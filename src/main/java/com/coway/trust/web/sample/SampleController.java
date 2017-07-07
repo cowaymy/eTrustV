@@ -265,7 +265,6 @@ public class SampleController {
 		// VO 를 이용한 파라미터 사용 예시.
 		// 기본적으로 @RequestParam Map<String, Object> params 를 사용하는 것으로 정함.
 		List<EgovMap> sampleList = sampleService.selectSampleList(searchVO);
-		int totCnt = sampleService.selectSampleListTotCnt(searchVO);
 
 		if (params.isEmpty()) {
 			params.put("test", "test");
@@ -273,7 +272,6 @@ public class SampleController {
 
 		// 화면 단으로 전달할 데이터.
 		model.addAttribute("resultList", sampleListByPrams);
-		model.addAttribute("totCnt", totCnt);
 
 		// 호출될 화면
 		return "sample/sampleList";

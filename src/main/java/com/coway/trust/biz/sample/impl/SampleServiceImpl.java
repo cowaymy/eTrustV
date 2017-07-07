@@ -201,6 +201,15 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
 		return sampleMapper.selectSampleList(searchVO);
 	}
+	
+	@Override
+	public List<EgovMap> selectSampleList(SampleVO sampleVO) {
+		logger.debug(" appName : {}", appName);
+		logger.debug(" appName : {}", appName);
+		// MessageSource 사용 예시.
+		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
+		return sampleMapper.selectSampleList(sampleVO);
+	}
 
 	@Override
 	public List<EgovMap> selectSampleList(Map<String, Object> params) {
@@ -211,7 +220,7 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 	 * 글 총 갯수를 조회한다. @param searchVO - 조회할 정보가 담긴 VO @return 글 총 갯수 @exception
 	 */
 	@Override
-	public int selectSampleListTotCnt(SampleDefaultVO searchVO) {
-		return sampleMapper.selectSampleListTotCnt(searchVO);
+	public int selectSampleListTotCnt(SampleVO sampleVO) {
+		return sampleMapper.selectSampleListTotCnt(sampleVO);
 	}
 }

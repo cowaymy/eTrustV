@@ -20,18 +20,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
+import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.web.sample.SampleRegForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -52,25 +50,26 @@ public class SampleApiController {
 
 	@ApiOperation(value = "샘플 목록 조회")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseEntity<List<SampleDto>> selectSampleList(@ModelAttribute("searchVO") SampleDefaultVO searchVO,
-			@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	public ResponseEntity<List<SampleDto>> selectSampleList(@ModelAttribute SampleForm sampleForm,
+			ModelMap model) throws Exception {
 		//
 		HttpSession session = sessionHandler.getCurrentSession();
+		
+		Precondition.checkNotNull(sampleForm.getId(), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
+		
+		logger.debug("id : {}", sampleForm.getId());
 
-		String param01 = (String) params.get("param01");
-		logger.debug("param01 : {}", param01);
+		// 서비스 파라미터에 맞게 변환.
+		SampleVO sampleVO = sampleForm.createSampleVO(sampleForm);
+		Map<String, Object> params = sampleForm.createMap(sampleForm);
+		
+		// 서비스 호출. - parameter : VO
+		List<EgovMap> sampleList = sampleService.selectSampleList(sampleVO);
+		int totCnt = sampleService.selectSampleListTotCnt(sampleVO);
+		
+		// 서비스 호출. - parameter : Map
+		List<EgovMap> sampleList2 = sampleService.selectSampleList(params);
 
-		/** pageing setting */
-		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
-		paginationInfo.setPageSize(searchVO.getPageSize());
-		searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		List<EgovMap> sampleList = sampleService.selectSampleList(searchVO);
-		int totCnt = sampleService.selectSampleListTotCnt(searchVO);
-		paginationInfo.setTotalRecordCount(totCnt);
 		return ResponseEntity.ok(sampleList.stream().map(r -> SampleDto.create(r)).collect(Collectors.toList()));
 	}
 

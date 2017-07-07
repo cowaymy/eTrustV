@@ -1,5 +1,7 @@
 package com.coway.trust.api.sample;
 
+import com.coway.trust.util.BeanConverter;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -48,10 +50,12 @@ public class SampleDto
 
     public static SampleDto create( EgovMap egvoMap )
     {
-        SampleDto dto = new SampleDto();
-        dto.id = egvoMap.get( "id" ).toString();
-        dto.name = egvoMap.get( "name" ).toString();
-        dto.description = egvoMap.get( "description" ).toString();
-        return dto;
+    	return BeanConverter.toBean(egvoMap, SampleDto.class);
+    	
+//        SampleDto dto = new SampleDto();
+//        dto.id = egvoMap.get( "id" ).toString();
+//        dto.name = egvoMap.get( "name" ).toString();
+//        dto.description = egvoMap.get( "description" ).toString();
+//        return dto;
     }
 }

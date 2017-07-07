@@ -7,10 +7,14 @@
          <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
           resultMap="clobMap" 을 사용해야 함.
     -->
-	<resultMap id="clobMap" type="EgovMap">
+	<resultMap id="sampleClobMap" type="EgovMap">
         <result property="requestComment" column="request_comment" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="cdcConfirmComment" column="cdc_confirm_comment" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="hqConfirmComment" column="hq_confirm_comment" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+    <resultMap id="sampleClobMap2" type="EgovMap">
+        <result property="otherXml" column="other_xml" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
 
 	<insert id="insertSample" parameterType="SampleVO">
@@ -26,7 +30,7 @@
             #{message})
 	</insert>
 	
-	<select id="selectClobData" parameterType="Map"  resultMap="clobMap">
+	<select id="selectClobData" parameterType="Map"  resultMap="sampleClobMap">
 	<![CDATA[
 		SELECT 
             base_cdc, 
@@ -55,11 +59,7 @@
 		)
 	</insert>
 
-    <resultMap id="clobMap2" type="EgovMap">
-        <result property="otherXml" column="other_xml" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    
-    <select id="selectClobOtherData" parameterType="Map"  resultMap="clobMap2">
+    <select id="selectClobOtherData" parameterType="Map"  resultMap="sampleClobMap2">
     <![CDATA[
         SELECT
             'aa' as aa,
@@ -160,7 +160,7 @@
             FROM DUAL
     </select>
 
-	<select id="selectSampleListTotCnt" parameterType="searchVO" resultType="int">
+	<select id="selectSampleListTotCnt" parameterType="sampleVO" resultType="int">
 
 			SELECT COUNT(*) totcnt
 			FROM DUAL

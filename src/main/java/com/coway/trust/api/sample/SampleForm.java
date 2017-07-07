@@ -1,23 +1,23 @@
 package com.coway.trust.api.sample;
 
+import java.util.Map;
+
+import com.coway.trust.biz.sample.SampleVO;
+import com.coway.trust.util.BeanConverter;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel
 public class SampleForm extends SampleDefaultForm {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 아이디 */
+	@ApiModelProperty(value = "아이디")
 	private String id;
 
-	/** 이름 */
+	@ApiModelProperty(value = "이름")
 	private String name;
-
-	/** 내용 */
-	private String description;
-
-	/** 사용여부 */
-	private String useYn;
-
-	/** 등록자 */
-	private String regUser;
 
 	public String getId() {
 		return id;
@@ -35,28 +35,30 @@ public class SampleForm extends SampleDefaultForm {
 		this.name = name;
 	}
 
-	public String getDescription() {
-		return description;
+	/**
+	 * serivce 의 파라미터가 map 인 경우.
+	 * 
+	 * @param sampleForm
+	 * @return
+	 * @throws Exception
+	 */
+	public Map createMap(SampleForm sampleForm) {
+		return BeanConverter.toMap(sampleForm);
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	/**
+	 * service의 파라미터가 VO 인 경우.
+	 * 
+	 * @param sampleForm
+	 * @return
+	 * @throws Exception
+	 */
+	public SampleVO createSampleVO(SampleForm sampleForm) {
+		SampleVO sampleVO = new SampleVO();
 
-	public String getUseYn() {
-		return useYn;
-	}
+		sampleVO.setId(sampleForm.getId());
+		sampleVO.setName(sampleForm.getName());
 
-	public void setUseYn(String useYn) {
-		this.useYn = useYn;
+		return sampleVO;
 	}
-
-	public String getRegUser() {
-		return regUser;
-	}
-
-	public void setRegUser(String regUser) {
-		this.regUser = regUser;
-	}
-
 }
