@@ -8,6 +8,8 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>        <!-- 일반 공통 js -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/gridCommon.js"></script>    <!-- AUIGrid 공통함수. 같이 추가해 보아요~ -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util.js"></script>
+
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.serializejson.js"></script> <!-- Form to jsonObject -->
         
     <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/AUIGridLicense.js"></script>
@@ -15,3 +17,4 @@
     <!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid.js"></script>
 <!-- AUIGrid -->
+
