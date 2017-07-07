@@ -233,7 +233,10 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
         console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
         
     };
-    
+
+    function test(){
+        alert("test function call...");
+    }
 	</script>
 </head>
 

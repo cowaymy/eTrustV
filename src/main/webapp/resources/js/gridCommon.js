@@ -43,7 +43,7 @@ var GridCommon = {
 	                groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
 	        };
 	        
-	        this.gridPros = $.extend(this.gridPros, _options);
+	        gridPros = $.extend(gridPros, _options);
 
 	        // 실제로 #_sGridId 에 그리드 생성
 	        return AUIGrid.create("#" + _sGridId, _columnLayout, gridPros);

@@ -162,6 +162,10 @@ public class SampleController {
 		logger.debug(" appName : {}", appName);
 		// 파라미터 사용 예시.
 		logger.debug(" test param : {}", params.get("test"));
+		
+		logger.debug(" isPop : {}", params.get("isPop"));
+		logger.debug(" param01 : {}", params.get("param01"));
+		logger.debug(" param02 : {}", params.get("param02"));
 
 		// MessageSource 사용 예시.
 		logger.debug("fail.common.dbmsg : {}", messageAccessor.getMessage(SampleConstants.SAMPLE_DBMSG));
@@ -177,6 +181,15 @@ public class SampleController {
 
 		// 호출될 화면
 		return "sample/sampleView";
+	}
+	
+	/**
+	 * 화면 호출.
+	 */
+	@RequestMapping(value = "/popupSample.do")
+	public String popupSample(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "sample/popupSample";
 	}
 	
 	/**

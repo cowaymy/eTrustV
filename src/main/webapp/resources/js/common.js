@@ -66,5 +66,138 @@ var Common = {
 				}
 			}
 		});
+	},
+	
+	/**
+	 * Div - 팝업
+	 * 
+	 * @param _url
+	 * @param _jsonObj
+	 * @param _callback
+	 * @returns divObj
+	 */
+	popupDiv : function(_url, _jsonObj, _callback){
+		
+		/*
+		 * 팝업시 left/top 제외 시킴. 
+		 * => /webapp/WEB-INF/tiles/layout/default.jsp
+		 */ 
+		_jsonObj = $.extend(_jsonObj, {isPop : true});
+
+		// TODO : div 팝업  class 적용 필요.
+		var $obj = $('<div></div>');
+		
+	    $('body').append($obj);
+	    
+	    $.ajax({
+			type : 'post',
+			url : _url,
+			data : _jsonObj,
+			dataType : "html",
+			success : function(result, textStatus, XMLHttpRequest) {
+				
+				$obj.html(result);
+				
+				$obj.show();
+				
+		        // TODO : close 버튼에 이벤트 추가 해야 함.
+		        $obj.find('.close').on('click', function(){
+		        	if (_callback) {
+		        		_callback(_jsonObj);
+		            }
+		        	
+		        	// TODO : 창 닫기.
+				});
+		        
+			},
+			error : function() {
+				alert("Fail Common.popupDiv...");
+			}
+		});
+	    
+	    return $obj;
+	},
+	
+	/**
+	 * 새창 - 팝업
+	 * @param _formId
+	 * @param _url
+	 * @param _options
+	 * @returns popObj
+	 */
+	popupWin : function(_formId, _url, _options) {
+		
+		var option = {
+				winName		: "popup",
+				isDuplicate	: true,		// 계속 팝업을 띄울지 여부.
+				fullscreen 	: "no",		// 전체 창. (yes/no)(default : no)
+				location 		: "no",		// 주소창이 활성화. (yes/no)(default : yes)
+				menubar 	: "no",		// 메뉴바 visible. (yes/no)(default : yes)
+				titlebar 		: "yes",		// 타이틀바. (yes/no)(default : yes)
+				toolbar 		: "no",		// 툴바. (yes/no)(default : yes)
+				resizable 	: "yes",		// 창 사이즈 변경. (yes/no)(default : yes)
+				scrollbars 	: "yes",		// 스크롤바. (yes/no)(default : yes)
+				width 		: "800px",	// 창 가로 크기
+				height 		: "500px"	// 창 세로 크기
+		};
+		
+		option = $.extend(option, _options);
+		
+		if(option.isDuplicate){
+			option.winName = option.winName + new Date();
+		}
+		
+		var frm = document.getElementById(_formId);
+		
+		var popObj = window.open("", option.winName, "fullscreen=" + option.fullscreen +
+				",location=" + option.location +
+				",menubar=" + option.menubar +
+				",titlebar=" + option.titlebar +
+				",toolbar=" + option.toolbar +
+				",resizable=" + option.resizable +
+				",scrollbars=" + option.scrollbars +
+				",width=" + option.width +
+				",height=" + option.height
+		);
+		
+		/*
+		 * 팝업시 left/top 제외 시킴. 
+		 * => /webapp/WEB-INF/tiles/layout/default.jsp
+		 */ 
+		var _input = document.createElement("textarea");
+		_input.name = "isPop";
+		_input.value = true;
+		_input.style.display = 'none';
+		
+		frm.appendChild(_input);
+		
+		frm.action = _url;
+		frm.target = option.winName;
+		frm.method = "post";
+		frm.submit();
+		
+		return popObj;
+	},
+
+	openNew : function(url, data, target) {
+		var form = document.createElement("form");
+		form.action = url;
+		form.method = "post";
+		form.target = target || "_self";
+		if (data) {
+			for ( var key in data) {
+				var input = document.createElement("textarea");
+				input.name = key;
+				input.value = typeof data[key] === "object" ? JSON
+						.stringify(data[key]) : data[key];
+				form.appendChild(input);
+			}
+		}
+		form.style.display = 'none';
+		document.body.appendChild(form);
+		form.submit();
 	}
+
 };
+
+
