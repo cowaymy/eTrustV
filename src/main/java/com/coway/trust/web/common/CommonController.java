@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,7 +31,7 @@ public class CommonController {
 
 	@Autowired
 	private DatabaseDrivenMessageSource dbMessageSource;
-	
+
 	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -44,7 +42,7 @@ public class CommonController {
 	}
 
 	@RequestMapping(value = "/unauthorized.do")
-	public String unauthorized( @RequestParam Map<String, Object> params, ModelMap model) {
+	public String unauthorized(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "/error/unauthorized";
 	}
 

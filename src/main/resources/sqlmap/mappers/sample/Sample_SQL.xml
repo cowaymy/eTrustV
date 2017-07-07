@@ -32,6 +32,7 @@
             base_cdc, 
             status_code, 
             request_dt,
+            TO_CHAR(request_dt, 'yyyymmdd') as request_dt_format,
             request_comment, /* CLOB */
             cdc_confirm_comment, /* CLOB */
             hq_confirm_comment /* CLOB */

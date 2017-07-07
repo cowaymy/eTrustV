@@ -1,6 +1,7 @@
 package com.coway.trust.web.sample;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -33,6 +35,7 @@ import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.AuthVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.EgovFormBasedFileVo;
@@ -117,15 +120,26 @@ public class SampleController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectClobData.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectClobData(@RequestParam Map<String, Object> params, Model model)
+	public ResponseEntity<List<EgovMap>> selectClobData(@RequestParam Map<String, Object> params, Model model, Date toDate )
 			throws Exception {
 		List<EgovMap> list = sampleService.selectClobData(params);
 		// List<EgovMap> list2 = sampleService.selectClobOtherData(params);
 		return ResponseEntity.ok(list);
 	}
 
+	/**
+	 * responseBody에 json data로 응답을 보내는 경우.
+	 * 
+	 * 1) return type void 인 경우 : response body 로 보내려면, @ResponseBody 를 기술해 줌.
+	 * 2) return type을 ResponseEntity<ReturnMessage> 로 하여 보내 준다. ( @ResponseBody 필요 없음 )
+	 * 
+	 * @param params
+	 * @param model
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/saveClobData.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveClobData(@RequestBody Map<String, Object> params, Model model) throws Exception {
+	@ResponseBody
+	public void saveClobData(@RequestBody Map<String, Object> params, Model model) throws Exception {
 		
 		// sample date
 		params.put("baseYear", "2019");
@@ -135,7 +149,7 @@ public class SampleController {
 		
 		sampleService.insertClobData(params);
 		
-		return ResponseEntity.ok(new ReturnMessage());
+//		return ResponseEntity.ok(new ReturnMessage());
 	}
 
 	/**
@@ -151,9 +165,27 @@ public class SampleController {
 
 		// MessageSource 사용 예시.
 		logger.debug("fail.common.dbmsg : {}", messageAccessor.getMessage(SampleConstants.SAMPLE_DBMSG));
+		
+		// 화면에서 보여줄 데이터.
+		AuthVO auth = new AuthVO();
+		auth.setInsert(true);
+		auth.setRead(true);
+		auth.setUpdate(true);
+		auth.setDelete(false);
+		
+		model.addAttribute("auth", auth);
 
 		// 호출될 화면
 		return "sample/sampleView";
+	}
+	
+	/**
+	 * 화면 호출.
+	 */
+	@RequestMapping(value = "/main.do")
+	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "sample/main";
 	}
 
 	/**
@@ -169,6 +201,21 @@ public class SampleController {
 
 		// 호출될 화면
 		return "sample/sampleGridModify";
+	}
+	
+	/**
+	 * 화면 호출.
+	 */
+	@RequestMapping(value = "/sampleMultiGridList.do")
+	public String sampleMultiGridList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		// 프로퍼티 사용 예시.
+		logger.debug(" appName : {}", appName);
+		// 파라미터 사용 예시.
+		logger.debug(" test param : {}", params.get("test"));
+
+		// 호출될 화면
+		return "sample/sampleMultiGridList";
 	}
 
 	/**
@@ -268,7 +315,7 @@ public class SampleController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // 추가 리스트 얻기
 		List<Object> removeList = params.get(AppConstants.AUIGRID_REMOVE); // 제거 리스트 얻기
 
-		// TODO : 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		if (updateList.size() > 0) {
 			Map hm = null;
 			Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
@@ -317,7 +364,7 @@ public class SampleController {
 		List<SampleGridForm> addList = dataSet.getAdd(); // 추가 리스트 얻기
 		List<SampleGridForm> removeList = dataSet.getRemove(); // 제거 리스트 얻기
 
-		// TODO : 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		addList.forEach(form -> {
 			logger.debug("add id : {}", form.getId());
 			logger.debug(" add name : {}", form.getName());
@@ -412,7 +459,7 @@ public class SampleController {
 
 		logger.debug("id : {}", id);
 
-		// TODO : message properties 설정 해야함.
+		// message properties 설정 해야함.
 		// eTRUST 에서는 DB에 의해 관리할 예정임.
 		Precondition.checkNotNull(id, "id은 필수 항목입니다.");
 		Precondition.checkNotNull(name, "name은 필수 항목입니다.");

@@ -62,7 +62,9 @@
     	    // 로그인 성공시.
 			$("#loginForm").attr("target", "");
 			$("#loginForm").attr({
-			    action : "/common/main.do",
+// TODO : 메인 화면 변경 필요.			
+//			    action : "/common/main.do",
+                action : "/sample/main.do",
 			    method : "POST"
 			}).submit();
             

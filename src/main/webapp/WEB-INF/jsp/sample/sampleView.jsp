@@ -54,7 +54,7 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
 
     // document ready (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
-        
+
         // AUIGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
         
@@ -122,7 +122,7 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
     
     // 리스트 조회.
     function fn_getSampleListAjax() {        
-        Common.ajax("GET", "/sample/selectJsonSampleList", $("#detailForm").serialize(), function(result) {
+        Common.ajax("GET", "/sample/selectJsonSampleList", $("#searchForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(myGridID, result);
@@ -277,6 +277,12 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
                         multi : <input type="text" id="multi02" name="multi[]" value="multiValue02"/><br/>
                         <input type="button" class="btn" onclick="javascript:fn_saveJsonObject();" value="전송[JsonObject]"/>
                         <input type="button" class="btn" onclick="javascript:fn_saveSerializeJSON();" value="전송[SerializeJSON]"/>
+                        
+                        <br/>
+                        <br/>
+                        <br/>
+                        <!-- 공통 버튼 제어 -->
+                        <%@ include file="./buttonA.jsp" %>
                     </form>
                 </div>
             </div>

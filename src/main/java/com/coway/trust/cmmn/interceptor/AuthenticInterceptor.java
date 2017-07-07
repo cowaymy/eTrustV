@@ -27,8 +27,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			checkAuthorized();
 			return true;
 		} else {
-//			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-			throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
+			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
 	}
 
