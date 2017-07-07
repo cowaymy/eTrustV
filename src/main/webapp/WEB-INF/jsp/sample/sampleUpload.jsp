@@ -6,8 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>sample file upload</title>
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
-
 <!-- 
 sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
 그 이하는 https://github.com/malsup/form/ 여기에서 jquery.form.js 을 다운받고 import 해야합니다.

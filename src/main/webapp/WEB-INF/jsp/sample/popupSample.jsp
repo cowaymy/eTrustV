@@ -10,12 +10,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><spring:message code="title.sample" /></title>
     <link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/egovframework/sample.css'/>"/>
-    
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>        <!-- 일반 공통 js -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.serializejson.js"></script> <!-- Form to jsonObject -->
-        
+
     <script type="text/javaScript" language="javascript">
     
     $(function() {

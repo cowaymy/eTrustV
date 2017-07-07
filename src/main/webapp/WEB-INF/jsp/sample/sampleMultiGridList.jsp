@@ -11,27 +11,6 @@
     <title><spring:message code="title.sample" /></title>
     <link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/egovframework/sample.css'/>"/>
     
-<!-- AUIGrid -->    
-    <!-- AUIGrid 테마 CSS 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
-    <!-- 원하는 테마가 있다면, 다른 파일로 교체 하십시오. -->
-    
-    
-    <link href="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid_style.css" rel="stylesheet">
-
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>        <!-- 일반 공통 js -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/gridCommon.js"></script>    <!-- AUIGrid 공통함수. 같이 추가해 보아요~ -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util.js"></script>
-        
-    <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/AUIGridLicense.js"></script>
-    
-    <!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid.js"></script>
-<!-- AUIGrid -->
-
-
-
 <style type="text/css">
 
 /* 커스텀 칼럼 스타일 정의 */

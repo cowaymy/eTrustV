@@ -4,13 +4,13 @@
 
 	<select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
 			SELECT
-				username as id,
-                userfullname as name,
-                usermobileno as phoneNumber
-			FROM USER_
+				user_name as id,
+                user_full_name as name,
+                user_mobile_no as phoneNumber
+			FROM SYS0047M
 			WHERE 1=1
-            AND username = #{userId}
-            AND userpassword = #{password}
+            AND user_name = #{userId}
+            AND user_passwd = #{password}
 	</select>
 
 </mapper>

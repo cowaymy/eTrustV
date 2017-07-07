@@ -4,10 +4,9 @@
 	<!-- Layout(Templates) start -->
 	
     <definition name="layout.default" template="/WEB-INF/tiles/layout/default.jsp">
-        <put-attribute name="common" value="/WEB-INF/tiles/view/common.jsp" />
         <put-attribute name="head" value="" />
         <put-attribute name="css" value="" />
-        <put-attribute name="script" value="" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
         <put-attribute name="bodyClass" value="" />
         <put-attribute name="header" value="/WEB-INF/tiles/view/header.jsp" />
         <put-attribute name="left" value="/WEB-INF/tiles/view/left.jsp" />
@@ -17,14 +16,18 @@
     </definition>
     
     <definition name="layout.default2" template="/WEB-INF/tiles/layout/default2.jsp">
-        <put-attribute name="common" value="/WEB-INF/tiles/view/common.jsp" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
         <put-attribute name="body" value="" />
         <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
     </definition>
     
-    <definition name="layout.empty" template="/WEB-INF/tiles/layout/empty.jsp">
-    	<put-attribute name="common" value="/WEB-INF/tiles/view/common.jsp" />
+    <definition name="layout.empty.script" template="/WEB-INF/tiles/layout/emptyScript.jsp">
+        <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
     	<put-attribute name="body" value="" />
+    </definition>
+    
+    <definition name="layout.empty" template="/WEB-INF/tiles/layout/empty.jsp">
+        <put-attribute name="body" value="" />
     </definition>
     
     <!-- Layout(Templates) end -->
@@ -33,7 +36,11 @@
     
     <!-- Content start -->
     
-    <definition name="*/*Pop" extends="layout.empty">
+    <definition name="login/*" extends="layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/login/{1}.jsp" />
+    </definition>
+    
+    <definition name="*/*Pop" extends="layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}Pop.jsp" />
     </definition>
     
@@ -42,24 +49,17 @@
         <put-attribute name="body" value="/WEB-INF/jsp/sample/{1}.jsp" />
     </definition>
     
-    
-    <!-- sample
-    <definition name="/" extends="base">
-		<put-attribute name="body" value="/WEB-INF/jsp/index.jsp" />
-	</definition>
-	
-	<definition name="/*" extends="base">
+	<definition name="/*" extends="layout.default">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp" />
 	</definition>
 
-	<definition name="*/*" extends="base">
+	<definition name="*/*" extends="layout.default">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
 	</definition>
 
-	<definition name="*/*/*" extends="base">
+	<definition name="*/*/*" extends="layout.default">
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
 	</definition>
-	 -->
     
     
     <!-- Content end -->
