@@ -22,7 +22,7 @@ public class PSTRequestDOController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PSTRequestDOController.class);
 	
-	@Resource(name = "PSTRequestDOService")
+	@Resource(name = "pstRequestDOService")
 	private PSTRequestDOService pstRequestDOService;
 	
 }
