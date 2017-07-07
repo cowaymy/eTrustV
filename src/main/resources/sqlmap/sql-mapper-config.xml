@@ -3,9 +3,16 @@
 
 <configuration>
     <typeAliases>
-		<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    
+        <!-- 공통 -->
+        <typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 		<typeAlias alias="loginVO" type="com.coway.trust.cmmn.model.LoginVO"/>
 		<typeAlias alias="searchVO" type="com.coway.trust.biz.sample.SampleDefaultVO"/>
 		<typeAlias alias="sampleVO" type="com.coway.trust.biz.sample.SampleVO"/>
+		
+		<!-- 업무 A -->
+		
+		<!-- 업무 B -->
+		
     </typeAliases>
 </configuration>
