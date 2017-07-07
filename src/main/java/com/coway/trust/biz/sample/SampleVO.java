@@ -46,6 +46,8 @@ public class SampleVO extends SampleDefaultVO {
 
 	/** 등록자 */
 	private String regUser;
+	
+	private int pageNo;
 
 	public String getId() {
 		return id;
@@ -85,6 +87,14 @@ public class SampleVO extends SampleDefaultVO {
 
 	public void setRegUser(String regUser) {
 		this.regUser = regUser;
+	}
+
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
 	}
 
 }

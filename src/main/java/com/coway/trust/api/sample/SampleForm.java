@@ -18,6 +18,10 @@ public class SampleForm {
 
 	@ApiModelProperty(value = "이름")
 	private String name;
+	
+	@ApiModelProperty(value = "페이지, default=0")
+	private int pageNo;
+
 
 	public String getId() {
 		return id;
@@ -33,6 +37,14 @@ public class SampleForm {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
 	}
 
 	/**

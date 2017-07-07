@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
+import com.coway.trust.cmmn.model.DisplayPagination;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
 
@@ -47,33 +48,37 @@ public class SampleApiController {
 
 	@ApiOperation(value = "샘플 목록 조회")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseEntity<List<SampleDto>> selectSampleList(@ModelAttribute SampleForm sampleForm,
+	public ResponseEntity<DisplayPagination<SampleDto>> selectSampleList(@ModelAttribute SampleForm sampleForm,
 			ModelMap model) throws Exception {
 		//
 		HttpSession session = sessionHandler.getCurrentSession();
-		
-		Precondition.checkNotNull(sampleForm.getId(), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
-		
+
+		Precondition.checkNotNull(sampleForm.getId(),
+				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
+
 		logger.debug("id : {}", sampleForm.getId());
 
 		// 서비스 파라미터에 맞게 변환.
 		SampleVO sampleVO = sampleForm.createSampleVO(sampleForm);
 		Map<String, Object> params = sampleForm.createMap(sampleForm);
-		
+
 		// 서비스 호출. - parameter : VO
 		List<EgovMap> sampleList = sampleService.selectSampleList(sampleVO);
-		int totCnt = sampleService.selectSampleListTotCnt(sampleVO);
-		
+
 		// 서비스 호출. - parameter : Map
 		List<EgovMap> sampleList2 = sampleService.selectSampleList(params);
 
-		return ResponseEntity.ok(sampleList.stream().map(r -> SampleDto.create(r)).collect(Collectors.toList()));
+		int totCnt = sampleService.selectSampleListTotCnt(sampleVO);
+
+		List<SampleDto> list = sampleList.stream().map(r -> SampleDto.create(r)).collect(Collectors.toList());
+		
+		DisplayPagination<SampleDto> dto = DisplayPagination.create(sampleForm.getPageNo(), totCnt, list);
+		return ResponseEntity.ok(dto);
 	}
 
 	@ApiOperation(value = "샘플 저장")
 	@RequestMapping(value = "/saveSample.do", method = RequestMethod.POST)
-	public void saveSample(@RequestBody SampleForm searchForm, Model model)
-			throws Exception {
+	public void saveSample(@RequestBody SampleForm searchForm, Model model) throws Exception {
 
 		String id = searchForm.getId();
 		String name = searchForm.getName();
@@ -84,7 +89,6 @@ public class SampleApiController {
 		Precondition.checkNotNull(id, messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
 		Precondition.checkNotNull(name,
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "NAME" }));
-
 
 		logger.debug("id : {}", id);
 		logger.debug("name : {}", name);

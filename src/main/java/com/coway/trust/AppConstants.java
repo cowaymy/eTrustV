@@ -9,6 +9,8 @@ public class AppConstants {
 
 	public static final String PATH_API = "/api";
 
+	public static final int RECORD_COUNT_PER_PAGE = 10;
+
 	// API BASE UR
 	public static final String API_BASE_URI = AppConstants.PATH_API + AppConstants.TAG;
 
