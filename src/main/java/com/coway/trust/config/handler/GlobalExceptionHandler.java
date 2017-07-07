@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 		logger.debug("request : {}", request.getRequestURI());
 
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
-		if (rest(contentType)) {
+		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(String.valueOf(HttpStatus.NOT_FOUND.value()));
 			message.setMessage("Resource not found for HTTP request with URI");
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
 		logger.error("[applicationException]message : {}", ex.getMessage());
 		logger.error("[applicationException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
-		if (rest(contentType)) {
+		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(ex.getCode());
 			message.setMessage(ex.getMessage());
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
 		logger.error("[authException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 
-		if (rest(contentType)) {
+		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
 			message.setMessage("Exception : " + ex.getMessage());
@@ -104,7 +104,7 @@ public class GlobalExceptionHandler {
 		logger.error("[defaultException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 
-		if (rest(contentType)) {
+		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
 			message.setMessage("Exception : " + ex.getMessage());

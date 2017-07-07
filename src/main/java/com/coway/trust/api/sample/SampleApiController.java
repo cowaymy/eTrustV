@@ -1,7 +1,5 @@
 package com.coway.trust.api.sample;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,7 +25,6 @@ import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
-import com.coway.trust.web.sample.SampleRegForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -75,49 +72,25 @@ public class SampleApiController {
 
 	@ApiOperation(value = "샘플 저장")
 	@RequestMapping(value = "/saveSample.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> saveSample(@RequestBody SampleRegForm searchForm, Model model)
+	public void saveSample(@RequestBody SampleForm searchForm, Model model)
 			throws Exception {
 
 		String id = searchForm.getId();
 		String name = searchForm.getName();
-		String description = searchForm.getDescription();
-		int seq = searchForm.getSeq();
 
 		logger.debug("id : {}", id);
 
-		// eTRUST 에서는 DB에 의해 관리할 예정임.
+		// 필수 체크.
 		Precondition.checkNotNull(id, messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
 		Precondition.checkNotNull(name,
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "NAME" }));
 
-		// Precondition.checkNotNull(id, "id은 필수 항목입니다.");
-		// Precondition.checkNotNull(name, "name은 필수 항목입니다.");
-		// Precondition.checkArgument(seq > 0, "seq은 필수 입력값입니다.");
 
 		logger.debug("id : {}", id);
 		logger.debug("name : {}", name);
-		logger.debug("description : {}", description);
 
 		// serivce DB 처리.
+		// sampleService.saveSample(sampleForm.createSampleVO(sampleForm));
 
-		Map<String, Object> ret = new HashMap<>();
-		ret.put("id", id);
-		ret.put("name", name);
-		ret.put("description", description);
-		ret.put("seq", seq);
-
-		List list = new ArrayList<Map<String, Object>>();
-		list.add(ret);
-		list.add(ret);
-		list.add(ret);
-		list.add(ret);
-
-		Map<String, Object> retForList = new HashMap<>();
-
-		retForList.put("param01", "param01");
-		retForList.put("param02", "param02");
-		retForList.put("data", list);
-
-		return ResponseEntity.ok(retForList);
 	}
 }

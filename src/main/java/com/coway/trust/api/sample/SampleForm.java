@@ -8,8 +8,8 @@ import com.coway.trust.util.BeanConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel
-public class SampleForm extends SampleDefaultForm {
+@ApiModel(value = "SampleForm", description = "샘플 조회조건")
+public class SampleForm {
 
 	private static final long serialVersionUID = 1L;
 
