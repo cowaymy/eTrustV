@@ -33,6 +33,11 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
     // document ready (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
 
+
+		// spring message 예시.
+    	alert("<spring:message code='sys.msg.success'/>");
+        
+
         // AUIGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
         

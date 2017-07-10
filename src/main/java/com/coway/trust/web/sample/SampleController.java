@@ -80,6 +80,15 @@ public class SampleController {
 		sampleService.saveTransaction(params);
 		return ResponseEntity.ok(new ReturnMessage());
 	}
+	
+	/**
+	 * 화면 호출.
+	 */
+	@RequestMapping(value = "/publishSample.do")
+	public String publishSample(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "sample/publishSample";
+	}
 
 	/**
 	 * 다중 서비스 호출 예제. - 마지막 서비스에서 오류 발생하여 모두 롤백됨.
