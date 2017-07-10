@@ -14,21 +14,20 @@ public class SampleForm {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "아이디")
-	private String id;
+	private String userId;
 
 	@ApiModelProperty(value = "이름")
 	private String name;
-	
+
 	@ApiModelProperty(value = "페이지, default=0")
 	private int pageNo;
 
-
-	public String getId() {
-		return id;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
@@ -38,7 +37,7 @@ public class SampleForm {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public int getPageNo() {
 		return pageNo;
 	}
@@ -68,7 +67,7 @@ public class SampleForm {
 	public SampleVO createSampleVO(SampleForm sampleForm) {
 		SampleVO sampleVO = new SampleVO();
 
-		sampleVO.setId(sampleForm.getId());
+		sampleVO.setId(sampleForm.getUserId());
 		sampleVO.setName(sampleForm.getName());
 
 		return sampleVO;

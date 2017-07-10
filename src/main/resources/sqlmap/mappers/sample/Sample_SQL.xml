@@ -104,13 +104,17 @@
 
 	</delete>
 
-	<select id="selectSample" parameterType="searchVO" resultType="SampleVO">
-
+	<select id="selectSampleVO" parameterType="searchVO" resultType="SampleVO">
 			SELECT
 				'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
 			FROM DUAL
-
 	</select>
+	
+	<select id="selectSample" parameterType="Map" resultType="egovMap">
+            SELECT
+                'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
+            FROM DUAL
+    </select>
 
 	<select id="selectSampleList" parameterType="searchVO" resultType="egovMap">
 

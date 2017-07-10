@@ -57,8 +57,9 @@ public interface SampleMapper {
 	void insertSampleByMap(Map<String, Object> params);
 
 	List<EgovMap> selectClobData(Map<String, Object> params);
+
 	List<EgovMap> selectClobOtherData(Map<String, Object> params);
-	
+
 	void insertClobData(Map<String, Object> params);
 
 	/**
@@ -89,7 +90,7 @@ public interface SampleMapper {
 	 * @return 조회한 글
 	 * @exception Exception
 	 */
-	SampleVO selectSample(SampleVO vo);
+	SampleVO selectSampleVO(SampleVO vo);
 
 	/**
 	 * 글 목록을 조회한다.
@@ -100,8 +101,12 @@ public interface SampleMapper {
 	 * @exception Exception
 	 */
 	List<EgovMap> selectSampleList(SampleDefaultVO searchVO);
+
 	List<EgovMap> selectSampleList(SampleVO sampleVO);
+
 	List<EgovMap> selectSampleByParamsList(Map<String, Object> params);
+
+	EgovMap selectSample(Map<String, Object> params);
 
 	/**
 	 * 글 총 갯수를 조회한다. @param searchVO - 조회할 정보가 담긴 VO @return 글 총 갯수 @exception

@@ -179,7 +179,7 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 	 */
 	@Override
 	public SampleVO selectSample(SampleVO vo) {
-		SampleVO resultVO = sampleMapper.selectSample(vo);
+		SampleVO resultVO = sampleMapper.selectSampleVO(vo);
 		if (resultVO == null)
 			throw new ApplicationException(AppConstants.FAIL, "message....");
 		return resultVO;
@@ -201,7 +201,7 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
 		return sampleMapper.selectSampleList(searchVO);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectSampleList(SampleVO sampleVO) {
 		logger.debug(" appName : {}", appName);
@@ -214,6 +214,11 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 	@Override
 	public List<EgovMap> selectSampleList(Map<String, Object> params) {
 		return sampleMapper.selectSampleByParamsList(params);
+	}
+
+	@Override
+	public EgovMap selectSample(Map<String, Object> params) {
+		return sampleMapper.selectSample(params);
 	}
 
 	/**

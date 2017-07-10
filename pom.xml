@@ -16,6 +16,7 @@
 		<org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
 		<hikaricp.version>2.6.1</hikaricp.version>
 		<jackson.library>2.7.5</jackson.library>
+		<swagger.version>2.2.2</swagger.version>
 	</properties>
 
 	<repositories>
@@ -132,13 +133,13 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.2.2</version>
+			<version>${swagger.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.2.2</version>
+			<version>${swagger.version}</version>
 		</dependency>
 
 		<!-- tiles -->

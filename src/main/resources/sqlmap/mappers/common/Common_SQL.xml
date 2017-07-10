@@ -15,7 +15,7 @@
 	</select>
 	
 	<select id="selectI18NList" parameterType="Map" resultType="egovMap">
-            select * from SYS_I18N
+            SELECT * FROM SYS_I18N
     </select>
     
     <select id="getCommonMstCodeList" parameterType="Map" resultType="egovMap">

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,16 +48,16 @@ public class SampleApiController {
 	private MessageSourceAccessor messageAccessor;
 
 	@ApiOperation(value = "샘플 목록 조회")
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/contents", method = RequestMethod.GET)
 	public ResponseEntity<DisplayPagination<SampleDto>> selectSampleList(@ModelAttribute SampleForm sampleForm,
 			ModelMap model) throws Exception {
 		//
 		HttpSession session = sessionHandler.getCurrentSession();
 
-		Precondition.checkNotNull(sampleForm.getId(),
+		Precondition.checkNotNull(sampleForm.getUserId(),
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
 
-		logger.debug("id : {}", sampleForm.getId());
+		logger.debug("userId : {}", sampleForm.getUserId());
 
 		// 서비스 파라미터에 맞게 변환.
 		SampleVO sampleVO = sampleForm.createSampleVO(sampleForm);
@@ -71,30 +72,50 @@ public class SampleApiController {
 		int totCnt = sampleService.selectSampleListTotCnt(sampleVO);
 
 		List<SampleDto> list = sampleList.stream().map(r -> SampleDto.create(r)).collect(Collectors.toList());
-		
+
 		DisplayPagination<SampleDto> dto = DisplayPagination.create(sampleForm.getPageNo(), totCnt, list);
 		return ResponseEntity.ok(dto);
 	}
 
 	@ApiOperation(value = "샘플 저장")
-	@RequestMapping(value = "/saveSample.do", method = RequestMethod.POST)
-	public void saveSample(@RequestBody SampleForm searchForm, Model model) throws Exception {
+	@RequestMapping(value = "/contents", method = RequestMethod.POST)
+	public void saveSample(@RequestBody SampleForm regForm, Model model) throws Exception {
 
-		String id = searchForm.getId();
-		String name = searchForm.getName();
+		String userId = regForm.getUserId();
+		String name = regForm.getName();
 
-		logger.debug("id : {}", id);
+		logger.debug("id : {}", userId);
 
 		// 필수 체크.
-		Precondition.checkNotNull(id, messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
+		Precondition.checkNotNull(userId,
+				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "USER ID" }));
 		Precondition.checkNotNull(name,
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "NAME" }));
 
-		logger.debug("id : {}", id);
+		logger.debug("id : {}", userId);
 		logger.debug("name : {}", name);
 
 		// serivce DB 처리.
 		// sampleService.saveSample(sampleForm.createSampleVO(sampleForm));
 
 	}
+
+	@ApiOperation(value = "샘플 조회")
+	@RequestMapping(value = "/contents/{id}", method = RequestMethod.GET)
+	public ResponseEntity<SampleDto> selectSample(@ModelAttribute SampleForm sampleForm, @PathVariable int id,
+			ModelMap model) throws Exception {
+
+		logger.debug("@PathVariable id : {}", id);
+		logger.debug("userId : {}", sampleForm.getUserId());
+
+		// 서비스 파라미터에 맞게 변환.
+		Map<String, Object> params = sampleForm.createMap(sampleForm);
+
+		// 서비스 호출. - parameter : Map
+		EgovMap sample = sampleService.selectSample(params);
+		SampleDto dto = SampleDto.create(sample);
+
+		return ResponseEntity.ok(dto);
+	}
+
 }
