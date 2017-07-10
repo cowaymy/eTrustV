@@ -26,4 +26,6 @@ public interface CommonMapper {
 	List<EgovMap> selectCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectI18NList();
+	
+	List<EgovMap> getMstCommonCodeList(Map<String, Object> params);
 }
