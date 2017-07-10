@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +42,23 @@ public class CommonController {
 
 		List<EgovMap> codeList = commonService.selectCodeList(params);
 		return ResponseEntity.ok(codeList);
+	}
+	
+	@RequestMapping(value = "/generalCode.do")
+	public String listCommCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		return "/common/GeneralCodeManagement";
+	}
+	
+	@RequestMapping(value = "/selectMstCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeMstList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("commCodeMstId : {}", params.get("commCodeMstId"));
+
+		List<EgovMap> mstCommCodeList = commonService.getMstCommonCodeList(params);
+		
+		return ResponseEntity.ok(mstCommCodeList);
+
 	}
 
 	@RequestMapping(value = "/unauthorized.do")
