@@ -3,21 +3,19 @@
 <mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
 
 	<select id="selectCodeList" parameterType="Map" resultType="egovMap">
-			SELECT
-				'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
-			FROM DUAL
-			WHERE 1=1
+		SELECT 
+		      CODE_ID , 
+		      CODE , 
+		      CODE_NAME , 
+		      DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION 
+		FROM SYS0013M
+		WHERE DISAB = 0
+		AND CODE_MASTER_ID = #{groupCode}
+		ORDER BY CODE_NAME
 	</select>
 	
 	<select id="selectI18NList" parameterType="Map" resultType="egovMap">
             select * from SYS_I18N
-    </select>
-    
-    <select id="getCommonCodeList" parameterType="Map" resultType="egovMap">
-            SELECT CODE_ID , CODE , CODE_NAME , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION FROM SYS0013M
-             WHERE DISAB = 0
-               AND CODE_MASTER_ID = #{groupCode}
-          ORDER BY CODE_NAME
     </select>
 
 </mapper>

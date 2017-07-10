@@ -10,6 +10,4 @@ public interface CommonService {
 	List<EgovMap> selectCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectI18NList();
-	
-	List<EgovMap> getCommonCodeList(Map<String, Object> params);
 }

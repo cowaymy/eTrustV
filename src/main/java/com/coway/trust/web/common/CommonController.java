@@ -37,9 +37,7 @@ public class CommonController {
 
 		logger.debug("groupCode : {}", params.get("groupCode"));
 
-		//List<EgovMap> codeList = commonService.selectCodeList(params);
-		List<EgovMap> codeList = commonService.getCommonCodeList(params);
-		
+		List<EgovMap> codeList = commonService.selectCodeList(params);
 		return ResponseEntity.ok(codeList);
 	}
 
