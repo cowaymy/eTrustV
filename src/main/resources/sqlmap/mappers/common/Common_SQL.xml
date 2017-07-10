@@ -17,5 +17,50 @@
 	<select id="selectI18NList" parameterType="Map" resultType="egovMap">
             select * from SYS_I18N
     </select>
+    
+    <select id="getCommonMstCodeList" parameterType="Map" resultType="egovMap">
+			SELECT 
+				 CdMst.CODE_MASTER_ID AS CODE_MASTER_ID, 
+				 CdMst.CODE_MASTER_NAME AS CODE_MASTER_NAME, 
+				 CdMst.CODE_DESC AS CODE_DESC, 
+				 CASE WHEN (CdMst.CRT_DT IS NOT NULL) THEN  CdMst.CRT_DT ELSE TO_DATE('19000101','YYYY-MM-DD') END AS CRT_DT, 
+				 CASE WHEN (CdMst.CRT_USER_ID IS NOT NULL) THEN CdMst.CRT_USER_ID ELSE 0 END AS CRT_USER_ID, 
+				 CASE WHEN (User1.USER_ID IS NOT NULL) THEN User1.USER_NAME ELSE '' END AS USER_NAME, 
+				 CASE WHEN (CdMst.DISAB IS NOT NULL) THEN CdMst.DISAB ELSE 0 END AS DISABLED, 
+				 CASE WHEN (CdMst.UPD_DT IS NOT NULL) THEN  CdMst.UPD_DT ELSE TO_DATE('19000101','YYYY-MM-DD') END AS UPD_DT, 
+				 CASE WHEN (CdMst.UPD_USER_ID IS NOT NULL) THEN CdMst.UPD_USER_ID ELSE 0 END AS UPD_USER_ID, 
+				 CASE WHEN (User2.USER_ID IS NOT NULL) THEN User2.USER_NAME ELSE '' END AS USER_NAME    
+				 FROM SYS0012M  CdMst
+				 LEFT OUTER JOIN SYS0047M  User1 ON User1.USER_ID = CdMst.CRT_USER_ID
+				 LEFT OUTER JOIN SYS0047M  User2 ON User2.USER_ID = CdMst.UPD_USER_ID   
+			WHERE 1 = 1	 
+				<if test="cdMstId !=null and cdMstId != ''">
+                    AND  CdMst.CODE_MASTER_ID  = #{cdMstId} 
+                </if>
+                <if test="cdMstNm !=null and cdMstNm != ''">
+                    AND (UPPER(CdMst.CODE_MASTER_NAME) = UPPER(#{cdMstNm}))
+                </if>
+                <if test="cdMstDesc !=null and cdMstDesc != ''">
+                    AND (UPPER(CdMst.CODE_DESC) = UPPER(#{cdMstDesc}))
+                </if>
+                <choose>
+                    <when test="cdMstDisab !=null and cdMstDisab != ''">
+                         AND (CdMst.DISAB = #{cdMstDisab})
+                    </when>
+                    <otherwise>
+                         AND (CdMst.DISAB = 0)
+                    </otherwise>
+                </choose>
+                <if test="userId !=null and userId != ''">
+                    AND (User1.USER_NAME = #{userId} )
+                </if>
+                <if test="crtDtFrom !=null and crtDtFrom != ''">
+                    AND TO_CHAR(CdMst.CRT_DT,'YYYYMMDDHH24MISS') >= #{crtDtFrom}||'000000' 
+                </if>
+                <if test="crtDtTo !=null and crtDtTo != ''">
+                    AND TO_CHAR(CRT_DT,'YYYYMMDDHH24MISS') >= #{crtDtTo}||'235959' 
+                </if>
+			ORDER BY CdMst.CODE_MASTER_NAME ASC		
+    </select>
 
 </mapper>

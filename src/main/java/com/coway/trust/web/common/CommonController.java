@@ -47,7 +47,7 @@ public class CommonController {
 	@RequestMapping(value = "/generalCode.do")
 	public String listCommCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		return "/common/GeneralCodeManagement";
+		return "/common/generalCodeManagement";
 	}
 	
 	@RequestMapping(value = "/selectMstCodeList.do", method = RequestMethod.GET)
