@@ -3,10 +3,23 @@
  */
 package com.coway.trust.biz.sales.pst;
 
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
 /**
  * @author Yunseok_Jang
  *
  */
 public interface PSTRequestDOService {
 
+	/**
+	 * 글 목록을 조회한다.
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	List<EgovMap> selectPstRequestDOList(PSTRequestDOVO pstRequestVO);
 }

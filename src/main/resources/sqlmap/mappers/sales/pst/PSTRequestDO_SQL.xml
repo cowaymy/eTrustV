@@ -187,4 +187,80 @@
              , PST_STUS_ID              = #{pstStusId}
          WHERE PST_SALES_ORD_ID         = #{pstSalesOrdId}
     </update>
+    
+    <select id="selectPstRequestDOList" parameterType="Map" resultType="egovMap">
+		SELECT T.PST_SALES_ORD_ID AS PST_SALES_ORD_ID
+		     , T.CODE AS CODE
+		     , T.PST_CUST_PO AS PST_CUST_PO
+		     , T.PST_CUR_RATE AS PST_CUR_RATE
+		     , T.PST_CUR_TYPE_ID AS PST_CUR_TYPE_ID
+		     , T.PST_DEALER_DELVRY_ADD_ID AS PST_DEALER_DELVRY_ADD_ID
+		     , T.PST_DEALER_DELVRY_CNT_ID AS PST_DEALER_DELVRY_CNT_ID
+		     , T.PST_DEALER_ID AS PST_DEALER_ID
+		     , T.PIC AS PIC
+		     , T.PST_REF_NO AS PST_REF_NO
+		     , T.PST_REM AS PST_REM
+		     , T.PST_STUS_ID AS PST_STUS_ID
+		     , T.PST_DEALER_MAIL_ADD_ID AS PST_DEALER_MAIL_ADD_ID
+		     , T.PST_TOT_AMT AS PST_TOT_AMT
+		     , T.C1 AS C1
+		     , T.CRT_USER_ID AS CRT_USER_ID
+		     , T.DEALER_NAME AS DEALER_NAME
+		     , T.CODE1 AS CODE1
+		     , T.DEALER_NRIC AS DEALER_NRIC
+		     , T.USER_NAME AS USER_NAME
+		     , T.USER_NAME1 AS USER_NAME1
+		     , T.PST_DEALER_MAIL_CNT_ID AS PST_DEALER_MAIL_CNT_ID
+		     , T.C2 AS C2
+		  FROM ( SELECT T1.PST_SALES_ORD_ID AS PST_SALES_ORD_ID
+		              , T1.PST_REF_NO AS PST_REF_NO
+		              , T1.PST_DEALER_ID AS PST_DEALER_ID
+		              , T1.PST_DEALER_MAIL_CNT_ID AS PST_DEALER_MAIL_CNT_ID
+		              , T1.PST_DEALER_DELVRY_CNT_ID AS PST_DEALER_DELVRY_CNT_ID
+		              , T1.PST_DEALER_MAIL_ADD_ID AS PST_DEALER_MAIL_ADD_ID
+		              , T1.PST_DEALER_DELVRY_ADD_ID AS PST_DEALER_DELVRY_ADD_ID
+		              , T1.PST_CUR_RATE AS PST_CUR_RATE
+		              , T1.PST_CUR_TYPE_ID AS PST_CUR_TYPE_ID
+		              , T1.PST_TOT_AMT AS PST_TOT_AMT
+		              , T1.PST_REM AS PST_REM
+		              , T1.PST_STUS_ID AS PST_STUS_ID
+		              , T1.CRT_USER_ID AS CRT_USER_ID
+		              , T1.PIC AS PIC
+		              , T1.PST_CUST_PO AS PST_CUST_PO
+		              , T2.CODE AS CODE
+		              , T3.CODE AS CODE1
+		              , T4.USER_NAME AS USER_NAME
+		              , T5.USER_NAME AS USER_NAME1
+		              , T6.DEALER_NAME AS DEALER_NAME
+		              , T6.DEALER_NRIC AS DEALER_NRIC
+		              , T1.CRT_DT AS C1
+		              , NVL(T8.WH_LOC_ID, 0) AS C2
+		           FROM SAL0062D T1
+		           LEFT OUTER
+		           JOIN SYS0013M T2
+		             ON T2.CODE_ID = T1.PST_CUR_TYPE_ID
+		           LEFT OUTER
+		           JOIN SYS0038M T3
+		             ON T3.STUS_CODE_ID = T1.PST_STUS_ID
+		           LEFT OUTER
+		           JOIN SYS0047M T4
+		             ON T4.USER_ID = T1.PIC
+		           LEFT OUTER
+		           JOIN SYS0047M T5
+		             ON T5.USER_ID = T1.CRT_USER_ID
+		           LEFT OUTER
+		           JOIN SAL0030D T6
+		             ON T6.DEALER_ID = T1.PST_DEALER_ID
+		           LEFT OUTER
+		           JOIN SYS0005M T7
+		             ON T7.BRNCH_ID = T6.DEALER_BRNCH_ID
+		           LEFT OUTER
+		           JOIN SYS0028M T8
+		             ON T8.WH_LOC_BRNCH_ID = T6.DEALER_BRNCH_ID
+		          WHERE (T1.PST_STUS_ID IN (1,4,10))
+		            AND TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') BETWEEN '2017-04-01 00:00:00' AND '2017-07-31 00:00:00'
+		) T
+		ORDER BY T.PST_SALES_ORD_ID ASC
+
+    </select>
 </mapper>

@@ -58,6 +58,6 @@ public interface PSTRequestDOMapper {
 	 * @return 글 목록
 	 * @exception Exception
 	 */
-	List<EgovMap> selectPstRequestDOList(PSTRequestDOVO searchVO);
+	List<EgovMap> selectPstRequestDOList(PSTRequestDOVO pstRequestVO);
 
 }
