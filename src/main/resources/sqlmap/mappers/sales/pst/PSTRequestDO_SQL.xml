@@ -177,4 +177,14 @@
 			</if>
 	</select>
 
+    <update id="updateSAL0062D"><!--PSTSalesM-->
+        UPDATE SAL0062D
+           SET PST_DEALER_MAIL_CNT_ID   = #{pstDealerMailCntId}
+             , PST_DEALER_DELVRY_CNT_ID = #{pstDealerDelvryCntId}
+             , PST_DEALER_MAIL_ADD_ID   = #{pstDealerMailAddId}
+             , PST_DEALER_DELVRY_ADD_ID = #{pstDealerDelvryAddId}
+             , PST_TOT_AMT              = #{pstTotAmt}
+             , PST_STUS_ID              = #{pstStusId}
+         WHERE PST_SALES_ORD_ID         = #{pstSalesOrdId}
+    </update>
 </mapper>
