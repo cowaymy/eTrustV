@@ -22,7 +22,7 @@ var Common = {
 	 *            같이 보낼 헤더 값(함수형)
 	 * 
 	 */
-	ajax : function(_method, _url, _jsonObj, _callback, _errcallback, _option, _header) {
+	ajax : function(_method, _url, _jsonObj, _callback, _errcallback, _options, _header) {
 
 		if (_method.toLowerCase() == 'get') {
 			_params = _jsonObj;
