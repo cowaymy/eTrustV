@@ -1,5 +1,26 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
+<script type="text/javaScript">
+
+$(function(){
+	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
+	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
+	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
+	// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
+	doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo');	
+});
+
+function fn_multiCombo(){
+	$('#cmbCategory').change(function() {
+	    //console.log($(this).val());
+	}).multipleSelect({
+	    selectAll: true, // 전체선택 
+	    width: '100%'
+	});            
+}
+
+</script>
+
 <div id="content"><!-- content start -->
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
@@ -38,8 +59,7 @@
 			    </td>
 			    <th scope="row">ORG Group</th>
 			    <td>
-			    <select class="w100p">
-			        <option value="">Active</option>
+			    <select class="w100p" id="cmbCategory">
 			    </select>
 			    </td>
 			    <th scope="row">ORG Code</th>
