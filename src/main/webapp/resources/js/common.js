@@ -229,36 +229,36 @@ $(document).ready(function(){
 	var pickerOpts={
 		changeMonth:true,
 		changeYear:true,
-		dayNamesMin:["일","월","화","수","목","금","토"],
+	/*	dayNamesMin:["일","월","화","수","목","금","토"],
 		monthNames:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
-		monthNamesShort:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+		monthNamesShort:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],*/
 		dateFormat: "dd/mm/yy"
 	};
 	
-	if(jQuery.isEmptyObject( $(".j_date"))){
+	//if(jQuery.isEmptyObject( $(".j_date"))){
 		$(".j_date").datepicker(pickerOpts);		
-	}
+	//}
 
 	var pickerOpts2={
 		changeMonth:true,
 		changeYear:true,
 		showButtonPanel:true,
-		monthNames:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
-		monthNamesShort:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+	/*	monthNames:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+		monthNamesShort:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],*/
 		dateFormat: "mm/yy",
 		onClose:function(dateText,inst){
-			var month=$("#ui-datepicker-div .ui-datepicker-month:selected").val();
-			var year=$("#ui-datepicker-div .ui-datepicker-year:selected").val();
+			var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+			var year=$("#ui-datepicker-div .ui-datepicker-year :selected").val();
 			$(this).datepicker('setDate',new Date(year,month,1));
 		}
 	};
 	
-	if(jQuery.isEmptyObject( $(".j_date2"))){
+	//if(jQuery.isEmptyObject( $(".j_date2"))){
 		$(".j_date2").datepicker(pickerOpts2);
 		$(".j_date2").click(function(){
 			$("#ui-datepicker-div").addClass("type2");
 		});	
-	}
+	//}
 	
 	/* 제이쿼리 ui달력 end*/
 
