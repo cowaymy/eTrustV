@@ -175,7 +175,9 @@ function resetUpdatedItems() {
 						</td>
 						<th scope="row">Uploaded Dated</th>
 						<td>
-						  <input type="text" name="updateDt1" id="updateDt1" size="10" /> ~ <input type="text" name="updateDt2" id="updateDt2" size="10" />
+							<input type="text" name="updateDt1" id="updateDt1" title="Uploaded Dated" placeholder="DD/MM/YYYY" class="j_date" />
+							To
+							<input type="text" name="updateDt2" id="updateDt2" title="Uploaded Dated" placeholder="DD/MM/YYYY" class="j_date" />
 						</td>
 						</tr>
                     </tbody>

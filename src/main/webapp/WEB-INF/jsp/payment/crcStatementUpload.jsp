@@ -76,7 +76,7 @@ $(document).ready(function(){
             };
         }
     });
-
+    
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid(columnLayout);
 });
@@ -97,7 +97,7 @@ function createAUIGrid(columnLayout) {
         editable : true,
     
         // 상태 칼럼 사용
-        showStateColumn : true,
+        //showStateColumn : true,
         
         displayTreeOpen : true,
         
@@ -148,10 +148,26 @@ function commitFormSubmit() {
  });
 };
 
+
 //수정 처리
 function fn_saveGridMap(){
-    Common.ajax("POST", "/payment/updateCRCStatementUpload.do", GridCommon.getGridData(myGridID), function(result) {
-        alert("UPDATE SUCCESS");
+	
+	//param data array
+	var data = {};
+
+    var gridList = AUIGrid.getGridData(myGridID);       //그리드 데이터
+	var formList = $("#myForm").serializeArray();       //폼 데이터
+    
+    //array에 담기        
+    if(gridList.length > 0) data.all = gridList;
+    else data.all = [];
+	
+    if(formList.length > 0) data.form = formList;
+    else data.form = [];
+	
+    //Ajax 호출
+    Common.ajax("POST", "/payment/updateCRCStatementUpload.do", data, function(result) {
+        alert(result.message);
         resetUpdatedItems(); // 초기화
     },  function(jqXHR, textStatus, errorThrown) {
         try {
@@ -165,8 +181,6 @@ function fn_saveGridMap(){
         }
         alert("Fail : " + jqXHR.responseJSON.message);        
     });
-  
-    
 }
 
 //그리드 초기화.
@@ -175,7 +189,7 @@ function resetUpdatedItems() {
  }
 </script>
 <!-- content start -->
-<div id="content">
+<section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
@@ -183,72 +197,118 @@ function resetUpdatedItems() {
         <li>Credit Card Statement</li>
     </ul>
 
-    <!-- title_line start -->
-    <div class="title_line">
-        <p class="fav"><img src="${pageContext.request.contextPath}/resources/image/icon_star.gif" alt="즐겨찾기" /></p>
-        <h2>CRC Statement Upload</h2>
-        <ul class="right_opt">
-            <li><p class="btn_blue multy"><a href="${pageContext.request.contextPath}/resources/download/CRC_Statement.csv">Download<br />CSV File Format</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
-        </ul>
-    </div>
-    <!-- title_line end -->
+	<!-- title_line start -->
+	<aside class="title_line">
+		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<h2>CRC Statement Upload</h2>
+		<ul class="right_opt">
+			<li><p class="btn_blue multy"><a href="${pageContext.request.contextPath}/resources/download/CRC_Statement.csv">Download<br />CSV File Format</a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
+		</ul>
+	</aside>
+	<!-- title_line end -->
 
     <!-- search_table start -->
-    <div class="search_table">
-          <form name="myForm" id="myForm">
+    <section class="search_table">
+        <form name="myForm" id="myForm">
             <!-- table start -->
-            <table summary="search table" class="type1">
+            <table class="type1">
                 <caption>search table</caption>
-				<colgroup>
-				    <col style="width:144px" />
-				    <col style="width:*" />
-				</colgroup>
-				<tbody>
-					<tr>
-					    <th scope="row">Reference Date</th>
-					    <td><input type="text" name="refDt" id="refDt" size="10" />
-					    </td>
-					</tr>
-                    <tr>
-                        <th scope="row">Card Account</th>
-                        <td>
-                            <select id="cardAccount" name="cardAccount">
-                                <option value="" selected>Select CRC Account</option>
-                                <c:forEach var="crcList" items="${ cardComboList}" varStatus="status">
-                                    <option value="${crcList.accId}">${crcList.accDesc2}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Account No</th>
-                        <td>
-                             <select id="account" name="account">
-                                <option value="" selected>Select Account</option>
-                                <c:forEach var="bankList" items="${ bankComboList}" varStatus="status">
-                                    <option value="${bankList.accId}">${bankList.accDesc2}</option>
-                                </c:forEach>                                
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">SCV File</th>
-                        <td><input type="file" id="fileSelector" name="files" accept=".csv"><p class="btn_sky"><a href="#">File</a></p></td>
-                    </tr>
-                   </tbody>
-               </table>
-               <!-- table end -->
-            </form>
-        </div>
-        <!-- search_table end -->
+                <colgroup>
+					<col style="width:144px" />
+					<col style="width:*" />
+                </colgroup>
+                <tbody>
+	                <tr>
+	                    <th scope="row">Reference Date</th>
+	                    <td><input type="text" name="crcStateRefDt" id="crcStateRefDt" title="Reference Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+	                </tr>
+	                <tr>
+	                    <th scope="row">Card Account</th>
+	                    <td>
+	                        <select id="crcStateCardAccount" name="crcStateCardAccount">
+	                            <option value="" selected>Select CRC Account</option>
+	                            <c:forEach var="crcList" items="${ cardComboList}" varStatus="status">
+	                                <option value="${crcList.accDesc}">${crcList.accDesc}</option>
+	                            </c:forEach>
+	                        </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th scope="row">Account No</th>
+	                    <td>
+	                        <select id="crcStateAccId" name="crcStateAccId">
+	                            <option value="" selected>Select Account</option>
+	                            <c:forEach var="bankList" items="${ bankComboList}" varStatus="status">
+	                                <option value="${bankList.accId}">${bankList.accDesc2}</option>
+	                            </c:forEach>                                
+	                        </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th scope="row">SCV File</th>
+	                    <td><input type="file" id="fileSelector" name="files" accept=".csv"><p class="btn_sky"><a href="#">File</a></p></td>
+	                </tr>
+	            </tbody>
+	        </table>
+	        <!-- table end -->
+	        <!-- 
+	        <ul class="right_btns">
+	           <li><p class="btn_gray"><a href="#"><span class="search"></span>Search</a></p></li>
+            </ul>
+             -->
+        </form>
+    </section>
+    <!-- search_table end -->
+    
+    <!-- search_result start -->
+    <section class="search_result">
+        <!-- link_btns_wrap start -->
+        <aside class="link_btns_wrap">
+            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/image/btn_link.gif" alt="link show" /></a></p>
+            <dl class="link_list">
+                <dt>Link</dt>
+                <dd>
+				    <ul class="btns">
+				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+				        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+				        <li><p class="link_btn"><a href="#">menu3</a></p></li>
+				        <li><p class="link_btn"><a href="#">menu4</a></p></li>
+				        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+				        <li><p class="link_btn"><a href="#">menu6</a></p></li>
+				        <li><p class="link_btn"><a href="#">menu7</a></p></li>
+				        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+				    </ul>
+				    <ul class="btns">
+				        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+				        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+				        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+				        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+				        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+				        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+				        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+				        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+				    </ul>
+                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/image/btn_link_close.gif" alt="hide" /></a></p>
+                </dd>
+            </dl>
+        </aside>
+        <!-- link_btns_wrap end -->
+        <!--  
+        <ul class="right_btns">
+		    <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li>
+		    <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li>
+		    <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li>
+		    <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li>
+		    <li><p class="btn_grid"><a href="#"><span class="search"></span>ADD</a></p></li>
+        </ul>
+        -->
+        <!-- grid_wrap start -->
+        <article id="grid_wrap" class="grid_wrap"></article>
+        <!-- grid_wrap end -->
+    
+    </section>
+    <!-- search_result end -->
 
-        <!-- search_result start -->
-        <div class="search_result">          
-            <!-- grid_wrap start -->
-            <div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
-            <!-- grid_wrap end -->
-        </div>
-        <!-- search_result end -->
-</div>
+</section>
 <!-- content end -->
