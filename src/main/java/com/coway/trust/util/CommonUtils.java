@@ -48,19 +48,6 @@ public final class CommonUtils {
 
     /**
      * <pre>
-     * Description  : 128Bit유일코드값 계산 (@KICC전달 유일값 세팅)
-     * auth jakarta@xmerce.com
-     */
-    public static String unqId( String paramValue, int subStr ){
-        String unqId = "";
-        UUID uid = UUID.randomUUID();
-        paramValue = uid.toString() + paramValue;
-        paramValue = paramValue.substring(0, 12);
-        return paramValue;
-    }
-
-    /**
-     * <pre>
      * Description  : null 처리 및 trim 처리를 한다.
      * @param strTemp
      * </pre>
