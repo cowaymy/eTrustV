@@ -38,9 +38,9 @@ var GridCommon = {
 	                // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
 	                displayTreeOpen : true,
 	                
-	                noDataMessage : "출력할 데이터가 없습니다.",
+	                noDataMessage : gridMsg["sys.info.grid.noDataMessage"], //"출력할 데이터가 없습니다.",
 	                
-	                groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
+	                groupingMessage : gridMsg["sys.info.grid.groupingMessage"] // "여기에 칼럼을 드래그하면 그룹핑이 됩니다."
 	        };
 	        
 	        gridPros = $.extend(gridPros, _options);

@@ -16,12 +16,13 @@
     </definition>
     
     <definition name="layout.default2" template="/WEB-INF/tiles/layout/default2.jsp">
+        <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
         <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
         <put-attribute name="body" value="" />
-        <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
     </definition>
     
     <definition name="layout.empty.script" template="/WEB-INF/tiles/layout/emptyScript.jsp">
+        <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
         <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
     	<put-attribute name="body" value="" />
     </definition>

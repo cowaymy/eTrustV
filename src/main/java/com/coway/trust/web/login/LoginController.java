@@ -1,5 +1,6 @@
 package com.coway.trust.web.login;
 
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,7 @@ public class LoginController {
 	private MessageSourceAccessor messageAccessor;
 
 	@RequestMapping(value = "/login.do")
-	public String login(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "login/login";
 	}
 

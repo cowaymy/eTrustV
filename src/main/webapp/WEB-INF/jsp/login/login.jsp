@@ -93,7 +93,7 @@
 			userId : <input type="text" id="userId" name="userId" value="SKLIM"/><br/>
 			password : <input type="text" id="password" name="password" value="SKLIM@12345"/><br/>
 			<spring:message code="sys.msg.success" /><br/>
-            <input type="button" class="btn" onclick="javascript:fn_login();" value="로그인"/>
+            <input type="button" class="btn" onclick="javascript:fn_login();" value="<spring:message code='sys.btn.login' />"/>
         </form>
 	</div>
                 

@@ -34,7 +34,8 @@ function fn_multiCombo(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Commission Rule Book Management</h2>
 <ul class="right_opt">
-    <li><p class="btn_blue"><a href="#">Save</a></p></li>
+    <!-- 공통 버튼 구성. -->
+    <%@ include file="/WEB-INF/jsp/common/contentButton.jsp" %>
 </ul>
 </aside><!-- title_line end -->
 
@@ -73,18 +74,18 @@ function fn_multiCombo(){
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_gray"><a href="#"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_gray"><a href="#"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
 </ul>
 </form>
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li>
-    <li><p class="btn_grid"><a href="#"><span class="search"></span>ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#"><span class="search"></span><spring:message code='sys.btn.excel.up' /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><span class="search"></span><spring:message code='sys.btn.del' /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><span class="search"></span><spring:message code='sys.btn.ins' /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><span class="search"></span><spring:message code='sys.btn.add' /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

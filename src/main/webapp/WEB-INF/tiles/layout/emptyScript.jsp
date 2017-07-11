@@ -6,6 +6,7 @@
 <head>
 <meta charset="utf-8">
 <title>e-TRUST</title>
+<tiles:insertAttribute name="var" />
 <tiles:insertAttribute name="script" />
 </head>
 

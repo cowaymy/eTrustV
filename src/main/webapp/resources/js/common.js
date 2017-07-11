@@ -234,7 +234,10 @@ $(document).ready(function(){
 		monthNamesShort:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
 		dateFormat: "dd/mm/yy"
 	};
-	$(".j_date").datepicker(pickerOpts);
+	
+	if(jQuery.isEmptyObject( $(".j_date"))){
+		$(".j_date").datepicker(pickerOpts);		
+	}
 
 	var pickerOpts2={
 		changeMonth:true,
@@ -249,10 +252,14 @@ $(document).ready(function(){
 			$(this).datepicker('setDate',new Date(year,month,1));
 		}
 	};
-	$(".j_date2").datepicker(pickerOpts2);
-	$(".j_date2").click(function(){
-		$("#ui-datepicker-div").addClass("type2");
-	});
+	
+	if(jQuery.isEmptyObject( $(".j_date2"))){
+		$(".j_date2").datepicker(pickerOpts2);
+		$(".j_date2").click(function(){
+			$("#ui-datepicker-div").addClass("type2");
+		});	
+	}
+	
 	/* 제이쿼리 ui달력 end*/
 
 	/* on클래스 넣기 start*/
@@ -357,4 +364,4 @@ $(document).ready(function(){
 		}
 	});
 	/* 멀티셀렉트 end*/
-	})
+	});
