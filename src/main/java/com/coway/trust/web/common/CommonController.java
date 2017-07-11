@@ -1,12 +1,17 @@
 package com.coway.trust.web.common;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +24,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.config.DatabaseDrivenMessageSource;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovResourceCloseHelper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -81,5 +89,60 @@ public class CommonController {
 	@RequestMapping(value = "/db-messages/reload.do")
 	public void reload(@RequestParam Map<String, Object> params, ModelMap model) {
 		dbMessageSource.reload();
+	}
+	
+	@RequestMapping(value = "/gridExport.do")
+	public void export(HttpServletRequest request, HttpServletResponse response) {
+		// AUIGrid 가 xlsx, csv, xml 등의 형식을 작성하여 base64 로 인코딩하여 data 파라메터로 post 요청을 합니다.
+		// 해당 서버에서는 base64 로 인코딩 된 데이터를 디코드하여 다운로드 가능하도록 붙임으로 마무리합니다.
+		// 참고로 org.apache.commons.codec.binary.Base64 클래스 사용을 위해는 commons-codec-1.4.jar 파일이 필요합니다.
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		String data = request.getParameter("data"); // 파라메터 data
+		String extension = request.getParameter("extension"); // 파라메터 확장자
+		String reqFileName = request.getParameter("filename"); // 파라메터 파일명
+
+		byte[] dataByte = Base64.decodeBase64(data.getBytes()); // 데이터 base64 디코딩
+
+		// csv 를 엑셀에서 열기 위해서는 euc-kr 로 작성해야 함.
+		try {
+			if (extension.equals("csv")) {
+				String sting;
+				sting = new String(dataByte, "utf-8");
+				outputStream.write(sting.getBytes("euc-kr"));
+			} else {
+				outputStream.write(dataByte);
+			}
+		} catch (UnsupportedEncodingException e) {
+			throw new ApplicationException(e);
+		} catch (IOException e) {
+			throw new ApplicationException(e);
+		} finally {
+			EgovResourceCloseHelper.close(outputStream);
+		}
+
+		String fileName = "export." + extension; // 다운로드 될 파일명
+
+		if (CommonUtils.isNotEmpty(reqFileName)) {
+			fileName = reqFileName + "." + extension;
+		}
+
+		response.reset();
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		response.setHeader("Content-Length", String.valueOf(outputStream.size()));
+
+		ServletOutputStream sos = null;
+		try {
+			sos = response.getOutputStream();
+			sos.write(outputStream.toByteArray());
+			sos.flush();
+			sos.close();
+		} catch (IOException e) {
+			throw new ApplicationException(e);
+		} finally {
+			EgovResourceCloseHelper.close(sos);
+		}
 	}
 }

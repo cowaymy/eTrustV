@@ -14,6 +14,9 @@ var GridCommon = {
 	                // 편집 가능 여부 (기본값 : false)
 	                editable : true,
 	                
+	                // 페이징 사용.
+	                usePaging : true,
+	                
 	                // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
 	                enterKeyColumnBase : true,
 	                
@@ -44,9 +47,59 @@ var GridCommon = {
 	        };
 	        
 	        gridPros = $.extend(gridPros, _options);
+	        
+	        
 
 	        // 실제로 #_sGridId 에 그리드 생성
-	        return AUIGrid.create("#" + _sGridId, _columnLayout, gridPros);
+	        return AUIGrid.create(GridCommon.makeGridId(_sGridId), _columnLayout, gridPros);
+	    },
+	    
+	    /**
+	     * 그리드 파일 export
+	     * @param type
+	     */
+	    exportTo : function(_sGridId, _type) {
+	    	
+	    	_sGridId = GridCommon.makeGridId(_sGridId);
+	        
+	        // 그리드가 작성한 엑셀, CSV 등의 데이터를 다운로드 처리할 서버 URL을 지시합니다.
+	        AUIGrid.setProp(_sGridId, "exportURL", "/common/gridExport.do");
+	        
+	        // 내보내기 실행  
+	        switch(_type) {
+	        case "xlsx":
+	            AUIGrid.exportToXlsx(_sGridId, {
+	                // 스타일 상태 유지 여부(기본값:true)
+	                exportWithStyle : true
+	            });
+	            break;
+	        case "csv":
+	            AUIGrid.exportToCsv(_sGridId);
+	            break;
+	        case "txt":
+	            AUIGrid.exportToTxt(_sGridId);
+	            break;
+	        case "xml":
+	            AUIGrid.exportToXml(_sGridId);
+	            break;
+	        case "json":
+	            AUIGrid.exportToJson(_sGridId);
+	            break;
+	        case "pdf":
+	            if(!AUIGrid.isAvailabePdf(_sGridId)) {
+	                alert(gridMsg["sys.warn.grid.pdf"]); // 'PDF 저장은 HTML5를 지원하는 최신 브라우저에서 가능합니다.(IE는 10부터 가능)'
+	                return;
+	            }
+	            AUIGrid.exportToPdf(_sGridId, {
+	                // 폰트 경로 지정(변경시 라이센스 확인 필.)
+	                fontPath : "/resources/font/jejugothic-regular.ttf"
+	            });
+	            break;
+	        case "object": // array-object 는 자바스크립트 객체임
+	            var data = AUIGrid.exportToObject(_sGridId);
+	            alert( data );
+	            break;
+	        }
 	    },
 
 		// 행/열 로 선택한 셀의 값을 리턴.
@@ -85,6 +138,15 @@ var GridCommon = {
 	    	else data.remove = [];
 	    	
 	    	return data;
+	    },
+	    
+	    makeGridId : function(gridID){
+	    	var firstChar = gridID.substr(0, 1);
+	    	if(firstChar == "#"){
+	    		return gridID;
+	    	}else{
+	    		return "#" + gridID;
+	    	}
 	    }
 	    
 };

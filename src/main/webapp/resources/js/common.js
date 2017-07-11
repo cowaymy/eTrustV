@@ -8,7 +8,7 @@ var Common = {
 	 *            GET, POST, PUT, DELETE
 	 * @param {_url}
 	 *            호출 url
-	 * @param {_params}
+	 * @param {_jsonObj}
 	 *            보낼 데이터
 	 * @param {_dataType}
 	 *            응답받을 데이터 타입
