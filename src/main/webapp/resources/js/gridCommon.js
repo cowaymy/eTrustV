@@ -58,12 +58,18 @@ var GridCommon = {
 	     * 그리드 파일 export
 	     * @param type
 	     */
-	    exportTo : function(_sGridId, _type) {
+	    exportTo : function(_sGridId, _type, _fileName) {
 	    	
 	    	_sGridId = GridCommon.makeGridId(_sGridId);
+	    	
+	    	var param = "";
+	    	
+	    	if(FormUtil.isNotEmpty(_fileName)){
+	    		param = "?filename=" + _fileName;
+	    	}
 	        
 	        // 그리드가 작성한 엑셀, CSV 등의 데이터를 다운로드 처리할 서버 URL을 지시합니다.
-	        AUIGrid.setProp(_sGridId, "exportURL", "/common/gridExport.do");
+	        AUIGrid.setProp(_sGridId, "exportURL", "/common/gridExport.do" + param);
 	        
 	        // 내보내기 실행  
 	        switch(_type) {

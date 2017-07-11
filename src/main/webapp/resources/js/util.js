@@ -77,7 +77,7 @@ var FormUtil = {
 	},
 	
 	isNotEmpty : function(str) {
-		return !CRUtil.isEmpty(str);
+		return !FormUtil.isEmpty(str);
 	},
 
 	/**

@@ -97,7 +97,7 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
     function fn_gridExport(type){
 
     	// type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    	GridCommon.exportTo("grid_wrap", type);
+    	GridCommon.exportTo("grid_wrap", type, "test");
     }
     
     </script>

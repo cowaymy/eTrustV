@@ -108,8 +108,7 @@ public class CommonController {
 		// csv 를 엑셀에서 열기 위해서는 euc-kr 로 작성해야 함.
 		try {
 			if (extension.equals("csv")) {
-				String sting;
-				sting = new String(dataByte, "utf-8");
+				String sting = new String(dataByte, "utf-8");
 				outputStream.write(sting.getBytes("euc-kr"));
 			} else {
 				outputStream.write(dataByte);
