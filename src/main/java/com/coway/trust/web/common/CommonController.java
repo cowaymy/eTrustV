@@ -53,12 +53,23 @@ public class CommonController {
 	@RequestMapping(value = "/selectMstCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeMstList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		logger.debug("commCodeMstId : {}", params.get("commCodeMstId"));
+		logger.debug("commCodeMstId : {}", params.get("cdMstId"));
 
 		List<EgovMap> mstCommCodeList = commonService.getMstCommonCodeList(params);
 		
 		return ResponseEntity.ok(mstCommCodeList);
 
+	}
+	
+	@RequestMapping(value = "/selectDetailCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeDetailList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("commDetailCodeMstId : {}", params.get("cdMstId"));
+		
+		List<EgovMap> mstCommDetailCodeList = commonService.getDetailCommonCodeList(params);
+		
+		return ResponseEntity.ok(mstCommDetailCodeList);
+		
 	}
 
 	@RequestMapping(value = "/unauthorized.do")

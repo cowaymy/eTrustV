@@ -51,4 +51,9 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	public 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params) {
 		return commonMapper.getMstCommonCodeList(params);
 	}
+	
+	@Override
+	public 	List<EgovMap> getDetailCommonCodeList(Map<String, Object> params) {
+		return commonMapper.getDetailCommonCodeList(params);
+	}
 }
