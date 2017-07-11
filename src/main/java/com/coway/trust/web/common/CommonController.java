@@ -53,7 +53,7 @@ public class CommonController {
 	@RequestMapping(value = "/selectMstCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeMstList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		logger.debug("commCodeMstId : {}", params.get("cdMstId"));
+		logger.debug("commCodeMstId : {}", params.get("mstCdId"));
 
 		List<EgovMap> mstCommCodeList = commonService.getMstCommonCodeList(params);
 		
@@ -64,7 +64,8 @@ public class CommonController {
 	@RequestMapping(value = "/selectDetailCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeDetailList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		logger.debug("commDetailCodeMstId : {}", params.get("cdMstId"));
+		logger.debug("commDetailDisabled : {}", params.get("mstDisabled"));
+		logger.debug("commDetailCodeMstId : {}", params.get("mstCdId"));
 		
 		List<EgovMap> mstCommDetailCodeList = commonService.getDetailCommonCodeList(params);
 		
