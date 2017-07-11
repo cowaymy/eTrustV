@@ -6,11 +6,13 @@
 <title>eTrust system</title>
 <link rel="stylesheet" type="text/css" href="../css/master.css" />
 <link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
 <script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="../js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
 <script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
 <script type="text/javascript" src="../js/common_pub.js"></script>
+<script type="text/javascript" src="../js/multiple-select.js"></script>
 </head>
 <body>
 
@@ -197,17 +199,11 @@
 	<td><input type="text" title="Account ID" placeholder="Account ID" class="w100p" /></td>
 	<th scope="row">Account Code</th>
 	<td>
-	<dl class="fake_select w100p">
-		<dt><input type="text" readonly="readonly" /></dt>
-		<dd>
-		<ul>
-			<li><label><input type="checkbox" /><span>Check All</span></label></li>
-			<li><label><input type="checkbox" /><span>Active</span></label></li>
-			<li><label><input type="checkbox" /><span>Completed</span></label></li>
-			<li><label><input type="checkbox" /><span>Cancel</span></label></li>
-		</ul>
-		</dd>
-	</dl>
+	<select class="multy_select" multiple="multiple">
+		<option value="2">Active</option>
+		<option value="3">Completed</option>
+		<option value="4">Cancel</option>
+	</select>
 	</td>
 	<th scope="row">Account Description</th>
 	<td>
