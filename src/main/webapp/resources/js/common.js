@@ -221,3 +221,140 @@ var Common = {
 	}
 
 };
+
+// publish code
+
+$(document).ready(function(){
+	/* 제이쿼리 ui달력 start*/
+	var pickerOpts={
+		changeMonth:true,
+		changeYear:true,
+		dayNamesMin:["일","월","화","수","목","금","토"],
+		monthNames:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+		monthNamesShort:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+		dateFormat: "dd/mm/yy"
+	};
+	$(".j_date").datepicker(pickerOpts);
+
+	var pickerOpts2={
+		changeMonth:true,
+		changeYear:true,
+		showButtonPanel:true,
+		monthNames:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+		monthNamesShort:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+		dateFormat: "mm/yy",
+		onClose:function(dateText,inst){
+			var month=$("#ui-datepicker-div .ui-datepicker-month:selected").val();
+			var year=$("#ui-datepicker-div .ui-datepicker-year:selected").val();
+			$(this).datepicker('setDate',new Date(year,month,1));
+		}
+	};
+	$(".j_date2").datepicker(pickerOpts2);
+	$(".j_date2").click(function(){
+		$("#ui-datepicker-div").addClass("type2");
+	});
+	/* 제이쿼리 ui달력 end*/
+
+	/* on클래스 넣기 start*/
+	$(document).on(
+		"click", ".click_add_on", function(){
+
+		var thisNum=$(".click_add_on").index(this);
+		var thisAddOn=$(".click_add_on").eq(thisNum);
+
+		thisAddOn.toggleClass("on");
+		return false;
+	});
+	/* on클래스 넣기 end*/
+
+	/* on클래스 넣기(type2) start*/
+	$(document).on(
+		"click", ".click_add_on_solo", function(){
+
+		var thisNum=$(".click_add_on_solo").index(this);
+		var thisAddOnSolo=$(".click_add_on_solo").eq(thisNum);
+		var target=thisAddOnSolo.attr("class").replace("click_add_on_solo ","");
+		var targetAddOn=$("."+target+"");
+
+		targetAddOn.removeClass("on");
+		thisAddOnSolo.addClass("on");
+		return false;
+	});
+	/* on클래스 넣기(type2) end*/
+
+	/* 탭동작 start */
+	$(document).on(
+		"click", ".tap_type1 li a", function(){
+		var theTapArea=$(".tap_wrap .tap_area");
+		var thisNum=$(this).parent().index();
+
+		$(this).addClass("on").parent().siblings().children("a").removeClass("on");
+		
+		theTapArea.eq(thisNum).css("display","block").siblings(".tap_area").css("display","none");
+		return false;
+	})
+	/* 탭동작 end */
+
+	/* 요소 보이기/숨기기 start*/
+	$(document).on(
+		"click", ".link_btns_wrap .show_btn", function(){
+
+		$(".link_btns_wrap .show_btn").css("display","none");
+		$(".link_btns_wrap .link_list").css("display","block");
+
+	});
+
+	$(document).on(
+		"click", ".link_btns_wrap .link_list dd .hide_btn", function(){
+
+		$(".link_btns_wrap .show_btn").css("display","block");
+		$(".link_btns_wrap .link_list").css("display","none");
+
+	});
+	/* 요소 보이기/숨기기 end*/
+
+	/* 멀티셀렉트 start*/
+	$(document).on(
+		"click", ".fake_select dt", function(){
+
+		var thisNum=$(".fake_select dt").index(this);
+		var thisFakeSelect=$(".fake_select dt").eq(thisNum).next("dd");
+		
+		$(".fake_select dd").slideUp(500);
+
+		if(thisFakeSelect.is(":visible")){
+			thisFakeSelect.slideUp(500);
+		}else{
+			thisFakeSelect.slideDown(500);
+		}
+		return false;
+	});
+
+	$(document).on(
+		"change", ".fake_select dd li :checkbox", function(){
+
+		var thisFakeSelectDt=$(this).parents(".fake_select").children("dt").children("input");
+		var thisText=$(this).next("span").text();
+		var thisDtText=thisFakeSelectDt.val();
+		var checkNum=$(this).parents(".fake_select").find(":checked").length;
+		
+		
+
+		if($(this).is(":checked")){
+			if(checkNum>1){
+				thisFakeSelectDt.val(thisDtText+","+thisText);
+			}else{
+				thisFakeSelectDt.val(thisDtText+thisText);
+			}
+			
+		}else{
+			if(checkNum==0){
+				thisFakeSelectDt.val("");	
+			}else{
+				thisFakeSelectDt.val(thisFakeSelectDt.val().replace(","+thisText,""));
+				thisFakeSelectDt.val(thisFakeSelectDt.val().replace(thisText+",",""));
+			}
+		}
+	});
+	/* 멀티셀렉트 end*/
+	})

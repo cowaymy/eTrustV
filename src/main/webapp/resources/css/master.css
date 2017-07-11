@@ -20,7 +20,11 @@ blockquote:before,blockquote:after,q:before,q:after{content:""; content:none;}
 table{border-collapse:collapse; border-spacing:0; width:100%; table-layout:fixed;}
 
 
+/* HTML5 display-role reset for older browsers */
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}
+
 /* shs reset.css*/
+html{overflow-y:scroll;}
 a{text-decoration:none;}
 a:hover,
 a:focus{text-decoration:none;}

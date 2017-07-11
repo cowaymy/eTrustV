@@ -57,14 +57,17 @@
 .title_line{clear:both; margin-bottom:10px;}
 .title_line:after{content:""; display:block; clear:both;}
 .title_line .fav{position:relative; top:2px; float:left; margin-right:10px;}
+.title_line .fav a{display:block; width:22px; height:21px; background:url(../image/icon_star.gif) no-repeat; text-indent:-1000em; overflow:hidden;}
+.title_line .fav a.on{background-position:100% 0;}
 .title_line h2{float:left; font-size:24px; color:#25527c; font-weight:normal;}
+.title_line h3{padding:20px 0 0 0; font-size:14px; color:#25527c;}
 .title_line .right_opt{float:right;}
 .title_line .right_opt:after{content:""; display:block; clear:both;}
 .title_line .right_opt li{float:left; margin-left:5px;}
 .h70{height:70px;}
 
 /* 각종 버튼 */
-.btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center;}
+.btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
 .btn_blue.multy a{line-height:12px;}
 .btn_blue2 a{display:inline-block; min-width:57px; height:28px; line-height:28px; padding:0 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
 .btn_blue2.big a{min-width:120px; height:36px; line-height:36px; font-size:14px;}
@@ -91,13 +94,17 @@ table+.center_btns{padding-top:15px;}
 
 /* 테이블 */
 table.type1{margin-bottom:5px; border-top:1px solid #d3d9dd;}
-table.type1 tbody th{padding-left:15px; color:#333; font-weight:bold; background:#e9f0f4; text-align:left; border-bottom:1px solid #d3d9dd; vertical-align:top; line-height:34px;}
+table.type1 tbody th{height:34px; padding:0 0 0 15px; color:#333; font-weight:bold; background:#e9f0f4; text-align:left; border-bottom:1px solid #d3d9dd; vertical-align:top; line-height:15px; vertical-align:middle;}
 table.type1 tbody td{padding:2px 6px; border-bottom:1px solid #d3d9dd; vertical-align:middle;}
 table.type1 tbody td > *{float:left; margin-right:4px;}
 table.type1 tbody td > span{line-height:15px;}
 table.type1 tbody td input[type=text]{width:237px; height:30px; line-height:28px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px;}
+table.type1 tbody td input[type=text].readonly{background:#f2f2f2; color:#ccc;}
 table.type1 tbody td select{width:237px; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 table.type1 tbody td .w100p{width:100%!important;}
+table.type1 td label{margin:0 5px!important;}
+table.type1 label input[type=checkbox]{position:relative; top:2px; margin:0 5px 0 0; padding:0; border:1px solid #d2d2d2;}
+table.type1 label span{line-height:26px;}
 table.type2{border-top:1px solid #d3d9dd;}
 table.type2 thead th{height:35px; color:#333; font-weight:bold; line-height:15px; background:#e9f0f4; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; vertical-align:middle;}
 table.type2 thead tr th:first-child{border-left:0 none;}
@@ -134,6 +141,11 @@ table.type2.gray tbody td{padding:2px 10px;}
 .ui-datepicker-calendar .ui-datepicker-week-end{color:#0865ff;}
 .ui-datepicker-calendar .ui-datepicker-week-end a{color:#0865ff;}
 .ui-datepicker-calendar tbody tr td:first-child a{color:#cf0303!important;}
+.type2 .ui-datepicker-header{padding:10px 10px 40px 10px;}
+.type2 .ui-datepicker-current,
+.type2 .ui-datepicker-calendar{display:none;}
+.type2 .ui-datepicker-buttonpane{position:relative; top:-30px;}
+.type2 .ui-datepicker-close{float:right; margin:0 10px 0 0;}
 
 /* 팝업 */
 #popup_wrap{max-width:1000px; width:100%; margin:auto;}
@@ -153,6 +165,9 @@ table.type2.gray tbody td{padding:2px 10px;}
 .tap_type1 li{float:left; margin-right:-1px;}
 .tap_type1 li a{display:block; height:29px; line-height:28px; padding:0 19px; border:1px solid #d3d9dd; font-size:12px; color:#888; font-weight:bold; border-radius:0 8px 0 0;}
 .tap_type1 li a.on{background:#a1c4d7; border:1px solid #a1c4d7; color:#25527c;}
+.tap_wrap{margin-top:40px;}
+.tap_area{display:none;}
+.tap_type1+.tap_area{display:block;}
 
 /* 페이징 */
 .pag{position:relative; padding:10px 0 0 0; text-align:center;}
@@ -172,3 +187,31 @@ table.type2.gray tbody td{padding:2px 10px;}
 .pag > ol > li{float:left;}
 .pag > ol > li a{display:inline-block; width:20px; line-height:20px; font-size:12px;}
 .pag > ol > li a.on{font-weight:bold; color:#25527c;}
+
+/* 링크 버튼 */
+.link_btns_wrap{position:relative; top:-10px;}
+.link_btns_wrap .link_list{display:none; position:relative; border:2px solid #a1c4d7;}
+.link_btns_wrap .link_list dt{height:34px; line-height:32px; padding:0 20px; background:#a1c4d7; font-size:20px; color:#fff;}
+.link_btns_wrap .link_list dd{padding:10px 9px 10px 14px;}
+.link_btns_wrap .link_list dd .hide_btn{position:absolute; top:10px; right:18px; z-index:2;}
+.link_btns_wrap .link_list dd .btns{margin-top:10px;}
+.link_btns_wrap .link_list dd .btns:after{content:""; display:block; clear:both;}
+.link_btns_wrap .link_list dd .btns:first-child{margin-top:0;}
+.link_btns_wrap .link_list dd .btns li{float:left; margin-right:5px;}
+.link_btns_wrap .link_btn a{display:block; height:18px; line-height:18px; padding:0 5px; font-size:11px; color:#2d395e; border:1px solid #ef7520; border-radius:3px;}
+.link_btns_wrap .link_btn.type2 a{border:1px solid #44c1af;}
+
+/* etc */
+.bottom_msg_box{padding:7px 10px; border:1px solid #a1c4d7; border-radius:4px;}
+.bottom_msg_box p{line-height:15px; color:#2d395e; font-size:11px;}
+
+/* 멀티셀렉트 */
+.fake_select{position:relative; height:32px; background:#fff; cursor:pointer;}
+.fake_select dt{height:30px; border:1px solid #ddd; border-radius:3px; padding-right:30px; background:url(../image/arrow_multy_select.gif) no-repeat 100% center;}
+.fake_select dt input[type=text]{width:100%!important; line-height:28px; border:0 none!important; cursor:pointer;}
+.fake_select dd{display:none; position:absolute; top:100%; left:0; z-index:100; width:100%; margin-top:-1px;}
+.fake_select dd ul{border:1px solid #ddd;}
+.fake_select dd ul li{border-top:1px solid #ddd; background:#fff;}
+.fake_select dd ul li:first-child{border-top:0 none;}
+.fake_select dd ul li label{display:block;}
+.fake_select dd ul li label span{line-height:30px;}
