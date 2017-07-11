@@ -68,7 +68,8 @@ var GridCommon = {
 	    	// 추가된 행 아이템들(배열)
 	    	var addList = AUIGrid.getAddedRowItems(gridID);
 	    	// 수정된 행 아이템들(배열)
-	    	var updateList = AUIGrid.getEditedRowColumnItems(gridID); 
+	    	//var updateList = AUIGrid.getEditedRowColumnItems(gridID);
+	    	var updateList = AUIGrid.getEditedRowItems(gridID); 
 	    	// 삭제된 행 아이템들(배열)
 	    	var removeList = AUIGrid.getRemovedItems(gridID);
 
