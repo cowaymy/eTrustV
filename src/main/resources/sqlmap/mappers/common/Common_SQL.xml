@@ -19,13 +19,14 @@
     </select>
     
     <select id="getMstCommonCodeList" parameterType="Map" resultType="egovMap">
+    
 			SELECT 
 				 CdMst.CODE_MASTER_ID AS CODE_MASTER_ID, 
 				 CdMst.CODE_MASTER_NAME AS CODE_MASTER_NAME, 
 				 CdMst.CODE_DESC AS CODE_DESC, 
 				 CASE WHEN (CdMst.CRT_DT IS NOT NULL) THEN  TO_CHAR(CdMst.CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT, 
 				 CASE WHEN (CdMst.CRT_USER_ID IS NOT NULL) THEN CdMst.CRT_USER_ID ELSE 0 END AS CRT_USER_ID, 
-				 CASE WHEN (User1.USER_ID IS NOT NULL) THEN User1.USER_NAME ELSE '' END AS USER_NAME, 
+				 CASE WHEN (User1.USER_ID IS NOT NULL) THEN User1.USER_NAME ELSE '' END AS CREATE_NAME, 
 				 CASE WHEN (CdMst.DISAB IS NOT NULL) THEN CdMst.DISAB ELSE 0 END AS DISABLED, 
 				 CASE WHEN (CdMst.UPD_DT IS NOT NULL) THEN  TO_CHAR(CdMst.UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT, 
 				 CASE WHEN (CdMst.UPD_USER_ID IS NOT NULL) THEN CdMst.UPD_USER_ID ELSE 0 END AS UPD_USER_ID, 
@@ -38,10 +39,10 @@
                     AND  CdMst.CODE_MASTER_ID  = #{cdMstId} 
                 </if>
                 <if test="cdMstNm !=null and cdMstNm != ''">
-                    AND (UPPER(CdMst.CODE_MASTER_NAME) = UPPER(#{cdMstNm}))
+                    AND (UPPER(CdMst.CODE_MASTER_NAME) LIKE UPPER(#{cdMstNm}) || '%' )
                 </if>
                 <if test="cdMstDesc !=null and cdMstDesc != ''">
-                    AND (UPPER(CdMst.CODE_DESC) = UPPER(#{cdMstDesc}))
+                    AND (UPPER(CdMst.CODE_DESC) LIKE UPPER(#{cdMstDesc})  || '%' )
                 </if>
                 <choose>
                     <when test="cdMstDisabled !=null and cdMstDisabled != ''">
@@ -51,16 +52,17 @@
                          AND (CdMst.DISAB = 0)
                     </otherwise>
                 </choose>
-                <if test="userId !=null and userId != ''">
-                    AND (User1.USER_NAME = #{userId} )
+                <if test="createID !=null and createID != ''">
+                    AND (User1.USER_NAME = #{createID} )
                 </if>
                 <if test="crtDtFrom !=null and crtDtFrom != ''">
-                    AND TO_CHAR(CdMst.CRT_DT,'YYYYMMDDHH24MISS') >= #{crtDtFrom}||'000000' 
+                    AND TO_CHAR(CdMst.CRT_DT,'YYYYMMDDHH24MISS') <![CDATA[ >= ]]> TO_CHAR(TO_DATE(#{crtDtFrom} , 'DD/MM/YYYY'),'YYYYMMDD')||'000000'        
                 </if>
                 <if test="crtDtTo !=null and crtDtTo != ''">
-                    AND TO_CHAR(CRT_DT,'YYYYMMDDHH24MISS') >= #{crtDtTo}||'235959' 
+                    AND TO_CHAR(CdMst.CRT_DT,'YYYYMMDDHH24MISS') <![CDATA[ <= ]]> TO_CHAR(TO_DATE(#{crtDtTo} , 'DD/MM/YYYY'),'YYYYMMDD')||'235959'
                 </if>
-			ORDER BY CdMst.CODE_MASTER_NAME ASC		
+			ORDER BY CdMst.CODE_MASTER_NAME ASC	
+	 	
     </select>
     
     <select id="getDetailCommonCodeList" parameterType="Map" resultType="egovMap">
@@ -72,7 +74,7 @@
 			      DBMS_LOB.SUBSTR (CODE_DESC, 4000) CODE_DESC,
 			      CASE WHEN (CRT_DT IS NOT NULL) THEN  TO_CHAR(CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT,
 			      CASE WHEN (CRT_USER_ID IS NOT NULL) THEN CRT_USER_ID ELSE 0 END AS CRT_USER_ID,
-			      CASE WHEN (DISAB IS NOT NULL) THEN DISAB ELSE 0 END AS DISAB, 
+			      CASE WHEN (DISAB IS NOT NULL) THEN DISAB ELSE 0 END AS DISABLED, 
 			      CASE WHEN (UPD_DT IS NOT NULL) THEN  TO_CHAR(UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT,
 			      CASE WHEN (UPD_USER_ID IS NOT NULL) THEN UPD_USER_ID ELSE 0 END AS UPD_USER_ID
 			      FROM SYS0013M
