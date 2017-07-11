@@ -37,8 +37,7 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
 
         // cellClick event.
         AUIGrid.bind(myGridID, "cellClick", function( event ) {
-            console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-            fn_setDetail(myGridID, event.rowIndex);
+            
         });
         
         fn_getSampleListAjax();
