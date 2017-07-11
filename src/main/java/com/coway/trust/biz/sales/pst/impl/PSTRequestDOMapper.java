@@ -16,6 +16,8 @@
 package com.coway.trust.biz.sales.pst.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import com.coway.trust.biz.sales.pst.PSTRequestDOVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -41,15 +43,16 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface PSTRequestDOMapper {
 
 	/**
-	 * 글을 조회한다.
+	 * 글을 조회한다. (상세조회)
 	 * 
 	 * @param vo
-	 *            - 조회할 정보가 담긴 SampleVO
+	 *            - 조회할 정보가 담긴 VO
 	 * @return 조회한 글
 	 * @exception Exception
 	 */
-	PSTRequestDOVO getPstRequestDODetail(PSTRequestDOVO vo);
+	EgovMap getPstRequestDODetailPop(Map<String, Object> params);
 
+	
 	/**
 	 * 글 목록을 조회한다.
 	 * 
@@ -58,6 +61,17 @@ public interface PSTRequestDOMapper {
 	 * @return 글 목록
 	 * @exception Exception
 	 */
-	List<EgovMap> selectPstRequestDOList(PSTRequestDOVO pstRequestVO);
+	List<EgovMap> selectPstRequestDOList(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회팝업 Stock List)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> getPstRequestDOStockDetailPop(Map<String, Object> params);
 
 }

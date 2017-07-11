@@ -14,5 +14,7 @@
 		
 		<!-- 업무 B -->
 		
+		<!-- Sales PST -->
+		<typeAlias alias="pstRequestVO" type="com.coway.trust.biz.sales.pst.PSTRequestDOVO"/>
     </typeAliases>
 </configuration>

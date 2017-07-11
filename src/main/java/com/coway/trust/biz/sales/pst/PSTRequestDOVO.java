@@ -4,6 +4,7 @@
 package com.coway.trust.biz.sales.pst;
 
 import java.io.Serializable;
+import java.sql.Clob;
 import java.util.Date;
 
 /**
@@ -31,11 +32,30 @@ public class PSTRequestDOVO implements Serializable{
 	/** PSTRequestDOList 항목 */
 	private String pstRefNo;			// PSO Number
 	private String dealerName;		// Dealer Name
-	private String pstCustPo;			// PO Number
+	private String pstCustPo;			// PO Number (Customer PO)
 	private Date crtDt;					// Create Date
 	private String code1;				// PSO Status
 
 	/** PSTRequestDOList 조회조건 */
+	
+	/** PSTRequestDODetailPop */
+	/** PST Info*/
+	private int pstSalesOrdId;
+	private String code;					// Currency Type
+	private int pstCurRate;			// Currency Rate
+	private String userName;			// Person In Charge
+	private String userName1;			// Create By
+	private Clob pstRem;				// Remark
+	
+	/** PST StockList*/
+	private String c2;					// Stock Description
+	private int pstItmReqQty;			// Request Quantity
+	private int pstItmDoQty;			// Do Quantity
+	private int pstItmCanQty;			// Cancel Quantity
+	private int pstItmBalQty;			// Balance Quantity
+	private int pstItmPrc;				// Item Price
+	
+	
 	
 	
 	public String getPstRefNo() {
@@ -77,6 +97,104 @@ public class PSTRequestDOVO implements Serializable{
 	public void setCode1(String code1) {
 		this.code1 = code1;
 	}
+
+	public int getPstSalesOrdId() {
+		return pstSalesOrdId;
+	}
+
+	public void setPstSalesOrdId(int pstSalesOrdId) {
+		this.pstSalesOrdId = pstSalesOrdId;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public int getPstCurRate() {
+		return pstCurRate;
+	}
+
+	public void setPstCurRate(int pstCurRate) {
+		this.pstCurRate = pstCurRate;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserName1() {
+		return userName1;
+	}
+
+	public void setUserName1(String userName1) {
+		this.userName1 = userName1;
+	}
+
+	public Clob getPstRem() {
+		return pstRem;
+	}
+
+	public void setPstRem(Clob pstRem) {
+		this.pstRem = pstRem;
+	}
+
+	public String getC2() {
+		return c2;
+	}
+
+	public void setC2(String c2) {
+		this.c2 = c2;
+	}
+
+	public int getPstItmReqQty() {
+		return pstItmReqQty;
+	}
+
+	public void setPstItmReqQty(int pstItmReqQty) {
+		this.pstItmReqQty = pstItmReqQty;
+	}
+
+	public int getPstItmDoQty() {
+		return pstItmDoQty;
+	}
+
+	public void setPstItmDoQty(int pstItmDoQty) {
+		this.pstItmDoQty = pstItmDoQty;
+	}
+
+	public int getPstItmCanQty() {
+		return pstItmCanQty;
+	}
+
+	public void setPstItmCanQty(int pstItmCanQty) {
+		this.pstItmCanQty = pstItmCanQty;
+	}
+
+	public int getPstItmBalQty() {
+		return pstItmBalQty;
+	}
+
+	public void setPstItmBalQty(int pstItmBalQty) {
+		this.pstItmBalQty = pstItmBalQty;
+	}
+
+	public int getPstItmPrc() {
+		return pstItmPrc;
+	}
+
+	public void setPstItmPrc(int pstItmPrc) {
+		this.pstItmPrc = pstItmPrc;
+	}
+	
+	
 	
 
 }

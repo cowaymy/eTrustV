@@ -4,6 +4,7 @@
 package com.coway.trust.biz.sales.pst;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -21,5 +22,28 @@ public interface PSTRequestDOService {
 	 * @return 글 목록
 	 * @exception Exception
 	 */
-	List<EgovMap> selectPstRequestDOList(PSTRequestDOVO pstRequestVO);
+	List<EgovMap> selectPstRequestDOList(Map<String, Object> params);
+	
+	
+	/**
+	 * 글 상세조회를 한다. PST Info
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	EgovMap getPstRequestDODetailPop(Map<String, Object> params);
+	
+	
+	/**
+	 * 글 상세조회를 한다. PST Stock List
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	List<EgovMap> getPstRequestDOStockDetailPop(Map<String, Object> params);
+	
 }
