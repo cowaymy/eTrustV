@@ -84,10 +84,11 @@
 .btn_grid a{display:inline-block; min-width:60px;height:22px; line-height:22px; padding:0 10px; background:#e0e8ec; border:1px solid #90a9b7; color:#25527c; font-size:10px; font-weight:bold; border-radius:3px; border-radius:3px; text-align:center;}
 .right_btns{text-align:right;}
 .right_btns li{display:inline-block;}
+.right_btns li select{position:relative; top:1px; min-width:50px; height:26px; line-height:22px; padding:0 0 0 4px; margin:0 13px 0 0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 .center_btns{text-align:center;}
 .center_btns li{display:inline-block;}
 table+.center_btns{padding-top:15px;}
-.grid_wrap{height:500px; margin:5px 0 20px 0;}
+.grid_wrap{margin:5px 0 20px 0;}
 .grid_wrap.h220{height:220px;}
 
 /* 검색 영역 */
