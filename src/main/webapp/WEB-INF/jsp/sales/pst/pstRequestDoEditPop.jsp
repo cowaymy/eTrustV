@@ -30,7 +30,7 @@
 <div id="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST Request Info</h1>
+<h1>PST Request Info Edit</h1>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
