@@ -15,16 +15,15 @@ var mstColumnLayout =
     [ 
         {    
             dataField : "codeMasterId",
-            headerText : "MASTER",
-            width : 120,
-            style : "aui-grid-user-custom-left"
-        }, {
-            dataField : "disabled",
-            headerText : "DISABLED",
+            headerText : "MASTER ID",
             width : 120
         }, {
             dataField : "codeMasterName",
             headerText : "MASTER NAME",
+            width : 200
+        }, {
+            dataField : "codeDesc",
+            headerText : "CODE DESCRIPTION",
             width : 200
         }, {
             dataField : "createName",
@@ -34,32 +33,50 @@ var mstColumnLayout =
             dataField : "crtDt",
             headerText : "CREATE DATE",
             width : 200
+        }, {
+            dataField : "disabled",
+            headerText : "DISABLED",
+            width : 120,
+            editRenderer : {
+                type : "ComboBoxRenderer",
+                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                   var list = getDisibledComboList();
+                   return list;                 
+                },
+                keyField : "id"
+            }
         }
     ];
 
-
+//{detailcode=test11, detailcodename=testD, detailcodedesc=testD, detaildisabled=N, codeMasterId=155, crtUserId=99999, updUserId=99999}
 var detailColumnLayout = 
     [ 
         {
-            dataField : "codeId",
+            dataField : "detailcodeid",
             headerText : "CODE ID",
             width : 120
         }, {
-            dataField : "code",
+            dataField : "detailcode",
             headerText : "CODE",
             width : 120
         }, {
-            dataField : "codeName",
+            dataField : "detailcodename",
             headerText : "NAME",
             width : 250
         }, {
-            dataField : "codeDesc",
+            dataField : "detailcodedesc",
             headerText : "DESCRIPTION",
             width : 250
         }, {
-            dataField : "disab",
+            dataField : "detaildisabled",
             headerText : "DISABLED",
             width : 200
+        }, {
+            dataField : "codeMasterId",
+            headerText : "CODE MASTER ID",
+            width : 200,
+            editable : false
         }
     ];
 
@@ -83,6 +100,11 @@ function fn_getMstCommCdListAjax()
         console.log("성공." + $("#crtDtFrom").val() );
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID, result);
+        AUIGrid.clearGridData(detailGridID);
+        
+        if(result != null && result.length > 0){
+        	fn_getDetailCode(myGridID, 0);
+        }
     });
 }
 
@@ -100,7 +122,7 @@ function fn_DetailGetInfo()
 function fn_setDetail(selGrdidID, rowIdx)  //cdMstId
 {     
    $("#mstCdId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "codeMasterId"));
-   $("#mstDisabled").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "disabled"));    
+   $("#mstDisabled").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "disabled"));  
 
    console.log("mstCdId: "+ $("#mstCdId").val() + " mstDisabled: " + $("#mstDisabled").val() + " codeMasterName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "codeMasterName") );                
 }
@@ -119,23 +141,46 @@ function auiCellEditignHandler(event)
     {
         console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     }
+	
 }
 
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) 
 {
- alert(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
+  alert(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
 
-// 행 추가, 삽입
+// MstGrid 행 추가, 삽입
 function addRow() 
 {
-    alert("addrow!");
-    var item = new Object();
+  var item = new Object();
+
+    item.codeMasterId  ="";
+    item.disabled      ="N";
+    item.codeMasterName =""  ;
+    item.codeDesc       ="";  
+    item.createName     ="";
+    item.crtDt          ="";
     // parameter
     // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
     // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
     AUIGrid.addRow(myGridID, item, "first");
+}
+
+function addRowDetail() 
+{
+  var item = new Object();
+
+    item.detailcodeid    ="";
+    item.detailcode      ="";
+    item.detailcodename  ="";
+    item.detailcodedesc  ="";
+    item.detaildisabled  ="N";  
+    item.codeMasterId    = $("#mstCdId").val(); 
+    // parameter
+    // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+    AUIGrid.addRow(detailGridID, item, "first");
 }
 
 //행 삭제 이벤트 핸들러
@@ -144,20 +189,125 @@ function auiRemoveRowHandler(event)
     alert (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
+//행 삭제 이벤트 핸들러
+function auiRemoveRowHandlerDetail(event) 
+{
+    alert (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
+}
+
 // 행 삭제 메소드
 function removeRow() 
 {
-    alert("removeRow: " + gSelRowIdx);    
+    alert("removeRowMst: " + gSelRowIdx);    
     AUIGrid.removeRow(myGridID,gSelRowIdx);
+}
+
+//서버로 전송.
+function fnSaveGridMap() 
+{
+/*
+      var grids = {
+              mstData : GridCommon.getEditData(myGridID)
+             ,dtlData : GridCommon.getEditData(detailGridID)
+            };
+
+Common.ajax("POST"
+         ,"/common/saveGeneralCode.do"
+         ,grids
+         ,function(result) 
+         {
+          alert("Success!");            
+          console.log("성공.");
+          console.log("data : " + result);
+         }      
+ 
+ */
+
+      Common.ajax("POST", "/common/saveGeneralCode.do",
+         GridCommon.getEditData(myGridID), function(result) {
+             alert("Success!");
+           
+             console.log("성공.");
+             console.log("data : " + result);
+             //fn_getRuleBookMngListAjax();
+         } 
+	
+	     , function(jqXHR, textStatus, errorThrown) 
+	       {
+	         try 
+	         {
+	           console.log("Fail Status : " + jqXHR.status);
+	           console.log("code : "        + jqXHR.responseJSON.code);
+	           console.log("message : "     + jqXHR.responseJSON.message);
+	           console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	         } 
+	          catch (e) 
+	         {
+	           console.log(e);
+	         }
+	         
+	         alert("Fail : " + jqXHR.responseJSON.message);
+	      }); 
+  
+
+}
+
+// 상세데이타 서버로 전송.
+function fnSaveDetailGridMap() 
+{
+      Common.ajax("POST", "/common/saveDetailCommCode.do",
+         GridCommon.getEditData(detailGridID), function(result) {
+             alert("Success!");
+           
+             console.log("성공.");
+             console.log("data : " + result);
+             //fn_getRuleBookMngListAjax();
+         } 
+    
+         , function(jqXHR, textStatus, errorThrown) 
+           {
+             try 
+             {
+               console.log("Fail Status : " + jqXHR.status);
+               console.log("code : "        + jqXHR.responseJSON.code);
+               console.log("message : "     + jqXHR.responseJSON.message);
+               console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+             } 
+              catch (e) 
+             {
+               console.log(e);
+             }
+             
+             alert("Fail : " + jqXHR.responseJSON.message);
+          }); 
+  
+
+}
+
+//Make Use_yn ComboList
+function getDisibledComboList()
+{     
+  var list =  ["N", "Y"];   
+  return list;
+}
+
+function fn_getDetailCode(myGridID, rowIndex){
+    fn_setDetail(myGridID, rowIndex);
+    fn_DetailGetInfo();
 }
 
 //AUIGrid 생성 후 반환 ID
 var myGridID, detailGridID;
 
 $(document).ready(function(){
+
+	var options = {
+			usePaging : true,
+		    useGroupingPanel : false
+	};
     
     // masterGrid 그리드를 생성합니다.
-    myGridID = createAUIGrid(mstColumnLayout,"codeMasterId");
+    myGridID = GridCommon.createAUIGrid("grid_wrap", mstColumnLayout,"codeMasterId", options);
     // AUIGrid 그리드를 생성합니다.
     
 
@@ -178,10 +328,8 @@ $(document).ready(function(){
     
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
- 
-    // detailGrid 생성
-    detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout,"codeId");
-    
+
+
     // cellClick event.
     AUIGrid.bind(myGridID, "cellClick", function( event ) 
     {
@@ -195,51 +343,54 @@ $(document).ready(function(){
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
-        fn_setDetail(myGridID, event.rowIndex);
-        fn_DetailGetInfo();
-    });
-    
-   // fn_getSampleListAjax();
+        if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
+        	|| String(event.value).length < 1)
+        {
+            alert("CodeMasterID Confirm!!");
+            return false;
+        } 
 
-});
+        //$("mstCdId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "codeMasterId"));
 
-function createAUIGrid(mstColumnLayout,_sRowIdField) {
+        $("#mstCdId").val( event.value);
+        
+        fn_getDetailCode(myGridID, event.rowIndex);
+    });    
 
-    // 그리드 속성 설정
-    var gridPros = {
-        // 페이지 설정
-        usePaging : true,               
-        pageRowCount : 30,              
-        fixedColumnCount : 1,
-        // 편집 가능 여부 (기본값 : false)
-        editable : true,                
-        // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-        enterKeyColumnBase : true,                
-        // 셀 선택모드 (기본값: singleCell)
-        selectionMode : "multipleCells",                
-        // 컨텍스트 메뉴 사용 여부 (기본값 : false)
-        useContextMenu : true,                
-        // 필터 사용 여부 (기본값 : false)
-        enableFilter : true,            
-        // 그룹핑 패널 사용
-        useGroupingPanel : false,  
-        rowIdField : _sRowIdField,              
-        // 상태 칼럼 사용
-        showStateColumn : true,                
-        // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
-        displayTreeOpen : false,                
-        noDataMessage : "출력할 데이터가 없습니다.",                
-        groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",                
-        //selectionMode : "multipleCells",
-        //rowIdField : "stkid",
-        enableSorting : true
+/***********************************************[ DETAIL GRID] ************************************************/
 
+    var dtailOptions = {
+            usePaging : true,
+            useGroupingPanel : false
     };
+ 
+    // detailGrid 생성
+    detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout,"detailcodeid", dtailOptions);
 
-    // 실제로 #grid_wrap 에 그리드 생성
-    myGridID = AUIGrid.create("#grid_wrap", mstColumnLayout, gridPros);
+    // 에디팅 시작 이벤트 바인딩
+    AUIGrid.bind(detailGridID, "cellEditBegin", auiCellEditignHandler);
+    
+    // 에디팅 정상 종료 이벤트 바인딩
+    AUIGrid.bind(detailGridID, "cellEditEnd", auiCellEditignHandler);
+    
+    // 에디팅 취소 이벤트 바인딩
+    AUIGrid.bind(detailGridID, "cellEditCancel", auiCellEditignHandler);
+    
+    // 행 추가 이벤트 바인딩 
+    AUIGrid.bind(detailGridID, "addRow", auiAddRowHandler);
+    
+    // 행 삭제 이벤트 바인딩 
+    AUIGrid.bind(detailGridID, "removeRow", auiRemoveRowHandlerDetail);
+    
+    // cellClick event.
+    AUIGrid.bind(detailGridID, "cellClick", function( event ) 
+    {
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        gSelRowIdx = event.rowIndex;
+    });
 
-}
+});   //$(document).ready
+
 </script>
 
 
@@ -253,16 +404,14 @@ function createAUIGrid(mstColumnLayout,_sRowIdField) {
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>General Code Management</h2>
-<ul class="right_opt">
-	<li><p class="btn_blue"><a href="#">Save</a></p></li>
-</ul>
 </aside><!-- title_line end -->
 
-<section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
+<section class="search_table"><!-- search_table start -->
 
 <input type ="hidden" id="mstCdId" name="mstCdId" value=""/>
 <input type ="hidden" id="mstDisabled" name="mstDisabled" value=""/>
+<input type ="hidden" id="tableGbn" name="tableGbn" value=""/>
 
 <table class="type1"><!-- table start -->
 <caption>search table</caption>
@@ -308,34 +457,25 @@ function createAUIGrid(mstColumnLayout,_sRowIdField) {
 </tbody>
 </table><!-- table end -->
 
-<!-- search -->
+<!-- MstSearch -->
 <ul class="right_btns">
 	<li><p class="btn_gray"><a onclick="fn_getMstCommCdListAjax();"><span class="search"></span>Search</a></p></li>
 </ul>
-</form>
-
 
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a onclick="removeRow();"><span class="search"></span>DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li>
 	<li><p class="btn_grid"><a onclick="addRow();"><span class="search"></span>ADD</a></p></li>
+	<li><p class="btn_grid"><a onclick="fnSaveGridMap();">Save</a></p></li>
 </ul>
 
-
-<article class="grid_wrap" style="height:350px;">
+<article class="grid_wrap">
 <!-- grid_wrap start -->
 <!-- 그리드 영역1 -->
  <div id="grid_wrap"></div>
 </article><!-- grid_wrap end -->
-
-<form id="dtailForm" method="get" action="">
-
-<input type ="hidden" id="mstCdId" name="mstCdId" value=""/>
-<input type ="hidden" id="mstDisabled" name="mstDisabled" value=""/>
 
 <ul class="right_btns">
 	<li>
@@ -343,23 +483,23 @@ function createAUIGrid(mstColumnLayout,_sRowIdField) {
 	<select id="dtailDisabled" name="dtailDisabled">
 	   <option value="" selected>All</option>
 	   <option value="1">Y</option>
-	   <option value="1">N</option>
+	   <option value="0">N</option>
 	</select>	
 	</li>
-	<li><p class="btn_grid"><a href="#"><span class="search"></span>SEARCH</a></p></li>
-	<li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li>
-	<li><p class="btn_grid"><a href="#"><span class="search"></span>ADD</a></p></li>
+	<!-- <li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>SEARCH</a></p></li> -->
+	<li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>SEARCH</a></p></li>
+	<li><p class="btn_grid"><a onclick="addRowDetail();"><span class="search"></span>ADD</a></p></li>   
+	<li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
 </ul>
 
-</form>
-<!--  detail Form -->
-
-<article class="grid_wrap" style="height:350px;"><!-- grid_wrap start -->
+<article class="grid_wrap"><!-- grid_wrap start -->
 <!--  그리드 영역2  -->
   <div id="detailGrid"></div> 
 </article><!-- grid_wrap end -->
 
+
 </section><!-- search_result end -->
+</form>
+<!--  detail Form -->
 
 </section><!-- content end -->
