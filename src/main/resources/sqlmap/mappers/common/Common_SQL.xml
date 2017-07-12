@@ -27,7 +27,7 @@
 				 CASE WHEN (CdMst.CRT_DT IS NOT NULL) THEN  TO_CHAR(CdMst.CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT, 
 				 CASE WHEN (CdMst.CRT_USER_ID IS NOT NULL) THEN CdMst.CRT_USER_ID ELSE 0 END AS CRT_USER_ID, 
 				 CASE WHEN (User1.USER_ID IS NOT NULL) THEN User1.USER_NAME ELSE '' END AS CREATE_NAME, 
-				 CASE WHEN (CdMst.DISAB IS NOT NULL) THEN CdMst.DISAB ELSE 0 END AS DISABLED, 
+				 DECODE(CASE WHEN (CdMst.DISAB IS NOT NULL) THEN CdMst.DISAB ELSE 0 END,0,'N',1,'Y','N') AS DISABLED, 
 				 CASE WHEN (CdMst.UPD_DT IS NOT NULL) THEN  TO_CHAR(CdMst.UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT, 
 				 CASE WHEN (CdMst.UPD_USER_ID IS NOT NULL) THEN CdMst.UPD_USER_ID ELSE 0 END AS UPD_USER_ID, 
 				 CASE WHEN (User2.USER_ID IS NOT NULL) THEN User2.USER_NAME ELSE '' END AS USER_NAME2    
@@ -44,14 +44,9 @@
                 <if test="cdMstDesc !=null and cdMstDesc != ''">
                     AND (UPPER(CdMst.CODE_DESC) LIKE UPPER(#{cdMstDesc})  || '%' )
                 </if>
-                <choose>
-                    <when test="cdMstDisabled !=null and cdMstDisabled != ''">
-                         AND (CdMst.DISAB = #{cdMstDisabled})
-                    </when>
-                    <otherwise>
-                         AND (CdMst.DISAB = 0)
-                    </otherwise>
-                </choose>
+                <if test="cdMstDisabled !=null and cdMstDisabled != ''">
+                    AND (CdMst.DISAB = #{cdMstDisabled})
+                </if>
                 <if test="createID !=null and createID != ''">
                     AND (User1.USER_NAME = #{createID} )
                 </if>
@@ -67,27 +62,94 @@
     
     <select id="getDetailCommonCodeList" parameterType="Map" resultType="egovMap">
 			 SELECT
-			      CODE_ID ,
+			      CODE_ID detailCodeId,
 			      CODE_MASTER_ID,
-			      CODE ,
-			      CODE_NAME,
-			      DBMS_LOB.SUBSTR (CODE_DESC, 4000) CODE_DESC,
+			      CODE detailCode,
+			      CODE_NAME detailCodeName,
+			      DBMS_LOB.SUBSTR (CODE_DESC, 4000) detailCodeDesc,
 			      CASE WHEN (CRT_DT IS NOT NULL) THEN  TO_CHAR(CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT,
 			      CASE WHEN (CRT_USER_ID IS NOT NULL) THEN CRT_USER_ID ELSE 0 END AS CRT_USER_ID,
-			      CASE WHEN (DISAB IS NOT NULL) THEN DISAB ELSE 0 END AS DISABLED, 
+			      DECODE(CASE WHEN (DISAB IS NOT NULL) THEN DISAB ELSE 0 END , 0,'N',1,'Y','N')  AS detailDisabled, 
 			      CASE WHEN (UPD_DT IS NOT NULL) THEN  TO_CHAR(UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT,
 			      CASE WHEN (UPD_USER_ID IS NOT NULL) THEN UPD_USER_ID ELSE 0 END AS UPD_USER_ID
 			      FROM SYS0013M
 			WHERE CODE_MASTER_ID = #{mstCdId} 
-			      <choose>
-                    <when test="mstDisabled !=null and mstDisabled != ''">
-                         AND DISAB = #{mstDisabled}
-                    </when>
-                    <otherwise>
-                         AND DISAB = 0   
-                    </otherwise>
-                 </choose>			  
+			    <if test="dtailDisabled !=null and dtailDisabled != ''">
+                    AND DISAB = #{dtailDisabled} 
+                </if>
 			ORDER BY CODE ASC
     </select>
+
+    <insert id="addCommCodeGrid" parameterType="Map">
+      INSERT INTO SYS0012M
+        ( CODE_MASTER_ID  /*pk*/
+         , CODE_MASTER_NAME  /*NN*/
+         , CODE_DESC  /*NN*/
+         , DISAB
+         , CRT_DT
+         , CRT_USER_ID
+         , UPD_DT
+         , UPD_USER_ID
+        )
+        VALUES
+        ( (SELECT MAX(CODE_MASTER_ID +1) CODE_MASTER_ID_SEQ FROM SYS0012M)
+         , #{codeMasterName}
+         , #{codeDesc}
+         , DECODE(#{disabled},'N',0,'Y',1,0)
+         , SYSDATE
+         , #{crtUserId}
+         , SYSDATE
+         , #{updUserId}
+         )
+    </insert>    
+    
+    <update id="updCommCodeGrid" parameterType="Map">
+		UPDATE SYS0012M
+		   SET CODE_DESC   = #{codeDesc}
+		     , DISAB       = DECODE(#{disabled},'N',0,'Y',1,0)
+		     , UPD_USER_ID = #{updUserId}
+		     , UPD_DT      = SYSDATE  
+		WHERE CODE_MASTER_ID = #{codeMasterId}
+    </update>    
+    
+    <insert id="addDetailCommCodeGrid" parameterType="Map">
+		INSERT INTO SYS0013M
+		        ( CODE_ID   
+		        , CODE_MASTER_ID   
+		        , CODE
+		        , CODE_NAME 
+		        , CODE_DESC
+		        , DISAB
+		        , CRT_DT
+		        , CRT_USER_ID
+		        , UPD_DT
+		        , UPD_USER_ID
+		        , OLD_CODE_ID
+		        )
+		VALUES
+		        ( (SELECT MAX(CODE_ID +1) FROM SYS0013M)
+		         , #{codeMasterId}
+		         , #{detailcode}
+		         , #{detailcodename}
+		         , DBMS_LOB.SUBSTR (#{detailcodedesc}, 4000) 
+		         , DECODE(#{detaildisabled},'N',0,'Y',1,0)
+		         , SYSDATE  
+		         , #{crtUserId} 
+		         , SYSDATE 
+		         , #{updUserId}
+		         , 0    
+		         )
+    </insert>    
+
+    <update id="updDetailCommCodeGrid" parameterType="Map">
+		UPDATE SYS0013M
+		   SET CODE        = #{detailcode}
+		     , CODE_NAME   = #{detailcodename}
+		     , CODE_DESC   = DBMS_LOB.SUBSTR (#{detailcodedesc}, 4000)  
+		     , DISAB       = DECODE(#{detaildisabled},'N',0,'Y',1,0)
+		     , UPD_USER_ID = #{crtUserId}
+		     , UPD_DT      = SYSDATE  
+		WHERE CODE_ID      = #{updUserId}
+    </update>    
 
 </mapper>
