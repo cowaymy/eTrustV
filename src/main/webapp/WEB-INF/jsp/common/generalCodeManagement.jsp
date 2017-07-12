@@ -32,9 +32,8 @@ var mstColumnLayout =
         }, {
             dataField : "crtDt",
             headerText : "CREATE DATE",
-            //formatDate :  "dd-mm-yyyy",//DD-MON-YYYY HH24:MI:SS
             dataType : "date",
-            formatString : "dd-mm-yyyy  tt hh:MM:ss",
+            formatString : "dd-mmm-yyyy HH:MM:ss",
             width : 200
         }, {
             dataField : "disabled",
@@ -52,7 +51,6 @@ var mstColumnLayout =
         }
     ];
 
-//{detailcode=test11, detailcodename=testD, detailcodedesc=testD, detaildisabled=N, codeMasterId=155, crtUserId=99999, updUserId=99999}
 var detailColumnLayout = 
     [ 
         {
@@ -74,13 +72,24 @@ var detailColumnLayout =
         }, {
             dataField : "detaildisabled",
             headerText : "DISABLED",
-            width : 200
+            width : 200,
+            editRenderer : 
+            {
+               type : "ComboBoxRenderer",
+               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+               listFunction : function(rowIndex, columnIndex, item, dataField) {
+                  var list = getDisibledComboList();
+                  return list;                 
+               },
+               keyField : "id"
+            }
         }, {
             dataField : "codeMasterId",
             headerText : "CODE MASTER ID",
             width : 200,
             editable : false
         }
+
     ];
 
 
@@ -189,19 +198,19 @@ function addRowDetail()
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) 
 {
-    alert (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
+    console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandlerDetail(event) 
 {
-    alert (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
+    console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 // 행 삭제 메소드
 function removeRow() 
 {
-    alert("removeRowMst: " + gSelRowIdx);    
+    console.log("removeRowMst: " + gSelRowIdx);    
     AUIGrid.removeRow(myGridID,gSelRowIdx);
 }
 
@@ -227,16 +236,15 @@ Common.ajax("POST"
  */
 
       Common.ajax("POST", "/common/saveGeneralCode.do",
-         GridCommon.getEditData(myGridID), function(result) {
-             alert("Success!");
-           
-             console.log("성공.");
-             console.log("data : " + result);
-             //fn_getRuleBookMngListAjax();
+         GridCommon.getEditData(myGridID)
+       , function(result) 
+         {
+            alert("Success!");
+            console.log("성공.");
+            console.log("data : " + result);
          } 
-	
-	     , function(jqXHR, textStatus, errorThrown) 
-	       {
+      , function(jqXHR, textStatus, errorThrown) 
+	    {
 	         try 
 	         {
 	           console.log("Fail Status : " + jqXHR.status);
@@ -250,7 +258,7 @@ Common.ajax("POST"
 	         }
 	         
 	         alert("Fail : " + jqXHR.responseJSON.message);
-	      }); 
+	     }); 
   
 
 }
@@ -338,7 +346,6 @@ $(document).ready(function(){
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
-       // fn_setDetail(myGridID, event.rowIndex);
     });
 
  // 셀 더블클릭 이벤트 바인딩
@@ -353,8 +360,6 @@ $(document).ready(function(){
             return false;
         } 
 
-        //$("mstCdId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "codeMasterId"));
-
         $("#mstCdId").val( event.value);
         
         fn_getDetailCode(myGridID, event.rowIndex);
@@ -362,10 +367,11 @@ $(document).ready(function(){
 
 /***********************************************[ DETAIL GRID] ************************************************/
 
-    var dtailOptions = {
+    var dtailOptions = 
+        {
             usePaging : true,
             useGroupingPanel : false
-    };
+        };
  
     // detailGrid 생성
     detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout,"detailcodeid", dtailOptions);
