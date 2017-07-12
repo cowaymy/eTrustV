@@ -171,7 +171,8 @@ function fnSaveDetailGridMap()
   Common.ajax("POST", "/common/saveDetailCommCode.do"
 	     , GridCommon.getEditData(detailGridID), function(result) 
 	       {
-          alert("Success!");           
+          alert("Success!");      
+          fn_getMstCommCdListAjax() ;     
           console.log("성공.");
           console.log("data : " + result);
          } 
@@ -296,7 +297,6 @@ var myGridID, detailGridID;
 
 $(document).ready(function()
 {
-
 	var options = {
 								  usePaging : true,
 								  useGroupingPanel : false
@@ -339,11 +339,11 @@ $(document).ready(function()
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
-        	|| String(event.value).length < 1)
-        {
-            alert("CodeMasterID Confirm!!");
-            return false;
-        } 
+        	  || String(event.value).length < 1)
+		        {
+		            alert("CodeMasterID Confirm!!");
+		            return false;
+		        } 
 
         $("#mstCdId").val( event.value);
         
