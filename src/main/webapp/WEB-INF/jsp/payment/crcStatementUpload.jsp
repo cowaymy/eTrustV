@@ -154,17 +154,17 @@ function fn_saveGridMap(){
 	
 	//필수항목 입력여부	
 	if($("#crcStateRefDt").val() == ''){
-		alert("Please Enter Reference Date");
+		alert("* Reference Date are composulary field . ");
 		return;
 	}
 	
 	if($("#crcStateCardAccount").val() == ''){
-	     alert("Please Choose Card Account");
+	     alert("* CRC Bank Account Code are composulary field . ");
 	     return;
 	 }
 	
 	 if($("#crcStateAccId").val() == ''){
-	     alert("Please Choose Account No.");
+	     alert("* Account Code are composulary field . ");
 	     return;
 	 }
 	 
@@ -188,8 +188,11 @@ function fn_saveGridMap(){
 	
     //Ajax 호출
     Common.ajax("POST", "/payment/updateCRCStatementUpload.do", data, function(result) {
-        alert(result.message);
+        Common.setMsg(result.message);  
         resetUpdatedItems(); // 초기화
+        
+        
+        
     },  function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
@@ -327,6 +330,11 @@ function resetUpdatedItems() {
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
+        
+         <!-- bottom_msg_box start -->
+        <aside class="bottom_msg_box">            
+        </aside>
+        <!-- bottom_msg_box end -->
     
     </section>
     <!-- search_result end -->

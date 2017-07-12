@@ -77,7 +77,7 @@ function fn_setEditProp (){
 // 수정 처리
 function fn_saveGridMap(){
     Common.ajax("POST", "/payment/updateCRCStatementTranList.do", GridCommon.getEditData(myGridID), function(result) {
-    	alert("UPDATE SUCCESS");
+    	Common.setMsg("UPDATE SUCCESS");    	
         resetUpdatedItems(); // 초기화
         
         fn_getCRCStatementListAjax();
@@ -232,6 +232,11 @@ function resetUpdatedItems() {
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
+        
+        <!-- bottom_msg_box start -->
+        <aside class="bottom_msg_box">            
+        </aside>
+        <!-- bottom_msg_box end -->
 
     </section>
     <!-- search_result end -->
