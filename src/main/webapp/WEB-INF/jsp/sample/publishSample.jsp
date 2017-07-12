@@ -12,7 +12,7 @@ $(function(){
 	doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo');	
 
 	// AUIGrid 그리드를 생성합니다.
-    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
+    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, null, {pageRowCount : 10});
 
     fn_getSampleListAjax();
     
@@ -112,11 +112,12 @@ function fn_delete(){
 	Common.setMsg("<spring:message code='sys.btn.delete'/>");
 }
 
-// 동작하지 않음.
-function fn_changeCount(){
-	AUIGrid.setProp(myGridID, { "pageRowCount" : "5"} );
-	AUIGrid.clearGridData(myGridID);
-	alert(1);
+// 페이징 당 갯수 변경.
+function fn_changeCount(obj){
+	//var allData = AUIGrid.getGridData(myGridID);
+	AUIGrid.destroy(myGridID);
+	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, null, {pageRowCount : $(obj).val()});
+	//AUIGrid.setGridData(myGridID, allData);
 	fn_getSampleListAjax();
 }
 
@@ -166,10 +167,10 @@ function fn_changeCount(){
 	    </td>
 	    <th scope="row">COUNT PER PAGE</th>
 	    <td>
-	    <select id="countPerPage" class="w100p" onchange="javascript:fn_changeCount();">
+	    <select id="countPerPage" class="w100p" onchange="javascript:fn_changeCount(this);">
+	        <option value="10">10</option>
 	        <option value="20">20</option>
 	        <option value="30">30</option>
-	        <option value="40">40</option>
 	    </select>
 	    </td>
 	</tr>
