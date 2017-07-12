@@ -6,3 +6,8 @@ var monthOptions = {
 };
 
 $(".j_date2").monthpicker(monthOptions);
+
+
+<div class="auto_file"><!-- auto_file start -->
+    <input type="file" title="file add" />
+    </div><!-- auto_file end -->
