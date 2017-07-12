@@ -159,7 +159,7 @@ function auiCellEditignHandler(event)
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) 
 {
-  alert(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
+  console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
 
 // MstGrid 행 추가, 삽입
