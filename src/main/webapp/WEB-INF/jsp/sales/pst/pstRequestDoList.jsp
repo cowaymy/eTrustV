@@ -309,7 +309,7 @@
 		<tr>
 		    <th scope="row">PSO No</th>
 		    <td><input type="text" title="PSO No" id="pstSalesOrdId" name="pstSalesOrdId" placeholder="PSO Number" class="w100p" /></td>
-		    <th scope="row">PSDO Status</th>
+		    <th scope="row">PSO Status</th>
 		    <td>
 		    <dl class="fake_select w100p">
 		        <dt><input type="text" readonly="readonly" /></dt>
