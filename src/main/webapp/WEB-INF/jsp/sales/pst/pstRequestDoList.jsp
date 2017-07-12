@@ -22,23 +22,32 @@
     //AUIGrid 생성 후 반환 ID
     var myGridID;
     
+    var gridValue;
+    
+    var option = {
+            width : "1000px", // 창 가로 크기
+            height : "600px" // 창 세로 크기
+    };
+    
     $(document).ready(function(){
     
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-        var option = {
-                width : "1000px", // 창 가로 크기
-                height : "600px" // 창 세로 크기
-        };
+        AUIGrid.setSelectionMode(myGridID, "singleRow");
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 //            alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId"));
             Common.popupWin("searchForm", "/sales/pst/getPstRequestDODetailPop.do?isPop=true&pstSalesOrdId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId"), option);
         });
+        
+     // 셀 더블클릭 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellClick", function(event) {
+            gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId");
+        });
     
-        fn_selectPstRequestDOListAjax();
+        //fn_selectPstRequestDOListAjax();
     
     
     });
@@ -52,25 +61,30 @@
                 dataField : "pstRefNo",
                 headerText : "PSO No",
                 width : 140,
+                editable : false,
                 style: 'left_style'
             }, {
                 dataField : "dealerName",
                 headerText : "Dealer Name",
+                editable : false,
                 style: 'left_style'
             }, {
                 dataField : "pstCustPo",
                 headerText : "Customer PO",
                 width : 170,
+                editable : false,
                 style: 'left_style'
             }, {
                 dataField : "c1",
                 headerText : "PSO Date",
                 width : 160,
+                editable : false,
                 style: 'left_style'
             }, {
                 dataField : "code1",
                 headerText : "PSO Status",
                 width : 170,
+                editable : false,
                 style: 'left_style'
             }, {
                 dataField : "pstSalesOrdId",
@@ -126,6 +140,10 @@
             AUIGrid.setGridData(myGridID, result);
         }
         );
+    }
+    
+    function fn_goPstInfoEdit(){
+    	Common.popupWin("searchForm", "/sales/pst/getPstRequestDOEditPop.do?isPop=true&pstSalesOrdId=" + gridValue, option);
     }
 </script>
 </head>
@@ -269,7 +287,7 @@
 	<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 	<h2>PST Request Do List</h2>
 	<ul class="right_opt">
-	    <li><p class="btn_blue"><a href="#">EDIT</a></p></li>
+	    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goPstInfoEdit()">EDIT</a></p></li>
 	    <li><p class="btn_blue"><a href="#">NEW</a></p></li>
 	</ul>
 	</aside><!-- title_line end -->
@@ -349,25 +367,15 @@
 	    <dt>Link</dt>
 	    <dd>
 	    <ul class="btns">
-	        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-	        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+	        <li><p class="link_btn"><a href="#">Do Request(Warehouse)</a></p></li>
+	        <li><p class="link_btn"><a href="#">View Report</a></p></li>
+	        <li><p class="link_btn type2"><a href="#">View Dealer</a></p></li>
 	    </ul>
-	    <ul class="btns">
-	        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-	        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-	        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-	        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-	        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-	        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-	        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+<!--
+ 	    <ul class="btns">
 	        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
 	    </ul>
+ -->
 	    <p class="hide_btn"><a href="#"><img src="image/btn_link_close.gif" alt="hide" /></a></p>
 	    </dd>
 	</dl>

@@ -39,7 +39,7 @@
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>PST Request Info</h1>
 			<ul class="right_opt">
-				<li><p class="btn_blue2"><a href="#">COPY</a></p></li>
+<!-- 				<li><p class="btn_blue2"><a href="#">COPY</a></p></li> -->
 				<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goPstInfoEdit()">EDIT</a></p></li>
 				<li><p class="btn_blue2"><a href="#">NEW</a></p></li>
 				<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>

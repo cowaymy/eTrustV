@@ -22,6 +22,10 @@
     function fn_goPstStockList(){
         location.href = "/sales/pst/getPstRequestDOStockEditPop.do?isPop=true&pstSalesOrdId=${pstInfo.pstSalesOrdId}&pstRefNo=${pstInfo.pstRefNo}";
     }
+    
+    function fn_close(){
+        window.close();
+    }
 
 </script>
 </head>
@@ -31,6 +35,13 @@
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>PST Request Info Edit</h1>
+
+<ul class="right_opt">
+<!--    <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
+    <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
+    <li><p class="btn_blue2"><a href="#">NEW</a></p></li>-->
+    <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_close()">CLOSE</a></p></li>
+</ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->

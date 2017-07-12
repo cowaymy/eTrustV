@@ -26,6 +26,8 @@
 
     $(document).ready(function(){
 
+    	AUIGrid.setSelectionMode(myGridID, "singleRow");
+    	
         // AUIGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
 
@@ -97,10 +99,10 @@
 	<header class="pop_header"><!-- pop_header start -->
 	<h1>PST Request Info</h1>
 	<ul class="right_opt">
-	    <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
+<!-- 	    <li><p class="btn_blue2"><a href="#">COPY</a></p></li> -->
 	    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goPstStockEdit()">EDIT</a></p></li>
 	    <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
-	    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>
+ 	    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>
 	</ul>
 	</header><!-- pop_header end -->
 	

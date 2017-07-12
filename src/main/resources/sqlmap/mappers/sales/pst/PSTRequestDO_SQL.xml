@@ -285,7 +285,27 @@
 		           LEFT OUTER
 		           JOIN SYS0028M T8
 		             ON T8.WH_LOC_BRNCH_ID = T6.DEALER_BRNCH_ID
-		          WHERE (T1.PST_STUS_ID IN (1,4,10))
+		          WHERE 1=1
+		            <if test="pstStusId1 != null and pstStusId4 != null" >
+		              <if test="pstStusId10 != null" >
+		              AND T1.PST_STUS_ID IN (#{pstStusId1},#{pstStusId4},#{pstStusId10})
+		              </if>
+		            </if>
+		            <if test="pstStusId1 != null and pstStusId4 != null" >
+		              <if test="pstStusId10 == null" >
+                      AND T1.PST_STUS_ID IN (#{pstStusId1},#{pstStusId4})
+                      </if>
+                    </if>
+                    <if test="pstStusId4 != null and pstStusId10 != null" >
+                      <if test="pstStusId1 == null" >
+                      AND T1.PST_STUS_ID IN (#{pstStusId4},#{pstStusId10})
+                      </if>
+                    </if>
+                    <if test="pstStusId1 != null and pstStusId10 != null" >
+                      <if test="pstStusId4 == null" >
+                      AND T1.PST_STUS_ID IN (#{pstStusId1},#{pstStusId10})
+                      </if>
+                    </if>
 		            <if test="createStDate != null and createStDate != ''" >
 		              <if test="createEnDate == null or createEnDate == ''" >
 		                <![CDATA[
