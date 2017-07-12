@@ -6,6 +6,8 @@ package com.coway.trust.biz.sales.pst;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.web.sales.pst.PSTStockListGridForm;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
@@ -45,5 +47,6 @@ public interface PSTRequestDOService {
 	 * @exception Exception
 	 */
 	List<EgovMap> getPstRequestDOStockDetailPop(Map<String, Object> params);
-	
+
+	public void updateStock(List<PSTSalesDVO> pstSalesDVOList, PSTSalesMVO pstSalesMVO);
 }

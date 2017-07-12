@@ -177,16 +177,46 @@
 			</if>
 	</select>
 
-    <update id="updateSAL0062D"><!--PSTSalesM-->
+    <update id="updatePstSalesM"><!--PSTSalesM-->
         UPDATE SAL0062D
-           SET PST_DEALER_MAIL_CNT_ID   = #{pstDealerMailCntId}
-             , PST_DEALER_DELVRY_CNT_ID = #{pstDealerDelvryCntId}
-             , PST_DEALER_MAIL_ADD_ID   = #{pstDealerMailAddId}
-             , PST_DEALER_DELVRY_ADD_ID = #{pstDealerDelvryAddId}
-             , PST_TOT_AMT              = #{pstTotAmt}
+           SET PST_TOT_AMT              = #{pstTotAmt}
              , PST_STUS_ID              = #{pstStusId}
          WHERE PST_SALES_ORD_ID         = #{pstSalesOrdId}
     </update>
+    
+    <update id="updatePstSalesD"><!--PSTSalesD-->
+        UPDATE SAL0063D
+           SET PST_ITM_PRC      = #{pstItmPrc}
+             , PST_ITM_TOT_PRC  = #{pstItmTotPrc}
+             , PST_ITM_CAN_QTY  = #{pstItmCanQty}
+             , PST_ITM_BAL_QTY  = #{pstItmBalQty}
+         WHERE PST_ITM_ID       = #{pstItmId}
+    </update>
+    
+    <insert id="insertPstLog"><!--PSTLog-->
+        INSERT
+          INTO SAL0061D
+             ( PST_TRNSIT_ID
+             , PST_SALES_ORD_ID
+             , PST_STOCK_ID
+             , PST_STOCK_REM
+             , PST_QTY
+             , PST_TYPE_ID
+             , PST_REF_NO
+             , CRT_DT
+             , CRT_USER_ID)
+        VALUES
+             ( (SELECT MAX(PST_TRNSIT_ID)+1 FROM SAL0061D)
+             , #{pstSalesOrdId}
+             , #{pstStockId}
+             , ' '
+         <!--, #{pstStockRem}-->
+             , #{pstQty}
+             , #{pstTypeId}
+             , #{pstRefNo}
+             , SYSDATE
+             , #{crtUserId})
+     </insert>
     
     <select id="selectPstRequestDOList" parameterType="Map" resultType="egovMap">
 		SELECT T.PST_SALES_ORD_ID AS PST_SALES_ORD_ID
@@ -318,7 +348,8 @@
     </select>
     
     <select id="getPstRequestDOStockDetailPop" parameterType="Map" resultType="egovMap">
-        SELECT T1.PST_SALES_ORD_ID AS PST_SALES_ORD_ID
+        SELECT T1.PST_ITM_ID
+             , T1.PST_SALES_ORD_ID AS PST_SALES_ORD_ID
 		     , T1.PST_ITM_STK_ID AS PST_ITM_STK_ID
 		     , T1.PST_ITM_PRC AS PST_ITM_PRC
 		     , T1.CRT_DT AS C1
@@ -328,6 +359,7 @@
 		     , T1.PST_ITM_DO_QTY  AS PST_ITM_DO_QTY
 		     , T1.PST_ITM_CAN_QTY AS PST_ITM_CAN_QTY
 		     , T1.PST_ITM_BAL_QTY AS PST_ITM_BAL_QTY
+		     , T1.PST_ITM_TOT_PRC
 		     , T1.PST_ITM_TOT_PRC *  CAST( T1.PST_ITM_BAL_QTY AS float) AS C3
 		  FROM SAL0063D T1
 		  LEFT OUTER

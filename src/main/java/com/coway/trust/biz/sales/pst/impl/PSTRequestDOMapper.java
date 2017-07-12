@@ -18,7 +18,11 @@ package com.coway.trust.biz.sales.pst.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.pst.PSTLogVO;
 import com.coway.trust.biz.sales.pst.PSTRequestDOVO;
+import com.coway.trust.biz.sales.pst.PSTSalesDVO;
+import com.coway.trust.biz.sales.pst.PSTSalesMVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -74,4 +78,25 @@ public interface PSTRequestDOMapper {
 	 */
 	List<EgovMap> getPstRequestDOStockDetailPop(Map<String, Object> params);
 
+	/**
+	 * 글을 수정한다.
+	 * 
+	 * @param vo
+	 *            - 수정할 정보가 담긴 SampleVO
+	 * @return void형
+	 * @exception Exception
+	 */
+	void updatePstSalesM(PSTSalesMVO pstSalesMVO);
+	
+	/**
+	 * 글을 수정한다.
+	 * 
+	 * @param vo
+	 *            - 수정할 정보가 담긴 SampleVO
+	 * @return void형
+	 * @exception Exception
+	 */
+	void updatePstSalesD(PSTSalesDVO pstSalesDVO);
+	
+	void insertPstLog(PSTLogVO pstLogVO);
 }
