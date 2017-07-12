@@ -24,7 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -56,4 +58,166 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	public 	List<EgovMap> getDetailCommonCodeList(Map<String, Object> params) {
 		return commonMapper.getDetailCommonCodeList(params);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public int addCommCodeGrid(List<Object> addList) 
+	{
+		//HttpSession session = sessionHandler.getCurrentSession();
+		int user=99999;
+		
+		/*if(session != null){
+			user = session.getId();
+			
+		}*/
+		
+		logger.debug("Add_Size: " + addList.size());
+		
+		for(Object obj : addList)
+		{
+			
+			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
+			((Map<String, Object>) obj).put("crtUserId", user);
+			((Map<String, Object>) obj).put("updUserId", user);
+			
+			logger.debug(" InsertMstCommCd ");
+			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
+			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
+			logger.debug(" codeMasterName : {}", ((Map<String, Object>) obj).get("codeMasterName"));
+			logger.debug(" codeDesc : {}", ((Map<String, Object>) obj).get("codeDesc"));
+			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));	
+			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));	
+		
+			commonMapper.addCommCodeGrid((Map<String, Object>) obj);
+		}
+		
+		return 0;
+	}
+
+	@Override
+	public int udtCommCodeGrid(List<Object> udtList) 
+	{
+		int user=99999;
+		for(Object obj : udtList){
+			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
+			((Map<String, Object>) obj).put("crtUserId", user);
+			((Map<String, Object>) obj).put("updUserId", user);
+			
+			logger.debug(" update ");
+			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
+			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
+			logger.debug(" codeMasterName : {}", ((Map<String, Object>) obj).get("codeMasterName"));
+			logger.debug(" codeDesc : {}", ((Map<String, Object>) obj).get("codeDesc"));
+			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));	
+			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));	
+			
+			commonMapper.updCommCodeGrid((Map<String, Object>) obj);
+		}
+		return 0;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int addDetailCommCodeGrid(List<Object> addList) 
+	{
+		//HttpSession session = sessionHandler.getCurrentSession();
+		int user=99999;
+		
+		/*if(session != null){
+			user = session.getId();
+			
+		}*/
+		
+		logger.debug("Detail_Add_Size: " + addList.size());
+		
+		for(Object obj : addList)
+		{
+			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
+			((Map<String, Object>) obj).put("crtUserId", user);
+			((Map<String, Object>) obj).put("updUserId", user);
+			
+			//{detailcodeid=1D79D7B5-A35F-77D5-CF91-35F79447E439, detailcode=test11, detailcodename=testD, detailcodedesc=testD, detaildisabled=N, codeMasterId=155, crtUserId=99999, updUserId=99999}  		
+			logger.debug(" [[Insert Deatail]] ");
+			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
+			logger.debug(" detailcode : {}", ((Map<String, Object>) obj).get("detailcode"));
+			logger.debug(" detailcodename : {}", ((Map<String, Object>) obj).get("detailcodename"));
+			logger.debug(" detailcodedesc : {}", ((Map<String, Object>) obj).get("detailcodedesc"));
+			logger.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
+			logger.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));	
+			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));	
+			
+			commonMapper.addDetailCommCodeGrid((Map<String, Object>) obj);
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	public int udtDetailCommCodeGrid(List<Object> udtList) 
+	{
+		int user=99999;
+		for(Object obj : udtList){
+			((Map<String, Object>) obj).put("crtUserId", user);
+			((Map<String, Object>) obj).put("updUserId", user);
+			
+			logger.debug(" update_Detail ");
+			logger.debug(" detailcode : {}", ((Map<String, Object>) obj).get("detailcode"));
+			logger.debug(" detailcodename : {}", ((Map<String, Object>) obj).get("detailcodename"));
+			logger.debug(" detailcodedesc : {}", ((Map<String, Object>) obj).get("detailcodedesc"));
+			logger.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
+			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));	
+			logger.debug(" detailcodeid : {}", ((Map<String, Object>) obj).get("detailcodeid"));	
+			
+			commonMapper.updDetailCommCodeGrid((Map<String, Object>) obj);
+		}
+		return 0;
+	}
+
+	@Override
+	public void saveCodes(Map<String, Object> params) 
+	{
+		SessionVO sessionVO = (SessionVO) params.get(AppConstants.SESSION_INFO);
+		Map<String, List<Object>> mstList = (Map<String, List<Object>>)params.get("mstData");
+		Map<String, List<Object>> dtlList = (Map<String, List<Object>>)params.get("dtlData");
+		
+		logger.debug("mstList_Size: " + mstList.size() + "dtlList_Size: " + dtlList.size());
+		
+		List<Object> mstUdtList = mstList.get(AppConstants.AUIGrid_UPDATE); // Get gride UpdateList
+		List<Object> mstAddList = mstList.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		//List<Object> mstDelList = mstList.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
+		
+		List<Object> dtlUdtList = dtlList.get(AppConstants.AUIGrid_UPDATE); // Get gride UpdateList
+		List<Object> dtlAddList = dtlList.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		//List<Object> dtlDelList = dtlList.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList		
+		
+		mstAddList.forEach(list -> {
+			Map<String, Object> map = (Map<String, Object>)list;
+			map.put("crtUserId", sessionVO.getId());
+			map.put("updUserId", sessionVO.getId());
+			commonMapper.addCommCodeGrid(map);
+		});
+		
+		mstUdtList.forEach(list -> {
+			Map<String, Object> map = (Map<String, Object>)list;
+			map.put("crtUserId", sessionVO.getId());
+			map.put("updUserId", sessionVO.getId());
+			commonMapper.updCommCodeGrid(map);
+		});
+		
+		dtlAddList.forEach(list -> {
+			Map<String, Object> map = (Map<String, Object>)list;
+			map.put("crtUserId", sessionVO.getId());
+			map.put("updUserId", sessionVO.getId());
+			commonMapper.addDetailCommCodeGrid(map);
+		});
+		
+		dtlUdtList.forEach(list -> {
+			Map<String, Object> map = (Map<String, Object>)list;
+			map.put("crtUserId", sessionVO.getId());
+			map.put("updUserId", sessionVO.getId());
+			commonMapper.updDetailCommCodeGrid(map);
+		});
+		
+	}
+	
 }

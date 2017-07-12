@@ -30,4 +30,13 @@ public interface CommonMapper {
 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params);
 	
 	List<EgovMap> getDetailCommonCodeList(Map<String, Object> params);
+	
+    int addCommCodeGrid(Map<String, Object> addList );
+    
+    int updCommCodeGrid(Map<String, Object> updateList);
+    
+    int addDetailCommCodeGrid(Map<String, Object> addList );
+    
+    int updDetailCommCodeGrid(Map<String, Object> updateList);
+    
 }
