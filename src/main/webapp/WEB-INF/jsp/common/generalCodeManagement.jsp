@@ -107,27 +107,91 @@ function fn_multiCombo()
 
 function fn_getMstCommCdListAjax() 
 {        
-    Common.ajax("GET", "/common/selectMstCodeList.do", $("#MainForm").serialize(), function(result) 
-    {
-        console.log("성공." + $("#crtDtFrom").val() );
-        console.log("data : " + result);
-        AUIGrid.setGridData(myGridID, result);
-        AUIGrid.clearGridData(detailGridID);
-        
-        if(result != null && result.length > 0){
-        	fn_getDetailCode(myGridID, 0);
-        }
-    });
+  Common.ajax("GET", "/common/selectMstCodeList.do"
+  	   , $("#MainForm").serialize()
+  	   , function(result) 
+	     {
+	        console.log("성공." + $("#crtDtFrom").val() );
+	        console.log("data : " + result);
+	        AUIGrid.setGridData(myGridID, result);
+	        AUIGrid.clearGridData(detailGridID);
+	        
+	        if(result != null && result.length > 0)
+		      {
+	        	fn_getDetailCode(myGridID, 0);
+	        }
+	     });
 }
 
 function fn_DetailGetInfo()
 {
-   Common.ajax("GET", "/common/selectDetailCodeList.do", $("#MainForm").serialize(), function(result) 
-   {
-       console.log("성공.");
-       console.log("data : " + result);
-       AUIGrid.setGridData(detailGridID, result);
-   });
+   Common.ajax("GET", "/common/selectDetailCodeList.do"
+		    , $("#MainForm").serialize()
+		    , function(result) 
+			   {
+			       console.log("성공.");
+			       console.log("data : " + result);
+			       AUIGrid.setGridData(detailGridID, result);
+			   });
+}
+
+// 마스터저장 서버 전송.
+function fnSaveGridMap() 
+{
+  Common.ajax("POST", "/common/saveGeneralCode.do"
+		    , GridCommon.getEditData(myGridID)
+		    , function(result) 
+		     {
+		        alert("Success!");
+		        fn_getMstCommCdListAjax() ;
+		        
+		        console.log("성공.");
+		        console.log("data : " + result);
+		     } 
+		   , function(jqXHR, textStatus, errorThrown) 
+	      {
+	        try 
+		      {
+		        console.log("Fail Status : " + jqXHR.status);
+		        console.log("code : "        + jqXHR.responseJSON.code);
+		        console.log("message : "     + jqXHR.responseJSON.message);
+		        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+		      } 
+		      catch (e) 
+		      {
+		        console.log(e);
+		      }
+	        alert("Fail : " + jqXHR.responseJSON.message);
+	      }); 
+}
+
+// 상세데이타 서버로 전송.
+function fnSaveDetailGridMap() 
+{
+  Common.ajax("POST", "/common/saveDetailCommCode.do"
+	     , GridCommon.getEditData(detailGridID), function(result) 
+	       {
+          alert("Success!");           
+          console.log("성공.");
+          console.log("data : " + result);
+         } 
+
+       , function(jqXHR, textStatus, errorThrown) 
+         {
+	          try 
+	          {
+	            console.log("Fail Status : " + jqXHR.status);
+	            console.log("code : "        + jqXHR.responseJSON.code);
+	            console.log("message : "     + jqXHR.responseJSON.message);
+	            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	          } 
+	          catch (e) 
+	          {
+	            console.log(e);
+	          }
+         
+          alert("Fail : " + jqXHR.responseJSON.message);
+        }); 
 }
 
 //컬럼 선택시 상세정보 세팅.
@@ -214,87 +278,6 @@ function removeRow()
     AUIGrid.removeRow(myGridID,gSelRowIdx);
 }
 
-//서버로 전송.
-function fnSaveGridMap() 
-{
-/*
-      var grids = {
-              mstData : GridCommon.getEditData(myGridID)
-             ,dtlData : GridCommon.getEditData(detailGridID)
-            };
-
-Common.ajax("POST"
-         ,"/common/saveGeneralCode.do"
-         ,grids
-         ,function(result) 
-         {
-          alert("Success!");            
-          console.log("성공.");
-          console.log("data : " + result);
-         }      
- 
- */
-
-      Common.ajax("POST", "/common/saveGeneralCode.do",
-         GridCommon.getEditData(myGridID)
-       , function(result) 
-         {
-            alert("Success!");
-            console.log("성공.");
-            console.log("data : " + result);
-         } 
-      , function(jqXHR, textStatus, errorThrown) 
-	    {
-	         try 
-	         {
-	           console.log("Fail Status : " + jqXHR.status);
-	           console.log("code : "        + jqXHR.responseJSON.code);
-	           console.log("message : "     + jqXHR.responseJSON.message);
-	           console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	         } 
-	          catch (e) 
-	         {
-	           console.log(e);
-	         }
-	         
-	         alert("Fail : " + jqXHR.responseJSON.message);
-	     }); 
-  
-
-}
-
-// 상세데이타 서버로 전송.
-function fnSaveDetailGridMap() 
-{
-      Common.ajax("POST", "/common/saveDetailCommCode.do",
-         GridCommon.getEditData(detailGridID), function(result) {
-             alert("Success!");
-           
-             console.log("성공.");
-             console.log("data : " + result);
-             //fn_getRuleBookMngListAjax();
-         } 
-    
-         , function(jqXHR, textStatus, errorThrown) 
-           {
-             try 
-             {
-               console.log("Fail Status : " + jqXHR.status);
-               console.log("code : "        + jqXHR.responseJSON.code);
-               console.log("message : "     + jqXHR.responseJSON.message);
-               console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-             } 
-              catch (e) 
-             {
-               console.log(e);
-             }
-             
-             alert("Fail : " + jqXHR.responseJSON.message);
-          }); 
-  
-
-}
-
 //Make Use_yn ComboList
 function getDisibledComboList()
 {     
@@ -302,7 +285,8 @@ function getDisibledComboList()
   return list;
 }
 
-function fn_getDetailCode(myGridID, rowIndex){
+function fn_getDetailCode(myGridID, rowIndex)
+{
     fn_setDetail(myGridID, rowIndex);
     fn_DetailGetInfo();
 }
@@ -310,12 +294,13 @@ function fn_getDetailCode(myGridID, rowIndex){
 //AUIGrid 생성 후 반환 ID
 var myGridID, detailGridID;
 
-$(document).ready(function(){
+$(document).ready(function()
+{
 
 	var options = {
-			usePaging : true,
-		    useGroupingPanel : false
-	};
+								  usePaging : true,
+								  useGroupingPanel : false
+								};
     
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("grid_wrap", mstColumnLayout,"codeMasterId", options);
