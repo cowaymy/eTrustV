@@ -10,13 +10,13 @@
 <meta charset="utf-8"/>
 <meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
 <title>eTrust system</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/master.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/common.css" />
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>
+<link rel="stylesheet" type="text/css" href="css/master.css" />
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
 
 <script type="text/javaScript" language="javascript">
 
@@ -35,8 +35,6 @@
         fn_getPstStockListAjax();
 
         //AUIGrid.setGridData(myGridID, result);
-
-
     });
     
     // AUIGrid 칼럼 설정
@@ -102,7 +100,7 @@
             fn_getPstStockListAjax();
           //resetUpdatedItems(); // 초기화
             
-          console.log("PST info successfully updated.");
+            console.log("PST info successfully updated.");
             console.log("data : " + result);
             
         },  function(jqXHR, textStatus, errorThrown) {
@@ -128,14 +126,14 @@
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>PST Request Info Edit</h1>
-<!--
+
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
--->
+
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
