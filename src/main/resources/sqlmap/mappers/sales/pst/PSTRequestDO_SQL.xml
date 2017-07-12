@@ -229,7 +229,6 @@
 		     , T.PST_DEALER_ID AS PST_DEALER_ID
 		     , T.PIC AS PIC
 		     , T.PST_REF_NO AS PST_REF_NO
-		     , T.PST_REM AS PST_REM
 		     , T.PST_STUS_ID AS PST_STUS_ID
 		     , T.PST_DEALER_MAIL_ADD_ID AS PST_DEALER_MAIL_ADD_ID
 		     , T.PST_TOT_AMT AS PST_TOT_AMT
@@ -252,7 +251,6 @@
 		              , T1.PST_CUR_RATE AS PST_CUR_RATE
 		              , T1.PST_CUR_TYPE_ID AS PST_CUR_TYPE_ID
 		              , T1.PST_TOT_AMT AS PST_TOT_AMT
-		              , T1.PST_REM AS PST_REM
 		              , T1.PST_STUS_ID AS PST_STUS_ID
 		              , T1.CRT_USER_ID AS CRT_USER_ID
 		              , T1.PIC AS PIC
@@ -288,10 +286,43 @@
 		           JOIN SYS0028M T8
 		             ON T8.WH_LOC_BRNCH_ID = T6.DEALER_BRNCH_ID
 		          WHERE (T1.PST_STUS_ID IN (1,4,10))
-		            AND TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') BETWEEN '2017-04-01 00:00:00' AND '2017-07-31 00:00:00'
+		            <if test="createStDate != null and createStDate != ''" >
+		              <if test="createEnDate == null or createEnDate == ''" >
+		                <![CDATA[
+                        AND TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') >= #{createStDate}
+                        ]]>
+                      </if>
+                    </if>
+                    <if test="createEnDate != null and createEnDate != ''" >
+                      <if test="createStDate == null or createStDate == ''" >
+                        <![CDATA[
+                        AND TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') <= #{createStDate}
+                        ]]>
+                      </if>
+                    </if>
+                    <if test="createStDate != null and createEnDate != null" >
+                        <if test="createStDate != '' and createEnDate != ''" >
+                        AND TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') BETWEEN #{createStDate} AND #{createEnDate}
+                        </if>
+                    </if>
 		            <if test="pstSalesOrdId != null and pstSalesOrdId != ''">
 		                AND PST_SALES_ORD_ID = #{pstSalesOrdId}
 		            </if>
+		            <if test="pstDealerId != null and pstDealerId != ''">
+                        AND PST_DEALER_ID = #{pstDealerId}
+                    </if>
+                    <if test="dealerName != null and dealerName != ''">
+                        AND DEALER_NAME LIKE '%'||#{dealerName}||'%'
+                    </if>
+                    <if test="pstCustPo != null and pstCustPo != ''">
+                        AND PST_CUST_PO = #{pstCustPo}
+                    </if>
+                    <if test="userName != null and userName != ''">
+                        AND USER_NAME = #{userName}
+                    </if>
+                    <if test="dealerNric != null and dealerNric != ''">
+                        AND DEALER_NRIC LIKE '%'|| #{dealerNric}||'%'
+                    </if>
 		) T
 		ORDER BY T.PST_SALES_ORD_ID ASC
 
