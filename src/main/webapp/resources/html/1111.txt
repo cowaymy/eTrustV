@@ -1,0 +1,8 @@
+var monthOptions = {
+	pattern: 'mm/yyyy',
+	selectedYear: 2017,
+	startYear: 2007,
+	finalYear: 2027
+};
+
+$(".j_date2").monthpicker(monthOptions);
