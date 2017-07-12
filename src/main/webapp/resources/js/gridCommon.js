@@ -55,6 +55,24 @@ var GridCommon = {
 	    },
 	    
 	    /**
+	     * loading .... 표시.
+	     * @param _sGridId
+	     */
+	    showLoader : function(_sGridId){
+	    	_sGridId = GridCommon.makeGridId(_sGridId);
+	    	AUIGrid.showAjaxLoader(GridCommon.makeGridId(_sGridId));
+	    },
+	    
+	    /**
+	     * loading .... 해제.
+	     * @param _sGridId
+	     */
+	    removeLoader : function(_sGridId){
+	    	_sGridId = GridCommon.makeGridId(_sGridId);
+	    	AUIGrid.removeAjaxLoader(GridCommon.makeGridId(_sGridId));
+	    },
+	    
+	    /**
 	     * 그리드 파일 export
 	     * @param type
 	     */
@@ -110,6 +128,7 @@ var GridCommon = {
 
 		// 행/열 로 선택한 셀의 값을 리턴.
 		getCellValue : function(gridID, rowIdx, colIdx){
+			gridID = GridCommon.makeGridId(gridID);
 	        // ex) 3번째 행의 1 번째 칼럼 즉, (3, 1) 의 셀의 값 얻기
 	        var cellValue = AUIGrid.getCellValue(gridID, rowIdx, colIdx);
 	        return cellValue;
@@ -117,6 +136,7 @@ var GridCommon = {
 	    
 	    // 행/컬럼Name으로 선택한 셀의 값을 리턴.
 	    getCellValue : function(gridID, rowIdx, colName){
+	    	gridID = GridCommon.makeGridId(gridID);
 	        // rowIdx 번째 행의 name 칼럼의 값 얻기
 	        var cellValue = AUIGrid.getCellValue(gridID, rowIdx, colName);
 	        return cellValue;
@@ -124,6 +144,7 @@ var GridCommon = {
 	    
 	    // 편집된 그리드 데이터 가져오기.
 	    getEditData : function(gridID){
+	    	gridID = GridCommon.makeGridId(gridID);
 	    	// 추가된 행 아이템들(배열)
 	    	var addList = AUIGrid.getAddedRowItems(gridID);
 	    	// 수정된 행 아이템들(배열)
@@ -148,6 +169,7 @@ var GridCommon = {
 	    
 	    // 그리드 전체 데이터 가져오기.
 	    getGridData : function(gridID){
+	    	gridID = GridCommon.makeGridId(gridID);
 	    	// 전체  행 아이템들(배열)
 	    	var allList = AUIGrid.getGridData(gridID);
 	    	

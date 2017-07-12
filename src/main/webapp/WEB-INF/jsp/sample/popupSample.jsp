@@ -31,7 +31,7 @@
     }
 
     function fn_openWinPop(){
-       Common.popupWin("dataForm", "/sample/sampleView.do");
+       Common.popupWin("dataForm", "/sample/publishSample.do");
     }
     </script>
 </head>

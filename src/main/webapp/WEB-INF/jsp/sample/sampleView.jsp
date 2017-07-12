@@ -104,7 +104,7 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
     }  
     
     // 리스트 조회.
-    function fn_getSampleListAjax() {        
+    function fn_getSampleListAjax() {
         Common.ajax("GET", "/sample/selectJsonSampleList", $("#searchForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);

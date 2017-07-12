@@ -83,9 +83,21 @@ public class SampleController {
 	
 	/**
 	 * 화면 호출.
+	 * - publish 적용.
+	 * - 버튼 퀀한 적용.
 	 */
 	@RequestMapping(value = "/publishSample.do")
 	public String publishSample(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		// 화면별 버튼 권한 리스트 예제.
+		Map<String, Object> buttonMap = new HashMap<>();
+		
+		buttonMap.put("save", true);
+		buttonMap.put("update", true);
+		buttonMap.put("delete", true);
+		
+		model.addAttribute("auth", buttonMap);
+		
 		// 호출될 화면
 		return "sample/publishSample";
 	}
