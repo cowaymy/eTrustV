@@ -164,8 +164,8 @@
 		<ul class="right_opt">
 		    <li>Login as <span>KRHQ9001-HQ</span></li>
 		    <li><a href="#" class="logout">Logout</a></li>
-		    <li><a href="#"><img src="image/top_btn_home.gif" alt="Home" /></a></li>
-		    <li><a href="#"><img src="image/top_btn_set.gif" alt="Setting" /></a></li>
+		    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/image/top_btn_home.gif" alt="Home" /></a></li>
+		    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/image/top_btn_set.gif" alt="Setting" /></a></li>
 		</ul>
 	</header><!-- header end -->
     <hr />
@@ -176,10 +176,10 @@
 	
 		<header class="lnb_header"><!-- lnb_header start -->
 		<form action="#" method="post">
-		<h1><a href="#"><img src="image/logo.gif" alt="eTrust system" /></a></h1>
+		<h1><a href="#"><img src="${pageContext.request.contextPath}/resources/image/logo.gif" alt="eTrust system" /></a></h1>
 		<p class="search">
 		<input type="text" title="검색어 입력" />
-		<input type="image" src="image/icon_lnb_search.gif" alt="검색" />
+		<input type="image" src="${pageContext.request.contextPath}/resources/image/icon_lnb_search.gif" alt="검색" />
 		</p>
 		
 		</form>
@@ -278,7 +278,7 @@
 	
 	<section id="content"><!-- content start -->
 		<ul class="path">
-		    <li><img src="image/path_home.gif" alt="Home" /></li>
+		    <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
 		    <li>Sales</li>
 		    <li>Order list</li>
 		</ul>
@@ -362,7 +362,7 @@
 	<section class="search_result"><!-- search_result start -->
 	
 	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	<p class="show_btn"><a href="#"><img src="image/btn_link.gif" alt="link show" /></a></p>
+	<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/image/btn_link.gif" alt="link show" /></a></p>
 	<dl class="link_list">
 	    <dt>Link</dt>
 	    <dd>
@@ -376,7 +376,7 @@
 	        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
 	    </ul>
  -->
-	    <p class="hide_btn"><a href="#"><img src="image/btn_link_close.gif" alt="hide" /></a></p>
+	    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/image/btn_link_close.gif" alt="hide" /></a></p>
 	    </dd>
 	</dl>
 	</aside><!-- link_btns_wrap end -->
