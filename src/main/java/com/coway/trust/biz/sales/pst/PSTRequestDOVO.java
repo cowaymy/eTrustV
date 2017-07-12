@@ -37,6 +37,9 @@ public class PSTRequestDOVO implements Serializable{
 	private String code1;				// PSO Status
 
 	/** PSTRequestDOList 조회조건 */
+	private String dealerNric;			// NRIC / Company No
+	private Date createStDate;
+	private Date createEnDate;
 	
 	/** PSTRequestDODetailPop */
 	/** PST Info*/
@@ -193,8 +196,31 @@ public class PSTRequestDOVO implements Serializable{
 	public void setPstItmPrc(int pstItmPrc) {
 		this.pstItmPrc = pstItmPrc;
 	}
-	
-	
+
+	public String getDealerNric() {
+		return dealerNric;
+	}
+
+	public void setDealerNric(String dealerNric) {
+		this.dealerNric = dealerNric;
+	}
+
+	public Date getCreateStDate() {
+		return createStDate;
+	}
+
+	public void setCreateStDate(Date createStDate) {
+		this.createStDate = createStDate;
+	}
+
+	public Date getCreateEnDate() {
+		return createEnDate;
+	}
+
+	public void setCreateEnDate(Date createEnDate) {
+		this.createEnDate = createEnDate;
+	}
+
 	
 
 }
