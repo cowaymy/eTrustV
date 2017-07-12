@@ -258,10 +258,14 @@ $(document).ready(function(){
 	};
 	
 	//if(jQuery.isEmptyObject( $(".j_date2"))){
-		$(".j_date2").datepicker(pickerOpts2);
-		$(".j_date2").click(function(){
-			$("#ui-datepicker-div").addClass("type2");
-		});	
+	var monthOptions = {
+			pattern: 'mm/yyyy',
+			selectedYear: 2017,
+			startYear: 2007,
+			finalYear: 2027
+		};
+
+		$(".j_date2").monthpicker(monthOptions);
 	//}
 	
 	/* 제이쿼리 ui달력 end*/
