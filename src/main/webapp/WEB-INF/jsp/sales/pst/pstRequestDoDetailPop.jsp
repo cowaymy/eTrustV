@@ -20,9 +20,16 @@
 <script type="text/javaScript" language="javascript">
 
 	function fn_goPstStockList(){
-		location.href = "/sales/pst/getPstRequestDOStockDetailPop.do";
+		location.href = "/sales/pst/getPstRequestDOStockDetailPop.do?isPop=true&pstSalesOrdId="+${pstInfo.pstSalesOrdId};
 	}
+	
+	function fn_goPstInfoEdit(){
+        location.href = "/sales/pst/getPstRequestDOEditPop.do?isPop=true&pstSalesOrdId="+${pstInfo.pstSalesOrdId};
+    }
 
+	function fn_close(){
+		window.close();
+	}
 </script>
 </head>
 <body>
@@ -33,9 +40,9 @@
 			<h1>PST Request Info</h1>
 			<ul class="right_opt">
 				<li><p class="btn_blue2"><a href="#">COPY</a></p></li>
-				<li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
+				<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goPstInfoEdit()">EDIT</a></p></li>
 				<li><p class="btn_blue2"><a href="#">NEW</a></p></li>
-				<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+				<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		

@@ -68,7 +68,7 @@
             width : 115
         }];
     
- // 리스트 조회.
+    // 리스트 조회.
     function fn_getPstStockListAjax() {        
         Common.ajax("GET", "/sales/pst/getPstStockJsonDetailPop", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
@@ -77,7 +77,15 @@
     }
  
     function fn_goPstInfo(){
-    	location.href = "/sales/pst/getPstRequestDODetailPop.do";
+    	location.href = "/sales/pst/getPstRequestDODetailPop.do?isPop=true&pstSalesOrdId="+${pstSalesOrdId};
+    }
+    
+    function fn_goPstStockEdit(){
+        location.href = "/sales/pst/getPstRequestDOEditPop.do?isPop=true&pstSalesOrdId="+${pstSalesOrdId};
+    }
+    
+    function fn_close(){
+        window.close();
     }
 </script>
 
@@ -90,9 +98,9 @@
 	<h1>PST Request Info</h1>
 	<ul class="right_opt">
 	    <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
-	    <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
+	    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goPstStockEdit()">EDIT</a></p></li>
 	    <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
-	    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>
 	</ul>
 	</header><!-- pop_header end -->
 	
@@ -114,7 +122,7 @@
 		<!-- search_result start -->
 	    <div class="search_result">
 	        <!-- grid_wrap start -->
-	        <div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+	        <div id="grid_wrap" style="width:100%; height:400px; margin:0 auto;"></div>
 	        <!-- grid_wrap end -->
 	    </div>
 	    <!-- search_result end -->

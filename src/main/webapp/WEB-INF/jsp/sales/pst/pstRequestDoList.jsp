@@ -27,10 +27,15 @@
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
+        var option = {
+                width : "1000px", // 창 가로 크기
+                height : "600px" // 창 세로 크기
+        };
+        
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 //            alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId"));
-            Common.popupWin("searchForm", "/sales/pst/getPstRequestDODetailPop.do?pstSalesOrdId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId"), "width=1300,height=600");
+            Common.popupWin("searchForm", "/sales/pst/getPstRequestDODetailPop.do?isPop=true&pstSalesOrdId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId"), option);
         });
     
         fn_selectPstRequestDOListAjax();
@@ -292,9 +297,9 @@
 		        <dt><input type="text" readonly="readonly" /></dt>
 		        <dd>
 		        <ul>
-		            <li><label><input type="checkbox" value="1" /><span>Active</span></label></li>
-		            <li><label><input type="checkbox" value="4" /><span>Completed</span></label></li>
-		            <li><label><input type="checkbox" value="10" /><span>Cancel</span></label></li>
+		            <li><label><input type="checkbox" value="1" id="pstStusId1" name="pstStusId1"/><span>Active</span></label></li>
+		            <li><label><input type="checkbox" value="4" id="pstStusId4" name="pstStusId4" /><span>Completed</span></label></li>
+		            <li><label><input type="checkbox" value="10" id="pstStusId10" name="pstStusId10" /><span>Cancel</span></label></li>
 		        </ul>
 		        </dd>
 		    </dl>
