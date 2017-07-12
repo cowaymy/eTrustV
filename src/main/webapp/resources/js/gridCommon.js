@@ -146,6 +146,19 @@ var GridCommon = {
 	    	return data;
 	    },
 	    
+	    // 그리드 전체 데이터 가져오기.
+	    getGridData : function(gridID){
+	    	// 전체  행 아이템들(배열)
+	    	var allList = AUIGrid.getGridData(gridID);
+	    	
+	    	var data = {};
+	    	
+	    	if(addList.length > 0) data.all = allList;
+	    	else data.all = [];
+	    	
+	    	return data;
+	    },
+	    
 	    makeGridId : function(gridID){
 	    	var firstChar = gridID.substr(0, 1);
 	    	if(firstChar == "#"){

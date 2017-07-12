@@ -152,6 +152,22 @@ function commitFormSubmit() {
 //수정 처리
 function fn_saveGridMap(){
 	
+	//필수항목 입력여부	
+	if($("#crcStateRefDt").val() == ''){
+		alert("Please Enter Reference Date");
+		return;
+	}
+	
+	if($("#crcStateCardAccount").val() == ''){
+	     alert("Please Choose Card Account");
+	     return;
+	 }
+	
+	 if($("#crcStateAccId").val() == ''){
+	     alert("Please Choose Account No.");
+	     return;
+	 }
+	 
 	//param data array
 	var data = {};
 
@@ -159,8 +175,13 @@ function fn_saveGridMap(){
 	var formList = $("#myForm").serializeArray();       //폼 데이터
     
     //array에 담기        
-    if(gridList.length > 0) data.all = gridList;
-    else data.all = [];
+    if(gridList.length > 0) {
+    	data.all = gridList;
+    }  else {
+    	alert('Select the CSV file on the loca PC');
+    	return;
+    	//data.all = [];
+    }
 	
     if(formList.length > 0) data.form = formList;
     else data.form = [];
@@ -194,7 +215,7 @@ function resetUpdatedItems() {
         <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Reconciliation</li>
-        <li>Credit Card Statement</li>
+        <li>CRC Statement Upload</li>
     </ul>
 
 	<!-- title_line start -->

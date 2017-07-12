@@ -9,8 +9,10 @@
 		<typeAlias alias="loginVO" type="com.coway.trust.cmmn.model.LoginVO"/>
 		<typeAlias alias="searchVO" type="com.coway.trust.biz.sample.SampleDefaultVO"/>
 		<typeAlias alias="sampleVO" type="com.coway.trust.biz.sample.SampleVO"/>
-		
+		<typeAlias alias="string" type="java.lang.String"/>
+		<typeAlias alias="int" type="java.lang.Integer"/>
 		<!-- 업무 A -->
+		<typeAlias alias="CRCStatementVO" type="com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO"/>
 		
 		<!-- 업무 B -->
 		
