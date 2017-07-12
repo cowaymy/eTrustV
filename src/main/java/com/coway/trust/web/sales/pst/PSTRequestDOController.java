@@ -61,12 +61,38 @@ public class PSTRequestDOController {
 	
 	
 	/**
+	 * 화면 호출. -PST Request Do List (데이터조회)
+	 */
+	@RequestMapping(value = "/selectPstRequestDOJsonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPstRequestDOJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+		if(params != null){
+			String stDate = (String)params.get("createStDate");
+			if(stDate != null && stDate != ""){
+				String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
+				params.put("createStDate", createStDate);
+			}
+			String enDate = (String)params.get("createEnDate");
+			if(enDate != null && enDate != ""){
+				String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
+				params.put("createEnDate", createEnDate);
+			}
+			
+		}
+		
+		List<EgovMap> pstList = pstRequestDOService.selectPstRequestDOList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(pstList);
+	}
+	
+	
+	/**
 	 * 화면 호출. - PST Info
 	 */
 	@RequestMapping(value = "/getPstRequestDODetailPop.do")
 	public String getPstRequestDODetailPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		
-		params.put("pstSalesOrdId", "129");			// 임시
+//		params.put("pstSalesOrdId", "129");			// 임시
 		
 		EgovMap pstInfo = pstRequestDOService.getPstRequestDODetailPop(params);
 		model.addAttribute("pstInfo", pstInfo);
@@ -81,7 +107,7 @@ public class PSTRequestDOController {
 	@RequestMapping(value = "/getPstRequestDOStockDetailPop.do")
 	public String getPstRequestDOStockDetailPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		
-		params.put("pstSalesOrdId", "129");			// 임시
+//		params.put("pstSalesOrdId", "129");			// 임시
 		
 		params.get("pstSalesOrdId");
 
@@ -113,7 +139,7 @@ public class PSTRequestDOController {
 	@RequestMapping(value = "/getPstRequestDOEditPop.do")
 	public String getPstRequestDOEditPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		
-		params.put("pstSalesOrdId", "128");			// 임시
+//		params.put("pstSalesOrdId", "128");			// 임시
 		
 		EgovMap pstInfo = pstRequestDOService.getPstRequestDODetailPop(params);
 		model.addAttribute("pstInfo", pstInfo);
