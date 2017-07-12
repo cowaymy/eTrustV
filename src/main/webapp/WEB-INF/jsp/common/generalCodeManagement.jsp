@@ -32,6 +32,9 @@ var mstColumnLayout =
         }, {
             dataField : "crtDt",
             headerText : "CREATE DATE",
+            //formatDate :  "dd-mm-yyyy",//DD-MON-YYYY HH24:MI:SS
+            dataType : "date",
+            formatString : "dd-mm-yyyy  tt hh:MM:ss",
             width : 200
         }, {
             dataField : "disabled",
