@@ -44,10 +44,19 @@ function doGetCombo(url, groupCd , selCode, obj , type, callbackFn){
         }
     }); 
 } ;
+function doDataCombo(data , type , obj){
+	var targetObj = document.getElementById(obj);
+	var custom = "";
+	
+	for(var i=targetObj.length-1; i>=0; i--) {
+        targetObj.remove( i );
+    }
+}
 
 function doDefCombo(data, selCode, obj , type, callbackFn){
 	var targetObj = document.getElementById(obj);
 	var custom = "";
+	
 	for(var i=targetObj.length-1; i>=0; i--) {
         targetObj.remove( i );
     }
@@ -58,10 +67,10 @@ function doDefCombo(data, selCode, obj , type, callbackFn){
     }else{
     	$(obj).attr("multiple","multiple");
     }
-    console.log(data);
+    
     $.each(data, function(index,value) {
     	//CODEID , CODE , CODENAME ,,description
-            if(selCode==data[index].id){
+            if(selCode==data[index].codeId){
                 $('<option />', {value : data[index].codeId, text:data[index].codeName}).appendTo(obj).attr("selected", "true");
             }else{
                 $('<option />', {value : data[index].codeId, text:data[index].codeName}).appendTo(obj);

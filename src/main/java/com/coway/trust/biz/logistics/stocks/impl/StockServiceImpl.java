@@ -8,6 +8,7 @@
 package com.coway.trust.biz.logistics.stocks.impl;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,70 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 	public List<EgovMap> selectStockImgList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return stockMapper.selectStockImgList(params);
+	}
+
+	@Override
+	public void updateStockInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		stockMapper.updateStockInfo(params);
+		
+		String apptype_id = "";
+		if (params.get("stock_type") != null && "61".equals((String)params.get("stock_type"))){
+			params.put("app_type_id", "66");
+			stockMapper.updateSalePriceUOM(params);
+			params.put("app_type_id", "67");
+			stockMapper.updateSalePriceUOM(params);
+		}else{
+			params.put("app_type_id", "69");
+			stockMapper.updateSalePriceUOM(params);
+		}
+	}
+
+	@Override
+	public void updatePriceInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		Map<String, Object> smap   = new HashMap<>();
+		Map<String, Object> smap2  = new HashMap<>();
+		smap.put("upd_user", (Integer)params.get("upd_user"));
+		smap2.put("upd_user", (Integer)params.get("upd_user"));
+		
+		if (params.get("priceTypeid") != null){
+			
+			if ("61".equals(params.get("priceTypeid"))){
+				smap.put("stockid"      ,  (Integer)params.get("stockId"));
+				smap.put("amt"          ,  (String)params.get("dNormalPrice"));
+				smap.put("apptypeid"    ,  "67");
+				smap.put("pricecharges" ,  0);
+				smap.put("pricecosting" ,  (String)params.get("dCost"));
+				smap.put("statuscodeid" ,  1);
+				smap.put("pricepv"      ,  (String)params.get("dPV"));
+				smap.put("tradeinpv"    ,  (String)params.get("dTradeInPV"));
+				
+				smap2.put("stockid"      ,  (Integer)params.get("stockId"));
+				smap2.put("amt"          ,  (String)params.get("dMonthlyRental"));
+				smap2.put("apptypeid"    ,  "66");
+				smap2.put("pricecharges" ,  0);
+				smap2.put("pricecosting" ,  (String)params.get("dCost"));
+				smap2.put("statuscodeid" ,  1);
+				smap2.put("pricepv"      ,  (String)params.get("dPV"));
+				smap2.put("tradeinpv"    ,  (String)params.get("dTradeInPV"));
+				smap2.put("pricerpf"     ,  (String)params.get("dRentalDeposit"));
+				
+				stockMapper.updateSalePriceInfo(smap);
+				stockMapper.updateSalePriceInfo(smap2);
+
+			}else{
+				
+				smap.put("stockid"      ,  (Integer)params.get("stockId"));
+				smap.put("amt"          ,  (String)params.get("dNormalPrice"));
+				smap.put("apptypeid"    ,  "69");
+				smap.put("pricecharges" ,  (String)params.get("dPenaltyCharge"));
+				smap.put("pricecosting" ,  (String)params.get("dCost"));
+				smap.put("statuscodeid" ,  1);
+				
+				stockMapper.updateSalePriceInfo(smap);
+			}
+		}
 	}
 	
 }

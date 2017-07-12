@@ -184,8 +184,15 @@
 		ORDER BY StkCode    			
 	</select>
 	<select id="selectStockInfo" parameterType="Map" resultType="egovMap">
-	   <![CDATA[
-	       SELECT (SELECT CODE_NAME
+	   
+	       SELECT
+	              <if test="mode !=null and mode == 'save'">
+	               (SELECT CODE_ID
+	                  FROM SYS0013M
+	                 WHERE CODE_ID = inv.STK_TYPE_ID)
+	                  typeid,
+	              </if> 
+	             (SELECT CODE_NAME
 		          FROM SYS0013M
 		         WHERE CODE_ID = inv.STK_TYPE_ID)
 		          typenm,
@@ -196,10 +203,18 @@
 		       inv.IS_SIRIM issirim,
 		       inv.IS_NCV isncv,
 		       inv.STK_CODE stockcode,
-		       CASE
+	           CASE
 		          WHEN INV.STK_TYPE_ID = 61
 		          THEN
-		             (SELECT ct.CODE_NAME
+		             (SELECT 
+		                      <choose>
+                	              <when test="mode !=null and mode == 'edit'">
+					                 MAX(ct.CODE_ID)
+					              </when>
+					              <otherwise>
+					                 MAX(ct.CODE_NAME)
+					              </otherwise>
+					          </choose>		                      
 		                FROM SAL0016M sp, SYS0013M ct
 		               WHERE     sp.APP_TYPE_ID = 67
 		                     AND SP.MEM_PAC_ID = 0
@@ -207,9 +222,16 @@
 		                     AND sp.UOM_ID = ct.CODE_ID
 		                     AND sp.STK_ID = inv.STK_ID)
 		          ELSE
-		             (SELECT ct.CODE_NAME
+		             (SELECT <choose>
+                                  <when test="mode !=null and mode == 'edit'">
+                                     MAX(ct.CODE_ID)
+                                  </when>
+                                  <otherwise>
+                                     MAX(ct.CODE_NAME)
+                                  </otherwise>
+                              </choose>
 		                FROM SAL0016M sp, SYS0013M ct
-		               WHERE     sp.APP_TYPE_ID <> 61
+		               WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
 		                     AND SP.MEM_PAC_ID = 0
 		                     AND sp.STUS_CODE_ID = 1
 		                     AND sp.UOM_ID = ct.CODE_ID
@@ -217,7 +239,14 @@
 		       END
 		          uomname,
 		       inv.STK_DESC stockname,
-		       (SELECT CODE_NAME
+		       (SELECT <choose>
+                            <when test="mode !=null and mode == 'edit'">
+                               MAX(CODE_ID)
+                            </when>
+                            <otherwise>
+                               MAX(CODE_NAME)
+                            </otherwise>
+                        </choose>
 		          FROM SYS0013M
 		         WHERE CODE_ID = inv.STK_CTGRY_ID)
 		          categotynm,
@@ -226,7 +255,6 @@
 		       inv.MEASURE_CBM mcbm,
 		       inv.STK_TYPE_ID typeid
 		  FROM SYS0026M inv
-		  ]]>
 		 WHERE inv.STK_ID = #{stockId}   
 	 
 	</select>
@@ -342,4 +370,60 @@
 			   AND ISI.STK_ID = #{stockId}
 			  ORDER BY imgid
         </select>
+        
+        
+        <update id="updateStockInfo" parameterType="Map">
+            UPDATE SYS0026M
+               SET STK_DESC     = #{stock_name}
+                 , STK_CTGRY_ID = #{stock_category}
+                 , IS_SIRIM     = #{cbSirim}
+                 , IS_NCV       = #{cbNCV}
+                 , NET_WT       = #{netweight}
+                 , GROS_WT      = #{grossweight}
+                 , MEASURE_CBM  = #{measurement}
+                 , UPD_DT       = SYSDATE
+                 , UPD_USER_ID  = #{upd_user}
+            WHERE STK_ID        = #{stockId}
+        </update>
+        
+        
+        <update id="updateSalePriceUOM" parameterType="Map">
+            UPDATE SAL0016M
+			   SET UOM_ID = #{stock_uom}
+				 , UPD_DT = SYSDATE
+		     WHERE PRC_ID = (SELECT PRC_ID FROM SAL0016M
+                              WHERE STK_ID = #{stockId}
+                                AND APP_TYPE_ID = #{app_type_id}
+                                AND ROWNUM = 1)
+        </update>
+        
+        
+        <update id="updateSalePriceInfo" parameterType="Map">
+           update SAL0016M
+			   set UPD_DT      = SYSDATE 
+			       <if test="apptypeid !=null and apptypeid == '69'">
+			     , AMT         = #{amt} 
+			     , PRC_CHRG    = #{pricecharges}  
+			     , PRC_COSTING = #{pricecosting}
+			       </if>
+			       <if test="apptypeid !=null and apptypeid == '66'">
+			     ,  AMT         = #{amt}
+			     ,  PRC_RPF     = #{pricerpf} 
+			     ,  PRC_PV      = #{pricepv} 
+			     ,  TRADE_IN_PV = #{tradeinpv} 
+			     ,  PRC_COSTING = #{pricecosting}
+			       </if>
+			       <if test="apptypeid !=null and apptypeid == '67'">
+			     ,  AMT         = #{amt}
+			     ,  PRC_PV      = #{pricepv}
+			     ,  TRADE_IN_PV = #{tradeinpv}
+			     ,  PRC_COSTING = #{pricecosting}
+			       </if>
+			     ,  UPD_USER_ID = #{upd_user} 
+			 where PRC_ID      =  (SELECT PRC_ID FROM SAL0016M
+		                            WHERE STK_ID = #{stockid}
+		                              AND APP_TYPE_ID = #{apptypeid}
+		                              AND MEM_PAC_ID  = 0)
+        </update>
+    
 </mapper>

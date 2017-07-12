@@ -26,6 +26,7 @@
 	user-select: none;
 	 touch-action:none;
     -ms-touch-action:none;
+    width:100%!important;
 }
 
 /* 셀 기본 */

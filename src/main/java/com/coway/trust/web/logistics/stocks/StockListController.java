@@ -8,6 +8,7 @@ import com.coway.trust.util.CommonUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.coway.trust.AppConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import com.coway.trust.biz.logistics.stocks.StockService;
 import com.coway.trust.biz.sample.SampleService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -53,7 +55,7 @@ public class StockListController {
 	@RequestMapping(value = "/Stock.do")
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		return "/logistics/Stock/StockList";
+		return "logistics/Stock/StockList";
 	}
 	
 	@RequestMapping(value = "/StockList.do" , method = RequestMethod.POST)
@@ -90,9 +92,11 @@ public class StockListController {
 	@RequestMapping(value = "/StockInfo.do" , method = RequestMethod.POST)
 	public ResponseEntity<Map> selectStockInfo( ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String stkid = request.getParameter("stkid");
+		String mode  = CommonUtils.nvl(request.getParameter("mode"));
 		
 		Map<String, Object> smap = new HashMap();
 		smap.put("stockId" , stkid);
+		smap.put("mode" , mode);
 	
 		List<EgovMap> info = stock.selectStockInfo(smap);
 		
@@ -147,7 +151,7 @@ public class StockListController {
 		return ResponseEntity.ok(map);
 	}
 	
-	@RequestMapping(value = "/StockImgList.do" , method = RequestMethod.POST)
+	@RequestMapping(value = "/selectStockImgList.do" , method = RequestMethod.POST)
 	public ResponseEntity<Map> selectStockImgList( ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String stkid  = CommonUtils.nvl(request.getParameter("stkid"));
 		
@@ -157,7 +161,50 @@ public class StockListController {
 		List<EgovMap> imglist = stock.selectStockImgList(smap);
 		
 		Map<String, Object> map = new HashMap();
-		map.put("data" , imglist);    	
+		map.put("data" , imglist);
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/modifyStockInfo.do" , method = RequestMethod.POST)
+	public ResponseEntity<Map> modifyStockInfo(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+		//sampleService.saveTransaction(params);
+		String retMsg = AppConstants.MSG_SUCCESS;
+		
+		//loginId
+		params.put("upd_user", 99999999);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("revalue" , (String)params.get("revalue"));
+		map.put("stkid"   , (Integer)params.get("stockId"));
+		
+		try{
+			stock.updateStockInfo(params);			
+		}catch(Exception ex){
+			retMsg = AppConstants.MSG_FAIL;
+		}finally{
+			map.put("msg" , retMsg);
+		}
+		
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/modifyPriceInfo.do" , method = RequestMethod.POST)
+	public ResponseEntity<Map> modifyPriceInfo(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+		//sampleService.saveTransaction(params);
+		String retMsg = AppConstants.MSG_SUCCESS;
+		System.out.println("197Line :::::: " + params.get("priceTypeid"));
+		//loginId
+		params.put("upd_user", 99999999);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("revalue" , (String)params.get("revalue"));
+		map.put("stkid"   , (Integer)params.get("stockId"));
+		map.put("msg" , retMsg);
+		
+		stock.updatePriceInfo(params);			
+		
 		return ResponseEntity.ok(map);
 	}
 

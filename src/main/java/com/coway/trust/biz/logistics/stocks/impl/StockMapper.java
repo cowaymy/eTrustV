@@ -19,4 +19,10 @@ public interface StockMapper {
 	List<EgovMap>selectServiceInfo(Map<String, Object> params);
 	
 	List<EgovMap>selectStockImgList(Map<String, Object> params);
+	
+	void updateStockInfo(Map<String, Object> params);
+	
+	void updateSalePriceUOM(Map<String, Object> params);
+	
+	void updateSalePriceInfo(Map<String, Object> params);
 }
