@@ -218,6 +218,10 @@ var Common = {
 		form.style.display = 'none';
 		document.body.appendChild(form);
 		form.submit();
+	},
+	
+	setMsg : function(message){
+		$(".bottom_msg_box").html("<p>" + message + "</p>");
 	}
 
 };

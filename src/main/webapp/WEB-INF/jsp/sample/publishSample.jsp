@@ -9,6 +9,8 @@ $(function(){
 	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
 	// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
 	doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo');	
+
+	Common.setMsg("<spring:message code='sys.msg.success'/>");
 });
 
 function fn_multiCombo(){
@@ -91,6 +93,10 @@ function fn_multiCombo(){
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역
 </article><!-- grid_wrap end -->
+
+<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
+<p>Information Message Area</p>
+</aside><!-- bottom_msg_box end -->
 
 </section><!-- search_result end -->
 
