@@ -150,7 +150,7 @@
 		     , DISAB       = DECODE(#{detaildisabled},'N',0,'Y',1,0)
 		     , UPD_USER_ID = #{crtUserId}
 		     , UPD_DT      = SYSDATE  
-		WHERE CODE_ID      = #{updUserId}
+		WHERE CODE_ID      = #{detailcodeid}
     </update>    
 
 </mapper>
