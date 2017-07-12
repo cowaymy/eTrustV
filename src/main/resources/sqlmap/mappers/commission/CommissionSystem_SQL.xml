@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.commission.system.impl.CommissionSystemMapper">
+<mapper
+	namespace="com.coway.trust.biz.commission.system.impl.CommissionSystemMapper">
 
-    <resultMap id="clobMap" type="EgovMap">
-        <result property="cdDs" column="cdDs" jdbcType="CLOB" javaType="java.lang.String"/> 
-    </resultMap>
-    
-    <!-- 
-        search Organization Master Code List
-    -->
-    <select id="selectOrgGrList" parameterType="Map" resultMap="clobMap">
-        SELECT
-            T2.CODE_MASTER_ID AS mstId ,
-            T1.CODE_MASTER_NAME AS mstNm,
-            T2.CODE_ID AS cdId,
-            T2.CODE AS cd,
-            T2.CODE_NAME AS cdNm,
-            T2.CODE_DESC AS cdDs      
-        FROM SYS0012M T1
-        JOIN SYS0013M T2
-            ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
-        WHERE 1=1
-            <if test="mstId != null and mstId != ''">
-                AND T1.CODE_MASTER_ID = #{mstId}
-                AND T2.CODE_ID IN (1,2,3)
-            </if>
-        ORDER BY T2.CODE
-    </select>
-    
-    <!-- 
-        search Organization Deteail Code List
-    -->
-    <select id="selectOrgList" parameterType="Map"  resultMap="clobMap">
+	<resultMap id="clobMap" type="EgovMap">
+		<result property="cdDs" column="cdDs" jdbcType="CLOB"
+			javaType="java.lang.String" />
+	</resultMap>
+
+	<!-- searchOrganization Gruop List -->
+	<select id="selectOrgGrList" parameterType="Map" resultMap="clobMap">
+		SELECT
+		T2.CODE_MASTER_ID AS mstId ,
+		T1.CODE_MASTER_NAME AS mstNm,
+		T2.CODE_ID AS cdId,
+		T2.CODE AS cd,
+		T2.CODE_NAME AS cdNm,
+		T2.CODE_DESC AS cdDs
+		FROM SYS0012M T1
+		JOIN SYS0013M T2
+		ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+		WHERE 1=1
+		<if test="mstId != null and mstId != ''">
+			AND T1.CODE_MASTER_ID = #{mstId}
+			AND T2.CODE_ID IN (1,2,3)
+		</if>
+		ORDER BY T2.CODE
+	</select>
+
+	<!-- search Organization List -->
+	<select id="selectOrgList" parameterType="Map" resultMap="clobMap">
     <![CDATA[
         SELECT
             T2.CODE_MASTER_ID AS mstId ,
@@ -45,18 +43,17 @@
             ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
         WHERE 1=1
          ]]>
-            <if test="mstId != null and mstId != ''">
-                AND T1.CODE_MASTER_ID = #{mstId}             
-            </if>
+		<if test="mstId != null and mstId != ''">
+			AND T1.CODE_MASTER_ID = #{mstId}
+		</if>
            <![CDATA[   
         ORDER BY T2.CODE_ID
          ]]>
-    </select>
-    
-    <!-- 
-        search rule book management List
-    -->
-    <select id="selectRuleBookMngList" parameterType="Map"  resultMap="clobMap">
+	</select>
+
+	<!-- search rule book management List -->
+	<select id="selectRuleBookMngList" parameterType="Map"
+		resultMap="clobMap">
     <![CDATA[   
          SELECT
           ORG_GR_CD,
@@ -73,37 +70,38 @@
 	      ON T1.ORG_CD = T2.CODE_ID
         WHERE 1=1
          ]]>
-            <if test="orgRgCombo != null and orgRgCombo != ''">
-                AND T1.ORG_GR_CD = #{orgRgCombo}             
-            </if>
-             <if test="orgCombo != null and orgCombo != ''">
-                AND T1.ORG_CD = #{orgCombo}             
-            </if>
-             <if test="searchDt != null and searchDt != ''">
-                AND #{searchDt} BETWEEN START_DT AND END_DT             
-            </if>
+		<if test="orgRgCombo != null and orgRgCombo != ''">
+			AND T1.ORG_GR_CD = #{orgRgCombo}
+		</if>
+		<if test="orgCombo != null and orgCombo != ''">
+			AND T1.ORG_CD = #{orgCombo}
+		</if>
+		<if test="searchDt != null and searchDt != ''">
+			AND #{searchDt} BETWEEN START_DT AND END_DT
+		</if>
            <![CDATA[   
         ORDER BY T1.ORG_GR_NM , T2.CODE_ID     
          ]]>
-    </select>
-    
-    <insert id="addCommissionGrid" parameterType="Map">
-      INSERT INTO CMM0041C (
-	   ORG_GR_CD,
-	   ORG_CD,
-	   ORG_SEQ,
-	   ORG_GR_NM, 
-	   ORG_NM,
-	   USE_YN,
-	   START_DT, 
-	   END_DT,
-	   CRT_USER_ID,
-	   CRT_DT, 
-	   UPD_USER_ID,
-	   UPD_DT
-	   ) 
-	VALUES (
-	    #{orgGrCd},
+	</select>
+
+<!-- add coommission rule book management -->
+	<insert id="addCommissionGrid" parameterType="Map">
+		INSERT INTO CMM0041C (
+		ORG_GR_CD,
+		ORG_CD,
+		ORG_SEQ,
+		ORG_GR_NM,
+		ORG_NM,
+		USE_YN,
+		START_DT,
+		END_DT,
+		CRT_USER_ID,
+		CRT_DT,
+		UPD_USER_ID,
+		UPD_DT
+		)
+		VALUES (
+		#{orgGrCd},
 		#{orgCd},
 		(SELECT NVL(MAX(ORG_SEQ),0)+1 FROM CMM0041C) ,
 		#{orgGrNm},
@@ -115,10 +113,11 @@
 		SYSDATE,
 		#{updUserId},
 		SYSDATE
-       )
-    </insert>
-    
-    <select id="selectRuleBookMngChk" parameterType="Map"  resultMap="clobMap">
+		)
+	</insert>
+
+<!-- search coommission rule book checking data -->
+	<select id="selectRuleBookMngChk" parameterType="Map" resultMap="clobMap">
     <![CDATA[   
          SELECT
           ORG_GR_CD,
@@ -127,29 +126,31 @@
           FROM CMM0041C
         WHERE END_DT=#{endDt} AND ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd}       
          ]]>
-    </select>
-    
-    <update id="udtCommissionGridEndDt">
-            UPDATE CMM0041C
-            SET 
-                  END_DT=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
-                , UPD_USER_ID=#{updUserId}
-                , UPD_DT=SYSDATE
-                  WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
-    </update>
-    
-    <update id="udtCommissionGridUseYn">
-            UPDATE CMM0041C
-            SET 
-                  USE_YN=#{useYn}
-                , UPD_USER_ID=#{updUserId}
-                , UPD_DT=SYSDATE
-                  WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
-    </update>
-    
-    <delete id="delCommissionGrid">
-            DELETE FROM CMM0041C
-            WHERE   ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
-    </delete>
-    
+	</select>
+
+<!-- update coommission rule book management : end_dt -->
+	<update id="udtCommissionGridEndDt">
+		UPDATE CMM0041C
+		SET
+		END_DT=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
+	</update>
+
+<!-- update coommission rule book management : use_yn -->
+	<update id="udtCommissionGridUseYn">
+		UPDATE CMM0041C
+		SET
+		USE_YN=#{useYn}
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
+	</update>
+
+<!-- delete coommission rule book management-->
+	<delete id="delCommissionGrid">
+		DELETE FROM CMM0041C
+		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
+	</delete>
 </mapper>

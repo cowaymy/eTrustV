@@ -4,6 +4,7 @@
 package com.coway.trust.web.commission.system;
 
 import java.util.ArrayList;
+import com.coway.trust.config.handler.SessionHandler;
 import java.util.List;
 import java.util.Map;
 
@@ -25,16 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.commission.system.CommissionSystemService;
-import com.coway.trust.biz.login.LoginService;
-import com.coway.trust.biz.sales.pst.PSTRequestDOService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
-import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.commission.CommissionConstants;
-import com.coway.trust.web.login.LoginController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -49,7 +46,7 @@ public class CommissionSystemController {
 	private static final Logger logger = LoggerFactory.getLogger(CommissionSystemController.class);
 
 	@Resource(name = "commissionSystemService")
-	private CommissionSystemService commissionSystemService ;	
+	private CommissionSystemService commissionSystemService;
 
 	@Value("${app.name}")
 	private String appName;
@@ -60,9 +57,17 @@ public class CommissionSystemController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 
 	/**
-	 * Call Rule Book Management Organization
+	 * Call commission rule book management Page 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/commissionRuleBookOrgMng.do")
 	public String commissionRuleBookOrgMng(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -72,53 +77,60 @@ public class CommissionSystemController {
 		model.addAttribute("orgGrList", orgGrList);
 		params.put("mstId", CommissionConstants.COMIS_CD_CD);
 		List<EgovMap> orgList = commissionSystemService.selectOrgList(params);
-		String dt = CommonUtils.getNowDate().substring(0,6);	
-		dt=dt.substring(4)+"/"+dt.substring(0,4);
-	
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("orgGrList", orgGrList);
 		model.addAttribute("orgList", orgList);
 		// 호출될 화면
 		return "commission/commissionRuleBookOrgMng";
 	}
-	
+
 	/**
-	 * Search
+	 *  Organization Ajax Search 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectOrgList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectJsonOrgList(@ModelAttribute("searchVO") SampleDefaultVO searchVO,
-			@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectJsonOrgList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 
-		// 검색 파라미터 확인.
+		// log 표준 
 		logger.debug("orgRgCombo : {}", params.get("orgRgCombo"));
 		logger.debug("orgCombo : {}", params.get("orgCombo"));
 		logger.debug("orgGubun : {}", params.get("orgGubun"));
-		String orgGubun = String.valueOf( params.get("orgGubun"));
-		String orgRg = "";
-		if(orgGubun.equals("G")){
-			orgRg = String.valueOf( params.get("orgGrCd"));
-		}else{
-			orgRg = String.valueOf( params.get("orgRgCombo"));
-		}
 		
+		String orgGubun = String.valueOf(params.get("orgGubun"));
+		String orgRg = ""	;
+		
+		if (orgGubun.equals("G")) {
+			orgRg = String.valueOf(params.get("orgGrCd"));
+		} else {
+			orgRg = String.valueOf(params.get("orgRgCombo"));
+		}
+
 		String mstId = "";
-		if(orgRg.equals(CommissionConstants.COMIS_CD_GRCD)){
-			mstId=CommissionConstants.COMIS_CD_CD;
-		}else if(orgRg.equals(CommissionConstants.COMIS_CT_GRCD)){
-			mstId=CommissionConstants.COMIS_CT_CD;
-		}else if(orgRg.equals(CommissionConstants.COMIS_HP_GRCD)){
-			mstId=CommissionConstants.COMIS_HP_CD;
-		}
-		params.put("mstId",mstId);
 		
+		if (orgRg.equals(CommissionConstants.COMIS_CD_GRCD)) {
+			mstId = CommissionConstants.COMIS_CD_CD;
+		} else if (orgRg.equals(CommissionConstants.COMIS_CT_GRCD)) {
+			mstId = CommissionConstants.COMIS_CT_CD;
+		} else if (orgRg.equals(CommissionConstants.COMIS_HP_GRCD)) {
+			mstId = CommissionConstants.COMIS_HP_CD;
+		}
+		
+		params.put("mstId", mstId);
+
 		// 조회.
 		List<EgovMap> orgList = commissionSystemService.selectOrgList(params);
 
-		//model.addAttribute("orgList", orgList);
 		// 데이터 리턴.
 		return ResponseEntity.ok(orgList);
 	}
-	
+
 	/**
 	 * Use Map and Edit Grid Insert,Update,Delete
 	 *
@@ -128,40 +140,32 @@ public class CommissionSystemController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/saveCommissionGrid.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveCommissionGrid(@RequestBody Map<String, ArrayList<Object>> params,
-			Model model) {
+	public ResponseEntity<ReturnMessage> saveCommissionGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 
-		List<Object> udtList = params.get(AppConstants.AUIGrid_UPDATE); // Get gride UpdateList
-		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
-
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-					// 조회.
-			int cnt=0;
-			if(addList.size()>0){
-				cnt=commissionSystemService.addCommissionGrid(addList);
-			}
-			if(udtList.size()>0){
-				cnt=commissionSystemService.udtCommissionGrid(udtList);
-			}
-			if(delList.size()>0){
-				cnt=commissionSystemService.delCommissionGrid(delList);
-			}
-	
-		/*	updateList.forEach(obj -> {
-				logger.debug("update id : {}", ((Map<String, Object>) obj).get("id"));
-				logger.debug("update name : {}", ((Map<String, Object>) obj).get("name"));
-			});*/
-
-			// for (Object map : updateList) {
-			// hm = (HashMap<String, Object>) map;
-			//
-			// logger.info("id : {}", (String) hm.get("id"));
-			// logger.info("name : {}", (String) hm.get("name"));
-			// }
-	
-
-		// 콘솔로 찍어보기
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";			
+		}else{
+			loginId=sessionVO.getId();
+		}
+		
+		List<Object> udtList = params.get(AppConstants.AUIGrid_UPDATE); 	// Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
+		
+		int cnt = 0;
+		
+		if (addList.size() > 0) {			
+			cnt = commissionSystemService.addCommissionGrid(addList,loginId);
+		}
+		if (udtList.size() > 0) {
+			cnt = commissionSystemService.udtCommissionGrid(udtList,loginId);
+		}
+		if (delList.size() > 0) {
+			cnt = commissionSystemService.delCommissionGrid(delList,loginId);
+		}
+		
 		logger.info("수정 : {}", udtList.toString());
 		logger.info("추가 : {}", addList.toString());
 		logger.info("삭제 : {}", delList.toString());
@@ -174,31 +178,36 @@ public class CommissionSystemController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
-	 * Call Rule Book Management List
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectRuleBookMngList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectRuleBookMngList(@ModelAttribute("searchVO") SampleDefaultVO searchVO,
-			@RequestParam Map<String, Object> params, ModelMap model) {
-			
+	public ResponseEntity<List<EgovMap>> selectRuleBookMngList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+
 		logger.debug("orgRgCombo : {}", params.get("orgRgCombo"));
 		logger.debug("orgCombo : {}", params.get("orgCombo"));
 		logger.debug("searchDt : {}", params.get("searchDt"));
-		String dt = String.valueOf( params.get("searchDt"));
-		if(dt.trim().equals("")){
-			dt = CommonUtils.getNowDate().substring(0,6);
+		
+		String dt = String.valueOf(params.get("searchDt"));
+		if (dt.trim().equals("")) {
+			dt = CommonUtils.getNowDate().substring(0, 6);
 			params.put("searchDt", dt);
-		}else if(dt.contains("/")){
-			dt=dt.replaceAll("/", "");
-			dt=dt.substring(2)+dt.substring(0,2);
+		} else if (dt.contains("/")) {
+			dt = dt.replaceAll("/", "");
+			dt = dt.substring(2) + dt.substring(0, 2);
 			params.put("searchDt", dt);
 		}
-		List<EgovMap> ruleBookMngList = commissionSystemService.selectRuleBookMngList(params);
 		
-		// 데이터 리턴.
+		List<EgovMap> ruleBookMngList = commissionSystemService.selectRuleBookMngList(params);
+
+		// return grid data
 		return ResponseEntity.ok(ruleBookMngList);
 	}
-	
 
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.commission.system.CommissionSystemService;
-import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.web.commission.CommissionConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -53,26 +49,23 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 	
-	/*@Autowired
-	private SessionHandler sessionHandler;*/
-
 	/**
-	 * search Organization List
+	 * search Organization Gruop List
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	@Override
 	public List<EgovMap> selectOrgGrList(Map<String, Object> params) {
 		return commissionSystemMapper.selectOrgGrList(params);
 	}
-	
+
 	/**
 	 * search Organization List
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	@Override
@@ -80,90 +73,115 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 		return commissionSystemMapper.selectOrgList(params);
 	}
 
+	/**
+	 * add coommission rule book management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public int addCommissionGrid(List<Object> addList) {
-		//HttpSession session = sessionHandler.getCurrentSession();
-		String user="0000000000";
+	public int addCommissionGrid(List<Object> addList,String loginId) {	
 		
-		/*if(session != null){
-			user = session.getId();
-			
-		}*/
-		for(Object obj : addList){
-			
+		int cnt=0;
+		
+		for (Object obj : addList) {
+
 			((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);
-			((Map<String, Object>) obj).put("crtUserId", user);
-			((Map<String, Object>) obj).put("updUserId", user);
-			
-			logger.debug("update orgGrCd : {}", ((Map<String, Object>) obj).get("orgGrCd"));
-			logger.debug("update ORG_GR_NM : {}", ((Map<String, Object>) obj).get("orgGrNm"));
-			logger.debug("update ORG_CD : {}", ((Map<String, Object>) obj).get("orgCd"));
-			logger.debug("update ORG_NM : {}", ((Map<String, Object>) obj).get("orgNm"));
-			logger.debug("update USE_YN : {}", ((Map<String, Object>) obj).get("useYn"));	
-			logger.debug("update CRT_USER_ID : {}", ((Map<String, Object>) obj).get("crtUserId"));	
-			logger.debug("update UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));			
-		
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+
+			logger.debug("add orgGrCd : {}", ((Map<String, Object>) obj).get("orgGrCd"));
+			logger.debug("add ORG_GR_NM : {}", ((Map<String, Object>) obj).get("orgGrNm"));
+			logger.debug("add ORG_CD : {}", ((Map<String, Object>) obj).get("orgCd"));
+			logger.debug("add ORG_NM : {}", ((Map<String, Object>) obj).get("orgNm"));
+			logger.debug("add USE_YN : {}", ((Map<String, Object>) obj).get("useYn"));
+			logger.debug("add CRT_USER_ID : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			logger.debug("add UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));
+
 			List<EgovMap> list = commissionSystemMapper.selectRuleBookMngChk((Map<String, Object>) obj);
-			if(list.size()>0){
+			if (list.size() > 0) {
 				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("orgGrCd", list.get(0).get("orgGrCd"));
 				params.put("orgCd", list.get(0).get("orgCd"));
 				params.put("orgSeq", list.get(0).get("orgSeq"));
-				params.put("updUserId",((Map<String, Object>) obj).get("updUserId"));
+				params.put("updUserId", ((Map<String, Object>) obj).get("updUserId"));
+				
 				commissionSystemMapper.udtCommissionGridEndDt(params);
-			}			
-			commissionSystemMapper.addCommissionGrid((Map<String, Object>) obj);
+			}
+			cnt=cnt+commissionSystemMapper.addCommissionGrid((Map<String, Object>) obj);
 		}
-		return 0;
+		return cnt;
 	}
 
+	/**
+	 * update coommission rule book management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
 	@Override
-	public int udtCommissionGrid(List<Object> udtList) {
-		String user="0000000000";
-		for(Object obj : udtList){
+	public int udtCommissionGrid(List<Object> udtList,String loginId) {
+		
+		int cnt=0;
+		for (Object obj : udtList) {
 			((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);
-			((Map<String, Object>) obj).put("crtUserId", user);
-			((Map<String, Object>) obj).put("updUserId", user);
-			
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+
 			logger.debug("update orgGrCd : {}", ((Map<String, Object>) obj).get("orgGrCd"));
 			logger.debug("update orgGrNm : {}", ((Map<String, Object>) obj).get("orgGrNm"));
 			logger.debug("update orgCd : {}", ((Map<String, Object>) obj).get("orgCd"));
 			logger.debug("update orgNm : {}", ((Map<String, Object>) obj).get("orgNm"));
-			logger.debug("update useYn : {}", ((Map<String, Object>) obj).get("useYn"));	
-			logger.debug("update crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));	
-			logger.debug("update updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));	
-			
-			commissionSystemMapper.udtCommissionGridUseYn((Map<String, Object>) obj);
+			logger.debug("update useYn : {}", ((Map<String, Object>) obj).get("useYn"));
+			logger.debug("update crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			logger.debug("update updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+
+			cnt=cnt+commissionSystemMapper.udtCommissionGridUseYn((Map<String, Object>) obj);
 		}
-		return 0;
+		return cnt;
 	}
 
+	/**
+	 * delete coommission rule book management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
 	@Override
-	public int delCommissionGrid(List<Object> delList) {
-		String user="0000000000";
-		for(Object obj : delList){
+	public int delCommissionGrid(List<Object> delList,String loginId) {
+		
+		for (Object obj : delList) {
 			((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);
-			((Map<String, Object>) obj).put("crtUserId", user);
-			((Map<String, Object>) obj).put("updUserId", user);
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+
+			logger.debug("delete orgGrCd : {}", ((Map<String, Object>) obj).get("orgGrCd"));
+			logger.debug("delete ORG_GR_NM : {}", ((Map<String, Object>) obj).get("orgGrNm"));
+			logger.debug("delete ORG_CD : {}", ((Map<String, Object>) obj).get("orgCd"));
+			logger.debug("delete ORG_NM : {}", ((Map<String, Object>) obj).get("orgNm"));
+			logger.debug("delete USE_YN : {}", ((Map<String, Object>) obj).get("useYn"));
+			logger.debug("delete CRT_USER_ID : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			logger.debug("delete UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));
 			
-			logger.debug("update orgGrCd : {}", ((Map<String, Object>) obj).get("orgGrCd"));
-			logger.debug("update ORG_GR_NM : {}", ((Map<String, Object>) obj).get("orgGrNm"));
-			logger.debug("update ORG_CD : {}", ((Map<String, Object>) obj).get("orgCd"));
-			logger.debug("update ORG_NM : {}", ((Map<String, Object>) obj).get("orgNm"));
-			logger.debug("update USE_YN : {}", ((Map<String, Object>) obj).get("useYn"));	
-			logger.debug("update CRT_USER_ID : {}", ((Map<String, Object>) obj).get("crtUserId"));	
-			logger.debug("update UPD_USER_ID : {}", ((Map<String, Object>) obj).get("updUserId"));	
 			commissionSystemMapper.delCommissionGrid((Map<String, Object>) obj);
 		}
 		return 0;
 	}
 
+	/**
+	 * search selectRuleBookMngList List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
 	@Override
 	public List<EgovMap> selectRuleBookMngList(Map<String, Object> params) {
-		return commissionSystemMapper.selectRuleBookMngList(params);		
+		return commissionSystemMapper.selectRuleBookMngList(params);
 	}
-
-
 
 }

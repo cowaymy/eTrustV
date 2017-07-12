@@ -9,44 +9,44 @@ public interface CommissionSystemService
 {
 
 	/**
-     *  search Organization Master List
+     *  search Organization Gruop List
      * @param params
      * @return
      */
     List<EgovMap> selectOrgGrList(Map<String, Object> params);
     
     /**
-     * search Organization Detail List
+     * search Organization List
      * @param params
      * @return
      */
     List<EgovMap> selectOrgList(Map<String, Object> params);
     
     /**
-     * search selectRuleBookMngListl List
+     * search selectRuleBookMngList List
      * @param params
      * @return
      */
     List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
     
     /**
-     * add Organization Detail Data
+     * add coommission rule book management Data
      * @param updateList
      * @return
      */
-    int addCommissionGrid(List<Object> updateList);
+    int addCommissionGrid(List<Object> updateList , String loginId);
     
     /**
-     * update Organization Detail Data
+     * update coommission rule book management Data
      * @param addList
      * @return
      */
-    int udtCommissionGrid(List<Object> addList);
+    int udtCommissionGrid(List<Object> addList, String loginId);
     
     /**
-     * delete Organization Detail Data
+     * delete coommission rule book management Data
      * @param removeList
      * @return
      */
-    int delCommissionGrid(List<Object> removeList);
+    int delCommissionGrid(List<Object> removeList, String loginId);
 }

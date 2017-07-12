@@ -18,9 +18,6 @@ package com.coway.trust.biz.commission.system.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.sample.SampleDefaultVO;
-import com.coway.trust.biz.sample.SampleVO;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -44,74 +41,73 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("commissionSystemMapper")
 public interface CommissionSystemMapper {
 	/**
-	 * search Organization Master List
+	 * search Organization Gruop List
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectOrgGrList(Map<String, Object> params);
-	
+
 	/**
-	 * search Organization Detail List
+	 * search Organization  List
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectOrgList(Map<String, Object> params);
-	
+
 	/**
-	 * search Organization Detail List
+	 * search selectRuleBookMngList List
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
-	
+
 	/**
-	 * search Organization Detail List
+	 * check rulebook data 
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectRuleBookMngChk(Map<String, Object> params);
-	
-	
+
 	/**
-	 * search Organization Detail List
+	 * add coommission rule book management Data
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	int addCommissionGrid(Map<String, Object> params);
-	
+
 	/**
-	 * search Organization Detail List
+	 * update coommission rule book management Data : use_yn
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	int udtCommissionGridUseYn(Map<String, Object> params);
-	
+
 	/**
-	 * search Organization Detail List
+	 * update coommission rule book management Data : end_dt
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	int udtCommissionGridEndDt(Map<String, Object> params);
-	
+
 	/**
-	 * search Organization Detail List
+	 * delete coommission rule book management Data
 	 * 
 	 * @param Map
-	 * @return search Organization List
+	 * @return
 	 * @exception Exception
 	 */
 	int delCommissionGrid(Map<String, Object> params);
