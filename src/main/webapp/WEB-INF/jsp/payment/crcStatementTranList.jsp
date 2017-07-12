@@ -175,9 +175,13 @@ function resetUpdatedItems() {
                             </select>
 					    </td>
 					    <th scope="row">Uploaded Dated</th>
-					    <td><input type="text" name="updateDt1" id="updateDt1" title="Uploaded Dated" placeholder="DD/MM/YYYY" class="j_date" />
-							To
-							<input type="text" name="updateDt2" id="updateDt2" title="Uploaded Dated" placeholder="DD/MM/YYYY" class="j_date" /></td>
+					    <td>
+					       <div class="date_set"><!-- date_set start -->
+					       <p><input type="text"  name="updateDt1" id="updateDt1" title="Uploaded Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text"  name="updateDt2" id="updateDt2" title="Uploaded Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div><!-- date_set end -->
+                        </td>
 	                </tr>
                 </tbody>
             </table>
