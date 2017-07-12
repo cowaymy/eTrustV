@@ -83,7 +83,7 @@
     }
  
     function fn_goPstInfo(){
-        location.href = "/sales/pst/getPstRequestDOEditPop.do?pstSalesOrdId="+searchForm.pstSalesOrdId.value;
+        location.href = "/sales/pst/getPstRequestDOEditPop.do?isPop=true&pstSalesOrdId="+searchForm.pstSalesOrdId.value;
     }
     
     function fn_updateStockList() {
@@ -128,13 +128,14 @@
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>PST Request Info Edit</h1>
-
+<!--
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
+-->
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
