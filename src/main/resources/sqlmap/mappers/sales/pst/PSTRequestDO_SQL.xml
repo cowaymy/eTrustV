@@ -306,6 +306,23 @@
                       AND T1.PST_STUS_ID IN (#{pstStusId1},#{pstStusId10})
                       </if>
                     </if>
+                    
+                    <if test="pstStusId1 != null and pstStusId4 == null" >
+                      <if test="pstStusId10 == null" >
+                      AND T1.PST_STUS_ID = #{pstStusId1}
+                      </if>
+                    </if>
+                    <if test="pstStusId4 != null and pstStusId10 == null" >
+                      <if test="pstStusId1 == null" >
+                      AND T1.PST_STUS_ID = #{pstStusId4}
+                      </if>
+                    </if>
+                    <if test="pstStusId10 != null and pstStusId1 == null" >
+                      <if test="pstStusId4 == null" >
+                      AND T1.PST_STUS_ID = #{pstStusId10}
+                      </if>
+                    </if>
+                    
 		            <if test="createStDate != null and createStDate != ''" >
 		              <if test="createEnDate == null or createEnDate == ''" >
 		                <![CDATA[
