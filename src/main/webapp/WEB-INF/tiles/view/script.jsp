@@ -26,7 +26,7 @@
     <!-- AUIGrid 라이센스 파일입니다. 그리드 출력을 위해 꼭 삽입하십시오. -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/AUIGridLicense.js"></script>
     <!-- 실제적인 AUIGrid 라이브러리입니다. 그리드 출력을 위해 꼭 삽입하십시오.--> 
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/messages/AUIGrid.messages.kr.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/messages/AUIGrid.messages.en.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid.js"></script>
     
     <!-- 그리드 pdf 다운로드용. -->
