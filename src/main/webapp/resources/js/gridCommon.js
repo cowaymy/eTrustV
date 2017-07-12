@@ -30,7 +30,7 @@ var GridCommon = {
 	                enableFilter : true,
 	            
 	                // 그룹핑 패널 사용
-	                useGroupingPanel : true,
+	                useGroupingPanel : false,
 	                
 	                // 상태 칼럼 사용
 	                showStateColumn : true,
