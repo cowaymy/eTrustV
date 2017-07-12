@@ -17,6 +17,8 @@ var GridCommon = {
 	                // 페이징 사용.
 	                usePaging : true,
 	                
+	                pageRowCount : 20,
+	                
 	                // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
 	                enterKeyColumnBase : true,
 	                

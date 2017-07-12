@@ -2,6 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
 <script type="text/javaScript">
+var myGridID;
 
 $(function(){
 	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
@@ -10,8 +11,64 @@ $(function(){
 	// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
 	doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo');	
 
-	Common.setMsg("<spring:message code='sys.msg.success'/>");
+	// AUIGrid 그리드를 생성합니다.
+    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
+
+    fn_getSampleListAjax();
+    
 });
+
+//AUIGrid 칼럼 설정
+// 데이터 형태는 다음과 같은 형태임,
+//[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
+var columnLayout = [ {
+        dataField : "id",
+        headerText : "id",
+        width : 120
+    }, {
+        dataField : "name",
+        headerText : "Name",
+        width : 120
+    }, {
+        dataField : "description",
+        headerText : "description",
+        width : 120
+    }, {
+        dataField : "product",
+        headerText : "Product",
+        width : 120
+    }, {
+        dataField : "color",
+        headerText : "Color",
+        width : 120
+    }, {
+        dataField : "price",
+        headerText : "Price",
+        dataType : "numeric",
+        style : "my-column",
+        width : 120
+    }, {
+        dataField : "quantity",
+        headerText : "Quantity",
+        dataType : "numeric",
+        width : 120
+    }, {
+        dataField : "date",
+        headerText : "Date",
+        width : 120
+    }];
+
+//ajax list 조회.
+function fn_getSampleListAjax() {        
+    Common.ajax("GET", "/sample/selectJsonSampleList", $("#searchForm").serialize(), function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        AUIGrid.setGridData(myGridID, result);
+
+        // 공통 메세지 영역에 메세지 표시.
+        Common.setMsg("<spring:message code='sys.msg.success'/>");
+    });
+}
 
 function fn_multiCombo(){
 	$('#cmbCategory').change(function() {
@@ -21,6 +78,48 @@ function fn_multiCombo(){
 	    width: '100%'
 	});            
 }
+
+
+
+/*  
+## 공통 버튼 jsp : /WEB-INF/jsp/common/contentButton.jsp 내용##
+ 
+    각 화면에서 클릭함수를 구현해 주어야 함.
+    
+    - button_id : 차후에 권한 관련 처리를 위해 버튼 id를 DB에 등록할 예정입니다.
+    
+    1) onclick javascript 형식 
+        : onclick="fn_{button_id}();"
+        
+    2) sys_i18n 다국어 메세지 테이블 id.
+        : sys.btn.{button_id}
+ */
+
+//공통 버튼 함수
+
+function fn_save(){
+	// 공통 메세지 영역에 메세지 표시.
+	 Common.setMsg("<spring:message code='sys.btn.save'/>");
+}
+
+function fn_update(){
+	// 공통 메세지 영역에 메세지 표시.
+	Common.setMsg("<spring:message code='sys.btn.update'/>");
+}
+
+function fn_delete(){
+	// 공통 메세지 영역에 메세지 표시.
+	Common.setMsg("<spring:message code='sys.btn.delete'/>");
+}
+
+// 동작하지 않음.
+function fn_changeCount(){
+	AUIGrid.setProp(myGridID, { "pageRowCount" : "5"} );
+	AUIGrid.clearGridData(myGridID);
+	alert(1);
+	fn_getSampleListAjax();
+}
+
 
 </script>
 
@@ -42,42 +141,44 @@ function fn_multiCombo(){
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form id="searchForm" action="#" method="post">
 
-<table class="type1"><!-- table start -->
-<caption>search table</caption>
-<colgroup>
-    <col style="width:80px" />
-    <col style="width:*" />
-    <col style="width:110px" />
-    <col style="width:*" />
-    <col style="width:100px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">기준년월</th>
-    <td>
-    <input type="text" title="기준년월" class="j_date2" />
-    </td>
-    <th scope="row">ORG Group</th>
-    <td>
-    <select class="w100p" id="cmbCategory" name="cmbCategory">
-    </select>
-    </td>
-    <th scope="row">ORG Code</th>
-    <td>
-    <select class="w100p">
-        <option value="">--Payment Key-in</option>
-    </select>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="right_btns">
-    <li><p class="btn_gray"><a href="#"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
-</ul>
+	<table class="type1"><!-- table start -->
+	<caption>search table</caption>
+	<colgroup>
+	    <col style="width:80px" />
+	    <col style="width:*" />
+	    <col style="width:110px" />
+	    <col style="width:*" />
+	    <col style="width:100px" />
+	    <col style="width:*" />
+	</colgroup>
+	<tbody>
+	<tr>
+	    <th scope="row">기준년월</th>
+	    <td>
+	    <input type="text" title="기준년월" class="j_date2" />
+	    </td>
+	    <th scope="row">ORG Group</th>
+	    <td>
+	    <select class="w100p" id="cmbCategory" name="cmbCategory">
+	    </select>
+	    </td>
+	    <th scope="row">COUNT PER PAGE</th>
+	    <td>
+	    <select id="countPerPage" class="w100p" onchange="javascript:fn_changeCount();">
+	        <option value="20">20</option>
+	        <option value="30">30</option>
+	        <option value="40">40</option>
+	    </select>
+	    </td>
+	</tr>
+	</tbody>
+	</table><!-- table end -->
+	
+	<ul class="right_btns">
+	    <li><p class="btn_gray"><a href="javascript:void(0);" onclick="javascript:fn_getSampleListAjax();"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
+	</ul>
 </form>
 </section><!-- search_table end -->
 
@@ -91,7 +192,7 @@ function fn_multiCombo(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+    <div id="grid_wrap"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="bottom_msg_box"><!-- bottom_msg_box start -->

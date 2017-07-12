@@ -162,6 +162,99 @@
              SELECT
                 'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
             FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            
     </select>
 
 	<select id="selectSampleListTotCnt" parameterType="sampleVO" resultType="int">
