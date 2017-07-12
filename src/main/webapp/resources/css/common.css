@@ -140,7 +140,7 @@ table.type2.gray tbody td{padding:2px 10px;}
 /* 제이쿼리 달력 */
 .ui-datepicker-header{position:relative; width:178px; padding:10px; border:1px solid #ccc; text-align:center; background:#f3f3f3;}
 .ui-datepicker-prev,
-.ui-datepicker-next{position:absolute; top:14px; display:block; width:15px; height:15px; text-indent:-1000em; overflow:hidden; background:url(../image/btn_cal_arr.gif) no-repeat; cursor:pointer;}
+.ui-datepicker-next{position:absolute; top:14px; display:block; width:15px; height:15px; text-indent:-1000em; overflow:hidden; background:url(../images/common/btn_cal_arr.gif) no-repeat; cursor:pointer;}
 .ui-datepicker-prev{left:10px;}
 .ui-datepicker-next{right:10px; background-position:100% 0;}
 .ui-datepicker-title{font-weight:bold; line-height:15px; color:#5a7f96;}
@@ -156,6 +156,10 @@ table.type2.gray tbody td{padding:2px 10px;}
 .ui-datepicker-calendar .ui-datepicker-week-end{color:#0865ff;}
 .ui-datepicker-calendar .ui-datepicker-week-end a{color:#0865ff;}
 .ui-datepicker-calendar tbody tr td:first-child a{color:#cf0303!important;}
+div.mtz-monthpicker{width:100%; padding:5px 0; box-sizing:border-box; border-radius:3px; border-bottom:0 none;}
+table.mtz-monthpicker{background:#fff; border:1px solid #ccc;}
+table.mtz-monthpicker td{border:1px solid #ccc;}
+table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; background:#06a7e2;}
 .type2 .ui-datepicker-header{padding:10px 10px 40px 10px;}
 .type2 .ui-datepicker-current,
 .type2 .ui-datepicker-calendar{display:none;}
