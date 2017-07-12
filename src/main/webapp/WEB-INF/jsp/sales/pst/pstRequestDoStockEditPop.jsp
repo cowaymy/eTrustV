@@ -10,13 +10,14 @@
 <meta charset="utf-8"/>
 <meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
 <title>eTrust system</title>
-<link rel="stylesheet" type="text/css" href="css/master.css" />
-<link rel="stylesheet" type="text/css" href="css/common.css" />
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="js/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/master.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/common.css" />
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>
+
 <script type="text/javaScript" language="javascript">
 
     //AUIGrid 생성 후 반환 ID
@@ -61,7 +62,7 @@
             dataField : "pstItmCanQty",
             headerText : "Cancel</br>Quantity",
             width : 100,
-            editable : false
+            visible : false
         }, {
             dataField : "pstItmPrc",
             headerText : "Item Price",
@@ -74,7 +75,7 @@
         }];
     
     //리스트 조회.
-    function fn_getPstStockListAjax() {        
+    function fn_getPstStockListAjax() {
         Common.ajax("GET", "/sales/pst/getPstStockJsonDetailPop", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         }
@@ -82,7 +83,7 @@
     }
  
     function fn_goPstInfo(){
-        location.href = "/sales/pst/getPstRequestDOEditPop.do";
+        location.href = "/sales/pst/getPstRequestDOEditPop.do?pstSalesOrdId="+searchForm.pstSalesOrdId.value;
     }
     
     function fn_updateStockList() {
@@ -95,10 +96,15 @@
         };
       
         Common.ajax("POST", "/sales/pst/updateStockList.do", pstRequestDOForm, function(result) {
-            alert("성공");
-            resetUpdatedItems(); // 초기화
-            console.log("성공.");
+            
+            alert("PST info successfully updated");
+            
+            fn_getPstStockListAjax();
+          //resetUpdatedItems(); // 초기화
+            
+          console.log("PST info successfully updated.");
             console.log("data : " + result);
+            
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -108,11 +114,10 @@
           }
           catch (e) {
               console.log(e);
+              alert("Saving data prepration failed.");
           }
 
-          alert("Fail : " + jqXHR.responseJSON.message);
-          
-          fn_getPstStockListAjax();
+          alert("Fail : " + jqXHR.responseJSON.message);          
       });
     }
 </script>
@@ -125,22 +130,22 @@
 <h1>PST Request Info</h1>
 
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">COPY</a></p></li>
-	<li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
-	<li><p class="btn_blue2"><a href="#">NEW</a></p></li>
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
+    <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
+    <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="tap_type1">
-	<li><a href="#" onclick="javascript:fn_goPstInfo()">PST info</a></li>
-	<li><a href="#">PST Mail Address</a></li>
-	<li><a href="#">PST Delivery Address</a></li>
-	<li><a href="#">PST Mail Contact</a></li>
-	<li><a href="#">PST Delivery Contact</a></li>
-	<li><a href="#" class="on">PST Stock List</a></li>
+    <li><a href="#" onclick="javascript:fn_goPstInfo()">PST info</a></li>
+    <li><a href="#">PST Mail Address</a></li>
+    <li><a href="#">PST Delivery Address</a></li>
+    <li><a href="#">PST Mail Contact</a></li>
+    <li><a href="#">PST Delivery Contact</a></li>
+    <li><a href="#" class="on">PST Stock List</a></li>
 </ul>
 <h2>Request Item List</h2>
 
@@ -158,7 +163,7 @@
 <!-- search_result end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_updateStockList();">UPDATE STOCK</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onClick="javascript:fn_updateStockList();">UPDATE STOCK</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

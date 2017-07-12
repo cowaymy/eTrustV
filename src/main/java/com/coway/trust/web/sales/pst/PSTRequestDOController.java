@@ -139,9 +139,10 @@ public class PSTRequestDOController {
 	@RequestMapping(value = "/getPstRequestDOEditPop.do")
 	public String getPstRequestDOEditPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		
-//		params.put("pstSalesOrdId", "128");			// 임시
+		params.put("pstSalesOrdId", params.get("pstSalesOrdId"));
 		
 		EgovMap pstInfo = pstRequestDOService.getPstRequestDODetailPop(params);
+		
 		model.addAttribute("pstInfo", pstInfo);
 		
 		return "sales/pst/pstRequestDoEditPop";
