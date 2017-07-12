@@ -158,7 +158,7 @@
 <!-- search_result start -->
 <div class="search_result">
     <!-- grid_wrap start -->
-    <div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
     <!-- grid_wrap end -->
 </div>
 <!-- search_result end -->
