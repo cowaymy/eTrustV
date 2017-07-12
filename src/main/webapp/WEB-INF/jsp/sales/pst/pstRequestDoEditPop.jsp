@@ -20,7 +20,8 @@
 <script type="text/javaScript" language="javascript">
 
     function fn_goPstStockList(){
-        location.href = "/sales/pst/getPstRequestDOStockEditPop.do";
+    	alert("/sales/pst/getPstRequestDOStockEditPop.do?pstSalesOrdId=${pstInfo.pstSalesOrdId}&pstRefNo=${pstInfo.pstRefNo}");
+        location.href = "/sales/pst/getPstRequestDOStockEditPop.do?pstSalesOrdId=${pstInfo.pstSalesOrdId}&pstRefNo=${pstInfo.pstRefNo}";
     }
 
 </script>

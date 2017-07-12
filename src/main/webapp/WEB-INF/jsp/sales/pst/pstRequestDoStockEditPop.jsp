@@ -22,38 +22,37 @@
     //AUIGrid 생성 후 반환 ID
     var myGridID;
     
-//    var result = ${pstStockList};
+//  var result = ${pstStockList};
 
     $(document).ready(function(){
 
-        // AUIGrid 그리드를 생성합니다.
+        //AUIGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
+        
+        AUIGrid.setSelectionMode(myGridID, "singleRow");
 
-       fn_getPstStockListAjax();
+        fn_getPstStockListAjax();
 
-//       AUIGrid.setGridData(myGridID, result);
+        //AUIGrid.setGridData(myGridID, result);
 
 
     });
     
- // AUIGrid 칼럼 설정
-    // 데이터 형태는 다음과 같은 형태임,
-    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
+    // AUIGrid 칼럼 설정
     var columnLayout = [ {
-//            dataField : "",
-//            headerText : "No",
-//            width : 40
-//        }, {
             dataField : "c2",
             headerText : "Stock Description",
+            editable : false
         }, {
             dataField : "pstItmReqQty",
             headerText : "Request</br>Quantity",
-            width : 105
+            width : 105,
+            editable : false
         }, {
             dataField : "pstItmBalQty",
             headerText : "Balance Quantity",
-            width : 130
+            width : 130,
+            editable : false
         }, {
             dataField : "pstItmCanQty2",
             headerText : "Cancel</br>Quantity",
@@ -61,18 +60,20 @@
         }, {
             dataField : "pstItmCanQty",
             headerText : "Cancel</br>Quantity",
-            width : 100
+            width : 100,
+            editable : false
         }, {
             dataField : "pstItmPrc",
             headerText : "Item Price",
-            width : 120
+            width : 120,
+            editable : false
         }, {
             dataField : "pstStockRem",
             headerText : "Remark",
             width : 170
         }];
     
- // 리스트 조회.
+    //리스트 조회.
     function fn_getPstStockListAjax() {        
         Common.ajax("GET", "/sales/pst/getPstStockJsonDetailPop", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
@@ -86,24 +87,24 @@
     
     function fn_updateStockList() {
         var pstRequestDOForm = {
-                dataSet     : GridCommon.getEditData(myGridID),
-                pstSalesMVO : {
-                  pstSalesOrdId : searchForm.pstSalesOrdId.value,
-                  pstRefNo      : searchForm.pstRefNo.value
-              }
-      };
+            dataSet     : GridCommon.getEditData(myGridID),
+            pstSalesMVO : {
+                pstSalesOrdId : searchForm.pstSalesOrdId.value,
+                pstRefNo      : searchForm.pstRefNo.value
+            }
+        };
       
-      Common.ajax("POST", "/sales/pst/updateStockList.do", pstRequestDOForm, function(result) {
-          alert("성공");
-          resetUpdatedItems(); // 초기화
-          console.log("성공.");
-          console.log("data : " + result);
-      },  function(jqXHR, textStatus, errorThrown) {
-          try {
-              console.log("status : " + jqXHR.status);
-              console.log("code : " + jqXHR.responseJSON.code);
-              console.log("message : " + jqXHR.responseJSON.message);
-              console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+        Common.ajax("POST", "/sales/pst/updateStockList.do", pstRequestDOForm, function(result) {
+            alert("성공");
+            resetUpdatedItems(); // 초기화
+            console.log("성공.");
+            console.log("data : " + result);
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
           }
           catch (e) {
               console.log(e);
