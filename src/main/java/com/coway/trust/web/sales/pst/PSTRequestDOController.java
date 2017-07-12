@@ -128,11 +128,11 @@ public class PSTRequestDOController {
 	@RequestMapping(value = "/getPstRequestDOStockEditPop.do")
 	public String getPstRequestDOStockEditPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		
-		params.put("pstSalesOrdId", "128");			// 임시
-		params.put("pstRefNo", "PSO0000128");			// 임시
+		//params.put("pstSalesOrdId", "128");			// 임시
+		//params.put("pstRefNo", "PSO0000128");			// 임시
 		
-		params.get("pstSalesOrdId");
-		params.get("pstRefNo");
+		logger.debug((String)params.get("pstSalesOrdId"));
+		logger.debug((String)params.get("pstRefNo"));
 
 		model.addAttribute("pstSalesOrdId", params.get("pstSalesOrdId"));
 		model.addAttribute("pstRefNo", params.get("pstRefNo"));
