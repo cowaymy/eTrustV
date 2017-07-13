@@ -34,4 +34,4 @@ button,label{cursor:pointer;}
 .blind{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
 input[type=text],
 input[type=password]{font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
-img,th,td{vedrtical-align:middle;}
+img,th,td{vertical-align:middle;}
