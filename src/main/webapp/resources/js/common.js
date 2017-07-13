@@ -77,6 +77,65 @@ var Common = {
 			}
 		});
 	},
+	
+	/**
+	 * 파일 업로드 ajax
+	 * @param _url
+	 * @param _formData		: Common.getFormData(_sFormId);
+	 * @param _callback
+	 * @param _errcallback
+	 * @param _options
+	 */
+	ajaxFile : function(_url, _formData, _callback, _errcallback, _options){ 
+		$.ajax({
+			url : _url,
+			processData : false,
+			contentType : false,
+			data : _formData,
+			type : "POST",
+			success : function(data, textStatus, jqXHR) {
+				
+				if (_callback) {
+					_callback(data, textStatus, jqXHR);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("status : " + jqXHR.status);
+					console.log("code : " + jqXHR.responseJSON.code);
+					console.log("message : " + jqXHR.responseJSON.message);
+					console.log("detailMessage : "
+							+ jqXHR.responseJSON.detailMessage);
+				} catch (e) {
+					console.log(e);
+				}
+
+				if (_errcallback) {
+					_errcallback(jqXHR, textStatus, errorThrown);
+				} else {
+					alert("Fail : " + jqXHR.responseJSON.message);
+				}
+			},
+			complete : function() {
+			}
+		});
+	},
+	
+	/**
+	 * Form Id 에 속한 파일 type을 FormData 로 변경하여 리턴.
+	 * @param _sFormId
+	 * @returns {FormData}
+	 */
+	getFormData : function(_sFormId){
+		var formData = new FormData();
+		$.each($("#" + _sFormId + " > input[type=file]"), function(i, obj) {
+			$.each(obj.files, function(j, file) {
+				formData.append("file[" + i + j + "]", file);
+			})
+		});
+		
+		return formData;
+	},
 
 	/**
 	 * 비동기 ajax 호출.

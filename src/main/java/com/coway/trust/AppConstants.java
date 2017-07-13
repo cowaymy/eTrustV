@@ -34,6 +34,7 @@ public class AppConstants {
 	 * file 관련
 	 */
 	public static final long UPLOAD_MAX_FILE_SIZE = 1024 * 1024 * 100; // 업로드 최대 사이즈 설정 (100M)
+	public static final String MSG_IS_NOT_ALLOW = " is not allow.";
 
 	/**
 	 * session info

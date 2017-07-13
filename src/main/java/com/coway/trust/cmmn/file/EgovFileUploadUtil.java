@@ -11,9 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.EgovFormBasedFileUtil;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.EgovWebUtil;
+import com.coway.trust.util.MimeTypeUtil;
 
 /**
  * @Class Name  : EgovFileUploadUtil.java
@@ -71,6 +74,11 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 
 				try {
 					is = mFile.getInputStream();
+					
+					if(MimeTypeUtil.isNotAllowFile(is)){
+						throw new ApplicationException(AppConstants.FAIL, mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
+					}
+					
 					saveFile(is, new File(EgovWebUtil.filePathBlackList(where + SEPERATOR + vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName())));
 				} finally {
 					if (is != null) {

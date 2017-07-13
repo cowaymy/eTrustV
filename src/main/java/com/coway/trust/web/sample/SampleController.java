@@ -80,28 +80,26 @@ public class SampleController {
 		sampleService.saveTransaction(params);
 		return ResponseEntity.ok(new ReturnMessage());
 	}
-	
+
 	/**
-	 * 화면 호출.
-	 * - publish 적용.
-	 * - 버튼 퀀한 적용.
+	 * 화면 호출. - publish 적용. - 버튼 퀀한 적용.
 	 */
 	@RequestMapping(value = "/publishSample.do")
 	public String publishSample(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		// 화면별 버튼 권한 리스트 예제.
 		Map<String, Object> buttonMap = new HashMap<>();
-		
+
 		buttonMap.put("save", true);
 		buttonMap.put("update", true);
 		buttonMap.put("delete", true);
-		
+
 		model.addAttribute("auth", buttonMap);
-		
+
 		// 호출될 화면
 		return "sample/publishSample";
 	}
-	
+
 	/**
 	 * 화면 호출.
 	 */
@@ -150,8 +148,8 @@ public class SampleController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectClobData.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectClobData(@RequestParam Map<String, Object> params, Model model, Date toDate )
-			throws Exception {
+	public ResponseEntity<List<EgovMap>> selectClobData(@RequestParam Map<String, Object> params, Model model,
+			Date toDate) throws Exception {
 		List<EgovMap> list = sampleService.selectClobData(params);
 		// List<EgovMap> list2 = sampleService.selectClobOtherData(params);
 		return ResponseEntity.ok(list);
@@ -160,8 +158,8 @@ public class SampleController {
 	/**
 	 * responseBody에 json data로 응답을 보내는 경우.
 	 * 
-	 * 1) return type void 인 경우 : response body 로 보내려면, @ResponseBody 를 기술해 줌.
-	 * 2) return type을 ResponseEntity<ReturnMessage> 로 하여 보내 준다. ( @ResponseBody 필요 없음 )
+	 * 1) return type void 인 경우 : response body 로 보내려면, @ResponseBody 를 기술해 줌. 2) return type을 ResponseEntity
+	 * <ReturnMessage> 로 하여 보내 준다. ( @ResponseBody 필요 없음 )
 	 * 
 	 * @param params
 	 * @param model
@@ -170,16 +168,16 @@ public class SampleController {
 	@RequestMapping(value = "/saveClobData.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void saveClobData(@RequestBody Map<String, Object> params, Model model) throws Exception {
-		
+
 		// sample date
 		params.put("baseYear", "2019");
 		params.put("baseWeek", "99");
 		params.put("baseCdc", "TEST");
 		params.put("requestComment", "TEST_REQUEST_COMMENT"); // clob
-		
+
 		sampleService.insertClobData(params);
-		
-//		return ResponseEntity.ok(new ReturnMessage());
+
+		// return ResponseEntity.ok(new ReturnMessage());
 	}
 
 	/**
@@ -192,27 +190,27 @@ public class SampleController {
 		logger.debug(" appName : {}", appName);
 		// 파라미터 사용 예시.
 		logger.debug(" test param : {}", params.get("test"));
-		
+
 		logger.debug(" isPop : {}", params.get("isPop"));
 		logger.debug(" param01 : {}", params.get("param01"));
 		logger.debug(" param02 : {}", params.get("param02"));
 
 		// MessageSource 사용 예시.
 		logger.debug("fail.common.dbmsg : {}", messageAccessor.getMessage(SampleConstants.SAMPLE_DBMSG));
-		
+
 		// 화면에서 보여줄 데이터.
 		AuthVO auth = new AuthVO();
 		auth.setInsert(true);
 		auth.setRead(true);
 		auth.setUpdate(true);
 		auth.setDelete(false);
-		
+
 		model.addAttribute("auth", auth);
 
 		// 호출될 화면
 		return "sample/sampleView";
 	}
-	
+
 	/**
 	 * 화면 호출.
 	 */
@@ -221,7 +219,7 @@ public class SampleController {
 		// 호출될 화면
 		return "sample/popupSample";
 	}
-	
+
 	/**
 	 * 화면 호출.
 	 */
@@ -245,7 +243,7 @@ public class SampleController {
 		// 호출될 화면
 		return "sample/sampleGridModify";
 	}
-	
+
 	/**
 	 * 화면 호출.
 	 */
