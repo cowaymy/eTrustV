@@ -120,19 +120,7 @@ public class CommonController {
 			{
 				cnt=commonService.delCommCodeGrid(delList);
 			}*/
-	
-		/*	updateList.forEach(obj -> {
-				logger.debug("update id : {}", ((Map<String, Object>) obj).get("id"));
-				logger.debug("update name : {}", ((Map<String, Object>) obj).get("name"));
-			});*/
 
-			// for (Object map : updateList) {
-			// hm = (HashMap<String, Object>) map;
-			//
-			// logger.info("id : {}", (String) hm.get("id"));
-			// logger.info("name : {}", (String) hm.get("name"));
-			// }
-	
 
 		// 콘솔로 찍어보기
 		logger.info("CommCd_수정 : {}", udtList.toString());
