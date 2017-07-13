@@ -65,6 +65,7 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	{
 		//HttpSession session = sessionHandler.getCurrentSession();
 		int user=99999;
+		int saveCnt = 0;
 		
 		/*if(session != null){
 			user = session.getId();
@@ -80,6 +81,11 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			((Map<String, Object>) obj).put("crtUserId", user);
 			((Map<String, Object>) obj).put("updUserId", user);
 			
+			if (String.valueOf(((Map<String, Object>) obj).get("codeMasterName")).length() == 0)
+			{
+				continue;
+			}
+			
 			logger.debug(" InsertMstCommCd ");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
 			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
@@ -88,10 +94,13 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));	
 			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));	
 		
+			saveCnt++;
+			
 			commonMapper.addCommCodeGrid((Map<String, Object>) obj);
+			
 		}
 		
-		return 0;
+		return saveCnt;
 	}
 
 	@Override
@@ -135,6 +144,12 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
 			((Map<String, Object>) obj).put("crtUserId", user);
 			((Map<String, Object>) obj).put("updUserId", user);
+			
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("detailcodename")).length() == 0)
+			   {
+					continue;
+			   }
 			
 			//{detailcodeid=1D79D7B5-A35F-77D5-CF91-35F79447E439, detailcode=test11, detailcodename=testD, detailcodedesc=testD, detaildisabled=N, codeMasterId=155, crtUserId=99999, updUserId=99999}  		
 			logger.debug(" [[Insert Deatail]] ");
