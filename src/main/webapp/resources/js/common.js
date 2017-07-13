@@ -222,6 +222,7 @@ var Common = {
 	
 	setMsg : function(message){
 		$(".bottom_msg_box").html("<p>" + message + "</p>");
+		$(".bottom_msg_box p").fadeOut(5000);
 	}
 
 };
@@ -372,4 +373,30 @@ $(document).ready(function(){
 		}
 	});
 	/* 멀티셀렉트 end*/
+	
+	/* 인풋 파일 start */
+	function setInputFile(){
+		var theFile=$(":file");
+		$(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
+	}
+	setInputFile();
+
+	$(document).on(
+		"click", ".label_text a", function(){
+		var thisFileInput=$(this).parent().parent().prev(":file");
+
+		thisFileInput.click();	
+		return false;
+	})
+
+	$(document).on(
+		"change", ":file", function(){
+		var thisVal=$(this).val();
+		var thisfakeInput=$(this).next().children(".input_text");
+
+		thisfakeInput.val(thisVal);
+		})
+	/* 인풋 파일 end */
 	});
+
+

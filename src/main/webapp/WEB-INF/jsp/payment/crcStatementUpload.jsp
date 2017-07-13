@@ -271,7 +271,14 @@ function resetUpdatedItems() {
 	                </tr>
 	                <tr>
 	                    <th scope="row">SCV File</th>
-	                    <td><input type="file" id="fileSelector" name="files" accept=".csv"><p class="btn_sky"><a href="#">File</a></p></td>
+	                    <td>	                       
+	                       <!-- auto_file start -->
+	                       <div class="auto_file">
+	                           <input type="file" id="fileSelector" title="file add" accept=".csv" />
+                           </div>
+                           <!-- auto_file end -->
+	                    
+	                    </td>
 	                </tr>
 	            </tbody>
 	        </table>
