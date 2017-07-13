@@ -92,10 +92,15 @@ $(document).on(
 	var thisLi=$(this).parent("li");
 	var thisHasChild=thisLi.children("ul").length;
 
-	thisLi.toggleClass("on");
-	thisLi.siblings().removeClass("on");
+	
 
 	if(thisHasChild>0){
+		if(thisLi.children("ul").is(":visible")){
+			thisLi.children("ul").slideUp("500");
+		}else{
+			thisLi.children("ul").slideDown("500");
+		}
+		$(this).toggleClass("on");
 		return false;
 	}else{
 	}
