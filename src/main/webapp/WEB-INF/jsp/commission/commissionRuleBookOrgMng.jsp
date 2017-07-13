@@ -368,10 +368,9 @@
 	//Save Data
 	function fn_saveGridMap() {
 		if (validation()) {
-			Common.ajax("POST", "/commission/system/saveCommissionGrid.do", GridCommon.getEditData(myGridID), function(result) {
-				alert("Success!");
-				console.log("성공.");
-				console.log("data : " + result);
+			Common.ajax("POST", "/commission/system/saveCommissionGrid.do", GridCommon.getEditData(myGridID), function(result) {			
+				  // 공통 메세지 영역에 메세지 표시.
+			  Common.setMsg("<spring:message code='sys.msg.success'/>");
 				fn_getRuleBookMngListAjax();
 			}, function(jqXHR, textStatus, errorThrown) {
 				try {
@@ -480,6 +479,9 @@
 		<!-- grid_wrap end -->
 
 	</section>
+	<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
+  <p></p>
+  </aside><!-- bottom_msg_box end -->
 	<!-- search_result end -->
 
 </section>
