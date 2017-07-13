@@ -16,6 +16,7 @@ public class ReturnMessage implements Serializable {
 	private String message;
 	private String detailMessage;
 	private List<?> dataList;
+	private Object data;
 
 	public String getCode() {
 		return code;
@@ -47,6 +48,14 @@ public class ReturnMessage implements Serializable {
 
 	public void setDataList(List<?> dataList) {
 		this.dataList = dataList;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
 	}
 
 }
