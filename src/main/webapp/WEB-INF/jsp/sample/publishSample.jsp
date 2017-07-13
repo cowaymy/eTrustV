@@ -196,10 +196,6 @@ function fn_changeCount(obj){
     <div id="grid_wrap"></div>
 </article><!-- grid_wrap end -->
 
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-
 </section><!-- search_result end -->
 
 </section><!-- content end -->

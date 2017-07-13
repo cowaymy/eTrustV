@@ -16,6 +16,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.mtz.monthpicker.js"></script>
     
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common.js"></script>        <!-- 일반 공통 js -->
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/common_pub.js"></script>        <!-- publish js -->
     
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.serializejson.js"></script> <!-- Form to jsonObject -->
@@ -33,6 +34,8 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/AUIGrid/AUIGrid.pdfkit.js"></script>
 <!-- AUIGrid -->
 
-    <script src="${pageContext.request.contextPath}/resources/multiple/multiple-select.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/multiple-select.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/combodraw.js"></script>
+
+    
     
