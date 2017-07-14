@@ -95,7 +95,7 @@
         VALUES
         ( (SELECT MAX(CODE_MASTER_ID +1) CODE_MASTER_ID_SEQ FROM SYS0012M)
          , #{codeMasterName}
-         , #{codeDesc}
+         , NVL(#{codeDesc},DBMS_LOB.SUBSTR (#{codeMasterName},4000) )
          , DECODE(#{disabled},'N',0,'Y',1,0)
          , SYSDATE
          , #{crtUserId}
@@ -106,7 +106,8 @@
     
     <update id="updCommCodeGrid" parameterType="Map">
 		UPDATE SYS0012M
-		   SET CODE_DESC   = #{codeDesc}
+		   SET CODE_DESC   = NVL(#{codeDesc},DBMS_LOB.SUBSTR (#{codeMasterName},4000) ) 
+		     , CODE_MASTER_NAME = #{codeMasterName}
 		     , DISAB       = DECODE(#{disabled},'N',0,'Y',1,0)
 		     , UPD_USER_ID = #{updUserId}
 		     , UPD_DT      = SYSDATE  
