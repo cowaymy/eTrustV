@@ -82,4 +82,21 @@ public class AppConstants {
 	public static final String MSG_FAIL = "sys.msg.success";
 	public static final String MSG_NOT_EXIST = "sys.msg.notexist";
 	public static final String MSG_NECESSARY = "sys.msg.necessary";
+	
+	/**
+	 * 공통 코드  KEY
+	 */	
+	public static final int CODE_EMPLOYEE_TYPE		= 1;
+	public static final int CODE_RACE_TYPE				= 2;
+	public static final int CODE_LANGUAGE_TYPE		= 3;
+	public static final int CODE_MARITAL_STATUS		= 4;
+	public static final int CODE_EDUCATION_LEVEL	= 5;
+	public static final int CODE_MEMBER_RANK			= 6;
+	public static final int CODE_TRANSPORT_TYPE		= 7;
+	public static final int CODE_APPLICATION_TYPE	= 10;			
+	public static final int CODE_WAREHOUSE_TYPE	= 14;
+	public static final int CODE_PAY_MODE				= 36;
+	public static final int CODE_PAY_TYPE					= 48;
+	public static final int CODE_DISCOUNT_TYPE		= 74;
+	
 }
