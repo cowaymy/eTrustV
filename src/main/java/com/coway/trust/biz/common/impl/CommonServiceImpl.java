@@ -107,12 +107,24 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	public int udtCommCodeGrid(List<Object> udtList) 
 	{
 		int user=99999;
+		int saveCnt = 0;
+		
 		for(Object obj : udtList){
 			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
 			((Map<String, Object>) obj).put("crtUserId", user);
 			((Map<String, Object>) obj).put("updUserId", user);
 			
-			logger.debug(" update ");
+			if (String.valueOf(((Map<String, Object>) obj).get("codeDesc")).trim().length() == 0)
+			{
+				logger.debug("AAAAAA_tr");
+				((Map<String, Object>) obj).put("codeDesc", "");
+			}
+			else
+			{
+				logger.debug("AAAAA_LENGTH: "+ String.valueOf(((Map<String, Object>) obj).get("codeDesc")).length() );
+			}
+			
+			logger.debug(" update CommCode");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
 			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
 			logger.debug(" codeMasterName : {}", ((Map<String, Object>) obj).get("codeMasterName"));
@@ -120,9 +132,11 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));	
 			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));	
 			
+			saveCnt++;
+			
 			commonMapper.updCommCodeGrid((Map<String, Object>) obj);
 		}
-		return 0;
+		return saveCnt;
 	}
 
 	@SuppressWarnings("unchecked")
