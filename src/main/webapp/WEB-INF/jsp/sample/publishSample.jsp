@@ -120,14 +120,6 @@ function callback(b){
 function fn_changeCount(obj){
     
 	Common.alert("페이지당 갯수가 " + $(obj).val() + "로 변경됩니다.", function(){
-
-		var txt;
-        var r = Common.confirm("Ok or Cancel !!!!", function() {
-            Common.alert("OK");
-        }, function() {
-            Common.alert("Cancel");
-        });
-
         //var allData = AUIGrid.getGridData(myGridID);
         AUIGrid.destroy(myGridID);
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, null, {

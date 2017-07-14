@@ -289,7 +289,7 @@ var Common = {
 	},
 	
 	/**
-	 * alert 대체용.]
+	 * alert 대체용.
 	 * 예) Common.alert("message test~");
 	 * @param message
 	 */
@@ -325,7 +325,7 @@ var Common = {
 	},
 	
 	/**
-	 * alert 대체용.
+	 * confirm 대체용.
 	 * 예) Common.confirm("save ??", function(){...}, function{...});
 	 * @param message
 	 * @param okCallback
@@ -356,12 +356,17 @@ var Common = {
 		});
 		
 		$obj.find('#_confirmOk').on('click', function(){
-			okCallback();
+			if(okCallback){
+				okCallback();	
+			}
+			
 			$obj.remove();
 		});
 		
 		$obj.find('#_confirmCancel').on('click', function(){
-			cancelCallback();
+			if(cancelCallback){
+				cancelCallback();				
+			}
 			$obj.remove();
 		});
 		
@@ -373,7 +378,6 @@ var Common = {
 	        height: 250,
 	        width: 400
 	    });
-		
 	}
 
 };
