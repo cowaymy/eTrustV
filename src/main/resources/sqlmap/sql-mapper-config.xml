@@ -11,8 +11,7 @@
 		<typeAlias alias="sampleVO" type="com.coway.trust.biz.sample.SampleVO"/>
 		<typeAlias alias="string" type="java.lang.String"/>
 		<typeAlias alias="int" type="java.lang.Integer"/>
-		<!-- 업무 A -->
-		<typeAlias alias="CRCStatementVO" type="com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO"/>
+		<!-- 업무 A -->	
 		
 		<!-- 업무 B -->
 		
