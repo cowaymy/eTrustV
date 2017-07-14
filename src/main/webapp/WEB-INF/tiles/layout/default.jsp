@@ -19,15 +19,9 @@
 
 
 <body class="<tiles:insertAttribute name="bodyClass" />" id="eTrustBody">
-		<c:if test="${!param.isPop}">
-			<tiles:insertAttribute name="header" />
-			<tiles:insertAttribute name="left" />
-		</c:if>
-		
+		<tiles:insertAttribute name="header" />
+		<tiles:insertAttribute name="left" />
 		<tiles:insertAttribute name="body" />
-		
-		<c:if test="${!param.isPop}">
-		  <tiles:insertAttribute name="footer" />
-		</c:if>
+		<tiles:insertAttribute name="footer" />
 </body>
 </html>
