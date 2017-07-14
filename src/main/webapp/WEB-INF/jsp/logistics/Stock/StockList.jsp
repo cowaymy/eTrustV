@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
     // AUIGrid 생성 후 반환 ID
@@ -232,7 +232,7 @@
             for(i=0; i<selectedItems.length; i++) {
             	if ($("#stock_info_edit").text() == "EDIT"){
             		if (selectedItems[i].item.statuscodeid == '1'){
-            			f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "ES");
+            			f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid+"&mode=edit", "ES");
             		}else{
             			alert(selectedItems[i].item.name + ' is a state that can not be changed.');
             		}
@@ -263,6 +263,18 @@
             }
             
         });
+        $(".numberAmt").keyup(function(e) {
+        	//regex = /^[0-9]+(\.[0-9]+)?$/g;
+        	regex = /[^.0-9]/gi;
+            
+   	        v = $(this).val();
+   	        if (regex.test(v)) {
+   	        	var nn = v.replace(regex, '');
+   	        	$(this).val(v.replace(regex, ''));
+   	            $(this).focus();
+   	            return;
+   	        }
+         });
     });
     
     function f_info_save(url , key , v , f){
@@ -285,8 +297,6 @@
     	$.extend(fdata, {'stockId': key});
     	$.extend(fdata, {'revalue': f});
     	
-    	console.log(fdata);
-    	
     	Common.ajax("POST" , url , fdata , function(data){
 										            alert(data.msg);
 										            if (v == "stockInfo"){
@@ -300,6 +310,7 @@
     	
     				   
 	function getMainListAjax(_da) {
+		console.log('1');
         var param = $('#listForm').serialize();
         var selcell = 0;
         var selectedItems = AUIGrid.getSelectedItems(myGridID);
@@ -318,6 +329,9 @@
                 var gridData = data;
                 AUIGrid.setGridData(myGridID, gridData.data);
                 AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
+                
+                console.log(_da.revalue);
+                $("#"+_da.revalue).click();
             },
             error: function(jqXHR, textStatus, errorThrown){
                 alert("실패하였습니다.");
@@ -426,6 +440,9 @@
 
 
     function getSampleListAjax() {
+    	
+    	//$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
+    	f_showModal();
         var param = $('#listForm').serialize();
 
         $.ajax({
@@ -444,8 +461,24 @@
                 alert("실패하였습니다.");
             },
             complete: function(){
+            	hideModal();
+            	//$.unblockUI();
             }
         });       
+    }
+    
+    function f_showModal(){
+    	$.blockUI.defaults.css = {textAlign:'center'}
+        $('div.SalesWorkDiv').block({
+                message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
+                centerY: false,
+                centerX: true,
+                css: { top: '300px', border: 'none'} 
+        });
+    }
+    function hideModal(){
+        $('div.SalesWorkDiv').unblock();
+        
     }
 
     function f_view(url , v) {
@@ -555,31 +588,31 @@
             }
             $("#priceTypeid").val(typeid);
             if (typeid == '61'){
-            	$("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value=''/>"); //PriceCharges
+            	$("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='numberAmt'/>"); //PriceCharges
                 $("#dPenaltyCharge").val(data[0].penalty);
-                $("#txtPV").html("<input type='text' name='dPV' id='dPV' value=''/>"); //PricePV
+                $("#txtPV").html("<input type='text' name='dPV' id='dPV' value='' class='numberAmt'/>"); //PricePV
                 $("#dPV").val(data[0].pricepv);
-                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' value=''/>"); //amt
+                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='numberAmt'/>"); //amt
                 $("#dMonthlyRental").val(data[0].mrental);
-                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' value=''/>"); //PriceRPF
+                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='numberAmt'/>"); //PriceRPF
                 $("#dRentalDeposit").val(data[0].pricerpf);
-                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' value=''/>"); //TradeInPV
+                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='numberAmt'/>"); //TradeInPV
                 $("#dTradeInPV").val(data[0].tradeinpv);
             }else{
-            	$("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value=''/>"); //PriceCharges
+            	$("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='numberAmt'/>"); //PriceCharges
                 $("#dPenaltyCharge").val(data[0].penalty);
-                $("#txtPV").html("<input type='text' name='dPV' id='dPV' disabled=true value=''/>"); //PricePV
+                $("#txtPV").html("<input type='text' name='dPV' id='dPV' disabled=true value='' class='numberAmt'/>"); //PricePV
                 $("#dPV").val(data[0].pricepv);
-                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value=''/>"); //amt
+                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='numberAmt'/>"); //amt
                 $("#dMonthlyRental").val(data[0].mrental);
-                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value=''/>"); //PriceRPF
+                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='numberAmt'/>"); //PriceRPF
                 $("#dRentalDeposit").val(data[0].pricerpf);
-                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value=''/>"); //TradeInPV
+                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='numberAmt'/>"); //TradeInPV
                 $("#dTradeInPV").val(data[0].tradeinpv);
             }
-            $("#txtCost").html("<input type='text' name='dCost' id='dCost' value=''/>"); //PriceCosting
+            $("#txtCost").html("<input type='text' name='dCost' id='dCost' value='' class='numberAmt'/>"); //PriceCosting
         	$("#dCost").val(data[0].pricecost);
-        	$("#txtNormalPrice").html("<input type='text' name='dNormalPrice' id='dNormalPrice' value=''/>"); // amt
+        	$("#txtNormalPrice").html("<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='numberAmt'/>"); // amt
         	$("#dNormalPrice").val(data[0].amt);
         	
         	$("#price_info_edit").text("SAVE");
@@ -653,9 +686,40 @@
         $("#txtPenaltyCharge").text();
         $("#txtTradeInPV").text();
     }
+    
+    
+    
+    function f_isNumeric(val){
+    	console.log(val);
+    	var num = $(val).val();
+    	console.log(num);
+        // 좌우 trim(공백제거)을 해준다.
+        num = String(num).replace(/^\s+|\s+$/g, "");
+        console.log(num);
+        /*if(typeof opt == "undefined" || opt == "1"){
+          // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
+          var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+        }else if(opt == "2"){
+          // 부호 미사용, 자릿수구분기호 선택, 소수점 선택
+          var regex = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+        }else if(opt == "3"){*/
+          // 부호 미사용, 자릿수구분기호 미사용, 소수점 선택
+          var regex = /^[0-9]+(\.[0-9]+)?$/g;
+        /*}else{
+          // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
+          var regex = /^[0-9]$/g;
+        }*/
+       
+        if( regex.test(num) ){
+          num = num.replace(/,/g, "");
+          console.log('111');
+          return isNaN(num) ? false : true;
+        }else{ return false;  }
+      }
+    
 </script>
 </head>
-
+<div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
@@ -701,7 +765,7 @@
                 <tr>
                     <th scope="row">Stock Code</th>
                     <td>
-                        <input type=text name="stkCd" id="stkCd" value=""/>
+                        <input type=text name="stkCd" id="stkCd" class="numberAmt" value=""/>
                     </td>
                     <th scope="row">Stock Name</th>
                     <td colspan='3'>
@@ -877,3 +941,4 @@
     </section><!-- data body end -->
 
 </section><!-- content end -->
+
