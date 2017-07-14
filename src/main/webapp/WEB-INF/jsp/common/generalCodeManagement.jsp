@@ -142,11 +142,11 @@ function fnSaveGridMap()
 		    , GridCommon.getEditData(myGridID)
 		    , function(result) 
 		     {
-		        alert("Success!");
+		        alert(result.data + " Count Save Success!");
 		        fn_getMstCommCdListAjax() ;
 		        
-		        console.log("성공.");
-		        console.log("data : " + result);
+		        console.log("성공." + JSON.stringify(result));
+		        console.log("data : " + result.data);
 		     } 
 		   , function(jqXHR, textStatus, errorThrown) 
 	      {
@@ -340,10 +340,10 @@ $(document).ready(function()
 
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
         	  || String(event.value).length < 1)
-		        {
+		    {
 		            alert("CodeMasterID Confirm!!");
 		            return false;
-		        } 
+		    } 
 
         $("#mstCdId").val( event.value);
         
