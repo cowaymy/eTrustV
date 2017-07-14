@@ -5,6 +5,11 @@
 #container{position:absolute; top:0; left:0; width:100%; min-width:1200px; height:100%; padding:32px 0 0 215px; box-sizing:border-box;}
 #container #content{position:relative; padding:10px 10px 10px 23px;}
 #container #content:after{content:""; display:block; clear:both;}
+#wrap.solo #header,
+#wrap.solo .lnb_wrap{display:none;}
+#wrap.solo #container{padding:0;}
+#wrap.solo #container #content{padding:20px;}
+#wrap.solo .bottom_msg_box{margin:10px 20px;}
 
 /* 로그인 */
 #login_wrap{position:absolute; width:100%; min-width:1280px; height:100%; min-height:768px; padding:30px 0; background:#f6f6f6 url(../images/common/bg_login.jpg) no-repeat center 0; box-sizing:border-box; /*background-size:cover;*/}
@@ -24,7 +29,7 @@
 #login_wrap .copy{text-align:center; color:#666; font-size:12px;}
 
 /* 헤더 */
-#header{position:fixed; top:0; left:0; width:100%; min-width:1200px; height:32px; background:#a1c4d7;}
+#header{position:fixed; top:0; left:0; z-index:1000; width:100%; min-width:1200px; height:32px; background:#a1c4d7;}
 #header:after{content:""; display:block; clear:both;}
 #header .left_opt{float:left; margin-left:20px;}
 #header .left_opt:after{content:""; display:block; clear:both;}
