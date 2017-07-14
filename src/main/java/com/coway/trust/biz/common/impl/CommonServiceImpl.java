@@ -249,4 +249,25 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		
 	}
 	
+	/**
+	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
+	 * @param params
+	 * @return
+	 */
+	@Override	
+	public List<EgovMap> getAccountList(Map<String, Object> params) {
+		return commonMapper.getAccountList(params);
+	}
+	
+	/**
+	 * Branch 정보 조회
+	 * @param params
+	 * @return
+	 */
+	@Override	
+	public List<EgovMap> getBranchList(Map<String, Object> params) {
+		return commonMapper.getBranchList(params);
+	}
+	
+
 }

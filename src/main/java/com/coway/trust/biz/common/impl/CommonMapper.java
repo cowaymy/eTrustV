@@ -18,6 +18,8 @@ package com.coway.trust.biz.common.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -38,5 +40,19 @@ public interface CommonMapper {
     int addDetailCommCodeGrid(Map<String, Object> addList );
     
     int updDetailCommCodeGrid(Map<String, Object> updateList);
+    
+    /**
+	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> getAccountList(Map<String, Object> params);
+	
+	/**
+	 * Branch 정보 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> getBranchList(Map<String, Object> params);
     
 }

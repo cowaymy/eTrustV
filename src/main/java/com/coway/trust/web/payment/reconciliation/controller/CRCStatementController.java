@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.SampleApplication;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
 import com.coway.trust.biz.sample.SampleDefaultVO;
@@ -49,6 +50,9 @@ public class CRCStatementController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CRCStatementController.class);
 
+	@Resource(name = "commonService")
+	private CommonService commonService;
+	
 	@Resource(name = "crcStatementService")
 	private CRCStatementService crcStatementService;
 
@@ -77,15 +81,15 @@ public class CRCStatementController {
 	@RequestMapping(value = "/initCRCStatementUpload.do")
 	public String CRCStatementUpload(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		CRCStatementVO crcStatementVO = new CRCStatementVO();
+		Map<String, Object> param = new HashMap<String, Object>();
 		
 		//크레딧 카드 리스트 조회
-		crcStatementVO.setAccountType("CRC");		
-		List<EgovMap> cardComboList  = crcStatementService.getAccountList(crcStatementVO);
+		param.put("accountType","CRC");		
+		List<EgovMap> cardComboList  = commonService.getAccountList(param);
 		
 		//은행 계좌 정보 조회
-		crcStatementVO.setAccountType("CASH");
-		List<EgovMap> bankComboList  = crcStatementService.getAccountList(crcStatementVO);
+		param.put("accountType","CASH");		
+		List<EgovMap> bankComboList  = commonService.getAccountList(param);
 		
 		// 화면 단으로 전달할 데이터.
 		model.addAttribute("cardComboList", cardComboList);
@@ -200,15 +204,15 @@ public class CRCStatementController {
 	@RequestMapping(value = "/initCRCStatementTranList.do")
 	public String initCRCStatementTranList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		CRCStatementVO crcStatementVO = new CRCStatementVO();
+		Map<String, Object> param = new HashMap<String, Object>();
 		
 		//크레딧 카드 리스트 조회
-		crcStatementVO.setAccountType("CRC");		
-		List<EgovMap> cardComboList  = crcStatementService.getAccountList(crcStatementVO);
+		param.put("accountType","CRC");		
+		List<EgovMap> cardComboList  = commonService.getAccountList(param);
 		
 		//은행 계좌 정보 조회
-		crcStatementVO.setAccountType("CASH");
-		List<EgovMap> bankComboList  = crcStatementService.getAccountList(crcStatementVO);
+		param.put("accountType","CASH");		
+		List<EgovMap> bankComboList  = commonService.getAccountList(param);
 		
 		// 화면 단으로 전달할 데이터.
 		model.addAttribute("cardComboList", cardComboList);

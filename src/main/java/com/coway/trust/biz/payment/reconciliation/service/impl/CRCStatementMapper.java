@@ -30,13 +30,6 @@ public interface CRCStatementMapper {
 
 	
 	/**
-	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> getAccountList(CRCStatementVO params);
-	
-	/**
 	 * CRC Statement Transaction 리스트 조회
 	 * @param params
 	 * @return

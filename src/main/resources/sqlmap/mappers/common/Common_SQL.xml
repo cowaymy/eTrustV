@@ -153,5 +153,88 @@
 		     , UPD_DT      = SYSDATE  
 		WHERE CODE_ID      = #{detailcodeid}
     </update>    
+    
+    <!--Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)  -->
+    <select id="getAccountList" parameterType="Map" resultType="egovMap">
+        SELECT 
+            ACC_ID, 
+            ACC_CODE, 
+            ACC_DESC, 
+            ACC_CODE || ' - ' ||  ACC_DESC AS ACC_DESC2
+        FROM
+            SYS0001M    
+        WHERE
+            ACC_STUS_ID = 1
+            <if test="accountType != null and accountType == 'CRC'">
+                AND IS_PAY_CRC = 1
+            </if>
+            <if test="accountType != null and accountType == 'CASH'">
+                AND IS_PAY_CASH = 1
+            </if>
+        ORDER BY ACC_CODE ASC
+    </select>    
+    
+    <!--Branch 정보 조회 -->
+    <select id="getBranchList" parameterType="Map" resultType="egovMap">
+        SELECT  
+            BRNCH_ID
+            , CODE
+            <choose>
+              <when test="kind != null and kind != '0' ">
+                , CODE ||  
+                    <choose>
+                        <when test="separator != null and separator != '' ">
+                                #{separator}
+                        </when>
+                        <otherwise>
+                            '|'
+                        </otherwise>
+                    </choose>   || NAME AS CODE_AND_NAME
+              </when>
+              <otherwise>
+                , NAME
+                , ADDR1
+                , ADDR2
+                , ADDR3
+                , ADDR4
+                , AREA_ID
+                , POST_CODE_ID
+                , STATE_CODE_ID
+                , CNTY_ID
+                , TEL1
+                , TEL2
+                , FAX
+                , CNTC
+                , TYPE_ID
+              </otherwise>
+          </choose>            
+        FROM 
+            SYS0005M
+        WHERE
+            STUS_ID = '1'
+             <choose>
+              <when test="kind != null and kind == '2' or kind == '5' ">
+                AND (TYPE_ID = '40' OR TYPE_ID = '43') 
+              </when>              
+              <when test="kind != null and kind == '3' ">
+                AND (TYPE_ID = '40' OR TYPE_ID = '43' OR TYPE_ID = '42') 
+              </when>
+              <when test="kind != null and kind == '4' ">
+                AND TYPE_ID = '42' 
+              </when>
+              <when test="kind != null and kind == '7' ">
+                AND TYPE_ID = '1160'
+              </when>
+          </choose>  
+        ORDER BY 
+            <choose>
+              <when test="kind != null and kind == '0' ">
+                CODE
+              </when>
+              <otherwise>
+               CODE || '|' || NAME
+              </otherwise>
+          </choose>
+    </select>  
 
 </mapper>

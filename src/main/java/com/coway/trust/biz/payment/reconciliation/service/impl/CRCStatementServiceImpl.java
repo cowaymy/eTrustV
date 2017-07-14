@@ -52,15 +52,7 @@ public class CRCStatementServiceImpl extends EgovAbstractServiceImpl implements 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
-	/**
-	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
-	 * @param params
-	 * @return
-	 */
-	@Override	
-	public List<EgovMap> getAccountList(CRCStatementVO params) {
-		return crcStatementMapper.getAccountList(params);
-	}
+	
 	
 	/**
 	 * CRC Statement Transaction 리스트 조회
