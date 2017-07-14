@@ -80,8 +80,7 @@
 .title_line .fav a.on{background-position:100% 0;}
 .title_line h2{float:left; font-size:24px; color:#25527c; font-weight:normal;}
 .title_line h3{float:left; padding:20px 0 0 0; font-size:16px; color:#25527c;}
-.title_line h4{position:relative; float:left; padding:10px 0 0 10px; font-size:14px; color:#25527c;}
-.title_line h4:before{content:""; display:block; position:absolute; top:17px; left:0; width:3px; height:3px; background:#25527c;}
+.title_line h4{position:relative; float:left;padding:10px 0 0 0; font-size:14px; color:#333;}
 .title_line .right_opt{float:right;}
 .title_line .right_opt:after{content:""; display:block; clear:both;}
 .title_line .right_opt li{float:left; margin-left:5px;}
@@ -89,6 +88,7 @@
 .title_line .left_opt{float:left;}
 .title_line .left_opt:after{content:""; display:block; clear:both;}
 .title_line .left_opt li{float:left; margin-left:5px;}
+table+.title_line h4{margin-top:10px;}
 .h70{height:70px;}
 .mt0{margin-top:0!important;}
 .mt10{margin-top:10px!important;}
