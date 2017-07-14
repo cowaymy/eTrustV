@@ -112,16 +112,31 @@ function fn_delete(){
 	Common.setMsg("<spring:message code='sys.btn.delete'/>");
 }
 
-// 페이징 당 갯수 변경.
-function fn_changeCount(obj){
-	//var allData = AUIGrid.getGridData(myGridID);
-	AUIGrid.destroy(myGridID);
-	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, null, {pageRowCount : $(obj).val()});
-	//AUIGrid.setGridData(myGridID, allData);
-	fn_getSampleListAjax();
+function callback(b){
+	alert(b);
 }
 
+// 페이징 당 갯수 변경.
+function fn_changeCount(obj){
+    
+	Common.alert("페이지당 갯수가 " + $(obj).val() + "로 변경됩니다.", function(){
 
+		var txt;
+        var r = Common.confirm("Ok or Cancel !!!!", function() {
+            Common.alert("OK");
+        }, function() {
+            Common.alert("Cancel");
+        });
+
+        //var allData = AUIGrid.getGridData(myGridID);
+        AUIGrid.destroy(myGridID);
+        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, null, {
+            pageRowCount : $(obj).val()
+        });
+        //AUIGrid.setGridData(myGridID, allData);
+        fn_getSampleListAjax();
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -141,7 +156,7 @@ function fn_changeCount(obj){
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="searchForm" action="#" method="post">
+<form id="searchForm" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

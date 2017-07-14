@@ -279,9 +279,101 @@ var Common = {
 		form.submit();
 	},
 	
+	/**
+	 * 본문 하단 메세지 출력.
+	 * @param message
+	 */
 	setMsg : function(message){
 		$(".bottom_msg_box").html("<p>" + message + "</p>");
 		$(".bottom_msg_box p").fadeOut(5000);
+	},
+	
+	/**
+	 * alert 대체용.]
+	 * 예) Common.alert("message test~");
+	 * @param message
+	 */
+	alert : function(message, callback) {
+		var msgHtml = '<div id="popup_wrap" class="msg_box">'
+				+ '	<header class="pop_header">' 
+				+ '<h1>Message</h1>'
+				+ '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
+				+ '</header>' 
+				+ '<section class="pop_body">'
+				+ '<p class="msg_txt">' + message + '</p>'
+				+ '<ul class="center_btns">'
+				+ '	<li><p class="btn_blue2" id="_alertOk"><a href="#">OK</a></p></li>'
+				+ '</ul>' 
+				+ '</section>' 
+				+ '</div>';
+
+		var $obj = $(msgHtml);
+
+		$("body").append($obj);
+		
+		$obj.find('#_popClose').on('click', function(){
+			$obj.remove();
+		});
+		
+		$obj.find('#_alertOk').on('click', function(){
+			$obj.remove();
+			
+			if(callback){
+				callback();
+			}
+		});
+	},
+	
+	/**
+	 * alert 대체용.
+	 * 예) Common.confirm("save ??", function(){...}, function{...});
+	 * @param message
+	 * @param okCallback
+	 * @param cancelCallback
+	 */
+	confirm : function(message, okCallback, cancelCallback) {
+
+		var msgHtml = '<div id="popup_wrap" class="msg_box">'
+				+ '	<header class="pop_header">' 
+				+ '<h1>Message</h1>'
+				+ '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
+				+ '</header>' 
+				+ '<section class="pop_body">'
+				+ '<p class="msg_txt">' + message + '</p>'
+				+ '<ul class="center_btns">'
+				+ '	<li><p class="btn_blue2" id="_confirmOk"><a href="#">OK</a></p></li>'
+				+ '	<li><p class="btn_blue2" id="_confirmCancel"><a href="#">Cancel</a></p></li>'
+				+ '</ul>' 
+				+ '</section>' 
+				+ '</div>';
+
+		var $obj = $(msgHtml);
+
+		$("body").append($obj);
+		
+		$obj.find('#_popClose').on('click', function(){
+			$obj.remove();
+		});
+		
+		$obj.find('#_confirmOk').on('click', function(){
+			okCallback();
+			$obj.remove();
+		});
+		
+		$obj.find('#_confirmCancel').on('click', function(){
+			cancelCallback();
+			$obj.remove();
+		});
+		
+	    // Define the Dialog and its properties.
+	    $("#popup_wrap").dialog({
+	        resizable: false,
+	        modal: true,
+	        title: "Modal",
+	        height: 250,
+	        width: 400
+	    });
+		
 	}
 
 };
