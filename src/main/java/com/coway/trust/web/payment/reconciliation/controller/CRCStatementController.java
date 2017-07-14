@@ -95,7 +95,7 @@ public class CRCStatementController {
 		model.addAttribute("cardComboList", cardComboList);
 		model.addAttribute("bankComboList", bankComboList);		
 		
-		return "payment/crcStatementUpload";
+		return "payment/reconciliation/crcStatementUpload";
 	}
 	
 	/**
@@ -218,7 +218,7 @@ public class CRCStatementController {
 		model.addAttribute("cardComboList", cardComboList);
 		model.addAttribute("bankComboList", bankComboList);		
 		
-		return "payment/crcStatementTranList";
+		return "payment/reconciliation/crcStatementTranList";
 	}
 	
 	/**
