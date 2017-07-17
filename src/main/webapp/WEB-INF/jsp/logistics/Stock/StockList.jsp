@@ -5,6 +5,7 @@
 
     // AUIGrid 생성 후 반환 ID
     var myGridID;
+    var cpGridID;
     var filterGrid;
     var spareGrid;
     var serviceGrid;
@@ -16,18 +17,18 @@
     var columnLayout = [{dataField:"stkid"             ,headerText:"StockID"           ,width:120 ,height:30, visible : false},
                         {dataField:"stkcode"           ,headerText:"StockCode"         ,width:100 ,height:30},
                         {dataField:"stkdesc"           ,headerText:"StockName"         ,width:350 ,height:30},
-                        {dataField:"stkcategoryid"        ,headerText:"CategoryID"      ,width:120,height:30 , visible : false},
-                        {dataField:"codename"        ,headerText:"Category"      ,width:140 ,height:30},
-                        {dataField:"stktypeid"            ,headerText:"TypeID"          ,width:120 ,height:30, visible : false},
-                        {dataField:"codename1"            ,headerText:"Type"          ,width:120 ,height:30},
-                        {dataField:"name"      ,headerText:"Status"    ,width:120 ,height:30},
+                        {dataField:"stkcategoryid"     ,headerText:"CategoryID"      ,width:120,height:30 , visible : false},
+                        {dataField:"codename"          ,headerText:"Category"      ,width:140 ,height:30},
+                        {dataField:"stktypeid"         ,headerText:"TypeID"          ,width:120 ,height:30, visible : false},
+                        {dataField:"codename1"         ,headerText:"Type"          ,width:120 ,height:30},
+                        {dataField:"name"              ,headerText:"Status"    ,width:120 ,height:30},
                         {dataField:"statuscodeid"      ,headerText:"statuscodeid"    ,width:120 ,height:30 , visible : false},
-                        {dataField:"issirim"             ,headerText:"IsSirim"           ,width:90 ,height:30},
-                        {dataField:"isncv"               ,headerText:"IsNCV"             ,width:90 ,height:30},
-                        {dataField:"qtypercarton"   ,headerText:"Qty Per Carton" ,width:120 ,height:30},
-                        {dataField:"netweight"           ,headerText:"Net Wgt"         ,width:100 ,height:30},
-                        {dataField:"grossweight"         ,headerText:"Gross Wgt"       ,width:100 ,height:30},
-                        {dataField:"measurementcbm"      ,headerText:"CBM"    ,width:100 ,height:30},
+                        {dataField:"issirim"           ,headerText:"IsSirim"           ,width:90 ,height:30},
+                        {dataField:"isncv"             ,headerText:"IsNCV"             ,width:90 ,height:30},
+                        {dataField:"qtypercarton"      ,headerText:"Qty Per Carton" ,width:120 ,height:30},
+                        {dataField:"netweight"         ,headerText:"Net Wgt"         ,width:100 ,height:30},
+                        {dataField:"grossweight"       ,headerText:"Gross Wgt"       ,width:100 ,height:30},
+                        {dataField:"measurementcbm"    ,headerText:"CBM"    ,width:100 ,height:30},
                         {dataField:"stkgrade"          ,headerText:"Grade"        ,width:100 ,height:30
                         }];
 
@@ -68,6 +69,37 @@
                           {dataField:"cdate"          ,headerText:"cdate"     ,width:120, visible : false},
                           {dataField:"cuser"          ,headerText:"cuser"     ,width:120 , visible : false}]
 
+ // 그리드 속성 설정
+    var gridPros = {
+        // 페이지 설정
+        usePaging : true,               
+        pageRowCount : 30,              
+        fixedColumnCount : 1,
+        // 편집 가능 여부 (기본값 : false)
+        editable : false,                
+        // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
+        enterKeyColumnBase : true,                
+        // 셀 선택모드 (기본값: singleCell)
+        selectionMode : "multipleCells",                
+        // 컨텍스트 메뉴 사용 여부 (기본값 : false)
+        useContextMenu : true,                
+        // 필터 사용 여부 (기본값 : false)
+        enableFilter : true,            
+        // 그룹핑 패널 사용
+        useGroupingPanel : true,                
+        // 상태 칼럼 사용
+        showStateColumn : true,                
+        // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
+        displayTreeOpen : true,                
+        noDataMessage : "출력할 데이터가 없습니다.",                
+        groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",                
+        //selectionMode : "multipleCells",
+        //rowIdField : "stkid",
+        enableSorting : true,
+        showRowCheckColumn : true,
+
+    };
+    
     var subgridpros = {
                         // 페이지 설정
                         usePaging : true,                
@@ -88,7 +120,8 @@
 
     $(document).ready(function(){
         // AUIGrid 그리드를 생성합니다.
-        createAUIGrid(columnLayout);        
+        createAUIGrid(columnLayout);
+        //copyAUIGrid(columnLayout);
         AUIGrid.setGridData(myGridID, []);
         doDefCombo(comboData, '' ,'cmbStatus', 'M', 'f_multiCombo');
     });
@@ -275,6 +308,7 @@
    	            return;
    	        }
          });
+        
     });
     
     function f_info_save(url , key , v , f){
@@ -310,7 +344,7 @@
     	
     				   
 	function getMainListAjax(_da) {
-		console.log('1');
+		
         var param = $('#listForm').serialize();
         var selcell = 0;
         var selectedItems = AUIGrid.getSelectedItems(myGridID);
@@ -330,7 +364,7 @@
                 AUIGrid.setGridData(myGridID, gridData.data);
                 AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
                 
-                console.log(_da.revalue);
+                
                 $("#"+_da.revalue).click();
             },
             error: function(jqXHR, textStatus, errorThrown){
@@ -343,36 +377,6 @@
     
     // AUIGrid 를 생성합니다.
     function createAUIGrid(columnLayout) {
-
-        // 그리드 속성 설정
-        var gridPros = {
-            // 페이지 설정
-            usePaging : true,               
-            pageRowCount : 30,              
-            fixedColumnCount : 1,
-            // 편집 가능 여부 (기본값 : false)
-            editable : false,                
-            // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-            enterKeyColumnBase : true,                
-            // 셀 선택모드 (기본값: singleCell)
-            selectionMode : "multipleCells",                
-            // 컨텍스트 메뉴 사용 여부 (기본값 : false)
-            useContextMenu : true,                
-            // 필터 사용 여부 (기본값 : false)
-            enableFilter : true,            
-            // 그룹핑 패널 사용
-            useGroupingPanel : true,                
-            // 상태 칼럼 사용
-            showStateColumn : true,                
-            // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
-            displayTreeOpen : true,                
-            noDataMessage : "출력할 데이터가 없습니다.",                
-            groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",                
-            //selectionMode : "multipleCells",
-            //rowIdField : "stkid",
-            enableSorting : true
-
-        };
 
         // 실제로 #grid_wrap 에 그리드 생성
         myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
@@ -404,7 +408,10 @@
             }*/
         });
     }
-
+    
+    /*function copyAUIGrid(columnLayout){
+    	cpGridID = AUIGrid.create("#copy_grid", columnLayout, gridPros);
+    }*/
 
     // AUIGrid 를 생성합니다.
     function filterAUIGrid(filtercolumn) {
@@ -645,19 +652,19 @@
     function f_multiCombo(){
         $(function() {
             $('#cmbCategory').change(function() {
-            //console.log($(this).val());
+            
             }).multipleSelect({
                 selectAll: true, // 전체선택 
                 width: '80%'
             });
             $('#cmbType').change(function() {
-            //console.log($(this).val());
+            
             }).multipleSelect({
                 selectAll: true,
                 width: '80%'
             });
             $('#cmbStatus').change(function() {
-            //console.log($(this).val());
+            
             }).multipleSelect({
                 selectAll: true,
                 width: '80%'
@@ -690,12 +697,12 @@
     
     
     function f_isNumeric(val){
-    	console.log(val);
+    	
     	var num = $(val).val();
-    	console.log(num);
+    	
         // 좌우 trim(공백제거)을 해준다.
         num = String(num).replace(/^\s+|\s+$/g, "");
-        console.log(num);
+        
         /*if(typeof opt == "undefined" || opt == "1"){
           // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
           var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
@@ -712,7 +719,7 @@
        
         if( regex.test(num) ){
           num = num.replace(/,/g, "");
-          console.log('111');
+          
           return isNaN(num) ? false : true;
         }else{ return false;  }
       }
