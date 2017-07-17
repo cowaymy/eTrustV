@@ -93,7 +93,7 @@ var detailColumnLayout =
     ];
 
 
-function fn_multiCombo()
+/* function fn_multiCombo()
 {
     $('#cmbCategory').change(function() {
         //console.log($(this).val());
@@ -101,7 +101,7 @@ function fn_multiCombo()
         selectAll: true, // 전체선택 
         width: '100%'
     });            
-}
+} */
 
 //ajax list 조회.
 
