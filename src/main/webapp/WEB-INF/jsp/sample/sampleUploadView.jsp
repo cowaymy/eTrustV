@@ -1,10 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>sample file upload</title>
 
 <!-- 
 sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
@@ -71,9 +66,6 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
 	}
 </script>
 
-</head>
-
-<body>
 	<form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
 		<input type="file" id="file01" name="fileTest1"/>
 		<input type="file" id="file02" name="fileTest2"/>
@@ -88,5 +80,3 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
         
         <a href="javascript:fn_downFile()">다운로드(단순 테스트 용입니다.)</a>
     </form>
-</body>
-</html>

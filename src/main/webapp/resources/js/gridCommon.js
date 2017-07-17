@@ -89,7 +89,7 @@ var GridCommon = {
 	    	}
 	        
 	        // 그리드가 작성한 엑셀, CSV 등의 데이터를 다운로드 처리할 서버 URL을 지시합니다.
-	        AUIGrid.setProp(_sGridId, "exportURL", "/common/gridExport.do" + param);
+	        AUIGrid.setProp(_sGridId, "exportURL", "/common/exportGrid.do" + param);
 	        
 	        // 내보내기 실행  
 	        switch(_type) {

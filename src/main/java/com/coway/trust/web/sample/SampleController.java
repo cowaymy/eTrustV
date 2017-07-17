@@ -286,7 +286,7 @@ public class SampleController {
 	/**
 	 * 화면 호출. - 데이터 포함 호출.
 	 */
-	@RequestMapping(value = "/selectSampleList.do")
+	@RequestMapping(value = "/sampleList.do")
 	public String selectSample2View(@ModelAttribute("searchVO") SampleDefaultVO searchVO,
 			@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -444,7 +444,7 @@ public class SampleController {
 	@RequestMapping(value = "/sampleUploadView.do")
 	public String sampleUploadView(@RequestParam Map<String, Object> params, ModelMap model) {
 		logger.debug(" appName : {}", appName);
-		return "sample/sampleUpload";
+		return "sample/sampleUploadView";
 	}
 
 	/**
