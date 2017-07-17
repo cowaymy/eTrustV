@@ -298,7 +298,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .treeMenu ul li.none_last{background:url(../images/common/bg_none_last.gif) no-repeat left 0; padding-bottom:0;}
 .treeMenu ul li.none{background:url(../images/common/bg_none.gif) no-repeat left 3px;}
 .treeMenu ul li a:focus,
-.treeMenu ul li a.on{color:#000;}
+.treeMenu ul li a.on{color:#25527c; font-weight:bold;}
 
 /* transfer */
 .transfer_wrap{position:relative; margin-bottom:10px;}
