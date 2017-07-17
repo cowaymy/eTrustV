@@ -13,7 +13,7 @@ $(document).ready(function(){
     // AUIGrid 그리드를 생성합니다.
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
     
-    var auiGridProps = {
+    /*var auiGridProps = {
             selectionMode : "multipleCells",
             enableSorting : true,               // 정렬 사용            
             editable : true,                       // 편집 가능 여부 (기본값 : false)
@@ -22,8 +22,16 @@ $(document).ready(function(){
     };
 
     // 그리드 생성
-    myGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
+    myGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);*/
     
+    var gridPros = {
+            // 편집 가능 여부 (기본값 : false)
+            editable : false,
+            
+            // 상태 칼럼 사용
+            showStateColumn : false
+    };
+	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     
 });
 
