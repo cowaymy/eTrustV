@@ -15,6 +15,10 @@
 		
 		<!-- 업무 B -->
 		
+		<!-- Reconciliation Search -->
+		<typeAlias alias="reconciliationSearchVO" type="com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO"/>
+		<typeAlias alias="reconciliationListVO" type="com.coway.trust.biz.payment.reconciliation.service.ReconciliationListVO"/>
+		
 		<!-- Sales PST -->
 		<typeAlias alias="pstRequestVO" type="com.coway.trust.biz.sales.pst.PSTRequestDOVO"/>
     </typeAliases>

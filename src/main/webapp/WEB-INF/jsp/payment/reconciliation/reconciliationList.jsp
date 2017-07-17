@@ -1,14 +1,89 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
-<script type="text/javaScript">
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
+<script type="text/javaScript">
+//AUIGrid 그리드 객체
+var myGridID;
+
+// 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
+$(document).ready(function(){
+    // AUIGrid 그리드를 생성합니다.
+    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
+    
+    var auiGridProps = {
+            selectionMode : "multipleCells",
+            enableSorting : true,               // 정렬 사용            
+            editable : true,                       // 편집 가능 여부 (기본값 : false)
+            enableMovingColumn : true,      // 칼럼 이동 가능 설정
+            wrapSelectionMove : true         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부            
+    };
+
+    // 그리드 생성
+    myGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
+    
+    
+});
+
+// AUIGrid 칼럼 설정
+var columnLayout = [ 
+    {
+        dataField : "reconciliationNo",
+        headerText : "Transaction No",
+        editable : false
+    }, {
+        dataField : "depositPaymentDate",
+        headerText : "Ref Date",
+        editable : false
+    }, {
+        dataField : "depositBranchCode",
+        headerText : "Branch",
+        editable : true
+    }, {
+        dataField : "depositAccountCode",
+        headerText : "Account",
+        editable : true
+    }, {
+        dataField : "reconciliationStatus",
+        headerText : "Status",
+        editable : true
+    }, {
+        dataField : "reconciliationRemark",
+        headerText : "Remark",
+        editable : true
+    }, {
+        dataField : "reconciliationCreated",
+        headerText : "Created",
+        editable : true
+    }, {
+        dataField : "reconciliationCreatorName",
+        headerText : "Creator",
+        editable : true
+    }, {
+        dataField : "reconciliationApproveAt",
+        headerText : "Updated",
+        editable : true
+    }, {
+        dataField : "reconciliationApproverName",
+        headerText : "Updator",
+        editable : true
+    }];
+    
+// ajax list 조회.
+    function searchList()
+    {
+    	   Common.ajax("GET","/payment/searchReconciliationList.do",$("#searchForm").serialize(), function(result){
+    		AUIGrid.setGridData(myGridID, result);
+    	});
+    }
 </script>
 
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
+        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Reconciliation</li>
         <li>Reconciliation Search</li>
@@ -17,7 +92,7 @@
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Credit Card Statement</h2>       
+        <h2>Reconciliation Search</h2>       
     </aside>
     <!-- title_line end -->
     
@@ -85,7 +160,7 @@
             <!-- table end -->
 
             <ul class="right_btns">
-                <li><p class="btn_gray"><a href=""><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_gray"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
             </ul>
         </form>
     </section>
@@ -96,7 +171,7 @@
         
         <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/image/btn_link.gif" alt="link show" /></a></p>
+            <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
@@ -120,7 +195,7 @@
                         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
                         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
                     </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/image/btn_link_close.gif" alt="hide" /></a></p>
+                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
         </aside>
@@ -129,11 +204,6 @@
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
-        
-        <!-- bottom_msg_box start -->
-        <aside class="bottom_msg_box">            
-        </aside>
-        <!-- bottom_msg_box end -->
 
     </section>
     <!-- search_result end -->

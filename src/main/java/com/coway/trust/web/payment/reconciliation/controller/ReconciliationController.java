@@ -33,6 +33,9 @@ import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
+import com.coway.trust.biz.payment.reconciliation.service.ReconciliationListService;
+import com.coway.trust.biz.payment.reconciliation.service.ReconciliationListVO;
+import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
@@ -52,6 +55,9 @@ public class ReconciliationController {
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
+	
+	@Resource(name="ReconciliationService")
+	private ReconciliationListService rService;
 	
 	@Value("${app.name}")
 	private String appName;
@@ -91,9 +97,27 @@ public class ReconciliationController {
 		
 		// 화면 단으로 전달할 데이터.
 		model.addAttribute("branchList", branchList);
-		model.addAttribute("bankComboList", bankComboList);			
+		model.addAttribute("bankComboList", bankComboList);	
 		
 		return "payment/reconciliation/reconciliationList";
+	}
+	
+	
+	/******************************************************
+	 * Reconciliation Search List
+	 *****************************************************/	
+	/**
+	 * Reconciliation Search List검색 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/searchReconciliationList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<ReconciliationListVO>> searchCRCStatementTranList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+	
+		List<ReconciliationListVO> list = rService.selectReconciliationList(searchVO);
+
+		return ResponseEntity.ok(list);
 	}
 	
 }
