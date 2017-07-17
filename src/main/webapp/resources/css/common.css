@@ -320,7 +320,17 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine3 > article:first-child .treeMenu{border-left:1px solid #ddd;}
 .divine2 > article h3,
 .divine3 > article h3{margin-bottom:10px; font-size:14px; color:#25527c!important; background:none!important;}
-
 .divine2:after{content:""; display:block; clear:both;}
 .divine2 > article{float:left; width:50%; box-sizing:border-box; padding-left:10px;}
 .divine2 > article:first-child{padding-left:0; padding-right:10px;}
+
+/* 아코디언 */
+.acodi_wrap{border:1px solid #ddd;}
+.acodi_wrap dt{border-top:1px solid #ddd; background:url(../images/common/bg_acodi.gif) repeat-x 0 0;}
+.acodi_wrap dt.on{background:#f5f5f5;}
+.acodi_wrap dt:first-child{border-top:0 none!important;}
+.acodi_wrap dt a{position:relative; display:block; height:31px; line-height:31px; padding:0 10px; font-size:14px; color:#333;}
+.acodi_wrap dt a:after{content:""; display:block; position:absolute; top:5px; right:10px; width:25px; height:25px; background:url(../images/common/btn_down.gif) no-repeat 0 0;}
+.acodi_wrap dt.on a:after{background:url(../images/common/btn_up.gif) no-repeat 0 0;}
+.acodi_wrap dd{display:none; padding:10px; border-top:1px solid #ddd;}
+.acodi_wrap dt.on+dd{display:block;}
