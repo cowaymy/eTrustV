@@ -228,7 +228,16 @@ public class SampleController {
 		// 호출될 화면
 		return "sample/main";
 	}
-
+	
+	/**
+	 * 화면 호출.
+	 */
+	@RequestMapping(value = "/sampleReport.do")
+	public String sampleReport(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "sample/sampleReport";
+	}
+	
 	/**
 	 * 화면 호출.
 	 */

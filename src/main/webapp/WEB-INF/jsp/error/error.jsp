@@ -5,8 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/egovframework/sample.css'/>" />
 <title>Basic Sample - jsp/error/error.jsp</title>
+<script type="text/javaScript">
+$(function(){
+	 // 공통 메세지 영역에 메세지 표시.
+    Common.setMsg("${exception}");
+});
+</script>
 </head>
 
 <body>

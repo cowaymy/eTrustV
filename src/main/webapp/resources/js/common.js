@@ -72,7 +72,7 @@ var Common = {
 				if (_errcallback) {
 					_errcallback(jqXHR, textStatus, errorThrown);
 				} else {
-					alert("Fail : " + jqXHR.responseJSON.message);
+					Common.setMsg("Fail : " + jqXHR.responseJSON.message);
 				}
 			}
 		});
@@ -113,7 +113,7 @@ var Common = {
 				if (_errcallback) {
 					_errcallback(jqXHR, textStatus, errorThrown);
 				} else {
-					alert("Fail : " + jqXHR.responseJSON.message);
+					Common.setMsg("Fail : " + jqXHR.responseJSON.message);
 				}
 			},
 			complete : function() {
@@ -243,7 +243,7 @@ var Common = {
 				+ ",width=" + option.width + ",height=" + option.height);
 
 		/*
-		 * 팝업시 left/top 제외 시킴. => /webapp/WEB-INF/tiles/layout/default.jsp
+		 * 팝업시 left/top 제외 시킴. => /etrust/src/main/webapp/WEB-INF/tiles/view/header.jsp ==> class="solo" 
 		 */
 		var _input = document.createElement("textarea");
 		_input.name = "isPop";
@@ -284,8 +284,12 @@ var Common = {
 	 * @param message
 	 */
 	setMsg : function(message){
-		$(".bottom_msg_box").html("<p>" + message + "</p>");
-		$(".bottom_msg_box p").fadeOut(5000);
+		try{
+			$(".bottom_msg_box").html("<p>" + message + "</p>");
+			$(".bottom_msg_box p").fadeOut(5000);			
+		}catch(e){
+			Common.alert(message);
+		}
 	},
 	
 	/**

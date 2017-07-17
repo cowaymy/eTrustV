@@ -35,6 +35,25 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+
+<!-- crystal reprot -->
+	<servlet>
+		<servlet-name>CrystalReportViewerServlet</servlet-name>
+		<servlet-class>com.crystaldecisions.report.web.viewer.CrystalReportViewerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CrystalReportViewerServlet</servlet-name>
+		<url-pattern>/CrystalReportViewerHandler</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>crystal_image_uri</param-name>
+		<param-value>/resources/report/crystalreportviewers</param-value>
+	</context-param>
+	<context-param>
+		<param-name>crystal_image_use_relative</param-name>
+		<param-value>webapp</param-value>
+	</context-param>
+<!-- crystal reprot -->
     
 	<servlet>
 		<servlet-name>servlet</servlet-name>
