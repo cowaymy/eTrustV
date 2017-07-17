@@ -293,7 +293,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .treeMenu ul li{position:relative; padding:0 0 7px 10px; background:url(../images/common/bg_none.gif) no-repeat left 3px;}
 .treeMenu ul li img{position:absolute; top:2px; left:-5px; cursor:pointer; vertical-align:baseline;}
 .treeMenu ul li.first,
-.treeMenu ul li.none_first{background:url(../images/common/bg_none_first.gif) no-repeat left 0;}
+.treeMenu ul li.none_first{background:url(../images/common/bg_none_first.gif) no-repeat left -4px;}
 .treeMenu ul li.last,
 .treeMenu ul li.none_last{background:url(../images/common/bg_none_last.gif) no-repeat left 0; padding-bottom:0;}
 .treeMenu ul li.none{background:url(../images/common/bg_none.gif) no-repeat left 3px;}
