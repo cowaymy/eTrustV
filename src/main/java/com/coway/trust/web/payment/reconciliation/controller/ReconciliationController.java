@@ -80,7 +80,7 @@ public class ReconciliationController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initReconciliationList.do")
-	public String initCRCStatementTranList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initReconciliationList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		Map<String, Object> param = null;
 		
@@ -88,7 +88,7 @@ public class ReconciliationController {
 		param = new HashMap<String, Object>();
 		param.put("kind","1");
 		param.put("separator","-");
-		List<EgovMap> branchList  = commonService.getBranchList(param);
+		List<EgovMap> branchList  = commonService.selectBranchList(param);
 		
 		//은행 계좌 정보 조회
 		param = new HashMap<String, Object>();		
@@ -113,11 +113,24 @@ public class ReconciliationController {
 	 * @return
 	 */
 	@RequestMapping(value = "/searchReconciliationList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<ReconciliationListVO>> searchCRCStatementTranList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<ReconciliationListVO>> searchReconciliationList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 	
 		List<ReconciliationListVO> list = rService.selectReconciliationList(searchVO);
 
 		return ResponseEntity.ok(list);
 	}
 	
+	
+	/**
+	 * Reconciliation View 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initReconciliationView.do")
+	public String initReconciliationView(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		System.out.println("id : " + params.get("id"));
+		return "payment/reconciliation/reconciliationView";
+	}
 }
