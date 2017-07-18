@@ -65,6 +65,29 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 	
+	
+/**************** Account Code Management *****************/	
+	
+	@RequestMapping(value = "/accountCode.do")
+	public String listAccountCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		return "/common/accountCodeManagement";
+	}	
+	
+	@RequestMapping(value = "/selectAccountCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAccountCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("accountCodeId : {}", params.get("mstCdId"));
+
+		List<EgovMap> mstCommCodeList = commonService.getMstCommonCodeList(params);
+		
+		return ResponseEntity.ok(mstCommCodeList);
+
+	}
+	
+	
+/**************** General Code Management *****************/	
+	
 	@RequestMapping(value = "/generalCode.do")
 	public String listCommCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
