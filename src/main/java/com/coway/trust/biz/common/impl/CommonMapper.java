@@ -53,11 +53,11 @@ public interface CommonMapper {
 	List<EgovMap> getAccountList(Map<String, Object> params);
 	
 	/**
-	 * Branch 정보 조회
+	* Branch ID로 User 정보 조회
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> getBranchList(Map<String, Object> params);
+	List<EgovMap> getUsersByBranch(Map<String, Object> params);
     
 
 }

@@ -266,14 +266,13 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 	
 	/**
-	 * Branch 정보 조회
+	 * Branch ID로 User 정보 조회
 	 * @param params
 	 * @return
 	 */
 	@Override	
-	public List<EgovMap> getBranchList(Map<String, Object> params) {
-		return commonMapper.getBranchList(params);
+	public List<EgovMap> getUsersByBranch(Map<String, Object> params) {
+		return commonMapper.getUsersByBranch(params);
 	}
-	
 
 }

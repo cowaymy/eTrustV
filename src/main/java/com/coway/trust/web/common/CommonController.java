@@ -292,5 +292,27 @@ public class CommonController {
 		return ResponseEntity.ok(message);
 	}	*/
 	
+	/**
+	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/getAccountList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getAccountList(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> resultList = commonService.getAccountList(params);
+		return ResponseEntity.ok(resultList);
+	}
+	
+	 /**
+	 * Branch ID로 User 정보 조회
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/getUsersByBranch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getUsersByBranch(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> resultList = commonService.getUsersByBranch(params);
+		return ResponseEntity.ok(resultList);
+	}
+	
 	
 }
