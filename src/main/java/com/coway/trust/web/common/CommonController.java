@@ -259,6 +259,15 @@ public class CommonController {
 		return ResponseEntity.ok(message);
 	}	
 	
+	@RequestMapping(value = "/selectBranchCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBranchCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("groupCode : {}", params.get("groupCode"));
+
+		List<EgovMap> codeList = commonService.selectBranchList(params);
+		return ResponseEntity.ok(codeList);
+	}
+	
 	/**
 	 * Use Map and Edit Grid Insert,Update,Delete
 	 *

@@ -46,6 +46,15 @@ public interface CommonService {
      * @return
      */
     int udtDetailCommCodeGrid(List<Object> updateList);
+
+    
+    /**
+     * BranchCodeList
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectBranchList(Map<String, Object> params);
+
     
     /**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
@@ -60,5 +69,6 @@ public interface CommonService {
 	 * @return
 	 */
 	List<EgovMap> getBranchList(Map<String, Object> params);
+
 	
 }

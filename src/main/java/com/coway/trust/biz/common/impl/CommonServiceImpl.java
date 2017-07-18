@@ -248,6 +248,12 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		});
 		
 	}
+
+	@Override
+	public List<EgovMap> selectBranchList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return commonMapper.selectBranchList(params);
+	}
 	
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
