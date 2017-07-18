@@ -18,6 +18,83 @@
             SELECT * FROM SYS_I18N
     </select>
     
+  <select id="getAccountCodeList" parameterType="Map" resultType="egovMap">
+        SELECT 
+              ACC_ID AS ACC_ID 
+              ,ACC_CODE AS ACC_CODE 
+              ,ACC_DESC AS ACC_DESC 
+              ,ACC_CRT_USER_ID AS ACC_CRT_USER_ID 
+              ,ACC_UPD_USER_ID AS ACC_UPD_USER_ID 
+              ,ACC_STUS_ID AS ACC_STUS_ID 
+              ,IS_PAY_CASH AS IS_PAY_CASH 
+              ,IS_PAY_ONLINE AS IS_PAY_ONLINE 
+              ,IS_PAY_CHQ AS IS_PAY_CHQ 
+              ,IS_PAY_CRC AS IS_PAY_CRC 
+              ,SYS0038M.Code AS STATUS_CODE 
+              ,SYS0038M.NAME AS STATUS_NAME
+              ,CASE WHEN (ACC_CURR_ID IS NOT NULL) THEN ACC_CURR_ID ELSE '' END AS ACC_CURR_ID 
+              ,CASE WHEN (ACC_GRP IS NOT NULL) THEN ACC_GRP ELSE '' END AS ACC_GRP 
+              ,CASE WHEN (ACC_IS_MFG IS NOT NULL) THEN ACC_IS_MFG ELSE 0 END AS ACC_IS_MFG 
+              ,CASE WHEN (ACC_LINK IS NOT NULL) THEN ACC_LINK ELSE '' END AS ACC_LINK 
+              ,CASE WHEN (ACC_PAY_TYPE_ID IS NOT NULL) THEN ACC_PAY_TYPE_ID ELSE 0 END AS ACC_PAY_TYPE_ID 
+              ,CASE WHEN (ACC_TYPE IS NOT NULL) THEN ACC_TYPE ELSE 0 END AS ACC_TYPE 
+              ,CASE WHEN (ACC_ADDR1 IS NOT NULL) THEN DBMS_LOB.SUBSTR (ACC_ADDR1,4000)  ELSE '' END AS ACC_ADDR1
+              ,CASE WHEN (ACC_ADDR2 IS NOT NULL) THEN DBMS_LOB.SUBSTR (ACC_ADDR2,4000)  ELSE '' END AS ACC_ADDR2 
+              ,CASE WHEN (ACC_ADDR3 IS NOT NULL) THEN DBMS_LOB.SUBSTR (ACC_ADDR3,4000)  ELSE '' END AS ACC_ADDR3
+              ,CASE WHEN (ACC_ADD_AREA_ID IS NOT NULL) THEN ACC_ADD_AREA_ID ELSE 0 END AS ACC_ADD_AREA_ID 
+              ,CASE WHEN (Extent4.AREA_ID IS NOT NULL) THEN Extent4.AREA_NAME ELSE '' END AS AREA_NAME 
+              ,CASE WHEN (ACC_ADD_CNTY_ID IS NOT NULL) THEN ACC_ADD_CNTY_ID ELSE 0 END AS ACC_ADD_CNTY_ID 
+              ,CASE WHEN (Extent6.CNTY_ID IS NOT NULL) THEN Extent6.NAME ELSE '' END AS NAME15 
+              ,CASE WHEN (ACC_CRT_DT IS NOT NULL) THEN  TO_CHAR(ACC_CRT_DT,'DD-MON-YYYY HH24:MI:SS')   ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS C14 
+              ,CASE WHEN (Extent7.USER_ID IS NOT NULL) THEN Extent7.USER_NAME ELSE '' END AS USER_NAME47 
+              ,CASE WHEN (ACC_ADD_POST_CODE_ID IS NOT NULL) THEN ACC_ADD_POST_CODE_ID ELSE 0 END AS ACC_ADD_POST_CODE_ID 
+              ,CASE WHEN (Extent3.POST_CODE_ID IS NOT NULL) THEN Extent3.POST_CODE_ID ELSE 0 END AS POST_CODE_ID 
+              ,CASE WHEN (SAP_ACC_CODE IS NOT NULL) THEN SAP_ACC_CODE ELSE '' END AS SAP_ACC_CODE 
+              ,CASE WHEN (ACC_ADD_STATE_ID IS NOT NULL) THEN ACC_ADD_STATE_ID ELSE 0 END AS ACC_ADD_STATE_ID 
+              ,CASE WHEN (Extent5.STATE_ID IS NOT NULL) THEN Extent5.NAME ELSE '' END AS NAME35 
+              ,CASE WHEN (ACC_TEL_NO1 IS NOT NULL) THEN ACC_TEL_NO1 ELSE '' END AS ACC_TEL_NO1 
+              ,CASE WHEN (ACC_TEL_NO2 IS NOT NULL) THEN ACC_TEL_NO2 ELSE '' END AS ACC_TEL_NO2 
+              ,CASE WHEN (ACC_UPD_DT IS NOT NULL) THEN TO_CHAR(ACC_UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE  TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS C23 
+              ,CASE WHEN (Extent8.USER_ID IS NOT NULL) THEN Extent8.USER_NAME ELSE '' END AS USER_NAME
+          FROM  SYS0001M
+                INNER JOIN SYS0038M  ON SYS0038M.STUS_CODE_ID = ACC_STUS_ID
+                  LEFT OUTER JOIN SYS0030C  Extent3 ON Extent3.POST_CODE_ID = ACC_ADD_POST_CODE_ID
+                  LEFT OUTER JOIN SYS0039M  Extent4 ON Extent4.AREA_ID = ACC_ADD_AREA_ID
+                  LEFT OUTER JOIN SYS0035M  Extent5 ON Extent5.STATE_ID = ACC_ADD_STATE_ID
+                  LEFT OUTER JOIN SYS0015M  Extent6 ON Extent6.CNTY_ID = ACC_ADD_CNTY_ID
+                  LEFT OUTER JOIN SYS0047M  Extent7 ON Extent7.USER_ID = ACC_CRT_USER_ID
+                  LEFT OUTER JOIN SYS0047M  Extent8 ON Extent8.USER_ID = ACC_UPD_USER_ID
+          WHERE 1 = 1
+          <if test="accStusId !=null and accStusId != 0">          
+          ACC_STUS_ID = #{accStusId} 
+          </if>
+          <if test="accId !=null and accId != ''">
+            AND ACC_ID = #{accId}
+          </if>
+          <if test="accCode !=null and accCode != ''">
+            AND ACC_CODE = #{accCode}
+          </if>         
+          <if test="accDesc !=null and accDesc != ''">
+            AND ACC_DESC LIKE  '%' || #{accDesc} || '%'
+          </if>         
+          <if test="sapAccCode !=null and sapAccCode != ''">
+            AND SAP_ACC_CODE = #{sapAccCode}
+          </if>  
+          <if test="paymentCd !=null and paymentCd == 'CSH' ">
+            AND IS_PAY_CASH = 1
+          </if>               
+          <if test="paymentCd !=null and paymentCd == 'ONL' ">
+            AND IS_PAY_ONLINE = 1
+          </if>               
+          <if test="paymentCd !=null and paymentCd == 'CHQ' ">
+            AND IS_PAY_CHQ = 1
+          </if>               
+          <if test="paymentCd !=null and paymentCd == 'CRC' ">
+            AND IS_PAY_CRC = 1
+          </if>               
+         ORDER BY ACC_CODE ASC
+  </select>    
+    
     <select id="getMstCommonCodeList" parameterType="Map" resultType="egovMap">
     
 			SELECT 
@@ -231,49 +308,6 @@
                 AND IS_PAY_CASH = 1
             </if>
         ORDER BY ACC_CODE ASC
-    </select>
-    
-    <select id="selectAddrSelCode" parameterType="Map" resultType="egovMap">
-        SELECT 
-              <choose>
-                  <when test="groupCode !=null and groupCode == 'country'">
-                      CNTY_ID CODE_ID , CODE code , NAME CODE_NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'state'">
-                      STATE_ID CODE_ID , CODE CODE , NAME CODE_NAME , CNTY_ID
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'area'">
-                      AREA_ID CODE_ID , AREA_NAME CODE_NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'post'">
-                      POST_CODE_ID CODE_ID , POST_CODE CODE_NAME 
-                  </when>
-              </choose>
-		  FROM 
-		      <choose>
-		          <when test="groupCode !=null and groupCode == 'country'">
-                      SYS0015M
-                      ORDER BY NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'state'">
-                      SYS0035M
-                      WHERE STUS_CODE_ID = '1'
-                        AND CNTY_ID like #{codevalue}
-                     ORDER BY NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'area'">
-                      SYS0039M
-                      WHERE AREA_STUS_ID = '1'
-                        AND AREA_STATE_ID like #{codevalue}
-                     ORDER BY AREA_NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'post'">
-                      SYS0030C
-                      WHERE STUS_CODE_ID = '1'
-                        AND AREA_ID like #{codevalue}
-                      ORDER BY POST_CODE
-                  </when>
-              </choose>
     </select>
 
 </mapper>
