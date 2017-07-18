@@ -15,4 +15,11 @@ public interface SearchPaymentService
 	 * @return
 	 */
     List<EgovMap> selectOrderList(Map<String, Object> params);
+    
+    /**
+	 * SearchPayment Payment List(Slave Grid) 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectPaymentList(Map<String, Object> params);
 }

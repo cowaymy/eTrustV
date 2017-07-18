@@ -4,7 +4,7 @@
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
-var myGridID;
+var myGridID,subGridID;
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
@@ -26,41 +26,72 @@ $(document).ready(function(){
     	doGetCombo('/common/getUsersByBranch.do', $(this).val() , ''   , 'userId' , 'S', '');
     });
     
-    var auiGridProps = {
-            selectionMode : "multipleCells",
-            enableSorting : true,               // 정렬 사용            
-            editable : true,                       // 편집 가능 여부 (기본값 : false)
-            enableMovingColumn : true,      // 칼럼 이동 가능 설정
-            wrapSelectionMove : true         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부            
-    };
-
-    // 그리드 생성
-    myGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
+   
     
-    // 그리드 생성
-    subGridID = AUIGrid.create("#grid_sub_wrap", columnLayout, auiGridProps);
+    //Grid Properties 설정 
+    var gridPros = {            
+            editable : false,                 // 편집 가능 여부 (기본값 : false)
+            showStateColumn : false     // 상태 칼럼 사용
+    };
+    
+    // Order 정보 (Master Grid) 그리드 생성
+    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    
+    
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    	
+    	// Payment (Slave Grid) 그리드 생성
+        subGridID = GridCommon.createAUIGrid("grid_sub_wrap", slaveColumnLayout,null,gridPros);
+    	
+    	$("#payId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "payId"));
+    	fn_getPaymentListAjax();
+    	        
+    });
 });
 
 // AUIGrid 칼럼 설정
 var columnLayout = [ 
-    { dataField:"trxId"         ,headerText:"TrxNo",editable : false },
-	{ dataField:"trxDt"           ,headerText:"TrxDate",editable : false },
-	{ dataField:"trxAmt"         ,headerText:"TrxTotal" ,editable : false },
-	{ dataField:"payId"         ,headerText:"PID" ,editable : false },
-	{ dataField:"orNo"          ,headerText:"ORNo" ,editable : false },
-	{ dataField:"payTypeName"       ,headerText:"PayType" ,editable : false },
-	{ dataField:"AdvMonth"          ,headerText:"AdvMonth" ,editable : false },
-	{ dataField:"trNo"          ,headerText:"TRNo" ,editable : false },
-	{ dataField:"orAmt"          ,headerText:"ORTotal" ,editable : false },
-	{ dataField:"salesOrdNo"      ,headerText:"OrderNo" ,editable : false },
-	{ dataField:"appTypeName"       ,headerText:"AppType" ,editable : false },
-	{ dataField:"productDesc"    ,headerText:"Product" ,editable : false },
-	{ dataField:"custName"      ,headerText:"Customer" ,editable : false },
-	{ dataField:"custIc"        ,headerText:"IC/CO No." ,editable : false },
-	{ dataField:"virtlAccNo"      ,headerText:"VANo" ,editable : false },
-	{ dataField:"clctrBrnchName"   ,headerText:"Branch" ,editable : false },
-	{ dataField:"keyinUserName"     ,headerText:"UserName" ,editable : false }
-    
+    { dataField:"trxId" ,headerText:"TrxNo",editable : false },
+	{ dataField:"trxDt" ,headerText:"TrxDate",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+	{ dataField:"trxAmt" ,headerText:"TrxTotal" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
+	{ dataField:"payId" ,headerText:"PID" ,editable : false },
+	{ dataField:"orNo" ,headerText:"ORNo" ,editable : false },
+	{ dataField:"payTypeName" ,headerText:"PayType" ,editable : false },
+	{ dataField:"AdvMonth" ,headerText:"AdvMonth" ,editable : false },
+	{ dataField:"trNo" ,headerText:"TRNo" ,editable : false },
+	{ dataField:"orAmt" ,headerText:"ORTotal" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
+	{ dataField:"salesOrdNo" ,headerText:"OrderNo" ,editable : false },
+	{ dataField:"appTypeName" ,headerText:"AppType" ,editable : false },
+	{ dataField:"productDesc" ,headerText:"Product" ,editable : false },
+	{ dataField:"custName" ,headerText:"Customer" ,editable : false },
+	{ dataField:"custIc" ,headerText:"IC/CO No." ,editable : false },
+	{ dataField:"virtlAccNo" ,headerText:"VANo" ,editable : false },
+	{ dataField:"clctrBrnchName" ,headerText:"Branch" ,editable : false },
+	{ dataField:"keyinUserName" ,headerText:"UserName" ,editable : false }
+    ];
+
+var slaveColumnLayout = [ 
+	{ dataField:"payId" ,headerText:"PayID",editable : false ,visible : false },
+	{ dataField:"payItmId" ,headerText:"ItemId",editable : false ,visible : false },
+	{ dataField:"codeName" ,headerText:"Mode",editable : false },
+	{ dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
+	{ dataField:"c7" ,headerText:"CardType" ,editable : false },
+	{ dataField:"codeName1" ,headerText:"CCType" ,editable : false },
+	{ dataField:"payItmCcHolderName" ,headerText:"CCHolder" ,editable : false },
+	{ dataField:"payItmCcExprDt" ,headerText:"CCExpiryDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+	{ dataField:"payItmChqNo" ,headerText:"ChequeNo" ,editable : false },
+	{ dataField:"name" ,headerText:"IssueBank" ,editable : false },
+	{ dataField:"payItmAmt" ,headerText:"Amount" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},                   
+	{ dataField:"c8" ,headerText:"CRCMode" ,editable : false },
+	{ dataField:"accDesc" ,headerText:"Bank Account" ,editable : false },
+	{ dataField:"c3" ,headerText:"Account Code" ,editable : false },
+	{ dataField:"payItmRefDt" ,headerText:"RefDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+	{ dataField:"payItmAppvNo" ,headerText:"ApprNo." ,editable : false },
+	{ dataField:"c4" ,headerText:"EFT" ,editable : false },
+	{ dataField:"c5" ,headerText:"Running No" ,editable : false },
+	{ dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
+	{ dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
     ];
 
 
@@ -71,12 +102,19 @@ function fn_getOrderListAjax() {
     });
 }
 
+//리스트 조회.
+function fn_getPaymentListAjax() {        
+    Common.ajax("GET", "/payment/selectPaymentList", $("#detailForm").serialize(), function(result) {
+        AUIGrid.setGridData(subGridID, result);
+    });
+}
+
 </script>
 
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Payment</li>
         <li>Search Payment</li>
@@ -153,7 +191,8 @@ function fn_getOrderListAjax() {
 					    </td>
 					    <th scope="row">KeyIn User</th>
                         <td>
-                            <select id="userId" name="userId" class="w100p">                                                                 
+                            <select id="userId" name="userId" class="w100p">
+                                <option value="">Select Branch</option>                                                                 
                              </select>
                         </td>
 					</tr>					
@@ -204,7 +243,7 @@ function fn_getOrderListAjax() {
 
             <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+                <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 				<dl class="link_list">
 				    <dt>Link</dt>
 				    <dd>
@@ -223,7 +262,7 @@ function fn_getOrderListAjax() {
 				        <li><p class="link_btn type2"><a href="#">Reverse Payment(Void)</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>				        
 				    </ul>
-				    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+				    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
 				</dl>
             </aside>
@@ -233,14 +272,7 @@ function fn_getOrderListAjax() {
     <!-- search_table end -->
 
     <!-- search_result start -->
-    <section class="search_result">
-		<ul class="right_btns">
-		    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-		    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-		    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-		    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-		    <li><p class="btn_grid"><a href="#">ADD</a></p></li> 
-		</ul>
+    <section class="search_result">		
 
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
@@ -254,4 +286,7 @@ function fn_getOrderListAjax() {
     <!-- search_result end -->
 
 </section>
-<!-- content end -->      
+<!-- content end -->
+<form name="detailForm" id="detailForm"  method="post">
+    <input type="hidden" name="payId" id="payId" />
+</form>      

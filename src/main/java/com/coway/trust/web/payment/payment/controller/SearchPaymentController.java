@@ -85,7 +85,7 @@ public class SearchPaymentController {
 	
 	/**
 	 * SearchPayment Order List(Master Grid) 조회
-	 * @param crcStatementVO
+	 * @param searchVO
 	 * @param params
 	 * @param model
 	 * @return
@@ -103,10 +103,31 @@ public class SearchPaymentController {
         logger.debug("poNo : {}", params.get("poNo"));
         
         // 조회.
-        List<EgovMap> masterList = searchPaymentService.selectOrderList(params);
+        List<EgovMap> resultList = searchPaymentService.selectOrderList(params);
         
         // 조회 결과 리턴.
-        return ResponseEntity.ok(masterList);
+        return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * SearchPayment Payment List(Slave Grid) 조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectPaymentList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPaymentList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+				, @RequestParam Map<String, Object> params, ModelMap model) {
+
+		//검색 파라미터 확인.(화면 Form객체 입력값)
+        logger.debug("payId : {}", params.get("payId"));        
+        
+        // 조회.
+        List<EgovMap> resultList = searchPaymentService.selectPaymentList(params);
+        
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
 	}
 	
 	
