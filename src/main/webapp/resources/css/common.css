@@ -338,6 +338,6 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 
 /* 화면 나누기 */
 .divine_auto{display:table; width:100%;}
-.divine_auto > div{display:table-cell; padding:0 5px;}
+.divine_auto > div{display:table-cell; padding:0 5px; vertical-align:top;}
 .divine_auto > div:first-child{padding:0 5px 0 0;}
 .divine_auto > div:last-child{padding:0 0 0 5px;}
