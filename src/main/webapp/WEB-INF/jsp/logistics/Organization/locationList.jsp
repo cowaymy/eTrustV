@@ -58,7 +58,7 @@
                         {dataField:"loccnty"    ,headerText:"loccnty"        ,width:90  ,height:30 , visible:false},
                         {dataField:"loctel1"    ,headerText:"loctel1"        ,width:90  ,height:30 , visible:false},
                         {dataField:"loctel2"    ,headerText:"loctel2"        ,width:120 ,height:30 , visible:false},
-                        {dataField:"loc_branch" ,headerText:"loc_branch"     ,width:100 ,height:30 , visible:false},
+                        {dataField:"locBranch"  ,headerText:"loc_branch"     ,width:100 ,height:30 , visible:false},
                         {dataField:"loctype"    ,headerText:"loctype"        ,width:100 ,height:30 , visible:false},
                         {dataField:"locgrad"    ,headerText:"locgrad"        ,width:100 ,height:30 , visible:false},
                         {dataField:"locuserid"  ,headerText:"locuserid"      ,width:100 ,height:30 , visible:false},
@@ -124,14 +124,35 @@
 		
 		AUIGrid.bind(myGridID, "cellClick", function( event ) 
 	    {
-	        fn_locDetail(AUIGrid.getCellValue(myGridID , event.rowIndex , "locid"));
+			
 	        
 	    });
 
 		// 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 	    {
-	    	fn_modyWare(event.rowIndex);
+	    	$("#detailView").show();
+            fn_locDetail(AUIGrid.getCellValue(myGridID , event.rowIndex , "locid"));
+        });
+		
+	    AUIGrid.bind(myGridID, "updateRow", function(event) {
+	        dialog.dialog( "close" ); // 다이얼로그 닫기
+	        
+	        console.log(GridCommon.getEditData(myGridID));
+	        
+	        Common.ajax("POST", "/logistics/organization/locationUpdate.do", GridCommon.getEditData(myGridID), function(result) {
+	        	Common.alert(result.message);
+	           // AUIGrid.resetUpdatedItems(myGridID, "a"); // 초기화
+	            
+	        },  function(jqXHR, textStatus, errorThrown) {
+	            try {
+	            } catch (e) {
+	            }
+
+	            Common.alert("Fail : " + jqXHR.responseJSON.message);
+	        });
+	        
+	        $("#search").click();
 	    });
 	    
 		dialog = $( "#editWindow" ).dialog({
@@ -142,18 +163,21 @@
 		      headerHeight:40,
 		      position : { my: "center", at: "center", of: $("#grid_wrap") },
 		      buttons: {
-		        "확인": function(event){alert('1');},
-		        "취소": function(event) {
+		        "SAVE": updateGridRow,
+		        "CANCEL": function(event) {
 		          dialog.dialog( "close" );
 		        }
 		      }
 		    });
+		
+		$("#detailView").hide();
 
     });
 
     $(function(){
         $("#search").click(function(){
         	getLocationListAjax();
+        	$("#detailView").hide();
         });
         $("#clear").click(function(){
         	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
@@ -161,7 +185,17 @@
         	$("#loccd").val('');
         	$("#locdesc").val('');
         });
-        
+        $("#update").click(function(){
+        	$("#detailView").hide();
+        	
+            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+            if (selectedItem[0] > -1){
+                fn_modyWare(selectedItem[0]);
+            }else{
+            Common.alert('Choice Data please..');
+            }
+            //AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
+        });
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
             v = $(this).val();
@@ -176,7 +210,7 @@
     });
     
     function fn_modyWare(rowid){
-    	console.log(AUIGrid.getCellValue(myGridID ,rowid,'statnm'));
+    	
     	$("#mstatus").text(AUIGrid.getCellValue(myGridID ,rowid,'statnm'));
     	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'locid'));
     	$("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
@@ -186,24 +220,49 @@
     	$("#mcontact1").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel1'));
     	$("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
     	
-    	doDefCombo(stockgradecomboData, '' ,'mstockgrade', 'S', '');
+    	doDefCombo(stockgradecomboData, AUIGrid.getCellValue(myGridID ,rowid,'locgrad') ,'mstockgrade', 'S', '');
     	
     	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty'),'mcountry', 'S', ''); 
     	
+    	doDefCombo('', '' ,'mstate', 'S', '');
+    	doDefCombo('', '' ,'marea', 'S', '');
+    	doDefCombo('', '' ,'mpostcd', 'S', '');
+    	
     	if (AUIGrid.getCellValue(myGridID ,rowid,'loccnty') != "" && AUIGrid.getCellValue(myGridID ,rowid,'loccnty') != undefined){
-    		getAddrRelay('state' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty') , 'mstate' , AUIGrid.getCellValue(myGridID ,rowid,'locstat'));
+    		getAddrRelay('mstate' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty') , 'state' , AUIGrid.getCellValue(myGridID ,rowid,'locstat'));
     	}
     	if (AUIGrid.getCellValue(myGridID ,rowid,'locstat') != "" && AUIGrid.getCellValue(myGridID ,rowid,'locstat') != undefined){
-            getAddrRelay('area' , AUIGrid.getCellValue(myGridID ,rowid,'locstat') , 'marea' , AUIGrid.getCellValue(myGridID ,rowid,'locarea'));
+            getAddrRelay('marea' , AUIGrid.getCellValue(myGridID ,rowid,'locstat') , 'area' , AUIGrid.getCellValue(myGridID ,rowid,'locarea'));
         }
     	if (AUIGrid.getCellValue(myGridID ,rowid,'locarea') != "" && AUIGrid.getCellValue(myGridID ,rowid,'locarea') != undefined){
-            getAddrRelay('post' , AUIGrid.getCellValue(myGridID ,rowid,'locarea') , 'mpostcd', AUIGrid.getCellValue(myGridID ,rowid,'locpost'));
+            getAddrRelay('mpostcd' , AUIGrid.getCellValue(myGridID ,rowid,'locarea') , 'post', AUIGrid.getCellValue(myGridID ,rowid,'locpost'));
         }
     	
-    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'branchcd'),'mwarebranch', 'S' , ''); 
+    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locBranch'),'mwarebranch', 'S' , ''); 
         dialog.dialog( "open" );
     }
     
+    function updateGridRow(){
+    	//AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
+    	var item = {};
+    	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+        
+        item.loccd   = $("#mwarecd").val();
+        item.locdesc = $("#mwarenm").val();
+        item.locaddr1 = $("#maddr1").val();
+        item.locaddr2 = $("#maddr2").val();
+        item.locaddr3 = $("#maddr3").val();
+        item.loctel1  = $("#mcontact1").val();
+        item.loctel2  = $("#mcontact2").val();
+        item.locgrad  = $("#mstockgrade").val();
+        item.loccnty  = $("#mcountry").val();
+        item.locstat  = $("#mstate").val();
+        item.locarea  = $("#marea").val();
+        item.locpost  = $("#mpostcd").val();
+        item.locBranch = $("#mwarebranch").val();
+        
+        AUIGrid.updateRow(myGridID, item, selectedItem[0]);
+    }
     
     function fn_locDetail(locid){
     	var param = "?locid="+locid;
@@ -226,7 +285,7 @@
     function fn_detailView(data){
     	var detail = data.data;
     	var stock = data.stock;
-    	console.log(detail[0]);
+    	
     	$("#txtwarecode").text(detail[0].loccd);
         $("#txtstockgrade").text(detail[0].locgrad);
         $("#txtwarename").text(detail[0].locdesc);
@@ -266,7 +325,7 @@
     function getLocationListAjax() {
         f_showModal();
         var param = $('#searchForm').serialize();
-        console.log(param);
+        
         $.ajax({
             type : "POST",
             url : "/logistics/organization/LocationList.do?"+param,
@@ -274,6 +333,7 @@
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                 var gridData = data;
+                console.log(gridData.data);
                 AUIGrid.setGridData(myGridID, gridData.data);
             },
             error: function(jqXHR, textStatus, errorThrown){
@@ -409,6 +469,7 @@
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.del' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li>
+    <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.add' /></a></p></li>
 </ul>
 
@@ -480,6 +541,7 @@
 <section class="pop_body"><!-- pop_body start -->
 <div id="editWindow" style="display:none" title="그리드 수정 사용자 정의">
 <h1>Warehouse Information</h1>
+<form id="modForm" name="modForm" method="POST">
 <table class="type1"><!-- table start -->
 <caption>search table</caption>
 <colgroup>
@@ -521,11 +583,11 @@
     <th scope="row">Country</th>
     <td><select id="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
     <th scope="row">State</th>
-    <td><select id="mstate" onchange="getAddrRelay('marea' , this.value , 'area', '')" disabled=true><option>Choose One</option></select></td>
+    <td><select id="mstate" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
 </tr>
 <tr>
     <th scope="row">Area</th>
-    <td><select id="marea" onchange="getAddrRelay('mpostcd' , this.value , 'post', '')" disabled=true><option>Choose One</option></select></td>
+    <td><select id="marea" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
     <th scope="row">Postcode</th>
     <td><select id="mpostcd" disabled=true><option>Choose One</option></select></td>
 </tr>
@@ -537,6 +599,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
 </div>
 </section>
 

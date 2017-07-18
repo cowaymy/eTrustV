@@ -17,4 +17,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface LocationService {
 	List<EgovMap>selectLocationList(Map<String, Object> params);
 	List<EgovMap>selectLocationStockList(Map<String, Object> params);
+	
+	void updateLocationInfo(Map<String, Object> params);
 }

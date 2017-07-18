@@ -118,5 +118,24 @@
 		               SYS0026M T2
 		         WHERE T1.STOCKID = T2.STK_ID AND QTY > 0) T1
 	</select>
+	
+	<update id="updateLocationInfo" parameterType="Map">
+	   UPDATE SYS0028M
+	      SET WH_LOC_CODE           = #{loccd}
+	        , WH_LOC_DESC           = #{locdesc}
+	        , WH_LOC_ADD1           = #{locaddr1}
+	        , WH_LOC_ADD2           = #{locaddr2}
+	        , WH_LOC_ADD3           = #{locaddr3}
+	        , WH_LOC_TEL1           = #{loctel1}
+	        , WH_LOC_TEL2           = #{loctel2}
+	        , WH_LOC_AREA_ID        = #{locarea}
+	        , WH_LOC_POST_CODE_ID   = #{locpost}
+	        , WH_LOC_STATE_ID       = #{locstat}
+	        , WH_LOC_BRNCH_ID       = #{locBranch}
+	        , WH_LOC_STK_GRAD       = #{locgrad}
+	        , WH_LOC_CNTY_ID        = #{loccnty}
+	        , WH_LOC_UPD_DT         = SYSDATE
+	    WHERE WH_LOC_ID = #{locid}
+	</update>
     
 </mapper>

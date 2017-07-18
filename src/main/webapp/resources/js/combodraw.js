@@ -128,6 +128,6 @@ function doGetComboAddr(url, groupCd ,codevalue ,  selCode, obj , type, callback
 function getAddrRelay(obj , value , tag , selvalue){
 	var robj= '#'+obj;
 	$(robj).attr("disabled",false);
-	doGetComboAddr('/common/selectAddrSelCodeList.do', tag , value , '',obj, 'S', ''); //청구처 리스트 조회
+	doGetComboAddr('/common/selectAddrSelCodeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회
 }
 

@@ -46,6 +46,12 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		return locMapper.selectLocationStockList(params);
 	}
 
+	@Override
+	public void updateLocationInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		locMapper.updateLocationInfo(params);
+	}
+
 	
 	
 }

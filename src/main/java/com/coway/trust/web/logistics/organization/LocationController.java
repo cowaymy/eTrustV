@@ -19,8 +19,10 @@ import com.coway.trust.AppConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,6 +56,9 @@ public class LocationController {
 
 	@Resource(name = "locationService")
 	private LocationService loc;
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 
 	@RequestMapping(value = "/Location.do")
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -100,6 +105,26 @@ public class LocationController {
 		map.put("stock", stock);
 
 		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/locationUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveSampleGrid(@RequestBody Map<String, ArrayList<Object>> params,
+			Model model) {
+
+		List<Object> updateList = params.get(AppConstants.AUIGrid_UPDATE); // 수정 리스트 얻기
+		
+		Map hm = null;
+		Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
+		
+		loc.updateLocationInfo(updateMap);
+		
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
 	}
 
 }
