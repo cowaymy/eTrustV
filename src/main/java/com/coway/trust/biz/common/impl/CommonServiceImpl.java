@@ -48,7 +48,14 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	public List<EgovMap> selectI18NList() {
 		return commonMapper.selectI18NList();
 	}
+		
+	// Account Code
+	@Override
+	public 	List<EgovMap> getAccountCodeList(Map<String, Object> params) {
+		return commonMapper.getAccountCodeList(params);
+	}
 	
+	// Gerneral Code
 	@Override
 	public 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params) {
 		return commonMapper.getMstCommonCodeList(params);

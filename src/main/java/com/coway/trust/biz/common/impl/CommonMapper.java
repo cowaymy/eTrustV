@@ -29,6 +29,11 @@ public interface CommonMapper {
 
 	List<EgovMap> selectI18NList();
 	
+	/* accountCodeList  */	
+    List<EgovMap> getAccountCodeList(Map<String, Object> params);
+	
+    
+    /*general Code*/
 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params);
 	
 	List<EgovMap> getDetailCommonCodeList(Map<String, Object> params);

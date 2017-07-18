@@ -13,8 +13,13 @@ public interface CommonService {
 
 	List<EgovMap> selectI18NList();
 	
+	// Account Code
+	List<EgovMap> getAccountCodeList(Map<String, Object> params);
+	
+	// Common Master Code
 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params);
 	
+	// Common Detail Code
 	List<EgovMap> getDetailCommonCodeList(Map<String, Object> params);
 	
 	void saveCodes(Map<String, Object> params);

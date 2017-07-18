@@ -77,11 +77,11 @@ public class CommonController {
 	@RequestMapping(value = "/selectAccountCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectAccountCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		logger.debug("accountCodeId : {}", params.get("mstCdId"));
+		logger.debug("accountCdId : {}", params.get("accountCdId"));
 
-		List<EgovMap> mstCommCodeList = commonService.getMstCommonCodeList(params);
+		List<EgovMap> accountCodeList = commonService.getAccountCodeList(params);
 		
-		return ResponseEntity.ok(mstCommCodeList);
+		return ResponseEntity.ok(accountCodeList);
 
 	}
 	
