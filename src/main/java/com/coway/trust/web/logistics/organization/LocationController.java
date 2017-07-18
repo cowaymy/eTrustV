@@ -44,7 +44,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
-@RequestMapping(value = "/organization")
+@RequestMapping(value = "/logistics/organization")
 public class LocationController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

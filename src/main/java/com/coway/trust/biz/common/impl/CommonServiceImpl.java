@@ -275,4 +275,10 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.getUsersByBranch(params);
 	}
 
+	@Override
+	public List<EgovMap> selectAddrSelCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return commonMapper.selectAddrSelCode(params);
+	}
+
 }

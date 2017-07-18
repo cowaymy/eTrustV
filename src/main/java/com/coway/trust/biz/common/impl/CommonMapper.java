@@ -59,5 +59,7 @@ public interface CommonMapper {
 	 */
 	List<EgovMap> getUsersByBranch(Map<String, Object> params);
     
+	
+	List<EgovMap> selectAddrSelCode(Map<String, Object> params);
 
 }

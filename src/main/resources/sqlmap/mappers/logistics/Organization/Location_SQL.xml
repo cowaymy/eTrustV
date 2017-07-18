@@ -108,7 +108,8 @@
 		       (SELECT NAME
 		          FROM SYS0038M
 		         WHERE STUS_CODE_ID = T1.STUS_CODE_ID)
-		          statname
+		          statname,
+		       '0' as unclamed
 		  FROM (SELECT *
 		          FROM (  SELECT STOCK_ID STOCKID, SUM (QTY) QTY
 		                    FROM LOG0014D

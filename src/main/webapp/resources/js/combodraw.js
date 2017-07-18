@@ -65,7 +65,6 @@ function doGetComboSepa(url, groupCd ,separator, selCode, obj , type, callbackFn
     }); 
 } ;
 
-
 function doDataCombo(data , type , obj){
 	var targetObj = document.getElementById(obj);
 	var custom = "";
@@ -105,3 +104,30 @@ function doDefCombo(data, selCode, obj , type, callbackFn){
         eval(strCallback);
     }
 };
+
+function doGetComboAddr(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
+	
+	$.ajax({
+        type : "GET",
+        url : url,
+        data : { groupCode : groupCd , codevalue : codevalue},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+           var rData = data;
+           doDefCombo(rData, selCode, obj , type,  callbackFn);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    }); 
+} ;
+
+function getAddrRelay(obj , value , tag , selvalue){
+	var robj= '#'+obj;
+	$(robj).attr("disabled",false);
+	doGetComboAddr('/common/selectAddrSelCodeList.do', tag , value , '',obj, 'S', ''); //청구처 리스트 조회
+}
+

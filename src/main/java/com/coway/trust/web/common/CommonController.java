@@ -315,4 +315,13 @@ public class CommonController {
 	}
 	
 	
+	@RequestMapping(value = "/selectAddrSelCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAddrSelCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("groupCode : {}", params.get("groupCode"));
+		
+		List<EgovMap> codeList = commonService.selectAddrSelCode(params);
+		return ResponseEntity.ok(codeList);
+	}
+	
 }

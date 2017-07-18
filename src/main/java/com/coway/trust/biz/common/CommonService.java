@@ -70,4 +70,6 @@ public interface CommonService {
 	 */
 	List<EgovMap> getUsersByBranch(Map<String, Object> params);
 	
+	List<EgovMap> selectAddrSelCode(Map<String, Object> params);
+	
 }

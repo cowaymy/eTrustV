@@ -1,6 +1,37 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 
+<style type="text/css">
+
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+
+/* 커스컴 disable 스타일*/
+.mycustom-disable-color {
+    color : #cccccc;
+}
+
+/* 그리드 오버 시 행 선택자 만들기 */
+.aui-grid-body-panel table tr:hover {
+    background:#D9E5FF;
+    color:#000;
+}
+.aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
+    background:#D9E5FF;
+    color:#000;
+}
+
+
+#editWindow {
+    font-size:13px;
+}
+#editWindow label, input { display:block; }
+#editWindow input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
+#editWindow fieldset { padding:0; border:0; margin-top:10px; }
+</style>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 
@@ -8,7 +39,11 @@
     var myGridID;
     var detailGrid;
     
+    // 수정창
+    var dialog;
+    
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "8","codeName": "Inactive"}];
+    var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
     
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"locid"      ,headerText:"WHID"           ,width:"8%"  ,height:30 , visible:true},
@@ -50,7 +85,7 @@
                         {dataField:"stkdesc"    ,headerText:"Description"    ,width:"40%" ,height:30 , visible:true},
                         {dataField:"qty"        ,headerText:"Balance"        ,width:"15%" ,height:30 , visible:true},
                         {dataField:"statname"   ,headerText:"Status"         ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"unClamed"   ,headerText:"unClamed"       ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"unclamed"   ,headerText:"unClamed"       ,width:"15%" ,height:30 , visible:true},
                         {dataField:"typename"   ,headerText:"typename"       ,width:120 ,height:30 , visible:false},
                         {dataField:"catename"   ,headerText:"catename"       ,width:120 ,height:30 , visible:false},
                         {dataField:"stkcateid"  ,headerText:"stkcateid"      ,width:120 ,height:30 , visible:false},
@@ -89,19 +124,30 @@
 		
 		AUIGrid.bind(myGridID, "cellClick", function( event ) 
 	    {
-	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-	        console.log(AUIGrid.getCellValue(myGridID , event.rowIndex , "locid"));
-	        
 	        fn_locDetail(AUIGrid.getCellValue(myGridID , event.rowIndex , "locid"));
 	        
 	    });
 
 		// 셀 더블클릭 이벤트 바인딩
-	    /*AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 	    {
-	        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-	        
-	    });*/
+	    	fn_modyWare(event.rowIndex);
+	    });
+	    
+		dialog = $( "#editWindow" ).dialog({
+		      autoOpen: false,
+		      height: 540,
+		      width: 800,
+		      modal: true,
+		      headerHeight:40,
+		      position : { my: "center", at: "center", of: $("#grid_wrap") },
+		      buttons: {
+		        "확인": function(event){alert('1');},
+		        "취소": function(event) {
+		          dialog.dialog( "close" );
+		        }
+		      }
+		    });
 
     });
 
@@ -110,11 +156,10 @@
         	getLocationListAjax();
         });
         $("#clear").click(function(){
-            doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //청구처 리스트 조회
-            doGetCombo('/common/selectCodeList.do', '15', '','cmbType', 'M' , 'f_multiCombo'); //청구처 리스트 조회
-            doDefCombo(comboData, '','cmbStatus', 'M', 'f_multiCombo');
-            $("#stkCd").val('');
-            $("#stkNm").val('');
+        	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
+        	doDefCombo(comboData, '' ,'status', 'S', '');
+        	$("#loccd").val('');
+        	$("#locdesc").val('');
         });
         
         $(".numberAmt").keyup(function(e) {
@@ -130,19 +175,46 @@
         
     });
     
+    function fn_modyWare(rowid){
+    	console.log(AUIGrid.getCellValue(myGridID ,rowid,'statnm'));
+    	$("#mstatus").text(AUIGrid.getCellValue(myGridID ,rowid,'statnm'));
+    	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'locid'));
+    	$("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
+    	$("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr1'));
+    	$("#maddr2").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr2'));
+    	$("#maddr3").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr3'));
+    	$("#mcontact1").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel1'));
+    	$("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
+    	
+    	doDefCombo(stockgradecomboData, '' ,'mstockgrade', 'S', '');
+    	
+    	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty'),'mcountry', 'S', ''); 
+    	
+    	if (AUIGrid.getCellValue(myGridID ,rowid,'loccnty') != "" && AUIGrid.getCellValue(myGridID ,rowid,'loccnty') != undefined){
+    		getAddrRelay('state' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty') , 'mstate' , AUIGrid.getCellValue(myGridID ,rowid,'locstat'));
+    	}
+    	if (AUIGrid.getCellValue(myGridID ,rowid,'locstat') != "" && AUIGrid.getCellValue(myGridID ,rowid,'locstat') != undefined){
+            getAddrRelay('area' , AUIGrid.getCellValue(myGridID ,rowid,'locstat') , 'marea' , AUIGrid.getCellValue(myGridID ,rowid,'locarea'));
+        }
+    	if (AUIGrid.getCellValue(myGridID ,rowid,'locarea') != "" && AUIGrid.getCellValue(myGridID ,rowid,'locarea') != undefined){
+            getAddrRelay('post' , AUIGrid.getCellValue(myGridID ,rowid,'locarea') , 'mpostcd', AUIGrid.getCellValue(myGridID ,rowid,'locpost'));
+        }
+    	
+    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'branchcd'),'mwarebranch', 'S' , ''); 
+        dialog.dialog( "open" );
+    }
+    
+    
     function fn_locDetail(locid){
     	var param = "?locid="+locid;
     	$.ajax({
             type : "POST",
-            url : "/organization/locationDetail.do"+param,
+            url : "/logistics/organization/locationDetail.do"+param,
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(_data) {
                 var data = _data.data;
                 var stock = _data.stock;
-                //f_info(data , v);
-                //console.log(data[0]);
-                //AUIGrid.setGridData(detailGrid, stock);
                 fn_detailView(_data);
             },
             error: function(jqXHR, textStatus, errorThrown){
@@ -157,45 +229,33 @@
     	console.log(detail[0]);
     	$("#txtwarecode").text(detail[0].loccd);
         $("#txtstockgrade").text(detail[0].locgrad);
-        $("#warename").text(detail[0].locdesc);
-        $("#status").text(detail[0].statnm);
+        $("#txtwarename").text(detail[0].locdesc);
+        $("#txtstatus").text(detail[0].statnm);
         $("#txtbranch").text(detail[0].branchnm +" - "+detail[0].branchnm);
         $("#txtcontact1").text(detail[0].loctel1);
         
         
         var fullAddr = "";
-        if (detail[0].locaddr1 != ""&& detail[0].locaddr1 != "undefined"){
+        if (detail[0].locaddr1 != ""&& detail[0].locaddr1 != undefined){
         	fullAddr = detail[0].locaddr1; 
         }
-        if (fullAddr != "" && detail[0].locaddr2 != "" && detail[0].locaddr2 != "undefined"){
+        if (fullAddr != "" && detail[0].locaddr2 != "" && detail[0].locaddr2 != undefined){
         	fullAddr += " " + detail[0].locaddr2
-        }else{
-        	fullAddr = detail[0].locaddr2
         }
-        if (fullAddr != "" && detail[0].locaddr3 != ""&& detail[0].locaddr3 != "undefined"){
+        if (fullAddr != "" && detail[0].locaddr3 != ""&& detail[0].locaddr3 != undefined){
             fullAddr += " " + detail[0].locaddr3
-        }else{
-            fullAddr = detail[0].locaddr3
         }
-        if (fullAddr != "" && detail[0].areanm != ""&& detail[0].areanm != "undefined"){
+        if (fullAddr != "" && detail[0].areanm != "" && detail[0].areanm != undefined){
             fullAddr += " " + detail[0].areanm
-        }else{
-            fullAddr = detail[0].areanm
         }
-        if (fullAddr != "" && detail[0].postcd != ""&& detail[0].postcd != "undefined"){
+        if (fullAddr != "" && detail[0].postcd != ""&& detail[0].postcd != undefined){
             fullAddr += " " + detail[0].postcd
-        }else{
-            fullAddr = detail[0].postcd
         }
-        if (fullAddr != "" && detail[0].name != ""&& detail[0].name != "undefined"){
+        if (fullAddr != "" && detail[0].name != ""&& detail[0].name != undefined){
             fullAddr += " " + detail[0].name
-        }else{
-            fullAddr = detail[0].name
         }
-        if (fullAddr != "" && detail[0].countrynm != ""&& detail[0].countrynm != "undefined"){
+        if (fullAddr != "" && detail[0].countrynm != ""&& detail[0].countrynm != "undefined "){
             fullAddr += " " + detail[0].countrynm
-        }else{
-            fullAddr = detail[0].countrynm
         }
         $("#txtaddress").text(fullAddr);
         $("#txtcontact2").text(detail[0].loctel2);
@@ -209,7 +269,7 @@
         console.log(param);
         $.ajax({
             type : "POST",
-            url : "/organization/LocationList.do?"+param,
+            url : "/logistics/organization/LocationList.do?"+param,
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
@@ -270,7 +330,7 @@
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="searchForm" method="post">
+<form id="searchForm" name="searchForm" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -357,22 +417,21 @@
 </article><!-- grid_wrap end -->
 
 <article id="detailView">
-    <aside class="title_line"><!-- title_line start -->
-    <h3>Warehouse Information</h3>
-<!--     <ul class="left_opt"> -->
-<!--         <li><p class="btn_blue"><a id="price_info_edit">EDIT</a></p></li> -->
-<!--     </ul> -->
-    </aside>
-    <form id='detailForm' name='detailForm' method='post'>
-    <input type="hidden" name="locid" id="locid" value=""/>
-    <table class="type1">
+<div class="divine_auto"><!-- divine_auto start -->
+
+<div style="width:55%;">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Warehouse Information</h3>
+</aside><!-- title_line end -->
+
+<table class="type1">
         <caption>search table</caption>
         <colgroup>
-            <col style="width:120px" />
+            <col style="width:130px" />
             <col style="width:*" />
-            <col style="width:120px" />
-            <col style="width:*" />
-            <col style="width:40%" />
+            <col style="width:130px" />
+            <col style="width:200px" />
         </colgroup>
         <tbody>
         <tr>
@@ -380,13 +439,12 @@
             <td ID="txtwarecode"></td>
             <th scope="row">Stock Grade</td>
             <td ID="txtstockgrade"></td>
-            <td rowspan="4" id="stockBalanceGrid"></td>
         </tr>
         <tr>
             <th scope="row">Warehouse Name</td>
-            <td ID="warename"></td>
+            <td ID="txtwarename"></td>
             <th scope="row">Status</td>
-            <td ID="status"></td>            
+            <td ID="txtstatus"></td>            
         </tr>
         <tr>
             <th scope="row">Branch</td>
@@ -402,10 +460,85 @@
         </tr>
         </tbody>
     </table>
-    </form>
+</div>
+
+<div style="width:43%;">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Warehouse Information</h3>
+</aside><!-- title_line end -->
+
+<div id="stockBalanceGrid"></div>
+</div>
+
+</div><!-- divine_auto end -->
 </article>
 
 </section><!-- search_result end -->
+
+
+<section class="pop_body"><!-- pop_body start -->
+<div id="editWindow" style="display:none" title="그리드 수정 사용자 정의">
+<h1>Warehouse Information</h1>
+<table class="type1"><!-- table start -->
+<caption>search table</caption>
+<colgroup>
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Status</th>
+    <td colspan="3"><span  id="mstatus"></span></td>
+</tr>
+<tr>
+    <th scope="row">Warehouse Code</th>
+    <td colspan="3"><input type="text" name="mwarecd" id="mwarecd"/></td>    
+</tr>
+<tr>
+    <th scope="row">Warehouse Name</th>
+    <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
+</tr>
+<tr>
+    <th scope="row">Stock Grade</th>
+    <td><select id="mstockgrade"></select></td>
+    <th scope="row">Branch</th>
+    <td><select id="mwarebranch"></select></td>
+</tr>
+<tr>
+    <th scope="row" rowspan="3">Address</th>
+    <td colspan="3"><input type="text" id="maddr1" name="maddr1" class="w100p"/></td>
+</tr>
+<tr>
+    <td colspan="3"><input type="text" id="maddr2" name="maddr2" class="w100p"/></td>
+</tr>
+<tr>
+    <td colspan="3"><input type="text" id="maddr3" name="maddr3" class="w100p"/></td>
+</tr>
+<tr>
+    <th scope="row">Country</th>
+    <td><select id="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
+    <th scope="row">State</th>
+    <td><select id="mstate" onchange="getAddrRelay('marea' , this.value , 'area', '')" disabled=true><option>Choose One</option></select></td>
+</tr>
+<tr>
+    <th scope="row">Area</th>
+    <td><select id="marea" onchange="getAddrRelay('mpostcd' , this.value , 'post', '')" disabled=true><option>Choose One</option></select></td>
+    <th scope="row">Postcode</th>
+    <td><select id="mpostcd" disabled=true><option>Choose One</option></select></td>
+</tr>
+<tr>
+    <th scope="row">Contact No (1)</th>
+    <td><input type="text" name="mcontact1" id="mcontact1"/></td>
+    <th scope="row">Contact No (2)</th>
+    <td><input type="text" name="mcontact2" id="mcontact2"/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</div>
+</section>
 
 </section><!-- content end -->
 
