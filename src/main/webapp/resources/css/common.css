@@ -100,6 +100,7 @@ table+.title_line{margin-top:20px;}
 .mt20{margin-top:20px!important;}
 .mt30{margin-top:30px!important;}
 .mt40{margin-top:40px!important;}
+.aui-vscrollbar{left:auto!important; right:0!important;}
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
