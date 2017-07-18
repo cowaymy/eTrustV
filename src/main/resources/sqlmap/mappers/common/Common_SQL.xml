@@ -163,6 +163,7 @@
 	              <otherwise>
 	                 BRNCH_ID CODE_ID 
                      , CODE ||#{separator}|| NAME  CODE_NAME
+                     , TYPE_ID
 	              </otherwise>
 	          </choose>
 	           
