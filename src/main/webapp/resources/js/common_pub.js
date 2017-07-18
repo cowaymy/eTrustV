@@ -108,8 +108,7 @@ $(document).on(
 /* LNB end */
 
 //트리메뉴 시작
-
-function setTree(){
+function setTree(){//트리메뉴 세팅
 	var treeBtn=$(".treeMenu a");
 	var treeLi=$(".treeMenu li");
 	var firstLi=$(".treeMenu>ul>li:first-child");
@@ -135,11 +134,11 @@ function setTree(){
 				thisLi.addClass("none");
 			}
 		}else if(haveUlNum!="0"){
-			thisLi.children("a").before("<img src='images/btn_plus.gif' alt='하위메뉴 보기' />");
+			thisLi.children("a").before("<img src='../images/common/btn_plus.gif' alt='하위메뉴 보기' />");
 		}
 	}
 }
-setTree();
+setTree();//트리메뉴 세팅 함수 실행
 
 $(document).on(
 	"click", ".treeMenu li img", function(){
