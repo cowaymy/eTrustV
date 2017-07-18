@@ -279,7 +279,7 @@ function removeRow()
     AUIGrid.removeRow(myGridID,gSelRowIdx);
 }
 
-//Make Use_yn ComboList
+//Make Use_yn ComboList, tooltip
 function getDisibledComboList()
 {     
   var list =  ["N", "Y"];   
