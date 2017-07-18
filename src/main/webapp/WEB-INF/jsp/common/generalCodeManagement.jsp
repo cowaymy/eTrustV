@@ -480,7 +480,6 @@ $(document).ready(function()
 	   <option value="0">N</option>
 	</select>	
 	</li>
-	<!-- <li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>SEARCH</a></p></li> -->
 	<li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>FILTER</a></p></li>
 	<li><p class="btn_grid"><a onclick="addRowDetail();"><span class="search"></span>ADD</a></p></li>   
 	<li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
