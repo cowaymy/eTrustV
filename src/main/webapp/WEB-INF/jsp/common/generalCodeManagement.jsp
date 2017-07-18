@@ -390,7 +390,7 @@ $(document).ready(function()
 
 <section id="content"><!-- content start -->
 <ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
+	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	<li>Sales</li>
 	<li>Order list</li>
 </ul>
@@ -398,6 +398,9 @@ $(document).ready(function()
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>General Code Management</h2>
+<ul class="right_btns">
+  <li><p class="btn_blue"><a onclick="fn_getMstCommCdListAjax();"><span class="search"></span>Search</a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <form id="MainForm" method="get" action="">
@@ -452,9 +455,6 @@ $(document).ready(function()
 </table><!-- table end -->
 
 <!-- MstSearch -->
-<ul class="right_btns">
-	<li><p class="btn_gray"><a onclick="fn_getMstCommCdListAjax();"><span class="search"></span>Search</a></p></li>
-</ul>
 
 </section><!-- search_table end -->
 
@@ -481,7 +481,7 @@ $(document).ready(function()
 	</select>	
 	</li>
 	<!-- <li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>SEARCH</a></p></li> -->
-	<li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>SEARCH</a></p></li>
+	<li><p class="btn_grid"><a onclick="fn_DetailGetInfo();"><span class="search"></span>FILTER</a></p></li>
 	<li><p class="btn_grid"><a onclick="addRowDetail();"><span class="search"></span>ADD</a></p></li>   
 	<li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
 </ul>
