@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.organization.impl.LocationMapper">
+    <resultMap id="locationClobMap" type="EgovMap">
+        <result property="locdesc" column="locdesc" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr1" column="locaddr1" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr2" column="locaddr2" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr3" column="locaddr3" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="descr" column="descr" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+	<select id="selectLocationList" parameterType="Map" resultMap="locationClobMap">
+        <![CDATA[
+		  SELECT WH_LOC_ID locid,
+		         WH_LOC_CODE loccd,
+		         WH_LOC_DESC locdesc,
+		         WH_LOC_ADD1 locaddr1,
+		         WH_LOC_ADD2 locaddr2,
+		         WH_LOC_ADD3 locaddr3,
+		         WH_LOC_AREA_ID locarea,
+		         WH_LOC_POST_CODE_ID locpost,
+		         WH_LOC_STATE_ID locstat,
+		         WH_LOC_CNTY_ID loccnty,
+		         WH_LOC_TEL1 loctel1,
+		         WH_LOC_TEL2 loctel2,
+		         WH_LOC_BRNCH_ID loc_branch,
+		         WH_LOC_TYPE_ID loctype,
+		         WH_LOC_STK_GRAD locgrad,
+		         WH_LOC_STUS_ID locstus,
+		         WH_LOC_UPD_USER_ID locuserid,
+		         WH_LOC_UPD_DT locupddt,
+		         CODE2 code2,
+		         DESC2 desc2,
+		         (SELECT AREA_NAME
+		            FROM SYS0039M
+		           WHERE AREA_ID = s28m.WH_LOC_AREA_ID)
+		            areanm,
+		         (SELECT POST_CODE
+		            FROM SYS0030C
+		           WHERE POST_CODE_ID = s28m.WH_LOC_POST_CODE_ID)
+		            postcd,
+		         s35m.code,
+		         s35m.name,
+		         (SELECT NAME
+		            FROM SYS0015M
+		           WHERE CNTY_ID = s28m.WH_LOC_CNTY_ID)
+		            countrynm,
+		         s05m.code branchcd,
+		         s05m.name branchnm,
+		         s05m.dcode,
+		         s05m.descr,
+		         (SELECT code_name
+		            FROM SYS0013M
+		           WHERE code_id = s28m.WH_LOC_TYPE_ID)
+		            codenm,
+		         s38m.name statnm,
+		         s47m.user_name
+		    FROM SYS0028M s28m,
+		         SYS0035M s35m,
+		         (SELECT s05m.brnch_id,
+		                 s05m.code,
+		                 s05m.name,
+		                 s13m.code dcode,
+		                 s13m.CODE_DESC descr
+		            FROM SYS0005M s05m, SYS0013M s13m
+		           WHERE s05m.type_id = s13m.code_id(+)) s05m,
+		         SYS0038M s38m,
+		         SYS0047M s47m
+		         ]]>
+		   WHERE     s28m.WH_LOC_TYPE_ID = 277
+		         AND s28m.WH_LOC_STATE_ID = s35m.STATE_ID(+)
+		         AND s28m.WH_LOC_BRNCH_ID = s05m.BRNCH_ID(+)
+		         AND s28m.WH_LOC_STUS_ID = s38m.STUS_CODE_ID(+)
+		         AND s28m.WH_LOC_UPD_USER_ID = s47m.USER_ID(+)
+		         <if test="loccd != null and loccd !=''">
+		              AND s28m.WH_LOC_CODE = #{loccd}
+		         </if>
+		         <if test="locdesc != null and locdesc !=''">
+                      AND s28m.WH_LOC_DESC lick '%'||#{locdesc}||'%'
+                 </if>
+		         <if test="branch != null and branch != ''">
+                    AND s28m.WH_LOC_BRNCH_ID  = #{branch}
+                </if>
+                <if test="status != null and status != ''">
+                    AND s28m.WH_LOC_STUS_ID  = #{status}
+                </if>
+                <if test="warelocid != null and warelocid != ''">
+                    AND s28m.WH_LOC_ID  = #{warelocid}
+                </if>
+		ORDER BY WH_LOC_CODE    			
+	</select>
+	<select id="selectLocationStockList" parameterType="Map" resultType="egovMap">
+	    SELECT T1.QTY qty,
+		       T1.STK_ID stkid,
+		       T1.STK_CODE stkcd,
+		       T1.STK_DESC stkdesc,
+		       T1.STK_CTGRY_ID stkcateid,
+		       T1.STK_TYPE_ID typeid,
+		       T1.STUS_CODE_ID statuscd,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = T1.STK_CTGRY_ID)
+		          catename,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = T1.STK_TYPE_ID)
+		          typename,
+		       (SELECT NAME
+		          FROM SYS0038M
+		         WHERE STUS_CODE_ID = T1.STUS_CODE_ID)
+		          statname
+		  FROM (SELECT *
+		          FROM (  SELECT STOCK_ID STOCKID, SUM (QTY) QTY
+		                    FROM LOG0014D
+		                   WHERE LOC_ID = #{warelocid}
+		                GROUP BY STOCK_ID) T1,
+		               SYS0026M T2
+		         WHERE T1.STOCKID = T2.STK_ID AND QTY > 0) T1
+	</select>
+    
+</mapper>
