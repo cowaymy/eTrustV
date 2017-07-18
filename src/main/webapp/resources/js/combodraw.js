@@ -44,6 +44,28 @@ function doGetCombo(url, groupCd , selCode, obj , type, callbackFn){
         }
     }); 
 } ;
+
+function doGetComboSepa(url, groupCd ,separator, selCode, obj , type, callbackFn){
+	
+	$.ajax({
+        type : "GET",
+        url : url,
+        data : { groupCode : groupCd , separator : separator},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+           var rData = data;
+           doDefCombo(rData, selCode, obj , type,  callbackFn);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    }); 
+} ;
+
+
 function doDataCombo(data , type , obj){
 	var targetObj = document.getElementById(obj);
 	var custom = "";
