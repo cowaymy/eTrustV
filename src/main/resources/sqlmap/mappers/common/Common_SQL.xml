@@ -234,7 +234,7 @@
     
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">
         SELECT <choose>
-	              <when test="groupCode !=null and groupCode == '0'">
+	              <when test='groupCode == "0"'>
 	                 BRNCH_ID,CODE,NAME,ADDR1,ADDR2,ADDR3,ADDR4,AREA_ID,POST_CODE_ID,STATE_CODE_ID,CNTY_ID,TEL1,TEL2,FAX,CNTC,TYPE_ID,STUS_ID,UPD_USER_ID,UPD_DT,IS_SYNC,REGN_ID
 	              </when>
 	              <otherwise>
@@ -246,20 +246,21 @@
 	           
 		  FROM SYS0005M
 		 WHERE 1 = 1
+		   AND #{groupCode} = #{groupCode}
 		 <choose>
-              <when test="groupCode !=null and groupCode == '2' or groupCode == '5'">
+              <when test='groupCode == "2" or groupCode == "5"'>
                  AND STUS_ID = 1
                  AND TYPE_ID IN (40 , 43)
               </when>
-              <when test="groupCode !=null and groupCode == '3'">
+              <when test='groupCode == "3"'>
                  AND STUS_ID = 1
                  AND TYPE_ID IN (40 , 43 , 42)
               </when>
-              <when test="groupCode !=null and groupCode == '4'">
+              <when test='groupCode == "4"'>
                  AND STUS_ID = 1
                  AND TYPE_ID IN (42)
               </when>
-              <when test="groupCode !=null and groupCode == '7'">
+              <when test='groupCode == "7"'>
                  AND STUS_ID = 1
                  AND TYPE_ID IN (1160)
               </when>
@@ -268,7 +269,7 @@
               </otherwise>
           </choose>
 		<choose>
-            <when test="groupCode !=null and groupCode == '0'">
+            <when test='groupCode == "0"'>
                ORDER BY CODE
             </when>
             <otherwise>
