@@ -77,4 +77,6 @@ public interface CommonService {
 	
 	List<EgovMap> selectAddrSelCode(Map<String, Object> params);
 	
+	List<EgovMap> selectProductCodeList();
+	
 }

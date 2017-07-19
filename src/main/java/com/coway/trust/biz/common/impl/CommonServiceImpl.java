@@ -288,4 +288,10 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectAddrSelCode(params);
 	}
 
+	@Override
+	public List<EgovMap> selectProductCodeList() {
+		// TODO Auto-generated method stub
+		return commonMapper.selectProductCodeList();
+	}
+
 }
