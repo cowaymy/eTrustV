@@ -126,5 +126,48 @@ public class LocationController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/insLocation.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> insLocation(@RequestBody Map<String, Object> params, Model model) {
+
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd===============================");
+		//Map<String, Object> insmap = new HashMap();
+		
+		
+/*		insmap.put("branch", );
+		insmap.put("status" , );
+		insmap.put("locdesc"  , );
+		insmap.put("loccd"  , );
+		insmap.put("branch", );
+		insmap.put("status" , );
+		insmap.put("locdesc"  , );
+		insmap.put("loccd"  , );
+		insmap.put("branch", );
+		insmap.put("status" , );
+		insmap.put("locdesc"  , );
+	*/
+		
+		
+		
+
+	//	loc.updateLocationInfo(insertMap);
+		
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
