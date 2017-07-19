@@ -12,3 +12,4 @@
 
 <tiles:insertAttribute name="body" />
 
+</html>
