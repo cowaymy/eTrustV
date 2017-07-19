@@ -267,7 +267,6 @@
                  AND STUS_ID = 1
               </otherwise>
           </choose>
-		   AND TYPE_ID IN (40 , 43 , 42)
 		<choose>
             <when test="groupCode !=null and groupCode == '0'">
                ORDER BY CODE
