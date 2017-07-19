@@ -19,6 +19,10 @@
     	    	param02 : "param02",
     	    	param03 : "param03",
     	};
+
+    	// 또는 
+    	
+    	jsonObj = $("#dataForm").serializeJSON();
         
         var divObj = Common.popupDiv("/sample/sampleView.do", jsonObj, function(params){
             alert("params01 : " + params.param01);
