@@ -137,5 +137,57 @@
 	        , WH_LOC_UPD_DT         = SYSDATE
 	    WHERE WH_LOC_ID = #{locid}
 	</update>
+	
+	
+    <insert id="insertLocationInfo" parameterType="Map">
+	     INSERT INTO SYS0028M(
+	       WH_LOC_ID
+	      ,WH_LOC_CODE 
+	      , WH_LOC_DESC  
+	      , WH_LOC_ADD1
+	      , WH_LOC_ADD2
+	      , WH_LOC_ADD3
+	      , WH_LOC_AREA_ID
+	      , WH_LOC_POST_CODE_ID
+	      , WH_LOC_STATE_ID
+	      , WH_LOC_CNTY_ID 
+	      , WH_LOC_TEL1
+	      , WH_LOC_TEL2
+          , WH_LOC_BRNCH_ID
+	      , WH_LOC_TYPE_ID
+	      , WH_LOC_STK_GRAD  
+	      , WH_LOC_STUS_ID
+	      , WH_LOC_UPD_USER_ID 
+	      , WH_LOC_UPD_DT
+	      , CODE2
+	      , DESC2
+	      , WH_LOC_IS_SYNC
+	      , WH_LOC_MOBILE  
+	     )  
+	    VALUES (
+	    (SELECT nvl(MAX(WH_LOC_ID),0) + 1 from SYS0028M) 
+	    ,#{loccd}
+	    ,#{locdesc} 
+	    ,#{locaddr1}
+	    ,#{locaddr2}
+	    ,#{locaddr3}
+	    ,#{locarea}
+	    ,#{locpost}
+	    ,#{locstat}
+	    ,#{loccnty} 
+	    ,#{loctel1}
+        ,#{loctel2}        
+	    ,#{locBranch}
+	    ,#{lotype_id}
+	    ,#{locgrad}
+	    ,#{lostus_id}
+        ,#{loup_user_id}
+	    ,SYSDATE  
+	    ,#{locode2}
+	    ,#{lodesc2}
+	    ,#{lois_sync}
+	    ,#{lomobile}
+	    )
+    </insert>
     
 </mapper>
