@@ -38,6 +38,9 @@
     // AUIGrid 생성 후 반환 ID
     var myGridID;
     var detailGrid;
+
+    // 등록창
+    var insdialog;
     
     // 수정창
     var dialog;
@@ -207,7 +210,55 @@
             }
          });
         
+    
+        $("#insert").click(function(){
+            alert("등록창 테스트!!!!!!!!!!!!!");
+            insDialog = $( "#registWindow" ).dialog({
+               /* autoOpen: false, */
+                height: 540,
+                width: 800,
+                  // modal: true,
+                headerHeight:40,
+                //position : { my: "center", at: "center", of: $("#grid_wrap") },
+                 buttons: {
+                  "저장": function(event){alert('3');
+                  Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) {  
+                  }, function(jqXHR, textStatus, errorThrown) {
+                      alert("실패하였습니다.");
+                      console.log("실패하였습니다.");
+                      console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+                      
+                      alert(jqXHR.responseJSON.message);
+                      console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+                    
+                      console.log("status : " + jqXHR.status);
+                      console.log("code : " + jqXHR.responseJSON.code);
+                      console.log("message : " + jqXHR.responseJSON.message);
+                      console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                      
+                  });
+                  },
+                  "취소": function(event) {
+                  insDialog.dialog( "close" );
+                  }
+                } 
+        });      
     });
+       
+    });
+    
+   
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     function fn_modyWare(rowid){
     	
@@ -470,7 +521,7 @@
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.del' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
-    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.add' /></a></p></li>
+    <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -602,6 +653,75 @@
 </form>
 </div>
 </section>
+
+
+<!-- ------------------------------------------------------------------------20170719 추가 함영수------------------------------------------------ -->
+
+<section class="pop_body"><!-- pop_body start -->
+<div id="registWindow" style="display:none" title="그리드 수정 사용자 정의">
+<h1>Warehouse Information</h1>
+<form id="insForm" name="insForm" method="get">
+<table class="type1">
+<caption>search table</caption>
+<colgroup>
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Warehouse Code</th>
+    <td colspan="3"><input type="text" name="mwarecd" id="mwarecd"/></td>    
+</tr>
+<!-- <tr>
+    <th scope="row">Warehouse Name</th>
+    <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
+</tr>
+<tr>
+    <th scope="row">Stock Grade</th>
+    <td><select id="mstockgrade"></select></td>
+    <th scope="row">Branch</th>
+    <td><select id="mwarebranch"></select></td>
+</tr>
+<tr>
+    <th scope="row" rowspan="3">Address</th>
+    <td colspan="3"><input type="text" id="maddr1" name="maddr1" class="w100p"/></td>
+</tr>
+<tr>
+    <td colspan="3"><input type="text" id="maddr2" name="maddr2" class="w100p"/></td>
+</tr>
+<tr>
+    <td colspan="3"><input type="text" id="maddr3" name="maddr3" class="w100p"/></td>
+</tr>
+<tr>
+    <th scope="row">Country</th>
+    <td><select id="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
+    <th scope="row">State</th>
+    <td><select id="mstate" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
+</tr>
+<tr>
+    <th scope="row">Area</th>
+    <td><select id="marea" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
+    <th scope="row">Postcode</th>
+    <td><select id="mpostcd" disabled=true><option>Choose One</option></select></td>
+</tr>
+<tr>
+    <th scope="row">Contact No (1)</th>
+    <td><input type="text" name="mcontact1" id="mcontact1"/></td>
+    <th scope="row">Contact No (2)</th>
+    <td><input type="text" name="mcontact2" id="mcontact2"/></td>
+</tr> -->
+</tbody>
+</table>
+</form>
+</div>
+</section>
+
+<!-- ------------------------------------------------------------------------20170719 추가 함영수------------------------------------------------ -->
+
+
+
 
 </section><!-- content end -->
 
