@@ -66,7 +66,7 @@
                   LEFT OUTER JOIN SYS0047M  Extent8 ON Extent8.USER_ID = ACC_UPD_USER_ID
           WHERE 1 = 1
           <if test="accStusId !=null and accStusId != 0">          
-          ACC_STUS_ID = #{accStusId} 
+            AND ACC_STUS_ID = #{accStusId} 
           </if>
           <if test="accId !=null and accId != ''">
             AND ACC_ID = #{accId}
