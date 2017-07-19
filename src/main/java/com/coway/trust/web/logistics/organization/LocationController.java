@@ -129,29 +129,41 @@ public class LocationController {
 	
 	
 	@RequestMapping(value = "/insLocation.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> insLocation(@RequestBody Map<String, Object> params, Model model) {
-
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd===============================");
-		//Map<String, Object> insmap = new HashMap();
+	public ResponseEntity<ReturnMessage> insLocation(@RequestParam Map<String, Object> params, Model model) {
 		
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inwarecd"));
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inaddr1"));
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inaddr2"));
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inaddr3"));
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("incontact1"));
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("incontact2"));
 		
-/*		insmap.put("branch", );
-		insmap.put("status" , );
-		insmap.put("locdesc"  , );
-		insmap.put("loccd"  , );
-		insmap.put("branch", );
-		insmap.put("status" , );
-		insmap.put("locdesc"  , );
-		insmap.put("loccd"  , );
-		insmap.put("branch", );
-		insmap.put("status" , );
-		insmap.put("locdesc"  , );
-	*/
+		Map<String, Object> insmap = new HashMap();				
 		
+		insmap.put("branch",params.get("inwarecd") );
+		insmap.put("status" ,params.get("inwarenm") );
+		insmap.put("locaddr1"  ,params.get("inaddr1") );
+		insmap.put("locaddr2"  ,params.get("inaddr2") );
+		insmap.put("locaddr3",params.get("inaddr3") );
+		insmap.put("loctel1" ,params.get("incontact1") );
+		insmap.put("loctel2"  ,params.get("incontact2") );
+		insmap.put("loccd"  ,params.get("") );
+		insmap.put("locdesc"  ,params.get("") );
+		insmap.put("locarea"  ,params.get("") );
+		insmap.put("locpost"  ,params.get("") );
+		insmap.put("locstat"  ,params.get("") );
+		insmap.put("loccnty"  ,params.get("") );
+		insmap.put("locBranch"  ,params.get("") );
+		insmap.put("lotype_id"  ,params.get("") );
+		insmap.put("locgrad"  ,params.get("") );
+		insmap.put("lostus_id"  ,params.get("") );
+		insmap.put("loup_user_id"  ,params.get("") );
+		insmap.put("locode2"  ,params.get("") );
+		insmap.put("lodesc2",params.get("") );
+		insmap.put("lois_sync" ,params.get("") );
+		insmap.put("lomobile"  ,params.get("") );
 		
-		
-
-	//	loc.updateLocationInfo(insertMap);
+		loc.insertLocationInfo(insmap);
 		
 
 		// 결과 만들기 예.
