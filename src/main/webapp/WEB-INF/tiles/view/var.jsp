@@ -8,6 +8,10 @@
 <script>
 	var javascriptLoglevel = "debug";
 
+	function getContextPath() {
+       return "${pageContext.request.contextPath}";
+    }
+	
 	var gridMsg = new Array();
 
 	gridMsg["sys.info.grid.noDataMessage"] = "<spring:message code='sys.info.grid.noDataMessage'  javaScriptEscape='true'/>";

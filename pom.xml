@@ -17,6 +17,7 @@
 		<hikaricp.version>2.6.1</hikaricp.version>
 		<jackson.library>2.7.5</jackson.library>
 		<swagger.version>2.2.2</swagger.version>
+		<webinf-lib>${project.basedir}/src/main/webapp/WEB-INF/lib</webinf-lib>
 	</properties>
 
 	<repositories>
@@ -60,6 +61,161 @@
 	</repositories>
 
 	<dependencies>
+
+		<!-- crystal report -->
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>com.azalea.ufl.barcode.1.0</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/com.azalea.ufl.barcode.1.0.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>commons-collections-3.1</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/commons-collections-3.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>xxxxx</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/commons-configuration-1.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>commons-lang-2.1</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/commons-lang-2.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/commons-logging.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>CrystalCommon2</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/CrystalCommon2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>CrystalReportsRuntime</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/CrystalReportsRuntime.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>cvom</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/cvom.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>DatabaseConnectors</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/DatabaseConnectors.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>icu4j</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/icu4j.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>jai_imageio</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/jai_imageio.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>JDBInterface</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/JDBInterface.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>jrcerom</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/jrcerom.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>keycodeDecoder</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/keycodeDecoder.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>logging</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/logging.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>pfjgraphics</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/pfjgraphics.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>QueryBuilder</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/QueryBuilder.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>webreporting</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/webreporting.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>webreporting-jsf</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/webreporting-jsf.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>xpp3</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/xpp3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>crystal</groupId>
+			<artifactId>Xtreme</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/Xtreme.jar</systemPath>
+		</dependency>
+
+		<!-- crystal report -->
+
 		<!-- 표준프레임워크 실행환경 -->
 		<dependency>
 			<groupId>egovframework.rte</groupId>
@@ -172,41 +328,32 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-		
-		<!-- AUIGrid 에서 사용.-->
+
+		<!-- AUIGrid 에서 사용. -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.9</version>
 		</dependency>
-		
-		<!-- AUIGrid JSON start
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.13</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.13</version>
-        </dependency>
-         AUIGrid JSON end -->
-		
-        <!-- MIME -->
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-parsers</artifactId>
-            <version>1.13</version>
-        </dependency>
+		<!-- AUIGrid JSON start <dependency> <groupId>org.codehaus.jackson</groupId> 
+			<artifactId>jackson-core-asl</artifactId> <version>1.9.13</version> </dependency> 
+			<dependency> <groupId>org.codehaus.jackson</groupId> <artifactId>jackson-mapper-asl</artifactId> 
+			<version>1.9.13</version> </dependency> AUIGrid JSON end -->
 
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-core</artifactId>
-            <version>1.13</version>
-        </dependency>
-        
+		<!-- MIME -->
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>1.13</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>1.13</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

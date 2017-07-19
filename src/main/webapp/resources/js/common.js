@@ -44,6 +44,9 @@ var Common = {
 				if (_header) {
 					_header(request);
 				}
+				
+				// loading start....
+				Common.showLoader();
 			},
 			crossDomain : true,
 			dataType : "json",
@@ -55,7 +58,8 @@ var Common = {
 				}
 			},
 			complete : function(data) {
-
+				// loading end....
+				Common.removeLoader();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 
@@ -93,6 +97,10 @@ var Common = {
 			contentType : false,
 			data : _formData,
 			type : "POST",
+			beforeSend : function(request) {
+				// loading start....
+				Common.showLoader();
+			},
 			success : function(data, textStatus, jqXHR) {
 				
 				if (_callback) {
@@ -117,6 +125,8 @@ var Common = {
 				}
 			},
 			complete : function() {
+				// loading end....
+				Common.removeLoader();
 			}
 		});
 	},
@@ -151,6 +161,37 @@ var Common = {
 			async : false
 		}, _header);
 	},
+	
+	getLoadingObj : function(){
+		var contextPath = getContextPath();
+		var loadingHtml = ''
+			+ '<div id="_loading" class="prog">'
+				+ '<p>'
+				+ '<span><img src="' + contextPath + '/resources/images/common/logo_coway2.gif" alt="Coway" /></span>'
+				+ '<span><img src="' + contextPath + '/resources/images/common/proge.gif" alt="loding...." /></span>'
+				+ '</p>'
+			+ '</div>';
+		
+		return $(loadingHtml);
+	},
+	
+	/**
+     * 화면 loading .... 표시.
+     */
+    showLoader : function(){
+    	if(FormUtil.isNotEmpty($("#_loading").html())){
+    		$("#_loading").show();
+    	}else{
+    		$("body").append(Common.getLoadingObj());
+    	}
+    },
+    
+    /**
+     * 화면 loading .... 해제.
+     */
+    removeLoader : function(){
+    	$("#_loading").hide();
+    },
 
 	/**
 	 * Div - 팝업
@@ -301,12 +342,12 @@ var Common = {
 		var msgHtml = '<div id="popup_wrap" class="msg_box">'
 				+ '	<header class="pop_header">' 
 				+ '<h1>Message</h1>'
-				+ '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
+				+ '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
 				+ '</header>' 
 				+ '<section class="pop_body">'
 				+ '<p class="msg_txt">' + message + '</p>'
 				+ '<ul class="center_btns">'
-				+ '	<li><p class="btn_blue2" id="_alertOk"><a href="#">OK</a></p></li>'
+				+ '	<li><p class="btn_blue2" id="_alertOk"><a href="javascript:void(0);">OK</a></p></li>'
 				+ '</ul>' 
 				+ '</section>' 
 				+ '</div>';
@@ -345,8 +386,8 @@ var Common = {
 				+ '<section class="pop_body">'
 				+ '<p class="msg_txt">' + message + '</p>'
 				+ '<ul class="center_btns">'
-				+ '	<li><p class="btn_blue2" id="_confirmOk"><a href="#">OK</a></p></li>'
-				+ '	<li><p class="btn_blue2" id="_confirmCancel"><a href="#">Cancel</a></p></li>'
+				+ '	<li><p class="btn_blue2" id="_confirmOk"><a href="javascript:void(0);">OK</a></p></li>'
+				+ '	<li><p class="btn_blue2" id="_confirmCancel"><a href="javascript:void(0);">Cancel</a></p></li>'
 				+ '</ul>' 
 				+ '</section>' 
 				+ '</div>';
