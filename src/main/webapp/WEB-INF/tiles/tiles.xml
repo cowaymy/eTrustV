@@ -45,7 +45,7 @@
     </definition>
     
     <definition name="*/*Pop" extends="layout.empty.script">
-        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}Pop.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
     </definition>
     
     <definition name="sample/*" extends="layout.default">
