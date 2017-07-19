@@ -113,7 +113,7 @@ table+.title_line{margin-top:20px;}
 .btn_gray a{display:inline-block; height:30px; line-height:30px; padding:0 20px; background:#999; color:#fff; font-size:12px; font-weight:bold; border-radius:3px; text-align:center;}
 .btn_grid a{display:inline-block; min-width:60px;height:22px; line-height:22px; padding:0 10px; background:#e0e8ec; border:1px solid #90a9b7; color:#25527c; font-size:10px; font-weight:bold; border-radius:3px; border-radius:3px; text-align:center;}
 .right_btns{text-align:right;}
-.right_btns li{display:inline-block;}
+.right_btns li{display:inline-block; vertical-align:top;}
 .left_btns{text-align:left;}
 .left_btns li{display:inline-block;}
 .center_btns{text-align:center;}
@@ -121,6 +121,12 @@ table+.title_line{margin-top:20px;}
 table+.center_btns{padding-top:15px;}
 .grid_wrap{margin:5px 0 20px 0;}
 .grid_wrap.h220{height:220px;}
+.left_btns li input[type=text],
+.center_btns li input[type=text],
+.right_btns li input[type=text]{width:237px; height:28px; line-height:26px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px;}
+.left_btns li > p,
+.center_btns li > p,
+.right_btns li > p{line-height:26px;}
 
 /* 검색 영역 */
 .search_table{margin-bottom:20px;}
