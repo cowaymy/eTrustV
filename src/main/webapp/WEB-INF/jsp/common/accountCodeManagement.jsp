@@ -16,15 +16,19 @@ var mstColumnLayout =
         }, {
             dataField : "accDesc",
             headerText : "DESCRIPTION",
-            width : 200
+            width : 170
+        }, {
+            dataField : "sapAccCode",
+            headerText : "SAP CODE",
+            width : 140
         }, {
             dataField : "statusCode",
             headerText : "STATUS",
-            width : 150
+            width : 140
         }, {
             dataField : "isPayCash",
             headerText : "CASH",
-            width : 150,
+            width : 140,
             headerTooltip : 
             {
                 show : true,
@@ -65,7 +69,7 @@ var mstColumnLayout =
         }, {
             dataField : "isPayChq",
             headerText : "CHEQUE",
-            width : 150
+            width : 140
           , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -88,7 +92,7 @@ var mstColumnLayout =
         }, {
             dataField : "isPayOnline",
             headerText : "ONLINE",
-            width : 150
+            width : 140
             , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -111,7 +115,7 @@ var mstColumnLayout =
         }, {
             dataField : "isPayCrc",
             headerText : "CREDIT CARD",
-            width : 150
+            width : 140
             , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -267,16 +271,40 @@ $(document).ready(function()
         {
                 console.log("add execute..");
                 return false;
-        }else
-            {
+        }
+        else
+        {
         	 console.log("add Not execute..");
-        	 return false;
-            } 
+             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             console.log("selectedItem: " + selectedItem[0]);  // rowIndex.. data exists
+
+             
+             /* if (selectedItem[0] > -1){
+                 fn_modyWare(selectedItem[0]);
+             }else{
+             Common.alert('Choice Data please..');
+             } */
+        	 return true;
+        } 
 
        // $("#mstCdId").val( event.value);
         
         //fn_getDetailCode(myGridID, event.rowIndex);
-    });    
+    });
+
+ // update
+/*     $("#update").click(function(){
+        $("#detailView").hide();
+        
+          var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+          if (selectedItem[0] > -1){
+              fn_modyWare(selectedItem[0]);
+          }else{
+          Common.alert('Choice Data please..');
+          }
+          //AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
+      }); */
+        
 
 });   //$(document).ready
 
