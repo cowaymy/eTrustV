@@ -62,9 +62,9 @@
 	      ORG_CD,
 	      ORG_NM,
 	      USE_YN,
-	      CASE WHEN END_DT IS NOT NULL AND LENGTH(END_DT)=6 
-		  THEN SUBSTR(END_DT,5) || '/' || SUBSTR(END_DT,0,4) 
-		  ELSE END_DT END END_DT ,
+	      CASE WHEN END_YEARMONTH IS NOT NULL AND LENGTH(END_YEARMONTH)=6 
+		  THEN SUBSTR(END_YEARMONTH,5) || '/' || SUBSTR(END_YEARMONTH,0,4) 
+		  ELSE END_YEARMONTH END END_DT ,
 	     T2.CODE_DESC AS cdDs
 	      FROM CMM0041C T1 JOIN SYS0013M T2
 	      ON T1.ORG_CD = T2.CODE_ID
@@ -76,10 +76,13 @@
 		<if test="orgCombo != null and orgCombo != ''">
 			AND T1.ORG_CD = #{orgCombo}
 		</if>
+		 <if test="useYnCombo != null and useYnCombo != ''">
+      AND T1.USE_YN = #{useYnCombo}
+    </if>
 		<if test="searchDt != null and searchDt != ''">
-			AND #{searchDt} BETWEEN START_DT AND END_DT
+			AND #{searchDt} BETWEEN START_YEARMONTH AND END_YEARMONTH
 		</if>
-           <![CDATA[   
+       <![CDATA[   
         ORDER BY T1.ORG_GR_NM , T2.CODE_ID     
          ]]>
 	</select>
@@ -93,8 +96,8 @@
 		ORG_GR_NM,
 		ORG_NM,
 		USE_YN,
-		START_DT,
-		END_DT,
+		START_YEARMONTH,
+		END_YEARMONTH,
 		CRT_USER_ID,
 		CRT_DT,
 		UPD_USER_ID,
@@ -124,7 +127,7 @@
           ORG_CD,
           ORG_SEQ
           FROM CMM0041C
-        WHERE END_DT=#{endDt} AND ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd}       
+        WHERE END_YEARMONTH=#{endDt} AND ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd}       
          ]]>
 	</select>
 
@@ -132,7 +135,7 @@
 	<update id="udtCommissionGridEndDt">
 		UPDATE CMM0041C
 		SET
-		END_DT=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+		END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
 		, UPD_USER_ID=#{updUserId}
 		, UPD_DT=SYSDATE
 		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
