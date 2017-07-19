@@ -9,36 +9,41 @@ var mstColumnLayout =
             dataField : "accId",
             headerText : "ID",
             width : 120
+           ,editable : false
         }, {
             dataField : "accCode",
             headerText : "CODE",
             width : 200
+           ,editable : false
         }, {
             dataField : "accDesc",
             headerText : "DESCRIPTION",
             width : 170
+            ,editable : false
         }, {
             dataField : "sapAccCode",
             headerText : "SAP CODE",
             width : 140
+            ,editable : false
         }, {
             dataField : "statusCode",
             headerText : "STATUS",
             width : 140
+            ,editable : false
         }, {
             dataField : "isPayCash",
             headerText : "CASH",
-            width : 140,
-            headerTooltip : 
+            width : 140
+/*             headerTooltip : 
             {
                 show : true,
                 tooltipHtml : "In Charge 가 Anna 인 경우 체크박스 표시 안함.<br/>(선택적 체크박스 표시)"
-            }
+            } */
           , renderer : 
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
                 checkValue : true, // true, false 인 경우가 기본
                 unCheckValue : false
                 
@@ -65,6 +70,7 @@ var mstColumnLayout =
                 } 
               */
             }
+        ,editable : false
                       
         }, {
             dataField : "isPayChq",
@@ -74,7 +80,7 @@ var mstColumnLayout =
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
                 checkValue : true, // true, false 인 경우가 기본
                 unCheckValue : false
                 // 체크박스 Visible 함수
@@ -88,6 +94,7 @@ var mstColumnLayout =
                    return true;
                  }
             }  //renderer
+        ,editable : false
         
         }, {
             dataField : "isPayOnline",
@@ -97,7 +104,7 @@ var mstColumnLayout =
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
                 checkValue : true, // true, false 인 경우가 기본
                 unCheckValue : false
                 // 체크박스 Visible 함수
@@ -111,6 +118,7 @@ var mstColumnLayout =
                    return true;
                  }
             }  //renderer
+        ,editable : false
                     
         }, {
             dataField : "isPayCrc",
@@ -120,7 +128,7 @@ var mstColumnLayout =
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
                 checkValue : true, // true, false 인 경우가 기본
                 unCheckValue : false
                 // 체크박스 Visible 함수
@@ -134,6 +142,7 @@ var mstColumnLayout =
                    return true;
                  }
             }  //renderer   
+        ,editable : false
                  
         }
     ];
@@ -142,7 +151,6 @@ var mstColumnLayout =
 
 function fnGetAccountCdListAjax() 
 {        
-	alert("GetAccountCodeList");
 	  Common.ajax("GET", "/common/selectAccountCodeList.do"
        , $("#MainForm").serialize()
        , function(result) 
@@ -188,23 +196,6 @@ function auiRemoveRowHandler(event)
     console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
-// MstGrid 행 추가, 삽입
-function addRow() 
-{
-  var item = new Object();
-
-/*     item.codeMasterId  ="";
-    item.disabled      ="N";
-    item.codeMasterName =""  ;
-    item.codeDesc       ="";  
-    item.createName     ="";
-    item.crtDt          =""; */
-    // parameter
-    // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-    AUIGrid.addRow(myGridID, item, "first");
-}
-
 // 행 삭제 메소드
 function removeRow() 
 {
@@ -212,11 +203,58 @@ function removeRow()
     AUIGrid.removeRow(myGridID,gSelRowIdx);
 }
 
-//Make Use_yn ComboList, tooltip
-function getDisibledComboList()
+function editPopUp() 
+{
+	  if ($("#paramAccCode").val().length < 1)
+	  {
+		  alert( "One Item Choose!" );
+		  return false;
+	  } 
+
+	  $("#parmAddEditFlag").val("EDIT");
+
+    var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
+    	    , $("#MainForm").serializeJSON()
+    	    , function(params)  // success
+    	    {
+     //       alert("params01 : " + params.param01);
+   
+          });
+
+    return ;
+}
+
+function addPopUp() 
+{
+	  $("#parmAddEditFlag").val("ADD");
+
+    var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
+    	    , $("#MainForm").serializeJSON()
+    	    , function()  // success
+    	    {
+     //       alert("params01 : " + params.param01);
+    	    	popUpObj = null;
+          });
+
+    return ;
+}
+
+
+//컬럼 선택시 상세정보 세팅.
+function fnSetDetail(selGrdidID, rowIdx)  //cdMstId
 {     
-  var list =  ["N", "Y"];   
-  return list;
+   $("#paramAccCode").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accCode"));  
+   $("#paramAccDesc").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accDesc"));  
+   $("#paramSapAccCode").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "sapAccCode"));  
+   $("#parmIsPayCash").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "isPayCash"));  
+   $("#parmIsPayChq").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "isPayChq"));  
+   $("#parmIsPayOnline").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "isPayOnline"));  
+   $("#parmIsPayCrc").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "isPayCrc"));  
+
+   console.log("paramAccCode:  "+ $("#paramAccCode").val() + " paramAccDesc: " + $("#paramAccDesc").val() + " paramSapAccCode: " + $("#paramSapAccCode").val() 
+		         + " parmIsPayCash: "+ $("#parmIsPayCash").val() + " parmIsPayChq: " + $("#parmIsPayChq").val() + " parmIsPayOnline: " + $("#parmIsPayOnline").val()
+		         + " parmIsPayCrc:  "+ $("#parmIsPayCrc").val()
+		          );                
 }
 
 
@@ -259,7 +297,9 @@ $(document).ready(function()
     AUIGrid.bind(myGridID, "cellClick", function( event ) 
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        
         gSelRowIdx = event.rowIndex;
+        $("#paramAccCode").val("");
     });
 
  // 셀 더블클릭 이벤트 바인딩
@@ -269,27 +309,15 @@ $(document).ready(function()
 
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true)
         {
-                console.log("add execute..");
-                return false;
+            return false;
         }
         else
         {
-        	 console.log("add Not execute..");
-             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-             console.log("selectedItem: " + selectedItem[0]);  // rowIndex.. data exists
-
-             
-             /* if (selectedItem[0] > -1){
-                 fn_modyWare(selectedItem[0]);
-             }else{
-             Common.alert('Choice Data please..');
-             } */
+           var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+           console.log("selectedItem: " + event.value);  // rowIndex.. data exists
+           fnSetDetail(myGridID,event.rowIndex);
         	 return true;
         } 
-
-       // $("#mstCdId").val( event.value);
-        
-        //fn_getDetailCode(myGridID, event.rowIndex);
     });
 
  // update
@@ -328,6 +356,15 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
+
+<input type ="hidden" id="paramAccCode"    name="paramAccCode"    value=""/>
+<input type ="hidden" id="paramAccDesc"    name="paramAccDesc"    value=""/>
+<input type ="hidden" id="paramSapAccCode" name="paramSapAccCode" value=""/>
+<input type ="hidden" id="parmIsPayCash"   name="parmIsPayCash"   value=""/>
+<input type ="hidden" id="parmIsPayChq"    name="parmIsPayChq"    value=""/>
+<input type ="hidden" id="parmIsPayOnline" name="parmIsPayOnline" value=""/>
+<input type ="hidden" id="parmIsPayCrc"    name="parmIsPayCrc"    value=""/>
+<input type ="hidden" id="parmAddEditFlag"  name="parmAddEditFlag"    value=""/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -417,9 +454,8 @@ $(document).ready(function()
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">CANCEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
-	<li><p class="btn_grid"><a href="#">SAVE</a></p></li>
+	<li><p class="btn_grid"><a href="javascript:;" onclick="editPopUp();">EDIT</a></p></li>
+	<li><p class="btn_grid"><a href="javascript:;" onclick="addPopUp();">ADD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
