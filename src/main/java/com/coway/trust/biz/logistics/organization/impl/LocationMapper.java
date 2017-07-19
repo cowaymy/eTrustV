@@ -13,4 +13,7 @@ public interface LocationMapper {
 	List<EgovMap> selectLocationStockList(Map<String, Object> params);
 	
 	void updateLocationInfo(Map<String, Object> params);
+	void insertLocationInfo(Map<String, Object> params);
+	
+	
 }
