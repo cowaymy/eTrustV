@@ -423,8 +423,10 @@
 					<col style="width: *" />
 					<col style="width: 110px" />
 					<col style="width: *" />
-					<col style="width: 100px" />
+					<col style="width: 110px" />
 					<col style="width: *" />
+					<col style="width: 110px" />
+          <col style="width: *" />
 				</colgroup>
 				<tbody>
 					<tr>
@@ -446,6 +448,14 @@
 						</select></td>
 						<input type="hidden" id="orgGubun" name="orgGubun" value="">
 						<input type="hidden" id="orgGrCd" name="orgGrCd" value="">
+						<th scope="row">USE YN</th>
+            <td>
+              <select id="useYnCombo" name="useYnCombo" style="width:100px;">
+                <option value=""></option>
+                <option value="Y">Y</option>
+                <option value="N">N</option>
+            </select>
+            </td>
 					</tr>
 				</tbody>
 			</table>
