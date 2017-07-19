@@ -195,7 +195,7 @@
             if (selectedItem[0] > -1){
                 fn_modyWare(selectedItem[0]);
             }else{
-                Common.alert('Choice Data please..');
+            Common.alert('Choice Data please..');
             }
             //AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
         });
@@ -247,18 +247,7 @@
        
     });
     
-   
-  
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+     
     
     function fn_modyWare(rowid){
     	
@@ -660,7 +649,7 @@
 <section class="pop_body"><!-- pop_body start -->
 <div id="registWindow" style="display:none" title="그리드 수정 사용자 정의">
 <h1>Warehouse Information</h1>
-<form id="insForm" name="insForm" method="get">
+<form id="insForm" name="insForm" method="GET">
 <table class="type1">
 <caption>search table</caption>
 <colgroup>
@@ -672,46 +661,46 @@
 <tbody>
 <tr>
     <th scope="row">Warehouse Code</th>
-    <td colspan="3"><input type="text" name="mwarecd" id="mwarecd"/></td>    
-</tr>
-<!-- <tr>
-    <th scope="row">Warehouse Name</th>
-    <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
+    <td colspan="3"><input type="text" name="inwarecd" id="inwarecd"/></td>    
 </tr>
 <tr>
+    <th scope="row">Warehouse Name</th>
+    <td colspan="3"><input type="text" name="inwarenm" id="inwarenm" class="w100p"/></td>
+</tr>
+<!-- <tr>
     <th scope="row">Stock Grade</th>
     <td><select id="mstockgrade"></select></td>
     <th scope="row">Branch</th>
     <td><select id="mwarebranch"></select></td>
-</tr>
+</tr> -->
 <tr>
     <th scope="row" rowspan="3">Address</th>
-    <td colspan="3"><input type="text" id="maddr1" name="maddr1" class="w100p"/></td>
+    <td colspan="3"><input type="text" id="inaddr1" name="inaddr1" class="w100p"/></td>
 </tr>
 <tr>
-    <td colspan="3"><input type="text" id="maddr2" name="maddr2" class="w100p"/></td>
+    <td colspan="3"><input type="text" id="inaddr2" name="inaddr2" class="w100p"/></td>
 </tr>
 <tr>
-    <td colspan="3"><input type="text" id="maddr3" name="maddr3" class="w100p"/></td>
+    <td colspan="3"><input type="text" id="inaddr3" name="inaddr3" class="w100p"/></td>
 </tr>
-<tr>
+<!-- <tr>
     <th scope="row">Country</th>
-    <td><select id="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
+    <td><select id="incountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
     <th scope="row">State</th>
-    <td><select id="mstate" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
+    <td><select id="instate" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
 </tr>
 <tr>
     <th scope="row">Area</th>
-    <td><select id="marea" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
+    <td><select id="inarea" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
     <th scope="row">Postcode</th>
-    <td><select id="mpostcd" disabled=true><option>Choose One</option></select></td>
-</tr>
+    <td><select id="inpostcd" disabled=true><option>Choose One</option></select></td>
+</tr> -->
 <tr>
     <th scope="row">Contact No (1)</th>
-    <td><input type="text" name="mcontact1" id="mcontact1"/></td>
+    <td><input type="text" name="incontact1" id="incontact1"/></td>
     <th scope="row">Contact No (2)</th>
-    <td><input type="text" name="mcontact2" id="mcontact2"/></td>
-</tr> -->
+    <td><input type="text" name="incontact2" id="incontact2"/></td>
+</tr> 
 </tbody>
 </table>
 </form>
