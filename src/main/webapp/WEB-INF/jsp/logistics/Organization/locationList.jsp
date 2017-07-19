@@ -145,7 +145,7 @@
 	        
 	        Common.ajax("POST", "/logistics/organization/locationUpdate.do", GridCommon.getEditData(myGridID), function(result) {
 	        	Common.alert(result.message);
-	           // AUIGrid.resetUpdatedItems(myGridID, "a"); // 초기화
+	            AUIGrid.resetUpdatedItems(myGridID, "all");
 	            
 	        },  function(jqXHR, textStatus, errorThrown) {
 	            try {
@@ -195,7 +195,7 @@
             if (selectedItem[0] > -1){
                 fn_modyWare(selectedItem[0]);
             }else{
-            Common.alert('Choice Data please..');
+                Common.alert('Choice Data please..');
             }
             //AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
         });
@@ -263,7 +263,7 @@
     function fn_modyWare(rowid){
     	
     	$("#mstatus").text(AUIGrid.getCellValue(myGridID ,rowid,'statnm'));
-    	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'locid'));
+    	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'loccd'));
     	$("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
     	$("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr1'));
     	$("#maddr2").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr2'));
