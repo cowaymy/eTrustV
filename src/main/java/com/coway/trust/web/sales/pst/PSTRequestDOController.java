@@ -53,8 +53,8 @@ public class PSTRequestDOController {
 	public String selectPstRequestDOList(@ModelAttribute("pstRequestVO") PSTRequestDOVO pstRequestVO,
 			@RequestParam Map<String, Object>params, ModelMap model) {
 		
-		List<EgovMap> pstList = pstRequestDOService.selectPstRequestDOList(params);
-		model.addAttribute("pstList", pstList);
+//		List<EgovMap> pstList = pstRequestDOService.selectPstRequestDOList(params);
+//		model.addAttribute("pstList", pstList);
 		
 		return "sales/pst/pstRequestDoList";
 	}
@@ -65,7 +65,10 @@ public class PSTRequestDOController {
 	 */
 	@RequestMapping(value = "/selectPstRequestDOJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPstRequestDOJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
-		if(params != null){
+		
+		List<EgovMap> pstList = null;
+		
+		if(params != null && !"".equals(params.toString().trim())){
 			String stDate = (String)params.get("createStDate");
 			if(stDate != null && stDate != ""){
 				String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
@@ -76,10 +79,10 @@ public class PSTRequestDOController {
 				String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
 				params.put("createEnDate", createEnDate);
 			}
-			
+			pstList = pstRequestDOService.selectPstRequestDOList(params);
 		}
 		
-		List<EgovMap> pstList = pstRequestDOService.selectPstRequestDOList(params);
+
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(pstList);

@@ -21,5 +21,7 @@
 		
 		<!-- Sales PST -->
 		<typeAlias alias="pstRequestVO" type="com.coway.trust.biz.sales.pst.PSTRequestDOVO"/>
+		<!-- Sales Customer -->
+        <typeAlias alias="customerVO" type="com.coway.trust.biz.sales.customer.CustomerVO"/>
     </typeAliases>
 </configuration>
