@@ -211,7 +211,7 @@ var Common = {
 		});
 
 		// TODO : div 팝업 class 적용 필요.
-		var $obj = $('<div></div>');
+		var $obj = $('<div id="_popupDiv"></div>');
 
 		$('body').append($obj);
 
@@ -226,18 +226,17 @@ var Common = {
 
 				$obj.show();
 
-				// TODO : close 버튼에 이벤트 추가 해야 함.
-				$obj.find('.close').on('click', function() {
+				$obj.find('.btn_blue2').on('click', function() {
 					if (_callback) {
 						_callback(_jsonObj);
 					}
 
-					// TODO : 창 닫기.
+					$obj.remove();
 				});
 
 			},
 			error : function() {
-				alert("Fail Common.popupDiv...");
+				Common.alert("Fail Common.popupDiv...");
 			}
 		});
 
