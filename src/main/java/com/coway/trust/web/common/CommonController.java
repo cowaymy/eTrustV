@@ -86,6 +86,24 @@ public class CommonController {
 	}
 	
 	
+	/**
+	 * POPUP 화면 호출.
+	 */
+	@RequestMapping(value = "/accountCodeEditPop.do")
+	public String accountCodeUpdPop(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
+		//{paramAccCode=1000/000, paramAccDesc=FIXED ASSTES AT COST, paramSapAccCode=, parmIsPayCash=1, parmIsPayChq=0, parmIsPayOnline=0, parmIsPayCrc=1, accId=, accCode=, accDesc=, sapAccCode=, accStusId=1, paymentCd=, isPop=true}
+		logger.debug(" Input Params : {}", params.toString() );
+
+		// popup 화면으로 넘길 데이터.
+		model.addAttribute("inputParams", params);
+
+		// 호출될 화면
+		return "/common/accountCodeManagementPop";
+	}	
+	
+	
+	
 /**************** General Code Management *****************/	
 	
 	@RequestMapping(value = "/generalCode.do")
