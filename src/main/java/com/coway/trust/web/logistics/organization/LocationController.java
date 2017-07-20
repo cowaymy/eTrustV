@@ -144,7 +144,7 @@ public class LocationController {
 		String inaddr3     = (String) params.get("inaddr3");
 		String incontact1     = (String) params.get("incontact1");
 		String incontact2     = (String) params.get("incontact2");
-		String inlocid     = "73404";
+		//String inlocid     = "73404";
 		
 		Map<String, Object> insmap = new HashMap();				
 		
@@ -155,7 +155,7 @@ public class LocationController {
 		insmap.put("inaddr3", inaddr3);
 		insmap.put("incontact1" , incontact1 );
 		insmap.put("incontact2"  ,incontact2);
-		insmap.put("inlocid",	inlocid);
+		//insmap.put("inlocid",	inlocid);
 		insmap.put("inarea"  ,params.get("") );
 		insmap.put("inpost"  ,params.get("") );
 		insmap.put("instat"  ,params.get("") );
