@@ -667,12 +667,12 @@
     <th scope="row">Warehouse Name</th>
     <td colspan="3"><input type="text" name="inwarenm" id="inwarenm" class="w100p"/></td>
 </tr>
-<!-- <tr>
+ <tr>
     <th scope="row">Stock Grade</th>
     <td><select id="mstockgrade"></select></td>
     <th scope="row">Branch</th>
     <td><select id="mwarebranch"></select></td>
-</tr> -->
+</tr> 
 <tr>
     <th scope="row" rowspan="3">Address</th>
     <td colspan="3"><input type="text" id="inaddr1" name="inaddr1" class="w100p"/></td>
