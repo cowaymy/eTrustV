@@ -7,7 +7,9 @@ $(function()
 {
   //doGetCombo('/common/selectCodeList.do',            '11',        '','cmbCategory', 'A' , ''); //Single COMBO => ALL
 
-  doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' 
+  doGetComboAddr('/common/selectAddrSelCodeList.do'
+		              , 'country' 
+		              , '' 
 			            //, AUIGrid.getCellValue(myGridID ,rowid ,'loccnty')
 			            ,''
 			            ,'mcountry'
@@ -19,7 +21,6 @@ $(function()
 
 </script>
 
-<body>
 <div id="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -151,4 +152,3 @@ $(function()
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-</body>

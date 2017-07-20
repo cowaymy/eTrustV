@@ -218,7 +218,6 @@ function editPopUp()
     	    , function(params)  // success
     	    {
      //       alert("params01 : " + params.param01);
-   
           });
 
     return ;
@@ -230,10 +229,9 @@ function addPopUp()
 
     var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
-    	    , function()  // success
+    	    , function(params)  // success
     	    {
      //       alert("params01 : " + params.param01);
-    	    	popUpObj = null;
           });
 
     return ;
@@ -309,12 +307,14 @@ $(document).ready(function()
 
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true)
         {
+            alert(1);
             return false;
         }
         else
         {
            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
            console.log("selectedItem: " + event.value);  // rowIndex.. data exists
+           console.log(">> " + AUIGrid.getCellValue(myGridID, event.rowIndex, "accCode"));
            fnSetDetail(myGridID,event.rowIndex);
         	 return true;
         } 
@@ -419,7 +419,7 @@ $(document).ready(function()
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+  <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> 
 <dl class="link_list">
 	<dt>Link</dt>
 	<dd>
