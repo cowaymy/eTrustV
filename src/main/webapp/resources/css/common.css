@@ -155,6 +155,7 @@ table.type1 tbody td input[type=text].readonly,
 table.type1 tbody td select.disabled{background:#f2f2f2; color:#ccc;}
 table.type1 tbody td select{width:237px; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 table.type1 tbody td .w100p{width:100%!important;}
+table.type1 tbody td.col_all{background:#e9f0f4;}
 table.type1 td > label{margin:0 5px!important;}
 table.type1 td .search_btn{display:block; height:30px;}
 table.type1 td .search_btn img{position:relative; top:6px;}
@@ -349,6 +350,8 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto > div{display:table-cell; padding:0 5px; vertical-align:top;}
 .divine_auto > div:first-child{padding:0 5px 0 0;}
 .divine_auto > div:last-child{padding:0 0 0 5px;}
+.divine_auto > div h3{font-size:14px;}
+.divine_auto > div .border_box{padding:10px; border:1px solid #ddd;}
 
 /* 로딩바 */
 .prog{display:block; position:fixed; top:0; left:0; z-index:1002; width:100%; height:100%; background:rgba(0,0,0,0.6);}
