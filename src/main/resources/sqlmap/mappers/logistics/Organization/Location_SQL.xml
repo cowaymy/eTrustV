@@ -165,29 +165,31 @@
 	      , WH_LOC_MOBILE  
 	     )  
 	    VALUES (
-	    (SELECT nvl(MAX(WH_LOC_ID),0) + 1 from SYS0028M) 
-	    ,#{loccd}
-	    ,#{locdesc} 
-	    ,#{locaddr1}
-	    ,#{locaddr2}
-	    ,#{locaddr3}
-	    ,#{locarea}
-	    ,#{locpost}
-	    ,#{locstat}
-	    ,#{loccnty} 
-	    ,#{loctel1}
-        ,#{loctel2}        
-	    ,#{locBranch}
-	    ,#{lotype_id}
-	    ,#{locgrad}
-	    ,#{lostus_id}
-        ,#{loup_user_id}
+	     #{inlocid}
+	    ,#{inwarecd}
+	    ,#{inwarenm} 
+	    ,#{inaddr1}
+	    ,#{inaddr2}
+	    ,#{inaddr3}
+	    ,#{inarea}
+	    ,#{inpost}    
+	    ,#{instat}	    
+	    ,#{incnty} 
+	    ,#{incontact1}
+        ,#{incontact2}  
+	    ,#{inbranch}  
+	    ,#{intype_id}
+	    ,#{ingrad}
+	    ,#{instus_id}	    
+        ,#{inup_user_id}
 	    ,SYSDATE  
-	    ,#{locode2}
-	    ,#{lodesc2}
-	    ,#{lois_sync}
-	    ,#{lomobile}
+	    ,#{incode2}
+	    ,#{indesc2}
+	    ,#{inis_sync}
+	    ,#{inmobile}
 	    )
     </insert>
-    
+    <select id="locCreateSeq" parameterType="Map" resultType="java.lang.String">
+      SELECT NVL(MAX(WH_LOC_ID),0) + 1 from SYS0028M
+    </select>
 </mapper>
