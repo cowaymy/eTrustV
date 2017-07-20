@@ -141,22 +141,22 @@ var columnLayout = [
                 <tbody>
                     <tr>
                         <th scope="row">Org Code</th>
-                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" /></td>
+                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" /></td>
                         <th scope="row">Grp Code</th>
-                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode" /></td>
+                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="grp Code"/></td>
                     </tr>
                     <tr>
                         <th scope="row">Dept Code</th>
-                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode" /></td>
+                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="dept Code"/></td>
                         <th scope="row">Member Code</th>
-                        <td><input type="text" title="memCode" id="memCode" name="memCode" /></td>
+                        <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="mem Code"/></td>
                     </tr>
                 </tbody>
             </table>
             <!-- table end -->
 
             <ul class="right_btns">
-                <li><p class="btn_gray"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
             </ul>
         </form>
     </section>
