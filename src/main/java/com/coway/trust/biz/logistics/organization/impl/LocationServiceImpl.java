@@ -54,6 +54,19 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 	
 	@Override
 	public void insertLocationInfo(Map<String, Object> params) {
+		
+		System.out.println("inwarecd                 :"+params.get("inwarecd"));
+		System.out.println("inwarenm          :"+params.get("inwarenm"));
+		System.out.println("inaddr1                 :"+params.get("inaddr1"));
+		System.out.println("inaddr1                 :"+params.get("inaddr2"));
+		System.out.println("inaddr3                 :"+params.get("inaddr3"));
+		System.out.println("incontact1                 :"+params.get("incontact1"));
+		System.out.println("incontact2                 :"+params.get("incontact2"));
+		
+		String inlocid = locMapper.locCreateSeq();
+		System.out.println("inlocid@@@                 :"+params.get("inlocid"));
+		params.put("inlocid", inlocid);
+		
 		// TODO Auto-generated method stub
 		locMapper.insertLocationInfo(params);
 	}
