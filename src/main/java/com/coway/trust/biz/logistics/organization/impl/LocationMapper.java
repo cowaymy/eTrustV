@@ -14,5 +14,5 @@ public interface LocationMapper {
 	
 	void updateLocationInfo(Map<String, Object> params);
 	void insertLocationInfo(Map<String, Object> params);
-	String locCreateSeq();
+	int locCreateSeq();
 }
