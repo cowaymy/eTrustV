@@ -29,4 +29,11 @@ public interface SearchPaymentService
 	 * @return
 	 */
     List<EgovMap> selectSalesList(Map<String, Object> params);
+    
+    /**
+	 * RentalCollectionByBS 조회
+	 * @param params
+	 * @return
+	 */
+    List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO);
 }
