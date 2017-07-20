@@ -141,7 +141,7 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/initRentalCollectionBySales.do")
 	public String initRentalCollectionBySales(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/payment/RentalCollectionBySales";
+		return "payment/payment/rentalCollectionBySales";
 	}
 	
 	/**
