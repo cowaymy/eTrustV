@@ -14,6 +14,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
 import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
@@ -83,6 +84,16 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<EgovMap> selectSalesList(Map<String, Object> params) {
 		return searchPaymentMapper.selectSalesList(params);
+	}
+	
+	/**
+	 * RentalCollectionByBS 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO) {
+		return searchPaymentMapper.searchRentalCollectionByBSList(searchVO);
 	}
 	
 }
