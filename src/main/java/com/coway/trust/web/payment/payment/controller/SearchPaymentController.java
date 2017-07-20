@@ -130,5 +130,33 @@ public class SearchPaymentController {
         return ResponseEntity.ok(resultList);
 	}
 	
+	/******************************************************
+	 * Search Payment (RC By Sales) 
+	 *****************************************************/	
+	/**
+	 * SearchPayment초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initRentalCollectionBySales.do")
+	public String initRentalCollectionBySales(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/payment/RentalCollectionBySales";
+	}
 	
+	/**
+	 * SearchPayment Payment List(Slave Grid) 조회
+	 * @param Map
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectSalesList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSalesList(
+				 @RequestParam Map<String, Object> params, ModelMap model) {
+
+        List<EgovMap> resultList = searchPaymentService.selectSalesList(params);
+ 
+        return ResponseEntity.ok(resultList);
+	}
 }

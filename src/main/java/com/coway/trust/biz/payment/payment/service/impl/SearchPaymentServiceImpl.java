@@ -75,6 +75,14 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		return searchPaymentMapper.selectPaymentList(params);
 	}
 	
-
+	/**
+	 * Sales List(Slave Grid) 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectSalesList(Map<String, Object> params) {
+		return searchPaymentMapper.selectSalesList(params);
+	}
 	
 }

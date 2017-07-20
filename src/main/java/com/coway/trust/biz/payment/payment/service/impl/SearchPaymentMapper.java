@@ -39,6 +39,11 @@ public interface SearchPaymentMapper {
 	 */
 	List<EgovMap> selectPaymentList(Map<String, Object> params);
 	
-	
+	/**
+	 * RentalCollectionBySales(Slave Grid) 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectSalesList(Map<String, Object> params);
 
 }
