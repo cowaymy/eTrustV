@@ -130,13 +130,7 @@ public class LocationController {
 	
 	@RequestMapping(value = "/insLocation.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> insLocation(@RequestParam Map<String, Object> params, Model model) {
-		
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inwarecd"));
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inaddr1"));
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inaddr2"));
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("inaddr3"));
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("incontact1"));
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ mwarecd==={}",params.get("incontact2"));
+
 		String inwarecd     = (String) params.get("inwarecd");
 		String inwarenm     = (String) params.get("inwarenm");
 		String inaddr1     = (String) params.get("inaddr1");
@@ -144,7 +138,6 @@ public class LocationController {
 		String inaddr3     = (String) params.get("inaddr3");
 		String incontact1     = (String) params.get("incontact1");
 		String incontact2     = (String) params.get("incontact2");
-		//String inlocid     = "73404";
 		
 		Map<String, Object> insmap = new HashMap();				
 		
@@ -155,7 +148,6 @@ public class LocationController {
 		insmap.put("inaddr3", inaddr3);
 		insmap.put("incontact1" , incontact1 );
 		insmap.put("incontact2"  ,incontact2);
-		//insmap.put("inlocid",	inlocid);
 		insmap.put("inarea"  ,1);
 		insmap.put("inpost"  ,2 );
 		insmap.put("instat"  ,3 );
@@ -165,10 +157,10 @@ public class LocationController {
 		insmap.put("ingrad"  , 'A' );
 		insmap.put("instus_id"  ,7);
 		insmap.put("inup_user_id"  ,8 );
-		insmap.put("incode2"  ,params.get("") );
-		insmap.put("indesc2",params.get("") );
+		insmap.put("incode2"  ,"");
+		insmap.put("indesc2","" );
 		insmap.put("inis_sync" ,9);
-		insmap.put("inmobile"  ,0 );		
+		insmap.put("inmobile"  ,1234 );		
 		
 		loc.insertLocationInfo(insmap);
 		
