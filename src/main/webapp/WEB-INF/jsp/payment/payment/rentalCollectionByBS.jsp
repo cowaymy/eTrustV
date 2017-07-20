@@ -141,15 +141,15 @@ var columnLayout = [
                 <tbody>
                     <tr>
                         <th scope="row">Org Code</th>
-                        <td><input type="text" title="Reference No." id="orgCode" name="orgCode" /></td>
+                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" /></td>
                         <th scope="row">Grp Code</th>
-                        <td><input type="text" title="Reference No." id="grpCode" name="grpCode" /></td>
+                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode" /></td>
                     </tr>
                     <tr>
                         <th scope="row">Dept Code</th>
-                        <td><input type="text" title="Reference No." id="deptCode" name="deptCode" /></td>
+                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode" /></td>
                         <th scope="row">Member Code</th>
-                        <td><input type="text" title="Reference No." id="memCode" name="memCode" /></td>
+                        <td><input type="text" title="memCode" id="memCode" name="memCode" /></td>
                     </tr>
                 </tbody>
             </table>
@@ -164,39 +164,6 @@ var columnLayout = [
 
     <!-- search_result start -->
     <section class="search_result">
-        
-        <!-- link_btns_wrap start -->
-        <!-- <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-                        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-                    </ul>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside> -->
-        <!-- link_btns_wrap end -->
-        
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
