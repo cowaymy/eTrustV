@@ -127,13 +127,13 @@ var columnLayout = [
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Rental Collection</li>
-        <li>Organization By Sales Account</li>
+        <li>Organization By BS Account</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Organization By Sales Account</h2>   
+        <h2>Organization By BS Account</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
         </ul>    
