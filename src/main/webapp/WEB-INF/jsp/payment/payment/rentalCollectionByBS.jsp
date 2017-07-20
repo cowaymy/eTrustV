@@ -143,13 +143,13 @@ var columnLayout = [
                         <th scope="row">Org Code</th>
                         <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" /></td>
                         <th scope="row">Grp Code</th>
-                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="grp Code"/></td>
+                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code"/></td>
                     </tr>
                     <tr>
                         <th scope="row">Dept Code</th>
-                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="dept Code"/></td>
+                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code"/></td>
                         <th scope="row">Member Code</th>
-                        <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="mem Code"/></td>
+                        <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="Member Code"/></td>
                     </tr>
                 </tbody>
             </table>
