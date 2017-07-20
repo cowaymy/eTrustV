@@ -1,5 +1,9 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script type="text/javaScript" language="javascript">
 
@@ -8,7 +12,9 @@
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
-        createAUIGrid();        
+        createAUIGrid();
+        
+        //AUIGrid.setSelectionMode(myGridID, "singleRow");
         
         doGetCombo('/common/selectCodeList.do',       '10', '',   'appType', 'M', 'fn_multiCombo'); //Common Code
         doGetCombo('/common/selectProductCodeList.do',  '', '', 'productId', 'S',              ''); //Product Code
@@ -18,8 +24,10 @@
     });
 
     function Test() {    	
+    	alert('call Test');
     	//alert($("#appType option").length);
     	//$("#appType option:eq(0)").attr("selected","true");
+    	AUIGrid.setSelectionMode(myGridID, "singleRow");
     }
     
     // 리스트 조회.
@@ -113,21 +121,21 @@
         var gridPros = {
             usePaging           : true,     //페이징 사용
             pageRowCount        : 20,       //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : true,            
+            editable            : false,            
             fixedColumnCount    : 1,            
             showStateColumn     : true,             
-            displayTreeOpen     : true,            
-            selectionMode       : "multipleCells",            
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",//"multipleCells",            
             headerHeight        : 30,       
-            useGroupingPanel    : true,     //그룹핑 패널 사용
+            useGroupingPanel    : false,     //그룹핑 패널 사용
             skipReadonlyColumns : true,     //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,     //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : false,    //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,    //줄번호 칼럼 렌더러 출력    
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
         
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "", gridPros);
     }
     
     function fn_multiCombo(){
@@ -296,7 +304,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order List</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onClick="javascript:xxx();">New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="javascript:Test();">New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="javascript:Test();">Edit</a></p></li>
 	<li><p class="btn_blue"><a href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -363,7 +372,7 @@
 	</td>
 	<th scope="row">NRIC/Company No</th>
 	<td>
-	<input type="text" title="NRIC/Company No" placeholder="NRIC/Company Number" class="w100p" />
+	<input id="custIc" name="custIc" type="text" title="NRIC/Company No" placeholder="NRIC/Company Number" class="w100p" />
 	</td>
 </tr>
 <tr>
@@ -373,29 +382,33 @@
 	</td>
 	<th scope="row">Salesman</th>
 	<td>
-	<input type="text" title="Salesman" placeholder="Salesman (Member Code)" class="w100p" />
+	<input id="salesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="Salesman (Member Code)" class="w100p" />
 	</td>
 	<th scope="row">Rental Status</th>
 	<td>
-	<select class="multy_select w100p" multiple="multiple">
-		<option value="1">11</option>
-		<option value="2">22</option>
-		<option value="3">33</option>
+	<select id="rentStus" name="rentStus" class="multy_select w100p" multiple="multiple">
+		<option value="REG">Regular</option>
+		<option value="INV">Investigate</option>
+        <option value="SUS">Suspend</option>
+        <option value="RET">Returned</option>
+        <option value="CAN">Cancelled</option>
+        <option value="TER">Terminated</option>
+        <option value="WOF">Write Off</option>
 	</select>
 	</td>
 </tr>
 <tr>
 	<th scope="row">Reference No</th>
 	<td>
-	<input type="text" title="Reference No<" placeholder="Reference Number" class="w100p" />
+	<input id="refNo" name="refNo" type="text" title="Reference No<" placeholder="Reference Number" class="w100p" />
 	</td>
 	<th scope="row">PO No</th>
 	<td>
-	<input type="text" title="PO No" placeholder="PO Number" class="w100p" />
+	<input id="poNo" name="poNo" type="text" title="PO No" placeholder="PO Number" class="w100p" />
 	</td>
 	<th scope="row">Contact No</th>
 	<td>
-	<input type="text" title="Contact No" placeholder="Contact No" class="w100p" />
+	<input id="contactNo" name="contactNo" type="text" title="Contact No" placeholder="Contact No" class="w100p" />
 	</td>
 </tr>
 <tr>
@@ -415,15 +428,15 @@
 <tr>
 	<th scope="row">Creator</th>
 	<td>
-	<input type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
+	<input id="crtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
 	</td>
 	<th scope="row">Promotion Code</th>
 	<td>
-	<input type="text" title="Promotion Code" placeholder="Promotion Code" class="w100p" />
+	<input id="promoCode" name="promoCode" type="text" title="Promotion Code" placeholder="Promotion Code" class="w100p" />
 	</td>
 	<th scope="row">Related No(Exchange)</th>
 	<td>
-	<input type="text" title="Related No(Exchange)" placeholder="Related No" class="w100p" />
+	<input id="relatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="Related No" class="w100p" />
 	</td>
 </tr>
 </tbody>

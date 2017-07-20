@@ -50,9 +50,8 @@ public class OrderListController {
 		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status 
 		String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId"); //Key-In Branch
 		String[] arrDscBrnchId = request.getParameterValues("dscBrnchId"); //DSC Branch 
+		String[] arrRentStus = request.getParameterValues("rentStus"); //Rent Status
 				
-		logger.debug("!@###### ordNo : "+params.get("ordNo"));
-		
 		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
 		if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
 
@@ -60,6 +59,21 @@ public class OrderListController {
 		params.put("arrOrdStusId", arrOrdStusId);
 		params.put("arrKeyinBrnchId", arrKeyinBrnchId);
 		params.put("arrDscBrnchId", arrDscBrnchId);
+		params.put("arrRentStus", arrRentStus);
+		
+		if(params.get("custIc") == null) {logger.debug("!@###### custIc is null");}
+		if("".equals(params.get("custIc"))) {logger.debug("!@###### custIc ''");}
+		
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### ordNo : "+params.get("ordNo"));
+		logger.debug("!@###### ordStartDt : "+params.get("ordStartDt"));
+		logger.debug("!@###### ordEndDt : "+params.get("ordEndDt"));
+		logger.debug("!@###### arrAppType : "+arrAppType);
+		logger.debug("!@###### arrOrdStusId : "+arrOrdStusId);
+		logger.debug("!@###### arrKeyinBrnchId : "+arrKeyinBrnchId);
+		logger.debug("!@###### arrRentStus : "+arrRentStus);
+		logger.debug("!@###### custIc : "+params.get("custIc"));
+		logger.debug("!@##############################################################################");
 		
 		List<EgovMap> orderList = orderListService.selectOrderList(params);
 
