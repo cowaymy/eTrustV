@@ -354,6 +354,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto.type2 > div:first-child{padding:0 20px 0 0;}
 .divine_auto.type2 > div:last-child{padding:0 0 0 20px;}
 .divine_auto.type2 .btns{position:absolute; top:50%; left:-34px; margin:-27px 0 0 0;}
+.divine_auto.type2 .btns.right-type{left:inherit;right:-34px;}
 .divine_auto.type2 .btns li{margin-top:5px;}
 .divine_auto.type2 .btns li:first-child{margin-top:0;}
 .divine_auto > div h3{font-size:14px;}
