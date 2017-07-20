@@ -32,7 +32,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
-import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSService;
 import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
