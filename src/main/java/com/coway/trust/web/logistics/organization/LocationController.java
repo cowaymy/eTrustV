@@ -156,19 +156,19 @@ public class LocationController {
 		insmap.put("incontact1" , incontact1 );
 		insmap.put("incontact2"  ,incontact2);
 		//insmap.put("inlocid",	inlocid);
-		insmap.put("inarea"  ,params.get("") );
-		insmap.put("inpost"  ,params.get("") );
-		insmap.put("instat"  ,params.get("") );
-		insmap.put("incnty"  ,params.get("") );
-		insmap.put("inbranch"  ,params.get("") );
-		insmap.put("intype_id"  ,params.get("") );
-		insmap.put("ingrad"  ,params.get("") );
-		insmap.put("instus_id"  ,params.get("") );
-		insmap.put("inup_user_id"  ,params.get("") );
+		insmap.put("inarea"  ,1);
+		insmap.put("inpost"  ,2 );
+		insmap.put("instat"  ,3 );
+		insmap.put("incnty"  ,4);
+		insmap.put("inbranch"  ,5);
+		insmap.put("intype_id"  ,6);
+		insmap.put("ingrad"  , 'A' );
+		insmap.put("instus_id"  ,7);
+		insmap.put("inup_user_id"  ,8 );
 		insmap.put("incode2"  ,params.get("") );
 		insmap.put("indesc2",params.get("") );
-		insmap.put("inis_sync" ,params.get("") );
-		insmap.put("inmobile"  ,params.get("") );		
+		insmap.put("inis_sync" ,9);
+		insmap.put("inmobile"  ,0 );		
 		
 		loc.insertLocationInfo(insmap);
 		
