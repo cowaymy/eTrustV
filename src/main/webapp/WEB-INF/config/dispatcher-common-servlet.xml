@@ -18,7 +18,9 @@
     </bean>
     
     <!-- 쿠키를 이용한 Locale 이용 -->
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+    </bean>
     <!-- session을 이용한 Locale 이용 -->    
      <!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" /> -->
     
