@@ -64,7 +64,7 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		System.out.println("incontact2                 :"+params.get("incontact2"));
 		
 		String inlocid = locMapper.locCreateSeq();
-		System.out.println("inlocid@@@                 :"+params.get("inlocid"));
+		System.out.println("inlocid@@@!!                 :"+inlocid);
 		params.put("inlocid", inlocid);
 		
 		// TODO Auto-generated method stub
