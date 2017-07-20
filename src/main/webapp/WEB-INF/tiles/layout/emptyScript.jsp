@@ -5,7 +5,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>e-TRUST</title>
+<title>e-TRUST pop</title>
 <tiles:insertAttribute name="var" />
 <tiles:insertAttribute name="script" />
 </head>
