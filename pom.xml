@@ -81,7 +81,7 @@
 
 		<dependency>
 			<groupId>crystal</groupId>
-			<artifactId>xxxxx</artifactId>
+			<artifactId>commons-configuration-1.2</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${webinf-lib}/commons-configuration-1.2.jar</systemPath>
