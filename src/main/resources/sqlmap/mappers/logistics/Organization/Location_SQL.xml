@@ -189,7 +189,7 @@
 	    ,#{inmobile}
 	    )
     </insert>
-    <select id="locCreateSeq" parameterType="Map" resultType="java.lang.String">
+    <select id="locCreateSeq" parameterType="Map" resultType="Integer">
       SELECT NVL(MAX(WH_LOC_ID),0) + 1 from SYS0028M
     </select>
 </mapper>
