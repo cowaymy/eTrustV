@@ -12,7 +12,9 @@
     var imgGrid;
     
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "8","codeName": "Inactive"}];
-
+    
+    
+    var srvMembershipList = new Array();
     // AUIGrid 칼럼 설정
     var columnLayout = [{dataField:"stkid"             ,headerText:"StockID"           ,width:120 ,height:30, visible : false},
                         {dataField:"stkcode"           ,headerText:"StockCode"         ,width:100 ,height:30},
@@ -39,11 +41,46 @@
                         {dataField:"typenm"              ,headerText:"TypeName"      ,width:"10%"},
                         {dataField:"period"              ,headerText:"Period"        ,width:"10%"},
                         {dataField:"qty"                 ,headerText:"Qty"           ,width:"7%"}];
-
-    var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"     ,width:120 , visible : false},
-                         {dataField:"packagename"         ,headerText:"Description"   ,width:"80%"},
-                         {dataField:"chargeamt"           ,headerText:"Qty"           ,width:"20%" }];
-
+    
+var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"     ,width:120 , visible : false},
+                     {dataField:"packagename"         ,headerText:"Description"   ,width:"70%",
+                      labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+                     var retStr = "";
+                     for (var i = 0, len = srvMembershipList.length; i < len; i++) {
+                         if (srvMembershipList[i]["pacid"] == value) {
+                             retStr = srvMembershipList[i]["cdname"];
+                             break;p
+                         }
+                     }
+                     return retStr == "" ? value : retStr;
+                 }, 
+               editRenderer : {
+                   type : "ComboBoxRenderer",
+                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                   listFunction : function(rowIndex, columnIndex, item, dataField) {
+                       return srvMembershipList ;
+                   },
+                   keyField : "pacid",
+                   valueField : "cdname"
+                	           }
+                     },
+                     {dataField:"chargeamt"           ,headerText:"Qty"           ,width:"15%" },
+                     {
+                         dataField : "undefined",
+                         headerText : "",
+                         renderer : {
+                             type : "ButtonRenderer",
+                             labelText : "Remove",
+                             onclick : function(rowIndex, columnIndex, value, item) {
+                                 //alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
+                                 removeRow();
+                             }
+                         }
+                     , editable : false
+                     }
+                    
+                     ];
+    
 
     var stockimgcolumn =[{dataField : "imgurl",        headerText : "",   prefix : "/resources", 
                             renderer : { type : "ImageRenderer", imgHeight : 24//, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
@@ -115,7 +152,9 @@
                         //displayTreeOpen : true,
                         noDataMessage : "출력할 데이터가 없습니다.",
                         // groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
-                        enableSorting : true
+                        enableSorting : true,
+                        
+                        softRemovePolicy : "exceptNew"
                         };
 
     $(document).ready(function(){
@@ -294,6 +333,16 @@
                     //$("#stock_info_edit").text("EDIT");
                 }
             }
+            
+        });
+        $("#service_info_edit").click(function(){
+            
+                if ($("#service_info_edit").text() == "Add Service Charge"){
+                	addRow();
+                	fn_srvMembershipList();
+                }else if ($("#service_info_edit").text() == "SAVE"){
+                	
+                }
             
         });
         $(".numberAmt").keyup(function(e) {
@@ -723,7 +772,31 @@
           return isNaN(num) ? false : true;
         }else{ return false;  }
       }
+    function removeRow() {
+        
+       //var rowPos = document.getElementById("removeSelect").value;
+            
+        AUIGrid.removeRow(serviceGrid);
+        AUIGrid.removeSoftRows(serviceGrid);
+    }   
     
+   function addRow (){
+	   var item = new Object();
+	   AUIGrid.addRow(serviceGrid, item, "last");
+	   $("#service_info_edit").text("SAVE");
+	   } 
+   function fn_srvMembershipList(){
+	   Common.ajaxSync("GET", "/stock/srvMembershipList ", "", function(result) {
+		   srvMembershipList  = new Array();
+               for (var i = 0; i < result.length; i++) {
+                   var list = new Object();
+                   list.pacid    = result[i].pacid;
+                   list.memcd  = result[i].memcd;
+                   list.cdname = result[i].cdname;
+                   srvMembershipList .push(list);
+               }
+   });
+   }
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -925,6 +998,12 @@
                 <div id="spare_grid" style="width:100%;"></div>
             </article>
             <article class="tap_area" id="service_info_div" style="display:none;">
+                <aside class="title_line"><!-- title_line start -->
+                <h3>Service Charge Information List</h3>
+                <ul class="left_opt">
+                    <li><p class="btn_blue"><a id="service_info_edit">Add Service Charge</a></p></li>
+                </ul>
+                </aside>
                 <div id="service_grid" style="width:100%;"></div>
             </article>            
             <article class="tap_area" id="stock_img_td" style="display:none;">
