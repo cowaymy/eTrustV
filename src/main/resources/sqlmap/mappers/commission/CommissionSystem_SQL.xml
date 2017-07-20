@@ -106,7 +106,7 @@
 		VALUES (
 		#{orgGrCd},
 		#{orgCd},
-		(SELECT NVL(MAX(ORG_SEQ),0)+1 FROM CMM0041C) ,
+		CMM0041C_ORG_SEQ.nextval ,
 		#{orgGrNm},
 		#{orgNm},
 		#{useYn},
