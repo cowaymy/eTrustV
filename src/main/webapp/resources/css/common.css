@@ -366,3 +366,10 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .prog > p{position:absolute; top:50%; left:50%; z-index:1003; width:250px; height:110px; margin:-55px 0 0 -125px; border:1px solid #06a7e2; border-radius:5px; background:#f8f8f8;}
 .prog span{display:block; text-align:center;}
 .prog span:first-child{margin-bottom:5px; margin-top:20px;}
+
+/* Performance Evaluation Awards */
+.award_wrap >ul{margin:10px 0 30px 0;}
+.award_wrap >ul:after{content:""; display:block; clear:both;}
+.award_wrap >ul li{float:left; width:25%;}
+.award_wrap >ul li strong{display:block; padding:5px 10px; margin:0 -1px -1px 0; background:#f5f5f5; border:1px solid #ddd; text-align:center;}
+.award_wrap >ul li p{padding:5px 10px; margin:0 -1px -1px 0; border:1px solid #ddd; text-align:center; font-size:12px;}
