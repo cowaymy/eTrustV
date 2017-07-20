@@ -183,6 +183,59 @@
                       
     </select>
      
- 
+         <select id="selectSalesList" parameterType="Map" resultType="egovMap">
+     SELECT V.ORG_CODE tOrgCode  ,
+       V.GRP_CODE tGrpCode  ,
+       V.DEPT_CODE tDeptCode  ,
+       V.ORG_CODE OrgCode ,
+       V.GRP_CODE GrpCode,
+       V.DEPT_CODE DeptCode,
+       R1.MEM_CODE MemberCode,
+       COUNT(ACC.ACC_DEBT_ORD_ID)  sUnit  ,
+       SUM(CASE 
+                WHEN Sub.ACC_DEBT_SUB_OPNG_OTSTND <![CDATA[< ]]> 0 THEN 0
+           ELSE Sub.ACC_DEBT_SUB_OPNG_OTSTND
+              END)  sLMOS  ,
+       SUM(Sub.ACC_DEBT_SUB_CURR_CHRG)  sCMCHG  ,
+       SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)  sCLCTG  ,
+       SUM(Sub.ACC_DEBT_SUB_CURR_COLCT)  sCOL  ,
+       SUM(Sub.ACC_DEBT_SUB_CURR_ADJ)  sADJ  ,
+       (SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)  + (SUM(Sub.ACC_DEBT_SUB_CURR_COLCT)  + SUM(Sub.ACC_DEBT_SUB_CURR_ADJ) )) sOUT  ,
+       /*SUM(Sub.AccDebtSubTotalOutstanding)CUROUTSTD,*/
+       (CASE 
+             WHEN (SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) ) = 0 THEN 0
+       ELSE round(((SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)  + (SUM(Sub.ACC_DEBT_SUB_CURR_COLCT)  + SUM(Sub.ACC_DEBT_SUB_CURR_ADJ) )) / (SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) ) * 100), 2)
+          END) sRate  
+  FROM PAY0052S ACC
+         JOIN PAY0053S Sub   ON Sub.ACC_DEBT_ORD_ID = ACC.ACC_DEBT_ORD_ID
+         JOIN SAL0001D SOM   ON SOM.SALES_ORD_ID = ACC.ACC_DEBT_ORD_ID
+         LEFT JOIN SAL0071D SCH   ON SCH.SALES_ORD_ID = SOM.SALES_ORD_ID
+         JOIN ORG0001D R1   ON SOM.MEM_ID = R1.MEM_ID
+         AND R1.MEM_TYPE = 2
+         JOIN ORG1001V V   ON V.MEM_ID = R1.MEM_ID
+ WHERE  R1.STUS = 1
+          AND SOM.APP_TYPE_ID = 66
+          
+          --AND SOM.DeptCode like '%CCS%'
+          AND Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET > 0
+          AND SOM.STUS_CODE_ID = 4
+          AND V.DEPT_CODE <![CDATA[ <> ]]> ' '
+          AND ( SCH.STUS_CODE_ID = 'INV'
+          OR SCH.STUS_CODE_ID = 'REG' )
+      <if test = "orgCode != ''">
+               AND V.ORG_CODE = #{orgCode}
+      </if>
+      <if test = "grpCode != ''">
+               AND V.GRP_CODE = #{grpCode}
+      </if>
+      <if test = "deptCode != ''">
+               AND V.DEPT_CODE = #{deptCode}
+      </if>
+      <if test = "memberCode != ''">
+               AND R1.MEM_CODE = #{memberCode}
+      </if>
+      GROUP BY V.ORG_CODE,V.GRP_CODE,V.DEPT_CODE,R1.MEM_CODE
+      
+     </select>
 
 </mapper>
