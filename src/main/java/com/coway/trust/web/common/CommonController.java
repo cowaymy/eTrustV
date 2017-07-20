@@ -3,8 +3,10 @@ package com.coway.trust.web.common;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -101,6 +103,76 @@ public class CommonController {
 		// 호출될 화면
 		return "/common/accountCodeManagementPop";
 	}	
+	
+	/**
+	 * ACCOUNT CODE INSERT
+	 */
+	@RequestMapping(value = "/insertAccount.do")
+	public ResponseEntity<ReturnMessage> insertAccountCode(@RequestBody Map<String, Object> params, ModelMap model) 
+	{
+		logger.debug(" InputAccountCode Params : {}", params.toString() );
+		
+		// popUpAccCode=, popUpSapAccCode=, popUpAccDesc=, popUpIsPayCash=on, popUpIsPayChq=on, popUpIsPayOnline=on, address1=, address2=, address3=, mcountry=, tel1=, tel2=, popUpIsPayCrc=false}
+	
+		int user=99999;
+		
+		((Map<String, Object>) params).put("crtUserId", user);
+		((Map<String, Object>) params).put("updUserId", user);
+		
+		if ("on".equals( String.valueOf(params.get("popUpIsPayCash"))))	
+		{
+			params.put("popUpIsPayCash", 1);
+		}
+		else
+		{
+			params.put("popUpIsPayCash", 0);
+		}
+		
+		if ("on".equals( String.valueOf(params.get("popUpIsPayChq"))))	
+		{
+			params.put("popUpIsPayChq", 1);
+		}
+		else
+		{
+			params.put("popUpIsPayChq", 0);
+		}
+		
+		if ("on".equals( String.valueOf(params.get("popUpIsPayOnline"))))	
+		{
+			params.put("popUpIsPayOnline", 1);
+		}
+		else
+		{
+			params.put("popUpIsPayOnline", 0);
+		}
+		
+		if ("on".equals( String.valueOf(params.get("popUpIsPayCrc"))))	
+		{
+			params.put("popUpIsPayCrc", 1);
+		}
+		else
+		{
+			params.put("popUpIsPayCrc", 0);
+		}
+
+		logger.debug(" ParamsChange : {}", params.toString() );
+		
+		
+		int cnt = commonService.insertAccountCode(params);
+		//ParamsChange : {popUpAccCode=111, popUpSapAccCode=222, popUpAccDesc=3333, popUpIsPayCash=1, popUpIsPayCrc=1, address1=, address2=, address3=, mcountry=, tel1=, tel2=, popUpIsPayChq=0, popUpIsPayOnline=0}
+		
+		// 호출될 화면
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}	
+	
+	
+	
 	
 	
 	

@@ -55,6 +55,14 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.getAccountCodeList(params);
 	}
 	
+	// AccoutCode Insert
+	@Override
+	public int insertAccountCode(Map<String, Object> params) 
+	{
+		return commonMapper.insertAccountCode(params);
+	}
+	
+	
 	// Gerneral Code
 	@Override
 	public 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params) {

@@ -29,10 +29,13 @@ public interface CommonMapper {
 
 	List<EgovMap> selectI18NList();
 	
-	/* accountCodeList  */	
+	/****** ACCOUNT CODE *********/
     List<EgovMap> getAccountCodeList(Map<String, Object> params);
-	
     
+    int insertAccountCode(Map<String, Object> params);
+	
+    /***********************************/
+        
     /*general Code*/
 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params);
 	
