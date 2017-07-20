@@ -18,6 +18,8 @@ package com.coway.trust.biz.payment.payment.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -45,5 +47,12 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	List<EgovMap> selectSalesList(Map<String, Object> params);
+	
+	/**
+	 * RentalCollectionByBS 조회
+	 * @param params
+	 * @return
+	 */
+	List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO);
 
 }
