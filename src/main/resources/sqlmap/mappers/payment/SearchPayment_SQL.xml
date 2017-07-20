@@ -235,7 +235,7 @@
                AND R1.MEM_CODE = #{memberCode}
       </if>
       GROUP BY V.ORG_CODE,V.GRP_CODE,V.DEPT_CODE,R1.MEM_CODE
-      
+       ORDER BY V.ORG_CODE,V.GRP_CODE,V.DEPT_CODE,R1.MEM_CODE
      </select>
      
      <!-- RentalCollectionByBS 리스트 조회 -->
