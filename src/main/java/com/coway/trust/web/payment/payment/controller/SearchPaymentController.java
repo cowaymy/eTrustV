@@ -59,11 +59,7 @@ public class SearchPaymentController {
 	
 	@Resource(name = "searchPaymentService")
 	private SearchPaymentService searchPaymentService;
-	
-	@Resource(name = "rentalCollectionByBSService")
-	private RentalCollectionByBSService rentalCollectionByBSService;
 
-	
 	@Value("${app.name}")
 	private String appName;
 
@@ -191,7 +187,7 @@ public class SearchPaymentController {
 				, @RequestParam Map<String, Object> params, ModelMap model) {
         
         // 조회.
-        List<RentalCollectionByBSSearchVO> resultList = rentalCollectionByBSService.searchRentalCollectionByBSList(searchVO);
+        List<RentalCollectionByBSSearchVO> resultList = searchPaymentService.searchRentalCollectionByBSList(searchVO);
         
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
