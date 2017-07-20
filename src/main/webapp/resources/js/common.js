@@ -233,8 +233,7 @@ var Common = {
 						_callback(_jsonObj);
 					}
 
-					//$obj.remove();
-					$obj.hide();
+					$obj.remove();
 				});
 
 			},
