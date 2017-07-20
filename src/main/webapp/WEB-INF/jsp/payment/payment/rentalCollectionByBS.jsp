@@ -60,37 +60,48 @@ var columnLayout = [
     }, {
         dataField : "sUnit",
         headerText : "Unit",
-        editable : false
+        editable : false,
+        dataType:"numeric"
     }, {
         dataField : "sLmos",
         headerText : "Pre-Out",
         editable : false,
-        width : 180
+        width : 180,
+        dataType:"numeric", 
+        formatString:"###0.#"
     }, {
         dataField : "sCmChg",
         headerText : "Charges",
         editable : false,
-        width : 180
+        width : 180,
+        dataType:"numeric", 
+        formatString:"###0.#"
     }, {
         dataField : "sClCtg",
         headerText : "Target",
         editable : false,
-        width : 180
+        width : 180,
+        dataType:"numeric", 
+        formatString:"###0.#"
     }, {
         dataField : "sCol",
         headerText : "Collection",
         editable : false,
-        width : 180
+        width : 180,dataType:"numeric", 
+        formatString:"###0.#"
     }, {
         dataField : "sAdj",
         headerText : "Adjustment",
         editable : false,
-        width : 180
+        width : 180,
+        dataType:"numeric"
     },{
         dataField : "sOut",
         headerText : "Outstanding",
         editable : false,
-        width : 180
+        width : 180,
+        dataType : "numeric", 
+        formatString : "#,##0.##"
     },{
         dataField : "sOutRate",
         headerText : "Out Rate",
@@ -115,14 +126,17 @@ var columnLayout = [
     <ul class="path">
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
-        <li>Payment</li>
-        <li>RentalCollectionByBS</li>
+        <li>Rental Collection</li>
+        <li>Organization By Sales Account</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>RentalCollectionByBS</h2>       
+        <h2>Organization By Sales Account</h2>   
+        <ul class="right_btns">
+            <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
+        </ul>    
     </aside>
     <!-- title_line end -->
     
@@ -154,10 +168,6 @@ var columnLayout = [
                 </tbody>
             </table>
             <!-- table end -->
-
-            <ul class="right_btns">
-                <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
-            </ul>
         </form>
     </section>
     <!-- search_table end -->
