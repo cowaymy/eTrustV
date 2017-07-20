@@ -31,6 +31,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSService;
 import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
@@ -57,6 +59,9 @@ public class SearchPaymentController {
 	
 	@Resource(name = "searchPaymentService")
 	private SearchPaymentService searchPaymentService;
+	
+	@Resource(name = "rentalCollectionByBSService")
+	private RentalCollectionByBSService rentalCollectionByBSService;
 
 	
 	@Value("${app.name}")
@@ -157,6 +162,38 @@ public class SearchPaymentController {
 
         List<EgovMap> resultList = searchPaymentService.selectSalesList(params);
  
+        return ResponseEntity.ok(resultList);
+	}
+	
+	/******************************************************
+	 * RentalCollectionByBS  
+	 *****************************************************/	
+	/**
+	 * RentalCollectionByBS초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initRentalCollectionByBS.do")
+	public String initRentalCollectionByBS(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/payment/rentalCollectionByBS";
+	}
+	
+	/**
+	 * RentalCollectionByBS   조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectRentalCollectionByBSList", method = RequestMethod.GET)
+	public ResponseEntity<List<RentalCollectionByBSSearchVO>> selectRentalCollectionByBSList(@ModelAttribute("searchVO")RentalCollectionByBSSearchVO searchVO
+				, @RequestParam Map<String, Object> params, ModelMap model) {
+        
+        // 조회.
+        List<RentalCollectionByBSSearchVO> resultList = rentalCollectionByBSService.searchRentalCollectionByBSList(searchVO);
+        
+        // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
 }
