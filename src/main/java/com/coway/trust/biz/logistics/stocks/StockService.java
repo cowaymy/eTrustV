@@ -34,4 +34,8 @@ public interface StockService {
 	
 	void updatePriceInfo(Map<String, Object> params);
 
+	List<EgovMap> srvMembershipList(Map<String, Object> params);
+
+	int addServiceInfoGrid(int stockId, List<Object> addLIst, String loginId);
+
 }

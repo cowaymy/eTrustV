@@ -25,4 +25,10 @@ public interface StockMapper {
 	void updateSalePriceUOM(Map<String, Object> params);
 	
 	void updateSalePriceInfo(Map<String, Object> params);
+
+	List<EgovMap> srvMembershipList();
+
+	int addServiceInfoGrid(Map<String, Object> param);
+
+	int selectPacId();
 }

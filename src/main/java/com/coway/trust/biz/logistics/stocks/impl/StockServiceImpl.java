@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -133,6 +134,36 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 				stockMapper.updateSalePriceInfo(smap);
 			}
 		}
+	}
+
+	@Override
+	public List<EgovMap> srvMembershipList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMapper.srvMembershipList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int addServiceInfoGrid(int stockId, List<Object> addLIst, String loginId) {
+		int cnt =0;
+		
+		int pac_id = stockMapper.selectPacId();
+		logger.debug("pac_id : {}", pac_id);
+		Map<String, Object> param   = new HashMap<>();
+		param.put("stockId", stockId);
+		param.put("crtUserId", loginId);
+		for(Object obj : addLIst ){
+			param.put("pac_id", pac_id);
+			param.put("packagename", ((Map<String, Object>) obj).get("packagename"));
+			param.put("chargeamt", (((Map<String, Object>) obj).get("chargeamt")==null)?0:((Map<String, Object>) obj).get("chargeamt"));
+			cnt = cnt + stockMapper.addServiceInfoGrid(param);
+		}
+
+		logger.debug("stockId : {}", param.get("stockId"));
+		logger.debug("crtUserId : {}", param.get("crtUserId"));
+		logger.debug("packagename : {}", param.get("packagename"));
+		// TODO Auto-generated method stub
+		return cnt;
 	}
 	
 }

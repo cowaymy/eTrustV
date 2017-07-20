@@ -43,13 +43,13 @@
                         {dataField:"qty"                 ,headerText:"Qty"           ,width:"7%"}];
     
 var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"     ,width:120 , visible : false},
-                     {dataField:"packagename"         ,headerText:"Description"   ,width:"70%",
+                     {dataField:"packagename"         ,headerText:"Description"   ,width:"70%",   
                       labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
                      var retStr = "";
                      for (var i = 0, len = srvMembershipList.length; i < len; i++) {
                          if (srvMembershipList[i]["pacid"] == value) {
                              retStr = srvMembershipList[i]["cdname"];
-                             break;p
+                             break;
                          }
                      }
                      return retStr == "" ? value : retStr;
@@ -64,7 +64,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                    valueField : "cdname"
                 	           }
                      },
-                     {dataField:"chargeamt"           ,headerText:"Qty"           ,width:"15%" },
+                     {dataField:"chargeamt"           ,headerText:"Qty"           ,width:"15%"   },
                      {
                          dataField : "undefined",
                          headerText : "",
@@ -336,12 +336,32 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             
         });
         $("#service_info_edit").click(function(){
-            
+        	 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+        	 
+        	 console.log("selectedItems[0].item.stkid "+selectedItems[0].item.stkid);
                 if ($("#service_info_edit").text() == "Add Service Charge"){
                 	addRow();
                 	fn_srvMembershipList();
                 }else if ($("#service_info_edit").text() == "SAVE"){
+                	// 추가된 행 아이템들(배열)
+                	var addedRowItems = AUIGrid.getAddedRowItems(serviceGrid);
+                	     
+                	// 수정된 행 아이템들(배열)
+                	var editedRowItems = AUIGrid.getEditedRowColumnItems(serviceGrid); 
+                	    
+                	// 삭제된 행 아이템들(배열)
+                	var removedRowItems = AUIGrid.getRemovedItems(serviceGrid);
+
+                	// 서버로 보낼 데이터 작성
+                	var data = {
+                	    "add" : addedRowItems,
+                	    "update" : editedRowItems,
+                	    "remove" : removedRowItems
+                	};
+
+                	f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,data,"service_info");	
                 	
+                	//serviceAUIGrid(servicecolumn); 
                 }
             
         });
@@ -361,8 +381,19 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     });
     
     function f_info_save(url , key , v , f){
-    	var fdata = $("#"+v).serializeJSON();
-    	if (v == "stockInfo"){
+    	var fdata ;
+    	  if(f == "service_info"){
+    		fdata= v;
+    	}else{
+    	  fdata = $("#"+v).serializeJSON();
+    	}    
+    	var keys = Object.keys(fdata);
+    	console.log("keys "+ keys);
+    	for ( var i in keys) {
+    	    console.log("key="+keys[i]+ ",  data="+ fdata[keys[i]]);
+    	    //+ ",  data="+ obj[keys[i]]);
+    	}
+    	if (v == "stockInfo" ){
 	    	if($("#cbSirim").is(":checked") == true){
 	    		//alert('1');
 	    		$.extend(fdata, {'cbSirim': '1'});
@@ -376,16 +407,17 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 	            $.extend(fdata, {'cbNCV': '0'});
 	        }
     	}
-    	
     	$.extend(fdata, {'stockId': key});
     	$.extend(fdata, {'revalue': f});
     	
     	Common.ajax("POST" , url , fdata , function(data){
-										            alert(data.msg);
+										            alert("?? it "+data.msg);
 										            if (v == "stockInfo"){
 										            	$("#stock_info_edit").text("EDIT");
 										            }else if (v == "priceForm"){
 										            	$("#price_info_edit").text("EDIT");
+										            }else if (v=="service_info"){
+										            	$("#service_info").text("EDIT");										            	
 										            }
 										            getMainListAjax(data);
 										       });

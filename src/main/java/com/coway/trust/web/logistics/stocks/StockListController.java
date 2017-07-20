@@ -4,37 +4,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.coway.trust.util.CommonUtils;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.coway.trust.AppConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stocks.StockService;
-import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 
-import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 @RequestMapping(value = "/stock")
@@ -48,6 +43,13 @@ public class StockListController {
 	@Resource(name = "stockService")
 	private StockService stock;
 
+	// DataBase message accessor....
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
+	
 	@RequestMapping(value = "/Stock.do")
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -194,10 +196,49 @@ public class StockListController {
 		map.put("revalue", (String) params.get("revalue"));
 		map.put("stkid", (Integer) params.get("stockId"));
 		map.put("msg", retMsg);
-
+		
 		stock.updatePriceInfo(params);
 
 		return ResponseEntity.ok(map);
 	}
+    
+	@RequestMapping(value = "/srvMembershipList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> srvMembershipList(Map<String, Object> params) {
 
+
+		// 조회.
+		List<EgovMap> srvMembershipList = stock.srvMembershipList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(srvMembershipList);
+	}
+	@RequestMapping(value = "/modifyServiceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> modifyServiceInfo(@RequestBody Map<String, Object> params,
+			Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="99999999";			
+		}else{
+			loginId=sessionVO.getId();
+		}
+		
+		int stockId =   (int)params.get("stockId");
+		List<Object> addLIst 		= (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		//List<Object> removeLIst   = params.get(AppConstants.AUIGRID_REMOVE);
+		logger.info("수정 : {}", addLIst.toString());
+		logger.debug("stockId id : {}", params.get("stockId"));
+		
+		int cnt = 0;
+		if(addLIst.size() > 0){
+			cnt = stock.addServiceInfoGrid(stockId,addLIst,loginId);
+		}
+		
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
 }
