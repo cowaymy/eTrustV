@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.login.impl.LoginMapper">
+
+	<select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
+			SELECT
+				username as id,
+                userfullname as name,
+                usermobileno as phoneNumber
+			FROM USER_
+			WHERE 1=1
+            AND username = #{userId}
+            AND userpassword = #{password}
+	</select>
+
+</mapper>

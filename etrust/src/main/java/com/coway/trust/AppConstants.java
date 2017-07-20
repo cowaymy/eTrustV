@@ -1,0 +1,80 @@
+package com.coway.trust;
+
+public class AppConstants {
+
+	// API 버전
+	public static final String TAG = "/v1";
+
+	public static final String PATH_WEB = "/web";
+
+	public static final String PATH_API = "/api";
+
+	// API BASE UR
+	public static final String API_BASE_URI = AppConstants.PATH_API + AppConstants.TAG;
+
+	public static final String DEFAULT_CHARSET = "UTF-8";
+
+	/**
+	 * URL
+	 */
+	public static final String REDIRECT_LOGIN = "redirect:/login/login.do";
+
+	public static final String REDIRECT_UNAUTHORIZED = "redirect:/common/unauthorized.do";
+
+	/**
+	 * ajax return code
+	 */
+	public static final String SUCCESS = "00";
+
+	public static final String FAIL = "99";
+
+	/**
+	 * file 관련
+	 */
+	public static final long UPLOAD_MAX_FILE_SIZE = 1024 * 1024 * 100; // 업로드 최대 사이즈 설정 (100M)
+
+	/**
+	 * session info
+	 */
+	public static final String SESSION_INFO = "SESSION_INFO";
+
+	/**
+	 * AUIGrid
+	 */
+	public static final String AUIGRID_ADD = "add";
+	public static final String AUIGrid_UPDATE = "update";
+	public static final String AUIGRID_REMOVE = "remove";
+
+	/**
+	 * 5 hours
+	 */
+	public static final int SESSION_MAX_INACTIVE_INTERVAL = 5 * 60 * 60;
+
+	/**
+	 * Example: 2014-11-21 16:25:32
+	 */
+	public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+	/**
+	 * Example: 2014-11-21T16:25:32-05:00
+	 */
+	public static final String DEFAULT_TIMESTAMP_GMT_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+
+	/**
+	 * Example: 2016-04-06T16:04:10.626+0900
+	 */
+	public static final String DEFAULT_TIMESTAMP_GMT_NANOFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+	/**
+	 * Arrays 값을 하나의 문자열로 전달 하는 경우 "대|!|한|!|민|!|국" 과 같이 전달 한다.
+	 */
+	public static final String DEFAULT_DELIMITER = "|!|";
+
+	/**
+	 * 공통 메세지 KEY
+	 */
+	public static final String MSG_SUCCESS = "sys.msg.success";
+	public static final String MSG_FAIL = "sys.msg.success";
+	public static final String MSG_NOT_EXIST = "sys.msg.notexist";
+	public static final String MSG_NECESSARY = "sys.msg.necessary";
+}
