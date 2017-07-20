@@ -205,9 +205,11 @@ var Common = {
 
 		/*
 		 * 팝업시 left/top 제외 시킴. => /webapp/WEB-INF/tiles/layout/default.jsp
+		 * 
 		 */
 		_jsonObj = $.extend(_jsonObj, {
-			isPop : true
+			isPop : true,
+			isDiv 	: true // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp	
 		});
 
 		// TODO : div 팝업 class 적용 필요.
@@ -231,7 +233,8 @@ var Common = {
 						_callback(_jsonObj);
 					}
 
-					$obj.remove();
+					//$obj.remove();
+					$obj.hide();
 				});
 
 			},
