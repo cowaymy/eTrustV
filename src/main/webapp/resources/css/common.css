@@ -155,7 +155,6 @@ table.type1 tbody td input[type=text].readonly,
 table.type1 tbody td select.disabled{background:#f2f2f2; color:#ccc;}
 table.type1 tbody td select{width:237px; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 table.type1 tbody td .w100p{width:100%!important;}
-table.type1 tbody td.col_all{background:#e9f0f4;}
 table.type1 td > label{margin:0 5px!important;}
 table.type1 td .search_btn{display:block; height:30px;}
 table.type1 td .search_btn img{position:relative; top:6px;}
@@ -350,27 +349,9 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto > div{display:table-cell; padding:0 5px; vertical-align:top;}
 .divine_auto > div:first-child{padding:0 5px 0 0;}
 .divine_auto > div:last-child{padding:0 0 0 5px;}
-.divine_auto.type2 > div{display:table-cell; padding:0 20px; vertical-align:top;}
-.divine_auto.type2 > div:first-child{padding:0 20px 0 0;}
-.divine_auto.type2 > div:last-child{padding:0 0 0 20px;}
-.divine_auto.type2 .btns{position:absolute; top:50%; left:-34px; margin:-27px 0 0 0;}
-.divine_auto.type2 .btns.right-type{left:inherit;right:-34px;}
-.divine_auto.type2 .btns li{margin-top:5px;}
-.divine_auto.type2 .btns li:first-child{margin-top:0;}
-.divine_auto > div h3{font-size:14px;}
-.divine_auto > div .border_box{position:relative; padding:10px; border:1px solid #ddd;}
-.divine_auto > div .border_box.mt44{margin-top:44px;}
 
 /* 로딩바 */
 .prog{display:block; position:fixed; top:0; left:0; z-index:1002; width:100%; height:100%; background:rgba(0,0,0,0.6);}
 .prog > p{position:absolute; top:50%; left:50%; z-index:1003; width:250px; height:110px; margin:-55px 0 0 -125px; border:1px solid #06a7e2; border-radius:5px; background:#f8f8f8;}
 .prog span{display:block; text-align:center;}
 .prog span:first-child{margin-bottom:5px; margin-top:20px;}
-
-/* Performance Evaluation Awards */
-.award_wrap{margin:10px 0 20px 0;}
-.award_wrap >ul{display:table; width:100%;}
-.award_wrap >ul:after{content:""; display:block; clear:both;}
-.award_wrap >ul li{display:table-cell;}
-.award_wrap >ul li strong{display:block; padding:5px 10px; margin:0 -1px -1px 0; background:#f5f5f5; border:1px solid #ddd; text-align:center;}
-.award_wrap >ul li p{padding:5px 10px; margin:0 -1px -1px 0; border:1px solid #ddd; text-align:center; font-size:12px;}
