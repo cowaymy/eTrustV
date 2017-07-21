@@ -623,13 +623,13 @@
     <th scope="row">Country</th>
     <td><select id="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
     <th scope="row">State</th>
-    <td><select id="mstate" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
+    <td><select id="mstate"  class="msap" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
 </tr>
 <tr>
     <th scope="row">Area</th>
-    <td><select id="marea" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
+    <td><select id="marea" class="msap" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
     <th scope="row">Postcode</th>
-    <td><select id="mpostcd" disabled=true><option>Choose One</option></select></td>
+    <td><select id="mpostcd" class="msap" disabled=true><option>Choose One</option></select></td>
 </tr>
 <tr>
     <th scope="row">Contact No (1)</th>
