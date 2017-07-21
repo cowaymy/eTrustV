@@ -18,4 +18,76 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 */
 	List<EgovMap> selectCustomerList(Map<String, Object> params);
+	/**
+	 * Customer View Basic Info mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap selectCustomerViewBasicInfo(Map<String, Object> params) throws Exception;
+	/**
+	 * Customer View Main Address mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap selectCustomerViewMainAddress(Map<String, Object> params) throws Exception;
+	/**
+	 * Customer View Main Contact mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap selectCustomerViewMainContact(Map<String, Object> params)throws Exception;
+	/**
+	 * Customer View Address List mapper
+	 * 
+	 * @param params
+	 * @return List<EgovMap>
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	List<EgovMap> selectCustomerAddressJsonList(Map<String, Object> params)throws Exception;
+	/**
+	 * Customer View Contact List mapper
+	 * 
+	 * @param params
+	 * @return List<EgovMap>
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	List<EgovMap> selectCustomerContactJsonList(Map<String, Object> params)throws Exception;
+	/**
+	 * Customer View Bank List mapper
+	 * 
+	 * @param params
+	 * @return List<EgovMap>
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	List<EgovMap> selectCustomerBankAccJsonList(Map<String, Object> params) throws Exception;
+	/**
+	 * Customer View Card List mapper
+	 * 
+	 * @param params
+	 * @return List<EgovMap>
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	List<EgovMap> selectCustomerCreditCardJsonList(Map<String, Object> params) throws Exception;
+	/**
+	 * Customer Own Order List mapper
+	 * 
+	 * @param params
+	 * @return List<EgovMap>
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	List<EgovMap> selectCustomerOwnOrderJsonList(Map<String, Object> params) throws Exception;
 }
