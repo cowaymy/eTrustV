@@ -33,7 +33,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.organization.OrganizationEventService;
-import com.coway.trust.biz.organization.OrganizationEventVO;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.GridDataSet;
@@ -73,10 +72,10 @@ public class OrganizationEventListController {
 
 	
 	/**
-	 * CRC Statement Transaction 리스트 조회
-	 * @param crcStatementVO
+	 * selectOrganizationEventList Statement Transaction 리스트 조회
+	 * @param 
 	 * @param params
-	 * @param model
+	 * @param model 
 	 * @return
 	 */
 	@RequestMapping(value = "/selectOrganizationEventList", method = RequestMethod.GET)
@@ -85,7 +84,7 @@ public class OrganizationEventListController {
 		Map<String, Object> param = null;
 		
 		//검색 파라미터 확인.(화면 Form객체 입력값)
-        logger.debug("refNo : {}", params.get("refNo"));
+        logger.debug("requestStatus : {}", params.get("requestStatus"));
         logger.debug("cardAccount : {}", params.get("cardAccount"));
         logger.debug("status : {}", params.get("status"));
         logger.debug("account : {}", params.get("account"));
