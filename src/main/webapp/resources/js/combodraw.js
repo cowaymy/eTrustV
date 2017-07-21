@@ -128,6 +128,13 @@ function doGetComboAddr(url, groupCd ,codevalue ,  selCode, obj , type, callback
 function getAddrRelay(obj , value , tag , selvalue){
 	var robj= '#'+obj;
 	$(robj).attr("disabled",false);
-	doGetComboAddr('/common/selectAddrSelCodeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회
+	if (obj == 'mstate' && value!='1'){
+		console.log($(".msap").length)
+		for (var i = 0 ; i < $(".msap").length ; i++){
+			doGetComboAddr('/common/selectAddrSelCodeList.do', tag , value , '', $(".msap").eq(i).attr('id') , 'S', ''); //청구처 리스트 조회
+		}
+	}else{
+		doGetComboAddr('/common/selectAddrSelCodeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회
+	}
 }
 
