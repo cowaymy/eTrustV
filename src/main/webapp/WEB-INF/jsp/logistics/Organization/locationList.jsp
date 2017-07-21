@@ -40,13 +40,13 @@
     var detailGrid;
 
     // 등록창
-    var insdialog;
-    
+    var insDialog;
     // 수정창
     var dialog;
     
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "8","codeName": "Inactive"}];
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
+    var instockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
     
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"locid"      ,headerText:"WHID"           ,width:"8%"  ,height:30 , visible:true},
@@ -130,7 +130,8 @@
 			
 	        
 	    });
-
+				
+		
 		// 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 	    {
@@ -212,7 +213,9 @@
         
     
         $("#insert").click(function(){
-            alert("등록창 테스트!!!!!!!!!!!!!");
+ 
+            fn_insertWare();
+            
             insDialog = $( "#registWindow" ).dialog({
                /* autoOpen: false, */
                 height: 540,
@@ -221,7 +224,8 @@
                 headerHeight:40,
                 //position : { my: "center", at: "center", of: $("#grid_wrap") },
                  buttons: {
-                  "저장": function(event){alert('3');
+                  "저장": function(event){
+                	  inValidation();
                   Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) {  
                   }, function(jqXHR, textStatus, errorThrown) {
                       alert("실패하였습니다.");
@@ -243,11 +247,12 @@
                   }
                 } 
         });      
-    });
+    });    
+        
        
     });
     
-     
+  
     
     function fn_modyWare(rowid){
     	
@@ -282,6 +287,48 @@
         dialog.dialog( "open" );
     }
     
+    
+  function fn_insertWare(){
+
+	    doDefCombo(instockgradecomboData, '' ,'instockgrade', 'S', '');
+	    $("#instockgrade option:eq(1)").prop("selected", true);
+	    $("#instockgrade").attr("disabled","disabled");
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch', 'S' , ''); //브런치 등록
+        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , 'this.value','incountry', 'S', ''); //주소 등록
+        doDefCombo('', '' ,'instate', 'S', ''); 
+        doDefCombo('', '' ,'inarea', 'S', '');
+        doDefCombo('', '' ,'inpostcd', 'S', '');     
+         
+    }
+  
+  function inValidation(){
+	   alert("111111111111111111");
+	   var incountry = $("#incountry").val();
+	   var instate = $("#instate").val();
+	   var inarea = $("#inarea").val();
+	   var inpostcd = $("#inpostcd").val();
+	   
+	   alert("incountry :    "+incountry);
+	   
+	   if($("#incountry").val() == null || $("#incountry").val() == undefined){
+	       $("#incountry").val('0');
+	   }
+	  
+	   if(instate == null || instate == "" ){
+	       $("#instate").val('0');
+	   }
+	   if(inarea == null || inarea == "" ){
+	       $("#inarea").val('0');
+	   }
+	   if(inpostcd == null || inpostcd == "" ){
+	       $("#inpostcd").val('0');
+	   }
+	       
+	   alert($("#incountry").val());
+
+	             
+	    }
+
     function updateGridRow(){
     	//AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
     	var item = {};
@@ -409,6 +456,8 @@
             });
         });*/
     }
+  
+    
     
 </script>
 </head>
@@ -669,9 +718,11 @@
 </tr>
  <tr>
     <th scope="row">Stock Grade</th>
-    <td><select id="mstockgrade"></select></td>
+    <td><select id="instockgrade" name="instockgrade" ></select></td>
     <th scope="row">Branch</th>
-    <td><select id="mwarebranch"></select></td>
+    <td><select id="inwarebranch" name="inwarebranch" >
+  
+    </select></td>
 </tr> 
 <tr>
     <th scope="row" rowspan="3">Address</th>
@@ -683,18 +734,18 @@
 <tr>
     <td colspan="3"><input type="text" id="inaddr3" name="inaddr3" class="w100p"/></td>
 </tr>
-<!-- <tr>
+ <tr>
     <th scope="row">Country</th>
-    <td><select id="incountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
+    <td><select id="incountry" name="incountry" onchange="getAddrRelay('instate' , this.value , 'state', '')"></select></td>
     <th scope="row">State</th>
-    <td><select id="instate" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
+    <td><select id="instate" name="instate" onchange="getAddrRelay('inarea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
 </tr>
 <tr>
     <th scope="row">Area</th>
-    <td><select id="inarea" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
+    <td><select id="inarea" name="inarea" onchange="getAddrRelay('inpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
     <th scope="row">Postcode</th>
-    <td><select id="inpostcd" disabled=true><option>Choose One</option></select></td>
-</tr> -->
+    <td><select id="inpostcd" name="inpostcd" disabled=true><option>Choose One</option></select></td>
+</tr>  
 <tr>
     <th scope="row">Contact No (1)</th>
     <td><input type="text" name="incontact1" id="incontact1"/></td>
