@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface OrganizationEventService {
 
-	
+	 
 	/**
 	 * 글 목록을 조회한다.
 	 * 
