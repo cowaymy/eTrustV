@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.coway.trust.biz.organization.impl.MemberListMapper">
+	
+
+	<resultMap id="clobMap" type="EgovMap">
+		<result property="cdDs" column="cdDs" jdbcType="CLOB"
+			javaType="java.lang.String" />
+	</resultMap>
+
+	<!-- searchOrganization Gruop List -->
+	<select id="nationality" parameterType="Map" resultMap="clobMap">
+		SELECT 
+		Extent1.CNTY_ID CountryID, 
+		Extent1.CODE Code, 
+		Extent1.NAME Name, 
+		Extent1.STUS_CODE_ID StatusCodeID, 
+		Extent1.CRT_DT Created, 
+		Extent1.CRT_USER_ID Creator, 
+		Extent1.UPD_DT Updated, 
+		Extent1.UPD_USER_ID Updator
+		FROM SYS0015M Extent1
+		ORDER BY Extent1.NAME ASC
+	</select>
+	
+	<select id="selectStatus" parameterType="Map" resultMap="clobMap">
+        SELECT 
+		Distinct1.StatusCodeID StatusCodeID, 
+		Distinct1.Code Code, 
+		Distinct1.Name Name
+		FROM ( SELECT DISTINCT 
+	    Extent1.STUS_CODE_ID StatusCodeID, 
+	    Extent1.CODE Code, 
+	    Extent1.NAME Name
+	    FROM  SYS0038M Extent1
+	    INNER JOIN ORG0001D Extent2 ON Extent1.STUS_CODE_ID = Extent2.STUS
+    )  Distinct1
+    </select>
+    
+    <select id="selectUserBranch" parameterType="Map" resultMap="clobMap">
+        SELECT 
+		Project1.BranchID AS BranchID, 
+		Project1.C1 C1
+		FROM ( SELECT 
+		    Extent1.BRNCH_ID BranchID, 
+		    Extent1.CODE||' - '||Extent1.NAME C1
+		    FROM SYS0005M Extent1
+		    WHERE 1 = Extent1.STUS_ID
+		  )  Project1
+        ORDER BY Project1.C1 ASC
+    </select>
+    
+     <select id="selectUser" parameterType="Map" resultMap="clobMap">
+        <![CDATA[
+        SELECT 
+		 Extent1 . USER_ID   UserID , 
+		 Extent1 . USER_NAME   UserName , 
+		 Extent1 . USER_PASSWD   UserPassword , 
+		 Extent1 . USER_FULL_NAME   UserFullName , 
+		 Extent1 . USER_EMAIL   UserEmail , 
+		 Extent1 . USER_STUS_ID   UserStatusID , 
+		 Extent1 . USER_BRNCH_ID   UserBranchID , 
+		 Extent1 . USER_DEPT_ID   UserDeptID , 
+		 Extent1 . USER_UPD_USER_ID   UserUpdateBy , 
+		 Extent1 . USER_UPD_DT   UserUpdateAt , 
+		 Extent1 . USER_SYNC_CHK   UserSyncCheck , 
+		 Extent1 . USER_NRIC   UserNRIC , 
+		 Extent1 . USER_DT_JOIN   UserDateJoin , 
+		 Extent1 . USER_GSEC_SYN_CHK   UserGsecSynCheck , 
+		 Extent1 . USER_PASSWD_LAST_UPD_DT   UserPasswdLastUpdateAt , 
+		 Extent1 . USER_TYPE_ID   UserTypeID , 
+		 Extent1 . USER_DFLT_PAS_SWD   UserDefaultPasswd , 
+		 Extent1 . USER_VAL_ID_FROM   UserValidFrom , 
+		 Extent1 . USER_VAL_ID_TO   UserValidTo , 
+		 Extent1 . USER_SEC_QUES_ID   UserSecQuesID , 
+		 Extent1 . USER_SEC_QUES_ANS   UserSecQuesAns , 
+		 Extent1 . USER_WORK_NO   UserWorkNo , 
+		 Extent1 . USER_MOBILE_NO   UserMobileNo , 
+		 Extent1 . USER_EXT_NO   UserExtNo , 
+		 Extent1 . USER_IS_PART_TM   UserIsPartTime , 
+		 Extent1 . USERDEPARTMENTID   UserDepartmentID , 
+		 Extent1 . USER_IS_EXTRNL   UserIsExternal 
+		FROM SYS0047M  Extent1 
+		WHERE (1 =  Extent1 . USER_STUS_ID ) AND (1 <>  Extent1 . USER_TYPE_ID ) AND (2 <>  Extent1 . USER_TYPE_ID ) AND (3 <>  Extent1 . USER_TYPE_ID )
+		ORDER BY  Extent1 . USER_NAME  ASC
+		]]>
+    </select>
+    
+    <select id="selectMemberList" parameterType="Map" resultMap="clobMap">
+        <![CDATA[
+	       SELECT row_number,
+			Project1.MEM_ID MemberID, 
+			Project1.MEM_TYPE  MemberType, 
+			Project1.MEM_CODE MemberCode, 
+			Project1.CODE_NAME CodeName, 
+			Project1.NAME Name, 
+			Project1.NRIC NRIC, 
+			Project1.NAME1 NAME1, 
+			Project1.UPD_DT Updated, 
+			Project1.STUS Status, 
+			Project1.C1 C1
+			FROM ( SELECT Project1.C1 C1,
+			         Project1.MEM_ID MEM_ID,
+			         Project1.MEM_CODE MEM_CODE,
+			         Project1.MEM_TYPE MEM_TYPE,
+			         Project1.NAME NAME,
+			         Project1.NRIC NRIC, 
+			         Project1.STUS STUS, 
+			        TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
+			         Project1.CODE_NAME CODE_NAME, 
+			         Project1.NAME1 NAME1, 
+			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
+			    FROM ( SELECT 
+			        GroupBy1.A1 C1, 
+			        Extent1.MEM_ID MEM_ID, 
+			        Extent1.MEM_CODE MEM_CODE, 
+			        Extent1.MEM_TYPE MEM_TYPE, 
+			        Extent1.NAME NAME, 
+			        Extent1.NRIC NRIC, 
+			        Extent1.STUS STUS, 
+			        Extent1.UPD_DT UPD_DT, 
+			        Extent2.CODE_NAME CODE_NAME, 
+			        Extent3.NAME NAME1
+			        FROM   ORG0001D Extent1
+			        INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID
+			        INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID
+			        CROSS JOIN  (SELECT 
+			            COUNT(1) A1
+			            FROM ORG0001D Extent4
+			             WHERE 1=1
+			             ]]>
+			             <if test="memTypeCom != null and memTypeCom != ''">
+			               AND  Extent4.MEM_TYPE =  #{memTypeCom}
+			             </if>
+			             <if test="code != null and code != ''">
+                           AND  Extent4.MEM_CODE LIKE  '%' ||  #{code} || '%'
+                         </if>
+                         <if test="name != null and name != ''">
+                           AND  Extent4.NAME LIKE '%' || #{name} || '%'
+                         </if>
+                         <if test="icNum != null and icNum != ''">
+                           AND  Extent4.NRIC LIKE   '%' || #{icNum} || '%'
+                         </if>
+                         <if test="birth != null and birth != ''">
+                           AND  TO_CHAR(TO_DATE(Extent4.DOB, 'YYYY-MM-DD'), 'DD/MM/YYYY') =  #{birth}
+                         </if>
+                         <if test="nation != null and nation != ''">
+                           AND  Extent4.NATION =  #{nation}
+                         </if>
+                         <if test="race != null and race != ''">
+                           AND  Extent4.RACE =  #{race}
+                         </if>
+                         <if test="status != null and status != ''">
+                           AND  Extent4.STUS =  #{status}
+                         </if>
+                         <if test="keyUser != null and keyUser != ''">
+                           AND  Extent4.CRT_USER_ID =  #{keyUser}
+                         </if>
+                         <if test="keyBranch != null and keyBranch != ''">
+                           AND  Extent4.BRNCH =  #{keyBranch}
+                         </if>
+                         <if test="createDate != null and createDate != ''">
+                            <![CDATA[   AND TO_CHAR(Extent4.CRT_DT, 'DD/MM/YYYY') >=  #{createDate} ]]>
+                         </if>
+                         <if test="endDate != null and endDate != ''">
+                            <![CDATA[  AND TO_CHAR(Extent4.CRT_DT, 'DD/MM/YYYY') <=  #{endDate} ]]>
+                         </if>
+			            )  GroupBy1			         
+			            WHERE 1=1
+			            <if test="memTypeCom != null and memTypeCom != ''">
+                          AND   Extent1.MEM_TYPE =  #{memTypeCom}
+                         </if>
+                         <if test="code != null and code != ''">
+                           AND  Extent1.MEM_CODE LIKE  '%' ||  #{code} || '%'
+                         </if>
+                         <if test="name != null and name != ''">
+                           AND  Extent1.NAME LIKE '%' || #{name} || '%'
+                         </if>
+                         <if test="icNum != null and icNum != ''">
+                           AND  Extent1.NRIC LIKE   '%' || #{icNum} || '%'
+                         </if>
+                         <if test="birth != null and birth != ''">
+                           AND  TO_CHAR(TO_DATE(Extent1.DOB, 'YYYY-MM-DD'), 'DD/MM/YYYY') =  #{birth}
+                         </if>
+                          <if test="nation != null and nation != ''">
+                           AND  Extent1.NATION =  #{nation}
+                         </if>
+                         <if test="race != null and race != ''">
+                           AND Extent1.RACE =  #{race}
+                         </if>
+                         <if test="status != null and status != ''">
+                           AND  Extent1.STUS =  #{status}
+                         </if>
+                         <if test="keyUser != null and keyUser != ''">
+                           AND  Extent1.CRT_USER_ID =  #{keyUser}
+                         </if>
+                         <if test="keyBranch != null and keyBranch != ''">
+                           AND  TO_NUMBER(Extent1.BRNCH,99999.99) =  #{keyBranch}
+                         </if>
+                         <if test="createDate != null and createDate != ''">
+                            <![CDATA[ AND  TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY')  >=  #{createDate} ]]>
+                         </if>
+                          <if test="endDate != null and endDate != ''">
+                            <![CDATA[  AND TO_CHAR( Extent1.CRT_DT, 'DD/MM/YYYY') <=  #{endDate} ]]>
+                         </if>
+                  <![CDATA[
+			    )   Project1
+			)  Project1
+			WHERE Project1.row_number < 100
+			ORDER BY Project1.MEM_CODE ASC
+			 ]]>
+    </select>
+</mapper>
