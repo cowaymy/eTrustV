@@ -49,4 +49,32 @@ public interface CommissionSystemService
      * @return
      */
     int delCommissionGrid(List<Object> removeList, String loginId);
+    
+    /**
+     *  search Organization Gruop Code List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectOrgGrCdList(Map<String, Object> params);
+    
+    /**
+     *  search Organization Code List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectOrgCdList(Map<String, Object> params);
+    
+    /**
+     *  search Organization Code Item List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectOrgItemList(Map<String, Object> params);
+
+    /**
+     * search Rule Book Item management List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectRuleBookItemMngList(Map<String, Object> params);
 }

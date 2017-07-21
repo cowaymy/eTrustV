@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,6 +209,117 @@ public class CommissionSystemController {
 
 		// return grid data
 		return ResponseEntity.ok(ruleBookMngList);
+	}
+	
+	/**
+	 * Call commission rule book Item management Page 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/commissionRuleBookItemMng.do")
+	public String commissionRuleBookItemMng(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
+		List<EgovMap> orgGrList = commissionSystemService.selectOrgGrCdList(params);
+		model.addAttribute("orgGrList", orgGrList);
+		
+		params.put("mstId", CommissionConstants.COMIS_CD_CD);
+		List<EgovMap> orgList = commissionSystemService.selectOrgCdList(params);
+		
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("orgGrList", orgGrList);
+		model.addAttribute("orgList", orgList);
+		// 호출될 화면
+		return "commission/commissionRuleBookItemMng";
+	}
+	
+	/**
+	 * Search rule book Item management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectRuleBookItemMngList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRuleBookItemMngList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String dt = String.valueOf(params.get("searchDt"));
+		if (dt.trim().equals("")) {
+			dt = CommonUtils.getNowDate().substring(0, 6);
+			params.put("searchDt", dt);
+		} else if (dt.contains("/")) {
+			dt = dt.replaceAll("/", "");
+			dt = dt.substring(2) + dt.substring(0, 2);
+			params.put("searchDt", dt);
+		}
+		
+		List<EgovMap> ruleBookMngList = commissionSystemService.selectRuleBookItemMngList(params);
+
+		// return grid data
+		return ResponseEntity.ok(ruleBookMngList);
+	}
+	
+	/**
+	 *  Organization Ajax Search 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectOrgCdList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrgCdList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {		
+		String orgGubun = String.valueOf(params.get("orgGubun"));
+		String orgRg = ""	;
+		
+		if (orgGubun.equals("G")) {
+			orgRg = String.valueOf(params.get("orgGrCd"));
+		} else {
+			orgRg = String.valueOf(params.get("orgRgCombo"));
+		}
+
+		String mstId = "";
+		if (orgRg.equals(CommissionConstants.COMIS_CD_GRCD)) {
+			mstId = CommissionConstants.COMIS_CD_CD;
+		} else if (orgRg.equals(CommissionConstants.COMIS_CT_GRCD)) {
+			mstId = CommissionConstants.COMIS_CT_CD;
+		} else if (orgRg.equals(CommissionConstants.COMIS_HP_GRCD)) {
+			mstId = CommissionConstants.COMIS_HP_CD;
+		}
+		params.put("mstId", mstId);
+
+		// 조회.
+		List<EgovMap> orgList = commissionSystemService.selectOrgCdList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(orgList);
+	}
+	
+	/**
+	 *  Organization Ajax Search 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectOrgItemList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectJsonOrgItemList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {		
+		String mstId = "";
+		params.put("mstId", mstId);
+		params.put("orgNm", request.getParameter("orgNm"));
+		// 조회.
+		List<EgovMap> orgList = commissionSystemService.selectOrgItemList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(orgList);
 	}
 
 }

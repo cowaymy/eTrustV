@@ -111,4 +111,42 @@ public interface CommissionSystemMapper {
 	 * @exception Exception
 	 */
 	int delCommissionGrid(Map<String, Object> params);
+	
+	/**
+	 * search Organization Gruop Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgGrCdList(Map<String, Object> params);
+	
+	/**
+	 * search Organization Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgCdList(Map<String, Object> params);
+	
+	/**
+	 * search Organization Item List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgItemList(Map<String, Object> params);
+	
+	
+	/**
+	 * search Rule Book Mng List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectRuleBookItemMngList(Map<String, Object> params);
+
 }

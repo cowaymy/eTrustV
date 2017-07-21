@@ -183,5 +183,53 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectRuleBookMngList(Map<String, Object> params) {
 		return commissionSystemMapper.selectRuleBookMngList(params);
 	}
+	
+	/**
+	 * search Organization Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgCdList(Map<String, Object> params) {
+		return commissionSystemMapper.selectOrgCdList(params);
+	}
+	
+	/**
+	 * search Organization Item List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgItemList(Map<String, Object> params) {
+		return commissionSystemMapper.selectOrgItemList(params);
+	}
+	
+	/**
+	 * search Organization Gruop Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgGrCdList(Map<String, Object> params) {
+		return commissionSystemMapper.selectOrgGrCdList(params);
+	}
+
+	/**
+	 * search Rule Book Item Mng List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectRuleBookItemMngList(Map<java.lang.String, Object> params) {
+		return commissionSystemMapper.selectRuleBookItemMngList(params);
+	}
 
 }
