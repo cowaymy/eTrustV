@@ -50,7 +50,6 @@ var mstColumnLayout =
                 // 체크박스 Visible 함수
                , visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
                  {
-                   console.log("visibleFunction: " + value +" / "+ item.isPayCash );
                    if(item.isPayCash == true)  
                    {
                     return true; // checkbox visible
@@ -144,7 +143,28 @@ var mstColumnLayout =
             }  //renderer   
         ,editable : false
                  
-        }
+       },{
+           dataField : "accAddCntyId",
+           headerText : "CNTY ID",
+           width : 50,
+           visible : false
+       },{
+           dataField : "accAddStateId",
+           headerText : "STATUS ID",
+           width : 50,
+           visible : false
+       },{
+           dataField : "accAddAreaId",
+           headerText : "AREA ID",
+           width : 50,
+           visible : false
+       },{
+           dataField : "accAddPostCodeId",
+           headerText : "POST CODE",
+           width : 50,
+           visible : false
+       }
+       
     ];
 
 //ajax list 조회.
@@ -154,15 +174,14 @@ function fnGetAccountCdListAjax()
 	  Common.ajax("GET", "/common/selectAccountCodeList.do"
        , $("#MainForm").serialize()
        , function(result) 
-       {
+       {  
           console.log("성공." + JSON.stringify(result));
-
           AUIGrid.setGridData(myGridID, result);
-          
-/*           if(result != null && result.length > 0)
+         
+          if(result != null && result.length > 0)
           {
-            fn_getDetailCode(myGridID, 0);
-          } */
+       	    fnSetDetail(myGridID,0);
+          }  
        }); 
 }
 
@@ -215,10 +234,7 @@ function editPopUp()
 
     var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
-    	    , function(params)  // success
-    	    {
-     //       alert("params01 : " + params.param01);
-          });
+    	    );
 
     return ;
 }
@@ -227,12 +243,9 @@ function addPopUp()
 {
 	  $("#parmAddEditFlag").val("ADD");
 
-    var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
-    	    , $("#MainForm").serializeJSON()
-    	    , function(params)  // success
-    	    {
-     //       alert("params01 : " + params.param01);
-          });
+    var popUpObj = Common.popupDiv("/common/accountCodeAddPop.do"
+            , $("#MainForm").serializeJSON()
+            );
 
     return ;
 }
@@ -241,6 +254,7 @@ function addPopUp()
 //컬럼 선택시 상세정보 세팅.
 function fnSetDetail(selGrdidID, rowIdx)  //cdMstId
 {     
+   $("#paramAccCodeId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accId"));  
    $("#paramAccCode").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accCode"));  
    $("#paramAccDesc").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accDesc"));  
    $("#paramSapAccCode").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "sapAccCode"));  
@@ -248,10 +262,15 @@ function fnSetDetail(selGrdidID, rowIdx)  //cdMstId
    $("#parmIsPayChq").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "isPayChq"));  
    $("#parmIsPayOnline").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "isPayOnline"));  
    $("#parmIsPayCrc").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "isPayCrc"));  
+   $("#parmAddCntyId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddCntyId"));  
+   $("#paramAddStateId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddStateId"));  
+   $("#paramAddAreaId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddAreaId"));  
+   $("#pramAddPostCodeId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddPostCodeId"));  
 
-   console.log("paramAccCode:  "+ $("#paramAccCode").val() + " paramAccDesc: " + $("#paramAccDesc").val() + " paramSapAccCode: " + $("#paramSapAccCode").val() 
-		         + " parmIsPayCash: "+ $("#parmIsPayCash").val() + " parmIsPayChq: " + $("#parmIsPayChq").val() + " parmIsPayOnline: " + $("#parmIsPayOnline").val()
-		         + " parmIsPayCrc:  "+ $("#parmIsPayCrc").val()
+   console.log(" paramAccCodeId:"+ $("#paramAccCodeId").val() +" paramAccCode:  "+ $("#paramAccCode").val() + " paramAccDesc: " + $("#paramAccDesc").val() + " paramSapAccCode: " + $("#paramSapAccCode").val() 
+		           + " parmIsPayCash: "+ $("#parmIsPayCash").val() + " parmIsPayChq: " + $("#parmIsPayChq").val() + " parmIsPayOnline: " + $("#parmIsPayOnline").val()
+		           + " parmIsPayCrc:  "+ $("#parmIsPayCrc").val() + " accAddCntyId: " + $("#parmAddCntyId").val() + " paramAddStateId: " + $("#paramAddStateId").val()
+		           + " paramAddAreaId:  "+ $("#paramAddAreaId").val() + " pramAddPostCodeId: " + $("#pramAddPostCodeId").val() 
 		          );                
 }
 
@@ -307,7 +326,6 @@ $(document).ready(function()
 
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true)
         {
-            alert(1);
             return false;
         }
         else
@@ -319,19 +337,6 @@ $(document).ready(function()
         	 return true;
         } 
     });
-
- // update
-/*     $("#update").click(function(){
-        $("#detailView").hide();
-        
-          var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-          if (selectedItem[0] > -1){
-              fn_modyWare(selectedItem[0]);
-          }else{
-          Common.alert('Choice Data please..');
-          }
-          //AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
-      }); */
         
 
 });   //$(document).ready
@@ -357,6 +362,7 @@ $(document).ready(function()
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
 
+<input type ="hidden" id="paramAccCodeId"  name="paramAccCodeId"  value=""/>
 <input type ="hidden" id="paramAccCode"    name="paramAccCode"    value=""/>
 <input type ="hidden" id="paramAccDesc"    name="paramAccDesc"    value=""/>
 <input type ="hidden" id="paramSapAccCode" name="paramSapAccCode" value=""/>
@@ -364,7 +370,11 @@ $(document).ready(function()
 <input type ="hidden" id="parmIsPayChq"    name="parmIsPayChq"    value=""/>
 <input type ="hidden" id="parmIsPayOnline" name="parmIsPayOnline" value=""/>
 <input type ="hidden" id="parmIsPayCrc"    name="parmIsPayCrc"    value=""/>
-<input type ="hidden" id="parmAddEditFlag"  name="parmAddEditFlag"    value=""/>
+<input type ="hidden" id="parmAddEditFlag" name="parmAddEditFlag" value=""/>
+<input type ="hidden" id="parmAddCntyId"   name="parmAddCntyId" value=""/>
+<input type ="hidden" id="paramAddStateId" name="paramAddStateId" value=""/>
+<input type ="hidden" id="paramAddAreaId"  name="paramAddAreaId" value=""/>
+<input type ="hidden" id="pramAddPostCodeId" name="pramAddPostCodeId" value=""/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
