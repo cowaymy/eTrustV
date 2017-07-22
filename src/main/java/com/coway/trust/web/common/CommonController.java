@@ -3,10 +3,9 @@ package com.coway.trust.web.common;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -86,6 +85,19 @@ public class CommonController {
 		return ResponseEntity.ok(accountCodeList);
 
 	}
+/*	
+	@RequestMapping(value = "/getAccountCodeCount.do", method = RequestMethod.GET)
+	public ResponseEntity<Integer> getAccountCodeCount(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("popUpAccCode : {}", params.get("popUpAccCode"));
+		
+		int accountCodeCount = commonService.getAccCodeCount(params);
+		
+		logger.debug("getCdCnt : {}", accountCodeCount);
+		
+		return ResponseEntity.ok(accountCodeCount);
+		
+	}*/
 	
 	
 	/**
@@ -95,11 +107,29 @@ public class CommonController {
 	public String accountCodeUpdPop(@RequestParam Map<String, Object> params, ModelMap model) 
 	{
 		//{paramAccCode=1000/000, paramAccDesc=FIXED ASSTES AT COST, paramSapAccCode=, parmIsPayCash=1, parmIsPayChq=0, parmIsPayOnline=0, parmIsPayCrc=1, accId=, accCode=, accDesc=, sapAccCode=, accStusId=1, paymentCd=, isPop=true}
-		logger.debug(" Input Params : {}", params.toString() );
+		logger.debug(" Edit InputParams : {}", params.toString() );
 
 		// popup 화면으로 넘길 데이터.
 		model.addAttribute("inputParams", params);
 
+		// 호출될 화면
+		return "/common/accountCodeManagementPop";
+	}
+	
+	@RequestMapping(value = "/accountCodeAddPop.do")
+	public String accountCodeAddPop(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
+		//{paramAccCode=1000/000, paramAccDesc=FIXED ASSTES AT COST, paramSapAccCode=, parmIsPayCash=1, parmIsPayChq=0, parmIsPayOnline=0, parmIsPayCrc=1, accId=, accCode=, accDesc=, sapAccCode=, accStusId=1, paymentCd=, isPop=true}
+		
+		//String flag = "ADD";		
+		//HashMap<String, Object> paramData = new HashMap<String, Object>();		
+		//((Map<String, Object>) paramData).put("parmAddEditFlag", flag);		
+		//model.addAttribute("InputParams", paramData);
+	    				
+		//Add InputParams : {InputParams={parmAddEditFlag=ADD}}
+		logger.debug(" Add InputParams : {}", model.toString() );
+		
+		
 		// 호출될 화면
 		return "/common/accountCodeManagementPop";
 	}	
@@ -110,9 +140,20 @@ public class CommonController {
 	@RequestMapping(value = "/insertAccount.do")
 	public ResponseEntity<ReturnMessage> insertAccountCode(@RequestBody Map<String, Object> params, ModelMap model) 
 	{
+		// InputAccountCode Params : {popUpAccCodeId=729, popUpSaveFlag=EDIT, popUpAccCode=667700, popUpSapAccCode=, popUpAccDesc=667700, popUpIsPayCash=on, popUpIsPayChq=on, popUpIsPayOnline=on, popUpIsPayCrc=on, address1=, address2=, address3=, mcountry=, mstate=, marea=, mpostcd=, tel1=, tel2=}
 		logger.debug(" InputAccountCode Params : {}", params.toString() );
+		ReturnMessage message = new ReturnMessage();
 		
-		// popUpAccCode=, popUpSapAccCode=, popUpAccDesc=, popUpIsPayCash=on, popUpIsPayChq=on, popUpIsPayOnline=on, address1=, address2=, address3=, mcountry=, tel1=, tel2=, popUpIsPayCrc=false}
+		if (!"EDIT".equals(params.get("popUpSaveFlag")) )
+		{
+			int accountCodeCount = commonService.getAccCodeCount(params);
+			
+			if(accountCodeCount > 0){
+				message.setCode(AppConstants.FAIL);
+				message.setMessage("CODE [" + params.get("popUpAccCode") + "] Exists Already.");
+				return ResponseEntity.ok(message);
+			}
+		}
 	
 		int user=99999;
 		
@@ -158,22 +199,18 @@ public class CommonController {
 		logger.debug(" ParamsChange : {}", params.toString() );
 		
 		
-		int cnt = commonService.insertAccountCode(params);
+		int cnt = commonService.mergeAccountCode(params);
+		//int cnt = commonService.insertAccountCode(params);
 		//ParamsChange : {popUpAccCode=111, popUpSapAccCode=222, popUpAccDesc=3333, popUpIsPayCash=1, popUpIsPayCrc=1, address1=, address2=, address3=, mcountry=, tel1=, tel2=, popUpIsPayChq=0, popUpIsPayOnline=0}
 		
 		// 호출될 화면
 		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(cnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
 	}	
-	
-	
-	
-	
 	
 	
 /**************** General Code Management *****************/	

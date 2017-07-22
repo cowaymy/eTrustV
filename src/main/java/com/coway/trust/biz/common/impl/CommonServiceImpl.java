@@ -55,11 +55,24 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.getAccountCodeList(params);
 	}
 	
-	// AccoutCode Insert
+	// Account Code Count
 	@Override
+	public 	int getAccCodeCount(Map<String, Object> params) {
+		return commonMapper.getAccCodeCount(params);
+	}
+	
+	// AccoutCode Insert
+/*	@Override
 	public int insertAccountCode(Map<String, Object> params) 
 	{
 		return commonMapper.insertAccountCode(params);
+	}*/
+	
+	// AccoutCode Merge
+	@Override
+	public int mergeAccountCode(Map<String, Object> params) 
+	{
+		return commonMapper.mergeAccountCode(params);
 	}
 	
 	

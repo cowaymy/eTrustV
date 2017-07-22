@@ -13,13 +13,12 @@ public interface CommonService {
 
 	List<EgovMap> selectI18NList();
 	
-	/******************* Account *******************/
-	int insertAccountCode(Map<String, Object> params);
+	// Account Code
+	int mergeAccountCode(Map<String, Object> params);
+	
+	int getAccCodeCount(Map<String, Object> params);
 	
 	List<EgovMap> getAccountCodeList(Map<String, Object> params);
-
-	/***********************************************/
-	
 	
 	// Common Master Code
 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params);
