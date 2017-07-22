@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
 
+	<select id="getAccCodeCount" parameterType="Map" resultType="int">
+		SELECT COUNT(*) COUNT
+      FROM (
+             SELECT ACC_CODE FROM SYS0001M GROUP BY ACC_CODE HAVING ACC_CODE= #{popUpAccCode} AND COUNT(ACC_CODE) > 0 
+           )
+	</select>
+	
 	<select id="selectCodeList" parameterType="Map" resultType="egovMap">
 		SELECT 
 		      CODE_ID , 
@@ -16,70 +23,93 @@
 	
 	<select id="selectI18NList" parameterType="Map" resultType="egovMap">
             SELECT * FROM SYS_I18N
-    </select>
+  </select>
     
-  <insert id="insertAccountCode" parameterType="Map" >
-  INSERT INTO SYS0001M
-      (
-         ACC_ID
-       , SAP_ACC_CODE
-       , ACC_CODE
-       , ACC_DESC
-       , ACC_GRP
-       , ACC_TYPE
-       , ACC_CURR_ID
-       , ACC_LINK
-       , ACC_IS_MFG
-       , ACC_PAY_TYPE_ID
-       , ACC_ADDR1
-       , ACC_ADDR2
-       , ACC_ADDR3
-       , ACC_ADD_POST_CODE_ID
-       , ACC_ADD_AREA_ID
-       , ACC_ADD_STATE_ID
-       , ACC_ADD_CNTY_ID
-       , ACC_TEL_NO1
-       , ACC_TEL_NO2
-       , ACC_CRT_USER_ID
-       , ACC_CRT_DT
-       , ACC_UPD_USER_ID
-       , ACC_UPD_DT
-       , ACC_STUS_ID
-       , IS_PAY_CASH
-       , IS_PAY_ONLINE
-       , IS_PAY_CHQ
-       , IS_PAY_CRC
-     )
-  VALUES  
-     ( (SELECT (MAX(ACC_ID) +1) FROM SYS0001M ) /*ACC_ID                    */
-        ,#{popUpSapAccCode}                     /*SAP_ACC_CODE              */
-        ,#{popUpAccCode}                        /*ACC_CODE                  */
-        ,#{popUpAccDesc}                        /*ACC_DESC                  */
-        ,''                                     /*ACC_GRP                   */
-        ,0                                      /*ACC_TYPE                  */
-        ,''                                     /*ACC_CURR_ID               */
-        ,''                                     /*ACC_LINK                  */
-        ,0                                      /*ACC_IS_MFG                */
-        ,0                                      /*ACC_PAY_TYPE_ID           */
-        ,#{address1}                            /*ACC_ADDR1                 */
-        ,#{address2}                            /*ACC_ADDR2                 */
-        ,#{address3}                            /*ACC_ADDR3                 */
-        ,NVL(#{mpostcd},0)                      /*ACC_ADD_POST_CODE_ID      */
-        ,NVL(#{marea},0)                        /*ACC_ADD_AREA_ID           */
-        ,NVL(#{mstate},0)                       /*ACC_ADD_STATE_ID          */
-        ,NVL(#{mcountry},0)                     /*ACC_ADD_CNTY_ID           */
-        ,#{tel1}                                /*ACC_TEL_NO1               */
-        ,#{tel2}                                /*ACC_TEL_NO2               */
-        ,#{crtUserId}                           /*ACC_CRT_USER_ID           */
-        ,SYSDATE                                /*ACC_CRT_DT                */
-        ,#{updUserId}                           /*ACC_UPD_USER_ID           */
-        ,SYSDATE                                /*ACC_UPD_DT                */
-        ,1                                      /*ACC_STUS_ID               */
-        ,#{popUpIsPayCash}                      /*IS_PAY_CASH               */
-        ,#{popUpIsPayOnline}                    /*IS_PAY_ONLINE             */
-        ,#{popUpIsPayChq}                       /*IS_PAY_CHQ                */
-        ,#{popUpIsPayCrc}                       /*IS_PAY_CRC                */
-      )
+  <insert id="mergeAccountCode" parameterType="Map" >
+    MERGE INTO SYS0001M
+      USING DUAL
+         ON (ACC_ID = #{popUpAccCodeId} )
+            WHEN MATCHED THEN
+                  UPDATE  
+                    SET ACC_DESC  = NVL(#{popUpAccDesc},ACC_DESC) 
+                      , ACC_ADDR1 = NVL(#{address1},ACC_ADDR1) 
+                      , ACC_ADDR2 = NVL(#{address2},ACC_ADDR2) 
+                      , ACC_ADDR3 = NVL(#{address3},ACC_ADDR3) 
+                      , ACC_ADD_STATE_ID = NVL(#{mstate},ACC_ADD_STATE_ID) 
+                      , ACC_ADD_CNTY_ID  = NVL(#{mcountry},ACC_ADD_CNTY_ID) 
+                      , ACC_ADD_POST_CODE_ID = NVL(#{mpostcd},ACC_ADD_POST_CODE_ID)
+                      , ACC_ADD_AREA_ID      = NVL(#{marea},ACC_ADD_AREA_ID)
+                      , ACC_TEL_NO1          = NVL(#{tel1},ACC_TEL_NO1) 
+                      , ACC_TEL_NO2          = NVL(#{tel2},ACC_TEL_NO2) 
+                      , ACC_UPD_USER_ID      = NVL(#{updUserId},ACC_UPD_USER_ID)
+                      , ACC_UPD_DT           = SYSDATE
+                      , IS_PAY_CASH          = NVL(#{popUpIsPayCash},IS_PAY_CASH) 
+                      , IS_PAY_ONLINE        = NVL(#{popUpIsPayOnline},IS_PAY_ONLINE) 
+                      , IS_PAY_CHQ           = NVL(#{popUpIsPayChq},IS_PAY_CHQ) 
+                      , IS_PAY_CRC           = NVL(#{popUpIsPayCrc},IS_PAY_CRC) 
+          
+            WHEN NOT MATCHED THEN
+                     INSERT 
+                        (
+                           ACC_ID
+                         , SAP_ACC_CODE
+                         , ACC_CODE
+                         , ACC_DESC
+                         , ACC_GRP
+                         , ACC_TYPE
+                         , ACC_CURR_ID
+                         , ACC_LINK
+                         , ACC_IS_MFG
+                         , ACC_PAY_TYPE_ID
+                         , ACC_ADDR1
+                         , ACC_ADDR2
+                         , ACC_ADDR3
+                         , ACC_ADD_POST_CODE_ID
+                         , ACC_ADD_AREA_ID
+                         , ACC_ADD_STATE_ID
+                         , ACC_ADD_CNTY_ID
+                         , ACC_TEL_NO1
+                         , ACC_TEL_NO2
+                         , ACC_CRT_USER_ID
+                         , ACC_CRT_DT
+                         , ACC_UPD_USER_ID
+                         , ACC_UPD_DT
+                         , ACC_STUS_ID
+                         , IS_PAY_CASH
+                         , IS_PAY_ONLINE
+                         , IS_PAY_CHQ
+                         , IS_PAY_CRC
+                       )
+                    VALUES  
+                       ( (SELECT (MAX(ACC_ID) +1) FROM SYS0001M ) /*ACC_ID                    */
+                          ,#{popUpSapAccCode}                     /*SAP_ACC_CODE              */
+                          ,#{popUpAccCode}                        /*ACC_CODE                  */
+                          ,#{popUpAccDesc}                        /*ACC_DESC                  */
+                          ,''                                     /*ACC_GRP                   */
+                          ,0                                      /*ACC_TYPE                  */
+                          ,''                                     /*ACC_CURR_ID               */
+                          ,''                                     /*ACC_LINK                  */
+                          ,0                                      /*ACC_IS_MFG                */
+                          ,0                                      /*ACC_PAY_TYPE_ID           */
+                          ,#{address1}                            /*ACC_ADDR1                 */
+                          ,#{address2}                            /*ACC_ADDR2                 */
+                          ,#{address3}                            /*ACC_ADDR3                 */
+                          ,NVL(#{mpostcd},0)                      /*ACC_ADD_POST_CODE_ID      */
+                          ,NVL(#{marea},0)                        /*ACC_ADD_AREA_ID           */
+                          ,NVL(#{mstate},0)                       /*ACC_ADD_STATE_ID          */
+                          ,NVL(#{mcountry},0)                     /*ACC_ADD_CNTY_ID           */
+                          ,#{tel1}                                /*ACC_TEL_NO1               */
+                          ,#{tel2}                                /*ACC_TEL_NO2               */
+                          ,#{crtUserId}                           /*ACC_CRT_USER_ID           */
+                          ,SYSDATE                                /*ACC_CRT_DT                */
+                          ,#{updUserId}                           /*ACC_UPD_USER_ID           */
+                          ,SYSDATE                                /*ACC_UPD_DT                */
+                          ,1                                      /*ACC_STUS_ID               */
+                          ,#{popUpIsPayCash}                      /*IS_PAY_CASH               */
+                          ,#{popUpIsPayOnline}                    /*IS_PAY_ONLINE             */
+                          ,#{popUpIsPayChq}                       /*IS_PAY_CHQ                */
+                          ,#{popUpIsPayCrc}                       /*IS_PAY_CRC                */
+                        )
   </insert>  
     
   <select id="getAccountCodeList" parameterType="Map" resultType="egovMap">
@@ -109,7 +139,7 @@
               ,CASE WHEN (Extent4.AREA_ID IS NOT NULL) THEN Extent4.AREA_NAME ELSE '' END AS AREA_NAME 
               ,CASE WHEN (ACC_ADD_CNTY_ID IS NOT NULL) THEN ACC_ADD_CNTY_ID ELSE 0 END AS ACC_ADD_CNTY_ID 
               ,CASE WHEN (Extent6.CNTY_ID IS NOT NULL) THEN Extent6.NAME ELSE '' END AS NAME15 
-              ,CASE WHEN (ACC_CRT_DT IS NOT NULL) THEN  TO_CHAR(ACC_CRT_DT,'DD-MON-YYYY HH24:MI:SS')   ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS C14 
+              ,CASE WHEN (ACC_CRT_DT IS NOT NULL) THEN  TO_CHAR(ACC_CRT_DT,'DD-MON-YYYY HH24:MI:SS')   ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS ACC_CRT_DT 
               ,CASE WHEN (Extent7.USER_ID IS NOT NULL) THEN Extent7.USER_NAME ELSE '' END AS USER_NAME47 
               ,CASE WHEN (ACC_ADD_POST_CODE_ID IS NOT NULL) THEN ACC_ADD_POST_CODE_ID ELSE 0 END AS ACC_ADD_POST_CODE_ID 
               ,CASE WHEN (Extent3.POST_CODE_ID IS NOT NULL) THEN Extent3.POST_CODE_ID ELSE 0 END AS POST_CODE_ID 
@@ -118,7 +148,7 @@
               ,CASE WHEN (Extent5.STATE_ID IS NOT NULL) THEN Extent5.NAME ELSE '' END AS NAME35 
               ,CASE WHEN (ACC_TEL_NO1 IS NOT NULL) THEN ACC_TEL_NO1 ELSE '' END AS ACC_TEL_NO1 
               ,CASE WHEN (ACC_TEL_NO2 IS NOT NULL) THEN ACC_TEL_NO2 ELSE '' END AS ACC_TEL_NO2 
-              ,CASE WHEN (ACC_UPD_DT IS NOT NULL) THEN TO_CHAR(ACC_UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE  TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS C23 
+              ,CASE WHEN (ACC_UPD_DT IS NOT NULL) THEN TO_CHAR(ACC_UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE  TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS ACC_UPD_DT 
               ,CASE WHEN (Extent8.USER_ID IS NOT NULL) THEN Extent8.USER_NAME ELSE '' END AS USER_NAME
           FROM  SYS0001M
                 INNER JOIN SYS0038M  ON SYS0038M.STUS_CODE_ID = ACC_STUS_ID
@@ -234,7 +264,7 @@
          , UPD_USER_ID
         )
         VALUES
-        ( (SELECT (MAX(CODE_MASTER_ID) +1) CODE_MASTER_ID_SEQ FROM SYS0012M)
+        ( (SELECT MAX(CODE_MASTER_ID)+1 CODE_MASTER_ID_SEQ FROM SYS0012M)
          , #{codeMasterName}
          , NVL(#{codeDesc},DBMS_LOB.SUBSTR (#{codeMasterName},4000) )
          , DECODE(#{disabled},'N',0,'Y',1,0)
