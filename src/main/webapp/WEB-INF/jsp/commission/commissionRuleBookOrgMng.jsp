@@ -331,7 +331,7 @@
 
 	// get Ajax Data and set grid data
 	function fn_getRuleBookMngListAjax() {
-		Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/commission/system/selectRuleBookOrgMngList", $("#searchForm").serialize(), function(result) {
 			console.log("성공.");
 			console.log("data : " + result);
 			AUIGrid.setGridData(myGridID, result);
