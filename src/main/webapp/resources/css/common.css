@@ -90,6 +90,7 @@
 .title_line .right_opt:after{content:""; display:block; clear:both;}
 .title_line .right_opt li{float:left; margin-left:5px;}
 .title_line h3+ .left_opt{margin:15px 0 0 5px;}
+.title_line h3+.right_btns{float:right; position:relative; top:13px;}
 .title_line .left_opt{float:left;}
 .title_line .left_opt:after{content:""; display:block; clear:both;}
 .title_line .left_opt li{float:left; margin-left:5px;}
@@ -113,6 +114,10 @@ table+.title_line{margin-top:20px;}
 .aui-vscrollbar{left:auto!important; right:0!important;}
 .red_text{color:#ff0000;}
 .brown_text{color:#712626;}
+.txt_box{position:Relative;}
+.txt_box i{display:none;}
+.txt_box:hover i{display:block; position:Absolute; top:10px; left:0; border:1px solid #06a7e2; background:#25527c; color:#fff; padding:5px 10px; white-space:nowrap; font-style:normal; font-size:12px;}
+.txt_box:hover i:before{content:""; display:block; position:absolute; top:-5px; left:50%; width:9px; height:5px; margin-left:-5px; background:url(../images/common/txt_arrow.gif) no-repeat;}
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
