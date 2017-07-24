@@ -7,24 +7,6 @@
          <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
           resultMap="clobMap" 을 사용해야 함.
     -->
-    <!-- Customer Contact List   -->
-    <resultMap type="EgovMap" id="contactClobMap">
-        <result property="c3" column="c3" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    
-    <!-- Customer Bank Account List  -->
-    <resultMap type="EgovMap" id="bankClobMap">
-            <result property="c2" column="c2" jdbcType="CLOB" javaType="java.lang.String"/>
-            <result property="c7" column="c7" jdbcType="CLOB" javaType="java.lang.String"/>
-            <result property="c6" column="c6" jdbcType="CLOB" javaType="java.lang.String"/>
-            <result property="c11" column="c11" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    <!--Customer Card Account List -->
-    <resultMap type="egovMap" id="cardClobMap">
-           <result property="c7" column="c7" jdbcType="CLOB" javaType="java.lang.String"/>
-           <result property="c8" column="c8" jdbcType="CLOB" javaType="java.lang.String"/>
-           <result property="c14" column="c14" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
     
     <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
         <![CDATA[
@@ -219,7 +201,11 @@
 		
     </select>
     <!-- Customer basic Info(Customer View)  -->
-    <select id="selectCustomerViewBasicInfo" parameterType="Map" resultType="egovMap">
+    <resultMap type="egovMap" id="basicClobMap">
+        <result  property="reMark" column="Remark" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+    <select id="selectCustomerViewBasicInfo" parameterType="Map" resultMap="basicClobMap">
        <![CDATA[
       SELECT 
             Extent1.CUST_ID AS CustomerID,
@@ -266,25 +252,30 @@
             LEFT OUTER JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent1.CORP_TYPE_ID AND Extent1.CORP_TYPE_ID IS NOT NULL
         WHERE 
             8 <> Extent1.STUS_CODE_ID AND Extent1.CUST_ID =${testparam}
+         AND
+            ROWNUM = 1
        ]]>
     </select>
     <!--  Customer Main Address(Customer View) -->
-    <select id="selectCustomerViewMainAddress" parameterType="Map" resultType="egovMap">
+    <resultMap type="egovMap" id="mainAddrClobMap">
+        <result property="c12" column="c12" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    <select id="selectCustomerViewMainAddress" parameterType="Map" resultMap="mainAddrClobMap">
       <![CDATA[ 
 			  SELECT Limit1.CUST_ADD_ID CUST_ADD_ID  ,
 			       Limit1.C1 C1  ,
 			       Limit1.C2 C2  ,
 			       Limit1.C3 C3  ,
-			       Limit1.C4 C4  ,-- unnecessary?
+			       Limit1.C4 C4  ,
 			       Limit1.C5 C5  ,
-			       Limit1.C6 C6  ,-- unnecessary?
+			       Limit1.C6 C6  ,
 			       Limit1.C7 C7  ,
-			       Limit1.C8 C8  ,-- unnecessary?
+			       Limit1.C8 C8  ,
 			       Limit1.C9 C9  ,
-			       Limit1.C10 C10  ,-- unnecessary?
+			       Limit1.C10 C10  ,
 			       Limit1.C11 C11  ,
-			       Limit1.C12 C12  ,-- unnecessary?
-			       Limit1.C13 C13  ,-- unnecessary?
+			       Limit1.C12 C12  , -- CLOB
+			       Limit1.C13 C13  ,
 			       Limit1.NAME NAME  ,
 			       Limit1.CUST_ID CUST_ID  ,
 			       Limit1.CRT_USER_ID CRT_USER_ID  ,
@@ -308,11 +299,11 @@
 			                CASE WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME     ELSE '' END C9  ,
 			                CASE WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID  ELSE 0 END C10  ,
 			                CASE WHEN ( Extent6.CNTY_ID IS NOT NULL ) THEN Extent6.NAME  ELSE '' END C11  ,
-			                CASE WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM   ELSE '' END C12  ,
+			                CASE WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM   ELSE NULL END C12  ,
 			                CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID  ELSE 0  END C13  ,
 			                CASE WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE ''  END C14  ,
 			                CASE WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) ) THEN Extent1.CRT_DT  ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END C15  , 
-			                CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) ) THEN Extent1.UPD_DT  ELSE '1900-01-01'  END C16  ,
+			                CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01') ) THEN Extent1.UPD_DT  ELSE '1900-01-01'  END C16  ,
 			                CASE WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID  ELSE 0 END C17  ,
 			                CASE WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME  ELSE ''  END C18  
 			         FROM SAL0023D Extent1
@@ -324,11 +315,14 @@
 			                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
 			                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
 			          WHERE  ( 8 <> Extent1.STUS_CODE_ID )
-			                   AND ( Extent1.CUST_ADD_ID = #{testparam} ) AND ROWNUM <= 1 ) Limit1
+			                   AND ( Extent1.CUST_ADD_ID = #{addrparam} ) AND ROWNUM <= 1 ) Limit1
      ]]>
     </select>
     <!-- customer main Contact(Customer View) -->
-    <select id="selectCustomerViewMainContact" parameterType="Map" resultType="egovMap">
+    <resultMap type="egovMap" id="mainContactClobMap">
+           <result property="c3" column="c3" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    <select id="selectCustomerViewMainContact" parameterType="Map" resultMap="mainContactClobMap">
         <![CDATA[
 			SELECT Limit1.CUST_CNTC_ID CUST_CNTC_ID  ,
 			       Limit1.CUST_ID CUST_ID  ,
@@ -395,21 +389,17 @@
    
     <select id="selectCustomerAddressJsonList" parameterType="Map" resultType="egovMap">
        <![CDATA[    
-        SELECT Project1.CUST_ADD_ID CUST_ADD_ID  ,
+         SELECT Project1.CUST_ADD_ID CUST_ADD_ID  ,
                         Project1.CUST_ID CUST_ID  ,
                         Project1.CRT_USER_ID CRT_USER_ID  ,
                         Project1.NAME NAME  ,
-                        Project1.C1 C1  ,
-                        Project1.C2 C2  ,
-                        Project1.C3 C3  ,
+                        Project1.C1 || Project1.C2 || Project1.C3 || Project1.C9 || Project1.C11 addr, -- NAME, C1, C2, C3, C9, C11,(VIEW Btn)                        
                         Project1.C4 C4  ,
                         Project1.C5 C5  ,
                         Project1.C6 C6  ,
                         Project1.C7 C7  ,
-                        Project1.C8 C8  ,
-                        Project1.C9 C9  ,
-                        Project1.C10 C10  ,
-                        Project1.C11 C11  ,
+                        Project1.C8 C8  ,                       
+                        Project1.C10 C10  ,                        
                         Project1.C12 C12  ,
                         Project1.C13 C13  ,
                         Project1.C14 C14  ,
@@ -505,11 +495,17 @@
                                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
                                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
                          WHERE  ( 8 <> Extent1.STUS_CODE_ID )
-                                  AND ( Extent1.CUST_ID = #{testparam} ) ) Project1
+                                  AND ( Extent1.CUST_ID = ${testparam} ) ) Project1
          
          ORDER BY Project1.Name DESC
 		 ]]>
     </select>
+    
+    <!-- Customer Contact List   -->
+    <resultMap type="EgovMap" id="contactClobMap">
+        <result property="c3" column="c3" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
     <select id="selectCustomerContactJsonList" parameterType="Map" resultMap="contactClobMap">
         <![CDATA[   
           SELECT Project1.CUST_CNTC_ID CUST_CNTC_ID  ,
@@ -576,6 +572,15 @@
                 ORDER BY Project1.Name DESC
                 ]]>
     </select>
+    
+    <!-- Customer Bank Account List  -->
+    <resultMap type="EgovMap" id="bankClobMap">
+            <result property="c2" column="c2" jdbcType="CLOB" javaType="java.lang.String"/>
+            <result property="c7" column="c7" jdbcType="CLOB" javaType="java.lang.String"/>
+            <result property="c6" column="c6" jdbcType="CLOB" javaType="java.lang.String"/>
+            <result property="c11" column="c11" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
     <select id="selectCustomerBankAccJsonList" parameterType="Map" resultMap="bankClobMap">
         <![CDATA[   
         SELECT  Project1.CUST_ACC_ID CUST_ACC_ID  ,
@@ -647,6 +652,14 @@
 		ORDER BY Project1.CUST_ACC_ID ASC 
 		 ]]>   
     </select>
+    
+    <!--Customer Card Account List -->
+    <resultMap type="egovMap" id="cardClobMap">
+           <result property="c7" column="c7" jdbcType="CLOB" javaType="java.lang.String"/>
+           <result property="c8" column="c8" jdbcType="CLOB" javaType="java.lang.String"/>
+           <result property="c14" column="c14" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
     <select id="selectCustomerCreditCardJsonList" parameterType="Map" resultMap="cardClobMap">
    <![CDATA[   
 		SELECT   Project1.CUST_CRC_ID CUST_CRC_ID  ,
@@ -733,7 +746,7 @@
 		    SELECT   Project6.C1 C1  ,
 	                Project6.C2 C2  ,
 	                Project6.C3 C3  ,
-	                Project6.C4 C4  ,
+	                TO_CHAR(Project6.C4,'DD-MM-YYYY') C4  ,
 	                Project6.C5 C5  ,
 	                Project6.C6 C6  ,
 	                Project6.C7 C7  ,
@@ -917,5 +930,160 @@
 					                                 GroupBy2 ) UnionAll1 ) Distinct1 ) Project6 ) Project6            
 					 ORDER BY Project6.C3 ASC	    
 	     ]]>
+    </select>
+    
+    <select id="selectCustomerThirdPartyJsonList" parameterType="Map" resultType="egovMap">
+        <![CDATA[  
+        SELECT  Project2.SALES_ORD_ID SALES_ORD_ID  ,
+	                Project2.SALES_ORD_NO SALES_ORD_NO  ,
+	                TO_CHAR(Project2.C1, 'DD-MM-YYYY') C1,	                 
+	                Project2.C2 C2  ,
+	                Project2.CODE CODE  ,
+	                Project2.CODE_NAME CODE_NAME  ,
+	                Project2.C3 C3  ,
+	                Project2.CODE1 CODE1  ,
+	                Project2.C4 C4  ,
+	                Project2.STK_CODE STK_CODE  ,
+	                Project2.STK_DESC STK_DESC  ,
+	                Project2.C5 C5  ,
+	                Project2.CODE2 CODE2  ,
+	                Project2.C6 C6  ,
+	                Project2.C7 C7  
+       FROM (   SELECT  Project2.SALES_ORD_ID SALES_ORD_ID  ,
+				                Project2.SALES_ORD_NO SALES_ORD_NO  ,
+				                Project2.STK_CODE STK_CODE  ,
+				                Project2.STK_DESC STK_DESC  ,
+				                Project2.CODE CODE  ,
+				                Project2.CODE_NAME CODE_NAME  ,
+				                Project2.CODE1 CODE1  ,
+				                Project2.CODE2 CODE2  ,
+				                Project2.C1 C1  ,
+				                Project2.C2 C2  ,
+				                Project2.C3 C3  ,
+				                Project2.C4 C4  ,
+				                Project2.C5 C5  ,
+				                Project2.C6 C6  ,
+				                Project2.C7 C7                  
+			         FROM ( SELECT GroupBy1.K1 SALES_ORD_ID  ,
+					                       GroupBy1.K2 SALES_ORD_NO  ,
+					                       GroupBy1.K3 STK_CODE  ,
+					                       GroupBy1.K4 STK_DESC  ,
+					                       GroupBy1.K5 CODE  ,
+					                       GroupBy1.K6 CODE_NAME  ,
+					                       GroupBy1.K7 CODE1  ,
+					                       GroupBy1.K8 CODE2  ,
+					                       GroupBy1.K9 C1  ,
+					                       GroupBy1.K10 C2  ,
+					                       GroupBy1.K11 C3  ,
+					                       GroupBy1.K12 C4  ,
+					                       GroupBy1.K13 C5  ,
+					                       GroupBy1.K14 C6  ,
+					                       CASE WHEN ( GroupBy1.A1 IS NOT NULL ) THEN GroupBy1.A2 ELSE UTILS.CONVERT_TO_FLOAT(0,53)  END C7  
+				                  FROM ( SELECT   Project1.SALES_ORD_ID K1  ,
+							                              Project1.SALES_ORD_NO K2  ,
+							                              Project1.STK_CODE K3  ,
+							                              Project1.STK_DESC K4  ,
+							                              Project1.CODE K5  ,
+							                              Project1.CODE_NAME K6  ,
+							                              Project1.CODE1 K7  ,
+							                              Project1.CODE2 K8  ,
+							                              Project1.C1 K9  ,
+							                              Project1.C2 K10  ,
+							                              Project1.C3 K11  ,
+							                              Project1.C4 K12  ,
+							                              Project1.C5 K13  ,
+							                              Project1.C6 K14  ,
+							                              SUM(Project1.RENT_AMT)  A1  ,
+							                              SUM(Project1.RENT_AMT)  A2  
+						                       FROM   ( SELECT   Extent2.SALES_ORD_ID SALES_ORD_ID  ,
+									                                     Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+									                                     Extent4.STK_CODE STK_CODE  ,
+									                                     Extent4.STK_DESC STK_DESC  ,
+									                                     Extent5.CODE CODE  ,
+									                                     Extent5.CODE_NAME CODE_NAME  ,
+									                                     Extent6.CODE CODE1  ,
+									                                     Extent7.CODE CODE2  ,
+									                                     Extent9.RENT_AMT RENT_AMT  ,
+									                                     CASE WHEN ( Extent2.SALES_DT IS NOT NULL ) THEN Extent2.SALES_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END C1  ,
+									                                     CASE WHEN ( Extent2.APP_TYPE_ID IS NOT NULL ) THEN Extent2.APP_TYPE_ID ELSE 0 END C2  ,
+									                                     CASE  WHEN ( Extent2.STUS_CODE_ID IS NOT NULL ) THEN Extent2.STUS_CODE_ID ELSE 0 END C3  ,
+									                                     CASE  WHEN ( Extent3.ITM_STK_ID IS NOT NULL ) THEN Extent3.ITM_STK_ID ELSE 0 END C4  ,
+									                                     CASE  WHEN ( Extent1.MODE_ID IS NOT NULL ) THEN Extent1.MODE_ID ELSE 0 END C5  ,
+									                                     CASE  WHEN ( Extent8.BANK_ID IS NOT NULL ) THEN Extent8.CODE ELSE '' END C6  
+                                                                FROM SAL0074D Extent1
+									                                     JOIN SAL0001D Extent2   ON ( 8 <> Extent2.STUS_CODE_ID )
+									                                     AND ( Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID )
+									                                     AND ( 66 = Extent2.APP_TYPE_ID )
+									                                     AND ( Extent2.CUST_ID <> #{testparam} ) -- CUST_ID
+									                                     JOIN SAL0002D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
+									                                     JOIN SYS0026M Extent4   ON Extent4.STK_ID = Extent3.ITM_STK_ID
+									                                     JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent2.APP_TYPE_ID
+									                                     JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent2.STUS_CODE_ID
+									                                     JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.MODE_ID
+									                                     LEFT JOIN SYS0004M Extent8   ON Extent8.BANK_ID = Extent1.BANK_ID
+									                                     LEFT JOIN PAY0022D Extent9   ON Extent9.RENT_SO_ID = Extent2.SALES_ORD_ID
+                                                             WHERE  ( Extent1.CUST_ID =#{testparam} ) -- CUST_ID
+                                                                 AND ( 1 = Extent1.IS_3RD_PARTY ) ) Project1
+                                            GROUP BY Project1.SALES_ORD_ID,Project1.SALES_ORD_NO,Project1.STK_CODE,Project1.STK_DESC,Project1.CODE,Project1.CODE_NAME,Project1.CODE1,Project1.CODE2,Project1.C1,Project1.C2,Project1.C3,Project1.C4,Project1.C5,Project1.C6 ) GroupBy1 ) Project2 ) Project2
+                ORDER BY Project2.SALES_ORD_NO ASC
+                  ]]>
+    </select>
+    <select id="selectCustomerDetailAddr" parameterType="Map" resultType="egovMap">
+			 <![CDATA[ 
+			  SELECT Limit1.CUST_ADD_ID CUST_ADD_ID  ,
+			       Limit1.C1 C1  ,
+			       Limit1.C2 C2  ,
+			       Limit1.C3 C3  ,
+			       Limit1.C4 C4  ,
+			       Limit1.C5 C5  ,
+			       Limit1.C6 C6  ,
+			       Limit1.C7 C7  ,
+			       Limit1.C8 C8  ,
+			       Limit1.C9 C9  ,
+			       Limit1.C10 C10  ,
+			       Limit1.C11 C11  ,
+			       Limit1.C12 C12  ,
+			       Limit1.C13 C13  ,
+			       Limit1.NAME NAME  ,
+			       Limit1.CUST_ID CUST_ID  ,
+			       Limit1.CRT_USER_ID CRT_USER_ID  ,
+			       Limit1.C14 C14  ,
+			       TO_CHAR(Limit1.C15, 'DD-MM-YYYY') C15  ,
+                   TO_CHAR(TO_DATE(Limit1.C16, 'YYYY-MM-DD'), 'DD-MM-YYYY') C16  ,
+			       Limit1.C17 C17  ,
+			       Limit1.C18 C18  
+			  FROM ( SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+			                Extent1.CUST_ID CUST_ID  ,
+			                Extent1.CRT_USER_ID CRT_USER_ID  ,
+			                Extent2.NAME NAME  ,
+			                CASE WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END C1  ,
+			                CASE WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END C2  ,
+			                CASE WHEN ( Extent1.ADD3 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD3)) ELSE '' END C3  ,
+			                CASE WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID ELSE 0 END C4  ,
+			                CASE  WHEN ( Extent3.POST_CODE_ID IS NOT NULL ) THEN Extent3.POST_CODE ELSE '' END C5  ,
+			                CASE  WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID ELSE 0 END C6  ,
+			                CASE  WHEN ( Extent4.AREA_ID IS NOT NULL ) THEN Extent4.AREA_NAME ELSE '' END C7  ,
+			                CASE  WHEN ( Extent1.STATE_ID IS NOT NULL ) THEN Extent1.STATE_ID ELSE 0 END C8  ,
+			                CASE  WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME ELSE '' END C9  ,
+			                CASE WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID ELSE 0 END C10  ,
+			                CASE  WHEN ( Extent6.CNTY_ID IS NOT NULL ) THEN Extent6.NAME ELSE '' END C11  ,
+			                CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM ELSE '' END C12  ,
+			                CASE  WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END C13  ,
+			                CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END C14  ,
+			                CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD'))) THEN Extent1.CRT_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END C15  ,
+			                CASE  WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01')) THEN Extent1.UPD_DT ELSE '1900-01-01' END C16  ,
+			                CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END C17  ,
+			                CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END C18  
+			         FROM SAL0023D Extent1
+			                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+			                LEFT JOIN SYS0030C Extent3   ON Extent3.POST_CODE_ID = Extent1.POST_CODE_ID
+			                LEFT JOIN SYS0039M Extent4   ON Extent4.AREA_ID = Extent1.AREA_ID
+			                LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_ID
+			                LEFT JOIN SYS0015M Extent6   ON Extent6.CNTY_ID = Extent1.CNTY_ID
+			                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+			                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
+			          WHERE  (8 <> Extent1.STUS_CODE_ID)
+			                   AND ( Extent1.CUST_ADD_ID = #{addrparam} ) AND ROWNUM <= 1 ) Limit1
+			       ]]>
     </select>
 </mapper>
