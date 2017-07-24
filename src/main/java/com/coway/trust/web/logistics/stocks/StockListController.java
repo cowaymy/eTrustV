@@ -224,15 +224,26 @@ public class StockListController {
 		}
 		
 		int stockId =   (int)params.get("stockId");
+		List<Object> removeLIst   =  (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 		List<Object> addLIst 		= (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		//List<Object> removeLIst   = params.get(AppConstants.AUIGRID_REMOVE);
-		logger.info("수정 : {}", addLIst.toString());
+		//logger.debug("수정 : {}", addLIst.toString());
+		//logger.debug("delete : {}", removeLIst.toString());
 		logger.debug("stockId id : {}", params.get("stockId"));
 		
+		
 		int cnt = 0;
-		if(addLIst.size() > 0){
-			cnt = stock.addServiceInfoGrid(stockId,addLIst,loginId);
+		
+		if(!removeLIst.isEmpty()){
+    		if(removeLIst.size() > 0){
+    			cnt = stock.removeServiceInfoGrid(stockId,removeLIst,loginId);
+    		}
+    		
+		}else if (!addLIst.isEmpty()) {
+			if(addLIst.size() > 0){
+				cnt = stock.addServiceInfoGrid(stockId,addLIst,loginId);
+			}
 		}
+		
 		
 		
 		ReturnMessage message = new ReturnMessage();

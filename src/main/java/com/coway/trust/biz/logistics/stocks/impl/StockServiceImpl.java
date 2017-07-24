@@ -165,5 +165,19 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		// TODO Auto-generated method stub
 		return cnt;
 	}
+
+	@Override
+	public int removeServiceInfoGrid(int stockId, List<Object> removeLIst, String loginId) {
+		// TODO Auto-generated method stub
+		int  cnt =0;
+		Map<String, Object> param = new HashMap<>();
+		param.put("stockId", stockId);
+		param.put("crtUserId", loginId);
+		for(Object obj : removeLIst ){
+			param.put("packageid", ((Map<String, Object>) obj).get("packageid"));
+			cnt = cnt + stockMapper.removeServiceInfoGrid(param);
+		}
+		return cnt;
+	}
 	
 }

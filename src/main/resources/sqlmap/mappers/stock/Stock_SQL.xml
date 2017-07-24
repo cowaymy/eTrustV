@@ -492,4 +492,22 @@
          <select id="selectPacId" parameterType="Map" resultType="Integer">
             SELECT NVL(MAX(PRC_ID),0)+1 FROM SAL0016M
          </select>
+         
+<!--          <update id="removeServiceInfoGrid" parameterType="Map">
+            UPDATE SAL0016M
+              SET MEM_PACT_ID  = 0
+              , UPD_USER_ID       = 
+              , UPD_DT               =
+             WHERE 1=1
+               AND STK_ID=
+               AND MEM_PAC_ID
+         </update> -->
+         
+         
+         <delete id="removeServiceInfoGrid" parameterType="Map" >
+            DELETE FROM SAL0016M
+            WHERE 
+                 MEM_PAC_ID = #{packageid}
+                 AND STK_ID   = #{stockId}
+         </delete>
 </mapper>

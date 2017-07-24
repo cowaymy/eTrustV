@@ -38,4 +38,6 @@ public interface StockService {
 
 	int addServiceInfoGrid(int stockId, List<Object> addLIst, String loginId);
 
+	int removeServiceInfoGrid(int stockId, List<Object> removeLIst, String loginId);
+
 }

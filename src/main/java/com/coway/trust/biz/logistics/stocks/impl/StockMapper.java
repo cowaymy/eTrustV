@@ -31,4 +31,6 @@ public interface StockMapper {
 	int addServiceInfoGrid(Map<String, Object> param);
 
 	int selectPacId();
+
+	int removeServiceInfoGrid(Map<String, Object> param);
 }
