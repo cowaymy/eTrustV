@@ -46,7 +46,7 @@
     
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "8","codeName": "Inactive"}];
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
-    var instockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
+    var instockgradecomboData = [{"codeId": "A","codeName": "A"}];
     
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"locid"      ,headerText:"WHID"           ,width:"8%"  ,height:30 , visible:true},
@@ -213,10 +213,12 @@
         
     
         $("#insert").click(function(){
- 
+        	$("#detailView").hide();
+        
             fn_insertWare();
             
             insDialog = $( "#registWindow" ).dialog({
+            	
                /* autoOpen: false, */
                 height: 540,
                 width: 800,
@@ -226,21 +228,6 @@
                  buttons: {
                   "저장": function(event){
                 	  inValidation();
-                  Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) {  
-                  }, function(jqXHR, textStatus, errorThrown) {
-                      alert("실패하였습니다.");
-                      console.log("실패하였습니다.");
-                      console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-                      
-                      alert(jqXHR.responseJSON.message);
-                      console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-                    
-                      console.log("status : " + jqXHR.status);
-                      console.log("code : " + jqXHR.responseJSON.code);
-                      console.log("message : " + jqXHR.responseJSON.message);
-                      console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-                      
-                  });
                   },
                   "취소": function(event) {
                   insDialog.dialog( "close" );
@@ -249,7 +236,17 @@
         });      
     });    
         
-       
+        $("#delete").click(function(){
+            $("#detailView").hide();
+            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+            if (selectedItem[0] > -1){
+            	fn_deleteWare(selectedItem[0]);
+            }else{
+            Common.alert('Choice Data please..');
+            }
+          
+        });     
+               
     });
     
   
@@ -292,42 +289,110 @@
 
 	    doDefCombo(instockgradecomboData, '' ,'instockgrade', 'S', '');
 	    $("#instockgrade option:eq(1)").prop("selected", true);
-	    $("#instockgrade").attr("disabled","disabled");
+ 	    $("#instockgrade").attr("disabled",true);	
+ 	   $('input').attr("disabled",true)//는 input 요소 설정 을 disabled
+ 	  $('input').attr("disabled",false)
+ 	    
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch', 'S' , ''); //브런치 등록
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , 'this.value','incountry', 'S', ''); //주소 등록
-        doDefCombo('', '' ,'instate', 'S', ''); 
+         doDefCombo('', '' ,'instate', 'S', ''); 
         doDefCombo('', '' ,'inarea', 'S', '');
-        doDefCombo('', '' ,'inpostcd', 'S', '');     
+        doDefCombo('', '' ,'inpostcd', 'S', '');    
          
     }
   
-  function inValidation(){
-	   alert("111111111111111111");
-	   var incountry = $("#incountry").val();
-	   var instate = $("#instate").val();
-	   var inarea = $("#inarea").val();
-	   var inpostcd = $("#inpostcd").val();
-	   
-	   alert("incountry :    "+incountry);
-	   
-	   if($("#incountry").val() == null || $("#incountry").val() == undefined){
-	       $("#incountry").val('0');
-	   }
-	  
-	   if(instate == null || instate == "" ){
-	       $("#instate").val('0');
-	   }
-	   if(inarea == null || inarea == "" ){
-	       $("#inarea").val('0');
-	   }
-	   if(inpostcd == null || inpostcd == "" ){
-	       $("#inpostcd").val('0');
-	   }
-	       
-	   alert($("#incountry").val());
+  function fn_deleteWare(rowid){      
+	  var locid=AUIGrid.getCellValue(myGridID ,rowid,'locid');	    
+      var param = "?locid="+locid;
+        $.ajax({
+          type : "POST",
+          url : "/logistics/organization/locationDelete.do"+param,
+          dataType : "json",               
+          contentType : "application/json;charset=UTF-8",
+          success : function(result) {
+          Common.alert(result.message);
+          $("#search").click();
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+              alert("실패하였습니다.");
+          }
+      });  
+      
 
-	             
-	    }
+  }
+  
+  
+  function inValidation(){
+   
+	   var inwarecd = $("#inwarecd").val().trim();
+	   var inwarenm = $("#inwarenm").val().trim();
+	   var instockgrade = $("#instockgrade").val().trim();
+	   var inwarebranch = $("#inwarebranch").val().trim();
+	   var incontact1 = $("#incontact1").val().trim();  
+	   var incontact2 = $("#incontact2").val().trim();   
+	   
+	   if(inwarecd == null || inwarecd == "" ){
+           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           $("#inwarecd").focus();
+           return;
+     }  
+	   if(inwarenm == null || inwarenm == "" ){
+           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           $("#inwarenm").focus();
+           return;
+     }
+	   if(instockgrade == null || instockgrade == "" ){
+           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           $("#instockgrade").focus();
+           return;
+     }
+	   if(inaddr1 == null || inaddr1 == "" ){
+           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           $("#inaddr1").focus();
+           return;
+     }
+	   
+       if(inwarebranch == null || inwarebranch == "" ){
+           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           $("#inwarebranch").focus();
+           return;
+     }
+       
+       if(incontact1 == null || incontact1 == "" ){
+           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
+           $("#incontact1").focus();
+           return;
+     }
+
+  	   if(isNaN(incontact1) || isNaN(incontact2) ){
+           Common.alert('Contact number is invalid. Please key in only number in contact field.'); 
+           return;
+     }   
+  	    $('#instockgrade').attr("disabled",false)
+  	     Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
+          Common.alert(result.message);
+          insDialog.dialog( "close" );
+          $('#insForm')[0].reset();
+          /* $("#search").click(); */
+          }, function(jqXHR, textStatus, errorThrown) {
+        	  Common.alert("실패하였습니다.");
+              console.log("실패하였습니다.");
+              console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+              
+              alert(jqXHR.responseJSON.message);
+              console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+            
+              console.log("status : " + jqXHR.status);
+              console.log("code : " + jqXHR.responseJSON.code);
+              console.log("message : " + jqXHR.responseJSON.message);
+              console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+              
+          });
+  }
+  
+  
+  
+  
 
     function updateGridRow(){
     	//AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
@@ -431,6 +496,7 @@
             }
         });       
     }
+     
     
     function f_showModal(){
         $.blockUI.defaults.css = {textAlign:'center'}
@@ -556,7 +622,7 @@
 
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.del' /></a></p></li>
+    <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
@@ -710,7 +776,7 @@
 <tbody>
 <tr>
     <th scope="row">Warehouse Code</th>
-    <td colspan="3"><input type="text" name="inwarecd" id="inwarecd"/></td>    
+    <td colspan="3"><input type="text" name="inwarecd" id="inwarecd" maxlength="10"/></td>    
 </tr>
 <tr>
     <th scope="row">Warehouse Name</th>
