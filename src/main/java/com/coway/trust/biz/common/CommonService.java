@@ -7,6 +7,7 @@ import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+@SuppressWarnings("unused")
 public interface CommonService {
 
 	List<EgovMap> selectCodeList(Map<String, Object> params);
@@ -82,5 +83,8 @@ public interface CommonService {
 	List<EgovMap> selectAddrSelCode(Map<String, Object> params);
 	
 	List<EgovMap> selectProductCodeList();
+
+	List<EgovMap> selectInStckSelCodeList(Map<String, Object> params);
+
 	
 }
