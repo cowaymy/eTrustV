@@ -212,6 +212,12 @@ public class StockListController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(srvMembershipList);
 	}
+	/**
+	 * 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/modifyServiceInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> modifyServiceInfo(@RequestBody Map<String, Object> params,
 			Model model) {
@@ -252,4 +258,49 @@ public class StockListController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/modifyFilterInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> modifyFilterInfo(@RequestBody Map<String, Object> params,
+			Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="99999999";			
+		}else{
+			loginId=sessionVO.getId();
+		}
+		
+		int stockId =   (int)params.get("stockId");
+		String revalue = (String)params.get("revalue"); 
+		List<Object> removeLIst   =  (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		List<Object> addLIst 		= (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		//logger.debug("수정 : {}", addLIst.toString());
+		//logger.debug("delete : {}", removeLIst.toString());
+		logger.debug("stockId id : {}", params.get("stockId"));
+		
+		
+		int cnt = 0;
+		
+		if(!removeLIst.isEmpty()){
+    		if(removeLIst.size() > 0){
+    			cnt = stock.removeFilterInfoGrid(stockId,removeLIst,loginId,revalue);
+    		}
+    		
+		}else if (!addLIst.isEmpty()) {
+			if(addLIst.size() > 0){
+				cnt = stock.addFilterInfoGrid(stockId,addLIst,loginId,revalue);
+			}
+		}
+		
+		
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
 }
+
+
