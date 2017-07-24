@@ -77,4 +77,6 @@ public interface CommonMapper {
 
 	List<EgovMap> selectProductCodeList();
 
+	List<EgovMap> selectInStckSelCodeList(Map<String, Object> params);
+
 }
