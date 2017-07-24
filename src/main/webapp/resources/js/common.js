@@ -200,8 +200,9 @@ var Common = {
 	 * @param _jsonObj
 	 * @param _callback
 	 * @returns divObj
+	 * @returns isManualClose : 개발자가 수동으로 div 팝업창을 닫으려면 true
 	 */
-	popupDiv : function(_url, _jsonObj, _callback) {
+	popupDiv : function(_url, _jsonObj, _callback, _isManualClose) {
 
 		/*
 		 * 팝업시 left/top 제외 시킴. => /webapp/WEB-INF/tiles/layout/default.jsp
@@ -211,11 +212,12 @@ var Common = {
 			isPop : true,
 			isDiv 	: true // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp	
 		});
-
-		// TODO : div 팝업 class 적용 필요.
+		
 		var $obj = $('<div id="_popupDiv"></div>');
 
 		$('body').append($obj);
+
+		$("#_popupDiv").attr("manualClose", _isManualClose); 
 
 		$.ajax({
 			type : 'post',
@@ -233,7 +235,9 @@ var Common = {
 						_callback(_jsonObj);
 					}
 
-					$obj.remove();
+					if($("#_popupDiv").attr("manualClose") != "true"){
+						$obj.remove();						
+					}
 				});
 
 			},
@@ -340,7 +344,7 @@ var Common = {
 	 * @param message
 	 */
 	alert : function(message, callback) {
-		var msgHtml = '<div id="popup_wrap" class="msg_box">'
+		var msgHtml = '<div id="popup_wrap" alert="Y" class="msg_box">'
 				+ '	<header class="pop_header">' 
 				+ '<h1>Message</h1>'
 				+ '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
@@ -379,7 +383,7 @@ var Common = {
 	 */
 	confirm : function(message, okCallback, cancelCallback) {
 
-		var msgHtml = '<div id="popup_wrap" class="msg_box">'
+		var msgHtml = '<div id="popup_wrap"  confirm="Y" class="msg_box">'
 				+ '	<header class="pop_header">' 
 				+ '<h1>Message</h1>'
 				+ '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
