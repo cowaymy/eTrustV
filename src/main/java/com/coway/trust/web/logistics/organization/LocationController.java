@@ -11,39 +11,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.coway.trust.util.CommonUtils;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.coway.trust.AppConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.organization.LocationService;
-import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.cmmn.model.ReturnMessage;
-
-import egovframework.rte.fdl.property.EgovPropertyService;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 @RequestMapping(value = "/logistics/organization")
@@ -59,6 +52,10 @@ public class LocationController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
+	
 
 	@RequestMapping(value = "/Location.do")
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -128,9 +125,30 @@ public class LocationController {
 	}
 	
 	
+	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/insLocation.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> insLocation(@RequestParam Map<String, Object> params, Model model) {
-
+		
+		/*SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		loginId=sessionVO.getId();*/
+		CommonUtils com = new CommonUtils();
+		
+/*		logger.debug("inwarecd : {}", params.get("inwarecd"));
+		logger.debug("inwarenm : {}", params.get("inwarenm"));
+		logger.debug("inaddr1 : {}", params.get("inaddr1"));
+		logger.debug("inaddr2 : {}", params.get("inaddr2"));	
+		logger.debug("inaddr3 : {}", params.get("inaddr3"));
+		logger.debug("incontact1 : {}", params.get("incontact1"));
+		logger.debug("incontact2 : {}", params.get("incontact2"));
+		logger.debug("incountry : {}", params.get("incountry"));
+		logger.debug("instate : {}", params.get("instate"));
+		logger.debug("inarea : {}", params.get("inarea"));
+		logger.debug("inpostcd : {}", params.get("inpostcd"));	
+		logger.debug("inwarebranch : {}", params.get("inwarebranch"));
+		logger.debug("loginId&&&*****@@@@@ : {}",loginId);*/
+		logger.debug("instockgrade : {}", params.get("instockgrade"));	
+			
 		String inwarecd     = (String) params.get("inwarecd");
 		String inwarenm     = (String) params.get("inwarenm");
 		String inaddr1     = (String) params.get("inaddr1");
@@ -138,6 +156,12 @@ public class LocationController {
 		String inaddr3     = (String) params.get("inaddr3");
 		String incontact1     = (String) params.get("incontact1");
 		String incontact2     = (String) params.get("incontact2");
+		String instockgrade     = (String) params.get("instockgrade");
+		String inwarebranch     = (String) params.get("inwarebranch");
+		int incnty     = com.intNvl((String) params.get("incountry"));
+		int instat     = com.intNvl((String) params.get("instate"));
+		int inarea     = com.intNvl((String) params.get("inarea"));
+		int inpost     = com.intNvl((String) params.get("inpostcd"));		
 		
 		Map<String, Object> insmap = new HashMap();				
 		
@@ -148,19 +172,19 @@ public class LocationController {
 		insmap.put("inaddr3", inaddr3);
 		insmap.put("incontact1" , incontact1 );
 		insmap.put("incontact2"  ,incontact2);
-		insmap.put("inarea"  ,1);
-		insmap.put("inpost"  ,2 );
-		insmap.put("instat"  ,3 );
-		insmap.put("incnty"  ,4);
-		insmap.put("inbranch"  ,5);
-		insmap.put("intype_id"  ,6);
-		insmap.put("ingrad"  , 'A' );
-		insmap.put("instus_id"  ,7);
-		insmap.put("inup_user_id"  ,8 );
-		insmap.put("incode2"  ,"");
-		insmap.put("indesc2","" );
-		insmap.put("inis_sync" ,9);
-		insmap.put("inmobile"  ,1234 );		
+		insmap.put("inarea"  , inarea);
+		insmap.put("inpost"  , inpost );
+		insmap.put("incnty"  , incnty);
+		insmap.put("instat"  ,instat );
+		insmap.put("intype_id"  ,277);
+		insmap.put("incode2"  ,inwarecd);
+		insmap.put("instus_id"  ,1);
+		insmap.put("ingrad"  , instockgrade );
+		insmap.put("indesc2",inwarenm);
+		insmap.put("inup_user_id"  ,1112 );
+		insmap.put("inbranch"  ,inwarebranch);
+		insmap.put("inis_sync" ,0);
+		insmap.put("inmobile"  ,0);		
 		
 		loc.insertLocationInfo(insmap);
 		
@@ -174,6 +198,22 @@ public class LocationController {
 	}
 	
 	
+	@RequestMapping(value = "/locationDelete.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteLocation(ModelMap model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String locid        = request.getParameter("locid");
+		
+		Map<String, Object> smap = new HashMap();
+		smap.put("locid"  , locid);
+		
+		loc.deleteLocationInfo(smap);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
 	
 	
 	
