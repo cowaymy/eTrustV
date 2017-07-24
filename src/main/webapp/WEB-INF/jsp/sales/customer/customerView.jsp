@@ -1,78 +1,226 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
-
-// AUIGrid 생성 후 반환 ID
-var addrGridID;
-var contactGridID;
+//AUIGrid 생성 후 반환 ID
+var addrGridID; // address list
+var contactGridID; // contact list
+var bankAccountGirdID; // bank account list
+var creditCardGridID; // credit card list
+var ownOrderGridID; // own order list
+var thirdPartyGridID; // third party list
 
 $(document).ready(function(){
+	//AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
+    addrGridID = GridCommon.createAUIGrid("#address_grid_wrap", addrColumnLayout, '', gridPros);  // address list
+    contactGridID = GridCommon.createAUIGrid("#contact_grid_wrap", contactColumnLayout, gridPros); // contact list
+    bankAccountGirdID = GridCommon.createAUIGrid("#bank_grid_wrap", bankColumnLayout, gridPros); // bank account list
+    creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout, gridPros); // credit card list
+    ownOrderGridID = GridCommon.createAUIGrid("#ownorder_grid_wrap", ownOrderColumnLayout,gridPros); // own order list
+    thirdPartyGridID = GridCommon.createAUIGrid("#thirdparty_grid_wrap", thirdPartyColumnLayout,gridPros);// third party list 
     
-    // AUIGrid 그리드를 생성합니다. (address, contact , )
-    addrGridID = GridCommon.createAUIGrid("#address_grid_wrap", addrColumnLayout, gridPros);
-    contactGridID = GridCommon.createAUIGrid("#contact_grid_wrap", contactColumnLayout, gridPros);
-    //Call Ajax
-    fn_getCustomerAddressAjax(); // address
-    fn_getCustomerContactAjax(); // contact
     //
-    AUIGrid.setSelectionMode(addrGridID, "singleRow");
+   /*  AUIGrid.setSelectionMode(addrGridID, "singleRow"); */
+    //Call Ajax
+    fn_getCustomerAddressAjax(); // address list
+    fn_getCustomerContactAjax(); // contact list
+    fn_getCustomerBankAjax(); // bank account list
+    fn_getCustomerCreditCardAjax(); // credit card list
+    fn_getCustomerOwnOrderAjax(); // own order list
+    fn_getCustomerThirdPartyAjax(); // third party list
 });
-
-
-
-// ajax View 조회.
-	// address Ajax
-	function fn_getCustomerAddressAjax() {        
-	    Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList",$("#searchForm").serialize(), function(result) {
-	       
-	        console.log("성공.");
-	        console.log("address data : " + result);
-	        AUIGrid.setGridData(addrGridID, result);
-	    });
-	}
-	// contact Ajax
-	function fn_getCustomerContactAjax(){
-		Common.ajax("GET", "/sales/customer/selectCustomerContactJsonList",$("#searchForm").serialize(), function(result) {
-	           
-            console.log("성공.");
-            console.log("Customer data : " + result);
+ // ajax View 조회.
+    // address Ajax
+    function fn_getCustomerAddressAjax() {        
+        Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList",null, function(result) {
+            AUIGrid.setGridData(addrGridID, result);
+        });
+    }
+    // contact Ajax
+    function fn_getCustomerContactAjax(){
+        Common.ajax("GET", "/sales/customer/selectCustomerContactJsonList",null, function(result) {
             AUIGrid.setGridData(contactGridID, result);
         });
-	}
-
+    }
+    // bank Ajax
+    function fn_getCustomerBankAjax(){
+        Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList",null, function(result) {
+            AUIGrid.setGridData(bankAccountGirdID, result);
+        });
+    }
+    // creaditcard Ajax
+    function fn_getCustomerCreditCardAjax(){
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList",null, function(result) {
+            AUIGrid.setGridData(creditCardGridID, result);
+        });
+    }
+    // own Order Ajax
+    function fn_getCustomerOwnOrderAjax(){
+        Common.ajax("GET", "/sales/customer/selectCustomerOwnOrderJsonList",null, function(result) {
+            AUIGrid.setGridData(ownOrderGridID, result);
+        });
+    }
+    // third party Ajax
+    function fn_getCustomerThirdPartyAjax(){
+        Common.ajax("GET", "/sales/customer/selectCustomerThirdPartyJsonList",null, function(result) {
+            AUIGrid.setGridData(thirdPartyGridID, result);
+        });
+    }
 //AUIGrid 칼럼 설정
 //데이터 형태는 다음과 같은 형태임,
 //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-	// Address Column
-	var addrColumnLayout = [ {
-		  dataField : "c1",
-		  headerText : "Address",
-		  width : 100
-		 }, {
-		  dataField : "c2",
-		  headerText : "Address",
-		  width : 100
-		 }, {
-		  dataField : "c3",
-		  headerText : "Address",
-		  width : 100
-	}];
-	
-	// Contact Column
-	var contactColumnLayout= [ {
-        dataField : "c5",
-        headerText : "Name",
-        width : 100
-       }, {
-        dataField : "c9",
-        headerText : "c9",
-        width : 100
-       }, {
-        dataField : "c13",
-        headerText : "c13",
-        width : 100
-	}];
-
+    // Address Column
+    var addrColumnLayout = [ 
+         {dataField : "name", headerText : "Status", width : 100}, 
+         {dataField : "addr", headerText : "Address", width : 100},
+         {dataField : "custAddId", headerText : "hidden", width:100, visible : false},
+         {
+        	 dataField : "undefined", 
+        	 headerText : "View", 
+        	 width : 120,
+             renderer : {
+            	      type : "ButtonRenderer", 
+            	      labelText : "View", 
+            	      onclick : function(rowIndex, columnIndex, value, item) {
+            	    	  //pupupWin
+            	    	  $("#addrparam").val(item.custAddId);
+            	    	  Common.popupWin("addrForm", "/sales/customer/selectCustomerAddrDetailView.do");
+                    }
+             }
+         }];
+    
+    // Contact Column
+    var contactColumnLayout= [ 
+          {dataField : "name", headerText : "Status", width : 100},
+          {dataField : "c9", headerText : "Name", width : 100},
+          {dataField : "c16", headerText : "Tel(Mobile)", width : 100},
+          {dataField : "c17", headerText : "Tel(Office)",width : 100},
+          {dataField : "c18", headerText : "Tel(Residence)", width : 100 },
+          {dataField : "c15",headerText : "Tel(Fax)",width : 100},
+          {
+        	  dataField : "undefined",
+        	  headerText : "View",
+        	  width : 120,
+              renderer : {
+                    type : "ButtonRenderer",
+                    labelText : "View",
+                    onclick : function(rowIndex, columnIndex, value, item) {
+                        /* value 에 해당 키값 가져가야함 */
+                        alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                    }
+             }
+         }];
+    // Bank Column
+     var bankColumnLayout= [
+            {dataField : "c7", headerText : "Account Holder", width : 100}, 
+            {dataField : "c10", headerText : "Type", width : 100}, 
+            {dataField : "c5", headerText : "Issue Bank", width : 100},
+            {dataField : "c1", headerText : "Account No", width : 100},
+            {
+            	dataField : "undefined",
+            	headerText : "View",
+            	width : 120,
+            	renderer : {
+                   type : "ButtonRenderer",
+                   labelText : "View",
+                   onclick : function(rowIndex, columnIndex, value, item) {
+                       /* value 에 해당 키값 가져가야함 */
+                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                   }
+            }
+        }]; 
+    // CreditCard Column
+    var creditCardColumnLayout = [
+           {dataField : "c6", headerText : "Name On Card", width : 100}, 
+           {dataField : "codeName", headerText : "Card Type", width : 100}, 
+           {dataField : "c10", headerText : "Type", width : 100},
+           {dataField : "c4", headerText : "Issue Bank", width : 100},
+           {dataField : "c8", headerText : "Credit Card No", width : 100},
+           {dataField : "c5", headerText : "Expiry", width : 100},
+           {
+        	   dataField : "undefined",
+        	   headerText : "View",
+        	   width : 120,
+        	   renderer : {
+                   type : "ButtonRenderer",
+                   labelText : "View",
+                   onclick : function(rowIndex, columnIndex, value, item) {
+                       /* value 에 해당 키값 가져가야함 */
+                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                   }
+            }
+    }];
+    // Own Order Column
+    var ownOrderColumnLayout = [
+           { dataField : "c3", headerText : "Order No", width : 100},
+           { dataField : "c4", headerText : "Order Date", width : 100},
+           { dataField : "c6", headerText : "App Type", width : 100},
+           { dataField : "c9", headerText : "Status", width : 100},
+           { dataField : "c12", headerText : "Product", width : 100},
+           { dataField : "c14", headerText : "Paymode", width : 100 },
+           { dataField : "c15", headerText : "Issue Bank", width : 100},
+           { dataField : "c16", headerText : "Outstanding", width : 100},
+           { 
+        	   dataField : "undefined", 
+        	   headerText : "View Ledger", 
+        	   width : 120,
+        	   renderer : {
+        		   type : "ButtonRenderer",
+        		   labelText : "View Ledger",
+        		   onclick : function(rowIndex, columnIndex, value, item) {
+                   /* value 에 해당 키값 가져가야함 */
+                   alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                   }
+                }
+           },
+           {
+        	   dataField : "undefined",
+        	   headerText : "View Order",
+        	   width : 120,
+        	   renderer : {
+        		   type : "ButtonRenderer",
+        		   labelText : "View Order",
+        		   onclick : function(rowIndex, columnIndex, value, item) {
+                   /* value 에 해당 키값 가져가야함 */
+                   alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+               }
+        }
+    }];
+    // Thrid Party Order Column
+    var thirdPartyColumnLayout = [
+         {dataField : "salesOrdNo",headerText : "Order No", width : 100},
+         {dataField : "c1", headerText : "Order Date", width : 100},
+         {dataField : "code", headerText : "App Type", width : 100},
+         {dataField : "code1", headerText : "Status", width : 100},
+         {dataField : "stkDesc", headerText : "Product", width : 100},
+         {dataField : "code2", headerText : "Paymode",width : 100},
+         {dataField : "c6", headerText : "Issue Bank", width : 100},
+         {dataField : "c7",headerText : "Outstanding", width : 100},
+         {
+        	 dataField : "undefined",
+        	 headerText : "View Ledger",
+        	 width : 120,
+        	 renderer : {
+        		 type : "ButtonRenderer",
+        		 labelText : "View Ledger",
+        		 onclick : function(rowIndex, columnIndex, value, item) {
+        			 /* value 에 해당 키값 가져가야함 */
+        			 alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+        			 }
+             }
+         },{
+        	 dataField : "undefined",
+        	 headerText : "View Order",
+        	 width : 120,
+        	 renderer : {
+        		 type : "ButtonRenderer",
+        		 labelText : "View Order",
+        		 onclick : function(rowIndex, columnIndex, value, item) {
+                   /* value 에 해당 키값 가져가야함 */
+                   alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+               }
+        }
+    }];
+    
 //그리드 속성 설정
 var gridPros = {
         
@@ -82,7 +230,7 @@ var gridPros = {
         // 한 화면에 출력되는 행 개수 10(기본값:10)
         pageRowCount : 10,
         
-        editable : true,
+        editable : false,
         
         fixedColumnCount : 1,
         
@@ -111,7 +259,9 @@ var gridPros = {
 </script>
 </head>
 <body>
-
+<form id="addrForm">
+    <input type="hidden"  id="addrparam" name="addrparam"/>
+</form>
 <div id="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1>View Customer</h1>
@@ -133,7 +283,7 @@ var gridPros = {
         <li><a href="#">Main Address</a></li>
         <li><a href="#">Main Contact</a></li>
     </ul>
-
+    <!-- ######### basic info ######### -->
     <article class="tap_area"><!-- tap_area start -->
     <table class="type1"><!-- table start -->
     <caption>table</caption>
@@ -166,7 +316,11 @@ var gridPros = {
         <th scope="row">Custormer Name</th>
         <td colspan="3">${result.name }</td>
         <th scope="row">Create By</th>
-        <td>${result.c1}</td>
+        <td>
+            <c:if test="${result.c1 ne 0}">
+                ${result.c1}
+            </c:if>
+        </td>
     </tr>
     <tr>
         <th scope="row">NRIC/Company Number</th>
@@ -188,7 +342,11 @@ var gridPros = {
         <th scope="row">Gender</th>
         <td>${result.c10}</td>
         <th scope="row">DOB</th>
-        <td>${result.c8}</td>
+        <td>
+            <c:if test="${result.c8 ne '01-01-1900'}">
+                ${result.c8}
+            </c:if>
+        </td>
         <th scope="row">Race</th>
         <td>${result.c14 }</td>
     </tr>
@@ -202,14 +360,14 @@ var gridPros = {
     </tr>
     <tr>
         <th scope="row">Remark</th>
-        <td colspan="5">${result.reamrk}</td>
+        <td colspan="5">${result.reMark}</td>
     </tr>
     </tbody>
     </table><!-- table end -->
     </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
     
+    <!-- ######### main address info ######### -->
+    <article class="tap_area"><!-- tap_area start -->
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -225,7 +383,7 @@ var gridPros = {
             </tr>
             <tr>
                 <th scope="row">Remark</th>
-                <td></td>
+                <td>${addresinfo.c12}</td>
             </tr>
     </c:if>
     
@@ -233,8 +391,8 @@ var gridPros = {
     </table><!-- table end -->
     </article><!-- tap_area end -->
 
+    <!-- ######### main Contact info ######### -->
     <article class="tap_area"><!-- tap_area start -->
-    
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -253,19 +411,28 @@ var gridPros = {
         <td></td>
         <th scope="row">Gender</th>
         <td>
-            <c:if test="${contactinfo.c6 eq 'M'}">
-                Male
-            </c:if>
-            <c:if test="${contactinfo.c6 eq 'F'}">
-                Female
-            </c:if>
+            <c:choose >
+                <c:when test="${contactinfo.c6 eq 'M'}">
+                     Male
+                </c:when>
+                <c:when test="${contactinfo.c6 eq 'F'}">
+                     Female
+                </c:when>
+                <c:otherwise>
+                    ${contactinfo.c6}
+                </c:otherwise>
+            </c:choose>
         </td>
     </tr>
     <tr>
         <th scope="row">NRIC</th>
         <td>${contactinfo.c10}</td>
         <th scope="row">DOB</th>
-        <td>${contactinfo.c4}</td>
+        <td>
+            <c:if test="${contactinfo.c4 ne  '01-01-1900'}">
+                ${contactinfo.c4}
+            </c:if> 
+        </td>
         <th scope="row">Race</th>
         <td>${contactinfo.c13}</td>
     </tr>
@@ -292,13 +459,11 @@ var gridPros = {
     </tbody>
     </table><!-- table end -->
     </article><!-- tap_area end -->
-
     </section><!-- tap_wrap end -->
-
     </dd>
+    <!-- ######### Customer Address List ######### -->
     <dt class="click_add_on"><a href="#">Customer Address List</a></dt>
     <dd>
-
     <ul class="right_btns">
         <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
         <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
@@ -308,10 +473,10 @@ var gridPros = {
     </ul>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="address_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+        <div id="address_grid_wrap" style="width:500; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
-
     </dd>
+    <!-- ######### Customer Contact List ######### -->
     <dt class="click_add_on"><a href="#">Customer Contact List</a></dt>
     <dd>
     
@@ -328,6 +493,7 @@ var gridPros = {
     </article><!-- grid_wrap end -->
 
     </dd>
+    <!-- ######### Customer Bank Account List ######### -->
     <dt class="click_add_on"><a href="#">Customer Bank Account List</a></dt>
     <dd>
     
@@ -340,10 +506,11 @@ var gridPros = {
     </ul>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="cust_bank_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+        <div id="bank_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
 
     </dd>
+    <!-- ######### Customer Credit Card List ######### -->
     <dt class="click_add_on"><a href="#">Customer Credit Card List</a></dt>
     <dd>
     
@@ -356,10 +523,11 @@ var gridPros = {
     </ul>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="cust_card_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+        <div id="creditcard_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
 
     </dd>
+    <!-- ######### Own Order(s) List ######### -->
     <dt class="click_add_on"><a href="#">Own Order(s)</a></dt>
     <dd>
     
@@ -372,10 +540,11 @@ var gridPros = {
     </ul>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="own_order_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+        <div id="ownorder_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
 
     </dd>
+    <!-- #########hird Party Order(s) List ######### -->
     <dt class="click_add_on"><a href="#">Third Party Order(s)</a></dt>
     <dd>
     
@@ -386,17 +555,15 @@ var gridPros = {
         <li><p class="btn_grid"><a href="#">INS</a></p></li>
         <li><p class="btn_grid"><a href="#">ADD</a></p></li>
     </ul>
-
+    
     <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="third_party_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+        <div id="thirdparty_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
 
     </dd>
 </dl>
 </article><!-- acodi_wrap end -->
-
 </section><!-- pop_body end -->
-
 </div><!-- popup_wrap end -->
 </body>
 </html>
