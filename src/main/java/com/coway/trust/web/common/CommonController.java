@@ -457,5 +457,13 @@ public class CommonController {
 		List<EgovMap> codeList = commonService.selectProductCodeList();
 		return ResponseEntity.ok(codeList);
 	}
+	@RequestMapping(value = "/selectInStckSelCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectInStckSelCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap> codeList = commonService.selectInStckSelCodeList(params);
+		logger.info("selectInStckSelCodeList: {}", codeList.toString());
+		return ResponseEntity.ok(codeList);
+	}
+
 	
 }
