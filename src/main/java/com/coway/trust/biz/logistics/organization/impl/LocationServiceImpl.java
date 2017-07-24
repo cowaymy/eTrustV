@@ -63,6 +63,10 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		locMapper.insertLocationInfo(params);
 	}
 
+	public void deleteLocationInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		locMapper.deleteLocationInfo(params);
+	}
 	
 	
 }
