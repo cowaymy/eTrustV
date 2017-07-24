@@ -1,3 +1,4 @@
+
 package com.coway.trust.web.logistics.stocks;
 
 import java.util.ArrayList;
@@ -263,11 +264,11 @@ public class StockListController {
 	public ResponseEntity<ReturnMessage> modifyFilterInfo(@RequestBody Map<String, Object> params,
 			Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
+		int loginId ;
 		if(sessionVO==null){
-			loginId="99999999";			
+			loginId=99999999;			
 		}else{
-			loginId=sessionVO.getId();
+			loginId=sessionVO.getUserId();
 		}
 		
 		int stockId =   (int)params.get("stockId");

@@ -40,4 +40,9 @@ public interface StockService {
 
 	int removeServiceInfoGrid(int stockId, List<Object> removeLIst, int loginId);
 
+	int removeFilterInfoGrid(int stockId, List<Object> removeLIst, int loginId, String revalue);
+
+	int addFilterInfoGrid(int stockId, List<Object> addLIst, int loginId, String revalue);
+
+
 }

@@ -152,8 +152,8 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		Map<String, Object> param   = new HashMap<>();
 		param.put("stockId", stockId);
 		param.put("crtUserId", loginId);
+		param.put("pac_id", pac_id);
 		for(Object obj : addLIst ){
-			param.put("pac_id", pac_id);
 			param.put("packagename", ((Map<String, Object>) obj).get("packagename"));
 			param.put("chargeamt", (((Map<String, Object>) obj).get("chargeamt")==null)?0:((Map<String, Object>) obj).get("chargeamt"));
 			cnt = cnt + stockMapper.addServiceInfoGrid(param);
@@ -166,6 +166,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		return cnt;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int removeServiceInfoGrid(int stockId, List<Object> removeLIst, int loginId) {
 		// TODO Auto-generated method stub
@@ -179,5 +180,57 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		}
 		return cnt;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int removeFilterInfoGrid(int stockId, List<Object> removeLIst, int loginId,String revalue) {
+		int  cnt =0;
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("stockId", stockId);
+		param.put("crtUserId", loginId);
+		param.put("revalue", revalue);
+		for(Object obj : removeLIst ){
+			param.put("bom_part_id", ((Map<String, Object>) obj).get("stockid"));
+			//String bom_part_id = (String) ((Map<String, Object>) obj).get("typeid");
+			//param.put("bom_part_id", Integer.parseInt(bom_part_id));
+			cnt = cnt + stockMapper.removeFilterInfoGrid(param);
+		}
+		return cnt;
+	}
+
+	@SuppressWarnings({ "unchecked", "unused" })
+	@Override
+	public int addFilterInfoGrid(int stockId, List<Object> addLIst, int loginId,String revalue) {
+		int cnt =0;
+		
+		int bom_id = stockMapper.selectBomId();
+		logger.debug("bom_id : {}", bom_id);
+		Map<String, Object> param   = new HashMap<>();
+		param.put("stockId", stockId);
+		param.put("crtUserId", loginId);
+		param.put("revalue", revalue);
+		param.put("bom_id", bom_id);
+		logger.info("addLIst : {}", addLIst.toString());
+		for(Object obj : addLIst ){
+			String bom_stk_id =   (String) ((Map<String, Object>) obj).get("stockid");
+			String bom_part_qty= (String) ((Map<String, Object>) obj).get("qty");
+			param.put("bom_stk_id", Integer.parseInt(bom_stk_id));
+			param.put("bom_part_qty",  Integer.parseInt(bom_part_qty));
+			
+			if(revalue.equals("filter_info")){
+			String bom_part_id = (String) ((Map<String, Object>) obj).get("typeid");
+			String bom_part_priod = (String)((Map<String, Object>) obj).get("period");
+			param.put("bom_part_id", Integer.parseInt(bom_part_id));
+			param.put("bom_part_priod", Integer.parseInt(bom_part_priod));
+			}
+			
+			cnt = cnt + stockMapper.addFilterInfoGrid(param);
+		}
+
+		return cnt;
+	}
+	
+	
 	
 }
