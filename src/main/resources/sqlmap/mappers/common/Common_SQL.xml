@@ -466,4 +466,28 @@
 		    BY T3.CODE_NAME ASC, T1.STK_DESC ASC
     ]]>
     </select>
+	<select id="selectInStckSelCodeList" parameterType="Map" resultType="egovMap">
+	        SELECT 
+	              <choose>
+	                  <when test="groupCode !=null and groupCode == 'filtercd'">
+	                   <![CDATA[
+						      STK.STK_ID CODE_ID
+					        , (STK.STK_CODE || ' - ' || STK.STK_DESC) CODE_NAME
+					      ]]>     
+	                  </when>
+	              </choose>
+	          FROM 
+	              <choose>
+	                  <when test="groupCode !=null and groupCode == 'filtercd'">
+	                      SYS0026M STK LEFT JOIN SYS0013M CD 
+	                      ON STK.STK_TYPE_ID = CD.CODE_ID
+						   WHERE STK.STK_TYPE_ID = 62
+						     AND STK.STK_CTGRY_ID = #{codevalue}
+						     AND STK.STUS_CODE_ID = 1
+						      ORDER BY CODE_NAME
+	                  </when>
+	              </choose>
+	    </select>    
+    
+    
 </mapper>
