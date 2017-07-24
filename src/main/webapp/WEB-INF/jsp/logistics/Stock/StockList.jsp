@@ -2,6 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/combodraw.js"></script>
 <style type="text/css">
 
 /* 커스텀 칼럼 스타일 정의 */
@@ -32,7 +33,8 @@
 #regFilterWind input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
 #regFilterWind fieldset { padding:0; border:0; margin-top:10px; }
 </style>
-<script type="text/javaScript" language="javascript">
+
+<script type="text/javaScript">
 
     // AUIGrid 생성 후 반환 ID
     var myGridID;
@@ -55,7 +57,11 @@
     
     
     var gridNm;
+    var chkNum;// 그리드 체크
+    
+    
     // AUIGrid 칼럼 설정
+    
     var columnLayout = [{dataField:"stkid"             ,headerText:"StockID"           ,width:120 ,height:30, visible : false},
                         {dataField:"stkcode"           ,headerText:"StockCode"         ,width:100 ,height:30},
                         {dataField:"stkdesc"           ,headerText:"StockName"         ,width:350 ,height:30},
@@ -89,11 +95,34 @@
                                 labelText : "Remove",
                                 onclick : function(rowIndex, columnIndex, value, item) {
                                     gridNm = filterGrid;
-                                   removeRow(rowIndex, gridNm);
+                                    chkNum =1;
+                                   removeRow(rowIndex, gridNm,chkNum);
                                 }
                             }
                         , editable : false
                         }];
+
+  var sparecolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
+                        {dataField:"stockname"           ,headerText:"Description"   ,width:"70%"},
+                       // {dataField:"stock"           ,headerText:"Desc"   ,width:"20%" , visible : false},
+                        //{dataField:"typeid"              ,headerText:"Type"          , visible : false},
+                        //{dataField:"typenm"              ,headerText:"TypeName"       , visible : false},
+                        //{dataField:"period"              ,headerText:"Period"        , visible : false},
+                        {dataField:"qty"                 ,headerText:"Qty"           ,width:"20%"},
+                        {
+                            dataField : "",
+                            headerText : "",
+                            renderer : {
+                                type : "ButtonRenderer",
+                                labelText : "Remove",
+                                onclick : function(rowIndex, columnIndex, value, item) {
+                                    gridNm = spareGrid;
+                                    chkNum =2;
+                                   removeRow(rowIndex, gridNm,chkNum);
+                                }
+                            }
+                        , editable : false
+                        }]; 
     
 var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"     ,width:120 , visible : false},
                      {dataField:"packagename"         ,headerText:"Description"   ,width:"70%",   
@@ -143,7 +172,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                              labelText : "Remove",
                              onclick : function(rowIndex, columnIndex, value, item) {
                                  gridNm = serviceGrid;
-                                 removeRow(rowIndex, gridNm);
+                                 chkNum=3;
+                                 removeRow(rowIndex, gridNm,chkNum);
                              }
                          }
                      , editable : false
@@ -173,7 +203,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                           {dataField:"udate"          ,headerText:"udate"     ,width:120 , visible : false},
                           {dataField:"uuser"          ,headerText:"uuser"     ,width:120, visible : false},
                           {dataField:"cdate"          ,headerText:"cdate"     ,width:120, visible : false},
-                          {dataField:"cuser"          ,headerText:"cuser"     ,width:120 , visible : false}]
+                          {dataField:"cuser"          ,headerText:"cuser"     ,width:120 , visible : false}];
 
  // 그리드 속성 설정
     var gridPros = {
@@ -246,10 +276,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $("#subDiv > .tap_area").eq(i).hide();
         }
         
-        AUIGrid.destroy(filterGrid); filterGrid  = null;
+ /*        AUIGrid.destroy(filterGrid); filterGrid  = null;
         AUIGrid.destroy(spareGrid);  spareGrid   = null;
         AUIGrid.destroy(serviceGrid);serviceGrid = null;
-        AUIGrid.destroy(imgGrid);    imgGrid     = null;
+        AUIGrid.destroy(imgGrid);    imgGrid     = null; */
         
     }
 
@@ -312,7 +342,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                f_removeclass();
                 $("#spare_info_div").show();
                 
-                spareAUIGrid(filtercolumn);
+                spareAUIGrid(sparecolumn);
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
@@ -405,6 +435,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             }
             
         });
+        
         $("#service_info_edit").click(function(){
              var selectedItems = AUIGrid.getSelectedItems(myGridID);
              
@@ -437,7 +468,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         });
         
         $("#filter_info_edit").click(function(){
-            //alert("filter_info_edit")
+        	
+        	 if ($("#filter_info_edit").text() == "Add Filter"){
             regDialog=$("#regFilterWindow").dialog({
                 //autoOpen: false,
                 resizable: false,
@@ -459,503 +491,694 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             });
             //$("#grid_wrap").hide();
             var comUrl= "/common/selectCodeList.do";
-            doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); //청구처 리스트 조회
+            doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
             //doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
-        });
-        $(".numberAmt").keyup(function(e) {
-            //regex = /^[0-9]+(\.[0-9]+)?$/g;
-            regex = /[^.0-9]/gi;
             
-            v = $(this).val();
-            if (regex.test(v)) {
-                var nn = v.replace(regex, '');
-                $(this).val(v.replace(regex, ''));
-                $(this).focus();
-                return;
-            }
-         });
+        }else if($("#filter_info_edit").text() == "SAVE"){
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            
+            console.log("selectedItems[0].item.stkid "+selectedItems[0].item.stkid);     	
+        	
+         // 추가된 행 아이템들(배열)
+            var addedRowItems = AUIGrid.getAddedRowItems(filterGrid);
+                 
+            // 수정된 행 아이템들(배열)
+            var editedRowItems = AUIGrid.getEditedRowColumnItems(filterGrid); 
+                
+            // 삭제된 행 아이템들(배열)
+            var removedRowItems = AUIGrid.getRemovedItems(filterGrid);
+
+            // 서버로 보낼 데이터 작성
+            var data = {
+                "add" : addedRowItems,
+                "update" : editedRowItems,
+                "remove" : removedRowItems
+            };
+
+            f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,data,"filter_info");  
+            
+            //serviceAUIGrid(servicecolumn); 
+        	
+        	
+        }
+        	 
         
     });
-    
-    function f_info_save(url , key , v , f){
-        var fdata ;
-          if(f == "service_info"){
-            fdata= v;
-        }else{
-          fdata = $("#"+v).serializeJSON();
-        }    
-        var keys = Object.keys(fdata);
-        console.log("keys "+ keys);
-        for ( var i in keys) {
-            console.log("key="+keys[i]+ ",  data="+ fdata[keys[i]]);
-            //+ ",  data="+ obj[keys[i]]);
-        }
-        if (v == "stockInfo" ){
-            if($("#cbSirim").is(":checked") == true){
-                //alert('1');
-                $.extend(fdata, {'cbSirim': '1'});
-            }else{
-                $.extend(fdata, {'cbSirim': '0'});
-            }
-            if($("#cbNCV").is(":checked") == true){
-                //alert('1');
-                $.extend(fdata, {'cbNCV': '1'});
-            }else{
-                $.extend(fdata, {'cbNCV': '0'});
-            }
-        }
-        $.extend(fdata, {'stockId': key});
-        $.extend(fdata, {'revalue': f});
         
-        Common.ajax("POST" , url , fdata , function(data){
-                                                    alert("msg "+data.msg);
-                                                    if (v == "stockInfo"){
-                                                        $("#stock_info_edit").text("EDIT");
-                                                    }else if (v == "priceForm"){
-                                                        $("#price_info_edit").text("EDIT");
-                                                    }else if (v=="service_info"){
-                                                        $("#service_info").text("EDIT");                                                        
-                                                    }
-                                                    getMainListAjax(data);
-                                               });
-    }
-        
-                       
-    function getMainListAjax(_da) {
-        
-        var param = $('#listForm').serialize();
-        var selcell = 0;
-        var selectedItems = AUIGrid.getSelectedItems(myGridID);
-        for(i=0; i<selectedItems.length; i++) {
-            selcell = selectedItems[i].rowIndex;
-        }
+ 
+	$("#spare_info_edit")
+				.click(
+						function() {
+							if ($("#spare_info_edit").text() == "Add Spare Part") {
+								regDialog = $("#regSpareWindow").dialog({
+									//autoOpen: false,
+									resizable : false,
+									height : 540,
+									width : 800,
+									modal : false,
+									position : {
+										my : "center",
+										at : "center",
+										of : $("#grid_wrap")
+									},
+									buttons : {
+										//"Save": updateGridRow,
+										//"Add Filter": addRowFileter,
+										"Add Spare Part" : function(event) {
+											addRowSparePart();
+											regDialog.dialog("close");
+										},
+										"Cancel" : function(event) {
+											regDialog.dialog("close");
+										}
+									}
+								});
+								//$("#grid_wrap").hide();
+								var comUrl = "/common/selectCodeList.do";
+								doGetCombo(comUrl, '11', '', 'categoryPop_sp',
+										'S', '');
+								//doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
 
-        $.ajax({
-            type : "POST",
-            url : "/stock/StockList.do?"+param,
-            //url : "/stock/StockList.do",
-            //data : param,
-            dataType : "json",
-            contentType : "application/json;charset=UTF-8",
-            success : function(data) {
-                var gridData = data;
-                AUIGrid.setGridData(myGridID, gridData.data);
-                AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
-                
-                
-                $("#"+_da.revalue).click();
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-                alert("실패하였습니다.");
-            },
-            complete: function(){
-            }
-        });       
-    }                      
-    
-    // AUIGrid 를 생성합니다.
-    function createAUIGrid(columnLayout) {
+							} else if ($("#spare_info_edit").text() == "SAVE") {
+								var selectedItems = AUIGrid
+										.getSelectedItems(myGridID);
 
-        // 실제로 #grid_wrap 에 그리드 생성
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+								console.log("selectedItems[0].item.stkid "
+										+ selectedItems[0].item.stkid);
 
-        //
-        AUIGrid.bind(myGridID, "cellClick", function(event) {
-            f_removeclass();
-            var selectedItems = event.selectedItems;
-            f_view("/stock/StockInfo.do?stkid="+AUIGrid.getCellValue(myGridID , event.rowIndex , "stkid") , "S");
-            $("#subDiv").show();
-            if (AUIGrid.getCellValue(myGridID , event.rowIndex , "stktypeid") == "61"){
-                $("#filter_info").show();
-                $("#spare_info").show();
-                $("#service_info").hide();
-            }else{
-                $("#service_info").show();
-                $("#filter_info").hide();
-                $("#spare_info").hide();
-            }
-            $("#stock_info_div").show();
-            $("#price_info_div").hide();
-            $("#filter_info_div").hide();
-            $("#service_info_div").hide();
-            $("#stock_img_td").hide();
-            $("#imgShow").html("");
-            $("#stock_info").find("a").attr("class","on");
-            /*if (){
-                
-            }*/
-        });
-    }
-    
-    /*function copyAUIGrid(columnLayout){
-        cpGridID = AUIGrid.create("#copy_grid", columnLayout, gridPros);
-    }*/
+								// 추가된 행 아이템들(배열)
+								var addedRowItems = AUIGrid
+										.getAddedRowItems(spareGrid);
 
-    // AUIGrid 를 생성합니다.
-    function filterAUIGrid(filtercolumn) {
-        filterGrid = AUIGrid.create("#filter_grid", filtercolumn, subgridpros);
-        /*AUIGrid.bind(filterGrid, "cellClick", function(event) {
-            
-            var selectedItems = AUIGrid.getSelectedItems(myGridID);
-            var typeid = "";
-            for(i=0; i<selectedItems.length; i++) {
-                typeid = selectedItems[i].item.stkdesc;
-            }            
-            
-            var selIdx = AUIGrid.getSelectedIndex(filterGrid); // 현재 선택한 행, 칼럼 인덱스 얻기
-            dataField = AUIGrid.getDataFieldByColumnIndex(filterGrid, selIdx[1]); // 칼럼 인덱스로 dataField 얻기
-            
-            item = {};
-            item["stock"] = typeid;
-            AUIGrid.updateRow(filterGrid, item, "selectedIndex");
-        });*/
-    }
-    
-    function spareAUIGrid(filtercolumn){
-        spareGrid = AUIGrid.create("#spare_grid", filtercolumn, subgridpros);
-    }
+								// 수정된 행 아이템들(배열)
+								var editedRowItems = AUIGrid
+										.getEditedRowColumnItems(spareGrid);
 
-    function serviceAUIGrid(servicecolumn) {
-        serviceGrid = AUIGrid.create("#service_grid", servicecolumn, subgridpros);
-    }
+								// 삭제된 행 아이템들(배열)
+								var removedRowItems = AUIGrid
+										.getRemovedItems(spareGrid);
 
-    function imgAUIGrid(stockimgcolumn) {
-        imgGrid = AUIGrid.create("#stock_img_div", stockimgcolumn, subgridpros);
-    }
+								// 서버로 보낼 데이터 작성
+								var data = {
+									"add" : addedRowItems,
+									"update" : editedRowItems,
+									"remove" : removedRowItems
+								};
 
+								f_info_save("/stock/modifyFilterInfo.do",
+										selectedItems[0].item.stkid, data,
+										"spare_info");
 
-    function getSampleListAjax() {
-        
-        //$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
-        f_showModal();
-        var param = $('#listForm').serialize();
+								//serviceAUIGrid(servicecolumn); 
 
-        $.ajax({
-            type : "POST",
-            url : "/stock/StockList.do?"+param,
-            //url : "/stock/StockList.do",
-            //data : param,
-            dataType : "json",
-            contentType : "application/json;charset=UTF-8",
-            success : function(data) {
-                var gridData = data;
+							}
 
-                AUIGrid.setGridData(myGridID, gridData.data);
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-                alert("실패하였습니다.");
-            },
-            complete: function(){
-                hideModal();
-                //$.unblockUI();
-            }
-        });       
-    }
-    
-    function f_showModal(){
-        $.blockUI.defaults.css = {textAlign:'center'}
-        $('div.SalesWorkDiv').block({
-                message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
-                centerY: false,
-                centerX: true,
-                css: { top: '300px', border: 'none'} 
-        });
-    }
-    function hideModal(){
-        $('div.SalesWorkDiv').unblock();
-        
-    }
+						});
 
-    function f_view(url , v) {
-        f_clearForm();
-        $.ajax({
-            type : "POST",
-            url : url,
-            dataType : "json",
-            contentType : "application/json;charset=UTF-8",
-            success : function(_data) {
-                var data = _data.data;
-                f_info(data , v);
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-                alert("실패하였습니다.");
-            }
-        });       
-    }
+	});
+	$(".numberAmt").keyup(function(e) {
+		//regex = /^[0-9]+(\.[0-9]+)?$/g;
+		regex = /[^.0-9]/gi;
 
-    function f_info(data , v){
-        
-        if (v == 'S'){
-            $("#txtStockType").empty();
-            $("#txtStockCode").empty();
-            $("#txtUOM").empty();
-            
-            $("#txtStockName").empty();
-            $("#txtCategory").empty();
-            
-            $("#txtNetWeight").empty();
-            $("#txtMeasurement").empty();
-            
-            $("#txtStockType").text(data[0].typenm);
-            $("#txtStatus").text(data[0].statusname);        
-            $("#txtStockCode").text(data[0].stockcode);      
-            $("#txtUOM").text(data[0].uomname);              
-            $("#txtStockName").text(data[0].stockname);      
-            $("#txtCategory").text(data[0].categotynm);
-            
-            $("#txtNetWeight").text(data[0].netweight);      
-            $("#txtGrossWeight").text(data[0].grossweight);  
-            $("#txtMeasurement").text(data[0].mcbm);
+		v = $(this).val();
+		if (regex.test(v)) {
+			var nn = v.replace(regex, '');
+			$(this).val(v.replace(regex, ''));
+			$(this).focus();
+			return;
+		}
+	});
 
-            if (data[0].isncv == 1){
-                $("#cbNCV").prop("checked",true);
-            }
-            if (data[0].issirim == 1){
-                $("#cbSirim").prop("checked",true);
-            }
-            $("#cbNCV").prop("disabled",true);
-            $("#cbSirim").prop("disabled",true);
-            
-            
-            $("#typeid").val(data[0].typeid);
-        }else if (v == 'ES'){
-            $("#cbNCV").prop("disabled",false);
-            $("#cbSirim").prop("disabled",false);
-            
-            $("#txtStockType").text(data[0].typenm); 
-            $("#txtStockType").append("<input type='hidden' name='stock_type' id='stock_type' value=''/>");
-            $("#stock_type").val(data[0].typeid);
-            $("#txtStatus").text(data[0].statusname);        
-            $("#txtStockCode").html("<input type='text' name='stock_code' id='stock_code' value='' disabled=true/>");
-            $("#stock_code").val(data[0].stockcode);      
-            $("#txtUOM").html("<select id='stock_uom' name='stock_uom'></select>");
-            doGetCombo('/common/selectCodeList.do', '42', data[0].uomname,'stock_uom', 'S'); //청구처 리스트 조회
-            $("#txtStockName").html("<input type='text' name='stock_name' id='stock_name' value=''/>");
-            $("#stock_name").val(data[0].stockname);
-            $("#txtCategory").html("<select id='stock_category' name='stock_category'></select>");
-            doGetCombo('/common/selectCodeList.do', '11', data[0].categotynm,'stock_category', 'S'); //청구처 리스트 조회
-            $("#txtNetWeight").html("<input type='text' name='netweight' id='netweight' value=''/>");
-            $("#netweight").val(data[0].netweight);      
-            $("#txtGrossWeight").html("<input type='text' name='grossweight' id='grossweight' value=''/>");
-            $("#grossweight").val(data[0].grossweight);  
-            $("#txtMeasurement").html("<input type='text' name='measurement' id='measurement' value=''/>");
-            $("#measurement").val(data[0].mcbm);
+	function f_info_save(url, key, v, f) {
+		var fdata;
+		if (f == "service_info" || f == "filter_info" || f == "spare_info") {
+			fdata = v;
+		} else {
+			fdata = $("#" + v).serializeJSON();
+		}
+		var keys = Object.keys(fdata);
+		console.log("keys " + keys);
+		for ( var i in keys) {
+			console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
+			//+ ",  data="+ obj[keys[i]]);
+		}
+		if (v == "stockInfo") {
+			if ($("#cbSirim").is(":checked") == true) {
+				$.extend(fdata, {
+					'cbSirim' : '1'
+				});
+			} else {
+				$.extend(fdata, {
+					'cbSirim' : '0'
+				});
+			}
+			if ($("#cbNCV").is(":checked") == true) {
+				$.extend(fdata, {
+					'cbNCV' : '1'
+				});
+			} else {
+				$.extend(fdata, {
+					'cbNCV' : '0'
+				});
+			}
+		}
+		$.extend(fdata, {
+			'stockId' : key
+		});
+		$.extend(fdata, {
+			'revalue' : f
+		});
 
-            if (data[0].isncv == 1){
-                $("#cbNCV").prop("checked",true);
-            }
-            if (data[0].issirim == 1){
-                $("#cbSirim").prop("checked",true);
-            }
-            $("#typeid").val(data[0].typeid);
-            $("#stock_info_edit").text("SAVE");
-        }else if (v == 'P'){
-            $("#txtCost").empty();
-            $("#txtNormalPrice").empty();
-            $("#txtPV").empty();
-            $("#txtMonthlyRental").empty();
-            $("#txtRentalDeposit").empty();
-            $("#txtPenaltyCharge").empty();
-            $("#txtTradeInPV").empty();
-            
-            $("#txtCost").text(data[0].pricecost);
-            $("#txtNormalPrice").text(data[0].amt);
-            $("#txtPV").text(data[0].pricepv);
-            $("#txtMonthlyRental").text(data[0].mrental);
-            $("#txtRentalDeposit").text(data[0].pricerpf);
-            $("#txtPenaltyCharge").text(data[0].penalty);
-            $("#txtTradeInPV").text(data[0].tradeinpv);
-        }else if (v == 'EP'){
-            var selectedItems = AUIGrid.getSelectedItems(myGridID);
-            var typeid = "";
-            for(i=0; i<selectedItems.length; i++) {
-                typeid = selectedItems[i].item.stktypeid;
-            }
-            $("#priceTypeid").val(typeid);
-            if (typeid == '61'){
-                $("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='numberAmt'/>"); //PriceCharges
-                $("#dPenaltyCharge").val(data[0].penalty);
-                $("#txtPV").html("<input type='text' name='dPV' id='dPV' value='' class='numberAmt'/>"); //PricePV
-                $("#dPV").val(data[0].pricepv);
-                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='numberAmt'/>"); //amt
-                $("#dMonthlyRental").val(data[0].mrental);
-                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='numberAmt'/>"); //PriceRPF
-                $("#dRentalDeposit").val(data[0].pricerpf);
-                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='numberAmt'/>"); //TradeInPV
-                $("#dTradeInPV").val(data[0].tradeinpv);
-            }else{
-                $("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='numberAmt'/>"); //PriceCharges
-                $("#dPenaltyCharge").val(data[0].penalty);
-                $("#txtPV").html("<input type='text' name='dPV' id='dPV' disabled=true value='' class='numberAmt'/>"); //PricePV
-                $("#dPV").val(data[0].pricepv);
-                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='numberAmt'/>"); //amt
-                $("#dMonthlyRental").val(data[0].mrental);
-                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='numberAmt'/>"); //PriceRPF
-                $("#dRentalDeposit").val(data[0].pricerpf);
-                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='numberAmt'/>"); //TradeInPV
-                $("#dTradeInPV").val(data[0].tradeinpv);
-            }
-            $("#txtCost").html("<input type='text' name='dCost' id='dCost' value='' class='numberAmt'/>"); //PriceCosting
-            $("#dCost").val(data[0].pricecost);
-            $("#txtNormalPrice").html("<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='numberAmt'/>"); // amt
-            $("#dNormalPrice").val(data[0].amt);
-            
-            $("#price_info_edit").text("SAVE");
-            
-        }else if(v == 'F'){
-            AUIGrid.setGridData(filterGrid, data);
-            
-        }else if(v == 'R'){
-            AUIGrid.setGridData(spareGrid, data);
-            
-        }else if(v == 'V'){
-            AUIGrid.setGridData(serviceGrid, data);
-            
-        }else if(v == 'I'){
-            AUIGrid.setGridData(imgGrid, data);
-            
-        }
-    }
+		Common.ajax("POST", url, fdata, function(data) {
+			//alert("msg "+data.msg);
+			if (v == "stockInfo") {
+				$("#stock_info_edit").text("EDIT");
+			} else if (v == "priceForm") {
+				$("#price_info_edit").text("EDIT");
+			} else if (v == "service_info") {
+				$("#service_info_edit").text("EDIT");
+			} else if (v == "filter_info") {
+				$("#filter_info_edit").text("Add Filter");
+			} else if (v == "spare_info") {
+				$("#spare_info_edit").text("Add Spare Part");
+			}
+			getMainListAjax(data);
+		});
+	}
 
-    //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-    //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-    //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-    // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-    doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //청구처 리스트 조회
-    doGetCombo('/common/selectCodeList.do', '15', '','cmbType', 'M' , 'f_multiCombo'); //청구처 리스트 조회
-    //doDefCombo(comboData, '' ,'cmbStatus', 'M', 'f_multiCombo');
-    
-    
+	function getMainListAjax(_da) {
 
-    function f_multiCombo(){
-        $(function() {
-            $('#cmbCategory').change(function() {
-            
-            }).multipleSelect({
-                selectAll: true, // 전체선택 
-                width: '80%'
-            });
-            $('#cmbType').change(function() {
-            
-            }).multipleSelect({
-                selectAll: true,
-                width: '80%'
-            });
-            $('#cmbStatus').change(function() {
-            
-            }).multipleSelect({
-                selectAll: true,
-                width: '80%'
-            });            
-        });
-    }
+		var param = $('#listForm').serialize();
+		var selcell = 0;
+		var selectedItems = AUIGrid.getSelectedItems(myGridID);
+		for (i = 0; i < selectedItems.length; i++) {
+			selcell = selectedItems[i].rowIndex;
+		}
 
-    function f_clearForm(){
-        $("#typeid").val("");
-        $("#txtStockType").text();         
-        $("#txtStatus").text();        
-        $("#txtStockCode").text();      
-        $("#txtUOM").text();              
-        $("#txtStockName").text();      
-        $("#txtCategory").text();      
-        $("#txtNetWeight").text();      
-        $("#txtGrossWeight").text();  
-        $("#txtMeasurement").text();
-        $("#cbNCV").prop("checked",false);
-        $("#cbSirim").prop("checked",false);
-        $("#txtCost").text();
-        $("#txtNormalPrice").text();
-        $("#txtPV").text();
-        $("#txtMonthlyRental").text();
-        $("#txtRentalDeposit").text();
-        $("#txtPenaltyCharge").text();
-        $("#txtTradeInPV").text();
-    }
-    
-    
-    
-    function f_isNumeric(val){
-        
-        var num = $(val).val();
-        
-        // 좌우 trim(공백제거)을 해준다.
-        num = String(num).replace(/^\s+|\s+$/g, "");
-        
-        /*if(typeof opt == "undefined" || opt == "1"){
-          // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
-          var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
-        }else if(opt == "2"){
-          // 부호 미사용, 자릿수구분기호 선택, 소수점 선택
-          var regex = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
-        }else if(opt == "3"){*/
-          // 부호 미사용, 자릿수구분기호 미사용, 소수점 선택
-          var regex = /^[0-9]+(\.[0-9]+)?$/g;
-        /*}else{
-          // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
-          var regex = /^[0-9]$/g;
-        }*/
-       
-        if( regex.test(num) ){
-          num = num.replace(/,/g, "");
-          
-          return isNaN(num) ? false : true;
-        }else{ return false;  }
-      }
-    function removeRow(rowIndex, gridNm) {
-        var rIdx=rowIndex;
-        var gNm=gridNm;
-        AUIGrid.removeRow(gNm,rIdx);
-        AUIGrid.removeSoftRows(gNm);
-        
-        var selectedItems = AUIGrid.getSelectedItems(myGridID);
-        var removedRowItems = AUIGrid.getRemovedItems(gNm);
+		$.ajax({
+			type : "POST",
+			url : "/stock/StockList.do?" + param,
+			//url : "/stock/StockList.do",
+			//data : param,
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var gridData = data;
+				AUIGrid.setGridData(myGridID, gridData.data);
+				AUIGrid.setSelectionByIndex(myGridID, selcell, 3);
 
-        // 서버로 보낼 데이터 작성
-        var data = {
-            "remove" : removedRowItems
-        };
-        alert("gNm "+gNm);
-/*         var str = gNm.toString();
-        var splitNm=str.subst(0,1).split('_');
-        //var splitNm=gNm.subst(0,1)
-        
-        alert("splitNm :"+ splitNm[1]); */
-        //f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,data,"service_info");  
-        //f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,data,"service_info");  
-       // console.log("data "+data);
-    }   
-    
-   function addRowSvr (){
-       var item = new Object();
-       AUIGrid.addRow(serviceGrid, item, "last");
-       $("#service_info_edit").text("SAVE");
-       } 
-   function addRowFileter(){
-       alert("addRowFileter");
-       var item = new Object();
-       item.stockid   =   $("#filtercdPop").val();
-       item.stockname =   $("#filtercdPop option:selected").text();
-      //item.stock     =   $("#").val();
-       item.typeid    =   $("#filtertypePop").val();
-       item.typenm    =   $("#filtertypePop option:selected").text();
-       item.period    =   $("#lifeperiodPop").val();
-       item.qty       =   $("#quantityPop").val();
-       AUIGrid.addRow(filterGrid, item, "last");
-       
-   }
-   function fn_srvMembershipList(){
-       Common.ajaxSync("GET", "/stock/srvMembershipList ", "", function(result) {
-           srvMembershipList  = new Array();
-               for (var i = 0; i < result.length; i++) {
-                   var list = new Object();
-                   list.pacid    = result[i].pacid;
-                   list.memcd  = result[i].memcd;
-                   list.cdname = result[i].cdname;
-                   srvMembershipList .push(list);
-               }
-   });
-   }
-   
+				$("#" + _da.revalue).click();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("실패하였습니다.");
+			},
+			complete : function() {
+			}
+		});
+	}
+
+	// AUIGrid 를 생성합니다.
+	function createAUIGrid(columnLayout) {
+
+		// 실제로 #grid_wrap 에 그리드 생성
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+
+		//
+		AUIGrid.bind(myGridID, "cellClick",
+				function(event) {
+					f_removeclass();
+					var selectedItems = event.selectedItems;
+					f_view("/stock/StockInfo.do?stkid="
+							+ AUIGrid.getCellValue(myGridID, event.rowIndex,
+									"stkid"), "S");
+					$("#subDiv").show();
+					if (AUIGrid.getCellValue(myGridID, event.rowIndex,
+							"stktypeid") == "61") {
+						$("#filter_info").show();
+						$("#spare_info").show();
+						$("#service_info").hide();
+					} else {
+						$("#service_info").show();
+						$("#filter_info").hide();
+						$("#spare_info").hide();
+					}
+					$("#stock_info_div").show();
+					$("#price_info_div").hide();
+					$("#filter_info_div").hide();
+					$("#service_info_div").hide();
+					$("#stock_img_td").hide();
+					$("#imgShow").html("");
+					$("#stock_info").find("a").attr("class", "on");
+					/*if (){
+					    
+					}*/
+				});
+	}
+
+	/*function copyAUIGrid(columnLayout){
+	    cpGridID = AUIGrid.create("#copy_grid", columnLayout, gridPros);
+	}*/
+
+	// AUIGrid 를 생성합니다.
+	function filterAUIGrid(filtercolumn) {
+		filterGrid = AUIGrid.create("#filter_grid", filtercolumn, subgridpros);
+		/*AUIGrid.bind(filterGrid, "cellClick", function(event) {
+		    
+		    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+		    var typeid = "";
+		    for(i=0; i<selectedItems.length; i++) {
+		        typeid = selectedItems[i].item.stkdesc;
+		    }            
+		    
+		    var selIdx = AUIGrid.getSelectedIndex(filterGrid); // 현재 선택한 행, 칼럼 인덱스 얻기
+		    dataField = AUIGrid.getDataFieldByColumnIndex(filterGrid, selIdx[1]); // 칼럼 인덱스로 dataField 얻기
+		    
+		    item = {};
+		    item["stock"] = typeid;
+		    AUIGrid.updateRow(filterGrid, item, "selectedIndex");
+		});*/
+	}
+
+	function spareAUIGrid(sparecolumn) {
+		spareGrid = AUIGrid.create("#spare_grid", sparecolumn, subgridpros);
+	}
+
+	function serviceAUIGrid(servicecolumn) {
+		serviceGrid = AUIGrid.create("#service_grid", servicecolumn,
+				subgridpros);
+	}
+
+	function imgAUIGrid(stockimgcolumn) {
+		imgGrid = AUIGrid.create("#stock_img_div", stockimgcolumn, subgridpros);
+	}
+
+	function getSampleListAjax() {
+
+		//$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
+		f_showModal();
+		var param = $('#listForm').serialize();
+
+		$.ajax({
+			type : "POST",
+			url : "/stock/StockList.do?" + param,
+			//url : "/stock/StockList.do",
+			//data : param,
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var gridData = data;
+
+				AUIGrid.setGridData(myGridID, gridData.data);
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("실패하였습니다.");
+			},
+			complete : function() {
+				hideModal();
+				//$.unblockUI();
+			}
+		});
+	}
+
+	function f_showModal() {
+		$.blockUI.defaults.css = {
+			textAlign : 'center'
+		}
+		$('div.SalesWorkDiv')
+				.block(
+						{
+							message : "<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
+							centerY : false,
+							centerX : true,
+							css : {
+								top : '300px',
+								border : 'none'
+							}
+						});
+	}
+	function hideModal() {
+		$('div.SalesWorkDiv').unblock();
+
+	}
+
+	function f_view(url, v) {
+		f_clearForm();
+		$.ajax({
+			type : "POST",
+			url : url,
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(_data) {
+				var data = _data.data;
+				f_info(data, v);
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("실패하였습니다.");
+			}
+		});
+	}
+
+	function f_info(data, v) {
+
+		if (v == 'S') {
+			$("#txtStockType").empty();
+			$("#txtStockCode").empty();
+			$("#txtUOM").empty();
+
+			$("#txtStockName").empty();
+			$("#txtCategory").empty();
+
+			$("#txtNetWeight").empty();
+			$("#txtMeasurement").empty();
+
+			$("#txtStockType").text(data[0].typenm);
+			$("#txtStatus").text(data[0].statusname);
+			$("#txtStockCode").text(data[0].stockcode);
+			$("#txtUOM").text(data[0].uomname);
+			$("#txtStockName").text(data[0].stockname);
+			$("#txtCategory").text(data[0].categotynm);
+
+			$("#txtNetWeight").text(data[0].netweight);
+			$("#txtGrossWeight").text(data[0].grossweight);
+			$("#txtMeasurement").text(data[0].mcbm);
+
+			if (data[0].isncv == 1) {
+				$("#cbNCV").prop("checked", true);
+			}
+			if (data[0].issirim == 1) {
+				$("#cbSirim").prop("checked", true);
+			}
+			$("#cbNCV").prop("disabled", true);
+			$("#cbSirim").prop("disabled", true);
+
+			$("#typeid").val(data[0].typeid);
+		} else if (v == 'ES') {
+			$("#cbNCV").prop("disabled", false);
+			$("#cbSirim").prop("disabled", false);
+
+			$("#txtStockType").text(data[0].typenm);
+			$("#txtStockType")
+					.append(
+							"<input type='hidden' name='stock_type' id='stock_type' value=''/>");
+			$("#stock_type").val(data[0].typeid);
+			$("#txtStatus").text(data[0].statusname);
+			$("#txtStockCode")
+					.html(
+							"<input type='text' name='stock_code' id='stock_code' value='' disabled=true/>");
+			$("#stock_code").val(data[0].stockcode);
+			$("#txtUOM").html(
+					"<select id='stock_uom' name='stock_uom'></select>");
+			doGetCombo('/common/selectCodeList.do', '42', data[0].uomname,
+					'stock_uom', 'S'); //청구처 리스트 조회
+			$("#txtStockName")
+					.html(
+							"<input type='text' name='stock_name' id='stock_name' value=''/>");
+			$("#stock_name").val(data[0].stockname);
+			$("#txtCategory")
+					.html(
+							"<select id='stock_category' name='stock_category'></select>");
+			doGetCombo('/common/selectCodeList.do', '11', data[0].categotynm,
+					'stock_category', 'S'); //청구처 리스트 조회
+			$("#txtNetWeight")
+					.html(
+							"<input type='text' name='netweight' id='netweight' value=''/>");
+			$("#netweight").val(data[0].netweight);
+			$("#txtGrossWeight")
+					.html(
+							"<input type='text' name='grossweight' id='grossweight' value=''/>");
+			$("#grossweight").val(data[0].grossweight);
+			$("#txtMeasurement")
+					.html(
+							"<input type='text' name='measurement' id='measurement' value=''/>");
+			$("#measurement").val(data[0].mcbm);
+
+			if (data[0].isncv == 1) {
+				$("#cbNCV").prop("checked", true);
+			}
+			if (data[0].issirim == 1) {
+				$("#cbSirim").prop("checked", true);
+			}
+			$("#typeid").val(data[0].typeid);
+			$("#stock_info_edit").text("SAVE");
+		} else if (v == 'P') {
+			$("#txtCost").empty();
+			$("#txtNormalPrice").empty();
+			$("#txtPV").empty();
+			$("#txtMonthlyRental").empty();
+			$("#txtRentalDeposit").empty();
+			$("#txtPenaltyCharge").empty();
+			$("#txtTradeInPV").empty();
+
+			$("#txtCost").text(data[0].pricecost);
+			$("#txtNormalPrice").text(data[0].amt);
+			$("#txtPV").text(data[0].pricepv);
+			$("#txtMonthlyRental").text(data[0].mrental);
+			$("#txtRentalDeposit").text(data[0].pricerpf);
+			$("#txtPenaltyCharge").text(data[0].penalty);
+			$("#txtTradeInPV").text(data[0].tradeinpv);
+		} else if (v == 'EP') {
+			var selectedItems = AUIGrid.getSelectedItems(myGridID);
+			var typeid = "";
+			for (i = 0; i < selectedItems.length; i++) {
+				typeid = selectedItems[i].item.stktypeid;
+			}
+			$("#priceTypeid").val(typeid);
+			if (typeid == '61') {
+				$("#txtPenaltyCharge")
+						.html(
+								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='numberAmt'/>"); //PriceCharges
+				$("#dPenaltyCharge").val(data[0].penalty);
+				$("#txtPV")
+						.html(
+								"<input type='text' name='dPV' id='dPV' value='' class='numberAmt'/>"); //PricePV
+				$("#dPV").val(data[0].pricepv);
+				$("#txtMonthlyRental")
+						.html(
+								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='numberAmt'/>"); //amt
+				$("#dMonthlyRental").val(data[0].mrental);
+				$("#txtRentalDeposit")
+						.html(
+								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='numberAmt'/>"); //PriceRPF
+				$("#dRentalDeposit").val(data[0].pricerpf);
+				$("#txtTradeInPV")
+						.html(
+								"<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='numberAmt'/>"); //TradeInPV
+				$("#dTradeInPV").val(data[0].tradeinpv);
+			} else {
+				$("#txtPenaltyCharge")
+						.html(
+								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='numberAmt'/>"); //PriceCharges
+				$("#dPenaltyCharge").val(data[0].penalty);
+				$("#txtPV")
+						.html(
+								"<input type='text' name='dPV' id='dPV' disabled=true value='' class='numberAmt'/>"); //PricePV
+				$("#dPV").val(data[0].pricepv);
+				$("#txtMonthlyRental")
+						.html(
+								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='numberAmt'/>"); //amt
+				$("#dMonthlyRental").val(data[0].mrental);
+				$("#txtRentalDeposit")
+						.html(
+								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='numberAmt'/>"); //PriceRPF
+				$("#dRentalDeposit").val(data[0].pricerpf);
+				$("#txtTradeInPV")
+						.html(
+								"<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='numberAmt'/>"); //TradeInPV
+				$("#dTradeInPV").val(data[0].tradeinpv);
+			}
+			$("#txtCost")
+					.html(
+							"<input type='text' name='dCost' id='dCost' value='' class='numberAmt'/>"); //PriceCosting
+			$("#dCost").val(data[0].pricecost);
+			$("#txtNormalPrice")
+					.html(
+							"<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='numberAmt'/>"); // amt
+			$("#dNormalPrice").val(data[0].amt);
+
+			$("#price_info_edit").text("SAVE");
+
+		} else if (v == 'F') {
+			AUIGrid.setGridData(filterGrid, data);
+
+		} else if (v == 'R') {
+			AUIGrid.setGridData(spareGrid, data);
+
+		} else if (v == 'V') {
+			AUIGrid.setGridData(serviceGrid, data);
+
+		} else if (v == 'I') {
+			AUIGrid.setGridData(imgGrid, data);
+
+		}
+	}
+
+	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
+	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
+	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
+	// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
+	doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M',
+			'f_multiCombo'); //청구처 리스트 조회
+	doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M',
+			'f_multiCombo'); //청구처 리스트 조회
+	//doDefCombo(comboData, '' ,'cmbStatus', 'M', 'f_multiCombo');
+
+	function f_multiCombo() {
+		$(function() {
+			$('#cmbCategory').change(function() {
+
+			}).multipleSelect({
+				selectAll : true, // 전체선택 
+				width : '80%'
+			});
+			$('#cmbType').change(function() {
+
+			}).multipleSelect({
+				selectAll : true,
+				width : '80%'
+			});
+			$('#cmbStatus').change(function() {
+
+			}).multipleSelect({
+				selectAll : true,
+				width : '80%'
+			});
+		});
+	}
+
+	function f_clearForm() {
+		$("#typeid").val("");
+		$("#txtStockType").text();
+		$("#txtStatus").text();
+		$("#txtStockCode").text();
+		$("#txtUOM").text();
+		$("#txtStockName").text();
+		$("#txtCategory").text();
+		$("#txtNetWeight").text();
+		$("#txtGrossWeight").text();
+		$("#txtMeasurement").text();
+		$("#cbNCV").prop("checked", false);
+		$("#cbSirim").prop("checked", false);
+		$("#txtCost").text();
+		$("#txtNormalPrice").text();
+		$("#txtPV").text();
+		$("#txtMonthlyRental").text();
+		$("#txtRentalDeposit").text();
+		$("#txtPenaltyCharge").text();
+		$("#txtTradeInPV").text();
+	}
+
+	function f_isNumeric(val) {
+
+		var num = $(val).val();
+
+		// 좌우 trim(공백제거)을 해준다.
+		num = String(num).replace(/^\s+|\s+$/g, "");
+
+		/*if(typeof opt == "undefined" || opt == "1"){
+		  // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
+		  var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+		}else if(opt == "2"){
+		  // 부호 미사용, 자릿수구분기호 선택, 소수점 선택
+		  var regex = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+		}else if(opt == "3"){*/
+		// 부호 미사용, 자릿수구분기호 미사용, 소수점 선택
+		var regex = /^[0-9]+(\.[0-9]+)?$/g;
+		/*}else{
+		  // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
+		  var regex = /^[0-9]$/g;
+		}*/
+
+		if (regex.test(num)) {
+			num = num.replace(/,/g, "");
+
+			return isNaN(num) ? false : true;
+		} else {
+			return false;
+		}
+	}
+
+	function removeRow(rowIndex, gridNm, num) {
+		var rIdx = rowIndex;
+		var gNm = gridNm;
+
+		var str;
+
+		if (num == 1) {
+			str = "filter_info";
+		} else if (num == 2) {
+			str = "spare_info";
+		}
+		AUIGrid.removeRow(gNm, rIdx);
+		AUIGrid.removeSoftRows(gNm);
+
+		var selectedItems = AUIGrid.getSelectedItems(myGridID);
+		var removedRowItems = AUIGrid.getRemovedItems(gNm);
+
+		// 서버로 보낼 데이터 작성
+		var data = {
+			"remove" : removedRowItems
+		};
+
+		if (num == 1 || num == 2) {
+
+			f_info_save("/stock/modifyFilterInfo.do",
+					selectedItems[0].item.stkid, data, str);
+
+		} else if (num == 3) {
+			f_info_save("/stock/modifyServiceInfo.do",
+					selectedItems[0].item.stkid, data, "service_info");
+
+		}
+
+		// console.log("data "+data);
+	}
+
+	function addRowSvr() {
+		var item = new Object();
+		AUIGrid.addRow(serviceGrid, item, "last");
+		$("#service_info_edit").text("SAVE");
+	}
+	function addRowFileter() {
+		var item = new Object();
+		item.stockid = $("#filtercdPop").val();
+		item.stockname = $("#filtercdPop option:selected").text();
+		//item.stock     =   $("#").val();
+		item.typeid = $("#filtertypePop").val();
+		item.typenm = $("#filtertypePop option:selected").text();
+		item.period = $("#lifeperiodPop").val();
+		item.qty = $("#quantityPop").val();
+		AUIGrid.addRow(filterGrid, item, "last");
+		$("#filter_info_edit").text("SAVE");
+
+	}
+	
+	function addRowSparePart(){
+        var item = new Object();
+        item.stockid = $("#sparecdPop").val();
+        item.stockname = $("#sparecdPop option:selected").text();
+        //item.stock     =   $("#").val();
+       // item.typeid = $("#filtertypePop").val();
+       // item.typenm = $("#filtertypePop option:selected").text();
+       // item.period = $("#lifeperiodPop").val();
+        item.qty = $("#quantityPop_sp").val();
+        AUIGrid.addRow(spareGrid, item, "last");
+        $("#spare_info_edit").text("SAVE");
+	}
+	
+	
+	function fn_srvMembershipList() {
+		Common.ajaxSync("GET", "/stock/srvMembershipList ", "",
+				function(result) {
+					srvMembershipList = new Array();
+					for (var i = 0; i < result.length; i++) {
+						var list = new Object();
+						list.pacid = result[i].pacid;
+						list.memcd = result[i].memcd;
+						list.cdname = result[i].cdname;
+						srvMembershipList.push(list);
+					}
+				});
+	}
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -1064,9 +1287,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     </colgroup>
                     <tbody>
                     <tr>
-                        <th scope="row">Stock Type</td>
+                        <th scope="row">Stock Type</th>
                         <td ID="txtStockType"></td>
-                        <th scope="row">Status</td>
+                        <th scope="row">Status</th>
                         <td ID="txtStatus"></td>
                         <td colspan="2">
                             <label><input type="checkbox" id="cbSirim"/><span>Sirim Certificate</span></label>
@@ -1074,24 +1297,24 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Stock Code</td>
+                        <th scope="row">Stock Code</th>
                         <td ID="txtStockCode"></td>
-                        <th scope="row">UOM</td>
+                        <th scope="row">UOM</th>
                         <td colspan="3" id="txtUOM"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Stock Name</td>
+                        <th scope="row">Stock Name</th>
                         <td colspan="3" id="txtStockName"></td>
-                        <th scope="row">Category</td>
+                        <th scope="row">Category</th>
                         <td ID="txtCategory"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Net Weight (KG)</td>
+                        <th scope="row">Net Weight (KG)</th>
                         <td ID="txtNetWeight"></td>
-                        <th scope="row">Gross Weight (KG)</td>
+                        <th scope="row">Gross Weight (KG)</th>
                         <td ID="txtGrossWeight"></td>
 
-                        <th scope="row">Measurement CBM</td>
+                        <th scope="row">Measurement CBM</th>
                         <td ID="txtMeasurement"></td>
                     </tr>
                     </tbody>
@@ -1120,23 +1343,23 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     </colgroup>
                     <tbody>
                     <tr>
-                        <th scope="row">Cost</td>
+                        <th scope="row">Cost</th>
                         <td ID="txtCost"></td>
-                        <th scope="row">Normal Price</td>
+                        <th scope="row">Normal Price</th>
                         <td ID="txtNormalPrice"></td>
-                        <th scope="row">Point of Value (PV)</td>
+                        <th scope="row">Point of Value (PV)</th>
                         <td ID="txtPV"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Monthly Rental</td>
+                        <th scope="row">Monthly Rental</th>
                         <td ID="txtMonthlyRental"></td>
-                        <th scope="row">Rental Deposit</td>
+                        <th scope="row">Rental Deposit</th>
                         <td ID="txtRentalDeposit"></td>
-                        <th scope="row">Penalty Charges</td>
+                        <th scope="row">Penalty Charges</th>
                         <td ID="txtPenaltyCharge"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Trade In (PV) Value</td>
+                        <th scope="row">Trade In (PV) Value</th>
                         <td colspan="5" ID="txtTradeInPV"></td>
                     </tr>
                     </tbody>
@@ -1182,7 +1405,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     </colgroup>
                     <tbody>
                     <tr>
-                        <td text-align:left;">
+                        <td  style="text-align: left;">
                             <div id="stock_img_div" style="width:100%;"></div></td>
                         <td >&nbsp;</td>
                         <td id="imgShow"></td>
@@ -1195,48 +1418,96 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
 <!-- registr filter-->
 
-<section class="pop_body"><!-- pop_body start -->
-<div id="regFilterWindow" style="display:none" title="그리드 수정 사용자 정의">
-<h1>Add Filter</h1>
-<form id="filterForm" name="filterForm" method="POST">
-<table class="type1"><!-- table start -->
-<caption>search table</caption>
-<colgroup>
-    <col style="width:120px" />
-    <col style="width:*" />
-    <col style="width:120px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Category</th>
-    <td colspan="3"><select id="categoryPop" name="categoryPop" onchange="getCdForStrockList('filtercdPop' , this.value , 'filtercd', '')" ></select></td>
-</tr>
-<tr>
-    <th scope="row">Filter Code</th>
-    <td colspan="3" class="w100p"><select id="filtercdPop"  class="w100p" name="filtercdPop"></select></td>    
-</tr>
-<tr>
-    <th scope="row">Filter Type</th>
-    <td colspan="3"><select id="filtertypePop">
-        <option value="310">Default</option>
-        <option value="311">Optional</option>
-    </select></td>
-</tr>
-<tr>
-    <th scope="row">Life Period</th>
-    <td><input type="number"  id="lifeperiodPop" name="lifeperiodPop" /></td colspan="2"><td align="left">month(s)</td>
-</tr>
-<tr>
-    <th scope="row" rowspan="3">Quantity</th>
-    <td colspan="3"><input type="number" id="quantityPop" name="quantityPop"/></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</form>
-</div>
-</section>
-</section><!-- content end -->
+		<section class="pop_body">
+			<!-- pop_body start -->
+			<div id="regFilterWindow" style="display: none" title="그리드 수정 사용자 정의">
+				<h1>Add Filter</h1>
+				<form id="filterForm" name="filterForm" method="POST">
+					<table class="type1">
+						<!-- table start -->
+						<caption>search table</caption>
+						<colgroup>
+							<col style="width: 120px" />
+							<col style="width: *" />
+							<col style="width: 120px" />
+							<col style="width: *" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<th scope="row">Category</th>
+								<td colspan="3"><select id="categoryPop" name="categoryPop"
+									onchange="getCdForStockList('filtercdPop' , this.value , 'filtercd', '')"></select></td>
+							</tr>
+							<tr>
+								<th scope="row">Filter Code</th>
+								<td colspan="3" class="w100p"><select id="filtercdPop"
+									class="w100p" name="filtercdPop"></select></td>
+							</tr>
+							<tr>
+								<th scope="row">Filter Type</th>
+								<td colspan="3"><select id="filtertypePop">
+										<option value="310">Default</option>
+										<option value="311">Optional</option>
+								</select></td>
+							</tr>
+							<tr>
+								<th scope="row">Life Period</th>
+								<td colspan="2"><input type="number" id="lifeperiodPop"
+									name="lifeperiodPop" /></td>
+								<td align="left">month(s)</td>
+							</tr>
+							<tr>
+								<th scope="row" rowspan="3">Quantity</th>
+								<td colspan="3"><input type="number" id="quantityPop"
+									name="quantityPop" /></td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- table end -->
+				</form>
+			</div>
+		</section>
+	
+	<!-- registr spare part-->
 
+       <section class="pop_body">
+            <div id="regSpareWindow" style="display: none" title="그리드 수정 사용자 정의">
+                <h1>Add Spare Part</h1>
+                <form id="spareForm" name="spareForm" method="POST">
+                    <table class="type1">
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 120px" />
+                            <col style="width: *" />
+                            <col style="width: 120px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Category</th>
+                                <td colspan="3"><select id="categoryPop_sp" name="categoryPop_sp"
+                                    onchange="getCdForStockList('sparecdPop' , this.value , 'sparecd', '')"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Spare Part Code</th>
+                                <td colspan="3" class="w100p"><select id="sparecdPop"
+                                    class="w100p" name="sparecdPop"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" rowspan="3">Quantity</th>
+                                <td colspan="3"><input type="number" id="quantityPop_sp"
+                                    name="quantityPop_sp" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </section> 
+        	
+		
+		
+		
+	</section><!-- content end -->
+</div>
 
 
