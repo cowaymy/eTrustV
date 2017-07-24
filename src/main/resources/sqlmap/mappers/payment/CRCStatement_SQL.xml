@@ -154,5 +154,15 @@
                 4238
             )            
     </update>
+    
+    
+    
+    <resultMap id="testMap" type="egovMap" />
+    <!-- testCallStoredProcedure  -->
+    <select id="testCallStoredProcedure" statementType="CALLABLE" parameterType="Map">
+        {
+        call SP_INST_RSC_ENRL(2,'20100616','20100616',4238,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=testMap})
+        }
+    </select>
 
 </mapper>

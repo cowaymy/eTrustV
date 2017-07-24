@@ -65,5 +65,12 @@ public interface CRCStatementMapper {
      * @param params
      */	
 	void insertCRCTransaction(Map<String, Object> params);
+	
+	/**
+	 * CRC Statement Transaction 리스트 조회
+	 * @param params
+	 * @return
+	 */
+	Map<String, Object> testCallStoredProcedure(Map<String, Object> param);
 
 }

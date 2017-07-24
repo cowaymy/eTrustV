@@ -42,4 +42,10 @@ public interface CRCStatementService
      * @param params
      */
     void updateCRCStatementUpload(Map<String, Object> crcSatementMap, List<Object> transactionList );
+    
+    /**
+     * testCallStoredProcedure
+     * @param params
+     */
+    Map<String, Object> testCallStoredProcedure(Map<String, Object> param);
 }

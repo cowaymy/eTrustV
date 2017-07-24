@@ -286,4 +286,54 @@ public class CRCStatementController {
     
     	return ResponseEntity.ok(message);
     }
+    
+    /**
+     * CRC Statement Transaction 정보 수정
+     * @param params
+     * @param model
+     * @return
+     * @RequestParam Map<String, Object> params
+     */
+    @RequestMapping(value = "/testCallStoredProcedure.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> testCallStoredProcedure(@RequestBody Map<String, ArrayList<Object>> params,
+    		Model model) {
+    	
+    	//parameter 객체를 생성한다. 프로시저에서 CURSOR 반환시 해당 paramter 객체에 리스트를 세팅한다.
+    	//프로시저에서 사용하는 parameter가 없어도 객체는 생성한다.
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	
+    	//프로시저 함수 호출
+    	crcStatementService.testCallStoredProcedure(param);
+    	
+    	//결과 뿌려보기 : 프로시저에서 p1이란 key값으로 객체를 반환한다.
+    	List<EgovMap> resultMapList = (List<EgovMap>)param.get("p1");
+    	
+
+		logger.debug("size : {}", resultMapList.size());
+        
+        if (resultMapList.size() > 0) {
+        	
+        	resultMapList.forEach(obj -> {
+                Map<String, Object> map = (Map<String, Object>) obj;
+                
+                //수정할 데이터 확인.(그리드 값)
+				logger.debug("ENRL_ID : {}", map.get("enrlId"));
+                logger.debug("BANK_ID : {}", map.get("bankId"));					
+                logger.debug("DEBT_DT_FROM : {}", map.get("debtDtFrom"));
+                logger.debug("DEBT_DT_TO : {}", map.get("debtDtTo"));
+                logger.debug("CRT_USER_ID : {}", map.get("crtUserId"));
+                logger.debug("CRT_DT : {}", map.get("crtDt"));
+                logger.debug("UPD_USER_ID : {}", map.get("updUserId"));
+                logger.debug("UPD_DT : {}", map.get("updDt"));
+                logger.debug("STUS_CODE_ID : {}", map.get("stusCodeId"));
+    		});
+    	}
+        
+    	// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage("Saved Successfully. Generate Running No : \n");
+    	
+    	return ResponseEntity.ok(message);
+    }
 }

@@ -110,4 +110,16 @@ public class CRCStatementServiceImpl extends EgovAbstractServiceImpl implements 
     	}
 	}
 	
+	/**
+     * CRC Statement 정보 등록
+     * @param params
+     */
+	@Override
+    public Map<String, Object> testCallStoredProcedure(Map<String, Object> param){
+		
+		return crcStatementMapper.testCallStoredProcedure(param);
+		
+		
+	}
+	
 }

@@ -211,6 +211,35 @@ function fn_saveGridMap(){
 function resetUpdatedItems() {
      AUIGrid.resetUpdatedItems(myGridID, "a");
  }
+ 
+ 
+ 
+
+//수정 처리
+function fn_testCallStoredProcedure(){
+	//param data array
+    var data = {};
+  //Ajax 호출
+  Common.ajax("POST", "/payment/testCallStoredProcedure.do", data, function(result) {
+      Common.setMsg(" success ");
+      
+      resetUpdatedItems(); // 초기화
+      
+      
+      
+  },  function(jqXHR, textStatus, errorThrown) {
+      try {
+          console.log("status : " + jqXHR.status);
+          console.log("code : " + jqXHR.responseJSON.code);
+          console.log("message : " + jqXHR.responseJSON.message);
+          console.log("detailMessage : "
+                  + jqXHR.responseJSON.detailMessage);
+      } catch (e) {
+          console.log(e);
+      }
+      alert("Fail : " + jqXHR.responseJSON.message);        
+  });
+}
 </script>
 <!-- content start -->
 <section id="content">
@@ -228,6 +257,8 @@ function resetUpdatedItems() {
 		<ul class="right_opt">
 			<li><p class="btn_blue multy"><a href="${pageContext.request.contextPath}/resources/download/CRC_Statement.csv">Download<br />CSV File Format</a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_testCallStoredProcedure();">sp test</a></p></li>
+			
 		</ul>
 	</aside>
 	<!-- title_line end -->
