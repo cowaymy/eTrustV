@@ -14,7 +14,6 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,7 +61,7 @@ public class LoginController {
 
 		ReturnMessage message = new ReturnMessage();
 
-		if (loginVO == null || StringUtils.isEmpty(loginVO.getUserId())) {
+		if (loginVO == null || loginVO.getUserId() == 0) {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "ID" }));
 		} else {

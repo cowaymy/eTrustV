@@ -66,6 +66,11 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 	
+	@RequestMapping(value = "/main.do")
+	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "common/main";
+	}
+	
 	
 /**************** Account Code Management *****************/	
 	
