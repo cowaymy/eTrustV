@@ -144,7 +144,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int addServiceInfoGrid(int stockId, List<Object> addLIst, String loginId) {
+	public int addServiceInfoGrid(int stockId, List<Object> addLIst, int loginId) {
 		int cnt =0;
 		
 		int pac_id = stockMapper.selectPacId();
@@ -167,7 +167,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 	}
 
 	@Override
-	public int removeServiceInfoGrid(int stockId, List<Object> removeLIst, String loginId) {
+	public int removeServiceInfoGrid(int stockId, List<Object> removeLIst, int loginId) {
 		// TODO Auto-generated method stub
 		int  cnt =0;
 		Map<String, Object> param = new HashMap<>();

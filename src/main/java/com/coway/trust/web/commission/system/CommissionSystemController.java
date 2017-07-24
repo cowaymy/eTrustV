@@ -148,7 +148,7 @@ public class CommissionSystemController {
 		if(sessionVO==null){
 			loginId="1000000000";			
 		}else{
-			loginId=sessionVO.getId();
+			loginId=sessionVO.getUserId();
 		}
 		
 		List<Object> udtList = params.get(AppConstants.AUIGrid_UPDATE); 	// Get gride UpdateList

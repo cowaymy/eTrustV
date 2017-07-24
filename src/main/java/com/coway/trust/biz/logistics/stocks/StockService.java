@@ -36,8 +36,8 @@ public interface StockService {
 
 	List<EgovMap> srvMembershipList(Map<String, Object> params);
 
-	int addServiceInfoGrid(int stockId, List<Object> addLIst, String loginId);
+	int addServiceInfoGrid(int stockId, List<Object> addLIst, int loginId);
 
-	int removeServiceInfoGrid(int stockId, List<Object> removeLIst, String loginId);
+	int removeServiceInfoGrid(int stockId, List<Object> removeLIst, int loginId);
 
 }

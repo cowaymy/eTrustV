@@ -23,7 +23,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
-		if (sessionVO != null && sessionVO.getId() != null) {
+		if (sessionVO != null && sessionVO.getUserId() > 0) {
 			checkAuthorized();
 			return true;
 		} else {

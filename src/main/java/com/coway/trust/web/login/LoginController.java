@@ -62,7 +62,7 @@ public class LoginController {
 
 		ReturnMessage message = new ReturnMessage();
 
-		if (loginVO == null || StringUtils.isEmpty(loginVO.getId())) {
+		if (loginVO == null || StringUtils.isEmpty(loginVO.getUserId())) {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "ID" }));
 		} else {

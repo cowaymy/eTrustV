@@ -249,29 +249,29 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		
 		mstAddList.forEach(list -> {
 			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getId());
-			map.put("updUserId", sessionVO.getId());
+			map.put("crtUserId", sessionVO.getUserId());
+			map.put("updUserId", sessionVO.getUserId());
 			commonMapper.addCommCodeGrid(map);
 		});
 		
 		mstUdtList.forEach(list -> {
 			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getId());
-			map.put("updUserId", sessionVO.getId());
+			map.put("crtUserId", sessionVO.getUserId());
+			map.put("updUserId", sessionVO.getUserId());
 			commonMapper.updCommCodeGrid(map);
 		});
 		
 		dtlAddList.forEach(list -> {
 			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getId());
-			map.put("updUserId", sessionVO.getId());
+			map.put("crtUserId", sessionVO.getUserId());
+			map.put("updUserId", sessionVO.getUserId());
 			commonMapper.addDetailCommCodeGrid(map);
 		});
 		
 		dtlUdtList.forEach(list -> {
 			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getId());
-			map.put("updUserId", sessionVO.getId());
+			map.put("crtUserId", sessionVO.getUserId());
+			map.put("updUserId", sessionVO.getUserId());
 			commonMapper.updDetailCommCodeGrid(map);
 		});
 		

@@ -3,14 +3,48 @@
 <mapper namespace="com.coway.trust.biz.login.impl.LoginMapper">
 
 	<select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
-			SELECT
-				user_name as id,
-                user_full_name as name,
-                user_mobile_no as phoneNumber
-			FROM SYS0047M
-			WHERE 1=1
-            AND user_name = #{userId}
-            AND user_passwd = #{password}
+	<![CDATA[
+        SELECT 
+            USR.USER_ID AS userId
+	       ,USR.USER_NAME AS userName
+	       ,USR.USER_FULL_NAME AS userFullName
+	       ,USR.USER_EMAIL AS userEmail
+	       ,USR.USER_STUS_ID AS userStatusId
+	       ,CASE
+	          WHEN (USR.USER_BRNCH_ID IS NOT NULL)
+	             THEN USR.USER_BRNCH_ID
+	          ELSE 0
+	       END AS userBranchId
+	       ,CASE
+	          WHEN (USR.USER_DEPT_ID IS NOT NULL)
+	             THEN USR.USER_DEPT_ID
+	          ELSE 0
+	       END AS userDeptId
+	       ,USR.USER_UPD_DT AS userUpdateAt
+	       ,USR.USER_PASSWD_LAST_UPD_DT AS userPasswdLastUpdateAt
+	       ,USR.USER_MOBILE_NO AS userMobileNo
+	       ,USR.USER_EXT_NO AS userExtNo
+	       ,USR.USER_IS_PART_TM AS userIsPartTime
+	       ,USR.USER_IS_EXTRNL AS userIsExternal
+	       ,STATUS.NAME AS statusName
+	       ,BRANCH.CODE
+	       ,BRANCH.NAME AS branchName
+	       ,SUPDEPT.DEPT_NAME AS deptName
+	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
+	       LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = USR.USER_BRNCH_ID
+	       LEFT OUTER JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
+	 WHERE USR.USER_NAME = #{userId}
+	   AND USR.USER_PASSWD = #{password}
+	   AND 1 = USR.USER_STUS_ID
+	   AND 1 <> USR.USER_TYPE_ID
+	   AND 2 <> USR.USER_TYPE_ID
+	   AND 3 <> USR.USER_TYPE_ID
+	   AND 1161 <> USR.USER_TYPE_ID
+	   AND 1165 <> USR.USER_TYPE_ID
+	   AND USR.USER_VAL_ID_FROM <= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+       AND USR.USER_VAL_ID_TO >= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	   AND ROWNUM = 1
+	]]>
 	</select>
 
 </mapper>
