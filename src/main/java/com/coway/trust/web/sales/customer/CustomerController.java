@@ -78,7 +78,8 @@ public class CustomerController {
 		
 		List<EgovMap> addresslist = null;
 		//TODO 추후 삭제
-		params.put("testparam", 31);
+		//CUST_ADD_ID
+		params.put("testparam", 1200);
 		logger.info("##### customer Address Parsing START #####");
 		addresslist = customerService.selectCustomerAddressJsonList(params);
 		
@@ -96,7 +97,7 @@ public class CustomerController {
 		
 		List<EgovMap> contactlist = null;
 		//TODO 추후 삭제
-		params.put("testparam", 31);
+		params.put("testparam", 1200);
 		logger.info("##### customer Contact Parsing START #####");
 		contactlist = customerService.selectCustomerContactJsonList(params);
 		// 데이터 리턴.
@@ -116,7 +117,7 @@ public class CustomerController {
 		
 		List<EgovMap> banklist = null;
 		//TODO 추후 삭제
-		params.put("testparam", 31);
+		params.put("testparam", 1200);
 		logger.info("##### customer Bank List Parsing START #####");
 		banklist = customerService.selectCustomerBankAccJsonList(params);
 		
@@ -136,7 +137,7 @@ public class CustomerController {
 		
 		List<EgovMap> cardlist = null;
 		//TODO 추후 삭제
-		params.put("testparam",12);
+		params.put("testparam",1200);
 		logger.info("##### customer Card List Parsing START #####");
 		cardlist = customerService.selectCustomerCreditCardJsonList(params);
 		
@@ -145,7 +146,7 @@ public class CustomerController {
 	}
 	/**
 	 * 
-	 * Customer View CreditCard List
+	 * Customer View Own Order List
 	 * @param params
 	 * @param model
 	 * @return
@@ -156,11 +157,50 @@ public class CustomerController {
 		
 		List<EgovMap> ownorderlist = null;
 		//TODO 추후 삭제
-		params.put("testparam", 12);
+		params.put("testparam", 1200);
 		logger.info("##### customer Own Order Parsing START #####");
 		ownorderlist = customerService.selectCustomerOwnOrderJsonList(params);
 		
 		return ResponseEntity.ok(ownorderlist);
+	}
+	/**
+	 * 
+	 * Customer View Third Party Order List
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.21
+	 * */
+	@RequestMapping(value = "/selectCustomerThirdPartyJsonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCustomerThirdPartyJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		List<EgovMap> thirdpartylist = null;
+		//TODO 추후 삭제
+		params.put("testparam", 1200);
+		logger.info("##### customer Third Party Parsing START #####");
+		thirdpartylist = customerService.selectCustomerThirdPartyJsonList(params);
+		
+		return ResponseEntity.ok(thirdpartylist);
+	}
+	/**
+	 * 
+	 * Customer Address Detail View 주소 리스트의 해당 상세화면
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.20
+	 * */
+	@RequestMapping(value = "/selectCustomerAddrDetailView")
+	public String selectCustomerDetailAddr(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model)throws Exception{
+		
+		EgovMap detailaddr = null;
+		//TODO 추후삭제 
+		params.put("addrparam", params.get("addrparam"));
+		logger.info("##### selectCustomerDetailAddr START #####");
+		detailaddr = customerService.selectCustomerDetailAddr(params);
+		model.addAttribute("detailaddr", detailaddr);
+		
+		return "sales/customer/customerAddress";
 	}
 	/**
 	 * 
@@ -179,7 +219,8 @@ public class CustomerController {
 		
 		//TODO 추후 삭제
 		//test param
-		params.put("testparam",31);
+		params.put("testparam",1200);
+		params.put("addrparam", 47512);
 		
 		logger.info("##### customeView START #####");
 		basicinfo = customerService.selectCustomerViewBasicInfo(params);
@@ -200,7 +241,7 @@ public class CustomerController {
 		model.addAttribute("result", basicinfo);
 		model.addAttribute("addresinfo", addresinfo);
 		model.addAttribute("contactinfo", contactinfo);
-		
+	
 		return "sales/customer/customerView";
 	}
 	

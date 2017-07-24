@@ -53,7 +53,7 @@ public interface CustomerService {
 	
 	/**
 	 * 상세화면 조회. customer Contact list
-	 * @param params (expect customer ID)
+	 * @param params (expect CUST_ADD_ID)
 	 * @return 
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
@@ -83,4 +83,20 @@ public interface CustomerService {
 	 * @author 이석희 2017.07.21
 	 */
 	List<EgovMap> selectCustomerOwnOrderJsonList(Map<String, Object> params)throws Exception;
+	/**
+	 * 상세화면 조회. third party list
+	 * @param params (expect customer ID)
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.21
+	 */
+	List<EgovMap> selectCustomerThirdPartyJsonList(Map<String, Object> params) throws Exception;
+	/**
+	 * 상세화면 조회. detail address view
+	 * @param params (expect CUST_ADD_ID)
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.21
+	 */
+	EgovMap selectCustomerDetailAddr(Map<String, Object> params) throws Exception;
 }

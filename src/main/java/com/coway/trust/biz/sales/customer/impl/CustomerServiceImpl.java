@@ -136,8 +136,29 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerOwnOrderJsonList(params);
 	}
-	
-	
-	
+	/**
+	 * 상세화면 조회한다. (Third Party Order List)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.21
+	 */
+	@Override
+	public List<EgovMap> selectCustomerThirdPartyJsonList(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCustomerThirdPartyJsonList(params);
+	}
+	/**
+	 * 상세화면 조회한다. (Detail Address View)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.24
+	 */
+	@Override
+	public EgovMap selectCustomerDetailAddr(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCustomerDetailAddr(params);
+	}
 	
 }
