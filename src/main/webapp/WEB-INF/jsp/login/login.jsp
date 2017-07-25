@@ -80,8 +80,8 @@ function fn_login(){
 <form id="loginForm" name="loginForm" method="post">
 
 <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway" /></h2>
-<p><input type="text" title="ID" placeholder="ID" id="userId" name="userId"/></p>
-<p><input type="password" title="PASSWORD" placeholder="PASSWORD"  id="password" name="password"/></p>
+<p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value="IVYLIM"/></p>
+<p><input type="password" title="PASSWORD" placeholder="PASSWORD"  id="password" name="password" value="ivy123"/></p>
 <p class="login_btn"><a href="javascript:void(0);" onclick="javascript:fn_login();"><spring:message code='sys.btn.login' /></a></p>
 <ul class="login_opt">
     <li><a href="javascript:void(0);"><spring:message code='sys.btn.id.search' /></a></li>
