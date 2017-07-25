@@ -287,15 +287,13 @@
     
   function fn_insertWare(){
 
-	    doDefCombo(instockgradecomboData, '' ,'instockgrade', 'S', '');
-	    $("#instockgrade option:eq(1)").prop("selected", true);
- 	    $("#instockgrade").attr("disabled",true);	
- 	   $('input').attr("disabled",true)//는 input 요소 설정 을 disabled
- 	  $('input').attr("disabled",false)
+	    doDefCombo(stockgradecomboData, '' ,'instockgrade', 'S', '');
+	    //$("#instockgrade option:eq(1)").prop("selected", true);
+ 	    //$("#instockgrade").attr("disabled",true);	
  	    
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch', 'S' , ''); //브런치 등록
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , 'this.value','incountry', 'S', ''); //주소 등록
-         doDefCombo('', '' ,'instate', 'S', ''); 
+        doDefCombo('', '' ,'instate', 'S', ''); 
         doDefCombo('', '' ,'inarea', 'S', '');
         doDefCombo('', '' ,'inpostcd', 'S', '');    
          
@@ -368,7 +366,7 @@
            Common.alert('Contact number is invalid. Please key in only number in contact field.'); 
            return;
      }   
-  	    $('#instockgrade').attr("disabled",false)
+  	    //$('#instockgrade').attr("disabled",false)
   	     Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
           Common.alert(result.message);
           insDialog.dialog( "close" );
@@ -389,10 +387,7 @@
               
           });
   }
-  
-  
-  
-  
+   
 
     function updateGridRow(){
     	//AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
@@ -762,7 +757,7 @@
 <!-- ------------------------------------------------------------------------20170719 추가 함영수------------------------------------------------ -->
 
 <section class="pop_body"><!-- pop_body start -->
-<div id="registWindow" style="display:none" title="그리드 수정 사용자 정의">
+<div id="registWindow" style="display:none" title="그리드 등록 사용자 정의">
 <h1>Warehouse Information</h1>
 <form id="insForm" name="insForm" method="GET">
 <table class="type1">
