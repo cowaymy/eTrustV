@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -34,10 +31,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.SampleApplication;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.AuthVO;
 import com.coway.trust.cmmn.model.GridDataSet;
@@ -66,12 +63,12 @@ public class SampleController {
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 
-	@Autowired
-	private JavaMailSender mailSender;
-
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private AdaptorService adaptorService;
 
 	/**
 	 * 트랜잭션 rollback 예제.
@@ -89,7 +86,9 @@ public class SampleController {
 	}
 
 	/**
-	 * 화면 호출. - publish 적용. - 버튼 퀀한 적용.
+	 * 화면 호출. 
+	 * - publish 적용.
+	 * - 그리드 페이징 갯수 변경 처리 포함됨 : publishSample.jsp
 	 */
 	@RequestMapping(value = "/publishSample.do")
 	public String publishSample(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -110,24 +109,12 @@ public class SampleController {
 	/**
 	 * 
 	 * TODO : 아직 완료 되지 않음... 테스트 중임.....
-	 * 
+	 * 서비스 + 메일 전송 예제.
 	 * sendMail test.
 	 */
 	@RequestMapping(value = "/sendMail.do")
 	public void sendMail(@RequestParam Map<String, Object> params, ModelMap model) {
-
-		try {
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-			messageHelper.setFrom("test@mail.com");
-			messageHelper.setTo("t1706036@partner.coway.co.kr");
-			messageHelper.setSubject("메일전송 테스트 제목"); // 메일제목은 생략이 가능하다
-			messageHelper.setText("메일본문");
-			mailSender.send(message);
-		} catch (Exception e) {
-			throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
-		}
-
+		sampleApplication.sendEmailAndProcess(params);
 	}
 
 	/**

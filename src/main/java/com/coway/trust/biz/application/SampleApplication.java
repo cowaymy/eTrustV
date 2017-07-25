@@ -5,4 +5,6 @@ import java.util.Map;
 public interface SampleApplication {
 
 	void saveMultiService(Map<String, Object> params);
+	
+	void sendEmailAndProcess(Map<String, Object> params);
 }
