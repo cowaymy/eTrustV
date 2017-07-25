@@ -181,7 +181,7 @@ $(document).on(
 
 	thisFileInput.click();	
 	return false;
-})
+});
 
 $(document).on(
 	"change", ":file", function(){
@@ -189,10 +189,10 @@ $(document).on(
 	var thisfakeInput=$(this).next().children(".input_text");
 
 	thisfakeInput.val(thisVal);
-})
+});
 /* 인풋 파일 end */
 
 /* 팝업 드래그 start */
-$("#popup_wrap").draggable();
+$("#popup_wrap, .popup_wrap").draggable();
 /* 팝업 드래그 end */
-})
+});
