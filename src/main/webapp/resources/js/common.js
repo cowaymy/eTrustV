@@ -264,7 +264,7 @@ var Common = {
 	popupWin : function(_formId, _url, _options) {
 
 		var option = {
-			winName : "popup",
+			winName : "_blank",
 			isDuplicate : true, // 계속 팝업을 띄울지 여부.
 			fullscreen : "no", // 전체 창. (yes/no)(default : no)
 			location : "no", // 주소창이 활성화. (yes/no)(default : yes)
