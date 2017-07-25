@@ -462,7 +462,7 @@
         if (fullAddr != "" && detail[0].name != ""&& detail[0].name != undefined){
             fullAddr += " " + detail[0].name
         }
-        if (fullAddr != "" && detail[0].countrynm != ""&& detail[0].countrynm != "undefined "){
+        if (fullAddr != "" && detail[0].countrynm != ""&& detail[0].countrynm != undefined){
             fullAddr += " " + detail[0].countrynm
         }
         $("#txtaddress").text(fullAddr);
