@@ -99,25 +99,24 @@ public class MstDataController {
 		return ResponseEntity.ok(codeList);
 	}
 	
-	@RequestMapping(value = "/materialUpdate.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveSampleGrid(@RequestBody Map<String, ArrayList<Object>> params,
+	@RequestMapping(value = "/materialUpdateItemType.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> materialUpdateItemType(@RequestBody Map<String, ArrayList<Object>> params,
 			Model model) {
 
 		List<Object> updateList = params.get(AppConstants.AUIGrid_UPDATE); // 수정 리스트 얻기
 		
-		List<Object> removeList = params.get(AppConstants.AUIGRID_REMOVE); // 수정 리스트 얻기
+		//List<Object> removeList = params.get(AppConstants.AUIGRID_REMOVE); // 수정 리스트 얻기
 		
-		logger.debug("101Line :::: " + removeList.size());
+		//logger.debug("101Line :::: " + removeList.size());
 		
-		Map<String, Object> removeMap = (Map<String, Object>) removeList.get(0);
+		//Map<String, Object> removeMap = (Map<String, Object>) removeList.get(0);
 		
-		logger.debug(" itmId ::: " + removeMap.get("itmId"));
+		//logger.debug(" itmId ::: " + removeMap.get("itmId"));
 		//Map hm = null;
 		//Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
 		
-		//loc.updateLocationInfo(updateMap);
+		mst.updateMaterialItemType(updateList);
 		
-
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

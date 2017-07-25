@@ -61,6 +61,16 @@ public class MaterialServiceImpl extends EgovAbstractServiceImpl implements Mate
 		// TODO Auto-generated method stub
 		return mstMapper.selectNonItemType();
 	}
+
+	@Override
+	public void updateMaterialItemType(List<Object> updateList) {
+		// TODO Auto-generated method stub
+		
+		for (int i = 0 ; i < updateList.size() ; i++){
+    		Map<String, Object> updateMap = (Map<String, Object>) updateList.get(i);
+    		mstMapper.updateMaterialItemType(updateMap);
+		}
+	}
 	
 	
 }

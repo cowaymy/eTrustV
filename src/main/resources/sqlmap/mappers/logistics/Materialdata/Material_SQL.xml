@@ -78,6 +78,7 @@
        T1.CURRENCY,
        T1.UOM,
        T1.ITEM_TYPE,
+       T1.OLD_STK_ID,
        S63.CODE_ID,
        S63.CODE_NAME
   FROM (SELECT M39D.ITM_ID,
@@ -101,7 +102,8 @@
                M39D.PROMO_NORMAL_PRC,
                M39D.CURRENCY,
                M39D.UOM,
-               M39D.ITEM_TYPE
+               M39D.ITEM_TYPE,
+               M39D.OLD_STK_ID
           FROM MSC0039D M39D
          WHERE 1 = 1
          <if test="svalue != null and svalue !=''">
@@ -128,4 +130,20 @@
 		                      FOR code_name
 		                      IN ('Product Display – Dummy Set','Cody Tools','HR Item','Finance Item','Misc Item','Uniform','Merchandise Item','Kiosk Item'))
     </select>
+    
+    <update id="updateMaterialItemType" parameterType="Map">
+       UPDATE MSC0039D
+          SET ITM_NAME     = #{itmName}
+            , PRC          = #{prc}
+            , ITM_DESC     = #{itmDesc}
+            , STUS_CODE_ID = #{stusCodeId}
+            , CTGRY_ID     = #{ctgryId}
+            , OLD_STK_ID   = #{oldStkId}
+            , CURRENCY     = #{currency}
+            , UOM          = #{uom}
+            , ITEM_TYPE    = #{itemType}
+            , UPD_DT       = SYSDATE
+            , UPD_USER_ID  = #{updUserId}
+        WHERE ITM_ID       = #{itmId}
+    </update>
 </mapper>

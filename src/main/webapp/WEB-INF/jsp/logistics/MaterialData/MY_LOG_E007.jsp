@@ -51,18 +51,20 @@
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
-    var columnLayout = [{dataField:"itmCode"         ,headerText:"Itm Code"         ,width:120    ,height:30 , visible:true},
-                        {dataField:"itmName"         ,headerText:"Itm Name"         ,width:250    ,height:30 , visible:true},
-                        {dataField:"itmDesc"         ,headerText:"Itm Desc"         ,width:350    ,height:30 , visible:true},
-                        {dataField:"itmId"           ,headerText:"Itm Id"           ,width:140    ,height:30 , visible:false},
-                        {dataField:"codeName"        ,headerText:"Code Name"        ,width:"12%"  ,height:30 , visible:true},
-                        {dataField:"attachImgLoc"    ,headerText:"Attach Img Loc"    ,width:120    ,height:30 , visible:false},
-                        {dataField:"ctgryId"         ,headerText:"Ctgry Id"         ,width:120    ,height:30 , visible:false},
-                        {dataField:"isAttachImg"     ,headerText:"IsAttach Img"     ,width:120    ,height:30 , visible:false},
-                        {dataField:"isHotItm"        ,headerText:"Hot Itm"        ,width:90     ,height:30 , visible:true},
+    var columnLayout = [{dataField:"itmCode"         ,headerText:"Itm Code"        ,width:120    ,height:30 , visible:true},
+                        {dataField:"itmName"         ,headerText:"Itm Name"        ,width:250    ,height:30 , visible:true},
+                        {dataField:"itmDesc"         ,headerText:"Itm Desc"        ,width:350    ,height:30 , visible:true},
+                        {dataField:"itmId"           ,headerText:"Itm Id"          ,width:140    ,height:30 , visible:false},
+                        {dataField:"codeName"        ,headerText:"Code Name"       ,width:"12%"  ,height:30 , visible:true},
+                        {dataField:"attachImgLoc"    ,headerText:"Attach Img Loc"  ,width:120    ,height:30 , visible:false},
+                        {dataField:"ctgryId"         ,headerText:"Ctgry Id"        ,width:120    ,height:30 , visible:true},
+                        {dataField:"isAttachImg"     ,headerText:"IsAttach Img"    ,width:120    ,height:30 , visible:false},
+                        {dataField:"isHotItm"        ,headerText:"Hot Itm"         ,width:90     ,height:30 , visible:true},
                         {dataField:"isNwItm"         ,headerText:"New Itm"         ,width:90     ,height:30 , visible:true},
-                        {dataField:"isPromoItm"      ,headerText:"Promo Itm"      ,width:120    ,height:30 , visible:true},
-                        {dataField:"itemType"        ,headerText:"Item Type"        ,width:100    ,height:30 , visible:false},
+                        {dataField:"isPromoItm"      ,headerText:"Promo Itm"       ,width:120    ,height:30 , visible:true},
+                        {dataField:"itemType"        ,headerText:"Item Type"       ,width:100    ,height:30 , visible:true},
+                        {dataField:"uom"             ,headerText:"Unit of Measure" ,width:100    ,height:30 , visible:true},
+                        {dataField:"currency"        ,headerText:"Currency"        ,width:100    ,height:30 , visible:true},
                         {dataField:"prc"             ,headerText:"Prc"             ,width:100    ,height:30 , visible:true , dataType:"numeric", formatString : "#.00"},
                         {dataField:"prcRem"          ,headerText:"PrcRem"          ,width:100    ,height:30 , visible:false},
                         {dataField:"promoNormalPrc"  ,headerText:"PromoNormalPrc"  ,width:100    ,height:30 , visible:false},
@@ -73,6 +75,7 @@
                         {dataField:"updDt"           ,headerText:"UpdDt"           ,width:100    ,height:30 , visible:false},
                         {dataField:"updUserId"       ,headerText:"UpdUserId"       ,width:100    ,height:30 , visible:false},
                         {dataField:"codeId"          ,headerText:"CodeId"          ,width:"8%"   ,height:30 , visible:false},
+                        {dataField:"oldStkId"        ,headerText:"CodeId"          ,width:"8%"   ,height:30 , visible:true},
                         {dataField:"PRD"             ,headerText:"ProductDisplayDummySet"   ,width:"8%"   ,height:30 , visible:true
                         	, renderer : 
                             {
@@ -187,6 +190,7 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
+        	f_detailView(event.rowIndex);
         });
         
         AUIGrid.bind(myGridID, "ready", function(event) {
@@ -213,6 +217,7 @@
         });
         
          $("#detailView").hide();
+         getMaterialListAjax("");
 
     });
 
@@ -224,7 +229,7 @@
             }
         });
     	$("#search").click(function(){
-            getMaterialListAjax();
+            getMaterialListAjax("");
             $("#detailView").hide();
         });
         $("#clear").click(function(){
@@ -234,12 +239,10 @@
             $("#locdesc").val('');
         });
         $("#update").click(function(){
-            
-            console.log(GridCommon.getEditData(myGridID).update.length);
             var updCnt = GridCommon.getEditData(myGridID).update.length;
             for (var i = 0 ; i < updCnt ; i++){
                 var make = GridCommon.getEditData(myGridID).update[i];
-                console.log(make);
+                
                 var itemtypevalue = "";
                 if (make.CDTL != undefined && make.CDTL != ""){
                 	if (itemtypevalue != "")itemtypevalue += ",";
@@ -270,30 +273,23 @@
                 	if (itemtypevalue != "")itemtypevalue += ",";
                     itemtypevalue += make.UNM; 
                 }
+                var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", make.itmId);
                 
-                console.log(itemtypevalue);
+                AUIGrid.setCellValue(myGridID, rows, "itemType" , itemtypevalue);
             }
             
-            
-       
-//                 $.each(itemdata, function(index,value) {
-//                     if(typeArr[j] == itemdata[index].codeId ){
-//                         AUIGrid.setCellValue(myGridID, i, itemdata[index].code , typeArr[j]);
-//                     }
-//                 });
-//             }
-            
-//         	Common.ajax("POST", "/logistics/material/materialUpdate.do", GridCommon.getEditData(myGridID), function(result) {
-//                 Common.alert(result.message);
-//                 AUIGrid.resetUpdatedItems(myGridID, "all");
+        	Common.ajax("POST", "/logistics/material/materialUpdateItemType.do", GridCommon.getEditData(myGridID), function(result) {
+                Common.alert(result.message);
+                AUIGrid.resetUpdatedItems(myGridID, "all");
                 
-//             },  function(jqXHR, textStatus, errorThrown) {
-//                 try {
-//                 } catch (e) {
-//                 }
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
 
-//                 Common.alert("Fail : " + jqXHR.responseJSON.message);
-//             });
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+        	getMaterialListAjax("");
         });
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
@@ -321,18 +317,138 @@
 
                 Common.alert("Fail : " + jqXHR.responseJSON.message);
             });
+        });$("#detailsave").click(function(){
+        	
+        	if (valiedcheck()){
+            	var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", $("#ditmid").val());
+            	var checkval = "";
+                $("input[id=itemtype]:checked").each(function() {
+                    if (checkval != "") checkval += ",";
+                    checkval += $(this).val();                
+                });
+            	AUIGrid.setCellValue(myGridID, rows, "itemType"   , checkval);
+            	AUIGrid.setCellValue(myGridID, rows, "itmName"    , $("#itmname").val());
+            	AUIGrid.setCellValue(myGridID, rows, "prc"        , $("#price").val());
+            	AUIGrid.setCellValue(myGridID, rows, "itmDesc"    , $("#itmdesc").val());
+            	AUIGrid.setCellValue(myGridID, rows, "oldStkId"   , $("#olditemid").val());
+            	AUIGrid.setCellValue(myGridID, rows, "uom"        , $("#uom").val());
+            	AUIGrid.setCellValue(myGridID, rows, "currency"   , $("#currency").val());
+            	AUIGrid.setCellValue(myGridID, rows, "ctgryId"    , $("#cateid").val());
+            	AUIGrid.setCellValue(myGridID, rows, "stusCodeId" , $("#stuscode").val());
+            	Common.ajax("POST", "/logistics/material/materialUpdateItemType.do", GridCommon.getEditData(myGridID), function(result) {
+                    Common.alert(result.message);
+                    AUIGrid.resetUpdatedItems(myGridID, "all");
+                    
+                },  function(jqXHR, textStatus, errorThrown) {
+                    try {
+                    } catch (e) {
+                    }
+
+                    Common.alert("Fail : " + jqXHR.responseJSON.message);
+                });
+            	getMaterialListAjax(rows);
+            }
+        	
+        });
+        $("#detailcancel").click(function(){
+        	var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", $("#ditmid").val());
+        	f_detailView(rows);
         });
         
 
     });
     
+    function f_detailView(rid){
+    	$("#detailView").show();
+        var seldata = AUIGrid.getItemByRowIndex(myGridID , rid);
+        
+        doGetCombo('/common/selectCodeList.do', '63', seldata.ctgryId ,'cateid', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '94', seldata.uom     ,'uom', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '42', seldata.currency,'currency', 'S' , '');
+        doDefCombo(comboData, seldata.stusCodeId ,'stuscode', 'S', '');
+        $("#itmcode").val(seldata.itmCode);
+        $("#itmname").val(seldata.itmName);
+        $("#itmdesc").val(seldata.itmDesc);
+        $("#olditemid").val(seldata.oldStkId);
+        $("#price").val(seldata.prc);
+        $("#ditmid").val(seldata.itmId);
+        //itemtypedata
+        var html = "";
+        var checked = "";
+        $.each(itemdata, function(index,value) {
+            if (index == 0 || (index % 4) == 0){
+                html += "<tr>";
+            }
+            
+            if (seldata.itemType != null && seldata.itemType != "" && seldata.itemType != undefined){
+                var typeArr = seldata.itemType.split(",");
+                for (var j = 0 ; j < typeArr.length ; j++){
+                    if(typeArr[j] == itemdata[index].codeId ){
+                        checked = "checked";
+                    }
+                }
+            }
+            
+            html += "<th scope=\"row\">"+itemdata[index].codeName+"</th>";
+            html += "<td>";
+            html += "<label><input type=\"checkbox\" id='itemtype' name='itemtype' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
+            html += "</td>";
+            
+            if ((index % 4) == 3){
+                html += "</tr>";
+            }
+            checked = "";
+        });
+        
+        $("#itemtypedata").html(html);
+    }
+    
+    function valiedcheck(){
+    	if($("#uom").val() == ""){
+            Common.alert("Please select one of Unit of Measure.");
+            $("#uom").focus();
+            return false;
+        }
+        if($("#currency").val() == ""){
+            Common.alert("Please select one of Currency.");
+            $("#currency").focus();
+            return false;
+        }
+        if($("#cateid").val() == ""){
+            Common.alert("Please select one of Key Product Group.");
+            $("#cateid").focus();
+            return false;
+        }
+        if($("#stuscode").val() == ""){
+            Common.alert("Please select one of Used.");
+            $("#stuscode").focus();
+            return false;
+        }
+        if($("#price").val() == ""){
+            Common.alert("Please enter the Sales Price.");
+            $("#price").focus();
+            return false;
+        }
+        if($("#itmname").val() == ""){
+            Common.alert("Please enter the Material Name.");
+            $("#itmname").focus();
+            return false;
+        }
+        
+        
+        if($("input[id=itemtype]:checked").length == 0){
+            Common.alert("Please check one or more Item Type.");
+            return false;
+        }
+        return true;
+    }
     function fn_itempop(cd , nm , ct , tp){
     	doGetCombo('/common/selectCodeList.do', '63', ct ,'spgroup', 'A' , '');
     	$("#svalue").val(cd);
         $("#sname").text(nm);
     }
     
-    function getMaterialListAjax() {
+    function getMaterialListAjax(rid) {
         f_showModal();
         var url = "/logistics/material/materialitemList.do";
         var param = $('#searchForm').serializeJSON();
@@ -352,13 +468,13 @@
         });
         Common.ajax("POST" , url , param , function(data){
         	
-            /*if(AUIGrid.isCreated(myGridID)) {
-                AUIGrid.destroy(myGridID);
-            }*/
-            //AUIGrid.destroy(myGridID);
-            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
+            console.log(data.data);
             AUIGrid.setGridData(myGridID, data.data);
             hideModal();
+            if (rid != ""){
+            	AUIGrid.setSelectionByIndex(myGridID, rid, 3);
+            	f_detailView(rid);
+            }
         });
     }
     
@@ -475,6 +591,8 @@
 <aside class="title_line"><!-- title_line start -->
 <h3 id="title">Material Master Create/Change</h3>
 </aside>
+<form id="detailForm">
+<input type="text" id="ditmid"/>
 <aside class="title_line"><!-- title_line start -->
 <h4>Main Value</h4>
 </aside><!-- title_line end -->
@@ -493,29 +611,35 @@
 <tr>
     <th scope="row">Material Code</th>
     <td>
-    <input type="text" placeholder="" class="readonly w100p" readonly="readonly" />
+    <input type="text" placeholder="" id='itmcode' class="readonly w100p" readonly="readonly" />
     </td>
-    <th scope="row">Description</th>
+    <th scope="row">Material Name</th>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="w100p" />
+    <input type="text" id='itmname' title="" placeholder="" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Description</th>
+    <td colspan="5">
+    <input type="text" id='itmdesc' title="" placeholder="" class="w100p" />
     </td>
 </tr>
 <tr>
     <th scope="row">Old Material Number</th>
     <td>
-    <input type="text" placeholder="" class="w100p" readonly="" />
+    <input type="text" id='olditemid' placeholder="" class="w100p" readonly="" />
     </td>
-    <th scope="row">Material Code</th>
+    <th scope="row">Unit of Measure</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="uom">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
     </select>
     </td>
-    <th scope="row">Material Code</th>
+    <th scope="row">Currency</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="currency">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
@@ -525,7 +649,7 @@
 <tr>
     <th scope="row">Key Product Group</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="cateid">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
@@ -533,11 +657,11 @@
     </td>
     <th scope="row">Sales Price</th>
     <td>
-    <input type="text" placeholder="" class="w100p" readonly="" />
+    <input type="text" placeholder="" id="price" class="numberAmt"/>
     </td>
     <th scope="row">Used</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="stuscode">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
@@ -563,40 +687,17 @@
     <col style="width:200px" />
     <col style="width:*" />
 </colgroup>
-<tbody>
-<tr>
-    <th scope="row">Item Type 1(Kiosk)</th>
-    <td>
-    <label><input type="checkbox" /></label>
-    </td>
-    <th scope="row">Item Type 2Merchandise)</th>
-    <td>
-    <label><input type="checkbox" /></label>
-    </td>
-    <th scope="row">Item Type 3(Uniform)</th>
-    <td colspan="3">
-    <label><input type="checkbox" /></label>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Item Type 4(Misc Item)</th>
-    <td>
-    <label><input type="checkbox" /></label>
-    </td>
-    <th scope="row">Item Type 5(Cody Tool)</th>
-    <td>
-    <label><input type="checkbox" /></label>
-    </td>
-    <th scope="row">Item Type 6(Finance Item)</th>
-    <td>
-    <label><input type="checkbox" /></label>
-    </td>
-    <th scope="row">Item Type 7(HR Item)</th>
-    <td>
-    <label><input type="checkbox" /></label>
-    </td>
-</tr>
+<tbody id="itemtypedata">
+
 </tbody>
 </table><!-- table end -->
+
+<ul class="center_btns mt20">
+    <li><p class="btn_blue2"><a id="detailsave">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="detailcancel">CANCEL</a></p></li>
+</ul>
+
+
+</form>
 </div>
 </section>

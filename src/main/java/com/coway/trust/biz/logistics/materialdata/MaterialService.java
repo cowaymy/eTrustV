@@ -22,4 +22,6 @@ public interface MaterialService {
 	List<EgovMap>selectMaterialMstItemList(Map<String, Object> params);
 	
 	EgovMap selectMaterialMstItemTypeList();
+	
+	void updateMaterialItemType(List<Object> updateList);
 }

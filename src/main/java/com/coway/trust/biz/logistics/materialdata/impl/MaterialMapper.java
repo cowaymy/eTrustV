@@ -13,4 +13,6 @@ public interface MaterialMapper {
 	List<EgovMap> selectMaterialMstItemList(Map<String, Object> params);
 	
 	EgovMap selectNonItemType();
+	
+	void updateMaterialItemType(Map<String, Object> params);
 }
