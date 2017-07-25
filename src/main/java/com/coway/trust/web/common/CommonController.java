@@ -471,4 +471,15 @@ public class CommonController {
 	}
 
 	
+	@RequestMapping(value = "/searchPopList.do")
+	public String searchPopList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("sUrl : {}", params.get("sUrl"));
+
+		model.addAttribute("url", params);
+
+		// 호출될 화면
+		return "/common/searchPop";
+	}
+	
 }
