@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.materialdata.impl.MaterialMapper">
+   <resultMap id="NonItemClobMap" type="EgovMap">
+        <result property="attach_img_loc" column="ATTACH_IMG_LOC" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="itm_desc" column="ITM_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+   <select id="selectStockMstList" parameterType="Map" resultType="egovMap">
+	   SELECT itemid , itemname , itemcode ,cateid, catename
+	   <if test="gubun =='item'">
+       , description
+       </if>
+       <if test="gubun =='stock'">
+	   , typename,typeid
+	   </if>
+	   from (
+        <if test="gubun =='item'">
+		  SELECT 
+		      ITM_ID  itemid ,
+		       ITM_NAME  itemname,
+		       ITM_CODE  itemcode,
+		       CTGRY_ID  cateid,
+		       DBMS_LOB.SUBSTR (ITM_DESC, 4000)  description,
+			   (SELECT code_name
+				  FROM SYS0013M
+				 WHERE code_master_id = 63
+				   and code_id = CTGRY_ID) catename
+		  FROM MSC0039D 
+		 where 1 = 1 
+		 </if>
+		 <if test="gubun =='stock'">
+		 SELECT STK_ID  itemid
+		     , STK_CODE itemcode
+		     , STK_DESC itemname
+		     , STK_CTGRY_ID cateid
+		     , STK_TYPE_ID typeid
+		     ,(SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = SYS0026M.STK_CTGRY_ID)
+		          catename,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = SYS0026M.STK_TYPE_ID)
+		          typename
+		 FROM SYS0026M 
+		WHERE 1 = 1
+		 </if>  
+      )
+      where 1 = 1
+      <if test="scode != null and scode !=''">
+            and itemcode like  #{scode}||'%'
+       </if>
+       <if test="sname != null and sname !=''">
+            and itemname like '%'|| #{sname} ||'%'
+       </if>    			
+	</select>
+	
+	<select id="selectMaterialMstItemList" parameterType="Map" resultMap="NonItemClobMap">
+       SELECT T1.ITM_ID,
+       T1.ITM_CODE,
+       T1.ITM_NAME,
+       T1.ATTACH_IMG_LOC,
+       T1.CTGRY_ID,
+       T1.SEQ,
+       T1.PRC,
+       T1.PRC_REM,
+       T1.ITM_DESC,
+       T1.CRT_DT,
+       T1.CRT_USER_ID,
+       T1.UPD_DT,
+       T1.UPD_USER_ID,
+       T1.STUS_CODE_ID,
+       T1.IS_ATTACH_IMG,
+       T1.IS_HOT_ITM,
+       T1.IS_NW_ITM,
+       T1.IS_PROMO_ITM,
+       T1.PROMO_NORMAL_PRC,
+       T1.CURRENCY,
+       T1.UOM,
+       T1.ITEM_TYPE,
+       S63.CODE_ID,
+       S63.CODE_NAME
+  FROM (SELECT M39D.ITM_ID,
+               M39D.ITM_CODE,
+               M39D.ITM_NAME,
+               M39D.ATTACH_IMG_LOC,
+               M39D.CTGRY_ID,
+               M39D.SEQ,
+               M39D.PRC,
+               M39D.PRC_REM,
+               M39D.ITM_DESC,
+               M39D.CRT_DT,
+               M39D.CRT_USER_ID,
+               M39D.UPD_DT,
+               M39D.UPD_USER_ID,
+               M39D.STUS_CODE_ID,
+               M39D.IS_ATTACH_IMG,
+               M39D.IS_HOT_ITM,
+               M39D.IS_NW_ITM,
+               M39D.IS_PROMO_ITM,
+               M39D.PROMO_NORMAL_PRC,
+               M39D.CURRENCY,
+               M39D.UOM,
+               M39D.ITEM_TYPE
+          FROM MSC0039D M39D
+         WHERE 1 = 1
+         <if test="svalue != null and svalue !=''">
+           AND ITM_CODE = #{svalue}
+        </if>
+        <if test="spgroup != null and spgroup !=''">
+           AND CTGRY_ID = #{spgroup}
+        </if>
+        <if test="sused != null and sused !=''">
+           AND STUS_CODE_ID = #{sused}
+        </if>
+       ) T1,
+       (SELECT *
+          FROM SYS0013M
+         WHERE CODE_MASTER_ID = 63) S63
+ WHERE T1.CTGRY_ID = S63.CODE_ID(+)             
+    </select>
+    <select id="selectNonItemType" resultType="egovMap">
+        select * from 
+		(SELECT code_name , code_id
+		           FROM SYS0013M
+		          WHERE CODE_MASTER_ID = '141')
+		          PIVOT (MAX (code_id)
+		                      FOR code_name
+		                      IN ('Product Display – Dummy Set','Cody Tools','HR Item','Finance Item','Misc Item','Uniform','Merchandise Item','Kiosk Item'))
+    </select>
+</mapper>
