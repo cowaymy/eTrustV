@@ -167,8 +167,6 @@ public class LocationController {
 		
 		CommonUtils com = new CommonUtils();
 		
-
-			
 		String inwarecd     = (String) params.get("inwarecd");
 		String inwarenm     = (String) params.get("inwarenm");
 		String inaddr1     = (String) params.get("inaddr1");
