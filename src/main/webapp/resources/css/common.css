@@ -127,7 +127,7 @@ table+.title_line{margin-top:20px;}
 .btn_blue2 a{display:inline-block; min-width:57px; height:28px; line-height:28px; padding:0 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
 .btn_blue2.big a{min-width:120px; height:36px; line-height:36px; font-size:14px;}
 .btn_sky a{display:inline-block; min-width:57px; height:30px; line-height:30px; padding:0 10px; background:#a1c4d7; color:#fff; font-size:12px; font-weight:bold; border-radius:3px; text-align:center;}
-.btn_sky.small a{height:22px; line-height:22px; padding:0 5px; font-weight:normal;}
+.btn_sky.small a{height:18px; line-height:16px; padding:0 8px; min-width:auto; font-weight:normal; font-size:11px;}
 .btn_gray a{display:inline-block; height:30px; line-height:30px; padding:0 20px; background:#999; color:#fff; font-size:12px; font-weight:bold; border-radius:3px; text-align:center;}
 .btn_grid a{display:inline-block; min-width:60px;height:22px; line-height:22px; padding:0 10px; background:#e0e8ec; border:1px solid #90a9b7; color:#25527c; font-size:10px; font-weight:bold; border-radius:3px; border-radius:3px; text-align:center;}
 .right_btns{text-align:right;}
