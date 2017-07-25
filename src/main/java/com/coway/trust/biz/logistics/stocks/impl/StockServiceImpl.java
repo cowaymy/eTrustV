@@ -199,7 +199,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		return cnt;
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
+	@SuppressWarnings({"unchecked","null"})
 	@Override
 	public int addFilterInfoGrid(int stockId, List<Object> addLIst, int loginId,String revalue) {
 		int cnt =0;
@@ -211,21 +211,22 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		param.put("crtUserId", loginId);
 		param.put("revalue", revalue);
 		param.put("bom_id", bom_id);
-		logger.info("addLIst : {}", addLIst.toString());
-		for(Object obj : addLIst ){
-			String bom_stk_id =   (String) ((Map<String, Object>) obj).get("stockid");
-			String bom_part_qty= (String) ((Map<String, Object>) obj).get("qty");
-			param.put("bom_stk_id", Integer.parseInt(bom_stk_id));
-			param.put("bom_part_qty",  Integer.parseInt(bom_part_qty));
-			
-			if(revalue.equals("filter_info")){
-			String bom_part_id = (String) ((Map<String, Object>) obj).get("typeid");
-			String bom_part_priod = (String)((Map<String, Object>) obj).get("period");
-			param.put("bom_part_id", Integer.parseInt(bom_part_id));
-			param.put("bom_part_priod", Integer.parseInt(bom_part_priod));
-			}
-			
-			cnt = cnt + stockMapper.addFilterInfoGrid(param);
+		if (null != addLIst){
+    		for(Object obj : addLIst ){
+    			String bom_stk_id =   (String) ((Map<String, Object>) obj).get("stockid");
+    			String bom_part_qty= (String) ((Map<String, Object>) obj).get("qty");
+    			param.put("bom_stk_id", Integer.parseInt(bom_stk_id));
+    			param.put("bom_part_qty",  Integer.parseInt(bom_part_qty));
+    			
+    			if(revalue.equals("filter_info")){
+    			String bom_part_id = (String) ((Map<String, Object>) obj).get("typeid");
+    			String bom_part_priod = (String)((Map<String, Object>) obj).get("period");
+    			param.put("bom_part_id", Integer.parseInt(bom_part_id));
+    			param.put("bom_part_priod", Integer.parseInt(bom_part_priod));
+    			}
+    			
+    			cnt = cnt + stockMapper.addFilterInfoGrid(param);
+    		}
 		}
 
 		return cnt;

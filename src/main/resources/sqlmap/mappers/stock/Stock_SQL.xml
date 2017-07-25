@@ -468,7 +468,14 @@
            #{pac_id}
             ,#{packagename}
             ,#{stockId}
-            ,#{chargeamt}
+             <choose>
+             <when test="chargeamt !=null and chargeamt > 0 ">
+               ,#{chargeamt}
+             </when>
+            <otherwise>
+              , 0
+            </otherwise>
+            </choose>
             ,0
             ,1
             ,sysdate
@@ -492,6 +499,9 @@
          <select id="selectPacId" parameterType="Map" resultType="Integer">
             SELECT NVL(MAX(PRC_ID),0)+1 FROM SAL0016M
          </select>
+         <select id="selectBomId" parameterType="Map" resultType="Integer">
+            SELECT NVL(MAX(BOM_ID),0)+1 FROM LOG0001M
+         </select>
          
 <!--          <update id="removeServiceInfoGrid" parameterType="Map">
             UPDATE SAL0016M
@@ -509,5 +519,80 @@
             WHERE 
                  MEM_PAC_ID = #{packageid}
                  AND STK_ID   = #{stockId}
+         </delete>
+         
+         <insert id="addFilterInfoGrid" parameterType="Map">
+         INSERT INTO LOG0001M
+		   (
+		  BOM_ID
+		, BOM_STK_ID
+		, BOM_PART_ID
+		, BOM_PART_QTY
+		, BOM_PART_TYPE_ID
+		, BOM_PART_STUS_ID
+		, BOM_PART_PRIOD
+		, BOM_CRT_DT
+		, BOM_CRT_USER_ID
+		, BOM_UPD_DT
+		, BOM_UPD_USER_ID
+		, BOM_TYPE_ID)
+		 VALUES
+		   (
+		  #{bom_id}
+		, #{stockId}
+		, #{bom_stk_id}
+		 <choose>
+             <when test="bom_part_qty !=null and bom_part_qty > 0 ">
+               ,#{bom_part_qty}
+             </when>
+            <otherwise>
+              , 0
+            </otherwise>
+            </choose>
+         <choose>  
+            <when test="bom_part_id !=null and bom_part_id >0">
+			, #{bom_part_id}
+			</when>
+			  <otherwise>
+              , 310
+            </otherwise>
+		</choose>
+		, 1
+		 <choose>
+             <when test="bom_part_priod !=null and bom_part_priod > 0 ">
+             ,#{bom_part_priod}
+             </when>
+            <otherwise>
+              , 0
+            </otherwise>
+            </choose>
+		, sysdate
+		,  #{crtUserId}
+		, sysdate
+		, #{crtUserId}
+		 <choose>
+             <when test="revalue !=null and revalue == 'filter_info'">
+             ,547
+             </when>
+             <when test="revalue !=null and revalue == 'spare_info'">
+             ,548
+             </when>
+         </choose>
+		
+		)
+         </insert>
+         
+        <delete id="removeFilterInfoGrid" parameterType="Map" >
+            DELETE FROM LOG0001M
+            WHERE BOM_STK_ID    =#{stockId}
+			AND BOM_PART_ID      =#{bom_part_id}
+			<choose>
+             <when test="revalue !=null and revalue == 'filter_info'">
+			 AND BOM_TYPE_ID      =547
+             </when>
+             <when test="revalue !=null and revalue == 'spare_info'">
+			 AND BOM_TYPE_ID      =548
+             </when>
+         </choose>
          </delete>
 </mapper>
