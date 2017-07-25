@@ -148,6 +148,7 @@ setTree();//트리메뉴 세팅 함수 실행
 function reSetTree(){//트리메뉴 재세팅 함수 실행
 	$(".treeMenu li").removeClass();
 	$(".treeMenu li img").remove();
+	setTree();
 }
 
 $(document).on(
