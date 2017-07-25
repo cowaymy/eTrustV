@@ -12,9 +12,9 @@
 <script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
 <script type="text/javascript" src="../js/jquery.ui.draggable.js"></script>
 <script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="../js/common_pub.js"></script>
 <script type="text/javascript" src="../js/multiple-select.js"></script>
 <script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
-<script type="text/javascript" src="../js/common_pub.js"></script>
 </head>
 <body>
 
@@ -148,18 +148,19 @@
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="../images/common/path_home.gif" alt="Home" /></li>
-	<li>Commission</li>
-	<li>Commission Rule Book Mgmt</li>
+	<li>Sales</li>
+	<li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Commission Rule Book Mgmt</h2>
+<h2>Status Code Management</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
+
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post">
@@ -167,42 +168,26 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:120px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:110px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:110px" />
-	<col style="width:*" />
-	<col style="width:90px" />
+	<col style="width:130px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Month/Year</th>
-	<td><input type="text" title="기준년월" placeholder="MM/YY" class="j_date2 w100p" /></td>
-	<th scope="row">ORG Group</th>
+	<th scope="row">Status ID</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+	<input type="text" title="" placeholder="Status ID" class="w100p" />
 	</td>
-	<th scope="row">ORG Code</th>
+	<th scope="row">Status Code</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+	<input type="text" title="" placeholder="Status Code" class="w100p" />
 	</td>
-	<th scope="row">USE YN</th>
+	<th scope="row">Status Name</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+	<input type="text" title="" placeholder="Status Name" class="w100p" />
 	</td>
 </tr>
 </tbody>
