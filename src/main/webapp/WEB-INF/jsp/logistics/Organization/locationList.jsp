@@ -227,7 +227,28 @@
                 //position : { my: "center", at: "center", of: $("#grid_wrap") },
                  buttons: {
                   "저장": function(event){
-                	  inValidation();
+                	  if(inValidation()){               		  
+                		//$('#instockgrade').attr("disabled",false)
+                          Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
+                           Common.alert(result.message);
+                           insDialog.dialog( "close" );
+                           $('#insForm')[0].reset();
+                           /* $("#search").click(); */
+                           }, function(jqXHR, textStatus, errorThrown) {
+                               Common.alert("실패하였습니다.");
+                               console.log("실패하였습니다.");
+                               console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+                               
+                               alert(jqXHR.responseJSON.message);
+                               console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+                             
+                               console.log("status : " + jqXHR.status);
+                               console.log("code : " + jqXHR.responseJSON.code);
+                               console.log("message : " + jqXHR.responseJSON.message);
+                               console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                               
+                           });               		  
+                	  }
                   },
                   "취소": function(event) {
                   insDialog.dialog( "close" );
@@ -332,60 +353,41 @@
 	   if(inwarecd == null || inwarecd == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
            $("#inwarecd").focus();
-           return;
+           return false;
      }  
 	   if(inwarenm == null || inwarenm == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
            $("#inwarenm").focus();
-           return;
+           return false;
      }
 	   if(instockgrade == null || instockgrade == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
            $("#instockgrade").focus();
-           return;
+           return false;
      }
 	   if(inaddr1 == null || inaddr1 == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
            $("#inaddr1").focus();
-           return;
+           return false;
      }
 	   
        if(inwarebranch == null || inwarebranch == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
            $("#inwarebranch").focus();
-           return;
+           return false;
      }
        
        if(incontact1 == null || incontact1 == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
            $("#incontact1").focus();
-           return;
+           return false;
      }
 
   	   if(isNaN(incontact1) || isNaN(incontact2) ){
            Common.alert('Contact number is invalid. Please key in only number in contact field.'); 
-           return;
+           return false;
      }   
-  	    //$('#instockgrade').attr("disabled",false)
-  	     Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
-          Common.alert(result.message);
-          insDialog.dialog( "close" );
-          $('#insForm')[0].reset();
-          /* $("#search").click(); */
-          }, function(jqXHR, textStatus, errorThrown) {
-        	  Common.alert("실패하였습니다.");
-              console.log("실패하였습니다.");
-              console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-              
-              alert(jqXHR.responseJSON.message);
-              console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-            
-              console.log("status : " + jqXHR.status);
-              console.log("code : " + jqXHR.responseJSON.code);
-              console.log("message : " + jqXHR.responseJSON.message);
-              console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-              
-          });
+  	   return true;
   }
    
 
