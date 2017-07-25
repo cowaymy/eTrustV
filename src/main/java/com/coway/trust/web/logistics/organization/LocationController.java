@@ -111,7 +111,23 @@ public class LocationController {
 		List<Object> updateList = params.get(AppConstants.AUIGrid_UPDATE); // 수정 리스트 얻기
 		
 		Map hm = null;
+		int up_sync= 0;
+		int up_mobile= 0;
+		Boolean loc_sync = false;
+		Boolean loc_mobile = false;
+	
+		if(loc_sync == true){
+			up_sync =1;
+		}
+		
+		if(loc_mobile == true){
+			up_mobile =1;
+		}
+		
 		Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
+		
+		updateMap.put("up_sync", up_sync);
+		updateMap.put("up_mobile", up_mobile);
 		
 		loc.updateLocationInfo(updateMap);
 		
@@ -129,26 +145,28 @@ public class LocationController {
 	@RequestMapping(value = "/insLocation.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> insLocation(@RequestParam Map<String, Object> params, Model model) {
 		
-		/*SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		String loginId = "";
-		loginId=sessionVO.getId();*/
-		CommonUtils com = new CommonUtils();
+		int inis_sync= 0;
+		int inmobile= 0;
+		Boolean loc_Sync = false;
+		Boolean loc_Mobile = false;
+				
+		if(sessionVO==null){
+			loginId="99999999";			
+		}else{
+			loginId=sessionVO.getId();
+		}
+		if(loc_Sync == true){
+			inis_sync =1;
+		}
 		
-/*		logger.debug("inwarecd : {}", params.get("inwarecd"));
-		logger.debug("inwarenm : {}", params.get("inwarenm"));
-		logger.debug("inaddr1 : {}", params.get("inaddr1"));
-		logger.debug("inaddr2 : {}", params.get("inaddr2"));	
-		logger.debug("inaddr3 : {}", params.get("inaddr3"));
-		logger.debug("incontact1 : {}", params.get("incontact1"));
-		logger.debug("incontact2 : {}", params.get("incontact2"));
-		logger.debug("incountry : {}", params.get("incountry"));
-		logger.debug("instate : {}", params.get("instate"));
-		logger.debug("inarea : {}", params.get("inarea"));
-		logger.debug("inpostcd : {}", params.get("inpostcd"));	
-		logger.debug("inwarebranch : {}", params.get("inwarebranch"));
-		logger.debug("loginId&&&*****@@@@@ : {}",loginId);*/
-		logger.debug("instockgrade : {}", params.get("instockgrade"));	
-			
+		if(loc_Mobile == true){
+			inmobile =1;
+		}
+		
+		CommonUtils com = new CommonUtils();
+					
 		String inwarecd     = (String) params.get("inwarecd");
 		String inwarenm     = (String) params.get("inwarenm");
 		String inaddr1     = (String) params.get("inaddr1");
@@ -181,10 +199,10 @@ public class LocationController {
 		insmap.put("instus_id"  ,1);
 		insmap.put("ingrad"  , instockgrade );
 		insmap.put("indesc2",inwarenm);
-		insmap.put("inup_user_id"  ,1112 );
+		insmap.put("inup_user_id"  ,loginId);
 		insmap.put("inbranch"  ,inwarebranch);
-		insmap.put("inis_sync" ,0);
-		insmap.put("inmobile"  ,0);		
+		insmap.put("inis_sync" ,inis_sync);
+		insmap.put("inmobile"  ,inmobile);		
 		
 		loc.insertLocationInfo(insmap);
 		
