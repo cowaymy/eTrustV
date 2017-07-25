@@ -496,6 +496,37 @@ var Common = {
 	        height: 250,
 	        width: 400
 	    });
+	},
+	/**
+	 * TO-DO check box등 필요시 등록 하세요~~
+	 * 단일 data setting 대체용.
+	 * 예) Common.setData(적용값 , 적용폼);
+	 * @param message
+	 * @param okCallback
+	 * @param cancelCallback
+	 */
+	setData : function(result, form) {
+		$.each(result, function(key, value) {			
+			var $form = $(form).find("input, select, textarea");
+			$.each($($form), function(index, elem) {
+				if (key == $(this).attr("name")) {
+					if ($(this).attr("type")) {
+						$(this).val(value);
+						console.log("text Box : " + key + ", value : " + value);
+					} else {
+						var name = elem.nodeName;
+						if (name == "SELECT") {
+							$(this).val(value);
+							console.log("select box : " + key + ", value : " + value);
+						} else if (name = "TEXTAREA") {
+							console.log("Text area : " + key + ", value : " + value);
+							$(this).val(value);
+						}
+					}
+					return false;
+				}
+			});
+		});
 	}
 
 };
