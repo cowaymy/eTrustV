@@ -67,4 +67,8 @@ public interface OrderDetailMapper {
 	
 	List<EgovMap> selectOrderSameRentalGroupOrderList(Map<String, Object> params); //Auto Debit Result
 
+	EgovMap selectOrderMailingInfoByOrderID(Map<String, Object> params); //Cody Info
+
+	EgovMap selectOrderRentPaySetInfoByOrderID(Map<String, Object> params); //Cody Info
+
 }

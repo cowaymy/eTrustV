@@ -342,7 +342,7 @@
              , V1.FIRST_INSTALL_NO
              , V1.FIRST_INSTALL_CT_CODE
              , V1.FIRST_INSTALL_CT_NAME
-             , V1.FIRST_INSTALL_DT
+             , TO_CHAR(V1.FIRST_INSTALL_DT, 'YYYY-MM-DD') FIRST_INSTALL_DT
              , V1.FIRST_INSTALL_REM
              , V1.FIRST_INSTALL_SIRIM_NO
              , V1.FIRST_INSTALL_SERIAL_NO
@@ -361,7 +361,7 @@
              , V1.PREFER_INST_TM
              , V1.INSTALL_ADDR_ID
              , V1.INSTALL_CNTC_ID
-             , V1.INST_CNT_DEPT
+             , DBMS_LOB.SUBSTR(V1.INST_CNT_DEPT, 4000) INST_CNT_DEPT
              , V1.INST_CNT_POST
              , DBMS_LOB.SUBSTR(V1.VRIFY_REM, 4000) VRIFY_REM
           FROM SAL1010V V1
@@ -567,5 +567,71 @@
 		     ) T
 		 ORDER BY T.SALES_ORD_NO
     ]]>
+    </select>
+    
+    <select id="selectOrderMailingInfoByOrderID" parameterType="Map" resultType="egovMap">
+        SELECT V1.ORD_ID
+             , V1.MAIL_ADD1
+             , V1.MAIL_ADD2
+             , V1.MAIL_ADD3
+             , V1.MAIL_CNTY
+             , V1.MAIL_STATE
+             , V1.MAIL_AREA
+             , V1.MAIL_POST_CODE
+             , V1.MAIL_CNT_NAME
+             , V1.MAIL_CNT_NRIC
+             , V1.MAIL_CNT_EMAIL
+             , V1.MAIL_CNT_TEL_M
+             , V1.MAIL_CNT_TEL_O
+             , V1.MAIL_CNT_TEL_R
+             , V1.MAIL_CNT_TEL_F
+             , V1.MAIL_CNT_GENDER
+             , V1.BILL_GRP_NO
+             , V1.BILL_STATE_EMAIL
+             , V1.BILL_STATE
+             , V1.BILL_SMS
+             , V1.BILL_POST
+             , V1.MAIL_CNTC_ID
+             , V1.MAIL_ADDR_ID
+             , DBMS_LOB.SUBSTR(V1.MAIL_CNT_DEPT, 4000) MAIL_CNT_DEPT
+             , V1.MAIL_CNT_POST
+          FROM SAL1011V V1
+         WHERE V1.ORD_ID = #{salesOrderId}
+    </select>
+    
+    <select id="selectOrderRentPaySetInfoByOrderID" parameterType="Map" resultType="egovMap">
+		SELECT V1.ORD_ID
+		     , V1.RENT_PAY_MODE_CODE
+		     , V1.RENT_PAY_MODE_DESC
+		     , V1.RENT_PAY_APPLY_DT
+		     , V1.RENT_PAY_SUBMIT_DT
+		     , V1.RENT_PAY_START_DT
+		     , V1.RENT_PAY_REJCT_DT
+		     , V1.RENT_PAY_REJCT_CODE
+		     , V1.RENT_PAY_REJCT_DESC
+		     , V1.RENT_PAY_ISS_BANK_CODE
+		     , V1.RENT_PAY_ISS_BANK_NAME
+		     , V1.RENT_PAY_ACC_NO
+		     , V1.RENT_PAY_ACC_OWNER
+		     , DBMS_LOB.SUBSTR(V1.RENT_PAY_CRC_NO, 4000) RENT_PAY_CRC_NO
+		     , V1.RENT_PAY_CR_OWNER
+		     , V1.RENT_PAY_CRC_EXPR
+		     , V1.ISSU_NRIC
+		     , V1.CLM_LIMIT
+		     , V1.CLM_DT
+		     , V1.CLM_DD_MODE
+		     , V1.IS_3PARTY
+		     , V1.PAYER_CUST_ID
+		     , V1.PAY_MODE_ID
+		     , V1.CRC_ID
+		     , V1.BANK_ACC_ID
+		     , V1.ISSU_BANK_ID
+		     , V1.FAIL_RESN_ID
+		     , V1.OLD_IC
+		     , V1.PAY_TRM
+		     , V1.CARD_TYPE
+		     , V1.CARD_TYPE_ID
+		  FROM PAY1009V V1
+		 WHERE V1.ORD_ID = #{salesOrderId}
     </select>
 </mapper>

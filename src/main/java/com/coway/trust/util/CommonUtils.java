@@ -815,4 +815,15 @@ public final class CommonUtils {
 		}
 		return false;
 	}
+	
+	public static String getMaskCreditCardNo(String inputStr, String maskStr, int visibleDigit) {    	
+    	String retVal = null;    	
+    	if(CommonUtils.isEmpty(inputStr)) {
+    		retVal = inputStr;
+    	}
+    	else {
+    		retVal = StringUtils.repeat(maskStr, inputStr.length() - visibleDigit) + inputStr.substring(inputStr.length() - visibleDigit);
+    	}
+    	return retVal;
+    }
 }

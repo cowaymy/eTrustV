@@ -2,8 +2,10 @@ package com.coway.trust.web.sales;
 
 public class SalesConstants {
 	
-	public static final String DEFAULT_DATE = "01/01/1900";
-		
+	public static final String DEFAULT_DATE = "01/01/1900";	
+	public static final String DEFAULT_DATE_FORMAT1 = "dd/MM/yyyy";	
+	public static final String DEFAULT_DATE_FORMAT2 = "yyyy-MM-dd";
+			
 	//COMMON CODE : PST_TRANSIT_TYPE(CODEMASTERID = 93)
 	public static final int SALES_PSTREQ = 1144;
 	public static final int SALES_PSTDO  = 1145;
