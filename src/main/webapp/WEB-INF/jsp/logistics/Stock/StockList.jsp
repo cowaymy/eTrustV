@@ -81,12 +81,12 @@
                         }];
 
     var filtercolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
-                        {dataField:"stockname"           ,headerText:"Description"   ,width:"50%"},
+                        {dataField:"stockname"           ,headerText:"Description"   ,width:"50%", editable : false},
                         {dataField:"stock"           ,headerText:"Desc"   ,width:"20%" , visible : false},
                         {dataField:"typeid"              ,headerText:"Type"          ,width:120 , visible : false},
-                        {dataField:"typenm"              ,headerText:"TypeName"      ,width:"10%"},
-                        {dataField:"period"              ,headerText:"Period"        ,width:"10%"},
-                        {dataField:"qty"                 ,headerText:"Qty"           ,width:"7%"},
+                        {dataField:"typenm"              ,headerText:"TypeName"      ,width:"10%", editable : false},
+                        {dataField:"period"              ,headerText:"Period"        ,width:"10%", editable : false},
+                        {dataField:"qty"                 ,headerText:"Qty"           ,width:"7%", editable : false},
                         {
                             dataField : "",
                             headerText : "",
@@ -103,12 +103,12 @@
                         }];
 
   var sparecolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
-                        {dataField:"stockname"           ,headerText:"Description"   ,width:"70%"},
+                        {dataField:"stockname"           ,headerText:"Description"   ,width:"70%", editable : false},
                        // {dataField:"stock"           ,headerText:"Desc"   ,width:"20%" , visible : false},
                         //{dataField:"typeid"              ,headerText:"Type"          , visible : false},
                         //{dataField:"typenm"              ,headerText:"TypeName"       , visible : false},
                         //{dataField:"period"              ,headerText:"Period"        , visible : false},
-                        {dataField:"qty"                 ,headerText:"Qty"           ,width:"20%"},
+                        {dataField:"qty"                 ,headerText:"Qty"           ,width:"20%", editable : false},
                         {
                             dataField : "",
                             headerText : "",
@@ -445,7 +445,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     fn_srvMembershipList();
                 }else if ($("#service_info_edit").text() == "SAVE"){
                     // 추가된 행 아이템들(배열)
-                    var addedRowItems = AUIGrid.getAddedRowItems(serviceGrid);
+      /*               var addedRowItems = AUIGrid.getAddedRowItems(serviceGrid);
                          
                     // 수정된 행 아이템들(배열)
                     var editedRowItems = AUIGrid.getEditedRowColumnItems(serviceGrid); 
@@ -458,9 +458,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         "add" : addedRowItems,
                         "update" : editedRowItems,
                         "remove" : removedRowItems
-                    };
+                    }; */
 
-                    f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,data,"service_info");  
+                    f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(serviceGrid),"service_info");  
                     
                     //serviceAUIGrid(servicecolumn); 
                     //$("#service_info_edit").text("Add Service Charge");
@@ -474,6 +474,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         	colShowHide(filterGrid,"",true);
         	$("#filter_info_edit").text("Add Filter");
         }else if ($("#filter_info_edit").text() == "Add Filter"){
+        	popClear();
             regDialog=$("#regFilterWindow").dialog({
                 //autoOpen: false,
                 resizable: false,
@@ -505,7 +506,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             
             console.log("selectedItems[0].item.stkid "+selectedItems[0].item.stkid);     	
         	
-         // 추가된 행 아이템들(배열)
+/*          // 추가된 행 아이템들(배열)
             var addedRowItems = AUIGrid.getAddedRowItems(filterGrid);
                  
             // 수정된 행 아이템들(배열)
@@ -519,8 +520,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 "add" : addedRowItems,
                 "update" : editedRowItems,
                 "remove" : removedRowItems
-            };
-            f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,data,"filter_info");  
+            }; */
+            f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
             
             //serviceAUIGrid(servicecolumn); 
             //$("#filter_info_edit").text("Add Filter");
@@ -536,6 +537,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		                    	colShowHide(spareGrid,"",true);
 		                    	$("#spare_info_edit").text("Add Spare Part");
 		                    } else if ($("#spare_info_edit").text() == "Add Spare Part") {
+		                    	popClear();
 								regDialog = $("#regSpareWindow").dialog({
 									//autoOpen: false,
 									resizable : false,
@@ -569,7 +571,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 								console.log("selectedItems[0].item.stkid "
 										+ selectedItems[0].item.stkid);
 
-								// 추가된 행 아이템들(배열)
+/* 								// 추가된 행 아이템들(배열)
 								var addedRowItems = AUIGrid
 										.getAddedRowItems(spareGrid);
 
@@ -586,10 +588,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 									"add" : addedRowItems,
 									"update" : editedRowItems,
 									"remove" : removedRowItems
-								};
+								}; */
 
 								f_info_save("/stock/modifyFilterInfo.do",
-										selectedItems[0].item.stkid, data,
+										selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
 										"spare_info");
 
 								//serviceAUIGrid(servicecolumn); 
@@ -661,10 +663,13 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 				$("#price_info_edit").text("EDIT");
 			} else if(f == "filter_info"){
 				$("#filter_info_edit").text("EDIT");
+				colShowHide(filterGrid,"",false);
 			} else if(f == "spare_info"){
 				$("#spare_info_edit").text("EDIT");
+				colShowHide(spareGrid,"",false);
             } else if(f == "service_info"){
             	$("#service_info_edit").text("EDIT");
+               	colShowHide(serviceGrid,"",false);
             }
 			getMainListAjax(data);
 		});
@@ -1083,7 +1088,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 	}
 
 	function f_isNumeric(val) {
-
 		var num = $(val).val();
 
 		// 좌우 trim(공백제거)을 해준다.
@@ -1102,31 +1106,63 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		  // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
 		  var regex = /^[0-9]$/g;
 		}*/
+		
+		/*  var re = /[~!@\#$%^&*\()\-=+_']/gi; 
+		 if(re.test(num)){ //특수문자가 포함되면 삭제하여 값으로 다시셋팅
+		 $(this).val(num.replace(re,"")); }  */
+
 
 		if (regex.test(num)) {
 			num = num.replace(/,/g, "");
-
 			return isNaN(num) ? false : true;
 		} else {
 			return false;
 		}
 	}
 
+	
+	function onlyNumber(event){
+        event = event || window.event;
+        var keyID = (event.which) ? event.which : event.keyCode;
+        if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
+            return;
+        else
+            return false;
+    }
+    function removeChar(event) {
+        event = event || window.event;
+        var keyID = (event.which) ? event.which : event.keyCode;
+        if ( keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
+            return;
+        else
+            event.target.value = event.target.value.replace(/[^0-9]/g, "");
+    }
+    
+    
 	function removeRow(rowIndex, gridNm, num) {
-		var rIdx = rowIndex;
-		var gNm = gridNm;
+		//var rIdx = rowIndex;
+		//var gNm = gridNm;
 
-		var str;
+/* 		var str;
 
 		if (num == 1) {
 			str = "filter_info";
 		} else if (num == 2) {
 			str = "spare_info";
-		}
+		} 
+		*/
 
-		AUIGrid.removeRow(gNm, rIdx);
-		AUIGrid.removeSoftRows(gNm);
-		var selectedItems = AUIGrid.getSelectedItems(myGridID);
+		AUIGrid.removeRow(gridNm, rowIndex);
+		AUIGrid.removeSoftRows(gridNm);
+		
+	      if (num == 1) {
+	    	  $("#filter_info_edit").text("SAVE");
+        } else if (num == 2) {
+        	  $("#spare_info_edit").text("SAVE");
+        } else if (num == 3){
+        	  $("#service_info_edit").text("SAVE");
+        }
+/* 		var selectedItems = AUIGrid.getSelectedItems(myGridID);
 		var removedRowItems = AUIGrid.getRemovedItems(gNm);
 		//var addedRowItems = AUIGrid.getAddedRowItems(gNm);
 
@@ -1140,14 +1176,16 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
 			f_info_save("/stock/modifyFilterInfo.do",
 					selectedItems[0].item.stkid, data, str);
+			
 
 		} else if (num == 3) {
 			f_info_save("/stock/modifyServiceInfo.do",
 					selectedItems[0].item.stkid, data, "service_info");
 
-		}
+		} */
 
 		// console.log("data "+data);
+		//$("#"+)
 	}
 
 	function addRowSvr() {
@@ -1202,10 +1240,14 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		$("#service_info_edit").text( "EDIT");
 		$("#filter_info_edit").text("EDIT");
 		$("#spare_info_edit").text("EDIT");
+		popClear();
+	}
+	function popClear(){
 		$("#filterForm")[0].reset();
 		$("#filtercdPop").attr("disabled",true);
 		$("#spareForm")[0].reset();
 		$("#sparecdPop").attr("disabled",true);
+		
 	}
 	
 	function colShowHide(gridNm,fied,checked){
@@ -1488,14 +1530,14 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 							</tr>
 							<tr>
 								<th scope="row">Life Period</th>
-								<td colspan="2"><input type="number" id="lifeperiodPop"
-									name="lifeperiodPop" /></td>
+								<td colspan="2"><input type="text" id="lifeperiodPop"
+									name="lifeperiodPop" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'/></td>
 								<td align="left">month(s)</td>
 							</tr>
 							<tr>
 								<th scope="row" rowspan="3">Quantity</th>
-								<td colspan="3"><input type="number" id="quantityPop"
-									name="quantityPop" /></td>
+								<td colspan="3"><input type="text" id="quantityPop"
+									name="quantityPop" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'/></td>
 							</tr>
 						</tbody>
 					</table>
@@ -1531,8 +1573,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                             </tr>
                             <tr>
                                 <th scope="row" rowspan="3">Quantity</th>
-                                <td colspan="3"><input type="number" id="quantityPop_sp"
-                                    name="quantityPop_sp" /></td>
+                                <td colspan="3"><input type="text" id="quantityPop_sp"
+                                    name="quantityPop_sp"  onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  /></td>
                             </tr>
                         </tbody>
                     </table>
