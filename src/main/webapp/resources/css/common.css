@@ -111,6 +111,7 @@ table+.title_line{margin-top:20px;}
 .ml20{margin-left:20px!important;}
 .ml30{margin-left:30px!important;}
 .ml40{margin-left:40px!important;}
+.pt0{padding-top:0!important}
 .aui-vscrollbar{left:auto!important; right:0!important;}
 .red_text{color:#ff0000;}
 .brown_text{color:#712626;}
@@ -133,9 +134,9 @@ table+.title_line{margin-top:20px;}
 .right_btns{text-align:right;}
 .right_btns li{display:inline-block; vertical-align:top;}
 .left_btns{text-align:left;}
-.left_btns li{display:inline-block;}
+.left_btns li{display:inline-block; vertical-align:top;}
 .center_btns{text-align:center;}
-.center_btns li{display:inline-block;}
+.center_btns li{display:inline-block; vertical-align:top;}
 table+.center_btns{padding-top:15px;}
 .grid_wrap{margin:5px 0 20px 0;}
 .grid_wrap.h220{height:220px;}
