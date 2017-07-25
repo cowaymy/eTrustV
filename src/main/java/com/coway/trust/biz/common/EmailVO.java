@@ -11,23 +11,11 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 
 public class EmailVO {
 
-	private String from;
 	private List<String> to = new ArrayList<>();
 	private String subject;
 	private String text;
 	private boolean isHtml;
 	private List<File> files = new ArrayList<>();
-
-	public String getFrom() {
-		if (StringUtils.isEmpty(this.from)) {
-			throw new ApplicationException(AppConstants.FAIL, "IllegalArgumentException");
-		}
-		return from;
-	}
-
-	public void setFrom(String from) {
-		this.from = from;
-	}
 
 	public List<String> getTo() {
 		if (this.to == null || this.to.size() == 0) {

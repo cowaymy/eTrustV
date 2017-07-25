@@ -60,7 +60,6 @@ public class SampleApplicationImpl extends EgovAbstractServiceImpl implements Sa
 
 		// 2. mail 처리.
 		EmailVO email = new EmailVO();
-		email.setFrom("gtrust.test@coway.com.my");
 		email.setTo("t1706036@partner.coway.co.kr");
 		email.setHtml(false);
 		email.setSubject("subject");

@@ -5,6 +5,7 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ import com.coway.trust.util.UUIDGenerator;
 public class AdaptorServiceImpl implements AdaptorService {
 	private static final Logger logger = LoggerFactory.getLogger(AdaptorServiceImpl.class);
 
+	@Value("${mail.config.from}")
+	private String from;
+	
 	@Autowired
 	private JavaMailSender mailSender;
 
@@ -29,8 +33,8 @@ public class AdaptorServiceImpl implements AdaptorService {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			boolean isMultiPart = email.getFiles().size() == 0 ? false : true;
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, AppConstants.DEFAULT_CHARSET);
-			messageHelper.setFrom(email.getFrom());
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, isMultiPart, AppConstants.DEFAULT_CHARSET);
+			messageHelper.setFrom(from);
 			messageHelper.setTo(email.getTo().toArray(new String[email.getTo().size()]));
 			messageHelper.setSubject(email.getSubject());
 			messageHelper.setText(email.getText());
