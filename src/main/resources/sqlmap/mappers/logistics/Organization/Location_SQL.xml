@@ -135,6 +135,8 @@
 	        , WH_LOC_STK_GRAD       = #{locgrad}
 	        , WH_LOC_CNTY_ID        = #{loccnty}
 	        , WH_LOC_UPD_DT         = SYSDATE
+	        , WH_LOC_IS_SYNC        = #{up_sync}
+	        , WH_LOC_MOBILE        = #{up_mobile}
 	    WHERE WH_LOC_ID = #{locid}
 	</update>
 	
@@ -173,8 +175,8 @@
 	    ,#{inaddr3}
 	    ,#{inarea}
 	    ,#{inpost}    
-	    ,#{instat}	    
-	    ,#{incnty} 
+	    ,#{instat}
+	    ,#{incnty}	    
 	    ,#{incontact1}
         ,#{incontact2}  
 	    ,#{inbranch}  
@@ -189,6 +191,13 @@
 	    ,#{inmobile}
 	    )
     </insert>
+    <delete id="deleteLocationInfo" parameterType="Map">
+    DELETE FROM SYS0028M 
+    WHERE WH_LOC_ID = #{locid} 
+    </delete>
+    
+    
+    
     <select id="locCreateSeq" parameterType="Map" resultType="Integer">
       SELECT NVL(MAX(WH_LOC_ID),0) + 1 from SYS0028M
     </select>
