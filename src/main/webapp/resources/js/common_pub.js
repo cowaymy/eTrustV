@@ -134,11 +134,21 @@ function setTree(){//트리메뉴 세팅
 				thisLi.addClass("none");
 			}
 		}else if(haveUlNum!="0"){
-			thisLi.children("a").before("<img src='../images/common/btn_plus.gif' alt='하위메뉴 보기' />");
+			if(haveUl.is(":visible")){
+				thisLi.children("a").before("<img src='../images/common/btn_minus.gif' alt='하위메뉴 보기' />");
+			}else{
+				thisLi.children("a").before("<img src='../images/common/btn_plus.gif' alt='하위메뉴 보기' />");
+			}
+			
 		}
 	}
 }
 setTree();//트리메뉴 세팅 함수 실행
+
+function reSetTree(){//트리메뉴 재세팅 함수 실행
+	$(".treeMenu li").removeClass();
+	$(".treeMenu li img").remove();
+}
 
 $(document).on(
 	"click", ".treeMenu li img", function(){
