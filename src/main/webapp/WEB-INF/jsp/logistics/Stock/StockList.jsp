@@ -165,7 +165,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                      
                      },
                      {
-                         dataField : "undefined",
+                         dataField : "",
                          headerText : "",
                          renderer : {
                              type : "ButtonRenderer",
@@ -276,11 +276,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $("#subDiv > .tap_area").eq(i).hide();
         }
         
- /*        AUIGrid.destroy(filterGrid); filterGrid  = null;
-        AUIGrid.destroy(spareGrid);  spareGrid   = null;
-        AUIGrid.destroy(serviceGrid);serviceGrid = null;
-        AUIGrid.destroy(imgGrid);    imgGrid     = null; */
-        
     }
 
     $(function(){
@@ -326,7 +321,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
                 $("#filter_info_div").show();
                 
-                filterAUIGrid(filtercolumn);        
+                //filterAUIGrid(filtercolumn);        
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
@@ -334,6 +329,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 }
             }else{
             }
+            	//alert("부디");
             $(this).find("a").attr("class","on");
         });
         $("#spare_info").click(function(){
@@ -342,7 +338,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                f_removeclass();
                 $("#spare_info_div").show();
                 
-                spareAUIGrid(sparecolumn);
+                //spareAUIGrid(sparecolumn);
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
@@ -358,7 +354,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 f_removeclass();
                 $("#service_info_div").show();
                 
-                serviceAUIGrid(servicecolumn);        
+                //serviceAUIGrid(servicecolumn);        
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
@@ -375,7 +371,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 f_removeclass();
                 $("#stock_img_td").show();
                 
-                imgAUIGrid(stockimgcolumn);        
+                //imgAUIGrid(stockimgcolumn);        
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
@@ -389,6 +385,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         });
         
         $("#search").click(function(){
+            $('#subDiv').hide();
             getSampleListAjax();
         });
         $("#clear").click(function(){
@@ -440,7 +437,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
              var selectedItems = AUIGrid.getSelectedItems(myGridID);
              
              console.log("selectedItems[0].item.stkid "+selectedItems[0].item.stkid);
-                if ($("#service_info_edit").text() == "Add Service Charge"){
+                if($("#service_info_edit").text() == "EDIT"){ 
+                    colShowHide(serviceGrid,"",true);
+                    $("#service_info_edit").text("Add Service Charge") ;
+                }else if ($("#service_info_edit").text() == "Add Service Charge"){
                     addRowSvr();
                     fn_srvMembershipList();
                 }else if ($("#service_info_edit").text() == "SAVE"){
@@ -463,13 +463,17 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,data,"service_info");  
                     
                     //serviceAUIGrid(servicecolumn); 
+                    //$("#service_info_edit").text("Add Service Charge");
+                    
                 }
             
         });
         
         $("#filter_info_edit").click(function(){
-        	
-        	 if ($("#filter_info_edit").text() == "Add Filter"){
+        if($("#filter_info_edit").text() == "EDIT"){	
+        	colShowHide(filterGrid,"",true);
+        	$("#filter_info_edit").text("Add Filter");
+        }else if ($("#filter_info_edit").text() == "Add Filter"){
             regDialog=$("#regFilterWindow").dialog({
                 //autoOpen: false,
                 resizable: false,
@@ -482,7 +486,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                   //"Add Filter": addRowFileter,
                   "Add Filter": function(event){
                       addRowFileter();
+                      
                       regDialog.dialog( "close" );
+                     // $("#regFilterWindow").reset();
                   },
                   "Cancel": function(event) {
                       regDialog.dialog( "close" );
@@ -514,11 +520,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 "update" : editedRowItems,
                 "remove" : removedRowItems
             };
-
             f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,data,"filter_info");  
             
             //serviceAUIGrid(servicecolumn); 
-        	
+            //$("#filter_info_edit").text("Add Filter");
         	
         }
         	 
@@ -526,10 +531,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     });
         
  
-	$("#spare_info_edit")
-				.click(
-						function() {
-							if ($("#spare_info_edit").text() == "Add Spare Part") {
+	$("#spare_info_edit").click(function() {
+		                    if($("#spare_info_edit").text() == "EDIT"){
+		                    	colShowHide(spareGrid,"",true);
+		                    	$("#spare_info_edit").text("Add Spare Part");
+		                    } else if ($("#spare_info_edit").text() == "Add Spare Part") {
 								regDialog = $("#regSpareWindow").dialog({
 									//autoOpen: false,
 									resizable : false,
@@ -542,10 +548,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 										of : $("#grid_wrap")
 									},
 									buttons : {
-										//"Save": updateGridRow,
-										//"Add Filter": addRowFileter,
 										"Add Spare Part" : function(event) {
 											addRowSparePart();
+											
 											regDialog.dialog("close");
 										},
 										"Cancel" : function(event) {
@@ -553,11 +558,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 										}
 									}
 								});
-								//$("#grid_wrap").hide();
 								var comUrl = "/common/selectCodeList.do";
 								doGetCombo(comUrl, '11', '', 'categoryPop_sp',
 										'S', '');
-								//doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
 
 							} else if ($("#spare_info_edit").text() == "SAVE") {
 								var selectedItems = AUIGrid
@@ -590,7 +593,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 										"spare_info");
 
 								//serviceAUIGrid(servicecolumn); 
-
+								//$("#service_info_edit").text("SAVE");
 							}
 
 						});
@@ -651,17 +654,18 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
 		Common.ajax("POST", url, fdata, function(data) {
 			//alert("msg "+data.msg);
+			Common.alert(data.message);
 			if (v == "stockInfo") {
 				$("#stock_info_edit").text("EDIT");
 			} else if (v == "priceForm") {
 				$("#price_info_edit").text("EDIT");
-			} else if (v == "service_info") {
-				$("#service_info_edit").text("EDIT");
-			} else if (v == "filter_info") {
-				$("#filter_info_edit").text("Add Filter");
-			} else if (v == "spare_info") {
-				$("#spare_info_edit").text("Add Spare Part");
-			}
+			} else if(f == "filter_info"){
+				$("#filter_info_edit").text("EDIT");
+			} else if(f == "spare_info"){
+				$("#spare_info_edit").text("EDIT");
+            } else if(f == "service_info"){
+            	$("#service_info_edit").text("EDIT");
+            }
 			getMainListAjax(data);
 		});
 	}
@@ -764,8 +768,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 	}
 
 	function serviceAUIGrid(servicecolumn) {
-		serviceGrid = AUIGrid.create("#service_grid", servicecolumn,
-				subgridpros);
+		serviceGrid = AUIGrid.create("#service_grid", servicecolumn,subgridpros);
 	}
 
 	function imgAUIGrid(stockimgcolumn) {
@@ -998,16 +1001,28 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			$("#price_info_edit").text("SAVE");
 
 		} else if (v == 'F') {
+			destory(filterGrid);
+			filterAUIGrid(filtercolumn)
 			AUIGrid.setGridData(filterGrid, data);
+			colShowHide(filterGrid,"",false);
 
 		} else if (v == 'R') {
+			destory(spareGrid);
+            spareAUIGrid(sparecolumn);
 			AUIGrid.setGridData(spareGrid, data);
+			colShowHide(spareGrid,"",false);
 
 		} else if (v == 'V') {
+			destory(serviceGrid);
+            serviceAUIGrid(servicecolumn);
 			AUIGrid.setGridData(serviceGrid, data);
+			colShowHide(serviceGrid,"",false);
 
 		} else if (v == 'I') {
+			destory(imgGrid);
+			imgAUIGrid(stockimgcolumn);
 			AUIGrid.setGridData(imgGrid, data);
+			//colShowHide(imgGrid,"",false);
 
 		}
 	}
@@ -1108,14 +1123,16 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		} else if (num == 2) {
 			str = "spare_info";
 		}
+
 		AUIGrid.removeRow(gNm, rIdx);
 		AUIGrid.removeSoftRows(gNm);
-
 		var selectedItems = AUIGrid.getSelectedItems(myGridID);
 		var removedRowItems = AUIGrid.getRemovedItems(gNm);
+		//var addedRowItems = AUIGrid.getAddedRowItems(gNm);
 
 		// 서버로 보낼 데이터 작성
 		var data = {
+			//"add" : addedRowItems,
 			"remove" : removedRowItems
 		};
 
@@ -1178,6 +1195,25 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 						srvMembershipList.push(list);
 					}
 				});
+	}
+	
+	function destory(gridNm){
+		AUIGrid.destroy(gridNm);
+		$("#service_info_edit").text( "EDIT");
+		$("#filter_info_edit").text("EDIT");
+		$("#spare_info_edit").text("EDIT");
+		$("#filterForm")[0].reset();
+		$("#filtercdPop").attr("disabled",true);
+		$("#spareForm")[0].reset();
+		$("#sparecdPop").attr("disabled",true);
+	}
+	
+	function colShowHide(gridNm,fied,checked){
+	      if(checked) {
+	            AUIGrid.showColumnByDataField(gridNm, fied);
+	        } else {
+	            AUIGrid.hideColumnByDataField(gridNm, fied);
+	        }
 	}
 </script>
 </head>
@@ -1260,7 +1296,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         <section id="subDiv" style="display:none;" class="tap_wrap"><!-- tap_wrap start -->
         
             <ul class="tap_type1">
-                <li id="stock_info"><a href="#"> stock info </a></li>
+                <li id="stock_info"><a href="#"> Stock info </a></li>
                 <li id="price_info"><a href="#"> Price & Value Information</a></li>
                 <li id="filter_info"><a href="#"> Filter Info</a></li>
                 <li id="spare_info"><a href="#"> Spare Part Info</a></li>
@@ -1371,7 +1407,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <aside class="title_line"><!-- title_line start -->
                     <h3 id="filterTab">Stock's Filter List</h3>
                     <ul class="left_opt">
-                    <li><p class="btn_blue"><a id="filter_info_edit">Add Filter</a></p></li>
+                    <li><p class="btn_blue"><a id="filter_info_edit">EDIT</a></p></li>
                     </ul>
                 </aside>
                 <div id="filter_grid" style="width:100%;">
@@ -1381,7 +1417,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <aside class="title_line"><!-- title_line start -->
                     <h3>Stock's Spare Part List</h3>
                     <ul class="left_opt">
-                    <li><p class="btn_blue"><a id="spare_info_edit">Add Spare Part</a></p></li>
+                    <li><p class="btn_blue"><a id="spare_info_edit">EDIT</a></p></li>
                     </ul>
                 </aside>
                 <div id="spare_grid" style="width:100%;"></div>
@@ -1390,7 +1426,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Service Charge Information List</h3>
                 <ul class="left_opt">
-                    <li><p class="btn_blue"><a id="service_info_edit">Add Service Charge</a></p></li>
+                    <li><p class="btn_blue"><a id="service_info_edit">EDIT</a></p></li>
                 </ul>
                 </aside>
                 <div id="service_grid" style="width:100%;"></div>
@@ -1468,7 +1504,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			</div>
 		</section>
 	
-	<!-- registr spare part-->
+	<!-- register spare part-->
 
        <section class="pop_body">
             <div id="regSpareWindow" style="display: none" title="그리드 수정 사용자 정의">
