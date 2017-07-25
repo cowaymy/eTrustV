@@ -192,7 +192,7 @@ $(document).on(
 });
 /* 인풋 파일 end */
 
-/* 팝업 드래그 start */
+/* 팝업 드래그 start 
 $("#popup_wrap, .popup_wrap").draggable();
-/* 팝업 드래그 end */
+ 팝업 드래그 end */
 });
