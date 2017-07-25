@@ -6,5 +6,5 @@ public interface SampleApplication {
 
 	void saveMultiService(Map<String, Object> params);
 	
-	void sendEmailAndProcess(Map<String, Object> params);
+	boolean sendEmailAndProcess(Map<String, Object> params);
 }

@@ -107,14 +107,18 @@ public class SampleController {
 	}
 
 	/**
-	 * 
-	 * TODO : 아직 완료 되지 않음... 테스트 중임.....
 	 * 서비스 + 메일 전송 예제.
 	 * sendMail test.
 	 */
 	@RequestMapping(value = "/sendMail.do")
-	public void sendMail(@RequestParam Map<String, Object> params, ModelMap model) {
-		sampleApplication.sendEmailAndProcess(params);
+	public ResponseEntity<ReturnMessage> sendMail(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		boolean result = sampleApplication.sendEmailAndProcess(params);
+		if(!result){
+			// TODO : 다국어 적용 필요.
+			message.setDetailMessage("SMS  전송 실패하였습니다.");			
+		}
+		return ResponseEntity.ok(message);
 	}
 
 	/**

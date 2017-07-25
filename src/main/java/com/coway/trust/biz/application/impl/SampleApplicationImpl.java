@@ -33,7 +33,7 @@ public class SampleApplicationImpl extends EgovAbstractServiceImpl implements Sa
 
 	@Autowired
 	private Sample2Service sample2Service;
-	
+
 	@Autowired
 	private AdaptorService adaptorService;
 
@@ -53,24 +53,25 @@ public class SampleApplicationImpl extends EgovAbstractServiceImpl implements Sa
 	 * 서비스 로직 + 메일 전송 예제.
 	 */
 	@Override
-	public void sendEmailAndProcess(Map<String, Object> params) {
+	public boolean sendEmailAndProcess(Map<String, Object> params) {
 
 		// 1. service 로직...
 		// sampleService.insertClobData(params);
 
 		// 2. mail 처리.
 		EmailVO email = new EmailVO();
-		email.setFrom("test@mail.com");
+		email.setFrom("gtrust.test@coway.com.my");
 		email.setTo("t1706036@partner.coway.co.kr");
 		email.setHtml(false);
 		email.setSubject("subject");
 		email.setText("email text");
 
 		/**
-		 * isTransactional == true : 메일 전송 실패시 rollback 처리고 ApplicationException 발생.
-		 * isTransactional == false : 메일 전송 실패시 그냥 진행. 결과는 true/false 로 확인. 
+		 * isTransactional == true : 메일 전송 실패시 rollback 처리고 ApplicationException 발생. isTransactional == false : 메일 전송
+		 * 실패시 그냥 진행. 결과는 true/false 로 확인.
 		 */
 		boolean isSuccess = adaptorService.sendEmail(email, false);
-		
+
+		return isSuccess;
 	}
 }

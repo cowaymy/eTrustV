@@ -10,4 +10,6 @@ public interface AdaptorService {
 	 * @return 성공여부
 	 */
 	boolean sendEmail(EmailVO email, boolean isTransactional);
+	
+	boolean sendSMS();
 }
