@@ -407,6 +407,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto > div .border_box{position:relative; padding:10px; border:1px solid #ddd;}
 .divine_auto > div .border_box.mt44{margin-top:44px;}
 .divine_auto > div .border_box .tran_list{float:none; width:100%; padding:0!important;}
+.divine_auto > div .border_box .right_btns:first-child{padding-top:0;}
 .divine_auto .left_btns li > strong,
 .divine_auto .center_btns li > strong,
 .divine_auto .right_btns li > strong{font-size:18px;}
