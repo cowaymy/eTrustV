@@ -34,11 +34,8 @@ $(document).ready(function(){
             wrapSelectionMove : true         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부            
     };*/
 
-    
-    
      // 그리드 생성
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	//myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
 	
 	// Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){ 
@@ -128,22 +125,12 @@ var columnLayout2 = [
             $('#c1').text(result.enrollInfo.c1);
             $('#debtDtFrom').text(result.enrollInfo.debtDtFrom);
             $('#debtDtTo').text(result.enrollInfo.debtDtTo);
-            
-            
-            
-            values = result.resultList ; //java에서 정의한 ArrayList명을 적어준다.
-            
-            $.each(values, function( index, value ) {
-               console.log( index + " : " + value.accNo ); //Book.java 의 변수명을 써주면 된다.
-            });
-
 
         },function(jqXHR, textStatus, errorThrown) {
-            //alert("실패하였습니다.");
-            //console.log("실패하였습니다.");
-            //console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+            alert("실패하였습니다.");
+
             
-            alert(jqXHR.responseJSON.message);
+            //alert(jqXHR.responseJSON.message);
             //console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
           
             //console.log("status : " + jqXHR.status);
@@ -167,7 +154,7 @@ var columnLayout2 = [
     
   //Save Data
     function fn_saveEnroll() {
-    	var data = {};
+	  
         var cmbIssueBank2 = $("#cmbIssueBank2 option:selected").val();
         var rdpCreateDateFr2 = $("#rdpCreateDateFr2").val();
         var rdpCreateDateTo2 = $("#rdpCreateDateTo2").val();
@@ -181,17 +168,13 @@ var columnLayout2 = [
         }
     	
     	if (validation()) {  
-    		  Common.ajax("POST", "/payment/saveEnroll.do?cmbIssueBank2="+cmbIssueBank2+"&rdpCreateDateFr2="+rdpCreateDateFr2+"&rdpCreateDateTo2="+rdpCreateDateTo2, $("#searchForm").serialize(), function(result) {
-    		var msg = result.message;
-    		var enrlId = result.data.enrlId;
-    		//console.log(result.data.enrlId);
-    		alert(msg+enrlId);
-    		
-    	
-    		
-    		// 공통 메세지 영역에 메세지 표시.
-            Common.setMsg("<spring:message code='sys.msg.success'/>");
-            //searchList();
+    	    Common.ajax("POST", "/payment/saveEnroll.do?cmbIssueBank2="+cmbIssueBank2+"&rdpCreateDateFr2="+rdpCreateDateFr2+"&rdpCreateDateTo2="+rdpCreateDateTo2, $("#searchForm").serialize(), function(result) {
+	    		var msg = result.message;
+	    		var enrlId = result.data.enrlId;
+	    		alert(msg+enrlId);
+	    		// 공통 메세지 영역에 메세지 표시.
+	            Common.setMsg("<spring:message code='sys.msg.success'/>");
+	            //searchList();
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
                 	console.log("status : " + jqXHR.status);
@@ -237,37 +220,45 @@ var columnLayout2 = [
 		$("#issueBankMsg").text("");
         $("#rdpCreateDateFr2").val("");
         $("#rdpCreateDateTo2").val("");
-        $("#rdpCreateDateFr2").attr("disabled",true).attr("readonly",false);
-		$("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
+        $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
+		$("#rdpCreateDateTo2").attr("disabled",false).attr("readonly",false);
 
 		switch (issueBankVal) {
 		case "2":
+			//ALB
 			issueMsg = "+1 Day Send Same Day";
-			 $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
+			 $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
 			$("#issueBankMsg").text(issueMsg); 
 			$("#issueBankMsg").css("color","red");
 			break;
 			
 		case "3":
+			//CIMB
+            //txtRemark.Text = "Same Day";
 			$("#issueBankMsg").text(issueMsg); 
 			break;
 		
 		case "5":
+			//HLBB
 			$("#issueBankMsg").text(issueMsg); 
             break;
          
 		case "21":
+			//MBB
 			issueMsg = "+2 Days";
-			 $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
+			$("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
             $("#issueBankMsg").text(issueMsg);
             $("#issueBankMsg").css("color","red");
             break;
             
 		case "6":
+			//PBB
+            //txtRemark.Text = "Same Day";
 			$("#issueBankMsg").text(issueMsg); 
             break;
             
 		case "7":
+			//RHB
 			issueMsg = "Current Date";
             $("#issueBankMsg").text(issueMsg);
             $("#issueBankMsg").css("color","red");
@@ -276,13 +267,12 @@ var columnLayout2 = [
             break;
             
 		case "9":
-			$("#issueBankMsg").text(issueMsg); 
-			 $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
 			//BSN
+			$("#issueBankMsg").text(issueMsg); 
+			 $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
             break;
-            
 
-		default:alert("default");
+		default:
 		   $("#issueBankMsg").text(issueMsg);
 		   $("#rdpCreateDateFr2").attr("disabled",true).attr("readonly",false);
 		   $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
@@ -292,7 +282,8 @@ var columnLayout2 = [
     
     function fn_close() {
     	$('#popup_wrap').hide();
-    	AUIGrid.destroy(myGridID2); 
+    	selectedGridValue = undefined;
+    	AUIGrid.destroy(myGridID2);
 	}
     
     function fn_close2() {
@@ -303,8 +294,8 @@ var columnLayout2 = [
         $("#rdpCreateDateTo2").val("");
     }
     
-    function fn_enrollmentResult() {
-		location.href = "initRentalCollectionByBS.do";
+    function fn_goEnrollmentResult() {
+		location.href = "initEnrollmentResultList.do";
 	}
 </script>
 
@@ -317,7 +308,6 @@ var columnLayout2 = [
         <li>Auto Debit</li>
         <li>Enrollment</li>
     </ul>
-    
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
@@ -398,7 +388,7 @@ var columnLayout2 = [
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:view_Enrollment()">View Enrollment</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()">New Enrollment</a></p></li>
-                        <li><p class="link_btn type2"><a href="#" onclick="fn_enrollmentResult();">Enrollment Result</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="fn_goEnrollmentResult();">Enrollment Result</a></p></li>
                         <!-- <li><p class="link_btn type2"><a href="#">menu2</a></p></li>
                         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
                         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
@@ -513,7 +503,7 @@ var columnLayout2 = [
                             <p><input id="rdpCreateDateTo2" name="rdpCreateDateTo2"  type="text" title="rdpCreateDateTo" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
                             </div><!-- date_set end --> 
                         </td>
-                        <td id="issueBankMsg"></td>
+                        <td id="issueBankMsg" style="width:18%"></td>
                     </tr>
                 </tbody>
     </table>
