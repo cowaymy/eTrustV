@@ -316,7 +316,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         });
         $("#filter_info").click(function(){
             
-            if($("#filter_info_div").css("display") == "none"){
+            //if($("#filter_info_div").css("display") == "none"){
                 f_removeclass();
 
                 $("#filter_info_div").show();
@@ -327,14 +327,14 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 for(i=0; i<selectedItems.length; i++) {
                     f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=filter", "F");
                 }
-            }else{
-            }
+           // }else{
+            //}
             	//alert("부디");
             $(this).find("a").attr("class","on");
         });
         $("#spare_info").click(function(){
             
-           if($("#spare_info_div").css("display") == "none"){
+          //if($("#spare_info_div").css("display") == "none"){
                f_removeclass();
                 $("#spare_info_div").show();
                 
@@ -344,13 +344,13 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 for(i=0; i<selectedItems.length; i++) {
                     f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=spare", "R");
                 }                
-            }else{              
-            }
+            //}else{              
+            //}
             $(this).find("a").attr("class","on");
         });
         $("#service_info").click(function(){
             
-            if($("#service_info_div").css("display") == "none"){
+           // if($("#service_info_div").css("display") == "none"){
                 f_removeclass();
                 $("#service_info_div").show();
                 
@@ -361,8 +361,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     f_view("/stock/ServiceInfo.do?stkid="+selectedItems[i].item.stkid, "V");
                 }
                 
-            }else{                
-            }
+          //  }else{                
+          //  }
             $(this).find("a").attr("class","on");
         });
         $("#stock_image").click(function(){
@@ -464,6 +464,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     
                     //serviceAUIGrid(servicecolumn); 
                     //$("#service_info_edit").text("Add Service Charge");
+                   // $("#service_info").click();
                     
                 }
             
@@ -525,6 +526,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             
             //serviceAUIGrid(servicecolumn); 
             //$("#filter_info_edit").text("Add Filter");
+            //$("#filter_info").click();
         	
         }
         	 
@@ -596,6 +598,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
 								//serviceAUIGrid(servicecolumn); 
 								//$("#service_info_edit").text("SAVE");
+								//$("#spare_info").click();
 							}
 
 						});
@@ -664,12 +667,15 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			} else if(f == "filter_info"){
 				$("#filter_info_edit").text("EDIT");
 				colShowHide(filterGrid,"",false);
+				$("#filter_info").trigger("click");
 			} else if(f == "spare_info"){
 				$("#spare_info_edit").text("EDIT");
 				colShowHide(spareGrid,"",false);
+				$("#spare_info").trigger("click");
             } else if(f == "service_info"){
             	$("#service_info_edit").text("EDIT");
                	colShowHide(serviceGrid,"",false);
+               	$("#service_info").trigger("click");
             }
 			getMainListAjax(data);
 		});
