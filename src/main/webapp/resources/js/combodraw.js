@@ -138,3 +138,29 @@ function getAddrRelay(obj , value , tag , selvalue){
 	}
 }
 
+function getCdForStockList(obj , value , tag , selvalue){
+	var robj= '#'+obj;
+	$(robj).attr("disabled",false);
+	doGetComboForStock('/common/selectInStckSelCodeList.do', tag , value , selvalue,obj, 'S', ''); 
+	
+}
+
+
+function doGetComboForStock(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
+	$.ajax({
+        type : "GET",
+        url : url,
+        data : { groupCode : groupCd , codevalue : codevalue},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+           var rData = data;
+           doDefCombo(rData, selCode, obj , type,  callbackFn);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    }); 
+} ;
