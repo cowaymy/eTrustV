@@ -239,6 +239,10 @@ var Common = {
 						$obj.remove();						
 					}
 				});
+				
+				/* 팝업 드래그 start */
+				$("#popup_wrap, .popup_wrap").draggable();
+				/* 팝업 드래그 end */
 
 			},
 			error : function() {
