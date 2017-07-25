@@ -146,16 +146,16 @@ public class LocationController {
 	public ResponseEntity<ReturnMessage> insLocation(@RequestParam Map<String, Object> params, Model model) {
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
+		int loginId = 0;
 		int inis_sync= 0;
 		int inmobile= 0;
 		Boolean loc_Sync = false;
 		Boolean loc_Mobile = false;
 				
 		if(sessionVO==null){
-			loginId="99999999";			
+			loginId=99999999;			
 		}else{
-			loginId=sessionVO.getId();
+			loginId=sessionVO.getUserId();
 		}
 		if(loc_Sync == true){
 			inis_sync =1;
@@ -166,7 +166,9 @@ public class LocationController {
 		}
 		
 		CommonUtils com = new CommonUtils();
-					
+		
+
+			
 		String inwarecd     = (String) params.get("inwarecd");
 		String inwarenm     = (String) params.get("inwarenm");
 		String inaddr1     = (String) params.get("inaddr1");
