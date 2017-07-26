@@ -360,18 +360,21 @@
         });
         
          $("#insert").click(function(){
-        	alert("인서트테스트");
             f_insertView();
         });
          
          $("#insertsave").click(function(){
              
-            // if (valiedcheck()){
-            	/* $("#insertForm").serialize() */
+             if (insvaliedcheck()){
+            	var checkval = "";
+                $("input[id=insitemtype]:checked").each(function() {
+                    if (checkval != "") checkval += ",";
+                    checkval += $(this).val();
+                });
+                $('[name="insitemtype"]').val(checkval);        	
                   var param = $('#insertForm').serializeJSON();
-                 Common.ajax("POST", "/logistics/material/materialInsertItemType.do",param, function(result) {
+                  Common.ajax("POST", "/logistics/material/materialInsertItemType.do",param, function(result) {
                      Common.alert(result.message);
-                     //AUIGrid.resetUpdatedItems(myGridID, "all");
                      
                  },  function(jqXHR, textStatus, errorThrown) {
                      try {
@@ -380,12 +383,8 @@
 
                      Common.alert("Fail : " + jqXHR.responseJSON.message);
                  });
-              //   getMaterialListAjax(rows);
-             //}
-             
+             }             
          });
-                
-
     });
     
     function f_detailView(rid){
@@ -472,6 +471,47 @@
         }
         return true;
     }
+    
+    function insvaliedcheck(){
+    	if($("#insitmname").val() == ""){
+               Common.alert("Please enter the Material Name.");
+               $("#insitmname").focus();
+               return false;
+        }
+        if($("#insuom").val() == ""){
+            Common.alert("Please select one of Unit of Measure.");
+            $("#insuom").focus();
+            return false;
+        }
+        if($("#inscurrency").val() == ""){
+            Common.alert("Please select one of Currency.");
+            $("#inscurrency").focus();
+            return false;
+        }
+        if($("#inscateid").val() == ""){
+            Common.alert("Please select one of Key Product Group.");
+            $("#inscateid").focus();
+            return false;
+        }
+        if($("#insstuscode").val() == ""){
+            Common.alert("Please select one of Used.");
+            $("#insstuscode").focus();
+            return false;
+        }
+        if($("#insprice").val() == ""){
+            Common.alert("Please enter the Sales Price.");
+            $("#insprice").focus();
+            return false;
+        }
+     
+        
+        if($("input[id=insitemtype]:checked").length == 0){
+            Common.alert("Please check one or more Item Type.");
+            return false;
+        }
+        return true;
+    }
+    
     function fn_itempop(cd , nm , ct , tp){
     	doGetCombo('/common/selectCodeList.do', '63', ct ,'spgroup', 'A' , '');
     	$("#svalue").val(cd);
@@ -526,20 +566,12 @@
     function f_insertView(){
     	$("#detailView").hide();
         $("#insertView").show();
-       
-          //var seldata = AUIGrid.getItemByRowIndex(myGridID , rid);
            
         doGetCombo('/common/selectCodeList.do', '63','','inscateid', 'S' , '');
         doGetCombo('/common/selectCodeList.do', '94', ''     ,'insuom', 'S' , '');
         doGetCombo('/common/selectCodeList.do', '42', '','inscurrency', 'S' , '');
         doDefCombo(comboData, '' ,'insstuscode', 'S', '');
-   /*      $("#itmcode").val(seldata.itmCode);
-        $("#itmname").val(seldata.itmName);
-        $("#itmdesc").val(seldata.itmDesc);
-        $("#olditemid").val(seldata.oldStkId);
-        $("#price").val(seldata.prc);
-        $("#ditmid").val(seldata.itmId); */
-        //itemtypedata
+
         var html = "";
         var checked = "";
         $.each(itemdata, function(index,value) {
@@ -547,19 +579,9 @@
                 html += "<tr>";
             }
             
-       /*      if (seldata.itemType != null && seldata.itemType != "" && seldata.itemType != undefined){
-                var typeArr = seldata.itemType.split(",");
-                for (var j = 0 ; j < typeArr.length ; j++){
-                    if(typeArr[j] == itemdata[index].codeId ){
-                        checked = "checked";
-                    }
-                }
-            } */
-            
             html += "<th scope=\"row\">"+itemdata[index].codeName+"</th>";
             html += "<td>";
-           // html += "<label><input type=\"checkbox\" id='insitemtype' name='insitemtype' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
-            html += "<label><input type=\"checkbox\" id='insitemtype' name='insitemtype[]' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
+            html += "<label><input type=\"checkbox\" id='insitemtype' name='insitemtype' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
             html += "</td>";
             
             if ((index % 4) == 3){
@@ -799,10 +821,10 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Material Code</th>
+    <!-- <th scope="row">Material Code</th>
     <td>
     <input type="text" placeholder="00000"  class="readonly w100p" readonly="readonly" />
-    </td>
+    </td> -->
     <th scope="row">Material Name</th>
     <td colspan="3">
     <input type="text" id='insitmname' name='insitmname' title="" placeholder="" class="w100p" />
