@@ -76,6 +76,12 @@ public class MaterialServiceImpl extends EgovAbstractServiceImpl implements Mate
 	public void insertMaterialItemType(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		
+		int itmidseq = mstMapper.materialItmIdSeq();
+		int itemtypeseq = mstMapper.materialItemTypeSeq();
+		
+		params.put("itmidseq", itmidseq);
+		params.put("itemtypeseq", itemtypeseq);
+				
 		mstMapper.insertMaterialItemType(params);
 	}
 	
