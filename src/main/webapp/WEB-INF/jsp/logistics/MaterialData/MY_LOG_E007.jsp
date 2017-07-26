@@ -360,15 +360,16 @@
         });
         
          $("#insert").click(function(){
-        	alert("제발!!!!!!!!!!!!");
+        	alert("인서트테스트");
             f_insertView();
         });
          
          $("#insertsave").click(function(){
              
             // if (valiedcheck()){
-
-                 Common.ajax("GET", "/logistics/material/materialInsertItemType.do", $("#insertForm").serialize(), function(result) {
+            	/* $("#insertForm").serialize() */
+                  var param = $('#insertForm').serializeJSON();
+                 Common.ajax("POST", "/logistics/material/materialInsertItemType.do",param, function(result) {
                      Common.alert(result.message);
                      //AUIGrid.resetUpdatedItems(myGridID, "all");
                      
@@ -532,12 +533,12 @@
         doGetCombo('/common/selectCodeList.do', '94', ''     ,'insuom', 'S' , '');
         doGetCombo('/common/selectCodeList.do', '42', '','inscurrency', 'S' , '');
         doDefCombo(comboData, '' ,'insstuscode', 'S', '');
-        /* $("#itmcode").val(seldata.itmCode);
+   /*      $("#itmcode").val(seldata.itmCode);
         $("#itmname").val(seldata.itmName);
         $("#itmdesc").val(seldata.itmDesc);
         $("#olditemid").val(seldata.oldStkId);
         $("#price").val(seldata.prc);
-        $("#ditmid").val(seldata.itmId);
+        $("#ditmid").val(seldata.itmId); */
         //itemtypedata
         var html = "";
         var checked = "";
@@ -546,18 +547,19 @@
                 html += "<tr>";
             }
             
-            if (seldata.itemType != null && seldata.itemType != "" && seldata.itemType != undefined){
+       /*      if (seldata.itemType != null && seldata.itemType != "" && seldata.itemType != undefined){
                 var typeArr = seldata.itemType.split(",");
                 for (var j = 0 ; j < typeArr.length ; j++){
                     if(typeArr[j] == itemdata[index].codeId ){
                         checked = "checked";
                     }
                 }
-            }
+            } */
             
             html += "<th scope=\"row\">"+itemdata[index].codeName+"</th>";
             html += "<td>";
-            html += "<label><input type=\"checkbox\" id='itemtype' name='itemtype' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
+           // html += "<label><input type=\"checkbox\" id='insitemtype' name='insitemtype' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
+            html += "<label><input type=\"checkbox\" id='insitemtype' name='insitemtype[]' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
             html += "</td>";
             
             if ((index % 4) == 3){
@@ -566,7 +568,7 @@
             checked = "";
         });
         
-        $("#itemtypedata").html(html);   */
+        $("#insitemtypedata").html(html);   
     }
      
     
@@ -779,7 +781,7 @@
 <aside class="title_line"><!-- title_line start -->
 <h3 id="title">Material Master Create/Change</h3>
 </aside>
-<form id="insertForm" method="GET">
+<form id="insertForm" method="post">
 <!-- <input type="text" id="insditmid"/> -->
 <aside class="title_line"><!-- title_line start -->
 <h4>Main Value</h4>
@@ -815,7 +817,7 @@
 <tr>
     <th scope="row">Old Material Number</th>
     <td>
-    <input type="text" id='insolditemid' name="insolditemid" placeholder="" class="w100p"  />
+    <input type="text" id='insolditemid' name="insolditemid" placeholder="" maxlength="15" class="w100p"  />
     </td>
     <th scope="row">Unit of Measure</th>
     <td>
@@ -866,14 +868,14 @@
     <col style="width:200px" />
     <col style="width:*" />
 </colgroup>
-<tbody id="itemtypedata">
+<tbody id="insitemtypedata">
 
 </tbody> 
 </table><!-- table end -->
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2"><a id="insertsave">SAVE</a></p></li>
-    <li><p class="btn_blue2"><a id="detailcancel">CANCEL</a></p></li>
+    <li><p class="btn_blue2"><a id="">CANCEL</a></p></li>
 </ul>
 
 
