@@ -1,0 +1,19 @@
+/**
+ * 
+ */
+package com.coway.trust.biz.logistics.courier;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+/**
+ * @author 8282
+ *
+ */
+public interface CourierService {
+
+	List<EgovMap> selectCourierList(Map<String, Object> params);
+
+}

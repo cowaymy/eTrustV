@@ -64,7 +64,7 @@
     
     var columnLayout = [{dataField:"stkid"             ,headerText:"StockID"           ,width:120 ,height:30, visible : false},
                         {dataField:"stkcode"           ,headerText:"StockCode"         ,width:100 ,height:30},
-                        {dataField:"stkdesc"           ,headerText:"StockName"         ,width:350 ,height:30},
+                        {dataField:"stkdesc"           ,headerText:"StockName"         ,width:350 ,height:30,style :"aui-grid-user-custom-left"},
                         {dataField:"stkcategoryid"     ,headerText:"CategoryID"      ,width:120,height:30 , visible : false},
                         {dataField:"codename"          ,headerText:"Category"      ,width:140 ,height:30},
                         {dataField:"stktypeid"         ,headerText:"TypeID"          ,width:120 ,height:30, visible : false},
@@ -81,10 +81,10 @@
                         }];
 
     var filtercolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
-                        {dataField:"stockname"           ,headerText:"Description"   ,width:"50%", editable : false},
+                        {dataField:"stockname"           ,headerText:"Description"   ,width:"50%", editable : false,style :"aui-grid-user-custom-left"},
                         {dataField:"stock"           ,headerText:"Desc"   ,width:"20%" , visible : false},
                         {dataField:"typeid"              ,headerText:"Type"          ,width:120 , visible : false},
-                        {dataField:"typenm"              ,headerText:"TypeName"      ,width:"10%", editable : false},
+                        {dataField:"typenm"              ,headerText:"TypeName"      ,width:"10%", editable : false,style :"aui-grid-user-custom-left"},
                         {dataField:"period"              ,headerText:"Period"        ,width:"10%", editable : false},
                         {dataField:"qty"                 ,headerText:"Qty"           ,width:"7%", editable : false},
                         {
@@ -103,7 +103,7 @@
                         }];
 
   var sparecolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
-                        {dataField:"stockname"           ,headerText:"Description"   ,width:"70%", editable : false},
+                        {dataField:"stockname"           ,headerText:"Description"   ,width:"70%", editable : false,style :"aui-grid-user-custom-left"},
                        // {dataField:"stock"           ,headerText:"Desc"   ,width:"20%" , visible : false},
                         //{dataField:"typeid"              ,headerText:"Type"          , visible : false},
                         //{dataField:"typenm"              ,headerText:"TypeName"       , visible : false},
@@ -125,7 +125,7 @@
                         }]; 
     
 var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"     ,width:120 , visible : false},
-                     {dataField:"packagename"         ,headerText:"Description"   ,width:"70%",   
+                     {dataField:"packagename"         ,headerText:"Description"   ,width:"70%",  style :"aui-grid-user-custom-left", 
                       labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
                      var retStr = "";
                      for (var i = 0, len = srvMembershipList.length; i < len; i++) {
