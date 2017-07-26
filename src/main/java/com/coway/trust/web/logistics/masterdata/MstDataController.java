@@ -124,4 +124,36 @@ public class MstDataController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/materialInsertItemType.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> materialInsertItemType(@RequestParam Map<String, Object> params,
+			Model model) {
+		
+		Map<String, Object> insmaterialmap = new HashMap();	
+		
+		insmaterialmap.put("insitmname", params.get("insitmname"));
+		insmaterialmap.put("insitmdesc", params.get("insitmdesc"));
+		insmaterialmap.put("insolditemid", params.get("insolditemid"));
+		insmaterialmap.put("insuom", params.get("insuom"));
+		insmaterialmap.put("inscurrency", params.get("inscurrency"));
+		insmaterialmap.put("inscateid", params.get("inscateid"));
+		insmaterialmap.put("insprice", params.get("insprice"));
+		insmaterialmap.put("insstuscode", params.get("insstuscode"));
+		
+		mst.insertMaterialItemType(insmaterialmap);
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	
+	
 }
