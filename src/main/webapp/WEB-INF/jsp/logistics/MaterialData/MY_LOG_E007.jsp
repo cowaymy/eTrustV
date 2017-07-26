@@ -190,6 +190,7 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
+        	$("#insertView").hide();
         	f_detailView(event.rowIndex);
         });
         
@@ -217,6 +218,7 @@
         });
         
          $("#detailView").hide();
+         $("#insertView").hide();
          getMaterialListAjax("");
 
     });
@@ -350,11 +352,38 @@
             }
         	
         });
+              
+        
         $("#detailcancel").click(function(){
         	var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", $("#ditmid").val());
         	f_detailView(rows);
         });
         
+         $("#insert").click(function(){
+        	alert("제발!!!!!!!!!!!!");
+            f_insertView();
+        });
+         
+         $("#insertsave").click(function(){
+             
+            // if (valiedcheck()){
+
+                 Common.ajax("GET", "/logistics/material/materialInsertItemType.do", $("#insertForm").serialize(), function(result) {
+                     Common.alert(result.message);
+                     //AUIGrid.resetUpdatedItems(myGridID, "all");
+                     
+                 },  function(jqXHR, textStatus, errorThrown) {
+                     try {
+                     } catch (e) {
+                     }
+
+                     Common.alert("Fail : " + jqXHR.responseJSON.message);
+                 });
+              //   getMaterialListAjax(rows);
+             //}
+             
+         });
+                
 
     });
     
@@ -492,6 +521,57 @@
         
     }
     
+    
+    function f_insertView(){
+    	$("#detailView").hide();
+        $("#insertView").show();
+       
+          //var seldata = AUIGrid.getItemByRowIndex(myGridID , rid);
+           
+        doGetCombo('/common/selectCodeList.do', '63','','inscateid', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '94', ''     ,'insuom', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '42', '','inscurrency', 'S' , '');
+        doDefCombo(comboData, '' ,'insstuscode', 'S', '');
+        /* $("#itmcode").val(seldata.itmCode);
+        $("#itmname").val(seldata.itmName);
+        $("#itmdesc").val(seldata.itmDesc);
+        $("#olditemid").val(seldata.oldStkId);
+        $("#price").val(seldata.prc);
+        $("#ditmid").val(seldata.itmId);
+        //itemtypedata
+        var html = "";
+        var checked = "";
+        $.each(itemdata, function(index,value) {
+            if (index == 0 || (index % 4) == 0){
+                html += "<tr>";
+            }
+            
+            if (seldata.itemType != null && seldata.itemType != "" && seldata.itemType != undefined){
+                var typeArr = seldata.itemType.split(",");
+                for (var j = 0 ; j < typeArr.length ; j++){
+                    if(typeArr[j] == itemdata[index].codeId ){
+                        checked = "checked";
+                    }
+                }
+            }
+            
+            html += "<th scope=\"row\">"+itemdata[index].codeName+"</th>";
+            html += "<td>";
+            html += "<label><input type=\"checkbox\" id='itemtype' name='itemtype' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
+            html += "</td>";
+            
+            if ((index % 4) == 3){
+                html += "</tr>";
+            }
+            checked = "";
+        });
+        
+        $("#itemtypedata").html(html);   */
+    }
+     
+    
+    
+     
 </script>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 <section id="content"><!-- content start -->
@@ -627,22 +707,16 @@
 <tr>
     <th scope="row">Old Material Number</th>
     <td>
-    <input type="text" id='olditemid' placeholder="" class="w100p" readonly="" />
+    <input type="text" id='olditemid' placeholder="" class="w100p"  />
     </td>
     <th scope="row">Unit of Measure</th>
     <td>
     <select class="w100p" id="uom">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Currency</th>
     <td>
     <select class="w100p" id="currency">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
 </tr>
@@ -650,9 +724,6 @@
     <th scope="row">Key Product Group</th>
     <td>
     <select class="w100p" id="cateid">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Sales Price</th>
@@ -700,4 +771,115 @@
 
 </form>
 </div>
+
+<!--------------------------------- 2017.07.25 함영수 insert 추가 시작  ---------------------------------------------->
+
+
+<div id="insertView">
+<aside class="title_line"><!-- title_line start -->
+<h3 id="title">Material Master Create/Change</h3>
+</aside>
+<form id="insertForm" method="GET">
+<!-- <input type="text" id="insditmid"/> -->
+<aside class="title_line"><!-- title_line start -->
+<h4>Main Value</h4>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:165px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Material Code</th>
+    <td>
+    <input type="text" placeholder="00000"  class="readonly w100p" readonly="readonly" />
+    </td>
+    <th scope="row">Material Name</th>
+    <td colspan="3">
+    <input type="text" id='insitmname' name='insitmname' title="" placeholder="" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Description</th>
+    <td colspan="5">
+    <input type="text" id='insitmdesc' name="insitmdesc" title="" placeholder="" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Old Material Number</th>
+    <td>
+    <input type="text" id='insolditemid' name="insolditemid" placeholder="" class="w100p"  />
+    </td>
+    <th scope="row">Unit of Measure</th>
+    <td>
+    <select class="w100p" id="insuom" name="insuom">
+    </select>
+    </td>
+    <th scope="row">Currency</th>
+    <td>
+    <select class="w100p" id="inscurrency" name="inscurrency" >
+    </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Key Product Group</th>
+    <td>
+    <select class="w100p" id="inscateid" name="inscateid">
+    </select>
+    </td>
+    <th scope="row">Sales Price</th>
+    <td>
+    <input type="text" placeholder="" id="insprice" name="insprice"  class="numberAmt"/>
+    </td>
+    <th scope="row">Used</th>
+    <td>
+    <select class="w100p" id="insstuscode" name="insstuscode">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+    </td>
+</tr> 
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h4>Item Type</h4>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:200px" />
+    <col style="width:*" />
+    <col style="width:200px" />
+    <col style="width:*" />
+    <col style="width:225px" />
+    <col style="width:*" />
+    <col style="width:200px" />
+    <col style="width:*" />
+</colgroup>
+<tbody id="itemtypedata">
+
+</tbody> 
+</table><!-- table end -->
+
+<ul class="center_btns mt20">
+    <li><p class="btn_blue2"><a id="insertsave">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="detailcancel">CANCEL</a></p></li>
+</ul>
+
+
+</form>
+</div> 
+
+<!--------------------------------- 2017.07.25 함영수 insert 추가 끝 ---------------------------------------------->
+
 </section>
