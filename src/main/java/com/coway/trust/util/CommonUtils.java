@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.springframework.expression.ParseException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -816,6 +817,24 @@ public final class CommonUtils {
 			}
 		}
 		return false;
+	}
+	
+	public static long getDiffDate(String cutOffDate){
+		long diffDate = -1;
+		
+		try{
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date cutoffdate = formatter.parse(cutOffDate);
+			Date curDate = new Date();
+			
+			long diff = curDate.getTime() - cutoffdate.getTime();
+			diffDate = diff/(24*60*60*1000);
+			
+		}catch(ParseException | java.text.ParseException e){
+			e.printStackTrace();
+		}
+		
+		return diffDate;
 	}
 	
 	public static String getMaskCreditCardNo(String inputStr, String maskStr, int visibleDigit) {    	
