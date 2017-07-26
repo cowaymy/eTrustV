@@ -168,6 +168,15 @@ showNewPopup = function() {
 	$("#new_wrap").show();
 }
 
+hideNewPopup = function() {
+	$("#new_wrap").hide();
+	//$("#myForm").reset();
+	//$("#fileSelector").replaceWith( $("#fileSelector").clone(true));
+	$("#myForm").each(function(){
+		this.reset();
+	});
+}
+
 //수정 처리
 function fn_saveGridMap(){
     
@@ -181,7 +190,7 @@ function fn_saveGridMap(){
     if(gridList.length > 0) {
         data.all = gridList;
     }  else {
-        alert('Select the CSV file on the loca PC');
+    	Common.alert('Select the CSV file on the loca PC');
         return;
         //data.all = [];
     }
@@ -193,7 +202,7 @@ function fn_saveGridMap(){
     Common.ajax("POST", "/payment/uploadFile", data, function(result) {
         Common.setMsg(result.message);  
         resetUpdatedItems(); // 초기화
-        
+        Common.alert(result.message);
         
         
     },  function(jqXHR, textStatus, errorThrown) {
@@ -209,6 +218,11 @@ function fn_saveGridMap(){
         alert("Fail : " + jqXHR.responseJSON.message);        
     });
 }
+
+//그리드 초기화.
+function resetUpdatedItems() {
+     AUIGrid.resetUpdatedItems(myGridID, "a");
+ }
 </script>
 
 <!-- content start -->
@@ -357,7 +371,7 @@ function fn_saveGridMap(){
     <header class="pop_header">
         <h1>Enrollment Result Update</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="$('#new_wrap').hide();">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()">CLOSE</a></p></li>
         </ul>
     </header>
     
@@ -376,7 +390,7 @@ function fn_saveGridMap(){
             <tr>
                 <th scope="row">Update Type</th>
                 <td colspan="3">
-                    <select name="updateType" style="width:100%">
+                    <select name="updateType" id="updateType"  style="width:100%">
                         <option value="978">Submit Date</option>
                         <option value="979">Start Date</option>
                         <option value="980">Reject Date</option>
@@ -402,7 +416,7 @@ function fn_saveGridMap(){
      
     </form>
     <!-- grid_wrap start -->
-    <article id="grid_wrap_new" class="grid_wrap"></article>
+    <article id="grid_wrap_new" class="grid_wrap" style="visibility:hidden"></article>
     <!-- grid_wrap end -->
 </section><!-- pop_body end -->
 </div>
