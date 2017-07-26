@@ -121,7 +121,7 @@ public class AtDebtCreCrdServiceImpl extends EgovAbstractServiceImpl implements 
 	public String saveNewEnrollment(List<Object> gridList, Map<String, Object> formInfo) {
 		
 		String message = "";
-		int userId = 12345;
+		int userId = 98765;
 		
 		if(userId > 0){
     		List<CsvFormatVO> csvList = new ArrayList();
@@ -162,7 +162,6 @@ public class AtDebtCreCrdServiceImpl extends EgovAbstractServiceImpl implements 
                 		if(enrollDList.size() > 0){
                 			for(EnrollmentUpdateDVO enrollD : enrollDList){
                 				enrollD.setEnrollUpdateId(updateId);
-                				System.out.println("enrollD : " + enrollD.toString());
                 				atDebtCreCrdMapper.insertUpdateGrid(enrollD);
                 			}
                 		}else{
@@ -176,6 +175,7 @@ public class AtDebtCreCrdServiceImpl extends EgovAbstractServiceImpl implements 
                 		atDebtCreCrdMapper.callEnrollProcedure(mapForPro);
                 		
                 		List<EgovMap> result = atDebtCreCrdMapper.selectSuccessInfo(updateId);
+                		
                 		if(result.size() > 0){
                 			message = "Enrollment information successfully updated.\n";
                 			message += "Update Batch ID : " + result.get(0).get("enrlUpdId") + "\n";
@@ -199,8 +199,6 @@ public class AtDebtCreCrdServiceImpl extends EgovAbstractServiceImpl implements 
 			message = "<b>Your login session was expired. Please relogin to our system.\n";
 		}
 		
-		System.out.println("message : " + message);
-		//int updateId = saveEnrollMaster(enrollDList, enrollMaster);
 		return message;
 	}
 	
