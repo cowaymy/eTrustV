@@ -59,13 +59,13 @@ public interface CommissionSystemMapper {
 	List<EgovMap> selectOrgList(Map<String, Object> params);
 
 	/**
-	 * search selectRuleBookMngList List
+	 * search selectRuleBookOrgMngList List
 	 * 
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
-	List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
+	List<EgovMap> selectRuleBookOrgMngList(Map<String, Object> params);
 
 	/**
 	 * check rulebook data 
@@ -119,6 +119,24 @@ public interface CommissionSystemMapper {
 	 * @return
 	 * @exception Exception
 	 */
+	List<EgovMap> selectOrgGrCdListAll(Map<String, Object> params);
+	
+	/**
+	 * search Organization Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgCdListAll(Map<String, Object> params);
+	
+	/**
+	 * search Organization Gruop Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
 	List<EgovMap> selectOrgGrCdList(Map<String, Object> params);
 	
 	/**
@@ -148,5 +166,77 @@ public interface CommissionSystemMapper {
 	 * @exception Exception
 	 */
 	List<EgovMap> selectRuleBookItemMngList(Map<String, Object> params);
+	
+	/**
+	 * check rulebook Item data 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectRuleBookItemMngChk(Map<String, Object> params);
+	
+	/**
+	 * update coommission rule book Item management Data : end_dt
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int udtCommissionItemGridEndDt(Map<String, Object> params);
 
+	/**
+	 * add coommission rule book management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int addCommissionItemGrid(Map<String, Object> params);
+	
+	/**
+	 * add coommission rule book Item management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int udtCommissionItemGridUseYn(Map<String, Object> params);
+	
+	/**
+	 * add coommission rule management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int addCommissionRuleData(Map<String, Object> params);
+	
+	/**
+	 * check rulebook Item data 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectRuleMngChk(Map<String, Object> params);
+	
+	/**
+	 * update coommission rule book Item management Data : end_dt
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int udtCommissionRuleEndDt(Map<String, Object> params);
+
+	/**
+	 * search Rule Book Mng List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
+	
 }

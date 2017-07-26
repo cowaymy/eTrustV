@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.coway.trust.biz.commission.system.impl.CommissionSystemMapper">
+<mapper namespace="com.coway.trust.biz.commission.system.impl.CommissionSystemMapper">
 
 	<resultMap id="clobMap" type="EgovMap">
-		<result property="cdDs" column="cdDs" jdbcType="CLOB"
-			javaType="java.lang.String" />
+		<result property="cdDs" column="cdDs" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="orgDs" column="orgds" jdbcType="CLOB" javaType="java.lang.String" />
 	</resultMap>
 
 	<!-- searchOrganization Gruop List -->
 	<select id="selectOrgGrList" parameterType="Map" resultMap="clobMap">
+	   <![CDATA[
 		SELECT
 		T2.CODE_MASTER_ID AS mstId ,
 		T1.CODE_MASTER_NAME AS mstNm,
@@ -21,11 +21,14 @@
 		JOIN SYS0013M T2
 		ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
 		WHERE 1=1
+		 ]]>
 		<if test="mstId != null and mstId != ''">
 			AND T1.CODE_MASTER_ID = #{mstId}
 			AND T2.CODE_ID IN (1,2,3)
 		</if>
+		 <![CDATA[
 		ORDER BY T2.CODE
+		 ]]>
 	</select>
 
 	<!-- search Organization List -->
@@ -52,8 +55,7 @@
 	</select>
 
 	<!-- search rule book management List -->
-	<select id="selectRuleBookMngList" parameterType="Map"
-		resultMap="clobMap">
+	<select id="selectRuleBookOrgMngList" parameterType="Map" resultMap="clobMap">
     <![CDATA[   
          SELECT
           ORG_GR_CD,
@@ -76,9 +78,9 @@
 		<if test="orgCombo != null and orgCombo != ''">
 			AND T1.ORG_CD = #{orgCombo}
 		</if>
-		 <if test="useYnCombo != null and useYnCombo != ''">
-      AND T1.USE_YN = #{useYnCombo}
-    </if>
+		<if test="useYnCombo != null and useYnCombo != ''">
+			AND T1.USE_YN = #{useYnCombo}
+		</if>
 		<if test="searchDt != null and searchDt != ''">
 			AND #{searchDt} BETWEEN START_YEARMONTH AND END_YEARMONTH
 		</if>
@@ -87,7 +89,7 @@
          ]]>
 	</select>
 
-<!-- add coommission rule book management -->
+	<!-- add coommission rule book management -->
 	<insert id="addCommissionGrid" parameterType="Map">
 		INSERT INTO CMM0041C (
 		ORG_GR_CD,
@@ -119,7 +121,7 @@
 		)
 	</insert>
 
-<!-- search coommission rule book checking data -->
+	<!-- search coommission rule book checking data -->
 	<select id="selectRuleBookMngChk" parameterType="Map" resultMap="clobMap">
     <![CDATA[   
          SELECT
@@ -131,7 +133,7 @@
          ]]>
 	</select>
 
-<!-- update coommission rule book management : end_dt -->
+	<!-- update coommission rule book management : end_dt -->
 	<update id="udtCommissionGridEndDt">
 		UPDATE CMM0041C
 		SET
@@ -141,7 +143,7 @@
 		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
 	</update>
 
-<!-- update coommission rule book management : use_yn -->
+	<!-- update coommission rule book management : use_yn -->
 	<update id="udtCommissionGridUseYn">
 		UPDATE CMM0041C
 		SET
@@ -151,97 +153,353 @@
 		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
 	</update>
 
-<!-- delete coommission rule book management-->
+	<!-- delete coommission rule book management -->
 	<delete id="delCommissionGrid">
 		DELETE FROM CMM0041C
 		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
 	</delete>
-	
-	<!-- searchOrganization Gruop Code List -->
-    <select id="selectOrgGrCdList" parameterType="Map" resultMap="clobMap">
-        SELECT 
-	        ORG_GR_CD AS cdId, 
-	        ORG_GR_NM AS cd 
-        FROM CMM0041C 
-        WHERE USE_YN ='Y' AND 
-            to_char(SYSDATE,'yyyymm') BETWEEN START_YEARMONTH AND END_YEARMONTH 
-        GROUP BY ORG_GR_CD, ORG_GR_NM
-    </select>
 
-   <!-- search Organization Code List -->
-    <select id="selectOrgCdList" parameterType="Map" resultMap="clobMap">
+	<!-- searchOrganization Gruop Code All List -->
+	<select id="selectOrgGrCdListAll" parameterType="Map" resultMap="clobMap">
+	<![CDATA[
+		SELECT
+		ORG_GR_CD ,
+		ORG_GR_NM 
+		FROM CMM0041C
+		WHERE 1=1
+		  AND START_YEARMONTH < END_YEARMONTH
+		 ]]>
+		<if test="useYnCombo != null and useYnCombo != ''">
+			AND USE_YN = #{useYnCombo}
+		</if>
+		<if test="searchDt != null and searchDt != ''">
+			AND TO_CHAR(SYSDATE,'YYYYMM') BETWEEN START_YEARMONTH AND END_YEARMONTH
+		</if>
+		<![CDATA[
+		GROUP BY ORG_GR_CD, ORG_GR_NM
+		 ]]>
+	</select>
+
+	<!-- searchOrganization Gruop Code All List -->
+	<select id="selectOrgCdListAll" parameterType="Map" resultMap="clobMap">
+  <![CDATA[
+    SELECT
+    ORG_CD ,
+    ORG_NM 
+    FROM CMM0041C
+    WHERE 1=1
+      AND START_YEARMONTH < END_YEARMONTH
+     ]]>
+		<if test="orgRgCombo != null and orgRgCombo != ''">
+			AND ORG_GR_CD = #{orgRgCombo}
+		</if>    
     <![CDATA[
-       SELECT 
-            T1.ORG_GR_CD AS orgGrCd,
-            T2.CODE_MASTER_ID AS mstId ,
-            T2.CODE_ID AS cdId,
-            T2.CODE AS cd,
-            T2.CODE_NAME AS cdNm,
-            T2.CODE_DESC AS cdDs
-       FROM CMM0041C T1
-        JOIN SYS0013M T2
-        ON T1.ORG_CD = T2.CODE_ID
-        WHERE T1.USE_YN='Y'
-        AND to_char(SYSDATE,'yyyymm') BETWEEN START_YEARMONTH AND END_YEARMONTH
-         ]]>
-        <if test="mstId != null and mstId != ''">
-            AND T2.CODE_MASTER_ID = #{mstId}
-        </if>
-           <![CDATA[   
-        ORDER BY T2.CODE_ID
-         ]]>
-    </select>
-    
-    
-    <!-- search Organization Item List -->
-     <select id="selectOrgItemList" parameterType="Map" resultMap="clobMap">
+    GROUP BY ORG_CD, ORG_NM
+    ORDER BY ORG_CD
+     ]]>
+	</select>
+
+	<!-- search Organization Code List -->
+	<select id="selectOrgCdList" parameterType="Map" resultMap="clobMap">
     <![CDATA[
-       select 
-		CODE_ID AS cdId,
-		CODE_MASTER_ID AS mstId, 
-		CODE AS cd,
-		CODE_NAME AS cdNm,
-		CODE_DESC AS cdDs
-       from SYS0013M 
-       where CODE LIKE #{orgNm} || '%' AND CODE <> #{orgNm}
+    SELECT
+         T1.ORG_SEQ , 
+         T1.ORG_GR_CD ,
+         T1.ORG_CD ,      
+         T1.ORG_NM ,
+         T2.CODE_DESC AS cdDs      
+         FROM CMM0041C T1 
+           LEFT OUTER JOIN SYS0013M T2
+           ON T1.ORG_CD = T2.CODE_ID
+           WHERE 1=1
+			AND T1.USE_YN = 'Y'
+			AND TO_CHAR(SYSDATE,'YYYYMM') BETWEEN T1.START_YEARMONTH AND T1.END_YEARMONTH
+    ORDER BY T1.ORG_CD
+     ]]>
+	</select>
+
+
+	<!-- search Organization Item List -->
+	<select id="selectOrgItemList" parameterType="Map" resultMap="clobMap">
+    <![CDATA[
+    SELECT
+        T1.CODE_MASTER_ID , 
+        T2.CODE_ID ,
+        T2.CODE ,      
+        T2.CODE_NAME ,
+        T2.CODE_DESC AS cdDs
+      FROM SYS0012M T1
+        JOIN  SYS0013M T2 
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE 1=1
          ]]>
-    </select>
-	
-	
+		<if test="mstId != null and mstId != ''">
+			AND T1.CODE_MASTER_ID=#{mstId}
+		</if>
+		<if test="ItemOrgCd != null and ItemOrgCd != ''">
+			AND T2.CODE LIKE #{ItemOrgCd} ||'%'
+		</if>
+		ORDER BY T2.CODE
+	</select>
+
+
 	<!-- search rule book Item management List -->
-    <select id="selectRuleBookItemMngList" parameterType="Map"
-        resultMap="clobMap">
+	<select id="selectRuleBookItemMngList" parameterType="Map" resultMap="clobMap">
         <![CDATA[   
 		SELECT
 		    T1.ITEM_SEQ, 
 		    T1.ITEM_CD,
 		    T1.ORG_SEQ, 
-		    T1.ORG_GR_CD, 
-		    T1.ITEM_NM,
+		    T1.ORG_GR_CD,
 		    T1.ORG_CD, 
+		    (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs, 
 		    T1.TYPE_CD, 
 		    T1.USE_YN,
 		    T1.ITEM_DESC,
 		    T1.START_YEARMONTH,
-		    T1.END_YEARMONTH, 
+		    CASE WHEN END_YEARMONTH IS NOT NULL AND LENGTH(END_YEARMONTH)=6 
+        THEN SUBSTR(END_YEARMONTH,5) || '/' || SUBSTR(END_YEARMONTH,0,4) 
+        ELSE END_YEARMONTH END END_DT ,
 		    T1.CRT_DT, 
 		    T1.UPD_USER_ID, 
-		    T1.UPD_DT
+		    T1.UPD_DT ,
+		    T2.CODE ,
+		    T2.CODE_NAME  ,
+		    T2.CODE_DESC AS cdDs
 		FROM CMM0042C T1 JOIN SYS0013M T2
-		    ON T1.ORG_CD = T2.CODE_ID
+		    ON T1.ITEM_CD = T2.CODE_ID
 		WHERE 1=1
         ]]>
 		<if test="orgRgCombo != null and orgRgCombo != ''">
-		  AND T1.ORG_GR_CD = #{orgRgCombo}
+			AND T1.ORG_GR_CD = #{orgRgCombo}
 		</if>
 		<if test="orgCombo != null and orgCombo != ''">
-		  AND T1.ORG_CD = #{orgCombo}
+			AND T1.ORG_CD = #{orgCombo}
 		</if>
 		<if test="useYnCombo != null and useYnCombo != ''">
-		  AND T1.USE_YN = #{useYnCombo}
+			AND T1.USE_YN = #{useYnCombo}
 		</if>
 		<if test="searchDt != null and searchDt != ''">
-		  AND #{searchDt} BETWEEN START_YEARMONTH AND END_YEARMONTH
+			AND #{searchDt} BETWEEN T1.START_YEARMONTH AND T1.END_YEARMONTH
 		</if>
-    </select>
+	</select>
+
+	<!-- search coommission rule book Item checking data -->
+	<select id="selectRuleBookItemMngChk" parameterType="Map" resultMap="clobMap">
+    <![CDATA[   
+         SELECT
+          ITEM_SEQ,
+          ITEM_CD,
+          ORG_SEQ
+          FROM CMM0042C
+        WHERE 1=1
+            ]]>
+		<if test="orgSeq != null and orgSeq != ''">
+			AND ORG_SEQ = #{orgSeq}
+		</if>
+		<if test="itemCd != null and itemCd != ''">
+			AND ITEM_CD = #{itemCd}
+		</if>
+		<if test="endDt != null and endDt != ''">
+			AND END_YEARMONTH=#{endDt}
+		</if>
+	</select>
+
+
+	<!-- update coommission rule book management : end_dt -->
+	<update id="udtCommissionItemGridEndDt">
+		UPDATE CMM0042C
+		SET
+		END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ITEM_SEQ=#{itemSeq} AND ORG_SEQ=#{orgSeq} AND ITEM_CD=#{itemCd} AND END_YEARMONTH=#{endDt}
+	</update>
+
+	<!-- add coommission rule book Item management -->
+	<insert id="addCommissionItemGrid" parameterType="Map">
+		INSERT INTO CMM0042C (
+		ITEM_SEQ,
+		ITEM_CD,
+		ORG_SEQ,
+		ITEM_NM,
+		ORG_GR_CD,
+		ORG_CD,
+		TYPE_CD,
+		USE_YN,
+		ITEM_DESC,
+		START_YEARMONTH,
+		END_YEARMONTH,
+		CRT_USER_ID,
+		CRT_DT,
+		UPD_USER_ID,
+		UPD_DT
+		) VALUES (
+		CMM0042C_ITEM_SEQ.nextval,
+		#{itemCd},
+		#{orgSeq},
+		#{itemNm},
+		#{orgGrCd},
+		#{orgCd},
+		#{typeCd},
+		#{useYn},
+		#{cdDs},
+		(SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
+		#{endDt},
+		#{crtUserId},
+		SYSDATE,
+		#{updUserId},
+		SYSDATE
+		)
+	</insert>
+
+	<!-- update coommission rule book management : use_yn -->
+	<update id="udtCommissionItemGridUseYn">
+		UPDATE CMM0042C
+		SET
+		USE_YN=#{useYn}
+		<if test="typeCd != null and typeCd != ''">
+			,TYPE_CD = #{typeCd}
+		</if>
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ITEM_SEQ=#{itemSeq} AND ORG_SEQ=#{orgSeq} AND ITEM_CD=#{itemCd}
+	</update>
+
+  <!-- search coommission rule  checking data -->
+  <select id="selectRuleMngChk" parameterType="Map" resultMap="clobMap">
+    <![CDATA[   
+         SELECT
+          RULE_SEQ,
+          ITEM_SEQ,
+          ITEM_CD
+          FROM CMM0043M
+        WHERE END_YEARMONTH=#{endDt} AND ITEM_SEQ=#{itemSeq} AND ITEM_CD=#{itemCd}       
+         ]]>
+  </select>
+  
+	<!-- add coommission rule book Item management -->
+	<insert id="addCommissionRuleData" parameterType="Map">
+		INSERT INTO CMM0043M (
+		RULE_SEQ,
+		ITEM_SEQ,
+		ITEM_CD,
+		RULE_LEVEL,
+		RULE_PID,
+		RULE_NM,
+		RULE_CATEGORY,
+		RULE_OPT1,
+		RULE_OPT2,
+		VALUE_TYPE,
+		VALUE_TYPE_NM,
+		RESULT_VALUE,
+		RESULT_VALUE_NM,
+		RULE_DESC,
+		START_YEARMONTH,
+		END_YEARMONTH,
+		USE_YN,
+		CRT_USER_ID,
+		CRT_DT,
+		UPD_USER_ID,
+		UPD_DT
+		) VALUES (
+		CMM0043M_RULE_SEQ.nextval,
+		#{itemSeq},
+		#{itemCd},
+		#{ruleLevel},
+		#{rulePid},
+		#{ruleNm},
+		#{ruleCategory},
+		#{ruleOpt1},
+		#{ruleOpt2},
+		#{valueType},
+		#{valueTypeNm},
+		#{resultValue},
+		#{resultValueNm},
+		#{ruleDesc},
+		(SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
+		#{endDt},
+		#{useYn},
+		#{crtUserId},
+		SYSDATE,
+		#{updUserId},
+		SYSDATE
+		)
+	</insert>
+	
+	
+  <!-- update coommission rule book management : end_dt -->
+  <update id="udtCommissionRuleEndDt">
+    UPDATE CMM0043M
+    SET
+    END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+    , UPD_USER_ID=#{updUserId}
+    , UPD_DT=SYSDATE
+    WHERE RULE_SEQ=#{ruleSeq} AND  ITEM_SEQ=#{itemSeq} AND ITEM_CD=#{itemCd} AND END_YEARMONTH=#{endDt}   
+  </update>
+  
+  <!-- search rule book mng list-->
+  <select id="selectRuleBookMngList" parameterType="Map" resultMap="clobMap">
+        <![CDATA[   
+     SELECT
+        T1.ITEM_SEQ, 
+        T1.ITEM_CD,
+        T1.ORG_SEQ, 
+        T1.ORG_GR_CD,
+        T1.ORG_CD, 
+        (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs, 
+        T1.TYPE_CD,
+        T1.ITEM_DESC,
+        T2.CODE ,
+        T2.CODE_NAME  ,
+        T2.CODE_DESC AS cdDs ,       
+        T3.RULE_SEQ ,
+        T3.RULE_LEVEL ,
+        T3.RULE_PID ,
+        T3.RULE_NM ,
+        T3.RULE_CATEGORY ,
+        T3.RULE_OPT1 ,
+        T3.RULE_OPT2 ,
+        T3.VALUE_TYPE ,
+        T3.VALUE_TYPE_NM ,
+        T3.RESULT_VALUE ,
+        T3.RESULT_VALUE_NM ,
+        T3.RULE_DESC ,
+        T3.START_YEARMONTH ,
+        T3.END_YEARMONTH ,
+        T3.USE_YN ,       
+        CASE WHEN T3.START_YEARMONTH IS NOT NULL AND LENGTH(T3.START_YEARMONTH)=6 
+        THEN SUBSTR(T3.START_YEARMONTH,5) || '/' || SUBSTR(T3.START_YEARMONTH,0,4) 
+        ELSE T3.START_YEARMONTH END START_DT ,
+        CASE WHEN T3.END_YEARMONTH IS NOT NULL AND LENGTH(T3.END_YEARMONTH)=6 
+        THEN SUBSTR(T3.END_YEARMONTH,5) || '/' || SUBSTR(T3.END_YEARMONTH,0,4) 
+        ELSE T3.END_YEARMONTH END END_DT 
+    FROM CMM0042C T1 JOIN SYS0013M T2
+        ON T1.ITEM_CD = T2.CODE_ID
+    LEFT OUTER JOIN CMM0043M T3
+        ON T1.ITEM_SEQ = T3.ITEM_SEQ   
+    WHERE 1=1
+        ]]>
+    <if test="orgSeq != null and orgSeq != ''">
+      AND T1.ORG_SEQ = #{orgSeq}
+    </if>
+    <if test="itemSeq != null and itemSeq != ''">
+      AND T1.ITEM_SEQ = #{itemSeq}
+    </if>
+    <if test="itemCd != null and itemCd != ''">
+      AND T1.ITEM_CD = #{itemCd}
+    </if>
+    <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+     <if test="useYn != null and useYn != ''">
+      AND T3.USE_YN = #{useYn}
+    </if>
+      <if test="ruleSeq != null and ruleSeq != ''">
+      AND T3.RULE_SEQ = #{ruleSeq}
+    </if>    
+    ORDER BY T3.RULE_SEQ
+    
+  </select>
+  
 </mapper>

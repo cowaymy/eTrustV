@@ -27,7 +27,7 @@ public interface CommissionSystemService
      * @param params
      * @return
      */
-    List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
+    List<EgovMap> selectRuleBookOrgMngList(Map<String, Object> params);
     
     /**
      * add coommission rule book management Data
@@ -49,6 +49,25 @@ public interface CommissionSystemService
      * @return
      */
     int delCommissionGrid(List<Object> removeList, String loginId);
+    /**
+     *  search Organization Gruop Code List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectOrgGrCdListAll(Map<String, Object> params);
+    
+    /**
+     *  search Organization Code List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectOrgCdListAll(Map<String, Object> params);
+    
+    /**
+     *  search Organization Code Item List
+     * @param params
+     * @return
+     */
     
     /**
      *  search Organization Gruop Code List
@@ -77,4 +96,38 @@ public interface CommissionSystemService
      * @return
      */
     List<EgovMap> selectRuleBookItemMngList(Map<String, Object> params);
+    
+    /**
+     * add coommission rule book management Data
+     * @param updateList
+     * @return
+     */
+    int addCommissionItemGrid(List<Object> updateList , String loginId);
+    
+    /**
+     * update coommission rule book management Data
+     * @param addList
+     * @return
+     */
+    int udtCommissionItemGrid(List<Object> addList, String loginId);
+    
+    /**
+     * delete coommission rule book management Data
+     * @param removeList
+     * @return
+     */
+    
+    /**
+     * add coommission rule  management Data
+     * @param updateList
+     * @return
+     */
+    int addCommissionRuleData(Map<String, Object> params, String loginId);
+    
+    /**
+     * search selectRuleBookMngList List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
 }
