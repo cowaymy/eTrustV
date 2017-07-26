@@ -375,8 +375,8 @@
     </update>
     
     <update id="callEnrollProcedure" statementType="CALLABLE" parameterType="Map">
-        {call SP_INST_RSC_ENRL_RESULT(#{enrollId, mode=IN, jdbcType=INTEGER, javaType=Integer},
-                                                        #{enrollTypeId, mode=IN, jdbcType=INTEGER, javaType=Integer} )}
+        {call SP_INST_RSC_ENRL_RESULT(#{enrollId},
+                                                        #{enrollTypeId} )}
     </update>
     
     <select id="selectSuccessInfo" parameterType="java.lang.Integer" resultType="egovMap">
