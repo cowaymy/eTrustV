@@ -5,11 +5,11 @@ import java.nio.ByteBuffer;
 
 /**
  * UUID 생성 클래스
- * 
- * @author aider
  */
 public final class UUIDGenerator
 {
+	private UUIDGenerator(){}
+	
     private static final Object MUTEX = new Object();
 
     /**

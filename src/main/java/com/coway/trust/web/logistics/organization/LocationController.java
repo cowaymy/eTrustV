@@ -165,8 +165,6 @@ public class LocationController {
 			inmobile =1;
 		}
 		
-		CommonUtils com = new CommonUtils();
-		
 		String inwarecd     = (String) params.get("inwarecd");
 		String inwarenm     = (String) params.get("inwarenm");
 		String inaddr1     = (String) params.get("inaddr1");
@@ -176,10 +174,10 @@ public class LocationController {
 		String incontact2     = (String) params.get("incontact2");
 		String instockgrade     = (String) params.get("instockgrade");
 		String inwarebranch     = (String) params.get("inwarebranch");
-		int incnty     = com.intNvl((String) params.get("incountry"));
-		int instat     = com.intNvl((String) params.get("instate"));
-		int inarea     = com.intNvl((String) params.get("inarea"));
-		int inpost     = com.intNvl((String) params.get("inpostcd"));		
+		int incnty     = CommonUtils.intNvl((String) params.get("incountry"));
+		int instat     = CommonUtils.intNvl((String) params.get("instate"));
+		int inarea     = CommonUtils.intNvl((String) params.get("inarea"));
+		int inpost     = CommonUtils.intNvl((String) params.get("inpostcd"));		
 		
 		Map<String, Object> insmap = new HashMap();				
 		

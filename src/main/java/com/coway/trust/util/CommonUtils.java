@@ -33,6 +33,8 @@ import com.coway.trust.AppConstants;
  * @author aider
  */
 public final class CommonUtils {
+	
+	private CommonUtils(){}
 
 	private final static String URI_REGEX = "\\{[A-z0-9]*\\}";
 	

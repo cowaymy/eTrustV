@@ -22,6 +22,8 @@ import com.coway.trust.cmmn.exception.ApplicationException;
  */
 public final class BeanConverter
 {
+	private BeanConverter(){}
+	
     /**
      * @param name
      * @param ignoreProperties

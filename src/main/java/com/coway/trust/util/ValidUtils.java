@@ -7,6 +7,8 @@ import com.coway.trust.AppConstants;
 
 public final class ValidUtils
 {
+	private ValidUtils(){}
+	
     /**
      * @param val 문자열 값
      * @param length 기준길이

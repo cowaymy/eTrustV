@@ -1,8 +1,3 @@
-/**
- * This sample code is an example of how to use the Business Objects APIs. 
- * Because the sample code is designed for demonstration only, it is 
- * unsupported.  You are free to modify and distribute the sample code as needed.   
- */
 package com.coway.trust.util;
 
 import java.io.BufferedInputStream;
@@ -43,14 +38,11 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKException;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 /**
- * Crystal Reports Java Helper Sample
- * ************************
- * Please note that you need to define a runtime server in order for this class
- * to compile.
- * ************************
- * @author Business Objects
+ * crystal report helper
  */
 public class CRJavaHelper {
+	
+	private CRJavaHelper(){}
 
     /**
      * Logs on to all existing datasource
