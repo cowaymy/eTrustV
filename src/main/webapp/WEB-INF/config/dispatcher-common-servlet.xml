@@ -15,6 +15,11 @@
         <property name="webBindingInitializer">
             <bean class="com.coway.trust.cmmn.web.EgovBindingInitializer"/>
         </property>
+        <property name="customArgumentResolvers">
+            <list>
+                <bean class="com.coway.trust.config.SessionVOArgumentResolver" />
+            </list>
+        </property>
     </bean>
     
     <!-- 쿠키를 이용한 Locale 이용 -->
@@ -67,7 +72,6 @@
         <property name="maxUploadSize" value="600000000"/>          <!-- bytes -->
         <property name="maxInMemorySize" value="100000000"/>     <!-- bytes -->
     </bean>
-    
     
     <!-- Configure to plugin JSON as request and response in method handler
     <bean

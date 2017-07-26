@@ -39,6 +39,7 @@ import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.AuthVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
 
@@ -91,7 +92,7 @@ public class SampleController {
 	 * - 그리드 페이징 갯수 변경 처리 포함됨 : publishSample.jsp
 	 */
 	@RequestMapping(value = "/publishSample.do")
-	public String publishSample(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String publishSample(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		// 화면별 버튼 권한 리스트 예제.
 		Map<String, Object> buttonMap = new HashMap<>();
@@ -110,8 +111,8 @@ public class SampleController {
 	 * 서비스 + 메일 전송 예제.
 	 * sendMail test.
 	 */
-	@RequestMapping(value = "/sendMail.do")
-	public ResponseEntity<ReturnMessage> sendMail(@RequestParam Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/sendMail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> sendMail(@RequestBody Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
 		boolean result = sampleApplication.sendEmailAndProcess(params);
 		if(!result){
