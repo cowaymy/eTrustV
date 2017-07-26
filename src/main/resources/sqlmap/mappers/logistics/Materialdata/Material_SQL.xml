@@ -146,4 +146,9 @@
             , UPD_USER_ID  = #{updUserId}
         WHERE ITM_ID       = #{itmId}
     </update>
+    
+    <update id="insertMaterialItemType" parameterType="Map">
+
+    </update> 
+    
 </mapper>
