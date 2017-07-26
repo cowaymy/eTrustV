@@ -15,13 +15,13 @@
         <th scope="row">Status</th>
         <td><span>${detailaddr.name}</span></td>
         <th scope="row">Create By</th>
-        <td><span><c:if test="${not empty detailaddr.crtdt}">(${detailaddr.crtdt})</c:if></span></td>
+        <td><span><c:if test="${not empty detailaddr.crtDt}">(${detailaddr.crtDt})</c:if></span></td>
     </tr>
     <tr>
         <th scope="row"></th>
         <td></td>
         <th scope="row">Update by</th>
-        <td>${detailaddr.username1}(${detailaddr.upddt})</td>
+        <td>${detailaddr.userName1}(${detailaddr.updDt})</td>
     </tr>
     <tr>
         <th scope="row" rowspan="3">Address</th>
@@ -35,15 +35,15 @@
     </tr>
     <tr>
         <th scope="row">Postcode</th>
-        <td>${detailaddr.postcode}</td>
+        <td>${detailaddr.postCode}</td>
         <th scope="row">Area</th>
-        <td>${detailaddr.areaname }</td>
+        <td>${detailaddr.areaName }</td>
     </tr>
     <tr>
         <th scope="row">State</th>
-        <td>${detailaddr.statename}</td>
+        <td>${detailaddr.stateName}</td>
         <th scope="row">Country</th>
-        <td>${detailaddr.cntyname}</td>
+        <td>${detailaddr.cntyName}</td>
     </tr>
     <tr>
         <th scope="row">Remark</th>

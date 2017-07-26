@@ -98,9 +98,9 @@
     var contactColumnLayout= [ 
           {dataField : "name", headerText : "Status", width : 100},
           {dataField : "name1", headerText : "Name", width : 100},
-          {dataField : "telm1", headerText : "Tel(Mobile)", width : 100},
-          {dataField : "telo", headerText : "Tel(Office)",width : 100},
-          {dataField : "telr", headerText : "Tel(Residence)", width : 100 },
+          {dataField : "telM1", headerText : "Tel(Mobile)", width : 100},
+          {dataField : "telO", headerText : "Tel(Office)",width : 100},
+          {dataField : "telR", headerText : "Tel(Residence)", width : 100 },
           {dataField : "telf",headerText : "Tel(Fax)",width : 100},
           {dataField : "custCntcId", visible: false },
           {
@@ -121,9 +121,9 @@
     // Bank Column
      var bankColumnLayout= [
             {dataField : "custAccOwner", headerText : "Account Holder", width : 100}, 
-            {dataField : "codename", headerText : "Type", width : 100}, 
-            {dataField : "bankname", headerText : "Issue Bank", width : 100},
-            {dataField : "custaccno", headerText : "Account No", width : 100},
+            {dataField : "codeName", headerText : "Type", width : 100}, 
+            {dataField : "bankName", headerText : "Issue Bank", width : 100},
+            {dataField : "custAccNo", headerText : "Account No", width : 100},
             {dataField : "custAccId" , visible : false},
             {
             	dataField : "undefined",
@@ -142,12 +142,12 @@
     
     // CreditCard Column
     var creditCardColumnLayout = [
-           {dataField : "custcrcowner", headerText : "Name On Card", width : 100}, 
+           {dataField : "custCrcOwner", headerText : "Name On Card", width : 100}, 
            {dataField : "codeName", headerText : "Card Type", width : 100}, 
-           {dataField : "codename1", headerText : "Type", width : 100},
-           {dataField : "bankname", headerText : "Issue Bank", width : 100},
+           {dataField : "codeName1", headerText : "Type", width : 100},
+           {dataField : "bankName", headerText : "Issue Bank", width : 100},
            {dataField : "custOriCrcNo", headerText : "Credit Card No", width : 100},
-           {dataField : "custcrcexpr", headerText : "Expiry", width : 100},
+           {dataField : "custCrcExpr", headerText : "Expiry", width : 100},
            {dataField : "custCrcId", visible : false},
            {
         	   dataField : "undefined",
@@ -167,13 +167,13 @@
     // Own Order Column
     var ownOrderColumnLayout = [
            { dataField : "salesOrdNo", headerText : "Order No", width : 100},
-           { dataField : "salesdt", headerText : "Order Date", width : 100},
+           { dataField : "salesDt", headerText : "Order Date", width : 100},
            { dataField : "code", headerText : "App Type", width : 100},
            { dataField : "code1", headerText : "Status", width : 100},
            { dataField : "stkDesc", headerText : "Product", width : 100},
            { dataField : "code2", headerText : "Paymode", width : 100 },
-           { dataField : "bankcode", headerText : "Issue Bank", width : 100},
-           { dataField : "rentamt", headerText : "Outstanding", width : 100},
+           { dataField : "bankCode", headerText : "Issue Bank", width : 100},
+           { dataField : "rentAmt", headerText : "Outstanding", width : 100},
            { 
         	   dataField : "undefined", 
         	   headerText : "View Ledger", 
@@ -204,13 +204,13 @@
     // Thrid Party Order Column
     var thirdPartyColumnLayout = [
          {dataField : "salesOrdNo",headerText : "Order No", width : 100},
-         {dataField : "salesdt", headerText : "Order Date", width : 100},
+         {dataField : "salesDt", headerText : "Order Date", width : 100},
          {dataField : "code", headerText : "App Type", width : 100},
          {dataField : "code1", headerText : "Status", width : 100},
          {dataField : "stkDesc", headerText : "Product", width : 100},
          {dataField : "code2", headerText : "Paymode",width : 100},
-         {dataField : "bankcode", headerText : "Issue Bank", width : 100},
-         {dataField : "rentamt",headerText : "Outstanding", width : 100},
+         {dataField : "bankCode", headerText : "Issue Bank", width : 100},
+         {dataField : "rentAmt",headerText : "Outstanding", width : 100},
          {
         	 dataField : "undefined",
         	 headerText : "View Ledger",
@@ -283,8 +283,8 @@
 	        toolbar : "no", // 툴바. (yes/no)(default : yes)
 	        resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
 	        scrollbars : "yes", // 스크롤바. (yes/no)(default : yes)
-	        width : "1000px", // 창 가로 크기
-	        height : "500px" // 창 세로 크기
+	        width : "1200px", // 창 가로 크기
+	        height : "330px" // 창 세로 크기
 	    };
 </script>
 <!-- Pop up Form -->
@@ -324,27 +324,27 @@
     <tbody>
     <tr>
         <th scope="row">Custormer ID</th>
-        <td><span>${result.customerid}</span></td>
+        <td><span>${result.custId}</span></td>
         <th scope="row">Custormer Type</th>
         <td>
             <span> 
-                ${result.codename1}
+                ${result.codeName1}
                 <!-- not Individual -->  
-                <c:if test="${ result.typeid ne 964}">
-                    (${result.codename})
+                <c:if test="${ result.typeId ne 964}">
+                    (${result.codeName})
                 </c:if>
             </span>
         </td>
         <th scope="row">Create At</th>
-        <td><span>${result.crtdt}</span></td>
+        <td><span>${result.crtDt}</span></td>
     </tr>
     <tr>
         <th scope="row">Custormer Name</th>
-        <td colspan="3">${result.custname}</td>
+        <td colspan="3">${result.name}</td>
         <th scope="row">Create By</th>
         <td>
-            <c:if test="${result.crtuserid ne 0}">
-                ${result.crtuserid}
+            <c:if test="${result.crtUserId ne 0}">
+                ${result.crtUserId}
             </c:if>
         </td>
     </tr>
@@ -352,17 +352,17 @@
         <th scope="row">NRIC/Company Number</th>
         <td>${result.nric}</td>
         <th scope="row">GST Registration No</th>
-        <td>${result.gstrgistno}</td>
+        <td>${result.gstRgistNo}</td>
         <th scope="row">Update By</th>
-        <td>${result.username}</td>
+        <td>${result.userName1}</td>
     </tr>
     <tr>
         <th scope="row">Email</th>
         <td>${result.email}</td>
         <th scope="row">nationality</th>
-        <td>${result.name1}</td>
+        <td>${result.cntyName}</td>
         <th scope="row">Update At</th>
-        <td>${result.upddt}</td>
+        <td>${result.updDt}</td>
     </tr>
     <tr>
         <th scope="row">Gender</th>
@@ -374,19 +374,19 @@
             </c:if>
         </td>
         <th scope="row">Race</th>
-        <td>${result.codename2 }</td>
+        <td>${result.codeName2 }</td>
     </tr>
     <tr>
         <th scope="row">Passport Expire</th>
-        <td>${result.passportexpire}</td>
+        <td>${result.pasSportExpr}</td>
         <th scope="row">Visa Expire</th>
-        <td>${result.visaexpire}</td>
+        <td>${result.visaExpr}</td>
         <th scope="row">VA Number</th>
-        <td>${result.custvano}</td>
+        <td>${result.custVaNo}</td>
     </tr>
     <tr>
         <th scope="row">Remark</th>
-        <td colspan="5">${result.remark}</td>
+        <td colspan="5">${result.rem}</td>
     </tr>
     </tbody>
     </table><!-- table end -->
@@ -401,18 +401,15 @@
         <col style="width:*" />
     </colgroup>
     <tbody>
-    <c:if test="${not empty addresinfo}">
-            <tr>
-                <th scope="row">Full Address</th>
-                <td><span>${addresinfo.add1}&nbsp;${addresinfo.add2}&nbsp;${addresinfo.add3}&nbsp;
-                ${addresinfo.postcode}&nbsp;${addresinfo.areaname}&nbsp;${addresinfo.name1}&nbsp;${addresinfo.name2}</span></td>
-            </tr>
-            <tr>
-                <th scope="row">Remark</th>
-                <td>${addresinfo.rem}</td>
-            </tr>
-    </c:if>
-    
+     <tr>
+         <th scope="row">Full Address</th>
+         <td><span>${addresinfo.add1}&nbsp;${addresinfo.add2}&nbsp;${addresinfo.add3}&nbsp;
+         ${addresinfo.postCode}&nbsp;${addresinfo.areaName}&nbsp;${addresinfo.name1}&nbsp;${addresinfo.name2}</span></td>
+     </tr>
+     <tr>
+         <th scope="row">Remark</th>
+         <td>${addresinfo.rem}</td>
+     </tr>
     </tbody>
     </table><!-- table end -->
     </article><!-- tap_area end -->
@@ -434,7 +431,7 @@
         <th scope="row">Name</th>
         <td><span>${contactinfo.name1}</span></td>
         <th scope="row">Initial</th>
-        <td>${contactinfo.codeid}</td>
+        <td>${contactinfo.code}</td>
         <th scope="row">Gender</th>
         <td>
             <c:choose >
@@ -460,7 +457,7 @@
             </c:if> 
         </td>
         <th scope="row">Race</th>
-        <td>${contactinfo.codename}</td>
+        <td>${contactinfo.codeName}</td>
     </tr>
     <tr>
         <th scope="row">Email</th>
@@ -472,11 +469,11 @@
     </tr>
     <tr>
         <th scope="row">Tel (Mobile)</th>
-        <td>${contactinfo.telm1}</td>
+        <td>${contactinfo.telM1}</td>
         <th scope="row">Tel (Residence)</th>
-        <td>${contactinfo.telr}</td>
+        <td>${contactinfo.telR}</td>
         <th scope="row">Tel (Office)</th>
-        <td>${contactinfo.telo }</td>
+        <td>${contactinfo.telO }</td>
     </tr>
     <tr>
         <th scope="row">Tel (Fax)</th>

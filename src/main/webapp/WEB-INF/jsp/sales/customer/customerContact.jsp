@@ -15,13 +15,13 @@
         <th scope="row">Status</th>
         <td><span>${detailcontact.name}</span></td>
         <th scope="row">Create By</th>
-        <td><span><c:if test="${not empty detailcontact.crtdt}">(${detailcontact.crtdt})</c:if></span></td>
+        <td><span><c:if test="${not empty detailcontact.crtDt}">(${detailcontact.crtDt})</c:if></span></td>
     </tr>
     <tr>
         <th scope="row">Initial</th>
-        <td><c:if test="${detailcontact.custinitial ne 0}">${detailcontact.custinitial}</c:if></td>
+        <td><c:if test="${detailcontact.custInitial ne 0}">${detailcontact.custInitial}</c:if></td>
         <th scope="row">Update By</th>
-        <td>${detailcontact.username1}<c:if test="${not empty detailcontact.upddt}">(${detailcontact.upddt})</c:if></td>
+        <td>${detailcontact.userName1}<c:if test="${not empty detailcontact.updDt}">(${detailcontact.updDt})</c:if></td>
     </tr>
     <tr>
         <th scope="row">Name</th>
@@ -44,19 +44,19 @@
     </tr>
     <tr>
         <th scope="row">Race</th>
-        <td>${detailcontact.codename}</td>
+        <td>${detailcontact.codeName}</td>
         <th scope="row">Email</th>
         <td>${detailcontact.email}</td>
     </tr>
     <tr>
         <th scope="row">Tel (Mobile)</th>
-        <td>${detailcontact.telm1}</td>
+        <td>${detailcontact.telM1}</td>
         <th scope="row">Tel (Office)</th>
-        <td>${detailcontact.telo }</td>
+        <td>${detailcontact.telO }</td>
     </tr>
     <tr>
         <th scope="row">Tel (Residence)</th>
-        <td>${detailcontact.telr }</td>
+        <td>${detailcontact.telR }</td>
         <th scope="row">Tel (Fax)</th>
         <td>${detailcontact.telf}</td>
     </tr>

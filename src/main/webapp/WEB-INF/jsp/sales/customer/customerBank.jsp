@@ -13,25 +13,25 @@
 <tbody>
 <tr>
     <th scope="row">Account</th>
-    <td><span>${detailbank.codename}</span></td>
+    <td><span>${detailbank.codeName}</span></td>
     <th scope="row">Create By</th>
-    <td><span><c:if test="${not empty detailbank.custacccrtdt}">(${detailbank.custacccrtdt})</c:if></span></td>
+    <td><span>${detailbank.userName}<c:if test="${not empty detailbank.custAccCrtDt}">(${detailbank.custAccCrtDt})</c:if></span></td>
 </tr>
 <tr>
     <th scope="row">Account No</th>
-    <td><span>${detailbank.custaccno}</span></td>
+    <td><span>${detailbank.custAccNo}</span></td>
     <th scope="row">Update By</th>
-    <td><span>${detailbank.username1}<c:if test="${not empty detailbank.custaccupddt}">(${detailbank.custaccupddt})</c:if></span></td>
+    <td><span>${detailbank.userName1}<c:if test="${not empty detailbank.custAccUpdDt}">(${detailbank.custAccUpdDt})</c:if></span></td>
 </tr>
 <tr>
     <th scope="row">Account Holder</th>
     <td><span>${detailbank.custAccOwner}</span></td>
     <th scope="row">Issue Bank</th>
-    <td><span>${detailbank.bankcode}<c:if test="${not empty detailbank.bankname}">${detailbank.bankname}</c:if></span></td>
+    <td><span>${detailbank.bankCode}<c:if test="${not empty detailbank.bankName}">${detailbank.bankName}</c:if></span></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><span>${detailbank.custaccrem}</span></td>
+    <td colspan="3"><span>${detailbank.custAccRem}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

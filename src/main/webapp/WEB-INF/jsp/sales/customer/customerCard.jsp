@@ -15,29 +15,29 @@
     <th scope="row">Credit Card Type</th>
     <td><span>${detailcard.code }</span></td>
     <th scope="row">Create By</th>
-    <td><span><c:if test="${not empty detailcard.custcrccrtdt }">(${detailcard.custcrccrtdt})</c:if></span></td>
+    <td><span>${detailcard.userName}<c:if test="${not empty detailcard.custCrcCrtDt }">(${detailcard.custCrcCrtDt})</c:if></span></td>
 </tr>
 <tr>
     <th scope="row">Credit No</th>
     <td><span>${detailcard.custOriCrcNo }</span></td>
     <th scope="row">Update By</th>
-    <td><span>${detailcard.username1}<c:if test="${not empty datailcard.custcrcupddt}">(${datailcard.custcrcupddt})</c:if></span></td>
+    <td><span>${detailcard.userName1}<c:if test="${not empty detailcard.custCrcUpdDt}">(${detailcard.custCrcUpdDt})</c:if></span></td>
 </tr>
 <tr>
     <th scope="row">Name On Card</th>
-    <td><span>${detailcard.custcrcowner}</span></td>
+    <td><span>${detailcard.custCrcOwner}</span></td>
     <th scope="row">Expiry Date</th>
-    <td><span>${detailcard.custcrcexpr}</span></td>
+    <td><span>${detailcard.custCrcExpr}</span></td>
 </tr>
 <tr>
     <th scope="row">Card Type</th>
     <td><span>${detailcard.codeName}</span></td>
     <th scope="row">Issue Bank</th>
-    <td><span>${detailcard.bankcode}<c:if test="${not empty detailcard.bankid}">-${detailcard.bankid}</c:if></span></td>
+    <td><span>${detailcard.bankCode}<c:if test="${not empty detailcard.bankId}">-${detailcard.bankId}</c:if></span></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><span>${detailcard.custcrcrem}</span></td>
+    <td colspan="3"><span>${detailcard.custCrcRem}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

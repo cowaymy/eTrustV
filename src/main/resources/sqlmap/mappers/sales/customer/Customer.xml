@@ -202,42 +202,42 @@
     </select>
     <!-- Customer basic Info(Customer View)  -->
     <resultMap type="egovMap" id="basicClobMap">
-        <result  property="remark" column="remark" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result  property="REM" column="REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     
     <select id="selectCustomerViewBasicInfo" parameterType="Map" resultMap="basicClobMap">
        <![CDATA[
-       SELECT 
-            Extent1.CUST_ID AS customerID,
-            Extent1.NAME AS custName,
-            Extent1.NRIC AS nric,
-            Extent1.REM AS remark,
-            Extent1.TYPE_ID AS typeID,
-            TO_CHAR(TO_DATE(Extent1.PAS_SPORT_EXPR, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS passportExpire,
-            TO_CHAR(TO_DATE(Extent1.VISA_EXPR, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS visaExpire,            
-            CASE WHEN Extent1.CRT_USER_ID IS NOT NULL THEN Extent1.CRT_USER_ID ELSE 0 END AS crtUserId,
-            CASE WHEN Extent2.USER_ID IS NOT NULL THEN Extent2.USER_NAME ELSE '' END AS userId,
-            CASE WHEN Extent1.CRT_DT IS NOT NULL AND Extent1.CRT_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') THEN TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY')  ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'), 'DD-MM-YYYY') END AS crtDt,
-            CASE WHEN Extent1.CORP_TYPE_ID IS NOT NULL THEN Extent1.CORP_TYPE_ID ELSE 0 END AS corpTypeId,
-            CASE WHEN Extent10.CODE_ID IS NOT NULL THEN Extent10.CODE ELSE '' END AS code,
-            CASE WHEN Extent10.CODE_ID IS NOT NULL THEN Extent10.CODE_NAME ELSE '' END AS codeName,
-            CASE WHEN Extent9.CODE_ID IS NOT NULL THEN Extent9.CODE_NAME ELSE '' END AS codeName1,            
-            CASE WHEN 964 <> Extent1.TYPE_ID THEN TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'), 'DD-MM-YYYY') WHEN Extent1.DOB IS NOT NULL AND TO_DATE(Extent1.DOB, 'YYYY-MM-DD') > TO_DATE('1900-01-01', 'YYYY-MM-DD') THEN TO_CHAR(TO_DATE(Extent1.DOB, 'YYYY-MM-DD'), 'DD-MM-YYYY') ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'), 'DD-MM-YYYY') END AS dob,            
-            CASE WHEN Extent1.EMAIL IS NOT NULL THEN Extent1.EMAIL ELSE '' END AS email,
-            CASE WHEN 964 <> Extent1.TYPE_ID THEN '' WHEN Extent1.GENDER IS NOT NULL THEN Extent1.GENDER ELSE '' END AS gender,
-            CASE WHEN 964 <> Extent1.TYPE_ID THEN 0 WHEN Extent1.NATION IS NOT NULL THEN Extent1.NATION ELSE 0 END AS nation,
-            CASE WHEN 964 <> Extent1.TYPE_ID THEN '' WHEN Extent4.CNTY_ID IS NOT NULL THEN Extent4.NAME ELSE '' END AS name1,
-            CASE WHEN 964 <> Extent1.TYPE_ID THEN 0 WHEN Extent1.RACE_ID IS NOT NULL THEN Extent1.RACE_ID ELSE 0 END AS raceId,
-            CASE WHEN 964 <> Extent1.TYPE_ID THEN '' WHEN Extent5.CODE_ID IS NOT NULL THEN Extent5.CODE_NAME ELSE '' END AS codeName2,
-            CASE WHEN Extent1.STUS_CODE_ID IS NOT NULL THEN Extent1.STUS_CODE_ID ELSE 0 END AS stusId,
-            CASE WHEN Extent1.UPD_USER_ID IS NOT NULL THEN Extent1.UPD_USER_ID ELSE 0 END AS updUserId,
-            CASE WHEN Extent1.UPD_DT IS NOT NULL AND Extent1.UPD_DT > '19000101'  THEN TO_CHAR(TO_DATE(Extent1.UPD_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'), 'DD-MM-YYYY') END AS updDt, -- date
-            CASE WHEN Extent3.USER_ID IS NOT NULL THEN Extent3.USER_NAME ELSE '' END AS userName,
-            CASE WHEN Extent6.CUST_ADD_ID IS NOT NULL THEN Extent6.CUST_ADD_ID ELSE 0 END AS custAddId,
-            CASE WHEN Extent7.CUST_CNTC_ID IS NOT NULL THEN Extent7.CUST_CNTC_ID ELSE 0 END AS custCntcId,
-            CASE WHEN Extent8.CUST_CARE_CNT_ID IS NOT NULL THEN Extent8.CUST_CARE_CNT_ID ELSE 0 END AS custCareCntId,
-            CASE WHEN Extent1.CUST_VA_NO IS NOT NULL THEN Extent1.CUST_VA_NO ELSE '' END AS custVaNo,
-            CASE WHEN Extent1.GST_RGIST_NO IS NOT NULL THEN Extent1.GST_RGIST_NO ELSE '' END AS gstRgistNo
+        SELECT 
+            Extent1.CUST_ID AS CUST_ID,
+            Extent1.NAME AS NAME,
+            Extent1.NRIC AS NRIC,
+            Extent1.REM AS REM,
+            Extent1.TYPE_ID AS TYPE_ID,
+            TO_CHAR(TO_DATE(Extent1.PAS_SPORT_EXPR, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS PAS_SPORT_EXPR,
+            TO_CHAR(TO_DATE(Extent1.VISA_EXPR, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS VISA_EXPR,            
+            CASE WHEN Extent1.CRT_USER_ID IS NOT NULL THEN Extent1.CRT_USER_ID ELSE 0 END AS CRT_USER_ID,
+            CASE WHEN Extent2.USER_ID IS NOT NULL THEN Extent2.USER_NAME ELSE '' END AS USER_NAME,
+            CASE WHEN Extent1.CRT_DT IS NOT NULL AND Extent1.CRT_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') THEN TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY  HH:MI:SS')  ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'), 'DD-MM-YYYY  HH:MI:SS') END AS CRT_DT,
+            CASE WHEN Extent1.CORP_TYPE_ID IS NOT NULL THEN Extent1.CORP_TYPE_ID ELSE 0 END AS CORP_TYPE_ID,
+            CASE WHEN Extent10.CODE_ID IS NOT NULL THEN Extent10.CODE ELSE '' END AS CODE,
+            CASE WHEN Extent10.CODE_ID IS NOT NULL THEN Extent10.CODE_NAME ELSE '' END AS CODE_NAME,
+            CASE WHEN Extent9.CODE_ID IS NOT NULL THEN Extent9.CODE_NAME ELSE '' END AS CODE_NAME1,            
+            CASE WHEN 964 <> Extent1.TYPE_ID THEN TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'), 'DD-MM-YYYY') WHEN Extent1.DOB IS NOT NULL AND TO_DATE(Extent1.DOB, 'YYYY-MM-DD') > TO_DATE('1900-01-01', 'YYYY-MM-DD') THEN TO_CHAR(TO_DATE(Extent1.DOB, 'YYYY-MM-DD'), 'DD-MM-YYYY') ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'), 'DD-MM-YYYY') END AS DOB,            
+            CASE WHEN Extent1.EMAIL IS NOT NULL THEN Extent1.EMAIL ELSE '' END AS EMAIL,
+            CASE WHEN 964 <> Extent1.TYPE_ID THEN '' WHEN Extent1.GENDER IS NOT NULL THEN Extent1.GENDER ELSE '' END AS GENDER,
+            CASE WHEN 964 <> Extent1.TYPE_ID THEN 0 WHEN Extent1.NATION IS NOT NULL THEN Extent1.NATION ELSE 0 END AS NATION,
+            CASE WHEN 964 <> Extent1.TYPE_ID THEN '' WHEN Extent4.CNTY_ID IS NOT NULL THEN Extent4.NAME ELSE '' END AS CNTY_NAME,
+            CASE WHEN 964 <> Extent1.TYPE_ID THEN 0 WHEN Extent1.RACE_ID IS NOT NULL THEN Extent1.RACE_ID ELSE 0 END AS RACE_ID,
+            CASE WHEN 964 <> Extent1.TYPE_ID THEN '' WHEN Extent5.CODE_ID IS NOT NULL THEN Extent5.CODE_NAME ELSE '' END AS CODE_NAME2,
+            CASE WHEN Extent1.STUS_CODE_ID IS NOT NULL THEN Extent1.STUS_CODE_ID ELSE 0 END AS STUS_CODE_ID,
+            CASE WHEN Extent1.UPD_USER_ID IS NOT NULL THEN Extent1.UPD_USER_ID ELSE 0 END AS UPD_USER_ID,
+            CASE WHEN Extent1.UPD_DT IS NOT NULL AND Extent1.UPD_DT > '19000101'  THEN TO_CHAR(TO_DATE(Extent1.UPD_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY  HH:MI:SS') ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD  HH:MI:SS'), 'DD-MM-YYYY') END AS UPD_DT, -- date
+            CASE WHEN Extent3.USER_ID IS NOT NULL THEN Extent3.USER_NAME ELSE '' END AS USER_NAME1,
+            CASE WHEN Extent6.CUST_ADD_ID IS NOT NULL THEN Extent6.CUST_ADD_ID ELSE 0 END AS CUST_ADD_ID,
+            CASE WHEN Extent7.CUST_CNTC_ID IS NOT NULL THEN Extent7.CUST_CNTC_ID ELSE 0 END AS CUST_CNTC_ID,
+            CASE WHEN Extent8.CUST_CARE_CNT_ID IS NOT NULL THEN Extent8.CUST_CARE_CNT_ID ELSE 0 END AS CUST_CARE_CNT_ID,
+            CASE WHEN Extent1.CUST_VA_NO IS NOT NULL THEN Extent1.CUST_VA_NO ELSE '' END AS CUST_VA_NO,
+            CASE WHEN Extent1.GST_RGIST_NO IS NOT NULL THEN Extent1.GST_RGIST_NO ELSE '' END AS GST_RGIST_NO
         
         FROM 
             SAL0029D Extent1
@@ -258,130 +258,130 @@
     </select>
     <!--  Customer Main Address(Customer View) -->
     <resultMap type="egovMap" id="mainAddrClobMap">
-        <result property="rem" column="rem" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="REM" column="REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     <select id="selectCustomerViewMainAddress" parameterType="Map" resultMap="mainAddrClobMap">
       <![CDATA[ 
 			  SELECT Limit1.CUST_ADD_ID CUST_ADD_ID  ,
-			       Limit1.add1 add1  ,
-			       Limit1.add2 add2  ,
-			       Limit1.add3 add3  ,
-			       Limit1.postCodeId postCodeId  ,
-			       Limit1.postCode postCode ,
-			       Limit1.areaId areaId  ,
-			       Limit1.areaName areaName,
-			       Limit1.stateId stateId  ,
-			       Limit1.name1 name1 ,
-			       Limit1.cntyId cntyId  ,
-			       Limit1.name2 name2  ,
-			       Limit1.rem rem  ,
-			       Limit1.stusCodeId stusCodeId  ,
-			       Limit1.NAME NAME  ,
-			       Limit1.CUST_ID CUST_ID  ,
-			       Limit1.CRT_USER_ID CRT_USER_ID  ,
-			       Limit1.userName userName  ,
-			       Limit1.crtDt crtDt  ,
-			       Limit1.updDt updDt  ,
-			       Limit1.updUser updUser  ,
-			       Limit1.userName1 userName1  
-			  FROM ( SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
-			                Extent1.CUST_ID CUST_ID  ,
-			                Extent1.CRT_USER_ID CRT_USER_ID  ,
-			                Extent2.NAME NAME  ,
-			                CASE WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END add1  ,
-			                CASE  WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END add2  ,
-			                CASE  WHEN ( Extent1.ADD3 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD3)) ELSE '' END add3  ,
-			                CASE  WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID ELSE 0 END postCodeId  ,
-			                CASE  WHEN ( Extent3.POST_CODE_ID IS NOT NULL ) THEN Extent3.POST_CODE ELSE '' END postCode  ,
-			                CASE  WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID ELSE 0 END areaId  ,
-			                CASE  WHEN ( Extent4.AREA_ID IS NOT NULL ) THEN Extent4.AREA_NAME ELSE '' END areaName  ,
-			                CASE  WHEN ( Extent1.STATE_ID IS NOT NULL ) THEN Extent1.STATE_ID ELSE 0 END stateId  ,
-			                CASE  WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME ELSE '' END name1  ,
-			                CASE  WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID ELSE 0 END cntyId ,
-			                CASE  WHEN ( Extent6.CNTY_ID IS NOT NULL ) THEN Extent6.NAME ELSE '' END name2  ,
-			                CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM ELSE '' END rem  ,
-			                CASE  WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END stusCodeId  ,
-			                CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END userName  ,
-			                CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('1900-01-01' , 'YYYY-MM-DD'))) THEN Extent1.CRT_DT ELSE TO_DATE('1900-01-01' , 'YYYY-MM-DD') END crtDt ,
-			                CASE  WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01')) THEN Extent1.UPD_DT ELSE '1900-01-01' END updDt  ,
-			                CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END updUser ,
-			                CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END userName1  
-			         FROM SAL0023D Extent1
-			                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
-			                LEFT JOIN SYS0030C Extent3   ON Extent3.POST_CODE_ID = Extent1.POST_CODE_ID
-			                LEFT JOIN SYS0039M Extent4   ON Extent4.AREA_ID = Extent1.AREA_ID
-			                LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_ID
-			                LEFT JOIN SYS0015M Extent6   ON Extent6.CNTY_ID = Extent1.CNTY_ID
-			                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
-			                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
-			          WHERE  ( 8 <> Extent1.STUS_CODE_ID)
-			                   AND ( Extent1.CUST_ADD_ID = #{custAddId}) AND ROWNUM <= 1 ) Limit1
+                   Limit1.ADD1 ADD1  ,
+                   Limit1.ADD2 ADD2  ,
+                   Limit1.ADD3 ADD3  ,
+                   Limit1.POST_CODE_ID POST_CODE_ID  ,
+                   Limit1.POST_CODE POST_CODE , --postCode
+                   Limit1.AREA_ID AREA_ID  , --areaId
+                   Limit1.AREA_NAME AREA_NAME, --areaName
+                   Limit1.STATE_ID STATE_ID  , --stateId
+                   Limit1.NAME1 NAME1 ,
+                   Limit1.CNTY_ID CNTY_ID  , --cntyId
+                   Limit1.NAME2 NAME2  ,
+                   Limit1.REM REM  ,
+                   Limit1.STUS_CODE_ID STUS_CODE_ID  , --stusCodeId
+                   Limit1.NAME NAME  ,
+                   Limit1.CUST_ID CUST_ID  ,
+                   Limit1.CRT_USER_ID CRT_USER_ID  ,
+                   Limit1.USER_NAME USER_NAME  , --userName
+                   Limit1.CRT_DT CRT_DT  , --crtDt
+                   Limit1.UPD_DT UPD_DT  , --updDt
+                   Limit1.UPD_USER_ID UPD_USER_ID  , --updUser
+                   Limit1.USER_NAME1 USER_NAME1  -- userName1
+              FROM ( SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+                            Extent1.CUST_ID CUST_ID  ,
+                            Extent1.CRT_USER_ID CRT_USER_ID  ,
+                            Extent2.NAME NAME  ,
+                            CASE WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END ADD1  ,
+                            CASE  WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END ADD2  ,
+                            CASE  WHEN ( Extent1.ADD3 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD3)) ELSE '' END ADD3  ,
+                            CASE  WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID ELSE 0 END POST_CODE_ID  ,
+                            CASE  WHEN ( Extent3.POST_CODE_ID IS NOT NULL ) THEN Extent3.POST_CODE ELSE '' END POST_CODE  ,
+                            CASE  WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID ELSE 0 END AREA_ID  ,
+                            CASE  WHEN ( Extent4.AREA_ID IS NOT NULL ) THEN Extent4.AREA_NAME ELSE '' END AREA_NAME  ,
+                            CASE  WHEN ( Extent1.STATE_ID IS NOT NULL ) THEN Extent1.STATE_ID ELSE 0 END STATE_ID  ,
+                            CASE  WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME ELSE '' END NAME1  ,
+                            CASE  WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID ELSE 0 END CNTY_ID ,
+                            CASE  WHEN ( Extent6.CNTY_ID IS NOT NULL ) THEN Extent6.NAME ELSE '' END NAME2  ,
+                            CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM ELSE '' END REM  ,
+                            CASE  WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  ,
+                            CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END USER_NAME  ,
+                            CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('1900-01-01' , 'YYYY-MM-DD'))) THEN Extent1.CRT_DT ELSE TO_DATE('1900-01-01' , 'YYYY-MM-DD') END CRT_DT ,
+                            CASE  WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01')) THEN Extent1.UPD_DT ELSE '1900-01-01' END UPD_DT  ,
+                            CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END UPD_USER_ID ,
+                            CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END USER_NAME1  
+                     FROM SAL0023D Extent1
+                            JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                            LEFT JOIN SYS0030C Extent3   ON Extent3.POST_CODE_ID = Extent1.POST_CODE_ID
+                            LEFT JOIN SYS0039M Extent4   ON Extent4.AREA_ID = Extent1.AREA_ID
+                            LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_ID
+                            LEFT JOIN SYS0015M Extent6   ON Extent6.CNTY_ID = Extent1.CNTY_ID
+                            LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+                            LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
+                      WHERE  ( 8 <> Extent1.STUS_CODE_ID)
+                               AND ( Extent1.CUST_ADD_ID = #{custAddId}) AND ROWNUM <= 1 ) Limit1
      ]]>
     </select>
     <!-- customer main Contact(Customer View) -->
     <resultMap type="egovMap" id="mainContactClobMap">
-           <result property="dept" column="dept" jdbcType="CLOB" javaType="java.lang.String"/>
+           <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     <select id="selectCustomerViewMainContact" parameterType="Map" resultMap="mainContactClobMap">
         <![CDATA[
 			SELECT Limit1.CUST_CNTC_ID CUST_CNTC_ID  ,
-	                   Limit1.CUST_ID CUST_ID  ,
-	                   TO_CHAR(Limit1.crtDt, 'DD-MM-YYYY') crtDt  ,
-	                   Limit1.CRT_USER_ID CRT_USER_ID  , 
-	                   Limit1.userName userName  , 
-	                   Limit1.dept dept  , 
-	                   TO_CHAR(Limit1.dob, 'DD-MM-YYYY') dob  , 
-	                   Limit1.email email  , 
-	                   Limit1.gender gender  , 
-	                   Limit1.custInitial custInitial  , 
-	                   Limit1.codeId codeId  , 
-	                   Limit1.name1 name1  , 
-	                   Limit1.nric nric  , 
-	                   Limit1.pos pos  ,
-	                   Limit1.raceId raceId  , 
-	                   Limit1.codeName codeName  , 
-	                   Limit1.stusCodeId stusCodeId  , 
-	                   Limit1.NAME NAME  ,
-	                   Limit1.telF telF  , 
-	                   Limit1.telM1 telM1  , 
-	                   Limit1.telO telO  , 
-	                   Limit1.telR telR  , 
-	                   Limit1.ext ext  , 
-	                   Limit1.updUserId updUserId  , 
-	                   Limit1.userName1 userName1  ,
-	                   TO_CHAR(Limit1.UpdDt, 'DD-MM-YYYY') updDt   
+                       Limit1.CUST_ID CUST_ID  ,
+                       TO_CHAR(Limit1.CRT_DT, 'DD-MM-YYYY') CRT_DT  ,
+                       Limit1.CRT_USER_ID CRT_USER_ID  , 
+                       Limit1.USER_NAME USER_NAME  , 
+                       Limit1.DEPT DEPT  , 
+                       TO_CHAR(Limit1.DOB, 'DD-MM-YYYY') DOB  , 
+                       Limit1.EMAIL EMAIL  , 
+                       Limit1.GENDER GENDER  , 
+                       Limit1.CUST_INITIAL CUST_INITIAL  , 
+                       Limit1.CODE CODE  ,  --codeId
+                       Limit1.NAME1 NAME1  , 
+                       Limit1.NRIC NRIC  , 
+                       Limit1.POS POS  ,
+                       Limit1.RACE_ID RACE_ID  , 
+                       Limit1.CODE_NAME CODE_NAME  , 
+                       Limit1.STUS_CODE_ID STUS_CODE_ID, 
+                       Limit1.NAME NAME  ,
+                       Limit1.TELF TELF  , 
+                       Limit1.TEL_M1 TEL_M1  , 
+                       Limit1.TEL_O TEL_O  , 
+                       Limit1.TEL_R TEL_R  , 
+                       Limit1.EXT EXT  , 
+                       Limit1.UPD_USER_ID UPD_USER_ID  , 
+                       Limit1.USER_NAME1 USER_NAME1  ,
+                       TO_CHAR(Limit1.UPD_DT, 'DD-MM-YYYY') UPD_DT   
             FROM ( SELECT Extent1.CUST_CNTC_ID CUST_CNTC_ID  ,
-		                            Extent1.CUST_ID CUST_ID  ,
-		                            Extent1.CRT_USER_ID CRT_USER_ID  ,
-		                            Extent2.NAME NAME  ,
-		                            CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > '1900-01-01' ) ) THEN TO_DATE(Extent1.CRT_DT, 'YYYY-MM-DD') ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END crtDt  , -- DATE
-		                            CASE WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END userName,
-		                            CASE WHEN ( Extent1.DEPT IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.DEPT)) ELSE NULL END dept  , --CLOB TYPE >> ELSE 처리 NULL or EMPTY_CLOB()
-		                            CASE WHEN ( ( Extent1.DOB IS NOT NULL ) AND ( Extent1.DOB >'1900-01-01' ) ) THEN Extent1.DOB ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')  END dob  , -- DATE
-		                            CASE WHEN ( Extent1.EMAIL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.EMAIL)) ELSE '' END email  ,
-		                            CASE WHEN ( Extent1.GENDER IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.GENDER)) ELSE '' END gender  ,
-		                            CASE WHEN ( Extent1.CUST_INITIAL IS NOT NULL ) THEN Extent1.CUST_INITIAL ELSE 0  END custInitial  ,
-		                            CASE WHEN ( Extent5.CODE_ID IS NOT NULL ) THEN Extent5.CODE ELSE '' END codeId  ,
-		                            CASE WHEN ( Extent1.NAME IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.NAME)) ELSE '' END name1  ,
-		                            CASE WHEN ( Extent1.NRIC IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.NRIC))ELSE '' END nric  ,
-		                            CASE WHEN ( Extent1.POS IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.POS)) ELSE '' END pos  ,
-		                            CASE WHEN ( Extent1.RACE_ID IS NOT NULL ) THEN Extent1.RACE_ID ELSE 0  END raceId  ,
-		                            CASE WHEN ( Extent6.CODE_ID IS NOT NULL ) THEN Extent6.CODE_NAME ELSE ''END codeName  ,
-		                            CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END stusCodeId  ,
-		                            CASE WHEN ( Extent1.TELF IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TELF)) ELSE '' END telF  ,
-		                            CASE WHEN ( Extent1.TEL_M1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TEL_M1)) ELSE ''  END telM1  ,
-		                            CASE WHEN ( Extent1.TEL_O IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TEL_O))  ELSE '' END telO  ,
-		                            CASE WHEN ( Extent1.TEL_R IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TEL_R))ELSE '' END telR  ,
-		                            CASE WHEN ( Extent1.EXT IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.EXT)) ELSE '' END ext  ,
-		                            CASE WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID  ELSE 0 END updUserId  ,
-		                            CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME  ELSE '' END userName1  ,
-		                            CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01' ) ) THEN Extent1.UPD_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')  END updDt  -- DATE
+                                    Extent1.CUST_ID CUST_ID  ,
+                                    Extent1.CRT_USER_ID CRT_USER_ID  ,
+                                    Extent2.NAME NAME  ,
+                                    CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > '1900-01-01' ) ) THEN TO_DATE(Extent1.CRT_DT, 'YYYY-MM-DD') ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END CRT_DT  , -- DATE
+                                    CASE WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END USER_NAME,
+                                    CASE WHEN ( Extent1.DEPT IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.DEPT)) ELSE NULL END DEPT  , --CLOB TYPE >> ELSE 처리 NULL or EMPTY_CLOB()
+                                    CASE WHEN ( ( Extent1.DOB IS NOT NULL ) AND ( Extent1.DOB >'1900-01-01' ) ) THEN Extent1.DOB ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')  END DOB  , -- DATE
+                                    CASE WHEN ( Extent1.EMAIL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.EMAIL)) ELSE '' END EMAIL  ,
+                                    CASE WHEN ( Extent1.GENDER IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.GENDER)) ELSE '' END GENDER  ,
+                                    CASE WHEN ( Extent1.CUST_INITIAL IS NOT NULL ) THEN Extent1.CUST_INITIAL ELSE 0  END CUST_INITIAL  ,
+                                    CASE WHEN ( Extent5.CODE_ID IS NOT NULL ) THEN Extent5.CODE ELSE '' END CODE  ,
+                                    CASE WHEN ( Extent1.NAME IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.NAME)) ELSE '' END NAME1  ,
+                                    CASE WHEN ( Extent1.NRIC IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.NRIC))ELSE '' END NRIC  ,
+                                    CASE WHEN ( Extent1.POS IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.POS)) ELSE '' END POS  ,
+                                    CASE WHEN ( Extent1.RACE_ID IS NOT NULL ) THEN Extent1.RACE_ID ELSE 0  END RACE_ID  ,
+                                    CASE WHEN ( Extent6.CODE_ID IS NOT NULL ) THEN Extent6.CODE_NAME ELSE ''END CODE_NAME  ,
+                                    CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  ,
+                                    CASE WHEN ( Extent1.TELF IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TELF)) ELSE '' END TELF  ,
+                                    CASE WHEN ( Extent1.TEL_M1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TEL_M1)) ELSE ''  END TEL_M1  ,
+                                    CASE WHEN ( Extent1.TEL_O IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TEL_O))  ELSE '' END TEL_O  ,
+                                    CASE WHEN ( Extent1.TEL_R IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.TEL_R))ELSE '' END TEL_R  ,
+                                    CASE WHEN ( Extent1.EXT IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.EXT)) ELSE '' END EXT  ,
+                                    CASE WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID  ELSE 0 END UPD_USER_ID  ,
+                                    CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME  ELSE '' END USER_NAME1  ,
+                                    CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01' ) ) THEN Extent1.UPD_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')  END UPD_DT  -- DATE
                      FROM SAL0027D Extent1
-		                            JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
-		                            LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
-		                            LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
-		                            LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent1.CUST_INITIAL 
-		                            LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent1.RACE_ID
+                                    JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                                    LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                                    LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
+                                    LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent1.CUST_INITIAL 
+                                    LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent1.RACE_ID
                       WHERE  ( 8 <> Extent1.STUS_CODE_ID )
                           AND  ( Extent1.CUST_CNTC_ID = #{custId} ) AND ROWNUM <= 1 ) Limit1
           ]]>
@@ -390,63 +390,63 @@
     <select id="selectCustomerAddressJsonList" parameterType="Map" resultType="egovMap">
        <![CDATA[    
 				SELECT Project1.CUST_ADD_ID CUST_ADD_ID  ,
-				        Project1.CUST_ID CUST_ID  ,
-				        Project1.CRT_USER_ID CRT_USER_ID  ,
-				        Project1.NAME NAME  ,
-				        Project1.add1 || Project1.add2 || Project1.add3 || Project1.name1 || Project1.Name2 addr,                       
-				        Project1.postCodeId postCodeId  ,
-				        Project1.postCode postCode  ,
-				        Project1.areaId areaId  ,
-				        Project1.areaName areaName  ,
-				        Project1.stateId stateId  ,                       
-				        Project1.cntyId cntyId  ,                        
-				        Project1.rem rem  ,
-				        Project1.stusCodeId stusCodeId  ,
-				        Project1.userName userName  ,
-				        Project1.crtDt crtDt  ,
-				        Project1.updDt updDt  ,
-				        Project1.updUser updUser  ,
-				        Project1.userName1 userName1
-				FROM ( SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
-				               Extent1.CUST_ID CUST_ID  ,
-				               Extent1.CRT_USER_ID CRT_USER_ID  ,
-				               Extent2.NAME NAME  ,
-				               CASE WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END add1  ,
-				               CASE WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END add2  ,
-				               CASE  WHEN ( Extent1.ADD3 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD3)) ELSE '' END add3  ,
-				               CASE  WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID ELSE 0 END postCodeId  ,
-				               CASE  WHEN ( Extent3.POST_CODE_ID IS NOT NULL ) THEN Extent3.POST_CODE ELSE '' END postCode  ,
-				               CASE  WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID ELSE 0 END areaId  ,
-				               CASE  WHEN ( Extent4.AREA_ID IS NOT NULL ) THEN Extent4.AREA_NAME ELSE '' END areaName  ,
-				               CASE  WHEN ( Extent1.STATE_ID IS NOT NULL ) THEN Extent1.STATE_ID ELSE 0  END stateId  ,
-				               CASE  WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME ELSE '' END name1  ,
-				               CASE  WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID ELSE 0 END cntyId  ,
-				               CASE  WHEN ( Extent6.CNTY_ID IS NOT NULL ) THEN Extent6.NAME ELSE '' END name2  ,
-				               CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM  ELSE '' END Rem  ,
-				               CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END stusCodeId  ,
-				               CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END userName  ,
-				               CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.CRT_DT ELSE TO_DATE('19000101','YYYYMMDD') END crtDt  ,
-				               CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.UPD_DT ELSE '1900-01-01 00:00:00' END updDt  ,
-				               CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END updUser  ,
-				               CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END userName1  
-				        FROM SAL0023D Extent1
-				               JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
-				               LEFT JOIN SYS0030C Extent3   ON Extent3.POST_CODE_ID = Extent1.POST_CODE_ID
-				               LEFT JOIN SYS0039M Extent4   ON Extent4.AREA_ID = Extent1.AREA_ID
-				               LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_ID
-				               LEFT JOIN SYS0015M Extent6   ON Extent6.CNTY_ID = Extent1.CNTY_ID
-				               LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
-				               LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
-				        WHERE  ( 8 <> Extent1.STUS_CODE_ID )
-				              AND ( Extent1.CUST_ID = #{custId} ) 
-				        ) Project1
-				ORDER BY Project1.Name DESC
+                        Project1.CUST_ID CUST_ID  ,
+                        Project1.CRT_USER_ID CRT_USER_ID  ,
+                        Project1.NAME NAME  ,
+                        Project1.add1 || Project1.add2 || Project1.add3 || Project1.name1 || Project1.Name2 ADDR,                       
+                        Project1.postCodeId POST_CODE_ID  ,
+                        Project1.postCode POST_CODE  ,
+                        Project1.areaId AREA_ID  ,
+                        Project1.areaName AREA_NAME  ,
+                        Project1.stateId STATE_ID  ,                       
+                        Project1.cntyId CNTY_ID  ,                        
+                        Project1.rem REM  ,
+                        Project1.stusCodeId STUS_CODE_ID ,
+                        Project1.userName USER_NAME  ,
+                        Project1.crtDt CRT_DT  ,
+                        Project1.updDt UPD_DT  ,
+                        Project1.updUser UPD_USER  ,
+                        Project1.userName1 USER_NAME1
+                FROM ( SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+                               Extent1.CUST_ID CUST_ID  ,
+                               Extent1.CRT_USER_ID CRT_USER_ID  ,
+                               Extent2.NAME NAME  ,
+                               CASE WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END add1  ,
+                               CASE WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END add2  ,
+                               CASE  WHEN ( Extent1.ADD3 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD3)) ELSE '' END add3  ,
+                               CASE  WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID ELSE 0 END postCodeId  ,
+                               CASE  WHEN ( Extent3.POST_CODE_ID IS NOT NULL ) THEN Extent3.POST_CODE ELSE '' END postCode  ,
+                               CASE  WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID ELSE 0 END areaId  ,
+                               CASE  WHEN ( Extent4.AREA_ID IS NOT NULL ) THEN Extent4.AREA_NAME ELSE '' END areaName  ,
+                               CASE  WHEN ( Extent1.STATE_ID IS NOT NULL ) THEN Extent1.STATE_ID ELSE 0  END stateId  ,
+                               CASE  WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME ELSE '' END name1  ,
+                               CASE  WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID ELSE 0 END cntyId  ,
+                               CASE  WHEN ( Extent6.CNTY_ID IS NOT NULL ) THEN Extent6.NAME ELSE '' END name2  ,
+                               CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM  ELSE '' END Rem  ,
+                               CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END stusCodeId  ,
+                               CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END userName  ,
+                               CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.CRT_DT ELSE TO_DATE('19000101','YYYYMMDD') END crtDt  ,
+                               CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.UPD_DT ELSE '1900-01-01 00:00:00' END updDt  ,
+                               CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END updUser  ,
+                               CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END userName1  
+                        FROM SAL0023D Extent1
+                               JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                               LEFT JOIN SYS0030C Extent3   ON Extent3.POST_CODE_ID = Extent1.POST_CODE_ID
+                               LEFT JOIN SYS0039M Extent4   ON Extent4.AREA_ID = Extent1.AREA_ID
+                               LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_ID
+                               LEFT JOIN SYS0015M Extent6   ON Extent6.CNTY_ID = Extent1.CNTY_ID
+                               LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+                               LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
+                        WHERE  ( 8 <> Extent1.STUS_CODE_ID )
+                              AND ( Extent1.CUST_ID = #{custId} ) 
+                        ) Project1
+                ORDER BY Project1.Name DESC
 		 ]]>
     </select>
     
     <!-- Ajax Call Contact List  -->
     <resultMap type="EgovMap" id="contactClobMap">
-        <result property="dept" column="dept" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     
     <select id="selectCustomerContactJsonList" parameterType="Map" resultMap="contactClobMap">
@@ -455,28 +455,28 @@
                      Project1.CUST_ID CUST_ID  ,
                      Project1.CRT_USER_ID CRT_USER_ID  ,
                      Project1.NAME NAME  ,
-                     Project1.crtDt crtDt  , 
-                     Project1.userName userName  ,
-                     Project1.dept dept  ,
-                     Project1.dob dob  ,
-                     Project1.email email  ,
-                     Project1.gender gender  , 
-                     Project1.custInitial custInitial  ,
-                     Project1.code code  ,
-                     Project1.name1 name1  , 
-                     Project1.nric nric  ,
-                     Project1.pos pos  ,
-                     Project1.raceId raceId  ,
-                     Project1.codeName codeName  ,
-                     Project1.stusCodeId stusCodeId  ,
-                     Project1.telF telF  ,
-                     Project1.telM1 telM1  ,
-                     Project1.telO telO  ,
-                     Project1.telR telR  ,
-                     Project1.ext ext  ,
-                     Project1.updUserId updUserId  ,
-                     Project1.userName1 userName1  ,
-                     Project1.updDt updDt                       
+                     Project1.crtDt CRT_DT  , 
+                     Project1.userName USER_NAME  ,
+                     Project1.dept DEPT  ,
+                     Project1.dob DOB  ,
+                     Project1.email EMAIL  ,
+                     Project1.gender GENDER  , 
+                     Project1.custInitial CUST_INITIAL  ,
+                     Project1.code CODE  ,
+                     Project1.name1 NAME1  , 
+                     Project1.nric NRIC  ,
+                     Project1.pos POS  ,
+                     Project1.raceId RACE_ID  ,
+                     Project1.codeName CODE_NAME  ,
+                     Project1.stusCodeId STUS_CODE_ID  ,
+                     Project1.telF TELF  ,
+                     Project1.telM1 TEL_M1  ,
+                     Project1.telO TEL_O  ,
+                     Project1.telR TEL_R  ,
+                     Project1.ext EXT  ,
+                     Project1.updUserId UPD_USER_ID  ,
+                     Project1.userName1 USERNAME1  ,
+                     Project1.updDt UPD_DT                       
             FROM ( SELECT   Extent1.CUST_CNTC_ID CUST_CNTC_ID  ,
                                     Extent1.CUST_ID CUST_ID  ,
                                     Extent1.CRT_USER_ID CRT_USER_ID  ,
@@ -518,33 +518,33 @@
     
     <!-- Ajax Call Bank List  -->
     <resultMap type="EgovMap" id="bankClobMap">
-            <result property="custEncryptAccNo" column="custEncryptAccNo" jdbcType="CLOB" javaType="java.lang.String"/> 
-            <result property="custAccBankBrnch" column="custAccBankBrnch" jdbcType="CLOB" javaType="java.lang.String"/>
-            <result property="custAccOwner" column="custAccOwner" jdbcType="CLOB" javaType="java.lang.String"/> 
-            <result property="custAccRem" column="custAccRem" jdbcType="CLOB" javaType="java.lang.String"/><!-- c11 -->
+            <result property="CUST_ENCRYPT_ACC_NO" column="CUST_ENCRYPT_ACC_NO" jdbcType="CLOB" javaType="java.lang.String"/> 
+            <result property="CUST_ACC_BANK_BRNCH" column="CUST_ACC_BANK_BRNCH" jdbcType="CLOB" javaType="java.lang.String"/>
+            <result property="CUST_ACC_OWNER" column="CUST_ACC_OWNER" jdbcType="CLOB" javaType="java.lang.String"/> 
+            <result property="CUST_ACC_REM" column="CUST_ACC_REM" jdbcType="CLOB" javaType="java.lang.String"/><!-- c11 -->
     </resultMap>
     
     <select id="selectCustomerBankAccJsonList" parameterType="Map" resultMap="bankClobMap">
         <![CDATA[   
         SELECT  Project1.CUST_ACC_ID CUST_ACC_ID  ,
                     Project1.CUST_ID CUST_ID  ,
-                    Project1.custAccNo custAccNo  , -- c1
-                    Project1.custEncryptAccNo custEncryptAccNo  ,
-                    Project1.custAccBankId custAccBankId  ,
-                    Project1.bankCode bankCode  ,
-                    Project1.bankName bankName  ,
-                    Project1.custAccBankBrnch custAccBankBrnch  ,
-                    Project1.custAccOwner custAccOwner  ,
-                    Project1.custAccStusId custAccStusId  , -- c8
-                    Project1.custAccTypeId custAccTypeId  ,
-                    Project1.codeName codeName  ,
-                    Project1.custAccRem custAccRem  ,
-                    Project1.custAccCrtUserId custAccCrtUserId  , --c12
-                    Project1.custAccUpdUserId custAccUpdUserId  ,
-                    Project1.custAccCrtDt custAccCrtDt  ,
-                    Project1.custAccUpdDt CustAccUpdDt  ,
-                    Project1.userName userName  , --c16
-                    Project1.userName1 userName1  
+                    Project1.custAccNo CUST_ACC_NO  , -- c1
+                    Project1.custEncryptAccNo CUST_ENCRYPT_ACC_NO  ,
+                    Project1.custAccBankId CUST_ACC_BANK_ID  ,
+                    Project1.bankCode BANK_CODE  ,
+                    Project1.bankName BANK_NAME  ,
+                    Project1.custAccBankBrnch CUST_ACC_BANK_BRNCH  ,
+                    Project1.custAccOwner CUST_ACC_OWNER  , --?
+                    Project1.custAccStusId CUST_ACC_STUS_ID  , 
+                    Project1.custAccTypeId CUST_ACC_TYPE_ID  ,
+                    Project1.codeName CODE_NAME  ,
+                    Project1.custAccRem CUST_ACC_REM  ,
+                    Project1.custAccCrtUserId CUST_ACC_CRT_USER_ID  , --c12
+                    Project1.custAccUpdUserId CUST_ACC_UPD_USER_ID  ,
+                    Project1.custAccCrtDt CUST_ACC_CRT_DT  ,
+                    Project1.custAccUpdDt CUST_ACC_UPD_DT  ,
+                    Project1.userName USER_NAME  , --c16
+                    Project1.userName1 USER_NAME1  
         FROM   ( SELECT Project1.CUST_ACC_ID CUST_ACC_ID  ,
                                 Project1.CUST_ID CUST_ID  ,
                                 Project1.custAccNo custAccNo  , -- c1
@@ -598,34 +598,34 @@
     
     <!-- Ajax Call Credit Card List  -->
     <resultMap type="egovMap" id="cardClobMap">
-           <result property="custCrcNo" column="custCrcNo" jdbcType="CLOB" javaType="java.lang.String"/>
-           <result property="custOriCrcNo" column="custOriCrcNo" jdbcType="CLOB" javaType="java.lang.String"/>
-           <result property="custCrcRem" column="custCrcRem" jdbcType="CLOB" javaType="java.lang.String"/>
+           <result property="CUST_CRC_NO" column="CUST_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
+           <result property="CUST_ORI_CRC_NO" column="CUST_ORI_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
+           <result property="CUST_CRC_REM" column="CUST_CRC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     
     <select id="selectCustomerCreditCardJsonList" parameterType="Map" resultMap="cardClobMap">
    <![CDATA[   
 		SELECT   Project1.CUST_CRC_ID CUST_CRC_ID  ,
-            Project1.custId custId  ,
-            Project1.custCrcBankId custCrcBankId  ,
-            Project1.bankCode bankCode  ,
-            Project1.bankName bankName  ,
-            Project1.custCrcExpr custCrcExpr  ,
-            Project1.custCrcOwner custCrcOwner  ,
-            Project1.custCrcNo custCrcNo  ,
-            Project1.custOriCrcNo custOriCrcNo  , --c8
+            Project1.custId CUST_ID  ,
+            Project1.custCrcBankId CUST_CRC_BANK_ID  ,
+            Project1.bankCode BANK_CODE  ,
+            Project1.bankName BANK_NAME  ,
+            Project1.custCrcExpr CUST_CRC_EXPR  ,
+            Project1.custCrcOwner CUST_CRC_OWNER  ,
+            Project1.custCrcNo CUST_CRC_NO  ,
+            Project1.custOriCrcNo CUST_ORI_CRC_NO  , --c8
             Project1.CUST_ENCRYPT_CRC_NO CUST_ENCRYPT_CRC_NO  ,
-            Project1.custCrcTypeId custCrcTypeId  , -- c9
-            Project1.codeName1 codeName1  ,
-            Project1.custCrcStusId custCrcStusId  ,
-            Project1.custCrcCrtDt custCrcCrtDt  ,
-            Project1.custCrcUpdDt custCrcUpdDt  ,
-            Project1.custCrcRem custCrcRem  ,
-            Project1.custCrcCrtUserId custCrcCrtUserId  ,
-            Project1.custCrcUpdUserId custCrcUpdUserId  ,
-            Project1.userName userName  ,
-            Project1.userName1 userName1  ,
-            Project1.cardTypeId cardTypeId  ,
+            Project1.custCrcTypeId CUST_CRC_TYPE_ID  , -- c9
+            Project1.codeName1 CODE_NAME1  ,
+            Project1.custCrcStusId CUST_CRC_STUS_ID  ,
+            Project1.custCrcCrtDt CUST_CRC_CRT_DT  ,
+            Project1.custCrcUpdDt CUST_CRC_UPD_DT  ,
+            Project1.custCrcRem CUST_CRC_REM  ,
+            Project1.custCrcCrtUserId CUST_CRC_CRT_USER_ID  ,
+            Project1.custCrcUpdUserId CUST_CRC_UPD_USER_ID  ,
+            Project1.userName USER_NAME  ,
+            Project1.userName1 USER_NAME1  ,
+            Project1.cardTypeId CARD_TYPE_ID  ,
             Project1.CODE_NAME CODE_NAME  
     FROM (  SELECT  Project1.CUST_CRC_ID CUST_CRC_ID  ,
 			                Project1.CUST_ENCRYPT_CRC_NO CUST_ENCRYPT_CRC_NO  ,
@@ -690,19 +690,19 @@
 		     SELECT   Project6.C1 C1  , 
                     Project6.SALES_ORD_ID SALES_ORD_ID  , 
                     Project6.SALES_ORD_NO SALES_ORD_NO  , 
-                    TO_CHAR(Project6.salesDt,'DD-MM-YYYY') salesDt  ,  --c4
-                    Project6.appTypeId appTypeId  , 
-                    Project6.code code  , 
-                    Project6.codeName codeName  , 
-                    Project6.stusCodeId stusCodeId  , 
-                    Project6.code1 code1  , 
-                    Project6.itmStkId itmStkId  , 
+                    TO_CHAR(Project6.salesDt,'DD-MM-YYYY') SALES_DT  ,  --c4
+                    Project6.appTypeId APP_TYPE_ID  , 
+                    Project6.code CODE  , 
+                    Project6.codeName CODE_NAME  , 
+                    Project6.stusCodeId STUS_CODE_ID  , 
+                    Project6.code1 CODE1  , 
+                    Project6.itmStkId ITM_STK_ID  , 
                     Project6.STK_CODE STK_CODE  ,
                     Project6.STK_DESC STK_DESC  , 
-                    Project6.modeId modeId  , 
-                    Project6.code2 code2  ,
-                    Project6.bankCode bankCode  , 
-                    Project6.rentAmt rentAmt  
+                    Project6.modeId MODE_ID  , 
+                    Project6.code2 CODE2  ,
+                    Project6.bankCode BANK_CODE  , 
+                    Project6.rentAmt RENT_AMT  
              FROM ( SELECT  Project6.C1 C1  , 
                             Project6.SALES_ORD_ID SALES_ORD_ID  , 
                             Project6.SALES_ORD_NO SALES_ORD_NO  , 
@@ -880,19 +880,19 @@
         <![CDATA[  
         SELECT  Project2.SALES_ORD_ID SALES_ORD_ID  ,
                     Project2.SALES_ORD_NO SALES_ORD_NO  ,
-                    TO_CHAR(Project2.salesDt, 'DD-MM-YYYY') salesDt,                     
-                    Project2.appTypeId appTypeId  ,
+                    TO_CHAR(Project2.salesDt, 'DD-MM-YYYY') SALES_DT,                     
+                    Project2.appTypeId APP_TYPE_ID  ,
                     Project2.CODE CODE  ,
                     Project2.CODE_NAME CODE_NAME  ,
-                    Project2.stusCodeId stusCodeId  ,
+                    Project2.stusCodeId STUS_CODE_ID  ,
                     Project2.CODE1 CODE1  ,
-                    Project2.itmStkId itmStkId  ,
+                    Project2.itmStkId ITM_STK_ID  ,
                     Project2.STK_CODE STK_CODE  ,
                     Project2.STK_DESC STK_DESC  ,
-                    Project2.modeId modeId  ,
+                    Project2.modeId MODE_ID  ,
                     Project2.CODE2 CODE2  ,
-                    Project2.bankCode bankCode  ,
-                    Project2.rentAmt rentAmt  
+                    Project2.bankCode BANK_CODE  ,
+                    Project2.rentAmt RENT_AMT  
        FROM (   SELECT  Project2.SALES_ORD_ID SALES_ORD_ID  ,
                                 Project2.SALES_ORD_NO SALES_ORD_NO  ,
                                 Project2.STK_CODE STK_CODE  ,
@@ -976,27 +976,27 @@
     <select id="selectCustomerDetailAddr" parameterType="Map" resultType="egovMap">
 			 <![CDATA[ 
 			  SELECT Limit1.CUST_ADD_ID CUST_ADD_ID  ,
-                   Limit1.add1 add1  , --c1
-                   Limit1.add2 add2  , 
-                   Limit1.add3 add3  ,
-                   Limit1.postCodeId postCodeId  , 
-                   Limit1.postCode postCode  , 
-                   Limit1.areaId areaId  , --c6 
-                   Limit1.areaName areaName  , 
-                   Limit1.stateIdd stateIdd  , 
-                   Limit1.stateName stateName  , 
-                   Limit1.cntyId cntyId  , 
-                   Limit1.cntyName cntyName  , 
-                   Limit1.rem rem  , 
-                   Limit1.stusCodeId stusCodeId  , 
+                   Limit1.add1 ADD1  , --c1
+                   Limit1.add2 ADD2  , 
+                   Limit1.add3 ADD3  ,
+                   Limit1.postCodeId POST_CODE_ID  , 
+                   Limit1.postCode POST_CODE  , 
+                   Limit1.areaId AREA_ID  , --c6 
+                   Limit1.areaName AREA_NAME  , 
+                   Limit1.stateIdd STATE_ID  , 
+                   Limit1.stateName STATE_NAME  , 
+                   Limit1.cntyId CNTY_ID  , 
+                   Limit1.cntyName CNTY_NAME  , 
+                   Limit1.rem REM  , 
+                   Limit1.stusCodeId STUS_CODE_ID  , 
                    Limit1.NAME NAME  , 
                    Limit1.CUST_ID CUST_ID  ,
                    Limit1.CRT_USER_ID CRT_USER_ID  , 
-                   Limit1.userName userName  , 
-                   TO_CHAR(Limit1.crtDt, 'DD-MM-YYYY') crtDt  , --c15
-                   TO_CHAR(TO_DATE(Limit1.updDt, 'YYYY-MM-DD'), 'DD-MM-YYYY') updDt  , 
-                   Limit1.updUserId updUserId  , 
-                   Limit1.userName1 userName1  
+                   Limit1.userName USER_NAME  , 
+                   TO_CHAR(Limit1.crtDt, 'DD-MM-YYYY') CRT_DT  , --c15
+                   TO_CHAR(TO_DATE(Limit1.updDt, 'YYYY-MM-DD'), 'DD-MM-YYYY') UPD_DT  , 
+                   Limit1.updUserId UPD_USER_ID  , 
+                   Limit1.userName1 USER_NAME1  
               FROM ( SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
                             Extent1.CUST_ID CUST_ID  ,
                             Extent1.CRT_USER_ID CRT_USER_ID  ,
@@ -1034,36 +1034,36 @@
     <!-- Customer Detail Contact(PopUp View)  -->
     
     <resultMap type="egovMap" id="detailContactClobMap">
-        <result property="dept" column="dept" jdbcType="CLOB" javaType="java.lang.String"/> <!-- user_id 밑에 2번 --> <!-- #{custCntcId}  -->
+        <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/> <!-- user_id 밑에 2번 --> <!-- #{custCntcId}  -->
     </resultMap>
     <select id="selectCustomerDetailContact" parameterType="Map" resultMap="detailContactClobMap">
 			 <![CDATA[ 
 			 SELECT Limit1.CUST_CNTC_ID CUST_CNTC_ID  ,
                    Limit1.CUST_ID CUST_ID  ,
-                   TO_CHAR(Limit1.crtDt, 'DD-MM-YYYY') crtDt  ,
+                   TO_CHAR(Limit1.crtDt, 'DD-MM-YYYY') CRT_DT  ,
                    Limit1.CRT_USER_ID CRT_USER_ID  ,
-                   Limit1.userNAme userNAme  , --c2
-                   Limit1.dept dept  ,
-                   TO_CHAR(Limit1.dob, 'DD-MM-YYYY') dob  ,
-                   Limit1.email email  ,
-                   Limit1.gender gender  ,
-                   Limit1.custInitial custInitial  , --c7
-                   Limit1.code code  ,
-                   Limit1.name1 name1  ,
-                   Limit1.nric nric  ,
-                   Limit1.pos pos  ,
-                   Limit1.raceId raceId  ,
-                   Limit1.codeName codeName  , --c13
-                   Limit1.stusCodeId stusCodeId  ,
+                   Limit1.userNAme USER_NAME  , --c2
+                   Limit1.dept DEPT  ,
+                   TO_CHAR(Limit1.dob, 'DD-MM-YYYY') DOB  ,
+                   Limit1.email EMAIL  ,
+                   Limit1.gender GENDER  ,
+                   Limit1.custInitial CUST_INITIAL  , --c7
+                   Limit1.code CODE  ,
+                   Limit1.name1 NAME1  ,
+                   Limit1.nric NRIC  ,
+                   Limit1.pos POS  ,
+                   Limit1.raceId RACE_ID  ,
+                   Limit1.codeName CODE_NAME  , --c13
+                   Limit1.stusCodeId STUS_CODE_ID  ,
                    Limit1.NAME NAME  ,
-                   Limit1.telF telF  ,
-                   Limit1.telM1 telM1  ,
-                   Limit1.telO telO  ,
-                   Limit1.telR telR  ,
-                   Limit1.ext ext  ,
-                   Limit1.updUserId updUserId  ,
-                   Limit1.userName1 userName1  ,
-                   TO_CHAR(Limit1.updDt, 'DD-MM-YYYY') updDt  
+                   Limit1.telF TELF  ,
+                   Limit1.telM1 TEL_M1  ,
+                   Limit1.telO TEL_O  ,
+                   Limit1.telR TEL_R  ,
+                   Limit1.ext EXT  ,
+                   Limit1.updUserId UPD_USER_ID  ,
+                   Limit1.userName1 USER_NAME1  ,
+                   TO_CHAR(Limit1.updDt, 'DD-MM-YYYY') UPD_DT
               FROM ( SELECT Extent1.CUST_CNTC_ID CUST_CNTC_ID  ,
                             Extent1.CUST_ID CUST_ID  ,
                             Extent1.CRT_USER_ID CRT_USER_ID  ,
@@ -1102,33 +1102,33 @@
     </select>
     <!-- Customer Detail Bank(PopUp View)  -->    
     <resultMap type="egovMap" id="detailBankClobMap">
-        <result property="custAccRem" column="custAccRem" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="custAccOwner" column="custAccOwner" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="custAccBankBrnch" column="custAccBankBrnch" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="custEncryptAccNo" column="custEncryptAccNo" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="CUST_ACC_REM" column="CUST_ACC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="CUST_ACC_OWNER" column="CUST_ACC_OWNER" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="CUST_ACC_BANK_BRNCH" column="CUST_ACC_BANK_BRNCH" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="CUST_ENCRYPT_ACC_NO" column="CUST_ENCRYPT_ACC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     
     <select id="selectCustomerDetailBank" parameterType="Map" resultMap="detailBankClobMap">
         <![CDATA[ 
 			  SELECT Limit1.CUST_ACC_ID CUST_ACC_ID  ,
                    Limit1.CUST_ID CUST_ID  ,
-                   Limit1.custAccNo custAccNo  ,
-                   Limit1.custEncryptAccNo custEncryptAccNo  ,
-                   Limit1.custAccBankId custAccBankId  ,
-                   Limit1.bankCode bankCode  ,
-                   Limit1.bankName bankName  ,
-                   Limit1.custAccBankBrnch custAccBankBrnch  ,
-                   Limit1.custAccOwner custAccOwner  ,
-                   Limit1.custAccStusId custAccStusId  ,
-                   Limit1.custAccTypeId custAccTypeId  ,
-                   Limit1.codeName codeName  ,
-                   Limit1.custAccRem custAccRem  ,
-                   Limit1.custAccCrtUserIdd custAccCrtUserIdd  ,
-                   Limit1.custUpdUserId custUpdUserId  ,
-                   TO_CHAR(Limit1.custAccCrtDt, 'DD-MM-YYYY') custAccCrtDt  ,
-                   TO_CHAR(Limit1.custAccUpdDt, 'DD-MM-YYYY') custAccUpdDt  ,
-                   Limit1.userName userName  ,
-                   Limit1.userNAme1 userNAme1  
+                   Limit1.custAccNo CUST_ACC_NO  ,
+                   Limit1.custEncryptAccNo CUST_ENCRYPT_ACC_NO  ,
+                   Limit1.custAccBankId CUST_ACC_BANK_ID  ,
+                   Limit1.bankCode BANK_CODE  ,
+                   Limit1.bankName BANK_NAME  ,
+                   Limit1.custAccBankBrnch CUST_ACC_BANK_BRNCH  ,
+                   Limit1.custAccOwner CUST_ACC_OWNER  ,
+                   Limit1.custAccStusId CUST_ACC_STUS_ID  ,
+                   Limit1.custAccTypeId CUST_ACC_TYPE_ID  ,
+                   Limit1.codeName CODE_NAME  ,
+                   Limit1.custAccRem CUST_ACC_REM  ,
+                   Limit1.custAccCrtUserIdd CUST_ACC_CRT_USER_ID  ,
+                   Limit1.custUpdUserId CUST_UPD_USER_ID  ,
+                   TO_CHAR(Limit1.custAccCrtDt, 'DD-MM-YYYY') CUST_ACC_CRT_DT  ,
+                   TO_CHAR(Limit1.custAccUpdDt, 'DD-MM-YYYY') CUST_ACC_UPD_DT  ,
+                   Limit1.userName USER_NAME  ,
+                   Limit1.userNAme1 USER_NAME1  
               FROM ( SELECT Extent1.CUST_ACC_ID CUST_ACC_ID  ,
                             Extent1.CUST_ID CUST_ID  ,
                             CASE WHEN ( Extent1.CUST_ACC_NO IS NOT NULL ) THEN Extent1.CUST_ACC_NO ELSE '' END custAccNo  , --c1
@@ -1159,33 +1159,33 @@
     </select>
     <!-- Customer Detail Card(PopUp View)  -->
     <resultMap type="egovMap" id="detailCardClobMap">
-        <result property="custCrcNo" column="custCrcNo" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="custOriCrcNo" column="custOriCrcNo" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="custCrcRem" column="custCrcRem" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="CUST_CRC_NO" column="CUST_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="CUST_ORI_CRC_NO" column="CUST_ORI_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="CUST_CRC_REM" column="CUST_CRC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     <select id="selectCustomerDetailCreditCard" parameterType="Map" resultMap="detailCardClobMap">
            <![CDATA[ 
 				SELECT Limit1.CUST_CRC_ID CUST_CRC_ID  ,
-					       Limit1.custId custId  , --c1
-					       Limit1.custCrcBankId custCrcBankId  , --c2
-					       Limit1.bankCode bankCode  , --c3
-					       Limit1.bankId bankId  , --c4
-					       Limit1.custCrcExpr custCrcExpr  , --c5
-					       Limit1.custCrcOwner custCrcOwner  , --c6
-					       Limit1.custCrcNo custCrcNo  , --c7 clob
-					       Limit1.custOriCrcNo custOriCrcNo  , --c8 clob
+					       Limit1.custId CUST_ID  , --c1
+					       Limit1.custCrcBankId CUST_CRC_BANK_ID  , --c2
+					       Limit1.bankCode BANK_CODE  , --c3
+					       Limit1.bankId BANK_ID  , --c4
+					       Limit1.custCrcExpr CUST_CRC_EXPR  , --c5
+					       Limit1.custCrcOwner CUST_CRC_OWNER  , --c6
+					       Limit1.custCrcNo CUST_CRC_NO  , --c7 clob
+					       Limit1.custOriCrcNo CUST_ORI_CRC_NO  , --c8 clob
 					       Limit1.CUST_ENCRYPT_CRC_NO CUST_ENCRYPT_CRC_NO  ,
-					       Limit1.custCrcTypeId custCrcTypeId  , --c9
-					       Limit1.code code  , --c10
-					       Limit1.custCrcStusId custCrcStusId  , --c11
-					       TO_CHAR(Limit1.custCrcCrtDt, 'DD-MM-YYYY') custCrcCrtDt  , --c12
-                           TO_CHAR(Limit1.custCrcUpdDt, 'DD-MM-YYYY') custCrcUpdDt  ,
-					       Limit1.custCrcRem custCrcRem  , --c14 clob
-					       Limit1.custCrcCrtUserId custCrcCrtUserId  , --c15
-					       Limit1.custCrcUpdUserId custCrcUpdUserId  , --c16
-					       Limit1.userName userName  , --c17
-					       Limit1.userName1 userName1  , --c18
-					       Limit1.cardTypeId cardTypeId  , --c19
+					       Limit1.custCrcTypeId CUST_CRC_TYPE_ID  , --c9
+					       Limit1.code CODE  , --c10
+					       Limit1.custCrcStusId CUST_CRC_STUS_ID  , --c11
+					       TO_CHAR(Limit1.custCrcCrtDt, 'DD-MM-YYYY') CUST_CRC_CRT_DT  , --c12
+                           TO_CHAR(Limit1.custCrcUpdDt, 'DD-MM-YYYY') CUST_CRC_UPD_DT  ,
+					       Limit1.custCrcRem CUST_CRC_REM  , --c14 clob
+					       Limit1.custCrcCrtUserId CUST_CRC_CRT_USER_ID  , --c15
+					       Limit1.custCrcUpdUserId CUST_CRC_UPD_USER_ID  , --c16
+					       Limit1.userName USER_NAME  , --c17
+					       Limit1.userName1 USER_NAME1  , --c18
+					       Limit1.cardTypeId CARD_TYPE_ID  , --c19
 					       Limit1.CODE_NAME CODE_NAME  
 				FROM ( SELECT Extent1.CUST_CRC_ID CUST_CRC_ID  ,
 						                Extent1.CUST_ENCRYPT_CRC_NO CUST_ENCRYPT_CRC_NO  ,
