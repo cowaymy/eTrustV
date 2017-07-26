@@ -100,16 +100,6 @@ public class MstDataController {
 
 		List<Object> updateList = params.get(AppConstants.AUIGrid_UPDATE); // 수정 리스트 얻기
 		
-		//List<Object> removeList = params.get(AppConstants.AUIGRID_REMOVE); // 수정 리스트 얻기
-		
-		//logger.debug("101Line :::: " + removeList.size());
-		
-		//Map<String, Object> removeMap = (Map<String, Object>) removeList.get(0);
-		
-		//logger.debug(" itmId ::: " + removeMap.get("itmId"));
-		//Map hm = null;
-		//Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
-		
 		mst.updateMaterialItemType(updateList);
 		
 		// 결과 만들기 예.
