@@ -83,125 +83,143 @@
 		//조회
 	$("#search").click(function(){	
 		   Common.ajax("GET", "/commission/system/selectRuleBookItemMngList", $("#searchForm").serialize(), function(result) {
+			     
 			      console.log("성공.");
 			      console.log("data : " + result);
 			      AUIGrid.setGridData(myGridID, result);
 			    });
    });
 		
-	//조회
-	  $("#searchRule").click(function(){  
-		  $("#searchFormRule [name=ruleSeq]").val("");
-		  Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {	         
-	            console.log("성공.");
-	            console.log("data : " + result);
-	            AUIGrid.setGridData(myGridID2, result);
-	          });
-	   });
-		
-	  //close
-	  $("#close01").click(function(){
-		  $("#searchFormRule")[0].reset();
-		  $("#popup_wrap").hide();
-	   });
-	  
-	  //close
-	    $("#close02").click(function(){
-	    	$("#insertFormRule")[0].reset();
-	      $("#popup_wrap2").hide();
-	     });
-	
-	//저장
-	 $("#save").click(function(){
-	  if (validation()) {
-        Common.ajax("POST", "/commission/system/saveCommissionItemGrid.do", GridCommon.getEditData(myGridID), function(result) {      
-            // 공통 메세지 영역에 메세지 표시.
-          Common.setMsg("<spring:message code='sys.msg.success'/>");
-          $( "#search" ).trigger( "click" );
-        }, function(jqXHR, textStatus, errorThrown) {
-          try {
-            console.log("status : " + jqXHR.status);
-            console.log("code : " + jqXHR.responseJSON.code);
-            console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-          } catch (e) {
-            console.log(e);
-          }
-          alert("Fail : " + jqXHR.responseJSON.message);
-          fn_getSampleListAjax();
-        });
-      }
-	   }); 
-		
-		//grid 행 추가
-    $("#addRow").click(function(){
-        var item = new Object();
-          item.orgSeq = "";
-          item.orgGrCd = "";
-          item.itemSeq = "";
-          item.orgCd = "Please select";
-          item.orgDs = "";
-          item.itemCd = "Please select";
-          item.cdDs = "";
-          item.useYn = "Y";
-          item.typeCd = "1";
-          item.endDt = "";
+	//rule 조회
+	$("#searchRule").click(function() {
+			$("#searchFormRule [name=ruleSeq]").val("");
+			Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {
+				console.log("성공.");
+				console.log("data : " + result);			
+				AUIGrid.setGridData(myGridID2, result);
+				//category 동적 생성
+				 $("#category").empty();         
+			 	if (result.length>0) {
+					for (var i = 0; i < result.length; i++) {
+						var obj = result[i];
+						if(i==0 || obj.ruleLevel != result[i-1].ruleLevel){
+							$("#category").append("<ul id='ul"+obj.ruleLevel+"' /> ");
+						}
+						$("#ul"+obj.ruleLevel).append("<li><strong>"+obj.ruleCategory+"</strong><p>"+obj.resultValue+"</p></li>");
+					}
+					 $("#searchFormRule [name=valueTypeNm]").val(result[0].valueTypeNm);
+					 $("#searchFormRule [name=valueType]").val(result[0].valueType);
+					 $("#searchFormRule [name=resultValueNm]").val(result[0].resultValueNm);
+				} 
+			});
+		});
 
-          // parameter
-          // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-          // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-          AUIGrid.addRow(myGridID, item, "first");
-      });
-		
-		//rule 등록 팝업
-    $("#addRule").click(function(){
-    	  var checkedItems = AUIGrid.getCheckedRowItems(myGridID2);
-         var str = "";
-         var rowItem;
-         var len = checkedItems.length;
-         rowItem = checkedItems[0];
-         console.log($("#searchFormRule [name=itemCd]").val());
-         console.log($("#searchFormRule [name=itemSeq]").val());
-         console.log($("#searchFormRule [name=orgSeq]").val());
-         if(len>0){
-        	 $("#searchFormRule [name=ruleSeq]").val(rowItem.item.ruleSeq);
-         }
-         Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {
-             console.log("성공.");
-             console.log("data : " + result);
-             //to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
-             $("#popup_wrap2").show();
-             
-     
-            //data set
-            $("#insertFormRule [name=saveType]").val("I");
-          if(len <= 0) {
-             $("#insertFormRule [name=ruleLevel]").val("1");          
-             $("#insertFormRule [name=rulePid]").val("0");            
-           }else{
-        	   str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name  + "\n";
-        	   console.log("str==="+str);
-             $("#insertFormRule [name=ruleLevel]").val(parseInt(rowItem.item.ruleLevel,10)+1);          
-             $("#insertFormRule [name=rulePid]").val(rowItem.item.ruleSeq);
-           }
-          $("#insertFormRule [name=orgDs]").val(result[0].orgDs);
-          $("#insertFormRule [name=codeName]").val(result[0].codeName);
-          $("#insertFormRule [name=itemCd]").val(result[0].itemCd);
-          $("#insertFormRule [name=itemSeq]").val(result[0].itemSeq);
-          $("#insertFormRule [name=orgSeq]").val(result[0].orgSeq);
-       });
-    }); // addrule     
+		//close
+		$("#close01").click(function() {
+			$("#searchFormRule")[0].reset();
+			$("#popup_wrap").hide();
+			$("#category").empty();
+			AUIGrid.clearGridData(myGridID2);  //grid data clear
+		});
 
-	//rule 수정 팝업
+		//close
+		$("#close02").click(function() {
+			$("#insertFormRule")[0].reset();
+			$("#popup_wrap2").hide();
+		});
+
+		//아이템 저장
+		$("#save").click(function() {
+			if (validation()) {
+				Common.ajax("POST", "/commission/system/saveCommissionItemGrid.do", GridCommon.getEditData(myGridID), function(result) {
+					// 공통 메세지 영역에 메세지 표시.
+					Common.setMsg("<spring:message code='sys.msg.success'/>");
+					$("#search").trigger("click");
+				}, function(jqXHR, textStatus, errorThrown) {
+					try {
+						console.log("status : " + jqXHR.status);
+						console.log("code : " + jqXHR.responseJSON.code);
+						console.log("message : " + jqXHR.responseJSON.message);
+						console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+					} catch (e) {
+						console.log(e);
+					}
+					alert("Fail : " + jqXHR.responseJSON.message);
+					fn_getSampleListAjax();
+				});
+			}
+		});
+
+		//아이템 grid 행 추가
+		$("#addRow").click(function() {
+			var item = new Object();
+			item.orgSeq = "";
+			item.orgGrCd = "";
+			item.itemSeq = "";
+			item.orgCd = "Please select";
+			item.orgDs = "";
+			item.itemCd = "Please select";
+			item.cdDs = "";
+			item.useYn = "Y";
+			item.typeCd = "1";
+			item.endDt = "";
+
+			// parameter
+			// item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+			// rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+			AUIGrid.addRow(myGridID, item, "first");
+		});
+
+		//rule 등록 및 수정 팝업
+		$("#addRule").click(function() {
+			$("#insertFormRule")[0].reset();
+			var checkedItems = AUIGrid.getCheckedRowItems(myGridID2);
+			var str = "";
+			var rowItem;			
+			var len = checkedItems.length;
+			rowItem = checkedItems[0];
+			console.log($("#searchFormRule [name=itemCd]").val());
+			console.log($("#searchFormRule [name=itemSeq]").val());
+			console.log($("#searchFormRule [name=orgSeq]").val());
+			if (len > 0) {
+				$("#searchFormRule [name=ruleSeq]").val(rowItem.item.ruleSeq);
+			}
+			Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {
+				console.log("성공.");
+				console.log("data : " + result);
+				//to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
+				$("#popup_wrap2").show();
+
+				//data set
+				$("#insertFormRule [name=saveType]").val("I");
+				if (len <= 0) {
+					$("#insertFormRule [name=ruleLevel]").val("1");
+					$("#insertFormRule [name=rulePid]").val("0");
+				} else {
+					str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name + "\n";
+					console.log("str===" + str);
+					$("#insertFormRule [name=ruleLevel]").val(parseInt(rowItem.item.ruleLevel, 10) + 1);
+					$("#insertFormRule [name=rulePid]").val(rowItem.item.ruleSeq);
+				}
+				$("#insertFormRule [name=orgDs]").val($("#searchFormRule [name=orgNm]").val());
+				$("#insertFormRule [name=codeName]").val($("#searchFormRule [name=itemNm]").val());
+				$("#insertFormRule [name=itemCd]").val($("#searchFormRule [name=itemCd]").val());
+				$("#insertFormRule [name=itemSeq]").val($("#searchFormRule [name=itemSeq]").val());
+			//	$("#insertFormRule [name=orgSeq]").val($("#searchFormRule [name=orgSeq]").val());
+			});
+		}); // addrule     
+
+		//rule 수정 팝업
 		$("#editRule").click(function() {
+			$("#insertFormRule")[0].reset();
 			var checkedItems = AUIGrid.getCheckedRowItems(myGridID2);
 			var str = "";
 			var rowItem;
 			var len = checkedItems.length;
-			 if (len <= 0) {
-		          Common.alert("Plese Check Radio Box");
-		          return false;
-		        }
+			if (len <= 0) {
+				Common.alert("Plese Check Radio Box");
+				return false;
+			}
 			rowItem = checkedItems[0];
 			str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name + "\n";
 			$("#searchFormRule [name=ruleSeq]").val(rowItem.item.ruleSeq);
@@ -211,11 +229,15 @@
 				console.log("data : " + result);
 				//to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
 				$("#popup_wrap2").show();
-				
+
 				//data set
-			
+
 				console.log("str===" + str);
 				Common.setData(result[0], $("#insertFormRule"));
+				if(result[0].rulePid==null ||result[0].rulePid==""){
+					$("#insertFormRule [name=rulePid]").val("0");
+				}
+				
 				$("#insertFormRule [name=saveType]").val("U");
 
 			});
@@ -348,7 +370,7 @@
 		return list;
 	}
 
-	// AUIGrid 칼럼 설정
+	// 아이템 AUIGrid 칼럼 설정
 	var columnLayout = [ {
 		dataField : "orgSeq",
 		headerText : "ORG SEQ",
@@ -419,27 +441,43 @@
 				$("#searchFormRule [name=itemCd]").val(AUIGrid.getCellValue(myGridID, rowIndex, 5));
 				$("#searchFormRule [name=itemSeq]").val(AUIGrid.getCellValue(myGridID, rowIndex, 2));
 				$("#searchFormRule [name=orgSeq]").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
+				$("#searchFormRule [name=orgNm]").val(AUIGrid.getCellValue(myGridID, rowIndex, 4));
+				$("#searchFormRule [name=itemNm]").val(AUIGrid.getCellValue(myGridID, rowIndex, 6));
 
+				//mygridid2 option
 				var options = {
 					// 체크박스 표시 설정
 					showRowCheckColumn : true,
-
 					// 체크박스 대신 라디오버튼 출력함
 					rowCheckToRadio : true,
 					// 엑스트라 라디오 버턴 체커블 함수
 					// 이 함수는 사용자가 라디오를 클릭 할 때 1번 호출됩니다.
-					rowCheckableFunction : function(rowIndex, isChecked, item) {
+			/* 		rowCheckableFunction : function(rowIndex, isChecked, item) {
 						if (item.product == "LG G3") { // 제품이 LG G3 인 경우 사용자 체크 못하게 함.
 							return false;
 						}
 						return true;
-					},
+					}, */
+					selectionMode : "singleRow",
+					displayTreeOpen : true,
+					// 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
+					rowIdField : "ruleSeq",
+				  flat2tree : true,
+				  // 트리의 고유 필드명
+			    treeIdField : "ruleSeq",
+			     // 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
+			     treeIdRefField : "rulePid"
 				};
-				myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2, "ruleSeq", options);
+				if(!myGridID2){
+					myGridID2= GridCommon.createAUIGrid("grid_wrap2", columnLayout2, "ruleSeq", options);
+				}
 				// 체크박스 클린 이벤트 바인딩
 				AUIGrid.bind(myGridID2, "rowCheckClick", function(event) {
 					alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked);
 				});
+				
+				$("#searchRule").trigger("click");
+				
 			}
 		}
 	}, {
@@ -486,8 +524,15 @@
 		visible : false,
 	} ];
 
-	// AUIGrid 칼럼 설정
-	var columnLayout2 = [ {
+	/**********************
+	 rule AUIGrid 칼럼 설정
+	**********************/
+	var columnLayout2 = [   {
+	    dataField : "orgDs",
+	    headerText : "ORG Name",
+	    width : 120,
+	    style : "my-column",
+	  } ,{
 		dataField : "orgSeq",
 		headerText : "ORG SEQ",
 		visible : false
@@ -495,19 +540,14 @@
 		dataField : "itemSeq",
 		headerText : "ITEM SEQ",
 		visible : false
-	}, {
+	},  {
 		dataField : "ruleSeq",
 		headerText : "RULE SEQ",
 		visible : false
-	}, {
+	} , {
 		dataField : "ruleLevel",
 		headerText : "RULE Level",
 		visible : false
-	}, {
-		dataField : "orgDs",
-		headerText : "ORG Name",
-		width : 120,
-		style : "my-column",
 	}, {
 		dataField : "ruleCategory",
 		headerText : "RULE CATEGORY",
@@ -545,7 +585,11 @@
 		dataField : "useYn",
 		headerText : "USE(Y/N)",
 		width : 100,
-	} ];
+	}, {
+	    dataField : "rulePid",
+	    headerText : "Rule Parent ID",
+	    visible : false,
+	  }  ];
 
 	//get Ajax data and set organization combo data
 
@@ -617,7 +661,9 @@
 		}
 	}
 
+	/*  validation */
 	function validationForm($form) {
+		var retVal= true;
 		var $input = $($form).find("input:text,select,radio,textarea");
 		$.each($input, function(index, elem) {
 			var name = $(this).attr("name");
@@ -627,12 +673,14 @@
 					name = $(this).attr("placeholder");
 				}
 				Common.alert(name + ":EMPTY DATA");
+				retVal=false;
 				return false;
 			}
 		});
-		return true;
+		return retVal;
 	}
 
+	 /*  validation */
 	function validation() {
 		var result = true;
 		var addList = AUIGrid.getAddedRowItems(myGridID);
@@ -873,52 +921,7 @@
 
 <section class="search_result"><!-- search_result start -->
 
-<article class="award_wrap"><!-- award_wrap start -->
-<ul>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-</ul>
-<ul>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-</ul>
-<ul>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-  <li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li><li>
-  <strong>Category</strong>
-  <p>Prize(RM)</p>
-  </li>
-</ul>
+<article id="category" class="award_wrap"><!-- award_wrap start -->
 </article><!-- award_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -933,27 +936,33 @@
 </colgroup>
 <tbody>
 <tr>
+  <th scope="row">ORG NAME</th>
+  <td>
+  <input type="text" title="" placeholder="Org Name" class="readonly w100p" id="orgNm" name="orgNm" readonly="readonly" />
+  </td>
+</tr>
+<tr>
   <th scope="row">Title</th>
   <td>
-  <input type="text" title="" placeholder="Performance Evaluation Awards" class="w100p" />
+  <input type="text" title="" placeholder="Performance Evaluation Awards" class="readonly w100p"  id="itemNm" name="itemNm" readonly="readonly" />
   </td>
 </tr>
 <tr>
   <th scope="row">Range Value Name</th>
   <td>
-  <input type="text" title="" placeholder="Performance Evaluation Rank" class="w100p" />
+  <input type="text" title="" placeholder="Performance Evaluation Rank" class="w100p"  id="valueTypeNm" name="valueTypeNm" />
   </td>
 </tr>
 <tr>
   <th scope="row">Range value type</th>
   <td>
-  <input type="text" title="" placeholder="RANK" class="w100p" />
+  <input type="text" title="" placeholder="RANK" class="w100p" id="valueType" name="valueType" />
   </td>
 </tr>
 <tr>
   <th scope="row">Conditional Result Value Name</th>
   <td>
-  <input type="text" title="" placeholder="AMOUNT(RM)" class="w100p" />
+  <input type="text" title="" placeholder="AMOUNT(RM)" class="w100p"  id="resultValueNm" name="resultValueNm" />
   </td>
 </tr>
 </tbody>
@@ -1007,17 +1016,19 @@
 </colgroup>
 <tbody>
 <tr>
-  <th scope="row">OGR Name</th>
-  <td><input type="text" title="" placeholder="OGR Name" class="w100p" id="orgDs" name="orgDs" /></td>
+  <th scope="row">ORG Name</th>
+  <td colspan="3"><input type="text" title="" placeholder="OGR Name" class="readonly w100p" id="orgDs" name="orgDs" readonly="readonly" /></td>  
+</tr>
+<tr>
   <th scope="row">Item Name</th>
-  <td><input type="text" title="" placeholder="Item Name" class="w100p" id="codeName" name="codeName" /></td>
+  <td colspan="3"><input type="text" title="" placeholder="Item Name" class="readonly w100p" id="codeName" name="codeName" readonly="readonly" /></td>
 </tr>
 <tr>
   <th scope="row">Rule Name</th>
   <td><input type="text" title="" placeholder="Rule Name" class="w100p" id="ruleNm" name="ruleNm" /></td>
   <th scope="row">USE (Y/N)</th>
   <td>
-  <select class="w100p" id="useYn" name="useYn">
+  <select class="w10p" id="useYn" name="useYn">
     <option value="Y">Y</option>
     <option value="N">N</option>
   </select>
@@ -1040,9 +1051,9 @@
   <td><input type="text" title="" placeholder="Range Value Type Name" class="w100p" id="valueTypeNm" name="valueTypeNm"  /></td>
 </tr>
 <tr>
-  <th scope="row">Result Value Type</th>
+  <th scope="row">Result Value </th>
   <td><input type="text" title="" placeholder="Result Value" class="w100p" id="resultValue" name="resultValue"  /></td>
-  <th scope="row">Result Value Type Name</th>
+  <th scope="row">Result Value  Name</th>
   <td><input type="text" title="" placeholder="Result Vallue  Name" class="w100p" id="resultValueNm" name="resultValueNm"  /></td>
 </tr>
 <tr>

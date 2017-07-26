@@ -372,9 +372,11 @@
          SELECT
           RULE_SEQ,
           ITEM_SEQ,
-          ITEM_CD
+          ITEM_CD,
+          RULE_LEVEL,
+          RULE_PID
           FROM CMM0043M
-        WHERE END_YEARMONTH=#{endDt} AND ITEM_SEQ=#{itemSeq} AND ITEM_CD=#{itemCd}       
+        WHERE ITEM_SEQ=#{itemSeq} AND ITEM_CD=#{itemCd} AND RULE_SEQ=#{ruleSeq}      
          ]]>
   </select>
   
@@ -455,7 +457,9 @@
         T2.CODE_DESC AS cdDs ,       
         T3.RULE_SEQ ,
         T3.RULE_LEVEL ,
-        T3.RULE_PID ,
+        CASE WHEN T3.RULE_PID IS NULL THEN NULL
+        WHEN T3.RULE_PID='0' THEN '' 
+        ELSE T3.RULE_PID END RULE_PID , 
         T3.RULE_NM ,
         T3.RULE_CATEGORY ,
         T3.RULE_OPT1 ,
@@ -476,9 +480,9 @@
         ELSE T3.END_YEARMONTH END END_DT 
     FROM CMM0042C T1 JOIN SYS0013M T2
         ON T1.ITEM_CD = T2.CODE_ID
-    LEFT OUTER JOIN CMM0043M T3
-        ON T1.ITEM_SEQ = T3.ITEM_SEQ   
-    WHERE 1=1
+     JOIN CMM0043M T3
+        ON T1.ITEM_SEQ = T3.ITEM_SEQ  
+      WHERE 1=1  
         ]]>
     <if test="orgSeq != null and orgSeq != ''">
       AND T1.ORG_SEQ = #{orgSeq}
@@ -489,16 +493,22 @@
     <if test="itemCd != null and itemCd != ''">
       AND T1.ITEM_CD = #{itemCd}
     </if>
-    <if test="searchDt != null and searchDt != ''">
-      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
-    </if>
+  
      <if test="useYn != null and useYn != ''">
       AND T3.USE_YN = #{useYn}
     </if>
       <if test="ruleSeq != null and ruleSeq != ''">
       AND T3.RULE_SEQ = #{ruleSeq}
-    </if>    
-    ORDER BY T3.RULE_SEQ
+    </if>
+    START WITH RULE_PID=0
+     <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+    CONNECT BY PRIOR RULE_SEQ =RULE_PID
+      <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+		ORDER BY T3.RULE_LEVEL
     
   </select>
   

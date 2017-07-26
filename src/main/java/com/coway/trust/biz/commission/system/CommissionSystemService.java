@@ -130,4 +130,11 @@ public interface CommissionSystemService
      * @return
      */
     List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
+    
+    /**
+     * update coommission rule  management Data
+     * @param updateList
+     * @return
+     */
+    int udtCommissionRuleData(Map<String, Object> params, String loginId);
 }

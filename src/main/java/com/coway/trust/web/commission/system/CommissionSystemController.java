@@ -390,7 +390,7 @@ public class CommissionSystemController {
 		int cnt = 0;
 		
 		if (saveType.equals("U")) {			
-			//cnt = commissionSystemService.addCommissionRuleData(params,loginId);
+			cnt = commissionSystemService.udtCommissionRuleData(params,loginId);
 		}else{
 			cnt = commissionSystemService.addCommissionRuleData(params,loginId);
 		}

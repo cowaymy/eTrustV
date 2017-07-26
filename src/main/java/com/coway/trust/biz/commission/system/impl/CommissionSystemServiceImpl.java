@@ -363,6 +363,49 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 			logger.debug("add crtUserId : {}", params.get("crtUserId"));
 			logger.debug("add updUserId : {}", params.get("updUserId"));
 
+		/*	List<EgovMap> list = commissionSystemMapper.selectRuleMngChk(params);
+			if (list.size() > 0) {
+				Map<String, Object> updParams = new HashMap<String, Object>();
+				updParams.put("ruleSeq", list.get(0).get("ruleSeq"));
+				updParams.put("itemSeq", list.get(0).get("itemSeq"));
+				updParams.put("itemCd", list.get(0).get("itemCd"));
+				updParams.put("updUserId", loginId);
+				
+				commissionSystemMapper.udtCommissionRuleEndDt(params);
+			}*/
+			cnt=cnt+commissionSystemMapper.addCommissionRuleData(params);
+		
+		return cnt;
+	}
+	
+	@Override
+	public int udtCommissionRuleData(Map<String, Object> params,String loginId) {
+		int cnt=0;
+		
+			params.put("endDt", CommissionConstants.COMIS_END_DT);
+			params.put("crtUserId", loginId);
+			params.put("updUserId", loginId);
+		
+			logger.debug("add itemCd : {}", params.get("itemCd"));
+			logger.debug("add ruleLevel : {}", params.get("ruleLevel"));
+			logger.debug("add rulePid : {}", params.get("rulePid"));
+			logger.debug("add ruleNm : {}", params.get("ruleNm"));
+			logger.debug("add ruleCategory : {}", params.get("ruleCategory"));
+			logger.debug("add ruleOpt1 : {}", params.get("ruleOpt1"));
+			logger.debug("add ruleOpt2 : {}", params.get("ruleOpt2"));
+			logger.debug("add valueType : {}", params.get("valueType"));
+			logger.debug("add valueTypeNm : {}", params.get("valueTypeNm"));
+			logger.debug("add resultValue : {}", params.get("resultValue"));
+			logger.debug("add resultValueNm : {}", params.get("resultValueNm"));
+			logger.debug("add ruleDesc : {}", params.get("ruleDesc"));
+			logger.debug("add endYearMonth : {}", params.get("endYearMonth"));
+			logger.debug("add useYn : {}", params.get("useYn"));
+			logger.debug("add crtUserId : {}", params.get("crtUserId"));
+			logger.debug("add updUserId : {}", params.get("updUserId"));
+			
+			if( params.get("rulePid")==null ||  params.get("rulePid").equals("")){
+				params.put("rulePid", "0");
+			}
 			List<EgovMap> list = commissionSystemMapper.selectRuleMngChk(params);
 			if (list.size() > 0) {
 				Map<String, Object> updParams = new HashMap<String, Object>();
@@ -370,6 +413,7 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 				updParams.put("itemSeq", list.get(0).get("itemSeq"));
 				updParams.put("itemCd", list.get(0).get("itemCd"));
 				updParams.put("updUserId", loginId);
+				params.put("ruleLevel", list.get(0).get("ruleLevel"));
 				
 				commissionSystemMapper.udtCommissionRuleEndDt(params);
 			}
