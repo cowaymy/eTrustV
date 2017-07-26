@@ -16,4 +16,6 @@ public interface MaterialMapper {
 	
 	void updateMaterialItemType(Map<String, Object> params);
 	void insertMaterialItemType(Map<String, Object> params);
+	int materialItmIdSeq();
+	int materialItemTypeSeq();
 }
