@@ -375,7 +375,7 @@
                   var param = $('#insertForm').serializeJSON();
                   Common.ajax("POST", "/logistics/material/materialInsertItemType.do",param, function(result) {
                      Common.alert(result.message);
-                     
+                     $('#insertForm')[0].reset();
                  },  function(jqXHR, textStatus, errorThrown) {
                      try {
                      } catch (e) {
@@ -385,6 +385,14 @@
                  });
              }             
          });
+         
+         $("#cancelinsert").click(function(){
+        	 $("#insertView").hide();
+        	 $('#insertForm')[0].reset();
+         });
+         
+         
+         
     });
     
     function f_detailView(rid){
@@ -821,10 +829,10 @@
 </colgroup>
 <tbody>
 <tr>
-    <!-- <th scope="row">Material Code</th>
+    <th scope="row">Material Code</th>
     <td>
-    <input type="text" placeholder="00000"  class="readonly w100p" readonly="readonly" />
-    </td> -->
+    <input type="text" placeholder=""  class="w100p" disabled="disabled" />
+    </td> 
     <th scope="row">Material Name</th>
     <td colspan="3">
     <input type="text" id='insitmname' name='insitmname' title="" placeholder="" class="w100p" />
@@ -835,7 +843,7 @@
     <td colspan="5">
     <input type="text" id='insitmdesc' name="insitmdesc" title="" placeholder="" class="w100p" />
     </td>
-</tr>
+</tr> 
 <tr>
     <th scope="row">Old Material Number</th>
     <td>
@@ -897,7 +905,7 @@
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2"><a id="insertsave">SAVE</a></p></li>
-    <li><p class="btn_blue2"><a id="">CANCEL</a></p></li>
+    <li><p class="btn_blue2"><a id="cancelinsert">CANCEL</a></p></li>
 </ul>
 
 
