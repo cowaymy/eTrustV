@@ -221,10 +221,6 @@ public class AtDebtCreCrdController {
     		
     	}
     	
-    	System.out.println(CommonUtils.getNowDate() + CommonUtils.getNowTime());
-    	
-    	logger.debug("message :  {}", msg);
-    	
     	// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
