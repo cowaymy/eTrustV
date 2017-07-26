@@ -147,8 +147,46 @@
         WHERE ITM_ID       = #{itmId}
     </update>
     
-    <update id="insertMaterialItemType" parameterType="Map">
-
-    </update> 
+    <insert id="insertMaterialItemType" parameterType="Map">
+	    INSERT INTO MSC0039D( 
+	    ITM_ID
+	   ,SEQ
+	   ,ITM_CODE 
+	   ,ITM_NAME
+	   ,PRC
+	   ,ITM_DESC
+	   ,CRT_DT
+	   ,CRT_USER_ID
+	   ,STUS_CODE_ID
+	   ,CTGRY_ID
+	   ,OLD_STK_ID
+	   ,CURRENCY 
+	   ,UOM
+	   ,ITEM_TYPE
+	    )
+	    VALUES (
+	    #{itmidseq}
+	   ,#{itemtypeseq}
+	   ,MSC0039D_SEQ.nextval
+	   ,#{insitmname}
+	   ,#{insprice}
+	   ,#{insitmdesc}
+	   ,SYSDATE
+	   ,#{loginId}
+	   ,#{insstuscode}   
+	   ,#{inscateid} 
+	   ,#{insolditemid}  
+	   ,#{inscurrency}
+	   ,#{insuom}
+	   ,#{insitemtype}    
+	    )
+    </insert> 
     
+    <select id="materialItmIdSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ITM_ID),0) + 1 from MSC0039D
+    </select>
+    <select id="materialItemTypeSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(SEQ),0) + 1 from MSC0039D
+    </select>
+  
 </mapper>
