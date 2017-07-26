@@ -1,4 +1,4 @@
-package com.coway.trust.biz.common;
+package com.coway.trust.cmmn.model;
 
 import java.io.File;
 import java.util.ArrayList;

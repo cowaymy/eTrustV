@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.common.AdaptorService;
-import com.coway.trust.biz.common.EmailVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample2.Sample2Service;
+import com.coway.trust.cmmn.model.EmailVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
