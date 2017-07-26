@@ -42,8 +42,8 @@
 	$(document).ready(function() {
 		  
 		//drag div
-		$("#popup_wrap, .popup_wrap").draggable();
-		$("#popup_wrap2, .popup_wrap2").draggable();
+		$("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
+		$("#popup_wrap2, .popup_wrap2").draggable({handle: '.pop_header'});
 		
 		// AUIGrid 그리드를 생성합니다.
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"itemSeq");
