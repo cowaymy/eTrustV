@@ -125,11 +125,6 @@ public class MstDataController {
 	public ResponseEntity<ReturnMessage> materialInsertItemType(@RequestBody Map<String, Object> params,
 			Model model) {
 		
-		CommonUtils com = new CommonUtils();
-		
-		String insitemtype = com.nvl(params.get("insitemtype"));
-		insitemtype=insitemtype.replace("[", "").replace("]", "").trim();
-		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = 0;
 		
@@ -150,7 +145,7 @@ public class MstDataController {
 		insmaterialmap.put("inscateid", params.get("inscateid"));
 		insmaterialmap.put("insprice", params.get("insprice"));
 		insmaterialmap.put("insstuscode", params.get("insstuscode"));
-		insmaterialmap.put("insitemtype", insitemtype);
+		insmaterialmap.put("insitemtype", params.get("insitemtype"));
 		insmaterialmap.put("loginId", loginId);
 				
 		mst.insertMaterialItemType(insmaterialmap);
