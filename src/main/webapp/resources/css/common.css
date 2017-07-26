@@ -203,7 +203,8 @@ table.type1 td .auto_file label span.label_text{position:absolute; top:0; right:
 table.type1 td .auto_file label span.label_text a{display:block; height:30px; line-height:30px; min-width:57px; text-align:center; padding:0 10px; background:#a1c4d7; color:#fff; font-size:12px; font-weight:bold; border-radius:3px;}
 table.type1 td > label input[type=checkbox]{position:relative; top:2px; margin:0 5px 0 0; padding:0; border:1px solid #d2d2d2;}
 table.type1 td > label input[type=radio]{position:relative; top:2px; margin:0 5px 0 0; padding:0; border:1px solid #d2d2d2;}
-table.type1 td > label span{line-height:26px;}
+table.type1 td > label span,
+table.type1 tbody td.col_all > span{line-height:26px;}
 
 table.type2{border-top:1px solid #d3d9dd;}
 table.type2 thead th{height:35px; color:#333; font-weight:bold; line-height:15px; background:#e9f0f4; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; vertical-align:middle;}
