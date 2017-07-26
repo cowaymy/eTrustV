@@ -11,41 +11,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.coway.trust.util.CommonUtils;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.coway.trust.AppConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.logistics.materialdata.MaterialService;
-import com.coway.trust.biz.logistics.organization.LocationService;
-import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 
-import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 @RequestMapping(value = "/logistics/material")
@@ -64,6 +56,9 @@ public class MstDataController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 
 	@RequestMapping(value = "/mylog007.do")
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -126,9 +121,24 @@ public class MstDataController {
 	}
 	
 	
-	@RequestMapping(value = "/materialInsertItemType.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> materialInsertItemType(@RequestParam Map<String, Object> params,
+	@RequestMapping(value = "/materialInsertItemType.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> materialInsertItemType(@RequestBody Map<String, Object> params,
 			Model model) {
+		
+		CommonUtils com = new CommonUtils();
+		
+		String insitemtype = com.nvl(params.get("insitemtype"));
+		insitemtype=insitemtype.replace("[", "").replace("]", "").trim();
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = 0;
+		
+		if(sessionVO==null){
+			loginId=99999999;			
+		}else{
+			loginId=sessionVO.getUserId();
+		}
+	
 		
 		Map<String, Object> insmaterialmap = new HashMap();	
 		
@@ -140,7 +150,9 @@ public class MstDataController {
 		insmaterialmap.put("inscateid", params.get("inscateid"));
 		insmaterialmap.put("insprice", params.get("insprice"));
 		insmaterialmap.put("insstuscode", params.get("insstuscode"));
-		
+		insmaterialmap.put("insitemtype", insitemtype);
+		insmaterialmap.put("loginId", loginId);
+				
 		mst.insertMaterialItemType(insmaterialmap);
 		
 		
