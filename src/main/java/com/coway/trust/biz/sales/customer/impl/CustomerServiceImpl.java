@@ -38,6 +38,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		return customerMapper.selectCustomerList(params);
 	}
 
+	
 	/**
 	 * 상세화면 조회한다.(Basic Info)
 	 * @param 
@@ -50,6 +51,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerViewBasicInfo(params);
 	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Main Address)
 	 * @param 
@@ -62,6 +65,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerViewMainAddress(params);
 	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Main Contact)
 	 * @param 
@@ -74,6 +79,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerViewMainContact(params);
 	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Address List)
 	 * @param 
@@ -86,6 +93,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerAddressJsonList(params);
 	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Contact List)
 	 * @param 
@@ -99,6 +108,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		return customerMapper.selectCustomerContactJsonList(params);
 	}
 
+	
 	/**
 	 * 상세화면 조회한다. (Bank List)
 	 * @param 
@@ -112,6 +122,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		return customerMapper.selectCustomerBankAccJsonList(params);
 	}
 
+	
 	/**
 	 * 상세화면 조회한다. (Card List)
 	 * @param 
@@ -124,6 +135,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerCreditCardJsonList(params);
 	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Own Order List)
 	 * @param 
@@ -136,6 +149,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerOwnOrderJsonList(params);
 	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Third Party Order List)
 	 * @param 
@@ -148,6 +163,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerThirdPartyJsonList(params);
 	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Detail Address View)
 	 * @param 
@@ -159,6 +176,48 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	public EgovMap selectCustomerDetailAddr(Map<String, Object> params) throws Exception {
 		
 		return customerMapper.selectCustomerDetailAddr(params);
+	}
+	
+	
+	/**
+	 * 상세화면 조회한다. (Detail Contact View)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.25
+	 */
+	@Override
+	public EgovMap selectCustomerDetailContact(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCustomerDetailContact(params);
+	}
+	
+	
+	/**
+	 * 상세화면 조회한다. (Detail Bank View)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.25
+	 */
+	@Override
+	public EgovMap selectCustomerDetailBank(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCustomerDetailBank(params);
+	}
+	
+	
+	/**
+	 * 상세화면 조회한다. (Detail Card View)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.25
+	 */
+	@Override
+	public EgovMap selectCustomerDetailCreditCard(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCustomerDetailCreditCard(params);
 	}
 	
 }

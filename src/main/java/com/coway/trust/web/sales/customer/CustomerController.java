@@ -64,8 +64,8 @@ public class CustomerController {
 		
 		// 데이터 리턴.
 		return ResponseEntity.ok(customerList);
-		
 	}
+	
 	
 	/**
 	 * Customer 상세 조회 Address List 
@@ -77,15 +77,16 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerAddressJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> addresslist = null;
-		//TODO 추후 삭제
-		//CUST_ADD_ID
-		params.put("testparam", 1200);
+		//params		
+		params.put("custId", params.get("custId"));
+		
 		logger.info("##### customer Address Parsing START #####");
 		addresslist = customerService.selectCustomerAddressJsonList(params);
 		
 		return ResponseEntity.ok(addresslist);
-		
 	}
+	
+	
 	/**
 	 * Customer 상세 조회 Contact List 
 	 * @param params
@@ -96,14 +97,15 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerContactJsonList(@RequestParam Map<String, Object>params, ModelMap model)throws Exception{
 		
 		List<EgovMap> contactlist = null;
-		//TODO 추후 삭제
-		params.put("testparam", 1200);
+		//params
+		params.put("custId", params.get("custId"));
 		logger.info("##### customer Contact Parsing START #####");
 		contactlist = customerService.selectCustomerContactJsonList(params);
 		// 데이터 리턴.
 		return ResponseEntity.ok(contactlist);
-		
 	}
+	
+	
 	/**
 	 * 
 	 * Customer View Bank List
@@ -116,14 +118,15 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerBankAccJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> banklist = null;
-		//TODO 추후 삭제
-		params.put("testparam", 1200);
+		//params
+		params.put("custId", params.get("custId"));
 		logger.info("##### customer Bank List Parsing START #####");
 		banklist = customerService.selectCustomerBankAccJsonList(params);
 		
 		return ResponseEntity.ok(banklist);
-		
 	}
+	
+	
 	/**
 	 * 
 	 * Customer View CreditCard List
@@ -136,14 +139,15 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerCreditCardJsonList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		List<EgovMap> cardlist = null;
-		//TODO 추후 삭제
-		params.put("testparam",1200);
+		//params
+		params.put("custId", params.get("custId"));
 		logger.info("##### customer Card List Parsing START #####");
 		cardlist = customerService.selectCustomerCreditCardJsonList(params);
 		
 		return ResponseEntity.ok(cardlist);
-		
 	}
+	
+	
 	/**
 	 * 
 	 * Customer View Own Order List
@@ -156,13 +160,15 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerOwnOrderJsonList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		List<EgovMap> ownorderlist = null;
-		//TODO 추후 삭제
-		params.put("testparam", 1200);
+		//params
+		params.put("custId", params.get("custId"));
 		logger.info("##### customer Own Order Parsing START #####");
 		ownorderlist = customerService.selectCustomerOwnOrderJsonList(params);
 		
 		return ResponseEntity.ok(ownorderlist);
 	}
+	
+	
 	/**
 	 * 
 	 * Customer View Third Party Order List
@@ -175,13 +181,15 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerThirdPartyJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> thirdpartylist = null;
-		//TODO 추후 삭제
-		params.put("testparam", 1200);
+		//params
+		params.put("custId", params.get("custId"));
 		logger.info("##### customer Third Party Parsing START #####");
 		thirdpartylist = customerService.selectCustomerThirdPartyJsonList(params);
 		
 		return ResponseEntity.ok(thirdpartylist);
 	}
+	
+	
 	/**
 	 * 
 	 * Customer Address Detail View 주소 리스트의 해당 상세화면
@@ -190,18 +198,64 @@ public class CustomerController {
 	 * @return
 	 * @author 이석희 2017.07.20
 	 * */
-	@RequestMapping(value = "/selectCustomerAddrDetailView")
-	public String selectCustomerDetailAddr(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model)throws Exception{
+	@RequestMapping(value = "/selectCustomerAddrDetailView.do")
+	public String selectCustomerDetailAddr(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		EgovMap detailaddr = null;
 		//TODO 추후삭제 
-		params.put("addrparam", params.get("addrparam"));
+		params.put("custAddId", params.get("getparam"));
 		logger.info("##### selectCustomerDetailAddr START #####");
 		detailaddr = customerService.selectCustomerDetailAddr(params);
 		model.addAttribute("detailaddr", detailaddr);
 		
 		return "sales/customer/customerAddress";
 	}
+	
+	
+	/**
+	 * 
+	 * Customer Bank Detail View 은행 리스트의 해당 상세화면
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.20
+	 * */
+	@RequestMapping(value = "/selectCustomerBankDetailView.do")
+	public String selectCustomerDetailBank(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		EgovMap detailbank = null;
+		params.put("custAccId", params.get("getparam"));
+		logger.info("##### selectCustomerDetailBank START #####");
+		detailbank = customerService.selectCustomerDetailBank(params);
+		model.addAttribute("detailbank", detailbank);
+		
+		return "sales/customer/customerBank";
+	}
+	
+	
+	/**
+	 * 
+	 * Customer Bank Detail View 은행 리스트의 해당 상세화면
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.20
+	 * */
+	@RequestMapping(value = "/selectCustomerCreditCardDetailView.do")
+	public String selectCustomerDetailCreditCard(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		EgovMap detailcard = null;
+		//param
+		params.put("custCrcId", params.get("getparam"));
+		logger.info("##### selectCustomerDetail Credit Card START #####");
+		detailcard = customerService.selectCustomerDetailCreditCard(params);
+		
+		model.addAttribute("detailcard", detailcard);
+		
+		return "sales/customer/customerCard";
+	}
+	
+	
 	/**
 	 * 
 	 * Customer View 상세화면
@@ -217,32 +271,48 @@ public class CustomerController {
 		EgovMap addresinfo = null;
 		EgovMap contactinfo = null;
 		
-		//TODO 추후 삭제
-		//test param
-		params.put("testparam",1200);
-		params.put("addrparam", 47512);
+		//param
+		params.put("custId", params.get("custId"));
+		params.put("custAddrId", params.get("custAddrId"));
 		
 		logger.info("##### customeView START #####");
 		basicinfo = customerService.selectCustomerViewBasicInfo(params);
 		addresinfo = customerService.selectCustomerViewMainAddress(params);
 		contactinfo = customerService.selectCustomerViewMainContact(params);
 		
-		//TODO 추후 삭제
-		if(basicinfo != null){
-			logger.info("##### 결과값 확인 basicInfo : {}", basicinfo.toString() , "#####");
-		}
-		if(addresinfo != null){
-			logger.info("##### 결과값 확인 addresinfo : {}", addresinfo.toString() , "#####");
-		}
-		if(contactinfo != null){
-			logger.info("##### 결과값 확인 contactinfo : {}", contactinfo.toString() , "#####");
-		}
-		
+		//ajax param
+		model.addAttribute("custId", params.get("custId"));
+		model.addAttribute("custAddrId", params.get("custAddrId"));
+		// infomation param
 		model.addAttribute("result", basicinfo);
 		model.addAttribute("addresinfo", addresinfo);
 		model.addAttribute("contactinfo", contactinfo);
 	
 		return "sales/customer/customerView";
 	}
+	
+	
+	/**
+	 * 
+	 * Customer Contact Detail View 연락처 리스트의 해당 상세화면
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.25
+	 * */
+	@RequestMapping(value = "/selectCustomerContactDetailView.do")
+	public String selectCustomerContactAddr(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model)throws Exception{
+		
+		EgovMap detailcontact = null;
+		
+		params.put("custCntcId", params.get("getparam"));
+		logger.info("##### selectCustomerDetailContact START #####");
+		detailcontact = customerService.selectCustomerDetailContact(params);
+		logger.info("확인 : " + detailcontact.toString());
+		model.addAttribute("detailcontact", detailcontact);
+		
+		return "sales/customer/customerContact";
+	}
+	
 	
 }
