@@ -32,5 +32,9 @@
 		<typeAlias alias="pstRequestVO" type="com.coway.trust.biz.sales.pst.PSTRequestDOVO"/>
 		<!-- Sales Customer -->
         <typeAlias alias="customerVO" type="com.coway.trust.biz.sales.customer.CustomerVO"/>
+        
+        <!-- Enrollment Result Update -->
+        <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.payment.service.EnrollmentUpdateMVO" />
+        <typeAlias alias="EnrollmentUpdateDVO" type="com.coway.trust.biz.payment.payment.service.EnrollmentUpdateDVO" />
     </typeAliases>
 </configuration>
