@@ -18,6 +18,8 @@ package com.coway.trust.biz.payment.payment.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.payment.payment.service.EnrollmentUpdateDVO;
+import com.coway.trust.biz.payment.payment.service.EnrollmentUpdateMVO;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -59,6 +61,69 @@ public interface AtDebtCreCrdMapper {
 	 * @exception Exception
 	 */
     Map<String, Object> saveEnroll(Map<String, Object> param);
+    
+	/**
+	 * selectEnrollment Result List(Master Grid) 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectEnrollmentResultList(Map<String, Object> params);
+	
+	/**
+	 * selectEnrollment Info(Master) 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectEnrollmentInfo(int params);
+	
+	/**
+	 * selectEnrollment Item(Grid) 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectEnrollmentItem(int params);
+	
+	/**
+	 * EnrollmentUpdateMaster 저장
+	 * @param params
+	 * @return
+	 */
+	int selectEnrollmentItem(EnrollmentUpdateMVO params);
+
+	/**
+	 * EnrollmentUpdateMaster Key값 가져오기
+	 * @param params
+	 * @return
+	 */
+	int getPAY0058DSEQ();
+	
+	/**
+	 * EnrollmentUpdateMaster값 저장하기
+	 * @param params
+	 * @return
+	 */
+	int insertUpdateMaster(EnrollmentUpdateMVO enrollMaster);
+	
+	/**
+	 * EnrollmentUpdateGrid값 저장하기
+	 * @param params
+	 * @return
+	 */
+	int insertUpdateGrid(EnrollmentUpdateDVO enrollGrid);
+	
+	/**
+	 * EnrollmentUpdateGrid값 수정하기
+	 * @param params
+	 * @return
+	 */
+	int callEnrollProcedure(Map params);
+	
+	/**
+	 * EnrollmentUpdate결과값 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectSuccessInfo(int value);
 
 
 }
