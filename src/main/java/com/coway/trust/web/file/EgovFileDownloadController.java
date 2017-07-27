@@ -123,7 +123,7 @@ public class EgovFileDownloadController {
 	 * @param response
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/FileDown.do")
+	@RequestMapping(value = "/fileDown.do")
 	public void fileDownload(@RequestParam Map<String, Object> params, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -133,28 +133,13 @@ public class EgovFileDownloadController {
 		String fileName = (String) params.get("fileName");
 		String orignlFileNm = (String) params.get("orignlFileNm");
 
-		// FileVO fileVO = new FileVO();
-		// fileVO.setAtchFileId(atchFileId);
-		// fileVO.setFileSn(fileSn);
-		// FileVO fvo = fileService.selectFileInf(fileVO);
-
 		File uFile = new File(uploadDir + File.separator + subPath, fileName);
 		long fSize = uFile.length();
 
 		if (fSize > 0) {
 			String mimetype = "application/x-msdownload";
-
-			// response.setBufferSize(fSize); // OutOfMemeory 발생
 			response.setContentType(mimetype);
-			// response.setHeader("Content-Disposition", "attachment; filename=\"" +
-			// URLEncoder.encode(fvo.getOrignlFileNm(), "utf-8") + "\"");
 			setDisposition(orignlFileNm, request, response);
-			// response.setContentLength(fSize);
-
-			/*
-			 * FileCopyUtils.copy(in, response.getOutputStream()); in.close(); response.getOutputStream().flush();
-			 * response.getOutputStream().close();
-			 */
 			BufferedInputStream in = null;
 			BufferedOutputStream out = null;
 
@@ -165,8 +150,6 @@ public class EgovFileDownloadController {
 				FileCopyUtils.copy(in, out);
 				out.flush();
 			} catch (IOException ex) {
-				// 다음 Exception 무시 처리
-				// Connection reset by peer: socket write error
 				EgovBasicLogger.ignore("IO Exception", ex);
 			} finally {
 				EgovResourceCloseHelper.close(in, out);

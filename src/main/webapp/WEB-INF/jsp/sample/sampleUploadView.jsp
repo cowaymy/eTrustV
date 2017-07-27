@@ -60,7 +60,7 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
 
 		 */
 
-		window.open("<c:url value='/file/FileDown.do?subPath=" + subPath
+		window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
 				+ "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
 				+ "'/>");
 	}
