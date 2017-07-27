@@ -182,6 +182,11 @@
 	    )
     </insert> 
     
+    <delete id="deleteMaterialItemType" parameterType="Map">
+       DELETE FROM MSC0039D 
+       WHERE ITM_ID = #{itmId} 
+    </delete>
+    
     <select id="materialItmIdSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ITM_ID),0) + 1 from MSC0039D
     </select>
