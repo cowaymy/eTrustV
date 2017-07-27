@@ -1,8 +1,11 @@
 package com.coway.trust.biz.login;
 
+import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.cmmn.model.LoginVO;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface LoginService {
 
@@ -10,4 +13,5 @@ public interface LoginService {
 
 	void logout(Map<String, Object> params);
 
+	List<EgovMap> getLanguages();
 }

@@ -1,10 +1,19 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
-<script type="text/javaScript" language="javascript">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/js.cookie.js"></script>
+<script type="text/javaScript">
 
 $(function() {
+    // spring locale config apply..
+    if(FormUtil.isNotEmpty(Cookies.get("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE"))){
+	    $("#language  option[value=" + Cookies.get("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE") + "]").attr("selected", "selected");
+    }
+    
+    if(FormUtil.isNotEmpty(Cookies.get("cookieUserId"))){
+	    $("#userId").val(Cookies.get("cookieUserId"));
+    }
     
     $("#userId").keypress(function(event) {
         if(event.keyCode == 13) {
@@ -17,6 +26,15 @@ $(function() {
         	fn_login();
         }
     });
+
+    $("#language").on("change", function(event) {
+        $("#loginForm").attr({
+            action : "/login/login.do",
+            method : "POST"
+        }).submit();
+	    //location.href = "/login/login.do?language=" + $(this).val();
+    });
+    
 });
 
 function fn_login(){
@@ -38,6 +56,13 @@ function fn_login(){
     	}
         return false;
     }
+
+    if($("#saveId").is(':checked')){
+	    Cookies.set("cookieUserId", userId, { expires: 7 }); 
+    }else{
+	    Cookies.set("cookieUserId", userId, { expires: 7 });
+    }
+    
     
     Common.ajax("POST", "/login/getLoginInfo.do", $("#loginForm").serializeJSON(), function(result) {
         
@@ -82,6 +107,15 @@ function fn_login(){
 <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway" /></h2>
 <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value="IVYLIM"/></p>
 <p><input type="password" title="PASSWORD" placeholder="PASSWORD"  id="password" name="password" value="ivy123"/></p>
+<p class="id_save"><label><input id="saveId" type="checkbox" /><span><spring:message code='sys.info.id' /> <spring:message code='sys.btn.save' /></span></label></p>
+<p class="lang">
+<span><spring:message code='sys.info.lang' /> <spring:message code='sys.info.select' /></span>
+<select id="language" name="language">
+    <c:forEach var="list" items="${languages}">
+        <option value="${list.language}" <c:if test="${param.language eq list.language}"> selected </c:if>>${list.language}</option>
+    </c:forEach>
+</select>
+</p>
 <p class="login_btn"><a href="javascript:void(0);" onclick="javascript:fn_login();"><spring:message code='sys.btn.login' /></a></p>
 <ul class="login_opt">
     <li><a href="javascript:void(0);"><spring:message code='sys.btn.id.search' /></a></li>

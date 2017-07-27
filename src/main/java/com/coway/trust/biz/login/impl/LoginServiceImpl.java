@@ -15,6 +15,7 @@
  */
 package com.coway.trust.biz.login.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.model.LoginVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("loginService")
 public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginService {
@@ -45,5 +47,10 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	public void logout(Map<String, Object> params) {
 		// TODO 로그 아웃시 처리사항....
 
+	}
+
+	@Override
+	public List<EgovMap> getLanguages() {
+		return loginMapper.selectLanguages();
 	}
 }

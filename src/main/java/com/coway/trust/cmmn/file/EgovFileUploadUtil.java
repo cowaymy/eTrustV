@@ -61,7 +61,7 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 
 			vo.setFileName(tmp);
 			vo.setContentType(mFile.getContentType());
-			vo.setServerSubPath(getTodayString());
+			vo.setServerSubPath(where);
 			vo.setPhysicalName(getPhysicalFileName());
 			vo.setSize(mFile.getSize());
 
@@ -79,7 +79,7 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 						throw new ApplicationException(AppConstants.FAIL, mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
 					}
 					
-					saveFile(is, new File(EgovWebUtil.filePathBlackList(where + SEPERATOR + vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName())));
+					saveFile(is, new File(EgovWebUtil.filePathBlackList(vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName())));
 				} finally {
 					if (is != null) {
 						is.close();
