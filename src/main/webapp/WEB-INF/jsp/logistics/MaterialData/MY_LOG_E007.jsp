@@ -303,23 +303,17 @@
                 return;
             }
         });
-        $("#delete").click(function(){
-        	var selectedItems = AUIGrid.getSelectedItems(myGridID);
-        	for (var i = 0 ; i < selectedItems.length ; i++){
-        		   AUIGrid.removeRow(myGridID, selectedItems[i].rowIndex);
-        	}
-        	Common.ajax("POST", "/logistics/material/materialUpdate.do", GridCommon.getEditData(myGridID), function(result) {
-                Common.alert(result.message);
-                AUIGrid.resetUpdatedItems(myGridID, "all");
-                
-            },  function(jqXHR, textStatus, errorThrown) {
-                try {
-                } catch (e) {
-                }
-
-                Common.alert("Fail : " + jqXHR.responseJSON.message);
-            });
-        });$("#detailsave").click(function(){
+        $("#delete").click(function(){ 
+        	var selectedItems = AUIGrid.getSelectedIndex(myGridID);
+        	  if (selectedItems[0] > -1){
+        		  f_deleteView(selectedItems[0]);
+              }else{
+              Common.alert('Choice Data please..');
+              }
+        });
+        
+        
+        $("#detailsave").click(function(){
         	
         	if (valiedcheck()){
             	var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", $("#ditmid").val());
@@ -602,8 +596,26 @@
     }
      
     
+    function f_deleteView(rowid){
     
-     
+        var itmId= AUIGrid.getCellValue(myGridID ,rowid,'itmId');         
+                
+         var param = "?itmId="+itmId;
+          $.ajax({
+            type : "POST",
+            url : "/logistics/material/materialDeleteItemType.do"+param,
+            dataType : "json",               
+            contentType : "application/json;charset=UTF-8",
+            success : function(result) {
+            Common.alert(result.message);
+            $("#search").click();
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert("실패하였습니다.");
+            }
+        });
+          
+    }    
 </script>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 <section id="content"><!-- content start -->
