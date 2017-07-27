@@ -8,12 +8,22 @@
 
  // AUIGrid 생성 후 반환 ID
     var myGridID;
+    
+    var gridValue;
+    
+    var option = {
+        width : "1000px", // 창 가로 크기
+        height : "600px" // 창 세로 크기
+    };
+    
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
         
-        // AUIGrid 그리드를 생성합니다.
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
+	    // AUIGrid 그리드를 생성합니다.
+	    createAUIGrid();
+	    
+	    AUIGrid.setSelectionMode(myGridID, "singleRow");
         
         // cellClick event.
         AUIGrid.bind(myGridID, "cellClick", function( event ) {
@@ -21,58 +31,112 @@
             fn_setDetail(myGridID, event.rowIndex);
         });
         
-        fn_getOrgEventListAjax();
+        
+                // 셀 더블클릭 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+//            fn_setDetail(myGridID, event.rowIndex);
+            Common.popupWin("searchForm", "/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"), option);
+        });
+        
+
+        
+        //fn_getOrgEventListAjax();
 
     });
 
-    // AUIGrid 칼럼 설정
-    var columnLayout = [ {
-                dataField : "reqstNo",
-                headerText : "Request No.",
-                width : 120
-            }, {
-                dataField : "typeDesc",
-                headerText : "Req Type",
-                width : 120
-            }, {
-                dataField : "code",
-	            headerText : "Member Type",
-	            width : 120
-	        }, {
-                dataField : "memCode",
-                headerText : "Member Code.",
-                width : 120
-            }, {
-                dataField : "name",
-                headerText : "Member Name.",
-                width : 120
-            }, {
-	            dataField : "c1",
-	            headerText : "Level (From)",
-	            width : 120
-	        }, {
-	            dataField : "c2",
-	            headerText : "Level (To)",
-	            width : 120
-	        }, {
-	            dataField : "name1",
-	            headerText : "Status",
-	            width : 120
-	        }, {
-                dataField : "userName",
-                headerText : "ReqBy",
-                width : 120
-            }, {
-                dataField : "crtDt",
-                headerText : "ReqAt",
-                width : 120
-    
-    }];
-    
+
+/*     // 컬럼 선택시 상세정보 세팅.
+    function fn_setDetail(gridID, rowIdx){
+        alert("aaaaaaaaaa");
+        Common.popupWin("searchForm", "/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"), option);
+    } */
+
+
+
+    function createAUIGrid(){
+        // AUIGrid 칼럼 설정
+	    var columnLayout = [ {
+                    dataField : "promoId",
+                    headerText : "promo ID.",
+                    width : 120
+                }, {
+	                dataField : "reqstNo",
+	                headerText : "Request No.",
+	                width : 120
+	            }, {
+	                dataField : "typeDesc",
+	                headerText : "Req Type",
+	                width : 120
+	            }, {
+	                dataField : "code",
+	                headerText : "Member Type",
+	                width : 120
+	            }, {
+	                dataField : "memCode",
+	                headerText : "Member Code.",
+	                width : 120
+	            }, {
+	                dataField : "name",
+	                headerText : "Member Name.",
+	                width : 120
+	            }, {
+	                dataField : "c1",
+	                headerText : "Level (From)",
+	                width : 120
+	            }, {
+	                dataField : "c2",
+	                headerText : "Level (To)",
+	                width : 120
+	            }, {
+	                dataField : "name1",
+	                headerText : "Status",
+	                width : 120
+	            }, {
+	                dataField : "userName",
+	                headerText : "ReqBy",
+	                width : 120
+	            }, {
+	                dataField : "crtDt",
+	                headerText : "ReqAt",
+	                width : 120
+		    
+		    }];
+		    // 그리드 속성 설정
+		    var gridPros = {
+		        
+		        // 페이징 사용       
+		        usePaging : true,
+		        
+		        // 한 화면에 출력되는 행 개수 20(기본값:20)
+		        pageRowCount : 20,
+		        
+		        editable : true,
+		        
+		        showStateColumn : true, 
+		        
+		        displayTreeOpen : true,
+		        
+		        
+		        headerHeight : 30,
+		        
+		        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+		        skipReadonlyColumns : true,
+		        
+		        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+		        wrapSelectionMove : true,
+		        
+		        // 줄번호 칼럼 렌더러 출력
+		        showRowNumColumn : true,
+		
+		    };
+		            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+		        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+    }
+
     
 // 리스트 조회.
 function fn_getOrgEventListAjax() {        
-    Common.ajax("GET", "/organization/selectOrganizationEventList", $("#searchForm").serialize(), function(result) {
+    Common.ajax("GET", "/organization/selectMemberEventList", $("#searchForm").serialize(), function(result) {
         
         console.log("성공.");
         console.log("data : " + result);
@@ -108,12 +172,6 @@ function f_info(data , v){
                 selectAll: true,
                 width: '80%'
             });
-            $('#requestPerson').change(function() {
-            
-            }).multipleSelect({
-                selectAll: true,
-                width: '80%'
-            });     
             $('#memberType').change(function() {
             
             }).multipleSelect({
@@ -124,8 +182,8 @@ function f_info(data , v){
     }
 
     doGetCombo('/common/selectCodeList.do', '165', '','requestStatus', 'M' , 'f_multiCombo'); // Request Status
+//    doGetCombo('/common/selectCodeList.do', '18', '','requestPerson', 'M' , 'f_multiCombo'); //Request Person
     doGetCombo('/common/selectCodeList.do', '18', '','requestType', 'M' , 'f_multiCombo'); //Request Type
-    doGetCombo('/common/selectCodeList.do', '18', '','requestPerson', 'M' , 'f_multiCombo'); //Request Person
     doGetCombo('/common/selectCodeList.do', '18', '','memberType', 'M' , 'f_multiCombo'); //MemberType
     
 </script>
@@ -147,7 +205,7 @@ function f_info(data , v){
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form action="#" id= "searchForm"' method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -165,26 +223,28 @@ function f_info(data , v){
 <tr>
     <th scope="row">Request No(From)</th>
     <td>
-    <input type="text" title="Request No(From)" placeholder="" class="w100p" />
+    <input id ="requestNoF" name="requestNoF" type="text" title="Request No(From)" placeholder="" class="w100p" />
     </td>
     <th scope="row">Request No(To)</th>
     <td>
-    <input type="text" title="Request No(To)" placeholder="" class="w100p" />
+    <input  id ="requestNoT" name="requestNoT" type="text" title="Request No(To)" placeholder="" class="w100p" />
     </td>
     <th scope="row">Request Date(From)</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input id ="requestDateF" name="requestDateF" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
     <th scope="row">Request Date(To)</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input id ="requestDateT" name="requestDateT" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
 </tr>
 <tr>
     <th scope="row">Request Status</th>
     <td>
     <select id="requestStatus" name="requestStatus" class="multy_select w100p">
-        <option value=""></option>
+<%--         <c:forEach var="list" items="${ reqStatusComboList}" varStatus="status">
+            <option value="${list.code}">${list.codeName } </option>
+        </c:forEach> --%>
     </select>
     </td>
     <th scope="row">Request Type</th>
@@ -193,7 +253,11 @@ function f_info(data , v){
     </td>
     <th scope="row">Request Person</th>
     <td>
-    <select  id="requestPerson" name="requestPerson" class="w100p">    </select>
+    <select  id="requestPerson" name="requestPerson" class="w100p">
+            <c:forEach var="list" items="${ reqPersonComboList}" varStatus="status">
+            <option value="${list.userId}">${list.userName } </option>
+        </c:forEach>
+    </select>
     </td>
     <th scope="row"></th>
     <td>
@@ -202,11 +266,11 @@ function f_info(data , v){
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select id="requestPerson" name="memberType"  class="multy_select w100p">    </select>
+    <select id="memberType" name="memberType"  class="multy_select w100p">    </select>
     </td>
     <th scope="row">Member Code</th>
     <td>
-    <input type="text" title="Member Code" placeholder="" class="w100p" />
+    <input id ="memberCode" name="memberCode" type="text" title="Member Code" placeholder="" class="w100p" />
     </td>
     <th scope="row"></th>
     <td>
@@ -263,7 +327,7 @@ function f_info(data , v){
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역 
-    <div id="grid_wrap" style="width:800px; height:300px; margin:0 auto;"></div>\
+    <div id="grid_wrap" style="width:100%; height:500px; margin:0 auto;"></div>\
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
