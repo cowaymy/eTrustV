@@ -85,5 +85,14 @@ public class MaterialServiceImpl extends EgovAbstractServiceImpl implements Mate
 		mstMapper.insertMaterialItemType(params);
 	}
 	
+	
+	@Override
+	public void deleteMaterialItemType(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+				
+		mstMapper.deleteMaterialItemType(params);
+	}
+	
+	
 		
 }
