@@ -1,4 +1,5 @@
 package com.coway.trust.biz.organization.impl;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
-import com.coway.trust.biz.organization.OrganizationEventService;
-import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.biz.organization.MemberEventService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-
 
 /**
  * @Class Name : OrganizationEventServiceImpl.java
@@ -33,26 +31,57 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 	 Copyright (C) by MOPAS All right reserved.
  */
 
-@Service("organizationEventService")
-public class OrganizationEventServiceImpl extends EgovAbstractServiceImpl implements OrganizationEventService {
+@Service("memberEventService")
+public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements MemberEventService {
 
-	private static final Logger logger = LoggerFactory.getLogger(OrganizationEventServiceImpl.class);
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(MemberEventServiceImpl.class);
 
 	@Value("${app.name}")
 	private String appName;
 
-	@Resource(name = "organizationEventMapper")
-	private OrganizationEventMapper organizationEventMapper;
+	@Resource(name = "memberEventMapper")
+	private MemberEventMapper memberEventMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
 	public List<EgovMap> selectOrganizationEventList(Map<String, Object> params) {
+
+//		for(int i=0; i < params.size(); i++) {
+//			logger.debug("requestStatus : {}", params.get("StatusList"));			
+//		}
 		
-		return organizationEventMapper.selectOrganizationEventList(params);
-		
+		return memberEventMapper.selectOrganizationEventList(params);
+
 	}
+
+	@Override
+	public List<EgovMap> reqStatusComboList() {
+ 
+		return memberEventMapper.reqStatusComboList();
+	}
+
+	@Override
+	public List<EgovMap> reqPersonComboList() {
+
+		return memberEventMapper.reqPersonComboList();
+	}
+
+	
+	
+	public EgovMap getMemberEventDetailPop(Map<String, Object> params) {
+		
+		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : " + params.get("pstSalesOrdId"));
+		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
+		
+		return memberEventMapper.getMemberEventDetailPop(params);
+	}
+	
+
+
+	
 	
 	
 }

@@ -22,8 +22,14 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Mapper("organizationEventMapper")
-public interface OrganizationEventMapper {
+@Mapper("memberEventMapper")
+public interface MemberEventMapper {
 
+	List<EgovMap> reqPersonComboList();
+	
+	List<EgovMap> reqStatusComboList();
+	
 	List<EgovMap> selectOrganizationEventList(Map<String, Object> params);
+	
+	EgovMap  getMemberEventDetailPop(Map<String, Object> params);
 }	
