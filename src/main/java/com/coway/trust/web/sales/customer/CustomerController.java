@@ -58,7 +58,6 @@ public class CustomerController {
 		params.put("typeIdList", typeId);
 		params.put("cmbCorpTypeIdList", cmbCorpTypeId);
 		
-		
 		logger.info("##### customerList START #####");
 		customerList = customerService.selectCustomerList(params);
 		
@@ -77,9 +76,7 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerAddressJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> addresslist = null;
-		//params		
-		params.put("custId", params.get("custId"));
-		
+		logger.info("44444444444444444444 test param 4444444444 : {}" , params.get("custID"));
 		logger.info("##### customer Address Parsing START #####");
 		addresslist = customerService.selectCustomerAddressJsonList(params);
 		
@@ -98,7 +95,6 @@ public class CustomerController {
 		
 		List<EgovMap> contactlist = null;
 		//params
-		params.put("custId", params.get("custId"));
 		logger.info("##### customer Contact Parsing START #####");
 		contactlist = customerService.selectCustomerContactJsonList(params);
 		// 데이터 리턴.
@@ -119,7 +115,6 @@ public class CustomerController {
 		
 		List<EgovMap> banklist = null;
 		//params
-		params.put("custId", params.get("custId"));
 		logger.info("##### customer Bank List Parsing START #####");
 		banklist = customerService.selectCustomerBankAccJsonList(params);
 		
@@ -139,8 +134,6 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerCreditCardJsonList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		List<EgovMap> cardlist = null;
-		//params
-		params.put("custId", params.get("custId"));
 		logger.info("##### customer Card List Parsing START #####");
 		cardlist = customerService.selectCustomerCreditCardJsonList(params);
 		
@@ -160,8 +153,6 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerOwnOrderJsonList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		List<EgovMap> ownorderlist = null;
-		//params
-		params.put("custId", params.get("custId"));
 		logger.info("##### customer Own Order Parsing START #####");
 		ownorderlist = customerService.selectCustomerOwnOrderJsonList(params);
 		
@@ -181,8 +172,6 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerThirdPartyJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> thirdpartylist = null;
-		//params
-		params.put("custId", params.get("custId"));
 		logger.info("##### customer Third Party Parsing START #####");
 		thirdpartylist = customerService.selectCustomerThirdPartyJsonList(params);
 		
@@ -202,13 +191,11 @@ public class CustomerController {
 	public String selectCustomerDetailAddr(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		EgovMap detailaddr = null;
-		//TODO 추후삭제 
-		params.put("custAddId", params.get("getparam"));
 		logger.info("##### selectCustomerDetailAddr START #####");
 		detailaddr = customerService.selectCustomerDetailAddr(params);
 		model.addAttribute("detailaddr", detailaddr);
 		
-		return "sales/customer/customerAddress";
+		return "sales/customer/customerAddressPop";
 	}
 	
 	
@@ -224,12 +211,11 @@ public class CustomerController {
 	public String selectCustomerDetailBank(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		EgovMap detailbank = null;
-		params.put("custAccId", params.get("getparam"));
 		logger.info("##### selectCustomerDetailBank START #####");
 		detailbank = customerService.selectCustomerDetailBank(params);
 		model.addAttribute("detailbank", detailbank);
 		
-		return "sales/customer/customerBank";
+		return "sales/customer/customerBankPop";
 	}
 	
 	
@@ -245,14 +231,12 @@ public class CustomerController {
 	public String selectCustomerDetailCreditCard(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		EgovMap detailcard = null;
-		//param
-		params.put("custCrcId", params.get("getparam"));
 		logger.info("##### selectCustomerDetail Credit Card START #####");
 		detailcard = customerService.selectCustomerDetailCreditCard(params);
 		
 		model.addAttribute("detailcard", detailcard);
 		
-		return "sales/customer/customerCard";
+		return "sales/customer/customerCardPop";
 	}
 	
 	
@@ -271,10 +255,6 @@ public class CustomerController {
 		EgovMap addresinfo = null;
 		EgovMap contactinfo = null;
 		
-		//param
-		params.put("custId", params.get("custId"));
-		params.put("custAddrId", params.get("custAddrId"));
-		
 		logger.info("##### customeView START #####");
 		basicinfo = customerService.selectCustomerViewBasicInfo(params);
 		addresinfo = customerService.selectCustomerViewMainAddress(params);
@@ -288,9 +268,9 @@ public class CustomerController {
 		model.addAttribute("addresinfo", addresinfo);
 		model.addAttribute("contactinfo", contactinfo);
 	
-		return "sales/customer/customerView";
+		return "sales/customer/customerViewPop";
 	}
-	
+
 	
 	/**
 	 * 
@@ -305,14 +285,44 @@ public class CustomerController {
 		
 		EgovMap detailcontact = null;
 		
-		params.put("custCntcId", params.get("getparam"));
 		logger.info("##### selectCustomerDetailContact START #####");
 		detailcontact = customerService.selectCustomerDetailContact(params);
 		logger.info("확인 : " + detailcontact.toString());
 		model.addAttribute("detailcontact", detailcontact);
 		
-		return "sales/customer/customerContact";
+		return "sales/customer/customerContactPop";
 	}
 	
+	
+	// Customer Edit Controller
+	/**
+	 * 
+	 * Customer Basic Info Edit 기본 정보 수정
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.27
+	 * */
+	@RequestMapping(value = "/updateCustomerBasicInfo.do")
+	public String updateCustomerBasicInfo(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		EgovMap basicinfo = null;
+		EgovMap addresinfo = null;
+		EgovMap contactinfo = null;
+		
+		logger.info("##### customer Basic Info Edit START #####");
+//		logger.debug("!!!!!!!!!!!!!!  Edit custId: {}" , params.get("custId"));
+//		logger.debug("!!!!!!!!!!!!!! Edit custAddId: {}" , params.get("custAddId"));
+		basicinfo = customerService.selectCustomerViewBasicInfo(params);
+		addresinfo = customerService.selectCustomerViewMainAddress(params);
+		contactinfo = customerService.selectCustomerViewMainContact(params);
+		
+		// infomation param
+		model.addAttribute("result", basicinfo);
+		model.addAttribute("addresinfo", addresinfo);
+		model.addAttribute("contactinfo", contactinfo);
+		
+		return "sales/customer/cusotmerBasicEditPop";
+	}
 	
 }

@@ -15,9 +15,10 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
-            $("#custId").val(event.item.custId);
-            $("#custAddId").val(event.item.custAddId);
-            Common.popupWin("detailForm", "/sales/customer/selectCustomerView.do", option);
+            $("#_custId").val(event.item.custId);
+            $("#_custAddId").val(event.item.custAddId);
+            Common.popupWin("popForm", "/sales/customer/selectCustomerView.do", option);
+            
             
         });
         // 셀 클릭 이벤트 바인딩
@@ -56,7 +57,21 @@
             },{
             	dataField : "custAddId",
             	visible : false
-            }];
+            },{
+                dataField : "undefined",
+                headerText : "Edit",
+                width : 170,
+                renderer : {
+                      type : "ButtonRenderer",
+                      labelText : "Edit",
+                      onclick : function(rowIndex, columnIndex, value, item) {
+                           //pupupWin
+                          $("#_custId").val(item.custCntcId);
+                          $("#_custAddId").val(item.custAddId);
+                          Common.popupWin("popForm", "/sales/customer/updateCustomerBasicInfo.do", option);
+                      }
+               }
+           }];
        
      // 그리드 속성 설정
         var gridPros = {
@@ -134,20 +149,20 @@
     var option = {
             winName : "popup",
             isDuplicate : true, // 계속 팝업을 띄울지 여부.
-            fullscreen : "no", // 전체 창. (yes/no)(default : no)
+            /* fullscreen : "no", // 전체 창. (yes/no)(default : no)
             location : "no", // 주소창이 활성화. (yes/no)(default : yes)
             menubar : "no", // 메뉴바 visible. (yes/no)(default : yes)
             titlebar : "yes", // 타이틀바. (yes/no)(default : yes)
             toolbar : "no", // 툴바. (yes/no)(default : yes)
             resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
-            scrollbars : "yes", // 스크롤바. (yes/no)(default : yes)
+            scrollbars : "yes", // 스크롤바. (yes/no)(default : yes) */
             width : "1200px", // 창 가로 크기
             height : "680px" // 창 세로 크기
         };
 </script>
-<form id="detailForm" method="post">
-    <input type="hidden" name="custId" id="custId"/>
-    <input type="hidden" name="custAddId" id="custAddId"/>
+<form id="popForm" method="post">
+    <input type="hidden" name="custId" id="_custId"/>
+    <input type="hidden" name="custAddId" id="_custAddId"/>
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">
