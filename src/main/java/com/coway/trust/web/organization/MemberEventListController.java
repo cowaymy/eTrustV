@@ -19,7 +19,7 @@ import com.coway.trust.biz.organization.MemberEventService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Controller
+@Controller 
 @RequestMapping(value = "/organization")
 public class MemberEventListController {
 
