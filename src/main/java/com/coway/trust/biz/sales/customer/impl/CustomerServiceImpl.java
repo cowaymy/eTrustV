@@ -179,6 +179,70 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	}
 	
 	
+	@Override
+	public int getCustIdSeq() {
+		
+		int getCustId = customerMapper.getCustIdSeq();
+		
+		return getCustId;
+	}
+	
+	
+	@Override
+	public int getCustAddrIdSeq() {
+		
+		int getCustAddrId = customerMapper.getCustAddrIdSeq();
+		
+		return getCustAddrId;
+	}
+	
+	
+	@Override
+	public int getCustCntcIdSeq() {
+		
+		int getCustCntcId = customerMapper.getCustCntcIdSeq();
+		
+		return getCustCntcId;
+	}
+	
+	
+	@Override
+	public int getCustCareCntIdSeq() {
+		
+		int getCustCareCntId = customerMapper.getCustCareCntIdSeq();
+		
+		return getCustCareCntId;
+	}
+	
+	
+	@Override
+	public void insertCustomerInfo(Map<String, Object> params) {
+		
+		customerMapper.insertCustomerInfo(params);
+	}
+	
+	
+	@Override
+	public void insertAddressInfo(Map<String, Object> params) {
+		
+		customerMapper.insertAddressInfo(params);
+	}
+	
+	
+	@Override
+	public void insertContactInfo(Map<String, Object> params) {
+		
+		customerMapper.insertContactInfo(params);
+	}
+	
+	
+	@Override
+	public void insertCareContactInfo(Map<String, Object> params) {
+		
+		customerMapper.insertCareContactInfo(params);
+	}
+	
+	
 	/**
 	 * 상세화면 조회한다. (Detail Contact View)
 	 * @param 
