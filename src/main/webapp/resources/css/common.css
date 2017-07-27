@@ -14,10 +14,15 @@
 /* 로그인 */
 #login_wrap{position:absolute; width:100%; min-width:1280px; height:100%; min-height:768px; padding:30px 0; background:#f6f6f6 url(../images/common/bg_login.jpg) no-repeat center 0; box-sizing:border-box; /*background-size:cover;*/}
 #login_wrap h1{width:1280px; margin:auto; padding:0 30px; box-sizing:border-box; }
-#login_wrap .login_box{width:341px; margin:150px auto 250px;}
+#login_wrap .login_box{width:341px; margin:130px auto 250px;}
 #login_wrap .login_box h2{margin-bottom:23px;}
 #login_wrap .login_box input[type=text],
 #login_wrap .login_box input[type=password]{display:block; width:313px; height:48px; line-height:48px; border:1px solid #ddd; margin:auto; text-indent:19px; font-size:12px;}
+#login_wrap .login_box p.id_save{float:left; margin:4px 0 0 10px;}
+#login_wrap .login_box p.id_save label input[type=checkbox]{position:Relative; top:2px; margin-right:5px;}
+#login_wrap .login_box p.lang{float:right; margin-right:13px;}
+#login_wrap .login_box p.lang select{width:80px; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
+#login_wrap .login_btn{clear:both; padding-top:5px;}
 #login_wrap .login_btn a{display:block; width:315px; height:50px; line-height:50px; text-align:center; margin:auto; background:#25527c url(../images/common/login_text.gif) no-repeat center center; text-indent:-1000em; overflow:hidden;}
 #login_wrap .login_box p{margin-bottom:10px;}
 #login_wrap .login_box .login_opt{text-align:center;}
