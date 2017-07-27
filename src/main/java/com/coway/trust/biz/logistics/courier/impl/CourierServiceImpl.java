@@ -27,4 +27,10 @@ public class CourierServiceImpl implements CourierService {
 		return courierMapper.selectCourierList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectCourierDetail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return courierMapper.selectCourierDetail(params);
+	}
+
 }

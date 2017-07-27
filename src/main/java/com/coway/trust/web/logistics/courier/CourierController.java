@@ -71,4 +71,12 @@ public class CourierController {
 		map.put("data", list);
 		return ResponseEntity.ok(map);
 	}
+
+	@RequestMapping(value = "/selectCourierDetail", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCourierDetail(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap> resultList = courierService.selectCourierDetail(params);
+
+		return ResponseEntity.ok(resultList);
+	}
 }

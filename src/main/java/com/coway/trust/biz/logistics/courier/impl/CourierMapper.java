@@ -11,4 +11,6 @@ public interface CourierMapper {
 
 	List<EgovMap> selectCourierList(Map<String, Object> params);
 
+	List<EgovMap> selectCourierDetail(Map<String, Object> params);
+
 }
