@@ -25,6 +25,7 @@ public interface MaterialService {
 	
 	void updateMaterialItemType(List<Object> updateList);
 	void insertMaterialItemType(Map<String, Object> params);
+	void deleteMaterialItemType(Map<String, Object> params);
 	
 	
 }
