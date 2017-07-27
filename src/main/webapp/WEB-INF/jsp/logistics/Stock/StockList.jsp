@@ -26,12 +26,12 @@
 }
 
 
-#regFilterWind {
+/* #regFilterWind {
     font-size:13px;
 }
 #regFilterWind label, input { display:block; }
 #regFilterWind input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
-#regFilterWind fieldset { padding:0; border:0; margin-top:10px; }
+#regFilterWind fieldset { padding:0; border:0; margin-top:10px; } */
 </style>
 
 <script type="text/javaScript">
@@ -1286,11 +1286,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
-                <col style="width:120px" />
+                <col style="width:150px" />
                 <col style="width:*" />
-                <col style="width:120px" />
+                <col style="width:160px" />
                 <col style="width:*" />
-                <col style="width:120px" />
+                <col style="width:160px" />
                 <col style="width:*" />
             </colgroup>
             <tbody>
@@ -1362,11 +1362,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <table class="type1">
                     <caption>search table</caption>
                     <colgroup>
-                        <col style="width:125px" />
+                        <col style="width:150px" />
                         <col style="width:*" />
-                        <col style="width:120px" />
+                        <col style="width:160px" />
                         <col style="width:*" />
-                        <col style="width:130px" />
+                        <col style="width:160px" />
                         <col style="width:*" />
                     </colgroup>
                     <tbody>
@@ -1418,11 +1418,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <table class="type1">
                     <caption>search table</caption>
                     <colgroup>
-                        <col style="width:125px" />
+                        <col style="width:150px" />
                         <col style="width:*" />
-                        <col style="width:120px" />
+                        <col style="width:160px" />
                         <col style="width:*" />
-                        <col style="width:130px" />
+                        <col style="width:160px" />
                         <col style="width:*" />
                     </colgroup>
                     <tbody>
@@ -1511,9 +1511,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 						<!-- table start -->
 						<caption>search table</caption>
 						<colgroup>
-							<col style="width: 120px" />
+							<col style="width: 150px" />
 							<col style="width: *" />
-							<col style="width: 120px" />
+							<col style="width: 160px" />
 							<col style="width: *" />
 						</colgroup>
 						<tbody>
@@ -1561,9 +1561,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     <table class="type1">
                         <caption>search table</caption>
                         <colgroup>
-                            <col style="width: 120px" />
+                            <col style="width: 150px" />
                             <col style="width: *" />
-                            <col style="width: 120px" />
+                            <col style="width: 160px" />
                             <col style="width: *" />
                         </colgroup>
                         <tbody>
