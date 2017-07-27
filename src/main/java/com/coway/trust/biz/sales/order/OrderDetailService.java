@@ -14,7 +14,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface OrderDetailService {
 
-	public EgovMap getOrderBasicInfo(Map<String, Object> params);
+	public EgovMap getOrderBasicInfo(Map<String, Object> params) throws Exception;
 	
 	public EgovMap getOrderBasicInfoByOrderID(Map<String, Object> params);
 	
@@ -26,11 +26,17 @@ public interface OrderDetailService {
 	
 	public List<EgovMap> getOrderReferralInfoList(Map<String, Object> params);
 	
-	public List<EgovMap> getROSCallLogList(Map<String, Object> params);
-	
-	public List<EgovMap> getPaymentList(Map<String, Object> params);
-	
-	public List<EgovMap> getAutoDebitResultList(Map<String, Object> params);
-	
+	public List<EgovMap> getCallLogList(Map<String, Object> params);
+
 	public List<EgovMap> getSameRentalGrpOrderList(Map<String, Object> params);
+	
+	public List<EgovMap> getMembershipInfoList(Map<String, Object> params);
+	
+	public List<EgovMap> getDocumentList(Map<String, Object> params);
+
+	List<EgovMap> getPaymentMasterList(Map<String, Object> params);
+
+	List<EgovMap> getAutoDebitList(Map<String, Object> params);
+
+	List<EgovMap> getDiscountList(Map<String, Object> params);
 }

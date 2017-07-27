@@ -5,12 +5,30 @@
 
     //AUIGrid 생성 후 반환 ID
     var custInfoGridID;
+    var memInfoGridID;
+    var docGridID;
+    var callLogGridID;
+    var payGridID;
+    var autoDebitGridID;
+    var discountGridID;
     
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+        createAUIGrid2();
+        createAUIGrid3();
+        createAUIGrid4();
+        createAUIGrid5();
+        createAUIGrid7();
+        createAUIGrid8();
         
         fn_selectOrderSameRentalGroupOrderList();
+        fn_selectMembershipInfoList();
+        fn_selectDocumentList();
+        fn_selectCallLogList();
+        fn_selectPaymentList();
+        fn_selectAutoDebitList();
+        fn_selectDiscountList();
     });
     
     function createAUIGrid() {
@@ -47,7 +65,7 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
             editable            : false,            
             fixedColumnCount    : 0,            
             showStateColumn     : true,             
@@ -62,7 +80,330 @@
             groupingMessage     : "Here groupping"
         };
         
-        custInfoGridID = GridCommon.createAUIGrid("grid_customerInfo_wrap", columnLayout, "", gridPros);
+        custInfoGridID = GridCommon.createAUIGrid("grid_custInfo_wrap", columnLayout, "", gridPros);
+    }
+    
+    function createAUIGrid2() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+                dataField   : "mbrshNo",        headerText  : "Membership<br>No",
+                width       : 120,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "mbrshBillNo",    headerText  : "Bill No",
+                width       : 100,              editable        : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "mbrshCrtDt",     headerText  : "Date",
+                width       : 70,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "mbrshStusCode",  headerText  : "Status",
+                width       : 70,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "pacName",        headerText  : "Package",
+                style       : 'left_style'
+            }, {
+                dataField   : "mbrshStartDt",   headerText  : "Start",
+                width       : 70,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "mbrshExprDt",    headerText  : "End",
+                width       : 70,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "mbrshDur",       headerText  : "Duration<br>(month)",
+                width       : 100,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "salesOrdId", visible     : false //salesOrderId
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        memInfoGridID = GridCommon.createAUIGrid("grid_memInfo_wrap", columnLayout, "", gridPros);
+    }
+    
+    function createAUIGrid3() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+                dataField   : "codeName",   headerText  : "Type of Document",
+                                            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "docSubDt",   headerText  : "Submit Date",
+                width       : 120,          editable        : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "docCopyQty", headerText  : "Quantity",
+                width       : 120,           editable    : false,
+                style       : 'left_style'
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        docGridID = GridCommon.createAUIGrid("grid_doc_wrap", columnLayout, "", gridPros);
+    }
+    
+    function createAUIGrid4() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+                dataField   : "rownum",             headerText  : "No",
+                width       : 60,                  editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "codeName",           headerText  : "Type",
+                width       : 120,                  editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "resnDesc",           headerText  : "Feedback",
+                width       : 120,                  editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "stusName",           headerText  : "Action",
+                width       : 120,                  editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "callRosAmt",         headerText  : "Amount",
+                width       : 70,                   editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "callRem",            headerText  : "Remark",
+                width       : 250,                  editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "rosCallerUserName",  headerText  : "Caller",
+                width       : 120,                  editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "callCrtUserName",    headerText  : "Creator",
+                width       : 80,                  editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "callCrtDt",          headerText  : "Create Date",
+                width       : 100,                  editable    : false,
+                style       : 'left_style'
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : false,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            rowHeight           : 150,   
+            wordWrap            : true, 
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        callLogGridID = GridCommon.createAUIGrid("grid_callLog_wrap", columnLayout, "", gridPros);
+    }
+    
+    function createAUIGrid5() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+                dataField   : "orNo",           headerText  : "Receipt No",
+                width       : 120,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "revReceiptNo",   headerText  : "Reverse For",
+                width       : 120,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "payData",        headerText  : "Payment Date",
+                width       : 120,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "codeDesc",       headerText  : "Payment Type",
+                width       : 150,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "accCode",        headerText  : "Debtor Acc",
+                width       : 100,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "code",           headerText  : "Key-In Branch<br>(Code)",
+                width       : 120,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "name1",          headerText  : "Key-In Branch<br>(Name)",
+                width       : 120,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "totAmt",         headerText  : "Total Amount",
+                width       : 100,              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "userName",       headerText  : "Creator",
+                width       : 80,               editable    : false,
+                style       : 'left_style'
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        payGridID = GridCommon.createAUIGrid("grid_pay_wrap", columnLayout, "", gridPros);
+    }
+    
+    function createAUIGrid7() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+                dataField   : "crtDtMm",      headerText  : "Month",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "batchMode",    headerText  : "Mode",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "code",         headerText  : "Bank",
+                                              editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "crtDtDd",      headerText  : "Date Deduct",
+                width       : 150,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "bankDtlAmt",   headerText  : "Amount",
+                width       : 100,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "isApproveStr", headerText  : "Success ?",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        autoDebitGridID = GridCommon.createAUIGrid("grid_autoDebit_wrap", columnLayout, "", gridPros);
+    }
+    
+    function createAUIGrid8() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+                dataField   : "salesOrdNo",      headerText  : "Order No",
+                width       : 100,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "codeDesc",        headerText  : "DiscountType",
+                width       : 180,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "dcAmtPerInstlmt", headerText  : "AmtPerInstalment",
+                width       : 120,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "dcStartInstlmt",  headerText  : "Start Installment",
+                width       : 120,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "dcEndInstlmt",    headerText  : "End Installment",
+                width       : 120,               editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "rem",             headerText  : "Remark",
+                                                 editable    : false,
+                style       : 'left_style'
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        discountGridID = GridCommon.createAUIGrid("grid_discount_wrap", columnLayout, "", gridPros);
     }
     
     // 리스트 조회.
@@ -72,9 +413,73 @@
         });
     }
     
-    function chgTab(num) {
-        if(num == 3) {
-            AUIGrid.resize(custInfoGridID, 900, 450);
+    // 리스트 조회.
+    function fn_selectMembershipInfoList() {        
+        Common.ajax("GET", "/sales/order/selectMembershipInfoJsonList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(memInfoGridID, result);
+        });
+    }
+    
+    // 리스트 조회.
+    function fn_selectDocumentList() {        
+        Common.ajax("GET", "/sales/order/selectDocumentJsonList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(docGridID, result);
+        });
+    }
+    
+    // 리스트 조회.
+    function fn_selectCallLogList() {        
+        Common.ajax("GET", "/sales/order/selectCallLogJsonList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(callLogGridID, result);
+        });
+    }
+    
+    // 리스트 조회.
+    function fn_selectPaymentList() {        
+        Common.ajax("GET", "/sales/order/selectPaymentJsonList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(payGridID, result);
+        });
+    }
+    
+    // 리스트 조회.
+    function fn_selectAutoDebitList() {        
+        Common.ajax("GET", "/sales/order/selectAutoDebitJsonList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(autoDebitGridID, result);
+        });
+    }
+    
+    // 리스트 조회.
+    function fn_selectDiscountList() {        
+        Common.ajax("GET", "/sales/order/selectDiscountJsonList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(discountGridID, result);
+        });
+    }
+    
+    
+    
+    function chgTab(tabNm) {
+    	switch(tabNm) {
+	        case 'custInfo' :
+	            AUIGrid.resize(custInfoGridID, 900, 380);
+	            break;
+            case 'memInfo' :
+                AUIGrid.resize(memInfoGridID, 900, 380);
+                break;
+            case 'docInfo' :
+                AUIGrid.resize(docGridID, 900, 380);
+                break;
+            case 'callLogInfo' :
+                AUIGrid.resize(callLogGridID, 900, 380);
+                break;
+            case 'payInfo' :
+                AUIGrid.resize(payGridID, 900, 380);
+                break;
+            case 'autoDebitInfo' :
+                AUIGrid.resize(autoDebitGridID, 900, 380);
+                break;
+            case 'discountInfo' :
+                AUIGrid.resize(discountGridID, 900, 380);
+                break;
         };
     }
 </script>
@@ -102,20 +507,24 @@
 <ul class="tap_type1 num4">
 	<li><a href="#" class="on">Basic Info</a></li>
 	<li><a href="#">HP / Cody</a></li>
-	<li><a href="#" onClick="javascript:chgTab(3)">Customer Info</a></li>
+	<li><a href="#" onClick="javascript:chgTab('custInfo');">Customer Info</a></li>
 	<li><a href="#">Installation Info</a></li>
 	<li><a href="#">Mailling Info</a></li>
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
 	<li><a href="#">Payment Channel</a></li>
-	<li><a href="#">Membership Info</a></li>
-	<li><a href="#">Document Submission</a></li>
-	<li><a href="#">Call Log</a></li>
+</c:if>
+	<li><a href="#" onClick="javascript:chgTab('memInfo');">Membership Info</a></li>
+	<li><a href="#" onClick="javascript:chgTab('docInfo');">Document Submission</a></li>
+	<li><a href="#" onClick="javascript:chgTab('callLogInfo');">Call Log</a></li>
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
 	<li><a href="#">Quarantee Info</a></li>
-	<li><a href="#">Payment Listing</a></li>
+</c:if>
+	<li><a href="#" onClick="javascript:chgTab('payInfo');">Payment Listing</a></li>
 	<li><a href="#">Last 6 Months Transaction</a></li>
 	<li><a href="#">Order Configuration</a></li>
-	<li><a href="#">Auto Debit Result</a></li>
+	<li><a href="#" onClick="javascript:chgTab('autoDebitInfo');">Auto Debit Result</a></li>
 	<li><a href="#">Relief Certificate</a></li>
-	<li><a href="#">Discount</a></li>
+	<li><a href="#" onClick="javascript:chgTab('discountInfo');">Discount</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -384,7 +793,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_customerInfo_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="grid_custInfo_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
@@ -620,6 +1029,7 @@
 
 </article><!-- tap_area end -->
 
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -663,42 +1073,43 @@
 	<th scope="row">Account Name</th>
 	<td><span>${orderDetail.rentPaySetInf.rentPayAccOwner}</span></td>
 	<th scope="row">Issure NRIC</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.issuNric}</span></td>
 </tr>
 <tr>
 	<th scope="row">Apply Date</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.rentPayApplyDt}</span></td>
 	<th scope="row">Submit Date</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.rentPaySubmitDt}</span></td>
 	<th scope="row">Start Date</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.rentPayStartDt}</span></td>
 </tr>
 <tr>
 	<th scope="row">Reject Date</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.rentPayRejctDt}</span></td>
 	<th scope="row">Reject Code</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.rentPayRejct}</span></td>
 	<th scope="row">Payment Team</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.payTrm} month(s)</span></td>
 </tr>
 <tr>
 	<th scope="row">Pay By Third Party</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.rentPaySetInf.is3party}</span></td>
 	<th scope="row">Third Party ID</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.thirdPartyInfo.customerid}</span></td>
 	<th scope="row">Third Party Type</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.thirdPartyInfo.c7}</span></td>
 </tr>
 <tr>
 	<th scope="row">Third Party Name</th>
-	<td colspan="3"><span>text</span></td>
+	<td colspan="3"><span>${orderDetail.thirdPartyInfo.name}</span></td>
 	<th scope="row">Third Party NRIC</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.thirdPartyInfo.nric}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 </article><!-- tap_area end -->
+</c:if>
 
 <article class="tap_area"><!-- tap_area start -->
 
@@ -711,7 +1122,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_memInfo_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -727,7 +1138,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_doc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -743,10 +1154,12 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_callLog_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
+
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
 
 <article class="tap_area"><!-- tap_area start -->
 
@@ -761,36 +1174,38 @@
 <tbody>
 <tr>
 	<th scope="row">Guarantee Status</th>
-	<td colspan="3"><span>text</span></td>
+	<td colspan="3"><span>${orderDetail.grntnfo.grntStatus}</span></td>
 </tr>
 <tr>
 	<th scope="row">HP Code</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntHPCode}</span></td>
 	<th scope="row">HP Name(NRIC)</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntHPName}</span></td>
 </tr>
 <tr>
 	<th scope="row">HM Code</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntHMCode}</span></td>
 	<th scope="row">HM Name(NRIC)</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntHMName}</span></td>
 </tr>
 <tr>
 	<th scope="row">SM Code</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntSMCode}</span></td>
 	<th scope="row">SM Name(NRIC)</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntSMName}</span></td>
 </tr>
 <tr>
 	<th scope="row">GM Code</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntGMCode}</span></td>
 	<th scope="row">GM Name(NRIC)</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.grntnfo.grntGMName}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 </article><!-- tap_area end -->
+
+</c:if>
 
 <article class="tap_area"><!-- tap_area start -->
 
@@ -803,7 +1218,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_pay_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -839,36 +1254,63 @@
 <tbody>
 <tr>
 	<th scope="row">BS Availability</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.orderCfgInfo.configBsGen}</span></td>
 	<th scope="row">BS Frequency</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.orderCfgInfo.srvMemFreq} month(s)</span></td>
 	<th scope="row">Last BS Date</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.orderCfgInfo.setlDt}</span></td>
 </tr>
 <tr>
 	<th scope="row">BS Cody Code</th>
-	<td colspan="5"><span>text</span></td>
+	<td colspan="5"><span>${orderDetail.orderCfgInfo.memCode} - ${orderDetail.orderCfgInfo.name}</span></td>
 </tr>
 <tr>
 	<th scope="row">Config Remark</th>
-	<td colspan="5"><span>text</span></td>
+	<td colspan="5"><span>${orderDetail.orderCfgInfo.configBsRem}</span></td>
 </tr>
 <tr>
 	<th scope="row">Happy Call Service</th>
 	<td colspan="5">
-	<label><input type="checkbox" /><span>Installation Type</span></label>
-	<label><input type="checkbox" /><span>BS Type</span></label>
-	<label><input type="checkbox" /><span>AS Type</span></label>
+	<label>
+  <c:choose>
+    <c:when test="${orderDetail.orderCfgInfo.configSettIns == 1}">
+       <input type="checkbox" onClick="return false" checked/>
+    </c:when>
+    <c:otherwise>
+       <input type="checkbox" onClick="return false"/>
+    </c:otherwise>
+  </c:choose>
+	<span>Installation Type</span></label>
+	<label>
+  <c:choose>
+    <c:when test="${orderDetail.orderCfgInfo.configSettBs == 1}">
+       <input type="checkbox" onClick="return false" checked/>
+    </c:when>
+    <c:otherwise>
+       <input type="checkbox" onClick="return false"/>
+    </c:otherwise>
+  </c:choose>
+	<span>BS Type</span></label>
+	<label>
+  <c:choose>
+    <c:when test="${orderDetail.orderCfgInfo.configSettAs == 1}">
+       <input type="checkbox" onClick="return false" checked/>
+    </c:when>
+    <c:otherwise>
+       <input type="checkbox" onClick="return false"/>
+    </c:otherwise>
+  </c:choose>
+	<span>AS Type</span></label>
 	</td>
 </tr>
 <tr>
 	<th scope="row">Prefer BS Week</th>
 	<td colspan="5">
-	<label><input type="radio" name="week" /><span>None</span></label>
-	<label><input type="radio" name="week" /><span>Week1</span></label>
-	<label><input type="radio" name="week" /><span>Week2</span></label>
-	<label><input type="radio" name="week" /><span>Week3</span></label>
-	<label><input type="radio" name="week" /><span>Week4</span></label>
+	<label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 0 || orderDetail.orderCfgInfo.configBsWeek > 4}">checked</c:if> disabled/><span>None</span></label>
+	<label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 1}">checked</c:if> disabled/><span>Week1</span></label>
+	<label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 2}">checked</c:if> disabled/><span>Week2</span></label>
+	<label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 3}">checked</c:if> disabled/><span>Week3</span></label>
+	<label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 4}">checked</c:if> disabled/><span>Week4</span></label>
 	</td>
 </tr>
 </tbody>
@@ -887,7 +1329,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_autoDebit_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -905,17 +1347,17 @@
 <tbody>
 <tr>
 	<th scope="row">Reference No</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.gstCertInfo.eurcRefNo}</span></td>
 	<th scope="row">Certificate Date</th>
-	<td><span>text</span></td>
+	<td><span>${orderDetail.gstCertInfo.eurcRefDt}</span></td>
 </tr>
 <tr>
 	<th scope="row">GST Registration No</th>
-	<td colspan="3"><span>text</span></td>
+	<td colspan="3"><span>${orderDetail.gstCertInfo.eurcCustRgsNo}</span></td>
 </tr>
 <tr>
 	<th scope="row">Remark</th>
-	<td colspan="3"><span>text</span></td>
+	<td colspan="3"><span>${orderDetail.gstCertInfo.eurcRem}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -933,7 +1375,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_discount_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->

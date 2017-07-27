@@ -51,9 +51,9 @@ public interface OrderDetailMapper {
 	
 	List<EgovMap> selectOrderReferralInfoList(Map<String, Object> params); //Referral Info
 	
-	List<EgovMap> selectROSCallLogList(Map<String, Object> params); //Call Log
+	List<EgovMap> selectCallLogList(Map<String, Object> params); //Call Log
 	
-	List<EgovMap> selectPaymentList(Map<String, Object> params); //Payment Listing
+	List<EgovMap> selectPaymentMasterList(Map<String, Object> params); //Payment Listing
 	
 	List<EgovMap> selectAutoDebitResultList(Map<String, Object> params); //Auto Debit Result
 
@@ -70,5 +70,20 @@ public interface OrderDetailMapper {
 	EgovMap selectOrderMailingInfoByOrderID(Map<String, Object> params); //Cody Info
 
 	EgovMap selectOrderRentPaySetInfoByOrderID(Map<String, Object> params); //Cody Info
+	
+	EgovMap selectThirdPartyInfo(Map<String, Object> params); //Cody Info
+	
+	List<EgovMap> selectMembershipInfoList(Map<String, Object> params); //Membership Info Result
 
+	List<EgovMap> selectDocumentList(Map<String, Object> params); //Document Result
+
+	EgovMap selectGuaranteeInfo(Map<String, Object> params); //Guarantee Info
+
+	List<EgovMap> selectAutoDebitList(Map<String, Object> params); //Auto Debit Result
+
+	List<EgovMap> selectDiscountList(Map<String, Object> params); //Discount
+
+	EgovMap selectOrderConfigInfo(Map<String, Object> params); //Guarantee Info
+
+	EgovMap selectGSTCertInfo(Map<String, Object> params); //Guarantee Info
 }

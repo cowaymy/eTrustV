@@ -38,7 +38,7 @@ public class OrderDetailController {
 	private OrderDetailService orderDetailService;
 	
 	@RequestMapping(value = "/orderDetail.do")
-	public String getOrderDetailPop(@RequestParam Map<String, Object>params, ModelMap model) {
+	public String getOrderDetailPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 		
 		//params.put("salesOrderId", 256488);
 		
@@ -69,5 +69,83 @@ public class OrderDetailController {
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(sameRentalGrpOrderJsonList);
+	}
+	
+	@RequestMapping(value = "/selectMembershipInfoJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMembershipInfoJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> memInfoList = orderDetailService.getMembershipInfoList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(memInfoList);
+	}
+	
+	@RequestMapping(value = "/selectDocumentJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDocumentJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> memInfoList = orderDetailService.getDocumentList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(memInfoList);
+	}
+	
+	@RequestMapping(value = "/selectCallLogJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCallLogJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> memInfoList = orderDetailService.getCallLogList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(memInfoList);
+	}
+	
+	@RequestMapping(value = "/selectPaymentJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPaymentJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> memInfoList = orderDetailService.getPaymentMasterList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(memInfoList);
+	}
+	
+	@RequestMapping(value = "/selectAutoDebitJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAutoDebitJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> memInfoList = orderDetailService.getAutoDebitList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(memInfoList);
+	}
+	
+	@RequestMapping(value = "/selectDiscountJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDiscountJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> memInfoList = orderDetailService.getDiscountList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(memInfoList);
 	}
 }

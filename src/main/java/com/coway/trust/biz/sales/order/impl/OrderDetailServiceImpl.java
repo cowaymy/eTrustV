@@ -4,6 +4,10 @@
 package com.coway.trust.biz.sales.order.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +21,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.payment.payment.service.impl.SearchPaymentMapper;
+import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.sales.order.OrderVO;
@@ -40,10 +46,16 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "orderDetailMapper")
 	private OrderDetailMapper orderDetailMapper;
 	
+	@Resource(name = "customerMapper")
+	private CustomerMapper customerMapper;
+	
+	@Resource(name = "searchPaymentMapper")
+	private SearchPaymentMapper searchPaymentMapper;
+	
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 	
-	public EgovMap getOrderBasicInfo(Map<String, Object> params) {
+	public EgovMap getOrderBasicInfo(Map<String, Object> params) throws Exception {
 		
 		EgovMap orderDetail = new EgovMap();
 		
@@ -57,14 +69,45 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		EgovMap salesmanInfo 	 = orderDetailMapper.selectOrderSalesmanViewByOrderID(params);
 		EgovMap codyInfo     	 = orderDetailMapper.selectOrderServiceMemberViewByOrderID(params);
 		EgovMap mailingInfo 	 = orderDetailMapper.selectOrderMailingInfoByOrderID(params);
-		EgovMap rentPaySetInf 	 = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
+		EgovMap rentPaySetInf 	 = null;
+		EgovMap thirdPartyInfo   = null;
+		EgovMap grntnfo          = null;
+		EgovMap orderCfgInfo 	 = orderDetailMapper.selectOrderConfigInfo(params);
+		EgovMap gstCertInfo      = orderDetailMapper.selectGSTCertInfo(params);
 		
+		if(SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))) {
+			
+			rentPaySetInf = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
+
+			if(rentPaySetInf != null) {
+    			
+    			this.loadRentPaySetInf(rentPaySetInf, basicInfo);
+    
+    			if(((BigDecimal)rentPaySetInf.get("is3party")).compareTo(BigDecimal.ONE) == 0) {
+    				rentPaySetInf.put("is3party", "Yes");
+    				
+    				params.put("testparam", rentPaySetInf.get("payerCustId"));
+    				
+    				thirdPartyInfo = customerMapper.selectCustomerViewBasicInfo(params);
+    			}
+    			else {
+    				rentPaySetInf.put("is3Party", "No");
+    			}
+    		}
+			
+			if (Integer.toString(SalesConstants.SALES_CCP_CODEID).equals(((BigDecimal)basicInfo.get("rentChkId")).toString())) {
+				grntnfo = orderDetailMapper.selectGuaranteeInfo(params);				
+				this.loadOrderGuaranteeInfo(grntnfo, installationInfo);
+			}
+    	}
+
 		this.loadBasicInfo(basicInfo);
 		this.loadCustInfo(basicInfo);
-		this.loadInstallationInfo(installationInfo);
-		this.loadMailingInfo(mailingInfo, basicInfo);
-		if(rentPaySetInf != null) this.loadRentPaySetInf(rentPaySetInf, basicInfo);
-
+		if(installationInfo != null) this.loadInstallationInfo(installationInfo);
+		if(mailingInfo != null) this.loadMailingInfo(mailingInfo, basicInfo);
+		if(orderCfgInfo != null) this.loadConfigInfo(orderCfgInfo);
+		if(gstCertInfo != null) this.loadGstCertInfo(gstCertInfo);
+				
 		orderDetail.put("basicInfo",     	basicInfo);
 		orderDetail.put("logView",       	logView);
 		orderDetail.put("agreementView", 	agreementView);
@@ -75,10 +118,79 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		orderDetail.put("codyInfo", 		codyInfo);
 		orderDetail.put("mailingInfo", 		mailingInfo);
 		orderDetail.put("rentPaySetInf", 	rentPaySetInf);
+		orderDetail.put("thirdPartyInfo", 	thirdPartyInfo);
+		orderDetail.put("orderCfgInfo", 	orderCfgInfo);
+		orderDetail.put("gstCertInfo",   	gstCertInfo);
 		
 		return orderDetail;
 	};
+	
+	private void loadGstCertInfo(EgovMap gstCertInfo) {
+		gstCertInfo.put("eurcRefDt", CommonUtils.changeFormat((String)gstCertInfo.get("eurcRefDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+	}
+	
+	private void loadConfigInfo(EgovMap orderCfgInfo) {
+		orderCfgInfo.put("configBsGen", ((BigDecimal)orderCfgInfo.get("configBsGen")).compareTo(BigDecimal.ONE) == 0 ? "Available" : "Unavailable");
+	}
+	
+	private void loadOrderGuaranteeInfo(EgovMap grntnfo, EgovMap installationInfo) throws ParseException {
 		
+		SimpleDateFormat format = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT3);
+		SimpleDateFormat format2 = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT2);
+		String fiDt = (String)installationInfo.get("firstInstallDt");
+		
+		String[] arrFidt = fiDt.split("-");
+		
+		Calendar c = Calendar.getInstance();
+
+		c.set(Integer.valueOf(arrFidt[0]), Integer.valueOf(arrFidt[1])-1, Integer.valueOf(arrFidt[2]),0,0,0);        
+		c.add(Calendar.MONTH, 25);
+
+		logger.debug("!@###### Calendar.MONTH  : "+Calendar.MONTH);
+
+        Date firstInstallDt = format2.parse(fiDt);
+        Date aftDate = c.getTime();
+        Date nowDate = format.parse(CommonUtils.getNowDate());
+        Date defaultDate = format.parse(SalesConstants.DEFAULT_DATE3);
+        
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### firstInstallDt  : "+firstInstallDt);
+		logger.debug("!@###### firstInstallDt  : "+firstInstallDt);
+		logger.debug("!@###### aftDate  : "+aftDate);
+		logger.debug("!@###### nowDate  : "+nowDate);
+		logger.debug("!@###### dflDate  : "+defaultDate);
+		logger.debug("!@##############################################################################");
+		
+		if(grntnfo != null) {
+			
+			if(firstInstallDt.after(defaultDate)) {
+    			if(nowDate.after(aftDate)) {
+    				grntnfo.put("grntStatus", "Expired");
+    			}
+    			else {
+    				grntnfo.put("grntStatus", "Active");
+    			}
+			}
+			
+			if(CommonUtils.isEmpty(grntnfo.get("memCode4"))) {
+    			grntnfo.put("grntHPCode", grntnfo.get("memCode4"));
+    			grntnfo.put("grntHPName", grntnfo.get("name4") + " (" + grntnfo.get("nric4")+ ")");
+			}
+			if(CommonUtils.isEmpty(grntnfo.get("memCode3"))) {
+    			grntnfo.put("grntHMCode", grntnfo.get("memCode3"));
+    			grntnfo.put("grntHMName", grntnfo.get("name3") + " (" + grntnfo.get("nric3")+ ")");
+			}
+			if(CommonUtils.isEmpty(grntnfo.get("memCode2"))) {
+				grntnfo.put("grntSMCode", grntnfo.get("memCode2"));
+				grntnfo.put("grntSMName", grntnfo.get("name2") + " (" + grntnfo.get("nric2")+ ")");
+			}
+			if(CommonUtils.isEmpty(grntnfo.get("memCode"))) {
+				grntnfo.put("grntGMCode", grntnfo.get("memCode"));
+				grntnfo.put("grntGMName", grntnfo.get("name") + " (" + grntnfo.get("nric")+ ")");
+			}
+		}
+	}
+	
 	private void loadRentPaySetInf(EgovMap rentPaySetInf, EgovMap basicInfo) {
 		
 		if(!"DD".equals((String)rentPaySetInf.get("rentPayModeCode"))) {
@@ -123,6 +235,43 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
         }
 
        	rentPaySetInf.put("issuNric", CommonUtils.nvl((String)rentPaySetInf.get("issuNric"), "-"));
+       	
+		if(CommonUtils.isEmpty(rentPaySetInf.get("rentPayApplyDt")) || SalesConstants.DEFAULT_DATE2.equals(rentPaySetInf.get("rentPayApplyDt"))) {
+			rentPaySetInf.put("rentPayApplyDt", "-");
+		}
+		else {
+			rentPaySetInf.put("rentPayApplyDt", CommonUtils.changeFormat((String)rentPaySetInf.get("rentPayApplyDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+		}
+       	
+		if(CommonUtils.isEmpty(rentPaySetInf.get("rentPaySubmitDt")) || SalesConstants.DEFAULT_DATE2.equals(rentPaySetInf.get("rentPaySubmitDt"))) {
+			rentPaySetInf.put("rentPaySubmitDt", "-");
+		}
+		else {
+			rentPaySetInf.put("rentPaySubmitDt", CommonUtils.changeFormat((String)rentPaySetInf.get("rentPaySubmitDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+		}
+       	
+		if(CommonUtils.isEmpty(rentPaySetInf.get("rentPayStartDt")) || SalesConstants.DEFAULT_DATE2.equals(rentPaySetInf.get("rentPayStartDt"))) {
+			rentPaySetInf.put("rentPayStartDt", "-");
+		}
+		else {
+			rentPaySetInf.put("rentPayStartDt", CommonUtils.changeFormat((String)rentPaySetInf.get("rentPayStartDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+		}
+       	
+		if(CommonUtils.isEmpty(rentPaySetInf.get("rentPayRejctDt")) || SalesConstants.DEFAULT_DATE2.equals(rentPaySetInf.get("rentPayRejctDt"))) {
+			rentPaySetInf.put("rentPayRejctDt", "-");
+		}
+		else {
+			rentPaySetInf.put("rentPayRejctDt", CommonUtils.changeFormat((String)rentPaySetInf.get("rentPayRejctDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+		}
+		
+		if(CommonUtils.isNotEmpty(rentPaySetInf.get("rentPayRejctCode"))) {
+			rentPaySetInf.put("rentPayRejct", "(" + rentPaySetInf.get("rentPayRejctCode")+") "+rentPaySetInf.get("rentPayRejctDesc"));
+		}
+		else {
+			rentPaySetInf.put("rentPayRejct", "-");
+		}
+		
+
 	}
 	
 	private void loadMailingInfo(EgovMap mailingInfo, EgovMap basicInfo) {
@@ -160,11 +309,11 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     		}
 		}
 		
-		if(CommonUtils.isEmpty(basicInfo.get("custPassportExpr")) || SalesConstants.DEFAULT_DATE.equals(basicInfo.get("custPassportExpr"))) {
+		if(CommonUtils.isEmpty(basicInfo.get("custPassportExpr")) || SalesConstants.DEFAULT_DATE2.equals(basicInfo.get("custPassportExpr"))) {
 			basicInfo.put("custPassportExpr", "-");
 		}
 		
-		if(CommonUtils.isEmpty(basicInfo.get("custVisaExpr")) || SalesConstants.DEFAULT_DATE.equals(basicInfo.get("custVisaExpr"))) {
+		if(CommonUtils.isEmpty(basicInfo.get("custVisaExpr")) || SalesConstants.DEFAULT_DATE2.equals(basicInfo.get("custVisaExpr"))) {
 			basicInfo.put("custVisaExpr", "-");
 		}
 	}
@@ -197,7 +346,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		
 		if(installationInfo != null) {
     		//TODO 날짜비교 로직 추가  
-    		if(CommonUtils.isEmpty(installationInfo.get("preferInstDt")) || SalesConstants.DEFAULT_DATE.equals(installationInfo.get("preferInstDt"))) {
+    		if(CommonUtils.isEmpty(installationInfo.get("preferInstDt")) || SalesConstants.DEFAULT_DATE2.equals(installationInfo.get("preferInstDt"))) {
     			installationInfo.put("preferInstDt", "-");
     		}
     		else {
@@ -209,7 +358,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     			installationInfo.put("preferInstTm", "-");
     		}
     		
-    		if(CommonUtils.isEmpty(installationInfo.get("firstInstallDt")) || SalesConstants.DEFAULT_DATE.equals(installationInfo.get("firstInstallDt"))) {
+    		if(CommonUtils.isEmpty(installationInfo.get("firstInstallDt")) || SalesConstants.DEFAULT_DATE2.equals(installationInfo.get("firstInstallDt"))) {
     			installationInfo.put("firstInstallDt", "-");
     		}
     		else {
@@ -225,7 +374,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     			}
     		}
     		
-    		if(CommonUtils.isEmpty(installationInfo.get("updDt")) || SalesConstants.DEFAULT_DATE.equals(installationInfo.get("updDt"))) {
+    		if(CommonUtils.isEmpty(installationInfo.get("updDt")) || SalesConstants.DEFAULT_DATE2.equals(installationInfo.get("updDt"))) {
     			installationInfo.put("updDt", "-");
     		}
     		
@@ -255,22 +404,43 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		return orderDetailMapper.selectOrderReferralInfoList(params);
 	};
 	
-	public List<EgovMap> getROSCallLogList(Map<String, Object> params) {
-		return orderDetailMapper.selectROSCallLogList(params);
+	public List<EgovMap> selectPaymentMasterList(Map<String, Object> params) {
+		return orderDetailMapper.selectPaymentMasterList(params);
 	};
-	
-	public List<EgovMap> getPaymentList(Map<String, Object> params) {
-		return orderDetailMapper.selectPaymentList(params);
-	};
-	
-	public List<EgovMap> getAutoDebitResultList(Map<String, Object> params) {
-		return orderDetailMapper.selectAutoDebitResultList(params);
-	};
-
 	
 	@Override
 	public List<EgovMap> getSameRentalGrpOrderList(Map<String, Object> params) {
 		return orderDetailMapper.selectOrderSameRentalGroupOrderList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getMembershipInfoList(Map<String, Object> params) {
+		return orderDetailMapper.selectMembershipInfoList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getDocumentList(Map<String, Object> params) {
+		return orderDetailMapper.selectDocumentList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getCallLogList(Map<String, Object> params) {
+		return orderDetailMapper.selectCallLogList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getPaymentMasterList(Map<String, Object> params) {
+		return orderDetailMapper.selectPaymentMasterList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getAutoDebitList(Map<String, Object> params) {
+		return orderDetailMapper.selectAutoDebitList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getDiscountList(Map<String, Object> params) {
+		return orderDetailMapper.selectDiscountList(params);
 	}
 	
 }
