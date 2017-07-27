@@ -103,12 +103,9 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 		
 		List<EgovMap> result = enrollMapper.selectEnrollmentDetView(params);
 		
-		logger.debug("selectEnrollmentDetView size: {}", result.size());
 		String issueBank = (String) params.get("cmbIssueBank2");
 		String rdpCreateDateFr = (String) params.get("rdpCreateDateFr2");
 		String enrlId = String.valueOf(params.get("enrlId"));
-		logger.debug("issueBank value: {}", issueBank);
-		
 			
 		switch (issueBank) {
 		case "2":
@@ -124,15 +121,11 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 	
 	public void createEnrollmentFile_ALB(List<EgovMap> params, String issueBank, String rdpCreateDateFr){
 		
-
-		logger.debug("createEnrollmentFile_ALB ===> params: {}", params);
-		
 		String debtDateFr = rdpCreateDateFr;
 		String day = rdpCreateDateFr.substring(0,2);
 		String month = rdpCreateDateFr.substring(3,5);
 		String year = rdpCreateDateFr.substring(6,10);
 		debtDateFr = year+month+day;
-		logger.debug("date : {}", year+month+day);
 		String sFile = "ALB" + debtDateFr + "ENROLL01.txt";
 		String location = "D://WebShare//FTP Folder//CRT//ALB/EnrollALB//" + sFile;
 		
@@ -227,13 +220,9 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 	
 	public void createEnrollmentFile_ALB_NEW(List<EgovMap> params, String issueBank, String enrlId){
 
-		logger.debug("createEnrollmentFile_ALB_NEW ===> params: {}", params);
-		
 		Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
         String toDate = df.format(date);
-
-		logger.debug("date : {}", toDate);
 		String sFile = "AD_Enrolment_" + toDate + ".txt";
 		String location = "D:/WebShare/FTP Folder/CRT/ALB/EnrollALB/" + sFile;
 		
