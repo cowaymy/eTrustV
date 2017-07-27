@@ -13,54 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.coway.trust.biz.payment.payment.service.impl;
+package com.coway.trust.biz.payment.autodebit.service.impl;
 
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.payment.payment.service.EnrollmentUpdateDVO;
-import com.coway.trust.biz.payment.payment.service.EnrollmentUpdateMVO;
+import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO;
+import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Mapper("atDebtCreCrdMapper")
-public interface AtDebtCreCrdMapper {
-
-	
-	/**
-	 * EnrollmentList 조회
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> selectEnrollmentList(Map<String, Object> params);
-	
-	/**
-	 * 글 상세조회를 한다. Enroll Info
-	 * 
-	 * @param pstRequestVO
-	 *            - 조회할 정보가 담긴 VO
-	 * @return 
-	 * @exception Exception
-	 */
-	EgovMap selectViewEnrollment(Map<String, Object> params);
-	
-	/**
-	 * 글 상세조회를 한다. Enroll Info List
-	 * @param params
-	 * @return
-	 */
-    List<EgovMap> selectViewEnrollmentList(Map<String, Object> params);
-    
-    /**
-	 * Save Enroll
-	 * 
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 */
-    Map<String, Object> saveEnroll(Map<String, Object> param);
+@Mapper("enrollResultMapper")
+public interface EnrollResultMapper {
     
 	/**
 	 * selectEnrollment Result List(Master Grid) 조회

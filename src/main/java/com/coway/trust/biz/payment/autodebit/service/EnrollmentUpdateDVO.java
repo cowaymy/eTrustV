@@ -1,4 +1,4 @@
-package com.coway.trust.biz.payment.payment.service;
+package com.coway.trust.biz.payment.autodebit.service;
 
 public class EnrollmentUpdateDVO {
 	private int enrollUpdateDetId;

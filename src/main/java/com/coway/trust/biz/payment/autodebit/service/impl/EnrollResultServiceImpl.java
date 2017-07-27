@@ -1,4 +1,4 @@
-package com.coway.trust.biz.payment.payment.service.impl;
+package com.coway.trust.biz.payment.autodebit.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +13,10 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.coway.trust.biz.payment.payment.service.AtDebtCreCrdService;
-import com.coway.trust.biz.payment.payment.service.CsvFormatVO;
-import com.coway.trust.biz.payment.payment.service.EnrollmentUpdateDVO;
-import com.coway.trust.biz.payment.payment.service.EnrollmentUpdateMVO;
+import com.coway.trust.biz.payment.autodebit.service.CsvFormatVO;
+import com.coway.trust.biz.payment.autodebit.service.EnrollResultService;
+import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO;
+import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -36,53 +36,20 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 	 Copyright (C) by MOPAS All right reserved.
  */
 
-@Service("atDebtCreCrdService")
-public class AtDebtCreCrdServiceImpl extends EgovAbstractServiceImpl implements AtDebtCreCrdService {
+@Service("enrollResultService")
+public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements EnrollResultService {
 
-	private static final Logger logger = LoggerFactory.getLogger(SearchPaymentServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EnrollResultServiceImpl.class);
 
 	@Value("${app.name}")
 	private String appName;
 
-	@Resource(name = "atDebtCreCrdMapper")
-	private AtDebtCreCrdMapper atDebtCreCrdMapper;
+	@Resource(name = "enrollResultMapper")
+	private EnrollResultMapper atDebtCreCrdMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
-	
-	
-	/**
-	 * SearchPayment Order List(Master Grid) 조회
-	 * @param params
-	 * @return
-	 */
-	@Override
-	public List<EgovMap> selectEnrollmentList(Map<String, Object> params) {
-		return atDebtCreCrdMapper.selectEnrollmentList(params);
-	}
-
-
-
-	@Override
-	public EgovMap selectViewEnrollment(Map<String, Object> params) {
-		return atDebtCreCrdMapper.selectViewEnrollment(params);
-	}
-
-
-
-	@Override
-	public List<EgovMap> selectViewEnrollmentList(Map<String, Object> params) {
-		return atDebtCreCrdMapper.selectViewEnrollmentList(params);
-	}
-
-
-
-	@Override
-	 public Map<String, Object> saveEnroll(Map<String, Object> param){
-		return atDebtCreCrdMapper.saveEnroll(param);
-	}
-	
 	/**
 	 * SearchEnrollment Result List(Master Grid) 조회
 	 * @param params
