@@ -34,7 +34,7 @@
         <typeAlias alias="customerVO" type="com.coway.trust.biz.sales.customer.CustomerVO"/>
         
         <!-- Enrollment Result Update -->
-        <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.payment.service.EnrollmentUpdateMVO" />
-        <typeAlias alias="EnrollmentUpdateDVO" type="com.coway.trust.biz.payment.payment.service.EnrollmentUpdateDVO" />
+        <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />
+        <typeAlias alias="EnrollmentUpdateDVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO" />
     </typeAliases>
 </configuration>
