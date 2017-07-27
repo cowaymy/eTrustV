@@ -159,22 +159,26 @@
 	        $("#search").click();
 	    });
 	    
-		dialog = $( "#editWindow" ).dialog({
-		      autoOpen: false,
-		      height: 540,
-		      width: 800,
-		      modal: true,
-		      headerHeight:40,
-		      position : { my: "center", at: "center", of: $("#grid_wrap") },
-		      buttons: {
-		        "SAVE": updateGridRow,
-		        "CANCEL": function(event) {
-		          dialog.dialog( "close" );
-		        }
-		      }
-		    });
+// 		dialog = $( "#editWindow" ).dialog({
+// 		      autoOpen: false,
+// 		      height: 540,
+// 		      width: 800,
+// 		      modal: true,
+// 		      headerHeight:40,
+// 		      position : { my: "center", at: "center", of: $("#grid_wrap") },
+// 		      buttons: {
+// 		        "SAVE": updateGridRow,
+// 		        "CANCEL": function(event) {
+// 		          dialog.dialog( "close" );
+// 		        }
+// 		      }
+// 		    });
 		
-		$("#detailView").hide();
+// 		$("#detailView").hide();
+
+	    /* 팝업 드래그 start */
+        $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
+        /* 팝업 드래그 end */
 
     });
 
@@ -302,7 +306,8 @@
         }
     	
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locBranch'),'mwarebranch', 'S' , ''); 
-        dialog.dialog( "open" );
+        //dialog.dialog( "open" );
+        $( "#editWindow" ).show();
     }
     
     
@@ -689,10 +694,16 @@
 
 </section><!-- search_result end -->
 
+<div class="popup_wrap" id="editWindow" style="display:none"><!-- popup_wrap start -->
 
-<section class="pop_body"><!-- pop_body start -->
-<div id="editWindow" style="display:none" title="그리드 수정 사용자 정의">
+<header class="pop_header"><!-- pop_header start -->
 <h1>Warehouse Information</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->
+
 <form id="modForm" name="modForm" method="POST">
 <table class="type1"><!-- table start -->
 <caption>search table</caption>
@@ -751,16 +762,26 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+</ul>
 </form>
-</div>
-</section>
 
+</section>
+</div>
 
 <!-- ------------------------------------------------------------------------20170719 추가 함영수------------------------------------------------ -->
+<div class="popup_wrap" id="registWindow" style="display:none"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Warehouse Information</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<div id="registWindow" style="display:none" title="그리드 등록 사용자 정의">
-<h1>Warehouse Information</h1>
 <form id="insForm" name="insForm" method="GET">
 <table class="type1">
 <caption>search table</caption>
@@ -817,10 +838,16 @@
 </tr> 
 </tbody>
 </table>
+
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+</ul>
 </form>
-</div>
+
 </section>
 
+</div>
 <!-- ------------------------------------------------------------------------20170719 추가 함영수------------------------------------------------ -->
 
 
