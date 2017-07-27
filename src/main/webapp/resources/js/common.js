@@ -451,7 +451,7 @@ var Common = {
 	 */
 	confirm : function(message, okCallback, cancelCallback) {
 
-		var msgHtml = '<div id="popup_wrap"  confirm="Y" class="msg_box">'
+		var msgHtml = '<div id="_popup_wrap_confirm"  confirm="Y" class="msg_box">'
 				+ '	<header class="pop_header">' 
 				+ '<h1>Message</h1>'
 				+ '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
@@ -489,7 +489,7 @@ var Common = {
 		});
 		
 	    // Define the Dialog and its properties.
-	    $("#popup_wrap").dialog({
+	    $("#_popup_wrap_confirm").dialog({
 	        resizable: false,
 	        modal: true,
 	        title: "Modal",
