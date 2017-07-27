@@ -6,24 +6,34 @@
 <script type="text/javaScript">
 
 $(function() {
+    fn_configLocale();
+    fn_configLoginId();
+    fn_configEvent();    
+});
+
+function fn_configLocale(){
     // spring locale config apply..
     if(FormUtil.isNotEmpty(Cookies.get("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE"))){
-	    $("#language  option[value=" + Cookies.get("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE") + "]").attr("selected", "selected");
+        $("#language  option[value=" + Cookies.get("org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE") + "]").attr("selected", "selected");
     }
-    
+}
+
+function fn_configLoginId(){
     if(FormUtil.isNotEmpty(Cookies.get("cookieUserId"))){
-	    $("#userId").val(Cookies.get("cookieUserId"));
+        $("#userId").val(Cookies.get("cookieUserId"));
     }
-    
+}
+
+function fn_configEvent(){
     $("#userId").keypress(function(event) {
         if(event.keyCode == 13) {
-        	fn_login();
+            fn_login();
         }
     });
     
     $("#password").keypress(function(event) {
         if(event.keyCode == 13) {
-        	fn_login();
+            fn_login();
         }
     });
 
@@ -32,10 +42,24 @@ $(function() {
             action : "/login/login.do",
             method : "POST"
         }).submit();
-	    //location.href = "/login/login.do?language=" + $(this).val();
     });
-    
-});
+}
+
+function fn_configCookies(userId){
+    if($("#saveId").is(':checked')){
+        Cookies.set("cookieUserId", userId, { expires: 7 }); 
+    }else{
+        Cookies.remove("cookieUserId");
+    }
+}
+
+function fn_goMain(){
+    $("#loginForm").attr("target", "");
+    $("#loginForm").attr({
+        action : "/common/main.do",
+        method : "POST"
+    }).submit();
+}
 
 function fn_login(){
     var userId = $("#userId").val();
@@ -43,17 +67,17 @@ function fn_login(){
     
     if(userId == ""){
         if($("#popup_wrap").attr("alert") != "Y"){
-        	Common.alert("<spring:message code='sys.msg.necessary' arguments='ID'/>");
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='ID'/>");
             $("#userId").focus();
         }
         return false;
     }
     
     if(password == ""){
-    	if($("#popup_wrap").attr("alert") != "Y"){
-    		Common.alert("<spring:message code='sys.msg.necessary' arguments='PASSWORD'/>");
-	        $("#password").focus();
-    	}
+        if($("#popup_wrap").attr("alert") != "Y"){
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='PASSWORD'/>");
+            $("#password").focus();
+        }
         return false;
     }
 
@@ -66,8 +90,8 @@ function fn_login(){
             return false;
          }
 
-        configCookies(userId);
-        goMain();
+        fn_configCookies(userId);
+        fn_goMain();
         
     }, function(jqXHR, textStatus, errorThrown) {
         console.log("fail.");
@@ -82,22 +106,6 @@ function fn_login(){
         console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
         
     });
-}
-
-function configCookies(userId){
-    if($("#saveId").is(':checked')){
-        Cookies.set("cookieUserId", userId, { expires: 7 }); 
-    }else{
-        Cookies.remove("cookieUserId");
-    }
-}
-
-function goMain(){
-    $("#loginForm").attr("target", "");
-    $("#loginForm").attr({
-        action : "/common/main.do",
-        method : "POST"
-    }).submit();
 }
    
 </script>
