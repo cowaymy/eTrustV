@@ -129,7 +129,7 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
     			pstLogVO.setPstStockId(pstSalesDVO.getPstItmStkId());
     			pstLogVO.setPstStockRem(pstSalesDVO.getPstStockRem());
     			pstLogVO.setPstQty(newPstItmCanQty); //입력받은 취소수량
-    			pstLogVO.setPstTypeId(SalesConstants.SALES_PSTCAN);
+    			pstLogVO.setPstTypeId(SalesConstants.SALES_PSTCAN_CODEID);
     			pstLogVO.setPstRefNo(pstSalesMVO.getPstRefNo());
     			pstLogVO.setCrtUserId(9999);
     			
