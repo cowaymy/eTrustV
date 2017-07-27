@@ -1,13 +1,15 @@
 package com.coway.trust.cmmn.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.coway.trust.AppConstants;
 
 public class SmsVO {
 	private String message;
-	private List<String> mobiles = new ArrayList<>();
+	private List<String> mobiles;
 
 	public String getMessage() {
 		return message;
@@ -18,10 +20,16 @@ public class SmsVO {
 	}
 
 	public List<String> getMobiles() {
+		if (this.mobiles == null) {
+			return Collections.emptyList();
+		}
 		return mobiles;
 	}
 
 	public void setMobiles(List<String> mobiles) {
+		if (this.mobiles == null) {
+			this.mobiles = new ArrayList<>();
+		}
 		this.mobiles = mobiles;
 	}
 
@@ -31,9 +39,13 @@ public class SmsVO {
 	 * @param mobile
 	 */
 	public void setMobile(String mobile) {
+		if (this.mobiles == null) {
+			this.mobiles = new ArrayList<>();
+		}
 
-		if (mobile.split(AppConstants.DEFAULT_DELIMITER).length > 0) {
-
+		String[] mobileArray = mobile.split(AppConstants.DEFAULT_DELIMITER);
+		if (mobileArray.length > 0) {
+			this.mobiles.addAll(Arrays.asList(mobileArray));
 		} else {
 			this.mobiles.add(mobile);
 		}

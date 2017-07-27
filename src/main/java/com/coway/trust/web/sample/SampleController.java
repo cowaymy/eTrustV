@@ -50,7 +50,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/sample")
 public class SampleController {
 
-	private static final Logger logger = LoggerFactory.getLogger(SampleController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SampleController.class);
 
 	@Resource(name = "sampleService")
 	private SampleService sampleService;
@@ -68,9 +68,6 @@ public class SampleController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-
-	@Autowired
-	private AdaptorService adaptorService;
 
 	/**
 	 * 트랜잭션 rollback 예제.
@@ -207,16 +204,16 @@ public class SampleController {
 	public String sampleView(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		// 프로퍼티 사용 예시.
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		// 파라미터 사용 예시.
-		logger.debug(" test param : {}", params.get("test"));
+		LOGGER.debug(" test param : {}", params.get("test"));
 
-		logger.debug(" isPop : {}", params.get("isPop"));
-		logger.debug(" param01 : {}", params.get("param01"));
-		logger.debug(" param02 : {}", params.get("param02"));
+		LOGGER.debug(" isPop : {}", params.get("isPop"));
+		LOGGER.debug(" param01 : {}", params.get("param01"));
+		LOGGER.debug(" param02 : {}", params.get("param02"));
 
 		// MessageSource 사용 예시.
-		logger.debug("fail.common.dbmsg : {}", messageAccessor.getMessage(SampleConstants.SAMPLE_DBMSG));
+		LOGGER.debug("fail.common.dbmsg : {}", messageAccessor.getMessage(SampleConstants.SAMPLE_DBMSG));
 
 		// 화면에서 보여줄 데이터.
 		AuthVO auth = new AuthVO();
@@ -265,9 +262,9 @@ public class SampleController {
 	public String sampleGridModify(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		// 프로퍼티 사용 예시.
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		// 파라미터 사용 예시.
-		logger.debug(" test param : {}", params.get("test"));
+		LOGGER.debug(" test param : {}", params.get("test"));
 
 		// 호출될 화면
 		return "sample/sampleGridModify";
@@ -280,9 +277,9 @@ public class SampleController {
 	public String sampleMultiGridList(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		// 프로퍼티 사용 예시.
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		// 파라미터 사용 예시.
-		logger.debug(" test param : {}", params.get("test"));
+		LOGGER.debug(" test param : {}", params.get("test"));
 
 		// 호출될 화면
 		return "sample/sampleMultiGridList";
@@ -295,9 +292,9 @@ public class SampleController {
 	public String sampleGridExcelUpload(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		// 프로퍼티 사용 예시.
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		// 파라미터 사용 예시.
-		logger.debug(" test param : {}", params.get("test"));
+		LOGGER.debug(" test param : {}", params.get("test"));
 
 		// 호출될 화면
 		return "sample/sampleGridExcelUpload";
@@ -311,9 +308,9 @@ public class SampleController {
 			@RequestParam Map<String, Object> params, ModelMap model) {
 
 		// 프로퍼티 사용 예시.
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		// 파라미터 사용 예시.
-		logger.debug(" test param : {}", params.get("test"));
+		LOGGER.debug(" test param : {}", params.get("test"));
 
 		// Map을 이용한 파라미터 사용 예시.
 		// 기본으로 사용.
@@ -340,8 +337,8 @@ public class SampleController {
 			@RequestParam Map<String, Object> params, ModelMap model) {
 
 		// 검색 파라미터 확인.
-		logger.debug("sId : {}", params.get("sId"));
-		logger.debug("sName : {}", params.get("sName"));
+		LOGGER.debug("sId : {}", params.get("sId"));
+		LOGGER.debug("sName : {}", params.get("sName"));
 
 		// 조회.
 		List<EgovMap> sampleList = sampleService.selectSampleList(params);
@@ -355,8 +352,8 @@ public class SampleController {
 	public ResponseEntity<ReturnMessage> saveSampleGridData(@RequestBody ArrayList<Object> params, Model model) {
 
 		params.forEach(obj -> {
-			logger.debug("Product : {}", ((Map<String, Object>) obj).get("Product"));
-			logger.debug("Price : {}", ((Map<String, Object>) obj).get("Price"));
+			LOGGER.debug("Product : {}", ((Map<String, Object>) obj).get("Product"));
+			LOGGER.debug("Price : {}", ((Map<String, Object>) obj).get("Price"));
 		});
 
 		// 결과 만들기 예.
@@ -388,11 +385,11 @@ public class SampleController {
 			Map hm = null;
 			Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
 
-			logger.info("0 번째 id : {}", updateMap.get("id"));
+			LOGGER.info("0 번째 id : {}", updateMap.get("id"));
 
 			updateList.forEach(obj -> {
-				logger.debug("update id : {}", ((Map<String, Object>) obj).get("id"));
-				logger.debug("update name : {}", ((Map<String, Object>) obj).get("name"));
+				LOGGER.debug("update id : {}", ((Map<String, Object>) obj).get("id"));
+				LOGGER.debug("update name : {}", ((Map<String, Object>) obj).get("name"));
 			});
 
 			// for (Object map : updateList) {
@@ -404,9 +401,9 @@ public class SampleController {
 		}
 
 		// 콘솔로 찍어보기
-		logger.info("수정 : {}", updateList.toString());
-		logger.info("추가 : {}", addList.toString());
-		logger.info("삭제 : {}", removeList.toString());
+		LOGGER.info("수정 : {}", updateList.toString());
+		LOGGER.info("추가 : {}", addList.toString());
+		LOGGER.info("삭제 : {}", removeList.toString());
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -434,21 +431,21 @@ public class SampleController {
 
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		addList.forEach(form -> {
-			logger.debug("add id : {}", form.getId());
-			logger.debug(" add name : {}", form.getName());
-			logger.debug(" add date : {}", form.getDate());
+			LOGGER.debug("add id : {}", form.getId());
+			LOGGER.debug(" add name : {}", form.getName());
+			LOGGER.debug(" add date : {}", form.getDate());
 		});
 
 		for (SampleGridForm form : updateList) {
-			logger.info(" update id : {}", form.getId());
-			logger.info(" update name : {}", form.getName());
-			logger.info(" update date : {}", form.getDate());
+			LOGGER.info(" update id : {}", form.getId());
+			LOGGER.info(" update name : {}", form.getName());
+			LOGGER.info(" update date : {}", form.getDate());
 		}
 
 		// 콘솔로 찍어보기
-		logger.info("수정 : {}", updateList.toString());
-		logger.info("추가 : {}", addList.toString());
-		logger.info("삭제 : {}", removeList.toString());
+		LOGGER.info("수정 : {}", updateList.toString());
+		LOGGER.info("추가 : {}", addList.toString());
+		LOGGER.info("삭제 : {}", removeList.toString());
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
@@ -463,7 +460,7 @@ public class SampleController {
 	 */
 	@RequestMapping(value = "/sampleUploadView.do")
 	public String sampleUploadView(@RequestParam Map<String, Object> params, ModelMap model) {
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		return "sample/sampleUploadView";
 	}
 
@@ -482,8 +479,8 @@ public class SampleController {
 				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
 
 		String param01 = (String) params.get("param01");
-		logger.debug("param01 : {}", param01);
-		logger.debug("list.size : {}", list.size());
+		LOGGER.debug("param01 : {}", param01);
+		LOGGER.debug("list.size : {}", list.size());
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		// TODO : 에러 발생시 파일 삭제 처리 예정.
 		return ResponseEntity.ok(list);
@@ -503,11 +500,11 @@ public class SampleController {
 
 		// 꼭 필요한 경우만 사용.
 		String queryStringParameter = (String) queryString.get("param01");
-		logger.debug("queryStringParameter : {}", queryStringParameter);
+		LOGGER.debug("queryStringParameter : {}", queryStringParameter);
 
 		// 꼭 필요한 경우만 사용.
 		String queryStringReq = (String) req.getParameter("param01");
-		logger.debug("queryStringReq : {}", queryStringReq);
+		LOGGER.debug("queryStringReq : {}", queryStringReq);
 
 		// 기본 파라미터 사용.
 		String id = (String) params.get("id");
@@ -519,13 +516,13 @@ public class SampleController {
 
 		Integer seq = 0;
 
-		logger.debug("multi : {}", multis.size());
+		LOGGER.debug("multi : {}", multis.size());
 
 		for (String multi : multis) {
-			logger.debug("multi : {}", multi);
+			LOGGER.debug("multi : {}", multi);
 		}
 
-		logger.debug("id : {}", id);
+		LOGGER.debug("id : {}", id);
 
 		// message properties 설정 해야함.
 		// eTRUST 에서는 DB에 의해 관리할 예정임.
@@ -533,9 +530,9 @@ public class SampleController {
 		Precondition.checkNotNull(name, "name은 필수 항목입니다.");
 		// Precondition.checkArgument(seq > 0, "seq은 필수 입력값입니다.");
 
-		logger.debug("id : {}", id);
-		logger.debug("name : {}", name);
-		logger.debug("description : {}", description);
+		LOGGER.debug("id : {}", id);
+		LOGGER.debug("name : {}", name);
+		LOGGER.debug("description : {}", description);
 
 		// serivce DB 처리.
 		sampleService.insertSample(params);

@@ -26,7 +26,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("sampleApplication")
 public class SampleApplicationImpl extends EgovAbstractServiceImpl implements SampleApplication {
 
-	private static final Logger logger = LoggerFactory.getLogger(SampleApplicationImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SampleApplicationImpl.class);
 
 	@Autowired
 	private SampleService sampleService;
@@ -46,6 +46,8 @@ public class SampleApplicationImpl extends EgovAbstractServiceImpl implements Sa
 		params.put("message", "another service test 99 !!!");
 
 		sampleService.insertSample(params);
+		
+		LOGGER.debug("아래 구문에서 exception 발생");
 		sample2Service.saveTransactionForRollback(params);
 	}
 

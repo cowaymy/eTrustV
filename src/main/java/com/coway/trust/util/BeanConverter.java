@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
 
 /**
@@ -335,7 +336,7 @@ public final class BeanConverter
     {
         if ( row == null )
         {
-            throw new RuntimeException( "Can not convert to target class. Source object is null" );
+            throw new ApplicationException( AppConstants.FAIL, "Can not convert to target class. Source object is null" );
         }
         try
         {

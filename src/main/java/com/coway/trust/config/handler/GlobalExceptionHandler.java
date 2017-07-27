@@ -28,13 +28,13 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 @EnableWebMvc
 @ControllerAdvice
 public class GlobalExceptionHandler {
-	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public Object handleError404(HttpServletRequest request, HttpServletResponse response, NoHandlerFoundException ex) {
-		logger.error("[handleError404]message : {}", ex.getMessage());
-		logger.error("[handleError404]ex : {}", ex);
-		logger.debug("request : {}", request.getRequestURI());
+		LOGGER.error("[handleError404]message : {}", ex.getMessage());
+		LOGGER.error("[handleError404]ex : {}", ex);
+		LOGGER.debug("request : {}", request.getRequestURI());
 
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {
@@ -54,9 +54,9 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ApplicationException.class)
 	public Object applicationException(HttpServletRequest request, HttpServletResponse response,
 			ApplicationException ex) {
-		logger.error("[applicationException]code : {}", ex.getCode());
-		logger.error("[applicationException]message : {}", ex.getMessage());
-		logger.error("[applicationException]ex : {}", ex);
+		LOGGER.error("[applicationException]code : {}", ex.getCode());
+		LOGGER.error("[applicationException]message : {}", ex.getMessage());
+		LOGGER.error("[applicationException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {
 			ReturnMessage message = new ReturnMessage();
@@ -75,8 +75,8 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(AuthException.class)
 	public Object authException(HttpServletRequest request, HttpServletResponse response, AuthException ex) {
-		logger.error("[authException]message : {}", ex.getMessage());
-		logger.error("[authException]ex : {}", ex);
+		LOGGER.error("[authException]message : {}", ex.getMessage());
+		LOGGER.error("[authException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 
 		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {
@@ -100,8 +100,8 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public Object defaultException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-		logger.error("[defaultException]message : {}", ex.getMessage());
-		logger.error("[defaultException]ex : {}", ex);
+		LOGGER.error("[defaultException]message : {}", ex.getMessage());
+		LOGGER.error("[defaultException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 
 		if (rest(contentType) || request.getRequestURI().contains(AppConstants.API_BASE_URI)) {

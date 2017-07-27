@@ -2,6 +2,7 @@ package com.coway.trust.cmmn.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +16,7 @@ public class EmailVO {
 	private String subject;
 	private String text;
 	private boolean isHtml;
-	private List<File> files = new ArrayList<>();
+	private List<File> files;
 
 	public List<String> getTo() {
 		if (this.to == null || this.to.size() == 0) {
@@ -68,14 +69,23 @@ public class EmailVO {
 	}
 
 	public void addFile(File file) {
+		if (this.files == null) {
+			this.files = new ArrayList<>();
+		}
 		this.files.add(file);
 	}
 
 	public void addFiles(List<File> files) {
+		if (this.files == null) {
+			this.files = new ArrayList<>();
+		}
 		this.files.addAll(files);
 	}
 
 	public List<File> getFiles() {
+		if (this.files == null) {
+			return Collections.emptyList();
+		}
 		return this.files;
 	}
 }

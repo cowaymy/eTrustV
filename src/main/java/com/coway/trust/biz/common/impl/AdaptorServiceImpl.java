@@ -26,7 +26,7 @@ import com.coway.trust.util.RestTemplateFactory;
 
 @Service("adaptorService")
 public class AdaptorServiceImpl implements AdaptorService {
-	private static final Logger logger = LoggerFactory.getLogger(AdaptorServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AdaptorServiceImpl.class);
 	private static final String SUCCESS = "success";
 
 	@Value("${mail.config.from}")
@@ -84,7 +84,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 			mailSender.send(message);
 		} catch (Exception e) {
 			isSuccess = false;
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			if (isTransactional) {
 				throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
 			}
@@ -105,11 +105,11 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 		String msgID = "";
 		smsVO.getMobiles().forEach(mobileNo -> {
-			String SMSUrl = "http://" + host + path + "?" + "ClientID=" + clientId + "&Username=" + userName
+			String smsUrl = "http://" + host + path + "?" + "ClientID=" + clientId + "&Username=" + userName
 					+ "&Password=" + password + "&Type=" + type + "&Message=" + changeToHex(smsVO.getMessage())
 					+ "&SenderID=" + senderId + "&Phone=" + countryCode + mobileNo + "&MsgID=" + msgID;
 
-			ResponseEntity<String> response = RestTemplateFactory.getInstance().getForEntity(SMSUrl, String.class);
+			ResponseEntity<String> response = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
 			if (response.getStatusCode() == HttpStatus.OK) {
 				String body = response.getBody();
 				if (SUCCESS.equals(body)) {

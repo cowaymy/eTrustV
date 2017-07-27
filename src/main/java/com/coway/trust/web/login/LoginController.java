@@ -31,7 +31,7 @@ import com.coway.trust.util.Precondition;
 @RequestMapping(value = "/login")
 public class LoginController {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
 	@Autowired
 	private LoginService loginService;
@@ -56,7 +56,7 @@ public class LoginController {
 		Precondition.checkNotNull(params.get("password"),
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "PASSWORD" }));
 
-		logger.debug("userID : {}", params.get("userId"));
+		LOGGER.debug("userID : {}", params.get("userId"));
 
 		LoginVO loginVO = loginService.getLoginInfo(params);
 

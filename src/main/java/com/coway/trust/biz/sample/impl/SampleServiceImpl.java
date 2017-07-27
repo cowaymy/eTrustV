@@ -38,7 +38,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("sampleService")
 public class SampleServiceImpl extends EgovAbstractServiceImpl implements SampleService {
 
-	private static final Logger logger = LoggerFactory.getLogger(SampleServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServiceImpl.class);
 
 	@Value("${app.name}")
 	private String appName;
@@ -95,11 +95,11 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 			// exception 발생.
 			String test = null;
 			if (test.equals("")) {
-
+				LOGGER.debug("this is sample");
 			}
 
 		} catch (Exception e) {
-			logger.info(">> 이 에러는 무시처리함.");
+			LOGGER.info(">> 이 에러는 무시처리함.");
 		}
 	}
 
@@ -128,10 +128,10 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 	 */
 	@Override
 	public String insertSample(SampleVO vo) {
-		logger.debug(vo.toString());
+		LOGGER.debug(vo.toString());
 		String id = "test001";
 		vo.setId(id);
-		logger.debug(vo.toString());
+		LOGGER.debug(vo.toString());
 
 		sampleMapper.insertSample(vo);
 		return id;
@@ -195,19 +195,19 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 	 */
 	@Override
 	public List<EgovMap> selectSampleList(SampleDefaultVO searchVO) {
-		logger.debug(" appName : {}", appName);
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		// MessageSource 사용 예시.
-		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
+		LOGGER.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
 		return sampleMapper.selectSampleList(searchVO);
 	}
 
 	@Override
 	public List<EgovMap> selectSampleList(SampleVO sampleVO) {
-		logger.debug(" appName : {}", appName);
-		logger.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
+		LOGGER.debug(" appName : {}", appName);
 		// MessageSource 사용 예시.
-		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
+		LOGGER.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
 		return sampleMapper.selectSampleList(sampleVO);
 	}
 

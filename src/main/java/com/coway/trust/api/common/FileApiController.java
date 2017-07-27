@@ -27,13 +27,13 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping(AppConstants.API_BASE_URI + "/file")
 public class FileApiController {
-	private static final Logger logger = LoggerFactory.getLogger(FileApiController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileApiController.class);
 
 	@Value("${com.file.mobile.upload.path}")
 	private String uploadDir;
 
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
+//	@Autowired
+//	private MessageSourceAccessor messageAccessor;
 
 	// TODO : 업무별 어떻게 처리 및 관리를 해야 할 것인지 설계 필요.
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -43,8 +43,8 @@ public class FileApiController {
 				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
 
 		String param01 = (String) params.get("param01");
-		logger.debug("param01 : {}", param01);
-		logger.debug("list.size : {}", list.size());
+		LOGGER.debug("param01 : {}", param01);
+		LOGGER.debug("list.size : {}", list.size());
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		// TODO : 에러 발생시 파일 삭제 처리 예정.
 		return ResponseEntity.ok(list);

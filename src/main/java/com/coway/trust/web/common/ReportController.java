@@ -33,9 +33,9 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 @RequestMapping(value = "/report")
 public class ReportController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
-	private final String REPROT_FILE_NAME = "reportFileName";
+	private static final String REPROT_FILE_NAME = "reportFileName";
 
 	@Value("${report.datasource.driver-class-name}")
 	private String reportDriverClass;
@@ -65,7 +65,7 @@ public class ReportController {
 	public void view(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> params,
 			ModelMap model) {
 
-		logger.debug("reportName : {}", params.get(REPROT_FILE_NAME));
+		LOGGER.debug("reportName : {}", params.get(REPROT_FILE_NAME));
 		String reportFile = (String) params.get(REPROT_FILE_NAME);
 
 		Precondition.checkArgument(CommonUtils.isNotEmpty(reportFile),
@@ -92,12 +92,12 @@ public class ReportController {
 				{
 					String connectString = reportUrl;
 					String driverName = reportDriverClass;
-					String JNDIName = "";
+					String jndiName = "";
 					String userName = reportUserName;
 					String password = reportPassword;
 
 					// Switch all tables on the main report and sub reports
-					CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, JNDIName);
+					CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
 
 					// logon to database
 					CRJavaHelper.logonDataSource(clientDoc, userName, password);
@@ -149,7 +149,7 @@ public class ReportController {
 			// ****** END CONNECT CRYSTALREPORTPAGEVIEWER SNIPPET ****************
 
 		} catch (ReportSDKExceptionBase ex) {
-			logger.error(CommonUtils.printStackTraceToString(ex));
+			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);
 		}
 	}

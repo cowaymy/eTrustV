@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.SimpleTimeZone;
 import java.util.StringTokenizer;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -104,12 +103,10 @@ public final class CommonUtils {
         if (strTemp.equals("null"))
             return "";
 
-        strTemp = strTemp.trim();
-
         if (strTemp.equals("")) {
             rtnValue = "";
         } else {
-            rtnValue = strTemp;
+            rtnValue = strTemp.trim();
         }
 
         return rtnValue;
@@ -210,43 +207,6 @@ public final class CommonUtils {
     public static String getFillString( int intTemp, String fillString, int len ){
         String strTemp = String.valueOf(intTemp);
         return getFillString(strTemp, fillString, len, null);
-    }
-
-    // 문자열 앞에 특정한 문자를 채워서 리턴한다.
-    public static String getFillString( String strTemp, String fillString, int len, String option ){
-        if (strTemp == null)
-            return "";
-
-        if (strTemp.length() >= len)
-            return strTemp;
-
-        // 데이터 String 이 null 인 경우 공백 처리
-        if (strTemp.equals("null"))
-            strTemp = "";
-
-        if (option == null)
-            option = "RIGHT";
-
-        option = option.toUpperCase();
-        String rtnValue = "";
-
-        if (option.equals("RIGHT")) {
-            // 앞에 문자열을 채워서 리턴한다.
-            len = len - strTemp.length();
-            for (int i = 0; i < len; i++) {
-                rtnValue += fillString;
-            }
-            rtnValue += strTemp;
-
-        } else {
-            // 뒤에 문자열을 채워서 리턴한다.
-            rtnValue += strTemp;
-            for (int i = strTemp.length(); i < len; i++) {
-                rtnValue += fillString;
-            }
-        }
-
-        return rtnValue;
     }
 
     // 숫자에 천단위로 콤마를 찍는다.

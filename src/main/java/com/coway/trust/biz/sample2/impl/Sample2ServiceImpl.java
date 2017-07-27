@@ -6,9 +6,6 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -20,16 +17,10 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("sample2Service")
 public class Sample2ServiceImpl extends EgovAbstractServiceImpl implements Sample2Service {
 
-	private static final Logger logger = LoggerFactory.getLogger(Sample2ServiceImpl.class);
-
-	@Value("${app.name}")
-	private String appName;
+	private static final Logger LOGGER = LoggerFactory.getLogger(Sample2ServiceImpl.class);
 
 	@Resource(name = "sample2Mapper")
 	private Sample2Mapper sample2Mapper;
-
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
 	public String saveTransactionForRollback(Map<String, Object> params) {
@@ -50,6 +41,7 @@ public class Sample2ServiceImpl extends EgovAbstractServiceImpl implements Sampl
 
 		sample2Mapper.insertSampleByMap(params);
 
+		LOGGER.debug("before exception");
 		// 아래의 exception으로 인해 위의 insert 가 rollback 됩니다.
 		throw new ApplicationException(AppConstants.FAIL, "transaction fail Test...");
 

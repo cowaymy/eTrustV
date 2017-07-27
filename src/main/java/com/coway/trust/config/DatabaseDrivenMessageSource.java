@@ -22,7 +22,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public class DatabaseDrivenMessageSource extends AbstractMessageSource implements ResourceLoaderAware {
 
-	private static final Logger log = LoggerFactory.getLogger(DatabaseDrivenMessageSource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseDrivenMessageSource.class);
 
 	private ResourceLoader resourceLoader;
 
@@ -79,7 +79,7 @@ public class DatabaseDrivenMessageSource extends AbstractMessageSource implement
 	}
 
 	protected Map<String, Map<String, String>> loadTexts() {
-		log.debug("loadTexts");
+		LOGGER.debug("loadTexts");
 		List<EgovMap> list = commonService.selectI18NList();
 		Messages messages = extractI18NData(list);
 		return messages.getMessages();

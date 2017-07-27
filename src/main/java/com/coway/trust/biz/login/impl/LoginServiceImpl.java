@@ -32,13 +32,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("loginService")
 public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginService {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginServiceImpl.class);
 
 	@Autowired
 	private LoginMapper loginMapper;
 
 	@Override
 	public LoginVO getLoginInfo(Map<String, Object> params) {
+		LOGGER.debug("loginInfo");
 		LoginVO loginVO = loginMapper.selectLoginInfo(params);
 		return loginVO;
 	}

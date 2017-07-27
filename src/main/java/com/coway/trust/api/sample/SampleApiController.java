@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(AppConstants.API_BASE_URI + "/sample")
 public class SampleApiController {
-	private static final Logger logger = LoggerFactory.getLogger(SampleApiController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SampleApiController.class);
 
 	@Resource(name = "sampleService")
 	private SampleService sampleService;
@@ -57,7 +57,7 @@ public class SampleApiController {
 		Precondition.checkNotNull(sampleForm.getUserId(),
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
 
-		logger.debug("userId : {}", sampleForm.getUserId());
+		LOGGER.debug("userId : {}", sampleForm.getUserId());
 
 		// 서비스 파라미터에 맞게 변환.
 		SampleVO sampleVO = sampleForm.createSampleVO(sampleForm);
@@ -84,7 +84,7 @@ public class SampleApiController {
 		String userId = regForm.getUserId();
 		String name = regForm.getName();
 
-		logger.debug("id : {}", userId);
+		LOGGER.debug("id : {}", userId);
 
 		// 필수 체크.
 		Precondition.checkNotNull(userId,
@@ -92,8 +92,8 @@ public class SampleApiController {
 		Precondition.checkNotNull(name,
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "NAME" }));
 
-		logger.debug("id : {}", userId);
-		logger.debug("name : {}", name);
+		LOGGER.debug("id : {}", userId);
+		LOGGER.debug("name : {}", name);
 
 		// serivce DB 처리.
 		// sampleService.saveSample(sampleForm.createSampleVO(sampleForm));
@@ -105,8 +105,8 @@ public class SampleApiController {
 	public ResponseEntity<SampleDto> selectSample(@ModelAttribute SampleForm sampleForm, @PathVariable int id,
 			ModelMap model) throws Exception {
 
-		logger.debug("@PathVariable id : {}", id);
-		logger.debug("userId : {}", sampleForm.getUserId());
+		LOGGER.debug("@PathVariable id : {}", id);
+		LOGGER.debug("userId : {}", sampleForm.getUserId());
 
 		// 서비스 파라미터에 맞게 변환.
 		Map<String, Object> params = sampleForm.createMap(sampleForm);
