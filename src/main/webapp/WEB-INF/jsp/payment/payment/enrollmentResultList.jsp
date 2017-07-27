@@ -324,7 +324,7 @@ function resetUpdatedItems() {
 <div class="popup_wrap" id="view_wrap" style="display:none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST Request Info</h1>
+<h1>Enrollment Update Info</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()">CLOSE</a></p></li>
 </ul>
@@ -382,14 +382,12 @@ function resetUpdatedItems() {
         <caption>table</caption>
         <colgroup>
             <col style="width:175px" />
-            <col style="width:330px" />
-            <col style="width:100px" />
             <col style="width:*" />
         </colgroup>
         <tbody>
             <tr>
                 <th scope="row">Update Type</th>
-                <td colspan="3">
+                <td>
                     <select name="updateType" id="updateType"  style="width:100%">
                         <option value="978">Submit Date</option>
                         <option value="979">Start Date</option>
@@ -404,19 +402,15 @@ function resetUpdatedItems() {
                         <input type="file" id="fileSelector" title="file add" accept=".csv"/>
                     </div><!-- auto_file end -->
                 </td>
-                <td>
-                    <a href="javascript:fn_saveGridMap();"><img src="../resources/images/common/btn.gif" alt="Read CSV" /></a>
-                </td>
-                <td>
-                    <a href="#" class="search_btn"><img src="../resources/images/common/btn.gif" alt="Download CSV Format" /></a>
-                </td>
+                
             </tr>
         </tbody>
     </table>
-     
+          <center><a href="javascript:fn_saveGridMap();"><img src="../resources/images/common/btn.gif" alt="Read CSV" /></a>
+          <a href="#" class="search_btn"><img src="../resources/images/common/btn.gif" alt="Download CSV Format" /></a></center>
     </form>
     <!-- grid_wrap start -->
-    <article id="grid_wrap_new" class="grid_wrap" style="visibility:hidden"></article>
+    <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
     <!-- grid_wrap end -->
 </section><!-- pop_body end -->
 </div>
