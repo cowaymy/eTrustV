@@ -119,6 +119,88 @@ public interface CustomerService {
 	
 	
 	/**
+	 * get Customer Id Seq 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int getCustIdSeq();
+	
+	
+	/**
+	 * get Customer Address Seq 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int getCustAddrIdSeq();
+	
+	
+	/**
+	 * get Customer Contact Seq 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int getCustCntcIdSeq();
+	
+	
+	/**
+	 * get Customer Care Contact Id Seq 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int getCustCareCntIdSeq();
+	
+	
+	/**
+	 * insert Customer Basic Info 
+	 * @param params
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertCustomerInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * insert install address  
+	 * @param params
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertAddressInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * insert additional service contact
+	 * @param params
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertContactInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * insert additional service contact (care contact)
+	 * @param params
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertCareContactInfo(Map<String, Object> params);
+	
+	
+	
+	
+	/**
 	 * 상세화면 조회. detail contact view
 	 * @param params 
 	 * @return 
