@@ -19,13 +19,11 @@ import com.coway.trust.util.EgovWebUtil;
 import com.coway.trust.util.MimeTypeUtil;
 
 /**
- * @Class Name  : EgovFileUploadUtil.java
+ * @Class Name : EgovFileUploadUtil.java
  * @Description : Spring 기반 File Upload 유틸리티
  * @Modification Information
  *
- *     수정일         수정자                   수정내용
- *     -------          --------        ---------------------------
- *   2009.08.26       한성곤                  최초 생성
+ *               수정일 수정자 수정내용 ------- -------- --------------------------- 2009.08.26 한성곤 최초 생성
  *
  * @author 공통컴포넌트 개발팀 한성곤
  * @since 2009.08.26
@@ -37,12 +35,15 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 	 * 파일을 Upload 처리한다.
 	 *
 	 * @param request
-	 * @param where
+	 * @param uploadPath
+	 *            TODO
+	 * @param subPath
 	 * @param maxFileSize
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, final String where, final long maxFileSize) throws Exception {
+	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, final String uploadPath,
+			final String subPath, final long maxFileSize) throws Exception {
 		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
 
 		MultipartHttpServletRequest mptRequest = (MultipartHttpServletRequest) request;
@@ -61,7 +62,8 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 
 			vo.setFileName(tmp);
 			vo.setContentType(mFile.getContentType());
-			vo.setServerSubPath(where);
+			vo.setServerPath(uploadPath);
+			vo.setServerSubPath(subPath);
 			vo.setPhysicalName(getPhysicalFileName());
 			vo.setSize(mFile.getSize());
 
@@ -74,12 +76,16 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 
 				try {
 					is = mFile.getInputStream();
-					
-					if(MimeTypeUtil.isNotAllowFile(is)){
-						throw new ApplicationException(AppConstants.FAIL, mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
+
+					if (MimeTypeUtil.isNotAllowFile(is)) {
+						throw new ApplicationException(AppConstants.FAIL,
+								mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
 					}
-					
-					saveFile(is, new File(EgovWebUtil.filePathBlackList(vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName())));
+
+					saveFile(is,
+							new File(EgovWebUtil.filePathBlackList(EgovWebUtil.filePathBlackList(uploadPath) + SEPERATOR
+									+ EgovWebUtil.filePathBlackList(vo.getServerSubPath()) + SEPERATOR
+									+ vo.getPhysicalName())));
 				} finally {
 					if (is != null) {
 						is.close();

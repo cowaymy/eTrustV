@@ -1,5 +1,6 @@
 package com.coway.trust.api.common;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class FileApiController {
 	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUpload(MultipartHttpServletRequest request,
 			@RequestParam Map<String, Object> params, Model model) throws Exception {
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				AppConstants.UPLOAD_MAX_FILE_SIZE);
+				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
 
 		String param01 = (String) params.get("param01");
 		logger.debug("param01 : {}", param01);

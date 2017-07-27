@@ -122,8 +122,8 @@ public class EgovFormBasedFileUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String where, long maxFileSize)
-			throws Exception {
+	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, final String uploadPath,
+			final String subPath, long maxFileSize) throws Exception {
 		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
 
 		// Check that we have a file upload request
@@ -160,15 +160,18 @@ public class EgovFormBasedFileUtil {
 
 					vo.setFileName(tmp);
 					vo.setContentType(item.getContentType());
-					vo.setServerSubPath(getTodayString());
+					vo.setServerPath(uploadPath);
+					vo.setServerSubPath(subPath);
 					vo.setPhysicalName(getPhysicalFileName());
 
 					if (tmp.lastIndexOf(".") >= 0) {
 						vo.setPhysicalName(vo.getPhysicalName() + tmp.substring(tmp.lastIndexOf(".")));
 					}
 
-					long size = saveFile(stream, new File(EgovWebUtil.filePathBlackList(where) + SEPERATOR
-							+ vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName()));
+					long size = saveFile(stream,
+							new File(EgovWebUtil.filePathBlackList(uploadPath) + SEPERATOR
+									+ EgovWebUtil.filePathBlackList(vo.getServerSubPath()) + SEPERATOR
+									+ vo.getPhysicalName()));
 
 					vo.setSize(size);
 

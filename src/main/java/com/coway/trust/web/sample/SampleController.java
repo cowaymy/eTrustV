@@ -1,5 +1,6 @@
 package com.coway.trust.web.sample;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -87,9 +88,7 @@ public class SampleController {
 	}
 
 	/**
-	 * 화면 호출. 
-	 * - publish 적용.
-	 * - 그리드 페이징 갯수 변경 처리 포함됨 : publishSample.jsp
+	 * 화면 호출. - publish 적용. - 그리드 페이징 갯수 변경 처리 포함됨 : publishSample.jsp
 	 */
 	@RequestMapping(value = "/publishSample.do")
 	public String publishSample(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
@@ -108,16 +107,15 @@ public class SampleController {
 	}
 
 	/**
-	 * 서비스 + 메일 전송 예제.
-	 * sendMail test.
+	 * 서비스 + 메일 전송 예제. sendMail test.
 	 */
 	@RequestMapping(value = "/sendMail.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> sendMail(@RequestBody Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
 		boolean result = sampleApplication.sendEmailAndProcess(params);
-		if(!result){
+		if (!result) {
 			// TODO : 다국어 적용 필요.
-			message.setDetailMessage("SMS  전송 실패하였습니다.");			
+			message.setDetailMessage("SMS  전송 실패하였습니다.");
 		}
 		return ResponseEntity.ok(message);
 	}
@@ -481,7 +479,7 @@ public class SampleController {
 	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUpload(MultipartHttpServletRequest request,
 			@RequestParam Map<String, Object> params, Model model) throws Exception {
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				AppConstants.UPLOAD_MAX_FILE_SIZE);
+				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
 
 		String param01 = (String) params.get("param01");
 		logger.debug("param01 : {}", param01);
