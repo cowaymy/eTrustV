@@ -131,6 +131,96 @@ public interface CustomerMapper {
 	
 	
 	/**
+	 * get customer Id 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int getCustIdSeq();
+	
+	
+	/**
+	 * get customer Address 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int getCustAddrIdSeq();
+	
+	
+	/**
+	 * get customer Contact
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int getCustCntcIdSeq();
+	
+	
+	/**
+	 * get customer Care Contact 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int getCustCareCntIdSeq();
+	
+	
+	/**
+	 * insert customer Info Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int insertCustomerInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * update customer Info Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int updateCustomerInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * insert address Info Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int insertAddressInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * insert contact Info Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int insertContactInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * insert care contact Info Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int insertCareContactInfo(Map<String, Object> params);
+	
+	
+	/**
 	 * Customer Contact Detail View mapper
 	 * 
 	 * @param params
