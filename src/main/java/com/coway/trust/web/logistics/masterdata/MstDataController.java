@@ -24,6 +24,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -150,6 +151,23 @@ public class MstDataController {
 	}
 	
 	
+	@RequestMapping(value = "/materialDeleteItemType.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> materialDeleteItemType(ModelMap model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception{
+		
+		Map<String, Object> materialDelete = new HashMap();
+		
+		String itmId        = request.getParameter("itmId");
+		materialDelete.put("itmId", itmId);		
+		mst.deleteMaterialItemType(materialDelete);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
 	
 	
 	
