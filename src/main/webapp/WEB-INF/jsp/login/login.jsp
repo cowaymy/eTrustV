@@ -57,13 +57,6 @@ function fn_login(){
         return false;
     }
 
-    if($("#saveId").is(':checked')){
-	    Cookies.set("cookieUserId", userId, { expires: 7 }); 
-    }else{
-	    Cookies.set("cookieUserId", userId, { expires: 7 });
-    }
-    
-    
     Common.ajax("POST", "/login/getLoginInfo.do", $("#loginForm").serializeJSON(), function(result) {
         
         if(result.code == 99){
@@ -72,13 +65,9 @@ function fn_login(){
             $("#userId").focus();
             return false;
          }
-         
-        // 로그인 성공시.
-        $("#loginForm").attr("target", "");
-        $("#loginForm").attr({
-            action : "/common/main.do",
-            method : "POST"
-        }).submit();
+
+        configCookies(userId);
+        goMain();
         
     }, function(jqXHR, textStatus, errorThrown) {
         console.log("fail.");
@@ -93,6 +82,22 @@ function fn_login(){
         console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
         
     });
+}
+
+function configCookies(userId){
+    if($("#saveId").is(':checked')){
+        Cookies.set("cookieUserId", userId, { expires: 7 }); 
+    }else{
+        Cookies.remove("cookieUserId");
+    }
+}
+
+function goMain(){
+    $("#loginForm").attr("target", "");
+    $("#loginForm").attr({
+        action : "/common/main.do",
+        method : "POST"
+    }).submit();
 }
    
 </script>
