@@ -76,7 +76,7 @@
 		              AND s28m.WH_LOC_CODE = #{loccd}
 		         </if>
 		         <if test="locdesc != null and locdesc !=''">
-                      AND s28m.WH_LOC_DESC lick '%'||#{locdesc}||'%'
+                      AND s28m.WH_LOC_DESC like '%'||#{locdesc}||'%'
                  </if>
 		         <if test="branch != null and branch != ''">
                     AND s28m.WH_LOC_BRNCH_ID  = #{branch}
