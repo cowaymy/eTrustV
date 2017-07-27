@@ -5,9 +5,8 @@ import java.util.Map;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-public interface OrganizationEventService {
+public interface MemberEventService {
 
-	 
 	/**
 	 * 글 목록을 조회한다.
 	 * 
@@ -16,8 +15,13 @@ public interface OrganizationEventService {
 	 * @return 글 목록
 	 * @exception Exception
 	 */
+	List<EgovMap> reqPersonComboList();
+
+	List<EgovMap> reqStatusComboList();
+
 	List<EgovMap> selectOrganizationEventList(Map<String, Object> params);
+
+	EgovMap getMemberEventDetailPop(Map<String, Object> params);
 	
-	
-	
+
 }
