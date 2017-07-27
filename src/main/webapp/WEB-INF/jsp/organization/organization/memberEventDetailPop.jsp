@@ -1,0 +1,167 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
+<title>eTrust system</title>
+<link rel="stylesheet" type="text/css" href="../css/master.css" />
+<link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
+<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="../js/multiple-select.js"></script>
+<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
+<script type="text/javascript" src="../js/common_pub.js"></script>
+
+<script type="text/javaScript" language="javascript">
+
+	function fn_close(){
+	    window.close();
+	}
+
+</script>
+
+</head>
+<body>
+
+<div id="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Member Promote/Demote Confirmation</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<section class="search_table"><!-- search_table start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Event Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Request No</th>
+    <td>
+    <span><c:out value="${promoInfo.reqstNo}"/></span>
+    </td>
+    <th scope="row">Request Status</th>
+    <td>
+    <span><c:out value="${promoInfo.name1}"/></span>
+    </td>
+    <th scope="row">Create At</th>
+    <td>
+    <span><c:out value="${promoInfo.c1}"/></span>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Type</th>
+    <td colspan="3"><span><c:out value="${promoInfo.codename1}"/></span></td>
+    <th scope="row">Create By</th>
+    <td><span><c:out value="${promoInfo.c6}"/></span></td>
+</tr>
+<tr>
+    <th scope="row">Level</th>
+    <td colspan="3"><span> ( ${promoInfo.memLvlFrom}    -  ${promoInfo.memOrgDesc}) To ( ${promoInfo.memLvlTo}    - ${promoInfo.memorgdescription1} ) </span></td>
+    <th scope="row">Update At</th>
+    <td><c:out value="${promoInfo.c5}"/></td>
+</tr>
+<tr>
+    <th scope="row">Superior</th>
+    <td colspan="3"><span> ( ${promoInfo.parentDeptCodeFrom}    - ${promoInfo.c3} ) To ( ${ promoInfo.parentDeptCodeTo}   - ${promoInfo.c4} )</span></td>
+    <th scope="row">Update By</th>
+    <td><span><c:out value="${promoInfo.c6}"/></span></td>
+</tr>
+<tr>
+    <th scope="row">Member Type</th>
+    <td><span><c:out value="${promoInfo.codeName}"/></span></td>
+    <th scope="row">Member Code</th>
+    <td><span><c:out value="${promoInfo.memCode}"/></span></td>
+    <th scope="row">Member NRIC</th>
+    <td><span><c:out value="${promoInfo.nric}"/></span></td>
+</tr>
+<tr>
+    <th scope="row">Member Name</th>
+    <td colspan="3"><span><c:out value="${promoInfo.name}"/></span></td>
+    <th scope="row">Team Code</th>
+    <%-- <td><span><c:out value="${promoInfo.deptCodeFrom} +"To" + ${promoInfo.deptCodeTo}"/></span></td> --%>
+</tr>
+<tr>
+    <th scope="row">Branch(To)</th>
+    <td colspan="5"> <%-- <span><c:out value="${promoInfo.nric} + "-" + ${promoInfo.nric} "/></span> --%></td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="5"><span><c:out value="${promoInfo.rem}"/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+
+<section class="search_table"><!-- search_table start -->
+
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Request Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Confirm Status</th>
+    <td>
+    <select class="w100p">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Current Downline</h2>
+</aside><!-- title_line end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</section><!-- search_table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+</ul>
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
+</body>
+</html>
