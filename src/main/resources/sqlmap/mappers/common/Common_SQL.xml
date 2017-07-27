@@ -18,7 +18,14 @@
 		FROM SYS0013M
 		WHERE DISAB = 0
 		AND CODE_MASTER_ID = #{groupCode}
-		ORDER BY CODE_NAME
+		<choose>
+		  <when test="orderValue !=null and orderValue !=''">
+		      ORDER BY #{orderValue}
+		  </when>
+		  <otherwise>
+		      ORDER BY CODE_NAME
+		  </otherwise>
+		</choose>
 	</select>
 	
 	<select id="selectI18NList" parameterType="Map" resultType="egovMap">
