@@ -412,7 +412,7 @@ var Common = {
 	 * @param message
 	 */
 	alert : function(message, callback) {
-		var msgHtml = '<div id="popup_wrap" alert="Y" class="msg_box">'
+		var msgHtml = '<div id="popup_wrap" alert="Y" class="popup_wrap msg_box">'
 				+ '	<header class="pop_header">' 
 				+ '<h1>Message</h1>'
 				+ '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
@@ -451,7 +451,7 @@ var Common = {
 	 */
 	confirm : function(message, okCallback, cancelCallback) {
 
-		var msgHtml = '<div id="_popup_wrap_confirm"  confirm="Y" class="msg_box">'
+		var msgHtml = '<div id="_popup_wrap_confirm"  confirm="Y" class="popup_wrap msg_box">'
 				+ '	<header class="pop_header">' 
 				+ '<h1>Message</h1>'
 				+ '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
