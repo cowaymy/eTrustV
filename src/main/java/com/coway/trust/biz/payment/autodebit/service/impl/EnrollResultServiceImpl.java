@@ -198,7 +198,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
                     {
                         SVMContractNo += ContractNOrderNo.charAt(i);
                     }
-        			if (ContractNOrderNo.length() < 7 && diffDays > 0){
+        			if (ContractNOrderNo.length() < 7 && diffDays >= 0){
         				 for (int i = 7; i < 14; i++)
                          {
                              OrderNo += ContractNOrderNo.charAt(i);
@@ -211,7 +211,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
                         }
                     }
     			}else{
-    				 if (ContractNOrderNo.length() < 7 && diffDays > 0)
+    				 if (ContractNOrderNo.length() < 7 && diffDays >= 0)
                      {
                          OrderNo = "0" + ContractNOrderNo;
                      } else
