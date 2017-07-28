@@ -284,6 +284,8 @@ var columnLayout2 = [
         $("#issueBankMsg").text("");
         $("#rdpCreateDateFr2").val("");
         $("#rdpCreateDateTo2").val("");
+        $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
+        $("#rdpCreateDateTo2").attr("disabled",false).attr("readonly",false);
     }
     
     function fn_goEnrollmentResult() {
@@ -444,7 +446,6 @@ var columnLayout2 = [
 <header class="pop_header"><!-- pop_header start -->
 <h1>NEW ENROLLMENT</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue"><a href="javascript:fn_saveEnroll();">Enoll</a></p></li>
     <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
@@ -460,9 +461,9 @@ var columnLayout2 = [
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Issue Bank</th>
-                        <td>
-                            <select id="cmbIssueBank2" name="cmbIssueBank2" class="w100p" onchange="fn_IssueBank();">
+                        <th scope="row">Issue Bank<span class="must">*</span></th>
+                        <td colspan="3">
+                            <select id="cmbIssueBank2" name="cmbIssueBank2" onchange="fn_IssueBank();">
                                <option value="" selected="selected">Issue Bank</option>
                                <option value="2">Alliance Bank</option>
                                <!-- <option value="3">CIMB Bank</option>
@@ -473,25 +474,24 @@ var columnLayout2 = [
                                <option value="9">BSN Bank</option>
                             </select>    
                         </td>
-                        <th scope="row">Debit Date</th>
-                        <td>
-                            <div class="date_set w105p"><!-- date_set start -->
-                            <p><input id="rdpCreateDateFr2" name="rdpCreateDateFr2" type="text" title="rdpCreateDateFr" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
-                            <span>~</span>
-                            <p><input id="rdpCreateDateTo2" name="rdpCreateDateTo2"  type="text" title="rdpCreateDateTo" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
-                            </div><!-- date_set end --> 
+                     </tr>
+                     <tr>
+                        <th scope="row">Debit Date<span class="must">*</span></th>
+                        <td colspan="3">
+	                        <div class="date_set w105p"><!-- date_set start -->   
+	                            <p><input id="rdpCreateDateFr2" name="rdpCreateDateFr2" type="text" title="rdpCreateDateFr2" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
+	                            <span>~</span>
+	                            <p><input id="rdpCreateDateTo2" name="rdpCreateDateTo2"  type="text" title="rdpCreateDateTo2" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+	                         </div>   
+	                         <p><span id="issueBankMsg"></span><p>
                         </td>
-                        <td id="issueBankMsg" style="width:18%"></td>
-                    </tr>
+                       
+                      </tr>
                 </tbody>
     </table>
-    <section class="search_result"><!-- search_result start -->
-        
-    <article class="grid_wrap"  id="grid_wrap"><!-- grid_wrap start -->
-    </article><!-- grid_wrap end -->
-    
-    </section><!-- search_result end -->
-
+    <ul class="center_btns">
+        <li><p class="btn_grid"><a href="javascript:fn_saveEnroll();">Enroll</a></p></li>
+    </ul>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
