@@ -6,6 +6,12 @@
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
 	
+	// popup 크기
+	var option = {
+            width : "1200px",   // 창 가로 크기
+            height : "800px"    // 창 세로 크기
+    };
+	
 	$(document).ready(function(){
 	    
         // AUIGrid 그리드를 생성합니다.
@@ -104,7 +110,7 @@
             wrapSelectionMove : true,
             
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false,
+            showRowNumColumn : true,
             
             groupingMessage : "Here groupping"
         };
@@ -122,7 +128,7 @@
     }
     
     // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-    doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'M' , 'f_multiCombo');             // Customer Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'M' , 'f_multiCombo');            // Customer Type Combo Box
     doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','nation', 'A', '');        // Nationality Combo Box
     doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
     
@@ -143,6 +149,10 @@
             });
            
         });
+    }
+    
+    function fn_insert(){
+        Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", option);
     }
 	
  // Popup Option     
@@ -177,6 +187,7 @@
 <h2>Customer list</h2>
 
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span>NEW</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -276,8 +287,8 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">NEW</a></p></li>
-	<!-- <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<!--<li><p class="btn_grid"><a href="#">NEW</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
 	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
 	<li><p class="btn_grid"><a href="#">INS</a></p></li>
 	<li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
