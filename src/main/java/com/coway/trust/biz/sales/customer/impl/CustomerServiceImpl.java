@@ -173,9 +173,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.07.24
 	 */
 	@Override
-	public EgovMap selectCustomerDetailAddr(Map<String, Object> params) throws Exception {
+	public EgovMap selectCustomerAddrDetailViewPop(Map<String, Object> params) throws Exception {
 		
-		return customerMapper.selectCustomerDetailAddr(params);
+		return customerMapper.selectCustomerAddrDetailViewPop(params);
 	}
 	
 	
@@ -251,9 +251,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.07.25
 	 */
 	@Override
-	public EgovMap selectCustomerDetailContact(Map<String, Object> params) throws Exception {
+	public EgovMap selectCustomerContactDetailViewPop(Map<String, Object> params) throws Exception {
 		
-		return customerMapper.selectCustomerDetailContact(params);
+		return customerMapper.selectCustomerContactDetailViewPop(params);
 	}
 	
 	
@@ -265,9 +265,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.07.25
 	 */
 	@Override
-	public EgovMap selectCustomerDetailBank(Map<String, Object> params) throws Exception {
+	public EgovMap selectCustomerBankDetailViewPop(Map<String, Object> params) throws Exception {
 		
-		return customerMapper.selectCustomerDetailBank(params);
+		return customerMapper.selectCustomerBankDetailViewPop(params);
 	}
 	
 	
@@ -279,9 +279,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.07.25
 	 */
 	@Override
-	public EgovMap selectCustomerDetailCreditCard(Map<String, Object> params) throws Exception {
+	public EgovMap selectCustomerCreditCardDetailViewPop(Map<String, Object> params) throws Exception {
 		
-		return customerMapper.selectCustomerDetailCreditCard(params);
+		return customerMapper.selectCustomerCreditCardDetailViewPop(params);
 	}
 	
 }
