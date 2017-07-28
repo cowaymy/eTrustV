@@ -45,7 +45,7 @@ public class AppConstants {
 	 * AUIGrid
 	 */
 	public static final String AUIGRID_ADD = "add";
-	public static final String AUIGrid_UPDATE = "update";
+	public static final String AUIGRID_UPDATE = "update";
 	public static final String AUIGRID_REMOVE = "remove";
 	public static final String AUIGRID_ALL = "all";
 	public static final String AUIGRID_FORM = "form";
