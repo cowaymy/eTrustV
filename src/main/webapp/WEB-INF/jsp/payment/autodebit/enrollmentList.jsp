@@ -96,7 +96,7 @@ var columnLayout2 = [
     
 // ajax list 조회.
     function searchList()
-    {
+    {      selectedGridValue = undefined;//그리드 value값 초기화
     	   Common.ajax("GET","/payment/selectEnrollmentList.do",$("#searchForm").serialize(), function(result){
     		AUIGrid.setGridData(myGridID, result);
     	});
@@ -119,24 +119,15 @@ var columnLayout2 = [
         }
 
         Common.ajax("GET", "/payment/selectViewEnrollment.do?enrollId="+enrollId, $("#searchForm").serialize(), function(result) {
-            /* AUIGrid.setGridData(myGridID, result); */
-            console.log(result);
-           
-            $('#enrlId').text(result.enrollInfo.enrlId);
+
+        	$('#enrlId').text(result.enrollInfo.enrlId);
             $('#crtDt').text(result.enrollInfo.crtDt);
             $('#issueBank').text(result.enrollInfo.code+"-"+result.enrollInfo.name);
             $('#c1').text(result.enrollInfo.c1);
             $('#debtDtFrom').text(result.enrollInfo.debtDtFrom);
             $('#debtDtTo').text(result.enrollInfo.debtDtTo);
             
-            
-            
             values = result.resultList ; //java에서 정의한 ArrayList명을 적어준다.
-            
-            $.each(values, function( index, value ) {
-               console.log( index + " : " + value.accNo ); //Book.java 의 변수명을 써주면 된다.
-            });
-
 
         },function(jqXHR, textStatus, errorThrown) {
             Common.alert("실패하였습니다.");
