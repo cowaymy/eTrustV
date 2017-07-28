@@ -140,14 +140,14 @@
         });
 		
 	    AUIGrid.bind(myGridID, "updateRow", function(event) {
-	        dialog.dialog( "close" ); // 다이얼로그 닫기
+	    	$( "#editWindow" ).hide();
 	        
 	        console.log(GridCommon.getEditData(myGridID));
 	        
 	        Common.ajax("POST", "/logistics/organization/locationUpdate.do", GridCommon.getEditData(myGridID), function(result) {
 	        	Common.alert(result.message);
 	            AUIGrid.resetUpdatedItems(myGridID, "all");
-	            
+	            $("#search").click();
 	        },  function(jqXHR, textStatus, errorThrown) {
 	            try {
 	            } catch (e) {
@@ -156,25 +156,10 @@
 	            Common.alert("Fail : " + jqXHR.responseJSON.message);
 	        });
 	        
-	        $("#search").click();
+	       // $("#search").click();
 	    });
-	    
-// 		dialog = $( "#editWindow" ).dialog({
-// 		      autoOpen: false,
-// 		      height: 540,
-// 		      width: 800,
-// 		      modal: true,
-// 		      headerHeight:40,
-// 		      position : { my: "center", at: "center", of: $("#grid_wrap") },
-// 		      buttons: {
-// 		        "SAVE": updateGridRow,
-// 		        "CANCEL": function(event) {
-// 		          dialog.dialog( "close" );
-// 		        }
-// 		      }
-// 		    });
 		
-// 		$("#detailView").hide();
+ 		$("#detailView").hide();
 
 	    /* 팝업 드래그 start */
         $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
@@ -216,50 +201,11 @@
          });
         
     
-        $("#insert").click(function(){
+         $("#insert").click(function(){
+        	 fn_insertWare();
         	$("#detailView").hide();
-        
-            fn_insertWare();
-            
-            insDialog = $( "#registWindow" ).dialog({
-            	
-               /* autoOpen: false, */
-                height: 540,
-                width: 800,
-                  // modal: true,
-                headerHeight:40,
-                //position : { my: "center", at: "center", of: $("#grid_wrap") },
-                 buttons: {
-                  "저장": function(event){
-                	  if(inValidation()){               		  
-                		//$('#instockgrade').attr("disabled",false)
-                          Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
-                           Common.alert(result.message);
-                           insDialog.dialog( "close" );
-                           $('#insForm')[0].reset();
-                           /* $("#search").click(); */
-                           }, function(jqXHR, textStatus, errorThrown) {
-                               Common.alert("실패하였습니다.");
-                               console.log("실패하였습니다.");
-                               console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-                               
-                               alert(jqXHR.responseJSON.message);
-                               console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-                             
-                               console.log("status : " + jqXHR.status);
-                               console.log("code : " + jqXHR.responseJSON.code);
-                               console.log("message : " + jqXHR.responseJSON.message);
-                               console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-                               
-                           });               		  
-                	  }
-                  },
-                  "취소": function(event) {
-                  insDialog.dialog( "close" );
-                  }
-                } 
-        });      
-    });    
+        	$("#registWindow").show();
+	     });     
         
         $("#delete").click(function(){
             $("#detailView").hide();
@@ -306,7 +252,6 @@
         }
     	
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locBranch'),'mwarebranch', 'S' , ''); 
-        //dialog.dialog( "open" );
         $( "#editWindow" ).show();
     }
     
@@ -322,7 +267,6 @@
         doDefCombo('', '' ,'instate', 'S', ''); 
         doDefCombo('', '' ,'inarea', 'S', '');
         doDefCombo('', '' ,'inpostcd', 'S', '');    
-         
     }
   
   function fn_deleteWare(rowid){      
@@ -396,7 +340,7 @@
   }
    
 
-    function updateGridRow(){
+    function fn_updateGridRow(){
     	//AUIGrid.setSelectionByIndex(myGridID, selcell , 3);
     	var item = {};
     	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -523,10 +467,41 @@
                 width: '80%'
             });
         });*/
-    }
-  
-    
-    
+    }        
+     function fn_updateCancel(){
+    	 $( "#editWindow" ).hide();
+     }
+     
+     function fn_insertGrid(){
+    	 
+    	 if(inValidation()){                        
+             //$('#instockgrade').attr("disabled",false)
+               Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
+                Common.alert(result.message);
+                $( "#registWindow" ).hide();
+                $('#insForm')[0].reset();
+                /* $("#search").click(); */
+                }, function(jqXHR, textStatus, errorThrown) {
+                    Common.alert("실패하였습니다.");
+                    console.log("실패하였습니다.");
+                    console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+                    
+                    alert(jqXHR.responseJSON.message);
+                    console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+                  
+                    console.log("status : " + jqXHR.status);
+                    console.log("code : " + jqXHR.responseJSON.code);
+                    console.log("message : " + jqXHR.responseJSON.message);
+                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                    
+                });                        
+           }
+    	 
+     }
+     function fn_insertCancel(){
+         $( "#registWindow" ).hide();
+     }
+     
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -763,8 +738,8 @@
 </tbody>
 </table><!-- table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_updateGridRow();">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_updateCancel();">CANCEL</a></p></li>
 </ul>
 </form>
 
@@ -840,8 +815,8 @@
 </table>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertGrid();">SAVE</a></p></li> 
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertCancel();">CANCEL</a></p></li>
 </ul>
 </form>
 
