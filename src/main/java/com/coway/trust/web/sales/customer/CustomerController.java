@@ -252,6 +252,28 @@ public class CustomerController {
 	
 	/**
 	 * 
+	 * Customer Contact Detail View 연락처 리스트의 해당 상세화면
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.25
+	 * */
+	@RequestMapping(value = "/selectCustomerContactDetailViewPop.do")
+	public String selectCustomerContactDetailViewPop(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model)throws Exception{
+		
+		EgovMap detailcontact = null;
+		
+		logger.info("##### selectCustomerDetailContact START #####");
+		detailcontact = customerService.selectCustomerContactDetailViewPop(params);
+		logger.info("확인 : " + detailcontact.toString());
+		model.addAttribute("detailcontact", detailcontact);
+		
+		return "sales/customer/customerContactPop";
+	}
+	
+	
+	/**
+	 * 
 	 * Customer Bank Detail View 은행 리스트의 해당 상세화면
 	 * @param params
 	 * @param model
