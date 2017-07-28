@@ -237,7 +237,8 @@ table.type2.gray tbody td{padding:2px 10px;}
 .ui-datepicker-prev{left:10px;}
 .ui-datepicker-next{right:10px; background-position:100% 0;}
 .ui-datepicker-title{font-weight:bold; line-height:15px; color:#5a7f96;}
-.ui-datepicker-month{margin-right:5px;}
+.ui-datepicker-month{margin-right:5px; height:24px; line-height:20px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
+.ui-datepicker-year{height:24px; line-height:20px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 .ui-datepicker-calendar{width:200px; padding:10px; border:1px solid #ccc; border-top:0 none; background:#fff;}
 .ui-datepicker-calendar th,
 .ui-datepicker-calendar td{width:25px; height:20px; line-height:20px; text-align:center;}
@@ -276,6 +277,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .pop_body > *:first-child{margin-top:0!important;}
 .pop_body form *:first-child{margin-top:0!important;}
 .pop_body h2{padding:10px 0 0 0; font-size:14px; color:#25527c;}
+.pop_body .title_line:first-child h2{padding-top:0;}
 .pop_body h3{margin:10px 0 0 0; height:25px; line-height:25px; font-size:12px; color:#333;}
 #popup_wrap.msg_box,
 .popup_wrap.msg_box{width:400px; height:200px; top:50%; margin:-100px 0 0 -200px; border:1px solid #0c3a65}
