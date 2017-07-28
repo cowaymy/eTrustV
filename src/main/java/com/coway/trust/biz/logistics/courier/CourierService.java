@@ -18,4 +18,8 @@ public interface CourierService {
 
 	List<EgovMap> selectCourierDetail(Map<String, Object> params);
 
+	void motifyCourier(Map<String, Object> params);
+
+	void insertCourier(Map<String, Object> params);
+
 }

@@ -86,54 +86,54 @@
                                          ON F2.CURIER_AREA_ID = T8.AREA_ID
                                           WHERE 1=1
                                              <if test="srchCourierCd !=null and srchCourierCd !=''">      
-                                             AND F2.CURIER_CODE LIKE  '%'||#{}||'%'
+                                             AND F2.CURIER_CODE LIKE  '%'||#{srchCourierCd}||'%'
                                              </if>
                                              <if test="srchCourierNm !=null and srchCourierNm !=''">
-                                             AND F2.CURIER_NAME LIKE  '%'||#{}||'%'
+                                             AND F2.CURIER_NAME LIKE  '%'||#{srchCourierNm}||'%'
                                              </if>
                                              <if test="srchRegNo !=null and srchRegNo !=''">
-                                             AND F2.CURIER_REG_NO LIKE  '%'||#{}||'%'
+                                             AND F2.CURIER_REG_NO LIKE  '%'||#{srchRegNo}||'%'
                                              </if>
                                              <if test="srchCntry !=null and srchCntry !=''">
-                                             AND F2.CURIER_CNTY_ID = #{}
+                                             AND F2.CURIER_CNTY_ID = #{srchCntry}
                                              </if>
                                              <if test="srchState !=null and srchState !=''">
-                                             AND F2.CURIER_STATE_ID = #{}
+                                             AND F2.CURIER_STATE_ID = #{srchState}
                                              </if>
                                              <if test="srchArea !=null and srchArea !=''">
-                                             AND F2.CURIER_AREA_ID = #{}
+                                             AND F2.CURIER_AREA_ID = #{srchArea}
                                              </if>
                                              <if test="srchPstCd !=null and srchPstCd !=''">
-                                             AND F2.CURIER_POST_CODE_ID = #{}
+                                             AND F2.CURIER_POST_CODE_ID = #{srchPstCd}
                                              </if>
                                              <if test="srchcontactNo !=null and srchcontactNo !=''">
-                                             AND F2.CURIER_CNTC_NO1 LIKE  '%'||#{}||'%'
+                                             AND F2.CURIER_CNTC_NO1 LIKE  '%'||#{srchcontactNo}||'%'
                                              </if>
                                              ) G1
                                      WHERE 1=1
                                      <if test="srchCourierCd !=null and srchCourierCd !=''">      
-                                     AND F1.CURIER_CODE LIKE  '%'||#{}||'%'
+                                     AND F1.CURIER_CODE LIKE  '%'||#{srchCourierCd}||'%'
                                      </if>
                                      <if test="srchCourierNm !=null and srchCourierNm !=''">
-                                     AND F1.CURIER_NAME LIKE  '%'||#{}||'%'
+                                     AND F1.CURIER_NAME LIKE  '%'||#{srchCourierNm}||'%'
                                      </if>
                                      <if test="srchRegNo !=null and srchRegNo !=''">
-                                     AND F1.CURIER_REG_NO LIKE  '%'||#{}||'%'
+                                     AND F1.CURIER_REG_NO LIKE  '%'||#{srchRegNo}||'%'
                                      </if>
                                      <if test="srchCntry !=null and srchCntry !=''">
-                                     AND F1.CURIER_CNTY_ID = #{}
+                                     AND F1.CURIER_CNTY_ID = #{srchCntry}
                                      </if>
                                      <if test="srchState !=null and srchState !=''">
-                                     AND F1.CURIER_STATE_ID = #{}
+                                     AND F1.CURIER_STATE_ID = #{srchState}
                                      </if>
                                      <if test="srchArea !=null and srchArea !=''">
-                                     AND F1.CURIER_AREA_ID = #{}
+                                     AND F1.CURIER_AREA_ID = #{srchArea}
                                      </if>
                                      <if test="srchPstCd !=null and srchPstCd !=''">
-                                     AND F1.CURIER_POST_CODE_ID = #{}
+                                     AND F1.CURIER_POST_CODE_ID = #{srchPstCd}
                                      </if>
                                      <if test="srchcontactNo !=null and srchcontactNo !=''">
-                                     AND F1.CURIER_CNTC_NO1 LIKE  '%'||#{}||'%'
+                                     AND F1.CURIER_CNTC_NO1 LIKE  '%'||#{srchcontactNo}||'%'
                                      </if>
                              ) P1
                         ) P1
@@ -169,5 +169,76 @@
        FROM  SYS0016M 
                  WHERE CURIER_ID = #{courierid}
     </select>
-
+    
+    <update id="motifyCourier" parameterType="Map">
+	     UPDATE SYS0016M
+					SET      
+						       CURIER_NAME               =#{curname},
+						       CURIER_REG_NO            =#{curregno},
+						       CURIER_ADD1               =#{curadd1},
+						       CURIER_ADD2               =#{curadd2},
+						       CURIER_ADD3               =#{curadd3},
+						       CURIER_CNTY_ID          =#{curcntyid},
+						       CURIER_STATE_ID         =#{curstateid},
+						       CURIER_AREA_ID          =#{curareaid},
+						       CURIER_POST_CODE_ID =#{curpostcod},
+						       CURIER_CNTC_NO1       =#{curcntcno1},
+						       CURIER_CNTC_NO2       =#{curcntcno2},
+						       CURIER_FAX_NO           =#{curfaxno},
+						       CURIER_EMAIL             =#{curemail},
+						       CURIER_UPD_DT           =SYSDATE,
+						       CURIER_UPD_USER_ID   =#{upd_user}
+					WHERE  CURIER_CODE              =#{curcode}
+    </update>
+    <insert id="insertCourier" parameterType="Map">
+             INSERT INTO SYS0016M
+               (
+               CURIER_ID,                                
+                 CURIER_CODE,                                        
+                 CURIER_NAME,                                        
+                 CURIER_REG_NO,                                      
+                 CURIER_STUS_ID,                                    
+                 CURIER_ADD1,                                    
+                 CURIER_ADD2,                                      
+                 CURIER_ADD3,                                     
+                 CURIER_CNTY_ID,                                    
+                 CURIER_STATE_ID,                                     
+                 CURIER_AREA_ID,                                      
+                 CURIER_POST_CODE_ID,                                  
+                 CURIER_CNTC_NO1,                                       
+                 CURIER_CNTC_NO2,                                       
+                 CURIER_FAX_NO,                          
+                 CURIER_EMAIL,                       
+                 CURIER_CRT_DT,                                   
+                 CURIER_CRT_USER_ID,                     
+                 CURIER_UPD_DT,                          
+                 CURIER_UPD_USER_ID                      
+                 )                                        
+      VALUES                                        
+               (
+                 #{curid},     
+                 #{curcode},   
+                 #{curname},   
+                 #{curregno},  
+                 #{curstusid}, 
+                 #{curadd1},   
+                 #{curadd2},   
+                 #{curadd3},   
+                 #{curcntyid}, 
+                 #{curstateid},
+                 #{curareaid}, 
+                 #{curpostcod},
+                 #{curcntcno1},
+                 #{curcntcno2},
+                 #{curfaxno},  
+                  #{curemail}, 
+                 SYSDATE,      
+                 #{upd_user},          
+                 SYSDATE,      
+                 #{upd_user}           
+                 )
+    </insert>
+    <select id="selectCourierId" resultType="Integer">
+    SELECT NVL(MAX(CURIER_ID),0)+1 FROM SYS0016M
+    </select>
 </mapper>

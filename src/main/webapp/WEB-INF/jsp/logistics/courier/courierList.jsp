@@ -123,6 +123,13 @@
         $("#cancelPopbtn").click(function(){
         	$("#editWindow").hide();
         });
+        $("#updatePopbtn").click(function(){
+        	//$("#editWindow").hide();
+        	   div="U";
+        	   saveAjax(div);
+        	   $("#editWindow").hide();
+        	  
+        });
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
             v = $(this).val();
@@ -174,12 +181,29 @@
         });
     }
     
+   function saveAjax(div) {
+	    var url;
+	    var key;
+	    var val= $("#detailForm").serializeJSON();
+	    selectedItem = AUIGrid.getSelectedIndex(myGridID);
+	   if(div=="U"){
+		   url="/logistics/courier/motifyCourier.do";
+	   }else if(div=="N"){
+		   url="/logistics/courier/insertCourier.do";
+	   }
+	   Common.ajax("POST",url,val,function(result){
+		   Common.alert(result.msg);
+		   $("#search").trigger("click");
+		   //$("#view").trigger("click");
+		   $("#view").click();
+	   });
+   } 
+   
     
     function fn_openDetail(div,idxId){
     	var id =AUIGrid.getCellValue(myGridID ,idxId, 'courierid');
     	Common.ajaxSync("GET", "/logistics/courier/selectCourierDetail",{"courierid":id} ,
                 function(data){
-                console.log(data);
                 var setVal=data.result;
 		    	if(div=="V"){
 		    		fn_setValuePop(setVal);

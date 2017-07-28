@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.logistics.courier.CourierService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -80,5 +82,63 @@ public class CourierController {
 		Map<String, Object> rmap = new HashMap<>();
 		rmap.put("result", result);
 		return ResponseEntity.ok(rmap);
+	}
+
+	@RequestMapping(value = "/motifyCourier.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> motifyCourier(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		// loginId
+		params.put("upd_user", loginId);
+
+		Map<String, Object> map = new HashMap();
+
+		try {
+			courierService.motifyCourier(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/insertCourier.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertCourier(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		// loginId
+		params.put("upd_user", loginId);
+
+		Map<String, Object> map = new HashMap();
+
+		try {
+			courierService.insertCourier(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
 	}
 }

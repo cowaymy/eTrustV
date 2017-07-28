@@ -23,14 +23,27 @@ public class CourierServiceImpl implements CourierService {
 
 	@Override
 	public List<EgovMap> selectCourierList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return courierMapper.selectCourierList(params);
 	}
 
 	@Override
 	public List<EgovMap> selectCourierDetail(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return courierMapper.selectCourierDetail(params);
+	}
+
+	@Override
+	public void motifyCourier(Map<String, Object> params) {
+		courierMapper.motifyCourier(params);
+
+	}
+
+	@Override
+	public void insertCourier(Map<String, Object> params) {
+		int curid = courierMapper.selectCourierId();
+		params.put("curid", curid);
+
+		courierMapper.insertCourier(params);
+
 	}
 
 }
