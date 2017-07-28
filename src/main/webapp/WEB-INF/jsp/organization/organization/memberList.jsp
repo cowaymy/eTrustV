@@ -37,8 +37,8 @@ $(document).ready(function() {
     
  // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-//        alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId"));
-        Common.popupWin("searchForm", "/organization/selectMemberListDetailPop.do?isPop=true&pstSalesOrdId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId"), option);
+        alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+        Common.popupWin("searchForm", "/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"))/* &MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"), option */;
     });
 });
 
@@ -80,6 +80,11 @@ function createAUIGrid() {
 		    headerText : "Last Update",
 		    editable : false,
 		    width : 180
+		    
+		}, {
+            dataField : "membertype",
+            headerText : "Member Type",
+            width : 0
 		}];
 		 // 그리드 속성 설정
         var gridPros = {
