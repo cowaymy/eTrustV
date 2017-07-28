@@ -96,7 +96,6 @@ public class MemberListController {
 		logger.debug("endDate : {}", params.get("endDate"));
 		
 		List<EgovMap> memberList = memberListService.selectMemberList(params);
-		logger.debug("memberList : {}", memberList);
 		return ResponseEntity.ok(memberList);
 	}
 	
@@ -111,7 +110,21 @@ public class MemberListController {
 	@RequestMapping(value = "/selectMemberListDetailPop.do")
 	public String selectMemberListDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		
-		logger.debug("MemberID : {}", params.get("MemberID"));
+		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
+		
+		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
+		logger.debug("PAExpired : {}", PAExpired);
+		logger.debug("selectMemberListView : {}", selectMemberListView);
+		logger.debug("issuedBank : {}", selectIssuedBank);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		model.addAttribute("PAExpired", PAExpired);
+		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
+		model.addAttribute("memberView", selectMemberListView);
+		model.addAttribute("issuedBank", selectIssuedBank);
+		
 		// 호출될 화면
 		return "organization/organization/memberListDetailPop";
 	}
@@ -129,5 +142,76 @@ public class MemberListController {
 		
 		// 호출될 화면
 		return "organization/organization/memberListNewPop";
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectDocSubmission", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDocSubmission(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		logger.debug("MemberType : {} "+params.get("MemberType"));
+		
+		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
+		List<EgovMap> selectDocSubmission;
+		
+		if("2".equals(params.get("MemberType").toString().trim())){//type가 Coway Lady면 쿼리가 살짝다름.....
+			selectDocSubmission = memberListService.selectDocSubmission2(params);
+		}else{
+			selectDocSubmission = memberListService.selectDocSubmission(params);
+		}
+		
+		logger.debug("selectDocSubmission : {}", selectDocSubmission);
+		return ResponseEntity.ok(selectDocSubmission);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectPromote", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPromote(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> selectPromote = memberListService.selectPromote(params);
+		logger.debug("selectPromote : {}", selectPromote);
+		return ResponseEntity.ok(selectPromote);
+	}
+	
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectPaymentHistory", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPaymentHistory(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> selectPaymentHistory = memberListService.selectPaymentHistory(params);
+		logger.debug("selectPaymentHistory : {}", selectPaymentHistory);
+		return ResponseEntity.ok(selectPaymentHistory);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectRenewalHistory", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRenewalHistory(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> selectRenewalHistory = memberListService.selectRenewalHistory(params);
+		logger.debug("selectRenewalHistory : {}", selectRenewalHistory);
+		return ResponseEntity.ok(selectRenewalHistory);
 	}
 }
