@@ -2,6 +2,145 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
 
+
+  <insert id="insertStatusCategoryCode" parameterType="Map">
+					MERGE INTO SYS0037M       
+					USING DUAL  
+					   ON (STUS_CTGRY_ID = #{stusCtgryId} AND STUS_CODE_ID= #{stusCodeId} )            
+					 WHEN MATCHED THEN     
+					      UPDATE  
+					         SET DISAB  = 0
+					       WHERE STUS_CTGRY_ID = #{stusCtgryId}
+					         AND STUS_CODE_ID = #{stusCodeId}
+					
+					 WHEN NOT MATCHED THEN                      
+					      INSERT  
+					      (
+					        STUS_CTGRY_ID
+					       ,STUS_CODE_ID
+					       ,SEQ_NO
+					       ,DISAB 
+					      )
+					     VALUES  
+					     (  
+					        #{stusCtgryId}
+					      , #{stusCodeId}
+					      , (SELECT DECODE(COUNT(SEQ_NO),0,1,(MAX(SEQ_NO)+1)) FROM ( SELECT SEQ_NO FROM SYS0037M GROUP BY STUS_CTGRY_ID,SEQ_NO HAVING STUS_CTGRY_ID = #{stusCtgryId} ) )                          
+					      , 0                                                         
+					     )
+  </insert> 
+  
+    <update id="updateCategoryCodeYN" parameterType="Map">
+        UPDATE  SYS0037M
+          SET DISAB  = DECODE(#{codeDisab},'Y',1,0)  
+        WHERE STUS_CTGRY_ID = #{stusCtgryId}
+          AND STUS_CODE_ID = #{stusCodeId}
+  </update>   
+
+  <insert id="insertStatusCode" parameterType="Map">
+         INSERT INTO SYS0038M
+            (
+              STUS_CODE_ID
+             ,NAME
+             ,CODE  
+           )
+        VALUES  
+           ( 
+              ( SELECT MAX(STUS_CODE_ID) +1 FROM SYS0038M  ) 
+            , #{codeName}                           
+            , #{code}                                                          
+          )
+  </insert>  
+
+  <update id="updateStatusCode" parameterType="Map">
+        UPDATE  SYS0038M
+          SET NAME  = NVL(#{codeName},NAME) 
+            , CODE  = #{code}   
+        WHERE STUS_CODE_ID = #{stusCodeId}
+  </update>  
+
+  <insert id="insertStatusCategory" parameterType="Map">
+         INSERT INTO SYS0036M
+            (
+              STUS_CTGRY_ID
+            , STUS_CTGRY_NAME
+            , STUS_CTGRY_DESC
+            , CRT_DT
+            , CRT_USER_ID
+            , UPD_DT
+            , UPD_USER_ID
+           )
+        VALUES  
+           ( 
+              (SELECT MAX(NVL(STUS_CTGRY_ID,0)) + 1 FROM SYS0036M ) 
+            , #{stusCtgryName}                   
+            , NVL(#{stusCtgryDesc},DBMS_LOB.SUBSTR(#{stusCtgryName} ,4000) )
+            , SYSDATE
+            , #{crtUserId}                           
+            , SYSDATE                                
+            , #{updUserId}                                                          
+          )
+  </insert>  
+
+  <update id="updateStatusCategory" parameterType="Map">
+        UPDATE  SYS0036M
+          SET STUS_CTGRY_NAME  = NVL(#{stusCtgryName},STUS_CTGRY_NAME) 
+            , STUS_CTGRY_DESC  = NVL(#{stusCtgryDesc},DBMS_LOB.SUBSTR(STUS_CTGRY_NAME,4000) )    
+            , CRT_USER_ID      = #{crtUserId} 
+            , UPD_USER_ID      = #{updUserId} 
+            , UPD_DT           = SYSDATE
+        WHERE STUS_CTGRY_ID = #{stusCtgryId}
+  </update>  
+
+  <select id="selectStatusCategoryList" parameterType="Map" resultType="egovMap">
+    SELECT  A.STUS_CTGRY_ID  
+           ,A.STUS_CTGRY_NAME
+           ,DBMS_LOB.SUBSTR (A.STUS_CTGRY_DESC, 4000) STUS_CTGRY_DESC
+           ,A.CRT_USER_ID
+           ,A.UPD_USER_ID
+           ,A.UPD_DT
+     FROM SYS0036M A
+    WHERE 1=1
+      <if test="paramCategoryId !=null and paramCategoryId != ''">
+        AND A.STUS_CTGRY_ID = #{paramCategoryId}
+      </if>     
+      <if test="paramCategoryNM !=null and paramCategoryNM != ''">
+        AND UPPER(A.STUS_CTGRY_NAME) LIKE '%' || UPPER(#{paramCategoryNM}) || '%'         
+      </if>     
+      <if test="paramCreateID !=null and paramCreateID != ''">
+        AND A.CRT_USER_ID = #{paramCreateID}
+      </if>  
+     ORDER BY  A.STUS_CTGRY_ID , A.UPD_DT DESC
+  </select>
+
+  <select id="selectStatusCodeList" parameterType="Map" resultType="egovMap">
+			SELECT
+			      0 CHECK_FLAG 
+			     ,STUS_CODE_ID  
+			     ,CODE  
+			     ,NAME CODE_NAME 
+			FROM SYS0038M
+			ORDER BY CODE_NAME ASC
+  </select>
+
+  <select id="selectStatusCategoryCodeList" parameterType="Map" resultType="egovMap">
+					SELECT  B.STUS_CODE_ID
+					       ,C.NAME CODE_NAME
+					       ,DECODE(B.DISAB, 0,'N',1,'Y','N') CODE_DISAB
+					  FROM SYS0036M A
+					      ,SYS0037M B
+					      ,SYS0038M C
+					 WHERE A.STUS_CTGRY_ID = B.STUS_CTGRY_ID
+					   AND B.STUS_CODE_ID = C.STUS_CODE_ID
+       <if test="selCategoryId !=null and selCategoryId != ''">
+             AND A.STUS_CTGRY_ID = #{selCategoryId}
+       </if>					   
+			 <if test="parmDisab !=null and parmDisab != ''">
+            AND B.DISAB = #{parmDisab}
+       </if>
+       ORDER BY B.STUS_CODE_ID
+  </select>
+
 	<select id="getAccCodeCount" parameterType="Map" resultType="int">
 		SELECT COUNT(*) COUNT
       FROM (
@@ -330,7 +469,7 @@
 		     , CODE_NAME   = #{detailcodename}
 		     , CODE_DESC   = DBMS_LOB.SUBSTR (#{detailcodedesc}, 4000)  
 		     , DISAB       = DECODE(#{detaildisabled},'N',0,'Y',1,0)
-		     , UPD_USER_ID = #{crtUserId}
+		     , UPD_USER_ID = #{updUserId}
 		     , UPD_DT      = SYSDATE  
 		WHERE CODE_ID      = #{detailcodeid}
     </update>  
