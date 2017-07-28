@@ -476,7 +476,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         	$("#filter_info_edit").text("Add Filter");
         }else if ($("#filter_info_edit").text() == "Add Filter"){
         	popClear();
-            regDialog=$("#regFilterWindow").dialog({
+        	$("#regFilterWindow").show();
+    /*     	regDialog=$("#regFilterWindow").dialog({
                 //autoOpen: false,
                 resizable: false,
                 height: 540,
@@ -496,7 +497,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                       regDialog.dialog( "close" );
                   }
                 }
-            });
+            }); */
             //$("#grid_wrap").hide();
             var comUrl= "/common/selectCodeList.do";
             doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
@@ -540,7 +541,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		                    	$("#spare_info_edit").text("Add Spare Part");
 		                    } else if ($("#spare_info_edit").text() == "Add Spare Part") {
 		                    	popClear();
-								regDialog = $("#regSpareWindow").dialog({
+		                    	$("#regSpareWindow").show();
+						/* 		regDialog = $("#regSpareWindow").dialog({
 									//autoOpen: false,
 									resizable : false,
 									height : 540,
@@ -561,7 +563,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 											regDialog.dialog("close");
 										}
 									}
-								});
+								}); */
 								var comUrl = "/common/selectCodeList.do";
 								doGetCombo(comUrl, '11', '', 'categoryPop_sp',
 										'S', '');
@@ -898,7 +900,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			$("#txtStatus").text(data[0].statusname);
 			$("#txtStockCode")
 					.html(
-							"<input type='text' name='stock_code' id='stock_code' value='' disabled=true/>");
+							"<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
 			$("#stock_code").val(data[0].stockcode);
 			$("#txtUOM").html(
 					"<select id='stock_uom' name='stock_uom'></select>");
@@ -910,20 +912,20 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			$("#stock_name").val(data[0].stockname);
 			$("#txtCategory")
 					.html(
-							"<select id='stock_category' name='stock_category'></select>");
+							"<select id='stock_category' name='stock_category' class='w100p'></select>");
 			doGetCombo('/common/selectCodeList.do', '11', data[0].categotynm,
 					'stock_category', 'S'); //청구처 리스트 조회
 			$("#txtNetWeight")
 					.html(
-							"<input type='text' name='netweight' id='netweight' value=''/>");
+							"<input type='text' name='netweight' id='netweight' class='w100p' value=''/>");
 			$("#netweight").val(data[0].netweight);
 			$("#txtGrossWeight")
 					.html(
-							"<input type='text' name='grossweight' id='grossweight' value=''/>");
+							"<input type='text' name='grossweight' class='w100p' id='grossweight' value=''/>");
 			$("#grossweight").val(data[0].grossweight);
 			$("#txtMeasurement")
 					.html(
-							"<input type='text' name='measurement' id='measurement' value=''/>");
+							"<input type='text' name='measurement' class='w100p' id='measurement' value=''/>");
 			$("#measurement").val(data[0].mcbm);
 
 			if (data[0].isncv == 1) {
@@ -960,53 +962,53 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			if (typeid == '61') {
 				$("#txtPenaltyCharge")
 						.html(
-								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='numberAmt'/>"); //PriceCharges
+								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='w100p numberAmt'/>"); //PriceCharges
 				$("#dPenaltyCharge").val(data[0].penalty);
 				$("#txtPV")
 						.html(
-								"<input type='text' name='dPV' id='dPV' value='' class='numberAmt'/>"); //PricePV
+								"<input type='text' name='dPV' id='dPV' value='' class='w100p numberAmt'/>"); //PricePV
 				$("#dPV").val(data[0].pricepv);
 				$("#txtMonthlyRental")
 						.html(
-								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='numberAmt'/>"); //amt
+								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='w100p numberAmt'/>"); //amt
 				$("#dMonthlyRental").val(data[0].mrental);
 				$("#txtRentalDeposit")
 						.html(
-								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='numberAmt'/>"); //PriceRPF
+								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='w100p numberAmt'/>"); //PriceRPF
 				$("#dRentalDeposit").val(data[0].pricerpf);
 				$("#txtTradeInPV")
 						.html(
-								"<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='numberAmt'/>"); //TradeInPV
+								"<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='w100p numberAmt'/>"); //TradeInPV
 				$("#dTradeInPV").val(data[0].tradeinpv);
 			} else {
 				$("#txtPenaltyCharge")
 						.html(
-								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='numberAmt'/>"); //PriceCharges
+								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='w100p numberAmt'/>"); //PriceCharges
 				$("#dPenaltyCharge").val(data[0].penalty);
 				$("#txtPV")
 						.html(
-								"<input type='text' name='dPV' id='dPV' disabled=true value='' class='numberAmt'/>"); //PricePV
+								"<input type='text' name='dPV' id='dPV' disabled=true value='' class='w100p numberAmt'/>"); //PricePV
 				$("#dPV").val(data[0].pricepv);
 				$("#txtMonthlyRental")
 						.html(
-								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='numberAmt'/>"); //amt
+								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='w100p numberAmt'/>"); //amt
 				$("#dMonthlyRental").val(data[0].mrental);
 				$("#txtRentalDeposit")
 						.html(
-								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='numberAmt'/>"); //PriceRPF
+								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='w100p numberAmt'/>"); //PriceRPF
 				$("#dRentalDeposit").val(data[0].pricerpf);
 				$("#txtTradeInPV")
 						.html(
-								"<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='numberAmt'/>"); //TradeInPV
+								"<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='w100p numberAmt'/>"); //TradeInPV
 				$("#dTradeInPV").val(data[0].tradeinpv);
 			}
 			$("#txtCost")
 					.html(
-							"<input type='text' name='dCost' id='dCost' value='' class='numberAmt'/>"); //PriceCosting
+							"<input type='text' name='dCost' id='dCost' value='' class='w100p numberAmt'/>"); //PriceCosting
 			$("#dCost").val(data[0].pricecost);
 			$("#txtNormalPrice")
 					.html(
-							"<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='numberAmt'/>"); // amt
+							"<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='w100p numberAmt'/>"); // amt
 			$("#dNormalPrice").val(data[0].amt);
 
 			$("#price_info_edit").text("SAVE");
@@ -1210,8 +1212,12 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		item.qty = $("#quantityPop").val();
 		AUIGrid.addRow(filterGrid, item, "last");
 		$("#filter_info_edit").text("SAVE");
-
+		 $("#regFilterWindow").hide(); 
 	}
+	
+	 function cancelRowFileter(){
+         $("#regFilterWindow").hide();  
+      }
 	
 	function addRowSparePart(){
         var item = new Object();
@@ -1224,7 +1230,12 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         item.qty = $("#quantityPop_sp").val();
         AUIGrid.addRow(spareGrid, item, "last");
         $("#spare_info_edit").text("SAVE");
+        $("#regSpareWindow").hide();          
 	}
+	
+	   function cancelRowSparePart(){
+		   $("#regSpareWindow").hide();  
+	    }
 	
 	
 	function fn_srvMembershipList() {
@@ -1265,7 +1276,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 	}
 </script>
 </head>
-<div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
+<div id="SalesWorkDiv" class="SalesWorkDiv">
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
@@ -1311,11 +1322,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <tr>
                     <th scope="row">Stock Code</th>
                     <td>
-                        <input type=text name="stkCd" id="stkCd" class="numberAmt" value=""/>
+                        <input type=text name="stkCd" id="stkCd" class="w100p numberAmt" value=""/>
                     </td>
                     <th scope="row">Stock Name</th>
                     <td colspan='3'>
-                        <input type=text name="stkNm" id="stkNm" value=""/>
+                        <input type=text name="stkNm" id="stkNm" class="w100p" value=""/>
                     </td>                
                 </tr>
             </tbody>
@@ -1339,7 +1350,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             <li><p class="btn_grid"><a href="javascript:f_tabHide()"><span class="search"></span>ADD</a></p></li>
         </ul>
 
-        <div id="grid_wrap"  style="height:350px"></div>
+        <div id="grid_wrap" class="mt10" style="height:350px"></div>
 
         <section id="subDiv" style="display:none;" class="tap_wrap"><!-- tap_wrap start -->
         
@@ -1501,11 +1512,15 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
 
 <!-- registr filter-->
-
-		<section class="pop_body">
+<div class="popup_wrap" id="regFilterWindow" style="display:none"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+		<h1>Add Filter</h1>
+		<ul class="right_opt">
+		    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+		</ul>
+    </header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->  
 			<!-- pop_body start -->
-			<div id="regFilterWindow" style="display: none" title="그리드 수정 사용자 정의">
-				<h1>Add Filter</h1>
 				<form id="filterForm" name="filterForm" method="POST">
 					<table class="type1">
 						<!-- table start -->
@@ -1548,15 +1563,25 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 						</tbody>
 					</table>
 					<!-- table end -->
-				</form>
-			</div>
-		</section>
+					<ul class="center_btns">
+                        <li><p class="btn_blue2 big"><a onclick="javascript:addRowFileter();">SAVE</a></p></li> 
+                        <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
+                    </ul>
+				</form>	
+	</section>	
+</div>
+		
+		
 	
 	<!-- register spare part-->
-
-       <section class="pop_body">
-            <div id="regSpareWindow" style="display: none" title="그리드 수정 사용자 정의">
-                <h1>Add Spare Part</h1>
+<div class="popup_wrap" id="regSpareWindow" style="display:none"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>Add Spare Part</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->          
                 <form id="spareForm" name="spareForm" method="POST">
                     <table class="type1">
                         <caption>search table</caption>
@@ -1584,11 +1609,13 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                             </tr>
                         </tbody>
                     </table>
-                </form>
-            </div>
-        </section> 
-        	
-		
+                    <ul class="center_btns">
+					    <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li> 
+					    <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowSparePart();">CANCEL</a></p></li>
+				    </ul>
+                </form>       
+ </section>     
+</div>		
 		
 		
 	</section><!-- content end -->
