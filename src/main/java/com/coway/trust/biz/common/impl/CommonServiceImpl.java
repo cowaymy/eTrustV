@@ -185,16 +185,13 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		GridDataSet<CommStatusGridData> gridDataSet = formDataParameters.getGridDataSet();
 		List<CommStatusGridData> updateList = gridDataSet.getUpdate(); // check 된 리스트
 		CommStatusFormVO commStatusVO = formDataParameters.getCommStatusVO();// form내의 input 객체
-		
-		logger.debug("updateList: " + updateList.size() );
-		
+				
 		Map<String, Object> param = null;
 		for (CommStatusGridData gridData : updateList) 
 		{
 			param = BeanConverter.toMap(gridData);  // list --> map
 			
-			
-			logger.debug("list: " + param.toString() );
+		//	logger.debug("list: " + param.toString() );
 			
 			if ("0".equals(String.valueOf(param.get("checkFlag"))))
 			{
