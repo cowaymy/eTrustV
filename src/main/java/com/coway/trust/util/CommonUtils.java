@@ -159,6 +159,27 @@ public final class CommonUtils {
 
         return rtnValue;
     }
+    
+    /**
+     * <pre>
+     * Description  : 특정 날짜에서 +-된 날짜를 반환한다. 
+     * </pre>
+     * inputDate : 기준일자
+     * d : 기준일자에서 +-될 일수
+     * format : 기준일자와 반환일자 format
+     * @throws java.text.ParseException 
+     */
+    public static String getAddDay( String inputDate, int d , String format) throws java.text.ParseException{
+        
+    	SimpleDateFormat df = new SimpleDateFormat(format, Locale.getDefault(Locale.Category.FORMAT));
+        Date date = df.parse(inputDate);  
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, d);        
+
+        return df.format(calendar.getTime());
+    }
 
     /**
      * <pre>

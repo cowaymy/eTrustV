@@ -219,17 +219,17 @@ public class ClaimController {
 			
 			//HLBB
 			if("5".equals(String.valueOf(claimMap.get("ctrlBankId")))){				
-				System.out.println("##################### CREATE BANK FILE HLBB");
+				this.createClaimFileHLBB(claimMap, claimDetailList);
 			}
 			
 			//MBB
 			if("21".equals(String.valueOf(claimMap.get("ctrlBankId")))){				
-				System.out.println("##################### CREATE BANK FILE MBB");
+				this.createClaimFileMBB(claimMap, claimDetailList);
 			}
 			
 			//PBB
 			if("6".equals(String.valueOf(claimMap.get("ctrlBankId")))){				
-				System.out.println("##################### CREATE BANK FILE PBB");
+				this.createClaimFilePBB(claimMap, claimDetailList);
 			}
 			
 			//RHB
@@ -278,7 +278,7 @@ public class ClaimController {
 	 public void createClaimFileALB(EgovMap claimMap, List<EgovMap> claimDetailList) throws Exception{
 		 
 		 String inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String)claimMap.get("ctrlBatchDt");
-		 String sFile = "ALB" + CommonUtils.changeFormat(inputDate, "YYYY-MM-DD" , "yyyyMMdd") + "B01.txt";
+		 String sFile = "ALB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "yyyyMMdd") + "B01.txt";
 		 
 		//파일 디렉토리
 		 File file = new File("C:/COWAY_PROJECT/TOBE/CRT/ALB/ClaimBankALB/" + sFile);
@@ -321,7 +321,7 @@ public class ClaimController {
                  sLimit = CommonUtils.getNumberFormat( String.valueOf(map.get("bankDtlAmt")), "#,##0.00");
                  String sBillDate = map.get("bankDtlDrDt") != null ? (String)map.get("bankDtlDrDt") : "1900-01-01";
                  sDocno = (String)map.get("cntrctNOrdNo");
-                 stextDetails = "D|101|" + sDrAccNo + "|" + sLimit + "|" + CommonUtils.changeFormat(sBillDate, "YYYY-MM-DD" , "ddMMyyyy") + "| |" + sDocno + "|";
+                 stextDetails = "D|101|" + sDrAccNo + "|" + sLimit + "|" + CommonUtils.changeFormat(sBillDate, "yyyy-MM-dd" , "ddMMyyyy") + "| |" + sDocno + "|";
                  iTotalAmt = iTotalAmt + Double.parseDouble(sLimit);
                  
                  out.write(stextDetails);
@@ -372,7 +372,7 @@ public class ClaimController {
          String hCreditAccNo = "140550010078613";
          String hCompanyName = "Coway (M) Sdn Bhd";
          String hFileBatchRefNo = String.valueOf(claimMap.get("ctrlId"));
-         String hCollectionDate = CommonUtils.changeFormat(inputDate, "YYYY-MM-DD", "ddMMyyyy");
+         String hCollectionDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy");
          String hSellerID = "AD10000101";
          String hCreditType = "S";
 
@@ -467,7 +467,7 @@ public class ClaimController {
 		 
 		 
 		 String inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String)claimMap.get("ctrlBatchDt");
-		 String sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "YYYY-MM-DD" , "yyyyMMdd") + "B01.dat";
+		 String sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "yyyyMMdd") + "B01.dat";
 		 
 		//파일 디렉토리
 		 File file = new File("C:/COWAY_PROJECT/TOBE/CRT/CIMB/ClaimBank/" + sFile);
@@ -484,10 +484,10 @@ public class ClaimController {
 		  *  파일 내용 쓰기
 		  ************************************************/
 		 //헤더 작성
-		 String sbatchNo = CommonUtils.changeFormat(inputDate, "yyyyMMdd" , "ddMMyy") + "01";		 
+		 String sbatchNo = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyy") + "01";		 
 		 String sSecCode = CommonUtils.getFillString(String.valueOf((Integer.parseInt(sbatchNo) + 1208083646)), " ", 10, "RIGHT");
-		 String sText = "01" + CommonUtils.changeFormat(inputDate, "yyyyMMdd" , "ddMMyy") + "01" + "2120" + CommonUtils.getFillString("WOONGJIN COWAY", " ", 40, "") +
-        		 CommonUtils.changeFormat(inputDate, "yyyyMMdd" , "ddMMyy") + sSecCode + CommonUtils.getFillString("", " ",128, "");
+		 String sText = "01" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyy") + "01" + "2120" + CommonUtils.getFillString("WOONGJIN COWAY", " ", 40, "") +
+        		 CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyy") + sSecCode + CommonUtils.getFillString("", " ",128, "");
         		 
 		 out.write(sText);
 		 out.newLine();
@@ -561,5 +561,349 @@ public class ClaimController {
          //Stringstring EmailTitle = "CIMB Auto Debit Claim File - Batch Date" + batchCtrl.CtrlBatDate.Value.ToShortDateString();
          //SendEmailAutoDebitDeduction(EmailTitle, Location);
 	 }
+	 
+	 
+	 public void createClaimFileHLBB(EgovMap claimMap, List<EgovMap> claimDetailList) throws Exception{		 
+		 
+		 String inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String)claimMap.get("ctrlBatchDt");
+		 String sFile = "EPY1000991_" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyyyy") + ".csv";
+		 
+		//파일 디렉토리
+		 File file = new File("C:/COWAY_PROJECT/TOBE/CRT/HLBB/ClaimBank/" + sFile);
+		 
+		// 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+				
+		 FileWriter fileWriter = new FileWriter(file);
+		 BufferedWriter out = new BufferedWriter(fileWriter);
+		 
+		 /***********************************************
+		  *  파일 내용 쓰기
+		  ************************************************/
+		 int counter = 1;
+         String stextDetails = "";
+         String sdrname = "";
+         String sdraccno = "";
+         String samt = "";
+         String sdocno = "";
+         long fTotAmt = 0;
+         
+         if (claimDetailList.size() > 0) {
+        	 for(int i = 0 ; i < claimDetailList.size() ; i++){
+        		 Map<String, Object> map = (Map<String, Object>)claimDetailList.get(i);
+        		 
+        		 sdrname = 
+        		 (String.valueOf(map.get("bankDtlDrName"))).length() > 40 ?
+        				 (String.valueOf(map.get("bankDtlDrName"))).substring(0,40) :
+        					 CommonUtils.getFillString(String.valueOf(map.get("bankDtlDrName")) , " ",40, "");
+
+        		 //암호화는 나중에 하자
+        		 //sdraccno = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
+        		 sdraccno = "34204542899".trim();
+        		 
+        		 samt = CommonUtils.getFillString(CommonUtils.getNumberFormat( String.valueOf(map.get("bankDtlAmt")), "#,##0.00") , "0",12, "RIGHT");
+                 sdocno = (String.valueOf(map.get("cntrctNOrdNo"))).trim();
+                 stextDetails = CommonUtils.getFillString(String.valueOf(counter) , "0",3, "RIGHT") + 
+                		 	",EPY1000991,HLBB," +
+                		 	sdrname + "," + sdraccno + "," + samt + ",DR," + sdocno + "," + 
+                		 	CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate,1,"yyyy-MM-dd" ), "yyyy-MM-dd" , "ddMMyyyy");
+                 
+                 fTotAmt = fTotAmt + ((java.math.BigDecimal)map.get("bankDtlAmt")).longValue();
+                 
+                 out.write(stextDetails);
+        		 out.newLine();
+        		 out.flush();
+        		 
+                 counter = counter + 1;
+        		 
+        	 }    		
+         }
+         
+         
+         
+         //footer 작성
+         String stext = "";
+         String sbatchtot = CommonUtils.getFillString(CommonUtils.getNumberFormat( String.valueOf(fTotAmt), "#,##0.00") , "0",12, "RIGHT");         
+         String sbatchno = (CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyy") + "01").trim();
+
+         stext = CommonUtils.getFillString(String.valueOf(counter) , "0",3, "RIGHT") + 
+        		 		",EPY1000991,HLBB," +
+        		 		CommonUtils.getFillString("WOONGJIN COWAY" , " ",40, "") +
+        		 		",00100321782," + sbatchtot +
+        		 		",CR," + sbatchno + "," + CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate,1,"yyyy-MM-dd" ), "yyyy-MM-dd" , "ddMMyyyy");
+         
+         
+        
+         out.write(stext);
+		 out.newLine();
+		 out.flush();
+         out.close();
+
+		 // 메일 보내기는 나중에
+         //Stringstring EmailTitle = "CIMB Auto Debit Claim File - Batch Date" + batchCtrl.CtrlBatDate.Value.ToShortDateString();
+         //SendEmailAutoDebitDeduction(EmailTitle, Location);
+	 }
+	 
+	 public void createClaimFileMBB(EgovMap claimMap, List<EgovMap> claimDetailList) throws Exception{		 
+		 
+		 String inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String)claimMap.get("ctrlBatchDt");
+		 String sFile = "ADSACC.txt";
+		 
+		//파일 디렉토리
+		 File file = new File("C:/COWAY_PROJECT/TOBE/CRT/MBB/ClaimBank/" + sFile);
+		 
+		// 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+				
+		 FileWriter fileWriter = new FileWriter(file);
+		 BufferedWriter out = new BufferedWriter(fileWriter);
+		 
+		 /***********************************************
+		  *  파일 내용 쓰기
+		  ************************************************/
+		 //헤더 작성
+		 String strHeader = "";
+		 String strHeader_Fix1 = "VOL1";
+		 String strHeader_Fix2 = "NN";
+		 String strHeader_OriginatorName = CommonUtils.getFillString("WJIN COWAY" , " ",13, "");
+		 String strHeader_BillDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyy");
+		 String strHeader_OriginatorID = "02172";
+		 String strHeader_BankUse = CommonUtils.getFillString("" , " ",50, "");
+		 
+         strHeader = strHeader_Fix1 + strHeader_Fix2 + strHeader_OriginatorName + strHeader_BillDate + 
+             strHeader_OriginatorID + strHeader_BankUse;
+         
+         out.write(strHeader);
+		 out.newLine();
+		 out.flush();
+		 
+         
+         //본문 작성
+		 long iHashTot = 0;
+         double iTotalAmt = 0;
+         
+         if (claimDetailList.size() > 0) {
+        	 for(int i = 0 ; i < claimDetailList.size() ; i++){
+        		 Map<String, Object> map = (Map<String, Object>)claimDetailList.get(i);
+        		 
+        		 
+        		 String strRecord = "";
+        		 String strRecord_Fix = "00";
+        		 
+        		 //암호화는 나중에 하자
+        		 //String strRecord_Acc = EncryptionProvider.Decrypt(det.AccNo.Trim()).PadLeft(12, '0');
+        		 String strRecord_Acc = CommonUtils.getFillString("34204542899".trim() , "0",12, "RIGHT");
+        		 
+        		 String.valueOf(((java.math.BigDecimal) map.get("bankDtlAmt")).longValue() * 100);
+        		 String strRecord_BillAmt = CommonUtils.getFillString(String.valueOf(((java.math.BigDecimal) map.get("bankDtlAmt")).longValue() * 100), "0" , 12 , "RIGHT");
+        		 String tmpStrRecord_NRIC = (String.valueOf(map.get("bankDtlDrNric"))).trim();
+        		 String strRecord_NRIC = tmpStrRecord_NRIC.length() > 8 ? 
+        				 tmpStrRecord_NRIC.substring(tmpStrRecord_NRIC.length() - 8 < 1 ? 0 : tmpStrRecord_NRIC.length() - 8, tmpStrRecord_NRIC.length()) :
+        					 CommonUtils.getFillString(tmpStrRecord_NRIC, " " , 8 , "");		         		 
+        		 String strRecord_BankUse1 = CommonUtils.getFillString("", " " , 1 , "");
+        		 String strRecord_BillNo = CommonUtils.getFillString(String.valueOf(map.get("cntrctNOrdNo")), " " , 14 ,"");
+        		 String strRecord_BankUse2 = CommonUtils.getFillString("", " " , 1 , "");
+        		 String tmpStrRecordPayer = (String.valueOf(map.get("bankDtlDrName"))).trim();
+        		 String strRecord_PayerName = tmpStrRecordPayer.length()  > 20 ? tmpStrRecordPayer.substring(0,20) : CommonUtils.getFillString(tmpStrRecordPayer, " " , 20 , "");
+        		 
+        		 String strRecord_BankUse3 = CommonUtils.getFillString("", " " , 1 , "");
+                 strRecord = strRecord_Fix + strRecord_Acc + strRecord_BillAmt + strRecord_NRIC + 
+                     strRecord_BankUse1 + strRecord_BillNo + strRecord_BankUse2 + strRecord_PayerName + 
+                     strRecord_BankUse3;
+                 
+                 // 암호화는 나중에 하자 
+                 //iHashTot = iHashTot + Int64.Parse(CommonFunction.Right(EncryptionProvider.Decrypt(det.AccNo.Trim()),4));
+                 iHashTot = iHashTot + Long.parseLong(("34204542899".trim()).substring(("34204542899".trim()).length() - 4 < 1 ? 0 : ("34204542899".trim()).length() - 4 , ("34204542899".trim()).length()));
+                 
+                 iTotalAmt = iTotalAmt + ((java.math.BigDecimal)map.get("bankDtlAmt")).longValue();
+                 
+                 out.write(strRecord);
+        		 out.newLine();
+        		 out.flush();
+        	 }    		
+         }
+         
+         
+         //footer 작성
+         String strTrailer = "";
+         String strTrailer_Fix = "FF";
+         String strTrailer_TotalRecord = CommonUtils.getFillString(String.valueOf(claimDetailList.size()), "0" , 12 , "RIGHT");
+         String strTrailer_TotalAmount = CommonUtils.getFillString(String.valueOf(iTotalAmt * 100), "0" , 12 , "RIGHT");
+         String strTrailer_TotalHash = CommonUtils.getFillString(String.valueOf(iHashTot), "0" , 12 , "RIGHT");         
+         String strTrailer_BankUse = CommonUtils.getFillString("", " " , 42 , "");
+         
+         strTrailer = strTrailer_Fix + strTrailer_TotalRecord + strTrailer_TotalAmount +
+             strTrailer_TotalHash + strTrailer_BankUse;
+        
+         out.write(strTrailer);
+		 out.newLine();
+		 out.flush();
+         out.close();
+
+		 // 메일 보내기는 나중에
+         //Stringstring EmailTitle = "CIMB Auto Debit Claim File - Batch Date" + batchCtrl.CtrlBatDate.Value.ToShortDateString();
+         //SendEmailAutoDebitDeduction(EmailTitle, Location);
+	 }
+	 
+	 
+	 public void createClaimFilePBB(EgovMap claimMap, List<EgovMap> claimDetailList) throws Exception{		 
+		 
+		 String inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String)claimMap.get("ctrlBatchDt");
+		 String sFile = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyyyy") + "01.DIF";
+		 
+		//파일 디렉토리
+		 File file = new File("C:/COWAY_PROJECT/TOBE/CRT/PBB/ClaimBank/" + sFile);
+		 
+		// 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+				
+		 FileWriter fileWriter = new FileWriter(file);
+		 BufferedWriter out = new BufferedWriter(fileWriter);
+		 
+		 /***********************************************
+		  *  파일 내용 쓰기
+		  ************************************************/
+		 //헤더 작성
+		 String sText = "FH0001" + "3139835308" + 
+				 		CommonUtils.getFillString("PBB", " " , 10 , "") +		 
+				 		CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "yyyyMMdd") +
+				 		CommonUtils.getFillString("WCBDEBIT", " " , 20 , "") +
+				 		CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "yyyyMMdd") +  
+				 		CommonUtils.getFillString("", " " , 138 , "");
+	     
+         
+         out.write(sText);
+		 out.newLine();
+		 out.flush();
+		 
+         
+         //본문 작성
+		 String stextDetails = "";
+		 String sDocno = "";
+		 String sDrAccNo = "";
+		 String sDrName = "";
+		 String sNRIC = "";
+		 String sLimit = "";
+		 String sAmt = "";
+         double iTotalAmt = 0;
+         String sFiller = "";
+         String sHashEntry = "";
+         long iHashTot = 0;
+         
+         String trimAccNo = "";
+         int startIdx = 0;
+         
+         if (claimDetailList.size() > 0) {
+        	 for(int i = 0 ; i < claimDetailList.size() ; i++){
+        		 Map<String, Object> map = (Map<String, Object>)claimDetailList.get(i);
+        		 
+
+                 sDocno = CommonUtils.getFillString((String.valueOf(map.get("cntrctNOrdNo"))).trim(), " " , 20 , "");
+                 
+                 //암호화는 나중에 하자
+                 //sDrAccNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim().PadRight(20,' ');
+                 sDrAccNo = CommonUtils.getFillString("34204542899".trim() , " ",20, "");
+                 
+                 String tmpSDrName = (String.valueOf(map.get("bankDtlDrName"))).trim();
+                 sDrName = tmpSDrName.length()  > 40 ? tmpSDrName.substring(0,40) : CommonUtils.getFillString(tmpSDrName, " " , 40 , "");
+                 sNRIC = CommonUtils.getFillString(String.valueOf(map.get("bankDtlDrNric")), " " , 20 , "");
+                 sLimit = CommonUtils.getFillString(String.valueOf(((java.math.BigDecimal)map.get("bankDtlAmt")).longValue() * 100), "0" , 12 , "RIGHT");
+                 sAmt = CommonUtils.getFillString(sLimit, "0" , 16 , "RIGHT");
+                 
+                 iTotalAmt = iTotalAmt + Double.parseDouble(sLimit);
+                 
+                 sFiller = CommonUtils.getFillString("", " " , 87 , "");
+                 
+                 //substring을 위한 세팅 시작
+                 trimAccNo = sDrAccNo.trim();
+                 startIdx = trimAccNo.length() - 4 < 1 ? 0 : trimAccNo.length()-4;    
+                 //substring을 위한 세팅 종료
+                 
+                 sHashEntry = String.valueOf((Integer.parseInt(sLimit) + Integer.parseInt(trimAccNo.substring(startIdx, trimAccNo.length()))));
+                 sHashEntry = CommonUtils.getFillString(sHashEntry, "0" , 15 , "RIGHT");
+
+                 stextDetails = "DT" + sDrAccNo + sAmt + sDrName + sDocno + sHashEntry + sFiller; 
+                 iHashTot = iHashTot + Integer.parseInt(trimAccNo.substring(startIdx, trimAccNo.length()));
+                 
+        		 out.write(stextDetails);
+        		 out.newLine();
+        		 out.flush();
+        	 }    		
+         }
+         
+         
+         //footer 작성
+         String sTextBtn = "";
+         sTextBtn = "FT0001" + "3139835308" + 
+        		 			CommonUtils.getFillString("PBB", " " , 10 , "") +
+        		 			CommonUtils.getFillString(String.valueOf((claimDetailList.size() + 2)), "0" , 10 , "RIGHT") +
+        		 			CommonUtils.getFillString(String.valueOf(iTotalAmt), "0" , 20 , "RIGHT") +
+        		 			CommonUtils.getFillString(String.valueOf(iHashTot), "0" , 15 , "RIGHT") +        		 			
+        		 			CommonUtils.getFillString("", " " , 129 , "");
+        
+        
+         out.write(sTextBtn);
+		 out.newLine();
+		 out.flush();
+         out.close();
+
+		 // 메일 보내기는 나중에
+         //Stringstring EmailTitle = "CIMB Auto Debit Claim File - Batch Date" + batchCtrl.CtrlBatDate.Value.ToShortDateString();
+         //SendEmailAutoDebitDeduction(EmailTitle, Location);
+         
+         /*********************************************
+          * Second file
+          *********************************************/
+         String sFile2nd = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyyyy") + "01.DTR";
+		 
+ 		//파일 디렉토리
+ 		 File file2nd = new File("C:/COWAY_PROJECT/TOBE/CRT/PBB/ClaimBank/" + sFile2nd);
+ 		 
+ 		// 디렉토리 생성
+ 		 if (!file2nd.getParentFile().exists()) {
+ 			file2nd.getParentFile().mkdirs();
+ 		 }
+ 				
+ 		 FileWriter fileWriter2nd = new FileWriter(file2nd);
+ 		 BufferedWriter out2nd = new BufferedWriter(fileWriter2nd);
+ 		 
+ 		String count = CommonUtils.getFillString(String.valueOf((claimDetailList.size() + 2)), " " , 6 , "RIGHT");
+ 		String iTotalAmtStr = CommonUtils.getFillString(CommonUtils.getNumberFormat( String.valueOf(iTotalAmt / 100), "#,##0.00")," " ,13, "RIGHT");
+ 		 
+ 		 StringBuffer sb = new StringBuffer();
+ 		 
+ 		 sb.append("                                                         PAGE: 1").append("\n");
+ 		 sb.append("                                                         REPORT DATE: " + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "dd/MM/yyyyd")).append("\n");
+ 		 sb.append("").append("\n");
+ 		 sb.append("                           WOONGJIN COWAY (M) SDN BHD").append("\n");
+ 		 sb.append("                   TRANSMITTAL REPORT OF DIRECT DEBIT RECORDS").append("\n");
+ 		 sb.append("                              FOR PUBLIC BANK BERHAD").append("\n");
+ 		 sb.append("").append("\n");
+ 		 sb.append("").append("\n");
+ 		 sb.append("DEDUCTION DATE: " + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "dd/MM/yyyy")).append("\n");
+ 		 sb.append("").append("\n");
+ 		 sb.append("           COUNT       AMOUNT").append("\n");
+ 		 sb.append("          -------------------").append("\n");
+ 		 sb.append("TOTAL:    " + count + iTotalAmtStr).append("\n");
+ 		 sb.append("").append("\n");
+          
+ 		out2nd.write(sb.toString());
+ 		out2nd.newLine();
+ 		out2nd.flush();
+ 		 
+ 		out2nd.close();
+ 		
+ 		// 메일 보내기는 나중에
+        //Stringstring EmailTitle = "CIMB Auto Debit Claim File - Batch Date" + batchCtrl.CtrlBatDate.Value.ToShortDateString();
+        //SendEmailAutoDebitDeduction(EmailTitle, Location);
+	 }
+	 
+	 
 	
 }
