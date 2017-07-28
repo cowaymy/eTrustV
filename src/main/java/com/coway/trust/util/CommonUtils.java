@@ -780,10 +780,14 @@ public final class CommonUtils {
 	}
 	
 	public static long getDiffDate(String cutOffDate){
+		return getDiffDate(cutOffDate, "yyyyMMdd");
+	}
+	
+	public static long getDiffDate(String cutOffDate, String format){
 		long diffDate = -1;
 		
 		try{
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat formatter = new SimpleDateFormat(format);
 			Date cutoffdate = formatter.parse(cutOffDate);
 			Date curDate = new Date();
 			
