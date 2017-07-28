@@ -46,9 +46,9 @@ var columnLayout;
 
 $(document).ready(function(){
 	// masterGrid 그리드를 생성합니다.
-	ttypedata = f_getTtype('306');
-	mtypedata = f_getTtype('308');
-	midata    = f_getTtype('307');
+	ttypedata = f_getTtype('306','');
+	mtypedata = f_getTtype('308','');
+	midata    = f_getTtype('307','');
 	
 	doDefCombo(ttypedata, '' ,"sttype", 'A', '');
 	doDefCombo(mtypedata, '' ,"smtype", 'A', '');
@@ -69,7 +69,7 @@ $(document).ready(function(){
                            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                            list : ttypedata,
                            keyField : "code",
-                           valueField : "code"
+                           valueField : "codeName"
                         }
                     }
                     ,{dataField:"ttypedesc"       ,headerText:"Transaction<br>Type Text" , editable:false    ,width:250    ,height:30 , visible:true}
@@ -87,7 +87,7 @@ $(document).ready(function(){
                         {
                            type : "ComboBoxRenderer",
                            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                           list : mtypedata,
+                           listFunction : function(rowIndex, columnIndex, value, headerText, item){var list =  mtypedata; return list; },
                            keyField : "code",
                            valueField : "code"
                         }
@@ -311,9 +311,7 @@ $(document).ready(function(){
     
     AUIGrid.bind(myGridID, "addRow", function(event){});
     AUIGrid.bind(myGridID, "cellEditBegin", function (event){
-    	console.log(event.item.ptype);
-    	console.log((AUIGrid.isAddedById(myGridID, event.item.ptype)));
-    	console.log(event.columnIndex);
+    	
     	if (event.columnIndex == 0 || event.columnIndex == 2){
     		//if (AUIGrid.isAddedById(event.pid, event.item.id)){
     		if(AUIGrid.isAddedById(myGridID, event.item.ptype)) {
@@ -321,16 +319,7 @@ $(document).ready(function(){
     		}else{
     		    return false;
     		}
-        }
-    	
-    	/*var addedRowItems = AUIGrid.getAddedRowItems(myGridID);
-        console.log(addedRowItems);
-        console.log(event);
-        if(event.rowIndex != addedRowItems.rowIndex){
-	        if (event.columnIndex == 0 || event.columnIndex == 2){
-	        	return false;
-	        }
-        }*/
+        }    	
     });
     AUIGrid.bind(myGridID, "cellEditEnd", function (event){
     	var data;
@@ -341,6 +330,7 @@ $(document).ready(function(){
 	        typevalue = AUIGrid.getCellValue(myGridID, event.rowIndex, "ttype");
 	        data = ttypedata;
 	        typedesc = "ttypedesc";
+	        mtypedata = f_getTtype('308' , typevalue);
 	    }else if (event.columnIndex == 2){
             typevalue = AUIGrid.getCellValue(myGridID, event.rowIndex, "mtype");
             data = mtypedata;
@@ -421,7 +411,7 @@ function SearchListAjax() {
 
     var url = "/logistics/organization/MaintainmovementList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
+    
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(myGridID, data.data);
 
@@ -465,12 +455,12 @@ function addRow() {
 
 
 
-function f_getTtype(g){
+function f_getTtype(g , v){
 	var rData = new Array();
 	$.ajax({
            type : "GET",
            url : "/common/selectCodeList.do",
-           data : { groupCode : g , orderValue : 'CRT_DT'},
+           data : { groupCode : g , orderValue : 'CRT_DT' , likeValue:v},
            dataType : "json",
            contentType : "application/json;charset=UTF-8",
            async:false,
