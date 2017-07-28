@@ -234,6 +234,8 @@ function editPopUp()
 
     var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
+          , null
+          , "true"
     	    );
 
     return ;
@@ -245,6 +247,8 @@ function addPopUp()
 
     var popUpObj = Common.popupDiv("/common/accountCodeAddPop.do"
             , $("#MainForm").serializeJSON()
+            , null
+            , "true"
             );
 
     return ;
@@ -273,7 +277,6 @@ function fnSetDetail(selGrdidID, rowIdx)  //cdMstId
 		           + " paramAddAreaId:  "+ $("#paramAddAreaId").val() + " pramAddPostCodeId: " + $("#pramAddPostCodeId").val() 
 		          );                
 }
-
 
 //AUIGrid 생성 후 반환 ID
 var myGridID;
@@ -453,7 +456,7 @@ $(document).ready(function()
 		<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
 		<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
 	</ul>
-	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+	<p class="hide_btn"><a href="javascript:;"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
 </dl>
 </aside><!-- link_btns_wrap end -->

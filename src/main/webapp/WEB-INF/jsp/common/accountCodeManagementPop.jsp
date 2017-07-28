@@ -7,21 +7,21 @@ $(function()
 {
 
 /*   doGetComboAddr('/common/selectAddrSelCodeList.do'  // url
-		              , 'country'  // code 
-		              , ''         // value
-			            , ''         // selectedItem
-			            , 'mcountry' // setting-Object
-			            , 'S'        // single Type ComboBox
-			            , ''         // callBack Function
-		            ); */
+                  , 'country'  // code 
+                  , ''         // value
+                  , ''         // selectedItem
+                  , 'mcountry' // setting-Object
+                  , 'S'        // single Type ComboBox
+                  , ''         // callBack Function
+                ); */
 
-	var cntyId = "${inputParams.parmAddCntyId}";
-	var areaId = "${inputParams.paramAddAreaId}";
-	var stateId = "${inputParams.paramAddStateId}";
-	var postId  = "${inputParams.pramAddPostCodeId}";
+  var cntyId = "${inputParams.parmAddCntyId}";
+  var areaId = "${inputParams.paramAddAreaId}";
+  var stateId = "${inputParams.paramAddStateId}";
+  var postId  = "${inputParams.pramAddPostCodeId}";
 
-	console.log("parmAddCntyId: " + cntyId +" paramAddStateId: " + stateId + " paramAddAreaId: " + areaId +" pramAddPostCodeId: " + postId )
-		            
+  console.log("parmAddCntyId: " + cntyId +" paramAddStateId: " + stateId + " paramAddAreaId: " + areaId +" pramAddPostCodeId: " + postId )
+                
   doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , cntyId ,'mcountry', 'S', ''); 
   getAddrRelay('mstate'  , cntyId  , 'state' , stateId);
   getAddrRelay('marea'   , stateId , 'area'  , areaId);
@@ -29,11 +29,11 @@ $(function()
 
   if (cntyId != "" && cntyId != undefined)
   {
-	  getAddrRelay('mstate' , cntyId , 'state' , stateId);
+    getAddrRelay('mstate' , cntyId , 'state' , stateId);
   }
 
   if (stateId != "" && stateId != undefined)
-	{
+  {
       getAddrRelay('marea' , stateId , 'area' , areaId);
   }
 
@@ -60,10 +60,10 @@ function fnSaveAccount()
    var countryVal = $("#mcountry option:selected").val();
 
    if (countryVal == 1)
-	 {
-	   if ( parseInt($("#mstate option").index($("#mstate option:selected")))  == 0)
+   {
+     if ( parseInt($("#mstate option").index($("#mstate option:selected")))  == 0)
        {           
-    	   Common.alert(' Please select the state.');
+         Common.alert(' Please select the state.');
          return false;
        }
        
@@ -78,37 +78,37 @@ function fnSaveAccount()
            Common.alert(' Please select the postcode.');
            return false;
        }
-	 }
+   }
 
 
    if ($("#popUpAccCode").val().length == 0)
    {
-	   Common.alert(' Please key in the account code.');
-	   //$("#popUpAccCode").focus();
-	   return false;
-	 }
-	 
+     Common.alert(' Please key in the account code.');
+     //$("#popUpAccCode").focus();
+     return false;
+   }
+   
    if ($("#popUpAccDesc").val().length == 0)
    {
-	   Common.alert(' Please key in the account description.');
-	   //$("#popUpAccDesc").focus();
-	   return false;
-	 }
+     Common.alert(' Please key in the account description.');
+     //$("#popUpAccDesc").focus();
+     return false;
+   }
 
    
 
-		Common.ajax("POST", "/common/insertAccount.do"  
+    Common.ajax("POST", "/common/insertAccount.do"  
             , $("#PopUpForm").serializeJSON({checkboxUncheckedValue: "false"})  // post 시 serializeJSON
             , function(result) 
              {
-		            if(result.code == 99){
-			            Common.alert(result.message);
-			          }else{
-			        	  alert(result.data + " Count Save Success!");
-	                console.log("성공." + JSON.stringify(result));
-	                console.log("data : " + result.data);
-	                fnGetAccountCdListAjax();				          
-				        }
+                if(result.code == 99){
+                  Common.alert(result.message);
+                }else{
+                  alert(result.data + " Count Save Success!");
+                  console.log("성공." + JSON.stringify(result));
+                  console.log("data : " + result.data);
+                  fnGetAccountCdListAjax();                 
+                }
              } 
            , function(jqXHR, textStatus, errorThrown) 
             {
@@ -128,6 +128,10 @@ function fnSaveAccount()
 
 }
 
+ function fn_close(){
+	 $("#_popupDiv").remove(); // hide();
+}
+
 
 </script>
 
@@ -143,7 +147,7 @@ function fnSaveAccount()
                               </c:choose>
 </h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="javascript:;" >CLOSE</a></p></li>
+  <li><p class="btn_blue2"><a href="javascript:fn_close();" >CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <form id="PopUpForm" name="PopUpForm" method="" action="">
@@ -160,38 +164,38 @@ function fnSaveAccount()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+  <col style="width:180px" />
+  <col style="width:*" />
+  <col style="width:180px" />
+  <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>  
   <th scope="row">Account Code<span class="must">*</span></th>
-	<td>
-	<input type="text" title="" id="popUpAccCode" name="popUpAccCode"  class="w100p" value='${inputParams.paramAccCode}'  placeholder='9999/999' maxlength="12"
-	        <c:if test="${inputParams.parmAddEditFlag eq 'EDIT' }"> disabled </c:if>  />
-	</td>
-	<th scope="row">SAP CODE</th>
-	<td>
-	<input type="text" title="SAP CODE" id="popUpSapAccCode" name="popUpSapAccCode" value='${inputParams.paramSapAccCode}' placeholder='Sap code' class="w100p" maxlength="50" />
-	</td>
+  <td>
+  <input type="text" title="" id="popUpAccCode" name="popUpAccCode"  class="w100p" value='${inputParams.paramAccCode}'  placeholder='9999/999' maxlength="12"
+          <c:if test="${inputParams.parmAddEditFlag eq 'EDIT' }"> disabled </c:if>  />
+  </td>
+  <th scope="row">SAP CODE</th>
+  <td>
+  <input type="text" title="SAP CODE" id="popUpSapAccCode" name="popUpSapAccCode" value='${inputParams.paramSapAccCode}' placeholder='Sap code' class="w100p" maxlength="50" />
+  </td>
 </tr>
 <tr>
-	<th scope="row">Account Description<span class="must">*</span></th>
-	<td colspan="3">
-	<input type="text" id="popUpAccDesc" name="popUpAccDesc" title="" value='${inputParams.paramAccDesc}' class="w100p" placeholder='Account description' maxlength="70"
-	       <c:if test="${inputParams.parmAddEditFlag eq 'EDIT' }"> disabled </c:if>  />
-	</td>
+  <th scope="row">Account Description<span class="must">*</span></th>
+  <td colspan="3">
+  <input type="text" id="popUpAccDesc" name="popUpAccDesc" title="" value='${inputParams.paramAccDesc}' class="w100p" placeholder='Account description' maxlength="70"
+         <c:if test="${inputParams.parmAddEditFlag eq 'EDIT' }"> disabled </c:if>  />
+  </td>
 </tr>
 <tr>
-	<th scope="row">Payment Account</th>
-	<td colspan="3">  
-	  <label><input type="checkbox" id="popUpIsPayCash" name="popUpIsPayCash" <c:if test="${inputParams.parmIsPayCash eq '1' }"> checked </c:if> /><span>Cash</span></label>
-		<label><input type="checkbox" id="popUpIsPayChq"  name="popUpIsPayChq" <c:if test="${inputParams.parmIsPayChq  eq '1' }"> checked </c:if> /><span>Cheque</span></label>
-		<label><input type="checkbox" id="popUpIsPayOnline" name="popUpIsPayOnline" <c:if test="${inputParams.parmIsPayOnline eq '1' }"> checked </c:if> /><span>Online</span></label>
-		<label><input type="checkbox" id="popUpIsPayCrc"    name="popUpIsPayCrc" <c:if test="${inputParams.parmIsPayCrc    eq '1' }"> checked </c:if> /><span>Credit Card</span></label>
-	</td>
+  <th scope="row">Payment Account</th>
+  <td colspan="3">  
+    <label><input type="checkbox" id="popUpIsPayCash" name="popUpIsPayCash" <c:if test="${inputParams.parmIsPayCash eq '1' }"> checked </c:if> /><span>Cash</span></label>
+    <label><input type="checkbox" id="popUpIsPayChq"  name="popUpIsPayChq" <c:if test="${inputParams.parmIsPayChq  eq '1' }"> checked </c:if> /><span>Cheque</span></label>
+    <label><input type="checkbox" id="popUpIsPayOnline" name="popUpIsPayOnline" <c:if test="${inputParams.parmIsPayOnline eq '1' }"> checked </c:if> /><span>Online</span></label>
+    <label><input type="checkbox" id="popUpIsPayCrc"    name="popUpIsPayCrc" <c:if test="${inputParams.parmIsPayCrc    eq '1' }"> checked </c:if> /><span>Credit Card</span></label>
+  </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -203,59 +207,59 @@ function fnSaveAccount()
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+  <col style="width:180px" />
+  <col style="width:*" />
+  <col style="width:180px" />
+  <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row" rowspan="3">Address</th>
-	<td colspan="3">
-	<input type="text" id="address1" name="address1" title="" placeholder="Address(1)" class="w100p" />
-	</td>
+  <th scope="row" rowspan="3">Address</th>
+  <td colspan="3">
+  <input type="text" id="address1" name="address1" title="" placeholder="Address(1)" class="w100p" />
+  </td>
 </tr>
 <tr>
-	<td colspan="3">
-	<input type="text" id="address2" name="address2" title="" placeholder="Address(2)" class="w100p" />
-	</td>
+  <td colspan="3">
+  <input type="text" id="address2" name="address2" title="" placeholder="Address(2)" class="w100p" />
+  </td>
 </tr>
 <tr>
-	<td colspan="3">
-	<input type="text" id="address3" name="address3" title="" placeholder="Address(3)" class="w100p" />
-	</td>
+  <td colspan="3">
+  <input type="text" id="address3" name="address3" title="" placeholder="Address(3)" class="w100p" />
+  </td>
 </tr>
 
 <tr>
-	<th scope="row">Country</th>
-	<td>
-	 <select id="mcountry" name="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select>
-	</td>
-	<th scope="row">State</th>
-	<td>
-	 <select id="mstate" name="mstate" class="msap" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" ><option>Choose One</option></select>
-	</td> 
-	
+  <th scope="row">Country</th>
+  <td>
+   <select id="mcountry" name="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select>
+  </td>
+  <th scope="row">State</th>
+  <td>
+   <select id="mstate" name="mstate" class="msap" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" ><option>Choose One</option></select>
+  </td> 
+  
 </tr>
 <tr>
-	<th scope="row">Area</th>
-	<td>
-	 <select id="marea" name="marea" class="msap" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" ><option>Choose One</option></select>
-	</td>
-	<th scope="row">Postcode</th>
-	<td>
+  <th scope="row">Area</th>
+  <td>
+   <select id="marea" name="marea" class="msap" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" ><option>Choose One</option></select>
+  </td>
+  <th scope="row">Postcode</th>
+  <td>
     <select id="mpostcd" name="mpostcd"  class="msap"><option>Choose One</option></select>
-	</td>
+  </td>
 </tr>
 <tr>
-	<th scope="row">Tel(1)</th>
-	<td>
-	<input type="text" id="tel1" name="tel1" title="" placeholder="Tel(1)" class="w100p" maxlength="12" />
-	</td>
-	<th scope="row">Tel(2)</th>
-	<td>
-	<input type="text" id="tel2" name="tel2" title="" placeholder="Tel(2)" class="w100p" maxlength="12" />
-	</td>
+  <th scope="row">Tel(1)</th>
+  <td>
+  <input type="text" id="tel1" name="tel1" title="" placeholder="Tel(1)" class="w100p" maxlength="12" />
+  </td>
+  <th scope="row">Tel(2)</th>
+  <td>
+  <input type="text" id="tel2" name="tel2" title="" placeholder="Tel(2)" class="w100p" maxlength="12" />
+  </td>
 </tr>
 </tbody>
 </table><!-- table end -->
