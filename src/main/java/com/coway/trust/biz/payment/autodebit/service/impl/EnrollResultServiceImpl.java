@@ -185,7 +185,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	private List<EnrollmentUpdateDVO> bindEnrollItemList(List<CsvFormatVO> csvList, int userId){
 		List<EnrollmentUpdateDVO> list = new ArrayList();
-		long diffDays = CommonUtils.getDiffDate("2016-07-01");
+		long diffDays = CommonUtils.getDiffDate("20160701");
 		if(csvList.size() > 0){
    		for(CsvFormatVO csv : csvList){
     			String ContractNOrderNo = csv.getOrderNo();
