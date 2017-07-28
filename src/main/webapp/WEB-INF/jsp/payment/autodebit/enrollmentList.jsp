@@ -86,7 +86,7 @@ var columnLayout2 = [
         dataField : "accName",
         headerText : "Name",
         editable : false,
-        width : 150
+        width : 350
     }, {
         dataField : "accNric",
         headerText : "NRIC",
