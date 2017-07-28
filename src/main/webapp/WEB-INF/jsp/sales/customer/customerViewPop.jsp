@@ -91,7 +91,7 @@
                       onclick : function(rowIndex, columnIndex, value, item) {
                           //pupupWin
                           $("#getparam").val(item.custAddId);
-                          Common.popupWin("detailForm", "/sales/customer/selectCustomerAddrDetailView.do", option);
+                          Common.popupWin("detailForm", "/sales/customer/selectCustomerAddrDetailViewPop.do", option);
                     }
              }
     }];
@@ -115,7 +115,7 @@
                     onclick : function(rowIndex, columnIndex, value, item) {
                          //pupupWin
                         $("#getparam").val(item.custCntcId);
-                        Common.popupWin("detailForm", "/sales/customer/selectCustomerContactDetailView.do", option);
+                        Common.popupWin("detailForm", "/sales/customer/selectCustomerContactDetailViewPop.do", option);
                     }
              }
          }];
@@ -137,7 +137,7 @@
                    onclick : function(rowIndex, columnIndex, value, item) {
                        
                        $("#getparam").val(item.custAccId);
-                       Common.popupWin("detailForm", "/sales/customer/selectCustomerBankDetailView.do", option);
+                       Common.popupWin("detailForm", "/sales/customer/selectCustomerBankDetailViewPop.do", option);
                    }
             }
         }]; 
@@ -161,7 +161,7 @@
                    onclick : function(rowIndex, columnIndex, value, item) {
                       
                        $("#getparam").val(item.custCrcId);
-                       Common.popupWin("detailForm", "/sales/customer/selectCustomerCreditCardDetailView.do", option);
+                       Common.popupWin("detailForm", "/sales/customer/selectCustomerCreditCardDetailViewPop.do", option);
                    }
             }
     }];

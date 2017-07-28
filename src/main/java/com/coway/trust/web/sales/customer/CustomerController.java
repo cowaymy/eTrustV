@@ -187,12 +187,12 @@ public class CustomerController {
 	 * @return
 	 * @author 이석희 2017.07.20
 	 * */
-	@RequestMapping(value = "/selectCustomerAddrDetailView.do")
-	public String selectCustomerDetailAddr(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+	@RequestMapping(value = "/selectCustomerAddrDetailViewPop.do")
+	public String selectCustomerAddrDetailViewPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		EgovMap detailaddr = null;
 		logger.info("##### selectCustomerDetailAddr START #####");
-		detailaddr = customerService.selectCustomerDetailAddr(params);
+		detailaddr = customerService.selectCustomerAddrDetailViewPop(params);
 		model.addAttribute("detailaddr", detailaddr);
 		
 		return "sales/customer/customerAddressPop";
@@ -207,12 +207,12 @@ public class CustomerController {
 	 * @return
 	 * @author 이석희 2017.07.20
 	 * */
-	@RequestMapping(value = "/selectCustomerBankDetailView.do")
-	public String selectCustomerDetailBank(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	@RequestMapping(value = "/selectCustomerBankDetailViewPop.do")
+	public String selectCustomerBankDetailViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		EgovMap detailbank = null;
 		logger.info("##### selectCustomerDetailBank START #####");
-		detailbank = customerService.selectCustomerDetailBank(params);
+		detailbank = customerService.selectCustomerBankDetailViewPop(params);
 		model.addAttribute("detailbank", detailbank);
 		
 		return "sales/customer/customerBankPop";
@@ -227,12 +227,12 @@ public class CustomerController {
 	 * @return
 	 * @author 이석희 2017.07.20
 	 * */
-	@RequestMapping(value = "/selectCustomerCreditCardDetailView.do")
-	public String selectCustomerDetailCreditCard(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	@RequestMapping(value = "/selectCustomerCreditCardDetailViewPop.do")
+	public String selectCustomerCreditCardDetailViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		EgovMap detailcard = null;
 		logger.info("##### selectCustomerDetail Credit Card START #####");
-		detailcard = customerService.selectCustomerDetailCreditCard(params);
+		detailcard = customerService.selectCustomerCreditCardDetailViewPop(params);
 		
 		model.addAttribute("detailcard", detailcard);
 		
@@ -280,13 +280,13 @@ public class CustomerController {
 	 * @return
 	 * @author 이석희 2017.07.25
 	 * */
-	@RequestMapping(value = "/selectCustomerContactDetailView.do")
-	public String selectCustomerContactAddr(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model)throws Exception{
+	@RequestMapping(value = "/selectCustomerContactDetailViewPop.do")
+	public String selectCustomerContactDetailViewPop(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model)throws Exception{
 		
 		EgovMap detailcontact = null;
 		
 		logger.info("##### selectCustomerDetailContact START #####");
-		detailcontact = customerService.selectCustomerDetailContact(params);
+		detailcontact = customerService.selectCustomerContactDetailViewPop(params);
 		logger.info("확인 : " + detailcontact.toString());
 		model.addAttribute("detailcontact", detailcontact);
 		
@@ -317,12 +317,185 @@ public class CustomerController {
 		addresinfo = customerService.selectCustomerViewMainAddress(params);
 		contactinfo = customerService.selectCustomerViewMainContact(params);
 		
+		//page param
+		model.addAttribute("custId", params.get("custId"));
+		model.addAttribute("custAddrId", params.get("custAddrId"));
 		// infomation param
 		model.addAttribute("result", basicinfo);
 		model.addAttribute("addresinfo", addresinfo);
 		model.addAttribute("contactinfo", contactinfo);
 		
 		return "sales/customer/cusotmerBasicEditPop";
+	}
+	
+	
+	/**
+	 * 
+	 * Customer Address Edit 기본 정보 수정
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.28
+	 * */
+	@RequestMapping(value = "/updateCustomerAddress.do")
+	public String updateCustomerAddress(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		EgovMap basicinfo = null;
+		EgovMap addresinfo = null;
+		EgovMap contactinfo = null;
+		
+		logger.info("##### customer Address Edit START #####");
+//		logger.debug("!!!!!!!!!!!!!!  Edit custId: {}" , params.get("custId"));
+//		logger.debug("!!!!!!!!!!!!!! Edit custAddId: {}" , params.get("custAddId"));
+		basicinfo = customerService.selectCustomerViewBasicInfo(params);
+		addresinfo = customerService.selectCustomerViewMainAddress(params);
+		contactinfo = customerService.selectCustomerViewMainContact(params);
+		
+		//page param
+		model.addAttribute("custId", params.get("custId"));
+		model.addAttribute("custAddrId", params.get("custAddrId"));
+		// infomation param
+		model.addAttribute("result", basicinfo);
+		model.addAttribute("addresinfo", addresinfo);
+		model.addAttribute("contactinfo", contactinfo);
+		
+		return "sales/customer/customerAddressEditPop"; 
+	}
+	
+	
+	/**
+	 * 
+	 * Customer Contact Edit 기본 정보 수정
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.28
+	 * */
+	@RequestMapping(value = "/updateCustomerContact.do")
+	public String updateCustomerContact(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		EgovMap basicinfo = null;
+		EgovMap addresinfo = null;
+		EgovMap contactinfo = null;
+		
+		logger.info("##### customer Contact Edit START #####");
+//		logger.debug("!!!!!!!!!!!!!!  Edit custId: {}" , params.get("custId"));
+//		logger.debug("!!!!!!!!!!!!!! Edit custAddId: {}" , params.get("custAddId"));
+		basicinfo = customerService.selectCustomerViewBasicInfo(params);
+		addresinfo = customerService.selectCustomerViewMainAddress(params);
+		contactinfo = customerService.selectCustomerViewMainContact(params);
+		
+		//page param
+		model.addAttribute("custId", params.get("custId"));
+		model.addAttribute("custAddrId", params.get("custAddrId"));
+		// infomation param
+		model.addAttribute("result", basicinfo);
+		model.addAttribute("addresinfo", addresinfo);
+		model.addAttribute("contactinfo", contactinfo);
+		
+		return "sales/customer/customerContactEditPop"; 
+	}
+	
+	
+	/**
+	 * 
+	 * Customer Bank Account Edit 기본 정보 수정
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.28
+	 * */
+	@RequestMapping(value = "/updateCustomerBankAccount.do")
+	public String updateCustomerBankAccount(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		EgovMap basicinfo = null;
+		EgovMap addresinfo = null;
+		EgovMap contactinfo = null;
+		
+		logger.info("##### customer Bank Acc Edit START #####");
+//		logger.debug("!!!!!!!!!!!!!!  Edit custId: {}" , params.get("custId"));
+//		logger.debug("!!!!!!!!!!!!!! Edit custAddId: {}" , params.get("custAddId"));
+		basicinfo = customerService.selectCustomerViewBasicInfo(params);
+		addresinfo = customerService.selectCustomerViewMainAddress(params);
+		contactinfo = customerService.selectCustomerViewMainContact(params);
+		
+		//page param
+		model.addAttribute("custId", params.get("custId"));
+		model.addAttribute("custAddrId", params.get("custAddrId"));
+		// infomation param
+		model.addAttribute("result", basicinfo);
+		model.addAttribute("addresinfo", addresinfo);
+		model.addAttribute("contactinfo", contactinfo);
+		
+		return "sales/customer/customerBankAccEditPop"; 
+	}
+	
+	
+	/**
+	 * 
+	 * Customer Credit Card Edit 기본 정보 수정
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.28
+	 * */
+	@RequestMapping(value = "/updateCustomerCreditCard.do")
+	public String updateCustomerCreditCard(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		EgovMap basicinfo = null;
+		EgovMap addresinfo = null;
+		EgovMap contactinfo = null;
+		
+		logger.info("##### customer Credit Card Edit START #####");
+//		logger.debug("!!!!!!!!!!!!!!  Edit custId: {}" , params.get("custId"));
+//		logger.debug("!!!!!!!!!!!!!! Edit custAddId: {}" , params.get("custAddId"));
+		basicinfo = customerService.selectCustomerViewBasicInfo(params);
+		addresinfo = customerService.selectCustomerViewMainAddress(params);
+		contactinfo = customerService.selectCustomerViewMainContact(params);
+		
+		//page param
+		model.addAttribute("custId", params.get("custId"));
+		model.addAttribute("custAddrId", params.get("custAddrId"));
+		// infomation param
+		model.addAttribute("result", basicinfo);
+		model.addAttribute("addresinfo", addresinfo);
+		model.addAttribute("contactinfo", contactinfo);
+		
+		return "sales/customer/customerCreditCardEditPop"; 
+	}
+	
+	
+	/**
+	 * 
+	 * Customer Basic Info (Limitation) Edit 기본 정보 수정
+	 * @param params
+	 * @param model
+	 * @return
+	 * @author 이석희 2017.07.28
+	 * */
+	@RequestMapping(value = "/updateCustomerBasicInfoLimitPop.do")
+	public String updateCustomerBasicInfoLimitPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		EgovMap basicinfo = null;
+		EgovMap addresinfo = null;
+		EgovMap contactinfo = null;
+		
+		logger.info("##### customer Address Edit START #####");
+//		logger.debug("!!!!!!!!!!!!!!  Edit custId: {}" , params.get("custId"));
+//		logger.debug("!!!!!!!!!!!!!! Edit custAddId: {}" , params.get("custAddId"));
+		basicinfo = customerService.selectCustomerViewBasicInfo(params);
+		addresinfo = customerService.selectCustomerViewMainAddress(params);
+		contactinfo = customerService.selectCustomerViewMainContact(params);
+		
+		//page param
+		model.addAttribute("custId", params.get("custId"));
+		model.addAttribute("custAddrId", params.get("custAddrId"));
+		// infomation param
+		model.addAttribute("result", basicinfo);
+		model.addAttribute("addresinfo", addresinfo);
+		model.addAttribute("contactinfo", contactinfo);
+		
+		return "sales/customer/customerBasicLimitPop"; 
 	}
 	
 }

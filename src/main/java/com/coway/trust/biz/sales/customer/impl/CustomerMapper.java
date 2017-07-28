@@ -127,7 +127,7 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap selectCustomerDetailAddr(Map<String, Object> params) throws Exception;
+	EgovMap selectCustomerAddrDetailViewPop(Map<String, Object> params) throws Exception;
 	
 	
 	/**
@@ -228,7 +228,7 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap selectCustomerDetailContact(Map<String, Object> params) throws Exception;
+	EgovMap selectCustomerContactDetailViewPop(Map<String, Object> params) throws Exception;
 	
 	
 	/**
@@ -239,7 +239,7 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap selectCustomerDetailBank(Map<String, Object> params) throws Exception;
+	EgovMap selectCustomerBankDetailViewPop(Map<String, Object> params) throws Exception;
 	
 	
 	/**
@@ -250,5 +250,5 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap selectCustomerDetailCreditCard(Map<String, Object> params) throws Exception;
+	EgovMap selectCustomerCreditCardDetailViewPop(Map<String, Object> params) throws Exception;
 }

@@ -973,7 +973,7 @@
                   ]]>
     </select>
     <!-- Customer Detail Address (PopUp View)  -->
-    <select id="selectCustomerDetailAddr" parameterType="Map" resultType="egovMap">
+    <select id="selectCustomerAddrDetailViewPop" parameterType="Map" resultType="egovMap">
 			 <![CDATA[ 
 			  SELECT Limit1.CUST_ADD_ID CUST_ADD_ID  ,
                    Limit1.add1 ADD1  , --c1
@@ -1036,7 +1036,7 @@
     <resultMap type="egovMap" id="detailContactClobMap">
         <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/> <!-- user_id 밑에 2번 --> <!-- #{custCntcId}  -->
     </resultMap>
-    <select id="selectCustomerDetailContact" parameterType="Map" resultMap="detailContactClobMap">
+    <select id="selectCustomerContactDetailViewPop" parameterType="Map" resultMap="detailContactClobMap">
 			 <![CDATA[ 
 			 SELECT Limit1.CUST_CNTC_ID CUST_CNTC_ID  ,
                    Limit1.CUST_ID CUST_ID  ,
@@ -1108,7 +1108,7 @@
         <result property="CUST_ENCRYPT_ACC_NO" column="CUST_ENCRYPT_ACC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
     
-    <select id="selectCustomerDetailBank" parameterType="Map" resultMap="detailBankClobMap">
+    <select id="selectCustomerBankDetailViewPop" parameterType="Map" resultMap="detailBankClobMap">
         <![CDATA[ 
 			  SELECT Limit1.CUST_ACC_ID CUST_ACC_ID  ,
                    Limit1.CUST_ID CUST_ID  ,
@@ -1163,7 +1163,7 @@
         <result property="CUST_ORI_CRC_NO" column="CUST_ORI_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="CUST_CRC_REM" column="CUST_CRC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
-    <select id="selectCustomerDetailCreditCard" parameterType="Map" resultMap="detailCardClobMap">
+    <select id="selectCustomerCreditCardDetailViewPop" parameterType="Map" resultMap="detailCardClobMap">
            <![CDATA[ 
 				SELECT Limit1.CUST_CRC_ID CUST_CRC_ID  ,
 					       Limit1.custId CUST_ID  , --c1
