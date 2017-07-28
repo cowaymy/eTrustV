@@ -115,7 +115,7 @@
 				                            CASE WHEN (S1.CUST_VA_NO IS NOT NULL) THEN S1.CUST_VA_NO ELSE '' END AS CUST_VA_NO, 
 				                            CASE WHEN (S1.GST_RGIST_NO IS NOT NULL) THEN S1.GST_RGIST_NO ELSE '' END AS GST_RGIST_NO
 				                            FROM   (SELECT T1.CUST_ID AS CUST_ID1, T1.Name AS Name1, T1.NRIC AS NRIC1, DBMS_LOB.SUBSTR (T1.REM, 4000) AS REM, T1.TYPE_ID AS TYPE_ID, T1.PAS_SPORT_EXPR AS PAS_SPORT_EXPR, 
-				                                        T1.VISA_EXPR AS VISA_EXPR, --C1, 
+				                                        T1.VISA_EXPR AS VISA_EXPR, 
 				                                        T1.CRT_USER_ID AS CRT_USER_ID1, T2.USER_ID AS USER_ID1, T2.USER_NAME AS USER_NAME1, TO_CHAR(T1.CRT_DT, 'YYYYMMDD') AS CRT_DT1, T1.CORP_TYPE_ID AS CORP_TYPE_ID, T9.CODE_ID AS CODE_ID1, 
 				                                        T9.CODE_NAME AS CODE_NAME1, T1.DOB AS DOB1, T1.Email AS Email1, T1.Gender AS Gender1, T1.NATION AS NATION, T4.Name AS Name2, T4.CNTY_ID AS CNTY_ID1, T1.RACE_ID AS RACE_ID1, 
 				                                        T5.CODE_ID AS CODE_ID2, T5.CODE_NAME AS CODE_NAME2, T1.STUS_CODE_ID AS STUS_CODE_ID1, T1.UPD_DT AS UPD_DT1, T1.UPD_USER_ID AS UPD_USER_ID1, T3.USER_ID AS USER_ID2, T3.USER_NAME AS USER_NAME2, 
@@ -148,8 +148,6 @@
 				                                    JOIN SYS0013M T9 
 				                                      ON T9.CODE_ID = T1.TYPE_ID
 				                                   WHERE (8 <>   T1.STUS_CODE_ID) 
-				                                     --AND (T1.TYPE_ID IN (965,964)) 
-				                                     --AND ( (1154 = (CASE WHEN (T1.CORP_TYPE_ID IS NOT NULL) THEN T1.CORP_TYPE_ID ELSE 0 END)) OR (1174 = (CASE WHEN (T1.CORP_TYPE_ID IS NOT NULL) THEN T1.CORP_TYPE_ID ELSE 0 END))) 
 				                                   ) S1
 				                            LEFT OUTER 
 				                            JOIN SYS0013M T10 
@@ -1219,4 +1217,219 @@
 				            AND ( Extent1.CUST_CRC_ID = #{getparam}) AND ROWNUM <= 1 ) Limit1
            ]]>
     </select>
+    
+    <select id="getCustIdSeq" parameterType="Map" resultType="Integer">
+      SELECT NVL(MAX(CUST_ID),0) + 1 from SAL0029D
+    </select>
+    
+    <select id="getCustAddrIdSeq" parameterType="Map" resultType="Integer">
+      SELECT NVL(MAX(CUST_ADD_ID),0) + 1 from SAL0023D
+    </select>
+    
+    <select id="getCustCntcIdSeq" parameterType="Map" resultType="Integer">
+      SELECT NVL(MAX(CUST_CNTC_ID),0) + 1 from SAL0027D
+    </select>
+    
+    <select id="getCustCareCntIdSeq" parameterType="Map" resultType="Integer">
+      SELECT NVL(MAX(CUST_CARE_CNT_ID),0) + 1 from SAL0026D
+    </select>
+    
+    <insert id="insertCustomerInfo" parameterType="Map">
+        INSERT INTO SAL0029D (CUST_ID,
+                                          NAME,
+					                      NRIC,
+					                      NATION,
+					                      DOB,
+					                      GENDER,
+					                      RACE_ID,
+					                      EMAIL,
+					                      REM,
+					                      STUS_CODE_ID,
+					                      UPD_USER_ID,
+					                      UPD_DT,
+					                      REN_GRP,
+					                      PST_TERMS,
+					                      ID_OLD,
+					                      CRT_USER_ID,
+					                      CRT_DT,
+					                      TYPE_ID,
+					                      PAS_SPORT_EXPR,
+					                      VISA_EXPR,
+					                      CUST_VA_NO,
+					                      CORP_TYPE_ID,
+					                      GST_RGIST_NO)
+					  VALUES   (#{getCustId},
+						            #{custName},
+						            #{nric},
+						            #{cmbNation},
+						            #{dob},
+						            #{gender},
+						            #{cmbRace},
+						            #{email},
+						            #{rem},
+						            #{stusCodeId},
+						            #{updUserId},
+						            SYSDATE,
+						            #{renGrp},
+						            #{pstTerms},
+						            #{idOld},
+						            #{crtUserId},
+						            SYSDATE,
+						            #{cmbTypeId},
+						            #{pasSportExpr},
+						            #{visaExpr},
+						            NULL,
+						            #{cmbCorpTypeId},
+						            #{gstRgistNo})
+    </insert>
+    
+    <update id="updateCustomerInfo" parameterType="Map">
+        UPDATE SAL0029D
+		     SET CUST_VA_NO = #{custVaNo}
+		 WHERE CUST_ID = #{getCustId};
+    </update>
+    
+    <insert id="insertAddressInfo" parameterType="Map">
+        INSERT INTO SAL0023D (CUST_ADD_ID,
+                                          CUST_ID,
+					                      NRIC,
+					                      TEL,
+					                      FAX,
+					                      ADD1,
+					                      ADD2,
+					                      ADD3,
+					                      ADD4,
+					                      POST_CODE_ID,
+					                      POST_CODE,
+					                      AREA_ID,
+					                      AREA,
+					                      STATE_ID,
+					                      CNTY_ID,
+					                      STUS_CODE_ID,
+					                      REM,
+					                      UPD_USER_ID,
+					                      UPD_DT,
+					                      ID_OLD,
+					                      SO_ID,
+					                      IDCM,
+					                      CRT_USER_ID,
+					                      CRT_DT)
+		  VALUES   (#{getCustAddrId},
+		                #{getCustId},
+			            #{nric},
+			            #{tel},
+			            #{fax},
+			            #{add1},
+			            #{add2},
+			            #{add3},
+			            #{add4},
+			            #{postCodeId},
+			            #{postCode},
+			            #{areaId},
+			            #{area},
+			            #{stateId},
+			            #{cntyId},
+			            #{stusCodeId},
+			            #{addrRem},
+			            #{updUserId},
+			            SYSDATE,
+			            #{idOld},
+			            #{soId},
+			            #{idcm},
+			            #{crtUserId},
+			            SYSDATE
+			            )
+    </insert>
+    
+     <insert id="insertContactInfo" parameterType="Map">
+        INSERT INTO SAL0027D (CUST_CNTC_ID, CUST_ID,
+					                      NAME,
+					                      CUST_INITIAL,
+					                      NRIC,
+					                      POS,
+					                      TEL_M1,
+					                      TEL_M2,
+					                      TEL_O,
+					                      TEL_R,
+					                      TELF,
+					                      DOB,
+					                      GENDER,
+					                      RACE_ID,
+					                      EMAIL,
+					                      STUS_CODE_ID,
+					                      UPD_DT,
+					                      UPD_USER_ID,
+					                      ID_OLD,
+					                      DEPT,
+					                      DCM,
+					                      CRT_DT,
+					                      CRT_USER_ID,
+					                      EXT)
+					  VALUES   (#{getCustCntcId},
+					                #{getCustId},
+						            #{custName},
+						            #{custInitial},
+						            #{nric},
+						            #{pos},
+						            #{telM1},
+						            #{telM2},
+						            #{telO},
+						            #{telR},
+						            #{telF},
+						            #{dob},
+						            #{gender},
+						            #{cmbRace},
+						            #{email},
+						            #{stusCodeId},
+						            SYSDATE,
+						            #{updUserId},
+						            #{idOld},
+						            #{dept},
+						            #{dcm},
+						            SYSDATE,
+						            #{crtUserId},
+						            #{ext}
+						            )
+    </insert>
+    
+    <insert id="insertCareContactInfo" parameterType="Map">
+		INSERT INTO SAL0026D (CUST_CARE_CNT_ID, CUST_ID,
+					                      NAME,
+					                      CUST_INITIAL,
+					                      TEL_M,
+					                      TEL_O,
+					                      TEL_R,
+					                      EXT,
+					                      EMAIL,
+					                      STUS_CODE_ID,
+					                      CRT_USER_ID,
+					                      CRT_DT,
+					                      UPD_USER_ID,
+					                      UPD_DT,
+					                      TELF)
+		  VALUES   (#{getCustCareCntId},
+		                #{getCustId},
+			            #{asCustName},
+			            #{custInitial},
+			            #{asTelM},
+			            #{asTelO},
+			            #{asTelR},
+			            #{asExt},
+			            #{asEmail},
+			            #{stusCodeId},
+			            #{crtUserId},
+			            SYSDATE,
+			            #{updUserId},
+			            SYSDATE,
+			            #{asTelF}
+		               )
+    </insert>
+    
+    <select id="nricDupChk" parameterType="Map" resultType="Integer">
+      SELECT COUNT(0) AS nricDupChk 
+		  FROM SAL0029D 
+		 WHERE  TYPE_ID = #{cmbTypeId}
+		    AND NRIC = #{nric}
+    </select>
+    
 </mapper>
