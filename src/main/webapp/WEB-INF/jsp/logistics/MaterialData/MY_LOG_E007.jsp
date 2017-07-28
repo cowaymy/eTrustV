@@ -772,7 +772,7 @@
     </td>
     <th scope="row">Sales Price</th>
     <td>
-    <input type="text" placeholder="" id="price" class="numberAmt"/>
+    <input type="text" placeholder="" id="price" class="w100p numberAmt"/>
     </td>
     <th scope="row">Used</th>
     <td>
