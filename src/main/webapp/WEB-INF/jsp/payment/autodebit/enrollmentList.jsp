@@ -4,8 +4,8 @@
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
-.my-custom-up div{
-    color:#FF0000;
+.my-custom-up{
+    text-align: left;
 }
 </style>
 <script type="text/javaScript">
@@ -48,17 +48,18 @@ $(document).ready(function(){
 });
  
 
- 
+
 // AUIGrid 칼럼 설정
 var columnLayout = [ 
     {
         dataField : "enrlid",
         headerText : "Enroll ID",
         editable : false,
-        width : 100
+        width : 200
     }, {
         dataField : "name",
         headerText : "Issue Bank",
+        style : "my-custom-up",
         editable : false
     }, {
         dataField : "createdate",
@@ -67,7 +68,8 @@ var columnLayout = [
     }, {
         dataField : "c1",
         headerText : "Creator",
-        editable : false
+        editable : false,
+        width : 250
     }];
     
 //AUIGrid 칼럼 설정
@@ -86,6 +88,7 @@ var columnLayout2 = [
         dataField : "accName",
         headerText : "Name",
         editable : false,
+        style : "my-custom-up",
         width : 350
     }, {
         dataField : "accNric",
