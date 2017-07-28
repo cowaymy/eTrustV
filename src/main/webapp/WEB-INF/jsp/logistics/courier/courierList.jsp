@@ -23,13 +23,6 @@
     color:#000;
 }
 
-
-/* #editWindow {
-    font-size:13px;
-}
-#editWindow label, input { display:block; }
-#editWindow input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
-#editWindow fieldset { padding:0; border:0; margin-top:10px; } */
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -45,7 +38,7 @@
     var comboData = [{"codeId": "1","codeName": "Y"},{"codeId": "8","codeName": "N"}];
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
     
-    // V= 보기, M=수정, N=신규....  
+    // V= 보기, U=수정, N=신규....  
     var div;
     
     var selectedItem; 
@@ -79,8 +72,6 @@
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
-       // doGetCombo('/common/selectCodeList.do', '63', '','spgroup', 'A' , ''); 
-        //doDefCombo(comboData, '' ,'sused', 'A', '');
         
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {   
@@ -89,131 +80,49 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
-            f_detailView(event.rowIndex);
+             $("#view").click();
         });
         
         AUIGrid.bind(myGridID, "ready", function(event) {
-            var rowCount = AUIGrid.getRowCount(myGridID);  
-            
-            for (var i = 0 ; i < rowCount ; i++){
-                var itemtype = AUIGrid.getCellValue(myGridID, i, "itemType");
-                
-                if (itemtype != null && itemtype != "" && itemtype != undefined){
-                    
-                    var typeArr = itemtype.split(",");
-                    for (var j = 0 ; j < typeArr.length ; j++){
-                        
-                        $.each(itemdata, function(index,value) {
-                            if(typeArr[j] == itemdata[index].codeId ){
-                                AUIGrid.setCellValue(myGridID, i, itemdata[index].code , typeArr[j]);
-                            }
-                        });
-                        
-                    }
-                }
-            }
-            AUIGrid.resetUpdatedItems(myGridID, "all");
         });
-        
-         //$("#detailView").hide();
-        // searchAjax();
-        
-        dialog = $( "#detailWindow" ).dialog({
-            autoOpen: false,
-            height: 500,
-            width: 1400,
-            modal: true,
-            headerHeight:40,
-            position : { my: "center", at: "center", of: $("#grid_wrap") },
-            buttons: {
-              /* "SAVE" , */
-              "CANCEL": function(event) {
-                dialog.dialog( "close" );
-              }
-            }
-          });
-        
-
     });
 
     $(function(){
-/*         $('#svalue').keypress(function(event) {
-            if (event.which == '13') {
-                $("#sUrl").val("/logistics/material/materialcdsearch.do");
-                Common.searchpopupWin("searchForm", "/common/searchPopList.do","item");
-            }
-        }); */
         $("#search").click(function(){
             searchAjax();
         });
-        $("#clear").click(function(){
-            doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
-            doDefCombo(comboData, '' ,'status', 'S', '');
-            $("#loccd").val('');
-            $("#locdesc").val('');
-        });
         $("#view").click(function(){
         	div="V";
+        	$("#detailHead").text("Courier Information Details");
         	selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
 	        	fn_openDetail(div,selectedItem[0]);
+	        	$("#editWindow").show();
             }else{
             Common.alert('Choice Data please..');
             }
         });
-        /* $("#update").click(function(){
-            var updCnt = GridCommon.getEditData(myGridID).update.length;
-            for (var i = 0 ; i < updCnt ; i++){
-                var make = GridCommon.getEditData(myGridID).update[i];
-                
-                var itemtypevalue = "";
-                if (make.CDTL != undefined && make.CDTL != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.CDTL; 
-                }
-                if (make.FINI != undefined && make.FINI != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.FINI; 
-                }if (make.HRI != undefined && make.HRI != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.HRI; 
-                }
-                if (make.KSK != undefined && make.KSK != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.KSK; 
-                }if (make.MKT != undefined && make.MKT != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.MKT; 
-                }
-                if (make.MISC != undefined && make.MISC != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.MISC; 
-                }if (make.PRD != undefined && make.PRD != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.PRD; 
-                }
-                if (make.UNM != undefined && make.UNM != ""){
-                    if (itemtypevalue != "")itemtypevalue += ",";
-                    itemtypevalue += make.UNM; 
-                }
-                var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", make.itmId);
-                
-                AUIGrid.setCellValue(myGridID, rows, "itemType" , itemtypevalue);
+        $("#update").click(function(){
+            div="U";
+            $("#detailHead").text("Courier Information Update");
+            selectedItem = AUIGrid.getSelectedIndex(myGridID);
+            if (selectedItem[0] > -1){
+                fn_openDetail(div,selectedItem[0]);
+                $("#editWindow").show();
+            }else{
+            Common.alert('Choice Data please..');
             }
-            
-            Common.ajax("POST", "/logistics/material/materialUpdateItemType.do", GridCommon.getEditData(myGridID), function(result) {
-                Common.alert(result.message);
-                AUIGrid.resetUpdatedItems(myGridID, "all");
-                
-            },  function(jqXHR, textStatus, errorThrown) {
-                try {
-                } catch (e) {
-                }
-
-                Common.alert("Fail : " + jqXHR.responseJSON.message);
-            });
-           // searchAjax("");
-        }); */
+       
+        });
+        $("#insert").click(function(){
+                div="N";
+                $("#detailHead").text("Courier Information New");
+                fn_setVisiable(div);
+                $("#editWindow").show();
+        });
+        $("#cancelPopbtn").click(function(){
+        	$("#editWindow").hide();
+        });
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
             v = $(this).val();
@@ -224,155 +133,22 @@
                 return;
             }
         });
-        $("#delete").click(function(){
-            var selectedItems = AUIGrid.getSelectedItems(myGridID);
-            for (var i = 0 ; i < selectedItems.length ; i++){
-                   AUIGrid.removeRow(myGridID, selectedItems[i].rowIndex);
-            }
-            Common.ajax("POST", "/logistics/material/materialUpdate.do", GridCommon.getEditData(myGridID), function(result) {
-                Common.alert(result.message);
-                AUIGrid.resetUpdatedItems(myGridID, "all");
-                
-            },  function(jqXHR, textStatus, errorThrown) {
-                try {
-                } catch (e) {
-                }
-
-                Common.alert("Fail : " + jqXHR.responseJSON.message);
-            });
-        });$("#detailsave").click(function(){
-            
-            if (valiedcheck()){
-                var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", $("#ditmid").val());
-                var checkval = "";
-                $("input[id=itemtype]:checked").each(function() {
-                    if (checkval != "") checkval += ",";
-                    checkval += $(this).val();                
-                });
-                AUIGrid.setCellValue(myGridID, rows, "itemType"   , checkval);
-                AUIGrid.setCellValue(myGridID, rows, "itmName"    , $("#itmname").val());
-                AUIGrid.setCellValue(myGridID, rows, "prc"        , $("#price").val());
-                AUIGrid.setCellValue(myGridID, rows, "itmDesc"    , $("#itmdesc").val());
-                AUIGrid.setCellValue(myGridID, rows, "oldStkId"   , $("#olditemid").val());
-                AUIGrid.setCellValue(myGridID, rows, "uom"        , $("#uom").val());
-                AUIGrid.setCellValue(myGridID, rows, "currency"   , $("#currency").val());
-                AUIGrid.setCellValue(myGridID, rows, "ctgryId"    , $("#cateid").val());
-                AUIGrid.setCellValue(myGridID, rows, "stusCodeId" , $("#stuscode").val());
-                Common.ajax("POST", "/logistics/material/materialUpdateItemType.do", GridCommon.getEditData(myGridID), function(result) {
-                    Common.alert(result.message);
-                    AUIGrid.resetUpdatedItems(myGridID, "all");
-                    
-                },  function(jqXHR, textStatus, errorThrown) {
-                    try {
-                    } catch (e) {
-                    }
-
-                    Common.alert("Fail : " + jqXHR.responseJSON.message);
-                });
-                //searchAjax(rows);
-            }
-            
-        });
-        $("#detailcancel").click(function(){
-            var rows = AUIGrid.getRowIndexesByValue(myGridID, "itmId", $("#ditmid").val());
-            f_detailView(rows);
-        });
-        
-
+       $("#curcntyid").change(function(){
+           doDefCombo('', '' ,'curstateid', 'S', ''); 
+           doDefCombo('', '' ,'curareaid', 'S', '');
+           doDefCombo('', '' ,'curpostcod', 'S', '');   
+         }); 
+       $("#curstateid").change(function(){
+           doDefCombo('', '' ,'curareaid', 'S', '');
+           doDefCombo('', '' ,'curpostcod', 'S', '');   
+         }); 
+       $("#curareaid").change(function(){
+           doDefCombo('', '' ,'curpostcod', 'S', '');   
+         }); 
     });
     
-    function f_detailView(rid){
-        $("#detailView").show();
-        var seldata = AUIGrid.getItemByRowIndex(myGridID , rid);
-        
-        doGetCombo('/common/selectCodeList.do', '63', seldata.ctgryId ,'cateid', 'S' , '');
-        doGetCombo('/common/selectCodeList.do', '94', seldata.uom     ,'uom', 'S' , '');
-        doGetCombo('/common/selectCodeList.do', '42', seldata.currency,'currency', 'S' , '');
-        doDefCombo(comboData, seldata.stusCodeId ,'stuscode', 'S', '');
-        $("#itmcode").val(seldata.itmCode);
-        $("#itmname").val(seldata.itmName);
-        $("#itmdesc").val(seldata.itmDesc);
-        $("#olditemid").val(seldata.oldStkId);
-        $("#price").val(seldata.prc);
-        $("#ditmid").val(seldata.itmId);
-        //itemtypedata
-        var html = "";
-        var checked = "";
-        $.each(itemdata, function(index,value) {
-            if (index == 0 || (index % 4) == 0){
-                html += "<tr>";
-            }
-            
-            if (seldata.itemType != null && seldata.itemType != "" && seldata.itemType != undefined){
-                var typeArr = seldata.itemType.split(",");
-                for (var j = 0 ; j < typeArr.length ; j++){
-                    if(typeArr[j] == itemdata[index].codeId ){
-                        checked = "checked";
-                    }
-                }
-            }
-            
-            html += "<th scope=\"row\">"+itemdata[index].codeName+"</th>";
-            html += "<td>";
-            html += "<label><input type=\"checkbox\" id='itemtype' name='itemtype' value='"+itemdata[index].codeId+"' "+checked+"/></label>";
-            html += "</td>";
-            
-            if ((index % 4) == 3){
-                html += "</tr>";
-            }
-            checked = "";
-        });
-        
-        $("#itemtypedata").html(html);
-    }
     
-    function valiedcheck(){
-        if($("#uom").val() == ""){
-            Common.alert("Please select one of Unit of Measure.");
-            $("#uom").focus();
-            return false;
-        }
-        if($("#currency").val() == ""){
-            Common.alert("Please select one of Currency.");
-            $("#currency").focus();
-            return false;
-        }
-        if($("#cateid").val() == ""){
-            Common.alert("Please select one of Key Product Group.");
-            $("#cateid").focus();
-            return false;
-        }
-        if($("#stuscode").val() == ""){
-            Common.alert("Please select one of Used.");
-            $("#stuscode").focus();
-            return false;
-        }
-        if($("#price").val() == ""){
-            Common.alert("Please enter the Sales Price.");
-            $("#price").focus();
-            return false;
-        }
-        if($("#itmname").val() == ""){
-            Common.alert("Please enter the Material Name.");
-            $("#itmname").focus();
-            return false;
-        }
-        
-        
-        if($("input[id=itemtype]:checked").length == 0){
-            Common.alert("Please check one or more Item Type.");
-            return false;
-        }
-        return true;
-    }
-    function fn_itempop(cd , nm , ct , tp){
-        doGetCombo('/common/selectCodeList.do', '63', ct ,'spgroup', 'A' , '');
-        $("#svalue").val(cd);
-        $("#sname").text(nm);
-    }
-    
-    
-    
+/*  모달  */    
     function f_showModal(){
         $.blockUI.defaults.css = {textAlign:'center'}
         $('div.SalesWorkDiv').block({
@@ -391,57 +167,131 @@
         f_showModal();
         var url = "/logistics/courier/selectCourierList.do";
         var param = $('#searchForm').serializeJSON();
-/*         $.ajax({
-            type : "GET",
-            url : "/common/selectCodeList.do",
-            data : { groupCode : "141"},
-            dataType : "json",
-            contentType : "application/json;charset=UTF-8",
-            success : function(data) {
-                itemdata = data;
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-            },
-            complete: function(){
-            }
-        }); */
         Common.ajax("POST" , url , param , function(data){
-            
             console.log(data.data);
             AUIGrid.setGridData(myGridID, data.data);
             hideModal();
-        /*     if (rid != ""){
-                AUIGrid.setSelectionByIndex(myGridID, rid, 3);
-                f_detailView(rid);
-            } */
         });
     }
     
     
     function fn_openDetail(div,idxId){
-    	//var id =AUIGrid.getCellValue(myGridID ,idxId, 'courierid');
-    	//alert("id +"+id);
+    	var id =AUIGrid.getCellValue(myGridID ,idxId, 'courierid');
+    	Common.ajaxSync("GET", "/logistics/courier/selectCourierDetail",{"courierid":id} ,
+                function(data){
+                console.log(data);
+                var setVal=data.result;
+		    	if(div=="V"){
+		    		fn_setValuePop(setVal);
+		    		fn_setVisiable(div);
+		    	}else if(div=="U"){
+		    		fn_setValuePop(setVal);
+		    		fn_setVisiable(div);
+		    	}else if(div=="N"){
+		    	}
+        });
+    }
+    function fn_setValuePop(setVal){
+    	$("#curcode").val(setVal[0].curierCode);
+        $("#curname").val(setVal[0].curierName);
+        $("#curregno").val(setVal[0].curierRegNo);
+        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , setVal[0].curierCntyId,'curcntyid', 'S', ''); 
+        getAddrRelay( 'curstateid' , setVal[0].curierCntyId , 'state' , setVal[0].curierStateId);
+        getAddrRelay( 'curareaid' , setVal[0].curierStateId , 'area' , setVal[0].curierAreaId);
+        getAddrRelay( 'curpostcod' , setVal[0].curierAreaId , 'post' ,  setVal[0].curierPostCodeId);
+        
+        $("#curcntcno1").val(setVal[0].curierCntcNo1);
+        $("#curcntcno2").val(setVal[0].curierCntcNo2);
+        $("#curfaxno").val(setVal[0].curierFaxNo);
+        $("#curemail").val(setVal[0].curierEmail);
+        $("#curadd1").val(setVal[0].curierAdd1);
+        $("#curadd2").val(setVal[0].curierAdd2);
+        $("#curadd3").val(setVal[0].curierAdd3);  
+            
+    }
+    
+    function fn_setVisiable(div){
     	if(div=="V"){
-    		fn_getCourierDetail(idxId);
-    		 dialog.dialog( "open" );
-    	}else if(div=="M"){
-    		
-    	}else if(div=="N"){
-    		
-    	}
+  		      $("#curcode").prop('readonly', true);
+  		      $("#curname").prop('readonly', true);
+  		      $("#curregno").prop('readonly', true);
+  		      $("#curcntyid").prop('disabled', true);
+  		      $("#curstateid").prop('disabled', true);
+  		      $("#curareaid").prop('disabled', true);
+  		      $("#curpostcod").prop('disabled', true);
+  		      $("#curcntcno1").prop('readonly', true);
+  		      $("#curcntcno2").prop('readonly', true);
+  		      $("#curfaxno").prop('readonly', true);
+  		      $("#curemail").prop('readonly', true);
+  		      $("#curadd1").prop('readonly', true);
+  		      $("#curadd2").prop('readonly', true);
+  		      $("#curadd3").prop('readonly', true);
+              $("#savePopbtn").hide();
+              $("#updatePopbtn").hide();
+        }else if(div=="U"){
+            $("#curcode").prop('readonly', true);
+            $("#curname").prop('readonly', false);
+            $("#curregno").prop('readonly', false);
+            $("#curcntyid").prop('disabled', false);
+            $("#curstateid").prop('disabled', false);
+            $("#curareaid").prop('disabled', false);
+            $("#curpostcod").prop('disabled', false);
+            $("#curcntcno1").prop('readonly', false);
+            $("#curcntcno2").prop('readonly', false);
+            $("#curfaxno").prop('readonly', false);
+            $("#curemail").prop('readonly', false);
+            $("#curadd1").prop('readonly', false);
+            $("#curadd2").prop('readonly', false);
+            $("#curadd3").prop('readonly', false);
+            
+            $("#updatePopbtn").show();
+            $("#savePopbtn").hide();
+        }else if(div=="N"){
+        	$("#curcode").val("Auto-Generate");            
+            $("#curname").val("");
+            $("#curregno").val("");
+            //$("#curcntyid").val("");
+            //$("#curstateid").val("");
+            //$("#curareaid").val("");
+            //$("#curpostcod").val("");
+            $("#curcntcno1").val("");
+            $("#curcntcno2").val("");
+            $("#curfaxno").val("");
+            $("#curemail").val("");
+            $("#curadd1").val("");
+            $("#curadd2").val("");
+            $("#curadd3").val(""); 
+            
+            $("#curname").prop('readonly', false);
+            $("#curregno").prop('readonly', false);
+            $("#curcntyid").prop('disabled', false);
+            $("#curstateid").prop('disabled', false);
+            $("#curareaid").prop('disabled', false);
+            $("#curpostcod").prop('disabled', false);
+            $("#curcntcno1").prop('readonly', false);
+            $("#curcntcno2").prop('readonly', false);
+            $("#curfaxno").prop('readonly', false);
+            $("#curemail").prop('readonly', false);
+            $("#curadd1").prop('readonly', false);
+            $("#curadd2").prop('readonly', false);
+            $("#curadd3").prop('readonly', false);
+            
+            $("#savePopbtn").show();
+            $("#updatePopbtn").hide();
+            
+        	combReset();
+        }
     }
     
-    function fn_getCourierDetail(id){
-    	Common.ajaxSync("GET", "courier/selectCourierDetail", id, 
-    			function(data){
-    		   console.log("selectCourierDetail :"+ date);
-    	});
-    }
-    
-    
-    
+  function combReset(){
+        	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' ,'', 'this.value','curcntyid', 'S', ''); 
+            doDefCombo('', '' ,'curstateid', 'S', ''); 
+            doDefCombo('', '' ,'curareaid', 'S', '');
+            doDefCombo('', '' ,'curpostcod', 'S', '');   
+	  
+  }
   
-  
+ 
 </script>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 <section id="content"><!-- content start -->
@@ -455,8 +305,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Courier Search</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a id="search"><span class="search"></span><spring:message code='sys.btn.search' /></a></p></li>
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span><spring:message code='sys.btn.clear' /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -549,173 +399,96 @@
     <div id="grid_wrap"></div>
 </article><!-- grid_wrap end -->
                 
-                
+<div class="popup_wrap" id="editWindow" style="display:none"><!-- popup_wrap start -->
+
+<header class="pop_header" ><!-- pop_header start -->
+					<h1 id="detailHead"></h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul> 
+</header><!-- pop_header end -->                
 			<section class="pop_body">
 				<!-- pop_body start -->
-				<div id="detailWindow" style="display: none" title="그리드 수정 사용자 정의">
-					<h1>Courier Information</h1>
 					<form id="detailForm" name="detailForm" method="POST">
-						<!-- <table class="type1">
-							table start
-							<caption>search table</caption>
-							<colgroup>
-								<col style="width: 120px" />
-								<col style="width: *" />
-								<col style="width: 120px" />
-								<col style="width: *" />
-								<col style="width: 120px" />
-								<col style="width: *" />
-								<col style="width: 120px" />
-								<col style="width: *" />
-							</colgroup>
-							<tbody>
-								<tr>
-									<th scope="row">Courier Code</th>
-									<td colspan="3"><span id="mstatus"></span></td>
-									<th scope="row">Courier Name</th>
-									<td colspan="3"><input type="text" name="mwarecd"
-										id="mwarecd" /></td>
-									<th scope="row">Courier Registration No</th>
-									<td colspan="3"><input type="text" name="mwarenm"
-										id="mwarenm" class="w100p" /></td>
-								</tr>
-								<tr>
-									<th scope="row">Contact No. (1)</th>
-									<td colspan="3"><select id="mstockgrade"></select></td>
-									<th scope="row">Contact No. (2)</th>
-									<td colspan="3"><select id="mwarebranch"></select></td>
-								</tr>
-								<tr>
-							         <th scope="row">Fax No.</th> 
-									<td colspan="3"><input type="text" id="maddr2"
-										name="maddr2" class="w100p" /></td>
-								    <th scope="row"> Email  </th>
-									<td colspan="3"><input type="text" id="maddr3"
-										name="maddr3" class="w100p" /></td>
-									<th scope="row">Country</th>
-									<td><select id="mcountry"
-										onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
-								</tr>
-								<tr>
-									<th scope="row" rowspan="3">Address</th>
-                                    <td colspan="3">1</td>    						
-                          						
-						  			<th scope="row">State</th>
-									<td><select id="mstate" class="msap"
-										onchange="getAddrRelay('marea' , this.value , 'area', this.value)"
-										disabled=true><option>Choose One</option></select></td>
-								</tr>
-								<tr>
-								<td colspan="3">2</td>                          
-                                    
-									<th scope="row">Area</th>
-									<td colspan="3"><select id="marea" class="msap"
-										onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)"
-										disabled=true><option>Choose One</option></select></td>
-									<th scope="row">Postcode</th>
-									<td colspan="3"><select id="mpostcd" class="msap" disabled=true><option>Choose
-												One</option></select></td>
-								</tr>
-								<tr>
-								<td colspan="3">3</td>
-								<th scope="row">Area</th>
-								<td></td>
-								
-								</tr>
-							</tbody>
-						</table>
-						table end -->
 						<table class="type1"><!-- table start -->
 						<caption>search table</caption>
 						<colgroup>
-						    <col style="width:150px" />
+						   <col style="width:140px" />
 						   <col style="width:*" />
-						   <col style="width:160px" />
+						   <col style="width:150px" />
 						   <col style="width:*" />
-						   <col style="width:160px" />
+						   <col style="width:150px" />
 						   <col style="width:*" />
 						</colgroup>
 						<tbody>
 						<tr>
 						    <th scope="row">Courier Code</th>
-						    <td>
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td id="tdcurcode">
+						    <input type="text" title="" placeholder=""  class="w100p" id="curcode" name="curcode"/>
 						    </td>
 						    <th scope="row">Courier Name</th>
-						    <td>
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td id="tdcurname">
+						    <input type="text" title="" placeholder="" class="w100p" id="curname" name="curname" />
 						    </td>
 						    <th scope="row">Courier Registration No</th>
-						    <td>
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td id="tdcurregno">
+						    <input type="text" title="" placeholder="" class="w100p"  id="curregno" name="curregno"/>
 						    </td>
 						</tr>
 						<tr>
 						    <th scope="row">Contact No. (1)</th>
-						    <td>
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td  id="tdcurcntcno1">
+						    <input type="text" title="" placeholder="" class="w100p" id="curcntcno1" name="curcntcno1" />
 						    </td>
 						    <th scope="row">Contact No. (2)</th>
-						    <td>
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td id="tdcurcntcno2">
+						    <input type="text" title="" placeholder="" class="w100p" id="curcntcno2" name="curcntcno2" />
 						    </td>
 						    <th scope="row">Country</th>
-						    <td>
-						    <select class="w100p">
-						        <option value="">11</option>
-						        <option value="">22</option>
-						        <option value="">33</option>
+						    <td id="tdcurcntyid">
+						    <select class="w100p" id="curcntyid" name="curcntyid" onchange="getAddrRelay('curstateid' , this.value , 'state', '')">
 						    </select>
 						    </td>
 						</tr>
 						<tr>
 						    <th scope="row">Fax No.</th>
-						    <td>
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td id="tdcurfaxno" >
+						    <input type="text" title="" placeholder="" class="w100p"  id="curfaxno" name="curfaxno"/>
 						    </td>
 						    <th scope="row">Email</th>
-						    <td>
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td  id="tdcuremail">
+						    <input type="text" title="" placeholder="" class="w100p"  id="curemail" name="curemail"/>
 						    </td>
 						    <th scope="row">State</th>
-						    <td>
-						    <select class="w100p">
-						        <option value="">11</option>
-						        <option value="">22</option>
-						        <option value="">33</option>
+						    <td id="tdcurstateid">
+						    <select class="w100p" id="curstateid" name="curstateid" onchange="getAddrRelay('curareaid' , this.value , 'area', this.value)" >
 						    </select>
 						    </td>
 						</tr>
 						<tr>
-						    <th scope="row" rowspan="3">Address</th>
-						    <td colspan="3">
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <th scope="row" rowspan="3" >Address</th>
+						    <td colspan="3" id="tdcuradd1">
+						    <input type="text" title="" placeholder="" class="w100p" id="curadd1" name="curadd1"/>
 						    </td>
 						    <th scope="row">Area</th>
-						    <td>
-						    <select class="w100p">
-						        <option value="">11</option>
-						        <option value="">22</option>
-						        <option value="">33</option>
+						    <td  id="tdcurareaid" >
+						    <select class="w100p" id="curareaid" name="curareaid" onchange="getAddrRelay('curpostcod' , this.value , 'post', this.value)">
 						    </select>
 						    </td>
 						</tr>
 						<tr>
-						    <td colspan="3">
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td colspan="3"  id="tdcuradd2">
+						    <input type="text" title="" placeholder="" class="w100p"  id="curadd2" name="curadd2"/>
 						    </td>
 						    <th scope="row">Postcode</th>
-						    <td>
-						    <select class="w100p">
-						        <option value="">11</option>
-						        <option value="">22</option>
-						        <option value="">33</option>
+						    <td id="tdcurpostcod">
+						    <select class="w100p" id="curpostcod" name="curpostcod">
 						    </select>
 						    </td>
 						</tr>
 						<tr>
-						    <td colspan="3">
-						    <input type="text" title="" placeholder="" class="w100p" />
+						    <td colspan="3" id="tdcuradd3">
+						    <input type="text" title="" placeholder="" class="w100p" id="curadd3" name="curadd3"/>
 						    </td>
 						    <th scope="row"></th>
 						    <td>
@@ -723,8 +496,12 @@
 						</tr>
 						</tbody>
 						</table><!-- table end -->
+						<ul class="center_btns">
+						    <li><p class="btn_blue2 big"><a id="savePopbtn"><spring:message code='sys.btn.save' /></a></p></li>
+						    <li><p class="btn_blue2 big"><a id="updatePopbtn"><spring:message code='sys.btn.update' /></a></p></li>
+						    <li><p class="btn_blue2 big"><a id="cancelPopbtn"><spring:message code='sys.btn.cancel' /></a></p></li>
+						</ul>
 					</form>
-				</div>
 			</section>
-
+</div>
 		</section>

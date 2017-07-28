@@ -73,10 +73,12 @@ public class CourierController {
 	}
 
 	@RequestMapping(value = "/selectCourierDetail", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCourierDetail(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<Map> selectCourierDetail(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		List<EgovMap> resultList = courierService.selectCourierDetail(params);
-
-		return ResponseEntity.ok(resultList);
+		logger.debug("courierid : {}", params.get("courierid"));
+		List<EgovMap> result = courierService.selectCourierDetail(params);
+		Map<String, Object> rmap = new HashMap<>();
+		rmap.put("result", result);
+		return ResponseEntity.ok(rmap);
 	}
 }
