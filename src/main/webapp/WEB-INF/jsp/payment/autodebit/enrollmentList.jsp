@@ -114,7 +114,7 @@ var columnLayout2 = [
         	 
         }else{
         	$("#popup_wrap").hide();
-        	alert("No enrollment record selected.");
+        	Common.alert("No enrollment record selected.");
             return;
         }
 
@@ -139,17 +139,8 @@ var columnLayout2 = [
 
 
         },function(jqXHR, textStatus, errorThrown) {
-            //alert("실패하였습니다.");
-            //console.log("실패하였습니다.");
-            //console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-            
-            alert(jqXHR.responseJSON.message);
-            //console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-          
-            //console.log("status : " + jqXHR.status);
-            //console.log("code : " + jqXHR.responseJSON.code);
-            //console.log("message : " + jqXHR.responseJSON.message);
-            //console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+            Common.alert("실패하였습니다.");
+
         }
         );
         
@@ -184,21 +175,18 @@ var columnLayout2 = [
     	    Common.ajax("POST", "/payment/saveEnroll.do?cmbIssueBank2="+cmbIssueBank2+"&rdpCreateDateFr2="+rdpCreateDateFr2+"&rdpCreateDateTo2="+rdpCreateDateTo2, $("#searchForm").serialize(), function(result) {
     		var msg = result.message;
     		var enrlId = result.data.enrlId;
-    		alert(msg+enrlId);
+    		Common.alert(msg+enrlId);
     		// 공통 메세지 영역에 메세지 표시.
             Common.setMsg("<spring:message code='sys.msg.success'/>");
             //searchList();
             }, function(jqXHR, textStatus, errorThrown) {
+            	Common.alert("실패하였습니다.");
                 try {
-                	console.log("status : " + jqXHR.status);
-                    console.log("code : " + jqXHR.responseJSON.code);
-                    console.log("message : " + jqXHR.responseJSON.message);
-                    console.log("detailMessage : "
-                            + jqXHR.responseJSON.detailMessage);
+
                 } catch (e) {
-                    console.log(e);
+                    //console.log(e);
                 }
-                alert("Fail : " + jqXHR.responseJSON.message);
+                //alert("Fail : " + jqXHR.responseJSON.message);
                 //fn_getSampleListAjax();
             });
         }
@@ -209,15 +197,15 @@ var columnLayout2 = [
         var message = "";
         
         if($("#cmbIssueBank2 option:selected").val() ==""){
-        	alert("* Please select the issue bank.");
+        	Common.alert("* Please select the issue bank.");
         	return;
         }else if($("#rdpCreateDateFr2").val() ==""){
-        	alert("* Please insert the debit date.");
+        	Common.alert("* Please insert the debit date.");
         	return;
         }else if($("#cmbIssueBank2 option:selected").val() =="7"){
         	
         	if($("#rdpCreateDateTo2").val() ==""){
-        		alert("* Please insert the debit date (To).");
+        		Common.alert("* Please insert the debit date (To).");
                 return;	
         	}
         }
@@ -388,25 +376,11 @@ var columnLayout2 = [
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
-                    <!-- <ul class="btns">
-                        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu5</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-                        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-                    </ul> -->
+
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:view_Enrollment()">View Enrollment</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()">New Enrollment</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="fn_goEnrollmentResult();">Enrollment Result</a></p></li>
-                        <!-- <li><p class="link_btn type2"><a href="#">menu2</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu5</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">menu6</a></p></li> -->
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
