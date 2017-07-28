@@ -4,50 +4,49 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Staff {
-	private String Name;
-	private int Age;
-	private String Position;
-	private BigDecimal Salary;
-	private List<String> Skills;
+	private String name;
+	private int age;
+	private String position;
+	private BigDecimal salary;
+	private List<String> skills;
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
 	public int getAge() {
-		return Age;
+		return age;
 	}
 
 	public void setAge(int age) {
-		Age = age;
+		this.age = age;
 	}
 
 	public String getPosition() {
-		return Position;
+		return position;
 	}
 
 	public void setPosition(String position) {
-		Position = position;
+		this.position = position;
 	}
 
 	public BigDecimal getSalary() {
-		return Salary;
+		return salary;
 	}
 
 	public void setSalary(BigDecimal salary) {
-		Salary = salary;
+		this.salary = salary;
 	}
 
 	public List<String> getSkills() {
-		return Skills;
+		return skills;
 	}
 
 	public void setSkills(List<String> skills) {
-		Skills = skills;
+		this.skills = skills;
 	}
-
 }

@@ -459,7 +459,7 @@ public final class BeanConverter
     {
         if ( source == null || target == null )
         {
-            throw new RuntimeException( "Source or Target object is null." );
+            throw new ApplicationException(AppConstants.FAIL, "Source or Target object is null." );
         }
         BeanUtils.copyProperties( source, target );
     }

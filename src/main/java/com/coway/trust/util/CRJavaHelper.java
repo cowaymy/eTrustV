@@ -99,13 +99,13 @@ public class CRJavaHelper {
         // Declare variables to hold ConnectionInfo values.
         // Below is the list of values required to switch to use a JDBC/JNDI
         // connection
-        String TRUSTED_CONNECTION = "false";
-        String SERVER_TYPE = "JDBC (JNDI)";
-        String USE_JDBC = "true";
-        String DATABASE_DLL = "crdb_jdbc.dll";
-        String JNDI_DATASOURCE_NAME = jndiName;
-        String CONNECTION_URL = connectionURL;
-        String DATABASE_CLASS_NAME = driverName;
+        String trustedConnection = "false";
+        String serverType = "JDBC (JNDI)";
+        String useJdbc = "true";
+        String databaseDll = "crdb_jdbc.dll";
+        String jndiDatasourceName = jndiName;
+        String connectionUrl = connectionURL;
+        String dbClassName = driverName;
 
         // The next few parameters are optional parameters which you may want to
         // uncomment
@@ -118,8 +118,8 @@ public class CRJavaHelper {
         // String URI = "new_URI";
 
         // Declare variables to hold database User Name and Password values
-        String DB_USER_NAME = username;
-        String DB_PASSWORD = password;
+        String dbUserName = username;
+        String dbPassword = password;
 
         // Obtain collection of tables from this database controller
         if (reportName == null || reportName.equals("")) {
@@ -151,13 +151,13 @@ public class CRJavaHelper {
                     propertyBag = new PropertyBag();
 
                     // Overwrite any existing properties with updated values
-                    propertyBag.put("Trusted_Connection", TRUSTED_CONNECTION);
-                    propertyBag.put("Server Type", SERVER_TYPE);
-                    propertyBag.put("Use JDBC", USE_JDBC);
-                    propertyBag.put("Database DLL",DATABASE_DLL );
-                    propertyBag.put("JNDI Datasource Name",JNDI_DATASOURCE_NAME );
-                    propertyBag.put("Connection URL", CONNECTION_URL);
-                    propertyBag.put("Database Class Name", DATABASE_CLASS_NAME);
+                    propertyBag.put("Trusted_Connection", trustedConnection);
+                    propertyBag.put("Server Type", serverType);
+                    propertyBag.put("Use JDBC", useJdbc);
+                    propertyBag.put("Database DLL",databaseDll );
+                    propertyBag.put("JNDI Datasource Name",jndiDatasourceName );
+                    propertyBag.put("Connection URL", connectionUrl);
+                    propertyBag.put("Database Class Name", dbClassName);
                     // propertyBag.put("Server Name", SERVER_NAME); //Optional property
                     // propertyBag.put("Connection String", CONNECTION_STRING); //Optional property
                     // propertyBag.put("Database Name", DATABASE_NAME); //Optional property
@@ -169,8 +169,8 @@ public class CRJavaHelper {
                     // when switching databases, the
                     // database password is *not* saved in the report and must be set at
                     // runtime if the database is secured.
-                    connectionInfo.setUserName(DB_USER_NAME);
-                    connectionInfo.setPassword(DB_PASSWORD);
+                    connectionInfo.setUserName(dbUserName);
+                    connectionInfo.setPassword(dbPassword);
 
                     // Update the table information
                     clientDoc.getDatabaseController().setTableLocation(origTable, newTable);
@@ -210,13 +210,13 @@ public class CRJavaHelper {
                         propertyBag = new PropertyBag();
 
                         // Overwrite any existing properties with updated values
-                        propertyBag.put("Trusted_Connection", TRUSTED_CONNECTION);
-                        propertyBag.put("Server Type", SERVER_TYPE);
-                        propertyBag.put("Use JDBC", USE_JDBC);
-                        propertyBag.put("Database DLL",DATABASE_DLL );
-                        propertyBag.put("JNDI Datasource Name",JNDI_DATASOURCE_NAME );
-                        propertyBag.put("Connection URL", CONNECTION_URL);
-                        propertyBag.put("Database Class Name", DATABASE_CLASS_NAME);
+                        propertyBag.put("Trusted_Connection", trustedConnection);
+                        propertyBag.put("Server Type", serverType);
+                        propertyBag.put("Use JDBC", useJdbc);
+                        propertyBag.put("Database DLL",databaseDll );
+                        propertyBag.put("JNDI Datasource Name",jndiDatasourceName );
+                        propertyBag.put("Connection URL", connectionUrl);
+                        propertyBag.put("Database Class Name", dbClassName);
                         // propertyBag.put("Server Name", SERVER_NAME); //Optional property
                         // propertyBag.put("Connection String", CONNECTION_STRING); //Optional property
                         // propertyBag.put("Database Name", DATABASE_NAME); //Optional property
@@ -228,8 +228,8 @@ public class CRJavaHelper {
                         // change when switching databases, the
                         // database password is *not* saved in the report and must be
                         // set at runtime if the database is secured.
-                        connectionInfo.setUserName(DB_USER_NAME);
-                        connectionInfo.setPassword(DB_PASSWORD);
+                        connectionInfo.setUserName(dbUserName);
+                        connectionInfo.setPassword(dbPassword);
 
                         // Update the table information
                         clientDoc.getSubreportController().getSubreport(subNames.getString(subNum)).getDatabaseController().setTableLocation(origTable, newTable);

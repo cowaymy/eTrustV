@@ -376,7 +376,7 @@ public class SampleController {
 	public ResponseEntity<ReturnMessage> saveSampleGrid(@RequestBody Map<String, ArrayList<Object>> params,
 			Model model) {
 
-		List<Object> updateList = params.get(AppConstants.AUIGrid_UPDATE); // 수정 리스트 얻기
+		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // 추가 리스트 얻기
 		List<Object> removeList = params.get(AppConstants.AUIGRID_REMOVE); // 제거 리스트 얻기
 

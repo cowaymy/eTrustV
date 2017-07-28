@@ -317,7 +317,7 @@ public class CommonController {
 	@RequestMapping(value = "/saveGeneralCode.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveCommissionGrid(@RequestBody Map<String, ArrayList<Object>> params,	Model model) 
 	{
-		List<Object> udtList = params.get(AppConstants.AUIGrid_UPDATE); // Get gride UpdateList
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
@@ -356,7 +356,7 @@ public class CommonController {
 	@RequestMapping(value = "/saveDetailCommCode.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveCommDetailGrid(@RequestBody Map<String, ArrayList<Object>> params,	Model model) 
 	{
-		List<Object> udtList = params.get(AppConstants.AUIGrid_UPDATE); // Get gride UpdateList
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 		

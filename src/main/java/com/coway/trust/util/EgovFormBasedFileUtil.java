@@ -211,9 +211,9 @@ public class EgovFormBasedFileUtil {
 
 		byte[] b = new byte[BUFFER_SIZE];
 
-		original = original.replaceAll("\r", "").replaceAll("\n", "");
+		String reOriginal = original.replaceAll("\r", "").replaceAll("\n", "");
 		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + convert(original) + "\";");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + convert(reOriginal) + "\";");
 		response.setHeader("Content-Transfer-Encoding", "binary");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");

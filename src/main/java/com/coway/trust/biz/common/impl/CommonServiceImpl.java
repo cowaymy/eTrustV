@@ -239,11 +239,11 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		
 		logger.debug("mstList_Size: " + mstList.size() + "dtlList_Size: " + dtlList.size());
 		
-		List<Object> mstUdtList = mstList.get(AppConstants.AUIGrid_UPDATE); // Get gride UpdateList
+		List<Object> mstUdtList = mstList.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> mstAddList = mstList.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		//List<Object> mstDelList = mstList.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 		
-		List<Object> dtlUdtList = dtlList.get(AppConstants.AUIGrid_UPDATE); // Get gride UpdateList
+		List<Object> dtlUdtList = dtlList.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> dtlAddList = dtlList.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		//List<Object> dtlDelList = dtlList.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList		
 		

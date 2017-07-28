@@ -99,7 +99,7 @@ public class MstDataController {
 	public ResponseEntity<ReturnMessage> materialUpdateItemType(@RequestBody Map<String, ArrayList<Object>> params,
 			Model model) {
 
-		List<Object> updateList = params.get(AppConstants.AUIGrid_UPDATE); // 수정 리스트 얻기
+		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
 		
 		mst.updateMaterialItemType(updateList);
 		

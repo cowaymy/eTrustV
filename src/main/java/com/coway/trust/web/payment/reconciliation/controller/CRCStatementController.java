@@ -258,7 +258,7 @@ public class CRCStatementController {
     public ResponseEntity<ReturnMessage> updateCRCStatementTranList(@RequestBody Map<String, ArrayList<Object>> params,
     		Model model) {
     
-    	List<Object> updateList = params.get(AppConstants.AUIGrid_UPDATE); // 수정 리스트 얻기 : 그리드에서 수정된 row만 가져온다.
+    	List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기 : 그리드에서 수정된 row만 가져온다.
     	
     	if (updateList.size() > 0) {
     		

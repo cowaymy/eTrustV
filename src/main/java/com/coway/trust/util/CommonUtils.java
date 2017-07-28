@@ -6,24 +6,25 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SimpleTimeZone;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.expression.ParseException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.web.common.CommonController;
 
 /**
  * <pre>
@@ -34,10 +35,10 @@ import com.coway.trust.AppConstants;
  */
 public final class CommonUtils {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommonController.class);
+	
 	private CommonUtils(){}
 
-	private final static String URI_REGEX = "\\{[A-z0-9]*\\}";
-	
 	/**
      * <pre>
      * Description  : null 처리 및 trim 처리를 한다.
@@ -121,7 +122,7 @@ public final class CommonUtils {
         String rtnValue = "";
 
         Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
         rtnValue = df.format(date);
 
         return rtnValue;
@@ -140,7 +141,7 @@ public final class CommonUtils {
         calendar.add(Calendar.DAY_OF_MONTH, d);
         Date date = calendar.getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
         rtnValue = df.format(date);
 
         return rtnValue;
@@ -153,7 +154,7 @@ public final class CommonUtils {
         calendar.add(Calendar.MONTH, d);
         Date date = calendar.getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
         rtnValue = df.format(date);
 
         return rtnValue;
@@ -168,7 +169,7 @@ public final class CommonUtils {
         String rtnValue = "";
 
         Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("HHmmss");
+        SimpleDateFormat df = new SimpleDateFormat("HHmmss", Locale.getDefault(Locale.Category.FORMAT));
         rtnValue = df.format(date);
 
         return rtnValue;
@@ -182,7 +183,7 @@ public final class CommonUtils {
         String rtnValue = "";
 
         Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault(Locale.Category.FORMAT));
         rtnValue = df.format(date);
 
         return rtnValue;
@@ -227,11 +228,11 @@ public final class CommonUtils {
         if (number == null)
             return rtnValue;
 
-        number = number.trim();
-        if (number.equals(""))
+        String trimNumber = number.trim();
+        if (trimNumber.equals(""))
             num = 0;
         else
-            num = Double.parseDouble(number);
+            num = Double.parseDouble(trimNumber);
 
         DecimalFormat df = new DecimalFormat("#,##0");
         rtnValue = df.format(num);
@@ -239,26 +240,26 @@ public final class CommonUtils {
         return rtnValue;
     }
 
-    public static String maxDay_Before( int cnt ){
+    public static String maxDayBefore( int cnt ){
 
         Calendar cals = Calendar.getInstance();
         cals.add(Calendar.DATE, cnt);
 
-        int tmp_days = cals.get(Calendar.DATE);
-        int tmp_months = cals.get(Calendar.MONTH) + 1;
+        int tmpDays = cals.get(Calendar.DATE);
+        int tmpMonths = cals.get(Calendar.MONTH) + 1;
         String years = String.valueOf(cals.get(Calendar.YEAR));
         String days = "";
         String months = "";
 
-        if (tmp_days >= 1 && tmp_days < 10)
-            days = "0" + String.valueOf(tmp_days);
+        if (tmpDays >= 1 && tmpDays < 10)
+            days = "0" + tmpDays;
         else
-            days = String.valueOf(tmp_days);
+            days = String.valueOf(tmpDays);
 
-        if (tmp_months >= 1 && tmp_months < 10)
-            months = "0" + String.valueOf(tmp_months);
+        if (tmpMonths >= 1 && tmpMonths < 10)
+            months = "0" + tmpMonths;
         else
-            months = String.valueOf(tmp_months);
+            months = String.valueOf(tmpMonths);
 
         return years + months + days;
     }
@@ -273,18 +274,18 @@ public final class CommonUtils {
         sb = sb.append(reformat(cal.get(Calendar.MONTH) + 1));
         sb = sb.append("-");
         sb = sb.append(reformat(cal.get(Calendar.DATE)));
-        return (sb.toString());
+        return sb.toString();
     }
 
     private String reformat( int n ){
         StringBuffer sb = new StringBuffer(2);
 
         if (n < 10) {
-            sb.append("0" + String.valueOf(n));
+            sb.append("0").append(n);
         } else {
             sb.append(String.valueOf(n));
         }
-        return (sb.toString());
+        return sb.toString();
     }
 
     /**
@@ -311,17 +312,6 @@ public final class CommonUtils {
             throw e;
         }
         return result;
-    }
-
-    public static String nvlToStr( String str ) throws Exception{
-        try {
-            if (str == null) {
-                str = "";
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-        return str;
     }
 
     public static String getMile( double w ){
@@ -365,74 +355,10 @@ public final class CommonUtils {
     	try{
     		ex.printStackTrace(new PrintWriter(errors));
     	}catch(Exception e){
-    		// 무시..
+    		LOGGER.warn("ignore");
     	}
         return errors.toString();
     }
-
-	/**
-	 * RESTFul 리소스 URI 를 리턴 한다.
-	 *
-	 * @param sourceUri
-	 *            pathVariables 마크업이 포함된 uri
-	 * @param pathVariables
-	 *            pathVariables 마크업 변수를 치환할 변수 배열
-	 * @return 리소스 uri 의 pathVariables 마크업이 실제 변수로 치환된 url
-	 */
-	public static String genUriWithPathVariables(String sourceUri, String... pathVariables) {
-		String resultUri = null;
-		if (pathVariables != null) {
-			Matcher matcher = Pattern.compile(URI_REGEX).matcher(sourceUri);
-			int matchedCount = 0;
-			while (matcher.find()) {
-				matchedCount++;
-			}
-			if (pathVariables.length == matchedCount) {
-				resultUri = sourceUri;
-				for (String pathVariable : pathVariables) {
-					resultUri = resultUri.replaceFirst(URI_REGEX, pathVariable);
-				}
-			} else {
-				throw new RuntimeException("path valiables count mismatched.\nsourceUri is " + sourceUri
-						+ "\npathVariables is " + Arrays.toString(pathVariables));
-			}
-		} else {
-			throw new RuntimeException("path valiable is null, abd sourceUri is " + sourceUri);
-		}
-		return resultUri;
-	}
-
-	/**
-	 * RESTFul 리소스 URI 를 리턴 한다.
-	 *
-	 * @param uri
-	 *            pathVariables 마크업이 포함된 uri
-	 * @param pathVariables
-	 *            pathVariables 마크업 변수를 치환할 변수 배열
-	 * @return 리소스 uri 의 pathVariables 마크업이 실제 변수로 치환된 url
-	 */
-	public static String genAwareUriWithPathVariables(String uri, String... pathVariables) {
-		String resultUri = uri;
-		if (pathVariables != null) {
-			Matcher matcher = Pattern.compile(URI_REGEX).matcher(uri);
-			int matchedCount = 0;
-			while (matcher.find()) {
-				matchedCount++;
-			}
-			if (matchedCount > pathVariables.length) {
-				throw new RuntimeException(
-						String.format("path valiables count mismatched. uri is '%s' pathVariables is '%s'", uri,
-								Arrays.toString(pathVariables)));
-			} else {
-				for (int i = 0; i < matchedCount; i++) {
-					resultUri = resultUri.replaceFirst(URI_REGEX, pathVariables[i]);
-				}
-			}
-		} else {
-			throw new RuntimeException(String.format("path valiable is null, abd uri is '%s'", uri));
-		}
-		return resultUri;
-	}
 
 	/**
 	 * value 가 null 또는 empty 인지 체크 한다.
@@ -787,7 +713,7 @@ public final class CommonUtils {
 		long diffDate = -1;
 		
 		try{
-			SimpleDateFormat formatter = new SimpleDateFormat(format);
+			SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault(Locale.Category.FORMAT));
 			Date cutoffdate = formatter.parse(cutOffDate);
 			Date curDate = new Date();
 			

@@ -34,6 +34,10 @@ public class DatabaseDrivenMessageSource extends AbstractMessageSource implement
 	public DatabaseDrivenMessageSource() {
 		// reload();
 	}
+	
+	public ResourceLoader getResourceLoader() {
+		return resourceLoader;
+	}
 
 	@PostConstruct
 	public void init() {

@@ -149,7 +149,7 @@ public class CommissionSystemController {
 			loginId=String.valueOf(sessionVO.getUserId());
 		}
 		
-		List<Object> udtList = params.get(AppConstants.AUIGrid_UPDATE); 	// Get gride UpdateList
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		
@@ -336,7 +336,7 @@ public class CommissionSystemController {
 			loginId=String.valueOf(sessionVO.getUserId());
 		}
 		
-		List<Object> udtList = params.get(AppConstants.AUIGrid_UPDATE); 	// Get gride UpdateList
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		

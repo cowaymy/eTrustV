@@ -90,8 +90,8 @@ public class Precondition {
 		}
 	}
 
-	static String format(String template, @Nullable Object... args) {
-		template = String.valueOf(template);
+	static String format(String pTemplate, @Nullable Object... args) {
+		String template = String.valueOf(pTemplate);// null => "null"
 		StringBuilder builder = new StringBuilder(template.length() + 16 * args.length);
 		int templateStart = 0;
 

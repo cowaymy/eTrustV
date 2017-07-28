@@ -79,7 +79,7 @@ public class MaintainMovementController {
 			Model model) {
 
 		List<Object> insList = params.get(AppConstants.AUIGRID_ADD); 
-		List<Object> updList = params.get(AppConstants.AUIGrid_UPDATE);
+		List<Object> updList = params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = params.get(AppConstants.AUIGRID_REMOVE);
 		
 		Map<String, Object> param = new HashMap();
