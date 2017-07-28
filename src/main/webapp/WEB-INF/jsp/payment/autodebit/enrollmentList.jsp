@@ -132,8 +132,7 @@ var columnLayout2 = [
         },function(jqXHR, textStatus, errorThrown) {
             Common.alert("실패하였습니다.");
 
-        }
-        );
+        });
         
         Common.ajax("GET","/payment/selectViewEnrollmentList.do?enrollId="+enrollId,$("#searchForm").serialize(), function(result){
             AUIGrid.setGridData(myGridID2, result);
@@ -143,8 +142,6 @@ var columnLayout2 = [
     new_Enrollment = function() {
     	$("#popup_wrap").hide();
         $("#popup_wrap2").show();
-        
-
     }
     
   //Save Data
@@ -172,13 +169,6 @@ var columnLayout2 = [
             //searchList();
             }, function(jqXHR, textStatus, errorThrown) {
             	Common.alert("실패하였습니다.");
-                try {
-
-                } catch (e) {
-                    //console.log(e);
-                }
-                //alert("Fail : " + jqXHR.responseJSON.message);
-                //fn_getSampleListAjax();
             });
         }
     }
@@ -438,10 +428,6 @@ var columnLayout2 = [
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-
-
-
 <div id="popup_wrap2" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1>NEW ENROLLMENT</h1>
