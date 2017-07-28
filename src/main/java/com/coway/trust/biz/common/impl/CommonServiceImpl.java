@@ -24,9 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommStatusFormVO;
 import com.coway.trust.biz.common.CommonService;
-import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.util.BeanConverter;
+import com.coway.trust.web.common.CommStatusGridData;
+import com.coway.trust.web.common.CommStatusVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -48,120 +51,291 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	public List<EgovMap> selectI18NList() {
 		return commonMapper.selectI18NList();
 	}
-		
-	// Account Code
+
+	/************************** Status Code ****************************/
+	// StatusCategory
 	@Override
-	public 	List<EgovMap> getAccountCodeList(Map<String, Object> params) {
+	public List<EgovMap> selectStatusCategoryList(Map<String, Object> params) {
+		return commonMapper.selectStatusCategoryList(params);
+	}
+
+	// StatusCategory Code
+	@Override
+	public List<EgovMap> selectStatusCategoryCodeList(Map<String, Object> params) {
+		return commonMapper.selectStatusCategoryCodeList(params);
+	}
+
+	// StatusCode
+	@Override
+	public List<EgovMap> selectStatusCodeList(Map<String, Object> params) {
+		return commonMapper.selectStatusCodeList(params);
+	}
+
+	@Override
+	public int insertStatusCategory(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("stusCtgryName")).length() == 0) 
+			{
+				continue;
+			}
+
+			logger.debug(" InsertSatusCategory ");
+			logger.debug(" stusCtgryId : {}", ((Map<String, Object>) obj).get("stusCtgryId"));
+			logger.debug(" stusCtgryName : {}", ((Map<String, Object>) obj).get("stusCtgryName"));
+			logger.debug(" stusCtgryDesc : {}", ((Map<String, Object>) obj).get("stusCtgryDesc"));
+			logger.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+
+			saveCnt++;
+
+			commonMapper.insertStatusCategory((Map<String, Object>) obj);
+
+		}
+
+		return saveCnt;
+	}
+
+	@Override
+	public int updateStatusCategory(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("stusCtgryName")).length() == 0) 
+			{
+				continue;
+			}
+
+			logger.debug(" InsertSatusCategory ");
+			logger.debug(" stusCtgryId : {}", ((Map<String, Object>) obj).get("stusCtgryId"));
+			logger.debug(" stusCtgryName : {}", ((Map<String, Object>) obj).get("stusCtgryName"));
+			logger.debug(" stusCtgryDesc : {}", ((Map<String, Object>) obj).get("stusCtgryDesc"));
+			logger.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+
+			saveCnt++;
+
+			commonMapper.updateStatusCategory((Map<String, Object>) obj);
+
+		}
+
+		return saveCnt;
+	}
+
+	@Override
+	public int insertStatusCode(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			logger.debug("[insertStatusCode]");
+			logger.debug(" codeName : {}", ((Map<String, Object>) obj).get("codeName"));
+			logger.debug(" code : {}", ((Map<String, Object>) obj).get("code"));
+
+			saveCnt++;
+
+			commonMapper.insertStatusCode((Map<String, Object>) obj);
+		}
+		return saveCnt;
+	}
+
+	@Override
+	public int updateStatusCode(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			logger.debug(" updateStatusCode ");
+			logger.debug(" stusCodeId : {}", ((Map<String, Object>) obj).get("stusCodeId"));
+			logger.debug(" codeName : {}", ((Map<String, Object>) obj).get("codeName"));
+			logger.debug(" code : {}", ((Map<String, Object>) obj).get("code"));
+
+			saveCnt++;
+
+			commonMapper.updateStatusCode((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+
+	@Override
+	public int insertStatusCategoryCode(CommStatusVO formDataParameters, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		GridDataSet<CommStatusGridData> gridDataSet = formDataParameters.getGridDataSet();
+		List<CommStatusGridData> updateList = gridDataSet.getUpdate(); // check 된 리스트
+		CommStatusFormVO commStatusVO = formDataParameters.getCommStatusVO();// form내의 input 객체
+		
+		logger.debug("updateList: " + updateList.size() );
+		
+		Map<String, Object> param = null;
+		for (CommStatusGridData gridData : updateList) 
+		{
+			param = BeanConverter.toMap(gridData);  // list --> map
+			
+			
+			logger.debug("list: " + param.toString() );
+			
+			if ("0".equals(String.valueOf(param.get("checkFlag"))))
+			{
+				continue;
+			}
+			
+			param.put("stusCtgryId", commStatusVO.getCatalogId());
+			param.put("crtUserId", crtUserId);
+			param.put("updUserId", crtUserId);
+			
+			commonMapper.insertStatusCategoryCode(param);
+			
+			saveCnt++;
+		}
+
+		return saveCnt;
+	}
+
+	// SUS0037M DisibleYN
+	@Override
+	public int updateCategoryCodeYN(CommStatusVO formDataParameters, Integer updUserId) 
+	{
+		int saveCnt = 0;
+
+		GridDataSet<CommStatusGridData> gridDataSet = formDataParameters.getGridDataSet();
+		List<CommStatusGridData> updateList = gridDataSet.getUpdate(); // grid에서 check 된 리스트
+		CommStatusFormVO commStatusVO = formDataParameters.getCommStatusVO();// form내의 input 객체
+		
+		Map<String, Object> param = null;
+		for (CommStatusGridData gridData : updateList) 
+		{
+			param = BeanConverter.toMap(gridData);  // grid의 필드명(key)과 데이타값을 map형식으로 자동변환
+
+			param.put("stusCtgryId", commStatusVO.getCatalogId());  // form의 input객체를 map형식으로 변환
+			//param.put("updUserId", updUserId); 
+			
+			commonMapper.updateCategoryCodeYN(param);
+			
+			saveCnt++;
+		}
+
+		return saveCnt;
+	}
+
+	/************************** Account Code ****************************/
+	@Override
+	public List<EgovMap> getAccountCodeList(Map<String, Object> params) 
+	{
 		return commonMapper.getAccountCodeList(params);
 	}
-	
+
 	// Account Code Count
 	@Override
-	public 	int getAccCodeCount(Map<String, Object> params) {
+	public int getAccCodeCount(Map<String, Object> params) 
+	{
 		return commonMapper.getAccCodeCount(params);
 	}
-	
+
 	// AccoutCode Insert
-/*	@Override
-	public int insertAccountCode(Map<String, Object> params) 
-	{
-		return commonMapper.insertAccountCode(params);
-	}*/
-	
+	/*
+	 * @Override public int insertAccountCode(Map<String, Object> params) { return
+	 * commonMapper.insertAccountCode(params); }
+	 */
+
 	// AccoutCode Merge
 	@Override
 	public int mergeAccountCode(Map<String, Object> params) 
 	{
 		return commonMapper.mergeAccountCode(params);
 	}
-	
-	
+
 	// Gerneral Code
 	@Override
-	public 	List<EgovMap> getMstCommonCodeList(Map<String, Object> params) {
+	public List<EgovMap> getMstCommonCodeList(Map<String, Object> params) 
+	{
 		return commonMapper.getMstCommonCodeList(params);
 	}
-	
+
 	@Override
-	public 	List<EgovMap> getDetailCommonCodeList(Map<String, Object> params) {
+	public List<EgovMap> getDetailCommonCodeList(Map<String, Object> params) 
+	{
 		return commonMapper.getDetailCommonCodeList(params);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public int addCommCodeGrid(List<Object> addList) 
+	public int addCommCodeGrid(List<Object> addList, Integer crtUserId) 
 	{
-		//HttpSession session = sessionHandler.getCurrentSession();
-		int user=99999;
 		int saveCnt = 0;
-		
-		/*if(session != null){
-			user = session.getId();
-			
-		}*/
-		
-		logger.debug("Add_Size: " + addList.size());
-		
-		for(Object obj : addList)
+
+		for (Object obj : addList) 
 		{
-			
-			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
-			((Map<String, Object>) obj).put("crtUserId", user);
-			((Map<String, Object>) obj).put("updUserId", user);
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("codeMasterName")).length() == 0)
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("codeMasterName")).length() == 0) 
 			{
 				continue;
 			}
-			
+
 			logger.debug(" InsertMstCommCd ");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
 			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
 			logger.debug(" codeMasterName : {}", ((Map<String, Object>) obj).get("codeMasterName"));
 			logger.debug(" codeDesc : {}", ((Map<String, Object>) obj).get("codeDesc"));
-			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));	
-			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));	
-		
+			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));
+			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));
+
 			saveCnt++;
-			
+
 			commonMapper.addCommCodeGrid((Map<String, Object>) obj);
-			
 		}
-		
+
 		return saveCnt;
 	}
 
 	@Override
-	public int udtCommCodeGrid(List<Object> udtList) 
+	public int udtCommCodeGrid(List<Object> udtList, Integer updUserId) 
 	{
-		int user=99999;
 		int saveCnt = 0;
-		
-		for(Object obj : udtList){
-			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
-			((Map<String, Object>) obj).put("crtUserId", user);
-			((Map<String, Object>) obj).put("updUserId", user);
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("codeDesc")).trim().length() == 0)
+
+		for (Object obj : udtList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", updUserId);
+			((Map<String, Object>) obj).put("updUserId", updUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("codeDesc")).trim().length() == 0) 
 			{
-				logger.debug("AAAAAA_tr");
 				((Map<String, Object>) obj).put("codeDesc", "");
 			}
-			else
-			{
-				logger.debug("AAAAA_LENGTH: "+ String.valueOf(((Map<String, Object>) obj).get("codeDesc")).length() );
-			}
-			
+
 			logger.debug(" update CommCode");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
 			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
 			logger.debug(" codeMasterName : {}", ((Map<String, Object>) obj).get("codeMasterName"));
 			logger.debug(" codeDesc : {}", ((Map<String, Object>) obj).get("codeDesc"));
-			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));	
-			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));	
-			
+			logger.debug(" createName : {}", ((Map<String, Object>) obj).get("createName"));
+			logger.debug(" crtDt : {}", ((Map<String, Object>) obj).get("crtDt"));
+
 			saveCnt++;
-			
+
 			commonMapper.updCommCodeGrid((Map<String, Object>) obj);
 		}
 		return saveCnt;
@@ -169,136 +343,77 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int addDetailCommCodeGrid(List<Object> addList) 
+	public int addDetailCommCodeGrid(List<Object> addList, Integer crtUserId) 
 	{
-		//HttpSession session = sessionHandler.getCurrentSession();
-		int user=99999;
-		
-		/*if(session != null){
-			user = session.getId();
-			
-		}*/
-		
-		logger.debug("Detail_Add_Size: " + addList.size());
-		
-		for(Object obj : addList)
+		for (Object obj : addList) 
 		{
-			/*((Map<String, Object>) obj).put("endDt", CommissionConstants.COMIS_END_DT);*/
-			((Map<String, Object>) obj).put("crtUserId", user);
-			((Map<String, Object>) obj).put("updUserId", user);
-			
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("detailcodename")).length() == 0)
-			   {
-					continue;
-			   }
-			
-			//{detailcodeid=1D79D7B5-A35F-77D5-CF91-35F79447E439, detailcode=test11, detailcodename=testD, detailcodedesc=testD, detaildisabled=N, codeMasterId=155, crtUserId=99999, updUserId=99999}  		
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("detailcodename")).length() == 0) {
+				continue;
+			}
+
 			logger.debug(" [[Insert Deatail]] ");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
 			logger.debug(" detailcode : {}", ((Map<String, Object>) obj).get("detailcode"));
 			logger.debug(" detailcodename : {}", ((Map<String, Object>) obj).get("detailcodename"));
 			logger.debug(" detailcodedesc : {}", ((Map<String, Object>) obj).get("detailcodedesc"));
 			logger.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
-			logger.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));	
-			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));	
-			
+			logger.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+
 			commonMapper.addDetailCommCodeGrid((Map<String, Object>) obj);
 		}
-		
-		return 0;
+
+		return 0;// commit;
 	}
-	
+
 	@Override
-	public int udtDetailCommCodeGrid(List<Object> udtList) 
+	public int udtDetailCommCodeGrid(List<Object> udtList, Integer updUserId) 
 	{
-		int user=99999;
-		for(Object obj : udtList){
-			((Map<String, Object>) obj).put("crtUserId", user);
-			((Map<String, Object>) obj).put("updUserId", user);
-			
+		for (Object obj : udtList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", updUserId);
+			((Map<String, Object>) obj).put("updUserId", updUserId);
+
 			logger.debug(" update_Detail ");
 			logger.debug(" detailcode : {}", ((Map<String, Object>) obj).get("detailcode"));
 			logger.debug(" detailcodename : {}", ((Map<String, Object>) obj).get("detailcodename"));
 			logger.debug(" detailcodedesc : {}", ((Map<String, Object>) obj).get("detailcodedesc"));
 			logger.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
-			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));	
-			logger.debug(" detailcodeid : {}", ((Map<String, Object>) obj).get("detailcodeid"));	
-			
+			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+			logger.debug(" detailcodeid : {}", ((Map<String, Object>) obj).get("detailcodeid"));
+
 			commonMapper.updDetailCommCodeGrid((Map<String, Object>) obj);
 		}
 		return 0;
 	}
 
 	@Override
-	public void saveCodes(Map<String, Object> params) 
+	public List<EgovMap> selectBranchList(Map<String, Object> params) 
 	{
-		SessionVO sessionVO = (SessionVO) params.get(AppConstants.SESSION_INFO);
-		Map<String, List<Object>> mstList = (Map<String, List<Object>>)params.get("mstData");
-		Map<String, List<Object>> dtlList = (Map<String, List<Object>>)params.get("dtlData");
-		
-		logger.debug("mstList_Size: " + mstList.size() + "dtlList_Size: " + dtlList.size());
-		
-		List<Object> mstUdtList = mstList.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
-		List<Object> mstAddList = mstList.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		//List<Object> mstDelList = mstList.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
-		
-		List<Object> dtlUdtList = dtlList.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
-		List<Object> dtlAddList = dtlList.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		//List<Object> dtlDelList = dtlList.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList		
-		
-		mstAddList.forEach(list -> {
-			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getUserId());
-			map.put("updUserId", sessionVO.getUserId());
-			commonMapper.addCommCodeGrid(map);
-		});
-		
-		mstUdtList.forEach(list -> {
-			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getUserId());
-			map.put("updUserId", sessionVO.getUserId());
-			commonMapper.updCommCodeGrid(map);
-		});
-		
-		dtlAddList.forEach(list -> {
-			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getUserId());
-			map.put("updUserId", sessionVO.getUserId());
-			commonMapper.addDetailCommCodeGrid(map);
-		});
-		
-		dtlUdtList.forEach(list -> {
-			Map<String, Object> map = (Map<String, Object>)list;
-			map.put("crtUserId", sessionVO.getUserId());
-			map.put("updUserId", sessionVO.getUserId());
-			commonMapper.updDetailCommCodeGrid(map);
-		});
-		
-	}
-
-	@Override
-	public List<EgovMap> selectBranchList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return commonMapper.selectBranchList(params);
 	}
-	
+
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
+	 * 
 	 * @param params
 	 * @return
 	 */
-	@Override	
+	@Override
 	public List<EgovMap> getAccountList(Map<String, Object> params) {
 		return commonMapper.getAccountList(params);
 	}
-	
+
 	/**
 	 * Branch ID로 User 정보 조회
+	 * 
 	 * @param params
 	 * @return
 	 */
-	@Override	
+	@Override
 	public List<EgovMap> getUsersByBranch(Map<String, Object> params) {
 		return commonMapper.getUsersByBranch(params);
 	}

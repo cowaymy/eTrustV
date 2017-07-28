@@ -18,8 +18,6 @@ package com.coway.trust.biz.common.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -29,7 +27,34 @@ public interface CommonMapper {
 
 	List<EgovMap> selectI18NList();
 	
-	/* accountCodeList  */	
+	
+	/************************** Status Code ****************************/
+	// StatusCategory
+	List<EgovMap> selectStatusCategoryList(Map<String, Object> params);
+	
+	// StatusCategory Code
+	List<EgovMap> selectStatusCategoryCodeList(Map<String, Object> params);
+	
+	// StatusCode
+	List<EgovMap> selectStatusCodeList(Map<String, Object> params);	
+	
+	// StatusCode Category
+	int insertStatusCategory(Map<String, Object> params);	
+	
+	int updateStatusCategory(Map<String, Object> params);	
+	
+	// StatusCode 
+	int insertStatusCode(Map<String, Object> params);	
+	
+	int updateStatusCode(Map<String, Object> params);	
+	
+	// Status Category Code
+	int insertStatusCategoryCode(Map<String, Object> params);	
+	
+	// Status Category Code Yn
+	int updateCategoryCodeYN(Map<String, Object> params);	
+	
+	/************************ accountCodeList  *************************/	
     List<EgovMap> getAccountCodeList(Map<String, Object> params);
 	
     

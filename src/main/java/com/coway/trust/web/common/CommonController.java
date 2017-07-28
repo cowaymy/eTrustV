@@ -3,7 +3,6 @@ package com.coway.trust.web.common;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +30,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.DatabaseDrivenMessageSource;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
@@ -43,7 +43,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class CommonController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
-	
+
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -53,208 +53,301 @@ public class CommonController {
 
 	@Autowired
 	private DatabaseDrivenMessageSource dbMessageSource;
-	
+
 	@Autowired
 	private SessionHandler sessionHandler;
-
+	
+	private int getUserId=9999;
+	
+	
 	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
 
 		logger.debug("groupCode : {}", params.get("groupCode"));
 
 		List<EgovMap> codeList = commonService.selectCodeList(params);
 		return ResponseEntity.ok(codeList);
 	}
-	
+
 	@RequestMapping(value = "/main.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "common/main";
 	}
-	
-	
-/**************** Account Code Management *****************/	
-	
-	@RequestMapping(value = "/accountCode.do")
-	public String listAccountCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		return "/common/accountCodeManagement";
-	}	
-	
-	@RequestMapping(value = "/selectAccountCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAccountCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("accountCdId : {}", params.get("accountCdId"));
 
-		List<EgovMap> accountCodeList = commonService.getAccountCodeList(params);
-		
-		return ResponseEntity.ok(accountCodeList);
+	/**************** Status Code Management *****************/
+
+	@RequestMapping(value = "/statusCode.do")
+	public String listStatusCode(Model model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return "/common/statusCodeManagement";
+	}
+
+	@RequestMapping(value = "/selectStatusCategoryList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStatusCategoryList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> statusCategoryList = commonService.selectStatusCategoryList(params);
+
+		return ResponseEntity.ok(statusCategoryList);
+	}
+
+	@RequestMapping(value = "/selectStatusCategoryCdList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStatusCategoryCdList(@RequestParam Map<String, Object> params)
+	{
+		List<EgovMap> statusCategoryCdList = commonService.selectStatusCategoryCodeList(params);
+
+		return ResponseEntity.ok(statusCategoryCdList);
 
 	}
-/*	
-	@RequestMapping(value = "/getAccountCodeCount.do", method = RequestMethod.GET)
-	public ResponseEntity<Integer> getAccountCodeCount(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	@RequestMapping(value = "/selectStatusCdIdList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStatusCdIdList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> statusCdIdList = commonService.selectStatusCodeList(params);
+
+		return ResponseEntity.ok(statusCdIdList);
+	}
+
+	@RequestMapping(value = "/saveStatusCategory.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveStatusCategory(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) 
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+
+		int cnt = 0;
+		if (addList.size() > 0) 
+		{
+			cnt = commonService.insertStatusCategory(addList, getUserId);
+		}
 		
-		logger.debug("popUpAccCode : {}", params.get("popUpAccCode"));
+		if (udtList.size() > 0) 
+		{
+			cnt = commonService.updateStatusCategory(udtList, getUserId);
+		}
+
+		// 콘솔로 찍어보기
+		logger.info("CommCd_수정 : {}", udtList.toString());
+		logger.info("CommCd_추가 : {}", addList.toString());
+		logger.info("CommCd_카운트 : {}", cnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/insertStatusCatalogDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveStatusCatalogCode(@RequestBody CommStatusVO params, SessionVO sessionVO) {
 		
-		int accountCodeCount = commonService.getAccCodeCount(params);
+/*		try {
+		  sessionVO.getUserId();
+		} catch (Exception e) {
+			sessionVO.setUserId(7777);
+		}
+		*/
 		
-		logger.debug("getCdCnt : {}", accountCodeCount);
+		logger.debug("insertStatusCatalogCode: "+params.getGridDataSet());
 		
-		return ResponseEntity.ok(accountCodeCount);
+		int cnt = commonService.insertStatusCategoryCode(params,  getUserId);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+
+	}
+
+	@RequestMapping(value = "/saveStatusCode.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveStatusCode(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO) 
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+
+		int cnt = 0;
+		if (addList.size() > 0) {
+			cnt = commonService.insertStatusCode(addList, getUserId);
+		}
+
+		if (udtList.size() > 0) {
+			cnt = commonService.updateStatusCode(udtList, getUserId);
+		}
+
+		// 콘솔로 찍어보기
+		logger.info("CommCd_수정 : {}", udtList.toString());
+		logger.info("CommCd_추가 : {}", addList.toString());
+		logger.info("CommCd_카운트 : {}", cnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	//Category Code Disabled Update
+	@RequestMapping(value = "/UpdCategoryCdYN.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> UpdCategoryCdYN(@RequestBody CommStatusVO params, SessionVO sessionVO)
+	{
+		int cnt = 0;
 		
-	}*/
+		cnt = commonService.updateCategoryCodeYN(params, getUserId);
+		
+		// 콘솔로 찍어보기
+		logger.info("disabledYn : {}", cnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
 	
 	
+
+	/********************************** Account Code Management *******************************************/
+
+	@RequestMapping(value = "/accountCode.do")
+	public String listAccountCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		return "/common/accountCodeManagement";
+	}
+
+	@RequestMapping(value = "/selectAccountCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAccountCodeList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> accountCodeList = commonService.getAccountCodeList(params);
+
+		return ResponseEntity.ok(accountCodeList);
+	}
+
 	/**
 	 * POPUP 화면 호출.
 	 */
 	@RequestMapping(value = "/accountCodeEditPop.do")
 	public String accountCodeUpdPop(@RequestParam Map<String, Object> params, ModelMap model) 
 	{
-		//{paramAccCode=1000/000, paramAccDesc=FIXED ASSTES AT COST, paramSapAccCode=, parmIsPayCash=1, parmIsPayChq=0, parmIsPayOnline=0, parmIsPayCrc=1, accId=, accCode=, accDesc=, sapAccCode=, accStusId=1, paymentCd=, isPop=true}
-		logger.debug(" Edit InputParams : {}", params.toString() );
-
 		// popup 화면으로 넘길 데이터.
 		model.addAttribute("inputParams", params);
 
 		// 호출될 화면
 		return "/common/accountCodeManagementPop";
 	}
-	
+
 	@RequestMapping(value = "/accountCodeAddPop.do")
-	public String accountCodeAddPop(@RequestParam Map<String, Object> params, ModelMap model) 
+	public String accountCodeAddPop(@RequestParam Map<String, Object> params) 
 	{
-		//{paramAccCode=1000/000, paramAccDesc=FIXED ASSTES AT COST, paramSapAccCode=, parmIsPayCash=1, parmIsPayChq=0, parmIsPayOnline=0, parmIsPayCrc=1, accId=, accCode=, accDesc=, sapAccCode=, accStusId=1, paymentCd=, isPop=true}
-		
-		//String flag = "ADD";		
-		//HashMap<String, Object> paramData = new HashMap<String, Object>();		
-		//((Map<String, Object>) paramData).put("parmAddEditFlag", flag);		
-		//model.addAttribute("InputParams", paramData);
-	    				
-		//Add InputParams : {InputParams={parmAddEditFlag=ADD}}
-		logger.debug(" Add InputParams : {}", model.toString() );
-		
-		
 		// 호출될 화면
 		return "/common/accountCodeManagementPop";
-	}	
-	
+	}
+
 	/**
 	 * ACCOUNT CODE INSERT
 	 */
 	@RequestMapping(value = "/insertAccount.do")
-	public ResponseEntity<ReturnMessage> insertAccountCode(@RequestBody Map<String, Object> params, ModelMap model) 
+	public ResponseEntity<ReturnMessage> insertAccountCode(@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) 
 	{
-		// InputAccountCode Params : {popUpAccCodeId=729, popUpSaveFlag=EDIT, popUpAccCode=667700, popUpSapAccCode=, popUpAccDesc=667700, popUpIsPayCash=on, popUpIsPayChq=on, popUpIsPayOnline=on, popUpIsPayCrc=on, address1=, address2=, address3=, mcountry=, mstate=, marea=, mpostcd=, tel1=, tel2=}
-		logger.debug(" InputAccountCode Params : {}", params.toString() );
 		ReturnMessage message = new ReturnMessage();
-		
-		if (!"EDIT".equals(params.get("popUpSaveFlag")) )
+
+		if (!"EDIT".equals(params.get("popUpSaveFlag"))) 
 		{
 			int accountCodeCount = commonService.getAccCodeCount(params);
-			
-			if(accountCodeCount > 0){
+
+			if (accountCodeCount > 0) 
+			{
 				message.setCode(AppConstants.FAIL);
 				message.setMessage("CODE [" + params.get("popUpAccCode") + "] Exists Already.");
 				return ResponseEntity.ok(message);
 			}
 		}
-	
-		int user=99999;
-		
-		((Map<String, Object>) params).put("crtUserId", user);
-		((Map<String, Object>) params).put("updUserId", user);
-		
-		if ("on".equals( String.valueOf(params.get("popUpIsPayCash"))))	
+
+		((Map<String, Object>) params).put("crtUserId", getUserId);
+		((Map<String, Object>) params).put("updUserId", getUserId);
+
+		if ("on".equals(String.valueOf(params.get("popUpIsPayCash")))) 
 		{
 			params.put("popUpIsPayCash", 1);
-		}
-		else
+		} else 
 		{
 			params.put("popUpIsPayCash", 0);
 		}
-		
-		if ("on".equals( String.valueOf(params.get("popUpIsPayChq"))))	
+
+		if ("on".equals(String.valueOf(params.get("popUpIsPayChq")))) 
 		{
 			params.put("popUpIsPayChq", 1);
-		}
-		else
+		} 
+		else 
 		{
 			params.put("popUpIsPayChq", 0);
 		}
-		
-		if ("on".equals( String.valueOf(params.get("popUpIsPayOnline"))))	
+
+		if ("on".equals(String.valueOf(params.get("popUpIsPayOnline")))) 
 		{
 			params.put("popUpIsPayOnline", 1);
-		}
-		else
+		} 
+		else 
 		{
 			params.put("popUpIsPayOnline", 0);
 		}
-		
-		if ("on".equals( String.valueOf(params.get("popUpIsPayCrc"))))	
+
+		if ("on".equals(String.valueOf(params.get("popUpIsPayCrc")))) 
 		{
 			params.put("popUpIsPayCrc", 1);
-		}
-		else
+		} 
+		else 
 		{
 			params.put("popUpIsPayCrc", 0);
 		}
 
-		logger.debug(" ParamsChange : {}", params.toString() );
-		
-		
 		int cnt = commonService.mergeAccountCode(params);
-		//int cnt = commonService.insertAccountCode(params);
-		//ParamsChange : {popUpAccCode=111, popUpSapAccCode=222, popUpAccDesc=3333, popUpIsPayCash=1, popUpIsPayCrc=1, address1=, address2=, address3=, mcountry=, tel1=, tel2=, popUpIsPayChq=0, popUpIsPayOnline=0}
-		
+
 		// 호출될 화면
-		// 결과 만들기 예.
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(cnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
-	}	
-	
-	
-/**************** General Code Management *****************/	
-	
+	}
+
+	/**************** General Code Management *****************/
+
 	@RequestMapping(value = "/generalCode.do")
-	public String listCommCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+	public String listCommCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
 		return "/common/generalCodeManagement";
 	}
-	
+
 	@RequestMapping(value = "/selectMstCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodeMstList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("commCodeMstId : {}", params.get("mstCdId"));
-
+	public ResponseEntity<List<EgovMap>> selectCodeMstList(@RequestParam Map<String, Object> params) 
+	{
 		List<EgovMap> mstCommCodeList = commonService.getMstCommonCodeList(params);
-		
-		return ResponseEntity.ok(mstCommCodeList);
 
+		return ResponseEntity.ok(mstCommCodeList);
 	}
-	
+
 	@RequestMapping(value = "/selectDetailCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodeDetailList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("commDetailDisabled : {}", params.get("mstDisabled"));
-		logger.debug("commDetailCodeMstId : {}", params.get("mstCdId"));
-		logger.debug("commDetailDisabled : {}", params.get("dtailDisabled"));
-		
+	public ResponseEntity<List<EgovMap>> selectCodeDetailList(@RequestParam Map<String, Object> params) 
+	{
 		List<EgovMap> mstCommDetailCodeList = commonService.getDetailCommonCodeList(params);
-		
+
 		return ResponseEntity.ok(mstCommDetailCodeList);
-		
 	}
 
 	@RequestMapping(value = "/unauthorized.do")
-	public String unauthorized(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String unauthorized(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
 		return "/error/unauthorized";
 	}
-	
+
 	@RequestMapping(value = "/exportGrid.do")
 	public void export(HttpServletRequest request, HttpServletResponse response) {
 		// AUIGrid 가 xlsx, csv, xml 등의 형식을 작성하여 base64 로 인코딩하여 data 파라메터로 post 요청을 합니다.
@@ -271,17 +364,24 @@ public class CommonController {
 
 		// csv 를 엑셀에서 열기 위해서는 euc-kr 로 작성해야 함.
 		try {
-			if (extension.equals("csv")) {
+			if (extension.equals("csv")) 
+			{
 				String sting = new String(dataByte, "utf-8");
 				outputStream.write(sting.getBytes("euc-kr"));
-			} else {
+			} else 
+			{
 				outputStream.write(dataByte);
 			}
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) 
+		{
 			throw new ApplicationException(e);
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			throw new ApplicationException(e);
-		} finally {
+		} 
+		finally 
+		{
 			EgovResourceCloseHelper.close(outputStream);
 		}
 
@@ -297,51 +397,50 @@ public class CommonController {
 		response.setHeader("Content-Length", String.valueOf(outputStream.size()));
 
 		ServletOutputStream sos = null;
-		try {
+		try 
+		{
 			sos = response.getOutputStream();
 			sos.write(outputStream.toByteArray());
 			sos.flush();
 			sos.close();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			throw new ApplicationException(e);
-		} finally {
+		} 
+		finally 
+		{
 			EgovResourceCloseHelper.close(sos);
 		}
 	}
 
 	@RequestMapping(value = "/db-messages/reload.do")
-	public void reload(@RequestParam Map<String, Object> params, ModelMap model) {
+	public void reload(@RequestParam Map<String, Object> params) 
+	{
 		dbMessageSource.reload();
 	}
-	
+
 	@RequestMapping(value = "/saveGeneralCode.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveCommissionGrid(@RequestBody Map<String, ArrayList<Object>> params,	Model model) 
+	public ResponseEntity<ReturnMessage> saveCommMstGrid(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) 
 	{
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-					// 조회.
-			int cnt=0;
-			if(addList.size()>0)
-			{
-				cnt=commonService.addCommCodeGrid(addList);
-			}
-			if(udtList.size()>0)
-			{   
-				cnt=commonService.udtCommCodeGrid(udtList);
-			}
-/*			if(delList.size()>0)
-			{
-				cnt=commonService.delCommCodeGrid(delList);
-			}*/
-
+		int cnt = 0;
+		if (addList.size() > 0) 
+		{
+			cnt = commonService.addCommCodeGrid(addList, getUserId);
+		}
+		
+		if (udtList.size() > 0) 
+		{
+			cnt = commonService.udtCommCodeGrid(udtList, getUserId);
+		}
 
 		// 콘솔로 찍어보기
 		logger.info("CommCd_수정 : {}", udtList.toString());
 		logger.info("CommCd_추가 : {}", addList.toString());
-		logger.info("CommCd_삭제 : {}", delList.toString());
 		logger.info("CommCd_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
@@ -351,55 +450,50 @@ public class CommonController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/saveDetailCommCode.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveCommDetailGrid(@RequestBody Map<String, ArrayList<Object>> params,	Model model) 
+	public ResponseEntity<ReturnMessage> saveCommDetailGrid(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) 
 	{
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
-		
+
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		// 조회.
-		int cnt=0;
-		if(addList.size()>0)
-		{
-			cnt=commonService.addDetailCommCodeGrid(addList);
+		int cnt = 0;
+		if (addList.size() > 0) {
+			cnt = commonService.addDetailCommCodeGrid(addList, getUserId);
 		}
-		if(udtList.size()>0)
-		{   
-			cnt=commonService.udtDetailCommCodeGrid(udtList);
+
+		if (udtList.size() > 0) {
+			cnt = commonService.udtDetailCommCodeGrid(udtList, getUserId);
 		}
-		/*			if(delList.size()>0)
-			{
-				cnt=commonService.delCommCodeGrid(delList);
-			}
-		*/
 
 		// 콘솔로 찍어보기
 		logger.info("DetailCommCd_수정 : {}", udtList.toString());
 		logger.info("DetailCommCd_추가 : {}", addList.toString());
-		logger.info("DetailCommCd_삭제 : {}", delList.toString());
 		logger.info("DetailCommCd_카운트 : {}", cnt);
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+
 		return ResponseEntity.ok(message);
-	}	
-	
+	}
+
+	private ArrayList<Object> userInfoList(int i) 
+	{
+		return null;
+	}
+
 	@RequestMapping(value = "/selectBranchCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectBranchCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
-
-		logger.debug("groupCode : {}", params.get("groupCode"));
-
+	public ResponseEntity<List<EgovMap>> selectBranchCodeList(@RequestParam Map<String, Object> params) 
+	{
 		List<EgovMap> codeList = commonService.selectBranchList(params);
 		return ResponseEntity.ok(codeList);
 	}
-	
+
 	/**
 	 * Use Map and Edit Grid Insert,Update,Delete
 	 *
@@ -408,78 +502,70 @@ public class CommonController {
 	 * @return
 	 * @throws Exception
 	 */
-/*	@RequestMapping(value = "/saveGeneralCode.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveGeneralCodeGrid2222(@RequestBody Map<String, Object> params,	Model model) 
-	{
-		SessionVO sessionVO =  new SessionVO(); //sessionHandler.getCurrentSessionInfo();
-		sessionVO.setId("7777");
-		params.put(AppConstants.SESSION_INFO, sessionVO);
-		commonService.saveCodes(params);
+	/*
+	 * @RequestMapping(value = "/saveGeneralCode.do", method = RequestMethod.POST) public ResponseEntity<ReturnMessage>
+	 * saveGeneralCodeGrid2222(@RequestBody Map<String, Object> params, Model model) { SessionVO sessionVO = new
+	 * SessionVO(); //sessionHandler.getCurrentSessionInfo(); sessionVO.setId("7777");
+	 * params.put(AppConstants.SESSION_INFO, sessionVO); commonService.saveCodes(params);
+	 * 
+	 * // 결과 만들기 예. ReturnMessage message = new ReturnMessage(); message.setCode(AppConstants.SUCCESS);
+	 * message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	 * 
+	 * return ResponseEntity.ok(message); }
+	 */
 
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}	*/
-	
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
+	 * 
 	 * @param params
 	 * @return
 	 */
 	@RequestMapping(value = "/getAccountList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getAccountList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> getAccountList(@RequestParam Map<String, Object> params) 
+	{
 		List<EgovMap> resultList = commonService.getAccountList(params);
 		return ResponseEntity.ok(resultList);
 	}
-	
-	 /**
+
+	/**
 	 * Branch ID로 User 정보 조회
+	 * 
 	 * @param params
 	 * @return
 	 */
 	@RequestMapping(value = "/getUsersByBranch.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getUsersByBranch(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> getUsersByBranch(@RequestParam Map<String, Object> params) 
+	{
 		List<EgovMap> resultList = commonService.getUsersByBranch(params);
 		return ResponseEntity.ok(resultList);
 	}
-	
-	
-	@RequestMapping(value = "/selectAddrSelCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAddrSelCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		logger.debug("groupCode : {}", params.get("groupCode"));
-		
+	@RequestMapping(value = "/selectAddrSelCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAddrSelCodeList(@RequestParam Map<String, Object> params) 
+	{
 		List<EgovMap> codeList = commonService.selectAddrSelCode(params);
 		return ResponseEntity.ok(codeList);
 	}
-	
-	@RequestMapping(value = "/selectProductCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectProductCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
 
+	@RequestMapping(value = "/selectProductCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductCodeList(@RequestParam Map<String, Object> params)
+	{
 		List<EgovMap> codeList = commonService.selectProductCodeList();
 		return ResponseEntity.ok(codeList);
 	}
-	@RequestMapping(value = "/selectInStckSelCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectInStckSelCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
 
+	@RequestMapping(value = "/selectInStckSelCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectInStckSelCodeList(@RequestParam Map<String, Object> params)
+	{
 		List<EgovMap> codeList = commonService.selectInStckSelCodeList(params);
-		logger.info("selectInStckSelCodeList: {}", codeList.toString());
 		return ResponseEntity.ok(codeList);
 	}
 
-	
 	@RequestMapping(value = "/searchPopList.do")
-	public String searchPopList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("sUrl : {}", params.get("sUrl"));
-
+	public String searchPopList(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
 		model.addAttribute("url", params);
-
 		// 호출될 화면
 		return "/common/searchPop";
 	}
-	
 }
