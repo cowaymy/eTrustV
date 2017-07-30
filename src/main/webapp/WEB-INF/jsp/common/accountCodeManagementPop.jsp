@@ -14,10 +14,6 @@ $(function()
                                 
   doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , cntyId      ,'mcountry' , 'S', '');
 
-/*   getAddrRelay('mstate'  , cntyId  , 'state' , stateId);
-  getAddrRelay('marea'   , stateId , 'area'  , areaId);
-  getAddrRelay('mpostcd' , areaId  , 'post'  , postId); */
-
   doDefCombo('', '' ,'mstate', 'S', '');
   doDefCombo('', '' ,'marea', 'S', '');
   doDefCombo('', '' ,'mpostcd', 'S', ''); 

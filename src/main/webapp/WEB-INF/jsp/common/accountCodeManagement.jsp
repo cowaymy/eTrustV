@@ -235,7 +235,7 @@ function editPopUp()
     var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
           , null
-          , "true"
+          , "false"
     	    );
 
     return ;
@@ -270,6 +270,7 @@ function fnSetDetail(selGrdidID, rowIdx)  //cdMstId
    $("#paramAddStateId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddStateId"));  
    $("#paramAddAreaId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddAreaId"));  
    $("#pramAddPostCodeId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddPostCodeId"));  
+   $("#accId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accId"));
 
    console.log(" paramAccCodeId:"+ $("#paramAccCodeId").val() +" paramAccCode:  "+ $("#paramAccCode").val() + " paramAccDesc: " + $("#paramAccDesc").val() + " paramSapAccCode: " + $("#paramSapAccCode").val() 
 		           + " parmIsPayCash: "+ $("#parmIsPayCash").val() + " parmIsPayChq: " + $("#parmIsPayChq").val() + " parmIsPayOnline: " + $("#parmIsPayOnline").val()
@@ -320,6 +321,7 @@ $(document).ready(function()
         
         gSelRowIdx = event.rowIndex;
         $("#paramAccCode").val("");
+        $("#accId").val("");
     });
 
  // 셀 더블클릭 이벤트 바인딩
@@ -432,7 +434,8 @@ $(document).ready(function()
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-  <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p> 
+  <p class="show_btn"><%-- <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+  </p> 
 <dl class="link_list">
 	<dt>Link</dt>
 	<dd>
