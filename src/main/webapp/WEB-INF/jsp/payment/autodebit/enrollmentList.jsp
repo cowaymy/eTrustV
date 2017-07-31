@@ -156,9 +156,9 @@ var columnLayout2 = [
         
         if(cmbIssueBank2 !="7"){
         	if(rdpCreateDateFr2 == ""){
-        		rdpCreateDateFr2 = "01/01/1900";
+        		//rdpCreateDateFr2 = "01/01/1900";
         	}else if(rdpCreateDateTo2 == "") {
-        		rdpCreateDateTo2 = "01/01/1900";
+        		//rdpCreateDateTo2 = "01/01/1900";
         	}
         }
     	
