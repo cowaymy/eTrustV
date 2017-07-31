@@ -145,6 +145,7 @@ var columnLayout2 = [
     new_Enrollment = function() {
     	$("#popup_wrap").hide();
         $("#popup_wrap2").show();
+        $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
     }
     
   //Save Data
@@ -260,7 +261,7 @@ var columnLayout2 = [
 
 		default:
 		   $("#issueBankMsg").text(issueMsg);
-		   $("#rdpCreateDateFr2").attr("disabled",true).attr("readonly",false);
+		   $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
 		   $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
 			break;
 		}
