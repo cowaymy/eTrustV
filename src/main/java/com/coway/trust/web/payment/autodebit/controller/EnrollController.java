@@ -116,15 +116,10 @@ public class EnrollController {
 	 * Save Enroll
 	 */
 	@RequestMapping(value = "/saveEnroll", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveEnroll(@RequestParam Map<String, ArrayList<Object>> params, Model model) {
-
-		logger.debug("cmbIssueBank2 : {}", params.get("cmbIssueBank2"));
-		logger.debug("rdpCreateDateFr2 : {}", params.get("rdpCreateDateFr2"));
-		logger.debug("rdpCreateDateTo2 : {}", params.get("rdpCreateDateTo2"));
+	public ResponseEntity<ReturnMessage> saveEnroll(@RequestBody Map<String, Object> params, Model model) {
 
 		String frDate = CommonUtils.nvl(params.get("rdpCreateDateFr2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateFr2"));
 		String toDate = CommonUtils.nvl(params.get("rdpCreateDateTo2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateTo2"));
-		logger.debug("toDate : {}", toDate);
 		
 		//parameter 객체를 생성한다. 프로시저에서 CURSOR 반환시 해당 paramter 객체에 리스트를 세팅한다.
     	//프로시저에서 사용하는 parameter가 없어도 객체는 생성한다.
