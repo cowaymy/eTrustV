@@ -72,7 +72,7 @@
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
-        
+        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' ,'this.value','srchCntry', 'S', '');
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {   
         });
@@ -371,14 +371,14 @@
 </tr>
 <tr>
     <th>Country</th>
-    <td><select id="srchCntry"></select>
+    <td><select id="srchCntry" name="srchCntry" onchange="getAddrRelay('srchState' , this.value , 'state', '')"></select>
     </td>
     <th>State</th>
-    <td><select  id="srchState"></select></td>
+    <td><select  id="srchState" name="srchState" onchange="getAddrRelay('srchArea' , this.value , 'area', this.value)"></select></td>
     <th>Area</th>
-    <td><select  id="srchArea"></select></td>
+    <td><select  id="srchArea" name="srchArea" onchange="getAddrRelay('srchPstCd' , this.value , 'post', this.value)"></select></td>
     <th>PostCode</th>
-    <td><select  id="srchPstCd"></select></td>
+    <td><select  id="srchPstCd" name="srchPstCd"></select></td>
 </tr>
 </tbody>
 </table><!-- table end -->
