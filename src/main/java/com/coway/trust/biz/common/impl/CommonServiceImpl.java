@@ -146,6 +146,11 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			logger.debug("[insertStatusCode]");
 			logger.debug(" codeName : {}", ((Map<String, Object>) obj).get("codeName"));
 			logger.debug(" code : {}", ((Map<String, Object>) obj).get("code"));
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("codeName")).length() == 0) 
+			{
+				continue;
+			}
 
 			saveCnt++;
 
