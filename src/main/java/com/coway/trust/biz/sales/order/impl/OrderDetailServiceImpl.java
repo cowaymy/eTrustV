@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -41,7 +42,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("orderDetailService")
 public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements OrderDetailService {
 
-	private static final Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
 	
 	@Resource(name = "orderDetailMapper")
 	private OrderDetailMapper orderDetailMapper;
@@ -49,11 +50,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
 	
-	@Resource(name = "searchPaymentMapper")
-	private SearchPaymentMapper searchPaymentMapper;
-	
 	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
+//	private MessageSourceAccessor messageSourceAccessor;
 	
 	public EgovMap getOrderBasicInfo(Map<String, Object> params) throws Exception {
 		
@@ -81,7 +79,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 
 			if(rentPaySetInf != null) {
     			
-    			this.loadRentPaySetInf(rentPaySetInf, basicInfo);
+    			this.loadRentPaySetInf(rentPaySetInf);
     
     			if(((BigDecimal)rentPaySetInf.get("is3party")).compareTo(BigDecimal.ONE) == 0) {
     				rentPaySetInf.put("is3party", "Yes");
@@ -135,8 +133,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	
 	private void loadOrderGuaranteeInfo(EgovMap grntnfo, EgovMap installationInfo) throws ParseException {
 		
-		SimpleDateFormat format = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT3);
-		SimpleDateFormat format2 = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT2);
+		SimpleDateFormat format = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT3, Locale.getDefault());
+		SimpleDateFormat format2 = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT2,  Locale.getDefault());
 		String fiDt = (String)installationInfo.get("firstInstallDt");
 		
 		String[] arrFidt = fiDt.split("-");
@@ -191,7 +189,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 	}
 	
-	private void loadRentPaySetInf(EgovMap rentPaySetInf, EgovMap basicInfo) {
+	private void loadRentPaySetInf(EgovMap rentPaySetInf) {
 		
 		if(!"DD".equals((String)rentPaySetInf.get("rentPayModeCode"))) {
 			rentPaySetInf.put("clmDdMode", "-");
@@ -441,6 +439,11 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	@Override
 	public List<EgovMap> getDiscountList(Map<String, Object> params) {
 		return orderDetailMapper.selectDiscountList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getLast6MonthTransList(Map<String, Object> params) {
+		return orderDetailMapper.selectLast6MonthTransList(params);
 	}
 	
 }

@@ -86,4 +86,6 @@ public interface OrderDetailMapper {
 	EgovMap selectOrderConfigInfo(Map<String, Object> params); //Guarantee Info
 
 	EgovMap selectGSTCertInfo(Map<String, Object> params); //Guarantee Info
+
+	List<EgovMap> selectLast6MonthTransList(Map<String, Object> params); //Last 6 Months Transaction
 }

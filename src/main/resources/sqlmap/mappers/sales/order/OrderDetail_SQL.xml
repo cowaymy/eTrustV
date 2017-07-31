@@ -1038,4 +1038,11 @@
 		   AND ROWNUM <= 1
     ]]>
     </select>
+    
+    <resultMap id="transMap" type="egovMap"></resultMap>
+    <select id="selectLast6MonthTransList" parameterType="Map"  statementType="CALLABLE">
+        {
+            call  SP_GET_ORD_LAST_6_MTH_TRNSC(#{salesOrderId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=transMap})
+        }
+    </select>
 </mapper>

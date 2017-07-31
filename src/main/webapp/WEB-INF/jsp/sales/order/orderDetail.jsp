@@ -9,6 +9,7 @@
     var docGridID;
     var callLogGridID;
     var payGridID;
+    var transGridID;
     var autoDebitGridID;
     var discountGridID;
     
@@ -19,6 +20,7 @@
         createAUIGrid3();
         createAUIGrid4();
         createAUIGrid5();
+        createAUIGrid6();
         createAUIGrid7();
         createAUIGrid8();
         
@@ -27,6 +29,7 @@
         fn_selectDocumentList();
         fn_selectCallLogList();
         fn_selectPaymentList();
+        fn_selectTransList();
         fn_selectAutoDebitList();
         fn_selectDiscountList();
     });
@@ -306,6 +309,61 @@
         payGridID = GridCommon.createAUIGrid("grid_pay_wrap", columnLayout, "", gridPros);
     }
     
+    function createAUIGrid6() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+	            dataField   : "colType",      headerText  : "colType",
+	            width       : 120,            editable    : false,
+	            style       : 'left_style'
+	        }, {
+	            dataField   : "colCurMth",    headerText  : "colCurMth",
+	            width       : 120,            editable    : false,
+	            style       : 'left_style'
+	        }, {
+                dataField   : "colPrev1Mth",  headerText  : "colPrev1Mth",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "colPrev2Mth",  headerText  : "colPrev2Mth",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "colPrev3Mth",  headerText  : "colPrev3Mth",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "colPrev4Mth",  headerText  : "colPrev4Mth",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }, {
+                dataField   : "colPrev5Mth", headerText  : "colPrev5Mth",
+                width       : 120,            editable    : false,
+                style       : 'left_style'
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : false,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",
+            showHeader          : false,
+          //headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : false,        //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        transGridID = GridCommon.createAUIGrid("grid_trans_wrap", columnLayout, "", gridPros);
+    }
+    
     function createAUIGrid7() {
         
         //AUIGrid 칼럼 설정
@@ -442,6 +500,13 @@
     }
     
     // 리스트 조회.
+    function fn_selectTransList() {        
+        Common.ajax("GET", "/sales/order/selectLast6MonthTransJsonList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(transGridID, result);
+        });
+    }
+    
+    // 리스트 조회.
     function fn_selectAutoDebitList() {        
         Common.ajax("GET", "/sales/order/selectAutoDebitJsonList.do", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(autoDebitGridID, result);
@@ -473,6 +538,9 @@
                 break;
             case 'payInfo' :
                 AUIGrid.resize(payGridID, 900, 380);
+                break;
+            case 'transInfo' :
+                AUIGrid.resize(transGridID, 900, 380);
                 break;
             case 'autoDebitInfo' :
                 AUIGrid.resize(autoDebitGridID, 900, 380);
@@ -520,7 +588,7 @@
 	<li><a href="#">Quarantee Info</a></li>
 </c:if>
 	<li><a href="#" onClick="javascript:chgTab('payInfo');">Payment Listing</a></li>
-	<li><a href="#">Last 6 Months Transaction</a></li>
+	<li><a href="#" onClick="javascript:chgTab('transInfo');">Last 6 Months Transaction</a></li>
 	<li><a href="#">Order Configuration</a></li>
 	<li><a href="#" onClick="javascript:chgTab('autoDebitInfo');">Auto Debit Result</a></li>
 	<li><a href="#">Relief Certificate</a></li>
@@ -1234,7 +1302,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_trans_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->

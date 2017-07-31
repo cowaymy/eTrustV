@@ -26,13 +26,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("orderListService")
 public class OrderListServiceImpl extends EgovAbstractServiceImpl implements OrderListService {
 
-	private static final Logger logger = LoggerFactory.getLogger(OrderListServiceImpl.class);
+//	private static Logger logger = LoggerFactory.getLogger(OrderListServiceImpl.class);
 	
 	@Resource(name = "orderListMapper")
 	private OrderListMapper orderListMapper;
 	
 	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
+//	private MessageSourceAccessor messageSourceAccessor;
 	
 	@Override
 	public List<EgovMap> selectOrderList(Map<String, Object> params) {

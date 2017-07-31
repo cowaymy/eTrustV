@@ -32,7 +32,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/sales/order")
 public class OrderDetailController {
 
-	private static final Logger logger = LoggerFactory.getLogger(OrderDetailController.class);
+	private static Logger logger = LoggerFactory.getLogger(OrderDetailController.class);
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
@@ -144,6 +144,19 @@ public class OrderDetailController {
 		logger.debug("!@##############################################################################");
 		
 		List<EgovMap> memInfoList = orderDetailService.getDiscountList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(memInfoList);
+	}
+	
+	@RequestMapping(value = "/selectLast6MonthTransJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectLast6MonthTransJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> memInfoList = orderDetailService.getLast6MonthTransList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);

@@ -39,4 +39,6 @@ public interface OrderDetailService {
 	List<EgovMap> getAutoDebitList(Map<String, Object> params);
 
 	List<EgovMap> getDiscountList(Map<String, Object> params);
+
+	List<EgovMap> getLast6MonthTransList(Map<String, Object> params);
 }

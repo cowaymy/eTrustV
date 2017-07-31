@@ -102,7 +102,7 @@
                 width       : 60,               editable    : false,
                 style       : 'left_style'
             }, {
-                dataField   : "ordId",          visible     : true //salesOrderId
+                dataField   : "ordId",          visible     : false //salesOrderId
             }];
 
         //그리드 속성 설정

@@ -33,7 +33,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/sales/order")
 public class OrderListController {
 
-	private static final Logger logger = LoggerFactory.getLogger(OrderListController.class);
+	private static Logger logger = LoggerFactory.getLogger(OrderListController.class);
 	
 	@Resource(name = "orderListService")
 	private OrderListService orderListService;
