@@ -220,7 +220,7 @@ function editPopUp()
     var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
           , null
-          , "true"  //  자동 Close 
+          , "true"  // true면 close버튼 클릭시 화면 close
     	    );
 
     return ;
@@ -233,7 +233,7 @@ function addPopUp()
     var popUpObj = Common.popupDiv("/common/accountCodeAddPop.do"
             , $("#MainForm").serializeJSON()
             , null
-            , "false"
+            , "true"
             );
 
     return ;

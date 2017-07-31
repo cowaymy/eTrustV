@@ -5,7 +5,7 @@
 var gSelRowIdx = 0;
 
 var statusCategoryLayout = 
-    [      // stusCtgryId=1, seqNo=1, disab=0, stusCtgryName=Customer Status, stusCtgryDesc=Customer Status, crtUserId=999, updUserId=999, updDt=2013-08-28 19:18:00.0}
+    [      
         {    
             dataField : "stusCtgryId",
             headerText : "CATEGORY ID",
@@ -40,7 +40,7 @@ var statusCategoryLayout =
 
 
 var detailColumnLayout = 
-    [   //stusCodeId=1, codeName=Active, codeDisab=0
+    [  
         {
             dataField : "stusCodeId",
             headerText : "CODE ID",
@@ -168,7 +168,7 @@ function addRowStatusCode()
   item.checkFlag   = 0;
   item.stusCodeId  ="";
   item.codeName    ="";
-  item.code        ="";
+  item.code        ="-";
     // parameter
     // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
     // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -385,23 +385,7 @@ $(document).ready(function()
         {
             usePaging : false,
             useGroupingPanel : false,
-            // 체크박스 표시 설정
-           // showRowCheckColumn : true,
-            // 전체 체크박스 표시 설정
-            //showRowAllCheckBox : true,          
-            //showEditedCellMarker : true,
-/*             rowCheckableFunction : function(rowIndex, isChecked, item) {
-            	return true;
-            }, */
             editable : true,
-/* 
-				   ,rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-				        if(item.product == "LG G3") { // 제품이 LG G3 인 경우 체크박스 disabeld 처리함
-				          return false; // false 반환하면 disabled 처리됨
-				        }
-				        return true;
-				      } */
-
         };
  
     // detailGrid 생성
