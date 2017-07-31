@@ -206,18 +206,18 @@ var Common = {
 
 		/*
 		 * 팝업시 left/top 제외 시킴. => /webapp/WEB-INF/tiles/layout/default.jsp
-		 * 
+		 *
 		 */
 		_jsonObj = $.extend(_jsonObj, {
 			isPop : true,
 			isDiv 	: true // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp	
 		});
-		
-		var $obj = $('<div id="_popupDiv"></div>');
+
+		var $obj = $('<div id="_popupDiv" name="_popupDiv"></div>');
 
 		$('body').append($obj);
 
-		$("#_popupDiv").attr("manualClose", _isManualClose); 
+		$("#_popupDiv").attr("manualClose", _isManualClose);
 
 		$.ajax({
 			type : 'post',

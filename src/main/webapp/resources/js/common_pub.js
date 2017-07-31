@@ -199,9 +199,14 @@ $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 /* 팝업 닫기 start */
  $(document).on(
 	"click", ".pop_header .right_opt a:contains('CLOSE') ", function(){
-	var thisPopupWrap=$(this).parents("#popup_wrap, .popup_wrap");
 
-	thisPopupWrap.fadeOut();
+	/* common.js 를 통한 div popup은 div remove를 해 줘야 함. */
+	if($(this).closest('div[name="_popupDiv"]').attr("manualClose")){
+        $("#_popupDiv").remove();
+	}else{
+        var thisPopupWrap=$(this).parents("#popup_wrap, .popup_wrap");
+        thisPopupWrap.fadeOut();
+	}
 	return false;
 });
 /* 팝업 닫기 start */
