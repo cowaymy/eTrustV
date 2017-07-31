@@ -153,96 +153,102 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Credit Card Statement View</h2>
+<h2>Statement List</h2>
 </aside><!-- title_line end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Credit Card Statement Information</h3>
-</aside><!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
+	<col style="width:190px" />
 	<col style="width:*" />
-	<col style="width:120px" />
+	<col style="width:190px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
-	<th scope="row">Statement Date</th>
-	<td><span>2017/05/08</span></td>
-	<th scope="row">Running No</th>
-	<td><span>CREDIT CARD-PBB_1705_0156</span></td>
-</tr>
 <tr>
 	<th scope="row">Reference No</th>
-	<td><span></span></td>
+	<td><input type="text" class="w100p" title="" placeholder="Reference No." /></td>
 	<th scope="row">Status</th>
-	<td><span></span></td>
+	<td>
+	<select class="multy_select" multiple="multiple">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
 </tr>
 <tr>
-	<th scope="row">Account</th>
-	<td><span></span></td>
+	<th scope="row">Bank Account</th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
 	<th scope="row">Remark</th>
-	<td><span></span></td>
+	<td><input type="text" class="w100p" title="" placeholder="Remark" /></td>
 </tr>
 <tr>
-	<th scope="row">Create By</th>
-	<td><span></span></td>
-	<th scope="row">Create At</th>
-	<td><span></span></td>
+	<th scope="row">Uploaded By</th>
+	<td><input type="text" class="w100p" title="" placeholder="Uploaded By" /></td>
+	<th scope="row">Uploaded Date</th>
+	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span>To</span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	</div><!-- date_set end -->
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Credit Card Statement Adjustment</h3>
-</aside><!-- title_line end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
-	<col style="width:160px" />
-	<col style="width:*" />
-	<col style="width:120px" />
-	<col style="width:*" />
-	<col style="width:140px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Gross Total(RM)</th>
-	<td><span>3,420.00</span></td>
-	<th scope="row">Adjustment(RM)</th>
-	<td><input type="text" title="" placeholder="-217.51" class="readonly" readonly="readonly" /></td>
-	<th scope="row">Refund(RM)</th>
-	<td><input type="text" title="" placeholder="-217.51" class="readonly" readonly="readonly" /></td>
-	<th scope="row">Net Total(RM)</th>
-	<td><span>3,202.49</span></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h3>Credit Card Transaction</h3>
-</aside><!-- title_line end -->
-
-<ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-	<li><p class="btn_grid"><a href="#">NEW</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">INS</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+<ul class="right_btns mt20">
+	<li><p class="btn_grid"><a href="#">Search</a></p></li>
+	<li><p class="btn_grid"><a href="#">Clear</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역
 </article><!-- grid_wrap end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+	<dt>Link</dt>
+	<dd>
+	<ul class="btns">
+		<li><p class="link_btn"><a href="#">menu1</a></p></li>
+		<li><p class="link_btn"><a href="#">menu2</a></p></li>
+		<li><p class="link_btn"><a href="#">menu3</a></p></li>
+		<li><p class="link_btn"><a href="#">menu4</a></p></li>
+		<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+		<li><p class="link_btn"><a href="#">menu6</a></p></li>
+		<li><p class="link_btn"><a href="#">menu7</a></p></li>
+		<li><p class="link_btn"><a href="#">menu8</a></p></li>
+	</ul>
+	<ul class="btns">
+		<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+		<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+		<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+		<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+		<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+		<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+	</ul>
+	<p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+	</dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+</form>
+</section><!-- search_table end -->
 
 </section><!-- content end -->
 
