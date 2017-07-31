@@ -202,7 +202,7 @@ $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 
 	/* common.js 를 통한 div popup은 div remove를 해 줘야 함. */
 	if($(this).closest('div[name="_popupDiv"]').attr("manualClose")){
-        $("#_popupDiv").remove();
+        $(this).closest('div[name="_popupDiv"]').remove();
 	}else{
         var thisPopupWrap=$(this).parents("#popup_wrap, .popup_wrap");
         thisPopupWrap.fadeOut();
