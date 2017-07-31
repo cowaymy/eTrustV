@@ -203,7 +203,7 @@
 	                JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
 	                LEFT JOIN SAL0077D Extent3   ON Extent3.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
 	          WHERE  ( 1 = Extent1.STUS_CODE_ID )
-	                    ) Project1
+	                   AND ( Extent1.ENRL_ID = #{enrlId} )  ) Project1
 	  ORDER BY Project1.ACC_NO ASC
     </select>
     
