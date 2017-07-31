@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.autodebit.service.EnrollService;
+import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -147,57 +148,56 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 
 	}
 	
-	public void createEnrollmentFile_ALB(List<EgovMap> params, String issueBank, String rdpCreateDateFr){
+	public void createEnrollmentFile_ALB(List<EgovMap> enrollmentDetView, String issueBank, String rdpCreateDateFr){
 		
 		String debtDateFr = rdpCreateDateFr;
-		String day = rdpCreateDateFr.substring(0,2);
-		String month = rdpCreateDateFr.substring(3,5);
-		String year = rdpCreateDateFr.substring(6,10);
-		debtDateFr = year+month+day;
-		String sFile = "ALB" + debtDateFr + "ENROLL01.txt";
-		String location = "D://WebShare//FTP Folder//CRT//ALB/EnrollALB//" + sFile;
+		//String day = rdpCreateDateFr.substring(0,2);
+		//String month = rdpCreateDateFr.substring(3,5);
+		//String year = rdpCreateDateFr.substring(6,10);
+		//debtDateFr = year+month+day;
 		
-		File file = new File(location);
-		FileWriter fw;
+		String inputDate = CommonUtils.nvl(debtDateFr).equals("") ? "1900-01-01" : debtDateFr;
+		
+		String sFile = "ALB" + CommonUtils.changeFormat(inputDate, "DD/MM/YYYY" , "yyyyMMdd") + "ENROLL01.txt";
+		File file = new File("D://WebShare//FTP Folder//CRT//ALB/EnrollALB//" + sFile);
+		
+		// 디렉토리 생성
+		if (!file.getParentFile().exists()) {
+			file.getParentFile().mkdirs();
+		}
+		
+		FileWriter fileWriter = null;
 		try {
-			fw = new FileWriter(file, false);
+			fileWriter = new FileWriter(file);
+			BufferedWriter out = new BufferedWriter(fileWriter);
 			String sText = "H|ADCUSPRO|";
-			sText += "\r\n";
-			
-			/*if(!file.exists()){
-				logger.debug("디렉토리존재유무 체크:"+"해당 디렉토리존재안함!");
-				file.mkdirs();
-			}*/
-			fw.write(sText);
-			fw.flush();
-
-    		//String schksum = "";
+			out.write(sText);
+			out.newLine();
+			out.flush(); 
+    		String schksum = "";
             int iHashTot = 0;
             int iTotAmt = 0;
             int icntdel = 0;
     
-            //String sDocno = "";
-            String sreserve = "";
-            //String sDrAccNo = "";
-            String sOldIC = "";
-            //String sNRIC = "";
-            //String sDrName = "";
+            String sDocno = "";
+            String sDrAccNo = "";
+            String sNRIC = "";
+            String sDrName = "";
             String sLimit = "";
-            String sFiller = "";
-            //String stextDetails = "";
+            String stextDetails = "";
             String sBatchTot = "";
             String sTotAdd = "";
             String sTotDel = "";
             String sHashTot = "";
             String sTextBtn = "";
 		
-    		if (params.size() > 0) {
+    		if (enrollmentDetView.size() > 0) {
     			
-    			params.forEach(obj -> {
-                    Map<String, Object> map2 = (Map<String, Object>) obj;
+    			for(int i = 0 ; i < enrollmentDetView.size() ; i++){
+    				Map<String, Object> map = (Map<String, Object>)enrollmentDetView.get(i);
                     
                     //수정할 데이터 확인.(그리드 값)
-                    logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
+                    /*logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
     				logger.debug("ENRL_ITM_ID : {}", map2.get("enrlItmId"));
                     logger.debug("ACC_NAME : {}", map2.get("accName"));					
                     logger.debug("ACC_NO : {}", map2.get("accNo"));
@@ -210,35 +210,29 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
                     logger.debug("SALES_ORD_ID : {}", map2.get("salesOrdId"));
                     logger.debug("SALES_ORD_NO : {}", map2.get("salesOrdNo"));
                     logger.debug("SVC_CNTRCT_ID : {}", map2.get("svcCntrctId"));
-                    logger.debug("C1 : {}", map2.get("c1"));
-                    String sDocno = ((String) map2.get("salesOrdNo")).trim();
-                    String sDrAccNo = StringUtils.leftPad(((String) map2.get("accNo")).trim(), 15, ' ');
-                    String sNRIC = ((String) map2.get("accNric")).trim();
-                    String sDrName = ((String) map2.get("accName")).trim();
-                    //String billAmt = (String) map2.get("billAmt");
-                    //logger.debug("billAmt:"+billAmt);
-                    //sLimit = string.Format(det.BillAmt.ToString(), "#####.00");
-                    /*if (sLimit == ".00")
-                    sLimit = "0.00";*/
-                    //String schksum = Integer.toString(calChkSum(sDocno, sDrAccNo));
-                    //String schksumPadLef = StringUtils.leftPad(schksum,12 , "0");
-                    String stextDetails = "D" + "|" + "101" + "|" + sDrName.toUpperCase().trim() + "|" + sNRIC.toUpperCase().trim() + "|" + sDrAccNo.toUpperCase().trim() + "|" + "sLimit" + "|" + "D" + "|" + sDocno + "|";
-                    stextDetails += "\r\n";
-                    try {
-    					fw.write(stextDetails);
-    					fw.flush();
-    	                
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
+                    logger.debug("C1 : {}", map2.get("c1"));*/
+                    
+                    sDocno = ((String) map.get("salesOrdNo")).trim();
+                    sDrAccNo = StringUtils.leftPad(((String) map.get("accNo")).trim(), 15, ' ');
+                    sNRIC = ((String) map.get("accNric")).trim();
+                    sDrName = ((String) map.get("accName")).trim();
+                    sLimit = CommonUtils.getNumberFormat( String.valueOf(map.get("billAmt")), "#,##0.00");
+                    if (sLimit == ".00")
+                    	sLimit = "0.00";
+                    schksum = StringUtils.leftPad(Integer.toString(calChkSum(sDocno, sDrAccNo)),12 , "0");
+                    stextDetails = "D" + "|" + "101" + "|" + sDrName.toUpperCase().trim() + "|" + sNRIC.toUpperCase().trim() + "|" + sDrAccNo.toUpperCase().trim() + "|" + sLimit + "|" + "D" + "|" + sDocno + "|";
+                    iHashTot = iHashTot + Integer.parseInt(schksum);
+                    out.write(stextDetails);
+           		 	out.newLine();
+           		 	out.flush();
     
-        		});
-    	        sTotAdd = Integer.toString(params.size());
+    			}
+    	        sTotAdd = Integer.toString(enrollmentDetView.size());
     	        sTextBtn = "T|" + sTotAdd + "|";
-    	        sTextBtn += "\r\n";
-    	        fw.write(sTextBtn);
-    	        fw.flush();
-    	        fw.close();
+    	        out.write(sTextBtn);
+       		 	out.newLine();
+       		 	out.flush();
+       		 	out.close();
         	}
 		
 		} catch (Exception e) {
@@ -246,19 +240,24 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 		}
 	}
 	
-	public void createEnrollmentFile_ALB_NEW(List<EgovMap> params, String issueBank, String enrlId){
+	public void createEnrollmentFile_ALB_NEW(List<EgovMap> enrollmentDetView, String issueBank, String enrlId){
 
 		Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
         String toDate = df.format(date);
 		String sFile = "AD_Enrolment_" + toDate + ".txt";
-		String location = "D:/WebShare/FTP Folder/CRT/ALB/EnrollALB/" + sFile;
-		
-		File file = new File(location);
-		FileWriter fw;
-		try {
-			fw = new FileWriter(file, false);
-			
+		File file = new File("D:/WebShare/FTP Folder/CRT/ALB/EnrollALB/" + sFile);
+		 
+		// 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+				
+		 FileWriter fileWriter = null;
+		 
+		 try {
+			fileWriter = new FileWriter(file);
+			BufferedWriter out = new BufferedWriter(fileWriter);
 			//-------- HEADER -------------
             String hRecordType = "H"; 
             String hCreditAccNo = "140550010078613";
@@ -266,26 +265,19 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
             String hFileBatchRefNo = enrlId;
             String hSellerID = "AD10000101";
             String HeaderStr = hRecordType + "|" + hCreditAccNo + "|" + hCompanyName + "|" + hFileBatchRefNo + "|" + hSellerID + "|";
-            HeaderStr += "\r\n";
-			fw.write(HeaderStr);
-			fw.flush();
+            out.write(HeaderStr);
+   		 	out.newLine();
+   		 	out.flush(); 
             //-------- END HEADER -------------
-			
-			
-			/*if(!file.exists()){
-				logger.debug("디렉토리존재유무 체크:"+"해당 디렉토리존재안함!");
-				file.mkdirs();
-			}*/
-			
-			
+
 			//-------- DETAILS---------------
             int hashTotal = 0;
             String dRecordType = "D";
             String dReqType = "C";
-            //String dDebtiAccNo = "";
-            //String dDebitAccName = "";
+            String dDebtiAccNo = "";
+            String dDebitAccName = "";
             String dBankCode = "MFBBMYKL";
-            //String dBuyerIDNo = "";
+            String dBuyerIDNo = "";
             String dMaxAmount = "";
             String dFreqMode = "M";
             String dNoFreq = "0008";
@@ -295,77 +287,66 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
             String ExpiryDate = "31122099";
             String Email1 = "";
             String Email2 = "";
-            //String DetailStr = "";
+            String DetailStr = "";
 		
-    		if (params.size() > 0) {
+    		if (enrollmentDetView.size() > 0) {
     			
-    			params.forEach(obj -> {
-                    Map<String, Object> map2 = (Map<String, Object>) obj;
+    			for(int i = 0 ; i < enrollmentDetView.size() ; i++){
+    				Map<String, Object> map = (Map<String, Object>)enrollmentDetView.get(i);
                     
                     //수정할 데이터 확인.(그리드 값)
-                    logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
-    				logger.debug("ENRL_ITM_ID : {}", map2.get("enrlItmId"));
-                    logger.debug("ACC_NAME : {}", map2.get("accName"));					
-                    logger.debug("ACC_NO : {}", map2.get("accNo"));
-                    logger.debug("ACC_NRIC : {}", map2.get("accNric"));
-                    logger.debug("APPV_DT : {}", map2.get("appvDt"));
-                    logger.debug("BILL_AMT : {}", map2.get("billAmt"));
-                    logger.debug("CLM_AMT : {}", map2.get("clmAmt"));
-                    logger.debug("ENRL_ID : {}", map2.get("enrlId"));
-                    logger.debug("LIMIT_AMT : {}", map2.get("limitAmt"));
-                    logger.debug("SALES_ORD_ID : {}", map2.get("salesOrdId"));
-                    logger.debug("SALES_ORD_NO : {}", map2.get("salesOrdNo"));
-                    logger.debug("SVC_CNTRCT_ID : {}", map2.get("svcCntrctId"));
-                    logger.debug("C1 : {}", map2.get("c1"));
+                    /*logger.debug("enrlId : {}", map.get("enrlId"));//프로시저 반환 enrId값
+    				logger.debug("ENRL_ITM_ID : {}", map.get("enrlItmId"));
+                    logger.debug("ACC_NAME : {}", map.get("accName"));					
+                    logger.debug("ACC_NO : {}", map.get("accNo"));
+                    logger.debug("ACC_NRIC : {}", map.get("accNric"));
+                    logger.debug("APPV_DT : {}", map.get("appvDt"));
+                    logger.debug("BILL_AMT : {}", map.get("billAmt"));
+                    logger.debug("CLM_AMT : {}", map.get("clmAmt"));
+                    logger.debug("ENRL_ID : {}", map.get("enrlId"));
+                    logger.debug("LIMIT_AMT : {}", map.get("limitAmt"));
+                    logger.debug("SALES_ORD_ID : {}", map.get("salesOrdId"));
+                    logger.debug("SALES_ORD_NO : {}", map.get("salesOrdNo"));
+                    logger.debug("SVC_CNTRCT_ID : {}", map.get("svcCntrctId"));
+                    logger.debug("C1 : {}", map.get("c1"));*/
                     
-                    String dDebtiAccNo = (String) map2.get("accNo");
+                    dDebtiAccNo = (String) map.get("accNo");
                     if(dDebtiAccNo.length() > 17){
                     	dDebtiAccNo.substring(0, 17);
-                    }else{
-                    	//dDebtiAccNo = dDebtiAccNo;
                     }
                     
-                    String dDebitAccName = (String) map2.get("accName");
+                    dDebitAccName = (String) map.get("accName");
                     if(dDebitAccName.length() > 40){
                     	dDebitAccName.substring(0, 40);
-                    }else{
-                    	//dDebitAccName = dDebitAccName;
                     }
                     
-                    String dBuyerIDNo = (String) map2.get("accNric");
+                    dBuyerIDNo = (String) map.get("accNric");
                     if(dBuyerIDNo.length() > 20){
                     	dBuyerIDNo.substring(0, 20);
-                    }else{
-                    	//dBuyerIDNo = dBuyerIDNo;
                     }
-                    //dMaxAmount = string.Format("{0:0.00}", det.BillAmt);
+                    dMaxAmount = CommonUtils.getNumberFormat( String.valueOf(map.get("billAmt")), "#,##0.00");
                     //OrderNo = det.ContractNOrderNo.Trim();
-					//int strAccNo =subStrRirght(dDebtiAccNo,10);
-                    //hashTotal += subStr;
+                    //hashTotal += Integer.parseInt(strRirght(dDebtiAccNo,10));
 
-                    String DetailStr = dRecordType + "|" + dReqType + "|" + dDebtiAccNo + "|" + dDebitAccName + "|" +
+                    DetailStr = dRecordType + "|" + dReqType + "|" + dDebtiAccNo + "|" + dDebitAccName + "|" +
                         dBankCode + "|" + dBuyerIDNo + "|" + dMaxAmount + "|" + dFreqMode + "|" + dNoFreq + "|" + OrderNo + "|" +
                         SellerInternalRefNo + "|" + CommencementDate + "|" + ExpiryDate + "|" + Email1 + "|" + Email2 + "|";
-                    try {
-                    	DetailStr += "\r\n";
-    					fw.write(DetailStr);
-    					fw.flush();
-    	                
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
+                    
+                    out.write(DetailStr);
+           		 	out.newLine();
+           		 	out.flush(); 
     
-        		});
+    			}
     			//-------- TRAILER ---------------
     			String tRecordType = "T";
-    			String tTotalRecord = Integer.toString(params.size());
+    			String tTotalRecord = Integer.toString(enrollmentDetView.size());
     			//String tHashTotal = string.Format("{0:0000000000}", hashTotal);
     			String TrailerStr = "";
                 TrailerStr = tRecordType + "|" + tTotalRecord + "|" + "tHashTotal" + "|";
-                TrailerStr += "\r\n";
-                fw.write(TrailerStr);
-                fw.flush();
-    	        fw.close();
+                out.write(TrailerStr);
+       		 	out.newLine();
+       		 	out.flush();
+       		 	out.close();
                 //-------- END TRAILER ---------------
         	}
 		
@@ -374,22 +355,25 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 		}
 	}
 	
-	public void createEnrollmentFile_MBB(List<EgovMap> params, String issueBank, String rdpCreateDateFr){
+	public void createEnrollmentFile_MBB(List<EgovMap> enrollmentDetView, String issueBank, String rdpCreateDateFr){
 
 		String debtDateFr = rdpCreateDateFr;
-		String day = rdpCreateDateFr.substring(0,2);
-		String month = rdpCreateDateFr.substring(3,5);
-		String year = rdpCreateDateFr.substring(6,10);
-		debtDateFr = day+month+year;
         
         String sFile = "EnrollMBB.txt";
         
-		String location = "D:/WebShare/FTP Folder/CRT/MBB/Enroll/" + sFile;
+		//파일 디렉토리
+		 File file = new File("D:/WebShare/FTP Folder/CRT/MBB/Enroll/" + sFile);
 		
-		File file = new File(location);
-		FileWriter fw;
-		try {
-			fw = new FileWriter(file, false);
+		 // 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+				
+		 FileWriter fileWriter = null;
+		 
+		 try {
+			fileWriter = new FileWriter(file);
+			BufferedWriter out = new BufferedWriter(fileWriter);
 			
 			int iHashTot = 0;
 			
@@ -404,58 +388,50 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
             strHeader = strHeader_Fix + strHeader_BankCode + strHeader_OriginatorID +
                 strHeader_OriginatorName + strHeader_EnrollDate + strHeader_Filler;
             
-            strHeader += "\r\n";
-			fw.write(strHeader);
-			fw.flush();
+            out.write(strHeader);
+            out.newLine();
+            out.flush();
             //-------- END HEADER -------------
-			
-			
-			/*if(!file.exists()){
-				logger.debug("디렉토리존재유무 체크:"+"해당 디렉토리존재안함!");
-				file.mkdirs();
-			}*/
-		
-    		if (params.size() > 0) {
+
+    		if (enrollmentDetView.size() > 0) {
     			
-    			params.forEach(obj -> {
-                    Map<String, Object> map2 = (Map<String, Object>) obj;
+    			for(int i = 0 ; i < enrollmentDetView.size() ; i++){
+    				Map<String, Object> map = (Map<String, Object>)enrollmentDetView.get(i);
                     
-                    //수정할 데이터 확인.(그리드 값)
-                    logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
-    				logger.debug("ENRL_ITM_ID : {}", map2.get("enrlItmId"));
-                    logger.debug("ACC_NAME : {}", map2.get("accName"));					
-                    logger.debug("ACC_NO : {}", map2.get("accNo"));
-                    logger.debug("ACC_NRIC : {}", map2.get("accNric"));
-                    logger.debug("APPV_DT : {}", map2.get("appvDt"));
-                    logger.debug("BILL_AMT : {}", map2.get("billAmt"));
-                    logger.debug("CLM_AMT : {}", map2.get("clmAmt"));
-                    logger.debug("ENRL_ID : {}", map2.get("enrlId"));
-                    logger.debug("LIMIT_AMT : {}", map2.get("limitAmt"));
-                    logger.debug("SALES_ORD_ID : {}", map2.get("salesOrdId"));
-                    logger.debug("SALES_ORD_NO : {}", map2.get("salesOrdNo"));
-                    logger.debug("SVC_CNTRCT_ID : {}", map2.get("svcCntrctId"));
-                    logger.debug("C1 : {}", map2.get("c1"));
+    				//수정할 데이터 확인.(그리드 값)
+                    /*logger.debug("enrlId : {}", map.get("enrlId"));//프로시저 반환 enrId값
+    				logger.debug("ENRL_ITM_ID : {}", map.get("enrlItmId"));
+                    logger.debug("ACC_NAME : {}", map.get("accName"));					
+                    logger.debug("ACC_NO : {}", map.get("accNo"));
+                    logger.debug("ACC_NRIC : {}", map.get("accNric"));
+                    logger.debug("APPV_DT : {}", map.get("appvDt"));
+                    logger.debug("BILL_AMT : {}", map.get("billAmt"));
+                    logger.debug("CLM_AMT : {}", map.get("clmAmt"));
+                    logger.debug("ENRL_ID : {}", map.get("enrlId"));
+                    logger.debug("LIMIT_AMT : {}", map.get("limitAmt"));
+                    logger.debug("SALES_ORD_ID : {}", map.get("salesOrdId"));
+                    logger.debug("SALES_ORD_NO : {}", map.get("salesOrdNo"));
+                    logger.debug("SVC_CNTRCT_ID : {}", map.get("svcCntrctId"));
+                    logger.debug("C1 : {}", map.get("c1"));*/
                     
                     String strRecord = "";
                     String strRecord_Fix = "00";
                     String strRecord_TransCode = "A";
                     //String strRecord_RefNo = det.ContractNOrderNo.Trim().Length > 14 ? CommonFunction.Left(det.ContractNOrderNo.Trim(), 14) : det.ContractNOrderNo.Trim().PadRight(14, ' ');
                     String strRecord_Reserve = StringUtils.rightPad("", 6,' ');
-                    String strRecord_AccNo = ((String) map2.get("accNo")).trim().length() > 12 ? subStrLeft(((String) map2.get("accNo")).trim(), 12) : StringUtils.rightPad(((String) map2.get("accNo")).trim(), 12,' ');
-                    String strRecord_IssueIC = ((String) map2.get("accNric")).trim();
+                    String strRecord_AccNo = ((String) map.get("accNo")).trim().length() > 12 ? strLeft(((String) map.get("accNo")).trim(), 12) : StringUtils.rightPad(((String) map.get("accNo")).trim(), 12,' ');
+                    String strRecord_IssueIC = ((String) map.get("accNric")).trim();
                     String strRecord_OldIC = "";
                     String strRecord_NRIC = "";
                     if (strRecord_IssueIC.length() >= 12){
                         strRecord_OldIC = StringUtils.rightPad("", 12,' ');
-                        strRecord_NRIC = subStrLeft(strRecord_IssueIC, 12);
-                    }
-                    else
-                    {
+                        strRecord_NRIC = strLeft(strRecord_IssueIC, 12);
+                    }else{
                         strRecord_OldIC = StringUtils.rightPad(strRecord_IssueIC, 12,' ');
                         strRecord_NRIC = StringUtils.rightPad("", 12,' ');
                     }
-                    String strRecord_Name = ((String) map2.get("accName")).trim().length() > 20 ? subStrLeft(((String) map2.get("accName")).trim(), 20) :  StringUtils.rightPad(((String) map2.get("accName")).trim(), 20,' ');
-                    String strRecord_AuthLimit = StringUtils.leftPad(String.valueOf(map2.get("billAmt")), 5, "0");
+                    String strRecord_Name = ((String) map.get("accName")).trim().length() > 20 ? strLeft(((String) map.get("accName")).trim(), 20) :  StringUtils.rightPad(((String) map.get("accName")).trim(), 20,' ');
+                    String strRecord_AuthLimit = StringUtils.leftPad(String.valueOf(map.get("billAmt")), 5, "0");
                     String strRecord_ValidValue = "";
                     //int validValue = 0;//this.CalChkSum(det.ContractNOrderNo.Trim(), det.AccNo.Trim());
                     //strRecord_ValidValue = StringUtils.leftPad(Integer.toString(validValue) , 12, "0");
@@ -465,20 +441,15 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
                         strRecord_AuthLimit + strRecord_ValidValue + strRecord_Filler;
                     //iHashTot = iHashTot + validValue;
                     
-                    try {
-                    	strRecord += "\r\n";
-    					fw.write(strRecord);
-    					fw.flush();
-    	                
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
+                    out.write(strRecord);
+           		 	out.newLine();
+           		 	out.flush();
     
-        		});
+        		}
     			//-------- TRAILER ---------------
     			String strTrailer = "";
     			String strTrailer_Fix = "FF";
-    			String strTrailer_TotalAdd = StringUtils.leftPad(Integer.toString(params.size()), 6, "0");
+    			String strTrailer_TotalAdd = StringUtils.leftPad(Integer.toString(enrollmentDetView.size()), 6, "0");
     			String strTrailer_TotalDel = StringUtils.leftPad("", 6, "0");
     			//String strTrailer_HashTotal = iHashTot.ToString().PadLeft(12, '0');
     			String strTrailer_Filler = StringUtils.rightPad("", 124,' ');
@@ -486,9 +457,10 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
                     "strTrailer_HashTotal" + strTrailer_Filler;
                 
                 strTrailer += "\r\n";
-                fw.write(strTrailer);
-                fw.flush();
-    	        fw.close();
+                out.write(strTrailer);
+       		 	out.newLine();
+       		 	out.flush();
+       		 	out.close();
                 //-------- END TRAILER ---------------
         	}
 		
@@ -497,46 +469,48 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 		}
 	}
 	
-	public void createEnrollmentFile_RHB(List<EgovMap> params){
+	public void createEnrollmentFile_RHB(List<EgovMap> enrollmentDetView){
 
 		Date date = new Date();
         SimpleDateFormat df = new SimpleDateFormat("ddMMyy");
         String toDate = df.format(date);
         
         String sFile = "AB_00035_AutoMaint_"+toDate+".txt";
-        
-		String location = "D:/WebShare/FTP Folder/CRT/RHB/Enroll/" + sFile;
+
+		//파일 디렉토리
+		 File file = new File("D:/WebShare/FTP Folder/CRT/RHB/Enroll/" + sFile);
 		
-		File file = new File(location);
-		FileWriter fw;
-		try {
-			fw = new FileWriter(file, false);
+		 // 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+						
+		 FileWriter fileWriter = null;
+		 
+		 try {
+			fileWriter = new FileWriter(file);
+			BufferedWriter out = new BufferedWriter(fileWriter);
 			
-			/*if(!file.exists()){
-				logger.debug("디렉토리존재유무 체크:"+"해당 디렉토리존재안함!");
-				file.mkdirs();
-			}*/
-		
-    		if (params.size() > 0) {
+    		if (enrollmentDetView.size() > 0) {
     			
-    			params.forEach(obj -> {
-                    Map<String, Object> map2 = (Map<String, Object>) obj;
+    			for(int i = 0 ; i < enrollmentDetView.size() ; i++){
+           		 Map<String, Object> map = (Map<String, Object>)enrollmentDetView.get(i);
                     
                     //수정할 데이터 확인.(그리드 값)
-                    logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
-    				logger.debug("ENRL_ITM_ID : {}", map2.get("enrlItmId"));
-                    logger.debug("ACC_NAME : {}", map2.get("accName"));					
-                    logger.debug("ACC_NO : {}", map2.get("accNo"));
-                    logger.debug("ACC_NRIC : {}", map2.get("accNric"));
-                    logger.debug("APPV_DT : {}", map2.get("appvDt"));
-                    logger.debug("BILL_AMT : {}", map2.get("billAmt"));
-                    logger.debug("CLM_AMT : {}", map2.get("clmAmt"));
-                    logger.debug("ENRL_ID : {}", map2.get("enrlId"));
-                    logger.debug("LIMIT_AMT : {}", map2.get("limitAmt"));
-                    logger.debug("SALES_ORD_ID : {}", map2.get("salesOrdId"));
-                    logger.debug("SALES_ORD_NO : {}", map2.get("salesOrdNo"));
-                    logger.debug("SVC_CNTRCT_ID : {}", map2.get("svcCntrctId"));
-                    logger.debug("C1 : {}", map2.get("c1"));
+                    /*logger.debug("enrlId : {}", map.get("enrlId"));//프로시저 반환 enrId값
+    				logger.debug("ENRL_ITM_ID : {}", map.get("enrlItmId"));
+                    logger.debug("ACC_NAME : {}", map.get("accName"));					
+                    logger.debug("ACC_NO : {}", map.get("accNo"));
+                    logger.debug("ACC_NRIC : {}", map.get("accNric"));
+                    logger.debug("APPV_DT : {}", map.get("appvDt"));
+                    logger.debug("BILL_AMT : {}", map.get("billAmt"));
+                    logger.debug("CLM_AMT : {}", map.get("clmAmt"));
+                    logger.debug("ENRL_ID : {}", map.get("enrlId"));
+                    logger.debug("LIMIT_AMT : {}", map.get("limitAmt"));
+                    logger.debug("SALES_ORD_ID : {}", map.get("salesOrdId"));
+                    logger.debug("SALES_ORD_NO : {}", map.get("salesOrdNo"));
+                    logger.debug("SVC_CNTRCT_ID : {}", map.get("svcCntrctId"));
+                    logger.debug("C1 : {}", map.get("c1"));*/
                     
                     String sbiller = "00035";
                     String sSrvChg = "N";
@@ -545,56 +519,53 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
                     String sMinComm = StringUtils.rightPad("", 9, "0");
                     String sMaxComm = StringUtils.rightPad("", 9, "0");
                     String sReserve = StringUtils.rightPad("", 266, " ");
-                    String sDrAccNo = StringUtils.rightPad(((String)map2.get("accNo")).trim(), 14,' ');
+                    String sDrAccNo = StringUtils.rightPad(((String)map.get("accNo")).trim(), 14,' ');
                     //sDocno = det.ContractNOrderNo.Trim().Length > 20 ? CommonFunction.Left(det.ContractNOrderNo.Trim(), 20) : det.ContractNOrderNo.Trim().PadRight(20, ' ');
                     //sLimit = (det.BillAmt * 100).ToString("000000000000000");
-                    String sDrName = ((String)map2.get("accName")).trim().length() > 35 ? subStrLeft(((String)map2.get("accName")).trim(), 35) : StringUtils.rightPad(((String)map2.get("accName")).trim(), 35,' ');
-                    String sOldIC = ((String)map2.get("accNric")).trim().length() > 12 ? subStrLeft(((String)map2.get("accNric")).trim(), 12) : StringUtils.rightPad(((String)map2.get("accNric")).trim(), 12,' ');
+                    String sDrName = ((String)map.get("accName")).trim().length() > 35 ? strLeft(((String)map.get("accName")).trim(), 35) : StringUtils.rightPad(((String)map.get("accName")).trim(), 35,' ');
+                    String sOldIC = ((String)map.get("accNric")).trim().length() > 12 ? strLeft(((String)map.get("accNric")).trim(), 12) : StringUtils.rightPad(((String)map.get("accNric")).trim(), 12,' ');
                     String stextDetails = sDrAccNo + sbiller + "sDocno" + "sLimit" + sDrName + sOldIC +
                         sSrvChg + sSrvChgAmt + sCommRate + sMinComm + sMaxComm + sReserve;
                     
-                    try {
-                    	stextDetails += "\r\n";
-    					fw.write(stextDetails);
-    					fw.flush();
-    					
-    	                
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
+                    out.write(stextDetails);
+           		 	out.newLine();
+           		 	out.flush();
     
-        		});
+        		}
     			
         	}
-    		fw.close();
+    		out.close();
 		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-public void createEnrollmentFile_BSN(List<EgovMap> params, String rdpCreateDateFr){
+public void createEnrollmentFile_BSN(List<EgovMap> enrollmentDetView, String rdpCreateDateFr){
 		
 		String debtDateFr = rdpCreateDateFr;
-		String day = rdpCreateDateFr.substring(0,2);
-		String month = rdpCreateDateFr.substring(3,5);
-		String year = rdpCreateDateFr.substring(6,10);
-		debtDateFr = year+month+day;
-		String sFile = "BSN" + debtDateFr + "E01.txt";
-		String location = "D:/WebShare/FTP Folder/CRT/BSN/Enroll/" + sFile;
+		String inputDate = CommonUtils.nvl(debtDateFr).equals("") ? "1900-01-01" : debtDateFr;
 		
-		File file = new File(location);
-		FileWriter fw;
-		try {
-			fw = new FileWriter(file, false);
-		
-    		if (params.size() > 0) {
+		String sFile = "BSN" + CommonUtils.changeFormat(inputDate, "MM/DD/YYYY" , "yyyyMMdd") + "E01.txt";
+		File file = new File("D:/WebShare/FTP Folder/CRT/BSN/Enroll/" + sFile);
+		 
+		// 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+				
+		 FileWriter fileWriter = null;
+		 
+		 try {
+			 fileWriter = new FileWriter(file);
+			 BufferedWriter out = new BufferedWriter(fileWriter);
+			 if (enrollmentDetView.size() > 0) {
     			
-    			params.forEach(obj -> {
-                    Map<String, Object> map2 = (Map<String, Object>) obj;
+    			for(int i = 0 ; i < enrollmentDetView.size() ; i++){
+    				Map<String, Object> map = (Map<String, Object>)enrollmentDetView.get(i);
                     
                     //수정할 데이터 확인.(그리드 값)
-                    logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
+                    /*logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
     				logger.debug("ENRL_ITM_ID : {}", map2.get("enrlItmId"));
                     logger.debug("ACC_NAME : {}", map2.get("accName"));					
                     logger.debug("ACC_NO : {}", map2.get("accNo"));
@@ -607,7 +578,7 @@ public void createEnrollmentFile_BSN(List<EgovMap> params, String rdpCreateDateF
                     logger.debug("SALES_ORD_ID : {}", map2.get("salesOrdId"));
                     logger.debug("SALES_ORD_NO : {}", map2.get("salesOrdNo"));
                     logger.debug("SVC_CNTRCT_ID : {}", map2.get("svcCntrctId"));
-                    logger.debug("C1 : {}", map2.get("c1"));
+                    logger.debug("C1 : {}", map2.get("c1"));*/
                     
                     String sDocno = "";
                     String sDrAccNo = "";
@@ -617,23 +588,16 @@ public void createEnrollmentFile_BSN(List<EgovMap> params, String rdpCreateDateF
                     String sOrgAcc = "1410029000510851";
                     
                     //sDocno = det.ContractNOrderNo.Trim().PadRight(20, ' ');
-                    sDrAccNo = StringUtils.rightPad(((String)map2.get("accNo")).trim(), 16,' ');
+                    sDrAccNo = StringUtils.rightPad(((String)map.get("accNo")).trim(), 16,' ');
                     sFiller = StringUtils.leftPad(sFiller, 20, " ");
                     stextDetails = sorigid + sOrgAcc + sDrAccNo + sDocno + sFiller;
    
-                    try {
-                    		stextDetails += "\r\n";
-                        	fw.write(stextDetails);
-                	        fw.flush();
-    	                
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
+                    out.write(stextDetails);
+                    out.newLine();
+                    out.flush();
     
-        		});
-    			
-    			fw.close();
-    	        
+        		}
+    			out.close();
         	}
 		
 		} catch (Exception e) {
@@ -641,22 +605,21 @@ public void createEnrollmentFile_BSN(List<EgovMap> params, String rdpCreateDateF
 		}
 	}
 	
-	public int subStrRirght(String sAccNo, int length){
+	public String strRirght(String sAccNo, int length){
 		String accNo = sAccNo;
 		int accNoLength = length;
-		int result = 0;
+		String result = "";
 		
-		if(sAccNo.length() > 0){
-			accNo = accNo.substring(accNoLength-length);
+		if(accNo.length() > 0){
+			accNo = accNo.substring(accNo.length() -accNoLength);
 		}else{
 			accNo= "0";
 		}
-		result = Integer.parseInt(accNo);
 		
 		return result;
 	}
 	
-	public String subStrLeft(String sAccNo, int length){
+	public String strLeft(String sAccNo, int length){
 		String accNo = sAccNo;
 		
 		if(sAccNo.length() > 0){
