@@ -35,9 +35,6 @@
     
     var itemdata;
     
-    var comboData = [{"codeId": "1","codeName": "Y"},{"codeId": "8","codeName": "N"}];
-    var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
-    
     // V= 보기, U=수정, N=신규....  
     var div;
     
