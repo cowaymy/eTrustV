@@ -578,19 +578,19 @@
                   <when test="groupCode !=null and groupCode == 'state'">
                       SYS0035M
                       WHERE STUS_CODE_ID = '1'
-                        AND CNTY_ID like #{codevalue}
+                        AND CNTY_ID = #{codevalue}
                      ORDER BY NAME
                   </when>
                   <when test="groupCode !=null and groupCode == 'area'">
                       SYS0039M
                       WHERE AREA_STUS_ID = '1'
-                        AND AREA_STATE_ID like #{codevalue}
+                        AND AREA_STATE_ID = #{codevalue}
                      ORDER BY AREA_NAME
                   </when>
                   <when test="groupCode !=null and groupCode == 'post'">
                       SYS0030C
                       WHERE STUS_CODE_ID = '1'
-                        AND AREA_ID like #{codevalue}
+                        AND AREA_ID = #{codevalue}
                       ORDER BY POST_CODE
                   </when>
               </choose>
