@@ -257,9 +257,9 @@
 		    T1.USE_YN,
 		    T1.ITEM_DESC,
 		    T1.START_YEARMONTH,
-		    CASE WHEN END_YEARMONTH IS NOT NULL AND LENGTH(END_YEARMONTH)=6 
-        THEN SUBSTR(END_YEARMONTH,5) || '/' || SUBSTR(END_YEARMONTH,0,4) 
-        ELSE END_YEARMONTH END END_DT ,
+		    CASE WHEN T1.END_YEARMONTH IS NOT NULL AND LENGTH(T1.END_YEARMONTH)=6 
+        THEN SUBSTR(T1.END_YEARMONTH,5) || '/' || SUBSTR(T1.END_YEARMONTH,0,4) 
+        ELSE T1.END_YEARMONTH END END_DT ,
 		    T1.CRT_DT, 
 		    T1.UPD_USER_ID, 
 		    T1.UPD_DT ,
@@ -268,6 +268,17 @@
 		    T2.CODE_DESC AS cdDs
 		FROM CMM0042C T1 JOIN SYS0013M T2
 		    ON T1.ITEM_CD = T2.CODE_ID
+		    ]]>
+		<if test="searchDt != null and searchDt != ''">
+			AND #{searchDt} BETWEEN T1.START_YEARMONTH AND T1.END_YEARMONTH
+		</if>
+    <![CDATA[   
+      JOIN CMM0041C T3 ON T1.ORG_SEQ=T3.ORG_SEQ 
+        ]]>
+		<if test="searchDt != null and searchDt != ''">
+			AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+		</if>
+    <![CDATA[   
 		WHERE 1=1
         ]]>
 		<if test="orgRgCombo != null and orgRgCombo != ''">
@@ -278,9 +289,6 @@
 		</if>
 		<if test="useYnCombo != null and useYnCombo != ''">
 			AND T1.USE_YN = #{useYnCombo}
-		</if>
-		<if test="searchDt != null and searchDt != ''">
-			AND #{searchDt} BETWEEN T1.START_YEARMONTH AND T1.END_YEARMONTH
 		</if>
 	</select>
 
