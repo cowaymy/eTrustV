@@ -810,4 +810,40 @@ public final class CommonUtils {
     	}
     	return retVal;
     }
+	
+	/**
+	 * 입력받은 문자열을 입력받은 크기만큼 왼쪽에서 부터 substring
+	 * 일반적인 substring 과 동일함. 
+	 * @param inputStr
+	 * @param len
+	 * @return
+	 */
+	public static String left (String inputStr, int len) {    	
+    	String retVal = null;
+    	
+    	if(inputStr.length() < 1){
+    		retVal = "";
+    	}else{    	
+    		retVal = inputStr.substring(0, len);
+    	}    	
+    	return retVal;
+    }
+	
+	/**
+	 * 입력받은 문자열을 입력받은 크기만큼 오른쪽에서 substring
+	 * @param inputStr
+	 * @param len
+	 * @return
+	 */
+	public static String right (String inputStr, int len) {    	
+    	String retVal = null;
+    	
+    	if(inputStr.length() < 1){
+    		retVal = "";
+    	}else{    	
+    		int startIdx = inputStr.length() - len < 1 ? 0 : inputStr.length() - len;    		
+    		retVal = inputStr.substring(startIdx, inputStr.length());
+    	}    	
+    	return retVal;
+    }
 }
