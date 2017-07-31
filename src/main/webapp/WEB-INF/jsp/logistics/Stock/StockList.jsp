@@ -104,10 +104,6 @@
 
   var sparecolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
                         {dataField:"stockname"           ,headerText:"Description"   ,width:"70%", editable : false,style :"aui-grid-user-custom-left"},
-                       // {dataField:"stock"           ,headerText:"Desc"   ,width:"20%" , visible : false},
-                        //{dataField:"typeid"              ,headerText:"Type"          , visible : false},
-                        //{dataField:"typenm"              ,headerText:"TypeName"       , visible : false},
-                        //{dataField:"period"              ,headerText:"Period"        , visible : false},
                         {dataField:"qty"                 ,headerText:"Qty"           ,width:"20%", editable : false},
                         {
                             dataField : "",
@@ -240,20 +236,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         // 페이지 설정
                         usePaging : true,                
                         pageRowCount : 10,                
-                        //fixedColumnCount : 1,
                         editable : true,                
-                        //enterKeyColumnBase : true,                
-                        //selectionMode : "multipleCells",                
-                        //useContextMenu : true,                
-                        //enableFilter : true,            
-                        //useGroupingPanel : true,
-                        //showStateColumn : true,
-                        //displayTreeOpen : true,
                         noDataMessage : "출력할 데이터가 없습니다.",
-                        // groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",
                         enableSorting : true,
-                        
-                        //softRemovePolicy : "exceptNew",
                         softRemoveRowMode:false
                         };
 
@@ -316,52 +301,36 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         });
         $("#filter_info").click(function(){
             
-            //if($("#filter_info_div").css("display") == "none"){
                 f_removeclass();
 
                 $("#filter_info_div").show();
-                
-                //filterAUIGrid(filtercolumn);        
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
                     f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=filter", "F");
                 }
-           // }else{
-            //}
             $(this).find("a").attr("class","on");
         });
         $("#spare_info").click(function(){
             
-          //if($("#spare_info_div").css("display") == "none"){
                f_removeclass();
                 $("#spare_info_div").show();
-                
-                //spareAUIGrid(sparecolumn);
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
                     f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=spare", "R");
                 }                
-            //}else{              
-            //}
             $(this).find("a").attr("class","on");
         });
         $("#service_info").click(function(){
             
-           // if($("#service_info_div").css("display") == "none"){
                 f_removeclass();
                 $("#service_info_div").show();
-                
-                //serviceAUIGrid(servicecolumn);        
-                
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
                     f_view("/stock/ServiceInfo.do?stkid="+selectedItems[i].item.stkid, "V");
                 }
                 
-          //  }else{                
-          //  }
             $(this).find("a").attr("class","on");
         });
         $("#stock_image").click(function(){
@@ -370,7 +339,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 f_removeclass();
                 $("#stock_img_td").show();
                 
-                //imgAUIGrid(stockimgcolumn);        
                 
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
@@ -443,28 +411,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     addRowSvr();
                     fn_srvMembershipList();
                 }else if ($("#service_info_edit").text() == "SAVE"){
-                    // 추가된 행 아이템들(배열)
-      /*               var addedRowItems = AUIGrid.getAddedRowItems(serviceGrid);
-                         
-                    // 수정된 행 아이템들(배열)
-                    var editedRowItems = AUIGrid.getEditedRowColumnItems(serviceGrid); 
-                        
-                    // 삭제된 행 아이템들(배열)
-                    var removedRowItems = AUIGrid.getRemovedItems(serviceGrid);
-
-                    // 서버로 보낼 데이터 작성
-                    var data = {
-                        "add" : addedRowItems,
-                        "update" : editedRowItems,
-                        "remove" : removedRowItems
-                    }; */
 
                     f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(serviceGrid),"service_info");  
-                    
-                    //serviceAUIGrid(servicecolumn); 
-                    //$("#service_info_edit").text("Add Service Charge");
-                   // $("#service_info").click();
-                    
                 }
             
         });
@@ -476,7 +424,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         }else if ($("#filter_info_edit").text() == "Add Filter"){
         	popClear();
         	$("#regFilterWindow").show();
-            //$("#grid_wrap").hide();
             var comUrl= "/common/selectCodeList.do";
             doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
             //doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
@@ -486,26 +433,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             
             console.log("selectedItems[0].item.stkid "+selectedItems[0].item.stkid);     	
         	
-/*          // 추가된 행 아이템들(배열)
-            var addedRowItems = AUIGrid.getAddedRowItems(filterGrid);
-                 
-            // 수정된 행 아이템들(배열)
-            var editedRowItems = AUIGrid.getEditedRowColumnItems(filterGrid); 
-                
-            // 삭제된 행 아이템들(배열)
-            var removedRowItems = AUIGrid.getRemovedItems(filterGrid);
-
-            // 서버로 보낼 데이터 작성
-            var data = {
-                "add" : addedRowItems,
-                "update" : editedRowItems,
-                "remove" : removedRowItems
-            }; */
             f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
-            
-            //serviceAUIGrid(servicecolumn); 
-            //$("#filter_info_edit").text("Add Filter");
-            //$("#filter_info").click();
         	
         }
         	 
@@ -531,32 +459,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 								console.log("selectedItems[0].item.stkid "
 										+ selectedItems[0].item.stkid);
 
-/* 								// 추가된 행 아이템들(배열)
-								var addedRowItems = AUIGrid
-										.getAddedRowItems(spareGrid);
-
-								// 수정된 행 아이템들(배열)
-								var editedRowItems = AUIGrid
-										.getEditedRowColumnItems(spareGrid);
-
-								// 삭제된 행 아이템들(배열)
-								var removedRowItems = AUIGrid
-										.getRemovedItems(spareGrid);
-
-								// 서버로 보낼 데이터 작성
-								var data = {
-									"add" : addedRowItems,
-									"update" : editedRowItems,
-									"remove" : removedRowItems
-								}; */
-
 								f_info_save("/stock/modifyFilterInfo.do",
 										selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
 										"spare_info");
-
-								//serviceAUIGrid(servicecolumn); 
-								//$("#service_info_edit").text("SAVE");
-								//$("#spare_info").click();
 							}
 
 						});
@@ -708,28 +613,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 				});
 	}
 
-	/*function copyAUIGrid(columnLayout){
-	    cpGridID = AUIGrid.create("#copy_grid", columnLayout, gridPros);
-	}*/
 
 	// AUIGrid 를 생성합니다.
 	function filterAUIGrid(filtercolumn) {
 		filterGrid = AUIGrid.create("#filter_grid", filtercolumn, subgridpros);
-		/*AUIGrid.bind(filterGrid, "cellClick", function(event) {
-		    
-		    var selectedItems = AUIGrid.getSelectedItems(myGridID);
-		    var typeid = "";
-		    for(i=0; i<selectedItems.length; i++) {
-		        typeid = selectedItems[i].item.stkdesc;
-		    }            
-		    
-		    var selIdx = AUIGrid.getSelectedIndex(filterGrid); // 현재 선택한 행, 칼럼 인덱스 얻기
-		    dataField = AUIGrid.getDataFieldByColumnIndex(filterGrid, selIdx[1]); // 칼럼 인덱스로 dataField 얻기
-		    
-		    item = {};
-		    item["stock"] = typeid;
-		    AUIGrid.updateRow(filterGrid, item, "selectedIndex");
-		});*/
 	}
 
 	function spareAUIGrid(sparecolumn) {
@@ -1104,17 +991,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     
     
 	function removeRow(rowIndex, gridNm, num) {
-		//var rIdx = rowIndex;
-		//var gNm = gridNm;
-
-/* 		var str;
-
-		if (num == 1) {
-			str = "filter_info";
-		} else if (num == 2) {
-			str = "spare_info";
-		} 
-		*/
 
 		AUIGrid.removeRow(gridNm, rowIndex);
 		AUIGrid.removeSoftRows(gridNm);
@@ -1126,30 +1002,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         } else if (num == 3){
         	  $("#service_info_edit").text("SAVE");
         }
-/* 		var selectedItems = AUIGrid.getSelectedItems(myGridID);
-		var removedRowItems = AUIGrid.getRemovedItems(gNm);
-		//var addedRowItems = AUIGrid.getAddedRowItems(gNm);
-
-		// 서버로 보낼 데이터 작성
-		var data = {
-			//"add" : addedRowItems,
-			"remove" : removedRowItems
-		};
-
-		if (num == 1 || num == 2) {
-
-			f_info_save("/stock/modifyFilterInfo.do",
-					selectedItems[0].item.stkid, data, str);
-			
-
-		} else if (num == 3) {
-			f_info_save("/stock/modifyServiceInfo.do",
-					selectedItems[0].item.stkid, data, "service_info");
-
-		} */
-
-		// console.log("data "+data);
-		//$("#"+)
 	}
 
 	function addRowSvr() {
