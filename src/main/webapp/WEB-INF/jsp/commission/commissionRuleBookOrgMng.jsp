@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <style type="text/css">
 
@@ -103,8 +104,8 @@
 			}
 			if (event.columnIndex == 2) {
 				var val = AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex - 2);
-				if (val == null || val == "" || val == "Please select") {
-					alert("Please select ORG GR CD");
+				if (val == null || val == "" || val == "Please select" || val == "선택하세요.") {
+					Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
 					return false;
 				}
 				$("#orgGubun").val("G");
@@ -113,20 +114,16 @@
 				fn_getOrgListAjax();
 			}
 		}
-
-		/*      if(event.type == "cellEditBegin") {
-		 document.getElementById("editBeginDesc").innerHTML = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value + ", which : " + event.which;
-		 } else if(event.type == "cellEditEnd") {
-		 document.getElementById("editBeginEnd").innerHTML = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value + ", which : " + event.which;
-		 } else if(event.type == "cellEditCancel") {
-		 document.getElementById("editBeginEnd").innerHTML = "에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value + ", which : " + event.which;
-		 } else if(event.type == "cellEditEndBefore") {
-		 // 여기서 반환하는 값이 곧 에디팅 완료 값입니다.
-		 // 개발자가 입력한 값을 변경할 수 있습니다.
-		 return event.value; // 원래 값으로 적용 시킴
-		 } */
 	};
 
+	// 행 추가 이벤트 핸들러
+	function auiAddRowHandler(event) {
+	}
+
+	// 행 삭제 이벤트 핸들러
+	function auiRemoveRowHandler(event) {
+	}
+	
 	//get Group Organization Combo Data
 	function getOrgRgName(val) {
 		var retStr = "";
@@ -151,16 +148,6 @@
 		return retStr;
 	}
 
-	// 행 추가 이벤트 핸들러
-	function auiAddRowHandler(event) {
-
-	}
-
-	// 행 삭제 이벤트 핸들러
-	function auiRemoveRowHandler(event) {
-
-	}
-
 	//Make orgRgComboList
 	function getOrgRgComboList() {
 		grpOrgList = new Array();
@@ -178,12 +165,21 @@
 		var list = [ "Y", "N" ];
 		return list;
 	}
+	
+	// get Ajax Data and set grid data
+    function fn_getRuleBookMngListAjax() {
+        Common.ajax("GET", "/commission/system/selectRuleBookOrgMngList", $("#searchForm").serialize(), function(result) {
+            console.log("성공.");
+            console.log("data : " + result);
+            AUIGrid.setGridData(myGridID, result);
+        });
+    }
 
 	// AUIGrid 칼럼 설정
 	var columnLayout = [ {
 		dataField : "orgGrCd",
 		headerText : "ORG GR CD",
-		width : 120,
+		//width : 120,
 		editRenderer : {
 			type : "ComboBoxRenderer",
 			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -197,12 +193,12 @@
 	}, {
 		dataField : "orgGrNm",
 		headerText : "ORG GR NM",
-		editable : false,
-		width : 120
+		//width : 120,
+		editable : false
 	}, {
 		dataField : "orgCd",
 		headerText : "ORG CD",
-		width : 120,
+		//width : 120,
 		/*   labelFunction : function(rowIndex, columnIndex, value,
 		          headerText, item) {
 		      var retStr = "";
@@ -226,14 +222,14 @@
 	}, {
 		dataField : "orgNm",
 		headerText : "ORG NAME",
-		editable : false,
-		width : 120
+		//width : 120,
+		editable : false
 	}, {
 		dataField : "cdDs",
 		headerText : "Description",
 		editable : false,
-		style : "my-column",
-		width : 180
+		//width : 180,
+		style : "my-column"
 	}, {
 		dataField : "useYn",
 		headerText : "USE YN",
@@ -250,13 +246,40 @@
 	}, {
 		dataField : "endDt",
 		headerText : "END DATE",
-		editable : false,
-		width : 120
+		//width : 120,
+		editable : false
 	}, {
 		dataField : "orgSeq",
 		headerText : "",
 		width : 0
 	} ];
+	
+    // 컬럼 선택시 상세정보 세팅.
+    function fn_setDetail(gridID, rowIdx) {
+        $("#id").val(AUIGrid.getCellValue(gridID, rowIdx, "id"));
+        $("#name").val(AUIGrid.getCellValue(gridID, rowIdx, "name"));
+        $("#description").val(AUIGrid.getCellValue(gridID, rowIdx, "description"));
+    }
+
+    var cnt = 0;
+
+    // make new rowdata
+    function addRow() {
+        var item = new Object();
+        item.orgGrCd = "<spring:message code='sys.info.grid.selectMessage'/>";
+        item.orgGrNm = "";
+        item.orgCd = "<spring:message code='sys.info.grid.selectMessage'/>";
+        item.orgNm = "";
+        item.cdDs = "";
+        item.useYn = "Y";
+        item.endDt = "";
+        item.orgSeq = "";
+
+        // parameter
+        // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+        // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+        AUIGrid.addRow(myGridID, item, "first");
+    }
 
 
 	//get Ajax data and set organization combo data
@@ -292,99 +315,109 @@
 		var addList = AUIGrid.getAddedRowItems(myGridID);
 		var udtList = AUIGrid.getEditedRowItems(myGridID);
 		if (addList.length == 0 && udtList.length == 0) {
-			alert("Please add or edit!");
+			Common.alert("<spring:message code='sys.common.alert.noChange'/>");
 			return false;
 		}
 
 		for (var i = 0; i < addList.length; i++) {
-			var orgGrCd = addList[0].orgGrCd;
-			var orgGrNm = addList[0].orgGrNm;
-			var orgCd = addList[0].orgCd;
-			var orgNm = addList[0].orgNm;
-			var cdDs = addList[0].cdDs;
-			var useYn = addList[0].useYn;
-			var endDt = addList[0].endDt;
-			var orgSeq = addList[0].orgSeq;
-			if (orgGrCd == "" || orgGrNm == "" || orgCd == "" || orgNm == "" || useYn == "") {
+			var orgGrCd = addList[i].orgGrCd;
+			var orgGrNm = addList[i].orgGrNm;
+			var orgCd = addList[i].orgCd;
+			var orgNm = addList[i].orgNm;
+			var cdDs = addList[i].cdDs;
+			var useYn = addList[i].useYn;
+			var endDt = addList[i].endDt;
+			var orgSeq = addList[i].orgSeq;
+			if (orgGrCd == "" || orgGrCd == "Please select" || orgGrCd == "선택하세요.") {
 				result = false;
-				alert("Please select data!");
+				Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
 				break;
 			}
+			if (orgGrNm == "") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR NM' htmlEscape='false'/>");
+                break;
+            }
+			if (orgCd == "" || orgCd == "Please select" || orgCd == "선택하세요.") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG CD' htmlEscape='false'/>");
+                break;
+            }
+			if (orgNm == "") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG NM' htmlEscape='false'/>");
+                break;
+            }
+			if (useYn == "") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
+                break;
+            }
 		}
 		for (var i = 0; i < udtList.length; i++) {
-			var orgGrCd = udtList[0].orgGrCd;
-			var orgGrNm = udtList[0].orgGrNm;
-			var orgCd = udtList[0].orgCd;
-			var orgNm = udtList[0].orgNm;
-			var cdDs = udtList[0].cdDs;
-			var useYn = udtList[0].useYn;
-			var endDt = udtList[0].endDt;
-			var orgSeq = udtList[0].orgSeq;
-			if (orgGrCd == "" || orgGrNm == "" || orgCd == "" || orgNm == "" || useYn == "") {
-				result = false;
-				alert("Please select data!");
-				break;
-			}
+			var orgGrCd = udtList[i].orgGrCd;
+			var orgGrNm = udtList[i].orgGrNm;
+			var orgCd = udtList[i].orgCd;
+			var orgNm = udtList[i].orgNm;
+			var cdDs = udtList[i].cdDs;
+			var useYn = udtList[i].useYn;
+			var endDt = udtList[i].endDt;
+			var orgSeq = udtList[i].orgSeq;
+			if (orgGrCd == "" || orgGrCd == "Please select" || orgGrCd == "선택하세요.") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
+                break;
+            }
+            if (orgGrNm == "") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR NM' htmlEscape='false'/>");
+                break;
+            }
+            if (orgCd == "" || orgCd == "Please select" || orgCd == "선택하세요.") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG CD' htmlEscape='false'/>");
+                break;
+            }
+            if (orgNm == "") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG NM' htmlEscape='false'/>");
+                break;
+            }
+            if (useYn == "") {
+                result = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
+                break;
+            }
 		}
 		return result;
-	}
-
-	// get Ajax Data and set grid data
-	function fn_getRuleBookMngListAjax() {
-		Common.ajax("GET", "/commission/system/selectRuleBookOrgMngList", $("#searchForm").serialize(), function(result) {
-			console.log("성공.");
-			console.log("data : " + result);
-			AUIGrid.setGridData(myGridID, result);
-		});
-	}
-
-	// 컬럼 선택시 상세정보 세팅.
-	function fn_setDetail(gridID, rowIdx) {
-		$("#id").val(AUIGrid.getCellValue(gridID, rowIdx, "id"));
-		$("#name").val(AUIGrid.getCellValue(gridID, rowIdx, "name"));
-		$("#description").val(AUIGrid.getCellValue(gridID, rowIdx, "description"));
-	}
-
-	var cnt = 0;
-
-	// make new rowdata
-	function addRow() {
-		var item = new Object();
-		item.orgGrCd = "Please select";
-		item.orgGrNm = "";
-		item.orgCd = "Please select";
-		item.orgNm = "";
-		item.cdDs = "";
-		item.useYn = "Y";
-		item.endDt = "";
-		item.orgSeq = "";
-
-		// parameter
-		// item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-		// rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-		AUIGrid.addRow(myGridID, item, "first");
 	}
 
 	//Save Data
 	function fn_saveGridMap() {
 		if (validation()) {
-			Common.ajax("POST", "/commission/system/saveCommissionGrid.do", GridCommon.getEditData(myGridID), function(result) {			
-				  // 공통 메세지 영역에 메세지 표시.
-			  Common.setMsg("<spring:message code='sys.msg.success'/>");
-				fn_getRuleBookMngListAjax();
-			}, function(jqXHR, textStatus, errorThrown) {
-				try {
-					console.log("status : " + jqXHR.status);
-					console.log("code : " + jqXHR.responseJSON.code);
-					console.log("message : " + jqXHR.responseJSON.message);
-					console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-				} catch (e) {
-					console.log(e);
-				}
-				alert("Fail : " + jqXHR.responseJSON.message);
-				fn_getSampleListAjax();
-			});
+			  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridCall);
+		}else{
+			return ;
 		}
+	}
+	
+	function fn_saveGridCall() {
+           Common.ajax("POST", "/commission/system/saveCommissionGrid.do", GridCommon.getEditData(myGridID), function(result) {
+                 // 공통 메세지 영역에 메세지 표시.
+             Common.setMsg("<spring:message code='sys.msg.success'/>");
+               fn_getRuleBookMngListAjax();
+           }, function(jqXHR, textStatus, errorThrown) {
+               try {
+                   console.log("status : " + jqXHR.status);
+                   console.log("code : " + jqXHR.responseJSON.code);
+                   console.log("message : " + jqXHR.responseJSON.message);
+                   console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+               } catch (e) {
+                   console.log(e);
+               }
+               Common.alert("Fail : " + jqXHR.responseJSON.message);
+               fn_getSampleListAjax();
+           });
 	}
 </script>
 
@@ -404,9 +437,9 @@
 		</p>
 		<h2>Commission Rule Book Management</h2>
 		<ul class="right_opt">
-			<li><p class="btn_blue">
-					<a href="javascript:fn_saveGridMap();">Save</a>
-				</p></li>
+			<li><p class="btn_gray">
+                     <a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a>
+                 </p></li>
 		</ul>
 	</aside>
 	<!-- title_line end -->
@@ -460,12 +493,6 @@
 				</tbody>
 			</table>
 			<!-- table end -->
-
-			<ul class="right_btns">
-				<li><p class="btn_gray">
-						<a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span>Search</a>
-					</p></li>
-			</ul>
 		</form>
 	</section>
 	<!-- search_table end -->
@@ -477,9 +504,16 @@
     <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li>
     <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li> -->
-			<li><p class="btn_grid">
-					<a href="javascript:addRow();"><span class="search"></span>ADD</a>
-				</p></li>
+			<li>
+    			<p class="btn_grid">
+					<a href="javascript:addRow();"><span class="search"></span><spring:message code='sys.btn.add'/></a>
+				</p>
+			</li>
+			<li>
+				<p class="btn_grid">
+                    <a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a>
+                </p>
+			</li>
 		</ul>
 
 		<article class="grid_wrap">
