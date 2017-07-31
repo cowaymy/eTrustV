@@ -164,7 +164,7 @@ var columnLayout2 = [
         }
     	
     	if (validation()) {  
-    	    Common.ajax("POST", "/payment/saveEnroll.do?cmbIssueBank2="+cmbIssueBank2+"&rdpCreateDateFr2="+rdpCreateDateFr2+"&rdpCreateDateTo2="+rdpCreateDateTo2, $("#searchForm").serialize(), function(result) {
+    	    Common.ajax("POST", "/payment/saveEnroll.do",  $('#searchForm').serializeJSON(), function(result) {
     		var msg = result.message;
     		var enrlId = result.data.enrlId;
     		Common.alert(msg+enrlId);
