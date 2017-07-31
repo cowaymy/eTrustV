@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.asset.impl.AssetMngMapper">
+    
+        <resultMap id="assetClobMap" type="EgovMap">
+        <result property="assetrem" column="assetrem" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="department" column="department" jdbcType="CLOB" javaType="java.lang.String"/>
+        </resultMap>
+     
+    <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
+		   SELECT 
+	           P1.ASSET_ID assetId  ,
+	           P1.BRAND_ID brandId  ,
+	           P1.NAME2 name  ,
+	           P1.CTGRY_ID ctgryId  ,
+	           P1.CODE_NAME codeName  ,
+	           P1. COLOR_ID   colorId   ,
+	           P1.CODENAME2 codeName1  ,
+	           P1.CRT_DT crtDt  ,
+	           P1.CRT_USER_ID crtUserId  ,
+	           P1.USER_NAME userName  ,
+	           P1.CURR_BRNCH_ID currBrnchId  ,
+	           P1.C1 branch  ,
+	           P1.CURR_DEPT_ID currDeptId  ,
+	           P1.C2 department  ,
+	           P1.CURR_USER_ID currUserId  ,
+	           P1.C3 userName2  ,
+	           P1.IMEI_NO imeiNo  ,
+	           P1.MAC_ADDR macAddr  ,
+	           P1.NAME name1  ,
+	           P1.PURCHS_AMT purchsAmt  ,
+	           P1.PURCHS_DT purchsDt  ,
+	           P1.REF_NO refNo  ,
+	           P1.ASSET_REM assetRem  ,
+	           P1.SERIAL_NO serialNo  ,
+	           P1.STUS_ID stusId  ,
+	           P1.NAME1 name2  ,
+	           P1.TYPE_ID typeId  ,
+	           P1.CODENAME1 codeName2  ,
+	           P1.UPD_DT updDt  ,
+	           P1.UPD_USER_ID updUserId  ,
+	           P1.USERNAME1 userName1  ,
+	           P1.WRANTY_NO wrantyNo  ,
+	           P1.DEALER_ID dealerId  ,
+	           P1.DEALER_NAME dealerName  ,
+	           P1.INVC_NO invcNo  
+	      FROM ( SELECT E1.ASSET_ID ASSET_ID  ,
+	                    E1.STUS_ID STUS_ID  ,
+	                    E1.CTGRY_ID CTGRY_ID  ,
+	                    E1.TYPE_ID TYPE_ID  ,
+	                    E1.COLOR_ID COLOR_ID  ,
+	                    E1.BRAND_ID BRAND_ID  ,
+	                    E1.CURR_BRNCH_ID CURR_BRNCH_ID  ,
+	                    E1.CURR_DEPT_ID CURR_DEPT_ID  ,
+	                    E1.CURR_USER_ID CURR_USER_ID  ,
+	                    E1.PURCHS_DT PURCHS_DT  ,
+	                    E1.PURCHS_AMT PURCHS_AMT  ,
+	                    E1.IMEI_NO IMEI_NO  ,
+	                    E1.WRANTY_NO WRANTY_NO  ,
+	                    E1.SERIAL_NO SERIAL_NO  ,
+	                    E1.REF_NO REF_NO  ,
+	                    E1.ASSET_REM ASSET_REM  ,
+	                    E1.CRT_USER_ID CRT_USER_ID  ,
+	                    E1.CRT_DT CRT_DT  ,
+	                    E1.UPD_USER_ID UPD_USER_ID  ,
+	                    E1.UPD_DT UPD_DT  ,
+	                    E1.NAME NAME  ,
+	                    E1.MAC_ADDR MAC_ADDR  ,
+	                    E1.INVC_NO INVC_NO  ,
+	                    E1.DEALER_ID DEALER_ID  ,
+	                    E2.NAME NAME1  ,
+	                    E3.NAME NAME2  ,
+	                    E4.CODE_NAME CODE_NAME  ,
+	                    E5.CODE_NAME CODENAME1  ,
+	                    E6.CODE_NAME CODENAME2  ,
+	                    E7.USER_NAME USER_NAME  ,
+	                    E8.USER_NAME USERNAME1  ,
+	                    E12.DEALER_NAME DEALER_NAME  ,
+	                    CASE 
+	                         WHEN ( E9.BRNCH_ID IS NOT NULL ) THEN E9.CODE
+	                    ELSE null
+	                       END C1  ,
+	                    CASE 
+	                         WHEN ( E10.DEPT_ID IS NOT NULL ) THEN E10.DEPT_NAME
+	                    ELSE null
+	                       END C2  ,
+	                    CASE 
+	                         WHEN ( E11.USER_ID IS NOT NULL ) THEN E11.USER_NAME
+	                    ELSE null
+	                       END C3  
+	             FROM LOG0050M E1
+	                    JOIN SYS0038M E2   ON E2.STUS_CODE_ID = E1.STUS_ID
+	                    JOIN LOG0049M E3   ON E3.BRAND_ID = E1.BRAND_ID
+	                    JOIN SYS0013M E4   ON E4.CODE_ID = E1.CTGRY_ID
+	                    JOIN SYS0013M E5   ON E5.CODE_ID = E1.TYPE_ID
+	                    JOIN SYS0013M E6   ON E6.CODE_ID = E1.COLOR_ID
+	                    JOIN SYS0047M E7   ON E7.USER_ID = E1.CRT_USER_ID
+	                    JOIN SYS0047M E8   ON E8.USER_ID = E1.UPD_USER_ID
+	                    LEFT JOIN SYS0005M E9   ON E9.BRNCH_ID = E1.CURR_BRNCH_ID
+	                    LEFT JOIN SYS0040M E10   ON ( E10.DEPT_ID = E1.CURR_DEPT_ID )
+	                    AND ( E1.CURR_DEPT_ID > 0 )
+	                    LEFT JOIN SYS0047M E11   ON ( E11.USER_ID = E1.CURR_USER_ID )
+	                    AND ( E1.CURR_USER_ID > 0 )
+	                    LEFT JOIN SAL0030D E12   ON E12.DEALER_ID = E1.DEALER_ID
+	               WHERE  1 = E1.STUS_ID ) P1
+	      ORDER BY P1.ASSET_ID ASC    
+    </select>
+    
+    
+    
+    <!-- <resultMap id="locationClobMap" type="EgovMap">
+        <result property="locdesc" column="locdesc" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr1" column="locaddr1" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr2" column="locaddr2" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr3" column="locaddr3" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="descr" column="descr" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+	<select id="selectLocationList" parameterType="Map" resultMap="locationClobMap">
+        <![CDATA[
+		  SELECT WH_LOC_ID locid,
+		         WH_LOC_CODE loccd,
+		         WH_LOC_DESC locdesc,
+		         WH_LOC_ADD1 locaddr1,
+		         WH_LOC_ADD2 locaddr2,
+		         WH_LOC_ADD3 locaddr3,
+		         WH_LOC_AREA_ID locarea,
+		         WH_LOC_POST_CODE_ID locpost,
+		         WH_LOC_STATE_ID locstat,
+		         WH_LOC_CNTY_ID loccnty,
+		         WH_LOC_TEL1 loctel1,
+		         WH_LOC_TEL2 loctel2,
+		         WH_LOC_BRNCH_ID loc_branch,
+		         WH_LOC_TYPE_ID loctype,
+		         WH_LOC_STK_GRAD locgrad,
+		         WH_LOC_STUS_ID locstus,
+		         WH_LOC_UPD_USER_ID locuserid,
+		         WH_LOC_UPD_DT locupddt,
+		         CODE2 code2,
+		         DESC2 desc2,
+		         (SELECT AREA_NAME
+		            FROM SYS0039M
+		           WHERE AREA_ID = s28m.WH_LOC_AREA_ID)
+		            areanm,
+		         (SELECT POST_CODE
+		            FROM SYS0030C
+		           WHERE POST_CODE_ID = s28m.WH_LOC_POST_CODE_ID)
+		            postcd,
+		         s35m.code,
+		         s35m.name,
+		         (SELECT NAME
+		            FROM SYS0015M
+		           WHERE CNTY_ID = s28m.WH_LOC_CNTY_ID)
+		            countrynm,
+		         s05m.code branchcd,
+		         s05m.name branchnm,
+		         s05m.dcode,
+		         s05m.descr,
+		         (SELECT code_name
+		            FROM SYS0013M
+		           WHERE code_id = s28m.WH_LOC_TYPE_ID)
+		            codenm,
+		         s38m.name statnm,
+		         s47m.user_name
+		    FROM SYS0028M s28m,
+		         SYS0035M s35m,
+		         (SELECT s05m.brnch_id,
+		                 s05m.code,
+		                 s05m.name,
+		                 s13m.code dcode,
+		                 s13m.CODE_DESC descr
+		            FROM SYS0005M s05m, SYS0013M s13m
+		           WHERE s05m.type_id = s13m.code_id(+)) s05m,
+		         SYS0038M s38m,
+		         SYS0047M s47m
+		         ]]>
+		   WHERE     s28m.WH_LOC_TYPE_ID = 277
+		         AND s28m.WH_LOC_STATE_ID = s35m.STATE_ID(+)
+		         AND s28m.WH_LOC_BRNCH_ID = s05m.BRNCH_ID(+)
+		         AND s28m.WH_LOC_STUS_ID = s38m.STUS_CODE_ID(+)
+		         AND s28m.WH_LOC_UPD_USER_ID = s47m.USER_ID(+)
+		         <if test="loccd != null and loccd !=''">
+		              AND s28m.WH_LOC_CODE = #{loccd}
+		         </if>
+		         <if test="locdesc != null and locdesc !=''">
+                      AND s28m.WH_LOC_DESC like '%'||#{locdesc}||'%'
+                 </if>
+		         <if test="branch != null and branch != ''">
+                    AND s28m.WH_LOC_BRNCH_ID  = #{branch}
+                </if>
+                <if test="status != null and status != ''">
+                    AND s28m.WH_LOC_STUS_ID  = #{status}
+                </if>
+                <if test="warelocid != null and warelocid != ''">
+                    AND s28m.WH_LOC_ID  = #{warelocid}
+                </if>
+		ORDER BY WH_LOC_CODE    			
+	</select>
+	<select id="selectLocationStockList" parameterType="Map" resultType="egovMap">
+	    SELECT T1.QTY qty,
+		       T1.STK_ID stkid,
+		       T1.STK_CODE stkcd,
+		       T1.STK_DESC stkdesc,
+		       T1.STK_CTGRY_ID stkcateid,
+		       T1.STK_TYPE_ID typeid,
+		       T1.STUS_CODE_ID statuscd,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = T1.STK_CTGRY_ID)
+		          catename,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = T1.STK_TYPE_ID)
+		          typename,
+		       (SELECT NAME
+		          FROM SYS0038M
+		         WHERE STUS_CODE_ID = T1.STUS_CODE_ID)
+		          statname,
+		       '0' as unclamed
+		  FROM (SELECT *
+		          FROM (  SELECT STOCK_ID STOCKID, SUM (QTY) QTY
+		                    FROM LOG0014D
+		                   WHERE LOC_ID = #{warelocid}
+		                GROUP BY STOCK_ID) T1,
+		               SYS0026M T2
+		         WHERE T1.STOCKID = T2.STK_ID AND QTY > 0) T1
+	</select>
+	
+	<update id="updateLocationInfo" parameterType="Map">
+	   UPDATE SYS0028M
+	      SET WH_LOC_CODE           = #{loccd}
+	        , WH_LOC_DESC           = #{locdesc}
+	        , WH_LOC_ADD1           = #{locaddr1}
+	        , WH_LOC_ADD2           = #{locaddr2}
+	        , WH_LOC_ADD3           = #{locaddr3}
+	        , WH_LOC_TEL1           = #{loctel1}
+	        , WH_LOC_TEL2           = #{loctel2}
+	        , WH_LOC_AREA_ID        = #{locarea}
+	        , WH_LOC_POST_CODE_ID   = #{locpost}
+	        , WH_LOC_STATE_ID       = #{locstat}
+	        , WH_LOC_BRNCH_ID       = #{locBranch}
+	        , WH_LOC_STK_GRAD       = #{locgrad}
+	        , WH_LOC_CNTY_ID        = #{loccnty}
+	        , WH_LOC_UPD_DT         = SYSDATE
+	        , WH_LOC_IS_SYNC        = #{up_sync}
+	        , WH_LOC_MOBILE        = #{up_mobile}
+	    WHERE WH_LOC_ID = #{locid}
+	</update>
+	
+	
+    <insert id="insertLocationInfo" parameterType="Map">
+	     INSERT INTO SYS0028M(
+	       WH_LOC_ID
+	      ,WH_LOC_CODE 
+	      , WH_LOC_DESC  
+	      , WH_LOC_ADD1
+	      , WH_LOC_ADD2
+	      , WH_LOC_ADD3
+	      , WH_LOC_AREA_ID
+	      , WH_LOC_POST_CODE_ID
+	      , WH_LOC_STATE_ID
+	      , WH_LOC_CNTY_ID 
+	      , WH_LOC_TEL1
+	      , WH_LOC_TEL2
+          , WH_LOC_BRNCH_ID
+	      , WH_LOC_TYPE_ID
+	      , WH_LOC_STK_GRAD  
+	      , WH_LOC_STUS_ID
+	      , WH_LOC_UPD_USER_ID 
+	      , WH_LOC_UPD_DT
+	      , CODE2
+	      , DESC2
+	      , WH_LOC_IS_SYNC
+	      , WH_LOC_MOBILE  
+	     )  
+	    VALUES (
+	     #{inlocid}
+	    ,#{inwarecd}
+	    ,#{inwarenm} 
+	    ,#{inaddr1}
+	    ,#{inaddr2}
+	    ,#{inaddr3}
+	    ,#{inarea}
+	    ,#{inpost}    
+	    ,#{instat}
+	    ,#{incnty}	    
+	    ,#{incontact1}
+        ,#{incontact2}  
+	    ,#{inbranch}  
+	    ,#{intype_id}
+	    ,#{ingrad}
+	    ,#{instus_id}	    
+        ,#{inup_user_id}
+	    ,SYSDATE  
+	    ,#{incode2}
+	    ,#{indesc2}
+	    ,#{inis_sync}
+	    ,#{inmobile}
+	    )
+    </insert>
+    <delete id="deleteLocationInfo" parameterType="Map">
+	    DELETE FROM SYS0028M 
+	    WHERE WH_LOC_ID = #{locid} 
+    </delete>
+    
+    <select id="locCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(WH_LOC_ID),0) + 1 from SYS0028M
+    </select> -->
+</mapper>
