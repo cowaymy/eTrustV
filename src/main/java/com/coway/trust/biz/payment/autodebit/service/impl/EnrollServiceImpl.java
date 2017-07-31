@@ -151,10 +151,6 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 	public void createEnrollmentFile_ALB(List<EgovMap> enrollmentDetView, String issueBank, String rdpCreateDateFr){
 		
 		String debtDateFr = rdpCreateDateFr;
-		//String day = rdpCreateDateFr.substring(0,2);
-		//String month = rdpCreateDateFr.substring(3,5);
-		//String year = rdpCreateDateFr.substring(6,10);
-		//debtDateFr = year+month+day;
 		
 		String inputDate = CommonUtils.nvl(debtDateFr).equals("") ? "1900-01-01" : debtDateFr;
 		
