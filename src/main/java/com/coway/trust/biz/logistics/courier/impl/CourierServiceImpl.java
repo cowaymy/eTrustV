@@ -1,5 +1,6 @@
 package com.coway.trust.biz.logistics.courier.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.logistics.courier.CourierService;
+import com.coway.trust.web.logistics.LogisticsConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -39,9 +41,32 @@ public class CourierServiceImpl implements CourierService {
 
 	@Override
 	public void insertCourier(Map<String, Object> params) {
-		int curid = courierMapper.selectCourierId();
-		params.put("curid", curid);
+		String chkId = LogisticsConstants.COURIER_CODE;
+		List<EgovMap> list = courierMapper.selectCourierId(chkId);
+		// params.put("curid", curid);
+		String docNoID = String.valueOf(list.get(0).get("docNoId"));
+		String docNo = String.valueOf(list.get(0).get("c1"));
+		String docNoPrefix = String.valueOf(list.get(0).get("c2"));
 
+		int docNoLength = docNo.length();
+		int NextNo = Integer.parseInt(docNo) + 1;
+		String nextDocNo = String.valueOf(NextNo);
+		int nextDocNoLength = nextDocNo.length();
+		String docNoFormat = docNo.substring(0, docNoLength - nextDocNoLength) + nextDocNo;
+		logger.debug("docNoLength : {}", docNoLength);
+		logger.debug("NextNo : {}", NextNo);
+		logger.debug("nextDocNo : {}", nextDocNo);
+		logger.debug("nextDocNoLength : {}", nextDocNoLength);
+		logger.debug("docNoLength - nextDocNoLength : {}", docNoLength - nextDocNoLength);
+		logger.debug("docNoFormat : {}", docNoFormat);
+
+		Map upmap = new HashMap<String, String>();
+		upmap.put("chkId", chkId);
+		upmap.put("docNoFormat", docNoFormat);
+		courierMapper.updateDocNo(upmap);
+		String curcode = docNoPrefix + docNoFormat;
+		// params.put("chkId", chkId);
+		params.put("curcode", curcode);
 		courierMapper.insertCourier(params);
 
 	}

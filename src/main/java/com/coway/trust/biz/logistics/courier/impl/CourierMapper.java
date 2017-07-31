@@ -17,6 +17,8 @@ public interface CourierMapper {
 
 	void insertCourier(Map<String, Object> params);
 
-	int selectCourierId();
+	List<EgovMap> selectCourierId(String chkId);
+
+	void updateDocNo(Map upmap);
 
 }

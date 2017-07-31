@@ -130,6 +130,13 @@
         	   $("#editWindow").hide();
         	  
         });
+        $("#savePopbtn").click(function(){
+        	//$("#editWindow").hide();
+        	   div="N";
+        	   saveAjax(div);
+        	   $("#editWindow").hide();
+        	  
+        });
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
             v = $(this).val();
@@ -194,8 +201,9 @@
 	   Common.ajax("POST",url,val,function(result){
 		   Common.alert(result.msg);
 		   $("#search").trigger("click");
-		   //$("#view").trigger("click");
-		   $("#view").click();
+		   if(div=="U"){
+			     $("#view").click();
+		  }
 	   });
    } 
    

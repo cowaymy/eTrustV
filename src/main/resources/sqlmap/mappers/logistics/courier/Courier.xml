@@ -139,7 +139,6 @@
                         ) P1
            <![CDATA[                   
            WHERE P1.ROW_NUMBER > 0
-           AND P1.ROW_NUMBER <= 10
            ]]>
         ORDER BY P1.CURIER_CODE ASC
     </select>
@@ -216,11 +215,11 @@
                  )                                        
       VALUES                                        
                (
-                 #{curid},     
+                 curid_seq.nextval,     
                  #{curcode},   
                  #{curname},   
                  #{curregno},  
-                 #{curstusid}, 
+                 1, 
                  #{curadd1},   
                  #{curadd2},   
                  #{curadd3},   
@@ -238,7 +237,26 @@
                  #{upd_user}           
                  )
     </insert>
-    <select id="selectCourierId" resultType="Integer">
-    SELECT NVL(MAX(CURIER_ID),0)+1 FROM SYS0016M
+    <select id="selectCourierId" parameterType="Map" resultType="EgovMap">
+	    SELECT DOC_NO_ID DOC_NO_ID  ,
+	       CASE 
+	            WHEN ( DOC_NO IS NOT NULL ) THEN DOC_NO
+	       ELSE ''
+	          END C1  ,
+	       CASE 
+	            WHEN ( DOC_NO_PREFIX IS NOT NULL ) THEN DOC_NO_PREFIX
+	       ELSE ''
+	          END C2  
+	  FROM SYS0022C  
+	 WHERE  DOC_NO_ID =#{chkId} AND ROWNUM <![CDATA[<= ]]> 1
+
+
     </select>
+    
+    <update id="updateDocNo"  parameterType="Map">
+     UPDATE SYS0022C
+		   SET DOC_NO =  #{docNoFormat}
+		 WHERE  DOC_NO_ID = #{chkId}
+    </update>
+     
 </mapper>
