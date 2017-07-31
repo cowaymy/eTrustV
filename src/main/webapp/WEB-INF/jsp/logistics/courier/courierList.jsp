@@ -159,6 +159,19 @@
        $("#curareaid").change(function(){
            doDefCombo('', '' ,'curpostcod', 'S', '');   
          }); 
+       
+       $("#srchCntry").change(function(){
+           doDefCombo('', '' ,'srchState', 'S', ''); 
+           doDefCombo('', '' ,'srchArea', 'S', '');
+           doDefCombo('', '' ,'srchPstCd', 'S', '');   
+         }); 
+       $("#srchState").change(function(){
+           doDefCombo('', '' ,'srchArea', 'S', '');
+           doDefCombo('', '' ,'srchPstCd', 'S', '');   
+         }); 
+       $("#srchArea").change(function(){
+           doDefCombo('', '' ,'srchPstCd', 'S', '');   
+         }); 
     });
     
     
