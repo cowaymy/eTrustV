@@ -71,7 +71,7 @@ var detailColumnLayout =
     ];
     
 var codeIDColumnLayout = 
-    [ //stusCodeId=39, code=-, codeName=-
+    [ 
       {
           dataField : "checkFlag",
           headerText : '<input type="checkbox" id="allCheckbox" name="allCheckbox" style="width:15px;height:15px;">',
