@@ -117,6 +117,7 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 		
 		case "3":
 			//CIMB
+			this.createEnrollmentFile_CIMB(result, rdpCreateDateFr);
 			break;
 		
 		case "5":
@@ -537,7 +538,7 @@ public class EnrollServiceImpl extends EgovAbstractServiceImpl implements Enroll
 		}
 	}
 	
-public void createEnrollmentFile_BSN(List<EgovMap> enrollmentDetView, String rdpCreateDateFr){
+	public void createEnrollmentFile_BSN(List<EgovMap> enrollmentDetView, String rdpCreateDateFr){
 		
 		String debtDateFr = rdpCreateDateFr;
 		String inputDate = CommonUtils.nvl(debtDateFr).equals("") ? "1900-01-01" : debtDateFr;
@@ -587,6 +588,79 @@ public void createEnrollmentFile_BSN(List<EgovMap> enrollmentDetView, String rdp
                     sDrAccNo = StringUtils.rightPad(((String)map.get("accNo")).trim(), 16,' ');
                     sFiller = StringUtils.leftPad(sFiller, 20, " ");
                     stextDetails = sorigid + sOrgAcc + sDrAccNo + sDocno + sFiller;
+   
+                    out.write(stextDetails);
+                    out.newLine();
+                    out.flush();
+    
+        		}
+    			out.close();
+        	}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+public void createEnrollmentFile_CIMB(List<EgovMap> enrollmentDetView, String rdpCreateDateFr){
+		
+		String debtDateFr = rdpCreateDateFr;
+		String inputDate = CommonUtils.nvl(debtDateFr).equals("") ? "1900-01-01" : debtDateFr;
+		
+		String sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "MM/DD/YYYY" , "yyyyMMdd") + "E01.txt";
+		File file = new File("D:/WebShare/FTP Folder/CRT/CIMB/Enroll/" + sFile);
+		 
+		// 디렉토리 생성
+		 if (!file.getParentFile().exists()) {
+			 file.getParentFile().mkdirs();
+		 }
+
+		 String sRcdType = "50";
+		 String sDrAccNo = "";
+		 String sOrgCode = "2120";
+		 String sDrName = "";
+		 String sLimit = "";
+		 String sFixAmt = "00000000000000";
+		 String sDocno = "";
+		 String sNRIC = "";
+		 String sfreq = "00";
+		 String sfreql = "999";
+		 String sReserve = StringUtils.rightPad("", 85, " ");
+		 String stextDetails = "";
+         
+         FileWriter fileWriter = null;
+		 try {
+			 fileWriter = new FileWriter(file);
+			 BufferedWriter out = new BufferedWriter(fileWriter);
+			 
+			 if (enrollmentDetView.size() > 0) {
+    			
+    			for(int i = 0 ; i < enrollmentDetView.size() ; i++){
+    				Map<String, Object> map = (Map<String, Object>)enrollmentDetView.get(i);
+                    
+                    //수정할 데이터 확인.(그리드 값)
+                    /*logger.debug("enrlId : {}", map2.get("enrlId"));//프로시저 반환 enrId값
+    				logger.debug("ENRL_ITM_ID : {}", map2.get("enrlItmId"));
+                    logger.debug("ACC_NAME : {}", map2.get("accName"));					
+                    logger.debug("ACC_NO : {}", map2.get("accNo"));
+                    logger.debug("ACC_NRIC : {}", map2.get("accNric"));
+                    logger.debug("APPV_DT : {}", map2.get("appvDt"));
+                    logger.debug("BILL_AMT : {}", map2.get("billAmt"));
+                    logger.debug("CLM_AMT : {}", map2.get("clmAmt"));
+                    logger.debug("ENRL_ID : {}", map2.get("enrlId"));
+                    logger.debug("LIMIT_AMT : {}", map2.get("limitAmt"));
+                    logger.debug("SALES_ORD_ID : {}", map2.get("salesOrdId"));
+                    logger.debug("SALES_ORD_NO : {}", map2.get("salesOrdNo"));
+                    logger.debug("SVC_CNTRCT_ID : {}", map2.get("svcCntrctId"));
+                    logger.debug("C1 : {}", map2.get("c1"));*/
+                    
+    				sDrAccNo = StringUtils.rightPad((String)map.get("accNo"), 14, " ");
+                    sDrName = ((String)map.get("accName")).trim().length() > 20 ? strLeft(((String)map.get("accName")).trim(), 20) : StringUtils.rightPad(((String)map.get("accName")).trim(), 20);
+                    //sLimit = (det.BillAmt * 100).ToString("00000000000000");
+                    //sDocno = det.ContractNOrderNo.Trim().Length > 30 ? CommonFunction.Left(det.ContractNOrderNo.Trim(), 30) : det.ContractNOrderNo.Trim().PadRight(30, ' ');
+                    sNRIC = ((String)map.get("accNric")).trim().length() > 12 ? strLeft(((String)map.get("accName")).trim(), 12)  : StringUtils.rightPad(((String)map.get("accName")).trim(), 12);
+                    stextDetails = sRcdType + sDrAccNo + sOrgCode + sDrName + sLimit + sFixAmt + sDocno + sNRIC +
+                        sfreq + sfreql + sReserve;
    
                     out.write(stextDetails);
                     out.newLine();
