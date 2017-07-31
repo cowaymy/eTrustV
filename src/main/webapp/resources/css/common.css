@@ -121,7 +121,7 @@ table+.title_line{margin-top:20px;}
 .red_text{color:#ff0000;}
 .green_text{color:#00bd31;}
 .brown_text{color:#712626;}
-.yellow_text{color:#e0f400;}
+.yellow_text{color:#e6d406;}
 .pink_text{color:#f0008d;}
 .black_text{color:#000;}
 .txt_box{position:Relative;}
@@ -196,7 +196,8 @@ table.type1 tbody td > p span{line-height:30px;}
 table.type1 tbody td input[type=text],
 table.type1 tbody td input[type=password]{width:237px; height:30px; line-height:28px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px;}
 input[type=text].readonly,
-select.disabled{background:#f2f2f2; color:#ccc;}
+select.disabled,
+textarea.readonly{background:#f2f2f2; color:#ccc;}
 table.type1 tbody td select{width:237px; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 table.type1 tbody td .w100p{width:100%!important;}
 table.type1 td > label{margin:0 5px!important;}
