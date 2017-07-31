@@ -26,6 +26,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.autodebit.service.EnrollService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -120,13 +121,17 @@ public class EnrollController {
 		logger.debug("cmbIssueBank2 : {}", params.get("cmbIssueBank2"));
 		logger.debug("rdpCreateDateFr2 : {}", params.get("rdpCreateDateFr2"));
 		logger.debug("rdpCreateDateTo2 : {}", params.get("rdpCreateDateTo2"));
+
+		String frDate = CommonUtils.nvl(params.get("rdpCreateDateFr2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateFr2"));
+		String toDate = CommonUtils.nvl(params.get("rdpCreateDateTo2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateTo2"));
+		logger.debug("toDate : {}", toDate);
 		
 		//parameter 객체를 생성한다. 프로시저에서 CURSOR 반환시 해당 paramter 객체에 리스트를 세팅한다.
     	//프로시저에서 사용하는 parameter가 없어도 객체는 생성한다.
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("cmbIssueBank2", params.get("cmbIssueBank2"));
-		param.put("rdpCreateDateFr2", params.get("rdpCreateDateFr2"));
-		param.put("rdpCreateDateTo2", params.get("rdpCreateDateTo2"));
+		param.put("rdpCreateDateFr2", frDate);
+		param.put("rdpCreateDateTo2", toDate);
     	//프로시저 함수 호출
 		enrollService.saveEnroll(param);
     	
@@ -152,27 +157,7 @@ public class EnrollController {
 			enrollService.selectEnrollmentDetView(param);
 			
 		}
-		
-        if (resultMapList.size() > 0) {
-        	
-        	resultMapList.forEach(obj -> {
-                Map<String, Object> map2 = (Map<String, Object>) obj;
-                
-                //수정할 데이터 확인.(그리드 값)
-				logger.debug("ENRL_ID : {}", map2.get("enrlId"));
-                logger.debug("BANK_ID : {}", map2.get("bankId"));					
-                logger.debug("DEBT_DT_FROM : {}", map2.get("debtDtFrom"));
-                logger.debug("DEBT_DT_TO : {}", map2.get("debtDtTo"));
-                logger.debug("CRT_USER_ID : {}", map2.get("crtUserId"));
-                logger.debug("CRT_DT : {}", map2.get("crtDt"));
-                logger.debug("UPD_USER_ID : {}", map2.get("updUserId"));
-                logger.debug("UPD_DT : {}", map2.get("updDt"));
-                logger.debug("STUS_CODE_ID : {}", map2.get("stusCodeId"));
-    		});
-    	}
-        
-        
-		
+
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
