@@ -271,7 +271,18 @@ var myGridID, detailGridID, statusCodeGridID;
 
 $(document).ready(function()
 {
-  var options = {
+	  $("#paramCategoryId").focus();
+	  
+	  $("#paramCategoryId").keydown(function(key) 
+			  {
+			    if (key.keyCode == 13) 
+			    {
+			    	fnSelectCategoryListAjax();
+			    }
+
+			  });
+
+	  var options = {
                   usePaging : true,
                   useGroupingPanel : false
                 };

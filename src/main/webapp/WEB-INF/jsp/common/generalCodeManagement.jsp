@@ -4,13 +4,6 @@
 
 var gSelRowIdx = 0;
 
-$(function()
- {
-    // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-    //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo'); 
- }
-);
-
 var mstColumnLayout = 
     [ 
         {    
@@ -92,16 +85,6 @@ var detailColumnLayout =
 
     ];
 
-
-/* function fn_multiCombo()
-{
-    $('#cmbCategory').change(function() {
-        //console.log($(this).val());
-    }).multipleSelect({
-        selectAll: true, // 전체선택 
-        width: '100%'
-    });            
-} */
 
 //ajax list 조회.
 
@@ -297,6 +280,17 @@ var myGridID, detailGridID;
 
 $(document).ready(function()
 {
+  
+	$("#cdMstId").focus();
+	  
+  $("#cdMstId").keydown(function(key) 
+  {
+    if (key.keyCode == 13) 
+    {
+    	fn_getMstCommCdListAjax();
+    }
+	});
+	
 	var options = {
 								  usePaging : true,
 								  useGroupingPanel : false

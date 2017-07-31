@@ -4,7 +4,7 @@
 //
 
 var mstColumnLayout = 
-    [ //{accId=1, accCode=1000/000, accDesc=FIXED ASSTES AT COST, accCrtUserId=349, accUpdUserId=0, accStusId=1, isPayCash=0, isPayOnline=0, isPayChq=0, isPayCrc=0, statusCode=ACT,statusName=Active, accIsMfg=0, accPayTypeId=0, accType=-2147483647, accAddAreaId=0, accAddCntyId=0, c14=01-1월 -1900 00:00:00, userName47=SYSDBA, accAddPostCodeId=0, postCodeId=0, accAddStateId=0, c23=01-1월 -1900 00:00:00},
+    [ 
         {    
             dataField : "accId",
             headerText : "ID",
@@ -220,7 +220,7 @@ function editPopUp()
     var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
           , null
-          , true  // 
+          , "true"  //  자동 Close 
     	    );
 
     return ;
@@ -269,6 +269,17 @@ var myGridID;
 
 $(document).ready(function()
 {
+	$("#accId").focus();
+	
+	$("#accId").keydown(function(key) 
+	{
+		if (key.keyCode == 13) 
+		{
+			fnGetAccountCdListAjax();
+		}
+
+	});
+	
   var options = {
                   usePaging : true,
                   useGroupingPanel : false,
