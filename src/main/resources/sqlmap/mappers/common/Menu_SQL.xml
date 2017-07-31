@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.MenuMapper">
+
+    <select id="selectMenuList" parameterType="Map" resultType="egovMap">
+        SELECT
+              'menu001' as menuId,
+              '/common/main.do' as menuUrl
+        FROM dual
+    </select>
+
+</mapper>
