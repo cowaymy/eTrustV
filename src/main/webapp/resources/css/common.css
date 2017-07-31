@@ -188,6 +188,7 @@ table+.center_btns{padding-top:15px;}
 table.type1{margin-bottom:5px; border-top:1px solid #d3d9dd;}
 table.type1 tbody th{height:34px; padding:0 0 0 15px; color:#333; font-weight:bold; background:#e9f0f4; text-align:left; border-bottom:1px solid #d3d9dd; vertical-align:top; line-height:15px; vertical-align:middle;}
 table.type1 tbody th .must{color:#ff0000; margin-left:5px;}
+table.type1 tbody th.border_right{border-right:1px solid #d3d9dd;}
 table.type1 tbody td{padding:2px 6px; border-bottom:1px solid #d3d9dd; vertical-align:middle; word-wrap:break-word;}
 table.type1 tbody td.disa{background:#f2f2f2;}
 table.type1 tbody td > *{float:left; margin-right:4px;}
@@ -272,6 +273,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 #popup_wrap:after{content:""; display:block; position:fixed; top:0; left:0; z-index:-1; width:100%; height:100%; background:rgba(0,0,0,0.6);}
 .popup_wrap{position:absolute; top:100px; left:50%; z-index:1001; margin-left:-500px; width:1000px; background:#fff; border:1px solid #ccc;}
 .popup_wrap:after{content:""; display:block; position:fixed; top:0; left:0; z-index:-1; width:100%; height:100%; background:rgba(0,0,0,0.6);}
+.popup_wrap.size_small{width:500px!important; margin-left:-250px!important;}
 .pop_header{padding:20px 20px 10px 20px; background:#e5e5e5; border-bottom:2px solid #25527c;}
 .pop_header:after{content:""; display:block; clear:both;}
 .pop_header h1{position:relative; float:left; height:28px; padding-left:14px; font-size:24px; color:#111; font-weight:normal;}
@@ -280,6 +282,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .pop_header .right_opt:after{content:""; display:block; clear:both;}
 .pop_header .right_opt li{float:left; margin-left:5px;}
 .pop_body{max-height:550px; padding:20px 20px 10px 20px; background:#fff; overflow-y:auto;}
+.popup_wrap.size_small .pop_body{max-height:350px;}
 .pop_body:after{content:""; display:block; height:20px; background:#fff;}
 .pop_body > *:first-child{margin-top:0!important;}
 .pop_body form > *:first-child{margin-top:0!important;}
