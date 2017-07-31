@@ -329,7 +329,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 }
            // }else{
             //}
-            	//alert("부디");
             $(this).find("a").attr("class","on");
         });
         $("#spare_info").click(function(){
@@ -477,27 +476,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         }else if ($("#filter_info_edit").text() == "Add Filter"){
         	popClear();
         	$("#regFilterWindow").show();
-    /*     	regDialog=$("#regFilterWindow").dialog({
-                //autoOpen: false,
-                resizable: false,
-                height: 540,
-                width: 800,
-                modal: false ,
-                position : { my: "center", at: "center", of: $("#grid_wrap") },
-                buttons: {
-                  //"Save": updateGridRow,
-                  //"Add Filter": addRowFileter,
-                  "Add Filter": function(event){
-                      addRowFileter();
-                      
-                      regDialog.dialog( "close" );
-                     // $("#regFilterWindow").reset();
-                  },
-                  "Cancel": function(event) {
-                      regDialog.dialog( "close" );
-                  }
-                }
-            }); */
             //$("#grid_wrap").hide();
             var comUrl= "/common/selectCodeList.do";
             doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
@@ -542,28 +520,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		                    } else if ($("#spare_info_edit").text() == "Add Spare Part") {
 		                    	popClear();
 		                    	$("#regSpareWindow").show();
-						/* 		regDialog = $("#regSpareWindow").dialog({
-									//autoOpen: false,
-									resizable : false,
-									height : 540,
-									width : 800,
-									modal : false,
-									position : {
-										my : "center",
-										at : "center",
-										of : $("#grid_wrap")
-									},
-									buttons : {
-										"Add Spare Part" : function(event) {
-											addRowSparePart();
-											
-											regDialog.dialog("close");
-										},
-										"Cancel" : function(event) {
-											regDialog.dialog("close");
-										}
-									}
-								}); */
 								var comUrl = "/common/selectCodeList.do";
 								doGetCombo(comUrl, '11', '', 'categoryPop_sp',
 										'S', '');
