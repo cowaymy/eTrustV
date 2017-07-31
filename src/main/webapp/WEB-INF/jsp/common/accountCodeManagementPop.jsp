@@ -35,17 +35,6 @@ $(function()
   
 });
 
-/* function fnGetAccountCdCount(callback) 
-{        
-    Common.ajax("GET", "/common/getAccountCodeCount.do"
-       , $("#PopUpForm").serialize()
-       , callback); 
-}
- */
-
-
-
- 
 function fnSaveAccount() 
 {
    var countryVal = $("#mcountry option:selected").val();
@@ -75,14 +64,12 @@ function fnSaveAccount()
    if ($("#popUpAccCode").val().length == 0)
    {
      Common.alert(' Please key in the account code.');
-     //$("#popUpAccCode").focus();
      return false;
    }
    
    if ($("#popUpAccDesc").val().length == 0)
    {
      Common.alert(' Please key in the account description.');
-     //$("#popUpAccDesc").focus();
      return false;
    }
 
@@ -207,7 +194,7 @@ function fnSaveAccount()
 <tr>
   <th scope="row" rowspan="3">Address</th>
   <td colspan="3">
-  <input type="text" id="address1" name="address1" title="" placeholder="Address(1)" class="w100p" />
+  <input type="text" id="address1" name="address1" title="" placeholder="Address(1)" class="w100p" /> 
   </td>
 </tr>
 <tr>

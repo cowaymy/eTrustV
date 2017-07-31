@@ -34,11 +34,6 @@ var mstColumnLayout =
             dataField : "isPayCash",
             headerText : "CASH",
             width : 140
-/*             headerTooltip : 
-            {
-                show : true,
-                tooltipHtml : "In Charge 가 Anna 인 경우 체크박스 표시 안함.<br/>(선택적 체크박스 표시)"
-            } */
           , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -57,17 +52,7 @@ var mstColumnLayout =
 
                    return true;
                  }
-                // 체크박스 disabled 함수
-                /* , disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
-                {
-                  if(item.isPayCash == false)
-                  {
-                    console.log("checkbox Unchecked");
-                    return true; // true 반환하면 disabled 시킴
-                   }
-                  return false;
-                } 
-              */
+  
             }
         ,editable : false
                       
@@ -248,7 +233,7 @@ function addPopUp()
     var popUpObj = Common.popupDiv("/common/accountCodeAddPop.do"
             , $("#MainForm").serializeJSON()
             , null
-            , "true"
+            , "false"
             );
 
     return ;
