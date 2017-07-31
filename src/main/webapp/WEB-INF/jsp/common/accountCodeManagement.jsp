@@ -220,7 +220,7 @@ function editPopUp()
     var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
           , null
-          , "false"
+          , true  // 
     	    );
 
     return ;
