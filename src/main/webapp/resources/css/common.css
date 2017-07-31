@@ -101,6 +101,7 @@
 .title_line .left_opt li{float:left; margin-left:5px;}
 table+.title_line{margin-top:20px;}
 .h70{height:70px;}
+.mt1m{margin-top:-1px!important;}
 .mt0{margin-top:0!important;}
 .mt10{margin-top:10px!important;}
 .mt20{margin-top:20px!important;}
