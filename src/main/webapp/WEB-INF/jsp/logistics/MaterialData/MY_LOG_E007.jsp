@@ -816,9 +816,6 @@
 </form>
 </div>
 
-<!--------------------------------- 2017.07.25 함영수 insert 추가 시작  ---------------------------------------------->
-
-
 <div id="insertView">
 <aside class="title_line"><!-- title_line start -->
 <h3 id="title">Material Master Create/Change</h3>
@@ -920,10 +917,7 @@
     <li><p class="btn_blue2"><a id="cancelinsert">CANCEL</a></p></li>
 </ul>
 
-
 </form>
 </div> 
-
-<!--------------------------------- 2017.07.25 함영수 insert 추가 끝 ---------------------------------------------->
 
 </section>
