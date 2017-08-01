@@ -155,7 +155,11 @@ showViewPopup = function() {
 		         AUIGrid.setGridData(viewGridID, result.item);
 		         //AUIGrid.showAjaxLoader(viewGridID);
 		 });
-	}
+	}else{
+        $("#view_wrap").hide();
+        Common.alert("No enrollment record selected.");
+        return;
+    }
 }
 
 hideViewPopup=function()
@@ -374,43 +378,48 @@ function resetUpdatedItems() {
             <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()">CLOSE</a></p></li>
         </ul>
     </header>
-    
-    <section class="pop_body"><!-- pop_body start -->
-    
-    <form name="myForm" id="myForm">
-    <table class="type1"><!-- table start -->
-        <caption>table</caption>
-        <colgroup>
-            <col style="width:175px" />
-            <col style="width:*" />
-        </colgroup>
-        <tbody>
-            <tr>
-                <th scope="row">Update Type</th>
-                <td>
-                    <select name="updateType" id="updateType"  style="width:100%">
-                        <option value="978">Submit Date</option>
-                        <option value="979">Start Date</option>
-                        <option value="980">Reject Date</option>
-                    </select>
-                </td>
-            </tr>
-             <tr>
-                <th scope="row">Select your CSV file *</th>
-                <td>
-                    <div class="auto_file"><!-- auto_file start -->
-                        <input type="file" id="fileSelector" title="file add" accept=".csv"/>
-                    </div><!-- auto_file end -->
-                </td>
-                
-            </tr>
-        </tbody>
-    </table>
-          <center><a href="javascript:fn_saveGridMap();"><img src="../resources/images/common/btn.gif" alt="Read CSV" /></a>
-          <a href="#" class="search_btn"><img src="../resources/images/common/btn.gif" alt="Download CSV Format" /></a></center>
-    </form>
-    <!-- grid_wrap start -->
-    <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
-    <!-- grid_wrap end -->
-</section><!-- pop_body end -->
+    <!-- pop_body start -->
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <form name="myForm" id="myForm">
+	            <!-- table start -->
+	            <table class="type1">
+	                <caption>table</caption>
+	                <colgroup>
+	                    <col style="width:175px" />
+	                    <col style="width:*" />
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Update Type</th>
+	                        <td>
+	                            <select name="updateType" id="updateType"  style="width:100%">
+	                                <option value="978">Submit Date</option>
+	                                <option value="979">Start Date</option>
+	                                <option value="980">Reject Date</option>
+	                            </select>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Select your CSV file *</th>
+	                        <td>
+	                            <div class="auto_file"><!-- auto_file start -->
+	                                <input type="file" id="fileSelector" title="file add" accept=".csv"/>
+	                            </div><!-- auto_file end -->
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+            </form>
+        </section>
+        <ul class="center_btns" id="center_btns1">
+            <li><p class="btn_blue2"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
+            <li><p class="btn_blue2"><a href="#">Download CSV Format</a></p></li>
+        </ul>
+        <!-- grid_wrap start -->
+        <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- pop_body end -->
 </div>

@@ -44,7 +44,7 @@ public class EnrollResultController {
 	private CommonService commonService;
 	
 	@Resource(name = "enrollResultService")
-	private EnrollResultService atDebtCreCrdService;
+	private EnrollResultService enrollResultService;
 
 	@Value("${app.name}")
 	private String appName;
@@ -82,7 +82,7 @@ public class EnrollResultController {
 	public ResponseEntity<List<EgovMap>> selectSalesList(
 				 @RequestParam Map<String, Object> params, ModelMap model) {
 
-        List<EgovMap> resultList = atDebtCreCrdService.selectEnrollmentResultrList(params);
+        List<EgovMap> resultList = enrollResultService.selectEnrollmentResultrList(params);
         
         return ResponseEntity.ok(resultList);
 	}
@@ -108,7 +108,7 @@ public class EnrollResultController {
     			Map<String, Object> map = (Map<String, Object>) obj;
     			formInfo.put((String)map.get("name"), map.get("value"));
     		}
-    		msg = atDebtCreCrdService.saveNewEnrollment(gridList, formInfo);
+    		msg = enrollResultService.saveNewEnrollment(gridList, formInfo);
     		
     	}
     	
@@ -132,7 +132,7 @@ public class EnrollResultController {
 
 		int enrollment = Integer.parseInt(params.get("enrollId").toString());
 		Map<String, Object> map = new HashMap<String, Object>(); 
-		map = atDebtCreCrdService.selectEnrollmentInfo(enrollment);
+		map = enrollResultService.selectEnrollmentInfo(enrollment);
         
         return ResponseEntity.ok(map);
 	}

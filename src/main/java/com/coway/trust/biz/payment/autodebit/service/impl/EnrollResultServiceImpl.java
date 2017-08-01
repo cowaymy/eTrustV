@@ -45,7 +45,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	private String appName;
 
 	@Resource(name = "enrollResultMapper")
-	private EnrollResultMapper atDebtCreCrdMapper;
+	private EnrollResultMapper enrollResultMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -57,7 +57,7 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	public List<EgovMap> selectEnrollmentResultrList(Map<String, Object> params) {
-		return atDebtCreCrdMapper.selectEnrollmentResultList(params);
+		return enrollResultMapper.selectEnrollmentResultList(params);
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	public Map<String, Object> selectEnrollmentInfo(int params) {
 		
 		Map<String, Object> returnValue = new HashMap<String, Object>();
-		List<EgovMap> infoList = atDebtCreCrdMapper.selectEnrollmentInfo(params);
-		List<EgovMap> itemList = atDebtCreCrdMapper.selectEnrollmentItem(params);
+		List<EgovMap> infoList = enrollResultMapper.selectEnrollmentInfo(params);
+		List<EgovMap> itemList = enrollResultMapper.selectEnrollmentItem(params);
 		returnValue.put("info", infoList);
 		returnValue.put("item", itemList);
 		
@@ -122,14 +122,14 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
             		EnrollmentUpdateMVO enrollMaster = getEnrollMaster(enrollDList, formInfo, userId);
         		
             		if(enrollMaster != null){
-                		int updateId = atDebtCreCrdMapper.getPAY0058DSEQ();
+                		int updateId = enrollResultMapper.getPAY0058DSEQ();
                 		enrollMaster.setEnrollUpdateId(updateId);
-                		atDebtCreCrdMapper.insertUpdateMaster(enrollMaster);
+                		enrollResultMapper.insertUpdateMaster(enrollMaster);
                 		
                 		if(enrollDList.size() > 0){
                 			for(EnrollmentUpdateDVO enrollD : enrollDList){
                 				enrollD.setEnrollUpdateId(updateId);
-                				atDebtCreCrdMapper.insertUpdateGrid(enrollD);
+                				enrollResultMapper.insertUpdateGrid(enrollD);
                 			}
                 		}else{
                 			message += "* You must select your CSV file.\n";
@@ -139,9 +139,9 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
                 		Map mapForPro = new HashMap();
                 		mapForPro.put("enrollId", updateId);
                 		mapForPro.put("enrollTypeId", Integer.parseInt(formInfo.get("updateType").toString()));
-                		atDebtCreCrdMapper.callEnrollProcedure(mapForPro);
+                		enrollResultMapper.callEnrollProcedure(mapForPro);
                 		
-                		List<EgovMap> result = atDebtCreCrdMapper.selectSuccessInfo(updateId);
+                		List<EgovMap> result = enrollResultMapper.selectSuccessInfo(updateId);
                 		
                 		if(result.size() > 0){
                 			message = "Enrollment information successfully updated.\n";

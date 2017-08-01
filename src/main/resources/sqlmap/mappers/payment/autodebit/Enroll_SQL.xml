@@ -170,41 +170,44 @@
     
     <select id="selectEnrollmentDetView" parameterType="Map" resultType="egovMap">
         SELECT 
-	        Project1.ENRL_ITM_ID ENRL_ITM_ID  ,
-	        Project1.ACC_NAME ACC_NAME  ,
-	        Project1.ACC_NO ACC_NO  ,
-	        Project1.ACC_NRIC ACC_NRIC  ,
-	        Project1.APPV_DT APPV_DT  ,
-	        Project1.BILL_AMT BILL_AMT  ,
-	        Project1.CLM_AMT CLM_AMT  ,
-	        Project1.ENRL_ID ENRL_ID  ,
-	        Project1.LIMIT_AMT LIMIT_AMT  ,
-	        Project1.SALES_ORD_ID SALES_ORD_ID  ,
-	        Project1.SALES_ORD_NO SALES_ORD_NO  ,
-	        Project1.SVC_CNTRCT_ID SVC_CNTRCT_ID  ,
-	        Project1.C1 C1  
-	            FROM ( SELECT Extent1.ENRL_ITM_ID ENRL_ITM_ID  ,
-	                Extent1.ENRL_ID ENRL_ID  ,
-	                Extent1.SALES_ORD_ID SALES_ORD_ID  ,
-	                Extent1.ACC_NO ACC_NO  ,
-	                Extent1.ACC_NAME ACC_NAME  ,
-	                Extent1.ACC_NRIC ACC_NRIC  ,
-	                Extent1.LIMIT_AMT LIMIT_AMT  ,
-	                Extent1.BILL_AMT BILL_AMT  ,
-	                Extent1.CLM_AMT CLM_AMT  ,
-	                Extent1.APPV_DT APPV_DT  ,
-	                Extent1.SVC_CNTRCT_ID SVC_CNTRCT_ID  ,
-	                Extent2.SALES_ORD_NO SALES_ORD_NO  ,
-	                CASE 
-	                     WHEN ( Extent3.SRV_CNTRCT_ID IS NOT NULL ) THEN Extent3.SRV_CNTRCT_REF_NO
-	                ELSE 'N'
-	                   END C1  
-	         FROM PAY0057D Extent1
-	                JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
-	                LEFT JOIN SAL0077D Extent3   ON Extent3.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
-	          WHERE  ( 1 = Extent1.STUS_CODE_ID )
-	                   AND ( Extent1.ENRL_ID = #{enrlId} )  ) Project1
-	  ORDER BY Project1.ACC_NO ASC
+            Extent1.ENRL_ITM_ID,
+            Extent1.ENRL_ID,
+            Extent1.SALES_ORD_ID,
+            Extent1.ACC_NO,
+            Extent1.ACC_NAME,
+            Extent1.ACC_NRIC,
+            Extent1.LIMIT_AMT,
+            Extent1.BILL_AMT,
+            Extent1.CLM_AMT,
+            Extent1.APPV_DT,
+            Extent1.SVC_CNTRCT_ID,
+            Extent2.SALES_ORD_NO,
+            (CASE WHEN Extent3.SRV_CNTRCT_ID IS NOT NULL THEN Extent3.SRV_CNTRCT_REF_NO ELSE 'N' END) AS  SRV_CNTRCT_ID,
+            (CASE 
+                WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
+                            (CASE 
+                                WHEN LENGTH(Extent2.SALES_ORD_NO) <![CDATA[   < ]]> 7 THEN
+                                    SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent2.SALES_ORD_NO)
+                                ELSE
+                                    SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) || TRIM(Extent2.SALES_ORD_NO)
+                                END)
+                ELSE
+                    (CASE 
+                        WHEN LENGTH(Extent2.SALES_ORD_NO) = 7 AND SUBSTR(Extent2.SALES_ORD_NO,0,1) = '0' THEN
+                            TRIM(SUBSTR(Extent2.SALES_ORD_NO,1,LENGTH(Extent2.SALES_ORD_NO)))
+                        ELSE
+                            TRIM(Extent2.SALES_ORD_NO)
+                    END)
+                END) AS CNTRCT_N_ORD_NO
+        FROM 
+            PAY0057D Extent1
+            JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN SAL0077D Extent3   ON Extent3.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+        WHERE  
+            Extent1.STUS_CODE_ID = 1
+            AND Extent1.ENRL_ID = #{enrlId}
+        ORDER BY 
+            Extent1.ACC_NO ASC
     </select>
     
 </mapper>

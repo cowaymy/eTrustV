@@ -48,6 +48,6 @@ public interface EnrollService
 	 * @param params
 	 * @return
 	 */
-    void selectEnrollmentDetView(Map<String, Object> params);
+    List<EgovMap> selectEnrollmentDetView(Map<String, Object> params);
    
 }
