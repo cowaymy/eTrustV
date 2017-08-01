@@ -453,7 +453,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .award_wrap >ul li p{padding:5px 10px; margin:0 -1px -1px 0; border:1px solid #ddd; text-align:center; font-size:12px;}
 
 /* time_picker */
-.time_picker{position:relative; float:none!important; margin:0!important;}
+.time_picker{display:inline-block; position:relative; float:none!important; margin:0!important;}
 .time_picker > ul{display:none; position:absolute; top:32px; left:50%; z-index:10; width:210px; margin-left:-105px;  border-top:1px solid #ddd; border-left:1px solid #ddd;  background:#fff; box-shadow:1px 1px 5px rgba(0,0,0,0.2);}
 .time_picker > ul:after{content:""; display:block; clear:both;}
 .time_picker > ul li{float:left; width:70px; border-right:1px solid #ddd; border-bottom:1px solid #ddd; box-sizing:border-box;}
