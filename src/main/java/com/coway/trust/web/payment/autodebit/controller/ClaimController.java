@@ -2,23 +2,16 @@ package com.coway.trust.web.payment.autodebit.controller;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,25 +22,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.util.EgovResourceCloseHelper;
+
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/payment")
 public class ClaimController {
-	
-	
-	
-	
 
-	private static final Logger logger = LoggerFactory.getLogger(ClaimController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClaimController.class);
 
 	@Resource(name = "claimService")
 	private ClaimService claimService;
@@ -142,15 +130,15 @@ public class ClaimController {
                 Map<String, Object> map = (Map<String, Object>) obj;
                 claim.put((String)map.get("name"),map.get("value"));
                 
-                logger.debug("name : {}", map.get("name"));
-                logger.debug("value : {}", map.get("value"));
+                LOGGER.debug("name : {}", map.get("name"));
+                LOGGER.debug("value : {}", map.get("value"));
     		});    		
     	}
 		//검색 파라미터 확인.(화면 Form객체 입력값)
-        logger.debug("new_claimType : {}", claim.get("new_claimType"));
-        logger.debug("new_claimDay : {}", claim.get("new_claimDay"));
-        logger.debug("new_issueBank : {}", claim.get("new_issueBank"));
-        logger.debug("new_debitDate : {}", claim.get("new_debitDate"));        
+    	LOGGER.debug("new_claimType : {}", claim.get("new_claimType"));
+    	LOGGER.debug("new_claimDay : {}", claim.get("new_claimDay"));
+    	LOGGER.debug("new_issueBank : {}", claim.get("new_issueBank"));
+    	LOGGER.debug("new_debitDate : {}", claim.get("new_debitDate"));        
         
 		
 		// HasActiveBatch : 동일한 bankId, Claim Type 에 해당하는 active 건이 있는지 확인한다. 
@@ -680,16 +668,16 @@ public class ClaimController {
 		 ************************************************/
 		//헤더 작성
 		String strHeader = "";
-		String strHeader_Fix1 = "VOL1";
-		String strHeader_Fix2 = "NN";
-		String strHeader_OriginatorName = StringUtils.rightPad("WJIN COWAY", 13, " ");
+		String strHeaderFix1 = "VOL1";
+		String strHeaderFix2 = "NN";
+		String strHeaderOriginatorName = StringUtils.rightPad("WJIN COWAY", 13, " ");
 		
-		String strHeader_BillDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyy");
-		String strHeader_OriginatorID = "02172";
-		String strHeader_BankUse = StringUtils.rightPad("", 50, " ");
+		String strHeaderBillDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyy");
+		String strHeaderOriginatorID = "02172";
+		String strHeaderBankUse = StringUtils.rightPad("", 50, " ");
 		
-		strHeader = strHeader_Fix1 + strHeader_Fix2 + strHeader_OriginatorName + strHeader_BillDate + 
-							strHeader_OriginatorID + strHeader_BankUse;
+		strHeader = strHeaderFix1 + strHeaderFix2 + strHeaderOriginatorName + strHeaderBillDate + 
+							strHeaderOriginatorID + strHeaderBankUse;
          
 		out.write(strHeader);
 		out.newLine();
@@ -704,31 +692,31 @@ public class ClaimController {
 				Map<String, Object> map = (Map<String, Object>)claimDetailList.get(i);
 				
 				String strRecord = "";
-				String strRecord_Fix = "00";
+				String strRecordFix = "00";
 				
 				//암호화는 나중에 하자
 				//String strRecord_Acc = EncryptionProvider.Decrypt(det.AccNo.Trim()).PadLeft(12, '0');
-				String strRecord_Acc = StringUtils.leftPad("34204542899".trim(), 12, "0");
+				String strRecordAcc = StringUtils.leftPad("34204542899".trim(), 12, "0");
 				
 				String.valueOf(((java.math.BigDecimal) map.get("bankDtlAmt")).longValue() * 100);
-				String strRecord_BillAmt = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) map.get("bankDtlAmt")).longValue() * 100), 12, "0");
+				String strRecordBillAmt = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) map.get("bankDtlAmt")).longValue() * 100), 12, "0");
 				
-				String tmpStrRecord_NRIC = (String.valueOf(map.get("bankDtlDrNric"))).trim();
-				String strRecord_NRIC = tmpStrRecord_NRIC.length() > 8 ? 
-        				 CommonUtils.right(tmpStrRecord_NRIC, 8) :
-        					 StringUtils.leftPad(tmpStrRecord_NRIC, 8, " ");
-        		String strRecord_BankUse1 = StringUtils.leftPad("", 1, " ");
-        		String strRecord_BillNo = StringUtils.leftPad(String.valueOf(map.get("cntrctNOrdNo")), 14, " ");        		
-        		String strRecord_BankUse2 = StringUtils.leftPad("", 1, " ");
+				String tmpStrRecordNRIC = (String.valueOf(map.get("bankDtlDrNric"))).trim();
+				String strRecordNRIC = tmpStrRecordNRIC.length() > 8 ? 
+        				 CommonUtils.right(tmpStrRecordNRIC, 8) :
+        					 StringUtils.leftPad(tmpStrRecordNRIC, 8, " ");
+        		String strRecordBankUse1 = StringUtils.leftPad("", 1, " ");
+        		String strRecordBillNo = StringUtils.leftPad(String.valueOf(map.get("cntrctNOrdNo")), 14, " ");        		
+        		String strRecordBankUse2 = StringUtils.leftPad("", 1, " ");
         		
         		
         		String tmpStrRecordPayer = (String.valueOf(map.get("bankDtlDrName"))).trim();
-        		String strRecord_PayerName = tmpStrRecordPayer.length()  > 20 ? tmpStrRecordPayer.substring(0,20) : StringUtils.rightPad(tmpStrRecordPayer, 20, " ");
-        		String strRecord_BankUse3 = StringUtils.leftPad("", 1, " ");
+        		String strRecordPayerName = tmpStrRecordPayer.length()  > 20 ? tmpStrRecordPayer.substring(0,20) : StringUtils.rightPad(tmpStrRecordPayer, 20, " ");
+        		String strRecordBankUse3 = StringUtils.leftPad("", 1, " ");
         		
-        		strRecord = strRecord_Fix + strRecord_Acc + strRecord_BillAmt + strRecord_NRIC + 
-                     strRecord_BankUse1 + strRecord_BillNo + strRecord_BankUse2 + strRecord_PayerName + 
-                     strRecord_BankUse3;
+        		strRecord = strRecordFix + strRecordAcc + strRecordBillAmt + strRecordNRIC + 
+                     strRecordBankUse1 + strRecordBillNo + strRecordBankUse2 + strRecordPayerName + 
+                     strRecordBankUse3;
         		
         		// 암호화는 나중에 하자
         		//iHashTot = iHashTot + Int64.Parse(CommonFunction.Right(EncryptionProvider.Decrypt(det.AccNo.Trim()),4));
@@ -744,14 +732,14 @@ public class ClaimController {
 		
 		//footer 작성
 		String strTrailer = "";
-		String strTrailer_Fix = "FF";
-		String strTrailer_TotalRecord = StringUtils.leftPad(String.valueOf(claimDetailList.size()), 12, "0");		
-		String strTrailer_TotalAmount = StringUtils.leftPad(String.valueOf(iTotalAmt * 100), 12, "0");
-		String strTrailer_TotalHash = StringUtils.leftPad(String.valueOf(iHashTot), 12, "0");
-		String strTrailer_BankUse = StringUtils.rightPad("", 42, " ");
+		String strTrailerFix = "FF";
+		String strTrailerTotalRecord = StringUtils.leftPad(String.valueOf(claimDetailList.size()), 12, "0");		
+		String strTrailerTotalAmount = StringUtils.leftPad(String.valueOf(iTotalAmt * 100), 12, "0");
+		String strTrailerTotalHash = StringUtils.leftPad(String.valueOf(iHashTot), 12, "0");
+		String strTrailerBankUse = StringUtils.rightPad("", 42, " ");
 		
-		strTrailer = strTrailer_Fix + strTrailer_TotalRecord + strTrailer_TotalAmount +
-             strTrailer_TotalHash + strTrailer_BankUse;
+		strTrailer = strTrailerFix + strTrailerTotalRecord + strTrailerTotalAmount +
+             strTrailerTotalHash + strTrailerBankUse;
         
 		out.write(strTrailer);
 		out.newLine();
@@ -760,7 +748,7 @@ public class ClaimController {
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String EmailTitle = "MBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
+		//String emailTitle = "MBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	 
@@ -871,7 +859,7 @@ public class ClaimController {
 		fileWriter.close();
 
 		//메일 보내기는 나중에
-		String EmailTitle = "PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
+		//String emailTitle = "PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
          
 		/*********************************************
@@ -896,7 +884,7 @@ public class ClaimController {
 		StringBuffer sb = new StringBuffer();
 		
 		sb.append("                                                         PAGE: 1").append("\n");
-		sb.append("                                                         REPORT DATE: " + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "dd/MM/yyyyd")).append("\n");
+		sb.append("                                                         REPORT DATE: " + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "dd/MM/yyyy")).append("\n");
 		sb.append("").append("\n");
 		sb.append("                           WOONGJIN COWAY (M) SDN BHD").append("\n");
 		sb.append("                   TRANSMITTAL REPORT OF DIRECT DEBIT RECORDS").append("\n");
@@ -918,7 +906,7 @@ public class ClaimController {
  		fileWriter2nd.close();
  		
  		// 메일 보내기는 나중에
- 		EmailTitle = "PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
+ 		//emailTitle = "PBB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
  		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	
@@ -1000,9 +988,9 @@ public class ClaimController {
                 		 			StringUtils.rightPad("0", 15, " ") + 
                 		 			StringUtils.rightPad("0", 15, " ") + StringUtils.rightPad("", 7, " ") + StringUtils.rightPad("0", 15, " ") +
                 		 			StringUtils.rightPad("", 16, " ") + 
-                		 			String.valueOf(intamtinh) + 
+                		 			intamtinh + 
                 		 			StringUtils.rightPad("", 5, " ") +
-                		 			String.valueOf(intaccinh) + 
+                		 			intaccinh + 
                 		 			StringUtils.rightPad( "", 190, " ");
                  
         		out.write(stextDetails);
@@ -1155,7 +1143,7 @@ public class ClaimController {
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String EmailTitle = "BSN Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
+		//String emailTitle = "BSN Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	 
@@ -1188,13 +1176,13 @@ public class ClaimController {
 		 ************************************************/
 		//헤더 작성
 		String strHeader = "";
-		String strHeader_CountryCode= "MY";
-		String strHeader_BranchCode = StringUtils.rightPad("950", 5, " ");
-		String strHeader_BranchDivision =StringUtils.rightPad(String.valueOf(claimMap.get("ctrlId")), 10, " ");
-		String strHeader_Account = StringUtils.rightPad("117192008", 30, " ");		
-		String strHeader_UnusedrSpaces = StringUtils.rightPad("", 30, " ");
+		String strHeaderCountryCode= "MY";
+		String strHeaderBranchCode = StringUtils.rightPad("950", 5, " ");
+		String strHeaderBranchDivision =StringUtils.rightPad(String.valueOf(claimMap.get("ctrlId")), 10, " ");
+		String strHeaderAccount = StringUtils.rightPad("117192008", 30, " ");		
+		String strHeaderUnusedrSpaces = StringUtils.rightPad("", 30, " ");
 		
-		strHeader = strHeader_CountryCode + strHeader_BranchCode + strHeader_BranchDivision + strHeader_Account + strHeader_UnusedrSpaces;
+		strHeader = strHeaderCountryCode + strHeaderBranchCode + strHeaderBranchDivision + strHeaderAccount + strHeaderUnusedrSpaces;
 		
 		out.write(strHeader);
 		out.newLine();
@@ -1250,12 +1238,12 @@ public class ClaimController {
 		
 		//footer 작성
 		String strTrailer = "";
-		String strTrailer_TotalRecord = StringUtils.leftPad(String.valueOf(claimDetailList.size()), 8, "0");
-		String strTrailer_UnusedSpaces = StringUtils.rightPad("0", 8, "0");		
-		String strTrailer_TotalAmount = StringUtils.leftPad(CommonUtils.getNumberFormat( String.valueOf(iTotalAmt), "0.00"), 16, "0");
-		String strTrailer_UnusedSpaces2 = StringUtils.rightPad("", 30, " ");
+		String strTrailerTotalRecord = StringUtils.leftPad(String.valueOf(claimDetailList.size()), 8, "0");
+		String strTrailerUnusedSpaces = StringUtils.rightPad("0", 8, "0");		
+		String strTrailerTotalAmount = StringUtils.leftPad(CommonUtils.getNumberFormat( String.valueOf(iTotalAmt), "0.00"), 16, "0");
+		String strTrailerUnusedSpaces2 = StringUtils.rightPad("", 30, " ");
 		
-		strTrailer = strTrailer_TotalRecord + strTrailer_UnusedSpaces + strTrailer_TotalAmount + strTrailer_UnusedSpaces2;
+		strTrailer = strTrailerTotalRecord + strTrailerUnusedSpaces + strTrailerTotalAmount + strTrailerUnusedSpaces2;
 		
 		out.write(strTrailer);
 		out.newLine();
@@ -1264,7 +1252,7 @@ public class ClaimController {
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String EmailTitle = "MyClear Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
+		//String emailTitle = "MyClear Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	 
@@ -1280,9 +1268,9 @@ public class ClaimController {
 		String inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String)claimMap.get("ctrlBatchDt");
 		String todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
 		
-		int RowNo = 0;
-		int FileNo = 1;
-		int RowBalance = claimDetailList.size();
+		int rowNo = 0;
+		int fileNo = 1;
+		int rowBalance = claimDetailList.size();
 		String stext = "";
 		
 		File file = null;
@@ -1293,9 +1281,9 @@ public class ClaimController {
 			for(int i = 0 ; i < claimDetailList.size() ; i++){
 				Map<String, Object> map = (Map<String, Object>)claimDetailList.get(i);
 				
-				if(RowNo == 0){
+				if(rowNo == 0){
 					//파일 디렉토리
-					file = new File("C:/COWAY_PROJECT/TOBE/CRC/CRC_" + todayDate + "_" + FileNo + ".csv");
+					file = new File("C:/COWAY_PROJECT/TOBE/CRC/CRC_" + todayDate + "_" + fileNo + ".csv");
 					
 					if (!file.getParentFile().exists()) {
 						file.getParentFile().mkdirs();
@@ -1305,36 +1293,36 @@ public class ClaimController {
 					out = new BufferedWriter(fileWriter);
 				}
 				
-				String CrcOwner = (String.valueOf(map.get("bankDtlDrName"))).trim();
+				String crcOwner = (String.valueOf(map.get("bankDtlDrName"))).trim();
 				
 				//암호화는 나중에 하자
 				//String CrcNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
-				String CrcNo = "34204542899".trim();
+				String crcNo = "34204542899".trim();
 				
-				String CrcExpiry = "0000";
-                String Amount = CommonUtils.getNumberFormat(String.valueOf(map.get("bankDtlAmt")),  "0.00");
-                String ServiceCode = String.valueOf(map.get("cntrctNOrdNo"));
-                String Remarks = String.valueOf(map.get("bankDtlId"));
+				String crcExpiry = "0000";
+                String amount = CommonUtils.getNumberFormat(String.valueOf(map.get("bankDtlAmt")),  "0.00");
+                String serviceCode = String.valueOf(map.get("cntrctNOrdNo"));
+                String remarks = String.valueOf(map.get("bankDtlId"));
                  
-                stext = CrcOwner + "," + CrcNo + "," + CrcExpiry + ",$"  + Amount + "," + ServiceCode + "," + Remarks;
+                stext = crcOwner + "," + crcNo + "," + crcExpiry + ",$"  + amount + "," + serviceCode + "," + remarks;
                  
                 out.write(stext);
         		out.newLine();
         		out.flush();
         		 
-                RowNo = RowNo + 1;
-                RowBalance = RowBalance - 1;
+                rowNo = rowNo + 1;
+                rowBalance = rowBalance - 1;
                  
-                if (RowNo == 10000 || RowBalance == 0){
+                if (rowNo == 10000 || rowBalance == 0){
                 	out.close();
                 	fileWriter.close();
                 	
-                	RowNo = 0;
-                	FileNo = FileNo + 1;
+                	rowNo = 0;
+                	fileNo = fileNo + 1;
                 }
                 
                 // 메일 보내기는 나중에
-                String EmailTitle = "CIMB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
+                //String emailTitle = "CIMB Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
                 //SendEmailAutoDebitDeduction(EmailTitle, Location);
         		         		
 			}    		
@@ -1440,7 +1428,7 @@ public class ClaimController {
         fileWriter.close();
 
 		// 메일 보내기는 나중에
-        String EmailTitle = "FPX Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
+        //String emailTitle = "FPX Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
         //SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 }

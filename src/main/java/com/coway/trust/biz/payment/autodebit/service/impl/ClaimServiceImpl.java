@@ -35,18 +35,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("claimService")
 public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ClaimServiceImpl.class);
-
-	@Value("${app.name}")
-	private String appName;
-
 	@Resource(name = "claimMapper")
 	private ClaimMapper claimMapper;
-
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
-
-	
 	
 	/**
 	 * Auto Debit - Claim List 리스트 조회
