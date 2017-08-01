@@ -1432,4 +1432,12 @@
 		    AND NRIC = #{nric}
     </select>
     
+    <select id="selectIssueBank" parameterType="Map" resultType="egovMap">
+          SELECT BANK_ID ,
+			         CODE ,
+			         NAME AS CODE_NAME  
+			 FROM SYS0004M
+		    ORDER BY CODE ASC
+    </select>
+    
 </mapper>

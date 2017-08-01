@@ -251,4 +251,10 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerCreditCardDetailViewPop(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * 
+	 */
+	List<EgovMap> selectIssueBank(Map<String, Object> params);
 }
