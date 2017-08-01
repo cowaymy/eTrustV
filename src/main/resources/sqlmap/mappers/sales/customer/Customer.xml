@@ -180,6 +180,9 @@
                                             <if test="nric != null and nric !=''">
                                                 AND S1.NRIC1 = #{nric}
                                             </if>
+                                            <if test="raceId != null and raceId !=''">
+                                                AND S1.RACE_ID1 = #{raceId}
+                                            </if>
                                             <if test="name != null and name !=''">
                                                 AND S1.Name1 like '%'|| #{name} || '%'
                                             </if>
