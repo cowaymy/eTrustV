@@ -37,10 +37,7 @@
     }
     
     function Test() {    	
-    	alert('call Test');
-    	//alert($("#appType option").length);
-    	//$("#appType option:eq(0)").attr("selected","true");
-    	AUIGrid.setSelectionMode(myGridID, "singleRow");
+    	Common.popupWin("searchForm", "/sales/order/orderRegister.do", option);
     }
     
     // 리스트 조회.

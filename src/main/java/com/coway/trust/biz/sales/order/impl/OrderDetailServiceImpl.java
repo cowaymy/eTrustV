@@ -51,9 +51,10 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	private CustomerMapper customerMapper;
 	
 	@Autowired
-//	private MessageSourceAccessor messageSourceAccessor;
-	
-	public EgovMap getOrderBasicInfo(Map<String, Object> params) throws Exception {
+	private MessageSourceAccessor messageSourceAccessor;
+
+	@Override
+	public EgovMap selectOrderBasicInfo(Map<String, Object> params) throws Exception {
 		
 		EgovMap orderDetail = new EgovMap();
 		
@@ -156,7 +157,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		logger.debug("!@###### firstInstallDt  : "+firstInstallDt);
 		logger.debug("!@###### aftDate  : "+aftDate);
 		logger.debug("!@###### nowDate  : "+nowDate);
-		logger.debug("!@###### dflDate  : "+defaultDate);
+		logger.debug("!@###### dflDate  := "+defaultDate);
 		logger.debug("!@##############################################################################");
 		
 		if(grntnfo != null) {
@@ -381,68 +382,44 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     		installationInfo.put("instct", instct);
 		}
 	}
-	
-	public EgovMap getOrderBasicInfoByOrderID(Map<String, Object> params) {
-		return orderDetailMapper.selectBasicInfo(params);
-	};
-	
-	public EgovMap getLatestOrderLogByOrderID(Map<String, Object> params) {
-		return orderDetailMapper.selectLatestOrderLogByOrderID(params);
-	};
-	
-	public EgovMap getOrderAgreementByOrderID(Map<String, Object> params) {
-		return orderDetailMapper.selectOrderAgreementByOrderID(params);
-	};
-		
-	public EgovMap getOrderInstallationInfoByOrderID(Map<String, Object> params) {
-		return orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
-	};
-		
-	public List<EgovMap> getOrderReferralInfoList(Map<String, Object> params) {
-		return orderDetailMapper.selectOrderReferralInfoList(params);
-	};
-	
-	public List<EgovMap> selectPaymentMasterList(Map<String, Object> params) {
-		return orderDetailMapper.selectPaymentMasterList(params);
-	};
-	
+
 	@Override
-	public List<EgovMap> getSameRentalGrpOrderList(Map<String, Object> params) {
+	public List<EgovMap> selectSameRentalGrpOrderList(Map<String, Object> params) {
 		return orderDetailMapper.selectOrderSameRentalGroupOrderList(params);
 	}
 	
 	@Override
-	public List<EgovMap> getMembershipInfoList(Map<String, Object> params) {
+	public List<EgovMap> selectMembershipInfoList(Map<String, Object> params) {
 		return orderDetailMapper.selectMembershipInfoList(params);
 	}
 	
 	@Override
-	public List<EgovMap> getDocumentList(Map<String, Object> params) {
+	public List<EgovMap> selectDocumentList(Map<String, Object> params) {
 		return orderDetailMapper.selectDocumentList(params);
 	}
 	
 	@Override
-	public List<EgovMap> getCallLogList(Map<String, Object> params) {
+	public List<EgovMap> selectCallLogList(Map<String, Object> params) {
 		return orderDetailMapper.selectCallLogList(params);
 	}
 	
 	@Override
-	public List<EgovMap> getPaymentMasterList(Map<String, Object> params) {
+	public List<EgovMap> selectPaymentMasterList(Map<String, Object> params) {
 		return orderDetailMapper.selectPaymentMasterList(params);
 	}
 	
 	@Override
-	public List<EgovMap> getAutoDebitList(Map<String, Object> params) {
+	public List<EgovMap> selectAutoDebitList(Map<String, Object> params) {
 		return orderDetailMapper.selectAutoDebitList(params);
 	}
 	
 	@Override
-	public List<EgovMap> getDiscountList(Map<String, Object> params) {
+	public List<EgovMap> selectDiscountList(Map<String, Object> params) {
 		return orderDetailMapper.selectDiscountList(params);
 	}
 	
 	@Override
-	public List<EgovMap> getLast6MonthTransList(Map<String, Object> params) {
+	public List<EgovMap> selectLast6MonthTransList(Map<String, Object> params) {
 		return orderDetailMapper.selectLast6MonthTransList(params);
 	}
 	

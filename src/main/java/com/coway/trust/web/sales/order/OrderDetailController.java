@@ -51,7 +51,7 @@ public class OrderDetailController {
 		logger.debug("!@##############################################################################");
 		
 		//[Tap]Basic Info
-		EgovMap orderDetail = orderDetailService.getOrderBasicInfo(params);//
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
 		
 		model.put("orderDetail", orderDetail);
 		
@@ -65,7 +65,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> sameRentalGrpOrderJsonList = orderDetailService.getSameRentalGrpOrderList(params);
+		List<EgovMap> sameRentalGrpOrderJsonList = orderDetailService.selectSameRentalGrpOrderList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(sameRentalGrpOrderJsonList);
@@ -78,7 +78,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.getMembershipInfoList(params);
+		List<EgovMap> memInfoList = orderDetailService.selectMembershipInfoList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
@@ -91,7 +91,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.getDocumentList(params);
+		List<EgovMap> memInfoList = orderDetailService.selectDocumentList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
@@ -104,7 +104,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.getCallLogList(params);
+		List<EgovMap> memInfoList = orderDetailService.selectCallLogList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
@@ -117,7 +117,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.getPaymentMasterList(params);
+		List<EgovMap> memInfoList = orderDetailService.selectPaymentMasterList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
@@ -130,7 +130,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.getAutoDebitList(params);
+		List<EgovMap> memInfoList = orderDetailService.selectAutoDebitList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
@@ -143,7 +143,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.getDiscountList(params);
+		List<EgovMap> memInfoList = orderDetailService.selectDiscountList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
@@ -156,7 +156,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.getLast6MonthTransList(params);
+		List<EgovMap> memInfoList = orderDetailService.selectLast6MonthTransList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);

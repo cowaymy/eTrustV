@@ -14,31 +14,21 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 public interface OrderDetailService {
 
-	public EgovMap getOrderBasicInfo(Map<String, Object> params) throws Exception;
-	
-	public EgovMap getOrderBasicInfoByOrderID(Map<String, Object> params);
-	
-	public EgovMap getLatestOrderLogByOrderID(Map<String, Object> params);
-	
-	public EgovMap getOrderAgreementByOrderID(Map<String, Object> params);
-	
-	public EgovMap getOrderInstallationInfoByOrderID(Map<String, Object> params);
-	
-	public List<EgovMap> getOrderReferralInfoList(Map<String, Object> params);
-	
-	public List<EgovMap> getCallLogList(Map<String, Object> params);
+	public EgovMap selectOrderBasicInfo(Map<String, Object> params) throws Exception;
 
-	public List<EgovMap> getSameRentalGrpOrderList(Map<String, Object> params);
+	public List<EgovMap> selectCallLogList(Map<String, Object> params);
+
+	public List<EgovMap> selectSameRentalGrpOrderList(Map<String, Object> params);
 	
-	public List<EgovMap> getMembershipInfoList(Map<String, Object> params);
+	public List<EgovMap> selectMembershipInfoList(Map<String, Object> params);
 	
-	public List<EgovMap> getDocumentList(Map<String, Object> params);
+	public List<EgovMap> selectDocumentList(Map<String, Object> params);
 
-	List<EgovMap> getPaymentMasterList(Map<String, Object> params);
+	List<EgovMap> selectPaymentMasterList(Map<String, Object> params);
 
-	List<EgovMap> getAutoDebitList(Map<String, Object> params);
+	List<EgovMap> selectAutoDebitList(Map<String, Object> params);
 
-	List<EgovMap> getDiscountList(Map<String, Object> params);
+	List<EgovMap> selectDiscountList(Map<String, Object> params);
 
-	List<EgovMap> getLast6MonthTransList(Map<String, Object> params);
+	List<EgovMap> selectLast6MonthTransList(Map<String, Object> params);
 }
