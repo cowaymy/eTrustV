@@ -47,9 +47,9 @@ $(document).on(
 /* 탭동작 start */
 $(document).on(
 	"click", ".tap_type1 li a", function(){
-	var theTapArea=$(".tap_wrap .tap_area");
-	var thisNum=$(this).parent().index();
-
+	var theTapArea=$(this).parents(".tap_wrap").children(".tap_area");
+	var thisNum=$(this).parents().index();
+	
 	$(this).addClass("on").parent().siblings().children("a").removeClass("on");
 	
 	theTapArea.eq(thisNum).css("display","block").siblings(".tap_area").css("display","none");
