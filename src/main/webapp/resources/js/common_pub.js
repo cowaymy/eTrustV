@@ -212,4 +212,22 @@ $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 	return false;
 });
 /* 팝업 닫기 start */
+
+/* 시간선택기 start */
+ $(document).on(
+	"focus", ".time_date ", function(){
+	$(this).next("ul").fadeIn(500);
+});
+
+ $(document).on(
+	"focusout", ".time_date ", function(){
+	$(this).next("ul").fadeOut(500);
+});
+
+ $(document).on(
+	"click", ".time_picker > ul li a ", function(){
+	$(this).parents(".time_picker").children(".time_date").val($(this).text());
+	return false;
+});
+/* 시간선택기 end */
 });
