@@ -388,14 +388,12 @@
     <select id="selectCustomerAddressJsonList" parameterType="Map" resultType="egovMap">
        <![CDATA[    
 				SELECT Project1.CUST_ADD_ID CUST_ADD_ID  ,
-                        Project1.CUST_ID CUST_ID  ,
+                         Project1.CUST_ID CUST_ID  ,
                         Project1.CRT_USER_ID CRT_USER_ID  ,
                         Project1.NAME NAME  ,
-                        Project1.add1 || Project1.add2 || Project1.add3 || Project1.name1 || Project1.Name2 ADDR,                       
-                        Project1.postCodeId POST_CODE_ID  ,
-                        Project1.postCode POST_CODE  ,
-                        Project1.areaId AREA_ID  ,
-                        Project1.areaName AREA_NAME  ,
+                        Project1.add1 ||' '||Project1.add2 ||' '||Project1.add3||' '||Project1.postCode||' '||Project1.areaName ||' '|| Project1.name1 ||' '|| Project1.Name2 ADDR,
+                        Project1.postCodeId POST_CODE_ID  ,                       
+                        Project1.areaId AREA_ID  ,                        
                         Project1.stateId STATE_ID  ,                       
                         Project1.cntyId CNTY_ID  ,                        
                         Project1.rem REM  ,
