@@ -97,24 +97,9 @@ public class AssetMasterController {
 		return ResponseEntity.ok(BrandList);
 	}
 	
-	@RequestMapping(value = "/selectColorList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectColorList(@RequestParam Map<String, Object> params) {
-
-		logger.debug("selectColorListCode : {}", params.get("groupCode"));
-
-		List<EgovMap> ColorList = ams.selectColorList(params);
-		
-		return ResponseEntity.ok(ColorList);
-	}
-	
 	@RequestMapping(value = "/insertAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-		
-		System.out.println("mastercategory :       "+params.get("mastercategory"));
-		System.out.println("masterpurchasedate :       "+params.get("masterpurchasedate"));
-		System.out.println("masterdealer :       "+params.get("masterdealer"));
-		System.out.println("mastertype :       "+params.get("mastertype"));
 			
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
