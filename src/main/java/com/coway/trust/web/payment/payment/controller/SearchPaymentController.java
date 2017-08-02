@@ -248,4 +248,37 @@ public class SearchPaymentController {
 	
 		return ResponseEntity.ok(result);
 	}
+	
+	/**
+	 * PaymentDetailViewer   조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectPaymentDetailViewer", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectPaymentDetailViewer(@RequestParam Map<String, Object> params, ModelMap model) {
+		logger.debug("payId : {}", params.get("payId"));
+		
+        // 마스터조회
+		EgovMap viewMaster = searchPaymentService.selectPaymentDetailViewer(params);
+		
+		//주문진행상태 조회
+		EgovMap orderProgressStatus = searchPaymentService.selectOrderProgressStatus(params);
+		
+		//selectPaymentDetailView
+		EgovMap selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
+		
+		//selectPaymentDetailSlaveList
+		EgovMap selectPaymentDetailSlaveList = searchPaymentService.selectPaymentDetailSlaveList(params);
+		
+		Map resultMap = new HashMap();
+		resultMap.put("viewMaster", viewMaster);
+		resultMap.put("orderProgressStatus", orderProgressStatus);
+		resultMap.put("selectPaymentDetailView", selectPaymentDetailView);
+		resultMap.put("selectPaymentDetailSlaveList", selectPaymentDetailSlaveList);
+        
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultMap);
+	}
 }

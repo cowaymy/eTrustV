@@ -50,4 +50,32 @@ public interface SearchPaymentService
 	 * @return
 	 */
  	List<EgovMap> selectDetailHistoryList(int payItemId);
+    
+    /**
+	 * PaymentDetailViewer   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPaymentDetailViewer(Map<String, Object> params);
+	
+	/**
+	 * 주문진행상태   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectOrderProgressStatus(Map<String, Object> params);
+	
+	/**
+	 * PaymentDetailView   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPaymentDetailView(Map<String, Object> params);
+	
+	/**
+	 * PaymentDetailSlaveList   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPaymentDetailSlaveList(Map<String, Object> params);
 }

@@ -95,7 +95,7 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	public List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO) {
 		return searchPaymentMapper.searchRentalCollectionByBSList(searchVO);
 	}
-
+	
 	/**
 	 * SearchMaster 조회
 	 * @param params
@@ -114,6 +114,46 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<EgovMap> selectDetailHistoryList(int payItemId) {
 		return searchPaymentMapper.selectDetailHistoryList(payItemId);
+	}
+	
+	/**
+	 * PaymentDetailViewer   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectPaymentDetailViewer(Map<String, Object> params) {
+		return searchPaymentMapper.selectPaymentDetailViewer(params);
+	}
+	
+	/**
+	 * 주문진행상태   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectOrderProgressStatus(Map<String, Object> params) {
+		return searchPaymentMapper.selectOrderProgressStatus(params);
+	}
+	
+	/**
+	 * paymentDetailView   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectPaymentDetailView(Map<String, Object> params) {
+		return searchPaymentMapper.selectPaymentDetailView(params);
+	}
+	
+	/**
+	 * PaymentDetailSlaveList   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectPaymentDetailSlaveList(Map<String, Object> params) {
+		return searchPaymentMapper.selectPaymentDetailSlaveList(params);
 	}
 	
 }

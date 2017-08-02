@@ -7,6 +7,20 @@
 var myGridID,subGridID;
 var viewHistoryGridID;
 
+//Grid에서 선택된 RowID
+var selectedGridValue;
+
+var gridPros_popList = {            
+        editable : false,                 // 편집 가능 여부 (기본값 : false)
+        showStateColumn : false     // 상태 칼럼 사용
+};
+
+//Grid Properties 설정 
+var gridPros = {            
+        editable : false,                 // 편집 가능 여부 (기본값 : false)
+        showStateColumn : false     // 상태 칼럼 사용
+};
+
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 	
@@ -21,34 +35,33 @@ $(document).ready(function(){
   
 	//Branch Combo 생성
 	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
+	
+	//EDIT POP Branch Combo 생성
+    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','edit_branchId', 'S' , '');
     
     //Branch Combo 변경시 User Combo 생성
     $('#branchId').change(function (){
     	doGetCombo('/common/getUsersByBranch.do', $(this).val() , ''   , 'userId' , 'S', '');
     });
 
-
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-
+    
+    
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){ 
-    	
+    	selectedGridValue = event.rowIndex;
+    	AUIGrid.destroy(subGridID); 
     	// Payment (Slave Grid) 그리드 생성
         subGridID = GridCommon.createAUIGrid("grid_sub_wrap", slaveColumnLayout,null,gridPros);
     	
     	$("#payId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "payId"));
+    	$("#salesOrdId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "salesOrdId"));
+    	
     	fn_getPaymentListAjax();
-    	        
+
     });
 });
-
-//Grid Properties 설정 
-var gridPros = {            
-        editable : false,                 // 편집 가능 여부 (기본값 : false)
-        showStateColumn : false     // 상태 칼럼 사용
-};
-
 
 // AUIGrid 칼럼 설정
 var columnLayout = [ 
@@ -68,7 +81,8 @@ var columnLayout = [
 	{ dataField:"custIc" ,headerText:"IC/CO No." ,editable : false },
 	{ dataField:"virtlAccNo" ,headerText:"VANo" ,editable : false },
 	{ dataField:"clctrBrnchName" ,headerText:"Branch" ,editable : false },
-	{ dataField:"keyinUserName" ,headerText:"UserName" ,editable : false }
+	{ dataField:"keyinUserName" ,headerText:"UserName" ,editable : false },
+	{ dataField:"salesOrdId" ,headerText:"SalesOrdId" ,editable : false, visible : true}
     ];
 
 var slaveColumnLayout = [ 
@@ -93,6 +107,45 @@ var slaveColumnLayout = [
 	{ dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
 	{ dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
     ];
+    
+var popColumnLayout = [ 
+    { dataField:"payId" ,headerText:"TEST",editable : false  },
+    { dataField:"codeName" ,headerText:"Mode",editable : false},
+    { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
+    { dataField:"c7" ,headerText:"CardType",editable : false },
+    { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
+    { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
+    { dataField:"payItmCcHolderName" ,headerText:"CCHolder" ,editable : false },
+    { dataField:"payItmCcExprDt" ,headerText:"CCExpiryDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"" ,headerText:"CRCNo" ,editable : false },
+    { dataField:"payItmChqNo" ,headerText:"ChequeNo" ,editable : false },
+    { dataField:"name" ,headerText:"IssueBank" ,editable : false },                   
+    { dataField:"payItmAmt" ,headerText:"Amount" ,editable : false },
+    { dataField:"c8" ,headerText:"CRCMode" ,editable : false },
+    { dataField:"accDesc" ,headerText:"BankAccount" ,editable : false },
+    { dataField:"payItmRefDt" ,headerText:"RefDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"payItmAppvNo" ,headerText:"ApprNo." ,editable : false },
+    { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
+    { dataField:"c4" ,headerText:"EFT" ,editable : false },
+    { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
+    ];
+
+var popSlaveColumnLayout = [ 
+    { dataField:"trxId" ,headerText:"TrxNo",editable : false},
+    { dataField:"payDt" ,headerText:"TrxDate",editable : false  },
+    { dataField:"trxAmt" ,headerText:"TrxTotal",editable : false },
+    { dataField:"payId" ,headerText:"PID",editable : false },
+    { dataField:"orNo" ,headerText:"ORNo" ,editable : false },
+    { dataField:"trNo" ,headerText:"TRNo" ,editable : false },
+    { dataField:"payItmCcHolderName" ,headerText:"ORTotal" ,editable : false },
+    { dataField:"salesOrdNo" ,headerText:"OrderNo" ,editable : false },
+    { dataField:"appTypeName" ,headerText:"AppType" ,editable : false },
+    { dataField:"productDesc" ,headerText:"Product" ,editable : false },
+    { dataField:"custName" ,headerText:"Customer" ,editable : false },                   
+    { dataField:"custIc" ,headerText:"IC/CO No." ,editable : false },
+    { dataField:"keyinBranchName" ,headerText:"Branch" ,editable : false },
+    { dataField:"ketinUserName" ,headerText:"UserName" ,editable : false },
+    ];
 
 var viewHistoryLayout=[
     { dataField:"typename" ,headerText:"Type" ,editable : false },
@@ -101,6 +154,9 @@ var viewHistoryLayout=[
     { dataField:"createdate" ,headerText:"Update Date" ,editable : false, formatString : "dd-mm-yyyy" },
     { dataField:"creator" ,headerText:"Updator" ,editable : false }
     ];
+
+
+
 // 리스트 조회.
 function fn_getOrderListAjax() {        
     Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
@@ -115,17 +171,134 @@ function fn_getPaymentListAjax() {
     });
 }
 
+function fn_openDivPop(val){
+	if(val == "VIEW"){
+		if(selectedGridValue !=  undefined){
+	        $("#popup_wrap").show();
+	        popGridID = GridCommon.createAUIGrid("popList_wrap", popColumnLayout, null, gridPros_popList);
+	        popSlaveGridID = GridCommon.createAUIGrid("popSlaveList_wrap", popSlaveColumnLayout, null, gridPros_popList);
+	        
+	        Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
+	            console.log(result);
+	            
+	            //Payment Information
+	            $('#txtORNo').text(result.viewMaster.orNo);$("#txtORNo").css("color","red");
+	            $('#txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#txtLastUpdator").css("color","red");
+	            $('#txtKeyInUser').text(result.viewMaster.keyinUserName);$("#txtKeyInUser").css("color","red");
+	            $('#txtOrderNo').text(result.viewMaster.salesOrdNo);$("#txtOrderNo").css("color","red");
+	            $('#txtTRRefNo').text(result.viewMaster.trNo);
+	            $('#txtTRIssueDate').text(result.viewMaster.trIssuDt);
+	            $('#txtProductCategory').text(result.viewMaster.productCtgryName);
+	            $('#txtProductName').text(result.viewMaster.productDesc);
+	            $('#txtAppType').text(result.viewMaster.appTypeName);
+	            $('#txtCustomerName').text(result.viewMaster.custName);
+	            $('#txtCustomerType').text(result.viewMaster.custTypeName);
+	            $('#txtCustomerID').text(result.viewMaster.custId);
+	            $('#txtOrderProgressStatus').text(result.orderProgressStatus.name);
+	            $('#txtInstallNo').text('');
+	            $('#txtNRIC').text(result.viewMaster.custIc);
+	            $('#txtPayType').text(result.viewMaster.payTypeName);
+	            $('#txtAdvMth').text(result.viewMaster.advMonth);
+	            $('#txtPayDate').text(result.viewMaster.payDt);
+	            $('#txtHPCode').text(result.viewMaster.hpId);
+	            $('#txtHPName').text(result.viewMaster.orNo);
+	            $('#txtBatchPaymentID').text(result.viewMaster.batchPayId);
+	             
+	            //Collector Information
+	            $('#txtSalesPerson').text(result.viewMaster.salesMemCode + "(" + result.viewMaster.salesMemName+")");
+	            $('#txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
+	            $('#txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
+	             
+	            
+	            $("#gridTitle").css("color","red");
+	            //팝업그리드 뿌리기
+	            AUIGrid.setGridData(popGridID, result.selectPaymentDetailView);
+	            AUIGrid.setGridData(popSlaveGridID, result.selectPaymentDetailSlaveList);
+	        },function(jqXHR, textStatus, errorThrown) {
+	            Common.alert("실패하였습니다.");
+
+	        });
+	        
+	   }else{
+	       $("#popup_wrap").hide();
+	       Common.alert("search records first");
+	       return;
+	   }
+		
+	}else if(val == "EDIT"){
+		if(selectedGridValue !=  undefined){
+            $("#popup_wrap2").show();
+            editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popColumnLayout, null, gridPros_popList);
+            //editPopSlaveGridID = GridCommon.createAUIGrid("editPopSlaveList_wrap", popSlaveColumnLayout, null, gridPros_popList);
+            
+            Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
+                console.log(result);
+                
+                //Payment Information
+                $('#edit_txtORNo').text(result.viewMaster.orNo);$("#edit_txtORNo").css("color","red");
+                $('#edit_txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#edit_txtLastUpdator").css("color","red");
+                $('#edit_txtKeyInUser').text(result.viewMaster.keyinUserName);$("#edit_txtKeyInUser").css("color","red");
+                $('#edit_txtOrderNo').text(result.viewMaster.salesOrdNo);$("#edit_txtOrderNo").css("color","red");
+                $('#edit_txtTRRefNo').text(result.viewMaster.trNo);
+                $('#edit_txtTRIssueDate').text(result.viewMaster.trIssuDt);
+                $('#edit_txtProductCategory').text(result.viewMaster.productCtgryName);
+                $('#edit_txtProductName').text(result.viewMaster.productDesc);
+                $('#edit_txtAppType').text(result.viewMaster.appTypeName);
+                $('#edit_txtCustomerName').text(result.viewMaster.custName);
+                $('#edit_txtCustomerType').text(result.viewMaster.custTypeName);
+                $('#edit_txtCustomerID').text(result.viewMaster.custId);
+                $('#edit_txtOrderProgressStatus').text(result.orderProgressStatus.name);
+                $('#edit_txtInstallNo').text('');
+                $('#edit_txtNRIC').text(result.viewMaster.custIc);
+                $('#edit_txtPayType').text(result.viewMaster.payTypeName);
+                $('#edit_txtAdvMth').text(result.viewMaster.advMonth);
+                $('#edit_txtPayDate').text(result.viewMaster.payDt);
+                $('#edit_txtHPCode').text(result.viewMaster.hpId);
+                $('#edit_txtHPName').text(result.viewMaster.orNo);
+                $('#edit_txtBatchPaymentID').text(result.viewMaster.batchPayId);
+                 
+                //Collector Information
+                $('#edit_txtSalesPerson').text(result.viewMaster.salesMemCode + "(" + result.viewMaster.salesMemName+")");
+                $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
+                $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
+                 
+                //팝업그리드 뿌리기
+                AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailView);
+                //AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailSlaveList);
+            },function(jqXHR, textStatus, errorThrown) {
+                Common.alert("실패하였습니다.");
+
+            });
+            
+       }else{
+           $("#popup_wrap2").hide();
+           Common.alert("search records first");
+           return;
+       }
+    }
+	
+}
+
+function fn_close() {
+    $('#popup_wrap').hide();
+    AUIGrid.destroy(popGridID); 
+    AUIGrid.destroy(popSlaveGridID); 
+}
+
+function fn_close2() {
+    $('#popup_wrap2').hide();
+    AUIGrid.destroy(editPopGridID); 
+}
+
 function showViewHistory(){
-	var payId = 4116282;
 	$("#view_history_wrap").show();
 	viewHistoryGridID = GridCommon.createAUIGrid("grid_view_history", viewHistoryLayout,null,gridPros);
-	 Common.ajax("GET", "/payment/selectViewHistoryList", {"payId" : payId} , function(result) {
+	 Common.ajax("GET", "/payment/selectViewHistoryList", $("#detailForm").serialize(), function(result) {
 	        AUIGrid.setGridData(viewHistoryGridID, result);
 	 });
 }
 
 function showDetailHistory(){
-	var payItemId = 559436;
 	$("#view_detail_wrap").show();
 	viewHistoryGridID = GridCommon.createAUIGrid("grid_detail_history", viewHistoryLayout,null,gridPros);
 	Common.ajax("GET", "/payment/selectDetailHistoryList", {"payItemId" : payItemId} , function(result) {
@@ -290,13 +463,11 @@ function hideDetailPopup(){
 				        <li><p class="link_btn"><a href="#">Official Receipt</a></p></li>				        
 				    </ul>
 				    <ul class="btns">
-				        <li><p class="link_btn type2"><a href="#">Veiw Details</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Edit Details</a></p></li>
+				        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
+				        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Reverse Payment(Void)</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>		
-				        <li><p class="link_btn type2"><a href="#" onClick="showViewHistory()">Temp(View History)</a></p></li>
-				        <li><p class="link_btn type2"><a href="#" onClick="showDetailHistory()">Temp(Detail History)</a></p></li>     		        
+				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>				        
 				    </ul>
 				    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
@@ -322,12 +493,269 @@ function hideDetailPopup(){
     <!-- search_result end -->
 
 </section>
-<!-- content end -->
-<form name="detailForm" id="detailForm"  method="post">
-    <input type="hidden" name="payId" id="payId" />
-</form>      
 
+<div id="popup_wrap" style="display:none;">
+<!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>VIEW PAYMENT DETAILS</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 
+<section class="pop_body"><!-- pop_body start -->
+    <aside class="title_line"><!-- title_line start -->
+        <h2>Payment Information</h2>
+    </aside><!-- title_line end -->
+    <table class="type1"><!-- table start -->
+        <caption>table</caption>
+                <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">OR(Official Receipt) No</th>
+                        <td id="txtORNo"></td>
+                        <th scope="row"> Last Updated By </th>
+                        <td id="txtLastUpdator"></td>
+                    </tr>
+                     <tr>
+                        <th scope="row">Payment Key By</th>
+                        <td id="txtKeyInUser"></td>
+                        <th scope="row">Order No.</th>
+                        <td id="txtOrderNo"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">TR Ref. No.</th>
+                        <td id="txtTRRefNo"></td>
+                        <th scope="row">TR Issued Date</th>
+                        <td id="txtTRIssueDate"></td>
+                    </tr>
+                     <tr>
+                        <th scope="row">Product Category</th>
+                        <td id="txtProductCategory"></td>
+                        <th scope="row">Product Name</th>
+                        <td id="txtProductName"></td>
+                        
+                    </tr>
+                    <tr>
+                        <th scope="row">Application Type</th>
+                        <td id="txtAppType"></td>
+                        <th scope="row">Customer Name</th>
+                        <td id="txtCustomerName"></td>
+                        
+                    </tr>
+                    <tr>
+                        <th scope="row">Customer Type</th>
+                        <td id="txtCustomerType"></td>
+                        <th scope="row"> Customer ID </th>
+                        <td id="txtCustomerID"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Order Progress Status</th>
+                        <td id="txtOrderProgressStatus"></td>
+                        <th scope="row">Install No.</th>
+                        <td id="txtInstallNo"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cust. NRIC/Company No.</th>
+                        <td id="txtNRIC"></td>
+                        <th scope="row">Payment Type</th>
+                        <td id="txtPayType"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Advance Month</th>
+                        <td id="txtAdvMth"></td>
+                        <th scope="row"> Payment Date </th>
+                        <td id="txtPayDate"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">HP Code</th>
+                        <td id="txtHPCode"></td>
+                        <th scope="row">HP Name</th>
+                        <td id="txtHPName"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Batch Payment ID</th>
+                        <td id="txtBatchPaymentID"></td>
+                    </tr>
+                </tbody>
+    </table>
+    <aside class="title_line"><!-- title_line start -->
+        <h2>Collector Information</h2>
+    </aside><!-- title_line end -->
+    <table class="type1"><!-- table start -->
+            <caption>table</caption>
+                <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Payment Collector Code</th>
+                        <td id="txtCollectorCode"></td>
+                        <th scope="row">HP Code/Dealer</th>
+                        <td id="txtSalesPerson"></td>
+                    </tr>
+                     <tr>
+                        <th scope="row">Branch Code</th>
+                        <td id="txtBranch"></td>
+                        <th scope="row">Debtor Account</th>
+                        <td id="txtDebtor"></td>
+                    </tr>
+                </tbody>
+    </table>
+    <ul class="center_btns">
+        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
+    </ul>
+    <section class="search_result"><!-- search_result start -->
+	    <article class="grid_wrap"  id="popList_wrap" style="width  : 100%;">
+	    </article><!-- grid_wrap end -->
+    </section><!-- search_result end -->
+    <section class="search_result"><!-- search_result start -->
+       <aside class="title_line" ><!-- title_line start -->
+        <h2 id="gridTitle">All Related Payments In This Transaction.(Click A Row To View Details) </h2>
+        </aside><!-- title_line end -->
+	    <article class="grid_wrap"  id="popSlaveList_wrap" style="width  : 100%;">
+	    </article><!-- grid_wrap end -->
+    </section><!-- search_result end -->
+</section><!-- pop_body end -->
+</div><!-- popup_wrap end -->
+<div id="popup_wrap2" class="popup_wrap" style="display:none;">
+<!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>PAYMENT EDITOR</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+    <aside class="title_line"><!-- title_line start -->
+        <h2>Payment Information</h2>
+    </aside><!-- title_line end -->
+    <table class="type1"><!-- table start -->
+        <caption>table</caption>
+                <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">OR(Official Receipt) No</th>
+                        <td id="edit_txtORNo"></td>
+                        <th scope="row"> Last Updated By </th>
+                        <td id="edit_txtLastUpdator"></td>
+                    </tr>
+                     <tr>
+                        <th scope="row">Payment Key By</th>
+                        <td id="edit_txtKeyInUser"></td>
+                        <th scope="row">Order No.</th>
+                        <td id="edit_txtOrderNo"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">TR Ref. No.</th>
+                        <td id="edit_txtTRRefNo"><input type="text" name="edit_txtTRRefNo" placeholder="TR Ref. No."></td>
+                        <th scope="row">TR Issued Date</th>
+                        <td id="">
+                            <div class="date_set"><!-- date_set start -->
+                                <p><input type="text"  name="edit_txtTRIssueDate" id="edit_txtTRIssueDate" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                        </td>
+                    </tr>
+                     <tr>
+                        <th scope="row">Product Category</th>
+                        <td id="edit_txtProductCategory"></td>
+                        <th scope="row">Product Name</th>
+                        <td id="edit_txtProductName"></td>
+                        
+                    </tr>
+                    <tr>
+                        <th scope="row">Application Type</th>
+                        <td id="edit_txtAppType"></td>
+                        <th scope="row">Customer Name</th>
+                        <td id="edit_txtCustomerName"></td>
+                        
+                    </tr>
+                    <tr>
+                        <th scope="row">Customer Type</th>
+                        <td id="edit_txtCustomerType"></td>
+                        <th scope="row"> Customer ID </th>
+                        <td id="edit_txtCustomerID"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Order Progress Status</th>
+                        <td id="edit_txtOrderProgressStatus"></td>
+                        <th scope="row">Install No.</th>
+                        <td id="edit_txtInstallNo"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cust. NRIC/Company No.</th>
+                        <td id="edit_txtNRIC"></td>
+                        <th scope="row">Payment Type</th>
+                        <td id="edit_txtPayType"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Advance Month</th>
+                        <td id="edit_txtAdvMth"></td>
+                        <th scope="row"> Payment Date </th>
+                        <td id="edit_txtPayDate"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Branch Code</th>
+                        <td id="">
+                            <select id="edit_branchId" name="edit_branchId" class="w100p">
+                             </select>
+                        </td>
+                    </tr>
+                </tbody>
+    </table>
+    <aside class="title_line"><!-- title_line start -->
+        <h2>Collector Information</h2>
+    </aside><!-- title_line end -->
+    <table class="type1"><!-- table start -->
+            <caption>table</caption>
+                <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Collector Code</th>
+                        <td id="edit_txtCollectorCode"></td>
+                        <th scope="row">HP Code/Dealer</th>
+                        <td id="edit_txtSalesPerson"></td>
+                    </tr>
+                     <tr>
+                        <th scope="row">Collector Name</th>
+                        <td id=""></td>
+                        <th scope="row">Debtor Account</th>
+                        <td id="edit_txtDebtor"></td>
+                    </tr>
+                </tbody>
+    </table>
+    <ul class="left_btns">
+        <li><label><input name="btnAllowComm" type="checkbox"  /><span>Allow commission for this payment </span></label></li>
+    </ul>
+    <ul class="center_btns">
+        <li><p class="btn_blue2"><a href="javascript:alert()">Update</a></p></li>
+        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
+    </ul>
+    <section class="search_result"><!-- search_result start -->
+        <article class="grid_wrap"  id="editPopList_wrap" style="width  : 100%;">
+        </article><!-- grid_wrap end -->
+    </section><!-- search_result end -->
+</section><!-- pop_body end -->
+</div><!-- popup_wrap end -->
 <div id="view_history_wrap" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
         <h1>PAYMENT MASTER HISTORY</h1>
@@ -361,3 +789,8 @@ function hideDetailPopup(){
     </section>
     <!-- pop_body end -->
 </div>
+<!-- content end -->
+<form name="detailForm" id="detailForm"  method="post">
+    <input type="hidden" name="payId" id="payId" />
+    <input type="hidden" name="salesOrdId" id="salesOrdId" />
+</form>      

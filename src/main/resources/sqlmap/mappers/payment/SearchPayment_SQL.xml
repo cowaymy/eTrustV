@@ -5,7 +5,18 @@
     <resultMap id="paymentListResultMap" type="EgovMap">
         <result property="payItmCcNo" column="PAY_ITM_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="c1" column="C1" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="java.lang.String"/>
+        <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="byte[]"/>
+        <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+    <resultMap id="orderStatusMap" type="EgovMap">
+        <result property="rem" column="REM" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+    <resultMap id="paymenDetailResultMap" type="EgovMap">
+        <result property="payItmCcNo" column="PAY_ITM_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="c1" column="C1" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="byte[]"/>
         <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
       
@@ -275,7 +286,325 @@
        ORDER BY S_ID
     </select>
     
-    <select id="selectViewHistoryList" parameterType="java.lang.Integer" resultType="egovMap">
+     <select id="selectPaymentDetailViewer" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.TRX_ID TRX_ID  ,
+		       Extent1.TRX_DT TRX_DT  ,
+		       Extent1.TRX_AMT TRX_AMT  ,
+		       Extent1.PAY_ID PAY_ID  ,
+		       Extent1.OR_NO OR_NO  ,
+		       Extent1.TR_NO TR_NO  ,
+		       Extent1.PAY_DT PAY_DT  ,
+		       Extent1.LAST_UPD_DT LAST_UPD_DT  ,
+		       Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
+		       Extent1.PAY_TYPE_NAME PAY_TYPE_NAME  ,
+		       Extent1.LAST_UPD_USER_ID LAST_UPD_USER_ID  ,
+		       Extent1.LAST_UPD_USER_NAME LAST_UPD_USER_NAME  ,
+		       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+		       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Extent1.OR_AMT OR_AMT  ,
+		       Extent1.PO_NO PO_NO  ,
+		       Extent1.CLCTR_BRNCH_ID CLCTR_BRNCH_ID  ,
+		       Extent1.CLCTR_BRNCH_CODE CLCTR_BRNCH_CODE  ,
+		       Extent1.CLCTR_BRNCH_NAME CLCTR_BRNCH_NAME  ,
+		       Extent1.CUST_ID CUST_ID  ,
+		       Extent1.CUST_NAME CUST_NAME  ,
+		       Extent1.CUST_IC CUST_IC  ,
+		       Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+		       Extent1.CUST_TYPE_NAME CUST_TYPE_NAME  ,
+		       Extent1.PRODUCT_CTGRY_ID PRODUCT_CTGRY_ID  ,
+		       Extent1.PRODUCT_CTGRY_NAME PRODUCT_CTGRY_NAME  ,
+		       Extent1.PRODUCT_ID PRODUCT_ID  ,
+		       Extent1.PRODUCT_CODE PRODUCT_CODE  ,
+		       Extent1.PRODUCT_DESC PRODUCT_DESC  ,
+		       Extent1.KEYIN_USER_ID KEYIN_USER_ID  ,
+		       Extent1.KEYIN_USER_NAME KEYIN_USER_NAME  ,
+		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+		       Extent1.APP_TYPE_NAME APP_TYPE_NAME  ,
+		       Extent1.CLCTR_NAME CLCTR_NAME  ,
+		       Extent1.CLCTR_CODE CLCTR_CODE  ,
+		       Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+		       Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+		       Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+		       Extent1.DEBTOR_ACC_ID DEBTOR_ACC_ID  ,
+		       Extent1.DEBTOR_ACC_CODE DEBTOR_ACC_CODE  ,
+		       Extent1.DEBTOR_ACC_DESC DEBTOR_ACC_DESC  ,
+		       Extent1.SALES_MEM_ID SALES_MEM_ID  ,
+		       Extent1.SALES_MEM_CODE SALES_MEM_CODE  ,
+		       Extent1.SALES_MEM_NAME SALES_MEM_NAME  ,
+		       Extent1.VIRTL_ACC_NO VIRTL_ACC_NO  ,
+		       Extent1.HP_CODE HP_CODE  ,
+		       Extent1.HP_NAME HP_NAME  ,
+		       Extent1.HP_ID HP_ID  ,
+		       Extent1.CLCTR_ID CLCTR_ID  ,
+		       Extent1.ALLOW_COMM ALLOW_COMM  ,
+		       Extent1.ADV_MONTH ADV_MONTH  ,
+		       Extent1.TR_ISSU_DT TR_ISSU_DT  ,
+		       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+		  FROM ( SELECT PaymentMasterView.TRX_ID TRX_ID  ,
+                PaymentMasterView.TRX_DT TRX_DT  ,
+                PaymentMasterView.TRX_AMT TRX_AMT  ,
+                PaymentMasterView.PAY_ID PAY_ID  ,
+                PaymentMasterView.OR_NO OR_NO  ,
+                PaymentMasterView.TR_NO TR_NO  ,
+                PaymentMasterView.PAY_DT PAY_DT  ,
+                PaymentMasterView.LAST_UPD_DT LAST_UPD_DT  ,
+                PaymentMasterView.PAY_TYPE_ID PAY_TYPE_ID  ,
+                PaymentMasterView.PAY_TYPE_NAME PAY_TYPE_NAME  ,
+                PaymentMasterView.LAST_UPD_USER_ID LAST_UPD_USER_ID  ,
+                PaymentMasterView.LAST_UPD_USER_NAME LAST_UPD_USER_NAME  ,
+                PaymentMasterView.SALES_ORD_ID SALES_ORD_ID  ,
+                PaymentMasterView.SALES_ORD_NO SALES_ORD_NO  ,
+                PaymentMasterView.OR_AMT OR_AMT  ,
+                PaymentMasterView.PO_NO PO_NO  ,
+                PaymentMasterView.CLCTR_BRNCH_ID CLCTR_BRNCH_ID  ,
+                PaymentMasterView.CLCTR_BRNCH_CODE CLCTR_BRNCH_CODE  ,
+                PaymentMasterView.CLCTR_BRNCH_NAME CLCTR_BRNCH_NAME  ,
+                PaymentMasterView.CUST_ID CUST_ID  ,
+                PaymentMasterView.CUST_NAME CUST_NAME  ,
+                PaymentMasterView.CUST_IC CUST_IC  ,
+                PaymentMasterView.CUST_TYPE_ID CUST_TYPE_ID  ,
+                PaymentMasterView.CUST_TYPE_NAME CUST_TYPE_NAME  ,
+                PaymentMasterView.PRODUCT_CTGRY_ID PRODUCT_CTGRY_ID  ,
+                PaymentMasterView.PRODUCT_CTGRY_NAME PRODUCT_CTGRY_NAME  ,
+                PaymentMasterView.PRODUCT_ID PRODUCT_ID  ,
+                PaymentMasterView.PRODUCT_CODE PRODUCT_CODE  ,
+                PaymentMasterView.PRODUCT_DESC PRODUCT_DESC  ,
+                PaymentMasterView.KEYIN_USER_ID KEYIN_USER_ID  ,
+                PaymentMasterView.KEYIN_USER_NAME KEYIN_USER_NAME  ,
+                PaymentMasterView.APP_TYPE_ID APP_TYPE_ID  ,
+                PaymentMasterView.APP_TYPE_NAME APP_TYPE_NAME  ,
+                PaymentMasterView.CLCTR_NAME CLCTR_NAME  ,
+                PaymentMasterView.CLCTR_CODE CLCTR_CODE  ,
+                PaymentMasterView.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+                PaymentMasterView.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+                PaymentMasterView.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+                PaymentMasterView.DEBTOR_ACC_ID DEBTOR_ACC_ID  ,
+                PaymentMasterView.DEBTOR_ACC_CODE DEBTOR_ACC_CODE  ,
+                PaymentMasterView.DEBTOR_ACC_DESC DEBTOR_ACC_DESC  ,
+                PaymentMasterView.SALES_MEM_ID SALES_MEM_ID  ,
+                PaymentMasterView.SALES_MEM_CODE SALES_MEM_CODE  ,
+                PaymentMasterView.SALES_MEM_NAME SALES_MEM_NAME  ,
+                PaymentMasterView.VIRTL_ACC_NO VIRTL_ACC_NO  ,
+                PaymentMasterView.HP_CODE HP_CODE  ,
+                PaymentMasterView.HP_NAME HP_NAME  ,
+                PaymentMasterView.HP_ID HP_ID  ,
+                PaymentMasterView.CLCTR_ID CLCTR_ID  ,
+                PaymentMasterView.ALLOW_COMM ALLOW_COMM  ,
+                PaymentMasterView.ADV_MONTH ADV_MONTH  ,
+                PaymentMasterView.TR_ISSU_DT TR_ISSU_DT  ,
+                PaymentMasterView.BATCH_PAY_ID BATCH_PAY_ID  
+         FROM PAY1001V PaymentMasterView ) Extent1
+        WHERE  Extent1.PAY_ID = #{payId} AND ROWNUM <![CDATA[   <= ]]>  1
+     </select>
+     
+     <select id="selectOrderProgressStatus" parameterType="Map" resultMap="orderStatusMap">
+          SELECT 
+                Extent1.INSTALL_ENTRY_ID  ,
+                Extent2.REM   ,
+                Extent3.NAME   
+		        FROM SAL0046D Extent1
+		         LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
+		         LEFT JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
+		         JOIN ( SELECT MAX(Extent4.INSTALL_ENTRY_ID)  A1  
+		                FROM SAL0046D Extent4
+		                       JOIN CCR0006D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
+            WHERE  Extent5.SALES_ORD_ID = #{salesOrdId} ) GroupBy1   ON Extent1.INSTALL_ENTRY_ID = GroupBy1.A1 WHERE ROWNUM <![CDATA[   <= ]]> 1
+     </select>
+     
+     <select id="selectPaymentDetailView" parameterType="Map" resultMap="paymenDetailResultMap">
+          SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+		       Extent1.PAY_ID PAY_ID  ,
+		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+		       Extent2.CODE_NAME CODE_NAME  ,
+		       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+		       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+		       CASE 
+		            WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO
+		       ELSE empty_clob()
+		          END C1  ,
+		       Extent1.PAY_ITM_ENCRYPT_CC_NO   ,
+		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+		       Extent3.CODE_NAME CODENAME1  ,
+		       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+		       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+		       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+		       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+		       CASE 
+		            WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE
+		       ELSE ' '
+		          END C2  ,
+		       Extent4.NAME NAME  ,
+		       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
+		       Extent1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
+		       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+		       CASE 
+		            WHEN ( Extent5.ACC_ID IS NOT NULL ) THEN Extent5.ACC_CODE
+		       ELSE ' '
+		          END C3  ,
+		       Extent5.ACC_DESC ACC_DESC  ,
+		       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+		       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+		       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+		       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+		       Extent6.NAME NAME1  ,
+		       Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
+		       Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+		       Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+		       Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+		       Extent1.PAY_ITM_MID PAY_ITM_MID  ,
+		       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+		       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+		       Extent1.ETC3 ETC3  ,
+		       CASE 
+		            WHEN ( Extent1.PAY_ITM_EFT_NO IS NOT NULL ) THEN Extent1.PAY_ITM_EFT_NO
+		       ELSE ' '
+		          END C4  ,
+		       CASE 
+		            WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO
+		       ELSE ' '
+		          END C5  ,
+		       CASE 
+		            WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID
+		       ELSE 0
+		          END C6  ,
+		       CASE 
+		            WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME
+		       ELSE ' '
+		          END C7  ,
+		       CASE 
+		            WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE 
+		                                                                     WHEN ( 1298 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'On'
+		                                                                     WHEN ( 1299 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'Off'
+		                                                                     WHEN ( 1300 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'PNP'
+		            ELSE '-'
+		               END
+		            WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
+		            WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off'
+		       ELSE '-'
+		          END C8  
+		  FROM PAY0065D Extent1
+		         LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
+		         LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
+		         LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent1.PAY_ITM_ISSU_BANK_ID
+		         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent1.PAY_ITM_BANK_ACC_ID
+		         LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
+		         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
+		 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
+		          AND ( Extent1.PAY_ID = #{payId} )
+     </select>
+     
+     <select id="selectPaymentDetailSlaveList" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.TRX_ID TRX_ID  ,
+               Extent1.TRX_DT TRX_DT  ,
+               Extent1.TRX_AMT TRX_AMT  ,
+               Extent1.PAY_ID PAY_ID  ,
+               Extent1.OR_NO OR_NO  ,
+               Extent1.TR_NO TR_NO  ,
+               Extent1.PAY_DT PAY_DT  ,
+               Extent1.LAST_UPD_DT LAST_UPD_DT  ,
+               Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
+               Extent1.PAY_TYPE_NAME PAY_TYPE_NAME  ,
+               Extent1.LAST_UPD_USER_ID LAST_UPD_USER_ID  ,
+               Extent1.LAST_UPD_USER_NAME LAST_UPD_USER_NAME  ,
+               Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+               Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+               Extent1.OR_AMT OR_AMT  ,
+               Extent1.PO_NO PO_NO  ,
+               Extent1.CLCTR_BRNCH_ID CLCTR_BRNCH_ID  ,
+               Extent1.CLCTR_BRNCH_CODE CLCTR_BRNCH_CODE  ,
+               Extent1.CLCTR_BRNCH_NAME CLCTR_BRNCH_NAME  ,
+               Extent1.CUST_ID CUST_ID  ,
+               Extent1.CUST_NAME CUST_NAME  ,
+               Extent1.CUST_IC CUST_IC  ,
+               Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+               Extent1.CUST_TYPE_NAME CUST_TYPE_NAME  ,
+               Extent1.PRODUCT_CTGRY_ID PRODUCT_CTGRY_ID  ,
+               Extent1.PRODUCT_CTGRY_NAME PRODUCT_CTGRY_NAME  ,
+               Extent1.PRODUCT_ID PRODUCT_ID  ,
+               Extent1.PRODUCT_CODE PRODUCT_CODE  ,
+               Extent1.PRODUCT_DESC PRODUCT_DESC  ,
+               Extent1.KEYIN_USER_ID KEYIN_USER_ID  ,
+               Extent1.KEYIN_USER_NAME KEYIN_USER_NAME  ,
+               Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+               Extent1.APP_TYPE_NAME APP_TYPE_NAME  ,
+               Extent1.CLCTR_NAME CLCTR_NAME  ,
+               Extent1.CLCTR_CODE CLCTR_CODE  ,
+               Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+               Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+               Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+               Extent1.DEBTOR_ACC_ID DEBTOR_ACC_ID  ,
+               Extent1.DEBTOR_ACC_CODE DEBTOR_ACC_CODE  ,
+               Extent1.DEBTOR_ACC_DESC DEBTOR_ACC_DESC  ,
+               Extent1.SALES_MEM_ID SALES_MEM_ID  ,
+               Extent1.SALES_MEM_CODE SALES_MEM_CODE  ,
+               Extent1.SALES_MEM_NAME SALES_MEM_NAME  ,
+               Extent1.VIRTL_ACC_NO VIRTL_ACC_NO  ,
+               Extent1.HP_CODE HP_CODE  ,
+               Extent1.HP_NAME HP_NAME  ,
+               Extent1.HP_ID HP_ID  ,
+               Extent1.CLCTR_ID CLCTR_ID  ,
+               Extent1.ALLOW_COMM ALLOW_COMM  ,
+               Extent1.ADV_MONTH ADV_MONTH  ,
+               Extent1.TR_ISSU_DT TR_ISSU_DT  ,
+               Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+          FROM ( SELECT PaymentMasterView.TRX_ID TRX_ID  ,
+                PaymentMasterView.TRX_DT TRX_DT  ,
+                PaymentMasterView.TRX_AMT TRX_AMT  ,
+                PaymentMasterView.PAY_ID PAY_ID  ,
+                PaymentMasterView.OR_NO OR_NO  ,
+                PaymentMasterView.TR_NO TR_NO  ,
+                PaymentMasterView.PAY_DT PAY_DT  ,
+                PaymentMasterView.LAST_UPD_DT LAST_UPD_DT  ,
+                PaymentMasterView.PAY_TYPE_ID PAY_TYPE_ID  ,
+                PaymentMasterView.PAY_TYPE_NAME PAY_TYPE_NAME  ,
+                PaymentMasterView.LAST_UPD_USER_ID LAST_UPD_USER_ID  ,
+                PaymentMasterView.LAST_UPD_USER_NAME LAST_UPD_USER_NAME  ,
+                PaymentMasterView.SALES_ORD_ID SALES_ORD_ID  ,
+                PaymentMasterView.SALES_ORD_NO SALES_ORD_NO  ,
+                PaymentMasterView.OR_AMT OR_AMT  ,
+                PaymentMasterView.PO_NO PO_NO  ,
+                PaymentMasterView.CLCTR_BRNCH_ID CLCTR_BRNCH_ID  ,
+                PaymentMasterView.CLCTR_BRNCH_CODE CLCTR_BRNCH_CODE  ,
+                PaymentMasterView.CLCTR_BRNCH_NAME CLCTR_BRNCH_NAME  ,
+                PaymentMasterView.CUST_ID CUST_ID  ,
+                PaymentMasterView.CUST_NAME CUST_NAME  ,
+                PaymentMasterView.CUST_IC CUST_IC  ,
+                PaymentMasterView.CUST_TYPE_ID CUST_TYPE_ID  ,
+                PaymentMasterView.CUST_TYPE_NAME CUST_TYPE_NAME  ,
+                PaymentMasterView.PRODUCT_CTGRY_ID PRODUCT_CTGRY_ID  ,
+                PaymentMasterView.PRODUCT_CTGRY_NAME PRODUCT_CTGRY_NAME  ,
+                PaymentMasterView.PRODUCT_ID PRODUCT_ID  ,
+                PaymentMasterView.PRODUCT_CODE PRODUCT_CODE  ,
+                PaymentMasterView.PRODUCT_DESC PRODUCT_DESC  ,
+                PaymentMasterView.KEYIN_USER_ID KEYIN_USER_ID  ,
+                PaymentMasterView.KEYIN_USER_NAME KEYIN_USER_NAME  ,
+                PaymentMasterView.APP_TYPE_ID APP_TYPE_ID  ,
+                PaymentMasterView.APP_TYPE_NAME APP_TYPE_NAME  ,
+                PaymentMasterView.CLCTR_NAME CLCTR_NAME  ,
+                PaymentMasterView.CLCTR_CODE CLCTR_CODE  ,
+                PaymentMasterView.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+                PaymentMasterView.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+                PaymentMasterView.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+                PaymentMasterView.DEBTOR_ACC_ID DEBTOR_ACC_ID  ,
+                PaymentMasterView.DEBTOR_ACC_CODE DEBTOR_ACC_CODE  ,
+                PaymentMasterView.DEBTOR_ACC_DESC DEBTOR_ACC_DESC  ,
+                PaymentMasterView.SALES_MEM_ID SALES_MEM_ID  ,
+                PaymentMasterView.SALES_MEM_CODE SALES_MEM_CODE  ,
+                PaymentMasterView.SALES_MEM_NAME SALES_MEM_NAME  ,
+                PaymentMasterView.VIRTL_ACC_NO VIRTL_ACC_NO  ,
+                PaymentMasterView.HP_CODE HP_CODE  ,
+                PaymentMasterView.HP_NAME HP_NAME  ,
+                PaymentMasterView.HP_ID HP_ID  ,
+                PaymentMasterView.CLCTR_ID CLCTR_ID  ,
+                PaymentMasterView.ALLOW_COMM ALLOW_COMM  ,
+                PaymentMasterView.ADV_MONTH ADV_MONTH  ,
+                PaymentMasterView.TR_ISSU_DT TR_ISSU_DT  ,
+                PaymentMasterView.BATCH_PAY_ID BATCH_PAY_ID  
+         FROM PAY1001V PaymentMasterView ) Extent1
+        WHERE  Extent1.PAY_ID = #{payId}
+     </select>
+     
+     <select id="selectViewHistoryList" parameterType="java.lang.Integer" resultType="egovMap">
         SELECT Project1.HIST_ID HistoryId  ,
 		       Project1.CRT_DT CreateDate  ,
 		       Project1.CREATEBY CreatorID  ,
