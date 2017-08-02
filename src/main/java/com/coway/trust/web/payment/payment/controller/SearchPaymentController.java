@@ -42,6 +42,7 @@ import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
 
@@ -190,5 +191,61 @@ public class SearchPaymentController {
         
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * SearchMaster 조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="selectViewHistoryList")
+	public ResponseEntity<List<EgovMap>> selectViewHistoryList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap> result = null;
+		String payId = params.get("payId").toString();
+		
+		try {
+			if(CommonUtils.isNumCheck(payId)){
+				result = searchPaymentService.selectViewHistoryList(Integer.parseInt(payId));
+			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		return ResponseEntity.ok(result);
+	}
+	
+	/**
+	 * SearchDetail 조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="selectDetailHistoryList")
+	public ResponseEntity<List<EgovMap>> selectDetailHistoryList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap> result = null;
+		String payItemId = params.get("payItemId").toString();
+		
+		try {
+			if(CommonUtils.isNumCheck(payItemId)){
+				result = searchPaymentService.selectDetailHistoryList(Integer.parseInt(payItemId));
+			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		return ResponseEntity.ok(result);
 	}
 }

@@ -55,4 +55,18 @@ public interface SearchPaymentMapper {
 	 */
 	List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO);
 
+	/**
+	 * MasterHistory 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectViewHistoryList(int payId);
+
+	/**
+	 * DetailHistory 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectDetailHistoryList(int payItemId);
+
 }

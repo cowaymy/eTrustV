@@ -5,6 +5,7 @@
 
 //AUIGrid 그리드 객체
 var myGridID,subGridID;
+var viewHistoryGridID;
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
@@ -25,19 +26,11 @@ $(document).ready(function(){
     $('#branchId').change(function (){
     	doGetCombo('/common/getUsersByBranch.do', $(this).val() , ''   , 'userId' , 'S', '');
     });
-    
-   
-    
-    //Grid Properties 설정 
-    var gridPros = {            
-            editable : false,                 // 편집 가능 여부 (기본값 : false)
-            showStateColumn : false     // 상태 칼럼 사용
-    };
-    
+
+
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    
-    
+
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){ 
     	
@@ -49,6 +42,13 @@ $(document).ready(function(){
     	        
     });
 });
+
+//Grid Properties 설정 
+var gridPros = {            
+        editable : false,                 // 편집 가능 여부 (기본값 : false)
+        showStateColumn : false     // 상태 칼럼 사용
+};
+
 
 // AUIGrid 칼럼 설정
 var columnLayout = [ 
@@ -94,7 +94,13 @@ var slaveColumnLayout = [
 	{ dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
     ];
 
-
+var viewHistoryLayout=[
+    { dataField:"typename" ,headerText:"Type" ,editable : false },
+    { dataField:"valuefr" ,headerText:"From" ,editable : false },
+    { dataField:"valueto" ,headerText:"To" ,editable : false },
+    { dataField:"createdate" ,headerText:"Update Date" ,editable : false },
+    { dataField:"creator" ,headerText:"Updator" ,editable : false }
+    ];
 // 리스트 조회.
 function fn_getOrderListAjax() {        
     Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
@@ -109,6 +115,34 @@ function fn_getPaymentListAjax() {
     });
 }
 
+function showViewHistory(){
+	var payId = 4116282;
+	$("#view_history_wrap").show();
+	viewHistoryGridID = GridCommon.createAUIGrid("grid_view_history", viewHistoryLayout,null,gridPros);
+	 Common.ajax("GET", "/payment/selectViewHistoryList", {"payId" : payId} , function(result) {
+	        AUIGrid.setGridData(viewHistoryGridID, result);
+	 });
+}
+
+function showDetailHistory(){
+	//var payItemId = 12345;
+	$("#view_detail_wrap").show();
+	viewHistoryGridID = GridCommon.createAUIGrid("grid_detail_history", viewHistoryLayout,null,gridPros);
+	//Common.ajax("GET", "/payment/selectDetailHistoryList", {"payItemId" : payItemId} , function(result) {
+    //    AUIGrid.setGridData(viewHistoryGridID, result);
+   // });
+}
+
+function hideViewPopup(){
+	$("#view_history_wrap").hide();
+	AUIGrid.destroy("#grid_view_history");
+	
+}
+
+function hideDetailPopup(){
+	$("#view_detail_wrap").hide();
+    AUIGrid.destroy("#grid_detail_history");
+}
 </script>
 
 <!-- content start -->
@@ -260,7 +294,9 @@ function fn_getPaymentListAjax() {
 				        <li><p class="link_btn type2"><a href="#">Edit Details</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Reverse Payment(Void)</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>				        
+				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>		
+				        <li><p class="link_btn type2"><a href="#" onClick="showViewHistory()">Temp(View History)</a></p></li>
+				        <li><p class="link_btn type2"><a href="#" onClick="showDetailHistory()">Temp(Detail History)</a></p></li>     		        
 				    </ul>
 				    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
@@ -290,3 +326,38 @@ function fn_getPaymentListAjax() {
 <form name="detailForm" id="detailForm"  method="post">
     <input type="hidden" name="payId" id="payId" />
 </form>      
+
+
+<div id="view_history_wrap" class="popup_wrap size_small" style="display:none;">
+    <header class="pop_header">
+        <h1>PAYMENT MASTER HISTORY</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_body start -->
+    <section class="pop_body">
+       
+        <!-- grid_wrap start -->
+        <article id="grid_view_history" class="grid_wrap"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- pop_body end -->
+</div>
+
+<div id="view_detail_wrap" class="popup_wrap size_small" style="display:none;">
+    <header class="pop_header">
+        <h1>PAYMENT DETAIL HISTORY</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_body start -->
+    <section class="pop_body">
+       
+        <!-- grid_wrap start -->
+        <article id="grid_detail_history" class="grid_wrap"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- pop_body end -->
+</div>

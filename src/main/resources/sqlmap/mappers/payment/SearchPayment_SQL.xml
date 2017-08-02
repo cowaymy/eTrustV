@@ -274,5 +274,38 @@
        </if>
        ORDER BY S_ID
     </select>
+    
+    <select id="selectViewHistoryList" parameterType="java.lang.Integer" resultType="egovMap">
+        SELECT Project1.HIST_ID HistoryId  ,
+		       Project1.CRT_DT CreateDate  ,
+		       Project1.CREATEBY CreatorID  ,
+		       Project1.C1 Creator  ,
+		       Project1.PAY_ID PayID  ,
+		       Project1.REF_ID_FROM RefIDFr  ,
+		       Project1.REF_ID_TO RefIDTo  ,
+		       Project1.TYPE_ID TypeID  ,
+		       Project1.CODE_NAME TypeName  ,
+		       Project1.VALU_FROM ValueFr  ,
+		       Project1.VALU_TO ValueTo  
+        FROM ( SELECT Extent1.HIST_ID HIST_ID  ,
+                Extent1.TYPE_ID TYPE_ID  ,
+                Extent1.PAY_ID PAY_ID  ,
+                Extent1.VALU_FROM VALU_FROM  ,
+                Extent1.VALU_TO VALU_TO  ,
+                Extent1.REF_ID_FROM REF_ID_FROM  ,
+                Extent1.REF_ID_TO REF_ID_TO  ,
+                Extent1.CRT_DT CRT_DT  ,
+                Extent1.CREATEBY CREATEBY  ,
+                Extent2.CODE_NAME CODE_NAME  ,
+                CASE 
+                     WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                ELSE ' '
+                   END C1  
+         FROM PAY0066D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
+                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CREATEBY
+          WHERE  Extent1.PAY_ID = #{value} ) Project1
+     ORDER BY Project1.HIST_ID DESC
+    </select>
 
 </mapper>

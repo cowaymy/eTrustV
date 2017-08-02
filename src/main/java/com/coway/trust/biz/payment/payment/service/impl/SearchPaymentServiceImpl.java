@@ -95,5 +95,25 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	public List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO) {
 		return searchPaymentMapper.searchRentalCollectionByBSList(searchVO);
 	}
+
+	/**
+	 * SearchMaster 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectViewHistoryList(int payId) {
+		return searchPaymentMapper.selectViewHistoryList(payId);
+	}
+
+	/**
+	 * SearchDetail 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectDetailHistoryList(int payItemId) {
+		return searchPaymentMapper.selectDetailHistoryList(payItemId);
+	}
 	
 }
