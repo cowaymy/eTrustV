@@ -40,6 +40,13 @@ public interface ClaimMapper {
 	void deleteClaimResultItem(Map<String, Object> params);	
 	
 	/**
+	 * Auto Debit - Claim Result Update : 아이템 등록
+	 * @param params
+	 * @return
+	 */
+	void insertClaimResultItem(Map<String, Object> params);	
+	
+	/**
 	 * Auto Debit - Claim Result Deactivate 처리 : 마스터 수정
 	 * @param params
 	 * @return
@@ -59,6 +66,12 @@ public interface ClaimMapper {
 	 * @return
 	 */
 	List<EgovMap> selectClaimDetailById(Map<String, Object> params);	
+	
+	/**
+     * Auto Debit - Claim 생성 프로시저 호출
+     * @param params
+     */
+	Map<String, Object> createClaim(Map<String, Object> param);
 	
 
 }

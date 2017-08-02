@@ -4,7 +4,7 @@
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
-var myGridID;
+var myGridID,updResultGridID;
 
 //Grid에서 선택된 RowID
 var selectedGridValue;
@@ -114,13 +114,93 @@ $(document).ready(function(){
     
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    updResultGridID = GridCommon.createAUIGrid("updResult_grid_wrap", updResultColLayout,null,gridPros);
     
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){ 
         selectedGridValue = event.rowIndex;
     });
     
+    // HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
+    function checkHTML5Brower() {
+        var isCompatible = false;
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            isCompatible = true;
+        }
+        return isCompatible;
+    };
+    
+    // 파일 선택하기
+    $('#fileSelector').on('change', function(evt) {
+        if (!checkHTML5Brower()) {
+            // 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
+            // 파일 내용 읽어 반환시켜 그리드에 적용.
+            commitFormSubmit();
+            
+            //alert("브라우저가 HTML5 를 지원하지 않습니다.");
+        } else {
+            var data = null;
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                return;
+            }
+            var reader = new FileReader();
+            //reader.readAsText(file); // 파일 내용 읽기
+            reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
+            reader.onload = function(event) {
+                if (typeof event.target.result != "undefined") {
+                    // 그리드 CSV 데이터 적용시킴
+                    AUIGrid.setCsvGridData(updResultGridID, event.target.result, false);
+                } else {
+                    alert('No data to import!');
+                }
+            };
+            reader.onerror = function() {
+                alert('Unable to read ' + file.fileName);
+            };
+        }
+    
+        });
+    
+
+  //HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
+  //서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
+  //즉, 이것은 IE 10 이상에서는 불필요 (IE8, 9 에서만 해당됨)
+  function commitFormSubmit() {
+   
+   AUIGrid.showAjaxLoader(updResultGridID);
+   
+   // Submit 을 AJax 로 보내고 받음.
+   // ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
+   // 링크 : http://malsup.com/jquery/form/
+   
+   $('#updResultForm').ajaxSubmit({
+       type : "json",
+       success : function(responseText, statusText) {
+           if(responseText != "error") {
+               
+               var csvText = responseText;
+               
+               // 기본 개행은 \r\n 으로 구분합니다.
+               // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
+               // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
+               // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
+               csvText = csvText.replace(/\r?\n/g, "\r\n")
+               
+               // 그리드 CSV 데이터 적용시킴
+               AUIGrid.setCsvGridData(updResultGridID, csvText);
+               
+               AUIGrid.removeAjaxLoader(updResultGridID);
+           }
+       },
+       error : function(e) {
+           alert("ajaxSubmit Error : " + e);
+       }
+   });
+   
+   }
 });
+
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
@@ -131,10 +211,12 @@ var columnLayout = [
     { dataField:"updDt" ,headerText:"Update Date",width: 120 ,visible : false, editable : false },
     { dataField:"ctrlTotSucces" ,headerText:"Success",width: 120 ,visible : false, editable : false },
     { dataField:"ctrlTotFail" ,headerText:"Fail",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlIsCrc" ,headerText:"ctrlIsCrc",width: 120 ,visible : false, editable : false },
+    { dataField:"bankId" ,headerText:"bankId",width: 120 ,visible : false, editable : false },
     
     { dataField:"ctrlId" ,headerText:"Batch Id",width: 120 ,editable : false },
     { dataField:"stusCode" ,headerText:"Status",width: 100 ,editable : false },
-    { dataField:"ctrlIsCrc" ,headerText:"Type",width: 100 ,editable : false },
+    { dataField:"ctrlIsCrcName" ,headerText:"Type",width: 100 ,editable : false },
     { dataField:"bankCode" ,headerText:"Issue Bank",width: 100 ,editable : false },
     { dataField:"ctrlBatchDt" ,headerText:"Debit Date",width: 120 ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
     { dataField:"ctrlTotItm" ,headerText:"Total Item",width: 120 ,editable : false },
@@ -163,7 +245,20 @@ var columnLayout = [
     }
     ];
     
-    
+var updResultColLayout = [ 
+                    {         
+                        dataField : "0",
+                        headerText : "RefNo",
+                        editable : true
+                    },{
+                        dataField : "1",
+                        headerText : "RefCode",
+                        editable : true
+                    },{
+                        dataField : "2",
+                        headerText : "ItemID.",
+                        editable : true
+                    }];   
 // 리스트 조회.
 function fn_getClaimListAjax() {        
     Common.ajax("GET", "/payment/selectClaimList", $("#searchForm").serialize(), function(result) {
@@ -177,12 +272,13 @@ function fn_openDivPop(val){
 	if(val == "VIEW" || val == "RESULT" || val == "RESULTNEXT" || val == "FILE"){
 		
 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-	    var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-	    var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlStusId");
-	    var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");   
 	    
-		if (selectedItem[0] > -1){
-			
+	    if (selectedItem[0] > -1){
+		
+	    	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	        var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlStusId");
+	        var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");   
+	        
 			if((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1){
                 Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
                         "Only [Active] batch is allowed to update claim result.</b>");   
@@ -196,7 +292,7 @@ function fn_openDivPop(val){
 	            
 	            $("#view_batchId").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId"));
 	            $("#view_status").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName"));
-	            $("#view_type").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc"));
+	            $("#view_type").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrcName"));
 	            $("#view_creator").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "crtUserName"));
 	            $("#view_issueBank").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "bankCode") + ' - ' + AUIGrid.getCellValue(myGridID, selectedGridValue, "bankName"));
 	            $("#view_createDt").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "crtDt"));
@@ -244,15 +340,15 @@ function fn_openDivPop(val){
 		$("#new_wrap").show();	
 		
 		//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
+		$("#newForm")[0].reset();
 		$("#claimDayMust").hide();
-		$("#issueBankMust").hide();
-		
+		$("#issueBankMust").hide();		
 	}
 }
 
 //Layer close
 hideViewPopup=function(val){
-    $(val).hide();    
+    $(val).hide();
 }
 
 // Pop-UP 에서 Deactivate 처리
@@ -269,7 +365,7 @@ function fn_deactivate(){
 	        
 	        $("#view_batchId").text(result[0].ctrId);
 	        $("#view_status").text(result[0].stusName);
-	        $("#view_type").text(result[0].ctrlIsCrc);
+	        $("#view_type").text(result[0].ctrlIsCrcName);
 	        $("#view_creator").text(result[0].crtUserName);
 	        $("#view_issueBank").text(result[0].bankCode + ' - ' + result[0].bankName);
 	        $("#view_createDt").text(result[0].crtDt);
@@ -283,14 +379,90 @@ function fn_deactivate(){
 	        $("#view_totalFail").text(result[0].ctrlTotFail);
 	        
 	        $('#pop_header h1').text('VIEW CLAIM');
-	        $('#center_btns').hide();
+	        $('#center_btns1').hide();
+            $('#center_btns2').hide();          
+            $('#center_btns3').hide();
 	    },function(result) {
 	        Common.alert("<b>Failed to deactivate this claim batch.<br />Please try again later.</b>");   
 	    });		
 	});
 }
 
+//Pop-UP 에서 Update Result 버튼 클릭시 팝업창 생성
+function fn_updateResult(){
+	$("#updResult_wrap").show();  
+}
 
+//Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
+function fn_resultFileUp(){
+	
+	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
+	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
+    
+    //param data array
+    var data = {};
+    var gridList = AUIGrid.getGridData(updResultGridID);       //그리드 데이터
+    
+    //array에 담기        
+    if(gridList.length > 0) {
+        data.all = gridList;
+    }  else {
+        alert('Select the CSV file on the loca PC');
+        return;
+        //data.all = [];
+    }
+    
+    //form객체 담기
+    data.form = [{"ctrlId":ctrlId,"ctrlIsCrc":ctrlIsCrc,"bankId":bankId}];
+    
+    //Ajax 호출
+    Common.ajax("POST", "/payment/updateClaimResultItem.do", data, function(result) {
+    	resetUpdatedItems(); // 초기화
+    	
+        var message = "";        
+        message += "Batch ID : " + result.data.ctrlId + "<br />";
+        message += "Total Result Item : " + result.data.totalItem + "<br />";
+        message += "Total Success : " + result.data.totalSuccess + "<br />";
+        message += "Total Failed : " + result.data.totalFail + "<br />";
+        message += "<br />Are you sure want to confirm this result ?<br />";
+        
+        Common.confirm(message,
+        		function (){
+        	         var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+        	         
+        	         //param data array
+        	         var data = {};
+        	         data.form = [{"ctrlId":ctrlId}];
+        	         
+        	         Common.ajax("POST", "/payment/updateDeactivate.do", data, 
+        	        		 function(result) {
+        	        	          Common.alert("<b>This claim batch has been deactivated.</b>");
+        	        	     },
+        	        	     function(result) {
+        	        	    	  Common.alert("<b>Failed to deactivate this claim batch.<br />Please try again later.</b>");
+        	        	    });     
+       });
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+            console.log("status : " + jqXHR.status);
+            console.log("code : " + jqXHR.responseJSON.code);
+            console.log("message : " + jqXHR.responseJSON.message);
+            console.log("detailMessage : "
+                    + jqXHR.responseJSON.detailMessage);
+        } catch (e) {
+            console.log(e);
+        }
+        alert("Fail : " + jqXHR.responseJSON.message);        
+    });
+}
+
+//그리드 초기화.
+function resetUpdatedItems() {
+     AUIGrid.resetUpdatedItems(updResultGridID, "a");
+ }
+ 
+ 
 //NEW CLAIM Pop-UP 에서 Generate Claim 처리
 function fn_genClaim(){
 	
@@ -327,11 +499,39 @@ function fn_genClaim(){
 	
 	Common.ajax("POST", "/payment/generateNewClaim.do", data, 
 			function(result) {
-		         Common.alert("<b>This claim batch has been deactivated.</b>");
-		   
+		         var message = "";
+		         
+		         if(result.code == "IS_BATCH"){		        	 
+		        	 message += "There is one active batch exist.<br />";
+		        	 message += "Batch ID : " + result.data.ctrlId + "<br />";
+		        	 message += "Creator : " + result.data.crtUserName + "<br />";
+		        	 message += "Create Date : " + result.data.crtDt  + "<br />";
+		        	 message += "<br />You must deactive or complete the batch before create a new batch.<br />";
+		        	 
+		         }else if(result.code == "FILE_OK"){
+                     message += "New claim batch successfully generated.<br /><br />";
+                     message += "Batch ID : " + result.data.ctrlId + "<br />";
+                     message += "Total Claim Amount : " + result.data.ctrlBillAmt + "<br />";
+                     message += "Total Account : " + result.data.ctrlTotItm + "<br />";
+                     message += "Creator : " + result.data.crtUserName + "<br />";
+                     message += "Create Date : " + result.data.crtDt + "<br />";
+                     
+		         }else if(result.code == "FILE_FAIL"){
+		        	 message += "New claim batch successfully generated, but failed to create claim file.<br /><br />";
+                     message += "Batch ID : " + result.data.ctrlId + "<br />";
+                     message += "Total Claim Amount : " + result.data.ctrlBillAmt + "<br />";
+                     message += "Total Account : " + result.data.ctrlTotItm + "<br />";
+                     message += "Creator : " + result.data.crtUserName + "<br />";
+                     message += "Create Date : " + result.data.crtDt + "<br />";
+                     
+		         }else{
+		        	 message += "Failed to generate new claim batch. Please try again later.";
+		         }
+		         
+		         Common.alert("<b>" + message + "</b>");
 	       },
 	       function(result) {
-                 Common.alert("<b>Failed to deactivate this claim batch.<br />Please try again later.</b>");   
+                 Common.alert("<b>Failed to generate new claim batch. Please try again later.</b>");   
            }
 	);
 }
@@ -571,7 +771,7 @@ function fn_createFile(){
 
         <ul class="center_btns" id="center_btns1">
             <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
-            <li><p class="btn_blue2"><a href="#">Update Result</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_updateResult();">Update Result</a></p></li>
         </ul>
         
         <ul class="center_btns" id="center_btns2">
@@ -645,6 +845,66 @@ function fn_createFile(){
         
         <ul class="center_btns">
             <li><p class="btn_blue2"><a href="javascript:fn_genClaim();">Generate Claim</a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
+
+
+
+
+<!--------------------------------------------------------------- 
+    POP-UP (NEW CLAIM)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="updResult_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="updResult_pop_header">
+        <h1>CLAIM RESULT UPDATE</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#updResult_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="updResultForm" id="updResultForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Result File</th>
+                        <td>
+                            <!-- auto_file start -->
+                           <div class="auto_file">
+                               <input type="file" id="fileSelector" title="file add" accept=".csv" />
+                           </div>
+                           <!-- auto_file end -->
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>
+        
+        <section class="search_result"><!-- search_result start -->
+            <article class="grid_wrap"  id="updResult_grid_wrap" style="display:none;"></article>             
+            <!-- grid_wrap end -->
+        </section><!-- search_result end -->
+        <!-- search_table end -->
+        
+        <ul class="center_btns">
+            <li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();">Upload</a></p></li>
         </ul>
     </section>
     </form>       

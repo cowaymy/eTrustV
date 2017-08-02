@@ -102,6 +102,90 @@ public class ClaimController {
 		
     }
 	
+	/**
+     * Claim Result Upload File 처리
+     * @param params
+     * @param model
+     * @return
+     * @RequestParam Map<String, Object> params
+     */
+    @RequestMapping(value = "/updateClaimResultItem.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateClaimResultItem(@RequestBody Map<String, ArrayList<Object>> params,
+    		Model model) {
+    	
+    	List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+    	List<Object> resultItemList = new ArrayList<Object>();
+    	Map<String, Object> uploadMap = null;
+    	String refNo = "";
+    	int totalSuccess = 0;
+    	int totalFail = 0;
+    	
+    	// 폼객체 처리.
+		Map<String, Object> claimMap = (Map<String, Object>)formList.get(0);
+		
+		//파일로 입력받은 그리드 데이터 
+    	if (gridList.size() > 0) {
+    		
+    		Map<String, Object> hm = null;
+    		
+    		for (Object map : gridList) {
+    			hm = (HashMap<String, Object>) map;
+    			
+    			refNo = (String.valueOf(hm.get("0"))).trim().length() < 7 ? "0"+(String.valueOf(hm.get("0"))).trim() : (String.valueOf(hm.get("0"))).trim();                
+                
+    			uploadMap = new HashMap<String, Object>();                
+                uploadMap.put("refNo", refNo);
+                uploadMap.put("refCode", (String.valueOf(hm.get("1"))).trim());
+                uploadMap.put("id", (String.valueOf(claimMap.get("ctrlId"))).trim());
+                
+                if("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))  ||
+                		"2".equals(String.valueOf(claimMap.get("bankId")))  ||
+                		"3".equals(String.valueOf(claimMap.get("bankId")))  
+                		){
+                	uploadMap.put("itemId", (String.valueOf(hm.get("2"))).trim());
+                }else{
+                	uploadMap.put("itemId", "");
+                }
+                
+                resultItemList.add(uploadMap);
+                
+                //message 처리를 위한 값 세팅
+                if("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))){                	
+                	if("".equals(String.valueOf(uploadMap.get("refCode")))){
+                		totalSuccess++;
+                	}                	
+                	if(!"".equals(String.valueOf(uploadMap.get("refCode")))){
+                		totalFail++;
+                	}
+                }else if("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) ||
+                				"134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))){
+                	if("00".equals(String.valueOf(uploadMap.get("refCode")))){
+                		totalSuccess++;
+                	}
+                	if(!"00".equals(String.valueOf(uploadMap.get("refCode")))){
+                		totalFail++;
+                	}
+                }
+    		}
+    	}
+    	
+    	claimMap.put("totalItem", gridList.size());
+    	claimMap.put("totalSuccess", totalSuccess);
+    	claimMap.put("totalFail", totalFail);
+    	
+    	// 데이터 등록
+    	claimService.updateClaimResultItem(claimMap, resultItemList);	
+    	
+    	// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(claimMap);
+    	message.setMessage("Saved Successfully");
+    	
+    	return ResponseEntity.ok(message);
+    }
+	
 	
 	/**
 	 * Generate New Claim 처리
@@ -110,28 +194,23 @@ public class ClaimController {
 	 * @return
 	 */
 	@RequestMapping(value = "/generateNewClaim.do", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> generateNewClaim(@RequestBody Map<String, ArrayList<Object>> params,
+    public ResponseEntity<ReturnMessage> generateNewClaim(@RequestBody Map<String, ArrayList<Object>> params,
     		Model model) {
-		
-		
-		Map<String, Object> returnMap = new HashMap<>();
 		
 		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 		
-	
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		Map<String, Object> searchMap = null;
+		String returnCode = "";
     	
-    	//CRC Statement 정보 Map
+    	//form 객체 값을 담을 Map
     	Map<String, Object> claim = new HashMap<String, Object>();
     	
-    	//CRC Statement 정보 Map에 데이터 세팅
-    	if (formList.size() > 0) {
-    		
+    	//form 객체 데이터 세팅
+    	if (formList.size() > 0) {    		
     		formList.forEach(obj -> {
                 Map<String, Object> map = (Map<String, Object>) obj;
                 claim.put((String)map.get("name"),map.get("value"));
-                
-                LOGGER.debug("name : {}", map.get("name"));
-                LOGGER.debug("value : {}", map.get("value"));
     		});    		
     	}
 		//검색 파라미터 확인.(화면 Form객체 입력값)
@@ -142,26 +221,59 @@ public class ClaimController {
         
 		
 		// HasActiveBatch : 동일한 bankId, Claim Type 에 해당하는 active 건이 있는지 확인한다. 
-		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap = new HashMap<String, Object>();
 		searchMap.put("issueBank", claim.get("new_issueBank"));
 		searchMap.put("claimType", claim.get("new_claimType"));
 		searchMap.put("status", "1");
 		
         List<EgovMap> isActiveBatchList = claimService.selectClaimList(searchMap);
         
+        //Active인 배치가 있는 경우
         if(isActiveBatchList.size() > 0){
-        	returnMap.put("resultCode", "IS_BATCH");
-        	returnMap.put("dataList", isActiveBatchList.get(0));
+        	returnCode = "IS_BATCH";
+        	returnMap = (Map<String, Object>)isActiveBatchList.get(0);
         }else{
-        	//claimService.generateNewClaim(searchMap);
-        	returnMap.put("resultCode", "IS_BATCH");
-        	returnMap.put("dataList", new ArrayList<EgovMap>());
         	
+        	String isCRC = "131".equals((String.valueOf(claim.get("new_claimType")))) ? "1" : "132".equals((String.valueOf(claim.get("new_claimType")))) ?  "0" : "134"; 
+        	String inputDate = CommonUtils.changeFormat(String.valueOf(claim.get("new_debitDate")),"dd/MM/yyyy","yyyyMMdd");
+        	String claimDay = CommonUtils.nvl(String.valueOf(claim.get("new_claimDay")));
+        	String bankId  = CommonUtils.nvl(String.valueOf(claim.get("new_issueBank")));
+        			
+        	claim.put("new_claimType", isCRC);
+        	claim.put("new_debitDate", inputDate);
+        	claim.put("new_claimDay", claimDay);
+        	claim.put("new_issueBank", bankId);
         	
+        	claimService.createClaim(claim);		        	//프로시저 함수 호출
+        	List<EgovMap> resultMapList = (List<EgovMap>)claim.get("p1");         	//결과 뿌려보기 : 프로시저에서 p1이란 key값으로 객체를 반환한다.
+        	
+        	if(resultMapList.size() > 0){
+        		//프로시저 결과 Map
+        		returnMap = (Map<String, Object>)resultMapList.get(0);
+        		
+        		// Calim Master 및 Detail 조회
+    			EgovMap claimMasterMap = claimService.selectClaimById(returnMap);
+    			List<EgovMap> claimDetailList = claimService.selectClaimDetailById(returnMap);
+    			
+        		try{
+        			// 파일 생성하기
+        			this.createClaimFileMain(claimMasterMap,claimDetailList);
+        			returnCode = "FILE_OK";
+        		}catch (Exception e){
+        			returnCode = "FILE_FAIL";
+        		}
+        	}else{
+        		returnCode = "FAIL";
+        	}
         }
         
-        // 조회 결과 리턴.        
-        return ResponseEntity.ok(returnMap);
+        // 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(returnCode);
+    	message.setData(returnMap);
+    	message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
+		
+		return ResponseEntity.ok(message);
 		
     }
 	
@@ -185,6 +297,25 @@ public class ClaimController {
 		// Claim Detail List 조회
 		List<EgovMap> claimDetailList = claimService.selectClaimDetailById(claimMap);
 		
+		// 파일 생성하기
+		this.createClaimFileMain(claimMap,claimDetailList);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+		
+    }
+	
+	
+	/**********************************************
+	 *
+	 * 파일 생성하기 
+	 * 
+	 ***********************************************/
+	public void createClaimFileMain(EgovMap claimMap, List<EgovMap> claimDetailList) throws Exception{
 		// 파일 생성하기
 		if("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			//ALB
@@ -233,22 +364,8 @@ public class ClaimController {
 		}else if("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))){
 			this.createClaimFileFPX(claimMap, claimDetailList);			
 		}
-		
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-		
-    }
+	}
 	
-	
-	/**********************************************
-	 *
-	 * 파일 생성하기 
-	 * 
-	 ***********************************************/
 	/**
 	 * ALB - Create Claim File
 	 * @param claimMap

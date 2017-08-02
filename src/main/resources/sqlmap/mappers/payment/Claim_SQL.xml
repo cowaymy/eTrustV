@@ -22,11 +22,11 @@
             Extent1.UPD_USER_ID,
             TO_CHAR(Extent1.CRT_DT,'DD-MM-YYYY hh:mi:ss A.M.') AS CRT_DT,
             NVL(TO_CHAR(Extent1.UPD_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT,            
-            
+            Extent1.CTRL_IS_CRC,
             (CASE 
                     WHEN 1 = Extent1.CTRL_IS_CRC THEN 'Credit Card'
                     WHEN 134 = Extent1.CTRL_IS_CRC THEN 'FPX'
-                    ELSE 'Direct Debit' END) AS CTRL_IS_CRC,
+                    ELSE 'Direct Debit' END) AS CTRL_IS_CRC_NAME,
 			Extent1.CTRL_REM,
 			NVL(Extent1.CTRL_FAIL_SMS_IS_PUMP,0) AS CTRL_FAIL_SMS_IS_PUMP,
 			Extent1.CTRL_TOT_ITM,
@@ -102,6 +102,12 @@
         WHERE
             CTRL_ID = #{ctrlId}     
     </update>
+    
+    <!--Auto Debit - Claim Result Update : 아이템 등록 -->
+    <insert id="insertClaimResultItem" parameterType="Map" >
+        INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID)
+        VALUES (#{refNo},#{refCode},#{id},#{itemId})
+    </insert>
     
     <!--Auto Debit - Claim 조회 -->
     <select id="selectClaimById" parameterType="Map" resultType="egovMap">
@@ -191,5 +197,12 @@
             Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} 
         ORDER BY 
             UTILS.CONVERT_TO_VARCHAR2(Extent1.BANK_DTL_DR_ACC_NO) ASC
-  </select>
+    </select>
+  
+    <resultMap id="resultClaimMap" type="egovMap" />
+    <select id="createClaim" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank},#{new_debitDate},4238,#{new_claimDay},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})            
+        }
+    </select>
 </mapper>

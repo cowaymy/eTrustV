@@ -35,6 +35,18 @@ public interface ClaimService
 	 */
 	List<EgovMap> selectClaimDetailById(Map<String, Object> params); 
 	
+	/**
+     * Auto Debit - Claim 생성 프로시저 호출
+     * @param params
+     */
+    Map<String, Object> createClaim(Map<String, Object> param);
+    
+    /**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+    void updateClaimResultItem(Map<String, Object> claimMap, List<Object> resultItemList );
+	
 	
     
 }

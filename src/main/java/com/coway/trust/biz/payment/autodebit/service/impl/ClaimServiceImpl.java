@@ -80,6 +80,34 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 		return claimMapper.selectClaimDetailById(params);
 	}
 	
+	/**
+     * Auto Debit - Claim 생성 프로시저 호출
+     * @param params
+     */
+	@Override
+    public Map<String, Object> createClaim(Map<String, Object> param){
+		return claimMapper.createClaim(param);
+	}
+	
+	 /**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+	@Override
+    public void updateClaimResultItem(Map<String, Object> claimMap, List<Object> resultItemList ){
+		
+		claimMapper.deleteClaimResultItem(claimMap);
+		
+		//CRC Transaction 정보
+    	if (resultItemList.size() > 0) {    		
+    		Map<String, Object> hm = null;    		
+    		for (Object map : resultItemList) {
+    			hm = (HashMap<String, Object>) map;    			
+    			claimMapper.insertClaimResultItem(hm);    			
+    		}
+    	}
+	}
+	
 	
 	
 }
