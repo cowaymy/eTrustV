@@ -8,6 +8,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface AssetMngService {
 	
-	List<EgovMap>selectAssetList(Map<String, Object> params);	
+	List<EgovMap> selectAssetList(Map<String, Object> params);	
+	List<EgovMap> selectDealerList(Map<String, Object> params);
+	List<EgovMap> selectBrandList(Map<String, Object> params);
+	List<EgovMap> selectColorList(Map<String, Object> params);
+	void insertAssetMng(Map<String, Object> params);
+	
+	
 	
 }
