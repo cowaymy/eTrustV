@@ -98,7 +98,7 @@ var viewHistoryLayout=[
     { dataField:"typename" ,headerText:"Type" ,editable : false },
     { dataField:"valuefr" ,headerText:"From" ,editable : false },
     { dataField:"valueto" ,headerText:"To" ,editable : false },
-    { dataField:"createdate" ,headerText:"Update Date" ,editable : false },
+    { dataField:"createdate" ,headerText:"Update Date" ,editable : false, formatString : "dd-mm-yyyy" },
     { dataField:"creator" ,headerText:"Updator" ,editable : false }
     ];
 // 리스트 조회.
@@ -125,12 +125,12 @@ function showViewHistory(){
 }
 
 function showDetailHistory(){
-	//var payItemId = 12345;
+	var payItemId = 559436;
 	$("#view_detail_wrap").show();
 	viewHistoryGridID = GridCommon.createAUIGrid("grid_detail_history", viewHistoryLayout,null,gridPros);
-	//Common.ajax("GET", "/payment/selectDetailHistoryList", {"payItemId" : payItemId} , function(result) {
-    //    AUIGrid.setGridData(viewHistoryGridID, result);
-   // });
+	Common.ajax("GET", "/payment/selectDetailHistoryList", {"payItemId" : payItemId} , function(result) {
+       AUIGrid.setGridData(viewHistoryGridID, result);
+    });
 }
 
 function hideViewPopup(){
