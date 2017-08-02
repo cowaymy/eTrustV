@@ -74,7 +74,7 @@
                            //pupupWin
                           $("#_custId").val(item.custCntcId);
                           $("#_custAddId").val(item.custAddId);
-                          Common.popupWin("popForm", "/sales/customer/updateCustomerBasicInfo.do", option);
+                          Common.popupWin("popForm", "/sales/customer/updateCustomerBasicInfoPop.do", option);
                       }
                }
            }];
@@ -157,16 +157,8 @@
 	
  // Popup Option     
     var option = {
-            winName : "popup",
-            isDuplicate : true, // 계속 팝업을 띄울지 여부.
-            /* fullscreen : "no", // 전체 창. (yes/no)(default : no)
-            location : "no", // 주소창이 활성화. (yes/no)(default : yes)
-            menubar : "no", // 메뉴바 visible. (yes/no)(default : yes)
-            titlebar : "yes", // 타이틀바. (yes/no)(default : yes)
-            toolbar : "no", // 툴바. (yes/no)(default : yes)
-            resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
-            scrollbars : "yes", // 스크롤바. (yes/no)(default : yes) */
-            width : "1200px", // 창 가로 크기
+            
+    		width : "1200px", // 창 가로 크기
             height : "680px" // 창 세로 크기
         };
 </script>
