@@ -1,0 +1,14 @@
+package com.coway.trust.biz.logistics.bom;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+public interface BomService {
+
+	List<EgovMap> selectCdcList(Map<String, Object> params);
+
+	List<EgovMap> selectBomList(Map<String, Object> params);
+
+}
