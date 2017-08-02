@@ -10,7 +10,7 @@
 	   <if test="gubun =='item'">
        , description
        </if>
-       <if test="gubun =='stock'">
+       <if test="gubun =='stock' or gubun =='stocklist'">
 	   , typename,typeid
 	   </if>
 	   from (
@@ -28,7 +28,7 @@
 		  FROM MSC0039D 
 		 where 1 = 1 
 		 </if>
-		 <if test="gubun =='stock'">
+		 <if test="gubun =='stock' or gubun =='stocklist'">
 		 SELECT STK_ID  itemid
 		     , STK_CODE itemcode
 		     , STK_DESC itemname

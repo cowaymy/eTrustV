@@ -103,5 +103,7 @@ public interface CommonMapper {
 	List<EgovMap> selectProductCodeList();
 
 	List<EgovMap> selectInStckSelCodeList(Map<String, Object> params);
+	
+	List<EgovMap> selectStockLocationList(Map<String, Object> params);
 
 }

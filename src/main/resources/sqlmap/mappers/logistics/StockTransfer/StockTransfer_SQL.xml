@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper">
+   
+    <select id="selectStockTransferSeq" resultType="String">
+        SELECT  LPAD(LOG0047M_REQST_NO.nextval, 10, '0') FROM  DUAL
+    </select>
+    <insert id="insStockTransferHead" parameterType="Map">
+	    INSERT INTO LOG0047M (REQST_NO,
+						      TRNSC_TYPE,
+						      TRNSC_TYPE_DTL,
+						      PRIDIC_FRQNCY,
+						      REQST_CRT_DT,
+						      DOC_HDER_TXT,
+						      RCIV_CDC_RDC,
+						      REQST_CDC_RDC,
+						      CRT_USER_ID,
+						      CRT_DT)
+					 VALUES ( #{headtitle}||#{reqno}
+					        , #{sttype}
+					        , #{smtype}
+					        , #{pridic}
+					        , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+					        , #{dochdertxt}
+					        , #{flocation}
+					        , #{tlocation}
+					        , #{userId}
+					        , SYSDATE
+					        )
+    </insert>
+    
+    
+    <insert id="insStockTransfer" parameterType="Map">
+        INSERT INTO LOG0048D ( REQST_NO, REQST_NO_ITM
+                      ,ITM_CODE, ITM_NAME, REQST_QTY, UOM, CRT_USER_ID, CRT_DT)
+             VALUES  ( #{headtitle}||#{reqno} , (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno})
+                     , #{itmcd} , #{itmname}, #{rqty} ,#{uom} , #{userId}       , SYSDATE)
+    </insert> 
+    
+    <update id="updStockTransfer" parameterType="Map">
+        MERGE INTO LOG0047M  a
+             USING dual
+                on (a.REQST_NO=#{reqno}) 
+              WHEN MATCHED THEN
+                   UPDATE SET
+                          a.TRNSC_TYPE      =   #{sttype}                                                                     
+                       ,  a.TRNSC_TYPE_DTL  =   #{smtype}                                                                     
+                       ,  a.PRIDIC_FRQNCY   =   #{pridic}                                                                     
+                       ,  a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss') 
+                       ,  a.DOC_HDER_TXT    =   #{dochdertxt}                                                                 
+                       ,  a.RCIV_CDC_RDC    =   #{flocation}                                                                  
+                       ,  a.REQST_CDC_RDC   =   #{tlocation}                                                                  
+                       ,  a.CRT_USER_ID     =   #{userId}                                                                     
+                       ,  a.CRT_DT          =   SYSDATE 
+              WHEN NOT MATCHED THEN
+                       INSERT (REQST_NO,
+                                     TRNSC_TYPE,
+                                     TRNSC_TYPE_DTL,
+                                     PRIDIC_FRQNCY,
+                                     REQST_CRT_DT,
+                                     DOC_HDER_TXT,
+                                     RCIV_CDC_RDC,
+                                     REQST_CDC_RDC,
+                                     CRT_USER_ID,
+                                     CRT_DT)
+                            VALUES ( #{reqno}
+                                   , #{sttype}
+                                   , #{smtype}
+                                   , #{pridic}
+                                   , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+                                   , #{dochdertxt}
+                                   , #{flocation}
+                                   , #{tlocation}
+                                   , #{userId}
+                                   , SYSDATE
+                                   )
+    </update>
+    
+    
+</mapper>

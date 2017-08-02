@@ -50,8 +50,8 @@ $(document).ready(function(){
 	mtypedata = f_getTtype('308','');
 	midata    = f_getTtype('307','');
 	
-	doDefCombo(ttypedata, '' ,"sttype", 'A', '');
-	doDefCombo(mtypedata, '' ,"smtype", 'A', '');
+	doDefComboCode(ttypedata, '' ,"sttype", 'A', '');
+	doDefComboCode(mtypedata, '' ,"smtype", 'A', '');
 	
 	columnLayout = [{dataField:"ttype"         ,headerText:"Transaction<br>Type Code"      ,width:120    ,height:30
                         ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
@@ -404,6 +404,7 @@ $(function(){
         });
     });
     $("#sttype").change(function(){
+    	
     });
 });
 
@@ -468,6 +469,7 @@ function f_getTtype(g , v){
               $.each(data, function(index,value) {
             	  var list = new Object();
             	  list.code = data[index].code;
+            	  list.codeId = data[index].codeId;
             	  list.codeName = data[index].codeName;
             	  rData.push(list);
                 });
@@ -516,7 +518,7 @@ function f_getTtype(g , v){
 <tr>
     <th scope="row">Transaction Type</th>
     <td><select id="sttype" name="sttype" style="width:250px"></select></td>
-    <th scope="row">Transaction Type</th>
+    <th scope="row">Movement Type</th>
     <td><select id="smtype" name="smtype" style="width:250px"></select><p id='mtypenm'></p></td>
 </tr>
 </tbody>

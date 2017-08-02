@@ -568,4 +568,12 @@ public class CommonController {
 		// 호출될 화면
 		return "/common/searchPop";
 	}
+	@RequestMapping(value = "/selectStockLocationList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStockLocationList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap> codeList = commonService.selectStockLocationList(params);
+		logger.info("selectStockLocationList: {}", codeList.toString());
+		return ResponseEntity.ok(codeList);
+	}
+	
 }

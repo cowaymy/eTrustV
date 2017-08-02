@@ -4,37 +4,51 @@
 <script type="text/javaScript">
 var myGridID;
 
-$(function(){
+var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 15, usePaging : true, useGroupingPanel : false };
+
+$(document).ready(function(){
 	var surl = "${url.sUrl }";
-	var col;
-	var gb = "${url.isgubun }";
-	console.log("${url}")
-	if (gb == "item"){
-		col  = itemLayout;
-	}else if(gb == "stock"){
+    var col;
+    var gb = "${url.isgubun }";
+    console.log("${url}")
+    if (gb == "item"){
+        col  = itemLayout;
+    }else if(gb == "stock"){
+        col  = stockLayout;
+    }else if(gb == "stocklist"){
+    	gridoptions = {showRowCheckColumn : true, selectionMode : "multipleCells", showStateColumn : false , editable : false, pageRowCount : 15, usePaging : true, useGroupingPanel : false };
         col  = stockLayout;
     }else{
-    	gb="item";
-    	col  = itemLayout;
+        gb="item";
+        col  = itemLayout;
     }
-	$("#gubun").val(gb);
-	$("#scode").val("${url.svalue }");
-	
-	var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 15, usePaging : true, useGroupingPanel : false };
-	
-	myGridID = GridCommon.createAUIGrid("grid_wrap", col, null, gridoptions);
-	
-	fn_SearchList(surl);
+    $("#gubun").val(gb);
+    $("#scode").val("${url.svalue }");
+    
+    myGridID = GridCommon.createAUIGrid("grid_wrap", col, null, gridoptions);
+    
+    fn_SearchList(surl);
     //fn_getSampleListAjax();
     
-	// 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
-    {
-    	opener.fn_itempop(AUIGrid.getCellValue(myGridID , event.rowIndex , "itemcode") , AUIGrid.getCellValue(myGridID , event.rowIndex , "itemname") , 
-    			          AUIGrid.getCellValue(myGridID , event.rowIndex , "cateid") , AUIGrid.getCellValue(myGridID , event.rowIndex , "typeid"));
-    	self.close();
+    // 셀 더블클릭 이벤트 바인딩
+    if (gb != "stocklist"){
+	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+	    {
+	    	opener.fn_itempop(AUIGrid.getCellValue(myGridID , event.rowIndex , "itemcode") , AUIGrid.getCellValue(myGridID , event.rowIndex , "itemname") , 
+	                          AUIGrid.getCellValue(myGridID , event.rowIndex , "cateid") , AUIGrid.getCellValue(myGridID , event.rowIndex , "typeid"));
+	        self.close();
+	    });
+    }
+});
+
+$(function(){
+	$('#search').click(function() {
+        fn_SearchList("${url.sUrl }");
     });
-    
+    $('#transfer').click(function(){
+    	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    	opener.fn_itempopList(selectedItems);
+    })
 });
 
 //AUIGrid 칼럼 설정
@@ -77,6 +91,7 @@ function fn_SearchList(url) {
 <h2>Search Help</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="transfer"><span class="search"></span>transfer</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

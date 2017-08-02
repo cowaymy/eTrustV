@@ -112,5 +112,5 @@ public interface CommonService {
 
 	List<EgovMap> selectInStckSelCodeList(Map<String, Object> params);
 
-	
+	List<EgovMap> selectStockLocationList(Map<String, Object> params);
 }

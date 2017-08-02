@@ -161,8 +161,8 @@
 		   AND CODE LIKE #{likeValue}||'%'
 		</if>
 		<choose>
-		  <when test="orderValue !=null and orderValue =='CRT_DT'">
-		      ORDER BY CRT_DT
+		  <when test="orderValue !=null and orderValue !=''">
+		      ORDER BY ${orderValue} 
 		  </when>
 		  <otherwise>
 		      ORDER BY CODE_NAME
@@ -635,5 +635,16 @@
 						      ORDER BY CODE_NAME
 	    </select>    
     
+    <select id="selectStockLocationList" parameterType="Map" resultType="egovMap">
+        SELECT WH_LOC_ID CODE_ID, WH_LOC_CODE CODE , DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) CODE_NAME
+		  FROM SYS0028M S28M
+		 WHERE 1 = 1
+		   AND S28M.WH_LOC_STUS_ID = 1
+		   AND S28M.WH_LOC_TYPE_ID = 277
+		   <if test="groupCode != null and groupCode == 'CODY'">
+		      AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)
+		   </if>
+		 ORDER BY CODE
+    </select>
     
 </mapper>

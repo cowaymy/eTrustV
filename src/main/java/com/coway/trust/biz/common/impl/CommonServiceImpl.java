@@ -437,5 +437,11 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		// TODO Auto-generated method stub
 		return commonMapper.selectInStckSelCodeList(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectStockLocationList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return commonMapper.selectStockLocationList(params);
+	}
 
 }

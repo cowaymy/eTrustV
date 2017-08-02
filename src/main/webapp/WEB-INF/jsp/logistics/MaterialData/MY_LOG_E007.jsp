@@ -393,9 +393,9 @@
     	$("#detailView").show();
         var seldata = AUIGrid.getItemByRowIndex(myGridID , rid);
         
-        doGetCombo('/common/selectCodeList.do', '63', seldata.ctgryId ,'cateid', 'S' , '');
-        doGetCombo('/common/selectCodeList.do', '94', seldata.uom     ,'uom', 'S' , '');
-        doGetCombo('/common/selectCodeList.do', '42', seldata.currency,'currency', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '63', seldata.ctgryId  ,'cateid', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '94', seldata.currency ,'currency', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '42', seldata.uom      ,'uom', 'S' , '');
         doDefCombo(comboData, seldata.stusCodeId ,'stuscode', 'S', '');
         $("#itmcode").val(seldata.itmCode);
         $("#itmname").val(seldata.itmName);
@@ -570,8 +570,8 @@
         $("#insertView").show();
            
         doGetCombo('/common/selectCodeList.do', '63','','inscateid', 'S' , '');
-        doGetCombo('/common/selectCodeList.do', '94', ''     ,'insuom', 'S' , '');
-        doGetCombo('/common/selectCodeList.do', '42', '','inscurrency', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '42', ''     ,'insuom', 'S' , '');
+        doGetCombo('/common/selectCodeList.do', '94', '','inscurrency', 'S' , '');
         doDefCombo(comboData, '' ,'insstuscode', 'S', '');
 
         var html = "";
