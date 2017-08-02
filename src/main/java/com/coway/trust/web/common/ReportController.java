@@ -1,5 +1,7 @@
 package com.coway.trust.web.common;
 
+import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,7 +27,12 @@ import com.coway.trust.util.Precondition;
 import com.crystaldecisions.report.web.viewer.CrPrintMode;
 import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
 import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
+import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
+import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
+import com.crystaldecisions.sdk.occa.report.data.FieldDisplayNameType;
+import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.lib.ReportSDKException;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 @Controller
@@ -35,7 +41,9 @@ public class ReportController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
-	private static final String REPROT_FILE_NAME = "reportFileName";
+	private static final String REPORT_FILE_NAME = "reportFileName";
+	private static final String REPORT_VIEW_TYPE = "viewType";
+	private static final String REPORT_CLIENT_DOCUMENT = "com.crystaldecisions.sdk.occa.report.application.ReportClientDocument";
 
 	@Value("${report.datasource.driver-class-name}")
 	private String reportDriverClass;
@@ -61,15 +69,43 @@ public class ReportController {
 	@Autowired
 	private ServletContext context;
 
+	@RequestMapping(value = "/view-proc.do")
+	public void view2(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> params) {
+		this.checkArgument(params);
+		String reportFile = (String) params.get(REPORT_FILE_NAME);
+		String reportName = reportFilePath + reportFile;
+		ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+
+		try {
+			ReportAppSession ra = new ReportAppSession();
+			ra.createService(REPORT_CLIENT_DOCUMENT);
+
+			ra.setReportAppServer(ReportClientDocument.inprocConnectionString);
+			ra.initialize();
+			ReportClientDocument clientDoc = new ReportClientDocument();
+			clientDoc.setReportAppServer(ra.getReportAppServer());
+			clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+
+			clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
+
+			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+			Fields fields = clientDoc.getDataDefinition().getParameterFields();
+			this.setReportParameter(params, paramController, fields);
+			this.viewHandle(request, response, viewType, clientDoc,
+					this.getCrystalReportViewer(clientDoc.getReportSource()));
+		} catch (Exception ex) {
+			LOGGER.error(CommonUtils.printStackTraceToString(ex));
+			throw new ApplicationException(ex);
+		}
+	}
+
 	@RequestMapping(value = "/view.do")
-	public void view(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> params,
-			ModelMap model) {
-
-		LOGGER.debug("reportName : {}", params.get(REPROT_FILE_NAME));
-		String reportFile = (String) params.get(REPROT_FILE_NAME);
-
-		Precondition.checkArgument(CommonUtils.isNotEmpty(reportFile),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { REPROT_FILE_NAME }));
+	public void view(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> params) {
+		checkArgument(params);
+		String reportFile = (String) params.get(REPORT_FILE_NAME);
+		ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 
 		try {
 
@@ -81,76 +117,137 @@ public class ReportController {
 				// Report can be opened from the relative location specified in the CRConfig.xml, or the report location
 				// tag can be removed to open the reports as Java resources or using an absolute path
 				// (absolute path not recommended for Web applications).
-
 				clientDoc = new ReportClientDocument();
 				clientDoc.setReportAppServer(ReportClientDocument.inprocConnectionString);
-
-				// Open report
 				clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
 
-				// ****** BEGIN SET RUNTIME DATABASE CREDENTIALS ****************
-				{
-					String connectString = reportUrl;
-					String driverName = reportDriverClass;
-					String jndiName = "";
-					String userName = reportUserName;
-					String password = reportPassword;
+				String connectString = reportUrl;
+				String driverName = reportDriverClass;
+				String jndiName = "";
+				String userName = reportUserName;
+				String password = reportPassword;
 
-					// Switch all tables on the main report and sub reports
-					CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
-
-					// logon to database
-					CRJavaHelper.logonDataSource(clientDoc, userName, password);
-				}
-				// ****** END SET RUNTIME DATABASE CREDENTIALS ****************
+				// Switch all tables on the main report and sub reports
+				CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+				// logon to database
+				CRJavaHelper.logonDataSource(clientDoc, userName, password);
 
 				// Store the report document in session
 				// session.setAttribute(reportName, clientDoc);
-
 			}
 
-			// ****** BEGIN CONNECT CRYSTALREPORTPAGEVIEWER SNIPPET ****************
-			{
+			String reportSourceSessionKey = reportName + "ReportSource";
+			Object reportSource = session.getAttribute(reportSourceSessionKey);
 
-				// Create the CrystalReportViewer object
-				CrystalReportViewer crystalReportViewer = new CrystalReportViewer();
-
-				String reportSourceSessionKey = reportName + "ReportSource";
-				Object reportSource = session.getAttribute(reportSourceSessionKey);
-
-				if (reportSource == null) {
-					reportSource = clientDoc.getReportSource();
-					// session.setAttribute(reportSourceSessionKey, reportSource);
-				}
-
-				// set the reportsource property of the viewer
-				crystalReportViewer.setReportSource(reportSource);
-
-				// Apply the viewer preference attributes
-				crystalReportViewer = new CrystalReportViewer();
-				crystalReportViewer.setOwnPage(true);
-				crystalReportViewer.setPrintMode(CrPrintMode.ACTIVEX);
-				crystalReportViewer.setReportSource(reportSource);
-
-				crystalReportViewer.setOwnPage(true);
-				crystalReportViewer.setDisplayToolbar(true);
-				crystalReportViewer.setDisplayPage(true);
-				crystalReportViewer.setDisplayGroupTree(false);
-				crystalReportViewer.setHasLogo(false);
-				crystalReportViewer.setEnableDrillDown(true);
-				crystalReportViewer.setHasExportButton(false);
-				crystalReportViewer.setHasRefreshButton(false);
-				crystalReportViewer.setHasPrintButton(true);
-
-				// Process the report
-				crystalReportViewer.processHttpRequest(request, response, context, null);
-
+			if (reportSource == null) {
+				reportSource = clientDoc.getReportSource();
+				// session.setAttribute(reportSourceSessionKey, reportSource);
 			}
-			// ****** END CONNECT CRYSTALREPORTPAGEVIEWER SNIPPET ****************
+
+			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
+			Fields fields = clientDoc.getDataDefinition().getParameterFields();
+			this.setReportParameter(params, paramController, fields);
+			this.viewHandle(request, response, viewType, clientDoc, this.getCrystalReportViewer(reportSource));
 
 		} catch (ReportSDKExceptionBase ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);
 		}
+	}
+
+	private void checkArgument(Map<String, Object> params) {
+		LOGGER.debug("{} : {}", REPORT_FILE_NAME, params.get(REPORT_FILE_NAME));
+		LOGGER.debug("{} : {}", REPORT_VIEW_TYPE, params.get(REPORT_VIEW_TYPE));
+
+		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
+				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
+				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+	}
+
+	private CrystalReportViewer getCrystalReportViewer(Object reportSource) throws ReportSDKExceptionBase {
+		CrystalReportViewer crystalReportViewer = new CrystalReportViewer();
+
+		crystalReportViewer.setOwnPage(true);
+		crystalReportViewer.setPrintMode(CrPrintMode.ACTIVEX);
+		crystalReportViewer.setReportSource(reportSource);
+
+		crystalReportViewer.setDisplayToolbar(true);
+		crystalReportViewer.setDisplayPage(true);
+		crystalReportViewer.setDisplayGroupTree(false);
+		crystalReportViewer.setHasLogo(false);
+		crystalReportViewer.setEnableDrillDown(true);
+		crystalReportViewer.setHasExportButton(false);
+		crystalReportViewer.setHasRefreshButton(false);
+		crystalReportViewer.setHasPrintButton(true);
+		return crystalReportViewer;
+	}
+
+	private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
+			ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer) throws ReportSDKExceptionBase {
+		switch (viewType) {
+		case CSV:
+			viewCSV(response, clientDoc);
+			break;
+		case PDF:
+			viewPDF(response, clientDoc);
+			break;
+		case EXCEL:
+			viewEXCEL(response, clientDoc);
+			break;
+		default:
+			viewWindow(request, response, crystalReportViewer);
+			break;
+		}
+	}
+
+	private void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc) throws ReportSDKExceptionBase {
+		try {
+			CRJavaHelper.exportExcelDataOnly(clientDoc, response, true);
+		} catch (IOException ex) {
+			LOGGER.error(CommonUtils.printStackTraceToString(ex));
+			throw new ApplicationException(ex);
+		}
+	}
+
+	private void viewCSV(HttpServletResponse response, ReportClientDocument clientDoc) throws ReportSDKExceptionBase {
+		try {
+			CRJavaHelper.exportCSV(clientDoc, response, true);
+		} catch (IOException ex) {
+			LOGGER.error(CommonUtils.printStackTraceToString(ex));
+			throw new ApplicationException(ex);
+		}
+	}
+
+	private void viewPDF(HttpServletResponse response, ReportClientDocument clientDoc) throws ReportSDKExceptionBase {
+		try {
+			CRJavaHelper.exportPDF(clientDoc, response, true);
+		} catch (IOException ex) {
+			LOGGER.error(CommonUtils.printStackTraceToString(ex));
+			throw new ApplicationException(ex);
+		}
+	}
+
+	private void viewWindow(HttpServletRequest request, HttpServletResponse response,
+			CrystalReportViewer crystalReportViewer) throws ReportSDKExceptionBase {
+		crystalReportViewer.processHttpRequest(request, response, context, null);
+	}
+
+	private void setReportParameter(@RequestParam Map<String, Object> params, ParameterFieldController paramController,
+			Fields fields) {
+		params.forEach((k, v) -> {
+			try {
+				int index = fields.find(k, FieldDisplayNameType.fieldName, Locale.getDefault());
+				if (index >= 0) {
+					paramController.setCurrentValue("", k, v);
+				}
+			} catch (ReportSDKException e) {
+				throw new ApplicationException(e, e.getMessage());
+			}
+		});
+	}
+
+	enum ViewType {
+		WINDOW, PDF, EXCEL, CSV
 	}
 }

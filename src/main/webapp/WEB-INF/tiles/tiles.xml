@@ -40,7 +40,7 @@
     <definition name="login/*" extends="layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/login/{1}.jsp" />
     </definition>
-    
+
     <definition name="report/**" extends="layout.empty">
     </definition>
     

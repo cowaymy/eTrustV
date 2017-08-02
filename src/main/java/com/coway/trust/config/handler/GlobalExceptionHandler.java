@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<Object>(message, headers, HttpStatus.NOT_FOUND);
 		} else {
-			ModelAndView mav = new ModelAndView("/error/error");
+			ModelAndView mav = new ModelAndView("error/error");
 			mav.addObject("exception", ex);
 			return mav;
 		}
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<Object>(message, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
-			ModelAndView mav = new ModelAndView("/error/error");
+			ModelAndView mav = new ModelAndView("error/error");
 			mav.addObject("exception", ex);
 			return mav;
 		}
@@ -112,7 +112,7 @@ public class GlobalExceptionHandler {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<Object>(message, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
-			ModelAndView mav = new ModelAndView("/error/error");
+			ModelAndView mav = new ModelAndView("error/error");
 			mav.addObject("exception", ex);
 			return mav;
 		}

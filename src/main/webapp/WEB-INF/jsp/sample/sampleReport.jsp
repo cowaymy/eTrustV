@@ -9,15 +9,32 @@
 
 	});
 
-	function fn_openWinPop() {
+	function fn_report() {
 
+	    // viewType : WINDOW 인 경우 popupWin 옵션 사용 가능.
+	    /*
+        var option = {
+            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+            width : "1024px", // 창 가로 크기
+            height : "768px" // 창 세로 크기
+        };
+
+        Common.report("dataForm", option);
+		*/
+
+	    ////////////////////////////////////////////////////////////////////////////////////////
+
+	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 		var option = {
-	            width : "1024px", // 창 가로 크기
-	            height : "768px" // 창 세로 크기
-	        };
-		
-		var reportViewUrl = "/report/view.do"; // report를 보기 위한 uri 
-		Common.popupWin("dataForm", reportViewUrl, option);
+            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+		};
+
+        Common.report("dataForm", option);
+
+        ////////////////////////////////////////////////////////////////////////////////////////
+
+        // 프로시져 아닌 경우 아래만 호출.
+        //Common.report("dataForm");
 	}
 </script>
 
@@ -39,7 +56,7 @@
 		<h2>Course</h2>
 		<ul class="right_btns">
 			<li><p class="btn_blue">
-					<a href="javascript:void(0);" onclick="javascript:fn_openWinPop();"><span
+					<a href="javascript:void(0);" onclick="javascript:fn_report();"><span
 						class="clear"></span>리포트 팝업</a>
 				</p></li>
 		</ul>
@@ -49,11 +66,29 @@
 	<section class="search_table">
 		<!-- search_table start -->
 		<form id="dataForm">
-			/etrust/src/main/webapp/resources/report 이후 경로를 보내 줘야 함.(name 을 반드시 reportFileName 전송해야 함.) : 
-<!--        
-            <input type="text" id="reportFileName" name="reportFileName" value="/sample/CowayDailySalesStatusHP.rpt" /><br />
- -->
-			<input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br />
+			/etrust/src/main/webapp/resources/report 이후 경로를 보내 줘야 함.(name 을 반드시 reportFileName 전송해야 함.) :
+			<!--
+                        <input type="text" id="reportFileName" name="reportFileName" value="/sample/CowayDailySalesStatusHP.rpt" /><br />
+                        <input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br />
+                        <input type="text" id="reportFileName" name="reportFileName" value="/payment/PaymentListing_Excel.rpt" /><br />
+             -->
+			<!-- 필수 파라미터 start-->
+			<!-- 리포트 파일명 -->
+			<input type="text" id="reportFileName" name="reportFileName" value="/payment/PaymentListing_Excel.rpt" /><br />
+
+			<!-- view type
+			WINDOW : window popup
+			PDF : PDF 다운로드
+			EXCEL : EXCEL 다운로드
+			CVS : CVS 다운로드
+			-->
+			<input type="text" id="viewType" name="viewType" value="PDF" /><br />
+			<!-- 필수 파라미터 end-->
+
+			<!-- 리포트에서 사용할 파라미터 start-->
+			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="and pm.OR_NO = 'OR312430'" /><br />
+			<input type="text" id="@WhereSQL" name="@WhereSQL" value="and pm.OR_NO = 'OR312430'" /><br /><!-- AS-IS 파라미터로 설정된 값 -->
+			<!-- 리포트에서 사용할 파라미터 end-->
 		</form>
 	</section>
 	<!-- search_table end -->

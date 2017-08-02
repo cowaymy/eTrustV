@@ -373,6 +373,43 @@ var Common = {
 
 		return popObj;
 	},
+
+    /**
+     * 리포트 view  :  예제 파일 => sampleReport.jsp
+     *
+     * 1. _formId 내에 reportFileName, viewType 필수.
+     *
+     * reportFileName : /(업무폴더 포함)리포트 파일위치/파일명
+     * viewType : WINDOW, EXCEL, CSV, PDF
+     *
+     * 2. 프로시져로 구성된 리포트 파일 호출인 경우 _options.isProcedure = true  필수 .
+     *
+     * @param _formId
+     * @param _options
+     */
+    report : function(_formId, _options){
+
+        var option = {
+           isProcedure : false
+        };
+
+        option = $.extend(option, _options);
+
+        var reportViewUrl = "/report/view.do"; // report를 보기 위한 uri
+
+        if(option.isProcedure){
+            reportViewUrl = "/report/view-proc.do"; // procedure로 구성된 report를 보기 위한 uri
+		}
+
+		if($("#viewType").val() == "WINDOW"){
+            Common.popupWin(_formId, reportViewUrl, option);
+		}else{
+            $("#" + _formId).attr({
+                action : reportViewUrl,
+                method : "POST"
+            }).submit();
+		}
+    },
 	
 	openNew : function(url, data, target) {
 		var form = document.createElement("form");
@@ -441,7 +478,7 @@ var Common = {
 			}
 		});
 	},
-	
+
 	/**
 	 * confirm 대체용.
 	 * 예) Common.confirm("save ??", function(){...}, function{...});
