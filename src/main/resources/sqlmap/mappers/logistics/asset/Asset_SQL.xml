@@ -5,7 +5,7 @@
         <resultMap id="assetClobMap" type="EgovMap">
         <result property="assetrem" column="assetrem" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="department" column="department" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
+        <!-- <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/> -->
         </resultMap>
      
     <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
@@ -124,7 +124,7 @@
 		       CUST_ID CUST_ID  ,
 		       SBO_CODE SBO_CODE  
 		  FROM SAL0030D 
-		 WHERE  1 = DEALER_STUS_ID
+		 WHERE DEALER_STUS_ID = #{groupCode}
 		  ORDER BY DEALER_NAME ASC
     </select>
     
@@ -141,30 +141,6 @@
           WHERE  0 = DISAB
           ORDER BY Name ASC
     </select>
-   
-    <select id="selectColorList" parameterType="Map" resultMap="assetClobMap">
-         SELECT 
-			 CODE_ID CODE_ID, 
-			 CODE_MASTER_ID  CODE_MASTER_ID, 
-			 CODE  CODE, 
-			 CODE_NAME  CODE_NAME, 
-			 CODE_DESC  CODE_DESC, 
-			 DISAB DISAB, 
-			 CRT_DT  CRT_DT, 
-			 CRT_USER_ID  CRT_USER_ID, 
-			 UPD_DT UPD_DT, 
-			 UPD_USER_ID UPD_USER_ID, 
-			 OLD_CODE_ID OLD_CODE_ID
-		 FROM SYS0013M 
-		 WHERE DISAB = 0
-		 AND CODE_MASTER_ID = 112
-         <!-- AND CODE_MASTER_ID = #{groupCode} -->
-    </select>
-    
-    
-    
-    
-    
     
     <insert id="insertAssetMng" parameterType="Map">
          INSERT INTO LOG0050M(
