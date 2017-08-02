@@ -18,7 +18,7 @@
     </resultMap>
 
 	<insert id="insertSample" parameterType="SampleVO">
-        INSERT INTO SYS_I18N
+        INSERT INTO SYS0052M
             (id, 
             language, 
             country, 
@@ -73,7 +73,7 @@
 
 	
 	<insert id="insertSampleByMap" parameterType="Map">
-        INSERT INTO SYS_I18N
+        INSERT INTO SYS0052M
             (id, 
             language, 
             country, 

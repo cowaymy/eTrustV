@@ -8,7 +8,7 @@
     1) onclick javascript 형식 
         : onclick="fn_{button_id}();"
         
-    2) sys_i18n 다국어 메세지 테이블 id.
+    2) SYS0052M 다국어 메세지 테이블 id.
         : sys.btn.{button_id}
  -->
 

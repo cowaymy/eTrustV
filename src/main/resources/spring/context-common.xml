@@ -23,7 +23,7 @@
 		<property name="parentMessageSource" ref="dbMessageSource"/>
 	</bean>
 
-	<!-- database[SYS_I18N] message -->
+	<!-- database[ SYS0052M] message -->
 	<!-- order : 2 -->
 	<bean id="dbMessageSource" class="com.coway.trust.config.DatabaseDrivenMessageSource"/>
 

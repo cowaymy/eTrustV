@@ -49,7 +49,7 @@
 	<select id="selectLanguages" resultType="egovMap">
     <![CDATA[
         SELECT   LANGUAGE
-		    FROM SYS_I18N
+		    FROM SYS0052M
 		GROUP BY LANGUAGE
     ]]>
     </select>

@@ -171,7 +171,7 @@
 	</select>
 	
 	<select id="selectI18NList" parameterType="Map" resultType="egovMap">
-            SELECT * FROM SYS_I18N
+            SELECT * FROM SYS0052M
   </select>
     
   <insert id="mergeAccountCode" parameterType="Map" >
