@@ -20,8 +20,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.asset.AssetMngService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -72,4 +75,91 @@ public class AssetMasterController {
 
 		return ResponseEntity.ok(map);
 	}	
+	
+	
+	@RequestMapping(value = "/selectDealerList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDealerList(@RequestParam Map<String, Object> params) {
+
+		logger.debug("selectDealerListCode : {}", params.get("groupCode"));
+
+		List<EgovMap> DealerList = ams.selectDealerList(params);
+		
+		return ResponseEntity.ok(DealerList);
+	}
+	
+	@RequestMapping(value = "/selectBrandList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBrandList(@RequestParam Map<String, Object> params) {
+
+		logger.debug("selectBrandListCode : {}", params.get("groupCode"));
+
+		List<EgovMap> BrandList = ams.selectBrandList(params);
+		
+		return ResponseEntity.ok(BrandList);
+	}
+	
+	@RequestMapping(value = "/selectColorList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectColorList(@RequestParam Map<String, Object> params) {
+
+		logger.debug("selectColorListCode : {}", params.get("groupCode"));
+
+		List<EgovMap> ColorList = ams.selectColorList(params);
+		
+		return ResponseEntity.ok(ColorList);
+	}
+	
+	@RequestMapping(value = "/insertAssetMng.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		System.out.println("mastercategory :       "+params.get("mastercategory"));
+		System.out.println("masterpurchasedate :       "+params.get("masterpurchasedate"));
+		System.out.println("masterdealer :       "+params.get("masterdealer"));
+		System.out.println("mastertype :       "+params.get("mastertype"));
+			
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		// loginId
+		params.put("masterstatus", 1);
+		params.put("crt_user_id", loginId);
+		params.put("upd_user_id", loginId);
+		params.put("masterbreanch", 42);
+		params.put("curr_dept_id", 38);
+		params.put("curr_user_id", 0);
+		params.put("mastercolor", 2);
+		params.put("masterbrand", 3);
+		params.put("masterpurchaseamount", 1234.00);
+		
+		//params.put("mastertype", 1);
+		//params.put("masterdealer", 5);
+		//params.put("mastercategory", 0);
+		
+		
+		Map<String, Object> map = new HashMap();
+
+		try {
+			ams.insertAssetMng(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }
