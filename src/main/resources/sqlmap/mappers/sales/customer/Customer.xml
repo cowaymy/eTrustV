@@ -232,7 +232,7 @@
             CASE WHEN 964 <> Extent1.TYPE_ID THEN '' WHEN Extent5.CODE_ID IS NOT NULL THEN Extent5.CODE_NAME ELSE '' END AS CODE_NAME2,
             CASE WHEN Extent1.STUS_CODE_ID IS NOT NULL THEN Extent1.STUS_CODE_ID ELSE 0 END AS STUS_CODE_ID,
             CASE WHEN Extent1.UPD_USER_ID IS NOT NULL THEN Extent1.UPD_USER_ID ELSE 0 END AS UPD_USER_ID,
-            CASE WHEN Extent1.UPD_DT IS NOT NULL AND Extent1.UPD_DT > '19000101'  THEN TO_CHAR(TO_DATE(Extent1.UPD_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY  HH:MI:SS') ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD  HH:MI:SS'), 'DD-MM-YYYY') END AS UPD_DT, -- date
+            CASE WHEN Extent1.UPD_DT IS NOT NULL AND Extent1.UPD_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') THEN TO_CHAR(TO_DATE(Extent1.UPD_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY  HH:MI:SS') ELSE TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD  HH:MI:SS'), 'DD-MM-YYYY') END AS UPD_DT, -- date
             CASE WHEN Extent3.USER_ID IS NOT NULL THEN Extent3.USER_NAME ELSE '' END AS USER_NAME1,
             CASE WHEN Extent6.CUST_ADD_ID IS NOT NULL THEN Extent6.CUST_ADD_ID ELSE 0 END AS CUST_ADD_ID,
             CASE WHEN Extent7.CUST_CNTC_ID IS NOT NULL THEN Extent7.CUST_CNTC_ID ELSE 0 END AS CUST_CNTC_ID,
@@ -1441,4 +1441,25 @@
 		    ORDER BY CODE ASC
     </select>
     
+    <update id="updateCustomerBasicInfoAf" parameterType="Map" >
+       UPDATE 
+            SAL0029D 
+       SET 
+            UPD_DT = SYSDATE,
+            NAME = #{name} , 
+            PAS_SPORT_EXPR =TO_CHAR(TO_DATE(#{pasSportExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
+            VISA_EXPR = TO_CHAR(TO_DATE(#{visaExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
+            EMAIL = #{email},
+            REM = #{rem},
+            <if test="typeID == 964">
+                DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+                GENDER = #{gender},
+                RACE_ID = #{raceId}
+            </if>
+            
+            <if test="typeID == 965">
+                CORP_TYPE_ID = #{cmbCorpTypeId}
+            </if>
+            WHERE CUST_ID = #{custID}
+    </update>
 </mapper>
