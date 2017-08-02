@@ -9,5 +9,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("AssetMngMapper")
 public interface AssetMngMapper {
 	List<EgovMap> selectAssetList(Map<String, Object> params);
-
+	List<EgovMap> selectDealerList(Map<String, Object> params);
+	List<EgovMap> selectBrandList(Map<String, Object> params);
+	List<EgovMap> selectColorList(Map<String, Object> params);
+	void insertAssetMng(Map<String, Object> params);
+	int AssetCreateSeq();
 }
