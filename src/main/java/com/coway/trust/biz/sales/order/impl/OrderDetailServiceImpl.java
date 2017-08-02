@@ -50,7 +50,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
 	
-	@Autowired
+//	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
