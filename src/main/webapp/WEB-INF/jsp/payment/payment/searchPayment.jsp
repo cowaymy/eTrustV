@@ -710,7 +710,7 @@ function hideDetailPopup(){
                     </tr>
                     <tr>
                         <th scope="row">Branch Code</th>
-                        <td id="">
+                        <td id="" colspan="3">
                             <select id="edit_branchId" name="edit_branchId" class="w100p">
                              </select>
                         </td>
