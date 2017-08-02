@@ -44,18 +44,11 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	}
 	
 	@Override
-	public List<EgovMap> selectColorList(Map<String, Object> params) {
-		return AssetMngMapper.selectColorList(params);
-	}
-	
-	@Override
 	public void insertAssetMng(Map<String, Object> params) {
 		
 		int inassetid = AssetMngMapper.AssetCreateSeq();
 		
 		params.put("inassetid", inassetid);
-		
-		System.out.println("임플 통과!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		
 		/*String chkId = LogisticsConstants.COURIER_CODE;
 		List<EgovMap> list = courierMapper.selectCourierId(chkId);
