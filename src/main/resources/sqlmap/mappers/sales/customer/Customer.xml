@@ -1235,6 +1235,18 @@
       SELECT NVL(MAX(CUST_CARE_CNT_ID),0) + 1 from SAL0026D
     </select>
     
+    <select id="getCustCrcIdSeq" parameterType="Map" resultType="Integer">
+      SELECT NVL(MAX(CUST_CRC_ID),0) + 1 from SAL0028D
+    </select>
+    
+    <select id="getCustAccIdSeq" parameterType="Map" resultType="Integer">
+      SELECT NVL(MAX(CUST_ACC_ID),0) + 1 from SAL0022D
+    </select>
+    
+    <select id="getCustIdMaxSeq" resultType="Integer">
+      SELECT MAX(CUST_ID) from SAL0029D
+    </select>
+    
     <insert id="insertCustomerInfo" parameterType="Map">
         INSERT INTO SAL0029D (CUST_ID,
                                           NAME,
@@ -1462,4 +1474,100 @@
             </if>
             WHERE CUST_ID = #{custID}
     </update>
+    
+    <insert id="insertCreditCardInfo">
+        INSERT INTO SAL0028D (CUST_CRC_ID, CUST_ID,
+					                      CUST_CRC_NO,
+					                      CUST_ORI_CRC_NO,
+					                      CUST_ENCRYPT_CRC_NO,
+					                      CUST_CRC_OWNER,
+					                      CUST_CRC_TYPE_ID,
+					                      CUST_CRC_BANK_ID,
+					                      CUST_CRC_STUS_ID,
+					                      CUST_CRC_REM,
+					                      CUST_CRC_UPD_USER_ID,
+					                      CUST_CRC_UPD_DT,
+					                      CUST_CRC_EXPR,
+					                      CUST_CRC_ID_OLD,
+					                      SO_ID,
+					                      CUST_CRC_IDCM,
+					                      CUST_CRC_CRT_USER_ID,
+					                      CUST_CRC_CRT_DT,
+					                      CARD_TYPE_ID)
+					  VALUES   (#{getCustCrcIdSeq},
+						            #{getCustId},
+						            #{crcNo},
+						            #{creditCardNo},
+						            #{encCrcNo},
+						            #{nmCard},
+						            #{crcType},
+						            #{bank},
+						            #{crcStusId},
+						            #{cardRem},
+						            #{crcUpdId},
+						            SYSDATE,
+						            #{cardExpiry},
+						            #{crcIdOld},
+						            #{soId},
+						            #{crcIdcm},
+						            #{crcCrtId},
+						            SYSDATE,
+						            #{cardType})
+    </insert>
+    
+    <select id="selectAccBank" parameterType="Map" resultType="egovMap">
+          SELECT   Mt.BANK_ID ,
+				       Mt.CODE CODE ,
+				       Mt.CODE_NAME  
+				  FROM ( SELECT Sub.BANK_ID BANK_ID  ,
+						                Sub.CODE CODE  ,
+						                Sub.CODE || ' - ' || Sub.NAME CODE_NAME  
+						        FROM SYS0004M Sub
+						          WHERE  ( 1 = Sub.STUS_CODE_ID )
+				                      AND  ( 1 = Sub.IS_ALLOW_FOR_DD ) ) Mt
+				  ORDER BY Mt.CODE ASC
+    </select>
+    
+    <insert id="insertBankAccountInfo">
+        INSERT INTO SAL0022D (CUST_ACC_ID, 
+					                      CUST_ID,
+					                      CUST_ACC_NO,
+					                      CUST_ENCRYPT_ACC_NO,
+					                      CUST_ACC_OWNER,
+					                      CUST_ACC_TYPE_ID,
+					                      CUST_ACC_BANK_ID,
+					                      CUST_ACC_BANK_BRNCH,
+					                      CUST_ACC_REM,
+					                      CUST_ACC_STUS_ID,
+					                      CUST_ACC_UPD_USER_ID,
+					                      CUST_ACC_UPD_DT,
+					                      CUST_ACC_NRIC,
+					                      CUST_ACC_ID_OLD,
+					                      SO_ID,
+					                      CUST_ACC_IDCM,
+					                      CUST_HLBB_ID,
+					                      CUST_ACC_CRT_USER_ID,
+					                      CUST_ACC_CRT_DT)
+					  VALUES   (#{getCustAccIdSeq},
+						            #{getCustId},
+						            #{accNo},
+						            #{encAccNo},
+						            #{accOwner},
+						            #{accTypeId},
+						            #{accBankId},
+						            #{accBankBrnch},
+						            #{accRem},
+						            #{accStusId},
+						            #{accUpdUserId},
+						            SYSDATE,
+						            #{accNric},
+						            #{accIdOld},
+						            #{soId},
+						            #{accIdcm},
+						            #{hlbbId},
+						            #{accCrtUserId},
+						            SYSDATE
+						            )
+    </insert>
+    
 </mapper>
