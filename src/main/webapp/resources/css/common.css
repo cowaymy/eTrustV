@@ -446,9 +446,9 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 
 /* Performance Evaluation Awards */
 .award_wrap{margin:10px 0 20px 0;}
-.award_wrap >ul{display:table; width:100%;}
+.award_wrap >ul{display:table; width:100%; table-layout:fixed;}
 .award_wrap >ul:after{content:""; display:block; clear:both;}
-.award_wrap >ul li{display:table-cell;}
+.award_wrap >ul li{display:table-cell; width:100%;}
 .award_wrap >ul li strong{display:block; padding:5px 10px; margin:0 -1px -1px 0; background:#f5f5f5; border:1px solid #ddd; text-align:center;}
 .award_wrap >ul li p{padding:5px 10px; margin:0 -1px -1px 0; border:1px solid #ddd; text-align:center; font-size:12px;}
 
