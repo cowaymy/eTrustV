@@ -206,10 +206,12 @@ textarea.readonly{background:#f2f2f2; color:#ccc;}
 table.type1 tbody td select{width:237px; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 table.type1 tbody td .w100p{width:100%!important;}
 table.type1 td > label{margin:0 5px!important;}
-table.type1 td .search_btn{display:block; height:30px;}
-table.type1 td .search_btn img{position:relative; top:6px;}
-table.type1 td .search_100p{position:relative; width:100%; padding-right:25px; box-sizing:border-box;}
-table.type1 td .search_100p .search_btn{position:absolute; top:0; right:0;}
+.search_btn{display:block; height:30px;}
+.search_btn img{position:relative; top:6px;}
+.search_100p{position:relative; width:100%; padding-right:25px; box-sizing:border-box;}
+.search_100p .search_btn{position:absolute; top:0; right:0;}
+.search_100p input[type=text]{width:100%; height:30px; line-height:28px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px;}
+.search_100p select{width:100%; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 table.type1 td .auto_file{position:relative; width:237px; padding-right:82px; height:30px;}
 table.type1 td .auto_file.w100p{width:100%; box-sizing:border-box;}
 table.type1 td .auto_file input[type=file]{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
