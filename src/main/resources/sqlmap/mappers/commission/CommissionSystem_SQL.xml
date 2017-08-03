@@ -411,7 +411,8 @@
 		CRT_USER_ID,
 		CRT_DT,
 		UPD_USER_ID,
-		UPD_DT
+		UPD_DT,
+		PRT_ORDER
 		) VALUES (
 		CMM0043M_RULE_SEQ.nextval,
 		#{itemSeq},
@@ -433,7 +434,8 @@
 		#{crtUserId},
 		SYSDATE,
 		#{updUserId},
-		SYSDATE
+		SYSDATE,
+		#{printOrder}
 		)
 	</insert>
 	
@@ -485,7 +487,8 @@
         ELSE T3.START_YEARMONTH END START_DT ,
         CASE WHEN T3.END_YEARMONTH IS NOT NULL AND LENGTH(T3.END_YEARMONTH)=6 
         THEN SUBSTR(T3.END_YEARMONTH,5) || '/' || SUBSTR(T3.END_YEARMONTH,0,4) 
-        ELSE T3.END_YEARMONTH END END_DT 
+        ELSE T3.END_YEARMONTH END END_DT ,
+        T3.PRT_ORDER
     FROM CMM0042C T1 JOIN SYS0013M T2
         ON T1.ITEM_CD = T2.CODE_ID
      JOIN CMM0043M T3
@@ -501,22 +504,24 @@
     <if test="itemCd != null and itemCd != ''">
       AND T1.ITEM_CD = #{itemCd}
     </if>
-  
-     <if test="useYn != null and useYn != ''">
-      AND T3.USE_YN = #{useYn}
-    </if>
-      <if test="ruleSeq != null and ruleSeq != ''">
+     <if test="ruleSeq != null and ruleSeq != ''">
       AND T3.RULE_SEQ = #{ruleSeq}
     </if>
     START WITH RULE_PID=0
+    <if test="useYn != null and useYn != ''">
+      AND T3.USE_YN = #{useYn}
+    </if>
      <if test="searchDt != null and searchDt != ''">
       AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
     </if>
     CONNECT BY PRIOR RULE_SEQ =RULE_PID
+    <if test="useYn != null and useYn != ''">
+      AND T3.USE_YN = #{useYn}
+    </if>
       <if test="searchDt != null and searchDt != ''">
       AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
     </if>
-		ORDER BY T3.RULE_LEVEL
+		ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER
     
   </select>
   

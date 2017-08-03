@@ -423,6 +423,14 @@ public class CommissionSystemController {
 			dt = dt.substring(2) + dt.substring(0, 2);
 			params.put("searchDt", dt);
 		}
+		String useYn = "";
+		if("Y".equals(params.get("useYn"))){
+			useYn = String.valueOf(params.get("useYn"));
+		}else{
+			useYn = String.valueOf(params.get("useYnCombo"));
+		}
+		
+		params.put("useYn", useYn);
 		
 		List<EgovMap> ruleBookMngList = commissionSystemService.selectRuleBookMngList(params);
 
