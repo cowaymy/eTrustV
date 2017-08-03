@@ -7,6 +7,10 @@
 .aui-grid-user-custom-left {
     text-align:left;
 }
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-right{
+    text-align:right;
+}
 
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
@@ -38,29 +42,31 @@
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
      var columnLayout = [
-								{dataField:"bom",headerText:"Material Cdoe",width:"15%",visible:true},
-								{dataField:"altrtivBom",headerText:"",width:"15%",visible:false},
-								{dataField:"plant",headerText:"Material Code Name",width:"15%",visible:true},
-								{dataField:"matrlNo",headerText:"",width:"15%",visible:false},
-								{dataField:"bomUse",headerText:"",width:"15%",visible:false},
-								{dataField:"bomItmNodeNo",headerText:"",width:"15%",visible:false},
-								{dataField:"bomCtgry",headerText:"",width:"15%",visible:false},
-								{dataField:"intnlCntr",headerText:"",width:"15%",visible:false},
-								{dataField:"itmCtgry",headerText:"",width:"15%",visible:false},
-								{dataField:"bomItmNo",headerText:"",width:"15%",visible:false},
-								{dataField:"sortString",headerText:"",width:"15%",visible:false},
-								{dataField:"bomCompnt",headerText:"Component",width:"15%",visible:true},
-								{dataField:"stkDesc",headerText:"Component Name",width:"15%",visible:true},
-								{dataField:"compntQty",headerText:"Qty",width:"15%",visible:true},
-								{dataField:"compntUnitOfMeasure",headerText:"",width:"15%",visible:false},
-								{dataField:"validFromDt",headerText:"Valid from",width:"15%",visible:true},
-								{dataField:"validToDt",headerText:"Valid to",width:"15%",visible:true},
-								{dataField:"chngNo",headerText:"",width:"15%",visible:false},
-								{dataField:"delIndict",headerText:"",width:"15%",visible:false},
-								{dataField:"dtRcordCrtOn",headerText:"",width:"15%",visible:false},
-								{dataField:"userWhoCrtRcord",headerText:"",width:"15%",visible:false},
-								{dataField:"chngOn",headerText:"",width:"15%",visible:false},
-								{dataField:"namePersonWhoChgObj ",headerText:"",width:"15%",visible:false}
+								{dataField:"bom",headerText:"Material Cdoe",width:"10%",visible:true},
+								{dataField:"altrtivBom",headerText:"",width:100,visible:false},
+								{dataField:"plant",headerText:"Material Code Name",width:"10%",visible:true,style :"aui-grid-user-custom-left"},
+								{dataField:"",headerText:"Base Qty",width:"5%",visible:true},
+								{dataField:"matrlNo",headerText:"",width:100,visible:false},
+								{dataField:"bomUse",headerText:"",width:100,visible:false},
+								{dataField:"bomItmNodeNo",headerText:"",width:100,visible:false},
+								{dataField:"bomCtgry",headerText:"",width:100,visible:false},
+								{dataField:"intnlCntr",headerText:"",width:100,visible:false},
+								{dataField:"itmCtgry",headerText:"",width:100,visible:false},
+								{dataField:"bomItmNo",headerText:"",width:100,visible:false},
+								{dataField:"sortString",headerText:"",width:100,visible:false},
+								{dataField:"bomCompnt",headerText:"Component",width:"10%",visible:true},
+								{dataField:"stkDesc",headerText:"Component Name",width:"33%",visible:true,style :"aui-grid-user-custom-left"},
+								{dataField:"category",headerText:"Category",width:"7%",visible:true,style :"aui-grid-user-custom-left"},
+								{dataField:"compntQty",headerText:"Qty",width:"5%",visible:true,style :"aui-grid-user-custom-right"},
+								{dataField:"compntUnitOfMeasure",headerText:"",width:100,visible:false},
+								{dataField:"validFromDt",headerText:"Valid from",width:"10%",visible:true},
+								{dataField:"validToDt",headerText:"Valid to",width:"10%",visible:true},
+								{dataField:"chngNo",headerText:"",width:100,visible:false},
+								{dataField:"delIndict",headerText:"",width:100,visible:false},
+								{dataField:"dtRcordCrtOn",headerText:"",width:100,visible:false},
+								{dataField:"userWhoCrtRcord",headerText:"",width:100,visible:false},
+								{dataField:"chngOn",headerText:"",width:100,visible:false},
+								{dataField:"namePersonWhoChgObj ",headerText:"",width:100,visible:false}
                          ];
     
     
