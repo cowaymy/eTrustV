@@ -106,4 +106,6 @@ public interface CommonMapper {
 	
 	List<EgovMap> selectStockLocationList(Map<String, Object> params);
 
+	EgovMap selectBrnchIdByPostCode(Map<String, Object> params);
+
 }

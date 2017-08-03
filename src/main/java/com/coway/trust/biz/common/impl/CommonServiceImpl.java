@@ -444,4 +444,9 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectStockLocationList(params);
 	}
 
+	@Override
+	public EgovMap selectBrnchIdByPostCode(Map<String, Object> params) {
+		return commonMapper.selectBrnchIdByPostCode(params);
+	}
+
 }

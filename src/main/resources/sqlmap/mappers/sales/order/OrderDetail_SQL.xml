@@ -1034,7 +1034,7 @@
 		     , T1.EURC_FILE_PATH_NAME
 		     , T1.EURC_RLIEF_APP_TYPE_ID
 		  FROM SAL0042D T1
-		 WHERE T1.EURC_SALES_ORD_ID = '534968'
+		 WHERE T1.EURC_SALES_ORD_ID = #{salesOrderId}
 		   AND ROWNUM <= 1
     ]]>
     </select>

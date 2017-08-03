@@ -565,7 +565,7 @@
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#">Order Ledger(1)</a></p></li>
 	<li><p class="btn_blue2"><a href="#">Order Ledger(2)</a></p></li>
-	<li><p class="btn_blue2"><a href="#" onClick="javascript:self.close();">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

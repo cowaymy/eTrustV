@@ -637,14 +637,40 @@
     
     <select id="selectStockLocationList" parameterType="Map" resultType="egovMap">
         SELECT WH_LOC_ID CODE_ID, WH_LOC_CODE CODE , DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) CODE_NAME
-		  FROM SYS0028M S28M
-		 WHERE 1 = 1
-		   AND S28M.WH_LOC_STUS_ID = 1
-		   AND S28M.WH_LOC_TYPE_ID = 277
-		   <if test="groupCode != null and groupCode == 'CODY'">
-		      AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)
-		   </if>
-		 ORDER BY CODE
+          FROM SYS0028M S28M
+         WHERE 1 = 1
+           AND S28M.WH_LOC_STUS_ID = 1
+           AND S28M.WH_LOC_TYPE_ID = 277
+           <if test="groupCode != null and groupCode == 'CODY'">
+              AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)
+           </if>
+         ORDER BY CODE
+    </select>
+    
+    <select id="selectBrnchIdByPostCode" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+		SELECT T.POST_CODE_SET_ID
+		     , T.POST_CODE
+		     , T.BRNCH_ID
+		     , T.CRT_DT
+		     , T.UPD_DT
+		     , T.UPD_USER_ID
+		     , T.STUS_CODE_ID
+		  FROM
+		     ( SELECT T1.POST_CODE_SET_ID
+		            , T1.POST_CODE
+		            , T1.BRNCH_ID
+		            , T1.CRT_DT
+		            , T1.UPD_DT
+		            , T1.UPD_USER_ID
+		            , T1.STUS_CODE_ID
+		         FROM SYS0031M T1
+		        WHERE T1.POST_CODE = #{postCode}
+		          AND 1 = T1.STUS_CODE_ID
+		        ORDER BY POST_CODE_SET_ID ASC
+		     ) T
+		 WHERE ROWNUM <= 1
+    ]]>
     </select>
     
 </mapper>

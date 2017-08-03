@@ -568,6 +568,7 @@ public class CommonController {
 		// 호출될 화면
 		return "/common/searchPop";
 	}
+	
 	@RequestMapping(value = "/selectStockLocationList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectStockLocationList(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -576,4 +577,14 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 	
+	@RequestMapping(value = "/customerPop.do")
+	public String customerPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "common/customerPop";
+	}
+	
+	@RequestMapping(value = "/selectBrnchIdByPostCode.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectBrnchIdByPostCode(@RequestParam Map<String, Object> params) {
+		EgovMap result = commonService.selectBrnchIdByPostCode(params);
+		return ResponseEntity.ok(result);
+	}
 }

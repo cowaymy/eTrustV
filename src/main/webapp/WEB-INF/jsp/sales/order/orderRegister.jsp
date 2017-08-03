@@ -1,0 +1,1130 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<head>
+<script type="text/javaScript" language="javascript">
+
+	$(document).ready(function(){
+	    //AUIGrid 그리드를 생성합니다.
+	    //createAUIGrid();
+	
+	    // 셀 더블클릭 이벤트 바인딩
+	    //AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+	        //fn_setDetail(myGridID, event.rowIndex);
+	    //});
+	    
+	    //doGetCombo('/common/selectCodeList.do',       '10', '',   'appType', 'M', 'fn_multiCombo'); //Common Code
+	    //doGetCombo('/common/selectProductCodeList.do',  '', '', 'productId', 'S',              ''); //Product Code
+	
+	    //doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'keyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+	    doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dscBrnchId', 'S', ''); //Branch Code
+	});
+
+	function fn_loadCustomer(custId){
+	
+	    $("#searchCustId").val(custId);
+	
+	    Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#searchForm").serialize(), function(result) {
+	        
+	        if(result != null && result.length == 1) {
+	            var custInfo = result[0];
+	        
+	            console.log("성공.");
+	            console.log("custId : " + result[0].custId);
+	            console.log("userName1 : " + result[0].name);
+	            
+	            //
+                $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
+                $("#custId").val(custInfo.custId); //Customer ID
+	            $("#custTypeNm").val(custInfo.codeName1); //Customer Name
+	            $("#typeId").val(custInfo.typeId); //Type
+	            $("#name").val(custInfo.name); //Name
+	            $("#nric").val(custInfo.nric); //NRIC/Company No
+	            $("#nationNm").val(custInfo.name2); //Nationality
+	            $("#raceId").val(custInfo.raceId); //Nationality
+	            $("#race").val(custInfo.codeName2); //
+	            $("#dob").val(custInfo.dob); //DOB
+	            $("#gender").val(custInfo.gender); //Gender
+	            $("#pasSportExpr").val(custInfo.pasSportExpr); //Passport Expiry
+	            $("#visaExpr").val(custInfo.visaExpr); //Visa Expiry
+                $("#email").val(custInfo.email); //Email
+                $("#rem").val(custInfo.rem); //Remark
+	            
+	            if(custInfo.corpTypeId > 0) {
+	                $("#corpTypeNm").val(custInfo.codeName); //Industry Code
+	            }
+	            else {
+	            	$("#corpTypeNm").val(""); //Industry Code
+	            }
+                
+                console.log("custInfo.custAddId :"+custInfo.custAddId);
+                console.log("custInfo.custCntcId:"+custInfo.custCntcId);
+                
+	            if(custInfo.custAddId > 0) {
+	                
+	                //----------------------------------------------------------
+                    // [Billing Detail] : Billing Address SETTING
+	                //----------------------------------------------------------
+	            	fn_loadMailAddr(custInfo.custAddId);
+
+	                //----------------------------------------------------------
+                    // [Installation] : Installation Address SETTING
+	                //----------------------------------------------------------
+	            	$('#instAddrForm').clearForm();
+	            	fn_loadInstallAddr(custInfo.custAddId);
+	            }
+	            
+	            if(custInfo.custCntcId > 0) {
+	                //----------------------------------------------------------
+                    // [Master Contact] : Owner & Purchaser Contact
+                    //                    Additional Service Contact
+	                //----------------------------------------------------------
+	            	$('#custCntcForm').clearForm();	            	
+                    //$('#liMstCntcNewAddr').addClass("blind");
+    	            //$('#liMstCntcSelAddr').addClass("blind");
+    	            //$('#liMstCntcNewAddr2').addClass("blind");
+    	            //$('#liMstCntcSelAddr2').addClass("blind");
+	            
+	            	fn_loadCntcPerson(custInfo.custCntcId)
+	            	fn_loadSrvCntcPerson(custInfo.custCareCntId);
+	            	
+	                //----------------------------------------------------------
+                    // [Installation] : Installation Contact Person
+	                //----------------------------------------------------------
+	            	$('#instCntcForm').clearForm();
+	            	fn_loadInstallationCntcPerson(custInfo.custCntcId);
+	            }
+	            
+	            $('#liMstCntcNewAddr').removeClass("blind");
+	            $('#liMstCntcSelAddr').removeClass("blind");
+	            $('#liMstCntcNewAddr2').removeClass("blind");
+	            $('#liMstCntcSelAddr2').removeClass("blind");
+	            $('#liBillNewAddr').removeClass("blind");
+	            $('#liBillSelAddr').removeClass("blind");
+	            $('#liBillNewAddr2').removeClass("blind");
+	            $('#liBillSelAddr2').removeClass("blind");
+	            $('#liInstNewAddr').removeClass("blind");
+	            $('#liInstSelAddr').removeClass("blind");
+	            $('#liInstNewAddr2').removeClass("blind");
+	            $('#liInstSelAddr2').removeClass("blind");
+	            /*
+                if (txtCustIndustry.Text == "Government")
+                {
+                    RadWindowManager1.RadAlert("<b>Goverment Customer</b>", 450, 160, "Alert", "callBackFn", null);
+                }
+                */
+                
+                if(custInfo.codeName == 'Government') {
+                    Common.alert('<b>Goverment Customer</b>');
+                }
+	        }
+	        else {
+	            Common.alert('<b>Customer not found.<br>Your input customer ID :'+$("#searchCustId").val()+'</b>');
+	        }
+	    });
+	}
+	
+	function fn_loadMailAddr(custAddId){
+		console.log("fn_loadMailAddr START");
+		
+        $("#searchCustAddId").val(custAddId);
+        
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", $("#searchForm").serialize(), function(billCustInfo) {
+            
+            if(billCustInfo != null) {
+            
+                console.log("성공.");
+                console.log("add1 : " + billCustInfo.add1);
+                
+                //
+                //$("#hiddenCustAddId").val(billCustInfo.custAddId); //Customer Address ID(Hidden)
+                $("#billAdd1").val(billCustInfo.add1); //Address
+                $("#billAdd2").val(billCustInfo.add2); //Address
+                $("#billAdd3").val(billCustInfo.add3); //Address
+                $("#billPostCode").val(billCustInfo.postCode); //Post Code
+                $("#billAreaName").val(billCustInfo.areaName); //Area
+                $("#billStateName").val(billCustInfo.name1); //State
+                $("#billCntyName").val(billCustInfo.name2); //Country
+            }
+        });
+	}
+	
+    function fn_loadInstallAddr(custAddId){
+        console.log("fn_loadInstallAddr START");
+        
+        $("#searchCustAddId").val(custAddId);
+        
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", $("#searchForm").serialize(), function(custInfo) {
+            
+            if(custInfo != null) {
+            
+                console.log("성공.");
+                console.log("add1 : " + custInfo.add1);
+                
+                //
+                $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
+                $("#add1").val(custInfo.add1); //Address
+                $("#add2").val(custInfo.add2); //Address
+                $("#add3").val(custInfo.add3); //Address
+                $("#postCode").val(custInfo.postCode); //Post Code
+                $("#areaName").val(custInfo.areaName); //Area
+                $("#stateName").val(custInfo.name1); //State
+                $("#cntyName").val(custInfo.name2); //Country
+                $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+            }
+        });
+    }
+
+    function fn_loadSrvCntcPerson(custCareCntId) {
+        console.log("fn_loadSrvCntcPerson START");
+        
+        $("#searchCustCareCntId").val(custCareCntId);
+        
+        Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", $("#searchForm").serialize(), function(srvCntcInfo) {
+            
+            if(srvCntcInfo != null) {
+            
+                console.log("성공.");
+                console.log("srvCntcInfo:"+srvCntcInfo.custCareCntId);
+                console.log("srvCntcInfo:"+srvCntcInfo.name);
+                console.log("srvCntcInfo:"+srvCntcInfo.custInitial);
+                console.log("srvCntcInfo:"+srvCntcInfo.email);
+                
+                //
+                $("#srvCntcId").val(srvCntcInfo.custCareCntId);
+                $("#srvCntcName").val(srvCntcInfo.name);
+                $("#srvInitial").val(srvCntcInfo.custInitial);
+                $("#srvCntcEmail").val(srvCntcInfo.email);
+                $("#srvCntcTelM").val(srvCntcInfo.telM);
+                $("#srvCntcTelR").val(srvCntcInfo.telR);
+                $("#srvCntcTelO").val(srvCntcInfo.telO);
+                $("#srvCntcTelF").val(srvCntcInfo.telf);
+                $("#srvCntcExt").val(srvCntcInfo.ext);
+            }
+        });
+    }
+    
+    function fn_loadCntcPerson(custCntcId){
+        console.log("fn_loadCntcPerson START");
+        
+        $("#searchCustCntcId").val(custCntcId);
+        
+        Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", $("#searchForm").serialize(), function(custCntcInfo) {
+            
+            if(custCntcInfo != null) {
+            
+                console.log("성공.");
+                
+                //
+                $("#custCntcId").val(custCntcInfo.custCnctId);
+                $("#custCntcName").val(custCntcInfo.name);
+                $("#custInitial").val(custCntcInfo.custInitial);
+                $("#custCntcEmail").val(custCntcInfo.email);
+                $("#custCntcTelM").val(custCntcInfo.telM1);
+                $("#custCntcTelR").val(custCntcInfo.telR);
+                $("#custCntcTelO").val(custCntcInfo.telO);
+                $("#custCntcTelF").val(custCntcInfo.telf);
+                $("#custCntcExt").val(custCntcInfo.ext);
+            }
+        });
+    }
+
+    function fn_loadInstallationCntcPerson(custCntcId){
+        console.log("fn_loadInstallationCntcPerson START");
+        
+        $("#searchCustCntcId").val(custCntcId);
+        
+        Common.ajax("GET", "/sales/order/selectCustCntcJsonInfo.do", $("#searchForm").serialize(), function(instCntcInfo) {
+            
+            if(instCntcInfo != null) {
+            
+                console.log("성공.");
+
+                $("#instCntcId").val(instCntcInfo.custCnctId);
+                $("#instCntcName").val(instCntcInfo.name);
+                $("#instInitial").val(instCntcInfo.custInitial);
+                $("#instCntcEmail").val(instCntcInfo.email);
+                $("#instCntcTelM").val(instCntcInfo.telM1);
+                $("#instCntcTelR").val(instCntcInfo.telR);
+                $("#instCntcTelO").val(instCntcInfo.telO);
+                $("#instCntcTelF").val(instCntcInfo.telf);
+                $("#instCntcExt").val(instCntcInfo.ext);
+                $("#instGender").val(instCntcInfo.gender);
+                $("#instNric").val(instCntcInfo.nric);
+                $("#instDob").val(instCntcInfo.dob);
+                $("#instRaceId").val(instCntcInfo.raceId);
+                $("#instDept").val(instCntcInfo.dept);
+                $("#instPost").val(instCntcInfo.pos);
+            }
+        });
+    }
+
+	$.fn.clearForm = function() {
+	    return this.each(function() {
+	        var type = this.type, tag = this.tagName.toLowerCase();
+	        if (tag === 'form'){
+	            return $(':input',this).clearForm();
+	        }
+	        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+	            this.value = '';
+	        }else if (type === 'checkbox' || type === 'radio'){
+	            this.checked = false;
+	        }else if (tag === 'select'){
+	            this.selectedIndex = -1;
+	        }
+	    });
+	};
+
+	$(function(){
+	    $('#custBtn').click(function() {
+	        $("#sUrl").val("/common/customerPop.do");
+	        Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+	    });
+        $('#custId').blur(function(event) {
+        	if(FormUtil.isNotEmpty($('#custId').val())) {
+        		fn_loadCustomer($('#custId').val());
+        	};
+        });
+	});
+</script>
+</head>
+<body>
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>New Order</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<section class="tap_wrap"><!-- tap_wrap start -->
+<ul class="tap_type1 num4">
+    <li><a href="#" class="on">Customer</a></li>
+    <li><a href="#">Master Contact</a></li>
+    <li><a href="#">Sales Order</a></li>
+    <li><a href="#">Payment Channel</a></li>
+    <li><a href="#">Billing Detail</a></li>
+    <li><a href="#">Installation</a></li>
+    <li><a href="#">Documents</a></li>
+    <li><a href="#">Relief Certificate</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<form id="searchForm" name="mainForm" action="#" method="post">
+    <input id="sUrl"                name="sUrl"          type="hidden"/>
+    <input id="searchCustId"        name="custId"        type="hidden"/>
+    <input id="searchCustAddId"     name="custAddId"     type="hidden"/>
+    <input id="searchCustCntcId"    name="custId"        type="hidden"/>
+    <input id="searchCustCareCntId" name="custCareCntId" type="hidden"/>
+</form>
+
+<!--############################################################################
+    Customer
+        - Owner & Purchaser Contact
+        - Additional Service Contact
+#############################################################################-->
+<section class="search_table"><!-- search_table start -->
+<form id="custForm" name="custForm" action="#" method="post">
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a href="#">Add New Customer</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Customer ID<span class="must">*</span></th>
+    <td><input id="custId" name="custId" type="text" title="" placeholder="Customer ID" class="" /><a class="search_btn" id="custBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row">Type</th>
+    <td><input id="custTypeNm" name="custTypeNm" type="text" title="" placeholder="Customer Type" class="w100p" readonly/> 
+        <input id="typeId" name="typeId" type="hidden"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Name</th>
+    <td><input id="name" name="name" type="text" title="" placeholder="Customer Name" class="w100p" readonly/></td>
+    <th scope="row">NRIC/Company No</th>
+    <td><input id="nric"" name="nric" type="text" title="" placeholder="NRIC/Company No" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Nationality</th>
+    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p" readonly/></td>
+    <th scope="row">Race</th>
+    <td><input id="raceId" name="raceId" type="text" title="" placeholder="Race" class="w100p" readonly/>
+        <input id="race" name="race" type="hidden"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">DOB</th>
+    <td><input id="dob" name="dob" type="text" title="" placeholder="DOB" class="w100p" readonly/></td>
+    <th scope="row">Gender</th>
+    <td><input id="gender" name="gender" type="text" title="" placeholder="Gender" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Passport Expiry</th>
+    <td><input id="pasSportExpr" name="pasSportExpr" type="text" title="" placeholder="Passport Expiry" class="w100p" readonly/></td>
+    <th scope="row">Visa Expiry</th>
+    <td><input id="visaExpr" name="visaExpr" type="text" title="" placeholder="Visa Expiry" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Email</th>
+    <td><input id="email" name="email" type="text" title="" placeholder="Email Address" class="w100p" readonly/></td>
+    <th scope="row">Industry Code</th>
+    <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="Industry Code" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3"><textarea  id="rem" name="rem" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+</ul>
+
+</form>
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<!--############################################################################
+    Master Contract
+        - Owner & Purchaser Contact
+        - Additional Service Contact
+#############################################################################-->
+<form id=custCntcForm name="custCntcForm" action="#" method="post">
+    <input id="custCntcId" name="custCntcId" type="hidden"/>
+    <input id="srvCntcId"  name="srvCntcId"  type="hidden"/>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Owner &amp; Purchaser Contact</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li id="liMstCntcNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
+    <li id="liMstCntcSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Contact</a></p></li>
+</ul>
+
+<section class="search_table"><!-- search_table start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Initial</th>
+    <td><input id="custInitial" name="custInitial" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Name</th>
+    <td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Mobile)(1)</th>
+    <td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Tel(Residence)(1)</th>
+    <td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Office)(1)</th>
+    <td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Ext No.(1)</th>
+    <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Fax)(1)</th>
+    <td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Email(1)</th>
+    <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Additional Service Contact</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li id="liMstCntcNewAddr2" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
+    <li id="liMstCntcSelAddr2" class="blind"><p class="btn_grid"><a href="#">Select Another Contact</a></p></li>
+</ul>
+
+<section class="search_table"><!-- search_table start -->
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Name</th>
+    <td colspan="3"><input id="srvCntcName" name="srvCntcName" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Mobile)(2)</th>
+    <td><input id="srvCntcTelM" name="srvCntcTelM" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Tel(Residence)(2)</th>
+    <td><input id="srvCntcTelR" name="srvCntcTelR" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Office)(2)</th>
+    <td><input id="srvCntcTelO" name="srvCntcTelO" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Ext No.(2)</th>
+    <td><input id="srvCntcExt" name="srvCntcExt" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Fax)(2)</th>
+    <td><input id="srvCntcTelF" name="srvCntcTelF" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Email(2)</th>
+    <td><input id="srvCntcEmail" name="srvCntcEmail" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+</ul>
+
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+</form>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Application Type<span class="must">*</span></th>
+    <td>
+    <select class="w100p">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+    </td>
+    <th scope="row">Order Date<span class="must">*</span></th>
+    <td><span>31/07/2017</span></td>
+</tr>
+<tr>
+    <th scope="row">Installment Duration<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Salesman Code<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Reference No<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Salesman Type</th>
+    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+</tr>
+<tr>
+    <th scope="row">PO No<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Salesman Name</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Product<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row">Salesman NRIC</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Campaign<span class="must">*</span></th>
+    <td>
+    <select class="w100p">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+    </td>
+    <th scope="row">Department Code</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Promotion<span class="must">*</span></th>
+    <td>
+    <select class="w100p">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+    </td>
+    <th scope="row">Group Code</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Price/RPF (RM)</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Organization Code</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Rental Fees (RM)</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Trial No </th>
+    <td><label><input type="checkbox" /><span></span></label><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+<tr>
+    <th scope="row">PV</th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Related No</th>
+    <td><label><input type="checkbox" /><span></span></label><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+</ul>
+
+</form>
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Pay By Third Party</th>
+    <td colspan="3">
+    <label><input type="checkbox" /><span></span></label>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Third Party</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a href="#">Add New Third Party</a></p></li>
+</ul>
+
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Customer ID<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row">Type</th>
+    <td><input type="text" title="" placeholder="Costomer Type" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Name</th>
+    <td><input type="text" title="" placeholder="Customer Name" class="w100p" /></td>
+    <th scope="row">NRIC/Company No</th>
+    <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Rental Paymode<span class="must">*</span></th>
+    <td>
+    <select class="w100p">
+        <option value="">11</option>
+        <option value="">22</option>
+        <option value="">33</option>
+    </select>
+    </td>
+    <th scope="row">NRIC on DD/Passbook</th>
+    <td><input type="text" title="" placeholder="NRIC on DD/Passbook" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+</ul>
+
+</form>
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+<!-- New Billing Group Type start -->
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Group Option<span class="must">*</span></th>
+    <td>
+    <label><input type="radio" name="groupoption" /><span>New Billing Group</span></label>
+    <label><input type="radio" name="groupoption" /><span>Existion Billing Group</span></label>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<section id="tbBillMthd" class="blind">
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row" rowspan="5">Billing Method<span class="must">*</span></th>
+    <td colspan="3">
+    <label><input type="checkbox" /><span>Post</span></label>
+    </td>
+</tr>
+<tr>
+    <td colspan="3">
+    <label><input type="checkbox" /><span>SMS</span></label>
+    <label><input type="checkbox" /><span>Mobile 1</span></label>
+    <label><input type="checkbox" /><span>Mobile 2</span></label>
+    </td>
+</tr>
+<tr>
+    <td>
+    <label><input type="checkbox" /><span>E-Billing</span></label>
+    <label><input type="checkbox" /><span>Email 1</span></label>
+    <label><input type="checkbox" /><span>Email 2</span></label>
+    </td>
+    <th scope="row">Email(1)</th>
+    <td><input type="text" title="" placeholder="Email Address" class="w100p" /></td>
+</tr>
+<tr>
+    <td></td>
+    <th scope="row">Email(2)</th>
+    <td><input type="text" title="" placeholder="Email Address" class="w100p" /></td>
+</tr>
+<tr>
+    <td>
+    <label><input type="checkbox" /><span>Web Portal</span></label>
+    </td>
+    <th scope="row">Web address(URL)</th>
+    <td><input type="text" title="" placeholder="Web Address" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</section>
+
+<section id="sctBillAddr" class="blind">
+<form id="billAddrForm" name="" action="#" method="post">
+    <input id="hiddenBillPostCode"  name="hiddenBillPostCode"  type="hidden"/>
+    <input id="hiddenBillAreaName"  name="hiddenBillAreaName"  type="hidden"/>
+    <input id="hiddenBillStateName" name="hiddenBillStateName" type="hidden"/>
+    
+<aside class="title_line"><!-- title_line start -->
+<h2>Billing Address</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li id="liBillNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Address</a></p></li>
+    <li id="liBillSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Address</a></p></li>
+</ul>
+
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row" rowspan="3">Address<span class="must">*</span></th>
+    <td colspan="3"><input id="billAdd1" name="billAdd1" type="text" title="" placeholder="Address (1)" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <td colspan="3"><input id="billAdd2" name="billAdd2" type="text" title="" placeholder="Address (2)" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <td colspan="3"><input id="billAdd3" name="billAdd3" type="text" title="" placeholder="Address (3)" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Postcode</th>
+    <td><input id="billPostCode" name="billPostCode" type="text" title="" placeholder="Postcode" class="w100p" readonly/></td>
+    <th scope="row">Area</th>
+    <td><input id="billAreaName" name="billAreaName" type="text" title="" placeholder="Area" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">State</th>
+    <td><input id="billStateName" name="billStateName" type="text" title="" placeholder="State" class="w100p" readonly/></td>
+    <th scope="row">Country</th>
+    <td><input id="billCntyName" name="billCntyName" type="text" title="" placeholder="Country" class="w100p" readonly/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+<!-- Existing Type end -->
+</form>
+</section>
+
+<section id="sctBillSel" class="blind">    
+<aside class="title_line"><!-- title_line start -->
+<h2>Billing Group Selection</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Billing Group<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row">Billing Type<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Billing Address</th>
+    <td colspan="3"><textarea cols="20" rows="5"></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</section>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Remark</th>
+    <td><textarea cols="20" rows="5"></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+<!-- Existing Type end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+</ul>
+
+</form>
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+<form id="instAddrForm" name="installForm" action="#" method="post">
+    <input id="hiddenCustAddId" name="custAddId" type="hidden"/>
+    <input id="instCntcId"    name="instCntcId"    type="hidden"/>
+    
+<aside class="title_line"><!-- title_line start -->
+<h2>Installation Address</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li id="liInstNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Address</a></p></li>
+    <li id="liInstSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Address</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row" rowspan="3">Address<span class="must">*</span></th>
+    <td colspan="3"><input id="add1" name="add1" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <td colspan="3"><input id="add2" name="add2" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <td colspan="3"><input id="add3" name="add3" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Postcode</th>
+    <td><input id="postCode" name="postCode" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Area</th>
+    <td><input id="areaName" name="areaName" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">State</th>
+    <td><input id="stateName" name="stateName" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Country</th>
+    <td><input id="cntyName" name="cntyName" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+
+<form id="instCntcForm" name="installForm" action="#" method="post">
+    
+<section id="tbInstCntcPerson" class="blind">
+    
+<aside class="title_line"><!-- title_line start -->
+<h2>Installation Contact Person</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li id="liInstNewAddr2" class="blind"><p class="btn_grid"><a href="#">Add New Address</a></p></li>
+    <li id="liInstSelAddr2" class="blind"><p class="btn_grid"><a href="#">Select Another Address</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Name<span class="must">*</span></th>
+    <td><input id="instCntcName" name="instCntcName" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Initial</th>
+    <td><input id="instInitial" name="instInitial" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Gender</th>
+    <td><input id="instGender" name="instGender" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">NRIC</th>
+    <td><input id="instNric" name="instNric" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">DOB</th>
+    <td><input id="instDob" name="instDob" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Race</th>
+    <td><input id="instRaceId" name="instRaceId" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Email</th>
+    <td><input id="instCntcEmail" name="instCntcEmail" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Department</th>
+    <td><input id="instDept" name="instDept" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Post</th>
+    <td><input id="instPost" name="instPost" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Mobile)</th>
+    <td><input id="instCntcTelM" name="instCntcTelM" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Tel(Residence)</th>
+    <td><input id="instCntcTelR" name="instCntcTelR" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row">Tel(Office)</th>
+    <td><input id="instCntcTelO" name="instCntcTelO" type="text" title="" placeholder="" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Fax)</th>
+    <td><input id="instCntcTelF" name="instCntcTelF" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</section>
+</form>
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Installation Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">DSC Branch<span class="must">*</span></th>
+    <td colspan="3">
+    <select id="dscBrnchId" name="dscBrnchId" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Prefer Install Date<span class="must">*</span></th>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <th scope="row">Prefer Install Time<span class="must">*</span></th>
+    <td>
+    <div class="time_picker"><!-- time_picker start -->
+    <input type="text" title="" placeholder="" class="time_date w100p" />
+    <ul>
+        <li>Time Picker</li>
+        <li><a href="#">12:00 AM</a></li>
+        <li><a href="#">01:00 AM</a></li>
+        <li><a href="#">02:00 AM</a></li>
+        <li><a href="#">03:00 AM</a></li>
+        <li><a href="#">04:00 AM</a></li>
+        <li><a href="#">05:00 AM</a></li>
+        <li><a href="#">06:00 AM</a></li>
+        <li><a href="#">07:00 AM</a></li>
+        <li><a href="#">08:00 AM</a></li>
+        <li><a href="#">09:00 AM</a></li>
+        <li><a href="#">10:00 AM</a></li>
+        <li><a href="#">11:00 AM</a></li>
+        <li><a href="#">12:00 PM</a></li>
+        <li><a href="#">01:00 PM</a></li>
+        <li><a href="#">02:00 PM</a></li>
+        <li><a href="#">03:00 PM</a></li>
+        <li><a href="#">04:00 PM</a></li>
+        <li><a href="#">05:00 PM</a></li>
+        <li><a href="#">06:00 PM</a></li>
+        <li><a href="#">07:00 PM</a></li>
+        <li><a href="#">08:00 PM</a></li>
+        <li><a href="#">09:00 PM</a></li>
+        <li><a href="#">10:00 PM</a></li>
+        <li><a href="#">11:00 PM</a></li>
+    </ul>
+    </div><!-- time_picker end -->
+    </td>
+</tr>
+<tr>
+    <th scope="row">Special Instruction<span class="must">*</span></th>
+    <td colspan="3"><textarea cols="20" rows="5"></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+<!-- Existing Type end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+</ul>
+
+</form>
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:200px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Reference No<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="Cert Reference No" class="w100p" /></td>
+    <th scope="row">Certificate Date<span class="must">*</span></th>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">GST Registration No</th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3"><textarea cols="20" rows="5"></textarea></td>
+</tr>
+<tr>
+    <th scope="row">Upload Relief Cert(.zip)</th>
+    <td colspan="3">
+    <div class="auto_file"><!-- auto_file start -->
+    <input type="file" title="file add" />
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</form>
+</section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+</section><!-- tap_wrap end -->
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
+</body>
+</html>
