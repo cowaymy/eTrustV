@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +69,21 @@ public class BomController {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("data", list);
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/materialInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> materialInfo(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String cmpntId = request.getParameter("cmpntId");
+		logger.debug("cmpntId : {}", request.getParameter("cmpntId"));
+		Map<String, Object> params = new HashMap();
+		params.put("cmpntId", cmpntId);
+
+		List<EgovMap> info = bomService.materialInfo(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", info);
 		return ResponseEntity.ok(map);
 	}
 }

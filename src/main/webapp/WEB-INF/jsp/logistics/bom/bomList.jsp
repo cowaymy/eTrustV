@@ -38,13 +38,17 @@
     var filterGrid;
     var serviceGrid;
     
+    var isMerged = true; // 최초에는 merged 상태
     var selectedItem; 
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
      var columnLayout = [
-								{dataField:"bom",headerText:"Material Cdoe",width:"10%",visible:true},
+								{dataField:"bom",headerText:"Material Cdoe",width:"10%", cellMerge : true,visible:true},
 								{dataField:"altrtivBom",headerText:"",width:100,visible:false},
-								{dataField:"plant",headerText:"Material Code Name",width:"10%",visible:true,style :"aui-grid-user-custom-left"},
+								{dataField:"plant",headerText:"Material Code Name",width:"10%",visible:true,style :"aui-grid-user-custom-left"
+									,cellMerge : true,
+							        mergeRef : "bom", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+							        mergePolicy : "restrict"},
 								{dataField:"",headerText:"Base Qty",width:"5%",visible:true},
 								{dataField:"matrlNo",headerText:"",width:100,visible:false},
 								{dataField:"bomUse",headerText:"",width:100,visible:false},
@@ -70,18 +74,33 @@
                          ];
     
     
-    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false , fixedColumnCount:2};
+    var gridoptions = {
+    		showStateColumn : false , 
+    		editable : false, 
+    		pageRowCount : 30,
+    		usePaging : false, /* NOTE: true 설정시 셀병합 실행 안됨*/
+    		useGroupingPanel : false , 
+    		fixedColumnCount:2,
+    		// 셀 병합 실행
+            enableCellMerge : true
+
+    		   };
     
 
     $(document).ready(function(){
         // masterGrid 그리드를 생성합니다.
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
-        
-        //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' ,'this.value','srchCntry', 'S', '');
-        //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' ,'this.value','srchCntry', 'S', '');
+        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions); // 셀병합으로  안씀
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridoptions);
         doGetComboCDC('/logistics/bom/selectCdcList', '' , '' , '','cdcCmb', 'S', '');
+        
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {   
+        	 f_removeclass();
+        	 $("#subDiv").show();
+        	 //$("#material_info").show();
+        	 //$("#material_info_div").show();
+        	 //$("#material_info").find("a").attr("class", "on");
+        	 $("#material_info").click();
         });
 
         // 셀 더블클릭 이벤트 바인딩
@@ -91,13 +110,39 @@
         
         AUIGrid.bind(myGridID, "ready", function(event) {
         });
+        $("#subDiv").hide();
     });
 
     $(function(){
         $("#search").click(function(){
             searchAjax();
         });
-        $("#view").click(function(){
+       $("#material_info").click(function(){
+            
+            if($("#material_info_div").css("display") == "none"){
+               f_removeclass();
+                var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                for(i=0; i<selectedItems.length; i++) {
+                   // $("#stkId").val(selectedItems[i].item.stkid);
+                   console.log(selectedItems[i].item.bomCompnt);
+                   f_view("/logistics/bom/materialInfo.do?cmpntId="+selectedItems[i].item.bomCompnt , "S");
+                }
+                $("#material_info_div").show();
+                
+            }else{
+                //var selectedItems = AUIGrid.getSelectedItems(myGridID);
+               // for(i=0; i<selectedItems.length; i++) {
+                    //$("#stkId").val(selectedItems[i].item.stkid);
+                  //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
+               // }
+            }
+            $(this).find("a").attr("class","on");
+            
+        });
+        
+        
+        
+        /* $("#view").click(function(){
             div="V";
             $("#detailHead").text("Courier Information Details");
             selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -130,14 +175,12 @@
             $("#editWindow").hide();
         });
         $("#updatePopbtn").click(function(){
-            //$("#editWindow").hide();
                div="U";
                saveAjax(div);
                $("#editWindow").hide();
               
         });
         $("#savePopbtn").click(function(){
-            //$("#editWindow").hide();
                div="N";
                saveAjax(div);
                $("#editWindow").hide();
@@ -177,24 +220,10 @@
          }); 
        $("#srchArea").change(function(){
            doDefCombo('', '' ,'srchPstCd', 'S', '');   
-         }); 
+         });  */
     });
     
     
-/*  모달  */    
-    function f_showModal(){
-        $.blockUI.defaults.css = {textAlign:'center'}
-        $('div.SalesWorkDiv').block({
-                message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
-                centerY: false,
-                centerX: true,
-                css: { top: '300px', border: 'none'} 
-        });
-    }
-    function hideModal(){
-        $('div.SalesWorkDiv').unblock();
-        
-    }
     /* function Start*/
    function doGetComboCDC(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
     	
@@ -205,9 +234,8 @@
     	        dataType : "json",
     	        contentType : "application/json;charset=UTF-8",
     	        success : function(data) {
-    	        	console.log(rData);
+    	        	//console.log(rData);
     	           var rData = data;
-    	           //doDefCombo(rData, '', 'cdcCmb' , 'S',  '');
     	           doDefCombo(rData, selCode, obj , type,  callbackFn);
     	        },
     	        error: function(jqXHR, textStatus, errorThrown){
@@ -220,37 +248,89 @@
     
     
    function searchAjax() {
-        f_showModal();
         var url = "/logistics/bom/selectBomList.do";
         var param = $('#searchForm').serializeJSON();
         Common.ajax("POST" , url , param , function(data){
-            console.log(data.data);
+            //console.log(data.data);
             AUIGrid.setGridData(myGridID, data.data);
-            hideModal();
+            //setCellMerge();
+            $("#subDiv").hide();
         });
     }
-    
-   function saveAjax(div) {
-        var url;
-        var key;
-        var val= $("#detailForm").serializeJSON();
-        selectedItem = AUIGrid.getSelectedIndex(myGridID);
-       if(div=="U"){
-           url="/logistics/courier/motifyCourier.do";
-       }else if(div=="N"){
-           url="/logistics/courier/insertCourier.do";
+
+
+   function setCellMerge() {
+           //isMerged = !isMerged;
+           AUIGrid.setCellMerge(myGridID, isMerged);
+   }         
+
+   function f_removeclass(){
+       var lisize = $("#subDiv > ul > li").size();
+       for (var i = 0 ; i < lisize ; i++){
+           $("#subDiv > ul > li").eq(i).find("a").removeAttr("class");
        }
-       Common.ajax("POST",url,val,function(result){
-           Common.alert(result.msg);
-           $("#search").trigger("click");
-           if(div=="U"){
-                 $("#view").click();
-          }
+       
+       var r = $("#subDiv > .tap_area").size();
+       for(var i = 0 ; i < r ; i++){
+           $("#subDiv > .tap_area").eq(i).hide();
+       }
+       
+   }
+   
+   function f_view(url, v) {
+       $.ajax({
+           type : "POST",
+           url : url,
+           dataType : "json",
+           contentType : "application/json;charset=UTF-8",
+           success : function(_data) {
+               var data = _data.data;
+               console.log(data);
+               f_info(data, v);
+           },
+           error : function(jqXHR, textStatus, errorThrown) {
+               alert("실패하였습니다.");
+           }
        });
-   } 
+   }
    
     
-    function fn_openDetail(div,idxId){
+   function f_info(data, v) {
+	   if (v == 'S') {
+           $("#txtStockType").empty();
+           $("#txtStockCode").empty();
+           $("#txtUOM").empty();
+
+           $("#txtStockName").empty();
+           $("#txtCategory").empty();
+
+           $("#txtNetWeight").empty();
+           $("#txtMeasurement").empty();
+
+           $("#txtStockType").text(data[0].stkCtgryNm);
+           $("#txtStatus").text(data[0].stusCodeNm);
+           $("#txtStockCode").text(data[0].bomCompnt);
+           $("#txtUOM").text(data[0].uomName);
+           $("#txtStockName").text(data[0].stkDesc);
+           $("#txtCategory").text(data[0].stkTypeNm );
+
+           $("#txtNetWeight").text(data[0].netWt);
+           $("#txtGrossWeight").text(data[0].grosWt);
+           $("#txtMeasurement").text(data[0].measureCbm);
+
+           if (data[0].isNcv == 1) {
+               $("#cbNCV").prop("checked", true);
+           }
+           if (data[0].isSirim == 1) {
+               $("#cbSirim").prop("checked", true);
+           }
+           $("#cbNCV").prop("disabled", true);
+           $("#cbSirim").prop("disabled", true);
+
+           //$("#typeid").val(data[0].typeid);
+       }
+   }
+   /*  function fn_openDetail(div,idxId){
         var id =AUIGrid.getCellValue(myGridID ,idxId, 'courierid');
         Common.ajaxSync("GET", "/logistics/courier/selectCourierDetail",{"courierid":id} ,
                 function(data){
@@ -363,7 +443,7 @@
             doDefCombo('', '' ,'curareaid', 'S', '');
             doDefCombo('', '' ,'curpostcod', 'S', '');   
       
-  }
+  } */
   
  
 </script>
@@ -526,12 +606,12 @@
 		<section class="search_result">
 			<!-- search_result start -->
 
-			<ul class="right_btns">
+			<%-- <ul class="right_btns">
 
-				<%-- <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li>
+				 <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li>
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <li><p class="btn_grid"><a id="#"><spring:message code='sys.btn.del' /></a></p></li>
-    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
+    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li>  
 				<li><p class="btn_grid">
 						<a id="view"><spring:message code='sys.btn.view' /></a>
 					</p></li>
@@ -541,7 +621,7 @@
 				<li><p class="btn_grid">
 						<a id="insert"><spring:message code='sys.btn.add' /></a>
 					</p></li>
-			</ul>
+			</ul> --%>
 
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
@@ -551,21 +631,18 @@
 			    <section id="subDiv"class="tap_wrap"><!-- tap_wrap start -->
         
             <ul class="tap_type1">
-                <li id="stock_info"><a href="#"> Stock info </a></li>
-                <li id="price_info"><a href="#"> Price & Value Information</a></li>
+                <li id="material_info"><a href="#"> Material Code Info </a></li>
                 <li id="filter_info"><a href="#"> Filter Info</a></li>
                 <li id="spare_info"><a href="#"> Spare Part Info</a></li>
-                <li id="service_info"><a href="#"> Service Charge Info</a></li>
-                <li id="stock_image"><a href="#"> Stock Image</a></li>
             </ul>
-            <article class="tap_area" id="stock_info_div" style="display:none;">
+            <article class="tap_area" id="material_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
-                <h3>Stock Information</h3>
-                <ul class="left_opt">
-                    <li><p class="btn_blue"><a id="stock_info_edit">EDIT</a></p></li>
-                </ul>
+                <!-- <h3>Material Code Info</h3> -->
+             <!--    <ul class="left_opt">
+                    <li><p class="btn_blue"><a id="material_info_edit">EDIT</a></p></li>
+                </ul> -->
                 </aside>
-                <form id="stockInfo" name="stockInfo" method="post">
+                <form id="materialInfo" name="materialInfo" method="post">
                 <table class="type1">
                     <caption>search table</caption>
                     <colgroup>
@@ -612,96 +689,24 @@
                 </table>
                 </form>
             </article>
-
-            <article class="tap_area" id="price_info_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                <h3>Price & Value Information</h3>
-                <ul class="left_opt">
-                    <li><p class="btn_blue"><a id="price_info_edit">EDIT</a></p></li>
-                </ul>
-                </aside>
-                <form id='priceForm' name='priceForm' method='post'>
-                <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/>
-                <table class="type1">
-                    <caption>search table</caption>
-                    <colgroup>
-                        <col style="width:150px" />
-                        <col style="width:*" />
-                        <col style="width:160px" />
-                        <col style="width:*" />
-                        <col style="width:160px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <th scope="row">Cost</th>
-                        <td ID="txtCost"></td>
-                        <th scope="row">Normal Price</th>
-                        <td ID="txtNormalPrice"></td>
-                        <th scope="row">Point of Value (PV)</th>
-                        <td ID="txtPV"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Monthly Rental</th>
-                        <td ID="txtMonthlyRental"></td>
-                        <th scope="row">Rental Deposit</th>
-                        <td ID="txtRentalDeposit"></td>
-                        <th scope="row">Penalty Charges</th>
-                        <td ID="txtPenaltyCharge"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Trade In (PV) Value</th>
-                        <td colspan="5" ID="txtTradeInPV"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                </form>
-            </article>
-            
             <article class="tap_area" id="filter_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
-                    <h3 id="filterTab">Stock's Filter List</h3>
-                    <ul class="left_opt">
+                    <!-- <h3 id="filterTab">Filter Info</h3> -->
+                    <!-- <ul class="left_opt">
                     <li><p class="btn_blue"><a id="filter_info_edit">EDIT</a></p></li>
-                    </ul>
+                    </ul> -->
                 </aside>
                 <div id="filter_grid" style="width:100%;">
                 </div>                
             </article>
             <article class="tap_area" id="spare_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
-                    <h3>Stock's Spare Part List</h3>
-                    <ul class="left_opt">
+                    <!-- <h3> Spare Part List</h3> -->
+                    <!-- <ul class="left_opt">
                     <li><p class="btn_blue"><a id="spare_info_edit">EDIT</a></p></li>
-                    </ul>
+                    </ul> -->
                 </aside>
                 <div id="spare_grid" style="width:100%;"></div>
-            </article>
-            <article class="tap_area" id="service_info_div" style="display:none;">
-                <aside class="title_line"><!-- title_line start -->
-                <h3>Service Charge Information List</h3>
-                <ul class="left_opt">
-                    <li><p class="btn_blue"><a id="service_info_edit">EDIT</a></p></li>
-                </ul>
-                </aside>
-                <div id="service_grid" style="width:100%;"></div>
-            </article>            
-            <article class="tap_area" id="stock_img_td" style="display:none;">
-                <table class="type1">
-                    <caption>search table</caption>
-                    <colgroup>
-                        <col style="width:69%" />
-                        <col style="width:1%" />
-                        <col style="width:30%" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <td  style="text-align: left;">
-                            <div id="stock_img_div" style="width:100%;"></div></td>
-                        <td >&nbsp;</td>
-                        <td id="imgShow"></td>
-                    </tr>
-                </table>                        
             </article>
         </section><!--  tab -->
 			<!-- grid_wrap end -->

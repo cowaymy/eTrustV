@@ -13,4 +13,6 @@ public interface BomMapper {
 
 	List<EgovMap> selectBomList(Map<String, Object> params);
 
+	List<EgovMap> materialInfo(Map<String, Object> params);
+
 }
