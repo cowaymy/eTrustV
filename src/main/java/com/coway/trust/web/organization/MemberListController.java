@@ -1,5 +1,6 @@
 package com.coway.trust.web.organization;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,15 +10,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.organization.MemberListService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -140,6 +146,36 @@ public class MemberListController {
 	@RequestMapping(value = "/selectMemberListNewPop.do")
 	public String selectMemberListNewPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		
+		params.put("mstCdId",2);
+		List<EgovMap> race = commonService.getDetailCommonCodeList(params);
+		params.put("mstCdId",4);
+		List<EgovMap> marrital = commonService.getDetailCommonCodeList(params);
+		List<EgovMap> nationality = memberListService.nationality();
+		params.put("groupCode","state");
+		params.put("codevalue","1");
+		List<EgovMap> state = commonService.selectAddrSelCode(params);
+		params.put("mstCdId",5);
+		List<EgovMap> educationLvl = commonService.getDetailCommonCodeList(params);
+		params.put("mstCdId",3);
+		List<EgovMap> language = commonService.getDetailCommonCodeList(params);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		
+		logger.debug("race : {} "+race);
+		logger.debug("marrital : {} "+marrital);
+		logger.debug("nationality : {} "+nationality);
+		logger.debug("state : {} "+state);
+		logger.debug("educationLvl : {} "+educationLvl);
+		logger.debug("language : {} "+language);
+		
+		model.addAttribute("race", race);
+		model.addAttribute("marrital", marrital);
+		model.addAttribute("nationality", nationality);
+		model.addAttribute("state", state);
+		model.addAttribute("educationLvl", educationLvl);
+		model.addAttribute("language", language);
+		model.addAttribute("issuedBank", selectIssuedBank);
+		
+		
 		// 호출될 화면
 		return "organization/organization/memberListNewPop";
 	}
@@ -214,4 +250,51 @@ public class MemberListController {
 		logger.debug("selectRenewalHistory : {}", selectRenewalHistory);
 		return ResponseEntity.ok(selectRenewalHistory);
 	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectArea", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectArea(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("groupCode","area");
+		params.put("codevalue",params.get("codevalue"));
+		List<EgovMap> area = commonService.selectAddrSelCode(params);
+		logger.debug("area : {}", area);
+		return ResponseEntity.ok(area);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/memberSave", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveMemberl(@RequestBody Map<String, Object> params, Model model) {
+		Boolean success = false;
+		String msg = "";
+		logger.debug("memberNm : {}", params.get("memberNm"));
+		logger.debug("memberType : {}", params.get("memberType"));
+		logger.debug("joinDate : {}", params.get("joinDate"));
+		logger.debug("gender : {}", params.get("gender"));
+		
+		success = memberListService.saveMember(params);
+		// 결과 만들기.
+   	ReturnMessage message = new ReturnMessage();
+//    	message.setCode(AppConstants.SUCCESS);
+//    	message.setData(map);
+//    	message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
+   	
+   	System.out.println("msg   " + msg);
+//		
+	return ResponseEntity.ok(message);
+	}
+	
 }
