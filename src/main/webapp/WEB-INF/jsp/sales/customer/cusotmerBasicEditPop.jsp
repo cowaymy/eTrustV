@@ -3,36 +3,150 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$("#_editCustomerInfo").change(function(){
-	      
-		var status = $(this).val();
-		
-		if(status == '1'){
-			$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfo.do" }).submit();
-		}
-		if(status == '2'){
-			$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerAddress.do" }).submit();
-		}
-		if(status == '3'){
-			//$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfo.do" }).submit();
-		}
-		if(status == '4'){
-			//$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfo.do" }).submit();
-		}
-		if(status == '5'){
-			//$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfo.do" }).submit();
-		}
-	    if(status == '6'){
-            //$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfo.do" }).submit();
-        }
-	});
+	var selCodeCustId = $("#selCodeCustId").val(); // TypeId 
+	var selCodeCorpId = $("#selCodeCorpId").val();
+	var selCodeNation = $("#selCodeNation").val();
+	var selCodeRaceId = $("#selCodeRaceId").val(); //race id
 	
+	doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'cmbCorpTypeId', 'S', '');     // Company Type Combo Box
+	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'cmbCustTypeId', 'S', '');       // Customer Type Combo Box
+	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , selCodeNation,'cmdNationTypeId', 'A', '');        // Nationality Combo Box
+	doGetCombo('/common/selectCodeList.do', '2', selCodeRaceId ,'cmdRaceTypeId', 'S', ''); //cmdRaceTypeId
+	//TypeId 에 따른 수정항목 Control
+	// individual
+	if(selCodeCustId == '964'){
+		$("#cmbCustTypeId").attr("disabled" , "disabled");
+		$("#cmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
+		$("#nric").attr({"class":"readonly w100p","readonly" : "readonly"});
+		$("input[name='gender']").attr("disabled" , false);
+		$("#cmdRaceTypeId").attr("disabled" , false);
+		$("#cmdNationTypeId").attr("disabled" , "disabled");
+		$("#dob").attr("disabled" , false);
+	}
+	// company
+	if(selCodeCustId == '965'){
+		$("#cmbCustTypeId").attr("disabled" , "disabled");
+		$("#cmbCorpTypeId").attr({"class" : "w100p" , "disabled" : false});
+		$("#nric").attr({"class":"readonly w100p","readonly" : "readonly"});
+		$("input[name='gender']").attr("disabled" , "disabled");
+		$("#cmdRaceTypeId").attr({"disabled" : "disabled" , "class":"disabled w100p"});
+		$("#cmdNationTypeId").attr("disabled" , "disabled");
+		$("#dob").attr("disabled" , "disabled");
+	}
+    
+	 // 수정 항목 변경 
+    $("#_editCustomerInfo").change(function(){
+              
+            var stateVal = $(this).val();
+            $("#_selectParam").val(stateVal);
+    });
+	 
+    $("#_confirm").click(function () {
+        
+        var status = $("#_selectParam").val();
+        
+        if(status == '1'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoPop.do" }).submit();
+        }
+        if(status == '2'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerAddressPop.do" }).submit();
+        }
+        if(status == '3'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerContactPop.do" }).submit();
+        }
+        if(status == '4'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBankAccountPop.do" }).submit();
+        }
+        if(status == '5'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerCreditCardPop.do" }).submit();
+        }
+        if(status == '6'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoLimitPop.do" }).submit();
+        }
+        
+    });
+	
+    // update Button Click
+    $("#_updBtn").click(function(){
+       
+        /*********** individual ***********/
+        if(selCodeCustId == '964'){
+        	// 1. validation
+        	//Customer Name
+        	if('' == $("#name").val() || null == $("#name").val()){
+        		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Name'/>");
+            	return;
+            }
+        	//Race
+        	if('' == $("#cmdRaceTypeId").val() || null == $("#cmdRaceTypeId").val()){
+        		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Race'/>");
+        		return;
+        	}
+        	//Email 
+        	if('' != $("#email").val() && null != $("#email").val()){
+        		
+        		if(FormUtil.checkEmail($("#email").val()) == true){
+                    Common.alert("* Invalid email address.");
+                    return;
+                 }
+        	}
+        	// 2. update
+        	fn_getCustomerBasicAjax();
+        }
+        
+        /*********** company ***********/
+        if(selCodeCustId == '965'){
+        	// 1. validation
+        	//Company Type
+        	if('' == $("#cmbCorpTypeId").val() || null == $("#cmbCorpTypeId").val()){
+        		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Company Type'/>");
+        		return;
+        	}
+        	//Customer Name
+        	if('' == $("#name").val() || null == $("#name").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Name'/>");
+                return;
+            }
+        	//Email 
+            if('' != $("#email").val() && null != $("#email").val()){
+                
+                if(FormUtil.checkEmail($("#email").val()) == true){
+                    Common.alert("* Invalid email address.");
+                    return;
+                 }
+            }
+        	// 2. update
+        	fn_getCustomerBasicAjax();
+        }
+    });
+    
+    //update
+    function fn_getCustomerBasicAjax(){
+        Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serialize(), function(result) {
+            Common.alert(result.message, fn_reloadPage);
+        });
+    }
+    
+    //reload Page func
+    function fn_reloadPage(){
+    	
+    	$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoPop.do" }).submit();
+    }
 });
 </script>
+<!-- getParams  -->
+<input type="hidden" value="${result.typeId }" id="selCodeCustId"> <!-- TypeId : 964(Individual) / 965(Company)  --> 
+<input type="hidden" value="${result.corpTypeId}" id="selCodeCorpId">
+<input type="hidden" value="${result.nation }" id="selCodeNation">
+<input type="hidden" value="${result.raceId }" id="selCodeRaceId">
+<!-- move Page Form  -->
 <form id="editForm">
     <input type="hidden" name="custId" value="${custId}"/>
     <input type="hidden" name="custAddId" value="${custAddId}"/>
+    <input type="hidden" name="custCntcId" value="${custCntcId}" id="custCntcId"> 
+    <input type="hidden" name="selectParam"  id="_selectParam"/>
 </form>
+
 <section class="pop_body"><!-- pop_body start -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -44,15 +158,14 @@ $(document).ready(function(){
 <tr>
     <th scope="row">EDIT Type</th>
     <td>
-    <select id="_editCustomerInfo" class="target">
-        <option value="1">Edit Basic Info</option>
-        <option value="2">Edit Customer Address</option>
-        <option value="3">Edit Contact Info</option>
-        <option value="4">Edit Bank Account</option>
-        <option value="5">Edit Credit Card</option>
-        <option value="6">Edit Basic Info(Limitation)</option>
+    <select id="_editCustomerInfo">
+        <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>>Edit Basic Info</option>
+        <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>>Edit Customer Address</option>
+        <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>>Edit Contact Info</option>
+        <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>>Edit Bank Account</option>
+        <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>>Edit Credit Card</option>
     </select>
-    <p class="btn_sky"><a href="#">Confirm</a></p>
+    <p class="btn_sky"><a href="#" id="_confirm">Confirm</a></p>
     </td>
 </tr>
 </tbody>
@@ -259,7 +372,10 @@ $(document).ready(function(){
     <li><span class="red_text">*Compulsory Field</span> <span class="brown_text">#Compulsory Field(For Indvidual Type)</span></li>
 </ul>
 </aside><!-- title_line end -->
-
+<!-- ######### Update Field Start  ######### -->
+<form id="updForm"><!-- form start -->
+<input type="hidden" value="${result.custId}" name="custID">
+<input type="hidden" value="${result.typeId }" name="typeID">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -270,78 +386,68 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer Type</th><!-- Indivisual // Company  both Disable  -->
+    <th scope="row">Customer Type</th>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /> <!-- insert value  -->
+    <select name="cmbCustTypeId" id="cmbCustTypeId" class="disabled w100p" ></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Company Type</th> <!--  Company Type >>  965 Compare With -->
+    <th scope="row">Company Type<span class="must">*</span></th> 
+    <td><select name="cmbCorpTypeId" id="cmbCorpTypeId" class="disabled w100p" ></select></td> 
+    <th scope="row">NRIC/Company No<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" />
-    </td>
-    <th scope="row">NRIC/Company No<span class="must">*</span></th><!-- NRIC OR COMPANY NO -->
-    <td>
-    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" />
+    <input type="text" title="" placeholder=""   value="${result.nric}" id="nric"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Customer Name<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p" />
+    <input type="text" title="" placeholder="" class="w100p"  name="name" value="${result.name }" id="name"/> <!-- name  -->
     </td>
     <th scope="row">Nationality <span class="brown_text">#</span></th>
     <td>
-    <select class="disabled w100p" disabled="disabled">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+        <select class="disabled w100p" disabled="disabled" id="cmdNationTypeId" name="cmdNationTypeId"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">DOB <span class="brown_text">#</span></th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   value="${result.dob}" name="dob" id="dob" readonly="readonly"/>
     </td>
     <th scope="row">Passport Expire</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  value="${result.pasSportExpr}" name="pasSportExpr" readonly="readonly"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Gender <span class="brown_text">#</span></th>
     <td>
-    <label><input type="radio" name="Gender" /><span>Male</span></label>
-    <label><input type="radio" name="Gender" /><span>Female</span></label>
+    <label><input type="radio" name="gender"  <c:if test="${result.gender ne 'F'}">checked</c:if>  value="M"/><span>Male</span></label>
+    <label><input type="radio" name="gender"  <c:if test="${result.gender eq 'F'}">checked</c:if> value="F" /><span>Female</span></label>
     </td>
     <th scope="row">Visa Expire</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${result.visaExpr }" name="visaExpr" readonly="readonly"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Race <span class="brown_text">#</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p" id="cmdRaceTypeId" name="raceId"></select>
     </td>
     <th scope="row">Email</th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p" />
+    <input type="text" title="" placeholder="" class="w100p"  value="${result.email}" name="email" id="email"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Remarks</th>
-    <td colspan="3"><textarea cols="20" placeholder="Remarks" rows="5"></textarea></td>
+    <td colspan="3"><textarea cols="20" placeholder="Remarks" rows="5" name="rem">${result.rem}</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
-
+</form><!-- form end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">Update</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_updBtn">Update</a></p></li>
 </ul>
 </section><!-- pop_body end -->

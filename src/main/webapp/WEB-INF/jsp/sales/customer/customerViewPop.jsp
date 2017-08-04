@@ -277,7 +277,7 @@
     // Popup Option     
     var option = {
             winName : "popup",
-            isDuplicate : false, // 계속 팝업을 띄울지 여부.
+            /* isDuplicate : false, // 계속 팝업을 띄울지 여부. */
             fullscreen : "no", // 전체 창. (yes/no)(default : no)
             location : "no", // 주소창이 활성화. (yes/no)(default : yes)
             menubar : "no", // 메뉴바 visible. (yes/no)(default : yes)
@@ -317,6 +317,7 @@
 <form id="getParamForm" method="get">
     <input type="hidden" name="custAddrId" value="${custAddrId}"/>
     <input type="hidden" name="custId" value="${custId}"/>
+    <input type="hidden" name="custCntcId" value="${custCntcId}">
 </form>
 
 <section class="pop_body"><!-- pop_body start -->

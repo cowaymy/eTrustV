@@ -23,9 +23,8 @@
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
             $("#_custId").val(event.item.custId);
             $("#_custAddId").val(event.item.custAddId);
+            $("#_custCntcId").val(event.item.custCntcId);
             Common.popupWin("popForm", "/sales/customer/selectCustomerView.do", option);
-            
-            
         });
         // 셀 클릭 이벤트 바인딩
     
@@ -64,6 +63,9 @@
             	dataField : "custAddId",
             	visible : false
             },{
+            	dataField : "custCntcId",
+            	visible : false
+            },{
                 dataField : "undefined",
                 headerText : "Edit",
                 width : 170,
@@ -72,8 +74,10 @@
                       labelText : "Edit",
                       onclick : function(rowIndex, columnIndex, value, item) {
                            //pupupWin
-                          $("#_custId").val(item.custCntcId);
+                          $("#_custId").val(item.custId); // custCntcId
                           $("#_custAddId").val(item.custAddId);
+                          $("#_custCntcId").val(item.custCntcId);
+                         
                           Common.popupWin("popForm", "/sales/customer/updateCustomerBasicInfoPop.do", option);
                       }
                }
@@ -157,7 +161,8 @@
 	
  // Popup Option     
     var option = {
-            
+    		
+    		location : "no", // 주소창이 활성화. (yes/no)(default : yes)
     		width : "1200px", // 창 가로 크기
             height : "680px" // 창 세로 크기
         };
@@ -165,6 +170,7 @@
 <form id="popForm" method="post">
     <input type="hidden" name="custId" id="_custId"/>
     <input type="hidden" name="custAddId" id="_custAddId"/>
+    <input type="hidden" name="custCntcId" id="_custCntcId">
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">

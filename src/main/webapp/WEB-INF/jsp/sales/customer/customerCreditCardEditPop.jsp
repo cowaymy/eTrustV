@@ -1,5 +1,49 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript">
+$(document).ready(function(){
+    
+    $("#_editCustomerInfo").change(function(){
+          
+        var stateVal = $(this).val();
+        $("#_selectParam").val(stateVal);
+        
+    });
+    
+    $("#_confirm").click(function () {
+        
+        var status = $("#_selectParam").val();
+        
+        if(status == '1'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoPop.do" }).submit();
+        }
+        if(status == '2'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerAddressPop.do" }).submit();
+        }
+        if(status == '3'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerContactPop.do" }).submit();
+        }
+        if(status == '4'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBankAccountPop.do" }).submit();
+        }
+        if(status == '5'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerCreditCardPop.do" }).submit();
+        }
+        if(status == '6'){
+            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoLimitPop.do" }).submit();
+        }
+        
+    });
+    
+});
+</script>
+<!-- move Page Form  -->
+<form id="editForm">
+    <input type="hidden" name="custId" value="${custId}"/>
+    <input type="hidden" name="custAddId" value="${custAddId}"/>
+    <input type="hidden" name="custCntcId" value="${custCntcId}" id="custCntcId"> 
+    <input type="hidden" name="selectParam"  id="_selectParam"/>
+</form>
 <section class="pop_body"><!-- pop_body start -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -11,7 +55,15 @@
 <tr>
     <th scope="row">EDIT Type</th>
     <td>
-    <input type="text" title="" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p>
+     <select id="_editCustomerInfo">
+        <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>>Edit Basic Info</option>
+        <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>>Edit Customer Address</option>
+        <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>>Edit Contact Info</option>
+        <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>>Edit Bank Account</option>
+        <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>>Edit Credit Card</option>
+        
+    </select>
+    <p class="btn_sky"><a href="#" id="_confirm">Confirm</a></p>
     </td>
 </tr>
 </tbody>
