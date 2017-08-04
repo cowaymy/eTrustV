@@ -62,7 +62,7 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		// TODO Auto-generated method stub
 		locMapper.insertLocationInfo(params);
 	}
-
+	@Override
 	public void deleteLocationInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		locMapper.deleteLocationInfo(params);
