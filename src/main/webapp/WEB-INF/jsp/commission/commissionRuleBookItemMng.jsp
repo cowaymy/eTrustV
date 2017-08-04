@@ -125,12 +125,7 @@
       //rule search
        $("#searchRule").click(function() {
             $("#searchFormRule [name=ruleSeq]").val("");
-            var url="/commission/system/selectRuleBookMngList";
-            if($("#searchFormRule [name=searchYn]").val() == "Y"){
-            	url = url +"?useYn=Y";
-            	$("#searchFormRule [name=searchYn]").val("");
-            }
-            Common.ajax("GET", url, $("#searchFormRule").serialize(), function(result) {
+            Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {
                 console.log("성공.");
                 console.log("data : " + result);            
                 console.log("result.length : " + result.length);            
@@ -436,7 +431,6 @@
 	                	AUIGrid.setAllCheckedRows(myGridID2, false);
 	                }
                 });
-                $("#searchFormRule [name=searchYn]").val("Y");
                 $("#searchFormRule [name=useYnCombo]").val("Y").attr("selected", "selected");
                 $("#searchRule").trigger("click");
 			}
@@ -913,7 +907,6 @@
 <input type="hidden" name="itemSeq" id="itemSeq"/>
 <input type="hidden" name="orgSeq" id="orgSeq"/>
 <input type="hidden" name="ruleSeq" id="ruleSeq"/>
-<input type="hidden" name="searchYn" id="searchYn"/>
 
 <ul class="right_btns">
   <li><p class="btn_blue"><a href="#" id="searchRule"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>

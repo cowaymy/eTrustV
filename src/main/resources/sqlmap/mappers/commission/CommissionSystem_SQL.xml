@@ -508,15 +508,15 @@
       AND T3.RULE_SEQ = #{ruleSeq}
     </if>
     START WITH RULE_PID=0
-    <if test="useYn != null and useYn != ''">
-      AND T3.USE_YN = #{useYn}
+    <if test="useYnCombo != null and useYnCombo != ''">
+      AND T3.USE_YN = #{useYnCombo}
     </if>
      <if test="searchDt != null and searchDt != ''">
       AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
     </if>
     CONNECT BY PRIOR RULE_SEQ =RULE_PID
-    <if test="useYn != null and useYn != ''">
-      AND T3.USE_YN = #{useYn}
+    <if test="useYnCombo != null and useYnCombo != ''">
+      AND T3.USE_YN = #{useYnCombo}
     </if>
       <if test="searchDt != null and searchDt != ''">
       AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
