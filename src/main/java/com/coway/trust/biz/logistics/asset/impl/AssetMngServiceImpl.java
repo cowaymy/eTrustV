@@ -80,8 +80,17 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		AssetMngMapper.insertAssetMng(params);
 	}
 	
+	@Override
+	public void motifyAssetMng(Map<String, Object> params) {
+		AssetMngMapper.motifyAssetMng(params);
+
+	}
 	
-	
+	@Override
+	public void deleteAssetMng(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		AssetMngMapper.deleteAssetMng(params);
+	}
 	
 	
 	
