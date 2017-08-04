@@ -1,7 +1,10 @@
 package com.coway.trust.web.logistics.assetmaster;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -26,6 +29,8 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.asset.AssetMngService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -54,21 +59,53 @@ public class AssetMasterController {
 	}
 
 	@RequestMapping(value = "/assetList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectCourierList(@RequestBody Map<String, Object> params,
-			ModelMap model) throws Exception {
+	public ResponseEntity<Map> selectCourierList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {	
 		
-		/*String assetid     = request.getParameter("assetid");
-		String branchId     = request.getParameter("branchid");
-		String locdesc      = request.getParameter("locdesc");
-		String loccd        = request.getParameter("loccd");
-		System.out.println("assetid ::::::         "  +assetid);
-		Map<String, Object> smap = new HashMap();
-		smap.put("assetid", assetid);
-		smap.put("status" , statusCd);
-		smap.put("locdesc"  , locdesc);
-		smap.put("loccd"  , loccd);*/
+		String searchassetid = request.getParameter("searchassetid");
+		String[] searchstatus = request.getParameterValues("searchstatus");
+		String searchbrand = request.getParameter("searchbrand");
+		String searchmodelname = request.getParameter("searchmodelname");
+		String searchpurchasedate1 = request.getParameter("searchpurchasedate1");
+		String searchpurchasedate2 = request.getParameter("searchpurchasedate2");
+//		String searchcategory = request.getParameter("searchcategory");
+//		String searchcategory = request.getParameter("searchcategory");
+//		String searchcategory = request.getParameter("searchcategory");
+		
+		
+//		System.out.println("searchassetid :       "+request.getParameter("searchassetid"));
+//		System.out.println("searchbrand :       "+request.getParameter("searchbrand"));
+//		System.out.println(searchstatus.length);
+//		for (int i = 0; i < searchstatus.length; i++) {
+//			System.out.println("searchstatus :              "+searchstatus[i]);			
+//		}
+//		System.out.println("searchtype :       "+request.getParameter("searchtype"));
+//		System.out.println("searchcolor :       "+request.getParameter("searchcolor"));
+//		System.out.println("searchmodelname :       "+request.getParameter("searchmodelname"));
+//		System.out.println("searchpurchasedate1 :       "+request.getParameter("searchpurchasedate1"));
+//		System.out.println("searchpurchasedate2 :       "+request.getParameter("searchpurchasedate2"));
+//		System.out.println("searchrefno :       "+request.getParameter("searchrefno"));
+//		System.out.println("searchbranchid :       "+request.getParameter("searchbranchid"));
+//		System.out.println("searchdepartment :       "+request.getParameter("searchdepartment"));
+//		System.out.println("searchinvoiceno :       "+request.getParameter("searchinvoiceno"));
+//		System.out.println("searchdealer :       "+request.getParameter("searchdealer"));
+//		System.out.println("searchserialno :       "+request.getParameter("searchserialno"));
+//		System.out.println("searchwarrantyno :       "+request.getParameter("searchwarrantyno"));
+//		System.out.println("searchimeino :       "+request.getParameter("searchimeino"));
+//		System.out.println("searchmacaddress :       "+request.getParameter("searchmacaddress"));
+//		System.out.println("searchcreator :       "+request.getParameter("searchcreator"));
+//		System.out.println("searchcreatedate1 :       "+request.getParameter("searchcreatedate1"));
+//		System.out.println("searchcreatedate2 :       "+request.getParameter("searchcreatedate2"));
+//				
+		Map<String, Object> assetmap = new HashMap();
+		assetmap.put("searchassetid", searchassetid);
+		assetmap.put("searchstatus" , searchstatus);
+		assetmap.put("searchbrand"  ,	searchbrand );
+		assetmap.put("searchmodelname"  ,	searchmodelname );
+		assetmap.put("searchpurchasedate1"  ,	searchpurchasedate1 );
+		assetmap.put("searchpurchasedate2"  ,	searchpurchasedate2 );
 
-		List<EgovMap> list = ams.selectAssetList(params);
+		List<EgovMap> list = ams.selectAssetList(assetmap);
 		
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -118,15 +155,7 @@ public class AssetMasterController {
 		params.put("masterbreanch", 42);
 		params.put("curr_dept_id", 38);
 		params.put("curr_user_id", 0);
-		params.put("mastercolor", 2);
-		params.put("masterbrand", 3);
-		params.put("masterpurchaseamount", 1234.00);
-		
-		//params.put("mastertype", 1);
-		//params.put("masterdealer", 5);
-		//params.put("mastercategory", 0);
-		
-		
+			
 		Map<String, Object> map = new HashMap();
 
 		try {
@@ -141,10 +170,56 @@ public class AssetMasterController {
 	}
 	
 	
+	@RequestMapping(value = "/motifyAssetMng.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> motifyAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+
+		params.put("masterpurchasedate", CommonUtils.changeFormat((String)params.get("masterpurchasedate"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));		
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		// loginId
+		params.put("upd_user_id", loginId);
+
+		Map<String, Object> map = new HashMap();
+
+		try {
+			ams.motifyAssetMng(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
 	
 	
-	
-	
-	
+	@RequestMapping(value = "/deleteAssetMng.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> deleteAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		Map<String, Object> map = new HashMap();
+
+		try {
+			//ams.deleteAssetMng(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
 	
 }
