@@ -42,6 +42,10 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	public List<EgovMap> selectBrandList(Map<String, Object> params) {
 		return AssetMngMapper.selectBrandList(params);
 	}
+	@Override
+	public List<EgovMap> selectTypeList(Map<String, Object> params) {
+		return AssetMngMapper.selectTypeList(params);
+	}
 	
 	@Override
 	public void insertAssetMng(Map<String, Object> params) {
