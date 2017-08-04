@@ -257,38 +257,37 @@
     </select>
     
     <!-- type리스트  -->
-   <!--  <select id="" parameterType="Map" resultType="EgovMap">
+  <select id="selectTypeList" parameterType="Map" resultType="EgovMap">
             SELECT     
-                 Project1.CODE_ID AS CODE_ID, 
-                 Project1.CODE_MASTER_ID AS CODE_MASTER_ID, 
-                 Project1.CODE AS CODE, 
-                 Project1.CODE_NAME AS CODE_NAME, 
-                 Project1.CODE_DESC AS CODE_DESC, 
-                 Project1.DISAB AS DISAB, 
-                 Project1.CRT_DT AS CRT_DT, 
-                 Project1.CRT_USER_ID AS CRT_USER_ID, 
+                 Project1.CODE_ID  CODE_ID, 
+                 Project1.CODE_MASTER_ID  CODE_MASTER_ID, 
+                 Project1.CODE_NAME  CODE_NAME, 
+                 Project1.CODE  CODE, 
+                 <!-- Project1.CODE_DESC  CODE_DESC, --> 
+                 Project1.DISAB  DISAB, 
+                 Project1.CRT_DT  CRT_DT, 
+                 Project1.CRT_USER_ID  CRT_USER_ID, 
                  Project1.UPD_DT AS UPD_DT, 
-                 Project1.UPD_USER_ID AS UPD_USER_ID, 
-                 Project1.OLD_CODE_ID AS OLD_CODE_ID
+                 Project1.UPD_USER_ID  UPD_USER_ID, 
+                 Project1.OLD_CODE_ID  OLD_CODE_ID
                  FROM ( SELECT 
-                     Extent2.CODE_ID AS CODE_ID, 
-                     Extent2.CODE_MASTER_ID AS CODE_MASTER_ID, 
-                     Extent2.CODE AS CODE, 
-                     Extent2.CODE_NAME AS CODE_NAME, 
-                     Extent2.CODE_DESC AS CODE_DESC, 
-                     Extent2.DISAB AS DISAB, 
-                     Extent2.CRT_DT AS CRT_DT, 
-                     Extent2.CRT_USER_ID AS CRT_USER_ID, 
-                     Extent2.UPD_DT AS UPD_DT, 
-                     Extent2.UPD_USER_ID AS UPD_USER_ID, 
-                     Extent2.OLD_CODE_ID AS OLD_CODE_ID
+                     Extent2.CODE_ID  CODE_ID, 
+                     Extent2.CODE_MASTER_ID  CODE_MASTER_ID, 
+                     Extent2.CODE  CODE, 
+                     Extent2.CODE_NAME  CODE_NAME, 
+                     <!-- Extent2.CODE_DESC  CODE_DESC,  -->
+                     Extent2.DISAB  DISAB, 
+                     Extent2.CRT_DT  CRT_DT, 
+                     Extent2.CRT_USER_ID  CRT_USER_ID, 
+                     Extent2.UPD_DT  UPD_DT, 
+                     Extent2.UPD_USER_ID  UPD_USER_ID, 
+                     Extent2.OLD_CODE_ID  OLD_CODE_ID
                      FROM SYS0014M Extent1
                      INNER JOIN SYS0013M Extent2 ON (Extent2.CODE_ID = Extent1.CODE_ID) AND (0 = Extent2.DISAB)
-                     WHERE (0 = Extent1.DISAB) AND (Extent1.PARENT_CODE_ID = 1199) AND (Extent1.HRCHY_TYPE_ID = 1198)
+                     WHERE (0 = Extent1.DISAB) AND (Extent1.PARENT_CODE_ID = #{groupCode}) AND (Extent1.HRCHY_TYPE_ID = #{hrchytypeid})
                  ) Project1
                  ORDER BY Project1.CODE_NAME ASC
-    </select> -->
-    
+    </select> 
     
     <insert id="insertAssetMng" parameterType="Map">
          INSERT INTO LOG0050M(
