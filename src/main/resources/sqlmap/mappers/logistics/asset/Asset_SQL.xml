@@ -8,7 +8,7 @@
         <!-- <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/> -->
         </resultMap>
      
-    <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
+   <!--  <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
 		   SELECT 
 	           P1.ASSET_ID assetId  ,
 	           P1.BRAND_ID brandId  ,
@@ -105,14 +105,128 @@
 	                    LEFT JOIN SAL0030D E12   ON E12.DEALER_ID = E1.DEALER_ID
 	               WHERE  1 = E1.STUS_ID ) P1
 	      ORDER BY P1.ASSET_ID ASC    
+    </select> -->
+    <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
+		    select 
+                 E1.ASSET_ID assetId,
+                 E1.BRAND_ID brandId,
+                 l49.name, 
+                 E1.CTGRY_ID ctgryId,
+                 s13c.code_name codeName,
+                 E1.COLOR_ID colorId,
+                 s13r.code_name codeName1,
+                 E1.CRT_DT crtDt,
+                 E1.CRT_USER_ID crtUserId,
+                 (select USER_NAME from SYS0047M where user_id = e1.CRT_USER_ID) userName ,
+                 E1.CURR_BRNCH_ID currBrnchId,
+                 E1.CURR_DEPT_ID CURR_DEPT_ID,
+                 E1.CURR_USER_ID CURR_USER_ID,
+                 E1.IMEI_NO imeiNo,
+                 E1.MAC_ADDR macAddr,
+                 E1.NAME NAME1,
+                 E1.PURCHS_AMT purchsAmt,
+                 E1.PURCHS_DT purchsDt,
+                 E1.REF_NO refNo,
+                 E1.ASSET_REM assetRem,
+                 E1.SERIAL_NO serialNo,
+                 E1.STUS_ID stusId,
+                 s38.name name2,
+                 E1.TYPE_ID typeId,
+                 s13t.code_name codeName2,
+                 E1.UPD_DT updDt,
+                 E1.UPD_USER_ID updUserId,  
+                 (select USER_NAME from SYS0047M where user_id = e1.UPD_USER_ID) userName1 ,                                                                             
+                 E1.WRANTY_NO wrantyNo,
+                 E1.DEALER_ID dealerId,
+                 s30.DEALER_NAME dealerName,                          
+                 E1.INVC_NO invcNo,                                
+                 CASE WHEN (s05m.BRNCH_ID IS NOT NULL) THEN s05m.CODE 
+                      ELSE NULL 
+                 END
+                    branch , 
+                 CASE
+                    WHEN (s40.DEPT_ID IS NOT NULL) THEN s40.DEPT_NAME
+                    ELSE NULL
+                 END
+                    department,
+                 CASE
+                    WHEN (s47.USER_ID IS NOT NULL) THEN s47.USER_NAME
+                    ELSE NULL
+                 END
+                    userName2       
+		       FROM LOG0050M E1 , SYS0038M s38 , LOG0049M l49
+		     , (select * from sys0013m where code_master_id = 108) s13c
+		     , (select * from sys0013m where code_master_id = 111) s13t
+		     , (select * from sys0013m where code_master_id = 112) s13r
+		     , SYS0005M s05m , SAL0030D s30 , SYS0040M s40 , SYS0047M s47
+		<!-- WHERE 1 = E1.STUS_ID -->
+		  WHERE 1 = 1
+		  and e1.stus_id  = s38.STUS_CODE_ID
+		  and e1.brand_id = l49.brand_id
+		  and e1.ctgry_id = s13c.code_id
+		  and e1.type_id  = s13t.code_id
+		  and e1.COLOR_ID = s13r.code_id
+		  and E1.CURR_BRNCH_ID = s05m.BRNCH_ID(+)
+		  and E1.DEALER_ID = s30.DEALER_ID(+)
+		  and E1.CURR_DEPT_ID = s40.DEPT_ID(+) 
+		  and E1.CURR_USER_ID = s47.USER_ID(+)
+	     <if test="searchassetid != null and searchassetid !=''">
+                     AND E1.ASSET_ID = #{searchassetid}
+         </if>
+         <if test="searchstatus != null and searchstatus != ''">
+                     AND E1.STUS_ID in 
+            <foreach item="item" collection="searchstatus" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+         </if>   
+         <if test="searchbrand != null and searchbrand !=''">
+                     AND l49.name = #{searchbrand}
+         </if>
+         <if test="searchcolor != null and searchcolor !=''">
+                     AND E1.COLOR_ID = #{searchcolor}
+         </if>
+          <if test="searchmodelname != null and searchmodelname !=''">
+                     AND E1.NAME = #{searchmodelname}
+         </if>
+      <!--    <if test="searchpurchasedate1 != '' and searchpurchasedate2 != '' "> 
+                AND E1.PURCHS_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{searchpurchasedate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND E1.PURCHS_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{searchpurchasedate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+         </if> -->
+         <if test="searchrefno != null and searchrefno !=''">
+                     AND E1.REF_NO = #{searchrefno}
+         </if>
+            <if test="searchbranchid != null and searchbranchid !=''">
+                     AND E1.CURR_BRNCH_ID = #{searchbranchid}
+         </if>
+         <if test="searchinvoiceno != null and searchinvoiceno !=''">
+                     AND E1.INVC_NO = #{searchinvoiceno}
+         </if>
+         <if test="searchdealer != null and searchdealer !=''">
+                     AND E1.DEALER_ID = #{searchdealer}
+         </if>
+          <if test="searchserialno != null and searchserialno !=''">
+                     AND E1.SERIAL_NO = #{searchserialno}
+         </if>
+         <if test="searchwarrantyno != null and searchwarrantyno !=''">
+                     AND E1.WRANTY_NO = #{searchwarrantyno}
+         </if>
+         <if test="searchimeino != null and searchimeino !=''">
+                     AND E1.IMEI_NO = #{searchimeino}
+         </if>
+          <if test="searchmacaddress != null and searchmacaddress !=''">
+                     AND E1.MAC_ADDR = #{searchmacaddress}
+         </if>
+          <if test="searchcreator != null and searchcreator !=''">
+                     AND E1.CURR_USER_ID = #{searchcreator}
+         </if>
+		  order by asset_id
     </select>
-    
     
     <select id="selectDealerList" parameterType="Map" resultType="EgovMap">
 		  SELECT 
 		       DEALER_ID CODE_ID  ,
-		       DEALER_NAME CODE_NAME  ,
 		       DEALER_NRIC DEALER_NRIC  ,
+		       DEALER_NAME CODE_NAME  ,
 		       DEALER_EMAIL DEALER_EMAIL  ,
 		       DEALER_STUS_ID DEALER_STUS_ID  ,
 		       DEALER_BRNCH_ID DEALER_BRNCH_ID  ,
@@ -137,10 +251,44 @@
                CRT_DT CRT_DT  ,
                UPD_USER_ID UPD_USER_ID  ,
                UPD_DT UPD_DT  
-          FROM LOG0049M Extent1
+          FROM LOG0049M 
           WHERE  0 = DISAB
           ORDER BY Name ASC
     </select>
+    
+    <!-- type리스트  -->
+   <!--  <select id="" parameterType="Map" resultType="EgovMap">
+            SELECT     
+                 Project1.CODE_ID AS CODE_ID, 
+                 Project1.CODE_MASTER_ID AS CODE_MASTER_ID, 
+                 Project1.CODE AS CODE, 
+                 Project1.CODE_NAME AS CODE_NAME, 
+                 Project1.CODE_DESC AS CODE_DESC, 
+                 Project1.DISAB AS DISAB, 
+                 Project1.CRT_DT AS CRT_DT, 
+                 Project1.CRT_USER_ID AS CRT_USER_ID, 
+                 Project1.UPD_DT AS UPD_DT, 
+                 Project1.UPD_USER_ID AS UPD_USER_ID, 
+                 Project1.OLD_CODE_ID AS OLD_CODE_ID
+                 FROM ( SELECT 
+                     Extent2.CODE_ID AS CODE_ID, 
+                     Extent2.CODE_MASTER_ID AS CODE_MASTER_ID, 
+                     Extent2.CODE AS CODE, 
+                     Extent2.CODE_NAME AS CODE_NAME, 
+                     Extent2.CODE_DESC AS CODE_DESC, 
+                     Extent2.DISAB AS DISAB, 
+                     Extent2.CRT_DT AS CRT_DT, 
+                     Extent2.CRT_USER_ID AS CRT_USER_ID, 
+                     Extent2.UPD_DT AS UPD_DT, 
+                     Extent2.UPD_USER_ID AS UPD_USER_ID, 
+                     Extent2.OLD_CODE_ID AS OLD_CODE_ID
+                     FROM SYS0014M Extent1
+                     INNER JOIN SYS0013M Extent2 ON (Extent2.CODE_ID = Extent1.CODE_ID) AND (0 = Extent2.DISAB)
+                     WHERE (0 = Extent1.DISAB) AND (Extent1.PARENT_CODE_ID = 1199) AND (Extent1.HRCHY_TYPE_ID = 1198)
+                 ) Project1
+                 ORDER BY Project1.CODE_NAME ASC
+    </select> -->
+    
     
     <insert id="insertAssetMng" parameterType="Map">
          INSERT INTO LOG0050M(
@@ -197,6 +345,33 @@
         ,#{masterdealer}
         )
     </insert>
+    
+    <update id="motifyAssetMng" parameterType="Map">
+           UPDATE LOG0050M
+                    SET      
+                        NAME                   =#{mastermodelname},
+                        COLOR_ID            =#{mastercolor},                               
+                        INVC_NO              =#{masterinvoiceno},                              
+                        DEALER_ID            =#{masterdealer},                             
+                        PURCHS_DT           =TO_CHAR(TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),                             
+                        BRAND_ID             =#{masterbrand},                               
+                        PURCHS_AMT          =#{masterpurchaseamount},                                                    
+                        REF_NO                 =#{masterrefno},                            
+                        SERIAL_NO             =#{masterserialno},                                                                           
+                        WRANTY_NO           =#{masterwarrantyno},           
+                        MAC_ADDR              =#{mastermacaddress},                                                  
+                        IMEI_NO                 =#{masterimeino},                               
+                        ASSET_REM             =#{masterremark},
+                        UPD_USER_ID          =#{upd_user_id},
+                        UPD_DT                   = SYSDATE                            
+                    WHERE  ASSET_ID        =#{masterassetid}
+    </update>
+    
+    <delete id="deleteAssetMng" parameterType="Map">
+        DELETE FROM LOG0050M 
+        WHERE ASSET_ID = #{masterassetid} 
+    </delete>
+    
     <select id="AssetCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_ID),0) + 1 from LOG0050M
     </select>
