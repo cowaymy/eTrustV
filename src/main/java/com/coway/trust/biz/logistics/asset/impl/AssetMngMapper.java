@@ -11,6 +11,7 @@ public interface AssetMngMapper {
 	List<EgovMap> selectAssetList(Map<String, Object> params);
 	List<EgovMap> selectDealerList(Map<String, Object> params);
 	List<EgovMap> selectBrandList(Map<String, Object> params);
+	List<EgovMap> selectTypeList(Map<String, Object> params);
 	void insertAssetMng(Map<String, Object> params);
 	void motifyAssetMng(Map<String, Object> params);
 	void deleteAssetMng(Map<String, Object> params);
