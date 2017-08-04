@@ -72,31 +72,31 @@ public class AssetMasterController {
 //		String searchcategory = request.getParameter("searchcategory");
 //		String searchcategory = request.getParameter("searchcategory");
 		
-		
-//		System.out.println("searchassetid :       "+request.getParameter("searchassetid"));
-//		System.out.println("searchbrand :       "+request.getParameter("searchbrand"));
-//		System.out.println(searchstatus.length);
-//		for (int i = 0; i < searchstatus.length; i++) {
-//			System.out.println("searchstatus :              "+searchstatus[i]);			
-//		}
-//		System.out.println("searchtype :       "+request.getParameter("searchtype"));
-//		System.out.println("searchcolor :       "+request.getParameter("searchcolor"));
-//		System.out.println("searchmodelname :       "+request.getParameter("searchmodelname"));
-//		System.out.println("searchpurchasedate1 :       "+request.getParameter("searchpurchasedate1"));
-//		System.out.println("searchpurchasedate2 :       "+request.getParameter("searchpurchasedate2"));
-//		System.out.println("searchrefno :       "+request.getParameter("searchrefno"));
-//		System.out.println("searchbranchid :       "+request.getParameter("searchbranchid"));
-//		System.out.println("searchdepartment :       "+request.getParameter("searchdepartment"));
-//		System.out.println("searchinvoiceno :       "+request.getParameter("searchinvoiceno"));
-//		System.out.println("searchdealer :       "+request.getParameter("searchdealer"));
-//		System.out.println("searchserialno :       "+request.getParameter("searchserialno"));
-//		System.out.println("searchwarrantyno :       "+request.getParameter("searchwarrantyno"));
-//		System.out.println("searchimeino :       "+request.getParameter("searchimeino"));
-//		System.out.println("searchmacaddress :       "+request.getParameter("searchmacaddress"));
-//		System.out.println("searchcreator :       "+request.getParameter("searchcreator"));
-//		System.out.println("searchcreatedate1 :       "+request.getParameter("searchcreatedate1"));
-//		System.out.println("searchcreatedate2 :       "+request.getParameter("searchcreatedate2"));
-//				
+		System.out.println("searchcategory :       "+request.getParameter("searchcategory"));
+		System.out.println("searchassetid :       "+request.getParameter("searchassetid"));
+		System.out.println("searchbrand :       "+request.getParameter("searchbrand"));
+		System.out.println(searchstatus.length);
+		for (int i = 0; i < searchstatus.length; i++) {
+			System.out.println("searchstatus :              "+searchstatus[i]);			
+		}
+		System.out.println("searchtype :       "+request.getParameter("searchtype"));
+		System.out.println("searchcolor :       "+request.getParameter("searchcolor"));
+		System.out.println("searchmodelname :       "+request.getParameter("searchmodelname"));
+		System.out.println("searchpurchasedate1 :       "+request.getParameter("searchpurchasedate1"));
+		System.out.println("searchpurchasedate2 :       "+request.getParameter("searchpurchasedate2"));
+		System.out.println("searchrefno :       "+request.getParameter("searchrefno"));
+		System.out.println("searchbranchid :       "+request.getParameter("searchbranchid"));
+		System.out.println("searchdepartment :       "+request.getParameter("searchdepartment"));
+		System.out.println("searchinvoiceno :       "+request.getParameter("searchinvoiceno"));
+		System.out.println("searchdealer :       "+request.getParameter("searchdealer"));
+		System.out.println("searchserialno :       "+request.getParameter("searchserialno"));
+		System.out.println("searchwarrantyno :       "+request.getParameter("searchwarrantyno"));
+		System.out.println("searchimeino :       "+request.getParameter("searchimeino"));
+		System.out.println("searchmacaddress :       "+request.getParameter("searchmacaddress"));
+		System.out.println("searchcreator :       "+request.getParameter("searchcreator"));
+		System.out.println("searchcreatedate1 :       "+request.getParameter("searchcreatedate1"));
+		System.out.println("searchcreatedate2 :       "+request.getParameter("searchcreatedate2"));
+				
 		Map<String, Object> assetmap = new HashMap();
 		assetmap.put("searchassetid", searchassetid);
 		assetmap.put("searchstatus" , searchstatus);
@@ -105,10 +105,10 @@ public class AssetMasterController {
 		assetmap.put("searchpurchasedate1"  ,	searchpurchasedate1 );
 		assetmap.put("searchpurchasedate2"  ,	searchpurchasedate2 );
 
-		List<EgovMap> list = ams.selectAssetList(assetmap);
+		//List<EgovMap> list = ams.selectAssetList(assetmap);
 		
 		Map<String, Object> map = new HashMap();
-		map.put("data", list);
+		//.put("data", list);
 
 		return ResponseEntity.ok(map);
 	}	
@@ -133,6 +133,18 @@ public class AssetMasterController {
 		
 		return ResponseEntity.ok(BrandList);
 	}
+	
+	@RequestMapping(value = "/selectTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
+
+		logger.debug("selectTypeListCode : {}", params.get("groupCode"));
+		params.put("hrchytypeid", "1198");
+
+		List<EgovMap> TypeList = ams.selectTypeList(params);
+		
+		return ResponseEntity.ok(TypeList);
+	}
+	
 	
 	@RequestMapping(value = "/insertAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
