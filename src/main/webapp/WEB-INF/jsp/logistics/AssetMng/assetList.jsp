@@ -102,8 +102,11 @@
         doDefCombo(comboData, '' ,'searchstatus', 'M', 'f_multiCombo');
         $("#searchstatus option:eq(0)").prop("selected", true);
         
-        doGetCombo('/common/selectCodeList.do', '111', '','searchtype', 'M' , 'f_multiCombo'); //Type 리스트 조회
+        //doGetCombo('/common/selectCodeList.do', '111', '','searchtype', 'M' , 'f_multiCombo'); //Type 리스트 조회
         //$("#searchtype").attr("disabled",true);
+        
+        
+        doGetCombo('/logistics/assetmng/selectTypeList.do', '1199', '','searchtype', 'M' , 'f_multiCombo'); //Type 리스트 조회
         
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','searchdealer', 'S' , '');//dealer 
         doGetCombo('/common/selectCodeList.do', '112', '','searchcolor', 'S' , ''); //Color 리스트 조회
@@ -114,9 +117,13 @@
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
         doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand 리스트 조회
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','searchbranchid', 'S' , ''); //청구처 리스트 조회
-       
+       alert("1112222");
+        $("#searchtype option:eq(0)").prop("selected", true);
+
+
+        //$("#searchtype option:eq(1202)").prop("selected", true);
         
-        AUIGrid.bind(myGridID, "cellClick", function( event ) 
+        AUIGrid.bind(myGridID, "cellClick", function( event )  
         {
             
             
@@ -125,6 +132,7 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
+        	  
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
              	div="V";
@@ -201,7 +209,7 @@
              } 
          });
          
-         $("#Details_info").click(function(){
+      /*    $("#Details_info").click(function(){
               if($("#detail_info_div").css("display") == "none"){
                  //f_removeclass();
                  var selectedItems = AUIGrid.getSelectedItems(myGridID);
@@ -213,7 +221,7 @@
              }else{                
              }
              $(this).find("a").attr("class","on"); 
-         });
+         }); */
                   
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
@@ -260,11 +268,7 @@
            
         });
     }
-    
-    
-    
-    
-    
+
     function assetsaveAjax(div) {
         var url;
         var key;   
@@ -481,6 +485,15 @@
          
          return true;
      }
+     
+ /*    function typeallchek(){
+	    var typesize= $("#searchtype option").size();
+	    alert(typesize); */
+    /* 	 for (var int = 0; int < array.length; int++) {
+			
+		} 
+    	 
+}*/
      
 </script>
 </head>
@@ -706,11 +719,11 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
             <ul class="tap_type1">
-                <li id="Master_info"><a href="#"> Master info </a></li>
+                <li id="Master_info" class="on"><a href="#"> Master info </a></li>
                 <li id="Details_info"><a href="#"> Details Info</a></li>
             </ul>
 
-<article class="tap_area" id="Master_info_div" style="display:none;">
+<article class="tap_area" id="Master_info_div" >
 
 <form id="masterForm" name="masterForm" method="POST">
 <table class="type1"><!-- table start -->
