@@ -153,15 +153,15 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New AS Application</h2>
+<h2>Inventory Stock Management</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Select Order For AS</h3>
-<ul class="right_btns">
-	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
-</ul>
+<h3>Stock Information</h3>
+</aside><!-- title_line end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h4>Stock Info</h4>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -170,13 +170,99 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:100px" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+	<col style="width:170px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">AS Type</th>
-	<td><input type="text" title="" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p><p class="btn_sky"><a href="#">Search</a></p></td>
+	<th scope="row">Stock Type</th>
+	<td>
+	<select class="w100p">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
+	<td colspan="4">
+	<label><input type="checkbox" /><span>Sirim Certificate</span></label>
+	<label><input type="checkbox" /><span>NCV</span></label>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Stock Code</th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p" />
+	</td>
+	<th scope="row">UOM</th>
+	<td colspan="3">
+	<select class="w100p">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Stock Name</th>
+	<td colspan="3"><input type="text" title="" placeholder="" class="w100p" /></td>
+	<th scope="row">Category</th>
+	<td>
+	<select class="w100p">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Net Weight (KG)</th>
+	<td><input type="text" title="" placeholder="" class="w100p" /></td>
+	<th scope="row">Gross Weight (KG)</th>
+	<td><input type="text" title="" placeholder="" class="w100p" /></td>
+	<th scope="row">Measurement CBM</th>
+	<td><input type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Price &amp; Value Information</h3>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:170px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Cost</th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /></td>
+	<th scope="row">Normal Price</th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /></td>
+	<th scope="row">Point of Value (PV)</th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /></td>
+</tr>
+<tr>
+	<th scope="row">Monthly Rental</th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /></td>
+	<th scope="row">Rental Deposit</th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /></td>
+	<th scope="row">Penalty Charges</th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /></td>
+</tr>
+<tr>
+	<th scope="row">Trade In (PV) Value</th>
+	<td colspan="5"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -209,7 +295,11 @@
 	<p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
 </dl>
+
 </aside><!-- link_btns_wrap end -->
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a href="#">Save</a></p></li>
+</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역
