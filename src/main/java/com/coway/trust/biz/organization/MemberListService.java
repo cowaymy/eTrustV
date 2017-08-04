@@ -35,4 +35,7 @@ public interface MemberListService {
 	EgovMap selectApplicantConfirm(Map<String, Object> params);
 	
 	EgovMap selectCodyPAExpired(Map<String, Object> params);
+	
+	Boolean saveMember(Map<String, Object> params);
+
 }

@@ -37,4 +37,21 @@ public interface MemberListMapper {
 	EgovMap selectApplicantConfirm(Map<String, Object> params);
 	
 	EgovMap selectCodyPAExpired(Map<String, Object> params);
+	
+	String saveMember(Map<String, Object> params) ;
+	
+	EgovMap selectDocNo(String code);
+	
+	void updateDocNo(Map<String, Object> params);
+	
+	void insertMember(Map<String, Object> params);
+	
+	EgovMap selectOranization(Map<String, Object> params);
+	
+	String selectMemberId();
+	
+	void insertOrganization(Map<String, Object> params);
+	
+	void insertAccBill(Map<String, Object> params);
+	
 }
