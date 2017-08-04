@@ -34,7 +34,7 @@
     var detailGrid;
     
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "67","codeName": "Lost"},{"codeId": "8","codeName": "Inactive"}];
-    var categorycomboData = [{"codeId": "1199","codeName": "IT Equipment"}];
+   // var categorycomboData = [{"codeId": "1199","codeName": "IT Equipment"}];
     //var instockgradecomboData = [{"codeId": "A","codeName": "A"}];
     
     // AUIGrid 칼럼 설정                                                                            visible : false
@@ -47,7 +47,7 @@
                         {dataField:"branch"    ,headerText:"Branch"        ,width:120 ,height:30 , visible:true},
                         {dataField:"department"    ,headerText:"Department"        ,width:140 ,height:30 , visible:true},
                         {dataField:"purchsdt"    ,headerText:"Purchase Date"        ,width:120 ,height:30 , visible:true},
-                        {dataField:"username"    ,headerText:"Current User"        ,width:120  ,height:30 , visible:true},
+                        {dataField:"username2"    ,headerText:"Current User"        ,width:120  ,height:30 , visible:true},
                         {dataField:"refno"    ,headerText:"Ref No"        ,width:120  ,height:30 , visible:true},
                         {dataField:"dealername"    ,headerText:"Dealer"        ,width:120  ,height:30 , visible:true},
                         {dataField:"invcno"    ,headerText:"Inv No"        ,width:120 ,height:30 , visible:true},                     
@@ -60,7 +60,7 @@
                         {dataField:"currbrnchid"      ,headerText:"currBrnchId"          ,width:100 ,height:30 , visible:false},                        
                         {dataField:"currdeptid"     ,headerText:"currDeptId"         ,width:100 ,height:30 , visible:false},                    
                         {dataField:"curruserid"     ,headerText:"currUserId"         ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"username2"       ,headerText:"userName2"           ,width:100 ,height:30 , visible:false},                       
+                        {dataField:"username"       ,headerText:"userName2"           ,width:100 ,height:30 , visible:false},                       
                         {dataField:"imeino"       ,headerText:"imeiNo"           ,width:100 ,height:30 , visible:false},                      
                         {dataField:"macaddr"  ,headerText:"macAddr"      ,width:100 ,height:30 , visible:false},                      
                         {dataField:"purchsamt"   ,headerText:"purchsAmt"       ,width:100 ,height:30 , visible:false},                      
@@ -103,15 +103,18 @@
         $("#searchstatus option:eq(0)").prop("selected", true);
         
         doGetCombo('/common/selectCodeList.do', '111', '','searchtype', 'M' , 'f_multiCombo'); //Type 리스트 조회
-        $("#searchtype").attr("disabled",true);
+        //$("#searchtype").attr("disabled",true);
         
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','searchdealer', 'S' , '');//dealer 
         doGetCombo('/common/selectCodeList.do', '112', '','searchcolor', 'S' , ''); //Color 리스트 조회
         doGetCombo('/common/selectCodeList.do', '112', '','mastercolor', 'S' , ''); //Color 리스트 조회
         doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
-        //doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
+        doGetCombo('/common/selectCodeList.do', '108', '','searchcategory', 'S' , ''); //category 리스트 조회
+        doGetCombo('/common/selectCodeList.do', '108', '','mastercategory', 'S' , ''); //category 리스트 조회  
+        doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
         doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand 리스트 조회
-        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','searchbranchid', 'S' , ''); //청구처 리스트 조회
+       
         
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {
@@ -128,10 +131,11 @@
             	$("#detailHead").text("AssetMng Information Details");
                 fn_setVisiable(div); 
             	fn_assetDetail(selectedItem[0]);
+            	 $("#masterWindow").show();
             }else{
             Common.alert('Choice Data please..');
             }
-           $("#masterWindow").show();
+         //  $("#masterWindow").show();
         });
        
         /* 팝업 드래그 start */
@@ -153,18 +157,64 @@
          $("#insert").click(function(){
           // fn_insertWare();
            div="N";
-           $("#detailHead").text("Courier Information New");
+           $("#detailHead").text("AssetMng Information Registration");
            fn_setVisiable(div);
            $("#masterWindow").show();
           });
+         
          $("#savePopbtn").click(function(){
-             //$("#editWindow").hide();
                 div="N";
-                assetsaveAjax(div);
-                $("#editWindow").hide();
-               
+                if (valiedcheck()){
+                assetsaveAjax(div);  
+                }
          });
-               
+         
+         $("#update").click(function(){
+             div="U";
+             $("#detailHead").text("AssetMng Information Modification");
+             selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             if (selectedItem[0] > -1){
+            	 fn_assetDetail(selectedItem[0]);
+            	 fn_setVisiable(div);
+            	 $("#masterWindow").show();
+             }else{
+             Common.alert('Choice Data please..');
+             }
+        
+         });
+         
+         $("#updatePopbtn").click(function(){
+                div="U";
+                if (valiedcheck()){
+                assetsaveAjax(div);
+                }
+         });
+          
+         $("#delete").click(function(){
+             div="D";
+             selectedItem = AUIGrid.getSelectedIndex(myGridID);
+              if (selectedItem[0] > -1){
+                 fn_assetDetail(selectedItem[0]);
+                 assetsaveAjax(div);
+             }else{
+             Common.alert('Choice Data please..');
+             } 
+         });
+         
+         $("#Details_info").click(function(){
+              if($("#detail_info_div").css("display") == "none"){
+                 //f_removeclass();
+                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                 for(i=0; i<selectedItems.length; i++) {
+                    // f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
+                 }
+                 $("#detail_info_div").show();
+                 
+             }else{                
+             }
+             $(this).find("a").attr("class","on"); 
+         });
+                  
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
             v = $(this).val();
@@ -175,76 +225,82 @@
                 return;
             }
          });
-                   
+                        
     });
     
-    function getAssetListAjax() {
-        f_showModal();
+  /*   function getAssetListAjax() {
         var url = "/logistics/assetmng/assetList.do";
         var param = $('#searchForm').serializeJSON();
         Common.ajax("POST" , url , param , function(data){
              var gridData = data             
             console.log(gridData.data);            
             AUIGrid.setGridData(myGridID, gridData.data);
-            hideModal();
+        });
+    } */
+    
+    function getAssetListAjax() {
+    	f_showModal();
+        var param = $('#searchForm').serialize();
+        $.ajax({
+            type : "POST",
+            url : "/logistics/assetmng/assetList.do?" + param,
+            //url : "/stock/StockList.do",
+            //data : param,
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+            	var gridData = data             
+                console.log(gridData.data);            
+                AUIGrid.setGridData(myGridID, gridData.data);
+                hideModal();
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert("실패하였습니다.");
+            },
+           
         });
     }
     
+    
+    
+    
+    
     function assetsaveAjax(div) {
         var url;
-        var key;
+        var key;   
         var val= $("#masterForm").serializeJSON();
         selectedItem = AUIGrid.getSelectedIndex(myGridID);
        if(div=="U"){
-           //url="/logistics/assetmng/motifyCourier.do";
+           url="/logistics/assetmng/motifyAssetMng.do";
        }else if(div=="N"){
-    	   alert("인서트 중입니다!!!!");
            url="/logistics/assetmng/insertAssetMng.do";
+       }else if(div=="D"){
+           url="/logistics/assetmng/deleteAssetMng.do";
        }
        Common.ajax("POST",url,val,function(result){
            Common.alert(result.msg);
+           $("#masterWindow").hide();
         /*    $("#search").trigger("click");
            if(div=="U"){
                  $("#view").click();
           } */
        });
    } 
-    
-    
-    
-    function fn_setValuePop(setVal){
-        $("#curcode").val(setVal[0].curierCode);
-        $("#curname").val(setVal[0].curierName);
-        $("#curregno").val(setVal[0].curierRegNo);
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , setVal[0].curierCntyId,'curcntyid', 'S', ''); 
-        getAddrRelay( 'curstateid' , setVal[0].curierCntyId , 'state' , setVal[0].curierStateId);
-        getAddrRelay( 'curareaid' , setVal[0].curierStateId , 'area' , setVal[0].curierAreaId);
-        getAddrRelay( 'curpostcod' , setVal[0].curierAreaId , 'post' ,  setVal[0].curierPostCodeId);
-        
-        $("#curcntcno1").val(setVal[0].curierCntcNo1);
-        $("#curcntcno2").val(setVal[0].curierCntcNo2);
-        $("#curfaxno").val(setVal[0].curierFaxNo);
-        $("#curemail").val(setVal[0].curierEmail);
-        $("#curadd1").val(setVal[0].curierAdd1);
-        $("#curadd2").val(setVal[0].curierAdd2);
-        $("#curadd3").val(setVal[0].curierAdd3);  
-            
-    }
-    
+      
     function fn_assetDetail(rowid){
-    	
+    	$("#masterassetid").val(AUIGrid.getCellValue(myGridID ,rowid,'assetid'));
     	$("#masterstatus").val(AUIGrid.getCellValue(myGridID ,rowid,'name2'));
     	$("#masterbreanch").val(AUIGrid.getCellValue(myGridID ,rowid,'branch'));
     	$("#masterdepartment").val(AUIGrid.getCellValue(myGridID ,rowid,'department'));
-    	$("#masteruser").val(AUIGrid.getCellValue(myGridID ,rowid,'username'));
-    	$("#mastercategory").val(AUIGrid.getCellValue(myGridID ,rowid,'codename'));
-        $("#mastertype").val(AUIGrid.getCellValue(myGridID ,rowid,'codename2'));
+    	$("#masteruser").val(AUIGrid.getCellValue(myGridID ,rowid,'username2'));
+    	$("#mastercategory").val(AUIGrid.getCellValue(myGridID ,rowid,'ctgryid'));
+        $("#mastertype").val(AUIGrid.getCellValue(myGridID ,rowid,'typeid'));
     	$("#mastermodelname").val(AUIGrid.getCellValue(myGridID ,rowid,'name1'));
     	$("#mastercolor").val(AUIGrid.getCellValue(myGridID ,rowid,'colorid'));
     	$("#masterinvoiceno").val(AUIGrid.getCellValue(myGridID ,rowid,'invcno'));
-    	$("#masterdealer").val(AUIGrid.getCellValue(myGridID ,rowid,'dealername'));
+    	$("#masterdealer").val(AUIGrid.getCellValue(myGridID ,rowid,'dealerid'));
         $("#masterpurchasedate").val(AUIGrid.getCellValue(myGridID ,rowid,'purchsdt'));
-        $("#masterbrand").val(AUIGrid.getCellValue(myGridID ,rowid,'name'));
+        $("#masterbrand").val(AUIGrid.getCellValue(myGridID ,rowid,'brandid'));
         $("#masterpurchaseamount").val(AUIGrid.getCellValue(myGridID ,rowid,'purchsamt'));
         $("#masterrefno").val(AUIGrid.getCellValue(myGridID ,rowid,'refno'));
         $("#masterserialno").val(AUIGrid.getCellValue(myGridID ,rowid,'serialno'));
@@ -252,13 +308,11 @@
         $("#mastermacaddress").val(AUIGrid.getCellValue(myGridID ,rowid,'macaddr'));
         $("#masterimeino").val(AUIGrid.getCellValue(myGridID ,rowid,'imeino'));
         $("#masterremark").val(AUIGrid.getCellValue(myGridID ,rowid,'assetrem'));
-        //doGetCombo('/logistics/assetmng/selectDealerList.do', '1', AUIGrid.getCellValue(myGridID ,rowid,'dealername'),'masterdealer', 'S' , '');//dealer 
-        alert(AUIGrid.getCellValue(myGridID ,rowid,'dealername'));
+        //$("#masterWindow").show();
     }
     function fn_assetDetailCancel(){
         $( "#masterWindow" ).hide();
     }
-    
     
     function f_showModal(){
         $.blockUI.defaults.css = {textAlign:'center'}
@@ -308,9 +362,9 @@
                $("#mastermodelname").prop('readonly', true);
                $("#mastercolor").prop('disabled', true);
                $("#masterinvoiceno").prop('readonly', true);
-               //$("#masterdealer").prop('disabled', true);
+               $("#masterdealer").prop('disabled', true);
                $("#masterpurchasedate").prop('disabled', true);
-               $("#masterbrand").prop('readonly', true);
+               $("#masterbrand").prop('disabled', true);
                $("#masterpurchaseamount").prop('readonly', true);
                $("#masterrefno").prop('readonly', true);
                $("#masterserialno").prop('readonly', true);
@@ -322,25 +376,30 @@
                $("#trinserthide2").show(); 
                $("#savePopbtn").hide();
                $("#updatePopbtn").hide();
-               combReset(div);
          }else if(div=="U"){
-             $("#curcode").prop('readonly', true);
-             $("#curname").prop('readonly', false);
-             $("#curregno").prop('readonly', false);
-             $("#curcntyid").prop('disabled', false);
-             $("#curstateid").prop('disabled', false);
-             $("#curareaid").prop('disabled', false);
-             $("#curpostcod").prop('disabled', false);
-             $("#curcntcno1").prop('readonly', false);
-             $("#curcntcno2").prop('readonly', false);
-             $("#curfaxno").prop('readonly', false);
-             $("#curemail").prop('readonly', false);
-             $("#curadd1").prop('readonly', false);
-             $("#curadd2").prop('readonly', false);
-             $("#curadd3").prop('readonly', false);
-             $("#mastercategory").hide();
-             $("#updatePopbtn").show();
-             $("#savePopbtn").hide();
+        	   $("#masterstatus").prop('readonly', true);
+               $("#masterbreanch").prop('readonly', true);
+               $("#masterdepartment").prop('readonly', true);
+               $("#masteruser").prop('readonly', false);
+               $("#mastercategory").prop('disabled', true);
+               $("#mastertype").prop('disabled', true);
+               $("#mastermodelname").prop('readonly', false);
+               $("#mastercolor").prop('disabled', false);
+               $("#masterinvoiceno").prop('readonly', false);
+               $("#masterdealer").prop('disabled', false);
+               $("#masterpurchasedate").prop('disabled', false);
+               $("#masterbrand").prop('disabled', false);
+               $("#masterpurchaseamount").prop('readonly', false);
+               $("#masterrefno").prop('readonly', false);
+               $("#masterserialno").prop('readonly', false);
+               $("#masterwarrantyno").prop('readonly', false);
+               $("#mastermacaddress").prop('readonly', false);
+               $("#masterimeino").prop('readonly', false);
+               $("#masterremark").prop('readonly', false);
+               $("#trinserthide1").show(); 
+               $("#trinserthide2").show(); 
+               $("#savePopbtn").hide();
+               $("#updatePopbtn").show();
          }else if(div=="N"){
          	 $('#masterForm')[0].reset();
         	 $("#trinserthide1").hide(); 
@@ -352,7 +411,7 @@
              $("#masterinvoiceno").prop('readonly', false);
              $("#masterdealer").prop('disabled', false);             
              $("#masterpurchasedate").prop('disabled', false);       
-             $("#masterbrand").prop('readonly', false);        
+             $("#masterbrand").prop('disabled', false);        
              $("#masterpurchaseamount").prop('readonly', false);
              $("#masterrefno").prop('readonly', false);            
              $("#masterserialno").prop('readonly', false);
@@ -363,31 +422,65 @@
              $("#savePopbtn").show();
              $("#updatePopbtn").hide();
              
-             combReset(div);
+             combReset();
          }
      }
      function combReset(){
-    	 if(div=="V"){
-    		 alert("조회 콤보");
-    	    
-   		   //doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand
-           //doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
-           //doGetCombo('/common/selectCodeList.do', '112', '','mastercolor', 'S' , ''); //Color 리스트 조회
-           //doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer
-           //doDefCombo(categorycomboData, '' ,'mastercategory', 'S', '');
-           //doDefCombo('', '' ,'masterdealer', 'S', '');
-    	}else if(div=="N"){
-    		alert("인서트 콤보");
     	   doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand
     	   doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
            doGetCombo('/common/selectCodeList.do', '112', '','mastercolor', 'S' , ''); //Color 리스트 조회
-           doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer
-           doDefCombo(categorycomboData, '' ,'mastercategory', 'S', '');
-         /*   doDefCombo('', '' ,'curstateid', 'S', ''); 
-           doDefCombo('', '' ,'curareaid', 'S', '');
-           doDefCombo('', '' ,'curpostcod', 'S', '');    */	
-    	}
+           doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer	
 }
+     
+     function valiedcheck(){
+         if($("#mastercategory").val() == ""){
+             Common.alert("Please select the category.");
+             $("#mastercategory").focus();
+             return false;
+         }
+         if($("#mastertype").val() == ""){
+             Common.alert("Please select the type.");
+             $("#mastertype").focus();
+             return false;
+         }
+         if($("#mastermodelname").val() == ""){
+             Common.alert("Please key in the model name.");
+             $("#mastermodelname").focus();
+             return false;
+         }
+         if($("#mastercolor").val() == ""){
+             Common.alert("Please select the color.");
+             $("#mastercolor").focus();
+             return false;
+         }
+         if($("#masterinvoiceno").val() == ""){
+             Common.alert("Please key in the invoice.");
+             $("#masterinvoiceno").focus();
+             return false;
+         }
+         if($("#masterdealer").val() == ""){
+             Common.alert("Please select the Dealer.");
+             $("#masterdealer").focus();
+             return false;
+         }
+         if($("#masterpurchasedate").val() == ""){
+             Common.alert("Please select purchase date");
+             $("#masterpurchasedate").focus();
+             return false;
+         }
+         if($("#masterbrand").val() == ""){
+             Common.alert("Please select the brand.");
+             $("#masterbrand").focus();
+             return false;
+         }
+         if($("#masterpurchaseamount").val() == ""){
+             Common.alert("Please key in purchase Amount.");
+             $("#masterpurchaseamount").focus();
+             return false;
+         }      
+         
+         return true;
+     }
      
 </script>
 </head>
@@ -425,7 +518,7 @@
 <tr>
     <th scope="row">Asset ID</th>
     <td>
-    <input type="text" id="assetid" name="assetid" title="Code" placeholder="Asset ID(Number Only)" class="w100p" />
+    <input type="text" id="searchassetid" name="searchassetid" title="Code" placeholder="" class="w100p numberAmt" />
     </td>
     <th scope="row">Status</th>
     <td>
@@ -434,30 +527,30 @@
     </td>
     <th scope="row">Brand</th>
     <td>
-    <input type="text" id="searchbrand" name="searchbrand" placeholder="Brand"  class="w100p" />
+    <input type="text" id="searchbrand" name="searchbrand" placeholder=""  class="w100p" />
     </td>
 </tr>
 <tr>
     <th scope="row">Category</th>
     <td>
-    <select id="" name="" onchange="getAddrRelay('searchtype' , this.value , 'type', this.value)"  title="" placeholder="Category" class="w100p" >
+    <select id="searchcategory" name="searchcategory"  title="" placeholder="" class="w100p" >
     </select>
     </td>
     <th scope="row">Type</th>
     <td>
-    <select id="searchtype" name="searchtype" placeholder="Type" class="w100p">
+    <select id="searchtype" name="searchtype" placeholder="" class="w100p">
     </select>
     </td>
     <th scope="row">Color</th>
     <td>
-    <select id="searchcolor" name="searchcolor" placeholder="Color" class="w100p" >
+    <select id="searchcolor" name="searchcolor" placeholder="" class="w100p" >
     </select>
     </td>
 </tr>
 <tr>
     <th scope="row">Model Name</th>
     <td>
-    <input type="text" id="searchmodelname" name="searchmodelname" title="Code" placeholder="Model Name" class="w100p" />
+    <input type="text" id="searchmodelname" name="searchmodelname" title="Code" placeholder="" class="w100p" />
     </td>
     <th scope="row">Purchase Date</th>
     <td>
@@ -475,12 +568,12 @@
 <tr>
     <th scope="row">Branch</th>
     <td>
-    <select id="branchid" name="branchid" class="w100p" >
+    <select id="searchbranchid" name="searchbranchid" class="w100p" >
     </select>
     </td>
     <th scope="row">Department</th>
     <td>
-    <select class="w100p" id="" name="">
+    <select class="w100p" id="searchdepartment" name="searchdepartment">
     </select>
     </td>
     <th scope="row"></th>
@@ -491,11 +584,11 @@
 <tr>
     <th scope="row">Invoice No</th>
     <td>
-    <input type="text" id="" name="" title="" placeholder="Invoice No" class="w100p" />
+    <input type="text" id="searchinvoiceno" name="searchinvoiceno" title="" placeholder="" class="w100p" />
     </td>
     <th scope="row">Dealer</th>
     <td>
-    <select id="searchdealer" name="searchdealer" placeholder="Dealer" class="w100p" >
+    <select id="searchdealer" name="searchdealer" placeholder="" class="w100p" >
     </select>
     </td>
     <th scope="row"></th>
@@ -506,25 +599,25 @@
 <tr>
     <th scope="row">Serial No</th>
     <td>
-    <input type="text" id="" name="" title="" placeholder="Serial Number" class="w100p" />
+    <input type="text" id="searchserialno" name="searchserialno" title="" placeholder="" class="w100p" />
     </td>
     <th scope="row">Warranty No</th>
     <td>
-    <input type="text" id="" name="" placeholder="Warranty Number" class="w100p"/>
+    <input type="text" id="searchwarrantyno" name="searchwarrantyno" placeholder="" class="w100p"/>
     </td>
     <th scope="row">IMEI No</th>
     <td>
-    <input type="text" id=""  name="" placeholder="IMEI Number" class="w100p"/>
+    <input type="text" id="searchimeino"  name="searchimeino" placeholder="" class="w100p"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Mac Address</th>
     <td>
-    <input type="text" id="" name="" title="" placeholder="MAC Address" class="w100p" />
+    <input type="text" id="searchmacaddress" name="searchmacaddress" title="" placeholder="" class="w100p" />
     </td>
     <th scope="row">Creator</th>
     <td>
-   <input type="text" id="" name="" placeholder="Creator(Username)"  class="w100p">
+   <input type="text" id="searchcreator" name="searchcreator" placeholder=""  class="w100p">
     </select>
     </td>
     <th scope="row">Create Date</th>
@@ -597,60 +690,7 @@
 <!-- <article id="detailView"> -->
 <div class="divine_auto"><!-- divine_auto start -->
 
-<!-- <div style="width:55%;">
-
-<aside class="title_line">title_line start
-<h3>Warehouse Information</h3>
-</aside>title_line end
-
-<table class="type1">
-        <caption>search table</caption>
-        <colgroup>
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:200px" />
-        </colgroup>
-        <tbody>
-        <tr>
-            <th scope="row">Warehouse Code</td>
-            <td ID="txtwarecode"></td>
-            <th scope="row">Stock Grade</td>
-            <td ID="txtstockgrade"></td>
-        </tr>
-        <tr>
-            <th scope="row">Warehouse Name</td>
-            <td ID="txtwarename"></td>
-            <th scope="row">Status</td>
-            <td ID="txtstatus"></td>            
-        </tr>
-        <tr>
-            <th scope="row">Branch</td>
-            <td ID="txtbranch"></td>
-            <th scope="row">Contact (1)</td>
-            <td ID="txtcontact1"></td>
-        </tr>
-        <tr>
-            <th scope="row">Address</td>
-            <td ID="txtaddress"></td>
-            <th scope="row">Contact (2)</td>
-            <td ID="txtcontact2"></td>
-        </tr>
-        </tbody>
-    </table>
-</div> -->
-
-<div style="width:43%;">
-
-<aside class="title_line"><!-- title_line start -->
-<h3>Warehouse Information</h3>
-</aside><!-- title_line end -->
-
-<div id="stockBalanceGrid"></div>
-</div>
-
 </div><!-- divine_auto end -->
-</article>
 
 </section><!-- search_result end -->
 
@@ -664,6 +704,14 @@
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 
+<section class="tap_wrap"><!-- tap_wrap start -->
+            <ul class="tap_type1">
+                <li id="Master_info"><a href="#"> Master info </a></li>
+                <li id="Details_info"><a href="#"> Details Info</a></li>
+            </ul>
+
+<article class="tap_area" id="Master_info_div" style="display:none;">
+
 <form id="masterForm" name="masterForm" method="POST">
 <table class="type1"><!-- table start -->
 <caption>search table</caption>
@@ -674,6 +722,7 @@
     <col style="width:*" />
 </colgroup>
 <tbody>
+<input type="hidden" id="masterassetid" name="masterassetid"/>
 <tr id="trinserthide1"> 
     <th scope="row">Assert Status</th>
     <td colspan="2" id="tdassertstatus"><input type="text" title="" placeholder=""  class="w100p" id="masterstatus" name="assetstatus"/></td>
@@ -689,12 +738,11 @@
 <tr>
     <th scope="row">Category</th>
     <td colspan="2" id="tdcategory">
-    <!-- <input type="text" title="" placeholder=""  class="w100p" id="mastercategory" name="mastercategory"> -->
     <select id="mastercategory" name="mastercategory" title="" placeholder=""  class="w100p">
     </select>  
     </td>
     <th scope="row">Type</th>
-    <td colspan="2" id="tdtype"><!-- <input type="text" title="" placeholder=""  class="w100p" id="mastertype" name="mastertype"/> -->
+    <td colspan="2" id="tdtype">
     <select id="mastertype" name="mastertype" title="" placeholder=""  class="w100p">
     </select>
     </td>     
@@ -703,7 +751,7 @@
     <th scope="row">Model Name</th>
     <td colspan="2" id="tdmodelname"><input type="text" title="" placeholder=""  class="w100p" id="mastermodelname" name="mastermodelname"/></td>
     <th scope="row">Color</th>
-    <td colspan="2" id="tdcolor"><!-- <input type="text" title="" placeholder=""  class="w100p" id="mastercolor" name="mastercolor"/> -->
+    <td colspan="2" id="tdcolor">
     <select id="mastercolor" name="mastercolor" title="" placeholder=""  class="w100p">
     </select>
     </td>     
@@ -712,25 +760,25 @@
     <th scope="row">Invoice No</th>
     <td colspan="2" id="tdinvoiceno"><input type="text" title="" placeholder=""  class="w100p" id="masterinvoiceno" name="masterinvoiceno"/></td>
     <th scope="row">Dealer</th>
-    <td colspan="2" id="tddealer"><!-- <input type="text" title="" placeholder=""  class="w100p" id="masterdealer" name="masterdealer"/> -->
+    <td colspan="2" id="tddealer">
     <select id="masterdealer" name="masterdealer" title="" placeholder=""  class="w100p">
     </select>
     </td>     
 </tr>
 <tr>
     <th scope="row">Purchase Date</th>
-    <td colspan="2" id="tdpurchase date"><!-- <input type="text" title="" placeholder=""  class="w100p" id="masterpurchasedate" name="masterpurchasedate"/> -->
+    <td colspan="2" id="tdpurchase date">
     <input id="masterpurchasedate" name="masterpurchasedate" type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly />
     </td>
     <th scope="row">Brand</th>
-    <td colspan="2" id="tdbrand"><!-- <input type="text" title="" placeholder=""  class="w100p" id="masterbrand" name="masterbrand"/> -->
+    <td colspan="2" id="tdbrand">
      <select id="masterbrand" name="masterbrand" title="" placeholder=""  class="w100p">
     </select>
     </td>     
 </tr>
 <tr>
     <th scope="row">Purchase Amount</th>
-    <td colspan="2" id="tdpurchaseamount"><input type="text" title="" placeholder=""  class="w100p" id="masterpurchaseamount" name="masterpurchaseamount"/></td>
+    <td colspan="2" id="tdpurchaseamount"><input type="text" title="" placeholder=""  class="w100p numberAmt" id="masterpurchaseamount" name="masterpurchaseamount"/></td>
     <th scope="row">Ref No</th>
     <td colspan="2" id="tdrefno"><input type="text"  title="" placeholder=""  class="w100p" id="masterrefno" name="masterrefno"/></td>     
 </tr>
@@ -759,6 +807,67 @@
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_assetDetailCancel();">CANCEL</a></p></li>
 </ul>
 </form>
+</article>
+
+
+
+<article class="tap_area" id="detail_info_div" style="display:none;">
+                <aside class="title_line"><!-- title_line start -->
+                <h3>Price & Value Information</h3>
+                <ul class="left_opt">
+                    <li><p class="btn_blue"><a id="price_info_edit">EDIT</a></p></li>
+                </ul>
+                </aside>
+                <form id="stockInfo" name="stockInfo" method="post">
+                <table class="type1">
+                    <caption>search table</caption>
+                    <colgroup>
+                        <col style="width:150px" />
+                        <col style="width:*" />
+                        <col style="width:160px" />
+                        <col style="width:*" />
+                        <col style="width:160px" />
+                        <col style="width:*" />
+                    </colgroup>
+                   <tbody>
+                    <tr>
+                        <th scope="row">Stock Type</th>
+                        <td ID="txtStockType"></td>
+                        <th scope="row">Status</th>
+                        <td ID="txtStatus"></td>
+                        <td colspan="2">
+                            <label><input type="checkbox" id="cbSirim"/><span>Sirim Certificate</span></label>
+                            <label><input type="checkbox" id="cbNCV" /><span>NCV</span></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Stock Code</th>
+                        <td ID="txtStockCode"></td>
+                        <th scope="row">UOM</th>
+                        <td colspan="3" id="txtUOM"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Stock Name</th>
+                        <td colspan="3" id="txtStockName"></td>
+                        <th scope="row">Category</th>
+                        <td ID="txtCategory"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Net Weight (KG)</th>
+                        <td ID="txtNetWeight"></td>
+                        <th scope="row">Gross Weight (KG)</th>
+                        <td ID="txtGrossWeight"></td>
+
+                        <th scope="row">Measurement CBM</th>
+                        <td ID="txtMeasurement"></td>
+                    </tr>
+                    </tbody> 
+                </table>
+                </form>
+</article>   
+
+
+</section><!--  tab -->
 
 </section>
 </div>
