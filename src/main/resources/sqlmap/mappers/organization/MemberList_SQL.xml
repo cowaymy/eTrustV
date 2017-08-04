@@ -879,4 +879,268 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           AND ( 1 = Extent1.AG_STUS_ID ) AND ROWNUM <= 1
         ]]>
     </select>
+    
+    
+    <select id="selectDocNo" parameterType="String" resultMap="clobMap">
+     <![CDATA[
+		 SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+		       CASE 
+		            WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+		       ELSE''
+		          END C1  ,
+		       CASE 
+		            WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+		       ELSE ''
+		          END C2  
+		  FROM SYS0022C Extent1
+		 WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+    </select>
+    
+     <update id="updateDocNo">
+     <![CDATA[
+        UPDATE DocNo
+         SET DocNo =#{nextDocNo}
+           WHERE  ( DocNoID = #{docNoId} );
+        ]]>
+    </update>
+    
+     <insert id="insertMember" >
+        INSERT INTO ORG0001D
+        ( MEM_CODE
+        , MEM_TYPE
+        , NAME
+        , FULL_NAME
+        , PASSWD
+        , NRIC
+        , DOB
+        , GENDER
+        , RACE
+        , MARTL
+        , NATION
+        , ADDR1
+        , ADDR2
+        , ADDR3
+        , ADDR4
+        , AREAL
+        , POST_CODE
+        , STATE
+        , CNTY
+        , TEL_OFFICE
+        , TEL_HUSE
+        , TEL_MOBILE
+        , EMAIL
+        , SPUSE_CODE
+        , SPOUSE_NAME
+        , SPOUSE_NRIC
+        , SPOUSE_OCPAT
+        , SPOUSE_TEL_CNTC
+        , SPOUSE_DOB
+        , EDC_LEV
+        , LANG
+        , BANK
+        , BANK_ACC_NO
+        , SPONS_CODE
+        , JOIN_DT
+        , RESIGN_DT
+        , TRM_DT
+        , RENEW_DT
+        , AGRMNT_NO
+        , BRNCH
+        , STUS
+        , SYNC_CHK
+        , RANK
+        , TRNSPRT
+        , PROMO_DT
+        , TR_NO
+        , CRT_DT
+        , CRT_USER_ID
+        , UPD_DT
+        , UPD_USER_ID
+        , MEM_IS_OUT_SRC
+        , APLICNT_ID
+        , BIZ_TYPE
+        , HSPTLZ )
+            VALUES ( 
+            #{memCode}
+            , #{memberType}
+            , #{memberNm}
+            , #{fulllName}
+            , #{password}
+            , #{nric}
+            , #{birth}
+            , #{gender}
+            , #{race}
+            , #{marital}
+            , #{nation}
+            , #{address1}
+            , #{address2}
+            , #{address3}
+            , #{address4}
+            , #{area}
+            , #{postCode}
+            , #{state}
+            , #{country}
+            , #{officeNo}
+            , #{residenceNo}
+            , #{mobileNo}
+            , #{email}
+            , #{spouseCode}
+            , #{spouseName}
+            , #{spouseNric}
+            , #{spouseOcc}
+            , #{spouseContat}
+            , #{spouseDob}
+            , #{educationLvl}
+            , #{language}
+            , #{bank}
+            , #{bankAccNo}
+            , #{sponsorCd}
+            , #{joinDate}
+            , #{reSignDate}
+            , #{termDate}
+            , #{RenewDate}
+            , #{AgrmntNo}
+            , #{branch}
+            , #{status}
+            , #{SyncCheck}
+            , #{rank}
+            , #{transportCd}
+            , #{promoteDate}
+            , #{trNo}
+            , #{created}
+            , 52366
+            , #{updated}
+            , 52366
+            , #{memIsOutSource}
+            , #{applicantID}
+            , #{BusinessesType}
+            , #{Hospitalization} )
+              SELECT MEM_ID 
+			  FROM ORG0001D 
+			 WHERE  ROW_CNT > 0
+          AND MEM_ID =(SELECT MAX(MEM_ID)+1 FROM ORG0001D)
+    </insert>
+    
+    <select id="selectOranization" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.MEM_ID MEM_ID  ,
+	       Extent1.MEM_UP_ID MEM_UP_ID  ,
+	       Extent1.MEM_LVL MEM_LVL  ,
+	       Extent1.DEPT_CODE DEPT_CODE  ,
+	       Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+	       Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+	       Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+	       Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+	       Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+	       Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+	       Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+	       Extent1.PR_CODE PR_CODE  ,
+	       Extent1.PR_MEM_ID PR_MEM_ID  ,
+	       Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+	       Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+	       Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+	       Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+	       Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+	       Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+	       Extent1.BRNCH_ID BRNCH_ID  
+	  FROM ORG0005D Extent1
+	 WHERE  ( 3 = Extent1.MEM_LVL )
+          AND ( Extent1.DEPT_CODE =#{deptCode}) 
+        ]]>
+    </select>
+    
+      <select id="selectMemberId" parameterType="String" resultType="String">
+     <![CDATA[
+         SELECT MAX(MEM_ID)+1 MEMBERID FROM ORG0001D
+        ]]>
+    </select>
+    
+    <insert id="insertOrganization" >
+    INSERT INTO ORG0005D
+        ( MEM_ID
+        , MEM_UP_ID
+        , MEM_LVL
+        , DEPT_CODE
+        , ORG_UPD_USER_ID
+        , ORG_UPD_DT
+        , PREV_DEPT_CODE
+        , PREV_GRP_CODE
+        , PREV_MEM_ID_ID
+        , PREV_MEM_LVL
+        , ORG_STUS_CODE_ID
+        , PR_CODE
+        , PR_MEM_ID
+        , GRAND_PR_CODE
+        , GRAND_PR_MEM_ID
+        , LAST_DEPT_CODE
+        , LAST_GRP_CODE
+        , LAST_ORG_CODE
+        , LAST_TOP_ORG_CODE
+        , BRNCH_ID )
+           VALUES ( 
+           #{memberId}
+           , #{memberUpID}
+           , #{memberLvl}
+           , #{deptCode}
+           , #{orgUpdateBy}
+           , #{orgUpdateAt}
+           , #{prevDeptCode}
+           , #{prevGroupCode}
+           , #{prevMemberUpId}
+           , #{prevMemberLvl}
+           , #{orgStatusCodeId}
+           , #{prCode}
+           , #{prMemberId}
+           , #{grandPrCode}
+           , #{grandPrMemberId}
+           , #{lastDeptCode}
+           , #{lastGrpCode}
+           , #{lastOrgCode}
+           , #{lastTopOrgCode}
+           , #{branchId} )
+  </insert>
+  
+  <insert id="insertAccBill" >
+    INSERT INTO PAY0007D
+        ( BILL_TYPE_ID
+        , BILL_SO_ID
+        , BILL_MEM_ID
+        , BILL_AS_ID
+        , BILL_PAY_TYPE_ID
+        , BILL_NO
+        , BILL_MEM_SHIP_NO
+        , BILL_DT
+        , BILL_AMT
+        , BILL_REM
+        , BILL_IS_PAID
+        , BILL_IS_COMM
+        , UPD_USER_ID
+        , UPD_DT
+        , SYNC_CHK
+        , COURS_ID
+        , STUS_ID )
+          VALUES 
+          ( #{billTypeId}
+          , #{billSOID}
+          , #{billMemId}
+          , #{billASID}
+          , #{billPayTypeId}
+          , #{memberCode}
+          , #{billMemberShipNo}
+          , #{billDate}
+          , #{billAmt}
+          , #{billRemark}
+          , #{billIsPaid}
+          , #{billIsComm}
+          , #{updator}
+          , #{updated}
+          , #{syncCheck}
+          , #{courseId}
+          , #{statusId})
+		  SELECT BILL_ID 
+		  FROM PAY0007D 
+		 WHERE  ROW_CNT > 0
+		          AND BILL_ID = select max(bill_id)+1 from PAY0007D
+  </insert>
 </mapper>
