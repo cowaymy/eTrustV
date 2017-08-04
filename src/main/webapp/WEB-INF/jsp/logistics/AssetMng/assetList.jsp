@@ -117,9 +117,7 @@
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
         doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand 리스트 조회
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','searchbranchid', 'S' , ''); //청구처 리스트 조회
-       alert("1112222");
-        $("#searchtype option:eq(0)").prop("selected", true);
-
+      
 
         //$("#searchtype option:eq(1202)").prop("selected", true);
         
@@ -152,6 +150,11 @@
         });
                 
 	    $(function(){
+	    	//all select 값 주기
+	        $('#searchcategory').change(function() {
+                $('#searchtype').multipleSelect("checkAll");
+            });
+	        
 	        $("#search").click(function(){
 	            getAssetListAjax();    
 	        });
