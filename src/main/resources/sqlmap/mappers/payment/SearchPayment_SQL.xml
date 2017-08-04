@@ -293,7 +293,7 @@
 		       Extent1.PAY_ID PAY_ID  ,
 		       Extent1.OR_NO OR_NO  ,
 		       Extent1.TR_NO TR_NO  ,
-		       Extent1.PAY_DT PAY_DT  ,
+		       TO_CHAR(Extent1.PAY_DT,'YYYY-MM-DD hh:mi:ss A.M.') PAY_DT,
 		       Extent1.LAST_UPD_DT LAST_UPD_DT  ,
 		       Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
 		       Extent1.PAY_TYPE_NAME PAY_TYPE_NAME  ,
@@ -671,5 +671,178 @@
 		          WHERE  Extent1.PAY_ITM_ID = #{value} ) Project1
 		  ORDER BY Project1.HIST_ID DESC
     </select>
+    
+    <select id="selectPayMaster" parameterType="Map" resultType="egovMap">
+          SELECT 
+		       Extent1.PAY_ID PAY_ID  ,
+		       Extent1.OR_NO OR_NO  ,
+		       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+		       Extent1.BILL_ID BILL_ID  ,
+		       Extent1.TR_NO TR_NO  ,
+		       Extent1.TYPE_ID TYPE_ID  ,
+		       Extent1.PAY_DATA PAY_DATA  ,
+		       Extent1.BANK_CHG_AMT BANK_CHG_AMT  ,
+		       Extent1.BANK_CHG_ACC_ID BANK_CHG_ACC_ID  ,
+		       Extent1.COLL_MEM_ID COLL_MEM_ID  ,
+		       Extent1.BRNCH_ID BRNCH_ID  ,
+		       Extent1.BANK_ACC_ID BANK_ACC_ID  ,
+		       Extent1.ALLOW_COMM ALLOW_COMM  ,
+		       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.SYNC_HECK SYNC_HECK  ,
+		       Extent1.CUST_ID_3PARTY CUST_ID_3PARTY  ,
+		       Extent1.TOT_AMT TOT_AMT  ,
+		       Extent1.MTCH_ID MTCH_ID  ,
+		       Extent1.CRT_USER_ID CRT_USER_ID  ,
+		       Extent1.CRT_DT CRT_DT  ,
+		       Extent1.IS_ALLOW_REV_MULTI IS_ALLOW_REV_MULTI  ,
+		       Extent1.IS_GL_POST_CLM IS_GL_POST_CLM  ,
+		       Extent1.GL_POST_CLM_DT GL_POST_CLM_DT  ,
+		       Extent1.TRX_ID TRX_ID  ,
+		       Extent1.ADV_MONTH ADV_MONTH  ,
+		       Extent1.ACC_BILL_ID ACC_BILL_ID  ,
+		       Extent1.TR_ISSU_DT TR_ISSU_DT  ,
+		       Extent1.TAX_INVC_IS_GEN TAX_INVC_IS_GEN  ,
+		       Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+		       Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
+		       Extent1.SVC_CNTRCT_ID SVC_CNTRCT_ID  ,
+		       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+		  FROM PAY0064D Extent1
+		 WHERE  Extent1.PAY_ID = #{hiddenPayId} AND ROWNUM <![CDATA[   <= ]]>  1
+     </select>
+  
+     <insert id="saveChanges" parameterType="Map">
+        INSERT INTO PAY0066D(
+        HIST_ID,
+        TYPE_ID, 
+        PAY_ID, 
+        VALU_FROM, 
+        VALU_TO, 
+        REF_ID_FROM, 
+        REF_ID_TO, 
+        CRT_DT, 
+        CREATEBY
+        )VALUES (
+        PAY0066D_SEQ.NEXTVAL,
+        #{typeID}, 
+        #{payID}, 
+        #{valueFr}, 
+        #{valueTo}, 
+        #{refIDFr}, 
+        #{refIDTo}, 
+        SYSDATE, 
+        #{createBy}
+        )
+    </insert>
+
+    <update id="updChanges" parameterType="Map">
+        UPDATE PAY0064D
+        SET
+        UPD_DT= SYSDATE 
+        <if test="trNo != '' ">
+          , TR_NO=#{trNo}
+       </if>
+       <if test="collMemId != '' ">
+          ,COLL_MEM_ID = #{collMemId}
+       </if>
+       <if test="brnchId != '' ">
+          , BRNCH_ID = #{brnchId}
+       </if>
+       <if test="trIssueDate != '' ">
+          , TR_ISSU_DT = #{trIssueDate}
+       </if>
+       <if test="allowComm != '' ">
+          , ALLOW_COMM = #{allowComm}
+       </if>
+        WHERE PAY_ID=#{payId}
+    </update>
+    
+    <select id="selectMemCode" parameterType="Map" resultType="egovMap">
+          SELECT 
+               Extent1.MEM_ID MEM_ID  ,
+               Extent1.MEM_CODE MEM_CODE  ,
+		       Extent1.MEM_TYPE MEM_TYPE  ,
+		       Extent1.NAME NAME  ,
+		       Extent1.FULL_NAME FULL_NAME  ,
+		       Extent1.PASSWD PASSWD  ,
+		       Extent1.NRIC NRIC  ,
+		       Extent1.DOB DOB  ,
+		       Extent1.GENDER GENDER  ,
+		       Extent1.RACE RACE  ,
+		       Extent1.MARTL MARTL  ,
+		       Extent1.NATION NATION  ,
+		       Extent1.ADDR1 ADDR1  ,
+		       Extent1.ADDR2 ADDR2  ,
+		       Extent1.ADDR3 ADDR3  ,
+		       Extent1.ADDR4 ADDR4  ,
+		       Extent1.AREAL AREAL  ,
+		       Extent1.POST_CODE POST_CODE  ,
+		       Extent1.STATE STATE  ,
+		       Extent1.CNTY CNTY  ,
+		       Extent1.TEL_OFFICE TEL_OFFICE  ,
+		       Extent1.TEL_HUSE TEL_HUSE  ,
+		       Extent1.TEL_MOBILE TEL_MOBILE  ,
+		       Extent1.EMAIL EMAIL  ,
+		       Extent1.SPUSE_CODE SPUSE_CODE  ,
+		       Extent1.SPOUSE_NAME SPOUSE_NAME  ,
+		       Extent1.SPOUSE_NRIC SPOUSE_NRIC  ,
+		       Extent1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+		       Extent1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+		       Extent1.SPOUSE_DOB SPOUSE_DOB  ,
+		       Extent1.EDC_LEV EDC_LEV  ,
+		       Extent1.LANG LANG  ,
+		       Extent1.BANK BANK  ,
+		       Extent1.BANK_ACC_NO BANK_ACC_NO  ,
+		       Extent1.SPONS_CODE SPONS_CODE  ,
+		       Extent1.JOIN_DT JOIN_DT  ,
+		       Extent1.RESIGN_DT RESIGN_DT  ,
+		       Extent1.TRM_DT TRM_DT  ,
+		       Extent1.RENEW_DT RENEW_DT  ,
+		       Extent1.AGRMNT_NO AGRMNT_NO  ,
+		       Extent1.BRNCH BRNCH  ,
+		       Extent1.STUS STUS  ,
+		       Extent1.SYNC_CHK SYNC_CHK  ,
+		       Extent1.RANK RANK  ,
+		       Extent1.TRNSPRT TRNSPRT  ,
+		       Extent1.PROMO_DT PROMO_DT  ,
+		       Extent1.TR_NO TR_NO  ,
+		       Extent1.CRT_DT CRT_DT  ,
+		       Extent1.CRT_USER_ID CRT_USER_ID  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+		       Extent1.APLICNT_ID APLICNT_ID  ,
+		       Extent1.BIZ_TYPE BIZ_TYPE  ,
+		       Extent1.HSPTLZ HSPTLZ  
+		  FROM ORG0001D Extent1
+		 WHERE  Extent1.MEM_ID = #{edit_txtCollectorCode} AND ROWNUM <![CDATA[   <= ]]>  1
+     </select>
+     
+     <select id="selectBranchCode" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+		       Extent1.CODE CODE  ,
+		       Extent1.NAME NAME  ,
+		       Extent1.ADDR1 ADDR1  ,
+		       Extent1.ADDR2 ADDR2  ,
+		       Extent1.ADDR3 ADDR3  ,
+		       Extent1.ADDR4 ADDR4  ,
+		       Extent1.AREA_ID AREA_ID  ,
+		       Extent1.POST_CODE_ID POST_CODE_ID  ,
+		       Extent1.STATE_CODE_ID STATE_CODE_ID  ,
+		       Extent1.CNTY_ID CNTY_ID  ,
+		       Extent1.TEL1 TEL1  ,
+		       Extent1.TEL2 TEL2  ,
+		       Extent1.FAX FAX  ,
+		       Extent1.CNTC CNTC  ,
+		       Extent1.TYPE_ID TYPE_ID  ,
+		       Extent1.STUS_ID STUS_ID  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.IS_SYNC IS_SYNC  ,
+		       Extent1.REGN_ID REGN_ID  
+		  FROM SYS0005M Extent1
+		 WHERE  Extent1.BRNCH_ID = #{edit_branchId} AND ROWNUM <![CDATA[   <= ]]>  1
+     </select>
 
 </mapper>

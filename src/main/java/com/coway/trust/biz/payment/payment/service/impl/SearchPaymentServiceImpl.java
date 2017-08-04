@@ -156,4 +156,44 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		return searchPaymentMapper.selectPaymentDetailSlaveList(params);
 	}
 	
+	/**
+	 * selectPayMaster   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectPayMaster(Map<String, Object> params) {
+		return searchPaymentMapper.selectPayMaster(params);
+	}
+
+	@Override
+	public void saveChanges(Map<String, Object> params) {
+		searchPaymentMapper.saveChanges(params);
+	}
+	
+	@Override
+	public void updChanges(Map<String, Object> params) {
+		searchPaymentMapper.updChanges(params);
+	}
+	
+	/**
+	 * selectMemCode   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectMemCode(Map<String, Object> params) {
+		return searchPaymentMapper.selectMemCode(params);
+	}
+	
+	/**
+	 * selectBranchCode   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectBranchCode(Map<String, Object> params) {
+		return searchPaymentMapper.selectBranchCode(params);
+	}
+	
 }

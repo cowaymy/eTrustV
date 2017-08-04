@@ -78,4 +78,39 @@ public interface SearchPaymentService
 	 * @return
 	 */
 	EgovMap selectPaymentDetailSlaveList(Map<String, Object> params);
+	
+	/**
+	 * selectPayMaster   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPayMaster(Map<String, Object> params);
+	
+	/**
+	 * saveChanges 저장
+	 * @param params
+	 * @return
+	 */
+	void saveChanges (Map<String, Object> params);
+	
+	/**
+	 * updChanges 
+	 * @param params
+	 * @return
+	 */
+	void updChanges (Map<String, Object> params);
+	
+	/**
+	 * selectMemCode   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectMemCode(Map<String, Object> params);
+	
+	/**
+	 * selectBranchCode   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectBranchCode(Map<String, Object> params);
 }

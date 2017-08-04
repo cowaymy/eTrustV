@@ -194,17 +194,23 @@ function fn_openDivPop(val){
 	            $('#txtCustomerName').text(result.viewMaster.custName);
 	            $('#txtCustomerType').text(result.viewMaster.custTypeName);
 	            $('#txtCustomerID').text(result.viewMaster.custId);
-	            $('#txtOrderProgressStatus').text(result.orderProgressStatus.name);
+	            if(result.orderProgressStatus.name != null){
+	            	$('#txtOrderProgressStatus').text(result.orderProgressStatus.name);
+	            }else{
+	            	$('#txtOrderProgressStatus').text("");
+	            }
+	            
 	            $('#txtInstallNo').text('');
 	            $('#txtNRIC').text(result.viewMaster.custIc);
 	            $('#txtPayType').text(result.viewMaster.payTypeName);
 	            $('#txtAdvMth').text(result.viewMaster.advMonth);
 	            $('#txtPayDate').text(result.viewMaster.payDt);
-	            $('#txtHPCode').text(result.viewMaster.hpId);
-	            $('#txtHPName').text(result.viewMaster.orNo);
+	            $('#txtHPCode').text(result.viewMaster.hpCode);
+	            $('#txtHPName').text(result.viewMaster.hpName);
 	            $('#txtBatchPaymentID').text(result.viewMaster.batchPayId);
 	             
 	            //Collector Information
+	            $('#txtCollectorCode').text(result.viewMaster.clctrCode);
 	            $('#txtSalesPerson').text(result.viewMaster.salesMemCode + "(" + result.viewMaster.salesMemName+")");
 	            $('#txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
 	            $('#txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
@@ -214,6 +220,7 @@ function fn_openDivPop(val){
 	            //팝업그리드 뿌리기
 	            AUIGrid.setGridData(popGridID, result.selectPaymentDetailView);
 	            AUIGrid.setGridData(popSlaveGridID, result.selectPaymentDetailSlaveList);
+	            
 	        },function(jqXHR, textStatus, errorThrown) {
 	            Common.alert("실패하였습니다.");
 
@@ -229,7 +236,6 @@ function fn_openDivPop(val){
 		if(selectedGridValue !=  undefined){
             $("#popup_wrap2").show();
             editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popColumnLayout, null, gridPros_popList);
-            //editPopSlaveGridID = GridCommon.createAUIGrid("editPopSlaveList_wrap", popSlaveColumnLayout, null, gridPros_popList);
             
             Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
                 console.log(result);
@@ -239,8 +245,8 @@ function fn_openDivPop(val){
                 $('#edit_txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#edit_txtLastUpdator").css("color","red");
                 $('#edit_txtKeyInUser').text(result.viewMaster.keyinUserName);$("#edit_txtKeyInUser").css("color","red");
                 $('#edit_txtOrderNo').text(result.viewMaster.salesOrdNo);$("#edit_txtOrderNo").css("color","red");
-                $('#edit_txtTRRefNo').text(result.viewMaster.trNo);
-                $('#edit_txtTRIssueDate').text(result.viewMaster.trIssuDt);
+                $('#edit_txtTRRefNo').val(result.viewMaster.trNo);
+                $('#edit_txtTRIssueDate').val(result.viewMaster.trIssuDt);
                 $('#edit_txtProductCategory').text(result.viewMaster.productCtgryName);
                 $('#edit_txtProductName').text(result.viewMaster.productDesc);
                 $('#edit_txtAppType').text(result.viewMaster.appTypeName);
@@ -261,6 +267,18 @@ function fn_openDivPop(val){
                 $('#edit_txtSalesPerson').text(result.viewMaster.salesMemCode + "(" + result.viewMaster.salesMemName+")");
                 $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
                 $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
+
+                
+                $('#edit_branchId').val(result.viewMaster.clctrBrnchId);
+                $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
+                $('#edit_txtClctrName').text(result.viewMaster.clctrName);
+                
+                if(result.viewMaster.allowComm != "1"){
+                	$("#btnAllowComm").attr('checked', false) ;
+                }else{
+                	$("#btnAllowComm").attr('checked', true) ;
+
+                }
                  
                 //팝업그리드 뿌리기
                 AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailView);
@@ -315,6 +333,30 @@ function hideViewPopup(){
 function hideDetailPopup(){
 	$("#view_detail_wrap").hide();
     AUIGrid.destroy("#grid_detail_history");
+}
+
+function saveChanges() {
+	
+	var payId = $("#payId").val();
+	
+	if($("#btnAllowComm").is(":checked")){
+		$("#allowComm").val(1);
+	}else{
+		$("#allowComm").val(0);
+	}
+	
+	$("#hiddenPayId").val(payId);
+	
+	Common.ajax("POST", "/payment/saveChanges", $('#myForm').serializeJSON(), function(result) {
+		
+		var msg = result.message;
+        Common.alert(msg);
+        // 공통 메세지 영역에 메세지 표시.
+        Common.setMsg("<spring:message code='sys.msg.success'/>");
+
+	}, function(jqXHR, textStatus, errorThrown) {
+        Common.alert("실패하였습니다.");
+    });
 }
 </script>
 
@@ -634,7 +676,7 @@ function hideDetailPopup(){
     <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
-
+<form name="myForm" id="myForm">
 <section class="pop_body"><!-- pop_body start -->
     <aside class="title_line"><!-- title_line start -->
         <h2>Payment Information</h2>
@@ -662,11 +704,11 @@ function hideDetailPopup(){
                     </tr>
                     <tr>
                         <th scope="row">TR Ref. No.</th>
-                        <td id="edit_txtTRRefNo"><input type="text" name="edit_txtTRRefNo" placeholder="TR Ref. No."></td>
+                        <td><input type="text" name="edit_txtTRRefNo" id="edit_txtTRRefNo"></td>
                         <th scope="row">TR Issued Date</th>
                         <td id="">
                             <div class="date_set"><!-- date_set start -->
-                                <p><input type="text"  name="edit_txtTRIssueDate" id="edit_txtTRIssueDate" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                                <p><input type="text"  name="edit_txtTRIssueDate" id="edit_txtTRIssueDate" title="Create Date From"  class="j_date" /></p>
                             </div>
                         </td>
                     </tr>
@@ -731,23 +773,23 @@ function hideDetailPopup(){
                 <tbody>
                     <tr>
                         <th scope="row">Collector Code</th>
-                        <td id="edit_txtCollectorCode"></td>
+                        <td id=""><input type="text" name="edit_txtCollectorCode" id="edit_txtCollectorCode"></td>
                         <th scope="row">HP Code/Dealer</th>
                         <td id="edit_txtSalesPerson"></td>
                     </tr>
                      <tr>
                         <th scope="row">Collector Name</th>
-                        <td id=""></td>
+                        <td id="edit_txtClctrName"></td>
                         <th scope="row">Debtor Account</th>
                         <td id="edit_txtDebtor"></td>
                     </tr>
                 </tbody>
     </table>
     <ul class="left_btns">
-        <li><label><input name="btnAllowComm" type="checkbox"  /><span>Allow commission for this payment </span></label></li>
+        <li><label><input name="btnAllowComm" id="btnAllowComm" type="checkbox"  /><span>Allow commission for this payment </span></label></li>
     </ul>
     <ul class="center_btns">
-        <li><p class="btn_blue2"><a href="javascript:alert()">Update</a></p></li>
+        <li><p class="btn_blue2"><a href="javascript:saveChanges()">Update</a></p></li>
         <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
     </ul>
     <section class="search_result"><!-- search_result start -->
@@ -755,6 +797,9 @@ function hideDetailPopup(){
         </article><!-- grid_wrap end -->
     </section><!-- search_result end -->
 </section><!-- pop_body end -->
+<input type="hidden" name="hiddenPayId" id="hiddenPayId">
+<input type="hidden" name="allowComm" id="allowComm">
+</form>
 </div><!-- popup_wrap end -->
 <div id="view_history_wrap" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">

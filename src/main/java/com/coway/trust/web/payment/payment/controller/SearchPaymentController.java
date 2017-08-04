@@ -258,13 +258,13 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/selectPaymentDetailViewer", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectPaymentDetailViewer(@RequestParam Map<String, Object> params, ModelMap model) {
-		logger.debug("payId : {}", params.get("payId"));
 		
         // 마스터조회
 		EgovMap viewMaster = searchPaymentService.selectPaymentDetailViewer(params);
 		
 		//주문진행상태 조회
 		EgovMap orderProgressStatus = searchPaymentService.selectOrderProgressStatus(params);
+		
 		
 		//selectPaymentDetailView
 		EgovMap selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
@@ -274,11 +274,226 @@ public class SearchPaymentController {
 		
 		Map resultMap = new HashMap();
 		resultMap.put("viewMaster", viewMaster);
-		resultMap.put("orderProgressStatus", orderProgressStatus);
 		resultMap.put("selectPaymentDetailView", selectPaymentDetailView);
 		resultMap.put("selectPaymentDetailSlaveList", selectPaymentDetailSlaveList);
+		if(orderProgressStatus != null){
+			resultMap.put("orderProgressStatus", orderProgressStatus);
+		}else{
+			resultMap.put("orderProgressStatus", "");
+		}
         
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultMap);
+	}
+	
+	/**
+	 * saveChanges
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/saveChanges", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveChanges(@RequestBody Map<String, Object> params, ModelMap model) {
+		
+        // 마스터조회
+		EgovMap viewMaster = searchPaymentService.selectPayMaster(params);
+		//마스터조회값
+		String trNo = String.valueOf(viewMaster.get("trNo"));
+		String brnchId = String.valueOf(viewMaster.get("brnchId"));
+		String collMemId = String.valueOf(viewMaster.get("collMemId"));
+		String allowComm = String.valueOf(viewMaster.get("allowComm"));
+		String trIssuDt = String.valueOf(viewMaster.get("trIssuDt"));
+		
+		logger.debug("마스터조회값 trNo : {}", trNo);
+		logger.debug("마스터조회값 brnchId : {}", brnchId);
+		logger.debug("마스터조회값 collMemId : {}", collMemId);
+		logger.debug("마스터조회값 allowComm : {}", allowComm);
+		logger.debug("마스터조회값 trIssuDt : {}", trIssuDt);
+		
+		
+	     //변경전 멤버코드, 브랜치코드 조회
+	    Map idMap = new HashMap();
+		idMap.put("edit_txtCollectorCode", String.valueOf(viewMaster.get("collMemId")));
+		idMap.put("edit_branchId", String.valueOf(viewMaster.get("brnchId")));
+	    EgovMap beforeMemCode = searchPaymentService.selectMemCode(idMap);
+		EgovMap beforeBranchCode = searchPaymentService.selectBranchCode(idMap);
+		
+		
+		String frMemCode = "";
+		String frBranchCode = "";
+		if(beforeMemCode !=null){
+			frMemCode = String.valueOf(beforeMemCode.get("memCode"));
+		}else{
+			frMemCode = "";
+		}
+		
+		if(beforeBranchCode != null){
+			frBranchCode = String.valueOf(beforeBranchCode.get("code"));
+		}else{
+			frBranchCode = "";
+		}
+		
+		
+		//변경후 멤버코드, 브랜치코드 조회
+		//EgovMap afterMemCode = searchPaymentService.selectMemCode(params);
+		EgovMap afterBranchCode = searchPaymentService.selectBranchCode(params);
+		String toMemCode = "";
+		String toBranchCode = "";
+		
+		/*if(afterMemCode !=null){
+			toMemCode = String.valueOf(afterMemCode.get("memCode"));
+    	}else{
+    		toMemCode = "";
+    	}*/
+    	
+    	if(afterBranchCode != null){
+    		toBranchCode = String.valueOf(afterBranchCode.get("code"));
+    	}else{
+    		toBranchCode = "";
+    	}
+		
+		boolean HasChanges = false;
+		Map trMap = new HashMap();
+		Map branchMap = new HashMap();
+		Map collectorMap = new HashMap();
+		Map allowMap = new HashMap();
+		Map updMap = new HashMap();
+		
+		//1127 : TR Number
+		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")))){
+			HasChanges =true;
+			
+            String typeID = "1127";
+            String payID = String.valueOf(params.get("hiddenPayId"));
+            String valueFr = trNo;
+            String valueTo = String.valueOf(params.get("edit_txtTRRefNo"));
+            String refIDFr = "0";
+            String refIDTo = "0";
+            String createBy = "52366";
+            
+            trMap.put("typeID", typeID);
+            trMap.put("payID", payID);
+            trMap.put("valueFr", valueFr);
+            trMap.put("valueTo", valueTo);
+            trMap.put("refIDFr", refIDFr);
+            trMap.put("refIDTo", refIDTo);
+            trMap.put("createBy", createBy);
+            
+            searchPaymentService.saveChanges(trMap);
+		}
+		
+		//1128 : Key-In Branch
+		if(!brnchId.equals(String.valueOf(params.get("edit_branchId")))){
+			HasChanges =true;
+			
+            String typeID = "1128";
+            String payID = String.valueOf(params.get("hiddenPayId"));
+            String valueFr = frBranchCode;
+            String valueTo = toBranchCode;
+            String refIDFr = brnchId;
+            String refIDTo = String.valueOf(params.get("edit_branchId"));
+            String createBy = "52366";
+            
+            branchMap.put("typeID", typeID);
+            branchMap.put("payID", payID);
+            branchMap.put("valueFr", valueFr);
+            branchMap.put("valueTo", valueTo);
+            branchMap.put("refIDFr", refIDFr);
+            branchMap.put("refIDTo", refIDTo);
+            branchMap.put("createBy", createBy);
+            
+            searchPaymentService.saveChanges(branchMap);
+		}
+
+		//1129 : Collector
+		if(!collMemId.equals(collMemId)){//화면에서 받은 멤버아이디값과 마스터 collMemId와 비교
+			HasChanges =true;
+			
+            String typeID = "1129";
+            String payID = String.valueOf(params.get("hiddenPayId"));
+            String valueFr = "100002";//공통 멤버조회 생기면 넣자! 변경전코드
+            String valueTo = "100001";//공통 멤버조회 생기면 넣자! 변경후코드
+            String refIDFr = collMemId;//마스터멤버아이디(변경전데이터)
+            String refIDTo = collMemId;//인서트쳐야할 멤버아이디(변경후데이터)
+            String createBy = "52366";
+            
+            collectorMap.put("typeID", typeID);
+            collectorMap.put("payID", payID);
+            collectorMap.put("valueFr", valueFr);
+            collectorMap.put("valueTo", valueTo);
+            collectorMap.put("refIDFr", refIDFr);
+            collectorMap.put("refIDTo", refIDTo);
+            collectorMap.put("createBy", createBy);
+            
+            searchPaymentService.saveChanges(collectorMap);
+		}
+		//1137 : Allow Commission
+		if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
+			HasChanges =true;
+			
+            String typeID = "1137";
+            String payID = String.valueOf(params.get("hiddenPayId"));
+            String valueFr = allowComm.equals("0") ? "No":"Yes" ;
+            String valueTo = String.valueOf(params.get("allowComm")).equals("0") ? "No":"Yes";
+            String refIDFr = "0";
+            String refIDTo = "0";
+            String createBy = "52366";
+            
+            allowMap.put("typeID", typeID);
+            allowMap.put("payID", payID);
+            allowMap.put("valueFr", valueFr);
+            allowMap.put("valueTo", valueTo);
+            allowMap.put("refIDFr", refIDFr);
+            allowMap.put("refIDTo", refIDTo);
+            allowMap.put("createBy", createBy);
+            
+            searchPaymentService.saveChanges(allowMap);
+		}
+		
+		//if(HasChanges){
+			
+			if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")))){
+				updMap.put("trNo", String.valueOf(params.get("edit_txtTRRefNo")));
+			}else{
+				updMap.put("trNo", "");
+			}
+			
+			if(!brnchId.equals(String.valueOf(params.get("edit_branchId")))){
+				updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
+			}else{
+				updMap.put("brnchId", "");
+			}
+			
+			if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorCode")))){
+				updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorCode")));
+			}else{
+				updMap.put("collMemId", "");
+			}
+			
+			if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
+				updMap.put("allowComm", String.valueOf(params.get("allowComm")));
+			}else{
+				updMap.put("allowComm", "");
+			}
+			
+			if(!trIssuDt.equals(String.valueOf(params.get("edit_txtTRIssueDate")))){
+				updMap.put("trIssueDate", String.valueOf(params.get("edit_txtTRIssueDate")));
+			}else{
+				updMap.put("trIssueDate", "");
+			}
+				
+			updMap.put("payId", String.valueOf(params.get("hiddenPayId")));
+			
+			searchPaymentService.updChanges(updMap);
+		//}
+		
+		
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage("Payment successfully updated.");
+		
+		return ResponseEntity.ok(message);
 	}
 }
