@@ -241,6 +241,7 @@ table.type2 tbody th{height:35px; color:#333; font-weight:bold; line-height:15px
 table.type2 thead tr th:first-child,
 table.type2 tbody tr th:first-child{border-left:0 none;}
 table.type2 tbody td{height:31px; padding:2px 6px; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; text-align:center; vertical-align:middle;}
+table.type2 tbody td.border_left{border-left:1px solid #d3d9dd!important;}
 table.type2 tbody tr td:first-child{border-left:0 none;}
 table.type2 tbody td input[type=text]{width:100%; height:30px; line-height:28px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px;}
 table.type2 tbody td.al_left{text-align:left;}
@@ -276,6 +277,8 @@ table.type2.acodi .aco_tr{display:none;}
 .ui-datepicker-calendar .ui-datepicker-week-end{color:#0865ff;}
 .ui-datepicker-calendar .ui-datepicker-week-end a{color:#0865ff;}
 .ui-datepicker-calendar tbody tr td:first-child a{color:#cf0303!important;}
+.ui-datepicker-today{background:#ff8400!important;}
+.ui-datepicker-today a{color:#fff!important;}
 div.mtz-monthpicker{width:100%; padding:5px 0; box-sizing:border-box; border-radius:3px; border-bottom:0 none;}
 table.mtz-monthpicker{background:#fff; border:1px solid #ccc;}
 table.mtz-monthpicker td{border:1px solid #ccc;}
@@ -476,3 +479,15 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .time_picker > ul li:first-child{width:210px; background:#394466; color:#fff; text-align:center; line-height:24px; font-weight:bold;}
 .time_picker > ul li a{display:block; height:20px; line-height:20px; font-size:12px; text-align:center;}
 .time_picker > ul li a:hover{background:#25a0da; color:#fff;}
+
+/* 테이블 달력 */
+.cal_header{position:relative; padding:10px; text-align:center; background:#25527c;}
+.cal_header strong{font-size:15px; color:#fff;}
+.cal_header strong span{margin:0 3px; font-size:15px; color:#fff;}
+.cal_header .left_opt{position:absolute; top:5px; left:10px;}
+.cal_header .left_opt:after{content:""; display:block; clear:both;}
+.cal_header .left_opt li{float:left; margin-right:5px; overflow:hidden}
+.cal_header .left_opt li input[type=text]{display:inline-block; width:1px!important; height:1px; border:0 none; background:#25527c;}
+.cal_header .left_opt li label span{line-height:24px; color:#fff;}
+.cal_th{height:auto!important; padding:3px; background:#f5f5f5!important;}
+.cal_td{min-height:50px;}
