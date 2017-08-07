@@ -1,8 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
+//AUIGrid 생성 후 반환 ID
+var creditCardGridID; // credit card list
+
+
 $(document).ready(function(){
-    
+	
+	/* Move Page */
     $("#_editCustomerInfo").change(function(){
           
         var stateVal = $(this).val();
@@ -35,13 +40,88 @@ $(document).ready(function(){
         
     });
     
-});
+    /*  Gird */
+    //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
+    creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
+    fn_getCustomerCreditCardAjax(); // credit card list
+    
+    // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(creditCardGridID, "cellDoubleClick", function(event){
+       
+    	$("#custId").val(event.item.custId);
+        $("#custCrcId").val(event.item.custCrcId);
+        
+        Common.popupWin("editForm", "/sales/customer/updateCustomerCreditCardInfoPop.do", option);
+    });
+    
+});// Document Ready End
+
+	//creaditcard Ajax
+	function fn_getCustomerCreditCardAjax(){
+	    Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList",$("#editForm").serialize(), function(result) {
+	        AUIGrid.setGridData(creditCardGridID, result);
+	    });
+	}
+	
+	//그리드 속성 설정
+    var gridPros = {
+
+        // 페이징 사용       
+        usePaging : true,
+        // 한 화면에 출력되는 행 개수 10(기본값:10)
+        pageRowCount : 10,
+        // 수정 
+        editable : false,
+        // column Count
+        fixedColumnCount : 1,
+        
+        showStateColumn : false, //true
+        
+        displayTreeOpen : false, //true
+        
+        selectionMode : "multipleCells",
+        
+        headerHeight : 30,
+        // 그룹핑 패널 사용
+        useGroupingPanel : false, //true
+        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+        skipReadonlyColumns : true,
+        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+        wrapSelectionMove : false, //false
+        // 줄번호 칼럼 렌더러 출력
+        showRowNumColumn : false,
+        
+        groupingMessage : "Here groupping"      
+    };
+	
+    // CreditCard Column
+    var creditCardColumnLayout = [
+           {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
+           {dataField : "codeName", headerText : "Card Type", width : '15%'}, 
+           {dataField : "codeName1", headerText : "Type", width : '15%'},
+           {dataField : "bankName", headerText : "Issue Bank", width : '25%'},
+           {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
+           {dataField : "custCrcExpr", headerText : "Expiry", width : '15%'},
+           {dataField : "custCrcId", visible : false},
+           {dataField : "custId", visible : false}
+           ];
+    
+    // Popup Option     
+    var option = {
+            
+            location : "no", // 주소창이 활성화. (yes/no)(default : yes)
+            width : "1200px", // 창 가로 크기
+            height : "400px" // 창 세로 크기
+    };
+
+    
 </script>
 <!-- move Page Form  -->
 <form id="editForm">
-    <input type="hidden" name="custId" value="${custId}"/>
-    <input type="hidden" name="custAddId" value="${custAddId}"/>
-    <input type="hidden" name="custCntcId" value="${custCntcId}" id="custCntcId"> 
+    <input type="hidden" name="custId" value="${custId}" id="custId"/>
+    <input type="hidden" name="custAddId" value="${custAddId}" id="custAddId"/>
+    <input type="hidden" name="custCntcId" value="${custCntcId}" id="custCntcId">
+    <input type="hidden" name="custCrcId" id="custCrcId"> 
     <input type="hidden" name="selectParam"  id="_selectParam"/>
 </form>
 <section class="pop_body"><!-- pop_body start -->
@@ -269,7 +349,7 @@ $(document).ready(function(){
     <li><p class="btn_grid"><a href="#">ADD New Credit Card Account</a></p></li>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+    <div id="creditcard_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <!-- ########## Credit Card Grid End ########## -->
 </section><!-- pop_body end -->

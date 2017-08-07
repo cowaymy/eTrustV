@@ -9,6 +9,11 @@ $(document).ready(function() {
 	doGetCombo('/common/selectCodeList.do', '17', selCodeInitial, 'cmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box
 	doGetCombo('/common/selectCodeList.do', '2', selCodeRace, 'cmbRaceTypeId', 'S' , ''); // Customer Race Type Combo Box
 	
+	// main 일 경우 delete 버튼 숨기기
+    if($("#stusCodeId").val() == 9){
+        $("#_delBtn").css("display", "none" );
+    } 
+	
 	// update Button Click
 	$("#_updBtn").click(function() {
 		// 1. validation
@@ -96,29 +101,55 @@ $(document).ready(function() {
 		
 		// Validation Success
 		// 2. Update
-		fn_getCustomerContactAjax();
+		fn_customerContactInfoUpdateAjax()();
 		
 	});
 	
+	 //Delete
+    $("#_delBtn").click(function() {
+       Common.confirm("Are you sure want to delete this contact person ?", fn_deleteContactAjax);
+    });
+}); // Document Ready Func End
+
+/* ####### update Func ########### */
 	// Call Ajax - DB Update
-	function fn_getCustomerContactAjax(){
-        Common.ajax("GET", "/sales/customer/updateCustomerContactInfoAf.do",$("#updForm").serialize(), function(result) {
-            Common.alert(result.message, fn_parentReload);
-        });
-    }
+	function fn_customerContactInfoUpdateAjax(){
+	    Common.ajax("GET", "/sales/customer/updateCustomerContactInfoAf.do",$("#updForm").serialize(), function(result) {
+	        Common.alert(result.message, fn_parentReload);
+	    });
+	}
 	
 	// Parent Reload Func
 	function fn_parentReload() {
-		window.opener.document.location.reload();
-		window.opener.opener.parent.fn_selectPstRequestDOListAjax();
+	    window.opener.document.location.reload();
+	    window.opener.opener.parent.fn_selectPstRequestDOListAjax();
 	}
-});
+/* ####### update Func  End########### */
 
+/* ####### delete Func ########### */
+    //delete
+	function fn_deleteContactAjax(){
+	    
+	    Common.ajax("GET", "/sales/customer/deleteCustomerContact.do", $("#updForm").serialize(), function(result){
+	        //result alert and closePage
+	        Common.alert(result.message, fn_closePage);
+	    });
+	}
+	
+	//Parent Reload and PageClose Func
+	function fn_closePage(){
+	    //Parent Window Method Call
+	    window.opener.opener.parent.fn_selectPstRequestDOListAjax();
+	    window.opener.document.location.reload();
+	    window.close(); 
+	}
+/* ####### delete Func End ########### */
 </script>
 
 <!-- getParams  -->
 <input type="hidden" value="${detailcontact.custInitial}" id="selCodeInitial">
 <input type="hidden" value="${detailcontact.raceId}" id="selCodeRace">
+<input type="hidden" value="${detailcontact.stusCodeId}" id="stusCodeId">
 <section class="pop_body"><!-- pop_body start -->
 <form id="updForm"> <!-- Form Start  -->
 <input type="hidden" value="${detailcontact.custCntcId }" name="custCntcId">
@@ -152,7 +183,7 @@ $(document).ready(function() {
 </tr>
 <tr>
     <th scope="row">NRIC</th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.nric }" name="nric" id="nric"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.nric }" name="nric" id="nric" maxlength="18"/></td>
     <th scope="row">DOB</th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" value="${detailcontact.dob}" name="dob"/>
@@ -188,7 +219,7 @@ $(document).ready(function() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" id="_updBtn">Update</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">Delete</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_delBtn">Delete</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

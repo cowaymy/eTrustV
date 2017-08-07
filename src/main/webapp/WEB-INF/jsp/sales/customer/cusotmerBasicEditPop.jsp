@@ -21,7 +21,7 @@ $(document).ready(function(){
 		$("input[name='gender']").attr("disabled" , false);
 		$("#cmdRaceTypeId").attr("disabled" , false);
 		$("#cmdNationTypeId").attr("disabled" , "disabled");
-		$("#dob").attr("disabled" , false);
+		$("#dob").attr("disabled" , "disabled");
 	}
 	// company
 	if(selCodeCustId == '965'){
