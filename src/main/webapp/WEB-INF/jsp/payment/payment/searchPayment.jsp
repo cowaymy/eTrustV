@@ -145,24 +145,25 @@ var popColumnLayout = [
     { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
     { dataField:"c4" ,headerText:"EFT" ,editable : false },
     { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
+    { dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false },
     { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
     ];
 
 var popSlaveColumnLayout = [ 
     { dataField:"trxId" ,headerText:"TrxNo",editable : false},
-    { dataField:"payDt" ,headerText:"TrxDate",editable : false  },
+    { dataField:"trxDt" ,headerText:"TrxDate",editable : false  },
     { dataField:"trxAmt" ,headerText:"TrxTotal",editable : false },
     { dataField:"payId" ,headerText:"PID",editable : false },
     { dataField:"orNo" ,headerText:"ORNo" ,editable : false },
     { dataField:"trNo" ,headerText:"TRNo" ,editable : false },
-    { dataField:"payItmCcHolderName" ,headerText:"ORTotal" ,editable : false },
+    { dataField:"orAmt" ,headerText:"ORTotal" ,editable : false },
     { dataField:"salesOrdNo" ,headerText:"OrderNo" ,editable : false },
     { dataField:"appTypeName" ,headerText:"AppType" ,editable : false },
     { dataField:"productDesc" ,headerText:"Product" ,editable : false },
     { dataField:"custName" ,headerText:"Customer" ,editable : false },                   
     { dataField:"custIc" ,headerText:"IC/CO No." ,editable : false },
-    { dataField:"keyinBranchName" ,headerText:"Branch" ,editable : false },
-    { dataField:"ketinUserName" ,headerText:"UserName" ,editable : false },
+    { dataField:"keyinBrnchName" ,headerText:"Branch" ,editable : false },
+    { dataField:"keyinUserName" ,headerText:"UserName" ,editable : false },
     ];
 
 var viewHistoryLayout=[
@@ -192,6 +193,7 @@ function fn_getPaymentListAjax() {
 
 
 function fn_openDivPop(val){
+	
 	if(val == "VIEW"){
 		if(selectedGridValue !=  undefined){
 	        $("#popup_wrap").show();
@@ -447,12 +449,12 @@ function saveChanges() {
 	var trNo = $("#edit_txtTRRefNo").val();
 	var branchId = $("#edit_branchId").val();
 	
-	if($.trim(trNo).length >10 ){
+	if($.trim(trNo).length > 10 ){
         Common.alert("* The TR number cannot exceed length of 10.");
         return;
     }
 	
-	if($.trim(branchId )==""){
+	if($.trim(branchId ) == ""){
 		Common.alert("* Please select the key-in branch.");
 		return;
 	}
