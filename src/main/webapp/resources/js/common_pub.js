@@ -230,4 +230,19 @@ $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 	return false;
 });
 /* 시간선택기 end */
+
+
+/* 아코디언테이블 start */
+ $(document).on(
+	"click", ".aco_btn", function(){
+	 if($(this).parents("tr").next("tr").is(":visible")){
+		$(this).children("img").attr("src",$(this).children("img").attr("src").replace("up.gif","down.gif"));
+		$(this).parents("tr").next("tr").css("display","none");
+	 }else{
+		$(this).children("img").attr("src",$(this).children("img").attr("src").replace("down.gif","up.gif"));
+		$(this).parents("tr").next("tr").css("display","table-row");
+	 }
+	return false;
+});
+/* 아코디언테이블 end */
 });

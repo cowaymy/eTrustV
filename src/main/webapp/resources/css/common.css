@@ -132,6 +132,13 @@ table+.title_line{margin-top:20px;}
 .txt_box:hover i{display:block; position:Absolute; top:15px; left:0; z-index:90; border:1px solid #06a7e2; background:#f5f5f5; padding:5px 10px; white-space:nowrap; font-style:normal; font-size:12px; border-radius:3px; font-weight:normal; line-height:1.3;}
 .txt_box:hover i:before{content:""; display:block; position:absolute; top:-5px; left:50%; width:9px; height:5px; margin-left:-5px; background:url(../images/common/txt_arrow.gif) no-repeat;}
 h3 .txt_box{font-size:16px; color:#25527c;}
+.color_box{display:inline-block; width:20px; height:20px;}
+.color_box.black{background:#000;}
+.color_box.red{background:#ff0000;}
+.color_box.blue{background:#0000ff;}
+.color_box.green{background:#00ff00;}
+.color_box.gray{background:#999;}
+
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
@@ -225,8 +232,10 @@ table.type1 td > label span,
 table.type1 tbody td.col_all > span{line-height:26px;}
 
 table.type2{border-top:1px solid #d3d9dd;}
-table.type2 thead th{height:35px; color:#333; font-weight:bold; line-height:15px; background:#e9f0f4; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; vertical-align:middle;}
-table.type2 thead tr th:first-child{border-left:0 none;}
+table.type2 thead th,
+table.type2 tbody th{height:35px; color:#333; font-weight:bold; line-height:15px; background:#e9f0f4; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; vertical-align:middle;}
+table.type2 thead tr th:first-child,
+table.type2 tbody tr th:first-child{border-left:0 none;}
 table.type2 tbody td{height:31px; padding:2px 6px; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; text-align:center; vertical-align:middle;}
 table.type2 tbody tr td:first-child{border-left:0 none;}
 table.type2 tbody td input[type=text]{width:100%; height:30px; line-height:28px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px;}
@@ -234,6 +243,9 @@ table.type2 tbody td.al_left{text-align:left;}
 table.type2.gray{border-top:2px solid #111;}
 table.type2.gray thead th{color:#333; background:#eee;}
 table.type2.gray tbody td{padding:2px 10px;}
+table.type2.acodi .aco_tr{display:none;}
+
+
 
 .page_size{padding:20px 0 10px 0;}
 .page_size:after{content:""; display:block; clear:both;}
