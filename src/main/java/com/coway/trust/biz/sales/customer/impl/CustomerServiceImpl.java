@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+
+import com.coway.trust.biz.sales.customer.CustomerBVO;
+import com.coway.trust.biz.sales.customer.CustomerCVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -17,7 +20,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("customerService")
 public class CustomerServiceImpl extends EgovAbstractServiceImpl implements CustomerService {
 
-	private static final Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 	
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
@@ -215,6 +218,19 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	}
 	
 	
+	/**
+	 * NRIC / Company No 중복체크 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	public int nricDupChk(Map<String, Object> params){
+		int nricDupChk = customerMapper.nricDupChk(params);
+		return nricDupChk;
+	}
+	
+	
 	@Override
 	public void insertCustomerInfo(Map<String, Object> params) {
 		
@@ -283,7 +299,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerCreditCardDetailViewPop(params);
 	}
-
+	
 	
 	/**
 	 * 기본정보 업데이트 
@@ -382,7 +398,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.08.04
 	 */
 	@Override
-	public List<EgovMap> selectAccBank(Map<String, Object> params) throws Exception {
+	public List<EgovMap> selectAccBank(Map<String, Object> params)  {
 		
 		return customerMapper.selectAccBank(params);
 	}
@@ -493,4 +509,64 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	public void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception {
 		customerMapper.updateCustomerAddressInfoAf(params);
 	}
+	
+	
+	/**
+	 *  Credit Card Issue Bank 
+	 */
+	@Override
+	public List<EgovMap> selectIssueBank(Map<String, Object> params) {
+		return customerMapper.selectIssueBank(params);
+	}
+	
+	
+	@Override
+	public int getCustCrcIdSeq() {
+		
+		int getCustCrcIdSeq = customerMapper.getCustCrcIdSeq();
+		
+		return getCustCrcIdSeq;
+	}
+	
+	
+	@Override
+	public void insertCreditCardInfo(List<CustomerCVO> customerCardVOList) {
+		
+		for(CustomerCVO customerCVO : customerCardVOList) {
+			logger.debug("##### Impl >> getCreditCardNo :"+customerCVO.getCreditCardNo());
+			customerMapper.insertCreditCardInfo(customerCVO);
+		}
+		
+	}
+	
+	
+	@Override
+	public int getCustIdMaxSeq() {
+		
+		int getCustIdMaxSeq = customerMapper.getCustIdMaxSeq();
+		
+		return getCustIdMaxSeq;
+	}
+	
+	
+	
+	@Override
+	public int getCustAccIdSeq() {
+		
+		int getCustAccIdSeq = customerMapper.getCustAccIdSeq();
+		
+		return getCustAccIdSeq;
+	}
+	
+	
+	@Override
+	public void insertBankAccountInfo(List<CustomerBVO> customerBankVOList) {
+		
+		for(CustomerBVO customerBVO : customerBankVOList) {
+			
+			customerMapper.insertBankAccountInfo(customerBVO);
+		}
+		
+	}
+	
 }

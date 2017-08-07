@@ -3,6 +3,9 @@ package com.coway.trust.biz.sales.customer.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.customer.CustomerBVO;
+import com.coway.trust.biz.sales.customer.CustomerCVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -181,6 +184,16 @@ public interface CustomerMapper {
 	
 	
 	/**
+	 * NRIC/Customer No Data Duplication Check
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int nricDupChk(Map<String, Object> params);
+	
+	
+	/**
 	 * update customer Info Data
 	 * 
 	 * @param Map
@@ -254,9 +267,66 @@ public interface CustomerMapper {
 	
 	
 	/**
-	 * 
+	 * Credit Card Issue Bank
 	 */
 	List<EgovMap> selectIssueBank(Map<String, Object> params);
+	
+	
+	/**
+	 * Bank Account Issue Bank
+	 *
+	List<EgovMap> selectAccBank(Map<String, Object> params);
+	
+	
+	/**
+	 * get customer Credit Card ID 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int getCustCrcIdSeq();
+	
+	
+	/**
+	 * insert Credit Card Info Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int insertCreditCardInfo(CustomerCVO customerCVO);
+	
+	
+	/**
+	 * get Customer Id Max Seq 
+	 * 필요없음.
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int getCustIdMaxSeq();
+	
+	
+	/**
+	 * get customer Bank Account ID 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int getCustAccIdSeq();
+	
+	
+	/**
+	 * insert Bank Account Info Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int insertBankAccountInfo(CustomerBVO customerBVO);
+	
 	
 	
 	/**
@@ -333,7 +403,7 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	List<EgovMap> selectAccBank(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectAccBank(Map<String, Object> params);
 	
 	
 	/**

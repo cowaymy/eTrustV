@@ -295,7 +295,7 @@ public interface CustomerService {
 	 * @exception Exception
 	 * @author 이석희 2017.08.04
 	 */
-	List<EgovMap> selectAccBank(Map<String, Object> params ) throws Exception;
+	List<EgovMap> selectAccBank(Map<String, Object> params );
 	
 	
 	/**
@@ -376,4 +376,72 @@ public interface CustomerService {
 	 * @author 이석희 2017.08.07
 	 */
 	void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Credit Card Issue Bank - select box
+	 */
+	List<EgovMap> selectIssueBank(Map<String, Object> params);
+	
+	
+	/**
+	 * get Customer Credit Card Id Seq 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int getCustCrcIdSeq();
+	
+	
+	/**
+	 * insert Customer Credit Card Info 
+	 * @param params
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertCreditCardInfo(List<CustomerCVO> customerCardVOList);
+	
+	
+	/**
+	 * get Customer Bank Account Id Seq 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int getCustAccIdSeq();
+	
+	
+	/**
+	 * insert Customer Bank Account Info 
+	 * @param params
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertBankAccountInfo(List<CustomerBVO> customerBankVOList);
+	
+	
+	/**
+	 * get Customer Id Max Seq 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int getCustIdMaxSeq();
+	
+	
+	/**
+	 * NRIC / Company No 중복체크
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	int nricDupChk(Map<String, Object> params);
+	
+	
 }
