@@ -92,11 +92,10 @@ public class EnrollController {
 	/**
 	 * ViewEnrollment 팝업 Master
 	 */
-	@RequestMapping(value = "/selectViewEnrollment")
+	@RequestMapping(value = "/selectViewEnrollment", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectViewEnrollment(@RequestParam Map<String, Object>params, ModelMap model) {
 		
 		params.put("enrollId", params.get("enrollId"));
-		logger.debug("enrollId : {}", params.get("enrollId"));
 		EgovMap enrollInfo = enrollService.selectViewEnrollment(params);
 		
 		Map result = new HashMap();
