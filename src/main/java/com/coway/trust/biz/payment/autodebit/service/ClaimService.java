@@ -46,7 +46,29 @@ public interface ClaimService
      * @param params
      */
     void updateClaimResultItem(Map<String, Object> claimMap, List<Object> resultItemList );
+    
+    /**
+     * Auto Debit - Claim Result Update LIVE
+     * @param params
+     */
+    void updateClaimResultLive(Map<String, Object> claimMap);
+    
+    /**
+     * Auto Debit - Claim Result Update NEXT DAY
+     * @param params
+     */
+    void updateClaimResultNextDay(Map<String, Object> claimMap);
+    
+    /**
+     * Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회
+     * @param params
+     */
+    List<EgovMap> selectFailClaimDetailList(Map<String, Object> param);
 	
-	
+    /**
+     * Auto Debit - Fail Deduction SMS 재발송 처리
+     * @param params
+     */
+    void sendFaileDeduction(Map<String, Object> params);
     
 }

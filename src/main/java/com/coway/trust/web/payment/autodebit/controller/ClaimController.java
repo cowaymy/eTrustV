@@ -76,29 +76,69 @@ public class ClaimController {
 	}
 	
 	/**
+	 * Claim Master By Id  (Master Grid) 조회 -
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectClaimMasterById.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectClaimMasterById(@ModelAttribute("searchVO") SampleDefaultVO searchVO
+				, @RequestParam Map<String, Object> params, ModelMap model) {
+		
+		EgovMap returnMap = null;
+		// 조회.
+        List<EgovMap> resultList = claimService.selectClaimList(params);        
+        
+        if(resultList != null && resultList.size() > 0){
+        	returnMap = resultList.get(0);
+        }else{
+        	returnMap = new EgovMap();
+        }
+        
+        // 조회 결과 리턴.        
+        return ResponseEntity.ok(returnMap);
+	}
+	
+	/**
 	 * Claim Result Deactivate 처리
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/updateDeactivate.do", method = RequestMethod.POST)
-    public ResponseEntity<List<EgovMap>> updateDeactivate(@RequestBody Map<String, ArrayList<Object>> params,
+	@RequestMapping(value = "/updateDeactivate.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> updateDeactivate(@RequestParam Map<String, Object> params,
     		Model model) {
+    	// 처리.
+		claimService.updateDeactivate(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);    	
+    	message.setMessage("Saved Successfully");
     	
-		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+    	return ResponseEntity.ok(message);
 		
-		// 처리.
-		Map<String, Object> map = (Map<String, Object>)formList.get(0);
-		claimService.updateDeactivate(map);
+    }
+	
+	/**
+	 * Claim Result - Fail Deduction SMS 재발송 처리
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/sendFaileDeduction.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> sendFaileDeduction(@RequestParam Map<String, Object> params,
+    		Model model) {
+    	// 처리.
+		claimService.sendFaileDeduction(params);
 		
-		// 조회.		
-		Map<String, Object> searchMap = new HashMap<String, Object>();
-		searchMap.put("batchId", map.get("ctrlId"));
-		
-        List<EgovMap> resultList = claimService.selectClaimList(searchMap);
-        
-        // 조회 결과 리턴.        
-        return ResponseEntity.ok(resultList);
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);    	
+    	message.setMessage("Saved Successfully");
+    	
+    	return ResponseEntity.ok(message);
 		
     }
 	
@@ -176,6 +216,62 @@ public class ClaimController {
     	
     	// 데이터 등록
     	claimService.updateClaimResultItem(claimMap, resultItemList);	
+    	
+    	// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(claimMap);
+    	message.setMessage("Saved Successfully");
+    	
+    	return ResponseEntity.ok(message);
+    }
+    
+    /**
+     * Claim Result Update LIVE 처리
+     * @param params
+     * @param model
+     * @return
+     * @RequestParam Map<String, Object> params
+     */
+    @RequestMapping(value = "/updateClaimResultLive.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateClaimResultLive(@RequestBody Map<String, ArrayList<Object>> params,
+    		Model model) {
+    	
+    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+    	
+    	// 폼객체 처리.
+		Map<String, Object> claimMap = (Map<String, Object>)formList.get(0);
+		
+		// 데이터 수정
+		claimService.updateClaimResultLive(claimMap);
+		
+    	// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(claimMap);
+    	message.setMessage("Saved Successfully");
+    	
+    	return ResponseEntity.ok(message);
+    }
+    
+    /**
+     * Claim Result Update NEXT DAY 처리
+     * @param params
+     * @param model
+     * @return
+     * @RequestParam Map<String, Object> params
+     */
+    @RequestMapping(value = "/updateClaimResultNextDay.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateClaimResultNextDay(@RequestBody Map<String, ArrayList<Object>> params,
+    		Model model) {
+    	
+    	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+    	
+    	// 폼객체 처리.
+		Map<String, Object> claimMap = (Map<String, Object>)formList.get(0);
+		
+		// 데이터 수정
+    	claimService.updateClaimResultNextDay(claimMap);	
     	
     	// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
@@ -277,6 +373,22 @@ public class ClaimController {
 		
     }
 	
+	/**
+	 * Claim List - SMS deduction 팝업 리스트 조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectFailClaimDetailList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectFailClaimDetailList(@RequestParam Map<String, Object> params,
+	    		Model model) {
+		// 조회.
+        List<EgovMap> detailList = claimService.selectFailClaimDetailList(params);
+        
+        // 조회 결과 리턴.        
+        return ResponseEntity.ok(detailList);
+	}
 	
 	/**
 	 * Claim Create File 처리

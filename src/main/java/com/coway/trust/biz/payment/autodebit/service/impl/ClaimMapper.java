@@ -73,5 +73,32 @@ public interface ClaimMapper {
      */
 	Map<String, Object> createClaim(Map<String, Object> param);
 	
+	/**
+	 * Auto Debit - Claim Result Update Live
+	 * @param params
+	 * @return
+	 */
+	void updateClaimResultLive(Map<String, Object> params);
+	
+	/**
+	 * Auto Debit - Claim Result Update NEXT DAY
+	 * @param params
+	 * @return
+	 */
+	void updateClaimResultNextDay(Map<String, Object> params);	
+	
+	/**
+	 * Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectFailClaimDetailList(Map<String, Object> params);	
+	
+	/**
+	 * Auto Debit - Fail Deduction SMS 재발송 처리
+	 * @param params
+	 * @return
+	 */
+	void sendFaileDeduction(Map<String, Object> params);	
 
 }

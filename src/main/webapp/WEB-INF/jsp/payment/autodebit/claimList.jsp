@@ -4,7 +4,7 @@
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
-var myGridID,updResultGridID;
+var myGridID,updResultGridID,smsGridID;
 
 //Grid에서 선택된 RowID
 var selectedGridValue;
@@ -115,6 +115,7 @@ $(document).ready(function(){
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     updResultGridID = GridCommon.createAUIGrid("updResult_grid_wrap", updResultColLayout,null,gridPros);
+    smsGridID = GridCommon.createAUIGrid("sms_grid_wrap", smsColLayout,null,gridPros);
     
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){ 
@@ -258,7 +259,19 @@ var updResultColLayout = [
                         dataField : "2",
                         headerText : "ItemID.",
                         editable : true
-                    }];   
+                    }];  
+
+var smsColLayout = [ 
+                    { dataField:"bankDtlApprCode" ,headerText:"Approval Code",width: 150 ,editable : false },
+                    { dataField:"salesOrdNo" ,headerText:"Order No",width: 150 ,editable : false },
+                    { dataField:"bankDtlDrAccNo" ,headerText:"Account No",width: 150 ,editable : false },
+                    { dataField:"bankDtlDrName" ,headerText:"Name",width: 150 ,editable : false },
+                    { dataField:"bankDtlDrNric" ,headerText:"NRIC",width: 150 ,editable : false },
+                    { dataField:"bankDtlAmt" ,headerText:"Claim Amt",width: 150 ,editable : false },
+                    { dataField:"bankDtlRenAmt" ,headerText:"Rent Amt",width: 150 ,editable : false },
+                    { dataField:"bankDtlRptAmt" ,headerText:"Penalty Amt",width: 150 ,editable : false }      
+                          ];   
+                          
 // 리스트 조회.
 function fn_getClaimListAjax() {        
     Common.ajax("GET", "/payment/selectClaimList", $("#searchForm").serialize(), function(result) {
@@ -269,7 +282,7 @@ function fn_getClaimListAjax() {
 //View Claim Pop-UP
 function fn_openDivPop(val){
 	
-	if(val == "VIEW" || val == "RESULT" || val == "RESULTNEXT" || val == "FILE"){
+	if(val == "VIEW" || val == "RESULT" || val == "RESULTNEXT" || val == "FILE" || val == "SMS"){
 		
 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 	    
@@ -277,33 +290,58 @@ function fn_openDivPop(val){
 		
 	    	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	        var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlStusId");
-	        var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");   
+	        var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");
+	        var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlFailSmsIsPump");
 	        
-			if((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1){
+	        if((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1){
                 Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
                         "Only [Active] batch is allowed to update claim result.</b>");   
 			}else if(val == "FILE" && ctrlStusId != 1){
 				Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
 					    "Only [Active] batch is allowed to re-generate claim file.</b>");
-			}else{
-			
-	            $("#view_wrap").show();
-	            $("#new_wrap").hide();
-	            
-	            $("#view_batchId").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId"));
-	            $("#view_status").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName"));
-	            $("#view_type").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrcName"));
-	            $("#view_creator").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "crtUserName"));
-	            $("#view_issueBank").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "bankCode") + ' - ' + AUIGrid.getCellValue(myGridID, selectedGridValue, "bankName"));
-	            $("#view_createDt").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "crtDt"));
-	            $("#view_totalItem").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlTotItm"));
-	            $("#view_debitDate").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlBatchDt"));
-	            $("#view_targetAmount").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlBillAmt"));
-	            $("#view_updator").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "crtUserName"));
-	            $("#view_receiveAmount").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlBillPayAmt"));
-	            $("#view_updateDate").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "updDt"));
-	            $("#view_totalSuccess").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlTotSucces"));
-	            $("#view_totalFail").text(AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlTotFail"));
+			}else if(val == "SMS" && ctrlStusId != 4){
+                Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
+                "Only [Completed] batch is allowed to send failed deduction SMS.</b>");
+            }else if(val == "SMS" && smsSend == 1){
+                Common.alert("<b>Failed deduction SMS process for batch [" + ctrlId + "] was completed.</b>");
+            }else{
+            	
+            	$('#sms_grid_wrap').hide();
+            	
+            	
+            	Common.ajax("GET", "/payment/selectClaimMasterById.do", {"batchId":ctrlId}, function(result) {
+            		$("#view_wrap").show();
+                    $("#new_wrap").hide();                    
+                
+                    $("#view_batchId").text(result.ctrlId);
+                    $("#view_status").text(result.stusName);
+                    $("#view_type").text(result.ctrlIsCrcName);
+                    $("#view_creator").text(result.crtUserName);
+                    $("#view_issueBank").text(result.bankCode + ' - ' + result.bankName);
+                    $("#view_createDt").text(result.crtDt);
+                    $("#view_totalItem").text(result.ctrlTotItm);
+                    $("#view_debitDate").text(result.ctrlBatchDt);
+                    $("#view_targetAmount").text(result.ctrlBillAmt);
+                    $("#view_updator").text(result.crtUserName);
+                    $("#view_receiveAmount").text(result.ctrlBillPayAmt);
+                    $("#view_updateDate").text(result.updDt);
+                    $("#view_totalSuccess").text(result.ctrlTotSucces);
+                    $("#view_totalFail").text(result.ctrlTotFail);
+            	});  
+            	
+            	
+            	if(val == "SMS"){
+            		$('#sms_grid_wrap').show();
+            		
+            		  Common.ajax("GET", "/payment/selectFailClaimDetailList.do", {"batchId":ctrlId}, function(result) {
+            			  AUIGrid.setGridData(smsGridID, result);
+            			  AUIGrid.resize(smsGridID);
+                      });  
+            	}    
+            		
+            			
+            			     
+            
 			}
 			
 			//팝업 헤더 TEXT 및 버튼 설정
@@ -312,24 +350,35 @@ function fn_openDivPop(val){
 			    $('#center_btns1').hide();
 			    $('#center_btns2').hide();			
 			    $('#center_btns3').hide();
+			    $('#center_btns4').hide();
 			
 			}else if(val == "RESULT"){
 				$('#pop_header h1').text('CLAIM RESULT');				
 				$('#center_btns1').show();
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
+                $('#center_btns4').hide();
                 
 			}else if(val == "RESULTNEXT"){
                 $('#pop_header h1').text('CLAIM RESULT(NEXT DAY)');
                 $('#center_btns1').hide();
                 $('#center_btns2').show();
                 $('#center_btns3').hide();
+                $('#center_btns4').hide();
                 
             }else if (val == "FILE"){
                 $('#pop_header h1').text('CLAIM FILE GENERATOR');                
                 $('#center_btns1').hide();
                 $('#center_btns2').hide();
                 $('#center_btns3').show();
+                $('#center_btns4').hide();
+            
+            } else if (val == "SMS"){
+                $('#pop_header h1').text('FAILED DEDUCTION SMS');                
+                $('#center_btns1').hide();
+                $('#center_btns2').hide();
+                $('#center_btns3').hide();
+                $('#center_btns4').show();
             }
 			
         }else{
@@ -338,7 +387,7 @@ function fn_openDivPop(val){
 	}else{
 		$("#view_wrap").hide();
 		$("#new_wrap").show();	
-		
+				
 		//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
 		$("#newForm")[0].reset();
 		$("#claimDayMust").hide();
@@ -348,6 +397,9 @@ function fn_openDivPop(val){
 
 //Layer close
 hideViewPopup=function(val){
+	//AUIGrid.destroy(updResultGridID);
+	//AUIGrid.destroy(smsGridID); 	
+	$('#sms_grid_wrap').hide();	
     $(val).hide();
 }
 
@@ -356,40 +408,35 @@ function fn_deactivate(){
 	Common.confirm('<b>Are you sure want to deactivate this claim batch ?</b>',function (){
 	    var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	    
-	    //param data array
-	    var data = {};
-	    data.form = [{"ctrlId":ctrlId}];
-	    
-	    Common.ajax("POST", "/payment/updateDeactivate.do", data, function(result) {
-	    	Common.alert("<b>This claim batch has been deactivated.</b>");  
-	        
-	        $("#view_batchId").text(result[0].ctrId);
-	        $("#view_status").text(result[0].stusName);
-	        $("#view_type").text(result[0].ctrlIsCrcName);
-	        $("#view_creator").text(result[0].crtUserName);
-	        $("#view_issueBank").text(result[0].bankCode + ' - ' + result[0].bankName);
-	        $("#view_createDt").text(result[0].crtDt);
-	        $("#view_totalItem").text(result[0].ctrlTotItm);
-	        $("#view_debitDate").text(result[0].ctrlBatchDt);
-	        $("#view_targetAmount").text(result[0].ctrlBillAmt);
-	        $("#view_updator").text(result[0].crtUserName);
-	        $("#view_receiveAmount").text(result[0].ctrlBillPayAmt);
-	        $("#view_updateDate").text(result[0].updDt);
-	        $("#view_totalSuccess").text(result[0].ctrlTotSucces);
-	        $("#view_totalFail").text(result[0].ctrlTotFail);
-	        
-	        $('#pop_header h1').text('VIEW CLAIM');
-	        $('#center_btns1').hide();
-            $('#center_btns2').hide();          
-            $('#center_btns3').hide();
+	    Common.ajax("GET", "/payment/updateDeactivate.do", {"ctrlId":ctrlId}, function(result) {
+	    	Common.alert("<b>This claim batch has been deactivated.</b>","fn_openDivPop('VIEW')");
+	    	
 	    },function(result) {
 	        Common.alert("<b>Failed to deactivate this claim batch.<br />Please try again later.</b>");   
-	    });		
+	    });
 	});
 }
 
+//Pop-UP 에서 Fail Deduction SMS 처리
+function fn_sendFailDeduction(){
+	   var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	   
+	   Common.ajax("GET", "/payment/sendFaileDeduction.do", {"ctrlId":ctrlId}, function(result) {
+            Common.alert("<b>SMS successfully added into sending list.</b>",function () {fn_openDivPop('VIEW'); });
+            
+        },function(result) {
+            Common.alert("<b>Failed to send SMS. Please try again later.</b>");   
+        });
+    
+}
+
+
+
+var updateResultItemKind = "";      //claim result update시 구분 (LIVE :current / NEXT : batch)
+
 //Pop-UP 에서 Update Result 버튼 클릭시 팝업창 생성
-function fn_updateResult(){
+function fn_updateResult(val){
+	updateResultItemKind = val;
 	$("#updResult_wrap").show();  
 }
 
@@ -435,13 +482,31 @@ function fn_resultFileUp(){
         	         var data = {};
         	         data.form = [{"ctrlId":ctrlId}];
         	         
-        	         Common.ajax("POST", "/payment/updateDeactivate.do", data, 
-        	        		 function(result) {
-        	        	          Common.alert("<b>This claim batch has been deactivated.</b>");
-        	        	     },
-        	        	     function(result) {
-        	        	    	  Common.alert("<b>Failed to deactivate this claim batch.<br />Please try again later.</b>");
-        	        	    });     
+        	         //CALIM RESULT UPDATE
+        	         if(updateResultItemKind == 'LIVE'){
+	        	         Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+	        	        		 function(result) {
+	        	        	          Common.alert("<b>Claim result successfully updated.</b>");
+	        	        	     },
+	        	        	     function(result) {
+	        	        	    	  Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+	        	        	    });     
+        	         }
+        	       //CALIM RESULT UPDATE NEXT DAY
+        	       if(updateResultItemKind == 'NEXT'){
+	                   Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+	                           function(result) {
+	                	            var resultMsg = "";
+	                	            resultMsg += "<b>The result item have stored in our system.<br />";
+	                	            resultMsg += "Syncrhonization process will run on schedule plan.<br />";
+	                	            resultMsg += "Kindly check your claim result on next day.<br />Thank you.</b>";	                	   
+	                	   
+	                                Common.alert(resultMsg);
+	                           },
+	                           function(result) {
+	                                Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+	                          });
+        	       }
        });
     },  function(jqXHR, textStatus, errorThrown) {
         try {
@@ -666,8 +731,8 @@ function fn_createFile(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
                         <li><p class="link_btn"><a href="#">Schedule Setting</a></p></li>
                         <li><p class="link_btn"><a href="#">Schedule Claim Batch</a></p></li>
-                        <li><p class="link_btn"><a href="#">Fail Deduction SMS</a></p></li>
-                        <li><p class="link_btn"><a href="#">Enrollment List</a></p></li>                                               
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');">Fail Deduction SMS</a></p></li>
+                        <li><p class="link_btn"><a href="/payment/initEnrollmentList.do">Enrollment List</a></p></li>                                               
                     </ul>
                     <ul class="btns">                       
                     </ul>
@@ -768,19 +833,27 @@ function fn_createFile(){
             </table>
         </section>
         <!-- search_table end -->
+        
+        <section class="search_result"><!-- search_result start -->
+            <article class="grid_wrap"  id="sms_grid_wrap"></article>               
+            <!-- grid_wrap end -->
+        </section><!-- search_result end -->
 
         <ul class="center_btns" id="center_btns1">
             <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_updateResult();">Update Result</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('LIVE');">Update Result</a></p></li>
         </ul>
         
         <ul class="center_btns" id="center_btns2">
             <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
-            <li><p class="btn_blue2"><a href="#">Update Result</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('NEXT');">Update Result</a></p></li>
         </ul>
         
          <ul class="center_btns" id="center_btns3">
             <li><p class="btn_blue2"><a href="javascript:fn_createFile();">Generate File</a></p></li>
+        </ul>
+         <ul class="center_btns" id="center_btns4">
+            <li><p class="btn_blue2"><a href="javascript:fn_sendFailDeduction();">Send Fail Deduction SMS</a></p></li>
         </ul>
     </section>
     <!-- pop_body end -->
@@ -903,7 +976,7 @@ function fn_createFile(){
         </section><!-- search_result end -->
         <!-- search_table end -->
         
-        <ul class="center_btns">
+        <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();">Upload</a></p></li>
         </ul>
     </section>

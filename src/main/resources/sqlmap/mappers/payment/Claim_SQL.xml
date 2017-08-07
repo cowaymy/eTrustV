@@ -5,6 +5,13 @@
     <resultMap id="claimListMap" type="EgovMap">
         <result property="ctrlRem" column="CTRL_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
+    
+    <resultMap id="failClaimDetailMap" type="EgovMap">
+        <result property="bankDtlDrAccNo" column="BANK_DTL_DR_ACC_NO" jdbcType="BLOB" javaType="byte[]"/>
+        <result property="bankDtlApprCode" column="BANK_DTL_APPR_CODE" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+    
       
         
     <!--Auto Debit - Claim List 리스트 조회 -->
@@ -109,6 +116,24 @@
         VALUES (#{refNo},#{refCode},#{id},#{itemId})
     </insert>
     
+
+    <update id="updateClaimResultLive" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_TEST(0,2,'20170803',4238,5)            
+        }
+    </update>
+    
+    
+    <!--Auto Debit - Claim Result Update NEXT DAY -->
+    <update id="updateClaimResultNextDay" parameterType="Map" >
+        UPDATE PAY0041D SET 
+            CTRL_WAIT_SYNC = 1
+            , UPD_DT = SYSDATE
+            , UPD_USER_ID = 4238
+        WHERE
+            CTRL_ID = #{ctrlId}     
+    </update>
+    
     <!--Auto Debit - Claim 조회 -->
     <select id="selectClaimById" parameterType="Map" resultType="egovMap">
         SELECT
@@ -203,6 +228,59 @@
     <select id="createClaim" statementType="CALLABLE" parameterType="Map">
         {
             call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank},#{new_debitDate},4238,#{new_claimDay},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})            
+        }
+    </select>
+    
+    <!--Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회 -->
+    <select id="selectFailClaimDetailList" parameterType="Map" resultMap="failClaimDetailMap">
+        SELECT 
+            Extent1.BANK_DTL_ID  ,
+			Extent1.BANK_DTL_CTRL_ID  ,
+			Extent1.SALES_ORD_ID ,
+			Extent1.BANK_DTL_DR_DT ,
+			Extent1.BANK_DTL_DR_BANK_TYPE_ID  ,			
+			Extent1.BANK_DTL_ENCRYPT_DR_ACC_NO AS BANK_DTL_DR_ACC_NO,
+			Extent1.BANK_DTL_DR_NAME ,
+			Extent1.BANK_DTL_AMT ,
+			Extent1.BANK_DTL_APPR_CODE ,
+			Extent1.BANK_DTL_OR_NO ,
+			Extent1.CRT_USER_ID ,
+			Extent1.CRT_DT ,
+			Extent1.UPD_USER_ID ,
+			Extent1.UPD_DT ,
+			Extent1.BANK_DTL_DR_NRIC ,
+			Extent1.BANK_DTL_OR_NO_RPT ,
+			Extent1.BANK_DTL_REN_STUS ,
+			Extent1.SVC_CNTRCT_ID ,
+			Extent1.BANK_DTL_BANK_ID ,
+			NVL(Extent1.BANK_APPV,0) AS BANK_APPV,
+			NVL(Extent1.BANK_DTL_APPR_DT,TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'),'YYYY-MM-DD')) AS BANK_DTL_APPR_DT,			
+			NVL(Extent2.BIC,'') AS BIC,			
+			NVL(Extent1.BANK_DTL_FPX_ID,0) AS BANK_DTL_FPX_ID,
+			NVL(Extent5.F_PX_ID,'') AS F_PX_ID,
+			LTRIM(RTRIM(Extent3.SALES_ORD_NO)) SALES_ORD_NO  ,
+			NVL(Extent1.BANK_DTL_RPT_AMT,0) AS BANK_DTL_RPT_AMT,
+			NVL(Extent1.BANK_DTL_REN_AMT,0) AS BANK_DTL_REN_AMT,
+			NVL(Extent1.BANK_DTL_CRC_EXPR,'') AS BANK_DTL_CRC_EXPR,
+			CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN LTRIM(RTRIM(Extent4.SRV_CNTRCT_REF_NO)) ELSE ' ' END SRV_CNTRCT_REF_NO  ,
+			CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN SUBSTR(LTRIM(RTRIM(Extent4.SRV_CNTRCT_REF_NO)), 4 + 1, 7) || LTRIM(RTRIM(Extent3.SALES_ORD_NO))
+			ELSE LTRIM(RTRIM(Extent3.SALES_ORD_NO)) END CNTRCT_N_ORD_NO  
+        FROM 
+            PAY0042D Extent1
+            LEFT JOIN SYS0004M Extent2   ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
+            JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN SAL0077D Extent4   ON Extent4.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+            LEFT JOIN PAY0090C Extent5   ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID
+        WHERE
+            Extent1.BANK_APPV = 2
+            AND Extent1.BANK_DTL_CTRL_ID = #{batchId} 
+        ORDER BY BANK_DTL_CTRL_ID          
+    </select>
+    
+    <resultMap id="resultSMS" type="egovMap" />
+    <select id="sendFaileDeduction" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_AUTO_DEBT_FAIL_DEDUCT_SMS(#{ctrlId} , 4238,#{returnData, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=resultSMS})            
         }
     </select>
 </mapper>

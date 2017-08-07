@@ -108,6 +108,40 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
     	}
 	}
 	
+	/**
+     * Auto Debit - Claim Result Update Live
+     * @param params
+     */
+	@Override
+    public void updateClaimResultLive(Map<String, Object> claimMap){
+		claimMapper.updateClaimResultLive(claimMap);
+	}
 	
+	/**
+     * Auto Debit - Claim Result Update NEXT DAY
+     * @param params
+     */
+	@Override
+    public void updateClaimResultNextDay(Map<String, Object> claimMap){
+		claimMapper.updateClaimResultNextDay(claimMap);
+	}
+	
+	/**
+     * Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회
+     * @param params
+     */
+	@Override
+    public List<EgovMap> selectFailClaimDetailList(Map<String, Object> param){
+		return claimMapper.selectFailClaimDetailList(param);
+	}
+	
+	/**
+     * Auto Debit - Fail Deduction SMS 재발송 처리
+     * @param params
+     */
+	@Override
+    public void sendFaileDeduction(Map<String, Object> param){
+		claimMapper.sendFaileDeduction(param);
+	}
 	
 }
