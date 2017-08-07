@@ -257,4 +257,169 @@ public interface CustomerMapper {
 	 * 
 	 */
 	List<EgovMap> selectIssueBank(Map<String, Object> params);
+	
+	
+	/**
+	 * Customer Basic Update mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerBasicInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Address to Set Active mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerAddressSetActive(Map<String, Object> params)throws Exception;
+	
+	
+	/**
+	 * Customer Address to Set Main mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerAddressSetMain(Map<String, Object> params) throws Exception;
+
+	
+	/**
+	 * Customer Contact to Set Active mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerContactSetActive(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Contact to Set Main mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerContactSetMain(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Contact update mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerContactInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Bank ComboBox List (Issue Bank) mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	List<EgovMap> selectAccBank(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Card ComboBox List (Issue Bank) mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	List<EgovMap> selectCrcBank(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Bank update mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerBankInfoAf(Map<String, Object> params) throws Exception; 
+	
+	
+	/**
+	 * Customer Card update mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerCardInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Address Delete mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void deleteCustomerAddress(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Contact Delete mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void deleteCustomerContact(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Bank Delete mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void deleteCustomerBank(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Card Delete mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void deleteCustomerCard(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Address Update mapper
+	 * 
+	 * @param params
+	 * @return Boolean
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
 }

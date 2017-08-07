@@ -198,8 +198,6 @@ public interface CustomerService {
 	void insertCareContactInfo(Map<String, Object> params);
 	
 	
-	
-	
 	/**
 	 * 상세화면 조회. detail contact view
 	 * @param params 
@@ -228,4 +226,154 @@ public interface CustomerService {
 	 * @author 이석희 2017.07.25
 	 */
 	EgovMap selectCustomerCreditCardDetailViewPop(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer 기본정보 업데이트
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.01
+	 */
+	void updateCustomerBasicInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer main Address 업데이트(Set Active)
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.02
+	 */
+	void updateCustomerAddressSetActive(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer main Address 업데이트(Set Main)
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.02
+	 */
+	void updateCustomerAddressSetMain(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer main Address 업데이트(Set Active)
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.02
+	 */
+	void updateCustomerContactSetActive(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer main Contact 업데이트(Set Main)
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	void updateCustomerContactSetMain(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer 연락처 업데이트
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */   
+	void updateCustomerContactInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Bank ComboBox List (Issue Bank)
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	List<EgovMap> selectAccBank(Map<String, Object> params ) throws Exception;
+	
+	
+	/**
+	 * Card ComboBox List (Issue Bank)
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	List<EgovMap> selectCrcBank(Map<String, Object> params ) throws Exception;
+	
+	
+	/**
+	 * customer 은행 Account 업데이트
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	void updateCustomerBankInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer 카드 Account 업데이트
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	void updateCustomerCardInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer Address Delete
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	void deleteCustomerAddress(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer Contact Delete
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	void deleteCustomerContact(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer Bank Delete
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.07
+	 */
+	void deleteCustomerBank(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer Card Delete
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.07
+	 */
+	void deleteCustomerCard(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * customer Address Update
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.07
+	 */
+	void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
 }

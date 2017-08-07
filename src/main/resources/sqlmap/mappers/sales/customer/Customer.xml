@@ -258,10 +258,7 @@
        ]]>
     </select>
     <!--  Customer Main Address(Customer View) -->
-    <resultMap type="egovMap" id="mainAddrClobMap">
-        <result property="REM" column="REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    <select id="selectCustomerViewMainAddress" parameterType="Map" resultMap="mainAddrClobMap">
+    <select id="selectCustomerViewMainAddress" parameterType="Map" resultType="egovMap">
       <![CDATA[ 
 			  SELECT Limit1.CUST_ADD_ID CUST_ADD_ID  ,
                    Limit1.ADD1 ADD1  ,
@@ -1464,7 +1461,7 @@
             EMAIL = #{email},
             REM = #{rem},
             <if test="typeID == 964">
-                DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+               <!--  DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), -->
                 GENDER = #{gender},
                 RACE_ID = #{raceId}
             </if>
@@ -1516,7 +1513,7 @@
     </insert>
     
     <select id="selectAccBank" parameterType="Map" resultType="egovMap">
-          SELECT   Mt.BANK_ID ,
+          SELECT   Mt.BANK_ID CODE_ID, <!-- Mt.BANK_ID -->
 				       Mt.CODE CODE ,
 				       Mt.CODE_NAME  
 				  FROM ( SELECT Sub.BANK_ID BANK_ID  ,
@@ -1636,4 +1633,100 @@
             CUST_CNTC_ID = #{custCntcId}
     </update>
     
+    <select id="selectCrcBank" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    BANK_ID CODE_ID,
+			    CODE,
+			    CODE || ' - ' || NAME AS CODE_NAME
+			FROM
+			    SYS0004M
+			ORDER BY CODE ASC 
+    </select>
+    
+    <update id="updateCustomerBankInfoAf" parameterType="Map">
+			UPDATE
+			    SAL0022D
+			SET
+			    CUST_ACC_UPD_DT = SYSDATE,
+			    CUST_ACC_TYPE_ID = #{custAccTypeId},
+			    CUST_ACC_BANK_ID = #{custAccBankId},
+			    CUST_ACC_NO = #{custAccNo},
+			    CUST_ACC_BANK_BRNCH = #{custAccBankBrnch},
+			    CUST_ACC_OWNER = #{custAccOwner},
+			    CUST_ACC_REM = #{custAccRem}
+			WHERE
+			    CUST_ACC_ID = #{custAccId}
+    </update>
+    
+    <update id="updateCustomerCardInfoAf" parameterType="Map">
+			UPDATE 
+			    SAL0028D
+			SET
+			    CUST_CRC_UPD_DT = SYSDATE,
+			    CUST_CRC_TYPE_ID = #{custCrcTypeId},
+			    CUST_CRC_BANK_ID = #{custCrcBankId},
+			    CUST_ORI_CRC_NO = #{custOriCrcNo},
+			    CUST_CRC_EXPR = #{custCrcExpr},
+			    CUST_CRC_OWNER = #{custCrcOwner},
+			    CARD_TYPE_ID = #{cardTypeId},
+			    CUST_CRC_REM = #{custCrcRem}
+			WHERE 
+			    CUST_CRC_ID = #{custCrcId}
+    </update>
+    
+    <update id="deleteCustomerAddress" parameterType="Map">
+			UPDATE 
+			    SAL0023D
+			SET
+			    STUS_CODE_ID = 8
+			WHERE
+			    CUST_ADD_ID = #{custAddId}
+			AND 
+			    STUS_CODE_ID !=9
+    </update>
+    
+    <update id="deleteCustomerContact" parameterType="Map">
+			UPDATE 
+			    SAL0027D
+			SET
+			    STUS_CODE_ID = 8
+			WHERE
+			    CUST_CNTC_ID = #{custCntcId}
+			AND
+			    STUS_CODE_ID != 9
+    </update>
+    
+    <update id="deleteCustomerBank" parameterType="Map">
+			UPDATE 
+			    SAL0022D
+			SET
+			    CUST_ACC_STUS_ID = 8
+			WHERE 
+			    CUST_ACC_ID = #{custAccId}
+    </update>
+    
+    <update id="deleteCustomerCard" parameterType="Map">
+			UPDATE 
+			    SAL0028D
+			SET
+			    CUST_CRC_STUS_ID = 8
+			WHERE 
+			    CUST_CRC_ID = #{custCrcId}
+    </update>
+    
+    <update id="updateCustomerAddressInfoAf" parameterType="Map">
+			UPDATE
+			    SAL0023D
+			SET
+			    ADD1 = #{add1},
+			    ADD2 = #{add2},
+			    ADD3 = #{add3},   
+			    CNTY_ID = #{cntyId},
+			    STATE_ID = #{stateId},
+			    AREA_ID = #{areaId},
+			    POST_CODE_ID = #{postCodeId},
+			    REM = #{rem}
+			WHERE
+			    CUST_ADD_ID = #{custAddId}
+    </update>
 </mapper>
