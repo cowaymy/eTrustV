@@ -301,6 +301,12 @@ function fn_openDivPop(val){
                 	$("#btnAllowComm").attr('checked', true) ;
 
                 }
+                
+                if(result.passReconSize  > 0 ){
+                	$("#edit_branchId").attr('disabled', true) ;
+                }else{
+                	$("#edit_branchId").attr('disabled', false) ;
+                }
                  
                 //팝업그리드 뿌리기
                 AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailView);
