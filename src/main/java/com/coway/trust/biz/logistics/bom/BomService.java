@@ -13,4 +13,8 @@ public interface BomService {
 
 	List<EgovMap> materialInfo(Map<String, Object> params);
 
+	List<EgovMap> filterInfo(Map<String, Object> params);
+
+	List<EgovMap> spareInfo(Map<String, Object> params);
+
 }

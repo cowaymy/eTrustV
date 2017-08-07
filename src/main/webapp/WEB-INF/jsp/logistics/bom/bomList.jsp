@@ -36,7 +36,7 @@
     var myGridID;
     var materialGrid;
     var filterGrid;
-    var serviceGrid;
+    var spareGrid;
     
     var isMerged = true; // 최초에는 merged 상태
     var selectedItem; 
@@ -60,6 +60,7 @@
 								{dataField:"sortString",headerText:"",width:100,visible:false},
 								{dataField:"bomCompnt",headerText:"Component",width:"10%",visible:true},
 								{dataField:"stkDesc",headerText:"Component Name",width:"33%",visible:true,style :"aui-grid-user-custom-left"},
+								{dataField:"categoryid",headerText:"",width:100,visible:false},
 								{dataField:"category",headerText:"Category",width:"7%",visible:true,style :"aui-grid-user-custom-left"},
 								{dataField:"compntQty",headerText:"Qty",width:"5%",visible:true,style :"aui-grid-user-custom-right"},
 								{dataField:"compntUnitOfMeasure",headerText:"",width:100,visible:false},
@@ -91,7 +92,7 @@
         // masterGrid 그리드를 생성합니다.
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions); // 셀병합으로  안씀
         myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridoptions);
-        doGetComboCDC('/logistics/bom/selectCdcList', '' , '' , '','cdcCmb', 'S', '');
+        doGetComboCDC('/logistics/bom/selectCdcList', '' , '' , '','srchCdc', 'S', '');
         
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {   
@@ -101,6 +102,14 @@
         	 //$("#material_info_div").show();
         	 //$("#material_info").find("a").attr("class", "on");
         	 $("#material_info").click();
+        	 if(AUIGrid.getCellValue(myGridID, event.rowIndex,"categoryid")=="62"){
+        		 $("#filter_info").show();
+        		 $("#spare_info").hide();
+        	 }else{
+        		 $("#filter_info").hide();
+                 $("#spare_info").show();
+        	 }
+        	 
         });
 
         // 셀 더블클릭 이벤트 바인딩
@@ -112,6 +121,13 @@
         });
         $("#subDiv").hide();
     });
+    function filterAUIGrid(columnLayout) {
+        filterGrid = AUIGrid.create("#filter_grid", columnLayout, gridoptions);
+    }
+
+    function spareAUIGrid(columnLayout) {
+        spareGrid = AUIGrid.create("#spare_grid", columnLayout, gridoptions);
+    }
 
     $(function(){
         $("#search").click(function(){
@@ -139,88 +155,54 @@
             $(this).find("a").attr("class","on");
             
         });
+       $("#filter_info").click(function(){
+           
+           if($("#filter_info_div").css("display") == "none"){
+              f_removeclass();
+               var selectedItems = AUIGrid.getSelectedItems(myGridID);
+               for(i=0; i<selectedItems.length; i++) {
+                  // $("#stkId").val(selectedItems[i].item.stkid);
+                  console.log(selectedItems[i].item.bomCompnt);
+                  //f_view("/logistics/bom/filterInfo.do?cmpntId="+selectedItems[i].item.bomCompnt+"&grid=filter&materialCd="+selectedItems[i].item.bom, "F");
+                  f_view("/logistics/bom/filterInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "F");
+               }
+               $("#filter_info_div").show();
+               
+           }else{
+               //var selectedItems = AUIGrid.getSelectedItems(myGridID);
+              // for(i=0; i<selectedItems.length; i++) {
+                   //$("#stkId").val(selectedItems[i].item.stkid);
+                 //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
+              // }
+           }
+           $(this).find("a").attr("class","on");
+           
+       });
+        
+       $("#spare_info").click(function(){
+           
+           if($("#spare_info_div").css("display") == "none"){
+              f_removeclass();
+               var selectedItems = AUIGrid.getSelectedItems(myGridID);
+               for(i=0; i<selectedItems.length; i++) {
+                  // $("#stkId").val(selectedItems[i].item.stkid);
+                  console.log(selectedItems[i].item.bomCompnt);
+                  f_view("/logistics/bom/spareInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "R");
+               }
+               $("#spare_info_div").show();
+               
+           }else{
+               //var selectedItems = AUIGrid.getSelectedItems(myGridID);
+              // for(i=0; i<selectedItems.length; i++) {
+                   //$("#stkId").val(selectedItems[i].item.stkid);
+                 //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
+              // }
+           }
+           $(this).find("a").attr("class","on");
+           
+       });
         
         
-        
-        /* $("#view").click(function(){
-            div="V";
-            $("#detailHead").text("Courier Information Details");
-            selectedItem = AUIGrid.getSelectedIndex(myGridID);
-            if (selectedItem[0] > -1){
-                fn_openDetail(div,selectedItem[0]);
-                $("#editWindow").show();
-            }else{
-            Common.alert('Choice Data please..');
-            }
-        });
-        $("#update").click(function(){
-            div="U";
-            $("#detailHead").text("Courier Information Update");
-            selectedItem = AUIGrid.getSelectedIndex(myGridID);
-            if (selectedItem[0] > -1){
-                fn_openDetail(div,selectedItem[0]);
-                $("#editWindow").show();
-            }else{
-            Common.alert('Choice Data please..');
-            }
-       
-        });
-        $("#insert").click(function(){
-                div="N";
-                $("#detailHead").text("Courier Information New");
-                fn_setVisiable(div);
-                $("#editWindow").show();
-        });
-        $("#cancelPopbtn").click(function(){
-            $("#editWindow").hide();
-        });
-        $("#updatePopbtn").click(function(){
-               div="U";
-               saveAjax(div);
-               $("#editWindow").hide();
-              
-        });
-        $("#savePopbtn").click(function(){
-               div="N";
-               saveAjax(div);
-               $("#editWindow").hide();
-              
-        });
-        $(".numberAmt").keyup(function(e) {
-            regex = /[^.0-9]/gi;
-            v = $(this).val();
-            if (regex.test(v)) {
-                var nn = v.replace(regex, '');
-                $(this).val(v.replace(regex, ''));
-                $(this).focus();
-                return;
-            }
-        });
-       $("#curcntyid").change(function(){
-           doDefCombo('', '' ,'curstateid', 'S', ''); 
-           doDefCombo('', '' ,'curareaid', 'S', '');
-           doDefCombo('', '' ,'curpostcod', 'S', '');   
-         }); 
-       $("#curstateid").change(function(){
-           doDefCombo('', '' ,'curareaid', 'S', '');
-           doDefCombo('', '' ,'curpostcod', 'S', '');   
-         }); 
-       $("#curareaid").change(function(){
-           doDefCombo('', '' ,'curpostcod', 'S', '');   
-         }); 
-       
-       $("#srchCntry").change(function(){
-           doDefCombo('', '' ,'srchState', 'S', ''); 
-           doDefCombo('', '' ,'srchArea', 'S', '');
-           doDefCombo('', '' ,'srchPstCd', 'S', '');   
-         }); 
-       $("#srchState").change(function(){
-           doDefCombo('', '' ,'srchArea', 'S', '');
-           doDefCombo('', '' ,'srchPstCd', 'S', '');   
-         }); 
-       $("#srchArea").change(function(){
-           doDefCombo('', '' ,'srchPstCd', 'S', '');   
-         });  */
     });
     
     
@@ -307,6 +289,7 @@
            $("#txtNetWeight").empty();
            $("#txtMeasurement").empty();
 
+           //$("#txtStockType").text(data[0].stkCtgryID);
            $("#txtStockType").text(data[0].stkCtgryNm);
            $("#txtStatus").text(data[0].stusCodeNm);
            $("#txtStockCode").text(data[0].bomCompnt);
@@ -328,123 +311,28 @@
            $("#cbSirim").prop("disabled", true);
 
            //$("#typeid").val(data[0].typeid);
+       } else if (v == 'F') {
+    	   AUIGrid.destroy(filterGrid);
+           filterAUIGrid(columnLayout)
+           AUIGrid.setGridData(filterGrid, data);
+           //colShowHide(filterGrid,"",false);
+
+       } else if (v == 'R') {
+    	   AUIGrid.destroy(spareGrid);
+           spareAUIGrid(columnLayout);
+           AUIGrid.setGridData(spareGrid, data);
+           //colShowHide(spareGrid,"",false);
+
        }
    }
-   /*  function fn_openDetail(div,idxId){
-        var id =AUIGrid.getCellValue(myGridID ,idxId, 'courierid');
-        Common.ajaxSync("GET", "/logistics/courier/selectCourierDetail",{"courierid":id} ,
-                function(data){
-                var setVal=data.result;
-                if(div=="V"){
-                    fn_setValuePop(setVal);
-                    fn_setVisiable(div);
-                }else if(div=="U"){
-                    fn_setValuePop(setVal);
-                    fn_setVisiable(div);
-                }else if(div=="N"){
-                }
-        });
-    }
-    function fn_setValuePop(setVal){
-        $("#curcode").val(setVal[0].curierCode);
-        $("#curname").val(setVal[0].curierName);
-        $("#curregno").val(setVal[0].curierRegNo);
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , setVal[0].curierCntyId,'curcntyid', 'S', ''); 
-        getAddrRelay( 'curstateid' , setVal[0].curierCntyId , 'state' , setVal[0].curierStateId);
-        getAddrRelay( 'curareaid' , setVal[0].curierStateId , 'area' , setVal[0].curierAreaId);
-        getAddrRelay( 'curpostcod' , setVal[0].curierAreaId , 'post' ,  setVal[0].curierPostCodeId);
-        
-        $("#curcntcno1").val(setVal[0].curierCntcNo1);
-        $("#curcntcno2").val(setVal[0].curierCntcNo2);
-        $("#curfaxno").val(setVal[0].curierFaxNo);
-        $("#curemail").val(setVal[0].curierEmail);
-        $("#curadd1").val(setVal[0].curierAdd1);
-        $("#curadd2").val(setVal[0].curierAdd2);
-        $("#curadd3").val(setVal[0].curierAdd3);  
-            
-    }
-    
-    function fn_setVisiable(div){
-        if(div=="V"){
-              $("#curcode").prop('readonly', true);
-              $("#curname").prop('readonly', true);
-              $("#curregno").prop('readonly', true);
-              $("#curcntyid").prop('disabled', true);
-              $("#curstateid").prop('disabled', true);
-              $("#curareaid").prop('disabled', true);
-              $("#curpostcod").prop('disabled', true);
-              $("#curcntcno1").prop('readonly', true);
-              $("#curcntcno2").prop('readonly', true);
-              $("#curfaxno").prop('readonly', true);
-              $("#curemail").prop('readonly', true);
-              $("#curadd1").prop('readonly', true);
-              $("#curadd2").prop('readonly', true);
-              $("#curadd3").prop('readonly', true);
-              $("#savePopbtn").hide();
-              $("#updatePopbtn").hide();
-        }else if(div=="U"){
-            $("#curcode").prop('readonly', true);
-            $("#curname").prop('readonly', false);
-            $("#curregno").prop('readonly', false);
-            $("#curcntyid").prop('disabled', false);
-            $("#curstateid").prop('disabled', false);
-            $("#curareaid").prop('disabled', false);
-            $("#curpostcod").prop('disabled', false);
-            $("#curcntcno1").prop('readonly', false);
-            $("#curcntcno2").prop('readonly', false);
-            $("#curfaxno").prop('readonly', false);
-            $("#curemail").prop('readonly', false);
-            $("#curadd1").prop('readonly', false);
-            $("#curadd2").prop('readonly', false);
-            $("#curadd3").prop('readonly', false);
-            
-            $("#updatePopbtn").show();
-            $("#savePopbtn").hide();
-        }else if(div=="N"){
-            $("#curcode").val("Auto-Generate");            
-            $("#curname").val("");
-            $("#curregno").val("");
-            //$("#curcntyid").val("");
-            //$("#curstateid").val("");
-            //$("#curareaid").val("");
-            //$("#curpostcod").val("");
-            $("#curcntcno1").val("");
-            $("#curcntcno2").val("");
-            $("#curfaxno").val("");
-            $("#curemail").val("");
-            $("#curadd1").val("");
-            $("#curadd2").val("");
-            $("#curadd3").val(""); 
-            
-            $("#curname").prop('readonly', false);
-            $("#curregno").prop('readonly', false);
-            $("#curcntyid").prop('disabled', false);
-            $("#curstateid").prop('disabled', false);
-            $("#curareaid").prop('disabled', false);
-            $("#curpostcod").prop('disabled', false);
-            $("#curcntcno1").prop('readonly', false);
-            $("#curcntcno2").prop('readonly', false);
-            $("#curfaxno").prop('readonly', false);
-            $("#curemail").prop('readonly', false);
-            $("#curadd1").prop('readonly', false);
-            $("#curadd2").prop('readonly', false);
-            $("#curadd3").prop('readonly', false);
-            
-            $("#savePopbtn").show();
-            $("#updatePopbtn").hide();
-            
-            combReset();
-        }
-    }
-    
-  function combReset(){
-            doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' ,'', 'this.value','curcntyid', 'S', ''); 
-            doDefCombo('', '' ,'curstateid', 'S', ''); 
-            doDefCombo('', '' ,'curareaid', 'S', '');
-            doDefCombo('', '' ,'curpostcod', 'S', '');   
-      
-  } */
-  
+   
+   function colShowHide(gridNm,fied,checked){
+       if(checked) {
+             AUIGrid.showColumnByDataField(gridNm, fied);
+         } else {
+             AUIGrid.hideColumnByDataField(gridNm, fied);
+         }
+ }
  
 </script>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -498,32 +386,34 @@
 								<div class="date_set w100p">
 									<!-- date_set start -->
 									<p>
-										<select class="w100p">
-											<option value="">11</option>
-											<option value="">22</option>
-											<option value="">33</option>
+										<select class="w100p" id="srchMaterialStart" name="srchMaterialStart">
+											<option value=""></option>
+											<option value="1">1</option>
+											<option value="1000">1000</option>
+											<option value="10000">10000</option>
 										</select>
 									</p>
 									<span>~</span>
 									<p>
-										<select class="w100p">
-											<option value="">11</option>
-											<option value="">22</option>
-											<option value="">33</option>
+										<select class="w100p" id="srchMaterialEnd" name="srchMaterialEnd">
+											<option value=""></option>
+											<option value="1000">1000</option>
+											<option value="10000">10000</option>
+											<option value="100000">100000</option>
 										</select>
 									</p>
 								</div>
 								<!-- date_set end -->
 							</td>
 							<th scope="row">CDC</th>
-							<td><select class="w100p" id="cdcCmb" name="cdcCmb">
+							<td><select class="w100p" id="srchCdc" name="srchCdc">
 							</td>
 							<th scope="row">Valid From Date</th>
 							<td><div class="date_set">
 									<!-- date_set start -->
 									<p>
 										<input type="text" title="Create start Date"
-											placeholder="DD/MM/YYYY" class="j_date" />
+											placeholder=" " class="j_date" id="srchValid" name="srchValid"/>
 									</p>
 								</div></td>
 						</tr>

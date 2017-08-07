@@ -39,4 +39,16 @@ public class BomServiceImpl implements BomService {
 		return bomMapper.materialInfo(params);
 	}
 
+	@Override
+	public List<EgovMap> filterInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return bomMapper.selectBomList(params);
+	}
+
+	@Override
+	public List<EgovMap> spareInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return bomMapper.selectBomList(params);
+	}
+
 }

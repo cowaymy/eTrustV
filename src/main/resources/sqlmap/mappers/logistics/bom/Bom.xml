@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.logistics.bom.impl.BomMapper">
     <select id="selectCdcList" parameterType="Map" resultType="EgovMap">
 	SELECT   
-	    WH_LOC_CODE code_id,
+	    WH_LOC_ID code_id,
 	    DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) code_name
 	    FROM SYS0028M
 	  WHERE WH_LOC_TYPE_ID = 277
@@ -25,6 +25,7 @@
             d.SORT_STRING  sort_string ,
             d.BOM_COMPNT  bom_compnt ,
             m2.STK_DESC stk_desc,
+            sm.CODE_ID categoryid,
             sm.CODE_NAME category,
             d.COMPNT_QTY  compnt_qty ,
             d.COMPNT_UNIT_OF_MEASURE  compnt_unit_of_measure ,
@@ -36,10 +37,24 @@
             d.USER_WHO_CRT_RCORD  user_who_crt_rcord ,
             d.CHNG_ON  chng_on ,
             d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj
-        FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
+        FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm,LOG0056M l
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
-              AND sm.CODE_ID = m2.STK_TYPE_ID  
+              AND sm.CODE_ID = m2.STK_TYPE_ID
+              AND d.BOM_COMPNT = l.STK_CODE
+              <if test="srchMaterialStart != null and srchMaterialEnd != null and srchMaterialStart != '' and srchMaterialEnd != ''">
+              AND m.BOM BETWEEN #{srchMaterialStart} AND #{srchMaterialEnd} 
+              </if>  
+             <if test="srchCdc != null and srchCdc != ''">
+               AND LOC_ID=#{srchCdc}
+              </if>  
+             <if test="srchValid != null and srchValid != ''">
+              AND TO_CHAR(d.VALID_FROM_DT, 'YYYY-MM-DD') = TO_DATE(TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'YYYYMMDD'))
+              </if>  
+              <if test="materialCd != null and categoryid != null">
+              AND m.BOM=#{materialCd}
+              AND sm.CODE_ID=#{categoryid}
+              </if>
               ORDER BY m.BOM, d.BOM_ITM_NODE_NO 
     </select>
      <select id="materialInfo" parameterType="Map" resultType="egovMap">
@@ -49,6 +64,9 @@
 		       ,(SELECT CODE_NAME
 		          FROM SYS0013M
 		         WHERE CODE_ID = s26m.STK_CTGRY_ID) STK_CTGRY_NM
+		      , (SELECT CODE_ID
+		           FROM SYS0013M
+		          WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_ID
 		      , (SELECT CODE_NAME
 		           FROM SYS0013M
 		          WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_NM

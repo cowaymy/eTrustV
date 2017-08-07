@@ -86,4 +86,38 @@ public class BomController {
 		map.put("data", info);
 		return ResponseEntity.ok(map);
 	}
+
+	@RequestMapping(value = "/filterInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> filterInfo(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String materialCd = request.getParameter("materialCd");
+		String categoryid = request.getParameter("categoryid");
+
+		Map<String, Object> params = new HashMap();
+		params.put("categoryid", categoryid);
+		params.put("materialCd", materialCd);
+
+		List<EgovMap> info = bomService.filterInfo(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", info);
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/spareInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> spareInfo(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String materialCd = request.getParameter("materialCd");
+		String categoryid = request.getParameter("categoryid");
+
+		Map<String, Object> params = new HashMap();
+		params.put("categoryid", categoryid);
+		params.put("materialCd", materialCd);
+
+		List<EgovMap> info = bomService.spareInfo(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", info);
+		return ResponseEntity.ok(map);
+	}
 }
