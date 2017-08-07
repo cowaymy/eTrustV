@@ -296,16 +296,15 @@ function fn_openDivPop(val){
                 $('#edit_txtClctrName').text(result.viewMaster.clctrName);
                 
                 if(result.viewMaster.allowComm != "1"){
-                	$("#btnAllowComm").attr('checked', false) ;
+                	$("#btnAllowComm").attr('checked', false);
                 }else{
-                	$("#btnAllowComm").attr('checked', true) ;
-
+                	$("#btnAllowComm").attr('checked', true);
                 }
                 
                 if(result.passReconSize  > 0 ){
-                	$("#edit_branchId").attr('disabled', true) ;
+                	$("#edit_branchId").attr('disabled', true);
                 }else{
-                	$("#edit_branchId").attr('disabled', false) ;
+                	$("#edit_branchId").attr('disabled', false);
                 }
                  
                 //팝업그리드 뿌리기
