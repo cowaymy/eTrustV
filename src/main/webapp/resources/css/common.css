@@ -134,11 +134,15 @@ table+.title_line{margin-top:20px;}
 h3 .txt_box{font-size:16px; color:#25527c;}
 .color_box{display:inline-block; width:20px; height:20px;}
 .color_box.black{background:#000;}
-.color_box.red{background:#ff0000;}
-.color_box.blue{background:#0000ff;}
-.color_box.green{background:#00ff00;}
-.color_box.gray{background:#999;}
-
+.color_box.red{background:#fc1d1d;}
+.color_box.blue{background:#399cff;}
+.color_box.green{background:#0f8825;}
+.color_box.gray{background:#909090;}
+.color_box.brown{background:#784100;}
+.color_box.gold{background:#daa520;}
+.color_box.orange{background:#ffb141;}
+.color_box.purple{background:#9f20da;}
+.color_box.white{background:#fff; border:1px solid #ccc; box-sizing:border-box;}
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
