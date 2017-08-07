@@ -283,5 +283,214 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerCreditCardDetailViewPop(params);
 	}
+
 	
+	/**
+	 * 기본정보 업데이트 
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.01
+	 */
+	@Override
+	public void updateCustomerBasicInfoAf(Map<String, Object> params) throws Exception {
+		
+		customerMapper.updateCustomerBasicInfoAf(params);
+	}
+
+	
+	/**
+	 * Main Address 업데이트 (Set Active)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.01
+	 */
+	@Override
+	public void updateCustomerAddressSetActive(Map<String, Object> params) throws Exception {
+		
+		customerMapper.updateCustomerAddressSetActive(params);
+		
+	}
+
+
+	/**
+	 * Main Address 업데이트 (Set Main)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.01
+	 */
+	@Override
+	public void updateCustomerAddressSetMain(Map<String, Object> params) throws Exception {
+
+		customerMapper.updateCustomerAddressSetMain(params);
+	}
+
+
+	/**
+	 * Main Contact 업데이트 (Set Active)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	@Override
+	public void updateCustomerContactSetActive(Map<String, Object> params) throws Exception {
+		
+		customerMapper.updateCustomerContactSetActive(params);
+		
+	}
+
+
+	/**
+	 * Main Contact 업데이트 (Set Main)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	@Override
+	public void updateCustomerContactSetMain(Map<String, Object> params) throws Exception {
+		
+		
+		//set STUS_CODE_ID == 9 <MAIN>
+		customerMapper.updateCustomerContactSetMain(params);
+	}
+
+
+	/**
+	 * 연락처 업데이트
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	@Override
+	public void updateCustomerContactInfoAf(Map<String, Object> params) throws Exception {
+		
+		customerMapper.updateCustomerContactInfoAf(params);
+		
+	}
+
+	
+	/**
+	 * Bank ComboBox List (Issue Bank)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	@Override
+	public List<EgovMap> selectAccBank(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectAccBank(params);
+	}
+
+
+	/**
+	 * Card ComboBox List (Issue Bank)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.04
+	 */
+	@Override
+	public List<EgovMap> selectCrcBank(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCrcBank(params);
+	}
+
+
+	/**
+	 * 은행 Account 업데이트
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	@Override
+	public void updateCustomerBankInfoAf(Map<String, Object> params) throws Exception {
+		customerMapper.updateCustomerBankInfoAf(params);
+		
+	}
+
+
+	/**
+	 * 카드 Account 업데이트
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	@Override
+	public void updateCustomerCardInfoAf(Map<String, Object> params) throws Exception {
+		customerMapper.updateCustomerCardInfoAf(params);
+	}
+
+	
+	/**
+	 * Address Delete
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	@Override
+	public void deleteCustomerAddress(Map<String, Object> params) throws Exception {
+		customerMapper.deleteCustomerAddress(params);
+	}
+
+	
+	/**
+	 * Contact Delete
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.03
+	 */
+	@Override
+	public void deleteCustomerContact(Map<String, Object> params) throws Exception {
+		customerMapper.deleteCustomerContact(params);
+	}
+
+
+	/**
+	 * Bank Delete
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.07
+	 */
+	@Override
+	public void deleteCustomerBank(Map<String, Object> params) throws Exception {
+		customerMapper.deleteCustomerBank(params);
+		
+	}
+
+
+	/**
+	 * Card Delete
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.07
+	 */
+	@Override
+	public void deleteCustomerCard(Map<String, Object> params) throws Exception {
+		customerMapper.deleteCustomerCard(params);
+	}
+
+
+	/**
+	 * Address Update
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.08.07
+	 */
+	@Override
+	public void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception {
+		customerMapper.updateCustomerAddressInfoAf(params);
+	}
 }
