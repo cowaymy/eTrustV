@@ -338,6 +338,19 @@ function hideDetailPopup(){
 function saveChanges() {
 	
 	var payId = $("#payId").val();
+	var trNo = $("#edit_txtTRRefNo").val();
+	var branchId = $("#edit_branchId").val();
+	
+	if($.trim(trNo).length >10 ){
+        Common.alert("* The TR number cannot exceed length of 10.");
+        return;
+    }
+	
+	if($.trim(branchId )==""){
+		Common.alert("* Please select the key-in branch.");
+		return;
+	}
+	
 	
 	if($("#btnAllowComm").is(":checked")){
 		$("#allowComm").val(1);
