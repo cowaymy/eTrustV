@@ -800,6 +800,24 @@ public final class CommonUtils {
 		return diffDate;
 	}
 	
+	public static long getDiffDate(String cutOffDate, String criteriaDate, String format){
+		long diffDate = -1;
+		
+		try{
+			SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault(Locale.Category.FORMAT));
+			Date cutoffdate = formatter.parse(cutOffDate);
+			Date curDate = formatter.parse(criteriaDate);
+			
+			long diff = curDate.getTime() - cutoffdate.getTime();
+			diffDate = diff/(24*60*60*1000);
+			
+		}catch(ParseException | java.text.ParseException e){
+			e.printStackTrace();
+		}
+		
+		return diffDate;
+	}
+	
 	public static String getMaskCreditCardNo(String inputStr, String maskStr, int visibleDigit) {    	
     	String retVal = null;    	
     	if(CommonUtils.isEmpty(inputStr)) {
