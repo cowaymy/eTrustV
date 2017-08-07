@@ -308,7 +308,7 @@ public class SearchPaymentController {
 			passReconSize = paymentItemIsPassRecon.size();
 			resultMap.put("passReconSize", passReconSize);
 		}else{
-			resultMap.put("passReconSize", 0);
+			resultMap.put("passReconSize", passReconSize);
 		}
         
         // 조회 결과 리턴.
