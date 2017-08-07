@@ -897,15 +897,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ]]>
     </select>
     
-     <update id="updateDocNo">
+     <update id="updateDocNo" parameterType="Map">
      <![CDATA[
         UPDATE DocNo
-         SET DocNo =#{nextDocNo}
-           WHERE  ( DocNoID = #{docNoId} );
+         SET DocNo = (select max(doc_no)+1 from SYS0022C)
+           WHERE  ( DocNoID = #{docNoId} )
         ]]>
     </update>
     
-     <insert id="insertMember" >
+     <insert id="insertMember" parameterType="Map">
         INSERT INTO ORG0001D
         ( MEM_CODE
         , MEM_TYPE
@@ -1056,7 +1056,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ]]>
     </select>
     
-    <insert id="insertOrganization" >
+    <insert id="insertOrganization" parameterType="Map">
     INSERT INTO ORG0005D
         ( MEM_ID
         , MEM_UP_ID
@@ -1101,7 +1101,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
            , #{branchId} )
   </insert>
   
-  <insert id="insertAccBill" >
+  <insert id="insertAccBill" parameterType="Map">
     INSERT INTO PAY0007D
         ( BILL_TYPE_ID
         , BILL_SO_ID
@@ -1142,5 +1142,282 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  FROM PAY0007D 
 		 WHERE  ROW_CNT > 0
 		          AND BILL_ID = select max(bill_id)+1 from PAY0007D
+  </insert>
+  
+  <insert id="insertAccOrderBill" parameterType="Map">
+	   INSERT INTO PAY0016D
+	         ( ACC_BILL_TASK_ID
+	         , ACC_BILL_REF_DT
+	         , ACC_BILL_REF_NO
+	         , ACC_BILL_ORD_ID
+	         , ACC_BILL_ORD_NO
+	         , ACC_BILL_TYPE_ID
+	         , ACC_BILL_MODE_ID
+	         , ACC_BILL_SCHDUL_ID
+	         , ACC_BILL_SCHDUL_PRIOD
+	         , ACC_BILL_ADJ_ID
+	         , ACC_BILL_SCHDUL_AMT
+	         , ACC_BILL_ADJ_AMT
+	         , ACC_BILL_TXS_AMT
+	         , ACC_BILL_NET_AMT
+	         , ACC_BILL_STUS
+	         , ACC_BILL_REM
+	         , ACC_BILL_CRT_DT
+	         , ACC_BILL_CRT_USER_ID
+	         , ACC_BILL_GRP_ID
+	         , ACC_BILL_TAX_CODE_ID
+	         , ACC_BILL_TAX_RATE
+	         , ACC_BILL_ACCT_CNVR
+	         , ACC_BILL_CNTRCT_ID )
+	           VALUES ( 
+	           #{accBillTaskId}
+	           , #{accBillRefDate}
+	           , #{accBillRefNo}
+	           , #{accBillOrderId}
+	           , #{accBillOrderNo}
+	           , #{accBillTypeId}
+	           , #{accBillModeId}
+	           , #{accBillScheduleId}
+	           , #{accBillSchedulePeriod}
+	           , #{accBillAdjustmentId}
+	           , #{accBillScheduleAmount}
+	           , #{accBillAdjustmentAmount}
+	           , #{accBillTaxesAmount}
+	           , #{accBillNetAmount}
+	           , #{accBillStatus}
+	           , #{accBillRemark}
+	           , #{accBillCreateAt}
+	           , #{accBillCreateBy}
+	           , #{accBillGroupId}
+	           , #{accBillTaxCodeId}
+	           , #{accBillTaxRate}
+	           , #{accBillAcctConversion}
+	           , #{accBillContractId} )
+  </insert>
+  
+  <update id="updateDocNoNumber" parameterType="Map">
+     <![CDATA[
+        UPDATE DocNo
+         SET DocNo = (select max(doc_no)+1 from SYS0022C)
+           WHERE  ( DocNoID = #{docNoId} )
+        ]]>
+    </update>
+    
+    <select id="selectMiscList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+		  SELECT Extent1.MEM_ID MEM_ID  ,
+		       #{memberName} C1  ,
+		       #{membetFullName} C2  ,
+		       #{address1} C3  ,
+		       #{address2} C4  ,
+		       #{address3} C5  ,
+		       #{address4} C6  ,
+		       Extent5.POST_CODE POST_CODE  ,
+		       Extent3.NAME NAME  ,
+		       Extent2.NAME NAME1  ,
+		       #{memberNirc} C7  
+		  FROM ORG0001D Extent1
+		         JOIN SYS0015M Extent2   ON UTILS.CONVERT_TO_NUMBER(Extent1.CNTY,10,0) = Extent2.CNTY_ID
+		         LEFT JOIN SYS0035M Extent3   ON UTILS.CONVERT_TO_NUMBER(Extent1.STATE,10,0) = Extent3.STATE_ID
+		         LEFT JOIN SYS0039M Extent4   ON Extent1.AREAL = Extent4.AREA_ID
+		         LEFT JOIN SYS0030C Extent5   ON Extent1.POST_CODE = Extent5.POST_CODE_ID
+		 WHERE  Extent1.MEM_ID = 66640 AND ROWNUM <= 1
+        ]]>
+    </select>
+    
+      <insert id="insertInvMISC" parameterType="Map">
+		    INSERT INTO PAY0031D
+		  ( TAX_INVC_REF_NO
+		  , TAX_INVC_REF_DT
+		  , TAX_INVC_SVC_NO
+		  , TAX_INVC_TYPE
+		  , TAX_INVC_CUST_NAME
+		  , TAX_INVC_CNTC_PERSON
+		  , TAX_INVC_ADDR1
+		  , TAX_INVC_ADDR2
+		  , TAX_INVC_ADDR3
+		  , TAX_INVC_ADDR4
+		  , TAX_INVC_POST_CODE
+		  , TAX_INVC_STATE_NAME
+		  , TAX_INVC_CNTY
+		  , TAX_INVC_TASK_ID
+		  , TAX_INVC_REM
+		  , TAX_INVC_CHRG
+		  , TAX_INVC_TXS
+		  , TAX_INVC_AMT_DUE
+		  , TAX_INVC_CRT_DT
+		  , TAX_INVC_CRT_USER_ID )
+		  VALUES ( 
+		  #{taxInvoiceRefNo}
+		  , #{taxInvoiceRefDate}
+		  , #{taxInvoiceServiceNo}
+		  , #{taxInvoiceType}
+		  , #{taxInvoiceCustName}
+		  , #{taxInvoiceContactPerson}
+		  , #{taxInvoiceAddress1}
+		  , #{taxInvoiceAddress2}
+		  , #{taxInvoiceAddress3}
+		  , #{taxInvoiceAddress4}
+		  , #{taxInvoicePostCode}
+		  , #{taxInvoiceStateName}
+		  , #{taxInvoiceCountry}
+		  , #{taxInvoiceTaskID}
+		  , #{taxInvoiceRemark}
+		  , #{taxInvoiceCharges}
+		  , #{taxInvoiceTaxes}
+		  , #{taxInvoiceAmountDue}
+		  , #{taxInvoiceCreated}
+		  , #{taxInvoiceCreated} )
+		  SELECT TAX_INVC_ID 
+		  FROM PAY0031D 
+		  WHERE ROW_CNT > 0
+		          AND TAX_INVC_ID = (select MAX(TAX_INVC_ID)+1 from PAY0031D)
+		          AND TAX_INVC_REF_NO = BR6400024460;
+      </insert>
+      <insert id="insertInvMISCD" parameterType="Map">
+	      INSERT INTO PAY0032D
+	         ( TAX_INVC_ID
+	         , INVC_ITM_TYPE
+	         , INVC_ITM_ORD_NO
+	         , INVC_ITM_PO_NO
+	         , INVC_ITM_CODE
+	         , INVC_ITM_DESC1
+	         , INVC_ITM_DESC2
+	         , INVC_ITM_SERIAL_NO
+	         , INVC_ITM_QTY
+	         , INVC_ITM_UNIT_PRC
+	         , INVC_ITM_GST_RATE
+	         , INVC_ITM_GST_TXS
+	         , INVC_ITM_CHRG
+	         , INVC_ITM_AMT_DUE
+	         , INVC_ITM_ADD1
+	         , INVC_ITM_ADD2
+	         , INVC_ITM_ADD3
+	         , INVC_ITM_ADD4
+	         , INVC_ITM_POST_CODE
+	         , INVC_ITM_AREA_NAME
+	         , INVC_ITM_STATE_NAME
+	         , INVC_ITM_CNTY
+	         , INVC_ITM_INSTALL_DT
+	         , INVC_ITM_RETN_DT
+	         , INVC_ITM_BILL_REF_NO )
+	           VALUES 
+	           ( #{taxInvoiceID}
+	           , #{invoiceItemType}
+	           , #{invoiceItemOrderNo}
+	           , #{invoiceItemPONo}
+	           , #{invoiceItemCode}
+	           , #{invoiceItemDescription1}
+	           , #{invoiceItemDescription2}
+	           , #{invoiceItemSerialNo}
+	           , #{invoiceItemQuantity}
+	           , 0
+	           , #{invoiceItemGSTRate}
+	           , #{invoiceItemGSTTaxes}
+	           , #{invoiceItemCharges}
+	           , #{invoiceItemAmountDue}
+	           , #{invoiceItemAdd1}
+	           , #{invoiceItemAdd2}
+	           , #{invoiceItemAdd3}
+	           , NULL
+	           , #{invoiceItemPostCode}
+	           , NULL
+	           , #{invoiceItemStateName}
+	           , #{invoiceItemCountry}
+	           , NULL
+	           , NULL
+	           , NULL )
+	           SELECT INVC_ITM_ID 
+			  FROM PAY0032D 
+			 WHERE  ROW_CNT > 0
+			          AND INVC_ITM_ID = (select max(INVC_ITM_ID) from PAY0032D)
+	  </insert>
+	  
+	  <update id="updateBillRem" parameterType="Map">
+	  UPDATE PAY0016D
+	   SET ACC_BILL_REM = #{accBillRemark}
+	 WHERE  ( ( ACC_BILL_ID = 19583523 )
+	  AND ( ACC_BILL_TASK_ID = 0 ) );
+	  </update>
+	  
+	  <insert id="insertUser" parameterType="Map">
+	  INSERT INTO USER
+        ( USER_NAME
+        , USER_PASSWD
+        , USER_FULL_NAME
+        , USER_EMAIL
+        , USER_STUS_ID
+        , USER_BRNCH_ID
+        , USER_DEPT_ID
+        , USER_UPD_USER_ID
+        , USER_UPD_DT
+        , USER_SYNC_CHK
+        , USER_NRIC
+        , USER_DT_JOIN
+        , USER_GSEC_SYN_CHK
+        , USER_PASSWD_LAST_UPD_DT
+        , USER_TYPE_ID
+        , USER_DFLT_PAS_SWD
+        , USER_VAL_ID_FROM
+        , USER_VAL_ID_TO
+        , USER_SEC_QUES_ID
+        , USER_SEC_QUES_ANS
+        , USER_WORK_NO
+        , USER_MOBILE_NO
+        , USER_EXT_NO
+        , USER_IS_PART_TM
+        , USER_DEPT_ID
+        , USER_IS_EXTRNL )
+         VALUES
+          ( #{userName}
+          , #{password}
+          , #{userFullName}
+          , #{userEmail}
+          , #{userStatusID}
+          , #{userBranchID}
+          , #{userDeptID}
+          , #{userUpdateBy}
+          , #{userUpdateAt}
+          , #{userSyncCheck}
+          , #{userNRIC}
+          , #{userDateJoin}
+          , #{userGsecSynCheck}
+          , #{userPasswdLastUpdateAt}
+          , #{userTypeID}
+          , #{userDefaultPasswd}
+          , #{userValidFrom}
+          , #{userValidTo}
+          , #{userSecQuesID}
+          , #{userSecQuesAns}
+          , #{userWorkNo}
+          , #{userMobileNo}
+          , #{userExtNo}
+          , #{userIsPartTime}
+          , #{userDepartmentID}
+          , #{userIsExternal} )
+          SELECT USER_ID 
+		  FROM USER_ 
+		 WHERE  V_ROWCOUNT > 0
+          AND USER_ID = (SELECT MAX(USER_ID) FROM USER)
+        </insert>
+        <insert id="insertRoleUser" parameterType="Map">
+        INSERT INTO SYS0045M
+            ( ROLE_ID
+            , USER_ID
+            , STUS_ID
+            , CRT_DT
+            , CRT_USER_ID
+            , UPD_DT
+            , UPD_USER_ID 
+            )
+        VALUES 
+        ( #{roleID}
+        , #{userID}
+        , #{statusID}
+        , #{createdAt}
+        , #{createdBy}
+        , #{updatedAt}
+        , #{updatedBy}
+        )
   </insert>
 </mapper>
