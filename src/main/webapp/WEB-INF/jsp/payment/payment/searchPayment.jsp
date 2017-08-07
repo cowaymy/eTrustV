@@ -477,6 +477,11 @@ function saveChanges() {
         Common.alert("실패하였습니다.");
     });
 }
+
+function goRcByBs() {
+	alert();
+	location.href = "initRentalCollectionByBS.do";
+}
 </script>
 
 <!-- content start -->
@@ -618,7 +623,7 @@ function saveChanges() {
 				    <ul class="btns">
 				        <li><p class="link_btn"><a href="#">Payment Listing</a></p></li>
 				        <li><p class="link_btn"><a href="#">RC By Sales</a></p></li>
-				        <li><p class="link_btn"><a href="#">RC By BS</a></p></li>
+				        <li><p class="link_btn"><a href="javascript:goRcByBs();">RC By BS</a></p></li>
 				        <li><p class="link_btn"><a href="#">Daily Collection Raw</a></p></li>
 				        <li><p class="link_btn"><a href="#">Late Submission Raw</a></p></li>
 				        <li><p class="link_btn"><a href="#">Official Receipt</a></p></li>				        
