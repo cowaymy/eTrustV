@@ -182,6 +182,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		String docNo = "";
 		EgovMap selectDocNo = memberListMapper.selectDocNo(docNoId);
 		logger.debug("selectDocNo : {}",selectDocNo);
+		if(docNoId.equals("130") && Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
+			docNo = (String) selectDocNo.get("c2")+(String) selectDocNo.get("c1");
+			logger.debug("docNo : {}",docNo);
+			selectDocNo.put("docNo", docNo);
+		}
 		if(Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
 			docNo = (String) selectDocNo.get("c1") != null ? (String) selectDocNo.get("c1") : "";
 			String prefix = (String) selectDocNo.get("c2") != null ? (String) selectDocNo.get("c2") : "";
@@ -191,7 +196,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return selectDocNo;
 	}
 	
-	/*public String getNextDocNo(String prefixNo,String docNo){
+	public void updateDocNoNumber(String docNoId){//8자리 만들어서 update
+		EgovMap selectDocNoNumber = memberListMapper.selectDocNo(docNoId);
+		logger.debug("selectDocNoNumber : {}",selectDocNoNumber);
+		int nextDocNoNumber = Integer.parseInt((String)selectDocNoNumber.get("c1")) + 1;
+		String a = String.format("%08d", nextDocNoNumber);
+		logger.debug("a : {}",a);
+	}
+	
+	public String getNextDocNo(String prefixNo,String docNo){
 		String nextDocNo = "";
 		int docNoLength=0;
 		if(prefixNo != null && prefixNo != ""){
@@ -200,17 +213,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}else{
 			docNoLength = docNo.length();
 		}
-		String docNoFormat = "";
-		
-		for(int i = 1; i <= docNoLength; i++){
-			docNoFormat += "0";
-		}
 		
 		int nextNo = Integer.parseInt(docNo) + 1;
-		logger.debug("nextNo : {}",nextNo);
-		nextDocNo = String.format(docNoFormat, nextNo);
+		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
+		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
-	}*/
+	}
 	
 	public Boolean doSaveMember(Map<String, Object> params) {
 		Boolean success = false;
@@ -224,21 +232,30 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			
 			case 1:
 				selectMemberCode = getDocNo("1");
+				memberCode = selectMemberCode.get("c1").toString();
+				params.put("memberCode", memberCode);
 				logger.debug("selectMemberCode : {}",selectMemberCode);
 				ID=1;
-				//nextDocNo = getNextDocNo("",selectMemberCode.get("c1").toString());
+				nextDocNo = getNextDocNo("",selectMemberCode.get("c1").toString());
 				logger.debug("nextDocNo : {}",nextDocNo);
 				selectMemberCode.put("nextDocNo", nextDocNo);
 				break;
 			}
 			
+			
+			
 			if(Integer.parseInt(selectMemberCode.get("docNoId").toString()) == ID){
 				logger.debug("update 문 탈 예정");
 				//memberListMapper.updateDocNo(selectMemberCode);
 			}
-			params.put("memberCode", memberCode);
+			
+			//Member Save
 			//memberListMapper.insertMember(params);
+			
+			
 			logger.debug("params : {}",params);
+			
+			
 			//MemberOrganization save
 			EgovMap selectOrganization = null;
 			selectOrganization = memberListMapper.selectOranization(params);//deptCode 가져가서 select
@@ -311,27 +328,30 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				}
 			}
 			
+			EgovMap selectHpBillNo = null;
+			String hpBillNo="";
+			EgovMap selectInvoiceNo = null;
 			//AcBilling Save (for Hp)
 			
 			if(params.get("memberType").toString().equals("1")){
 				
-				selectMemberCode = getDocNo("5");
-				logger.debug("selectMemberCode : {}",selectMemberCode);
-				memberCode=(String)selectMemberCode.get("c1");
-				ID=1;
-				//nextDocNo = getNextDocNo("HPB", selectMemberCode.get("c1").toString());
+				selectHpBillNo = getDocNo("5");
+				logger.debug("selectHpBillNo : {}",selectHpBillNo);
+				hpBillNo=(String)selectHpBillNo.get("c1");
+				int hPBillID=5;
+				nextDocNo = getNextDocNo("HPB", selectHpBillNo.get("c1").toString());
 				logger.debug("nextDocNo : {}",nextDocNo);
-				selectMemberCode.put("nextDocNo", nextDocNo);
-				logger.debug("selectMemberCode : {}",selectMemberCode);
-				if(Integer.parseInt(selectMemberCode.get("docNoId").toString()) == ID){
+				selectHpBillNo.put("nextDocNo", nextDocNo);
+				logger.debug("selectHpBillNo : {}",selectHpBillNo);
+				if(Integer.parseInt(selectHpBillNo.get("docNoId").toString()) == hPBillID){
 					logger.debug("update 문 탈 예정");
-					//memberListMapper.updateDocNo(selectMemberCode);
+					//memberListMapper.updateDocNo(selectHpBillNo);
 				}
-				params.put("memberCode", memberCode);
+				params.put("hpBillNo", hpBillNo);
 				
 				Map<String, Object> accBill = new HashMap<String, Object>();
 				accBill.put("billId", 0);
-				accBill.put("billINo", memberCode);
+				accBill.put("billINo", hpBillNo);
 				accBill.put("billTypeId", 222);
 				accBill.put("billSOID", 0);
 				accBill.put("billMemId", MemberId);
@@ -351,7 +371,213 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				
 				logger.debug("accBill : {}",accBill);
 				//memberListMapper.insertAccBill(accBill);
+			
+			
+    			//AccOrderBill Save
+    			Map<String, Object> accOrderBill = new HashMap<String, Object>();
+    			accOrderBill.put("accBillTaskId", 0);
+    			accOrderBill.put("accBillRefDate", new Date());
+    			accOrderBill.put("accBillRefNo", "1000");
+    			accOrderBill.put("accBillOrderId", 0);
+    			accOrderBill.put("accBillOrderNo", "");
+    			accOrderBill.put("accBillTypeId", 1159);
+    			accOrderBill.put("accBillModeId", 1171);
+    			accOrderBill.put("accBillScheduleId", 0);
+    			accOrderBill.put("accBillSchedulePeriod", 0);
+    			accOrderBill.put("accBillAdjustmentId", 0);
+    			accOrderBill.put("accBillScheduleAmount", 100);
+    			accOrderBill.put("accBillAdjustmentAmount", 0);
+    			//accOrderBill.put("accBillTaxesAmount", (100 - (System.Convert.ToDecimal(100) * 100 / 106)));
+    			accOrderBill.put("accBillNetAmount", 100);
+    			accOrderBill.put("accBillStatus", 1);
+    			accOrderBill.put("accBillRemark",memberCode);
+    			accOrderBill.put("accBillCreateAt", new Date());
+    			accOrderBill.put("accBillCreateBy", params.get("creator"));
+    			accOrderBill.put("accBillGroupId", 0);
+    			accOrderBill.put("accBillTaxCodeId", 32);
+    			accOrderBill.put("accBillTaxRate", 6);
+    			accOrderBill.put("accBillAcctConversion", 0);
+    			accOrderBill.put("accBillContractId", 0);
+    			
+    			logger.debug("accOrderBill : {}",accOrderBill);
+    			//memberListMapper.insertAccOrderBill(accOrderBill);
+    			
+    			//GST 2015-01-06
+    			selectInvoiceNo = getDocNo("130");
+    			updateDocNoNumber("130");
+    			
+    			Map<String, Object> selectMiscValue = new HashMap<String, Object>();
+    			selectMiscValue.put("memberId", MemberId);
+    			selectMiscValue.put("memberName", params.get("memberNm"));
+    			selectMiscValue.put("membetFullName", params.get("fulllName"));
+    			selectMiscValue.put("address1", params.get("address1"));
+    			selectMiscValue.put("address2", params.get("address2"));
+    			selectMiscValue.put("address3", params.get("address3"));
+    			selectMiscValue.put("address4", params.get("address4"));
+    			selectMiscValue.put("memberNirc", params.get("nric"));
+    			
+    			
+    			EgovMap selectMiscList = null;
+    			selectMiscList = memberListMapper.selectMiscList(selectMiscValue) ;
+			
+    			if(selectMiscList != null){
+    				Map<String, Object>  InvMISC = new HashMap<String, Object>();
+    				
+    				InvMISC.put("taxInvoiceRefNo", selectInvoiceNo.get("docNo"));
+    				InvMISC.put("taxInvoiceRefDate", new Date());
+    				InvMISC.put("taxInvoiceServiceNo", params.get(memberCode));
+    				InvMISC.put("taxInvoiceType", 117);
+    				InvMISC.put("taxInvoiceCustName",selectMiscList.get("c2"));
+    				InvMISC.put("taxInvoiceContactPerson",selectMiscList.get("c1"));
+    				InvMISC.put("taxInvoiceAddress1",selectMiscList.get("address1"));
+    				InvMISC.put("taxInvoiceAddress2",selectMiscList.get("address2"));
+    				InvMISC.put("taxInvoiceAddress3",selectMiscList.get("address3"));
+    				InvMISC.put("taxInvoiceAddress4",selectMiscList.get("address4"));
+    				InvMISC.put("taxInvoicePostCode",selectMiscList.get("postCode"));
+    				InvMISC.put("taxInvoiceStateName",selectMiscList.get("name"));
+    				InvMISC.put("taxInvoiceCountry",selectMiscList.get("name1"));
+    				InvMISC.put("taxInvoiceTaskID",0);
+    				InvMISC.put("taxInvoiceRemark","");
+    				//InvMISC.put("taxInvoiceCharges",Convert.ToDecimal(string.Format("{0:0.00}", (System.Convert.ToDecimal(100.00) * 100 / 106))););
+    				//InvMISC.put("taxInvoiceTaxes",(100 - (System.Convert.ToDecimal(100.00) * 100 / 106)););
+    				InvMISC.put("taxInvoiceAmountDue",100);
+    				InvMISC.put("taxInvoiceCreated",new Date());
+ 
+    				logger.debug("InvMISC : {}",InvMISC);
+    				//String a = memberListMapper.insertInvMISC(InvMISC);
+    				
+    				Map<String, Object>  InvMISCD = new HashMap<String, Object>();
+    				InvMISCD.put("taxInvoiceID", "" );//위에 insert할때 값 가져와서 넣어줘야함
+    				InvMISCD.put("invoiceItemType",  1260);
+    				InvMISCD.put("invoiceItemOrderNo", "");
+    				InvMISCD.put("invoiceItemPONo", "");
+    				InvMISCD.put("invoiceItemCode", params.get("deptCode"));
+    				InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c2"));
+    				InvMISCD.put("invoiceItemDescription2",selectMiscList.get("nric"));
+    				InvMISCD.put("invoiceItemSerialNo","");
+    				InvMISCD.put("invoiceItemQuantity",1);
+    				InvMISCD.put("invoiceItemGSTRate",6);
+    				//InvMISCD.put("invoiceItemGSTTaxes",(100 - (System.Convert.ToDecimal(100.00) * 100 / 106));
+    				//InvMISCD.put("invoiceItemCharges",Convert.ToDecimal(string.Format("{0:0.00}", (System.Convert.ToDecimal(100.00) * 100 / 106)));
+    				InvMISCD.put("invoiceItemAmountDue",100);
+    				InvMISCD.put("invoiceItemAdd1","");
+    				InvMISCD.put("invoiceItemAdd2","");
+    				InvMISCD.put("invoiceItemAdd3","");
+    				InvMISCD.put("invoiceItemPostCode","");
+    				InvMISCD.put("invoiceItemStateName","");
+    				InvMISCD.put("invoiceItemCountry","");
+    				
+    				logger.debug("InvMISCD : {}",InvMISCD);
+    				//memberListMapper.insertInvMISCD(InvMISC);
+    				
+    				accOrderBill.put("accBillRemark",selectInvoiceNo.get("docNo"));
+    				//memberListMapper.updateBillRem(accOrderBill);
+    			}
+			
+			}
+			
+			//Save MemberAgreement
+			if(params.get("codyPaExpr").toString() != null){
+				Map<String, Object>  MA = new HashMap<String, Object>();
+				MA.put("agreementID", 0);
+				MA.put("agreementRefNo", "");
+				MA.put("memberID", MemberId);
+				MA.put("agreementTypeID", 1416);
+				MA.put("agreementStatusID", 1);
+				MA.put("agreementRemark", "");
+				MA.put("agreementStartDate", "1900-01-01 00:00:00.000");
+				MA.put("agreementExpiryDate", params.get("codyPaExpr"));
+				MA.put("agreementCreator", params.get("creator"));
+				MA.put("agreementCreated", new Date());
+				MA.put("AgreementUpdator", null);
+				MA.put("AgreementUpdated", null);
 				
+				logger.debug("MA : {}",MA);
+				//쿼리문 없으니까 asis테스트
+			}
+			
+			//Save User(for HP & CD& CT)
+			if(!params.get("memberType").toString().equals("4")){
+				Map<String, Object>  user = new HashMap<String, Object>();
+				user.put("userID", 0);
+				user.put("userName", memberCode);
+				user.put("password", params.get("password"));
+				user.put("userFullName", params.get("fulllName"));
+				user.put("userEmail", params.get("email"));
+				user.put("userStatusID",1);
+				user.put("userBranchID",0);
+				user.put("userDeptID",0);
+				user.put("userUpdateBy",params.get("creator"));
+				user.put("userUpdateAt",new Date());
+				user.put("userSyncCheck",false);
+				user.put("userNRIC",params.get("nric"));
+				user.put("userDateJoin",params.get("joinDate"));
+				user.put("userGsecSynCheck",Integer.parseInt(params.get("memberType").toString()) == 1 ? 1: 0);
+				user.put("userPasswdLastUpdateAt",new Date());
+				user.put("userTypeID",Integer.parseInt(params.get("memberType").toString()));
+				user.put("userDefaultPasswd", params.get("password"));
+				user.put("userValidFrom", params.get("joinDate"));
+				user.put("userValidTo", "12/31/2099");
+				user.put("userSecQuesID", 0);
+				user.put("userSecQuesAns", "");
+				user.put("userWorkNo", "");
+				user.put("userMobileNo", "");
+				user.put("userExtNo", "");
+				user.put("userIsPartTime", false);
+				user.put("userDepartmentID", 0);
+				user.put("userIsExternal", false);
+				
+				logger.debug("user : {}",user);
+				//memberListMapper.insertUser(user);
+				
+				//Save SystemRoleUser(For HP & CD)
+				if(params.get("memberType").toString().equals("1")|| params.get("memberType").toString().equals("2")){
+					Map<String, Object>  roleuser = new HashMap<String, Object>();
+					if(params.get("memberType").toString().equals("1")){
+						roleuser.put("roleID", 115);
+					}else{
+						roleuser.put("roleID", 121);
+					}
+					roleuser.put("userID", "");
+					roleuser.put("statusID", 1);
+					roleuser.put("createdAt", new Date());
+					roleuser.put("createdBy", params.get("creator"));
+					roleuser.put("updatedAt", new Date());
+					roleuser.put("updatedBy",params.get("creator"));
+					
+					logger.debug("roleuser : {}",roleuser);
+					//memberListMapper.insertRoleUser(roleuser);
+				}
+			}
+			
+			//Save InvWhlocation(For DC & CT)
+			
+			if(params.get("memberType").toString().equals("2") || params.get("memberType").toString().equals("3")){
+				Map<String, Object>  invWH = new HashMap<String, Object>();
+				invWH.put("WHLocID", 0);
+				invWH.put("WHLocCode", memberCode);
+				invWH.put("WHLocDesc", params.get("fullName"));
+				invWH.put("WHLocAdd1", "");
+				invWH.put("WHLocAdd2", "");
+				invWH.put("WHLocAdd3", "");
+				invWH.put("WHLocAreaID", 0);
+				invWH.put("WHLocPostcodeID", 0);
+				invWH.put("WHLocStateID", 0);
+				invWH.put("WHLocCountryID", 0);
+				invWH.put("WHLocTel1", "");
+				invWH.put("WHLocTel2", "");
+				invWH.put("WHLocBranchID", 0);
+				invWH.put("WHLocTypeID", 278);
+				invWH.put("WHLocStkGrade", "");
+				invWH.put("WHLocStatusID", 1);
+				invWH.put("WHLocUpdateBy", params.get("creator"));
+				invWH.put("WHLocUpdateAt", new Date());
+				invWH.put("Code2", "");
+				invWH.put("Desc2", "");
+				invWH.put("WHLocIsSync", true);
+				
+				logger.debug("invWH : {}",invWH);
+				//쿼리 없으니 asis 테스트
 			}
 			success=true;
 		}catch(Exception e){

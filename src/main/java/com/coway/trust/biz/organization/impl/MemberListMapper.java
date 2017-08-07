@@ -54,4 +54,20 @@ public interface MemberListMapper {
 	
 	void insertAccBill(Map<String, Object> params);
 	
+	void insertAccOrderBill(Map<String, Object> params);
+	
+	EgovMap selectMiscList(Map<String, Object> params);
+	
+	String insertInvMISC(Map<String, Object> params);
+	
+	void insertInvMISCD(Map<String, Object> params);
+	
+	void updateBillRem(Map<String, Object> params);
+	
+	void insertUser(Map<String, Object> params);
+	
+	void insertRoleUser(Map<String, Object> params);
+	
+	
+	
 }
