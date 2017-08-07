@@ -362,6 +362,7 @@
 		headerText : "ORG NAME",
 		width : 200,
 		style : "my-column",
+		editable : false
 	}, {
 		dataField : "itemCd",
 		headerText : "ITEM CODE",
@@ -417,7 +418,7 @@
                     treeIdField : "ruleSeq",
                      // 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
                      treeIdRefField : "rulePid",
-                     height : 300,
+                     height : 334,
                      editable : false
                 };
                 if(!myGridID2){
@@ -707,7 +708,7 @@
              // 공통 메세지 영역에 메세지 표시.
              Common.alert("<spring:message code='sys.msg.success'/>");
              $("#searchRule").trigger("click");
-             fn_cancelRuleCall();
+             $("#close02").trigger("click");
          }, function(jqXHR, textStatus, errorThrown) {
              try {
                  console.log("status : " + jqXHR.status);
@@ -997,7 +998,7 @@
 
 <article class="grid_wrap2"><!-- grid_wrap start -->
   <!-- grid_wrap start -->
-      <div id="grid_wrap2" style="width: 100%; height: 300px; margin: 0 auto;"></div>
+      <div id="grid_wrap2" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
