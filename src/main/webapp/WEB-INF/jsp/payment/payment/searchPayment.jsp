@@ -479,7 +479,6 @@ function saveChanges() {
 }
 
 function goRcByBs() {
-	alert();
 	location.href = "initRentalCollectionByBS.do";
 }
 </script>
