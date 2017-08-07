@@ -9,21 +9,21 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("stockMapper")
 public interface StockMapper {
 	List<EgovMap> selectStockList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectStockInfo(Map<String, Object> params);
-	
+
 	List<EgovMap> selectPriceInfo(Map<String, Object> params);
-	
+
 	List<EgovMap> selectFilterInfo(Map<String, Object> params);
-	
-	List<EgovMap>selectServiceInfo(Map<String, Object> params);
-	
-	List<EgovMap>selectStockImgList(Map<String, Object> params);
-	
+
+	List<EgovMap> selectServiceInfo(Map<String, Object> params);
+
+	List<EgovMap> selectStockImgList(Map<String, Object> params);
+
 	void updateStockInfo(Map<String, Object> params);
-	
+
 	void updateSalePriceUOM(Map<String, Object> params);
-	
+
 	void updateSalePriceInfo(Map<String, Object> params);
 
 	List<EgovMap> srvMembershipList();
@@ -39,4 +39,6 @@ public interface StockMapper {
 	int addFilterInfoGrid(Map<String, Object> param);
 
 	int removeFilterInfoGrid(Map<String, Object> param);
+
+	void insertSalePriceInfoHistory(Map<String, Object> smap);
 }

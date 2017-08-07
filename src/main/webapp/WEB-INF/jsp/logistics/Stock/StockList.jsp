@@ -295,7 +295,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 }
                 $("#price_info_div").show();
                 
-            }else{                
+            }else{
+            	 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                 for(i=0; i<selectedItems.length; i++) {
+                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
+                 }
             }
             $(this).find("a").attr("class","on");
         });
@@ -523,6 +527,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		Common.ajax("POST", url, fdata, function(data) {
 			//alert("msg "+data.msg);
 			Common.alert(data.message);
+			console.log("start");
 			if (v == "stockInfo") {
 				$("#stock_info_edit").text("EDIT");
 			} else if (v == "priceForm") {
@@ -541,6 +546,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                	$("#service_info").trigger("click");
             }
 			getMainListAjax(data);
+			console.log("end");
 		});
 	}
 
@@ -1087,7 +1093,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 <div id="SalesWorkDiv" class="SalesWorkDiv">
 <section id="content"><!-- content start -->
     <ul class="path">
-        <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
+                alt="Home" /></li>
         <li>Logistics</li>
         <li>Stocks</li>
     </ul>

@@ -595,4 +595,49 @@
              </when>
          </choose>
          </delete>
+         
+          <insert id="insertSalePriceInfoHistory" parameterType="Map">
+          INSERT INTO LOG0058H
+						          (ROW_NO,
+									PRC_ID,
+									MEM_PAC_ID,
+									STK_ID,
+									AMT,
+									UOM_ID,
+									UOM_CONV,
+									APP_TYPE_ID,
+									PRIOD,
+									PRC_RPF,
+									PRC_PV,
+									TRADE_IN_PV,
+									PRC_CHRG,
+									PRC_COSTING,
+									STUS_CODE_ID,
+									CRT_USER_ID,
+									CRT_DT) 
+			SELECT SEQ_LOG0058H.NEXTVAL,
+			                        PRC_ID,
+                                    MEM_PAC_ID,
+                                    STK_ID,
+                                    AMT,
+                                    UOM_ID,
+                                    UOM_CONV,
+                                    APP_TYPE_ID,
+                                    PRIOD,
+                                    PRC_RPF,
+                                    PRC_PV,
+                                    TRADE_IN_PV,
+                                    PRC_CHRG,
+                                    PRC_COSTING,
+                                    STUS_CODE_ID,
+                                    #{upd_user},
+                                    SYSDATE
+               FROM  SAL0016M  
+                        WHERE PRC_ID      =  (SELECT PRC_ID 
+                                                                FROM SAL0016M
+                                                                WHERE STK_ID = #{stockid}
+                                                                AND APP_TYPE_ID = #{apptypeid}
+                                                                AND MEM_PAC_ID  = 0)    
+         </insert>
+         
 </mapper>
