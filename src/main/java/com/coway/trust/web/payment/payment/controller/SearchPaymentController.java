@@ -290,6 +290,9 @@ public class SearchPaymentController {
 		//selectPaymentDetailSlaveList
 		EgovMap selectPaymentDetailSlaveList = searchPaymentService.selectPaymentDetailSlaveList(params);
 		
+		//selectPaymentItemIsPassRecon
+		EgovMap paymentItemIsPassRecon = searchPaymentService.selectPaymentItemIsPassRecon(params);
+		
 		Map resultMap = new HashMap();
 		resultMap.put("viewMaster", viewMaster);
 		resultMap.put("selectPaymentDetailView", selectPaymentDetailView);
@@ -298,6 +301,14 @@ public class SearchPaymentController {
 			resultMap.put("orderProgressStatus", orderProgressStatus);
 		}else{
 			resultMap.put("orderProgressStatus", "");
+		}
+		
+		int passReconSize = 0;
+		if(paymentItemIsPassRecon != null){
+			passReconSize = paymentItemIsPassRecon.size();
+			resultMap.put("passReconSize", passReconSize);
+		}else{
+			resultMap.put("passReconSize", 0);
 		}
         
         // 조회 결과 리턴.
