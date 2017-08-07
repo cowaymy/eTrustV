@@ -206,12 +206,22 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	public EgovMap selectPayMaster(Map<String, Object> params) {
 		return searchPaymentMapper.selectPayMaster(params);
 	}
-
+	
+	/**
+	 *  EDIT 히스토리테이블 인서트
+	 * @param params
+	 * @return
+	 */
 	@Override
 	public void saveChanges(Map<String, Object> params) {
 		searchPaymentMapper.saveChanges(params);
 	}
 	
+	/**
+	 * EDIT 업데이트
+	 * @param params
+	 * @return
+	 */
 	@Override
 	public void updChanges(Map<String, Object> params) {
 		searchPaymentMapper.updChanges(params);
@@ -235,6 +245,36 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public EgovMap selectBranchCode(Map<String, Object> params) {
 		return searchPaymentMapper.selectBranchCode(params);
+	}
+	
+	/**
+	 * updGlReceiptBranchId 업데이트
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public void updGlReceiptBranchId(Map<String, Object> params) {
+		searchPaymentMapper.updGlReceiptBranchId(params);
+	}
+	
+	/**
+	 * selectPayDs   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectPayDs(Map<String, Object> params) {
+		return searchPaymentMapper.selectPayDs(params);
+	}
+	
+	/**
+	 * selectGlRoute   조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectGlRoute(Map<String, Object> params) {
+		return searchPaymentMapper.selectGlRoute(params);
 	}
 	
 }

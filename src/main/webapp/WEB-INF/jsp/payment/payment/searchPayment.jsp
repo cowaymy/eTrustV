@@ -302,7 +302,6 @@ function fn_openDivPop(val){
                  
                 //팝업그리드 뿌리기
                 AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailView);
-                //AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailSlaveList);
             },function(jqXHR, textStatus, errorThrown) {
                 Common.alert("실패하였습니다.");
 

@@ -284,7 +284,6 @@ public class SearchPaymentController {
 		//주문진행상태 조회
 		EgovMap orderProgressStatus = searchPaymentService.selectOrderProgressStatus(params);
 		
-		
 		//selectPaymentDetailView
 		EgovMap selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
 		
@@ -683,7 +682,6 @@ public class SearchPaymentController {
 		logger.debug("마스터조회값 allowComm : {}", allowComm);
 		logger.debug("마스터조회값 trIssuDt : {}", trIssuDt);
 
-		boolean HasChanges = false;
 		Map trMap = new HashMap();
 		Map branchMap = new HashMap();
 		Map collectorMap = new HashMap();
@@ -692,7 +690,6 @@ public class SearchPaymentController {
 		
 		//1127 : TR Number
 		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")))){
-			HasChanges =true;
 			
             String typeID = "1127";
             String payID = String.valueOf(params.get("hiddenPayId"));
@@ -715,7 +712,6 @@ public class SearchPaymentController {
 		
 		//1128 : Key-In Branch
 		if(!brnchId.equals(String.valueOf(params.get("edit_branchId")))){
-			HasChanges =true;
 			
 			Map frBranchIdMap = new HashMap();
 			Map toBranchIdMap = new HashMap();
@@ -759,7 +755,6 @@ public class SearchPaymentController {
 
 		//1129 : Collector
 		if(!collMemId.equals(String.valueOf(params.get("collMemId")))){
-			HasChanges =true;
 			
 			Map frMemberIdMap = new HashMap();
 			Map toMemberIdMap = new HashMap();
@@ -798,11 +793,10 @@ public class SearchPaymentController {
             collectorMap.put("refIDTo", refIDTo);
             collectorMap.put("createBy", createBy);
             
-            //searchPaymentService.saveChanges(collectorMap);
+            //searchPaymentService.saveChanges(collectorMap); 멤버조회 공통생성되면 그때붙이자
 		}
 		//1137 : Allow Commission
 		if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
-			HasChanges =true;
 			
             String typeID = "1137";
             String payID = String.valueOf(params.get("hiddenPayId"));
@@ -832,12 +826,22 @@ public class SearchPaymentController {
 			
 		if(!brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 			updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
+			
+			EgovMap payD = searchPaymentService.selectPayDs(params);
+			
+			EgovMap glRoute = searchPaymentService.selectGlRoute(payD);
+			
+			if(glRoute != null){
+				glRoute.put("brnchId", String.valueOf(params.get("edit_branchId")));
+				searchPaymentService.updGlReceiptBranchId(glRoute);//PAY0009D 테이블 GL_RECIPT_BRNCH_ID 업데이트
+			}
+			
 		}else{
 			updMap.put("brnchId", "");
 		}
 		
 		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorCode")))){
-			updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorCode")));
+			//updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId"))); todo 입력받은 COLL_MEM_ID 로 업데이트쳐야됨
 		}else{
 			updMap.put("collMemId", "");
 		}

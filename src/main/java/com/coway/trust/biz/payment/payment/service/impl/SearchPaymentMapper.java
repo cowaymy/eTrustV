@@ -132,6 +132,27 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	EgovMap selectBranchCode(Map<String, Object> params);
+	
+	/**
+	 * updGlReceiptBranchId
+	 * @param params
+	 * @return
+	 */
+	void updGlReceiptBranchId(Map<String, Object> params);
+	
+	/**
+	 * selectPayDs   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPayDs(Map<String, Object> params);
+	
+	/**
+	 * selectGlRoute   조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectGlRoute(Map<String, Object> params);
 
 	/**
 	 * PaymentItem 조회
