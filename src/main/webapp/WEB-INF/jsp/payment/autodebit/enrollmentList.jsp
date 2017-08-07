@@ -25,17 +25,7 @@ var gridPros = {
 $(document).ready(function(){
     // AUIGrid 그리드를 생성합니다.
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
-    
-    /*var auiGridProps = {
-            selectionMode : "multipleCells",
-            enableSorting : true,               // 정렬 사용            
-            editable : true,                       // 편집 가능 여부 (기본값 : false)
-            enableMovingColumn : true,      // 칼럼 이동 가능 설정
-            wrapSelectionMove : true         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부            
-    };*/
 
-    
-    
      // 그리드 생성
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	//myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
@@ -47,7 +37,6 @@ $(document).ready(function(){
     
 });
  
-
 
 // AUIGrid 칼럼 설정
 var columnLayout = [ 
@@ -121,7 +110,7 @@ var columnLayout2 = [
             return;
         }
 
-        Common.ajax("GET", "/payment/selectViewEnrollment.do?enrollId="+enrollId, $("#searchForm").serialize(), function(result) {
+        Common.ajax("GET", "/payment/selectViewEnrollment.do",{"enrollId":enrollId}, function(result) {
 
         	$('#enrlId').text(result.enrollInfo.enrlId);
             $('#crtDt').text(result.enrollInfo.crtDt);
