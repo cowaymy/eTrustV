@@ -169,4 +169,11 @@ public interface SearchPaymentService
 	 * @return
 	 */
 	EgovMap selectGlRoute(Map<String, Object> params);
+	
+	/**
+	 * selectPaymentItemIsPassRecon 조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPaymentItemIsPassRecon(Map<String, Object> params);
 }

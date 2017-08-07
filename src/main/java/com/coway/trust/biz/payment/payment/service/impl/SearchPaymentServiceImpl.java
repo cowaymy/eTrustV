@@ -277,4 +277,14 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		return searchPaymentMapper.selectGlRoute(params);
 	}
 	
+	/**
+	 * selectPaymentItemIsPassRecon 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectPaymentItemIsPassRecon(Map<String, Object> params) {
+		return searchPaymentMapper.selectPaymentItemIsPassRecon(params);
+	}
+	
 }

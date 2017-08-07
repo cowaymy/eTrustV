@@ -181,4 +181,11 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	String selectCodeDetail(String payItmCcTypeId);
+	
+	/**
+	 * selectPaymentItemIsPassRecon 조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectPaymentItemIsPassRecon(Map<String, Object> params);
 }
