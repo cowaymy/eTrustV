@@ -80,6 +80,41 @@ public interface SearchPaymentService
 	EgovMap selectPaymentDetailSlaveList(Map<String, Object> params);
 	
 	/**
+	 * PaymentItem 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectPaymentItem(int payItemId);
+	
+	/**
+	 * PaymentDetail 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectPaymentDetail(int payItemId);
+	
+	/**
+	 * PaymentHistory 저장
+	 * @param params
+	 * @return
+	 */
+	int insertPayHistory(PayDVO pay, EgovMap qryDet);
+	
+	/**
+	 * PaymentBankCode 조회
+	 * @param params
+	 * @return
+	 */
+	String selectBankCode(String PayItemIssuedBankID);
+	
+	/**
+	 * PaymentCodeDetail 조회
+	 * @param params
+	 * @return
+	 */
+	String selectCodeDetail(String payItmCcTypeId);
+	
+	/**
 	 * selectPayMaster   조회
 	 * @param params
 	 * @return

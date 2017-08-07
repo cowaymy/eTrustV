@@ -14,6 +14,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.payment.payment.service.PayDVO;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
 import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
@@ -154,6 +155,46 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public EgovMap selectPaymentDetailSlaveList(Map<String, Object> params) {
 		return searchPaymentMapper.selectPaymentDetailSlaveList(params);
+	}
+	
+	/**
+	 * PaymentItem 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectPaymentItem(int payItemId) {
+		return searchPaymentMapper.selectPaymentItem(payItemId);
+	}
+
+	/**
+	 * PaymentDetail 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectPaymentDetail(int payItemId) {
+		// TODO Auto-generated method stub
+		return searchPaymentMapper.selectPaymentDetail(payItemId);
+	}
+	
+	@Override
+	public int insertPayHistory(PayDVO pay, EgovMap qryDet ){
+		
+		
+		return 0;
+	}
+
+	@Override
+	public String selectBankCode(String payItmIssuBankId) {
+		// TODO Auto-generated method stub
+		return searchPaymentMapper.selectBankCode(payItmIssuBankId);
+	}
+
+	@Override
+	public String selectCodeDetail(String payItmCcTypeId) {
+		// TODO Auto-generated method stub
+		return searchPaymentMapper.selectCodeDetail(payItmCcTypeId);
 	}
 	
 	/**

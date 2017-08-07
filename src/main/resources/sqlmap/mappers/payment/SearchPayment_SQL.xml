@@ -19,6 +19,13 @@
         <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="byte[]"/>
         <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
+    
+    <resultMap id="paymentItemMap" type="EgovMap">
+        <result property="payItmCcNo" column="PAY_ITM_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="payItmOriCcNo" column="PAY_ITM_ORI_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
+         <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="byte[]"/>
+        <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
       
     <!--Search Payment Order List(Master Grid) 리스트 조회  -->
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
@@ -844,5 +851,160 @@
 		  FROM SYS0005M Extent1
 		 WHERE  Extent1.BRNCH_ID = #{edit_branchId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
+
+	<select id="selectPaymentItem" parameterType="java.lang.Integer" resultMap="paymentItemMap">
+	   SELECT
+	       Limit1.PAY_ITM_ID PAY_ITM_ID  ,
+	       Limit1.PAY_ID PAY_ID  ,
+	       Limit1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+	       Limit1.CODE_NAME CODE_NAME  ,
+	       Limit1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+	       Limit1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+	       Limit1.C1 PAY_ITM_ORI_CC_NO  ,
+	       Limit1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
+	       Limit1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+	       Limit1.CODENAME1 CODENAME1  ,
+	       Limit1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+	       Limit1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+	       Limit1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+	       Limit1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+	       Limit1.C2 BANK_ID  ,
+	       Limit1.NAME NAME  ,
+	       Limit1.PAY_ITM_AMT PAY_ITM_AMT  ,
+	       Limit1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
+	       Limit1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+	       Limit1.C3 ACC_ID  ,
+	       Limit1.ACC_DESC ACC_DESC  ,
+	       Limit1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+	       Limit1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+	       Limit1.PAY_ITM_REM PAY_ITM_REM  ,
+	       Limit1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+	       Limit1.NAME1 NAME1  ,
+	       Limit1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
+	       Limit1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+	       Limit1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+	       Limit1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+	       Limit1.PAY_ITM_MID PAY_ITM_MID  ,
+	       Limit1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+	       Limit1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+	       Limit1.ETC3 ETC3  ,
+	       Limit1.C4 PAY_ITM_EFT_NO  ,
+	       Limit1.C5 PAY_ITM_RUNNG_NO  ,
+	       Limit1.C6 PAY_ITM_CARD_TYPE_ID  ,
+	       Limit1.C7 CODE_ID  ,
+	       Limit1.C8 IS_ONLINE  
+	  FROM ( SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+	                Extent1.PAY_ID PAY_ID  ,
+	                Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+	                Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+	                Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+	                Extent1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
+	                Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+	                Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+	                Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+	                Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
+	                Extent1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
+	                Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+	                Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+	                Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+	                Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+	                Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+	                Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
+	                Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+	                Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+	                Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+	                Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+	                Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+	                Extent1.ETC3 ETC3  ,
+	                Extent1.PAY_ITM_MID PAY_ITM_MID  ,
+	                Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+	                Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+	                Extent2.CODE_NAME CODE_NAME  ,
+	                Extent3.CODE_NAME CODENAME1  ,
+	                Extent4.NAME NAME  ,
+	                Extent5.ACC_DESC ACC_DESC  ,
+	                Extent6.NAME NAME1  ,
+	                CASE WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO ELSE empty_clob() END C1  ,
+	                CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE ' ' END C2  ,
+	                CASE WHEN ( Extent5.ACC_ID IS NOT NULL ) THEN Extent5.ACC_CODE ELSE ' ' END C3  ,
+	                CASE WHEN ( Extent1.PAY_ITM_EFT_NO IS NOT NULL ) THEN Extent1.PAY_ITM_EFT_NO ELSE ' ' END C4  ,
+	                CASE WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END C5  ,
+	                CASE WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END C6  ,
+	                CASE WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME ELSE ' ' END C7  ,
+	                CASE WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE 
+	                        WHEN ( 1298 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'On'
+	                        WHEN ( 1299 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'Off'
+	                        WHEN ( 1300 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'PNP' ELSE '-' END
+	                     WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
+	                     WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off' ELSE '-' END C8  
+	               FROM PAY0065D Extent1
+		                LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
+		                LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
+		                LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent1.PAY_ITM_ISSU_BANK_ID
+		                LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent1.PAY_ITM_BANK_ACC_ID
+		                LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
+		                LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
+	               WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
+	                   AND ( Extent1.PAY_ITM_ID = #{value} ) AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
+	</select>
+	
+	<select id="selectPaymentDetail" parameterType="java.lang.Integer" resultType="egovMap">
+	   SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+	       Extent1.PAY_ID PAY_ID  ,
+	       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+	       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+	       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+	       Extent1.PAY_ITM_ORI_CC_NO PAY_ITM_ORI_CC_NO  ,
+	       Extent1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
+	       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+	       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+	       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+	       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
+	       Extent1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
+	       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+	       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+	       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+	       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+	       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+	       Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
+	       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+	       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+	       Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+	       Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+	       Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+	       Extent1.PAY_ITM_BANK_BRNCH_ID PAY_ITM_BANK_BRNCH_ID  ,
+	       Extent1.PAY_ITM_BANK_IN_SLIP_NO PAY_ITM_BANK_IN_SLIP_NO  ,
+	       Extent1.PAY_ITM_EFT_NO PAY_ITM_EFT_NO  ,
+	       Extent1.PAY_ITM_CHQ_DEP_RECIPT_NO PAY_ITM_CHQ_DEP_RECIPT_NO  ,
+	       Extent1.ETC1 ETC1  ,
+	       Extent1.ETC2 ETC2  ,
+	       Extent1.ETC3 ETC3  ,
+	       Extent1.PAY_ITM_MID PAY_ITM_MID  ,
+	       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+	       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+	       Extent1.PAY_ITM_BANK_CHRG_ACC_ID PAY_ITM_BANK_CHRG_ACC_ID  ,
+	       Extent1.PAY_ITM_RUNNG_NO PAY_ITM_RUNNG_NO  ,
+	       Extent1.UPD_USER_ID UPD_USER_ID  ,
+	       Extent1.UPD_DT UPD_DT  ,
+	       Extent1.IS_FUND_TRNSFR IS_FUND_TRNSFR  ,
+	       Extent1.SKIP_RECON SKIP_RECON  ,
+	       Extent1.PAY_ITM_CARD_TYPE_ID PAY_ITM_CARD_TYPE_ID  ,
+	       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID  
+	 FROM PAY0065D Extent1
+	 WHERE  Extent1.PAY_ITM_ID = #{value} AND ROWNUM <![CDATA[<=]]> 1
+	</select>
+	
+	<select id="selectBankCode" parameterType="java.lang.String" resultType="java.lang.String">
+	   SELECT CODE
+	   FROM SYS0004M
+	   WHERE BANK_ID = #{value}
+	</select>
+	
+	<select id="selectCodeDetail" parameterType="java.lang.String" resultType="java.lang.String">
+	   SELECT CODE_NAME
+	   FROM SYS0013M
+	   WHERE CODE_ID = #{value}
+	</select>
+	
 
 </mapper>

@@ -107,8 +107,25 @@ var slaveColumnLayout = [
 	{ dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
 	{ dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
     ];
-    
+              
 var popColumnLayout = [ 
+    { dataField:"history" ,
+    	headerText:" ", 
+    	//headerTooltip :{ show : true, tooltipHtml : "View History" },
+    	renderer : {
+            type : "IconRenderer",
+            iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+                "default" : "./assets/office_man.png"// default
+            },
+            iconWidth : 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+            iconHeight : 20,
+            //altField : "View History",
+            onclick : function(rowIndex, columnIndex, value, item) {
+                alert("( " + rowIndex + ", " + columnIndex + " ) " + item.payItmId + "  클릭, " + value);
+                showDetailHistory(item.payItmId);
+            }
+    	}
+    },
     { dataField:"payId" ,headerText:"TEST",editable : false  },
     { dataField:"codeName" ,headerText:"Mode",editable : false},
     { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
@@ -128,6 +145,7 @@ var popColumnLayout = [
     { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
     { dataField:"c4" ,headerText:"EFT" ,editable : false },
     { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
+    { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
     ];
 
 var popSlaveColumnLayout = [ 
@@ -170,6 +188,8 @@ function fn_getPaymentListAjax() {
         AUIGrid.setGridData(subGridID, result);
     });
 }
+
+
 
 function fn_openDivPop(val){
 	if(val == "VIEW"){
@@ -316,12 +336,91 @@ function showViewHistory(){
 	 });
 }
 
-function showDetailHistory(){
+function showDetailHistory(payItemId){
 	$("#view_detail_wrap").show();
 	viewHistoryGridID = GridCommon.createAUIGrid("grid_detail_history", viewHistoryLayout,null,gridPros);
 	Common.ajax("GET", "/payment/selectDetailHistoryList", {"payItemId" : payItemId} , function(result) {
        AUIGrid.setGridData(viewHistoryGridID, result);
     });
+}
+
+function showItemEdit(payItemId){
+	
+	//var payId = 166; var payItemId = 170; //cash
+	//var payId = 2273; var payItemId = 2222; // online
+	var payId = 3877; var payItemId = 3853; //credit card
+    //var payId = 21; var payItemId = 22; //cheque
+	$("#payItemId").val(payItemId);
+	$("#payId").val(payId);
+	    
+	 Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
+		 var payMode = result[0].payItmModeId;
+		 if(payMode == 105){ //cash
+			 $("#item_edit_cash").show();
+			 $("#paymentCa").text(result[0].codeName);
+	         $("#amountCa").text(result[0].payItmAmt);
+	         $("#bankAccCa").text(result[0].accId + result[0].accDesc);
+		 }else if(payMode == 106){//cheque
+			 $("#item_edit_cheque").show();
+			 $("#paymentCh").text(result[0].codeName);
+			 $("#amountCh").text(result[0].payItmAmt);
+			 $("#bankAccCh").text(result[0].accId + result[0].accDesc);
+			 $("#chequeNumberCh").text(result[0].payItmChqNo);
+			 $("#txtRefNumberCh").val(result[0].payItmRefNo);
+			 var refDate = new Date(result[0].payItmRefDt);
+			 var defaultDate = new Date("01-01-1900");
+			 if((refDate.getTime() > defaultDate.getTime()))
+			{
+				 console.log("refDate > defaultDate : " + (refDate.getTime() > defaultDate.getTime()));
+				 $("#txtRefDateCh").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
+			}
+			 $("#txtRunNoCh").val(result[0].payItmRunngNo);
+			 $("#tareaRemarkCh").val(result[0].payItmRem);
+		}else if(payMode == 107){//creditcard
+			  $("#item_edit_credit").show();
+			  $("#paymentCC").text(result[0].codeName);
+			  $("#amountCC").text(result[0].payItmAmt);
+	          $("#bankAccCC").text(result[0].accId + result[0].accDesc);
+	          $("#CCNo").text(result[0].payItmCcNo);
+	          $("#txtCCHolderName").val(result[0].payItmCcHolderName);
+	          var exDt =  result[0].payItmCcExprDt;
+	          if(exDt != undefined){
+	        	    console.log("date : " + exDt);
+	        	    exDt = "01/01/1900";
+	        	    var expiryDate = new Date(exDt);
+	          }
+		 }else if(payMode == 108){//online
+			 $("#item_edit_online").show();
+		 }
+	 });
+	
+   
+    
+  /*  if(view == "cash"){
+        $("#item_edit_cash").show();
+    }else if(view == "creditCard"){
+    	$("#item_edit_credit").show();
+    }else if(view == "cheque"){
+    	$("#item_edit_cheque").show();
+    }else if(view == "online"){
+    	$("#item_edit_online").show();
+    }
+    Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
+    	if(view == "cash"){
+    		$("#paymentCa").text(result[0].codeName);
+            $("#amountCa").text(result[0].payItmAmt);
+            $("#bankAccCa").text(result[0].accId + result[0].accDesc);
+	    }else if(view == "creditCard"){
+	        $("#paymentCC").text(result[0].codeName);
+	        $("#amountCC").text(result[0].payItmAmt);
+	        $("#bankAccCC").text(result[0].accId+Result[0].accDesc);
+	    }else if(view == "cheque"){
+	        
+	    }else if(view == "online"){
+	        
+	    }
+        
+    });*/
 }
 
 function hideViewPopup(){
@@ -333,6 +432,14 @@ function hideViewPopup(){
 function hideDetailPopup(){
 	$("#view_detail_wrap").hide();
     AUIGrid.destroy("#grid_detail_history");
+}
+
+function saveData(){
+	alert("!!!!");
+	
+	 Common.ajax("GET", "/payment/savePaymentDetail", $("#payDetail").serialize(), function(result) {
+		 
+	 });
 }
 
 function saveChanges() {
@@ -522,7 +629,8 @@ function saveChanges() {
 				        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Reverse Payment(Void)</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>				        
+				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>		
+				        <li><p class="link_btn type2"><a href="#" onclick="showItemEdit();">TEMP1</a></p></li>           
 				    </ul>
 				    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
@@ -852,3 +960,342 @@ function saveChanges() {
     <input type="hidden" name="payId" id="payId" />
     <input type="hidden" name="salesOrdId" id="salesOrdId" />
 </form>      
+
+<div id="item_edit_cash" class="popup_wrap size_small" style="display:none;">
+    <header class="pop_header">
+        <h1>PAYMENT ITEM - EDIT</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_body start -->
+    <section class="pop_body">
+    <form id="payDetail" name="payDetail">
+    <table class="type1">
+        <colgroup>
+            <col style="width:165px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>Payment Mode</th>
+            <td id="paymentCa"></td>
+        </tr>
+        <tr>
+            <th>Amount</th>
+            <td id="amountCa"></td>
+        </tr>
+        <tr>
+            <th>Bank Account</th>
+            <td id="bankAccCa"></td>
+        </tr>
+        <tr>
+            <th>Reference No</th>
+            <td id="referenceNoCa">
+                <p><input type="text" name="txtReferenceNoCa" id="txtReferenceNoCa" placeholder="Reference No" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Reference Date</th>
+            <td id="referenceDateCa">
+                 <p><input type="text"  name="txtRefDateCa" id="txtRefDateCa" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Running No</th>
+            <td id="runningNoCa">
+                <p><input type="text" name="txtRunNoCa" id="txtRunNoCa" placeholder="runningNo"/></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Remark</th>
+            <td id="r">
+                <p><textarea id="tareaRemarkCa" name="tareaRemarkCa"></textarea></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> 
+	            <ul class="center_btns">
+	               <li><p class="btn_blue2"><a href="#" onclick="saveData()">save</a></p></li>
+	             </ul>
+             </td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="hidden" id="payItemId" name="payItemId"/>
+    <input type="hidden" id="payId" name="payId"/>
+    </form>
+    </section>
+    <!-- pop_body end -->
+</div>
+<!-- content end -->
+
+<div id="item_edit_credit" class="popup_wrap size_small" style="display:none;">
+    <header class="pop_header">
+        <h1>PAYMENT ITEM - EDIT</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_body start -->
+    <section class="pop_body">
+    <form id="payDetailCC" name="payDetail">
+    <table class="type1">
+        <colgroup>
+            <col style="width:165px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>Payment Mode</th>
+            <td id="paymentCC"></td>
+        </tr>
+        <tr>
+            <th>Amount</th>
+            <td id="amountCC"></td>
+        </tr>
+        <tr>
+            <th>Bank Account</th>
+            <td id="bankAccCC"></td>
+        </tr>
+        <tr>
+            <th>Issued Bank</th>
+            <td id="issuedBankCC">
+                <p><select></select></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Credit Card No</th>
+            <td id="CCNo"></td>
+        </tr>
+        <tr>
+            <th>Credit Card Holder</th>
+            <td id="cCHolder">
+                <p><input type="text" name="txtCCHolderName" id="txtCCHolderName" placeholder="Credit Card Holder Name" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Credit Card Expiry</th>
+            <td id="ccExpiry">
+                <p><input type="text"  name="txtCCExpiry" id="txtCCExpiry"  placeholder="DD/MM/YYYY" class="j_date" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Card Type</th>
+            <td id="cardTypeCC">
+                <p><input type="text" name="cardType" id="cardType"  /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Credit Card Type</th>
+            <td id="cCType">
+                <p><input type="text" name="creditCardType" id="creditCardType" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Credit Card Mode</th>
+            <td id="cCMode"></td>
+        </tr>
+        <tr>
+            <th>Approval Number</th>
+            <td id="approvalNumber"></td>
+        </tr>
+        <tr>
+            <th>Reference No</th>
+            <td id="referenceNoCC">
+                <p><input type="text" name="txtRefNoCC" id="txtRefNoCC" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Reference Date</th>
+            <td id="referenceDateCC">
+                <p><input type="text" name="txtRefDateCC" id="txtRefDateCC" placeholder="DD/MM/YYYY" class="j_date"/></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Running No</th>
+            <td id="runningNoCC">
+                <p><input type="text" name="txtRunningNoCC" id="txtRunningNoCC" placeholder="Running Number"/></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Remark</th>
+            <td id="remarkCC">
+                <p><textarea id="tareaRemarkCC" name="tareaRemarkCC"></textarea></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> 
+                <ul class="center_btns">
+                   <li><p class="btn_blue2"><a href="#" onclick="saveData('creditCard')">save</a></p></li>
+                 </ul>
+             </td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="hidden" id="payItemId" name="payItemId"/>
+    <input type="hidden" id="payId" name="payId"/>
+    </form>
+    </section>
+    <!-- pop_body end -->
+</div>
+<!-- content end -->
+
+<div id="item_edit_cheque" class="popup_wrap size_small" style="display:none;">
+    <header class="pop_header">
+        <h1>PAYMENT ITEM - EDIT</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_body start -->
+    <section class="pop_body">
+    <form id="payDetail" name="payDetail">
+    <table class="type1">
+        <colgroup>
+            <col style="width:165px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>Payment Mode</th>
+            <td id="paymentCh"></td>
+        </tr>
+        <tr>
+            <th>Amount</th>
+            <td id="amountCh"></td>
+        </tr>
+        <tr>
+            <th>Bank Account</th>
+            <td id="bankAccCh"></td>
+        </tr>
+        <tr>
+            <th>Issued Bank</th>
+            <td id="issuedBankCh">
+                <p><select id="sIssuedBankCh" name="sIssuedBankCh"></select></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Cheque Number</th>
+            <td id="chequeNumberCh"></td>
+        </tr>
+        <tr>
+            <th>Reference Number</th>
+            <td id="referenceNumberCh">
+                <p><input type="text" name="txtRefNumberCh" id="txtRefNumberCh" placeholder="Reference Number" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Reference Date</th>
+            <td id="refDateCh">
+                 <p><input type="text"  name="txtRefDateCh" id="txtRefDateCh" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Running No</th>
+            <td id="runningNoCh">
+                <p><input type="text" name="txtRunNoCh" id="txtRunNoCh" placeholder="runningNo" readonly="readonly"/></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Remark</th>
+            <td id="r">
+                <p><textarea id="tareaRemarkCh" name="tareaRemarkCh"></textarea></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> 
+                <ul class="center_btns">
+                   <li><p class="btn_blue2"><a href="#" onclick="saveData()">save</a></p></li>
+                 </ul>
+             </td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="hidden" id="payItemId" name="payItemId"/>
+    <input type="hidden" id="payId" name="payId"/>
+    </form>
+    </section>
+    <!-- pop_body end -->
+</div>
+<!-- content end -->
+<div id="item_edit_online" class="popup_wrap size_small" style="display:none;">
+    <header class="pop_header">
+        <h1>PAYMENT ITEM - EDIT</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_body start -->
+    <section class="pop_body">
+    <form id="payDetail" name="payDetail">
+    <table class="type1">
+        <colgroup>
+            <col style="width:165px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>Payment Mode</th>
+            <td id="paymentOn"></td>
+        </tr>
+        <tr>
+            <th>Amount</th>
+            <td id="amountOn"></td>
+        </tr>
+        <tr>
+            <th>Bank Account</th>
+            <td id="bankAccOn"></td>
+        </tr>
+        <tr>
+            <th>Issued Bank</th>
+            <td id="issuedBankOn">
+                <p><select id="sIssuedBankOn" name="sIssuedBankOn"></select></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Reference No</th>
+            <td id="referenceNoOn">
+                <p><input type="text" name="txtRefNoOn" id="txtRefNoOn" placeholder="Reference Number" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Reference Date</th>
+            <td id="refDateCh">
+                 <p><input type="text"  name="txtRefDateOn" id="txtRefDateOn" title="Create Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>EFT No</th>
+            <td id="runningNoCh">
+                <p><input type="text" name="txtEFTNoOn" id="txtEFTNoOn" /></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Running No</th>
+            <td id="runningNoCh">
+                <p><input type="text" name="txtRunNoOn" id="txtRunNoOn"/></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Remark</th>
+            <td id="r">
+                <p><textarea id="tareaRemarkOn" name="tareaRemarkOn"></textarea></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> 
+                <ul class="center_btns">
+                   <li><p class="btn_blue2"><a href="#" onclick="saveData()">save</a></p></li>
+                 </ul>
+             </td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="hidden" id="payItemId" name="payItemId"/>
+    <input type="hidden" id="payId" name="payId"/>
+    </form>
+    </section>
+    <!-- pop_body end -->
+</div>
+<!-- content end -->

@@ -133,4 +133,31 @@ public interface SearchPaymentMapper {
 	 */
 	EgovMap selectBranchCode(Map<String, Object> params);
 
+	/**
+	 * PaymentItem 조회
+	 * @param payItemId
+	 * @return
+	 */
+	List<EgovMap> selectPaymentItem(int payItemId);
+	
+	/**
+	 * PaymentDetail 조회
+	 * @param payItemId
+	 * @return
+	 */
+	List<EgovMap> selectPaymentDetail(int payItemId);
+	
+	/**
+	 * BankCode 조회
+	 * @param payItemId
+	 * @return
+	 */
+	String selectBankCode(String payItmIssuBankId);
+	
+	/**
+	 *  CodeDetail조회
+	 * @param payItemId
+	 * @return
+	 */
+	String selectCodeDetail(String payItmCcTypeId);
 }
