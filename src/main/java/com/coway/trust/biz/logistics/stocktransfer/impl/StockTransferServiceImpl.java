@@ -35,23 +35,20 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	private StockTransferMapper stocktran;
 
 	@Override
-	public List<EgovMap> selectStockTransferList(Map<String, Object> params) {
+	public List<EgovMap> selectStockTransferMainList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return null;
+		return stocktran.selectStockTransferMainList(params);
 	}
 
 	@Override
-	public void updateStockTransferInfo(Map<String, Object> params) {
+	public void insertStockTransferInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
-		/*List<Object> updList = (List<Object>) params.get("upd");
-		List<Object> delList = (List<Object>) params.get("rem");*/
 		
 		String seq = (String)stocktran.selectStockTransferSeq();
 		
-		System.out.println(" :::::: " + seq);
-		
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
-		fMap.put("reqno" , seq);
+		
+		fMap.put("reqno" , fMap.get("headtitle") + seq);
 		fMap.put("userId", params.get("userId"));
 		
 		
@@ -60,23 +57,109 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		if (insList.size() > 0){
 			for (int i = 0 ; i < insList.size() ; i++){
 	    		Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
-	    		insMap.put("reqno" , seq);
+	    		insMap.put("reqno" , fMap.get("headtitle") + seq);
 	    		insMap.put("userId", params.get("userId"));
 	    		stocktran.insStockTransfer(insMap);
 			}
+		}		
+	}
+
+	@Override
+	public List<EgovMap> selectStockTransferNoList() {
+		// TODO Auto-generated method stub
+		return stocktran.selectStockTransferNoList();
+	}
+
+	@Override
+	public Map<String, Object> StocktransferDataDetail(String param) {
+		
+		Map<String, Object> hdMap = stocktran.selectStockTransferHead(param);
+		
+		List<EgovMap> list = stocktran.selectStockTransferItem(param);
+		
+		Map<String, Object> pMap = new HashMap();
+		pMap.put("toloc", (String)hdMap.get("rcivcr"));
+		
+		List<EgovMap> toList = stocktran.selectStockTransferToItem(pMap);
+		
+		Map<String, Object> reMap = new HashMap();
+		reMap.put("hValue", hdMap);
+		reMap.put("iValue", list);
+		reMap.put("itemto", toList);
+		
+		return reMap;
+	}
+
+	@Override
+	public int stockTransferItemDeliveryQty(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = stocktran.stockTransferItemDeliveryQty(params);
+		int iCnt = 0;
+		try{
+			iCnt = (int)map.get("qty");
+		}catch(Exception ex){
+			iCnt = 0;
 		}
-		/*if (updList.size() > 0){
-			for (int i = 0 ; i < updList.size() ; i++){
-	    		Map<String, Object> updMap = (Map<String, Object>) updList.get(i);
-	    		stocktran.updStockTransfer(updMap);
+		return iCnt;
+	}
+
+	@Override
+	public List<EgovMap> selectTolocationItemList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stocktran.selectStockTransferToItem(params);
+	}
+
+	@Override
+	public void addStockTransferInfo(Map<String, Object> params) {
+		List<Object> insList = (List<Object>) params.get("add");
+		List<Object> updList = (List<Object>) params.get("upd");
+		/*List<Object> delList = (List<Object>) params.get("rem");*/
+		
+		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
+		
+		if (insList.size() > 0){
+			for (int i = 0 ; i < insList.size() ; i++){
+	    		Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+	    		insMap.put("reqno" , fMap.get("reqno"));
+	    		insMap.put("userId", params.get("userId"));	    		
+	    		stocktran.insStockTransfer(insMap);
 			}
 		}
-		if (delList.size() > 0){
-			for (int i = 0 ; i < delList.size() ; i++){
-	    		Map<String, Object> remMap = (Map<String, Object>) delList.get(i);
-	    		stocktran.remStockTransfer(remMap);
-			}	
-		}*/
+		if (updList.size() > 0){
+			for (int i = 0 ; i < updList.size() ; i++){
+	    		Map<String, Object> insMap = (Map<String, Object>) updList.get(i);
+	    		insMap.put("reqno" , fMap.get("reqno"));
+	    		insMap.put("userId", params.get("userId"));	    		
+	    		stocktran.insStockTransfer(insMap);
+			}
+		}
+	}
+	
+	
+	@Override
+	public void deliveryStockTransferInfo(Map<String, Object> params) {
+		List<Object> updList = (List<Object>) params.get("upd");
+		
+		String seq = (String)stocktran.selectDeliveryStockTransferSeq();
+		
+		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
+		
+		fMap.put("reqno" , fMap.get("reqno")   );
+		fMap.put("delno" , seq                 );
+		fMap.put("ttype" , fMap.get("smtype")  );
+		fMap.put("userId", params.get("userId"));	
+		
+		stocktran.deliveryStockTransferIns(fMap);
+		
+		if (updList.size() > 0){
+			for (int i = 0 ; i < updList.size() ; i++){
+	    		Map<String, Object> insMap = (Map<String, Object>) updList.get(i);
+	    		insMap.put("delno" , seq                 );
+	    		insMap.put("userId", params.get("userId"));
+	    		
+	    		stocktran.deliveryStockTransferDetailIns(insMap);
+			}
+		}		
 	}
 
 }

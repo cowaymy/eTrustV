@@ -5,76 +5,241 @@
     <select id="selectStockTransferSeq" resultType="String">
         SELECT  LPAD(LOG0047M_REQST_NO.nextval, 10, '0') FROM  DUAL
     </select>
-    <insert id="insStockTransferHead" parameterType="Map">
-	    INSERT INTO LOG0047M (REQST_NO,
-						      TRNSC_TYPE,
-						      TRNSC_TYPE_DTL,
-						      PRIDIC_FRQNCY,
-						      REQST_CRT_DT,
-						      DOC_HDER_TXT,
-						      RCIV_CDC_RDC,
-						      REQST_CDC_RDC,
-						      CRT_USER_ID,
-						      CRT_DT)
-					 VALUES ( #{headtitle}||#{reqno}
-					        , #{sttype}
-					        , #{smtype}
-					        , #{pridic}
-					        , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
-					        , #{dochdertxt}
-					        , #{flocation}
-					        , #{tlocation}
-					        , #{userId}
-					        , SYSDATE
-					        )
-    </insert>
+    <select id="selectStockTransferMainList" parameterType="Map" resultType="egovMap">
+        select l47.REQST_STUS     status
+		     , reqs.code_name     staname
+		     , l47.reqst_no       reqstno
+		     , l48.reqst_no_itm   reqitmno
+		     , l47.trnsc_type     ttype
+		     , tran.code_name     ttext
+		     , l47.trnsc_type_dtl mtype
+		     , trand.code_name    mtext
+		     , decode(l47.PRIDIC_FRQNCY , 'A' , 'Auto' , 'M' , 'Manual' ,l47.PRIDIC_FRQNCY) froncy
+		     , to_char(l47.reqst_crt_dt , 'yyyy-mm-dd')     crtdt
+		     , to_char(l47.reqst_require_dt , 'yyyy-mm-dd') reqdt
+		     , l47.REF_DOC_NO docno
+		     , l47.DOC_HDER_TXT headtitle
+		     , l47.GOODS_RCIPT grcipt
+		     , l47.RCIV_CDC_RDC rcvloc
+		     , s28c.wh_loc_code rcvlocnm
+		     , DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) rcvlocdesc
+		     , l47.reqst_cdc_rdc reqloc
+		     , s28q.wh_loc_code  reqlocnm
+		     , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
+		     , l48.itm_code      itmcode
+		     , l48.itm_name      itmname
+		     , l48.reqst_qty     reqstqty
+		     , nvl(delv.DELVRY_QTY , 0) as delinote
+		     , nvl(L48.RCIPT_qty , 0) as greceipt
+		     , l48.uom
+		     , uomt.code_name uomnm
+		  from log0047m l47
+		     , log0048d l48
+		     , (select * from sys0013m where code_master_id = 306) tran
+		     , (select * from sys0013m where code_master_id = 308) trand
+		     , (select * from sys0013m where code_master_id = 42) uomt
+		     , (select * from sys0013m where code_master_id = 309) reqs
+		     , sys0028m s28c
+		     , sys0028m s28q
+		     , (select l54.DELVRY_NO, l54.TRNSC_TYPE_DTL, l54.DELVRY_DT, l54.DELVRY_GI_DT, l54.DELVRY_GR_DT, l54.DELVRY_CMPLT, l54.DELVRY_GI_CMPLT, l54.DELVRY_GR_CMPLT, l54.DOC_HDER_TXT, l54.REQST_NO,
+		               l55.ITM_CODE, l55.ITM_NAME, l55.DELVRY_QTY 
+		          from log0054m l54 , log0055d l55 
+		         where l54.delvry_no = l55.delvry_no) delv
+		 where 1 =1 
+		   and l47.reqst_no       = l48.reqst_no
+		   and l47.trnsc_type     = tran.code(+)
+		   and l47.trnsc_type_dtl = trand.code(+)
+		   and l47.rciv_cdc_rdc   = s28c.wh_loc_id(+)
+		   and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
+		   and l48.uom            = uomt.code_id
+		   and l47.reqst_no       = delv.reqst_no(+)
+		   and l47.reqst_stus     = reqs.code(+)
+		   <if test="streq !=null and streq !=''">
+		      and l47.reqst_no = #{streq}
+		   </if>
+		   <if test="smtype !=null and smtype !=''">
+              and l47.trnsc_type_dtl = #{smtype}
+           </if>
+           <if test="sttype !=null and sttype !=''">
+              and l47.trnsc_type = #{sttype}
+           </if>
+           <if test="flocation !=null and flocation !=''">
+              and l47.rciv_cdc_rdc = #{flocation}
+           </if>
+           <if test="tlocation !=null and tlocation !=''">
+              and l47.reqst_cdc_rdc = #{tlocation}
+           </if>
+           <if test="sam !=null and sam !=''">
+              and l47.PRIDIC_FRQNCY = #{sam}
+           </if>
+           <if test="crtsdt !=null and crtsdt !=''">
+              and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(${crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="crtedt !=null and crtedt !=''">
+              and to_char(l47.reqst_crt_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(${crtedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+            <if test="reqsdt !=null and reqsdt !=''">
+              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(${reqsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="reqedt !=null and reqedt !=''">
+              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(${reqedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="sstatus !=null and sstatus !=''">
+              and l47.reqst_stus = #{sstatus}
+           </if>
+           
+    </select> 
+<!--     <insert id="insStockTransferHead" parameterType="Map"> -->
+<!-- 	    INSERT INTO LOG0047M (REQST_NO, -->
+<!-- 						      TRNSC_TYPE, -->
+<!-- 						      TRNSC_TYPE_DTL, -->
+<!-- 						      PRIDIC_FRQNCY, -->
+<!-- 						      REQST_CRT_DT, -->
+<!-- 						      REQST_REQUIRE_DT, -->
+<!-- 						      DOC_HDER_TXT, -->
+<!-- 						      RCIV_CDC_RDC, -->
+<!-- 						      REQST_CDC_RDC, -->
+<!-- 						      REQST_STUS, -->
+<!-- 						      CRT_USER_ID, -->
+<!-- 						      CRT_DT) -->
+<!-- 					 VALUES ( #{reqno} -->
+<!-- 					        , #{sttype} -->
+<!-- 					        , #{smtype} -->
+<!-- 					        , #{pridic} -->
+<!-- 					        , SYSDATE -->
+<!-- 					        , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss') -->
+<!-- 					        , #{dochdertxt} -->
+<!-- 					        , #{flocation} -->
+<!-- 					        , #{tlocation} -->
+<!-- 					        , 'O' -->
+<!-- 					        , #{userId} -->
+<!-- 					        , SYSDATE -->
+<!-- 					        ) -->
+<!--     </insert> -->
     
     
     <insert id="insStockTransfer" parameterType="Map">
-        INSERT INTO LOG0048D ( REQST_NO, REQST_NO_ITM
-                      ,ITM_CODE, ITM_NAME, REQST_QTY, UOM, CRT_USER_ID, CRT_DT)
-             VALUES  ( #{headtitle}||#{reqno} , (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno})
-                     , #{itmcd} , #{itmname}, #{rqty} ,#{uom} , #{userId}       , SYSDATE)
+        MERGE INTO LOG0048D A
+             USING DUAL
+                ON (A.REQST_NO = #{reqno} and REQST_NO_ITM = #{resnoitm})
+            WHEN MATCHED THEN
+                UPDATE SET 
+                       A.REQST_QTY = #{rqty}
+                     , A.UOM       = #{uom}
+                     , A.CRT_USER_ID = #{userId}
+                     , A.CRT_DT      = SYSDATE
+            WHEN NOT MATCHED THEN 
+                INSERT ( REQST_NO, REQST_NO_ITM
+                        ,ITM_CODE, ITM_NAME, REQST_QTY, UOM, CRT_USER_ID, CRT_DT)
+                VALUES ( #{reqno} , (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno})
+                        ,#{itmcd} , #{itmname}, #{rqty} ,#{uom} , #{userId}       , SYSDATE)
     </insert> 
     
-    <update id="updStockTransfer" parameterType="Map">
+    <update id="insStockTransferHead" parameterType="Map">
         MERGE INTO LOG0047M  a
              USING dual
                 on (a.REQST_NO=#{reqno}) 
               WHEN MATCHED THEN
                    UPDATE SET
-                          a.TRNSC_TYPE      =   #{sttype}                                                                     
-                       ,  a.TRNSC_TYPE_DTL  =   #{smtype}                                                                     
-                       ,  a.PRIDIC_FRQNCY   =   #{pridic}                                                                     
-                       ,  a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss') 
+                          a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss') 
                        ,  a.DOC_HDER_TXT    =   #{dochdertxt}                                                                 
-                       ,  a.RCIV_CDC_RDC    =   #{flocation}                                                                  
-                       ,  a.REQST_CDC_RDC   =   #{tlocation}                                                                  
                        ,  a.CRT_USER_ID     =   #{userId}                                                                     
                        ,  a.CRT_DT          =   SYSDATE 
               WHEN NOT MATCHED THEN
                        INSERT (REQST_NO,
-                                     TRNSC_TYPE,
-                                     TRNSC_TYPE_DTL,
-                                     PRIDIC_FRQNCY,
-                                     REQST_CRT_DT,
-                                     DOC_HDER_TXT,
-                                     RCIV_CDC_RDC,
-                                     REQST_CDC_RDC,
-                                     CRT_USER_ID,
-                                     CRT_DT)
-                            VALUES ( #{reqno}
-                                   , #{sttype}
-                                   , #{smtype}
-                                   , #{pridic}
-                                   , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
-                                   , #{dochdertxt}
-                                   , #{flocation}
-                                   , #{tlocation}
-                                   , #{userId}
-                                   , SYSDATE
-                                   )
+                              TRNSC_TYPE,
+                              TRNSC_TYPE_DTL,
+                              PRIDIC_FRQNCY,
+                              REQST_CRT_DT,
+                              REQST_REQUIRE_DT,
+                              DOC_HDER_TXT,
+                              RCIV_CDC_RDC,
+                              REQST_CDC_RDC,
+                              REQST_STUS,
+                              CRT_USER_ID,
+                              CRT_DT)
+                            VALUES (  #{reqno}
+		                            , #{sttype}
+		                            , #{smtype}
+		                            , #{pridic}
+		                            , SYSDATE
+		                            , to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+		                            , #{dochdertxt}
+		                            , #{flocation}
+		                            , #{tlocation}
+		                            , 'O'
+		                            , #{userId}
+		                            , SYSDATE
+		                            )
     </update>
     
+    <select id="selectStockTransferNoList" parameterType="Map" resultType="egovMap">
+        SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m ORDER BY CRT_DT DESC
+    </select>
+    <select id="selectStockTransferHead" parameterType="String" resultType="egovMap">
+        SELECT REQST_NO REQNO , TRNSC_TYPE TRNTYPE , TRNSC_TYPE_DTL TRNDTL , PRIDIC_FRQNCY PRIFR , TO_CHAR(REQST_CRT_DT , 'DD/MM/YYYY') REQCRTDT
+		     , DOC_HDER_TXT DOCTXT , RCIV_CDC_RDC RCIVCR , REQST_CDC_RDC REQCR, REQST_STUS REQST
+		  FROM LOG0047M
+		 WHERE REQST_NO = #{param} 
+    </select>
+    <select id="selectStockTransferItem" parameterType="String" resultType="egovMap">
+        SELECT l48.REQST_NO_ITM resnoitm ,s26.STK_ID itmid, l48.ITM_CODE itmcd, l48.ITM_NAME itmname , l48.REQST_QTY rqty , UOM uom from  LOG0048D l48, sys0026m s26
+		 WHERE l48.ITM_CODE = s26.STK_CODE
+		   AND l48.REQST_NO = #{param}           
+		 ORDER BY l48.REQST_NO_ITM 
+    </select>
     
+    <select id="selectStockTransferToItem" parameterType="Map" resultType="egovMap">
+        select l56.loc_id locid, l56.stk_code stkcd, DBMS_LOB.SUBSTR (l56.stk_desc, 4000) stknm
+		     , l56.stk_type_id typeid , s15.code_name typenm
+		     , l56.stk_ctgry_id cateid , s11.code_name catenm
+		     , l56.qty , s26.stk_id stkid
+		  from log0056m l56 , sys0026m s26
+		     , (select * from sys0013m where code_master_id = 15) s15
+		     , (select * from sys0013m where code_master_id = 11) s11 
+		 where 1 = 1
+		   and l56.stk_type_id = s15.code_id
+		   and l56.stk_ctgry_id = s11.code_id
+		   and l56.stk_code = s26.stk_code
+		   and l56.loc_id = #{toloc}
+		   <if test="ctype != null and ctype !=''">
+		      and l56.stk_type_id = #{ctype}
+		   </if>
+    </select>
+    
+    <select id="stockTransferItemDeliveryQty" parameterType="Map" resultType="egovMap">
+        select qty 
+		  from log0056m l56 
+		 where 1 = 1
+		   and l56.loc_id = #{toloc}
+		   and l56.stk_code = #{itmcd}
+    </select>
+    
+    <select id="selectDeliveryStockTransferSeq" resultType="String">
+        SELECT  'DVR'||LPAD(LOG0054M_REQST_NO.nextval, 10, '0') FROM  DUAL
+    </select>
+    <insert id="deliveryStockTransferIns" parameterType="Map">
+        INSERT INTO LOG0054M (
+							    DELVRY_NO
+							  , TRNSC_TYPE_DTL
+							  , DELVRY_DT
+							  , REQST_NO
+							  , CRT_USER_ID
+							  , CRT_DT
+							) VALUES(
+							    #{delno}
+							  , #{ttype}
+							  , to_char(sysdate , 'yyyymmdd')
+							  , #{reqno}
+							  , #{userId}
+							  , SYSDATE
+							)
+    </insert>
+    
+    <insert id="deliveryStockTransferDetailIns" parameterType="Map">
+        INSERT INTO LOG0055D (  DELVRY_NO, DELVRY_NO_ITM
+		                      , ITM_CODE, ITM_NAME, DELVRY_QTY, CRT_USER_ID, CRT_DT)
+		            VALUES   (  #{delno} , (select decode(count(DELVRY_NO_ITM) , 0 , 1 , max(DELVRY_NO_ITM +1)) from log0055d where DELVRY_NO = 0)
+		                      , #{itmcd} , #{itmname}, #{deliqty} , ${userId} , SYSDATE)
+    </insert>
 </mapper>

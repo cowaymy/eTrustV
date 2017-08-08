@@ -61,14 +61,55 @@ public class StocktransferController {
 	
 
 	@RequestMapping(value = "/StocktransferIns.do")
-	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String stockins(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		return "logistics/StockTrans/StockTransferIns";
 	}
+	
+	@RequestMapping(value = "/StocktransferList.do")
+	public String stocklist(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-	@RequestMapping(value = "/StocktransferList.do", method = RequestMethod.POST)
+		return "logistics/StockTrans/StockTransferList";
+	}
+	
+	@RequestMapping(value = "/StocktransferView.do" , method = RequestMethod.POST)
+	public String stockview(Model model, HttpServletRequest request, HttpServletResponse response ) throws Exception {
+		String streq     = request.getParameter("streq");
+		String sttype    = request.getParameter("sttype");
+		String smtype    = request.getParameter("smtype");
+		String tlocation = request.getParameter("tlocation");
+		String flocation = request.getParameter("flocation");
+		String crtsdt    = request.getParameter("crtsdt");
+		String crtedt    = request.getParameter("crtedt");
+		String reqsdt    = request.getParameter("reqsdt");
+		String reqedt    = request.getParameter("reqedt");
+		String sam       = request.getParameter("sam");
+		String sstatus   = request.getParameter("sstatus");
+		String rStcode   = request.getParameter("rStcode");
+		
+		Map<String, Object> map = new HashMap();
+		map.put("streq"    , streq    );
+		map.put("sttype"   , sttype   );
+		map.put("smtype"   , smtype   );
+		map.put("tlocation", tlocation);
+		map.put("flocation", flocation);
+		map.put("crtsdt"   , crtsdt   );
+		map.put("crtedt"   , crtedt   );
+		map.put("reqsdt"   , reqsdt   );
+		map.put("reqedt"   , reqedt   );
+		map.put("sam"      , sam      );
+		map.put("sstatus"  , sstatus  );
+		
+		model.addAttribute("searchVal", map);
+		model.addAttribute("rStcode", rStcode);
+		
+		return "logistics/StockTrans/StockTransferView";
+	}
+
+	@RequestMapping(value = "/StocktransferSearchList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> selectLocationList(@RequestBody Map<String, Object> params, Model model) throws Exception {
-		List<EgovMap> list = stock.selectStockTransferList(params);
+		
+		List<EgovMap> list = stock.selectStockTransferMainList(params);
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -77,7 +118,7 @@ public class StocktransferController {
 	}
 	
 	@RequestMapping(value = "/StocktransferAdd.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> materialUpdateItemType(@RequestBody Map<String, Object> params,
+	public ResponseEntity<ReturnMessage> StocktransferAdd(@RequestBody Map<String, Object> params,
 			Model model) {
 
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
@@ -97,7 +138,116 @@ public class StocktransferController {
 		//param.put("rem", remList);
 		param.put("form", formMap);
 		param.put("userId", 999999999);
-		stock.updateStockTransferInfo(param);
+		stock.insertStockTransferInfo(param);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/StocktransferReqAdd.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> StocktransferReqAdd(@RequestBody Map<String, Object> params,
+			Model model) {
+
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
+		//Map<String , Object> formMap = (Map<String, Object>) formList.get(0);
+		
+		
+		logger.debug("insList :::: " + insList.size());
+		
+		Map<String, Object> param = new HashMap();
+		param.put("add", insList);
+		param.put("upd", updList);
+		param.put("form", formMap);
+		param.put("userId", 999999999);
+		
+		stock.addStockTransferInfo(param);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectStockTransferNo.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
+
+		logger.debug("groupCode : {}", params.get("groupCode"));
+
+		List<EgovMap> codeList = stock.selectStockTransferNoList();
+		return ResponseEntity.ok(codeList);
+	}
+	
+	@RequestMapping(value = "/StocktransferDataDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> StocktransferDataDetail( Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String rstonumber = request.getParameter("rStcode");
+		System.out.println(" ::: " + rstonumber);
+		Map<String, Object> map = stock.StocktransferDataDetail(rstonumber);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/stockTransferItemDeliveryQty.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> stockTransferItemDeliveryQty( Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String toloc = request.getParameter("toloc");
+		String itmcd = request.getParameter("itmcd");
+		int iCnt = 0;
+		Map<String, Object> map = new HashMap();
+		map.put("toloc", toloc);
+		map.put("itmcd", itmcd);
+		
+		iCnt = (int)stock.stockTransferItemDeliveryQty(map);
+		
+		map.put("iqty", iCnt);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	@RequestMapping(value = "/stockTransferTolocationItemList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> stockTransferTolocationItemList( Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String[] type = request.getParameterValues("cType");
+		String toloc = request.getParameter("slocation");
+		
+		
+		Map<String, Object> smap = new HashMap();
+		smap.put("ctype", type);
+		smap.put("toloc", toloc);
+		
+		List<EgovMap> list = stock.selectTolocationItemList(smap);
+		
+		smap.put("data", list);
+
+		return ResponseEntity.ok(smap);
+	}
+	@RequestMapping(value = "/StocktransferDelivery.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> StocktransferDelivery(@RequestBody Map<String, Object> params,
+			Model model) {
+
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
+		//Map<String , Object> formMap = (Map<String, Object>) formList.get(0);
+		
+		Map<String, Object> param = new HashMap();
+		param.put("upd", updList);
+		param.put("form", formMap);
+		param.put("userId", 999999999);
+		
+		stock.deliveryStockTransferInfo(param);
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();

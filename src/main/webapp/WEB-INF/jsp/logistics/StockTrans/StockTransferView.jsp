@@ -40,11 +40,10 @@ var rescolumnLayout=[{dataField:"locid"     ,headerText:"Location"          ,wid
                      {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30},
                      {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:true}
                     ];
-                    
 var reqcolumnLayout;
 
-var resop = {showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
-var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
+var resop = {showRowCheckColumn : true , usePaging : true,useGroupingPanel : false , Editable:false};
+var reqop = {showRowCheckColumn : true , usePaging : true,useGroupingPanel : false , Editable:true};
 
 var uomlist = f_getTtype('42' , '');
 var paramdata;
@@ -52,45 +51,16 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     ***********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , '');
+    
+    var hdData;
+    
+    mainSearchFunc();
+    
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
     $("#cancelTr").hide();
     /**********************************
      * Header Setting End
      ***********************************/
-    
-     reqcolumnLayout=[{dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
-                      {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30},
-                      {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30},
-                      {dataField:"avqty"     ,headerText:"Available Qty"  ,width:120    ,height:30},
-                      {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
-                      {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
-                          ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
-                              var retStr = "";
-                              
-                              for(var i=0,len=uomlist.length; i<len; i++) {
-                                  if(uomlist[i]["codeId"] == value) {
-                                      retStr = uomlist[i]["codeName"];
-                                      break;
-                                  }
-                              }
-                              return retStr == "" ? value : retStr;
-                          },editRenderer : 
-                          {
-                             type : "ComboBoxRenderer",
-                             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                             list : uomlist,
-                             keyField : "codeId",
-                             valueField : "codeName"
-                          }
-                      }
-                     ];
-    
-    resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
-    reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout,"", reqop);
     
     AUIGrid.bind(resGrid, "addRow", function(event){});
     AUIGrid.bind(reqGrid, "addRow", function(event){});
@@ -108,6 +78,16 @@ $(document).ready(function(){
     		$("#sUrl").val("/logistics/material/materialcdsearch.do");
     		Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
     	}
+    	if (event.dataField == "qty"){
+    		var data = "toloc="+$("#tlocation").val()+"&itmcd="+AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd");
+            Common.ajax("Get", "/logistics/stocktransfer/stockTransferItemDeliveryQty.do", data, function(result) {
+                if (result.iqty > 0){
+                    
+                }else{
+                    Common.alert('No input data field');
+                }
+            });
+    	}
     });
     
     AUIGrid.bind(resGrid, "cellClick", function( event ) {});
@@ -124,35 +104,52 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	//if (f_validatation('search')){
-    		console.log($("#tlocation").val());
+    	if (f_validatation('search')){
     	    $("#slocation").val($("#tlocation").val());
-    	    SearchListAjax();
-    	//}
+    	}
     });
     $('#clear').click(function() {
+    });
+    $('#delivery').click(function() {
+    	$("#smtype").attr("disabled" , false);
+    	var dat = GridCommon.getEditData(reqGrid);
+    	dat.form = $("#headForm").serializeJSON();
+    	
+    	console.log(dat);
+    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferDelivery.do", dat, function(result) {
+            Common.alert(result.message);
+            AUIGrid.resetUpdatedItems(reqGrid, "all");
+            
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+            } catch (e) {
+            }
+
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
+    	$("#smtype").attr("disabled" , true);
     });
     $('#reqadd').click(function() {
     	f_AddRow();
     });
     $('#reqdel').click(function(){
     });
-    $('#save').click(function() {
-    	if (f_validatation('save')){
-	    	var dat = GridCommon.getEditData(reqGrid);
-	    	dat.form = $("#headForm").serializeJSON();
-	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
-	            Common.alert(result.message);
-	            AUIGrid.resetUpdatedItems(reqGrid, "all");
-	            
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }
-	
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
-    	}
+    $('#reqsave').click(function() {
+    	
+    	var dat = GridCommon.getEditData(reqGrid);
+    	dat.form = $("#headForm").serializeJSON();
+    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqAdd.do", dat, function(result) {
+            Common.alert(result.message);
+            AUIGrid.resetUpdatedItems(reqGrid, "all");
+            
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+            } catch (e) {
+            }
+
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
+    	
     });
     $("#sttype").change(function(){
     	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
@@ -162,59 +159,122 @@ $(function(){
         
     });
     $("#rightbtn").click(function(){
-        checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
-        if (checkedItems.length > 0){
-	        var rowPos = "first";
-	        var item = new Object();
-	        var rowList = [];
-	        
-	        for (var i = 0 ; i < checkedItems.length ; i++){
-	            rowList[i] = {
-	                itmid : checkedItems[i].stkid,
-	                itmcd : checkedItems[i].stkcd,
-	                itmname : checkedItems[i].stknm
-	            }
-	        }
-	        
-	        AUIGrid.addRow(reqGrid, rowList, rowPos);
+    	checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
+    	if (checkedItems.length > 0){
+            var rowPos = "first";
+            var item = new Object();
+            var rowList = [];
+            
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                rowList[i] = {
+                    itmid : checkedItems[i].stkid,
+                    itmcd : checkedItems[i].stkcd,
+                    itmname : checkedItems[i].stknm
+                }
+            }
+            
+            AUIGrid.addRow(reqGrid, rowList, rowPos);
         }
     });
 });
 
-function f_validatation(v){
-	if ($("#sttype").val() == null || $("#sttype").val() == undefined || $("#sttype").val() == ""){
-        Common.alert("Please select one of Transaction Type.");
-        return false;
-    }
-    if ($("#smtype").val() == null || $("#smtype").val() == undefined || $("#smtype").val() == ""){
-        Common.alert("Please select one of Transfer Type Detail.");
-        return false;
-    }
-    if ($("#tlocation").val() == null || $("#tlocation").val() == undefined || $("#tlocation").val() == ""){
-        Common.alert("Please select one of To Location.");
-        return false;
-    }
-    if ($("#flocation").val() == null || $("#flocation").val() == undefined || $("#flocation").val() == ""){
-        Common.alert("Please select one of From Location.");
-        return false;
-    }
-    if (v == 'save'){
-    	if ($("#reqcrtdate").val() == null || $("#reqcrtdate").val() == undefined || $("#reqcrtdate").val() == ""){
-    		Common.alert("Please enter Document Date.");
-    		return false;
-    	}
-    }
-    return true;
+function mainSearchFunc(){
+	var param = "rStcode=${rStcode }";
+	$.ajax({
+        type : "GET",
+        url : "/logistics/stocktransfer/StocktransferDataDetail.do",
+        data : param,
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        async:false,
+        success : function(data) {
+            hdData = data.hValue;
+            headFunc(data.hValue);
+            requestList(data.iValue);
+            reciveList(data.itemto)
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        },
+        complete: function(){
+        }
+    });
+}
+function headFunc(data){
+	//console.log(data);
+	$("#reqno").val(data.reqno);
+	$("#reqcrtdate").val(data.reqcrtdt);
+	
+	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
+    doGetComboData('/common/selectCodeList.do', paramdata, data.trntype ,'sttype', 'S' , '');
+    paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:data.trntype};
+    doGetComboData('/common/selectCodeList.do', paramdata, data.trndtl,'smtype', 'S' , '');
     
+    doGetCombo('/common/selectStockLocationList.do', '', data.rcivcr,'tlocation', 'S' , '');
+    $("#tlocation").attr("disabled",true);
+    doGetCombo('/common/selectStockLocationList.do', '', data.reqcr,'flocation', 'S' , '');
+    
+	$("#dochdertxt").val(data.doctxt);
+	$("#dochdertxt").prop("readonly","readonly");
+	
+	$("#reqcrtdate").attr("disabled",true);
+	$("#sttype").attr("disabled",true);
+	$("#smtype").attr("disabled",true);
+	$("#flocation").attr("disabled",true);
+	//$("#dochdertxt").prop("class","readonly w100p");
+	$("#pridic").val(data.prifr);
+	
+	//$("#reqcrtdate").prop("class","readonly w100p");//class="j_date"
+}
+
+function requestList(data){
+	reqcolumnLayout=[{dataField:"resnoitm"  ,headerText:"ITEM_NO"        ,width:120    ,height:30 , visible:false},
+	                 {dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
+                     {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30},
+                     {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30},
+                     {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
+                     {dataField:"deliqty"   ,headerText:"Delivery Qty"   ,width:120    ,height:30},
+                     {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
+                         ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+                             var retStr = "";
+                             
+                             for(var i=0,len=uomlist.length; i<len; i++) {
+                                 if(uomlist[i]["codeId"] == value) {
+                                     retStr = uomlist[i]["codeName"];
+                                     break;
+                                 }
+                             }
+                             return retStr == "" ? value : retStr;
+                         },editRenderer : 
+                         {
+                            type : "ComboBoxRenderer",
+                            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                            list : uomlist,
+                            keyField : "codeId",
+                            valueField : "codeName"
+                         }
+                     }
+                    ];
+   
+    reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout,"", reqop);
+	
+    AUIGrid.setGridData(reqGrid, data);
+}
+
+
+function reciveList(data){
+	resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
+	AUIGrid.setGridData(resGrid, data);
 }
 
 function SearchListAjax() {
-    console.log($("#slocation").val());
-    var url = "/logistics/stocktransfer/stockTransferTolocationItemList.do";
+
+    var url = "/logistics/organization/MaintainmovementList.do";
     var param = $('#searchForm').serialize();
-    console.log(param);
-    Common.ajax("GET" , url , param , function(result){
-    	AUIGrid.setGridData(resGrid, result.data);
+    Common.ajax("GET" , url , param , function(data){
+    	
+    	
+        //AUIGrid.setGridData(myGridID, data.data);
     });
 }
 
@@ -305,6 +365,10 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
+<ul class="right_btns">
+    <li><p class="btn_blue"><a id="edit"><span class="edit"></span>Edit</a></p></li>
+    <li><p class="btn_blue"><a id="list"><span class="list"></span>List</a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -381,8 +445,8 @@ function f_multiCombo() {
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="searchForm" name="searchForm" >
-<input type="hidden" id="slocation" name="slocation">
+<form id="searchFrom" method="post">
+<input type="hidden" id="slocation">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -462,8 +526,10 @@ function f_multiCombo() {
 <div class="border_box" style="height:340px;"><!-- border_box start -->
 
 <ul class="right_btns">
+    <li><p class="btn_grid"><a id="delivery">Delivery</a></p></li>
     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li>
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
+    <li><p class="btn_grid"><a id="reqsave">SAVE</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -481,9 +547,9 @@ function f_multiCombo() {
 
 </div><!-- divine_auto end -->
 
-<ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
-</ul>
+<!-- <ul class="center_btns mt20"> -->
+<!--     <li><p class="btn_blue2 big"><a id="save">Save</a></p></li> -->
+<!-- </ul> -->
 
 </section><!-- search_result end -->
 <form id='popupForm'>

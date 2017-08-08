@@ -16,8 +16,19 @@ import com.coway.trust.cmmn.model.LoginVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface StockTransferService {
-	List<EgovMap>selectStockTransferList(Map<String, Object> params);
+	List<EgovMap> selectStockTransferMainList(Map<String, Object> params);
 	
-	void updateStockTransferInfo(Map<String, Object> params);
+	void insertStockTransferInfo(Map<String, Object> params);
 	
+	void addStockTransferInfo(Map<String, Object> params);
+	
+	List<EgovMap> selectStockTransferNoList();
+	
+	Map<String, Object> StocktransferDataDetail(String param);
+	
+	int stockTransferItemDeliveryQty(Map<String, Object> params);
+	
+	List<EgovMap> selectTolocationItemList(Map<String, Object> params);
+	
+	void deliveryStockTransferInfo(Map<String, Object> params);
 }
