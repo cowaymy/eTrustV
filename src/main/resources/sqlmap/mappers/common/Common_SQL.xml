@@ -2,6 +2,206 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
 
+  <delete id="deletePgmId" parameterType="Map">
+      DELETE SYS0050M  WHERE PGM_CODE  = #{pgmCode}
+  </delete>
+          
+  <update id="updPgmIdTrans" parameterType="Map">
+      UPDATE SYS0050M
+         SET FUNC_VIEW        = #{funcView} 
+            ,FUNC_CHNG        = #{funcChng}
+            ,FUNC_PRT         = #{funcPrt}
+       <choose>
+         <when test='funcUserDfn1 == "Y" and descUserDfn1 == null '>
+             ,FUNC_USER_DFN1   = 'N'
+             ,DESC_USER_DFN1   = ''
+         </when>
+         <when test='funcUserDfn1 == "N" '>
+             ,FUNC_USER_DFN1   = 'N'
+             ,DESC_USER_DFN1   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN1   = #{funcUserDfn1}
+             ,DESC_USER_DFN1   = #{descUserDfn1} 
+         </otherwise>
+       </choose>
+       
+       <choose>
+         <when test='funcUserDfn2 == "Y" and descUserDfn2 == null '>
+             ,FUNC_USER_DFN2   = 'N'
+             ,DESC_USER_DFN2   = ''
+         </when>
+         <when test='funcUserDfn2 == "N" '>
+             ,FUNC_USER_DFN2   = 'N'
+             ,DESC_USER_DFN2   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN2   = #{funcUserDfn2}
+             ,DESC_USER_DFN2   = #{descUserDfn2} 
+         </otherwise>
+       </choose>
+       
+       <choose>
+         <when test='funcUserDfn3 == "Y" and descUserDfn3 == null '>
+             ,FUNC_USER_DFN3   = 'N'
+             ,DESC_USER_DFN3   = ''
+         </when>
+         <when test='funcUserDfn3 == "N" '>
+             ,FUNC_USER_DFN3   = 'N'
+             ,DESC_USER_DFN3   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN3   = #{funcUserDfn3}
+             ,DESC_USER_DFN3   = #{descUserDfn3} 
+         </otherwise>
+       </choose>
+       
+       <choose>
+         <when test='funcUserDfn4 == "Y" and descUserDfn4 == null '>
+             ,FUNC_USER_DFN4   = 'N'
+             ,DESC_USER_DFN4   = ''
+         </when>
+         <when test='funcUserDfn4 == "N" '>
+             ,FUNC_USER_DFN4   = 'N'
+             ,DESC_USER_DFN4   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN4   = #{funcUserDfn4}
+             ,DESC_USER_DFN4   = #{descUserDfn4} 
+         </otherwise>
+       </choose>
+       
+       <choose>
+         <when test='funcUserDfn5 == "Y" and descUserDfn5 == null '>
+             ,FUNC_USER_DFN5   = 'N'
+             ,DESC_USER_DFN5   = ''
+         </when>
+         <when test='funcUserDfn5 == "N" '>
+             ,FUNC_USER_DFN5   = 'N'
+             ,DESC_USER_DFN5   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN5   = #{funcUserDfn5}
+             ,DESC_USER_DFN5   = #{descUserDfn5} 
+         </otherwise>
+       </choose>
+            ,UPD_USER_ID      = #{updUserId}
+            ,UPD_DT           = SYSDATE
+       WHERE PGM_CODE         = #{pgmCode}
+  </update>
+  
+  <update id="updatePgmId" parameterType="Map">
+      UPDATE SYS0050M
+         SET PGM_NAME    = #{pgmName}
+            ,PGM_PATH    = #{pgmPath}
+            ,PGM_DESC    = #{pgmDesc}
+            ,UPD_USER_ID = #{updUserId}
+            ,UPD_DT      = SYSDATE
+       WHERE PGM_CODE    = #{pgmCode}
+  </update>
+    
+  <insert id="insertPgmId" parameterType="Map">
+   INSERT INTO SYS0050M
+          (                        
+             PGM_CODE
+            ,PGM_NAME
+            ,PGM_PATH  
+            ,PGM_DESC
+            ,FUNC_VIEW         
+            ,FUNC_CHNG        
+            ,FUNC_PRT         
+            ,FUNC_USER_DFN1
+            ,FUNC_USER_DFN2
+            ,FUNC_USER_DFN3
+            ,FUNC_USER_DFN4
+            ,FUNC_USER_DFN5
+            ,CRT_USER_ID
+            ,CRT_DT
+            ,UPD_USER_ID
+            ,UPD_DT
+          )
+    VALUES
+         (
+           ( SELECT #{orgCode} || LPAD(DECODE(COUNT(1),0,'1',MAX(PGMID_SEQ)+1),3,'0') PGMCD FROM
+					    (
+					     SELECT CASE WHEN  (( SELECT COUNT (A.PGM_CODE) FROM SYS0050M A  WHERE A.PGM_CODE = #{orgCode} || '001') > 0  )  THEN SUBSTR(B.PGM_CODE,4,6)  ELSE '0' END PGMID_SEQ
+					       FROM SYS0050M B GROUP BY (SUBSTR(B.PGM_CODE,4,6))
+					     )
+            )          
+            ,#{pgmName}
+            ,#{pgmPath}
+            ,#{pgmDesc}
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,#{crtUserId}
+            ,SYSDATE
+            ,#{updUserId}
+            ,SYSDATE
+         )
+  </insert>  
+
+  <select id="selectProgramList" parameterType="Map" resultType="egovMap">
+		SELECT   
+		       PGM_CODE
+		      ,SUBSTR(PGM_CODE,1,3) ORG_CODE
+		      ,PGM_NAME
+		      ,PGM_PATH
+		      ,PGM_DESC
+		      ,FUNC_VIEW
+		      ,FUNC_CHNG
+		      ,FUNC_PRT
+		      ,FUNC_USER_DFN1
+		      ,DESC_USER_DFN1
+		      ,FUNC_USER_DFN2
+		      ,DESC_USER_DFN2
+		      ,FUNC_USER_DFN3
+		      ,DESC_USER_DFN3
+		      ,FUNC_USER_DFN4
+		      ,DESC_USER_DFN4
+		      ,FUNC_USER_DFN5
+		      ,DESC_USER_DFN5
+		      ,CRT_USER_ID
+		      ,CRT_DT
+		      ,UPD_USER_ID
+		      ,UPD_DT
+		  FROM SYS0050M
+		 WHERE 1 = 1
+      <if test="pgmCode !=null and pgmCode != ''">
+        AND PGM_CODE = #{pgmCode}
+      </if>     
+      <if test="pgmNm !=null and pgmNm != ''">
+        AND UPPER(PGM_NAME) LIKE '%' || UPPER(#{PGM_NAME}) || '%'         
+      </if>     
+     ORDER BY  PGM_CODE
+  </select>
+
+  <select id="selectPgmTranList" parameterType="Map" resultType="egovMap">
+	SELECT
+				PGM_CODE
+				,FUNC_VIEW
+				,FUNC_CHNG
+				,FUNC_PRT
+				,FUNC_USER_DFN1
+				,DESC_USER_DFN1
+				,FUNC_USER_DFN2
+				,DESC_USER_DFN2
+				,FUNC_USER_DFN3
+				,DESC_USER_DFN3
+				,FUNC_USER_DFN4
+				,DESC_USER_DFN4
+				,FUNC_USER_DFN5
+				,DESC_USER_DFN5
+	FROM SYS0050M
+	WHERE PGM_CODE = #{paramPgmId}
+	ORDER BY PGM_CODE
+  </select>
+
 
   <insert id="insertStatusCategoryCode" parameterType="Map">
 					MERGE INTO SYS0037M       
