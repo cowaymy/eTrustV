@@ -159,29 +159,93 @@
 <h2>Order Information</h2>
 </aside><!-- title_line end -->
 
-<section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:200px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Order Number</th>
+	<td><input type="text" title="" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p></td>
+</tr>
+<tr>
+	<th scope="row">Outright Price</th>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+<tr>
+	<th scope="row">Total Billed Amount</th>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+<tr>
+	<th scope="row">Current Bill Month</th>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+<tr>
+	<th scope="row">Current Outstanding</th>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Conversion Adjustment</h2>
+</aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
 	<col style="width:200px" />
 	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"></th>
-	<td></td>
-	<th scope="row"></th>
-	<td></td>
+	<th scope="row">Percentage (%)</th>
+	<td>
+	<select style="width:60px;" class="mr5">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Fixed Amount</th>
+	<td>
+	<select style="width:60px;" class="mr5">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-</form>
-</section><!-- search_table end -->
+<aside class="title_line"><!-- title_line start -->
+<h2>Conversion Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:200px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Conversion Amount</th>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+<tr>
+	<th scope="row">Total Amount</th>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
 
 </section><!-- content end -->
 
