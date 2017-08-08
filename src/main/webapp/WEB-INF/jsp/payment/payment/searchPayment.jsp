@@ -269,7 +269,13 @@ function fn_openDivPop(val){
                 $('#edit_txtKeyInUser').text(result.viewMaster.keyinUserName);$("#edit_txtKeyInUser").css("color","red");
                 $('#edit_txtOrderNo').text(result.viewMaster.salesOrdNo);$("#edit_txtOrderNo").css("color","red");
                 $('#edit_txtTRRefNo').val(result.viewMaster.trNo);
-                $('#edit_txtTRIssueDate').val(result.viewMaster.trIssuDt);
+                //$('#edit_txtTRIssueDate').val(result.viewMaster.trIssuDt);
+                var refDate = new Date(result.viewMaster.trIssuDt);
+                var defaultDate = new Date("01/01/1900");
+                if((refDate.getTime() > defaultDate.getTime())){
+                    $("#edit_txtTRIssueDate").val(result.viewMaster.trIssuDt);
+                }
+                
                 $('#edit_txtProductCategory').text(result.viewMaster.productCtgryName);
                 $('#edit_txtProductName').text(result.viewMaster.productDesc);
                 $('#edit_txtAppType').text(result.viewMaster.appTypeName);
@@ -290,11 +296,12 @@ function fn_openDivPop(val){
                 $('#edit_txtSalesPerson').text(result.viewMaster.salesMemCode + "(" + result.viewMaster.salesMemName+")");
                 $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
                 $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
-
                 
                 $('#edit_branchId').val(result.viewMaster.clctrBrnchId);
                 $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
                 $('#edit_txtClctrName').text(result.viewMaster.clctrName);
+                
+                
                 
                 if(result.viewMaster.allowComm != "1"){
                 	$("#btnAllowComm").attr('checked', false);
