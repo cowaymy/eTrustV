@@ -20,6 +20,969 @@
 		     , T1.TELF
 		  FROM SAL0026D T1
 		 WHERE T1.CUST_CARE_CNT_ID = #{custCareCntId}
+		   AND ROWNUM &lt;= 1
     </select>
+
+    <insert id="insertSalesOrderM" parameterType="salesOrderMVO">
+		INSERT
+		  INTO SAL0001D
+		     ( SALES_ORD_ID
+		     , SALES_ORD_NO
+		     , REF_NO
+		     , SALES_DT
+		     , CUST_ID
+		     , CUST_CNT_ID
+		     , CUST_ADD_ID
+		     , MEM_ID
+		     , BRNCH_ID
+		     , APP_TYPE_ID
+		     , DSCNT_AMT
+		     , TAX_AMT
+		     , TOT_AMT
+		     , PROMO_ID
+		     , BINDING_NO
+		     , CC_PROMO_ID
+		     , TOT_PV
+		     , REM
+		     , PV_MONTH
+		     , PV_YEAR
+		     , STUS_CODE_ID
+		     , UPD_DT
+		     , UPD_USER_ID
+		     , SYNC_CHK
+		     , CUST_PO_NO
+		     , REN_CHK_ID
+		     , INST_PRIOD
+		     , DO_NO
+		     , DEPT_CODE
+		     , GRP_CODE
+		     , ORG_CODE
+		     , SALES_ORD_ID_OLD
+		     , EDIT_TYPE_ID
+		     , CUST_BILL_ID
+		     , MTH_RENT_AMT
+		     , LOK
+		     , AEON_STUS_ID
+		     , COMM_DT
+		     , CRT_USER_ID
+		     , CRT_DT
+		     , PAY_COM_DT
+		     , DEF_RENT_AMT
+		     , REF_DOC_ID
+		     , RENT_PROMO_ID
+		     , SALES_HM_ID
+		     , SALES_SM_ID
+		     , SALES_GM_ID
+		     , ADV_BILL
+		     , CNVR_SCHEME_ID
+		     , CUST_CARE_CNT_ID
+		     )
+		VALUES
+		     ( #{salesOrdId}
+		     , #{salesOrdNo}
+		     , #{refNo}
+		     , #{salesDt}
+		     , #{custId}
+		     , #{custCntId}
+		     , #{custAddId}
+		     , #{memId}
+		     , #{brnchId}
+		     , #{appTypeId}
+		     , #{dscntAmt}
+		     , #{taxAmt}
+		     , #{totAmt}
+		     , #{promoId}
+		     , #{bindingNo}
+		     , #{ccPromoId}
+		     , #{totPv}
+		     , #{rem}
+		     , #{pvMonth}
+		     , #{pvYear}
+		     , #{stusCodeId}
+		     , #{updDt}
+		     , #{updUserId}
+		     , #{syncChk}
+		     , #{custPoNo}
+		     , #{renChkId}
+		     , #{instPriod}
+		     , #{doNo}
+		     , #{deptCode}
+		     , #{grpCode}
+		     , #{orgCode}
+		     , #{salesOrdIdOld}
+		     , #{editTypeId}
+		     , #{custBillId}
+		     , #{mthRentAmt}
+		     , #{lok}
+		     , #{aeonStusId}
+		     , #{commDt}
+		     , #{crtUserId}
+		     , #{crtDt}
+		     , #{payComDt}
+		     , #{defRentAmt}
+		     , #{refDocId}
+		     , #{rentPromoId}
+		     , #{salesHmId}
+		     , #{salesSmId}
+		     , #{salesGmId}
+		     , #{advBill}
+		     , #{cnvrSchemeId}
+		     , #{custCareCntId}
+		     )
+    </insert>
+    
+    <insert id="insertSalesOrderD" parameterType="salesOrderDVO">
+		INSERT
+		  INTO SAL0002D
+		     ( SALES_ORD_ID
+		     , ITM_NO
+		     , ITM_STK_ID
+		     , ITM_PRC_ID
+		     , ITM_QTY
+		     , ITM_TAX
+		     , ITM_DSCNT
+		     , ITM_PRC
+		     , ITM_PV
+		     , STUS_CODE_ID
+		     , UPD_DT
+		     , UPD_USER_ID
+		     , EDIT_TYPE_ID
+		     , ITM_ID
+		     , ITM_CALL_ENTRY_ID
+		     )
+		VALUES
+		     ( #{salesOrdId}
+		     , #{itmNo}
+		     , #{itmStkId}
+		     , #{itmPrcId}
+		     , #{itmQty}
+		     , #{itmTax}
+		     , #{itmDscnt}
+		     , #{itmPrc}
+		     , #{itmPv}
+		     , #{stusCodeId}
+		     , #{updDt}
+		     , #{updUserId}
+		     , #{editTypeId}
+		     , #{itmId}
+		     , #{itmCallEntryId}
+		     )
+	</insert>
+
+    <insert id="insertInstallation" parameterType="installationVO">
+		INSERT
+		  INTO SAL0045D
+		     ( INSTALL_ID
+		     , SALES_ORD_ID
+		     , ADD_ID
+		     , CNT_ID
+		     , PRE_CALL_DT
+		     , PRE_DT
+		     , PRE_TM
+		     , ACT_DT
+		     , ACT_TM
+		     , STUS_CODE_ID
+		     , INSTCT
+		     , UPD_DT
+		     , UPD_USER_ID
+		     , BRNCH_ID
+		     , EDIT_TYPE_ID
+		     , IS_TRADE_IN
+		     , VRIFY_REM
+		     )
+		VALUES
+		     ( #{installId}
+		     , #{salesOrdId}
+		     , #{addId}
+		     , #{cntId}
+		     , #{preCallDt}
+		     , #{preDt}
+		     , #{preTm}
+		     , #{actDt}
+		     , #{actTm}
+		     , #{stusCodeId}
+		     , #{instct}
+		     , #{updDt}
+		     , #{updUserId}
+		     , #{brnchId}
+		     , #{editTypeId}
+		     , #{isTradeIn}
+		     , #{vrifyRem}
+		     )
+    </insert>
+    
+    <insert id="insertRentPaySet" parameterType="rentPaySetVO">
+		INSERT
+		  INTO SAL0074D
+		     ( RENT_PAY_ID
+		     , SALES_ORD_ID
+		     , MODE_ID
+		     , CUST_CRC_ID
+		     , BANK_ID
+		     , CUST_ACC_ID
+		     , DD_APPLY_DT
+		     , DD_SUBMIT_DT
+		     , DD_START_DT
+		     , DD_REJCT_DT
+		     , UPD_USER_ID
+		     , UPD_DT
+		     , STUS_CODE_ID
+		     , IS_3RD_PARTY
+		     , CUST_ID
+		     , EDIT_TYPE_ID
+		     , NRIC_OLD
+		     , FAIL_RESN_ID
+		     , ISSU_NRIC
+		     , AEON_CNVR
+		     , REM
+		     , LAST_APPLY_USER
+		     , PAY_TRM
+		     , SVC_CNTRCT_ID
+		     )
+		VALUES
+		     ( #{rentPayId}
+		     , #{salesOrdId}
+		     , #{modeId}
+		     , #{custCrcId}
+		     , #{bankId}
+		     , #{custAccId}
+		     , #{ddApplyDt}
+		     , #{ddSubmitDt}
+		     , #{ddStartDt}
+		     , #{ddRejctDt}
+		     , #{updUserId}
+		     , #{updDt}
+		     , #{stusCodeId}
+		     , #{is3RdParty}
+		     , #{custId}
+		     , #{editTypeId}
+		     , #{nricOld}
+		     , #{failResnId}
+		     , #{issuNric}
+		     , #{aeonCnvr}
+		     , #{rem}
+		     , #{lastApplyUser}
+		     , #{payTrm}
+		     , #{svcCntrctId}
+	     )
+	</insert>
+
+    <insert id="insertCustBillMaster" parameterType="custBillMasterVO">
+		INSERT
+		  INTO SAL0024D
+		     ( CUST_BILL_ID
+		     , CUST_BILL_SO_ID
+		     , CUST_BILL_CUST_ID
+		     , CUST_BILL_CNT_ID
+		     , CUST_BILL_ADD_ID
+		     , CUST_BILL_STUS_ID
+		     , CUST_BILL_REM
+		     , CUST_BILL_UPD_USER_ID
+		     , CUST_BILL_UPD_DT
+		     , CUST_BILL_GRP_NO
+		     , CUST_BILL_CRT_USER_ID
+		     , CUST_BILL_CRT_DT
+		     , CUST_BILL_PAY_TRM
+		     , CUST_BILL_INCHG_MEM_ID
+		     , CUST_BILL_EMAIL
+		     , CUST_BILL_IS_ESTM
+		     , CUST_BILL_IS_SMS
+		     , CUST_BILL_IS_POST
+		     , CUST_BILL_PAY_REF_NO1
+		     , CUST_BILL_PAY_REF_NO2
+		     , CUST_BILL_EMAIL_ADD
+		     , CUST_BILL_IS_WEB_PORTAL
+		     , CUST_BILL_WEB_PORTAL_URL
+		     , CUST_BILL_IS_SMS2
+		     , CUST_BILL_CUST_CARE_CNT_ID
+		     )
+		VALUES
+		     ( #{custBillId}
+		     , #{custBillSoId}
+		     , #{custBillCustId}
+		     , #{custBillCntId}
+		     , #{custBillAddId}
+		     , #{custBillStusId}
+		     , #{custBillRem}
+		     , #{custBillUpdUserId}
+		     , #{custBillUpdDt}
+		     , #{custBillGrpNo}
+		     , #{custBillCrtUserId}
+		     , #{custBillCrtDt}
+		     , #{custBillPayTrm}
+		     , #{custBillInchgMemId}
+		     , #{custBillEmail}
+		     , #{custBillIsEstm}
+		     , #{custBillIsSms}
+		     , #{custBillIsPost}
+		     , #{custBillPayRefNo1}
+		     , #{custBillPayRefNo2}
+		     , #{custBillEmailAdd}
+		     , #{custBillIsWebPortal}
+		     , #{custBillWebPortalUrl}
+		     , #{custBillIsSms2}
+		     , #{custBillCustCareCntId}
+		     )
+    </insert>
+    
+    <insert id="insertEStatementReq" parameterType="eStatementReqVO">
+		INSERT
+		  INTO PAY0060D
+		     ( REQ_ID
+		     , STUS_CODE_ID
+		     , CUST_BILL_ID
+		     , EMAIL
+		     , CNFM_CODE
+		     , CRT_DT
+		     , CRT_USER_ID
+		     , CNFM_DT
+		     , UPD_DT
+		     , UPD_USER_ID
+		     , EMAIL_FAIL_IND
+		     , EMAIL_FAIL_DESC
+		     , REF_NO
+		     , EMAIL_ADD
+		     )
+		VALUES
+		     ( #{reqId}
+		     , #{stusCodeId}
+		     , #{custBillId}
+		     , #{email}
+		     , #{cnfmCode}
+		     , #{crtDt}
+		     , #{crtUserId}
+		     , #{cnfmDt}
+		     , #{updDt}
+		     , #{updUserId}
+		     , #{emailFailInd}
+		     , #{emailFailDesc}
+		     , #{refNo}
+		     , #{emailAdd}
+             )
+     </insert>
+     
+    <insert id="insertAccClaimAdt" parameterType="accClaimAdtVO">
+		INSERT
+		  INTO PAY0008M
+		     ( ACC_CL_SO_ID
+		     , ACC_CL_SVC_CNTRCT_ID
+		     , ACC_CL_BILL_CLM_AMT
+		     , ACC_CL_CLM_AMT
+		     , ACC_CL_PROMO
+		     , ACC_CL_BANK_CODE
+		     , ACC_CL_BANK_ACC_NO
+		     , ACC_DEC_BANK_ACC_NO
+		     , ACC_CL_REQST_M_CODE
+		     , ACC_CL_APPLY_DT
+		     , ACC_CL_SUBMIT_DT
+		     , ACC_CL_APPV_DT
+		     , ACC_CL_REJCT_DT
+		     , ACC_CL_UPD_USER_ID
+		     , ACC_CL_UPD_DT
+		     , ACC_CL_STUS_ID
+		     , ACC_CL_PROMO_CHK_ID
+		     , ACC_CL_PROMO_START_DT
+		     , ACC_CL_REJCT_ID
+		     , ACC_CL_ACC_T_NAME
+		     , ACC_CL_ACC_NRIC
+		     , ACC_CL_SPL_CLM_AMT
+		     , ACC_CL_SO_NO
+		     , ACC_CL_USER_NAME
+		     , ACC_CL_PAY_MODE
+		     , ACC_CL_PAY_MODE_ID
+		     , ACC_CL_BANK_ID
+		     , ACC_CL_CLM_LIMIT
+		     , ACC_CL_BILL_DT
+		     , ACC_CL_INSERT_DT
+		     )
+		VALUES
+		     ( #{accClSoId}
+		     , #{accClSvcCntrctId}
+		     , #{accClBillClmAmt}
+		     , #{accClClmAmt}
+		     , #{accClPromo}
+		     , #{accClBankCode}
+		     , #{accClBankAccNo}
+		     , #{accDecBankAccNo}
+		     , #{accClReqstMCode}
+		     , #{accClApplyDt}
+		     , #{accClSubmitDt}
+		     , #{accClAppvDt}
+		     , #{accClRejctDt}
+		     , #{accClUpdUserId}
+		     , #{accClUpdDt}
+		     , #{accClStusId}
+		     , #{accClPromoChkId}
+		     , #{accClPromoStartDt}
+		     , #{accClRejctId}
+		     , #{accClAccTName}
+		     , #{accClAccNric}
+		     , #{accClSplClmAmt}
+		     , #{accClSoNo}
+		     , #{accClUserName}
+		     , #{accClPayMode}
+		     , #{accClPayModeId}
+		     , #{accClBankId}
+		     , #{accClClmLimit}
+		     , #{accClBillDt}
+		     , #{accClInsertDt}
+		     )
+    </insert>
+    
+    <insert id="insertRentalScheme" parameterType="rentalSchemeVO">
+		INSERT
+		  INTO SAL0071D
+		     ( REN_SCH_ID
+		     , SALES_ORD_ID
+		     , STUS_CODE_ID
+		     , REN_SCH_DT
+		     , REN_SCH_TERMS
+		     , IS_SYNC
+		     )
+		VALUES
+		     ( #{renSchId}
+		     , #{salesOrdId}
+		     , #{stusCodeId}
+		     , #{renSchDt}
+		     , #{renSchTerms}
+		     , #{isSync}
+		     )
+    </insert>
+    
+    <insert id="insertCcpDecisionM" parameterType="ccpDecisionMVO">
+		INSERT
+		  INTO SAL0102D
+		     ( CCP_ID
+		     , CCP_SALES_ORD_ID
+		     , CCP_SCHEME_TYPE_ID
+		     , CCP_TYPE_ID
+		     , CCP_INCOME_RANGE_ID
+		     , CCP_TOT_SCRE_POINT
+		     , CCP_STUS_ID
+		     , CCP_RESN_ID
+		     , CCP_REM
+		     , CCP_RJ_STUS_ID
+		     , CCP_UPD_USER_ID
+		     , CCP_UPD_DT
+		     , CCP_IS_LOU
+		     , CCP_IS_SAMAN
+		     , CCP_IS_SYNC
+		     , CCP_PNC_REM
+		     , CCP_HAS_GRNT
+		     , CCP_IS_HOLD
+		     , CCP_IS_CURR
+		     , CCP_FICO
+		     , CCP_FICO_LOK
+		     , CCP_CTOS_BATCH_NO
+		     )
+		VALUES
+		     ( #{ccpId}
+		     , #{ccpSalesOrdId}
+		     , #{ccpSchemeTypeId}
+		     , #{ccpTypeId}
+		     , #{ccpIncomeRangeId}
+		     , #{ccpTotScrePoint}
+		     , #{ccpStusId}
+		     , #{ccpResnId}
+		     , #{ccpRem}
+		     , #{ccpRjStusId}
+		     , #{ccpUpdUserId}
+		     , #{ccpUpdDt}
+		     , #{ccpIsLou}
+		     , #{ccpIsSaman}
+		     , #{ccpIsSync}
+		     , #{ccpPncRem}
+		     , #{ccpHasGrnt}
+		     , #{ccpIsHold}
+		     , #{ccpIsCurr}
+		     , #{ccpFico}
+		     , #{ccpFicoLok}
+		     , #{ccpCtosBatchNo}
+		     )
+    </insert>
+    
+    <insert id="insertDocSubmission" parameterType="docSubmissionVO">
+		INSERT
+		  INTO ORG0010D
+		     ( DOC_SUB_ID
+		     , DOC_SUB_TYPE_ID
+		     , DOC_TYPE_ID
+		     , DOC_SO_ID
+		     , DOC_MEM_ID
+		     , DOC_SUB_DT
+		     , DOC_COPY_QTY
+		     , STUS_ID
+		     , CRT_USER_ID
+		     , CRT_DT
+		     , UPD_USER_ID
+		     , UPD_DT
+		     , DOC_SUB_BATCH_ID
+		     )
+		VALUES
+		     ( #{docSubId}
+		     , #{docSubTypeId}
+		     , #{docTypeId}
+		     , #{docSoId}
+		     , #{docMemId}
+		     , #{docSubDt}
+		     , #{docCopyQty}
+		     , #{stusId}
+		     , #{crtUserId}
+		     , #{crtDt}
+		     , #{updUserId}
+		     , #{updDt}
+		     , #{docSubBatchId}
+		     )
+    </insert>
+    
+    <insert id="insertSrvMembershipSales" parameterType="srvMembershipSalesVO">
+		INSERT
+		  INTO SAL0095D
+		     ( SRV_MEM_ID
+		     , SRV_MEM_QUOT_ID
+		     , SRV_SALES_ORD_ID
+		     , SRV_MEM_NO
+		     , SRV_MEM_BILL_NO
+		     , SRV_MEM_PAC_ID
+		     , SRV_MEM_PAC_AMT
+		     , SRV_MEM_BS_AMT
+		     , SRV_MEM_PV
+		     , SRV_FREQ
+		     , SRV_START_DT
+		     , SRV_EXPR_DT
+		     , SRV_DUR
+		     , SRV_STUS_CODE_ID
+		     , SRV_REM
+		     , SRV_CRT_DT
+		     , SRV_CRT_USER_ID
+		     , SRV_UPD_DT
+		     , SRV_UPD_USER_ID
+		     , SRV_MEM_BS12_AMT
+		     , SRV_MEM_IS_SYNCH
+		     , SRV_MEM_SALES_MEM_ID
+		     , SRV_MEM_CUST_CNT_ID
+		     , SRV_MEM_QTY
+		     , SRV_BS_QTY
+		     , SRV_MEM_PROMO_ID
+		     , SRV_MEM_PV_MONTH
+		     , SRV_MEM_PV_YEAR
+		     , SRV_MEM_IS_MNL
+		     , SRV_MEM_BRNCH_ID
+		     , SRV_MEM_PAC_PROMO_ID
+		     , SRV_MEM_FORM_NO
+		     )
+		VALUES
+		     ( #{srvMemId}
+		     , #{srvMemQuotId}
+		     , #{srvSalesOrdId}
+		     , #{srvMemNo}
+		     , #{srvMemBillNo}
+		     , #{srvMemPacId}
+		     , #{srvMemPacAmt}
+		     , #{srvMemBsAmt}
+		     , #{srvMemPv}
+		     , #{srvFreq}
+		     , #{srvStartDt}
+		     , #{srvExprDt}
+		     , #{srvDur}
+		     , #{srvStusCodeId}
+		     , #{srvRem}
+		     , #{srvCrtDt}
+		     , #{srvCrtUserId}
+		     , #{srvUpdDt}
+		     , #{srvUpdUserId}
+		     , #{srvMemBs12Amt}
+		     , #{srvMemIsSynch}
+		     , #{srvMemSalesMemId}
+		     , #{srvMemCustCntId}
+		     , #{srvMemQty}
+		     , #{srvBsQty}
+		     , #{srvMemPromoId}
+		     , #{srvMemPvMonth}
+		     , #{srvMemPvYear}
+		     , #{srvMemIsMnl}
+		     , #{srvMemBrnchId}
+		     , #{srvMemPacPromoId}
+		     , #{srvMemFormNo}
+		     )
+    </insert>
+    
+    <insert id="insertSrvConfiguration" parameterType="srvConfigurationVO">
+		INSERT
+		  INTO SAL0090D
+		     ( SRV_CONFIG_ID
+		     , SRV_SO_ID
+		     , SRV_CODY_ID
+		     , SRV_PREV_DT
+		     , SRV_REM
+		     , SRV_BS_GEN
+		     , SRV_CRT_DT
+		     , SRV_CRT_USER_ID
+		     , SRV_UPD_DT
+		     , SRV_UPD_USER_ID
+		     , SRV_STUS_ID
+		     , SRV_BS_WEEK
+		     )
+		VALUES
+		     ( #{srvConfigId}
+		     , #{srvSoId}
+		     , #{srvCodyId}
+		     , #{srvPrevDt}
+		     , #{srvRem}
+		     , #{srvBsGen}
+		     , #{srvCrtDt}
+		     , #{srvCrtUserId}
+		     , #{srvUpdDt}
+		     , #{srvUpdUserId}
+		     , #{srvStusId}
+		     , #{srvBsWeek}
+		     )
+    </insert>
+    
+    <insert id="insertSrvConfigSetting" parameterType="srvConfigSettingVO">
+		INSERT
+		  INTO SAL0089D
+		     ( SRV_SETT_ID
+		     , SRV_CONFIG_ID
+		     , SRV_SETT_TYPE_ID
+		     , SRV_SETT_STUS_ID
+		     , SRV_SETT_REM
+		     , SRV_SETT_CRT_DT
+		     , SRV_SETT_CRT_USER_ID
+		     )
+		VALUES
+		     ( #{srvSettId}
+		     , #{srvConfigId}
+		     , #{srvSettTypeId}
+		     , #{srvSettStusId}
+		     , #{srvSettRem}
+		     , #{srvSettCrtDt}
+		     , #{srvSettCrtUserId}
+		     )
+    </insert>
+
+    <insert id="insertSrvConfigPeriod" parameterType="srvConfigPeriodVO">
+		INSERT
+		  INTO SAL0088D
+		     ( SRV_PRD_ID
+		     , SRV_CONFIG_ID
+		     , SRV_MBRSH_ID
+		     , SRV_PRD_START_DT
+		     , SRV_PRD_EXPR_DT
+		     , SRV_PRD_DUR
+		     , SRV_PRD_STUS_ID
+		     , SRV_PRD_REM
+		     , SRV_PRD_CRT_DT
+		     , SRV_PRD_CRT_USER_ID
+		     , SRV_PRD_UPD_DT
+		     , SRV_PRD_UPD_USER_ID
+		     , SRV_PRD_CNTRCT_ID
+		     )
+		VALUES
+		     ( #{srvPrdId}
+		     , #{srvConfigId}
+		     , #{srvMbrshId}
+		     , #{srvPrdStartDt}
+		     , #{srvPrdExprDt}
+		     , #{srvPrdDur}
+		     , #{srvPrdStusId}
+		     , #{srvPrdRem}
+		     , #{srvPrdCrtDt}
+		     , #{srvPrdCrtUserId}
+		     , #{srvPrdUpdDt}
+		     , #{srvPrdUpdUserId}
+		     , #{srvPrdCntrctId}
+		     )
+    </insert>
+    
+    <insert id="insertSrvConfigFilter" parameterType="srvConfigFilterVO">
+		INSERT
+		  INTO SAL0087D
+		     ( SRV_FILTER_ID
+		     , SRV_CONFIG_ID
+		     , SRV_FILTER_STK_ID
+		     , SRV_FILTER_PRIOD
+		     , SRV_FILTER_PRV_CHG_DT
+		     , SRV_FILTER_STUS_ID
+		     , SRV_FILTER_REM
+		     , SRV_FILTER_CRT_DT
+		     , SRV_FILTER_CRT_USER_ID
+		     , SRV_FILTER_UPD_DT
+		     , SRV_FILTER_UPD_USER_ID
+		     , SRV_FILTER_EXPR_DT
+		     )
+		VALUES
+		     ( #{srvFilterId}
+		     , #{srvConfigId}
+		     , #{srvFilterStkId}
+		     , #{srvFilterPriod}
+		     , #{srvFilterPrvChgDt}
+		     , #{srvFilterStusId}
+		     , #{srvFilterRem}
+		     , #{srvFilterCrtDt}
+		     , #{srvFilterCrtUserId}
+		     , #{srvFilterUpdDt}
+		     , #{srvFilterUpdUserId}
+		     , #{srvFilterExprDt}
+		     )
+    </insert>
+    
+    <insert id="insertCallEntry" parameterType="callEntryVO">
+		INSERT
+		  INTO CCR0006D
+		     ( CALL_ENTRY_ID
+		     , SALES_ORD_ID
+		     , TYPE_ID
+		     , STUS_CODE_ID
+		     , RESULT_ID
+		     , DOC_ID
+		     , CRT_USER_ID
+		     , CRT_DT
+		     , CALL_DT
+		     , IS_WAIT_FOR_CANCL
+		     , HAPY_CALLER_ID
+		     , UPD_DT
+		     , UPD_USER_ID
+		     , ORI_CALL_DT
+		     )
+		VALUES
+		     ( #{callEntryId}
+		     , #{salesOrdId}
+		     , #{typeId}
+		     , #{stusCodeId}
+		     , #{resultId}
+		     , #{docId}
+		     , #{crtUserId}
+		     , #{crtDt}
+		     , #{callDt}
+		     , #{isWaitForCancl}
+		     , #{hapyCallerId}
+		     , #{updDt}
+		     , #{updUserId}
+		     , #{oriCallDt}
+		     )
+    </insert>
+    
+    <insert id="insertCallResult" parameterType="callResultVO">
+		INSERT
+		  INTO CCR0007D
+		     ( CALL_RESULT_ID
+		     , CALL_ENTRY_ID
+		     , CALL_STUS_ID
+		     , CALL_DT
+		     , CALL_ACTN_DT
+		     , CALL_FDBCK_ID
+		     , CALL_CT_ID
+		     , CALL_REM
+		     , CALL_CRT_USER_ID
+		     , CALL_CRT_DT
+		     , CALL_CRT_USER_ID_DEPT
+		     , CALL_HC_ID
+		     , CALL_ROS_AMT
+		     , CALL_SMS
+		     , CALL_SMS_REM
+		     )
+		VALUES
+		     ( #{callResultId}
+		     , #{callEntryId}
+		     , #{callStusId}
+		     , #{callDt}
+		     , #{callActnDt}
+		     , #{callFdbckId}
+		     , #{callCtId}
+		     , #{callRem}
+		     , #{callCrtUserId}
+		     , #{callCrtDt}
+		     , #{callCrtUserIdDept}
+		     , #{callHcId}
+		     , #{callRosAmt}
+		     , #{callSms}
+		     , #{callSmsRem}
+		     )
+    </insert>
+    
+    <insert id="insertInstallEntry" parameterType="installEntryVO">
+		INSERT
+		  INTO SAL0046D
+		     ( INSTALL_ENTRY_ID
+		     , INSTALL_ENTRY_NO
+		     , SALES_ORD_ID
+		     , STUS_CODE_ID
+		     , CT_ID
+		     , INSTALL_DT
+		     , CALL_ENTRY_ID
+		     , INSTALL_STK_ID
+		     , INSTALL_RESULT_ID
+		     , CRT_USER_ID
+		     , CRT_DT
+		     , ALLOW_COMM
+		     , IS_TRADE_IN
+		     , CT_GRP
+		     , UPD_DT
+		     , UPD_USER_ID
+		     , REV_ID
+		     )
+		VALUES
+		     ( #{installEntryId}
+		     , #{installEntryNo}
+		     , #{salesOrdId}
+		     , #{stusCodeId}
+		     , #{ctId}
+		     , #{installDt}
+		     , #{callEntryId}
+		     , #{installStkId}
+		     , #{installResultId}
+		     , #{crtUserId}
+		     , #{crtDt}
+		     , #{allowComm}
+		     , #{isTradeIn}
+		     , #{ctGrp}
+		     , #{updDt}
+		     , #{updUserId}
+		     , #{revId}
+		     )
+    </insert>
+
+    <insert id="insertInstallResult" parameterType="installResultVO">    
+		INSERT
+		  INTO SAL0047D
+		     ( RESULT_ID
+		     , ENTRY_ID
+		     , STUS_CODE_ID
+		     , CT_ID
+		     , INSTALL_DT
+		     , REM
+		     , GL_POST
+		     , CRT_USER_ID
+		     , CRT_DT
+		     , SIRIM_NO
+		     , SERIAL_NO
+		     , FAIL_ID
+		     , NEXT_CALL_DT
+		     , ALLOW_COMM
+		     , IS_TRADE_IN
+		     , REQUIRE_SMS
+		     , DOC_REF_NO1
+		     , DOC_REF_NO2
+		     , UPD_DT
+		     , UPD_USER_ID
+		     , ADJ_AMT
+		     , MOBILE_ID
+		     )
+		VALUES
+		     ( #{resultId}
+		     , #{entryId}
+		     , #{stusCodeId}
+		     , #{ctId}
+		     , #{installDt}
+		     , #{rem}
+		     , #{glPost}
+		     , #{crtUserId}
+		     , #{crtDt}
+		     , #{sirimNo}
+		     , #{serialNo}
+		     , #{failId}
+		     , #{nextCallDt}
+		     , #{allowComm}
+		     , #{isTradeIn}
+		     , #{requireSms}
+		     , #{docRefNo1}
+		     , #{docRefNo2}
+		     , #{updDt}
+		     , #{updUserId}
+		     , #{adjAmt}
+		     , #{mobileId}
+		     )
+    </insert>
+
+    <insert id="insertSalesOrderLog" parameterType="salesOrderLogVO">    
+		INSERT
+		  INTO SAL0009D
+		     ( LOG_ID
+		     , SALES_ORD_ID
+		     , PRGRS_ID
+		     , LOG_DT
+		     , REF_ID
+		     , IS_LOK
+		     , LOG_CRT_USER_ID
+		     , LOG_CRT_DT
+		     )
+		VALUES
+		     ( #{logId}
+		     , #{salesOrdId}
+		     , #{prgrsId}
+		     , #{logDt}
+		     , #{refId}
+		     , #{isLok}
+		     , #{logCrtUserId}
+		     , #{logCrtDt}
+		     )
+    </insert>
+    
+    <insert id="insertGSTEURCertificate" parameterType="gSTEURCertificateVO">
+		INSERT
+		  INTO SAL0042D
+		     ( EURC_ID
+		     , EURC_REF_NO
+		     , EURC_REF_DT
+		     , EURC_RLIEF_TYPE_ID
+		     , EURC_RLIEF_APP_TYPE_ID
+		     , EURC_SALES_ORD_ID
+		     , EURC_CUST_ID
+		     , EURC_CUST_RGS_NO
+		     , EURC_REM
+		     , EURC_FILE_PATH_NAME
+		     , EURC_STUS_CODE_ID
+		     , EURC_CRT_USER_ID
+		     , EURC_CRT_DT
+		     , EURC_UPD_USER_ID
+		     , EURC_UPD_DT
+		     )
+		VALUES
+		     ( #{eurcId}
+		     , #{eurcRefNo}
+		     , #{eurcRefDt}
+		     , #{eurcRliefTypeId}
+		     , #{eurcRliefAppTypeId}
+		     , #{eurcSalesOrdId}
+		     , #{eurcCustId}
+		     , #{eurcCustRgsNo}
+		     , #{eurcRem}
+		     , #{eurcFilePathName}
+		     , #{eurcStusCodeId}
+		     , #{eurcCrtUserId}
+		     , #{eurcCrtDt}
+		     , #{eurcUpdUserId}
+		     , #{eurcUpdDt}
+		     )
+    </insert>
+    
+    <insert id="insertSalesOrderContract" parameterType="salesOrderContractVO">
+		INSERT
+		  INTO SAL0003D
+		     ( CNTRCT_ID
+		     , CNTRCT_SALES_ORD_ID
+		     , CNTRCT_RENTAL_PRIOD
+		     , CNTRCT_OBLIGT_PRIOD
+		     , CNTRCT_STUS_ID
+		     , CNTRCT_REM
+		     , CNTRCT_CRT_DT
+		     , CNTRCT_CRT_USER_ID
+		     , CNTRCT_UPD_DT
+		     , CNTRCT_UPD_USER_ID
+		     )
+		VALUES
+		     ( #{cntrctId}
+		     , #{cntrctSalesOrdId}
+		     , #{cntrctRentalPriod}
+		     , #{cntrctObligtPriod}
+		     , #{cntrctStusId}
+		     , #{cntrctRem}
+		     , #{cntrctCrtDt}
+		     , #{cntrctCrtUserId}
+		     , #{cntrctUpdDt}
+		     , #{cntrctUpdUserId}
+		     )
+    </insert>
     
 </mapper>

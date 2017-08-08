@@ -3,22 +3,66 @@
 <head>
 <script type="text/javaScript" language="javascript">
 
+    var docGridID;
+
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
-	    //createAUIGrid();
-	
-	    // 셀 더블클릭 이벤트 바인딩
-	    //AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-	        //fn_setDetail(myGridID, event.rowIndex);
-	    //});
+	    createAUIGrid();
 	    
-	    //doGetCombo('/common/selectCodeList.do',       '10', '',   'appType', 'M', 'fn_multiCombo'); //Common Code
-	    //doGetCombo('/common/selectProductCodeList.do',  '', '', 'productId', 'S',              ''); //Product Code
-	
-	    //doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'keyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+	    fn_selectDocSubmissionList();
+
+        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '',   'appType', 'S', ''); //Common Code
 	    doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dscBrnchId', 'S', ''); //Branch Code
+	    
+	    //Payment Channel, Billing Detail TAB Visible False처리
+        $('#tabPC').addClass("blind");
+        $('#tabBD').addClass("blind");
+        $('#atcPC').addClass("blind");
+        $('#atcBD').addClass("blind");
 	});
 
+    function createAUIGrid() {
+        
+        //AUIGrid 칼럼 설정
+        var columnLayout = [{
+                dataField   : "typeDesc",   headerText  : "Document",
+                editable    : false,        style       : 'left_style'
+            }, {
+                dataField   : "codeId",     visible     : false
+            }];
+
+        //그리드 속성 설정
+        var gridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 40,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : true,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : false,     
+            showRowCheckColumn  : true,        
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        docGridID = GridCommon.createAUIGrid("grid_doc_wrap", columnLayout, "", gridPros);
+    }
+    
+    // 리스트 조회.
+    function fn_selectDocSubmissionList() {
+        
+        $("#searchTypeCodeId").val("248");
+        
+        Common.ajax("GET", "/common/selectDocSubmissionList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(docGridID, result);
+        });
+    }
+    
 	function fn_loadCustomer(custId){
 	
 	    $("#searchCustId").val(custId);
@@ -64,6 +108,7 @@
 	                //----------------------------------------------------------
                     // [Billing Detail] : Billing Address SETTING
 	                //----------------------------------------------------------
+	                $('#billAddrForm').clearForm();
 	            	fn_loadMailAddr(custInfo.custAddId);
 
 	                //----------------------------------------------------------
@@ -213,6 +258,10 @@
             if(custCntcInfo != null) {
             
                 console.log("성공.");
+                console.log("srvCntcInfo:"+custCntcInfo.custCareCntId);
+                console.log("srvCntcInfo:"+custCntcInfo.name);
+                console.log("srvCntcInfo:"+custCntcInfo.custInitial);
+                console.log("srvCntcInfo:"+custCntcInfo.email);
                 
                 //
                 $("#custCntcId").val(custCntcInfo.custCnctId);
@@ -273,18 +322,198 @@
 	        }
 	    });
 	};
+	
+	function fn_setBillGrp(grpOpt) {
+	    
+	    if(grpOpt == 'new') {
+	    
+    	    $('#sctBillMthd').removeClass("blind");
+    	    $('#sctBillAddr').removeClass("blind");
+    	    $('#sctBillPrefer').removeClass("blind");
+    	    $('#sctBillSel').addClass("blind");
+    	    
+    	    $('#liBillNewAddr').removeClass("blind");
+    	    $('#liBillSelAddr').removeClass("blind");
+    	    $('#liBillPreferNewAddr').removeClass("blind");
+    	    $('#liBillPreferNewAddr').removeClass("blind");
+    	    
+    	    $('#billMthdForm').clearForm();
+    	    $('#billAddrForm').clearForm();
+    	    $('#billPreferForm').clearForm();
+    
+    	    $('#billMthdEmailTxt1').val($('#custCntcEmail').val().trim());
+    	    $('#billMthdEmailTxt2').val($('#srvCntcEmail').val().trim());
+    
+            $('#billRem').val("");
+            $('#billRem').removeAttr("readonly");
+    
+    	    if($('#typeId').val() == '965') { //Company
+    	        
+    	        console.log("fn_setBillGrp 1 typeId : "+$('#typeId').val());
+    
+    	        $('#sctBillPrefer').removeClass("blind");
+    
+    	        fn_loadBillingPreference();
+    	        
+    	        /*
+                btnBillGroupEStatement.Checked = true;
+                btnBillGroupEmail_1.Checked = true;
+                btnBillGroupEmail_1.Enabled = true;
+                btnBillGroupEmail_2.Enabled = true;
+                txtBillGroupEmail_1.Enabled = true;
+                txtBillGroupEmail_2.Enabled = true;
+                */
+    
+                $('#billMthdEstm').prop("checked", true);
+                $('#billMthdEmail1').prop("checked", true);
+    
+                $('#billMthdEmail1').removeAttr("disabled");
+                $('#billMthdEmail2').removeAttr("disabled");
+    
+    	    }
+    	    else if($('#typeId').val() == '964') { //Individual
+    	        
+    	        console.log("fn_setBillGrp 2 typeId : "+$('#typeId').val());
+                
+                if(FormUtil.isNotEmpty($('#custCntcEmail').val().trim())) {
+        	        /*
+                    btnBillGroupEStatement.Checked = true;
+                    btnBillGroupEmail_1.Checked = true;
+                    btnBillGroupEmail_1.Enabled = true;
+                    btnBillGroupEmail_2.Enabled = true;
+                    txtBillGroupEmail_1.Enabled = true;
+                    txtBillGroupEmail_2.Enabled = true;
+                    */
+                    $('#billMthdEstm').prop("checked", true);
+                    $('#billMthdEmail1').prop("checked", true);
+        
+                    $('#billMthdEmail1').removeAttr("disabled");
+                    $('#billMthdEmail2').removeAttr("disabled");
+                }
+    
+                $('#billMthdSms').prop("checked", true);
+                $('#billMthdSms1').prop("checked", true);
+    
+                $('#billMthdSms1').removeAttr("disabled");
+                $('#billMthdSms2').removeAttr("disabled");
+    	    }
+    	}
+    	else if(grpOpt == 'exist') {
+    	    $('#sctBillMthd').addClass("blind");
+    	    $('#sctBillAddr').addClass("blind");
+    	    $('#sctBillPrefer').addClass("blind");
+    	    $('#sctBillSel').removeClass("blind");
+    	    
+    	    $('#liBillNewAddr').removeClass("blind");
+    	    $('#liBillSelAddr').removeClass("blind");
+    	    $('#liBillPreferNewAddr').removeClass("blind");
+    	    $('#liBillPreferNewAddr').removeClass("blind");
+    	    
+    	    $('#billMthdForm').clearForm();
+    	    $('#billAddrForm').clearForm();
+    	    $('#billPreferForm').clearForm();
+    	    
+    	    $('#billRem').val("");
+    	    $('#billRem').prop("readonly", true);
+    	}
+	}
+	
+	function fn_loadBillingPreference() {
+        $("#billPreferInitial").val($("#srvInitial").val().trim());
+        $("#billPreferName").val($("#srvCntcName").val().trim());
+        $("#billPreferTelO").val($("#srvCntcTelO").val().trim());
+        $("#billPreferExt").val($("#srvCntcExt").val().trim());
+	}
 
 	$(function(){
+	    $('#saveBtn').click(function() {
+	        $('#tabPC').addClass("blind");
+	    });
 	    $('#custBtn').click(function() {
 	        $("#sUrl").val("/common/customerPop.do");
 	        Common.searchpopupWin("searchForm", "/common/customerPop.do","");
 	    });
+	    $('[name="grpOpt"]').click(function() {
+	        fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
+	    });
+	    $('#billMthdSms').click(function() {
+	        
+            $('#billMthdSms1').prop("checked", false);
+            $('#billMthdSms2').prop("checked", false);
+	        $('#billMthdSms1').prop("disabled", true);
+	        $('#billMthdSms2').prop("disabled", true);
+	        
+	        if($("#billMthdSms").is(":checked")) {
+	            $('#billMthdSms1').removeAttr("disabled");
+	            $('#billMthdSms2').removeAttr("disabled");
+	            
+	            $('#billMthdSms1').prop("checked", true);
+	        }
+	    });
+	    $('#billMthdEstm').click(function() {
+	        
+	        $('#spEmail1').text("");
+	        $('#spEmail2').text("");
+            $('#billMthdEmail1').prop("checked", false);
+            $('#billMthdEmail2').prop("checked", false);
+	        $('#billMthdEmailTxt1').val("");
+	        $('#billMthdEmailTxt2').val("");
+	        
+	        $('#billMthdEmail1').prop("disabled", true);
+	        $('#billMthdEmail2').prop("disabled", true);
+	        $('#billMthdEmailTxt1').prop("disabled", true);
+	        $('#billMthdEmailTxt2').prop("disabled", true);
+	        
+	        if($("#billMthdEstm").is(":checked")) {
+	            $('#spEmail1').text("*");
+	            $('#spEmail2').text("*");
+	            $('#billMthdEmail1').removeAttr("disabled");
+	            $('#billMthdEmail2').removeAttr("disabled");
+	            $('#billMthdEmailTxt1').removeAttr("disabled");
+	            $('#billMthdEmailTxt2').removeAttr("disabled");
+	            
+	            $('#billMthdEmail1').prop("checked", true);
+	            
+	            $('#billMthdEmailTxt1').val($('#custCntcEmail').val().trim());
+	            $('#billMthdEmailTxt2').val($('#srvCntcEmail').val().trim());
+	        }
+	    });
         $('#custId').blur(function(event) {
+            
+            //CLEAR CUSTOMER 
+//            this.ClearControl_Customer();
+//            this.ClearControl_MailAddress();
+//            this.ClearControl_ContactPerson();
+
+            if(!$('#tabPC').hasClass("blind")) {
+                $('#tabPC').addClass("blind");
+            }
+            if(!$('#tabBD').hasClass("blind")) {
+                $('#tabBD').addClass("blind");
+            }
+            
         	if(FormUtil.isNotEmpty($('#custId').val())) {
+        	    
+        	    $('#tabBD').removeClass("blind");
+        	    $('#atcBD').removeClass("blind");
+        	    
         		fn_loadCustomer($('#custId').val());
-        	};
+        	}
+        	else {
+        	    
+        	}
         });
 	});
+	
+    function chgTab(tabNm) {
+    	switch(tabNm) {
+	        case 'doc' :
+	            AUIGrid.resize(docGridID, 900, 380);
+	            break;
+            default :
+                break;
+        };
+    }
 </script>
 </head>
 <body>
@@ -302,32 +531,30 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-    <li><a href="#" class="on">Customer</a></li>
-    <li><a href="#">Master Contact</a></li>
-    <li><a href="#">Sales Order</a></li>
-    <li><a href="#">Payment Channel</a></li>
-    <li><a href="#">Billing Detail</a></li>
-    <li><a href="#">Installation</a></li>
-    <li><a href="#">Documents</a></li>
-    <li><a href="#">Relief Certificate</a></li>
+    <li id="tabCS"><a href="#" class="on">Customer</a></li>
+    <li id="tabMC"><a href="#">Master Contact</a></li>
+    <li id="tabSO"><a href="#">Sales Order</a></li>
+    <li id="tabPC"><a href="#">Payment Channel</a></li>
+    <li id="tabBD"><a href="#">Billing Detail</a></li>
+    <li id="tabIN"><a href="#">Installation</a></li>
+    <li id="tabDC"><a href="#" onClick="javascript:chgTab('doc');">Documents</a></li>
+    <li id="tabRC"><a href="#">Relief Certificate</a></li>
 </ul>
 
+<!--****************************************************************************
+    Customer - Form ID(searchForm/custForm)
+*****************************************************************************-->
 <article class="tap_area"><!-- tap_area start -->
+<section class="search_table"><!-- search_table start -->
 
 <form id="searchForm" name="mainForm" action="#" method="post">
     <input id="sUrl"                name="sUrl"          type="hidden"/>
     <input id="searchCustId"        name="custId"        type="hidden"/>
     <input id="searchCustAddId"     name="custAddId"     type="hidden"/>
-    <input id="searchCustCntcId"    name="custId"        type="hidden"/>
+    <input id="searchCustCntcId"    name="custCntcId"    type="hidden"/>
     <input id="searchCustCareCntId" name="custCareCntId" type="hidden"/>
+    <input id="searchTypeCodeId"    name="typeCodeId"    type="hidden"/>
 </form>
-
-<!--############################################################################
-    Customer
-        - Owner & Purchaser Contact
-        - Additional Service Contact
-#############################################################################-->
-<section class="search_table"><!-- search_table start -->
 <form id="custForm" name="custForm" action="#" method="post">
 
 <ul class="right_btns mb10">
@@ -391,7 +618,7 @@
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+    <li><p class="btn_blue2"><a id="saveBtn" href="#">OK</a></p></li>
 </ul>
 
 </form>
@@ -399,14 +626,9 @@
 
 </article><!-- tap_area end -->
 
-<!--############################################################################
+<!--****************************************************************************
     Master Contract
-        - Owner & Purchaser Contact
-        - Additional Service Contact
-#############################################################################-->
-<form id=custCntcForm name="custCntcForm" action="#" method="post">
-    <input id="custCntcId" name="custCntcId" type="hidden"/>
-    <input id="srvCntcId"  name="srvCntcId"  type="hidden"/>
+*****************************************************************************-->
 
 <article class="tap_area"><!-- tap_area start -->
 
@@ -419,7 +641,12 @@
     <li id="liMstCntcSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Contact</a></p></li>
 </ul>
 
+<!------------------------------------------------------------------------------
+    Owner & Purchaser Contact - Form ID(ownerPurchsForm)
+------------------------------------------------------------------------------->
 <section class="search_table"><!-- search_table start -->
+
+<form id=ownerPurchsForm name="ownerPurchsForm" action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -457,7 +684,12 @@
 </tbody>
 </table><!-- table end -->
 
+</form>
 </section><!-- search_table end -->
+
+<!------------------------------------------------------------------------------
+    Additional Service Contact - Form ID(addSvcCntcForm)
+------------------------------------------------------------------------------->
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Additional Service Contact</h2>
@@ -469,6 +701,10 @@
 </ul>
 
 <section class="search_table"><!-- search_table start -->
+
+<form id=addSvcCntcForm name="custCntcForm" action="#" method="post">
+    <input id="srvCntcId" name="srvCntcId" type="hidden"/>
+    <input id="srvInitial" name="srvInitial" type="hidden"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -507,11 +743,14 @@
     <li><p class="btn_blue2"><a href="#">OK</a></p></li>
 </ul>
 
+</form>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
-</form>
 
+<!--****************************************************************************
+    Sales Order
+*****************************************************************************-->
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
@@ -529,11 +768,7 @@
 <tr>
     <th scope="row">Application Type<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select id="appType" name="appType" class="w100p"></select>
     </td>
     <th scope="row">Order Date<span class="must">*</span></th>
     <td><span>31/07/2017</span></td>
@@ -616,10 +851,13 @@
 
 </article><!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start -->
+<!--****************************************************************************
+    Payment Channel - Form ID(payChnnlForm)
+*****************************************************************************-->
+<article id="atcPC" class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form id="payChnnlForm" name="payChnnlForm" action="#" method="post">
 
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
@@ -702,10 +940,12 @@
 
 </article><!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start -->
+<!--****************************************************************************
+    Billing Detail
+*****************************************************************************-->
+<article id="atcBD" class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <!-- New Billing Group Type start -->
 <table class="type1"><!-- table start -->
@@ -718,14 +958,20 @@
 <tr>
     <th scope="row">Group Option<span class="must">*</span></th>
     <td>
-    <label><input type="radio" name="groupoption" /><span>New Billing Group</span></label>
-    <label><input type="radio" name="groupoption" /><span>Existion Billing Group</span></label>
+    <label><input type="radio" name="grpOpt" value="new"  /><span>New Billing Group</span></label>
+    <label><input type="radio" name="grpOpt" value="exist"/><span>Existion Billing Group</span></label>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-<section id="tbBillMthd" class="blind">
+<!------------------------------------------------------------------------------
+    Billing Method - Form ID(billMthdForm)
+------------------------------------------------------------------------------->
+<section id="sctBillMthd" class="blind">
+
+<form id="billMthdForm" name="billMthdForm" action="#" method="post">
+        
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -743,24 +989,24 @@
 </tr>
 <tr>
     <td colspan="3">
-    <label><input type="checkbox" /><span>SMS</span></label>
-    <label><input type="checkbox" /><span>Mobile 1</span></label>
-    <label><input type="checkbox" /><span>Mobile 2</span></label>
+    <label><input id="billMthdSms" name="billMthdSms" type="checkbox" /><span>SMS</span></label>
+    <label><input id="billMthdSms1" name="billMthdSms1" type="checkbox" disabled/><span>Mobile 1</span></label>
+    <label><input id="billMthdSms2" name="billMthdSms2" type="checkbox" disabled/><span>Mobile 2</span></label>
     </td>
 </tr>
 <tr>
     <td>
-    <label><input type="checkbox" /><span>E-Billing</span></label>
-    <label><input type="checkbox" /><span>Email 1</span></label>
-    <label><input type="checkbox" /><span>Email 2</span></label>
+    <label><input id="billMthdEstm" name="billMthdEstm" type="checkbox" /><span>E-Billing</span></label>
+    <label><input id="billMthdEmail1" name="billMthdEmail1" type="checkbox" disabled/><span>Email 1</span></label>
+    <label><input id="billMthdEmail2" name="billMthdEmail2" type="checkbox" disabled/><span>Email 2</span></label>
     </td>
-    <th scope="row">Email(1)</th>
-    <td><input type="text" title="" placeholder="Email Address" class="w100p" /></td>
+    <th scope="row">Email(1)<span id="spEmail1" class="must">*</span></th>
+    <td><input id="billMthdEmailTxt1" name="billMthdEmailTxt1" type="text" title="" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
 <tr>
     <td></td>
-    <th scope="row">Email(2)</th>
-    <td><input type="text" title="" placeholder="Email Address" class="w100p" /></td>
+    <th scope="row">Email(2)<span id="spEmail2" class="must">*</span></th>
+    <td><input id="billMthdEmailTxt2" name="billMthdEmailTxt2" type="text" title="" placeholder="Email Address" class="w100p" disabled/></td>
 </tr>
 <tr>
     <td>
@@ -771,10 +1017,14 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
 </section>
 
+<!------------------------------------------------------------------------------
+    Billing Address - Form ID(billAddrForm)
+------------------------------------------------------------------------------->
 <section id="sctBillAddr" class="blind">
-<form id="billAddrForm" name="" action="#" method="post">
+<form id="billAddrForm" name="billAddrForm" action="#" method="post">
     <input id="hiddenBillPostCode"  name="hiddenBillPostCode"  type="hidden"/>
     <input id="hiddenBillAreaName"  name="hiddenBillAreaName"  type="hidden"/>
     <input id="hiddenBillStateName" name="hiddenBillStateName" type="hidden"/>
@@ -824,8 +1074,59 @@
 <!-- Existing Type end -->
 </form>
 </section>
+<br>
 
-<section id="sctBillSel" class="blind">    
+<section id="sctBillPrefer" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h2>Billing Preference</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li id="liBillPreferNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
+    <li id="liBillPreferSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Contact</a></p></li>
+</ul>
+
+<!------------------------------------------------------------------------------
+    Billing Preference - Form ID(billPreferForm)
+------------------------------------------------------------------------------->
+<section class="search_table"><!-- search_table start -->
+<form id=billPreferForm name="billPreferForm" action="#" method="post">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Initials<span class="must">*</span></th>
+    <td colspan="3"><input id="billPreferInitial" name="billPreferInitial" type="text" title="" placeholder="Initial" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Name<span class="must">*</span></th>
+    <td colspan="3"><input id="billPreferName" name="billPreferName" type="text" title="" placeholder="Name" class="w100p" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Tel(Office)<span class="must">*</span></th>
+    <td><input id="billPreferTelO" name="billPreferTelO" type="text" title="" placeholder="Tel(Office)" class="w100p" readonly/></td>
+    <th scope="row">Ext No.<span class="must">*</span></th>
+    <td><input id="billPreferExt" name="billPreferExt" type="text" title="" placeholder="Ext No." class="w100p" readonly/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</section><!-- search_table end -->
+</section>
+
+<!------------------------------------------------------------------------------
+    Billing Group Selection - Form ID(billPreferForm)
+------------------------------------------------------------------------------->
+<section id="sctBillSel" class="blind">
+<form id=billSelForm name="billSelForm" action="#" method="post">
+    
 <aside class="title_line"><!-- title_line start -->
 <h2>Billing Group Selection</h2>
 </aside><!-- title_line end -->
@@ -851,6 +1152,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
 </section>
 
 <table class="type1"><!-- table start -->
@@ -862,7 +1164,7 @@
 <tbody>
 <tr>
     <th scope="row">Remark</th>
-    <td><textarea cols="20" rows="5"></textarea></td>
+    <td><textarea id="billRem" name="billRem" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -877,13 +1179,13 @@
 
 </article><!-- tap_area end -->
 
+<!--****************************************************************************
+    Installation
+*****************************************************************************-->
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="instAddrForm" name="installForm" action="#" method="post">
-    <input id="hiddenCustAddId" name="custAddId" type="hidden"/>
-    <input id="instCntcId"    name="instCntcId"    type="hidden"/>
-    
+ 
 <aside class="title_line"><!-- title_line start -->
 <h2>Installation Address</h2>
 </aside><!-- title_line end -->
@@ -893,6 +1195,12 @@
     <li id="liInstSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Address</a></p></li>
 </ul>
 
+<!------------------------------------------------------------------------------
+    Installation Address - Form ID(instAddrForm)
+------------------------------------------------------------------------------->
+<form id="instAddrForm" name="instAddrForm" action="#" method="post">
+    <input id="hiddenCustAddId" name="custAddId" type="hidden"/>
+    <input id="instCntcId"    name="instCntcId"    type="hidden"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -928,8 +1236,6 @@
 </table><!-- table end -->
 </form>
 
-<form id="instCntcForm" name="installForm" action="#" method="post">
-    
 <section id="tbInstCntcPerson" class="blind">
     
 <aside class="title_line"><!-- title_line start -->
@@ -941,6 +1247,10 @@
     <li id="liInstSelAddr2" class="blind"><p class="btn_grid"><a href="#">Select Another Address</a></p></li>
 </ul>
 
+<!------------------------------------------------------------------------------
+    Installation Contact Person - Form ID(instCntcForm)
+------------------------------------------------------------------------------->
+<form id="instCntcForm" name="instCntcForm" action="#" method="post">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -994,12 +1304,17 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-</section>
 </form>
+</section>
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Installation Information</h2>
 </aside><!-- title_line end -->
+
+<!------------------------------------------------------------------------------
+    Installation Contact Person - Form ID(installForm)
+------------------------------------------------------------------------------->
+<form id="installForm" name="installForm" action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1059,6 +1374,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
 <!-- Existing Type end -->
 
 <ul class="center_btns">
@@ -1070,18 +1386,24 @@
 
 </article><!-- tap_area end -->
 
+<!--****************************************************************************
+    Documents
+*****************************************************************************-->
 <article class="tap_area"><!-- tap_area start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_doc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
 
+<!--****************************************************************************
+    Relief Certificate - Form ID(rliefForm)
+*****************************************************************************-->
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form id="rliefForm" name="rliefForm" action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

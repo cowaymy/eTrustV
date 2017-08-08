@@ -32,6 +32,30 @@
 		<typeAlias alias="pstRequestVO" type="com.coway.trust.biz.sales.pst.PSTRequestDOVO"/>
 		<!-- Sales Customer -->
         <typeAlias alias="customerVO" type="com.coway.trust.biz.sales.customer.CustomerVO"/>
+        <!-- Sales Order -->
+        <typeAlias alias="accClaimAdtVO" type="com.coway.trust.biz.sales.order.vo.AccClaimAdtVO"/>
+        <typeAlias alias="callEntryVO" type="com.coway.trust.biz.sales.order.vo.CallEntryVO"/>
+        <typeAlias alias="callResultVO" type="com.coway.trust.biz.sales.order.vo.CallResultVO"/>
+        <typeAlias alias="ccpDecisionMVO" type="com.coway.trust.biz.sales.order.vo.CcpDecisionMVO"/>
+        <typeAlias alias="custBillMasterVO" type="com.coway.trust.biz.sales.order.vo.CustBillMasterVO"/>
+        <typeAlias alias="docSubmissionVO" type="com.coway.trust.biz.sales.order.vo.DocSubmissionVO"/>
+        <typeAlias alias="eStatementReqVO" type="com.coway.trust.biz.sales.order.vo.EStatementReqVO"/>
+        <typeAlias alias="gSTEURCertificateVO" type="com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO"/>
+        <typeAlias alias="installEntryVO" type="com.coway.trust.biz.sales.order.vo.InstallEntryVO"/>
+        <typeAlias alias="installResultVO" type="com.coway.trust.biz.sales.order.vo.InstallResultVO"/>
+        <typeAlias alias="installationVO" type="com.coway.trust.biz.sales.order.vo.InstallationVO"/>
+        <typeAlias alias="rentPaySetVO" type="com.coway.trust.biz.sales.order.vo.RentPaySetVO"/>
+        <typeAlias alias="rentalSchemeVO" type="com.coway.trust.biz.sales.order.vo.RentalSchemeVO"/>
+        <typeAlias alias="salesOrderContractVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderContractVO"/>
+        <typeAlias alias="salesOrderDVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderDVO"/>
+        <typeAlias alias="salesOrderLogVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderLogVO"/>
+        <typeAlias alias="salesOrderMVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderMVO"/>
+        <typeAlias alias="srvConfigFilterVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigFilterVO"/>
+        <typeAlias alias="srvConfigPeriodVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO"/>
+        <typeAlias alias="srvConfigSettingVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO"/>
+        <typeAlias alias="srvConfigurationVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigurationVO"/>
+        <typeAlias alias="srvMembershipSalesVO" type="com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO"/>
+        
         
         <!-- Enrollment Result Update -->
         <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />

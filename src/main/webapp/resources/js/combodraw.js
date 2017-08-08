@@ -63,6 +63,26 @@ function doGetCombo(url, groupCd , selCode, obj , type, callbackFn){
     }); 
 } ;
 
+function doGetComboOrder(url, groupCd, orderVal, selCode, obj , type, callbackFn){
+	
+	$.ajax({
+        type : "GET",
+        url : url,
+        data : { groupCode : groupCd, orderValue : orderVal},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+           var rData = data;
+           doDefCombo(rData, selCode, obj , type,  callbackFn);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    }); 
+} ;
+
 function doGetComboSepa(url, groupCd ,separator, selCode, obj , type, callbackFn){
 	
 	$.ajax({
