@@ -1091,53 +1091,53 @@
 	
 	<select id="selectPaymentItemIsPassRecon" parameterType="Map" resultType="egovMap">
        SELECT 
-		       Extent1.PAY_ITM_ID PAY_ITM_ID  ,
-		       Extent1.PAY_ID PAY_ID  ,
-		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
-		       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
-		       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
-		       Extent1.PAY_ITM_ORI_CC_NO PAY_ITM_ORI_CC_NO  ,
-		       Extent1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
-		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
-		       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
-		       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
-		       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
-		       Extent1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
-		       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
-		       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
-		       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
-		       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
-		       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
-		       Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
-		       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
-		       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
-		       Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
-		       Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
-		       Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
-		       Extent1.PAY_ITM_BANK_BRNCH_ID PAY_ITM_BANK_BRNCH_ID  ,
-		       Extent1.PAY_ITM_BANK_IN_SLIP_NO PAY_ITM_BANK_IN_SLIP_NO  ,
-		       Extent1.PAY_ITM_EFT_NO PAY_ITM_EFT_NO  ,
-		       Extent1.PAY_ITM_CHQ_DEP_RECIPT_NO PAY_ITM_CHQ_DEP_RECIPT_NO  ,
-		       Extent1.ETC1 ETC1  ,
-		       Extent1.ETC2 ETC2  ,
-		       Extent1.ETC3 ETC3  ,
-		       Extent1.PAY_ITM_MID PAY_ITM_MID  ,
-		       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
-		       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
-		       Extent1.PAY_ITM_BANK_CHRG_ACC_ID PAY_ITM_BANK_CHRG_ACC_ID  ,
-		       Extent1.PAY_ITM_RUNNG_NO PAY_ITM_RUNNG_NO  ,
-		       Extent1.UPD_USER_ID UPD_USER_ID  ,
-		       Extent1.UPD_DT UPD_DT  ,
-		       Extent1.IS_FUND_TRNSFR IS_FUND_TRNSFR  ,
-		       Extent1.SKIP_RECON SKIP_RECON  ,
-		       Extent1.PAY_ITM_CARD_TYPE_ID PAY_ITM_CARD_TYPE_ID  ,
-		       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID  
-		  FROM PAY0065D Extent1
-		         JOIN PAY0074D Extent2   ON Extent2.F_DEP_RECON_ITM_PAY_ITM_ID = Extent1.PAY_ITM_ID
-		         JOIN PAY0073D Extent3   ON ( Extent3.F_DEP_RECON_ID = Extent2.F_DEP_RECON_ID )
-		         AND ( 5 = Extent3.F_DEP_RECON_STUS_ID )
-		 WHERE  ( Extent1.PAY_ID = #{payId} )
-		          AND ( 1 = Extent1.PAY_ITM_STUS_ID )
+	       Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+	       Extent1.PAY_ID PAY_ID  ,
+	       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+	       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+	       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+	       Extent1.PAY_ITM_ORI_CC_NO PAY_ITM_ORI_CC_NO  ,
+	       Extent1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
+	       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+	       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+	       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+	       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
+	       Extent1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
+	       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+	       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+	       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+	       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+	       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+	       Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
+	       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+	       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+	       Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+	       Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+	       Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+	       Extent1.PAY_ITM_BANK_BRNCH_ID PAY_ITM_BANK_BRNCH_ID  ,
+	       Extent1.PAY_ITM_BANK_IN_SLIP_NO PAY_ITM_BANK_IN_SLIP_NO  ,
+	       Extent1.PAY_ITM_EFT_NO PAY_ITM_EFT_NO  ,
+	       Extent1.PAY_ITM_CHQ_DEP_RECIPT_NO PAY_ITM_CHQ_DEP_RECIPT_NO  ,
+	       Extent1.ETC1 ETC1  ,
+	       Extent1.ETC2 ETC2  ,
+	       Extent1.ETC3 ETC3  ,
+	       Extent1.PAY_ITM_MID PAY_ITM_MID  ,
+	       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+	       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+	       Extent1.PAY_ITM_BANK_CHRG_ACC_ID PAY_ITM_BANK_CHRG_ACC_ID  ,
+	       Extent1.PAY_ITM_RUNNG_NO PAY_ITM_RUNNG_NO  ,
+	       Extent1.UPD_USER_ID UPD_USER_ID  ,
+	       Extent1.UPD_DT UPD_DT  ,
+	       Extent1.IS_FUND_TRNSFR IS_FUND_TRNSFR  ,
+	       Extent1.SKIP_RECON SKIP_RECON  ,
+	       Extent1.PAY_ITM_CARD_TYPE_ID PAY_ITM_CARD_TYPE_ID  ,
+	       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID  
+	   FROM PAY0065D Extent1
+	         JOIN PAY0074D Extent2   ON Extent2.F_DEP_RECON_ITM_PAY_ITM_ID = Extent1.PAY_ITM_ID
+	         JOIN PAY0073D Extent3   ON ( Extent3.F_DEP_RECON_ID = Extent2.F_DEP_RECON_ID )
+	         AND ( 5 = Extent3.F_DEP_RECON_STUS_ID )
+	   WHERE  ( Extent1.PAY_ID = #{payId} )
+	          AND ( 1 = Extent1.PAY_ITM_STUS_ID )
     </select>
 	
 

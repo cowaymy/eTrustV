@@ -285,10 +285,10 @@ public class SearchPaymentController {
 		EgovMap orderProgressStatus = searchPaymentService.selectOrderProgressStatus(params);
 		
 		//selectPaymentDetailView
-		EgovMap selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
+		List<EgovMap> selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
 		
 		//selectPaymentDetailSlaveList
-		EgovMap selectPaymentDetailSlaveList = searchPaymentService.selectPaymentDetailSlaveList(params);
+		List<EgovMap> selectPaymentDetailSlaveList = searchPaymentService.selectPaymentDetailSlaveList(params);
 		
 		//selectPaymentItemIsPassRecon
 		EgovMap paymentItemIsPassRecon = searchPaymentService.selectPaymentItemIsPassRecon(params);

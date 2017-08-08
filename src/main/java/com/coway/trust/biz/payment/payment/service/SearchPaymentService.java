@@ -70,14 +70,14 @@ public interface SearchPaymentService
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectPaymentDetailView(Map<String, Object> params);
+	List<EgovMap> selectPaymentDetailView(Map<String, Object> params);
 	
 	/**
 	 * PaymentDetailSlaveList   조회
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectPaymentDetailSlaveList(Map<String, Object> params);
+	List<EgovMap> selectPaymentDetailSlaveList(Map<String, Object> params);
 	
 	/**
 	 * PaymentItem 조회

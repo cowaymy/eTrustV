@@ -88,7 +88,7 @@ public interface SearchPaymentMapper {
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectPaymentDetailView(Map<String, Object> params);
+	List<EgovMap> selectPaymentDetailView(Map<String, Object> params);
 	
 	
 	/**
@@ -96,7 +96,7 @@ public interface SearchPaymentMapper {
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectPaymentDetailSlaveList(Map<String, Object> params);
+	List<EgovMap> selectPaymentDetailSlaveList(Map<String, Object> params);
 	
 	/**
 	 * selectPayMaster   조회

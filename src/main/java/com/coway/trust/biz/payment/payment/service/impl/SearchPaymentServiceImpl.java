@@ -143,7 +143,7 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 */
 	@Override
-	public EgovMap selectPaymentDetailView(Map<String, Object> params) {
+	public List<EgovMap> selectPaymentDetailView(Map<String, Object> params) {
 		return searchPaymentMapper.selectPaymentDetailView(params);
 	}
 	
@@ -153,7 +153,7 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 */
 	@Override
-	public EgovMap selectPaymentDetailSlaveList(Map<String, Object> params) {
+	public List<EgovMap> selectPaymentDetailSlaveList(Map<String, Object> params) {
 		return searchPaymentMapper.selectPaymentDetailSlaveList(params);
 	}
 	
