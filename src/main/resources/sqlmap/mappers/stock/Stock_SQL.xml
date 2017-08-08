@@ -597,7 +597,7 @@
          </delete>
          
           <insert id="insertSalePriceInfoHistory" parameterType="Map">
-          INSERT INTO LOG0058H
+          INSERT INTO LOG0058D
 						          (ROW_NO,
 									PRC_ID,
 									MEM_PAC_ID,
@@ -615,7 +615,7 @@
 									STUS_CODE_ID,
 									CRT_USER_ID,
 									CRT_DT) 
-			SELECT SEQ_LOG0058H.NEXTVAL,
+			SELECT LOG0058D_ROW_NO.NEXTVAL,
 			                        PRC_ID,
                                     MEM_PAC_ID,
                                     STK_ID,

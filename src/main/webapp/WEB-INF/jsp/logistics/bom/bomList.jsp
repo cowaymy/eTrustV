@@ -98,16 +98,18 @@
         {   
         	 f_removeclass();
         	 $("#subDiv").show();
-        	 //$("#material_info").show();
-        	 //$("#material_info_div").show();
-        	 //$("#material_info").find("a").attr("class", "on");
         	 $("#material_info").click();
-        	 if(AUIGrid.getCellValue(myGridID, event.rowIndex,"categoryid")=="62"){
+        	 if(3>event.columnIndex){
         		 $("#filter_info").show();
-        		 $("#spare_info").hide();
-        	 }else{
-        		 $("#filter_info").hide();
                  $("#spare_info").show();
+        	 }else{
+	        	 if(AUIGrid.getCellValue(myGridID, event.rowIndex,"categoryid")=="62"){
+	        		 $("#filter_info").show();
+	        		 $("#spare_info").hide();
+	        	 }else{
+	        		 $("#filter_info").hide();
+	                 $("#spare_info").show();
+	        	 }
         	 }
         	 
         });
@@ -135,69 +137,64 @@
         });
        $("#material_info").click(function(){
             
-            if($("#material_info_div").css("display") == "none"){
+            //if($("#material_info_div").css("display") == "none"){
                f_removeclass();
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
-                   // $("#stkId").val(selectedItems[i].item.stkid);
-                   console.log(selectedItems[i].item.bomCompnt);
                    f_view("/logistics/bom/materialInfo.do?cmpntId="+selectedItems[i].item.bomCompnt , "S");
                 }
                 $("#material_info_div").show();
                 
-            }else{
+            //}else{
                 //var selectedItems = AUIGrid.getSelectedItems(myGridID);
                // for(i=0; i<selectedItems.length; i++) {
                     //$("#stkId").val(selectedItems[i].item.stkid);
                   //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
                // }
-            }
+           // }
             $(this).find("a").attr("class","on");
             
         });
        $("#filter_info").click(function(){
            
-           if($("#filter_info_div").css("display") == "none"){
+          // if($("#filter_info_div").css("display") == "none"){
               f_removeclass();
                var selectedItems = AUIGrid.getSelectedItems(myGridID);
                for(i=0; i<selectedItems.length; i++) {
-                  // $("#stkId").val(selectedItems[i].item.stkid);
-                  console.log(selectedItems[i].item.bomCompnt);
-                  //f_view("/logistics/bom/filterInfo.do?cmpntId="+selectedItems[i].item.bomCompnt+"&grid=filter&materialCd="+selectedItems[i].item.bom, "F");
-                  f_view("/logistics/bom/filterInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "F");
+                  //f_view("/logistics/bom/filterInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "F");
+                  f_view("/logistics/bom/filterInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid=62", "F");
                }
                $("#filter_info_div").show();
                
-           }else{
+           //}else{
                //var selectedItems = AUIGrid.getSelectedItems(myGridID);
               // for(i=0; i<selectedItems.length; i++) {
                    //$("#stkId").val(selectedItems[i].item.stkid);
                  //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
               // }
-           }
+           //}
            $(this).find("a").attr("class","on");
            
        });
         
        $("#spare_info").click(function(){
            
-           if($("#spare_info_div").css("display") == "none"){
+           //if($("#spare_info_div").css("display") == "none"){
               f_removeclass();
                var selectedItems = AUIGrid.getSelectedItems(myGridID);
                for(i=0; i<selectedItems.length; i++) {
-                  // $("#stkId").val(selectedItems[i].item.stkid);
-                  console.log(selectedItems[i].item.bomCompnt);
-                  f_view("/logistics/bom/spareInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "R");
+                  //f_view("/logistics/bom/spareInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "R");
+                  f_view("/logistics/bom/spareInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid=63", "R");
                }
                $("#spare_info_div").show();
                
-           }else{
+          // }else{
                //var selectedItems = AUIGrid.getSelectedItems(myGridID);
               // for(i=0; i<selectedItems.length; i++) {
                    //$("#stkId").val(selectedItems[i].item.stkid);
                  //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
               // }
-           }
+           //}
            $(this).find("a").attr("class","on");
            
        });

@@ -37,11 +37,12 @@
             d.USER_WHO_CRT_RCORD  user_who_crt_rcord ,
             d.CHNG_ON  chng_on ,
             d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj
-        FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm,LOG0056M l
+        FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
+         /* ,LOG0056M l  */
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
               AND sm.CODE_ID = m2.STK_TYPE_ID
-              AND d.BOM_COMPNT = l.STK_CODE
+             /* AND d.BOM_COMPNT = l.STK_CODE */
               <if test="srchMaterialStart != null and srchMaterialEnd != null and srchMaterialStart != '' and srchMaterialEnd != ''">
               AND m.BOM BETWEEN #{srchMaterialStart} AND #{srchMaterialEnd} 
               </if>  
