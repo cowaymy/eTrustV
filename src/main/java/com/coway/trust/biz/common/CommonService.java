@@ -15,6 +15,11 @@ public interface CommonService {
 	List<EgovMap> selectI18NList();
 	
 	
+	/************************** Menu Management ****************************/
+	List<EgovMap> selectMenuList(Map<String, Object> params);
+	
+	int deleteMenuId(List<Object> addList, Integer updUserId);
+	
 	/************************** Program Management ****************************/
 	List<EgovMap> selectProgramList(Map<String, Object> params);
 	List<EgovMap> selectPgmTranList(Map<String, Object> params);

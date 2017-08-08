@@ -27,6 +27,11 @@ public interface CommonMapper {
 
 	List<EgovMap> selectI18NList();
 	
+	/************************** Menu Management ****************************/
+	// selectMenuList
+	List<EgovMap> selectMenuList(Map<String, Object> params);  
+	int deleteMenuId(Map<String, Object> params); 
+	
 	/************************** Program Management ****************************/	
 	
 	List<EgovMap> selectProgramList(Map<String, Object> params); 

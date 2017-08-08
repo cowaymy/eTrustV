@@ -52,6 +52,40 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectI18NList();
 	}
 	
+	/************************** Menu Management ****************************/
+	@Override
+	public List<EgovMap> selectMenuList(Map<String, Object> params) {
+		return commonMapper.selectMenuList(params);
+	}
+	
+	@Override
+	public int deleteMenuId(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("menuCode")).length() == 0 
+				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("menuCode")))) 
+			{
+				continue;
+			}
+			
+			logger.debug(" >>>>> deleteMenuId ");
+			logger.debug(" menuId : {}", ((Map<String, Object>) obj).get("menuCode"));
+
+			
+			delCnt++;
+			
+			commonMapper.deleteMenuId((Map<String, Object>) obj);
+		}
+		
+		return delCnt;
+	}	
+	
 	/************************** Program Management ****************************/
 	@Override
 	public List<EgovMap> selectProgramList(Map<String, Object> params) {
