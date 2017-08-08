@@ -230,9 +230,7 @@
         var url = "/logistics/bom/selectBomList.do";
         var param = $('#searchForm').serializeJSON();
         Common.ajax("POST" , url , param , function(data){
-            //console.log(data.data);
             AUIGrid.setGridData(myGridID, data.data);
-            //setCellMerge();
             $("#subDiv").hide();
         });
     }

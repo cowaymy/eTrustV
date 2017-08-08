@@ -168,6 +168,12 @@
     });
 
     $(function(){
+    	$("#loccd").keypress(function(event){
+    		if (event.which == '13') {
+                $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+                Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+            }
+    	});
         $("#search").click(function(){
         	getLocationListAjax();
         	$("#detailView").hide();
@@ -501,6 +507,14 @@
      function fn_insertCancel(){
          $( "#registWindow" ).hide();
      }
+
+     
+     function fn_itempopList(data){
+    	 console.log(data);
+    	 var rtnVal = data[0].item.loccd;
+    	 $("#loccd").val(rtnVal);
+    	} 
+        
      
 </script>
 </head>
@@ -523,7 +537,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" method="post">
-
+<input type="hidden" id="sUrl" name="sUrl">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

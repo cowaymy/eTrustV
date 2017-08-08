@@ -7,7 +7,6 @@
  */
 package com.coway.trust.biz.logistics.organization.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,18 +16,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.common.impl.CommonServiceImpl;
 import com.coway.trust.biz.logistics.organization.LocationService;
-import com.coway.trust.biz.logistics.organization.impl.LocationMapper;
-import com.coway.trust.biz.logistics.stocks.StockService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("locationService")
 public class LocationServiceImpl extends EgovAbstractServiceImpl implements LocationService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
 	@Resource(name = "locMapper")
@@ -51,22 +47,28 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		// TODO Auto-generated method stub
 		locMapper.updateLocationInfo(params);
 	}
-	
+
 	@Override
 	public void insertLocationInfo(Map<String, Object> params) {
-	
+
 		int inlocid = locMapper.locCreateSeq();
-		
+
 		params.put("inlocid", inlocid);
-		
+
 		// TODO Auto-generated method stub
 		locMapper.insertLocationInfo(params);
 	}
+
 	@Override
 	public void deleteLocationInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		locMapper.deleteLocationInfo(params);
 	}
-	
-	
+
+	@Override
+	public List<EgovMap> selectLocationCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return locMapper.selectLocationCodeList(params);
+	}
+
 }
