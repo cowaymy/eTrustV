@@ -74,6 +74,72 @@ public class CommonController {
 		return "common/main";
 	}
 	
+	/****************** Menu Management *******************/  
+	@RequestMapping(value = "/menuManagement.do")
+	public String menuList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		return "/common/menuManagement";
+	}
+	
+	// search
+	@RequestMapping(value = "/selectMenuList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMenuList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> statusCategoryList = commonService.selectMenuList(params);
+
+		return ResponseEntity.ok(statusCategoryList);
+	}
+	
+	//popup
+	@RequestMapping(value = "/searchProgramPop.do")  
+	public String searchPopProgramList(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
+		//model.addAttribute("url", params);
+		// 호출될 화면
+		return "/common/searchProgramPop";
+	}
+	
+	// save menuId
+	@RequestMapping(value = "/saveMenuId.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveMenuId(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) 
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
+
+		int cnt = 0;
+		if (addList.size() > 0) 
+		{   
+			cnt = commonService.insertPgmId(addList, getUserId);
+		}
+		
+		if (udtList.size() > 0) 
+		{
+			cnt = commonService.updatePgmId(udtList, getUserId);
+		}
+		
+		if (delList.size() > 0) 
+		{
+			cnt = commonService.deleteMenuId(delList, getUserId);
+		}
+
+		// 콘솔로 찍어보기
+		Logger.info("CommCd_수정 : {}", udtList.toString());
+		Logger.info("CommCd_추가 : {}", addList.toString());
+		Logger.info("CommCd_삭제 : {}", delList.toString());
+		Logger.info("CommCd_카운트 : {}", cnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}	
+	
+	
+	
 	/****************** Program Management *******************/
 	@RequestMapping(value = "/pgmManagement.do")
 	public String programList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
