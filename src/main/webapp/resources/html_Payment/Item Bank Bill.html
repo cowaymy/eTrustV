@@ -153,10 +153,10 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Billing Raw Data</h2>
+<h2> Item Bank Bill </h2>
 <ul class="right_btns">
-	<li><p class="btn_blue2"><a href="#">Generate</a></p></li>
-	<li><p class="btn_blue2"><a href="#">Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -167,12 +167,28 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:190px" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:130px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Report Type</th>
+	<th scope="row">IBB No.</th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p" />
+	</td>
+	<th scope="row">Type</th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Sales Agent</th>
 	<td>
 	<select class="w100p">
 		<option value="">11</option>
@@ -182,8 +198,21 @@
 	</td>
 </tr>
 <tr>
-	<th scope="row">Issue Month</th>
-	<td><input type="text" title="기준년월" class="j_date2" /></td>
+	<th scope="row">Customer Name</th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p" />
+	</td>
+	<th scope="row">Sales Date</th>
+	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span>To</span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	</div><!-- date_set end -->
+	</td>
+	<th scope="row"></th>
+	<td>
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -221,9 +250,9 @@
 </form>
 </section><!-- search_table end -->
 
+<section class="search_result"><!-- search_result start -->
+
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-	<li><p class="btn_grid"><a href="#">NEW</a></p></li>
 	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
 	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
 	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
@@ -234,6 +263,8 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역
 </article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
 
 </section><!-- content end -->
 
