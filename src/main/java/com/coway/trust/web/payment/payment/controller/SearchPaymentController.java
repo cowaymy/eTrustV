@@ -680,11 +680,11 @@ public class SearchPaymentController {
 		String trIssuDt = "";
 		
 		if(viewMaster != null){
-			trNo = String.valueOf(viewMaster.get("trNo"));
-			brnchId = String.valueOf(viewMaster.get("brnchId"));
-			collMemId = String.valueOf(viewMaster.get("collMemId"));
-			allowComm = String.valueOf(viewMaster.get("allowComm"));
-			trIssuDt = String.valueOf(viewMaster.get("trIssuDt"));
+			trNo = (String.valueOf(viewMaster.get("trNo"))) == null ? "" : String.valueOf(viewMaster.get("trNo"));
+			brnchId = String.valueOf(viewMaster.get("brnchId")) == null ? "" : String.valueOf(viewMaster.get("brnchId"));
+			collMemId = String.valueOf(viewMaster.get("collMemId")) == null ? "" : String.valueOf(viewMaster.get("collMemId"));
+			allowComm = String.valueOf(viewMaster.get("allowComm")) == null ? "" : String.valueOf(viewMaster.get("allowComm"));
+			trIssuDt = String.valueOf(viewMaster.get("trIssuDt")) == null ? "" : String.valueOf(viewMaster.get("trIssuDt"));
 		}
 		
 		logger.debug("마스터조회값 trNo : {}", trNo);
@@ -862,11 +862,13 @@ public class SearchPaymentController {
 		}else{
 			updMap.put("allowComm", "");
 		}
-			
+		
+		String trIssueDate = CommonUtils.nvl(params.get("edit_txtTRIssueDate")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("edit_txtTRIssueDate"));
 		if(!trIssuDt.equals(String.valueOf(params.get("edit_txtTRIssueDate")))){
-			updMap.put("trIssueDate", String.valueOf(params.get("edit_txtTRIssueDate")));
+			updMap.put("trIssueDate", trIssueDate);
 		}else{
-			updMap.put("trIssueDate", "");
+			
+			updMap.put("trIssueDate", trIssueDate);
 		}
 		searchPaymentService.updChanges(updMap);//변경값들 마스터테이블에 업데이트.
 		
