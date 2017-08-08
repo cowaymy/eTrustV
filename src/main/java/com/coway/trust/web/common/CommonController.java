@@ -42,7 +42,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/common")
 public class CommonController {
 
-	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
+	private static final Logger Logger = LoggerFactory.getLogger(CommonController.class);
 
 	// DataBase message accessor....
 	@Autowired
@@ -63,7 +63,7 @@ public class CommonController {
 	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
 
-		logger.debug("groupCode : {}", params.get("groupCode"));
+		Logger.debug("groupCode : {}", params.get("groupCode"));
 
 		List<EgovMap> codeList = commonService.selectCodeList(params);
 		return ResponseEntity.ok(codeList);
@@ -73,6 +73,127 @@ public class CommonController {
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "common/main";
 	}
+	
+	/****************** Program Management *******************/
+	@RequestMapping(value = "/pgmManagement.do")
+	public String programList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		return "/common/programManagement";
+	}
+	
+	
+	// POPUP 화면 호출.
+	 
+	@RequestMapping(value = "/pgmManagentEditPop.do")
+	public String pgmManagentUpdPop(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
+		// popup 화면으로 넘길 데이터.
+		model.addAttribute("inputParams", params);
+
+		// 호출될 화면
+		return "/common/programManagementPop";
+	}
+
+	@RequestMapping(value = "/pgmManagentAddPop.do")
+	public String pgmManagentAddPop(@RequestParam Map<String, Object> params) 
+	{
+		// 호출될 화면
+		return "/common/programManagementPop";
+	}
+	
+	// search
+	@RequestMapping(value = "/selectProgramList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProgramList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> statusCategoryList = commonService.selectProgramList(params);
+
+		return ResponseEntity.ok(statusCategoryList);
+	}
+	
+	@RequestMapping(value = "/selectPgmTranList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPgmTranList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> statusCategoryList = commonService.selectPgmTranList(params);
+		
+		return ResponseEntity.ok(statusCategoryList);
+	}
+	
+	// save pgmId
+	@RequestMapping(value = "/saveProgramId.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveProgramId(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) 
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
+
+		int cnt = 0;
+		if (addList.size() > 0) 
+		{   
+			cnt = commonService.insertPgmId(addList, getUserId);
+		}
+		
+		if (udtList.size() > 0) 
+		{
+			cnt = commonService.updatePgmId(udtList, getUserId);
+		}
+		
+		if (delList.size() > 0) 
+		{
+			cnt = commonService.deletePgmId(delList, getUserId);
+		}
+
+		// 콘솔로 찍어보기
+		Logger.info("CommCd_수정 : {}", udtList.toString());
+		Logger.info("CommCd_추가 : {}", addList.toString());
+		Logger.info("CommCd_삭제 : {}", delList.toString());
+		Logger.info("CommCd_카운트 : {}", cnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	// update transaction.	
+	@RequestMapping(value = "/updateTrans.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateTrans(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) 
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		int cnt = 0;
+		// add=[{funcChng=Y, funcPrt=Y, funcUserDfn1=Y, descUserDfn1=1233133, funcUserDfn2=N, _$uid=8DF42F98-02D7-B787-54F9-A5DD6FBFC901, pgmCode=SVC001}], update=[], remove=[]}
+		
+		if (addList.size() > 0) 
+		{   
+			cnt = commonService.updPgmIdTrans(addList, getUserId);
+		}
+		
+		if (udtList.size() > 0) 
+		{
+			cnt = commonService.updPgmIdTrans(udtList, getUserId);
+		}
+		
+		
+		// 콘솔로 찍어보기
+		Logger.info("CommCd_수정 : {}", udtList.toString());
+		Logger.info("CommCd_추가 : {}", addList.toString());
+		Logger.info("CommCd_카운트 : {}", cnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	
 
 	/**************** Status Code Management *****************/
 
@@ -126,9 +247,9 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		logger.info("CommCd_수정 : {}", udtList.toString());
-		logger.info("CommCd_추가 : {}", addList.toString());
-		logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("CommCd_수정 : {}", udtList.toString());
+		Logger.info("CommCd_추가 : {}", addList.toString());
+		Logger.info("CommCd_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -149,7 +270,7 @@ public class CommonController {
 		}
 		*/
 		
-		logger.debug("insertStatusCatalogCode: "+params.getGridDataSet());
+		Logger.debug("insertStatusCatalogCode: "+params.getGridDataSet());
 		
 		int cnt = commonService.insertStatusCategoryCode(params,  getUserId);
 
@@ -179,9 +300,9 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		logger.info("CommCd_수정 : {}", udtList.toString());
-		logger.info("CommCd_추가 : {}", addList.toString());
-		logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("CommCd_수정 : {}", udtList.toString());
+		Logger.info("CommCd_추가 : {}", addList.toString());
+		Logger.info("CommCd_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -201,7 +322,7 @@ public class CommonController {
 		cnt = commonService.updateCategoryCodeYN(params, getUserId);
 		
 		// 콘솔로 찍어보기
-		logger.info("disabledYn : {}", cnt);
+		Logger.info("disabledYn : {}", cnt);
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -439,9 +560,9 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		logger.info("CommCd_수정 : {}", udtList.toString());
-		logger.info("CommCd_추가 : {}", addList.toString());
-		logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("CommCd_수정 : {}", udtList.toString());
+		Logger.info("CommCd_추가 : {}", addList.toString());
+		Logger.info("CommCd_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -470,9 +591,9 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		logger.info("DetailCommCd_수정 : {}", udtList.toString());
-		logger.info("DetailCommCd_추가 : {}", addList.toString());
-		logger.info("DetailCommCd_카운트 : {}", cnt);
+		Logger.info("DetailCommCd_수정 : {}", udtList.toString());
+		Logger.info("DetailCommCd_추가 : {}", addList.toString());
+		Logger.info("DetailCommCd_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
