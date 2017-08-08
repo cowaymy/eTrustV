@@ -268,8 +268,9 @@ function fn_openDivPop(val){
                 $('#edit_txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#edit_txtLastUpdator").css("color","red");
                 $('#edit_txtKeyInUser').text(result.viewMaster.keyinUserName);$("#edit_txtKeyInUser").css("color","red");
                 $('#edit_txtOrderNo').text(result.viewMaster.salesOrdNo);$("#edit_txtOrderNo").css("color","red");
-                $('#edit_txtTRRefNo').val(result.viewMaster.trNo);
-                //$('#edit_txtTRIssueDate').val(result.viewMaster.trIssuDt);
+                $('#edit_txtTRRefNo').val(result.viewMaster.trNo);$("#edit_txtTRRefNo").css("backgroundColor","#F5F6CE");
+                
+                $("#edit_txtTRIssueDate").css("backgroundColor","#F5F6CE");
                 var refDate = new Date(result.viewMaster.trIssuDt);
                 var defaultDate = new Date("01/01/1900");
                 if((refDate.getTime() > defaultDate.getTime())){
@@ -297,7 +298,7 @@ function fn_openDivPop(val){
                 $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
                 $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
                 
-                $('#edit_branchId').val(result.viewMaster.clctrBrnchId);
+                $('#edit_branchId').val(result.viewMaster.clctrBrnchId);$("#edit_branchId").css("backgroundColor","#F5F6CE");
                 $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
                 $('#edit_txtClctrName').text(result.viewMaster.clctrName);
                 
@@ -384,7 +385,7 @@ function showItemEdit(payItemId){
 			 var refDate = new Date(result[0].payItmRefDt);
 			 var defaultDate = new Date("01-01-1900");
 			 if((refDate.getTime() > defaultDate.getTime()))
-			{
+			{    
 				 console.log("refDate > defaultDate : " + (refDate.getTime() > defaultDate.getTime()));
 				 $("#txtRefDateCh").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
 			}
