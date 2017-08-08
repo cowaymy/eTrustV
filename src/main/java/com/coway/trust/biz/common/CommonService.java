@@ -11,7 +11,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface CommonService {
 
 	List<EgovMap> selectCodeList(Map<String, Object> params);
-
 	List<EgovMap> selectI18NList();
 	
 	
@@ -134,4 +133,6 @@ public interface CommonService {
 	List<EgovMap> selectStockLocationList(Map<String, Object> params);
 
 	EgovMap selectBrnchIdByPostCode(Map<String, Object> params);
+	
+	List<EgovMap> selectDocSubmissionList(Map<String, Object> params);
 }

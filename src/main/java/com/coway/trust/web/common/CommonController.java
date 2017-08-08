@@ -774,4 +774,11 @@ public class CommonController {
 		EgovMap result = commonService.selectBrnchIdByPostCode(params);
 		return ResponseEntity.ok(result);
 	}
+		
+	@RequestMapping(value = "/selectDocSubmissionList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDocSubmissionList(@RequestParam Map<String, Object> params)
+	{
+		List<EgovMap> codeList = commonService.selectDocSubmissionList(params);
+		return ResponseEntity.ok(codeList);
+	}
 }

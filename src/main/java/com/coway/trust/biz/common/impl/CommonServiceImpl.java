@@ -646,4 +646,9 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectBrnchIdByPostCode(params);
 	}
 
+	@Override
+	public List<EgovMap> selectDocSubmissionList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return commonMapper.selectDocSubmissionList(params);
+	}
 }
