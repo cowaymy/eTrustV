@@ -750,7 +750,7 @@ $(document).ready(function()
 <h2>Program Management</h2>
 <ul class="right_btns">
   <li><p class="btn_blue"><a onclick="fnSelectPgmListAjax();"><span class="search"></span>Search</a></p></li>
-  <li><p class="btn_blue"><a onclick="fnClear();"><span class="clear"></span>Clear</a></p></li>
+  <!-- <li><p class="btn_blue"><a onclick="fnClear();"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
@@ -773,7 +773,7 @@ $(document).ready(function()
 <tr>
   <th scope="row">ID</th>
   <td>
-  <input type="text" title="" id="pgmId" name="pgmId" placeholder="program id" class="w100p" />
+  <input type="text" title="" id="pgmCode" name="pgmCode" placeholder="program id" class="w100p" />
   </td>
   <th scope="row">Name</th>
   <td>
