@@ -2,6 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
 
+  <select id="selectMenuList" parameterType="Map" resultType="egovMap">
+    SELECT 'Lvl'||MENU_LVL DIV 
+			      ,A.MENU_LVL
+			      ,A.MENU_CODE
+			      ,A.MENU_NAME
+			      ,A.PGM_CODE
+			      ,B.PGM_NAME 
+			      ,A.STATUS_CODE
+			      ,A.UPPER_MENU_CODE
+			      ,A.MENU_ORDER 
+			   FROM SYS0051M A
+			       ,SYS0050M B
+				WHERE B.PGM_CODE(+) = A.PGM_CODE
+				 <if test='menuCode !=null and menuCode != "" '>
+				  AND UPPER(A.MENU_CODE) LIKE '%' || UPPER(:menuCode) || '%'
+				 </if>  
+				 <if test='pgmCode !=null and pgmCode !="" '>
+				  AND UPPER(B.PGM_CODE(+)) LIKE '%' || UPPER(:pgmCode) || '%'
+				 </if>
+				ORDER BY A.MENU_CODE,A.MENU_ORDER
+	</select>
+	
+  <delete id="deleteMenuId" parameterType="Map">
+      DELETE SYS0051M  WHERE MENU_CODE  = #{menuCode}
+  </delete>	
+	
+
   <delete id="deletePgmId" parameterType="Map">
       DELETE SYS0050M  WHERE PGM_CODE  = #{pgmCode}
   </delete>
@@ -173,10 +200,10 @@
 		  FROM SYS0050M
 		 WHERE 1 = 1
       <if test="pgmCode !=null and pgmCode != ''">
-        AND PGM_CODE = #{pgmCode}
+        AND UPPER(PGM_CODE) LIKE '%' || UPPER(#{pgmCode}) || '%'
       </if>     
       <if test="pgmNm !=null and pgmNm != ''">
-        AND UPPER(PGM_NAME) LIKE '%' || UPPER(#{PGM_NAME}) || '%'         
+        AND UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmNm}) || '%'         
       </if>     
      ORDER BY  PGM_CODE
   </select>
