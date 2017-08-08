@@ -694,7 +694,7 @@ public class CommonController {
 	public ResponseEntity<List<EgovMap>> selectStockLocationList(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		List<EgovMap> codeList = commonService.selectStockLocationList(params);
-		logger.info("selectStockLocationList: {}", codeList.toString());
+		Logger.info("selectStockLocationList: {}", codeList.toString());
 		return ResponseEntity.ok(codeList);
 	}
 	
