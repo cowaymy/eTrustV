@@ -312,6 +312,30 @@
 	              and op.STUS_CODE_ID = 1
 	           </if>
         </select>
+        <select id="selectPriceHistoryInfo" parameterType="Map" resultType="egovMap">
+          SELECT 
+                    ROW_NO, 
+					PRC_ID, 
+					MEM_PAC_ID, 
+					STK_ID, 
+					NVL(AMT,0) amt, 
+					UOM_ID, 
+					UOM_CONV, 
+					APP_TYPE_ID, 
+					NVL(PRIOD, 0) ,
+					NVL(PRC_RPF, 0) pricerpf,
+					NVL(PRC_PV, 0) pricepv,
+					NVL(TRADE_IN_PV, 0 ) tradeinpv,
+					NVL(PRC_CHRG, 0) penalty,
+					NVL(PRC_COSTING, 0) pricecost,
+					STUS_CODE_ID, 
+					CRT_USER_ID, 
+					CRT_DT
+            FROM  LOG0058D 
+               WHERE 1 = 1
+                          AND STK_ID = #{stockId}
+                          ORDER BY ROW_NO               
+        </select>
         
         <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[

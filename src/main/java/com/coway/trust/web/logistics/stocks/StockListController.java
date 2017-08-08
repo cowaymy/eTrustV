@@ -1,7 +1,6 @@
 
 package com.coway.trust.web.logistics.stocks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +46,10 @@ public class StockListController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@Autowired
 	private SessionHandler sessionHandler;
-	
+
 	@RequestMapping(value = "/Stock.do")
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -65,7 +64,7 @@ public class StockListController {
 		String[] status = request.getParameterValues("cmbStatus");
 		String stkNm = request.getParameter("stkNm");
 		String stkCd = request.getParameter("stkCd");
-		
+
 		Map<String, Object> smap = new HashMap();
 		smap.put("cateList", cate);
 		smap.put("typeList", type);
@@ -109,9 +108,11 @@ public class StockListController {
 		smap.put("typeId", typeid);
 
 		List<EgovMap> info = stock.selectPriceInfo(smap);
+		List<EgovMap> infoHistory = stock.selectPriceHistoryInfo(smap);
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", info);
+		map.put("data2", infoHistory);
 		return ResponseEntity.ok(map);
 	}
 
@@ -171,8 +172,8 @@ public class StockListController {
 		params.put("upd_user", 99999999);
 
 		Map<String, Object> map = new HashMap();
-		map.put("revalue", (String) params.get("revalue"));
-		map.put("stkid", (Integer) params.get("stockId"));
+		map.put("revalue", params.get("revalue"));
+		map.put("stkid", params.get("stockId"));
 
 		try {
 			stock.updateStockInfo(params);
@@ -189,23 +190,22 @@ public class StockListController {
 	public ResponseEntity<Map> modifyPriceInfo(@RequestBody Map<String, Object> params, Model model) throws Exception {
 		// sampleService.saveTransaction(params);
 		String retMsg = AppConstants.MSG_SUCCESS;
-		
+
 		// loginId
 		params.put("upd_user", 99999999);
 
 		Map<String, Object> map = new HashMap();
-		map.put("revalue", (String) params.get("revalue"));
-		map.put("stkid", (Integer) params.get("stockId"));
+		map.put("revalue", params.get("revalue"));
+		map.put("stkid", params.get("stockId"));
 		map.put("msg", retMsg);
-		
+
 		stock.updatePriceInfo(params);
 
 		return ResponseEntity.ok(map);
 	}
-    
+
 	@RequestMapping(value = "/srvMembershipList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> srvMembershipList(Map<String, Object> params) {
-
 
 		// 조회.
 		List<EgovMap> srvMembershipList = stock.srvMembershipList(params);
@@ -213,6 +213,7 @@ public class StockListController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(srvMembershipList);
 	}
+
 	/**
 	 * 
 	 * @param params
@@ -220,90 +221,81 @@ public class StockListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/modifyServiceInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> modifyServiceInfo(@RequestBody Map<String, Object> params,
-			Model model) {
+	public ResponseEntity<ReturnMessage> modifyServiceInfo(@RequestBody Map<String, Object> params, Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
-		if(sessionVO==null){
-			loginId=99999999;			
-		}else{
-			loginId=sessionVO.getUserId();
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
 		}
-		
-		int stockId =   (int)params.get("stockId");
-		List<Object> removeLIst   =  (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
-		List<Object> addLIst 		= (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		//logger.debug("수정 : {}", addLIst.toString());
-		//logger.debug("delete : {}", removeLIst.toString());
+
+		int stockId = (int) params.get("stockId");
+		List<Object> removeLIst = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		List<Object> addLIst = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		// logger.debug("수정 : {}", addLIst.toString());
+		// logger.debug("delete : {}", removeLIst.toString());
 		logger.debug("stockId id : {}", params.get("stockId"));
-		
-		
+
 		int cnt = 0;
-		
-		if(!removeLIst.isEmpty()){
-    		if(removeLIst.size() > 0){
-    			cnt = stock.removeServiceInfoGrid(stockId,removeLIst,loginId);
-    		}
-    		
-		}else if (!addLIst.isEmpty()) {
-			if(addLIst.size() > 0){
-				cnt = stock.addServiceInfoGrid(stockId,addLIst,loginId);
+
+		if (!removeLIst.isEmpty()) {
+			if (removeLIst.size() > 0) {
+				cnt = stock.removeServiceInfoGrid(stockId, removeLIst, loginId);
+			}
+
+		} else if (!addLIst.isEmpty()) {
+			if (addLIst.size() > 0) {
+				cnt = stock.addServiceInfoGrid(stockId, addLIst, loginId);
 			}
 		}
-		
-		
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "unused", "null" })
 	@RequestMapping(value = "/modifyFilterInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> modifyFilterInfo(@RequestBody Map<String, Object> params,
-			Model model) {
+	public ResponseEntity<ReturnMessage> modifyFilterInfo(@RequestBody Map<String, Object> params, Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		int loginId ;
-		if(sessionVO==null){
-			loginId=99999999;			
-		}else{
-			loginId=sessionVO.getUserId();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
 		}
-		
-		int stockId =   (int)params.get("stockId");
-		String revalue = (String)params.get("revalue"); 
-		List<Object> removeLIst   =  (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
-		List<Object> addLIst 		= (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		
+
+		int stockId = (int) params.get("stockId");
+		String revalue = (String) params.get("revalue");
+		List<Object> removeLIst = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		List<Object> addLIst = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+
 		logger.info("removeLIst : {}", removeLIst.size());
-		//logger.info("addLIst : {}", addLIst.size());
+		// logger.info("addLIst : {}", addLIst.size());
 		int cnt = 0;
-		
-		//if(!removeLIst.isEmpty()){
-		if(null != removeLIst || !"".equals(removeLIst)){
-    		//if(removeLIst.size() > 0){
-    			cnt = stock.removeFilterInfoGrid(stockId,removeLIst,loginId,revalue);
-    		//}
-    		
+
+		// if(!removeLIst.isEmpty()){
+		if (null != removeLIst || !"".equals(removeLIst)) {
+			// if(removeLIst.size() > 0){
+			cnt = stock.removeFilterInfoGrid(stockId, removeLIst, loginId, revalue);
+			// }
+
 		}
-		//if (!addLIst.isEmpty()) {
-		if (null !=addLIst || !"".equals(addLIst)) {
-			//if(addLIst.size() > 0){
-				cnt = stock.addFilterInfoGrid(stockId,addLIst,loginId,revalue);
-			//}
+		// if (!addLIst.isEmpty()) {
+		if (null != addLIst || !"".equals(addLIst)) {
+			// if(addLIst.size() > 0){
+			cnt = stock.addFilterInfoGrid(stockId, addLIst, loginId, revalue);
+			// }
 		}
-		
-		
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 }
-
-

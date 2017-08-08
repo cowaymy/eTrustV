@@ -44,6 +44,8 @@
     var serviceGrid;
     var imgGrid;
     
+    var priceHistoryGrid;
+    
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "8","codeName": "Inactive"}];
     
     
@@ -200,6 +202,16 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                           {dataField:"uuser"          ,headerText:"uuser"     ,width:120, visible : false},
                           {dataField:"cdate"          ,headerText:"cdate"     ,width:120, visible : false},
                           {dataField:"cuser"          ,headerText:"cuser"     ,width:120 , visible : false}];
+    
+    var pricehiscolumn=[
+								{dataField:"pricecost"          ,headerText:"Cost"               ,width:"14%" , visible : true},
+								{dataField:"amt"          ,headerText:"Normal Price"     ,width:"14%" , visible : true},
+								{dataField:"pricepv"          ,headerText:"Point of <br> Value (PV)"     ,width:"15%" , visible : true},
+								{dataField:" "          ,headerText:"Monthly <br> Rental"     ,width:"14%" , visible : true},
+								{dataField:"pricerpf"          ,headerText:"Rental <br> Deposit"     ,width:"14%" , visible : true},
+								{dataField:"penalty"          ,headerText:"Penalty <br> Charges"     ,width:"14%" , visible : true},
+								{dataField:"tradeinpv"          ,headerText:"Trade In <br> (PV) Value"     ,width:"15%" , visible : true},
+                               ];
 
  // 그리드 속성 설정
     var gridPros = {
@@ -407,7 +419,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         $("#service_info_edit").click(function(){
              var selectedItems = AUIGrid.getSelectedItems(myGridID);
              
-             console.log("selectedItems[0].item.stkid "+selectedItems[0].item.stkid);
                 if($("#service_info_edit").text() == "EDIT"){ 
                     colShowHide(serviceGrid,"",true);
                     $("#service_info_edit").text("Add Service Charge") ;
@@ -435,7 +446,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         }else if($("#filter_info_edit").text() == "SAVE"){
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             
-            console.log("selectedItems[0].item.stkid "+selectedItems[0].item.stkid);     	
         	
             f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
         	
@@ -460,8 +470,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 								var selectedItems = AUIGrid
 										.getSelectedItems(myGridID);
 
-								console.log("selectedItems[0].item.stkid "
-										+ selectedItems[0].item.stkid);
 
 								f_info_save("/stock/modifyFilterInfo.do",
 										selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
@@ -492,9 +500,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			fdata = $("#" + v).serializeJSON();
 		}
 		var keys = Object.keys(fdata);
-		console.log("keys " + keys);
+		//console.log("keys " + keys);
 		for ( var i in keys) {
-			console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
+			//console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
 			//+ ",  data="+ obj[keys[i]]);
 		}
 		if (v == "stockInfo") {
@@ -527,7 +535,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		Common.ajax("POST", url, fdata, function(data) {
 			//alert("msg "+data.msg);
 			Common.alert(data.message);
-			console.log("start");
 			if (v == "stockInfo") {
 				$("#stock_info_edit").text("EDIT");
 			} else if (v == "priceForm") {
@@ -546,7 +553,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                	$("#service_info").trigger("click");
             }
 			getMainListAjax(data);
-			console.log("end");
 		});
 	}
 
@@ -636,6 +642,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 	function imgAUIGrid(stockimgcolumn) {
 		imgGrid = AUIGrid.create("#stock_img_div", stockimgcolumn, subgridpros);
 	}
+	function priceHistoryAUIGrid(pricehiscolumn) {
+		priceHistoryGrid = AUIGrid.create("#priceHistory_div", pricehiscolumn, subgridpros);
+	}
 
 	function getSampleListAjax() {
 
@@ -694,8 +703,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			dataType : "json",
 			contentType : "application/json;charset=UTF-8",
 			success : function(_data) {
-				var data = _data.data;
-				f_info(data, v);
+				//var data = _data.data;
+				f_info(_data, v);
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("실패하였습니다.");
@@ -703,8 +712,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		});
 	}
 
-	function f_info(data, v) {
-
+	function f_info(_data, v) {
+		var data = _data.data;
+		var data2 = _data.data2;
+		console.log(data2);
 		if (v == 'S') {
 			$("#txtStockType").empty();
 			$("#txtStockCode").empty();
@@ -801,6 +812,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			$("#txtRentalDeposit").text(data[0].pricerpf);
 			$("#txtPenaltyCharge").text(data[0].penalty);
 			$("#txtTradeInPV").text(data[0].tradeinpv);
+			
+	            destory(priceHistoryGrid);
+	            priceHistoryAUIGrid(pricehiscolumn);
+	            AUIGrid.setGridData(priceHistoryGrid, data2); 
 		} else if (v == 'EP') {
 			var selectedItems = AUIGrid.getSelectedItems(myGridID);
 			var typeid = "";
@@ -862,6 +877,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
 			$("#price_info_edit").text("SAVE");
 
+            destory(priceHistoryGrid);
+            priceHistoryAUIGrid(pricehiscolumn);
+            AUIGrid.setGridData(priceHistoryGrid, data2);  
+            
 		} else if (v == 'F') {
 			destory(filterGrid);
 			filterAUIGrid(filtercolumn)
@@ -1233,6 +1252,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             </article>
 
             <article class="tap_area" id="price_info_div" style="display:none;">
+                <div class="divine_auto"><!-- divine_auto start -->
+                    <div style="width:50%;">
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Price & Value Information</h3>
                 <ul class="left_opt">
@@ -1275,6 +1296,19 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     </tbody>
                 </table>
                 </form>
+                </div>
+                <div style="width:1%;" >
+                </div>
+				<div style="width:49%;">
+				
+				<aside class="title_line"><!-- title_line start -->
+				<h3>Price & Value Information History</h3>
+				</aside><!-- title_line end -->
+				
+				<div id="priceHistory_div"></div>
+				</div>
+				
+				</div><!-- divine_auto end -->
             </article>
             
             <article class="tap_area" id="filter_info_div" style="display:none;">

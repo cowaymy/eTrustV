@@ -41,4 +41,6 @@ public interface StockMapper {
 	int removeFilterInfoGrid(Map<String, Object> param);
 
 	void insertSalePriceInfoHistory(Map<String, Object> smap);
+
+	List<EgovMap> selectPriceHistoryInfo(Map<String, Object> param);
 }
