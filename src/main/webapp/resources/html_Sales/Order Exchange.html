@@ -152,39 +152,88 @@
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Rental To Outright Simulator</h2>
+<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<h2>Exchange List</h2>
+<ul class="right_btns">
+	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Order Information</h3>
-</aside><!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:200px" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:160px" />
+	<col style="width:*" />
+	<col style="width:170px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
+	<th scope="row">Exchange Type</th>
+	<td>
+	<select class="multy_select w100p" multiple="multiple">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
+	<th scope="row">Exchange Status</th>
+	<td>
+	<select class="multy_select w100p" multiple="multiple">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
+	<th scope="row">Request Date</th>
+	<td>
+
+	<div class="date_set w100p"><!-- date_set start -->
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span>To</span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	</div><!-- date_set end -->
+
+	</td>
+</tr>
+<tr>
 	<th scope="row">Order Number</th>
-	<td><input type="text" title="" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p></td>
+	<td>
+	<input type="text" title="" placeholder="Order Number" class="w100p" />
+	</td>
+	<th scope="row">Application Type</th>
+	<td>
+	<select class="multy_select w100p" multiple="multiple">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
+	<th scope="row">Requestor</th>
+	<td>
+	<input type="text" title="" placeholder="Requestor (Username)" class="w100p" />
+	</td>
 </tr>
 <tr>
-	<th scope="row">Outright Price</th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
-</tr>
-<tr>
-	<th scope="row">Total Billed Amount</th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
-</tr>
-<tr>
-	<th scope="row">Current Bill Month</th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
-</tr>
-<tr>
-	<th scope="row">Current Outstanding</th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+	<th scope="row">Customer ID</th>
+	<td>
+	<input type="text" title="" placeholder="Customer ID (Number Only)" class="w100p" />
+	</td>
+	<th scope="row">Customer Name</th>
+	<td>
+	<input type="text" title="" placeholder="Customer Name" class="w100p" />
+	</td>
+	<th scope="row">NRIC/Company No</th>
+	<td>
+	<input type="text" title="" placeholder="NRIC/Company Number" class="w100p" />
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -219,63 +268,26 @@
 </dl>
 </aside><!-- link_btns_wrap end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Conversion Adjustment</h3>
-</aside><!-- title_line end -->
+</form>
+</section><!-- search_table end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:200px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Percentage (%)</th>
-	<td>
-	<select style="width:60px;" class="mr5">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	<input type="text" title="" placeholder="" class="" />
-	</td>
-</tr>
-<tr>
-	<th scope="row">Fixed Amount</th>
-	<td>
-	<select style="width:60px;" class="mr5">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	<input type="text" title="" placeholder="" class="" />
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
+<section class="search_result"><!-- search_result start -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Conversion Information</h3>
-</aside><!-- title_line end -->
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+	<li><p class="btn_grid"><a href="#">NEW</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:200px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Conversion Amount</th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
-</tr>
-<tr>
-	<th scope="row">Total Amount</th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
-</tr>
-</tbody>
-</table><!-- table end -->
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
 
 </section><!-- content end -->
 
