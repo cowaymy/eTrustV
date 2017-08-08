@@ -14,6 +14,20 @@ public interface CommonService {
 
 	List<EgovMap> selectI18NList();
 	
+	
+	/************************** Program Management ****************************/
+	List<EgovMap> selectProgramList(Map<String, Object> params);
+	List<EgovMap> selectPgmTranList(Map<String, Object> params);
+	
+	int insertPgmId(List<Object> addList, Integer crtUserId);
+	
+	int updatePgmId(List<Object> addList, Integer crtUserId);
+	
+	int updPgmIdTrans(List<Object> addList, Integer updUserId);
+	
+	int deletePgmId(List<Object> addList, Integer updUserId);
+	
+	
 	/************************** Status Code ****************************/
 	// StatusCategory
 	List<EgovMap> selectStatusCategoryList(Map<String, Object> params);
