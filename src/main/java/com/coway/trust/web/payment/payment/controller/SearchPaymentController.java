@@ -700,12 +700,12 @@ public class SearchPaymentController {
 		Map updMap = new HashMap();
 		
 		//1127 : TR Number
-		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")))){
+		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")).trim())){
 			
             String typeID = "1127";
             String payID = String.valueOf(params.get("hiddenPayId"));
             String valueFr = trNo;
-            String valueTo = String.valueOf(params.get("edit_txtTRRefNo"));
+            String valueTo = String.valueOf(params.get("edit_txtTRRefNo")).trim();
             String refIDFr = "0";
             String refIDTo = "0";
             String createBy = "52366";
@@ -851,7 +851,7 @@ public class SearchPaymentController {
 			updMap.put("brnchId", "");
 		}
 		
-		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorCode")))){
+		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
 			//updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId"))); todo 입력받은 COLL_MEM_ID 로 업데이트쳐야됨
 		}else{
 			updMap.put("collMemId", "");
