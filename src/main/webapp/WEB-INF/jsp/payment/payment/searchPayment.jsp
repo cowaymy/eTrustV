@@ -177,7 +177,8 @@ var viewHistoryLayout=[
 
 
 // 리스트 조회.
-function fn_getOrderListAjax() {        
+function fn_getOrderListAjax() {
+	AUIGrid.destroy(subGridID);//subGrid 초기화
     Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
