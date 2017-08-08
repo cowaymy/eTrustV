@@ -35,6 +35,12 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	}
 	
 	@Override
+	public List<EgovMap> selectDetailList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return AssetMngMapper.selectDetailList(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectDealerList(Map<String, Object> params) {
 		return AssetMngMapper.selectDealerList(params);
 	}
