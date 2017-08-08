@@ -105,13 +105,32 @@ public class AssetMasterController {
 		assetmap.put("searchpurchasedate1"  ,	searchpurchasedate1 );
 		assetmap.put("searchpurchasedate2"  ,	searchpurchasedate2 );
 
-		//List<EgovMap> list = ams.selectAssetList(assetmap);
+		List<EgovMap> list = ams.selectAssetList(assetmap);
 		
 		Map<String, Object> map = new HashMap();
-		//.put("data", list);
+		map.put("data", list);
 
 		return ResponseEntity.ok(map);
 	}	
+	
+	
+	@RequestMapping(value = "/selectDetailList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> selectDetailList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {	
+		System.out.println("assetid :       "+request.getParameter("assetid"));
+		String assetid = request.getParameter("assetid");
+		
+		Map<String, Object> assetdetailmap = new HashMap();
+		assetdetailmap.put("assetid", assetid);
+
+		List<EgovMap> list = ams.selectDetailList(assetdetailmap);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}	
+	
 	
 	
 	@RequestMapping(value = "/selectDealerList.do", method = RequestMethod.GET)
@@ -136,8 +155,9 @@ public class AssetMasterController {
 	
 	@RequestMapping(value = "/selectTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
-
-		logger.debug("selectTypeListCode : {}", params.get("groupCode"));
+		
+		//logger.debug("@@@@@@@@@@@@@@@@@selectTypeListCode : {}", params.get("groupCode"));
+		//logger.debug("******************codevalue******************* : {}", params.get("codevalue"));
 		params.put("hrchytypeid", "1198");
 
 		List<EgovMap> TypeList = ams.selectTypeList(params);
