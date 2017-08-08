@@ -51,6 +51,169 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	public List<EgovMap> selectI18NList() {
 		return commonMapper.selectI18NList();
 	}
+	
+	/************************** Program Management ****************************/
+	@Override
+	public List<EgovMap> selectProgramList(Map<String, Object> params) {
+		return commonMapper.selectProgramList(params);
+	}	
+	
+	@Override
+	public List<EgovMap> selectPgmTranList(Map<String, Object> params) {
+		return commonMapper.selectPgmTranList(params);
+	}	
+	
+	@Override
+	public int deletePgmId(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmCode")).length() == 0 
+				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmCode")))) 
+			{
+				continue;
+			}
+			
+			logger.debug(" >>>>> deletePgmId ");
+			logger.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
+
+			
+			delCnt++;
+			
+			commonMapper.deletePgmId((Map<String, Object>) obj);
+		}
+		
+		return delCnt;
+	}
+	
+	@Override
+	public int insertPgmId(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("orgCode")).length() == 0 
+				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("orgCode"))) ) 
+			{
+				continue;
+			}
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmName")).length() == 0 
+				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmName"))) ) 
+			{
+				continue;
+			}
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmPath")).length() == 0 
+				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmPath"))) ) 
+			{
+				continue;
+			}
+			
+			logger.debug(" >>>>> InsertPgmId ");
+			logger.debug(" orgCode : {}", ((Map<String, Object>) obj).get("orgCode"));
+			logger.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
+			logger.debug(" pgmPath : {}", ((Map<String, Object>) obj).get("pgmPath"));
+			logger.debug(" pgmDesc : {}", ((Map<String, Object>) obj).get("pgmDesc"));
+
+			saveCnt++;
+
+			commonMapper.insertPgmId((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+	
+	@Override
+	public int updatePgmId(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmCode")).length() == 0
+				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmCode"))) )  
+			{
+				continue;
+			}
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmName")).length() == 0
+					|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmName"))) )  
+			{
+				continue;
+			}
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmPath")).length() == 0
+					|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmPath"))) )  
+			{
+				continue;
+			}
+			
+			logger.debug(" ========= updPgmIdTrans ============== ");
+			logger.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
+			logger.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
+			logger.debug(" pgmPath : {}", ((Map<String, Object>) obj).get("pgmPath"));
+			logger.debug(" pgmDesc : {}", ((Map<String, Object>) obj).get("pgmDesc"));
+			
+			saveCnt++;
+			
+			commonMapper.updatePgmId((Map<String, Object>) obj);
+			
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int updPgmIdTrans(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("pgmCode")).length() == 0) 
+			{
+				continue;
+			}
+
+			logger.debug(" ========= updPgmIdTrans ============== ");
+			logger.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
+			logger.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
+			logger.debug(" funcView : {}", ((Map<String, Object>) obj).get("funcView"));
+			logger.debug(" funcChng : {}", ((Map<String, Object>) obj).get("funcChng"));
+			logger.debug(" funcPrt : {}", ((Map<String, Object>) obj).get("funcPrt"));
+			logger.debug(" funcUserDfn1 : {}", ((Map<String, Object>) obj).get("funcUserDfn1"));
+			logger.debug(" descUserDfn1 : {}", ((Map<String, Object>) obj).get("descUserDfn1"));
+			logger.debug(" funcUserDfn2 : {}", ((Map<String, Object>) obj).get("funcUserDfn2"));
+			logger.debug(" descUserDfn2 : {}", ((Map<String, Object>) obj).get("descUserDfn2"));
+			logger.debug(" funcUserDfn3 : {}", ((Map<String, Object>) obj).get("funcUserDfn3"));
+			logger.debug(" descUserDfn3 : {}", ((Map<String, Object>) obj).get("descUserDfn3"));
+			logger.debug(" funcUserDfn4 : {}", ((Map<String, Object>) obj).get("funcUserDfn4"));
+			logger.debug(" descUserDfn4 : {}", ((Map<String, Object>) obj).get("descUserDfn4"));
+			logger.debug(" funcUserDfn5 : {}", ((Map<String, Object>) obj).get("funcUserDfn5"));
+			logger.debug(" descUserDfn5 : {}", ((Map<String, Object>) obj).get("descUserDfn5"));
+
+			saveCnt++;
+
+			commonMapper.updPgmIdTrans((Map<String, Object>) obj);
+
+		}
+
+		return saveCnt;
+	}	
 
 	/************************** Status Code ****************************/
 	// StatusCategory

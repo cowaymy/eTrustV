@@ -27,6 +27,14 @@ public interface CommonMapper {
 
 	List<EgovMap> selectI18NList();
 	
+	/************************** Program Management ****************************/	
+	
+	List<EgovMap> selectProgramList(Map<String, Object> params); 
+	List<EgovMap> selectPgmTranList(Map<String, Object> params); 
+	int insertPgmId(Map<String, Object> params); 
+	int updatePgmId(Map<String, Object> params); 
+	int updPgmIdTrans(Map<String, Object> params); 
+	int deletePgmId(Map<String, Object> params); 
 	
 	/************************** Status Code ****************************/
 	// StatusCategory
