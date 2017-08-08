@@ -6,106 +6,11 @@
         <result property="assetrem" column="assetrem" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="department" column="department" jdbcType="CLOB" javaType="java.lang.String"/>
         <!-- <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/> -->
+        <result property="department" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        <result property="department" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         </resultMap>
      
-   <!--  <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
-		   SELECT 
-	           P1.ASSET_ID assetId  ,
-	           P1.BRAND_ID brandId  ,
-	           P1.NAME2 name  ,
-	           P1.CTGRY_ID ctgryId  ,
-	           P1.CODE_NAME codeName  ,
-	           P1. COLOR_ID   colorId   ,
-	           P1.CODENAME2 codeName1  ,
-	           P1.CRT_DT crtDt  ,
-	           P1.CRT_USER_ID crtUserId  ,
-	           P1.USER_NAME userName  ,
-	           P1.CURR_BRNCH_ID currBrnchId  ,
-	           P1.C1 branch  ,
-	           P1.CURR_DEPT_ID currDeptId  ,
-	           P1.C2 department  ,
-	           P1.CURR_USER_ID currUserId  ,
-	           P1.C3 userName2  ,
-	           P1.IMEI_NO imeiNo  ,
-	           P1.MAC_ADDR macAddr  ,
-	           P1.NAME name1  ,
-	           P1.PURCHS_AMT purchsAmt  ,
-	           P1.PURCHS_DT purchsDt  ,
-	           P1.REF_NO refNo  ,
-	           P1.ASSET_REM assetRem  ,
-	           P1.SERIAL_NO serialNo  ,
-	           P1.STUS_ID stusId  ,
-	           P1.NAME1 name2  ,
-	           P1.TYPE_ID typeId  ,
-	           P1.CODENAME1 codeName2  ,
-	           P1.UPD_DT updDt  ,
-	           P1.UPD_USER_ID updUserId  ,
-	           P1.USERNAME1 userName1  ,
-	           P1.WRANTY_NO wrantyNo  ,
-	           P1.DEALER_ID dealerId  ,
-	           P1.DEALER_NAME dealerName  ,
-	           P1.INVC_NO invcNo  
-	      FROM ( SELECT E1.ASSET_ID ASSET_ID  ,
-	                    E1.STUS_ID STUS_ID  ,
-	                    E1.CTGRY_ID CTGRY_ID  ,
-	                    E1.TYPE_ID TYPE_ID  ,
-	                    E1.COLOR_ID COLOR_ID  ,
-	                    E1.BRAND_ID BRAND_ID  ,
-	                    E1.CURR_BRNCH_ID CURR_BRNCH_ID  ,
-	                    E1.CURR_DEPT_ID CURR_DEPT_ID  ,
-	                    E1.CURR_USER_ID CURR_USER_ID  ,
-	                    E1.PURCHS_DT PURCHS_DT  ,
-	                    E1.PURCHS_AMT PURCHS_AMT  ,
-	                    E1.IMEI_NO IMEI_NO  ,
-	                    E1.WRANTY_NO WRANTY_NO  ,
-	                    E1.SERIAL_NO SERIAL_NO  ,
-	                    E1.REF_NO REF_NO  ,
-	                    E1.ASSET_REM ASSET_REM  ,
-	                    E1.CRT_USER_ID CRT_USER_ID  ,
-	                    E1.CRT_DT CRT_DT  ,
-	                    E1.UPD_USER_ID UPD_USER_ID  ,
-	                    E1.UPD_DT UPD_DT  ,
-	                    E1.NAME NAME  ,
-	                    E1.MAC_ADDR MAC_ADDR  ,
-	                    E1.INVC_NO INVC_NO  ,
-	                    E1.DEALER_ID DEALER_ID  ,
-	                    E2.NAME NAME1  ,
-	                    E3.NAME NAME2  ,
-	                    E4.CODE_NAME CODE_NAME  ,
-	                    E5.CODE_NAME CODENAME1  ,
-	                    E6.CODE_NAME CODENAME2  ,
-	                    E7.USER_NAME USER_NAME  ,
-	                    E8.USER_NAME USERNAME1  ,
-	                    E12.DEALER_NAME DEALER_NAME  ,
-	                    CASE 
-	                         WHEN ( E9.BRNCH_ID IS NOT NULL ) THEN E9.CODE
-	                    ELSE null
-	                       END C1  ,
-	                    CASE 
-	                         WHEN ( E10.DEPT_ID IS NOT NULL ) THEN E10.DEPT_NAME
-	                    ELSE null
-	                       END C2  ,
-	                    CASE 
-	                         WHEN ( E11.USER_ID IS NOT NULL ) THEN E11.USER_NAME
-	                    ELSE null
-	                       END C3  
-	             FROM LOG0050M E1
-	                    JOIN SYS0038M E2   ON E2.STUS_CODE_ID = E1.STUS_ID
-	                    JOIN LOG0049M E3   ON E3.BRAND_ID = E1.BRAND_ID
-	                    JOIN SYS0013M E4   ON E4.CODE_ID = E1.CTGRY_ID
-	                    JOIN SYS0013M E5   ON E5.CODE_ID = E1.TYPE_ID
-	                    JOIN SYS0013M E6   ON E6.CODE_ID = E1.COLOR_ID
-	                    JOIN SYS0047M E7   ON E7.USER_ID = E1.CRT_USER_ID
-	                    JOIN SYS0047M E8   ON E8.USER_ID = E1.UPD_USER_ID
-	                    LEFT JOIN SYS0005M E9   ON E9.BRNCH_ID = E1.CURR_BRNCH_ID
-	                    LEFT JOIN SYS0040M E10   ON ( E10.DEPT_ID = E1.CURR_DEPT_ID )
-	                    AND ( E1.CURR_DEPT_ID > 0 )
-	                    LEFT JOIN SYS0047M E11   ON ( E11.USER_ID = E1.CURR_USER_ID )
-	                    AND ( E1.CURR_USER_ID > 0 )
-	                    LEFT JOIN SAL0030D E12   ON E12.DEALER_ID = E1.DEALER_ID
-	               WHERE  1 = E1.STUS_ID ) P1
-	      ORDER BY P1.ASSET_ID ASC    
-    </select> -->
+  
     <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
 		    select 
                  E1.ASSET_ID assetId,
@@ -222,6 +127,53 @@
 		  order by asset_id
     </select>
     
+    <select id="selectDetailList" parameterType="Map" resultMap="assetClobMap">
+      SELECT           
+                 Project1.ASSET_D_ID  ASSET_D_ID, 
+                 Project1.ASSET_ID  ASSET_ID, 
+                 Project1.BRAND_ID  BRAND_ID, 
+                 Project1.NAME1  NAME, 
+                 Project1.NAME  NAME1, 
+                 Project1.ASSET_D_REM  ASSET_D_REM, 
+                 Project1.STUS_ID  STUS_ID, 
+                 Project1.NAME2  NAME2, 
+                 Project1.TYPE_ID  TYPE_ID, 
+                 Project1.CODE_NAME  CODE_NAME, 
+                 Project1.UPD_DT  UPD_DT, 
+                 Project1.UPD_USER_ID  UPD_USER_ID, 
+                 Project1.USER_NAME  USER_NAME,
+                 Project1.NAME3  NAME3,
+                 Project1.VALU  VALU,
+                 Project1.ASSET_D_ITM_REM ASSET_D_ITM_REM
+                 FROM ( SELECT 
+                     Extent1.ASSET_D_ID  ASSET_D_ID, 
+                     Extent1.STUS_ID  STUS_ID, 
+                     Extent1.ASSET_ID  ASSET_ID, 
+                     Extent1.TYPE_ID  TYPE_ID, 
+                     Extent1.BRAND_ID  BRAND_ID, 
+                     Extent1.UPD_USER_ID  UPD_USER_ID, 
+                     Extent1.UPD_DT  UPD_DT, 
+                     Extent1.NAME  NAME, 
+                     Extent1.ASSET_D_REM  ASSET_D_REM, 
+                     Extent2.CODE_NAME  CODE_NAME, 
+                     Extent3.NAME  NAME1, 
+                     Extent4.NAME  NAME2, 
+                     (select user_name from SYS0047M where USER_ID = Extent1.UPD_USER_ID) USER_NAME,
+                     Extent6.NAME AS NAME3,
+                     Extent6.VALU AS VALU,
+                     Extent6.ASSET_D_ITM_REM
+                     FROM  LOG0051D  Extent1
+                     INNER JOIN SYS0013M  Extent2 ON Extent2.CODE_ID = Extent1.TYPE_ID
+                     INNER JOIN LOG0049M  Extent3 ON Extent3.BRAND_ID = Extent1.BRAND_ID
+                     INNER JOIN SYS0038M  Extent4 ON Extent4.STUS_CODE_ID = Extent1.STUS_ID
+                     INNER JOIN LOG0052D  Extent6 ON Extent6.ASSET_D_ID = Extent1.ASSET_D_ID
+                    WHERE  ( 1 = Extent1.STUS_ID )
+                    AND ( Extent1.ASSET_ID = #{assetid} )
+                    AND ( 0 = Extent6.DISAB ) ) Project1
+            ORDER BY Project1.ASSET_D_ID ASC,
+             Project1.ASSET_D_ID ASC
+    </select> 
+    
     <select id="selectDealerList" parameterType="Map" resultType="EgovMap">
 		  SELECT 
 		       DEALER_ID CODE_ID  ,
@@ -288,7 +240,7 @@
                  ) Project1
                  ORDER BY Project1.CODE_NAME ASC
     </select> 
-    
+     <!-- Asset 마스터 인서트 -->
     <insert id="insertAssetMng" parameterType="Map">
          INSERT INTO LOG0050M(
             ASSET_ID
@@ -344,6 +296,37 @@
         ,#{masterdealer}
         )
     </insert>
+    <!-- Asset 디테일 인서트 -->
+    <insert id="insertDetailAsset" parameterType="Map">
+         INSERT INTO LOG0051D(
+            ASSET_D_ID
+          , STUS_ID
+          , ASSET_ID
+          , TYPE_ID
+          , BRAND_ID
+          , CRT_USER_ID
+          , CRT_DT
+          , UPD_USER_ID
+          , UPD_DT
+          , NAME
+          ,ASSET_D_REM
+         )  
+        VALUES (
+    <!--      #{inassetid}
+        ,#{masterstatus}
+        ,#{mastercategory} 
+        ,#{mastertype}
+        ,#{mastercolor}
+        ,#{masterbrand}
+        ,#{masterbreanch}
+        ,#{curr_dept_id}
+        ,#{curr_user_id}    
+        ,#{masterpurchasedate}
+        ,TO_CHAR(TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY'), 'YYYY-MM-DD') 
+         -->
+        )
+    </insert>
+    
     
     <update id="motifyAssetMng" parameterType="Map">
            UPDATE LOG0050M
@@ -374,6 +357,9 @@
     <select id="AssetCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_ID),0) + 1 from LOG0050M
     </select>
-    
+    <select id="AssetdetailCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ASSET_D_ID),0) + 1 from LOG0051D
+    </select>
+ 
     
 </mapper>
