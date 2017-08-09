@@ -370,8 +370,8 @@ function showDetailHistory(payItemId){
 function showItemEdit(payItemId){
 	
 	//var payId = 166; var payItemId = 170; //cash
-	//var payId = 2273; var payItemId = 2222; // online
-	var payId = 3877; var payItemId = 3853; //credit card
+	var payId = 2273; var payItemId = 2222; // online
+	//var payId = 3877; var payItemId = 3853; //credit card
     //var payId = 21; var payItemId = 22; //cheque
 	
 	var defaultDate = new Date("01-01-1900");    
@@ -497,7 +497,6 @@ function hideDetailPopup(){
 }
 
 function saveCash(){
-	alert("!!!!");
 	 Common.ajax("GET", "/payment/saveCash", $("#cashForm").serialize(), function(result) {
 		 //Common.setMsg(result.message);  
 		 Common.alert(result.message);
@@ -512,11 +511,13 @@ function saveCreditCard(){
 
 function saveCheque(){
 	Common.ajax("GET", "/payment/saveCheque", $("#ChequeForm").serialize(), function(result) {
+		Common.alert(result.message);
     });
 }
 
 function saveOnline(){
     Common.ajax("GET", "/payment/saveOnline", $("#OnlineForm").serialize(), function(result) {
+    	Common.alert(result.message);
     });
 }
 function saveChanges() {

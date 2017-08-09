@@ -550,6 +550,11 @@ public class SearchPaymentController {
 			}
 			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, "", "", 0, runNo, eFTNo, 0);
 			boolean result = searchPaymentService.doEditPaymentDetails(payDet);
+			
+			if(result)
+				message = "Payment item successfully updated.";
+			else
+				message = "Failed to Update. Please try again later.";
 		}
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
@@ -562,7 +567,7 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveOnline", method = RequestMethod.GET)
-	public ResponseEntity<Map> saveOnline(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveOnline(@RequestParam Map<String, Object> params, ModelMap model) {
 	
 		int userId = 12345;
 		String message = "";
@@ -607,8 +612,14 @@ public class SearchPaymentController {
 			
 			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, "", "", 0, runNo, eFTNo, 0);
 			boolean result = searchPaymentService.doEditPaymentDetails(payDet);
+			
+			if(result)
+				message = "Payment item successfully updated.";
+			else
+				message = "Failed to Update. Please try again later.";
 		}
-		return ResponseEntity.ok(null);
+		msg.setMessage(message);
+		return ResponseEntity.ok(msg);
 	}
 	
 	private boolean checkOrNoIsAorType(String payItemId){
