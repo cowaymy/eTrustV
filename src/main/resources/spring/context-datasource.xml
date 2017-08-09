@@ -4,29 +4,31 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
         
-    <!-- jndi
-    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> 
-        <property name="jndiName" value="jdbc/etrust"/>
-        <property name="resourceRef" value="true"/>
-    </bean>
-    -->
-    
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<property name="poolName" value="springHikariCP" />
-		<property name="driverClassName" value="${spring.datasource.driver-class-name}" />
-		<property name="jdbcUrl" value="${spring.datasource.url}" />
-		<property name="username" value="${spring.datasource.username}" />
-		<property name="password" value="${spring.datasource.password}" />
-		<property name="connectionTimeout" value="${spring.datasource.connection.timeout}" />
-		<property name="idleTimeout" value="0" />
-		<property name="leakDetectionThreshold" value="30000" />
-		<property name="maxLifetime" value="0" />
-		<property name="maximumPoolSize" value="${spring.datasource.maximumPoolSize}" />
-		<property name="connectionTestQuery" value="${spring.datasource.validation-query}" />
-	</bean>
+    <!-- jndi -->
+	<beans profile="dev">
+		<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+			<property name="jndiName" value="eTRUST_DEV"/>
+		</bean>
+	</beans>
 
-	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-		<constructor-arg ref="hikariConfig" />
-	</bean>
+	<beans profile="local">
+		<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+			<property name="poolName" value="springHikariCP" />
+			<property name="driverClassName" value="${spring.datasource.driver-class-name}" />
+			<property name="jdbcUrl" value="${spring.datasource.url}" />
+			<property name="username" value="${spring.datasource.username}" />
+			<property name="password" value="${spring.datasource.password}" />
+			<property name="connectionTimeout" value="${spring.datasource.connection.timeout}" />
+			<property name="idleTimeout" value="0" />
+			<property name="leakDetectionThreshold" value="30000" />
+			<property name="maxLifetime" value="0" />
+			<property name="maximumPoolSize" value="${spring.datasource.maximumPoolSize}" />
+			<property name="connectionTestQuery" value="${spring.datasource.validation-query}" />
+		</bean>
+
+		<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+			<constructor-arg ref="hikariConfig" />
+		</bean>
+	</beans>
 
 </beans>
