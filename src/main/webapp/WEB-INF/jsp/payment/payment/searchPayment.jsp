@@ -153,6 +153,7 @@ var popColumnLayout = [
     { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
     { dataField:"c4" ,headerText:"EFT" ,editable : false },
     { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
+    { dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false },
     { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
     ];
 
