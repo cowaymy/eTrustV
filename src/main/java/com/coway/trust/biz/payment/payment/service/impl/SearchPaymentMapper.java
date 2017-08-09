@@ -18,6 +18,7 @@ package com.coway.trust.biz.payment.payment.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -167,20 +168,49 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	List<EgovMap> selectPaymentDetail(int payItemId);
+
 	
 	/**
-	 * BankCode 조회
+	 *  CheckAORType 조회
 	 * @param payItemId
 	 * @return
 	 */
-	String selectBankCode(String payItmIssuBankId);
+	String checkORNoIsAORType(String payItmId);
 	
 	/**
-	 *  CodeDetail조회
+	 *  PayHistory에 저장
 	 * @param payItemId
 	 * @return
 	 */
-	String selectCodeDetail(String payItmCcTypeId);
+	void insertPayDHistory(PayDHistoryVO vo);
+	
+	/**
+	 *  paymentDetail업데이트
+	 * @param Map
+	 * @return
+	 */
+	void updatePayDetail(Map map);
+	
+	/**
+	 *  DocRelated 검색
+	 * @param String
+	 * @return EgovMap
+	 */
+	List<EgovMap> selectPaymentDocRelated(int payItemId);
+	
+	/**
+	 *  DocDetail 검색
+	 * @param int
+	 * @return EgovMap
+	 */
+	List<EgovMap> selectPaymentDocDetail(int payItemId);
+	
+	/**
+	 *  payDocDetail업데이트
+	 * @param Map
+	 * @return
+	 */
+	void updatePayDocDetail(Map map);
 	
 	/**
 	 * selectPaymentItemIsPassRecon 조회

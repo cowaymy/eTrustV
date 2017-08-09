@@ -316,329 +316,313 @@ public class SearchPaymentController {
 	}
 	
 	/**
-	 * PaymentDetail 조회
+	 * PaymentCash 저장
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/savePaymentDetail", method = RequestMethod.GET)
-	public ResponseEntity<Map> savePaymentDetail(@RequestParam Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/saveCash", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> saveCash(@RequestParam Map<String, Object> params, ModelMap model) {
 	
 		int userId = 12345;
+		String message = "";
 		
+		ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	
+		if(userId > 0){
 		PayDVO payDet = new PayDVO();
+    		logger.debug("params : {}", params);
+    		boolean valid = true;
+    		
+    		String refNo = String.valueOf(params.get("txtReferenceNoCa")).trim();
+    		if(refNo.length() > 20){
+    			valid = false;
+    			message += "* Reference number cannot exceed length of 20.<br>";
+    		}
+    		String refDate = String.valueOf(params.get("txtRefDateCa")).trim();
+    		String remark = String.valueOf(params.get("tareaRemarkCa")).trim();
+    		String runNo = String.valueOf(params.get("txtRunNoCa")).trim();
+    		String EFTNo = "";
+    		int payItemId = Integer.parseInt(params.get("payItemId").toString());
+    
+    		
+    		if(!valid){
+    			msg.setMessage(message);
+    			return ResponseEntity.ok(msg);
+    		}
+    		
+    		payDet = this.getSaveDataPayDet(payItemId, userId, refNo, 0, refDate, remark, "", "", 0, runNo, EFTNo, 0);
+    
+    		boolean result = searchPaymentService.doEditPaymentDetails(payDet);
+    		
+    		if(result)
+				message = "Payment item successfully updated.";
+			else
+				message = "Failed to Update. Please try again later.";
+		}
 		
-		//TODO 파라미터값 수정 필요
-		String refNo = params.get("referenceNo").toString();
-		String refDate = params.get("refDate").toString();
-		String remark = params.get("remark").toString();
-		String runNo = params.get("runNo").toString();
-		String EFTNo = "";
-		int payItemId = Integer.parseInt(params.get("payItemId").toString());
+		msg.setMessage(message);
+		return ResponseEntity.ok(msg);
+	}
+	
+	/**
+	 * PaymentCreditCard 저장
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/saveCreditCard", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> saveCreditCard(@RequestParam Map<String, Object> params, ModelMap model) {
+	
+		int userId = 12345;
+		String message = "";
 		
-		System.out.println(refNo);
-		System.out.println(refDate);
-		System.out.println(remark);
-		System.out.println(runNo);
-		System.out.println(EFTNo);
-		System.out.println(payItemId);
-		
-		
-		
-		//switch(payItemId){
-		//case 
-		//}
-		
-		payDet = this.getSaveData_PayDet(payItemId, userId, refNo, 0, refDate, remark, "", "", 0, runNo, EFTNo, 0);
+		ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	
+		boolean result = false;
+		boolean valid = true;
 
-		EgovMap qryDet = searchPaymentService.selectPaymentDetail(payItemId).get(0);
-		System.out.println("qryDet1 : " + searchPaymentService.selectPaymentDetail(payItemId).get(0));
-		System.out.println("qryDET : " + qryDet);
-		//searchPaymentService.insertPayHistory(payDet, qryDet);
-		List<PayDHistoryVO> list = setHistoryList(payDet, qryDet);
-		
-		//TODO insert payDHistory테이블 필요함 추후에 for문 삭제 필요
-		for(int i=0; i<list.size(); i++){
-			System.out.println(list.get(i).toString());
-		}
-		
-		if(list.size() > 0){
+		if(userId > 0){
+			logger.debug("params : {}", params);        
+			PayDVO payDet = new PayDVO();
 			
+			int payItemId = Integer.parseInt(String.valueOf(params.get("payItemIdCC")).trim());
+			
+			boolean isAOR = checkOrNoIsAorType(String.valueOf(payItemId));
+			
+			String refNo = String.valueOf(params.get("txtRefNoCC")).trim();
+			String refDate = "01/01/1900";
+			if(!(String.valueOf(params.get("txtRefDateCC")).trim().equals("")))
+				refDate = String.valueOf(params.get("txtRefDateCC")).trim();
+			String remark = String.valueOf(params.get("tareaRemarkCC")).trim();
+			int issuedBankId = 0;
+			int tempIssued = String.valueOf(params.get("cmbIssuedBankCC")).trim().equals("") ? -1 :  Integer.parseInt(String.valueOf(params.get("cmbIssuedBankCC")).trim());
+			if(tempIssued > -1){
+				issuedBankId = tempIssued;
+			}
+		
+			String crcHolderName = String.valueOf(params.get("txtCCHolderName")).trim();
+			int cardTypeId = 0;
+			int tempCardType = String.valueOf(params.get("cmbCardTypeCC")).trim().equals("") ? -1 :  Integer.parseInt(String.valueOf(params.get("cmbCardTypeCC")).trim());
+			if(tempCardType > -1){
+				cardTypeId =tempCardType;
+			}
+			int crcTypeId = 0;
+			int tempCrcType = String.valueOf(params.get("cmbCreditCardTypeCC")).trim().equals("") ||
+					String.valueOf(params.get("cmbCreditCardTypeCC")).trim().equals("null") ? -1 :  Integer.parseInt(String.valueOf(params.get("cmbCreditCardTypeCC")).trim());
+			if(tempCrcType > -1){
+				crcTypeId = tempCrcType;
+			}
+			String crcExpiryDate = "";
+			if(!String.valueOf(params.get("txtCCExpiry")).trim().equals("")){
+				String expiryDate = String.valueOf(params.get("txtCCExpiry")).trim();
+				System.out.println("expiryDate : " + expiryDate);
+				String temp[] = expiryDate.split("/");
+				crcExpiryDate = temp[1] + "/" + temp[2].substring(2, 4);
+			}
+			System.out.println("crcExpiryDate : " + crcExpiryDate);
+			
+			String runNo = String.valueOf(params.get("txtRunningNoCC")).trim();
+			String eFTNo = "";
+		
+			//validation check
+			if(tempIssued <= -1){
+				valid = false;
+				message += "* Please select the issued bank.<br/>";
+			}
+			if(tempCardType <= -1){
+				valid = false;
+				message += "* Please select the card type<br />";
+			}
+			if(!isAOR)
+			{
+				System.out.println("isAOR : ..");
+				if(String.valueOf(params.get("txtCCHolderName")).trim().equals("")){
+					valid = false;
+					message += "* Please key in the credit card holder.<br />";
+				}
+				if(String.valueOf(params.get("txtCCExpiry")).trim().equals("")){
+					valid = false;
+					message += "* Please select the credit card expiry date. <br/>";
+				}
+				if(tempCrcType <= -1){
+					valid = false;
+					message += "* Please select the credit card type. <br />";
+				}else{
+					if(String.valueOf(params.get("txtCrcNo")).trim().startsWith("5")){
+						if(!(String.valueOf(params.get("cmbCreditCardTypeCC")).trim().equals("111"))){
+							valid = false;
+							message += "* Invalid credit card type.<br />";
+						}
+					}
+					else if(String.valueOf(params.get("txtCrcNo")).trim().startsWith("4")){
+						if(!(String.valueOf(params.get("cmbCreditCardTypeCC")).trim().equals("112"))){
+							valid = false;
+							message += "* Invalid credit card type. <br />";
+						}
+					}
+				}
+			}
+			if(!(refNo.equals(""))){
+				if(refNo.length() > 20){
+					valid = false;
+					message += "* Reference number cannot cxceed length of 20. <br />";
+				}
+			}
+			
+			if(!valid){
+				msg.setMessage(message);
+    			return ResponseEntity.ok(msg);
+			}
+			
+			
+			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, crcHolderName, crcExpiryDate, crcTypeId, runNo, eFTNo, cardTypeId);
+			
+			result = searchPaymentService.doEditPaymentDetails(payDet);
+			
+			if(result)
+				message = "Payment item successfully updated.";
+			else
+				message = "Failed to Update. Please try again later.";
 		}
 		
-		System.out.println("qryitemRefNo : " + qryDet.get("payItmRefNo"));
+		msg.setMessage(message);
+		return ResponseEntity.ok(msg);
+	}
+	
+	/**
+	 * PaymentCheque 저장
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/saveCheque", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> saveCheque(@RequestParam Map<String, Object> params, ModelMap model) {
+	
+		int userId = 12345;
+		String message="";
 		
-		System.out.println("result : " + qryDet.toString());
+		ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	
+		logger.debug("params : {}", params);        
+		int payItemId = Integer.parseInt(params.get("payItemIdCh").toString());
 		
+		if(userId > 0){
+			PayDVO payDet = new PayDVO();
+			String refNo = String.valueOf(params.get("txtRefNumberCh")).trim();
+			String refDate = "01/01/1900";
+			if(!(String.valueOf(params.get("txtRefDateCh")).trim().equals(""))){
+				refDate = String.valueOf(params.get("txtRefDateCh")).trim();
+			}
+			String remark = String.valueOf(params.get("tareaRemarkCh")).trim();
+			int issuedBankId =0;
+			int tempIssued = String.valueOf(params.get("sIssuedBankCh")).trim().equals("") ? -1 : Integer.parseInt(String.valueOf(params.get("sIssuedBankCh")).trim());
+			if(tempIssued > -1){
+				issuedBankId = tempIssued;
+			}
+			String runNo = String.valueOf(params.get("txtRunNoCh")).trim();
+			String eFTNo = "";
+			
+			boolean valid = true;
+			if(tempIssued <= -1){
+				valid = false;
+				message += "* Please select the issued bank. <br/>";
+			}
+			
+			if(String.valueOf(params.get("chequeNo")).trim().equals("")){
+				valid = false;
+				message += "* Please key in the cheque number.<br />";
+			}
+			
+			if(refNo.trim().length() > 20){
+				valid = false;
+				message += "* Reference number cannot exceed length of 20.<br />";
+			}
+			
+			if(!valid){
+				msg.setMessage(message);
+    			return ResponseEntity.ok(msg);
+			}
+			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, "", "", 0, runNo, eFTNo, 0);
+			boolean result = searchPaymentService.doEditPaymentDetails(payDet);
+		}
+		msg.setMessage(message);
+		return ResponseEntity.ok(msg);
+	}
+	
+	/**
+	 * PaymentCheque 저장
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/saveOnline", method = RequestMethod.GET)
+	public ResponseEntity<Map> saveOnline(@RequestParam Map<String, Object> params, ModelMap model) {
+	
+		int userId = 12345;
+		String message = "";
+		
+		ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	
+		logger.debug("params : {}", params);        
+		int payItemId = Integer.parseInt(params.get("payItemIdOn").toString());
+		
+		
+		if(userId > 0){
+			PayDVO payDet = new PayDVO();
+			
+			String refNo = String.valueOf(params.get("txtRefNoOn")).trim();
+			String refDate = "01/01/1900";
+			if(!(String.valueOf(params.get("txtRefDateOn")).trim().equals(""))){
+				refDate = String.valueOf(params.get("txtRefDateOn")).trim();
+			}
+			String remark = String.valueOf(params.get("tareaRemarkOn")).trim();
+			int issuedBankId = 0;
+			int tempIssued = String.valueOf(params.get("cmbIssuedBankOn")).trim().equals("") ? -1 : Integer.parseInt(String.valueOf(params.get("cmbIssuedBankOn")).trim());
+			if(tempIssued > -1){
+				issuedBankId = tempIssued;
+			}
+			String runNo = String.valueOf(params.get("txtRunNoOn")).trim();
+			String eFTNo = String.valueOf(params.get("txtEFTNoOn")).trim();
+			
+			boolean valid = true;
+			
+			if(tempIssued <= -1){
+				valid = false;
+				message += "* Please select the issued bank.<br />";
+			}
+			
+			if(!(refNo.equals(""))){
+				if(refNo.length() > 20){
+					valid = false;
+					message += "* Reference number cannot exceed length of 20.<br/>";
+				}
+			}
+			
+			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, "", "", 0, runNo, eFTNo, 0);
+			boolean result = searchPaymentService.doEditPaymentDetails(payDet);
+		}
 		return ResponseEntity.ok(null);
 	}
 	
-	private List<PayDHistoryVO> setHistoryList(PayDVO payDet, EgovMap qryDet){
-		List<PayDHistoryVO> list = new ArrayList();
+	private boolean checkOrNoIsAorType(String payItemId){
+		boolean isAor = false;
 		
-		//1130 : Ref Number
-		if(qryDet.get("payItmRefNo") != payDet.getPayItemRefNo()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			
-			his.setHistoryId(0);
-			his.setTypeId(1130);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			his.setValueFr(qryDet.get("payItmRefNo").toString());
-			his.setValueTo(payDet.getPayItemRefNo());
-			his.setRefIdFr(0);
-			his.setRefIdTo(0);
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			list.add(his);
-		}
+		String worno = String.valueOf(searchPaymentService.checkORNoIsAORType(payItemId));
 		
-		//1131 : Ref Date
-		//CommonUtils.getDiffDate(payDet.getPayItemRefDate(), qryDet.get("payItmRefDate").toString(), format)
-		System.out.println("payItemRefDate : " + qryDet.get("payItmRefDt") + ", " + payDet.getPayItemRefDate());
-		if(qryDet.get("payItmRefDt") != payDet.getPayItemRefDate()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			
-			his.setHistoryId(0);
-			his.setTypeId(1131);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			if(!CommonUtils.isEmpty(qryDet.get("payItmRefDt"))){
-				if(CommonUtils.getDiffDate(qryDet.get("payItmRefDt").toString(), "1900-01-01", "YYYY-MM-DD") != 0){
-					his.setValueFr(qryDet.get("payItemRefDt").toString());
-				}else{
-					his.setValueFr("");
-				}
-			}else{
-				his.setValueFr("");
-			}
-			
-			if(!CommonUtils.isEmpty(payDet.getPayItemRefDate())){
-				if(CommonUtils.getDiffDate(payDet.getPayItemRefDate(), "01/01/1900", "DD/MM/YYYY") != 0){
-					his.setValueTo(payDet.getPayItemRefDate());
-				}else{
-					his.setValueTo("");
-				}
-			}else{
-				his.setValueTo("");
-			}
-			his.setRefIdFr(0);
-			his.setRefIdTo(0);
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			list.add(his);
-		}
+		if(!(worno.equals("null")))
+			isAor = true;
+		else 
+			isAor = false;
 		
-		//1132 : Remark
-		if(qryDet.get("payItmRem") != payDet.getPayItemRefNo()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			
-			his.setHistoryId(0);
-			his.setTypeId(1132);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			his.setValueFr(qryDet.get("payItmRem").toString());
-			his.setValueTo(payDet.getPayItemRemark());
-			his.setRefIdFr(0);
-			his.setRefIdTo(0);
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			list.add(his);
-		}
-		
-		
-		if(qryDet.get("payItmModeId").equals(106) || qryDet.get("payItmModeId").equals(107) || qryDet.get("payItmModeId").equals(108)){
-			if(qryDet.get("payItmIssuBankId").toString() != String.valueOf(payDet.getPayItemIssuedBankId())){
-				PayDHistoryVO his = new PayDHistoryVO();
-				
-				String qryBankFr = searchPaymentService.selectBankCode(qryDet.get("payItmIssuBankId").toString());
-				String qryBankTo = searchPaymentService.selectBankCode(String.valueOf(payDet.getPayItemIssuedBankId()));
-				
-				his.setHistoryId(0);
-				his.setTypeId(1133);
-				his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-				his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-				if(qryBankFr != null){
-					his.setValueFr(qryBankFr);
-				}else{
-					his.setValueFr("");
-				}
-				if(qryBankTo != null){
-					his.setValueTo(qryBankTo);
-				}else{
-					his.setValueTo("");
-				}
-				
-				if(qryDet.get("payItmIssuBankId").toString() != null){
-					his.setRefIdFr(Integer.parseInt(qryDet.get("payItmIssuBankId").toString()));
-				}else{
-					his.setRefIdFr(0);
-				}
-				his.setRefIdTo(payDet.getPayItemIssuedBankId());
-				his.setCreateAt(payDet.getUpdated());
-				his.setCreateBy(payDet.getUpdator());
-				list.add(his);
-			}
-		}
-		
-		if(Integer.parseInt(qryDet.get("payItmModeId").toString()) == 107){
-			//1134 : CrcHolder
-			if(qryDet.get("payItmCcHolderName") == null){
-				qryDet.put("payItmCcHolderName", "");
-			}
-			
-			//Sting.valueOf(qryDet.get("payItmCcHolderName"));
-			
-			if(qryDet.get("payItmCcHolderName").toString() != payDet.getPayItemCCHolderName().toString()){
-				PayDHistoryVO his = new PayDHistoryVO();
-				
-				his.setHistoryId(0);
-				his.setTypeId(1134);
-				his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-				his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-				his.setValueFr(qryDet.get("payItmCcHolderName").toString());
-				his.setValueTo(payDet.getPayItemCCHolderName());
-				his.setRefIdFr(0);
-				his.setRefIdTo(0);
-				his.setCreateAt(payDet.getUpdated());
-				his.setCreateBy(payDet.getUpdator());
-				list.add(his);
-			}
-		}
-		
-		//1135 : Crc Expiry
-		if(qryDet.get("payItmCcExprDt") == null){
-			qryDet.put("payItmCcExprDt", "");
-		}
-		if(qryDet.get("payItmCcExprDt").toString() != payDet.getPayItemCCExpiryDate()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			his.setHistoryId(0);
-			his.setTypeId(1135);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			his.setValueFr(qryDet.get("payItmCcExprDt").toString());
-			his.setValueTo(payDet.getPayItemCCExpiryDate());
-			his.setRefIdFr(0);
-			his.setRefIdTo(0);
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			list.add(his);
-		}
-		
-		//1136 : Crc Type
-		if(qryDet.get("payItmCcExprDt").toString() != payDet.getPayItemCCExpiryDate()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			
-			String qryTypeFr = searchPaymentService.selectCodeDetail(qryDet.get("payItmCcTypeId").toString());
-			String qryTypeTo = searchPaymentService.selectCodeDetail(String.valueOf(payDet.getPayItemCCTypeId()));
-			
-			his.setHistoryId(0);
-			his.setTypeId(1136);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			if(qryTypeFr != null){
-				his.setValueFr(qryTypeFr);
-			}else{
-				his.setValueFr("");
-			}
-			
-			if(qryTypeTo != null){
-				his.setValueTo(qryTypeTo);
-			}else{
-				his.setValueTo("");
-			}
-			
-			if(qryDet.get("payItmCcTypeId").toString() != null){
-				his.setRefIdFr(Integer.parseInt(qryDet.get("payItmCcTypeId").toString()));
-			}else{
-				his.setRefIdFr(0);
-			}
-			his.setRefIdTo(payDet.getPayItemCCTypeId());
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			list.add(his);
-		}
-		
-		//1196 : Running Number
-		if(qryDet.get("payItmRunngNo") == null){
-			qryDet.put("payItmRunngNo", "");
-		}
-		String currentRunNo = qryDet.get("payItmRunngNo").toString() != null ? qryDet.get("payItmRunngNo").toString() : "";
-		if(currentRunNo != payDet.getPayItemRunningNo()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			his.setHistoryId(0);
-			his.setTypeId(1196);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			his.setValueFr(currentRunNo);
-			his.setValueTo(payDet.getPayItemRunningNo());
-			his.setRefIdFr(0);
-			his.setRefIdTo(0);
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			list.add(his);
-		}
-		
-		//1197 : EFT Number
-		if(qryDet.get("payItmEftNo") == null){
-			qryDet.put("payItmEftNo", "");
-		}
-		String currentEFT = qryDet.get("payItmEftNo").toString() != null ? qryDet.get("payItmEftNo").toString() : "";
-		if(currentRunNo != payDet.getPayItemRunningNo()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			his.setHistoryId(0);
-			his.setTypeId(1197);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			his.setValueFr(currentEFT);
-			his.setValueTo(payDet.getPayItemEFTNo());
-			his.setRefIdFr(0);
-			his.setRefIdTo(0);
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			list.add(his);
-		}
-		
-		//1242 : Card Type
-		System.out.println("############################payItmCardTypeId : " + qryDet.get("payItmCardTypeId").toString());
-		int currentCardTypeId = qryDet.get("payItmCardTypeId").toString() != null ? Integer.parseInt(qryDet.get("payItmCardTypeId").toString()) : 0;
-		if(currentCardTypeId != payDet.getPayItemCardTypeId()){
-			PayDHistoryVO his = new PayDHistoryVO();
-			
-			String qryTypeFr = searchPaymentService.selectCodeDetail(qryDet.get("payItmCardTypeId").toString());
-			String qryTypeTo = searchPaymentService.selectCodeDetail(String.valueOf(payDet.getPayItemCardTypeId()));
-			
-			his.setHistoryId(0);
-			his.setTypeId(1242);
-			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
-			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			if(qryTypeFr != null){
-				his.setValueFr(qryTypeFr);
-			}else{
-				his.setValueFr("");
-			}
-			if(qryTypeTo != null){
-				his.setValueTo(qryTypeTo);
-			}else{
-				his.setValueTo("");
-			}
-			
-			if(qryDet.get("payItmCardTypeId").toString() != null)
-			{
-				his.setRefIdFr(Integer.parseInt(qryDet.get("payItmCardTypeId").toString()));
-			}
-			his.setRefIdTo(payDet.getPayItemCardTypeId());
-
-			his.setCreateAt(payDet.getUpdated());
-			his.setCreateBy(payDet.getUpdator());
-			
-			list.add(his);
-		}
-		
-		return list;
+		return isAor;
 	}
 	
-	private PayDVO getSaveData_PayDet(int payItemId, int userId, String refNo, int issuedBankId, String refDate, String remark, String crcHolderName, String crcExpiryDate, int crcTypeId, String runNo, String EFTNo, int cardTypeId){
+	private PayDVO getSaveDataPayDet(int payItemId, int userId, String refNo, int issuedBankId, String refDate, String remark, String crcHolderName, String crcExpiryDate, int crcTypeId, String runNo, String EFTNo, int cardTypeId){
 		
 		PayDVO payDet = new PayDVO();
 		

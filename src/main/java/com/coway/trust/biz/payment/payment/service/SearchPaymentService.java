@@ -112,7 +112,7 @@ public interface SearchPaymentService
 	 * @param params
 	 * @return
 	 */
-	String selectCodeDetail(String payItmCcTypeId);
+	String selectCodeDetail(int payItmCcTypeId);
 	
 	/**
 	 * selectPayMaster   조회
@@ -148,7 +148,21 @@ public interface SearchPaymentService
 	 * @return
 	 */
 	EgovMap selectBranchCode(Map<String, Object> params);
+
+	/**
+	 * CheckAORType 조회
+	 * @param String
+	 * @return
+	 */
+	String checkORNoIsAORType(String payItem);
 	
+	/**
+	 * PaymentDetails 저장 및 업데이트
+	 * @param PayDVO
+	 * @return boolean
+	 */
+	boolean doEditPaymentDetails(PayDVO payDet);
+
 	/**
 	 * updGlReceiptBranchId (업데이트) 
 	 * @param params
@@ -176,4 +190,5 @@ public interface SearchPaymentService
 	 * @return
 	 */
 	EgovMap selectPaymentItemIsPassRecon(Map<String, Object> params);
+
 }
