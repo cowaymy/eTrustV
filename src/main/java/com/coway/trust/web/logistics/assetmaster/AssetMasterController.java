@@ -146,7 +146,7 @@ public class AssetMasterController {
 		 //Map<String, Object> masterMap = (Map<String, Object>) params.get("masterForm");
 		 Map<String, Object> detailMap= (Map<String, Object>) params.get("detailAddForm");
 		 
-		 List<Object> detailAddList = (List<Object>) detailMap.get(AppConstants.AUIGRID_ADD);
+		 List<EgovMap> detailAddList = (List<EgovMap>) detailMap.get(AppConstants.AUIGRID_ADD);
 		 for (int i = 0; i < detailAddList.size(); i++) {
 			 logger.debug("%%%%%%%%detailAddList%%%%%%%: {}", detailAddList.get(i));	 
 		}
