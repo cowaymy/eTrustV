@@ -800,7 +800,7 @@ public final class CommonUtils {
 		return diffDate;
 	}
 	
-	public static long getDiffDate(String cutOffDate, String criteriaDate, String format){
+	public static long getDiffDate(String criteriaDate, String cutOffDate, String format){
 		long diffDate = -1;
 		
 		try{
