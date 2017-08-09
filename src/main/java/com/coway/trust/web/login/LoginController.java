@@ -45,7 +45,7 @@ public class LoginController {
 	@RequestMapping(value = "/login.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		model.addAttribute("languages", loginService.getLanguages());
-		LOGGER.debug("Deploy_TEST");
+		LOGGER.debug("DEPLOY_TEST");
 		return "login/login";
 	}
 
