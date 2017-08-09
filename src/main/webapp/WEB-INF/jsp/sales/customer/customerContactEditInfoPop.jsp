@@ -33,12 +33,12 @@ $(document).ready(function() {
 			return;
 		}
 		//Race
-		if("" == $("#cmbRaceTypeId").val() || null == $("#name").val()){
+		if("" == $("#cmbRaceTypeId").val() || null == $("#cmbRaceTypeId").val()){
 			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Race'/>");
 			return;
 		}
 		//Nric
-		if("" != $("#nric").val() || null != $("#name").val()){
+		if("" != $("#nric").val() || null != $("#nric").val()){
 			if(FormUtil.checkNum($("#nric"))){
 				Common.alert("* Invalid nric number.");
 				return;
