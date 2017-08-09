@@ -5,8 +5,8 @@
 			<PatternLayout pattern="%d %5p [%c] %m%n" />
 		</Console>
 
-		<RollingFile name="rollingFile" fileName="c:/works/log-dev/rollingFile.log"
-			filePattern="c:/works/log-dev/rollingFile-%d{MM-dd-yyyy}-%i.log">
+		<RollingFile name="rollingFile" fileName="/was/domains/SalesDmain/servers/eTRUST/log/rollingFile.log"
+			filePattern="/was/domains/SalesDmain/servers/eTRUST/log/rollingFile-%d{MM-dd-yyyy}-%i.log">
 			<PatternLayout>
 				<Pattern>%d %p %c [%t] %m%n</Pattern>
 			</PatternLayout>
