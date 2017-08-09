@@ -31,7 +31,7 @@
     function fn_setDetail(gridID, rowIdx){
         //Common.popupWin("listSearchForm", "/sales/order/orderDetail.do?salesOrderId="+AUIGrid.getCellValue(gridID, rowIdx, "ordId"), _option);
         $('#listSalesOrderId').val(AUIGrid.getCellValue(gridID, rowIdx, "ordId"));
-        Common.popupDiv("/sales/order/orderDetail.do", $("#listSearchForm").serializeJSON());
+        Common.popupDiv("/sales/order/orderDetailPop.do", $("#listSearchForm").serializeJSON());
     }
     
     // 리스트 조회.
@@ -44,7 +44,7 @@
     $(function(){
         $('#btnNew').click(function() {
             //Common.popupWin("listSearchForm", "/sales/order/orderRegister.do", _option);
-            Common.popupDiv("/sales/order/orderRegister.do", $("#listSearchForm").serializeJSON());
+            Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
         });
         $('#btnEdit').click(function() {
             alert('Edit');

@@ -37,9 +37,9 @@ public class OrderRegisterController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 	
-	@RequestMapping(value = "/orderRegister.do")
+	@RequestMapping(value = "/orderRegisterPop.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "sales/order/orderRegister";
+		return "sales/order/orderRegisterPop";
 	}
 	
     @RequestMapping(value = "/selectCustAddJsonInfo.do", method = RequestMethod.GET)

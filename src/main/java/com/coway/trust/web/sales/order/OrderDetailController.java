@@ -37,7 +37,7 @@ public class OrderDetailController {
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
 	
-	@RequestMapping(value = "/orderDetail.do")
+	@RequestMapping(value = "/orderDetailPop.do")
 	public String getOrderDetailPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 		
 		//params.put("salesOrderId", 256488);
@@ -55,7 +55,7 @@ public class OrderDetailController {
 		
 		model.put("orderDetail", orderDetail);
 		
-		return "sales/order/orderDetail";
+		return "sales/order/orderDetailPop";
 	}
 	
 	@RequestMapping(value = "/selectSameRentalGrpOrderJsonList.do", method = RequestMethod.GET)
