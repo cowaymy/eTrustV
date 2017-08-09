@@ -298,7 +298,12 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 #popup_wrap:after{content:""; display:block; position:fixed; top:0; left:0; z-index:-1; width:100%; height:100%; background:rgba(0,0,0,0.6);}
 .popup_wrap{position:absolute; top:100px; left:50%; z-index:1001; margin-left:-500px; width:1000px; background:#fff; border:1px solid #ccc;}
 .popup_wrap:after{content:""; display:block; position:fixed; top:0; left:0; z-index:-1; width:100%; height:100%; background:rgba(0,0,0,0.6);}
+#popup_wrap.pop_win,
+.popup_wrap.pop_win{position:static; margin-left:0!important; width:100%!important; border:0 none!important;}
+#popup_wrap.pop_win:after,
+.popup_wrap.pop_win:after{display:none;}
 .popup_wrap.size_small{width:500px!important; margin-left:-250px!important;}
+.popup_wrap.size_mid{width:700px!important; margin-left:-350px!important;}
 .pop_header{padding:20px 20px 10px 20px; background:#e5e5e5; border-bottom:2px solid #25527c;}
 .pop_header:after{content:""; display:block; clear:both;}
 .pop_header h1{position:relative; float:left; height:28px; padding-left:14px; font-size:24px; color:#111; font-weight:normal;}
