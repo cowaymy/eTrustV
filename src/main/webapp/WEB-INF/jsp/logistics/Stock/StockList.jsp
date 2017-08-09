@@ -207,7 +207,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 								{dataField:"pricecost"          ,headerText:"Cost"               ,width:"14%" , visible : true},
 								{dataField:"amt"          ,headerText:"Normal Price"     ,width:"14%" , visible : true},
 								{dataField:"pricepv"          ,headerText:"Point of <br> Value (PV)"     ,width:"15%" , visible : true},
-								{dataField:" "          ,headerText:"Monthly <br> Rental"     ,width:"14%" , visible : true},
+								{dataField:"mrental"          ,headerText:"Monthly <br> Rental"     ,width:"14%" , visible : true},
 								{dataField:"pricerpf"          ,headerText:"Rental <br> Deposit"     ,width:"14%" , visible : true},
 								{dataField:"penalty"          ,headerText:"Penalty <br> Charges"     ,width:"14%" , visible : true},
 								{dataField:"tradeinpv"          ,headerText:"Trade In <br> (PV) Value"     ,width:"15%" , visible : true},
@@ -252,6 +252,16 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         noDataMessage : "출력할 데이터가 없습니다.",
                         enableSorting : true,
                         softRemoveRowMode:false
+                        };
+    var subgridpros2 = {
+                        // 페이지 설정
+                        usePaging : true,                
+                        pageRowCount : 10,                
+                        editable : false,                
+                        noDataMessage : "출력할 데이터가 없습니다.",
+                        enableSorting : true,
+                        softRemoveRowMode:false,
+                        reverseRowNum : true
                         };
 
     $(document).ready(function(){
@@ -643,7 +653,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 		imgGrid = AUIGrid.create("#stock_img_div", stockimgcolumn, subgridpros);
 	}
 	function priceHistoryAUIGrid(pricehiscolumn) {
-		priceHistoryGrid = AUIGrid.create("#priceHistory_div", pricehiscolumn, subgridpros);
+		priceHistoryGrid = AUIGrid.create("#priceHistory_div", pricehiscolumn, subgridpros2);
 	}
 
 	function getSampleListAjax() {
