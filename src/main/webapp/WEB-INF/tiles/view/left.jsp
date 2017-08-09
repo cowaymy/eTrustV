@@ -111,7 +111,7 @@
 </aside><!-- lnb_wrap end -->
 
 <form id="_menuForm">
-    <input type="hidden11" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${CURRENT_MENU_CODE}"/>
+    <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${CURRENT_MENU_CODE}"/>
 </form>
 
 <script type="text/javaScript">
