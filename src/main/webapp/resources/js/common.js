@@ -225,7 +225,7 @@ var Common = {
 
 		$.ajax({
 			type : 'post',
-			url : _url,
+			url : getContextPath() + _url,
 			data : _jsonObj,
 			dataType : "html",
 			success : function(result, textStatus, XMLHttpRequest) {
@@ -306,7 +306,7 @@ var Common = {
 
 		frm.appendChild(_input);
 
-		frm.action = _url;
+		frm.action = getContextPath() + _url;
 		frm.target = option.winName;
 		frm.method = "post";
 		frm.submit();
