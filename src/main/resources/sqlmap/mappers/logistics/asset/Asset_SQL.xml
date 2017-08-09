@@ -144,7 +144,7 @@
                  Project1.USER_NAME  USER_NAME,
                  Project1.NAME3  NAME3,
                  Project1.VALU  VALU,
-                 Project1.ASSET_D_ITM_REM ASSET_D_ITM_REM
+                 Project1.ASSET_D_ITM_REM  ASSET_D_ITM_REM
                  FROM ( SELECT 
                      Extent1.ASSET_D_ID  ASSET_D_ID, 
                      Extent1.STUS_ID  STUS_ID, 
