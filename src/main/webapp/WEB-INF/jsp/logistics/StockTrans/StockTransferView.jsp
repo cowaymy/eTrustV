@@ -99,6 +99,22 @@ $(document).ready(function(){
     AUIGrid.bind(resGrid, "ready", function(event) {});
     AUIGrid.bind(reqGrid, "ready", function(event) {});
     
+    AUIGrid.bind(reqGrid, "cellEditBegin", function (event){
+    	
+    	if (AUIGrid.getCellValue(reqGrid, event.rowIndex, "delyno") != null && AUIGrid.getCellValue(reqGrid, event.rowIndex, "delyno") != ""){
+            Common.alert('You can not create a delivery note for the selected item.');
+            return false;
+        }
+        /*if (event.dataField != "delyqty"){
+            return false;
+        }else{
+            if (AUIGrid.getCellValue(reqGrid, event.rowIndex, "delvno") != null && AUIGrid.getCellValue(reqGrid, event.rowIndex, "delvno") != ""){
+                Common.alert('You can not create a delivery note for the selected item.');
+                return false;
+            }
+        }*/
+    });
+    
 });
 
 //btn clickevent
@@ -110,29 +126,61 @@ $(function(){
     });
     $('#clear').click(function() {
     });
-    $('#delivery').click(function() {
-    	$("#smtype").attr("disabled" , false);
-    	var dat = GridCommon.getEditData(reqGrid);
-    	dat.form = $("#headForm").serializeJSON();
-    	
-    	console.log(dat);
-    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferDelivery.do", dat, function(result) {
-            Common.alert(result.message);
-            AUIGrid.resetUpdatedItems(reqGrid, "all");
-            
-        },  function(jqXHR, textStatus, errorThrown) {
-            try {
-            } catch (e) {
-            }
-
-            Common.alert("Fail : " + jqXHR.responseJSON.message);
-        });
-    	$("#smtype").attr("disabled" , true);
+    $('#list').click(function() {
+    	document.listForm.action = '/logistics/stocktransfer/StocktransferList.do';
+        document.listForm.submit();
     });
+//     $('#delivery').click(function() {
+//     	$("#smtype").attr("disabled" , false);
+//     	var dat = GridCommon.getEditData(reqGrid);
+//     	dat.form = $("#headForm").serializeJSON();
+//     	Common.ajax("POST", "/logistics/stocktransfer/StocktransferDelivery.do", dat, function(result) {
+//             Common.alert(result.message);
+//             AUIGrid.resetUpdatedItems(reqGrid, "all");
+            
+//         },  function(jqXHR, textStatus, errorThrown) {
+//             try {
+//             } catch (e) {
+//             }
+
+//             Common.alert("Fail : " + jqXHR.responseJSON.message);
+//         });
+//     	$("#smtype").attr("disabled" , true);
+//     });
     $('#reqadd').click(function() {
     	f_AddRow();
     });
     $('#reqdel').click(function(){
+    	
+    	checkedItems = AUIGrid.getCheckedRowItems(reqGrid);
+    	
+        if (checkedItems.length > 0){
+            for (var i = 0 ; i < checkedItems.length ; i++){
+            	if (AUIGrid.getCellValue(reqGrid, checkedItems[i].rowIndex, "delyno") != null && AUIGrid.getCellValue(reqGrid, checkedItems[i].rowIndex, "delyno") !=""){
+            		
+            	}else{
+            		   AUIGrid.removeRow(reqGrid, checkedItems[i].rowIndex);
+            	}
+            }
+            //var removedRows = AUIGrid.getRemovedItems(myGridID, true);
+            AUIGrid.removeSoftRows(reqGrid);
+            
+            var dat = GridCommon.getEditData(reqGrid);
+            
+            
+            dat.form = $("#headForm").serializeJSON();
+            Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqItemDelete.do", dat, function(result) {
+                Common.alert(result.message);
+                AUIGrid.resetUpdatedItems(reqGrid, "all");
+                
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
+      
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+        }		  	
     });
     $('#reqsave').click(function() {
     	
@@ -201,7 +249,7 @@ function mainSearchFunc(){
     });
 }
 function headFunc(data){
-	//console.log(data);
+	
 	$("#reqno").val(data.reqno);
 	$("#reqcrtdate").val(data.reqcrtdt);
 	
@@ -215,9 +263,9 @@ function headFunc(data){
     doGetCombo('/common/selectStockLocationList.do', '', data.reqcr,'flocation', 'S' , '');
     
 	$("#dochdertxt").val(data.doctxt);
-	$("#dochdertxt").prop("readonly","readonly");
+	//$("#dochdertxt").prop("readonly","readonly");
 	
-	$("#reqcrtdate").attr("disabled",true);
+	//$("#reqcrtdate").attr("disabled",true);
 	$("#sttype").attr("disabled",true);
 	$("#smtype").attr("disabled",true);
 	$("#flocation").attr("disabled",true);
@@ -229,11 +277,12 @@ function headFunc(data){
 
 function requestList(data){
 	reqcolumnLayout=[{dataField:"resnoitm"  ,headerText:"ITEM_NO"        ,width:120    ,height:30 , visible:false},
-	                 {dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
-                     {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30},
-                     {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30},
+	                 {dataField:"delyno"    ,headerText:"delyno"         ,width:120    ,height:30 , visible:false},
+                     {dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
+                     {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30 , editable:false},
+                     {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30 , editable:false},
                      {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
-                     {dataField:"deliqty"   ,headerText:"Delivery Qty"   ,width:120    ,height:30},
+                     {dataField:"delyqty"   ,headerText:"Delivery Qty"   ,width:120    ,height:30 , editable:false},
                      {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
                          ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                              var retStr = "";
@@ -366,7 +415,6 @@ function f_multiCombo() {
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="edit"><span class="edit"></span>Edit</a></p></li>
     <li><p class="btn_blue"><a id="list"><span class="list"></span>List</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -526,7 +574,7 @@ function f_multiCombo() {
 <div class="border_box" style="height:340px;"><!-- border_box start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="delivery">Delivery</a></p></li>
+<!--     <li><p class="btn_grid"><a id="delivery">Delivery</a></p></li> -->
     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li>
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
     <li><p class="btn_grid"><a id="reqsave">SAVE</a></p></li>
@@ -555,5 +603,19 @@ function f_multiCombo() {
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
+</form>
+<form id="listForm" name="listForm" method="POST">
+<input type="hidden" id="streq"     name="streq"     value="${searchVal.streq    }"/>
+<input type="hidden" id="sttype"    name="sttype"    value="${searchVal.sttype   }"/>
+<input type="hidden" id="smtype"    name="smtype"    value="${searchVal.smtype   }"/>
+<input type="hidden" id="tlocation" name="tlocation" value="${searchVal.tlocation}"/>
+<input type="hidden" id="flocation" name="flocation" value="${searchVal.flocation}"/>
+<input type="hidden" id="crtsdt"    name="crtsdt"    value="${searchVal.crtsdt   }"/>
+<input type="hidden" id="crtedt"    name="crtedt"    value="${searchVal.crtedt   }"/>
+<input type="hidden" id="reqsdt"    name="reqsdt"    value="${searchVal.reqsdt   }"/>
+<input type="hidden" id="reqedt"    name="reqedt"    value="${searchVal.reqedt   }"/>
+<input type="hidden" id="sam"       name="sam"       value="${searchVal.sam      }"/>
+<input type="hidden" id="sstatus"   name="sstatus"   value="${searchVal.sstatus  }"/>
+
 </form>
 </section>
