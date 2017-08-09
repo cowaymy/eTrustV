@@ -74,7 +74,7 @@
              -->
 			<!-- 필수 파라미터 start-->
 			<!-- 리포트 파일명 -->
-			<input type="text" id="reportFileName" name="reportFileName" value="/payment/PaymentListing_Excel.rpt" /><br />
+			<input type="text" id="reportFileName" name="reportFileName" value="/sample/PaymentListing_Excel.rpt" /><br />
 
 			<!-- view type
 			WINDOW : window popup
