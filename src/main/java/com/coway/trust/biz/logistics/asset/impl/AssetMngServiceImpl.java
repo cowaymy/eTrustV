@@ -54,7 +54,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	}
 	
 	@Override
-	public void insertAssetMng(Map<String, Object> params) {
+	public void insertAssetMng(Map<String, Object> params, List<Object> detailAddList) {
 		
 		int inassetid = AssetMngMapper.AssetCreateSeq();
 		
@@ -66,12 +66,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		String docNoID = String.valueOf(list.get(0).get("docNoId"));
 		String docNo = String.valueOf(list.get(0).get("c1"));
 		String docNoPrefix = String.valueOf(list.get(0).get("c2"));
-
-		int docNoLength = docNo.length();
-		int NextNo = Integer.parseInt(docNo) + 1;
-		String nextDocNo = String.valueOf(NextNo);
-		int nextDocNoLength = nextDocNo.length();
-		String docNoFormat = docNo.substring(0, docNoLength - nextDocNoLength) + nextDocNo;
+		
 		logger.debug("docNoLength : {}", docNoLength);
 		logger.debug("NextNo : {}", NextNo);
 		logger.debug("nextDocNo : {}", nextDocNo);
@@ -87,7 +82,17 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		// params.put("chkId", chkId);
 		params.put("curcode", curcode);
 		courierMapper.insertCourier(params);*/
-		AssetMngMapper.insertAssetMng(params);
+		
+		int detailsize=detailAddList.size();
+		if(detailsize >0){
+			for (int i = 0; i < detailsize; i++) {
+				AssetMngMapper.insertDetailAsset(params);						
+			}
+		}
+		 	AssetMngMapper.insertAssetMng(params);
+		
+		
+		
 	}
 	
 	@Override
