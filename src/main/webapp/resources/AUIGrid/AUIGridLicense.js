@@ -1,8 +1,7 @@
-/*!
- * AUIGrid 2.12.4 License
- * License Type : Evaluation(Trial) Version
- * Authorized Domain(or IP) : localhost,127.0.0.1,192.1.1.76
- * Expiration Date : 2017-08-20
- * http://www.auisoft.net
+/**
+ * AUIGrid 2.13 License
+ * License Type : Enterprise License
+ * Product ID : AUIGrid-EN-40716-675467-170720
+ * Authorized Domain : etrust.my.coway.com, etrustdev.my.coway.com
  */
-var AUIGridLicense = "eyJjdCI6ImQzR0V5cGhocVdTdkQxNkZ3emY4XC9tMnR1VHRDcHFWYTF0ekhITFJxZDhwZWRZRFQ0dmZHUjZUYVV6ZlFvWXNUMHNHZllBMURsUVJcL3NsRXZaak11SjkwOHFTVE1KTnhuMkY0WWtWUmFaRDQ9IiwiaXYiOiJiZjI1OTkzYzQwZGQzNTI4YTkzM2YyNTBiZTk4MjY2NCIsInMiOiI5ZTAwZGJiNDQ0MjE5YmFlIn0=";
+var AUIGridLicense = "eyJjdCI6IlhrOEt1dVR1dUQ5OXRTR2pjOG0rdHgxaGJhR3c0a29ZcjVVZlVKck02NE5hTWt5cmdrUHdKTFFLWVpxcThWS2RMb1R3UmxkUUxFaTdmZW8vdTlyN3hkR1BoU3RRZ2FFcVc2MmxVNGZUbnJ5SEk0cDF3VGsyM0NOek5qVU16R1VCYm1PeXJxQWI2bWRQTU9TaG9pd3pIUT09IiwiaXYiOiI5ZDlkNzE2YTgxNjdiNGQyMzJlY2VjNDc3MTI3MDMyYiIsInMiOiI0NGU4MjMxODk1NTQ4MjRhIn0=";
