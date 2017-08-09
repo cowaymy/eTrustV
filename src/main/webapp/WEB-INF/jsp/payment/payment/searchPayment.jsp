@@ -39,6 +39,14 @@ $(document).ready(function(){
 	//EDIT POP Branch Combo 생성
     doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','edit_branchId', 'S' , '');
     
+	//CreditCardType 생성
+    doGetCombo('/common/selectCodeList.do', '21' , ''   ,'cmbCreditCardTypeCC', 'S' , '');
+	
+    //IssuedBank 생성
+    doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'sIssuedBankCh' , 'S', '');
+    doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'cmbIssuedBankCC' , 'S', '');
+    doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'cmbIssuedBankOn' , 'S', '');
+	
     //Branch Combo 변경시 User Combo 생성
     $('#branchId').change(function (){
     	doGetCombo('/common/getUsersByBranch.do', $(this).val() , ''   , 'userId' , 'S', '');
@@ -145,7 +153,6 @@ var popColumnLayout = [
     { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
     { dataField:"c4" ,headerText:"EFT" ,editable : false },
     { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
-    { dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false },
     { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
     ];
 
@@ -365,25 +372,29 @@ function showItemEdit(payItemId){
 	//var payId = 2273; var payItemId = 2222; // online
 	var payId = 3877; var payItemId = 3853; //credit card
     //var payId = 21; var payItemId = 22; //cheque
-	$("#payItemId").val(payItemId);
-	$("#payId").val(payId);
-	    
+	
+	var defaultDate = new Date("01-01-1900");    
 	 Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
 		 var payMode = result[0].payItmModeId;
 		 if(payMode == 105){ //cash
 			 $("#item_edit_cash").show();
+			 $("#payItemId").val(payItemId);
+			 $("#payId").val(payId);
 			 $("#paymentCa").text(result[0].codeName);
 	         $("#amountCa").text(result[0].payItmAmt);
 	         $("#bankAccCa").text(result[0].accId + result[0].accDesc);
 		 }else if(payMode == 106){//cheque
 			 $("#item_edit_cheque").show();
+			 $("#payItemIdCh").val(payItemId);
+             $("#payIdCh").val(payId);
 			 $("#paymentCh").text(result[0].codeName);
 			 $("#amountCh").text(result[0].payItmAmt);
 			 $("#bankAccCh").text(result[0].accId + result[0].accDesc);
+			 $("#sIssuedBankCh").val(result[0].payItmIssuBankId);
 			 $("#chequeNumberCh").text(result[0].payItmChqNo);
+			 $("#chequeNo").val(result[0].payItmChqNo);
 			 $("#txtRefNumberCh").val(result[0].payItmRefNo);
 			 var refDate = new Date(result[0].payItmRefDt);
-			 var defaultDate = new Date("01-01-1900");
 			 if((refDate.getTime() > defaultDate.getTime()))
 			{    
 				 console.log("refDate > defaultDate : " + (refDate.getTime() > defaultDate.getTime()));
@@ -392,50 +403,85 @@ function showItemEdit(payItemId){
 			 $("#txtRunNoCh").val(result[0].payItmRunngNo);
 			 $("#tareaRemarkCh").val(result[0].payItmRem);
 		}else if(payMode == 107){//creditcard
+			  $("#payItemIdCC").val(payItemId);
+			  $("#payIdCC").val(payId);
 			  $("#item_edit_credit").show();
 			  $("#paymentCC").text(result[0].codeName);
 			  $("#amountCC").text(result[0].payItmAmt);
 	          $("#bankAccCC").text(result[0].accId + result[0].accDesc);
-	          $("#CCNo").text(result[0].payItmCcNo);
+	          $("#cmbIssuedBankCC").val(result[0].payItmIssuBankId);
+	          $("#CCNo").text(result[0].payItmOriCcNo);
+	          $("#txtCrcNo").val(result[0].payItmOriCcNo);
+	          console.log("txtCrcNo : " + $("#txtCrcNo").val());
 	          $("#txtCCHolderName").val(result[0].payItmCcHolderName);
 	          var exDt =  result[0].payItmCcExprDt;
+	          //exDt = '03/15';
+	          var exMonth = 0;
+	          var exYear = 0;
+	          var exDate = new Date();
 	          if(exDt != undefined){
-	        	    console.log("date : " + exDt);
-	        	    exDt = "01/01/1900";
-	        	    var expiryDate = new Date(exDt);
+	        	  var expiryDate = exDt.split('/');
+	        	  console.log("expiryDate : " + expiryDate); 
+	        	  exMonth = expiryDate[0];
+	        	  exYear = expiryDate[1];
+	        	  
+	        	  if(exYear >= 90){
+	        		  exYear = 1900 + Number(exYear);
+	        	  }else{
+	        		  exYear = 2000 + Number(exYear);
+	        	  }
+	        	  
+	        	  exDate.setFullYear(exYear);
+	        	  exDate.setMonth(exMonth);
+	        	  exDate.setDate("01");
+	        	  
+	        	  var exMonthStr = exDate.getMonth() < 10 ? "0" + exDate.getMonth() : exDate.getMonth();
+	          
+	        	  console.log("exDate : " + exDate + ", exDate > defaultDate" + (exDate > defaultDate)); 
+	              
+	              if((exDate > defaultDate))
+	                  $("#txtCCExpiry").val("01" + "/" + (exMonthStr) + "/" + exDate.getFullYear());
+	              else
+	                  $("#txtCCExpiry").val();
 	          }
+	          
+	          if(result[0].payItmCardTypeId > 0)
+	        	  $("#cmbCardTypeCC").val(result[0].payItmCardTypeId).prop("selected", true);
+	          console.log("cmbCreditCardTypeCC : " + result[0].payItmCcTypeId + ", " + $("#cmbCreditCardTypeCC").val());
+	          $("#cmbCreditCardTypeCC").val(result[0].payItmCcTypeId).prop("selected", true);
+	          if(result[0].isOnline == 'On')
+	        	  $("#creditCardModeCC").text('Online');
+	          else
+	        	  $("#creditCardModeCC").text('Offline');
+	          $("#approvalNumberCC").text(result[0].payItmAppvNo);
+	          $("#txtRefNoCC").val(result[0].payItmRefNo);
+	          var refDt = new Date(result[0].payItmRefDt);
+	          if(refDt > defaultDate){
+	        	  var tmpMonth = refDt.getMonth() < 10 ? "0" + (refDt.getMonth()+1) : (refDt.getMonth() + 1);
+	        	  var tmpDate = refDt.getDate() < 10 ? "0" + (refDt.getDate()+1) : (refDt.getDate() + 1);
+	        	  $("#txtRefDateCC").val(refDt.getDate() + "/" + tmpMonth + "/" + refDt.getFullYear());
+	          }
+	          $("#tareaRemarkCC").val(result[0].payItmRem);
 		 }else if(payMode == 108){//online
 			 $("#item_edit_online").show();
+			 $("#payItemIdOn").val(payItemId);
+             $("#payIdOn").val(payId);
+			 $("#paymentOn").text(result[0].codeName);
+             $("#amountOn").text(result[0].payItmAmt);
+             $("#bankAccOn").text(result[0].accId + result[0].accDesc);
+             $("#cmbIssuedBankOn").val(result[0].payItmIssuBankId);
+             $("#txtRefNoOn").val(result[0].payItmRefNo);
+             var refDate = new Date(result[0].payItmRefDt);
+             if((refDate.getTime() > defaultDate.getTime()))
+            {
+                 console.log("refDate > defaultDate : " + (refDate.getTime() > defaultDate.getTime()));
+                 $("#txtRefDateOn").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
+            }
+             $("#txtEFTNoOn").val(result[0].payItmEftNo);
+             $("#txtRunNoOn").val(result[0].payItmRunngNo);
+             $("#tareaRemarkOn").val(result[0].payItmRem);
 		 }
 	 });
-	
-   
-    
-  /*  if(view == "cash"){
-        $("#item_edit_cash").show();
-    }else if(view == "creditCard"){
-    	$("#item_edit_credit").show();
-    }else if(view == "cheque"){
-    	$("#item_edit_cheque").show();
-    }else if(view == "online"){
-    	$("#item_edit_online").show();
-    }
-    Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
-    	if(view == "cash"){
-    		$("#paymentCa").text(result[0].codeName);
-            $("#amountCa").text(result[0].payItmAmt);
-            $("#bankAccCa").text(result[0].accId + result[0].accDesc);
-	    }else if(view == "creditCard"){
-	        $("#paymentCC").text(result[0].codeName);
-	        $("#amountCC").text(result[0].payItmAmt);
-	        $("#bankAccCC").text(result[0].accId+Result[0].accDesc);
-	    }else if(view == "cheque"){
-	        
-	    }else if(view == "online"){
-	        
-	    }
-        
-    });*/
 }
 
 function hideViewPopup(){
@@ -449,14 +495,29 @@ function hideDetailPopup(){
     AUIGrid.destroy("#grid_detail_history");
 }
 
-function saveData(){
+function saveCash(){
 	alert("!!!!");
-	
-	 Common.ajax("GET", "/payment/savePaymentDetail", $("#payDetail").serialize(), function(result) {
-		 
+	 Common.ajax("GET", "/payment/saveCash", $("#cashForm").serialize(), function(result) {
+		 //Common.setMsg(result.message);  
+		 Common.alert(result.message);
 	 });
 }
 
+function saveCreditCard(){
+	Common.ajax("GET", "/payment/saveCreditCard", $("#creditCardForm").serialize(), function(result) {
+		Common.alert(result.message);
+    });
+}
+
+function saveCheque(){
+	Common.ajax("GET", "/payment/saveCheque", $("#ChequeForm").serialize(), function(result) {
+    });
+}
+
+function saveOnline(){
+    Common.ajax("GET", "/payment/saveOnline", $("#OnlineForm").serialize(), function(result) {
+    });
+}
 function saveChanges() {
 	
 	var payId = $("#payId").val();
@@ -989,7 +1050,7 @@ function goRcByBs() {
     </header>
     <!-- pop_body start -->
     <section class="pop_body">
-    <form id="payDetail" name="payDetail">
+    <form id="cashForm" name="payDetail">
     <table class="type1">
         <colgroup>
             <col style="width:165px" />
@@ -1035,7 +1096,7 @@ function goRcByBs() {
         <tr>
             <td colspan="2"> 
 	            <ul class="center_btns">
-	               <li><p class="btn_blue2"><a href="#" onclick="saveData()">save</a></p></li>
+	               <li><p class="btn_blue2"><a href="#" onclick="saveCash()">save</a></p></li>
 	             </ul>
              </td>
         </tr>
@@ -1058,7 +1119,10 @@ function goRcByBs() {
     </header>
     <!-- pop_body start -->
     <section class="pop_body">
-    <form id="payDetailCC" name="payDetail">
+    <form id="creditCardForm" name="creditCardForm">
+    <input type="hidden" id="payItemIdCC" name="payItemIdCC"/>
+    <input type="hidden" id="payIdCC" name="payIdCC"/>
+    <input type="hidden" id="txtCrcNo" name="txtCrcNo" />
     <table class="type1">
         <colgroup>
             <col style="width:165px" />
@@ -1080,7 +1144,7 @@ function goRcByBs() {
         <tr>
             <th>Issued Bank</th>
             <td id="issuedBankCC">
-                <p><select></select></p>
+                <select id="cmbIssuedBankCC" name="cmbIssuedBankCC" class="w100p"></select>
             </td>
         </tr>
         <tr>
@@ -1102,22 +1166,25 @@ function goRcByBs() {
         <tr>
             <th>Card Type</th>
             <td id="cardTypeCC">
-                <p><input type="text" name="cardType" id="cardType"  /></p>
+                <select id="cmbCardTypeCC" name="cmbCardTypeCC" class="w100p">
+                    <option value="1241">Credit Card</option>
+                    <option value="1240">Debit Card</option>
+                </select>
             </td>
         </tr>
         <tr>
             <th>Credit Card Type</th>
-            <td id="cCType">
-                <p><input type="text" name="creditCardType" id="creditCardType" /></p>
+            <td id="creditCardTypeCC">
+                <select id="cmbCreditCardTypeCC" name="cmbCreditCardTypeCC" class="w100p"></select>
             </td>
         </tr>
         <tr>
             <th>Credit Card Mode</th>
-            <td id="cCMode"></td>
+            <td id="creditCardModeCC"></td>
         </tr>
         <tr>
             <th>Approval Number</th>
-            <td id="approvalNumber"></td>
+            <td id="approvalNumberCC"></td>
         </tr>
         <tr>
             <th>Reference No</th>
@@ -1146,14 +1213,13 @@ function goRcByBs() {
         <tr>
             <td colspan="2"> 
                 <ul class="center_btns">
-                   <li><p class="btn_blue2"><a href="#" onclick="saveData('creditCard')">save</a></p></li>
+                   <li><p class="btn_blue2"><a href="#" onclick="saveCreditCard()">save</a></p></li>
                  </ul>
              </td>
         </tr>
         </tbody>
     </table>
-    <input type="hidden" id="payItemId" name="payItemId"/>
-    <input type="hidden" id="payId" name="payId"/>
+
     </form>
     </section>
     <!-- pop_body end -->
@@ -1169,7 +1235,7 @@ function goRcByBs() {
     </header>
     <!-- pop_body start -->
     <section class="pop_body">
-    <form id="payDetail" name="payDetail">
+    <form id="ChequeForm" name="ChequeForm">
     <table class="type1">
         <colgroup>
             <col style="width:165px" />
@@ -1225,14 +1291,15 @@ function goRcByBs() {
         <tr>
             <td colspan="2"> 
                 <ul class="center_btns">
-                   <li><p class="btn_blue2"><a href="#" onclick="saveData()">save</a></p></li>
+                   <li><p class="btn_blue2"><a href="#" onclick="saveCheque()">save</a></p></li>
                  </ul>
              </td>
         </tr>
         </tbody>
     </table>
-    <input type="hidden" id="payItemId" name="payItemId"/>
-    <input type="hidden" id="payId" name="payId"/>
+    <input type="hidden" id="payItemIdCh" name="payItemIdCh"/>
+    <input type="hidden" id="payIdCh" name="payIdCh"/>
+    <input type="hidden" id="chequeNo" name="chequeNo" />
     </form>
     </section>
     <!-- pop_body end -->
@@ -1247,7 +1314,7 @@ function goRcByBs() {
     </header>
     <!-- pop_body start -->
     <section class="pop_body">
-    <form id="payDetail" name="payDetail">
+    <form id="OnlineForm" name="OnlineForm">
     <table class="type1">
         <colgroup>
             <col style="width:165px" />
@@ -1269,7 +1336,7 @@ function goRcByBs() {
         <tr>
             <th>Issued Bank</th>
             <td id="issuedBankOn">
-                <p><select id="sIssuedBankOn" name="sIssuedBankOn"></select></p>
+                <p><select id="cmbIssuedBankOn" name="cmbIssuedBankOn"></select></p>
             </td>
         </tr>
         <tr>
@@ -1305,14 +1372,14 @@ function goRcByBs() {
         <tr>
             <td colspan="2"> 
                 <ul class="center_btns">
-                   <li><p class="btn_blue2"><a href="#" onclick="saveData()">save</a></p></li>
+                   <li><p class="btn_blue2"><a href="#" onclick="saveOnline()">save</a></p></li>
                  </ul>
              </td>
         </tr>
         </tbody>
     </table>
-    <input type="hidden" id="payItemId" name="payItemId"/>
-    <input type="hidden" id="payId" name="payId"/>
+    <input type="hidden" id="payItemIdOn" name="payItemIdOn"/>
+    <input type="hidden" id="payIdOn" name="payIdOn"/>
     </form>
     </section>
     <!-- pop_body end -->
