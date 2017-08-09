@@ -146,7 +146,7 @@ function fn_menu(menuCode, menuPath){
     $("#CURRENT_MENU_CODE").val(menuCode);
 
     $("#_menuForm").attr({
-        action : menuPath,
+        action : getContextPath() + menuPath,
         method : "POST"
     }).submit();
 }

@@ -38,7 +38,7 @@ var Common = {
 
 		$.ajax({
 			type : _method,
-			url : _url,
+			url : getContextPath() + _url,
 			contentType : "application/json;charset=UTF-8",
 			beforeSend : function(request) {
 				if (_header) {
@@ -76,7 +76,9 @@ var Common = {
 				if (_errcallback) {
 					_errcallback(jqXHR, textStatus, errorThrown);
 				} else {
-					Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                    if(FormUtil.isNotEmpty(jqXHR.responseJSON)){
+                        Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                    }
 				}
 			}
 		});
@@ -92,7 +94,7 @@ var Common = {
 	 */
 	ajaxFile : function(_url, _formData, _callback, _errcallback, _options){ 
 		$.ajax({
-			url : _url,
+			url : getContextPath() + _url,
 			processData : false,
 			contentType : false,
 			data : _formData,
@@ -121,7 +123,9 @@ var Common = {
 				if (_errcallback) {
 					_errcallback(jqXHR, textStatus, errorThrown);
 				} else {
-					Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+					if(FormUtil.isNotEmpty(jqXHR.responseJSON)){
+                        Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+					}
 				}
 			},
 			complete : function() {
@@ -366,7 +370,7 @@ var Common = {
 
 		frm.appendChild(_input);
 
-		frm.action = _url;
+		frm.action = getContextPath() + _url;
 		frm.target = option.winName;
 		frm.method = "post";
 		frm.submit();
@@ -405,7 +409,7 @@ var Common = {
             Common.popupWin(_formId, reportViewUrl, option);
 		}else{
             $("#" + _formId).attr({
-                action : reportViewUrl,
+                action : getContextPath() + reportViewUrl,
                 method : "POST"
             }).submit();
 		}
@@ -413,7 +417,7 @@ var Common = {
 	
 	openNew : function(url, data, target) {
 		var form = document.createElement("form");
-		form.action = url;
+		form.action = getContextPath() + url;
 		form.method = "post";
 		form.target = target || "_self";
 		if (data) {
