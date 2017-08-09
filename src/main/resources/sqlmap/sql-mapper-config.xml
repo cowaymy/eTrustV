@@ -62,5 +62,8 @@
         <!-- Enrollment Result Update -->
         <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />
         <typeAlias alias="EnrollmentUpdateDVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO" />
+    
+        <!-- SearchPayment -->
+        <typeAlias alias="PayDHistoryVO" type="com.coway.trust.biz.payment.payment.service.PayDHistoryVO" />
     </typeAliases>
 </configuration>
