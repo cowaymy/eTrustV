@@ -315,13 +315,11 @@
         var url;
         var key;
         var param;
-        var param= $("#masterForm").serializeJSON();
-
-        
-        /* 	param = {
-        		    $("#masterForm").serializeJSON(),
-        			GridCommon.getEditData(AddDetailGrid)
-        			   } */
+        //var param= $("#masterForm").serializeJSON();
+        param = { 
+        		masterForm : $("#masterForm").serializeJSON(),
+        		 detailForm : GridCommon.getEditData(AddDetailGrid)
+   			   }; 
          
         selectedItem = AUIGrid.getSelectedIndex(myGridID);
        if(div=="U"){
