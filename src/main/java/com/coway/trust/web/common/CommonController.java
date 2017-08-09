@@ -713,6 +713,19 @@ public class CommonController {
 		List<EgovMap> resultList = commonService.getAccountList(params);
 		return ResponseEntity.ok(resultList);
 	}
+	
+	/**
+	 * IssuedBank 정보 조회 
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/getIssuedBankList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getIssuedBankList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> resultList = commonService.selectBankList();
+		return ResponseEntity.ok(resultList);
+	}
 
 	/**
 	 * Branch ID로 User 정보 조회
