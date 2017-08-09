@@ -27,6 +27,7 @@ public interface EnrollResultService
      	 * @param params
      	 * @return
      	 */
-      String saveNewEnrollment(List<Object> gridList, Map<String, Object> formList);
+     // String saveNewEnrollment(List<Object> gridList, Map<String, Object> formList);
    
+      public List<EgovMap> saveNewEnrollment(EnrollmentUpdateMVO enrollMaster, List<EnrollmentUpdateDVO> enrollDList, int updateType);
 }

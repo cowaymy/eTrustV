@@ -26,7 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.payment.autodebit.service.CsvFormatVO;
 import com.coway.trust.biz.payment.autodebit.service.EnrollResultService;
+import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO;
+import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.CommonUtils;
@@ -37,26 +40,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/payment")
 public class EnrollResultController {
-
 	private static final Logger logger = LoggerFactory.getLogger(EnrollResultController.class);
 
-	@Resource(name = "commonService")
-	private CommonService commonService;
-	
 	@Resource(name = "enrollResultService")
 	private EnrollResultService enrollResultService;
 
-	@Value("${app.name}")
-	private String appName;
-
-	@Value("${com.file.upload.path}")
-	private String uploadDir;
-
-	// DataBase message accessor....
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
-
-	
 	/******************************************************
 	 * enrollmentResultList  
 	 *****************************************************//*	
@@ -97,27 +85,97 @@ public class EnrollResultController {
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> uploadFile(
 			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model) {
-
-		String msg = "";
+		String message = "";
+		
+		// 결과 만들기.
+    	ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	msg.setMessage(message );
+    	
+		//TODO userId값 변경 필요
+		int userId = 98765;
+	
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
     	Map<String, Object> formInfo = new HashMap<String, Object> ();
+    	System.out.println("formList : " + formList.size());
     	if(formList.size() > 0){
     		for(Object obj : formList){
     			Map<String, Object> map = (Map<String, Object>) obj;
     			formInfo.put((String)map.get("name"), map.get("value"));
     		}
-    		msg = enrollResultService.saveNewEnrollment(gridList, formInfo);
     		
+    		if(userId > 0)
+    		{
+    			List<CsvFormatVO> csvList = new ArrayList();
+    			
+    			if(gridList.size() > 1){
+    				for(int i=1; i<gridList.size(); i++){
+                		Map<String, Object> map = (Map<String, Object>) gridList.get(i);
+                		try{
+                    		if(CommonUtils.isNumCheck(map.get("1").toString()) && 
+                    				CommonUtils.isNumCheck(map.get("2").toString())&&
+                    				CommonUtils.isNumCheck(map.get("3").toString())){
+                    			
+                    			csvList.add(new CsvFormatVO(
+                	    				map.get("0").toString(), 
+                	    				Integer.parseInt(map.get("1").toString()), 
+                	    				Integer.parseInt(map.get("2").toString()), 
+                	    				Integer.parseInt(map.get("3").toString()), 
+                	    				map.get("4").toString()));
+                    		}
+                    		else{
+                    			message = "Failed to read CSV. Please ensure all the data in your CSV are correct before upload.";
+                    			msg.setMessage(message );
+                    			return ResponseEntity.ok(msg);
+                    		}
+                		}catch(Exception e){
+                			e.printStackTrace();
+                		}
+                	}
+    				
+    				List<EnrollmentUpdateDVO> enrollDList = bindEnrollItemList(csvList, userId);
+    				
+    				if(formInfo.get("updateType").toString() != null && !formInfo.get("updateType").toString().equals("")){
+                		if(enrollDList.size() > 0){
+                			EnrollmentUpdateMVO enrollMaster = getEnrollMaster(enrollDList, formInfo, userId);
+                			if(enrollMaster != null){
+                    			List<EgovMap> result = enrollResultService.saveNewEnrollment(enrollMaster, enrollDList, Integer.parseInt(formInfo.get("updateType").toString()));
+                    			
+                    			if(result.size() > 0){
+                        			message = "Enrollment information successfully updated.\n";
+                        			message += "Update Batch ID : " + result.get(0).get("enrlUpdId") + "\n";
+                        			message += "Total Update : " + result.get(0).get("totUpDt") + "\n";
+                        			message += "Total Success : " + result.get(0).get("totSucces")+ "\n";
+                        			message += "Total Failed : " + result.get(0).get("totFail")+ "";
+                        		}
+        
+                			} else{
+                				message = "Failed to update enrollment result.\n Please try again later.\n";
+                			}
+                		}else{
+                			message = "You must select your CSV file.\n";
+                		}
+                		
+    				}else{
+                		message =  "You must select the update type.\n";
+    				}
+    			}else{
+            		message = "No item found in your CSV.\nEnrollment update is unnecessary.";
+            	}
+    			
+    		}else{
+    			message = "Your login session was expired. Please relogin to our system.\n";
+    			
+    		//msg = enrollResultService.saveNewEnrollment(gridList, formInfo);
+    		}
+    	}else{
+    		//message = "temp";
     	}
     	
-    	// 결과 만들기.
-    	ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setMessage(msg );
-    	
-        return ResponseEntity.ok(message);
+    	msg.setMessage(message);
+        return ResponseEntity.ok(msg);
 	}
 	
 	/**
@@ -137,5 +195,78 @@ public class EnrollResultController {
         return ResponseEntity.ok(map);
 	}
 	
+	private EnrollmentUpdateMVO getEnrollMaster(List<EnrollmentUpdateDVO> enrollDList, Map<String, Object> formInfo, int userId){
+		EnrollmentUpdateMVO enrollMaster = new EnrollmentUpdateMVO();
+		
+		enrollMaster.setEnrollUpdateId(0);
+		enrollMaster.setTypeId(Integer.parseInt(formInfo.get("updateType").toString()));
+        enrollMaster.setCreated(CommonUtils.getNowDate() + CommonUtils.getNowTime());
+        enrollMaster.setCreator(userId);
+        enrollMaster.setTotalUpdate(enrollDList.size());
+        enrollMaster.setTotalSuccess(0);
+        enrollMaster.setTotalFail(0);
+		
+		return enrollMaster;
+	}
 	
+	private List<EnrollmentUpdateDVO> bindEnrollItemList(List<CsvFormatVO> csvList, int userId){
+		List<EnrollmentUpdateDVO> list = new ArrayList();
+		long diffDays = CommonUtils.getDiffDate("20160701");
+		if(csvList.size() > 0){
+   		for(CsvFormatVO csv : csvList){
+    			String contractNOrderNo = csv.getOrderNo();
+    			String svmContractNo = "";
+    			String orderNo = "";
+    			
+    			if (contractNOrderNo.length() > 7)
+    			{
+    				for (int i = 0; i < 7; i++)
+                    {
+                        svmContractNo += contractNOrderNo.charAt(i);
+                    }
+        			if (contractNOrderNo.length() < 7 && diffDays >= 0){
+        				 for (int i = 7; i < 14; i++)
+                         {
+                             orderNo += contractNOrderNo.charAt(i);
+                         }
+        			}else
+                    {
+                        for (int i = 8; i < 14; i++)
+                        {
+                            orderNo += contractNOrderNo.charAt(i);
+                        }
+                    }
+    			}else{
+    				 if (contractNOrderNo.length() < 7 && diffDays >= 0)
+                     {
+                         orderNo = "0" + contractNOrderNo;
+                     } else
+                     {
+                         orderNo = contractNOrderNo;
+                     }
+    			}
+                
+    			EnrollmentUpdateDVO enroll = new EnrollmentUpdateDVO();
+    			enroll.setEnrollUpdateDetId(0);
+    			enroll.setEnrollUpdateId(0);
+    			enroll.setStatusCodeId(1);
+    			enroll.setOrderNo(orderNo.trim());
+    			enroll.setSalesOrderId(0);
+    			enroll.setAppTypeId(0);
+    			enroll.setInputMonth(String.valueOf(csv.getMonth()));
+    			enroll.setInputDay(String.valueOf(csv.getDay()));
+    			enroll.setInputYear(String.valueOf(csv.getYear()));
+    			enroll.setResultDate("01-01-1990");
+    			enroll.setCreated(CommonUtils.getNowDate() + CommonUtils.getNowTime());
+    			enroll.setCreator(userId);
+    			enroll.setMessage(svmContractNo.trim().equals("")? "" : svmContractNo.trim());
+    			enroll.setInputRejectCode(!(csv.getRejectCode().trim() == null || csv.getRejectCode().trim().equals(""))?csv.getRejectCode() : "");
+    			enroll.setRejectCodeId(0);
+    			enroll.setServiceContractId(0);
+    			list.add(enroll);
+    			
+    		}
+		}
+		return list;
+	}
 }

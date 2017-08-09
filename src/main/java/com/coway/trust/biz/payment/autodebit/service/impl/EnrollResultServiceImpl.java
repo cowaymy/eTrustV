@@ -85,7 +85,35 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	@Transactional
-	public String saveNewEnrollment(List<Object> gridList, Map<String, Object> formInfo) {
+	public List<EgovMap> saveNewEnrollment(EnrollmentUpdateMVO enrollMaster, List<EnrollmentUpdateDVO> enrollDList, int updateType)
+	{
+		int updateId = enrollResultMapper.getPAY0058DSEQ();
+		enrollMaster.setEnrollUpdateId(updateId);
+		enrollResultMapper.insertUpdateMaster(enrollMaster);
+		
+		for(EnrollmentUpdateDVO enrollD : enrollDList){
+			enrollD.setEnrollUpdateId(updateId);
+			enrollResultMapper.insertUpdateGrid(enrollD);
+		}
+
+		Map mapForPro = new HashMap();
+		mapForPro.put("enrollId", updateId);
+		mapForPro.put("enrollTypeId", updateType);
+		enrollResultMapper.callEnrollProcedure(mapForPro);
+		
+		List<EgovMap> result = enrollResultMapper.selectSuccessInfo(updateId);
+		
+		return result;
+	}
+	
+/*	/**
+	 * Enrollment 저장
+	 * @param params
+	 * @return
+	 */
+	/*@Override
+	@Transactional*/
+	/*public String saveNewEnrollment(List<Object> gridList, Map<String, Object> formInfo) {
 		
 		String message = "";
 		int userId = 98765;
@@ -167,9 +195,9 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		
 		return message;
-	}
+	}*/
 	
-	private EnrollmentUpdateMVO getEnrollMaster(List<EnrollmentUpdateDVO> enrollDList, Map<String, Object> formInfo, int userId){
+	/*private EnrollmentUpdateMVO getEnrollMaster(List<EnrollmentUpdateDVO> enrollDList, Map<String, Object> formInfo, int userId){
 		EnrollmentUpdateMVO enrollMaster = new EnrollmentUpdateMVO();
 		
 		enrollMaster.setEnrollUpdateId(0);
@@ -181,9 +209,9 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
         enrollMaster.setTotalFail(0);
 		
 		return enrollMaster;
-	}
+	}*/
 	
-	private List<EnrollmentUpdateDVO> bindEnrollItemList(List<CsvFormatVO> csvList, int userId){
+	/*private List<EnrollmentUpdateDVO> bindEnrollItemList(List<CsvFormatVO> csvList, int userId){
 		List<EnrollmentUpdateDVO> list = new ArrayList();
 		long diffDays = CommonUtils.getDiffDate("20160701");
 		if(csvList.size() > 0){
@@ -242,5 +270,5 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
     		}
 		}
 		return list;
-	}
+	}*/
 }

@@ -204,7 +204,6 @@ function fn_saveGridMap(){
     
     //Ajax 호출
     Common.ajax("POST", "/payment/uploadFile", data, function(result) {
-        Common.setMsg(result.message);  
         resetUpdatedItems(); // 초기화
         Common.alert(result.message);
         
