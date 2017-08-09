@@ -30,6 +30,7 @@ public class MenuController {
 	@RequestMapping(value = "/getMenuList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMenuList(@RequestParam Map<String, Object> params, SessionVO sessionVO,
 			ModelMap model) {
+		LOGGER.debug("/getMenuList.do...........");
 		return ResponseEntity.ok(menuService.getMenuList(sessionVO));
 	}
 }
