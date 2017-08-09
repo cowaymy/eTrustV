@@ -129,7 +129,6 @@ var popColumnLayout = [
             iconHeight : 20,
             //altField : "View History",
             onclick : function(rowIndex, columnIndex, value, item) {
-                alert("( " + rowIndex + ", " + columnIndex + " ) " + item.payItmId + "  클릭, " + value);
                 showDetailHistory(item.payItmId);
             }
     	}
