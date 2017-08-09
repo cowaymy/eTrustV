@@ -311,14 +311,14 @@
         }); 
     }
     function assetsaveAjax(div) {
-        
+        alert(div);
         var url;
         var key;
         var param;
         //var param= $("#masterForm").serializeJSON();
         param = { 
-        		masterForm : $("#masterForm").serializeJSON(),
-        		 detailForm : GridCommon.getEditData(AddDetailGrid)
+        		masterAddForm : $("#masterForm").serializeJSON(),
+        		 detailAddForm : GridCommon.getEditData(AddDetailGrid)
    			   }; 
          
         selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -636,10 +636,11 @@
       }
       
       function detail_info_insert() {
-    	   /*  if (valiedcheck()){
-               detailsaveAjax();
-               }     */ 	  
-    	  $("#savePopbtn").click();   
+    	  div="N";
+    	     if (valiedcheck()){
+    	    	assetsaveAjax(div);
+               }      	  
+    	 // $("#savePopbtn").click();   
       }
    
        
