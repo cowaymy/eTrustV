@@ -13,6 +13,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.logistics.asset.AssetMngService;
@@ -24,6 +26,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("AssetMngService")
 public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements AssetMngService {
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Resource(name = "AssetMngMapper")
 	private AssetMngMapper AssetMngMapper;
@@ -54,7 +57,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	}
 	
 	@Override
-	public void insertAssetMng(Map<String, Object> params, List<Object> detailAddList) {
+	public void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList) {
 		
 		int inassetid = AssetMngMapper.AssetCreateSeq();
 		
@@ -86,21 +89,33 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		Map<String, Object> detailmap = new HashMap();
 	
 		int detailsize=detailAddList.size();
+		logger.debug("detailsize     : {}", detailsize);	
+		System.out.println("detailsize$$$  :  "+detailsize);
 		if(detailsize > 0){
-			/*for( : detailAddList){
+			System.out.println("통과!!!!!");
+			for (int i = 0; i < detailAddList.size(); i++) {
+				EgovMap map = (EgovMap) detailAddList.get(i);
+			/*	detailmap.put("insdetailtype", map.get("insdetailtype"));
+				detailmap.put("insdetailBrand", map.get("insdetailBrand"));
+				detailmap.put("insdetailmodel", map.get("insdetailmodel"));
+				detailmap.put("insdetailremark", map.get("insdetailremark"));*/
+			
+		/*		logger.debug("insdetailtype     : {}", map.get("insdetailtype"));	
+				logger.debug("insdetailBrand     : {}", map.get("insdetailBrand"));	 
+				logger.debug("insdetailmodel     : {}", map.get("insdetailmodel"));	 
+				logger.debug("insdetailremark     : {}", map.get("insdetailremark"));	 */
+				logger.debug("insdetailtype     : {}", map.get("codeName"));	
+				logger.debug("insdetailBrand     : {}", map.get("name"));	 
+				logger.debug("insdetailmodel     : {}", map.get("name1"));	 
+				logger.debug("insdetailremark     : {}", map.get("assetDRem"));	
 				
-			}*/
-			for (int i = 0; i < detailsize; i++) {
-				detailmap.put("detailstatus", 1);
-				detailmap.put("inassetid", inassetid);
-				detailmap.put("insdetailtype", detailAddList);
-	
-		AssetMngMapper.insertDetailAsset(detailAddList.get(i));
 				
-				
+				AssetMngMapper.insertDetailAsset(map);
+					
 			}
+			
 		}
-		 	AssetMngMapper.insertAssetMng(params);
+		 	//AssetMngMapper.insertAssetMng(params);
 		
 		
 		
