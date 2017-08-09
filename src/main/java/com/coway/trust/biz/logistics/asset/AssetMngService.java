@@ -13,7 +13,7 @@ public interface AssetMngService {
 	List<EgovMap> selectDealerList(Map<String, Object> params);
 	List<EgovMap> selectBrandList(Map<String, Object> params);
 	List<EgovMap> selectTypeList(Map<String, Object> params);
-	void insertAssetMng(Map<String, Object> params);
+	void insertAssetMng(Map<String, Object> params,List<Object> detailAddList);
 	void motifyAssetMng(Map<String, Object> params);
 	void deleteAssetMng(Map<String, Object> params);
 	
