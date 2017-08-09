@@ -142,6 +142,6 @@
         </form>
     </article><!-- login_box end -->
 
-    <p class="copy">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved.</p>
+    <p class="copy">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved..</p>
 </div><!-- login_wrap end -->
 </body>
