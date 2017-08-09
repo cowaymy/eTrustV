@@ -124,6 +124,9 @@ public class AssetMasterController {
 		assetdetailmap.put("assetid", assetid);
 
 		List<EgovMap> list = ams.selectDetailList(assetdetailmap);
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println("리스트 값 :::::::::::::"+list.get(i));
+		}
 		
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -169,7 +172,12 @@ public class AssetMasterController {
 	@RequestMapping(value = "/insertAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-			
+		
+		logger.debug("@@@@@@@@@insdetailtype@@@@@@@@@@@ : {}", params.get("insdetailtype"));
+		logger.debug("******************insdetailBrand******************* : {}", params.get("insdetailBrand"));
+		logger.debug("@@@@@@@@@@insdetailmodel@@@@@@@    : {}", params.get("insdetailmodel"));
+		logger.debug("******************insdetailremark******************* : {}", params.get("insdetailremark"));
+		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -191,7 +199,7 @@ public class AssetMasterController {
 		Map<String, Object> map = new HashMap();
 
 		try {
-			ams.insertAssetMng(params);
+			//ams.insertAssetMng(params);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
