@@ -642,6 +642,12 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 
 	@Override
+	public List<EgovMap> selectBankList() {
+		// TODO Auto-generated method stub
+		return commonMapper.selectBankList();
+	}
+
+	@Override
 	public EgovMap selectBrnchIdByPostCode(Map<String, Object> params) {
 		return commonMapper.selectBrnchIdByPostCode(params);
 	}

@@ -118,6 +118,27 @@ public interface CommonMapper {
 	List<EgovMap> selectInStckSelCodeList(Map<String, Object> params);
 	
 	List<EgovMap> selectStockLocationList(Map<String, Object> params);
+	
+	/**
+	*  IssuedBankList 조회
+	 * @param 
+	 * @return
+	 */
+	List<EgovMap> selectBankList();
+	
+	/**
+	*  IssuedBank 조회
+	 * @param String
+	 * @return String
+	 */
+	String selectBankInfoById(String param);
+	
+	/**
+	 *  CodeDetail조회
+	 * @param int
+	 * @return String
+	 */
+	String codeNameById(int payItmCcTypeId);
 
 	EgovMap selectBrnchIdByPostCode(Map<String, Object> params);
 
