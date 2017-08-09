@@ -173,6 +173,11 @@ public class AssetMasterController {
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 		
+		 //Map<String, Object> masterMap = params.masterForm.get("masterForm");				
+		
+		
+		//List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
+		
 		logger.debug("@@@@@@@@@insdetailtype@@@@@@@@@@@ : {}", params.get("insdetailtype"));
 		logger.debug("******************insdetailBrand******************* : {}", params.get("insdetailBrand"));
 		logger.debug("@@@@@@@@@@insdetailmodel@@@@@@@    : {}", params.get("insdetailmodel"));
