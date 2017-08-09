@@ -299,7 +299,6 @@
     <!-- Asset 디테일 인서트 -->
     <insert id="insertDetailAsset" parameterType="Map">
          INSERT INTO LOG0051D(
-            ASSET_D_ID
           , STUS_ID
           , ASSET_ID
           , TYPE_ID
