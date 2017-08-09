@@ -71,32 +71,7 @@ public class AssetMasterController {
 //		String searchcategory = request.getParameter("searchcategory");
 //		String searchcategory = request.getParameter("searchcategory");
 //		String searchcategory = request.getParameter("searchcategory");
-		
-		System.out.println("searchcategory :       "+request.getParameter("searchcategory"));
-		System.out.println("searchassetid :       "+request.getParameter("searchassetid"));
-		System.out.println("searchbrand :       "+request.getParameter("searchbrand"));
-		System.out.println(searchstatus.length);
-		for (int i = 0; i < searchstatus.length; i++) {
-			System.out.println("searchstatus :              "+searchstatus[i]);			
-		}
-		System.out.println("searchtype :       "+request.getParameter("searchtype"));
-		System.out.println("searchcolor :       "+request.getParameter("searchcolor"));
-		System.out.println("searchmodelname :       "+request.getParameter("searchmodelname"));
-		System.out.println("searchpurchasedate1 :       "+request.getParameter("searchpurchasedate1"));
-		System.out.println("searchpurchasedate2 :       "+request.getParameter("searchpurchasedate2"));
-		System.out.println("searchrefno :       "+request.getParameter("searchrefno"));
-		System.out.println("searchbranchid :       "+request.getParameter("searchbranchid"));
-		System.out.println("searchdepartment :       "+request.getParameter("searchdepartment"));
-		System.out.println("searchinvoiceno :       "+request.getParameter("searchinvoiceno"));
-		System.out.println("searchdealer :       "+request.getParameter("searchdealer"));
-		System.out.println("searchserialno :       "+request.getParameter("searchserialno"));
-		System.out.println("searchwarrantyno :       "+request.getParameter("searchwarrantyno"));
-		System.out.println("searchimeino :       "+request.getParameter("searchimeino"));
-		System.out.println("searchmacaddress :       "+request.getParameter("searchmacaddress"));
-		System.out.println("searchcreator :       "+request.getParameter("searchcreator"));
-		System.out.println("searchcreatedate1 :       "+request.getParameter("searchcreatedate1"));
-		System.out.println("searchcreatedate2 :       "+request.getParameter("searchcreatedate2"));
-				
+					
 		Map<String, Object> assetmap = new HashMap();
 		assetmap.put("searchassetid", searchassetid);
 		assetmap.put("searchstatus" , searchstatus);
@@ -124,9 +99,6 @@ public class AssetMasterController {
 		assetdetailmap.put("assetid", assetid);
 
 		List<EgovMap> list = ams.selectDetailList(assetdetailmap);
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println("리스트 값 :::::::::::::"+list.get(i));
-		}
 		
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -159,8 +131,6 @@ public class AssetMasterController {
 	@RequestMapping(value = "/selectTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
 		
-		//logger.debug("@@@@@@@@@@@@@@@@@selectTypeListCode : {}", params.get("groupCode"));
-		//logger.debug("******************codevalue******************* : {}", params.get("codevalue"));
 		params.put("hrchytypeid", "1198");
 
 		List<EgovMap> TypeList = ams.selectTypeList(params);
@@ -173,15 +143,13 @@ public class AssetMasterController {
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 		
-		 //Map<String, Object> masterMap = params.masterForm.get("masterForm");				
-		
-		
-		//List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
-		
-		logger.debug("@@@@@@@@@insdetailtype@@@@@@@@@@@ : {}", params.get("insdetailtype"));
-		logger.debug("******************insdetailBrand******************* : {}", params.get("insdetailBrand"));
-		logger.debug("@@@@@@@@@@insdetailmodel@@@@@@@    : {}", params.get("insdetailmodel"));
-		logger.debug("******************insdetailremark******************* : {}", params.get("insdetailremark"));
+		 //Map<String, Object> masterMap = (Map<String, Object>) params.get("masterForm");
+		 Map<String, Object> detailMap= (Map<String, Object>) params.get("detailAddForm");
+		 
+		 List<Object> detailAddList = (List<Object>) detailMap.get(AppConstants.AUIGRID_ADD);
+		 for (int i = 0; i < detailAddList.size(); i++) {
+			 logger.debug("%%%%%%%%detailAddList%%%%%%%: {}", detailAddList.get(i));	 
+		}
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
@@ -204,7 +172,7 @@ public class AssetMasterController {
 		Map<String, Object> map = new HashMap();
 
 		try {
-			//ams.insertAssetMng(params);
+			ams.insertAssetMng(params,detailAddList);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
