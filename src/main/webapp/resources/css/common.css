@@ -146,6 +146,8 @@ h3 .txt_box{font-size:16px; color:#25527c;}
 .color_box.purple{background:#9f20da;}
 .color_box.white{background:#fff; border:1px solid #ccc; box-sizing:border-box;}
 .fl_right{float:right!important;}
+select .otpgroup_text {background:#aaa; color:#fff;}
+select .otpgroup_text option {color:#444; background:#fff;}
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
