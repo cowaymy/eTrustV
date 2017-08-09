@@ -33,6 +33,7 @@
     // AUIGrid 생성 후 반환 ID
     var myGridID;
     var detailGrid;
+    var AddDetailGrid;
     
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "67","codeName": "Lost"},{"codeId": "8","codeName": "Inactive"}];
    // var categorycomboData = [{"codeId": "1199","codeName": "IT Equipment"}];
@@ -77,13 +78,18 @@
                        ];
     
     
-    var detailLayout = [{dataField:"TYPE_ID"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:false},
-                        {dataField:"BRAND_ID"      ,headerText:"Brand"           ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"NAME1"    ,headerText:"Model Name"    ,width:"40%" ,height:30 , visible:true},
-                        {dataField:"ASSET_D_REM"        ,headerText:"Remark1"        ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"NAME3"   ,headerText:"Name"         ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"VALU"   ,headerText:"Value"       ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"ASSET_D_ITM_REM"   ,headerText:"Remark2"       ,width:120 ,height:30 , visible:false},
+    var detailLayout = [ {dataField:"codeName"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:true}, 
+                         {dataField:"name"      ,headerText:"Brand"           ,width:"15%" ,height:30 , visible:true}, 
+                        {dataField:"name1"    ,headerText:"Model Name"    ,width:"40%" ,height:30 , visible:true},
+                        {dataField:"assetDRem"        ,headerText:"Remark1"        ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"name3"   ,headerText:"Name"         ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"valu"   ,headerText:"Value"       ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"department"   ,headerText:"Remark2"       ,width:120 ,height:30 , visible:true},
+                       ];
+    var insDetailLayout = [ {dataField:"codeName"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:true}, 
+                         {dataField:"name"      ,headerText:"Brand"           ,width:"15%" ,height:30 , visible:true}, 
+                        {dataField:"name1"    ,headerText:"Model Name"    ,width:"40%" ,height:30 , visible:true},
+                        {dataField:"assetDRem"        ,headerText:"Remark1"        ,width:"15%" ,height:30 , visible:true},
                        ];
     
     
@@ -142,10 +148,10 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
-            //detailGrid  = GridCommon.createAUIGrid("DtatilGrid", detailLayout,"", gridoptions);
+        	
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
-                div="V";
+                div="V";              
                 $("#detailHead").text("AssetMng Information Details");
                 getDetailAssetListAjax(selectedItem[0]);
                 fn_setVisiable(div); 
@@ -193,6 +199,27 @@
                 }
          });
          
+         $("#Details_info").click(function(){
+             //f_removeclass();
+             alert("asdsadasdasdasdasdas");
+            $("#add_info_div").show();
+             AddDetailAUIGrid(detailLayout);
+                  
+            // var selectedItems = AUIGrid.getSelectedItems(myGridID);
+             /* for(i=0; i<selectedItems.length; i++) {
+                 f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=filter", "F");
+             } */
+         //$(this).find("a").attr("class","on");
+     });
+         
+      $("#detail_info_add").click(function(){
+        	 alert("sadasdasdas");
+       // $("#detailForm")[0].reset();
+        $("#regDetailWindow").show();	   	 
+       });
+         
+         
+         
          $("#update").click(function(){
              div="U";
              $("#detailHead").text("AssetMng Information Modification");
@@ -224,20 +251,6 @@
              Common.alert('Choice Data please..');
              } 
          });
-         
-      /*    $("#Details_info").click(function(){
-              if($("#detail_info_div").css("display") == "none"){
-                 //f_removeclass();
-                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                 for(i=0; i<selectedItems.length; i++) {
-                    // f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
-                 }
-                 $("#detail_info_div").show();
-                 
-             }else{                
-             }
-             $(this).find("a").attr("class","on"); 
-         }); */
                   
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
@@ -287,8 +300,8 @@
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                  var gridData = data             
-                console.log(gridData.data);            
-               //AUIGrid.setGridData(detailGrid, gridData.data);
+                console.log(gridData.data);  
+                 f_dtail_info(gridData); 
                 hideModal(); 
             },
             error : function(jqXHR, textStatus, errorThrown) {
@@ -298,31 +311,43 @@
         }); 
     }
     function assetsaveAjax(div) {
+        
         var url;
-        var key;   
-        var val= $("#masterForm").serializeJSON();
+        var key;
+        var param;
+        var param= $("#masterForm").serializeJSON();
+
+        
+        /* 	param = {
+        		    $("#masterForm").serializeJSON(),
+        			GridCommon.getEditData(AddDetailGrid)
+        			   } */
+         
         selectedItem = AUIGrid.getSelectedIndex(myGridID);
        if(div=="U"){
            url="/logistics/assetmng/motifyAssetMng.do";
-       }else if(div=="N"){
+       }else if(div=="N"){ //마스터 인서트
            url="/logistics/assetmng/insertAssetMng.do";
-       }else if(div=="D"){
+       }else if(div=="D"){ //딜리트
            url="/logistics/assetmng/deleteAssetMng.do";
        }
-       Common.ajax("POST",url,val,function(result){
-           Common.alert(result.msg);
-          
-            alert("인서트 통과!!!!!!!!!!!!");
-            $("#update").click();
-           
-         /*   $("#masterWindow").hide(); */
-           
-        /*    $("#search").trigger("click");
-           if(div=="U"){
-                 $("#view").click();
-          } */
+       Common.ajax("POST",url,param,function(result){
+           Common.alert(result.msg);  
+            alert("인서트 통과!!!!!!!!!!!!"); 
        });
    } 
+    
+   /*  function detailsaveAjax() {
+        var url;
+        var key;
+        var val= $("#detailForm").serializeJSON();
+        selectedItem = AUIGrid.getSelectedIndex(myGridID);    
+        url="/logistics/assetmng/insertAssetMng.do";
+        Common.ajax("POST",url,val,function(result){
+           Common.alert(result.msg);  
+            alert("인서트 통과!!!!!!!!!!!!"); 
+       });
+   }  */
       
     function fn_assetDetail(rowid){
         $("#masterassetid").val(AUIGrid.getCellValue(myGridID ,rowid,'assetid'));
@@ -458,12 +483,14 @@
              $("#masterremark").prop('readonly', false); 
              $("#savePopbtn").show();
              $("#updatePopbtn").hide();
+             $("#insertdetail").show();
              
              combReset();
          }
      }
      function combReset(){
            doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand
+           doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','insdetailBrand', 'S' , '');//detailbrand
            doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
            doGetCombo('/common/selectCodeList.do', '112', '','mastercolor', 'S' , ''); //Color 리스트 조회
            doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 
@@ -526,26 +553,24 @@
         }
      
      
-     function doGetComboSelBox(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
-            
-                alert(codevalue);
-            $.ajax({
-                type : "GET",
-                url : url,
-                data : { groupCode : codevalue },
-                dataType : "json",
-                contentType : "application/json;charset=UTF-8",
-                success : function(data) {
-                   var rData = data;
-                   doDefCombos(rData, selCode, obj , type,  callbackFn);
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                    alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
-                },
-                complete: function(){
-                }
-            }); 
-        } ;
+     function doGetComboSelBox(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){      
+         $.ajax({
+             type : "GET",
+             url : url,
+             data : { groupCode : codevalue },
+             dataType : "json",
+             contentType : "application/json;charset=UTF-8",
+             success : function(data) {
+                var rData = data;
+                doDefCombos(rData, selCode, obj , type,  callbackFn);
+             },
+             error: function(jqXHR, textStatus, errorThrown){
+                 alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+             },
+             complete: function(){
+             }
+         }); 
+     } ;
         
         
         function doDefCombos(data, selCode, obj , type, callbackFn){
@@ -589,7 +614,37 @@
         } 
          
 }
-     
+      // AUIGrid 를 생성합니다.
+      function f_dtail_info(gridData) {
+    	  detailGrid  = GridCommon.createAUIGrid("DtatilGrid", detailLayout,"", gridoptions);
+    	  AUIGrid.setGridData(detailGrid, gridData.data);
+    	  $("#insertdetail").hide();
+      }
+      
+  
+       function AddDetailAUIGrid(detailLayout) {
+    	  AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
+      } 
+   
+      function addRowFileter() {
+          var item = new Object();
+          item.codeName = $("#insdetailtype option:selected").text();
+          item.name = $("#insdetailBrand option:selected").text();
+          item.name1 = $("#insdetailmodel").val();
+          item.assetDRem = $("#insdetailremark").val();
+         
+          AUIGrid.addRow(AddDetailGrid, item, "last");
+           $("#regDetailWindow").hide(); 
+      }
+      
+      function detail_info_insert() {
+    	   /*  if (valiedcheck()){
+               detailsaveAjax();
+               }     */ 	  
+    	  $("#savePopbtn").click();   
+      }
+   
+       
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -818,7 +873,7 @@
                 <li id="Details_info"><a href="#"> Details Info</a></li>
             </ul>
 
-<article class="tap_area" id="Master_info_div" >
+<article class="tap_area" >
 
 <form id="masterForm" name="masterForm" method="POST">
 <table class="type1"><!-- table start -->
@@ -851,7 +906,7 @@
     </td>
     <th scope="row">Type</th>
     <td colspan="2" id="tdtype">
-    <select id="mastertype" name="mastertype" onchange="getComboRelays('masterdetailtype' , this.value , 'detailtype', '')" title="" placeholder=""  class="w100p" disabled=true>
+    <select id="mastertype" name="mastertype" onchange="getComboRelays('insdetailtype' , this.value , 'detailtype', '')" title="" placeholder=""  class="w100p" disabled=true>
     </select>
     </td>     
 </tr>
@@ -906,13 +961,13 @@
     <th scope="row">Remark</th>
     <td colspan="5" id="tdremark"><input type="text" title="" placeholder=""  class="w100p" id="masterremark" name="masterremark"/></td>    
 </tr>
-<tr>
+<!-- <tr>
 <th scope="row">Detail Type</th>
   <td colspan="2" id="tdbrand">
      <select id="masterdetailtype" name="masterdetailtype" title="" placeholder=""  class="w100p" disabled=true>
     </select>
     </td>  
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 <ul class="center_btns">
@@ -925,104 +980,79 @@
 
 
 <article class="tap_area">
-<div id="DtatilGrid"></div>
+<!-- <div id="DtatilGrid" style="width:100%;"></div>  -->
+<div id="add_info_div" style="display:none;">
+                <aside class="title_line"><!-- title_line start -->
+                    <h3 >Add Dtails Info</h3>
+                    <ul class="left_opt">
+                    <li><p class="btn_blue"><a id="detail_info_add">ADD</a></p></li>
+                    </ul>
+                </aside>
+                <div id="addDetail_grid" style="width:100%;">
+                </div>
+                <ul class="left_opt">
+                    <li><p class="btn_blue"><a onclick="javascript:detail_info_insert();">SAVE</a></p></li>
+                </ul>         
+ </div>                      
 </article>
-<!-- 
-<article class="tap_area">tap_area start
-
-<table class="type2 acodi">table start
-<caption>table</caption>
-<colgroup>
-    <col style="width:60px" />
-    <col style="width:60px" />
-    <col style="width:100px" />
-    <col style="width:100px" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:100px" />
-    <col style="width:100px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="col"><a href="#" class="aco_btn"><img src="/resources/images/common/btn_down.gif" alt="View Info" /></a></th>
-    <th scope="col">No</th>
-    <th scope="col">Type</th>
-    <th scope="col">Brand</th>
-    <th scope="col">Model Name</th>
-    <th scope="col">Remark1</th>
-    <th scope="col">Name</th>
-    <th scope="col">Value</th>
-    <th scope="col">Remark2</th>
-</tr>
-<tr class="aco_tr">
-    <td><span></span></td>
-    <td><span>1</span></td>
-    <td><span><select id="" name="" title="" placeholder=""  class="w100p"></select></span></td>
-    <td><span><select id="" name="" title="" placeholder=""  class="w100p"></select></span></td>
-    <td><span><input type="text" title="" placeholder=""  class="w100p" id="" name=""/></span></td>
-    <td><span><input type="text" title="" placeholder=""  class="w100p" id="" name=""/></span></td>
-    <td><span><input type="text" title="" placeholder=""  class="w100p" id="" name=""/></span></td>
-    <td><span><input type="text" title="" placeholder=""  class="w100p" id="" name=""/></span></td>
-    <td><span><input type="text" title="" placeholder=""  class="w100p" id="" name=""/></span></td>
-</tr> 
-<tr>
-    <th scope="col"><a href="#" class="aco_btn"><img src="/resources/images/common/btn_down.gif" alt="View Info" /></a></th>
-    <th scope="col">No</th>
-    <th scope="col">Type</th>
-    <th scope="col">Brand</th>
-    <th scope="col">Model Name</th>
-    <th scope="col">Remark</th>
-    <th scope="col">Name</th>
-    <th scope="col">Value</th>
-    <th scope="col">Remark</th>
-</tr>
-<tr class="aco_tr">
-    <td><span></span></td>
-    <td><span>1</span></td>
-    <td><span>cpu</span></td>
-    <td><span>intel</span></td>
-    <td><span>i3-3217U</span></td>
-    <td><span></span></td>
-    <td><span>speed</span></td>
-    <td><span>1.6GHz</span></td>
-    <td><span></span></td>
-</tr>
-<tr>
-    <th scope="col"><a href="#" class="aco_btn"><img src="/resources/images/common/btn_down.gif" alt="View Info" /></a></th>
-    <th scope="col">No</th>
-    <th scope="col">Type</th>
-    <th scope="col">Brand</th>
-    <th scope="col">Model Name</th>
-    <th scope="col">Remark</th>
-    <th scope="col">Name</th>
-    <th scope="col">Value</th>
-    <th scope="col">Remark</th>
-</tr>
-<tr class="aco_tr">
-    <td><span></span></td>
-    <td><span>1</span></td>
-    <td><span>cpu</span></td>
-    <td><span>intel</span></td>
-    <td><span>i3-3217U</span></td>
-    <td><span></span></td>
-    <td><span>speed</span></td>
-    <td><span>1.6GHz</span></td>
-    <td><span></span></td>
-</tr> 
-
-</tbody>
-</table>table end
-
-</article>tap_area end
- -->
-
-
-
 </section><!--  tab -->
+
+
+<div class="popup_wrap" id="regDetailWindow" style="display:none"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Add Dtails Info</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->  
+            <!-- pop_body start -->
+                <form id="detailForm" name="detailForm" method="POST">
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Detail Type</th>
+                                <td colspan="2">
+                                <select id="insdetailtype" name="insdetailtype" title="" placeholder=""  class="w100p" disabled=true></select>
+                                </td>
+                                <th scope="row">Brand</th>
+                                <td colspan="2">
+                                <select id="insdetailBrand" name="insdetailBrand" title="" placeholder=""  class="w100p"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Model Name</th>
+                                <td colspan="3">
+                                <input type="text" id="insdetailmodel" name="insdetailmodel" class="w100p" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Remark</th>
+                                <td colspan="5"><input type="text" id="insdetailremark" name="insdetailremark"  class="w100p" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
+                    <ul class="center_btns">
+                        <li><p class="btn_blue2 big"><a onclick="javascript:addRowFileter();">SAVE</a></p></li> 
+                        <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
+                    </ul>
+                </form> 
+    </section>  
+</div>
+
 
 </section>
 </div>
 
 </section><!-- content end -->
+</div>
 
