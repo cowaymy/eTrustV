@@ -83,10 +83,21 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		params.put("curcode", curcode);
 		courierMapper.insertCourier(params);*/
 		
+		Map<String, Object> detailmap = new HashMap();
+	
 		int detailsize=detailAddList.size();
-		if(detailsize >0){
+		if(detailsize > 0){
+			/*for( : detailAddList){
+				
+			}*/
 			for (int i = 0; i < detailsize; i++) {
-				AssetMngMapper.insertDetailAsset(params);						
+				detailmap.put("detailstatus", 1);
+				detailmap.put("inassetid", inassetid);
+				detailmap.put("insdetailtype", detailAddList);
+	
+		AssetMngMapper.insertDetailAsset(detailAddList.get(i));
+				
+				
 			}
 		}
 		 	AssetMngMapper.insertAssetMng(params);
