@@ -21,7 +21,7 @@
         });
         
         doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
-        doGetCombo('/common/selectProductCodeList.do',  '', '', 'listProductId', 'S',              ''); //Product Code
+        doGetProductCombo('/common/selectProductCodeList.do',  '', '', 'listProductId', 'S',              ''); //Product Code
 
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code

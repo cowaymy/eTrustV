@@ -424,7 +424,8 @@
 	    });
 	    $('#custBtn').click(function() {
 	        $("#sUrl").val("/common/customerPop.do");
-	        Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+	        //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+	        Common.popupDiv("/common/customerPop.do", $("#searchForm").serializeJSON());
 	    });
 	    $('[name="grpOpt"]').click(function() {
 	        fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
@@ -460,7 +461,7 @@
         $('#custId').blur(function(event) {
             
             var strCustId = $('#custId').val();
-            alert(strCustId);
+            
             //CLEAR CUSTOMER 
 //          this.ClearControl_Customer();
 //          this.ClearControl_MailAddress();
@@ -565,6 +566,8 @@
                             
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             fn_tabOnOffSet('REL_CER', 'HIDE');
+                            
+                            doGetProductCombo('/common/selectProductCodeList.do',  '3', '', 'ordProudct', 'S', ''); //Product Code
                             
     	                    break;
                         
@@ -989,7 +992,7 @@
 </tr>
 <tr>
     <th scope="row">Product<span class="must">*</span></th>
-    <td><input id="ordProudct" name="ordProudct" type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><select id="ordProudct" name="ordProudct" class="w100p"></select></td>
     <th scope="row">Salesman NRIC</th>
     <td><input type="text" title="" placeholder="" class="w100p" /></td>
 </tr>

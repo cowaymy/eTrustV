@@ -15,8 +15,7 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            opener.fn_loadCustomer(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId"));
-            self.close();
+            fn_loadCustomer(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId"));
         });
 	});
 	
@@ -74,7 +73,7 @@
 
     // 리스트 조회.
     function fn_selectPstRequestDOListAjax() {        
-        Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#searchForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#custSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         }
         );
@@ -97,7 +96,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="searchForm" name="searchForm" action="#" method="post">
+<form id="custSearchForm" name="searchForm" action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

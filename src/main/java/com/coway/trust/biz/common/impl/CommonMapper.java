@@ -113,7 +113,7 @@ public interface CommonMapper {
 	
 	List<EgovMap> selectAddrSelCode(Map<String, Object> params);
 
-	List<EgovMap> selectProductCodeList();
+	List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectInStckSelCodeList(Map<String, Object> params);
 	

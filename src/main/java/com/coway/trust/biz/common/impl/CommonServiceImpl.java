@@ -624,9 +624,9 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 
 	@Override
-	public List<EgovMap> selectProductCodeList() {
+	public List<EgovMap> selectProductCodeList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return commonMapper.selectProductCodeList();
+		return commonMapper.selectProductCodeList(params);
 	}
 
 	@Override
