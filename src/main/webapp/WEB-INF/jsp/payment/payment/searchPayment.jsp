@@ -370,7 +370,7 @@ function showDetailHistory(payItemId){
 function showItemEdit(payItemId){
 	
 	//var payId = 166; var payItemId = 170; //cash
-	var payId = 2273; var payItemId = 2222; // online
+	//var payId = 2273; var payItemId = 2222; // online
 	//var payId = 3877; var payItemId = 3853; //credit card
     //var payId = 21; var payItemId = 22; //cheque
 	
@@ -711,8 +711,7 @@ function goRcByBs() {
 				        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>
 				        <li><p class="link_btn type2"><a href="#">Reverse Payment(Void)</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>		
-				        <li><p class="link_btn type2"><a href="#" onclick="showItemEdit();">TEMP1</a></p></li>           
+				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
 				    </ul>
 				    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
