@@ -1,11 +1,7 @@
 package com.coway.trust.web.sample;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,23 +17,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.SampleApplication;
-import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
-import com.coway.trust.cmmn.model.AuthVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -101,6 +90,12 @@ public class SampleController {
 
 		// 호출될 화면
 		return "sample/publishSample";
+	}
+
+	@RequestMapping(value = "/sampleAuth.do")
+	public String sampleAuth(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		// 화면별 버튼 권한 리스트 예제.
+		return "sample/sampleAuth";
 	}
 
 	/**
@@ -214,15 +209,6 @@ public class SampleController {
 
 		// MessageSource 사용 예시.
 		LOGGER.debug("fail.common.dbmsg : {}", messageAccessor.getMessage(SampleConstants.SAMPLE_DBMSG));
-
-		// 화면에서 보여줄 데이터.
-		AuthVO auth = new AuthVO();
-		auth.setInsert(true);
-		auth.setRead(true);
-		auth.setUpdate(true);
-		auth.setDelete(false);
-
-		model.addAttribute("auth", auth);
 
 		// 호출될 화면
 		return "sample/sampleView";

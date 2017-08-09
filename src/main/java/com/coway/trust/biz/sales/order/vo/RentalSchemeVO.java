@@ -1,7 +1,6 @@
 package com.coway.trust.biz.sales.order.vo;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
 
 

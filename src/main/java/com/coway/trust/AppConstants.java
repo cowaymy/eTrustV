@@ -42,6 +42,13 @@ public class AppConstants {
 	public static final String SESSION_INFO = "SESSION_INFO";
 
 	/**
+	 * MENU
+	 */
+	public static final String MENU_KEY = "MENU_KEY";
+	public static final String CURRENT_MENU_CODE = "CURRENT_MENU_CODE";
+	public static final String PAGE_AUTH = "PAGE_AUTH";
+
+	/**
 	 * AUIGrid
 	 */
 	public static final String AUIGRID_ADD = "add";

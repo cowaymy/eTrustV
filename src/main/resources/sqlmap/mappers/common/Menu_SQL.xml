@@ -2,11 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.MenuMapper">
 
-    <select id="selectMenuList" parameterType="Map" resultType="egovMap">
-        SELECT
-              'menu001' as menuId,
-              '/common/main.do' as menuUrl
-        FROM dual
+    <select id="selectMenuList" parameterType="sessionVO" resultType="egovMap">
+/*
+TODO :  로그인한 유저가 가진 메뉴를 조회 하도록 구현 필요. 현재 임시.
+ */
+        SELECT     MENU.MENU_LVL
+                  ,MENU.MENU_CODE
+                  ,MENU.UPPER_MENU_CODE
+                  ,MENU.MENU_NAME
+                  ,MENU.PGM_CODE
+                  ,MENU.PGM_PATH
+                  ,MENU.FUNC_VIEW
+                  ,MENU.MENU_ORDER
+                  ,CONNECT_BY_ISLEAF AS IS_LEAF
+                  ,SYS_CONNECT_BY_PATH (MENU.MENU_CODE, '|!|') AS PATH_CODE
+              FROM (SELECT DISTINCT MENU.*
+                                   ,PGM.PGM_PATH
+                                   ,PGM.FUNC_VIEW
+                               FROM SYS0051M MENU, SYS0050M PGM
+                              WHERE MENU.PGM_CODE = PGM.PGM_CODE(+)
+                         START WITH MENU.MENU_CODE IN (SELECT MENU.MENU_CODE
+                                                         FROM SYS0051M MENU
+                                                        WHERE MENU.PGM_CODE IS NOT NULL)
+                                AND MENU.PGM_CODE IN (
+                                                      /* TODO : 권한이 있는 PGM_CODE 리스트로 교체..*/
+                                                      SELECT PGM_CODE
+                                                        FROM SYS0050M)
+                         CONNECT BY PRIOR UPPER_MENU_CODE = MENU_CODE) MENU
+        START WITH MENU.UPPER_MENU_CODE IS NULL
+        CONNECT BY PRIOR MENU_CODE = UPPER_MENU_CODE
+          ORDER SIBLINGS BY MENU_ORDER
     </select>
 
+    <select id="selectPageAuth" parameterType="Map" resultType="pageAuthVO">
+/*
+TODO : path 로 권한을 가져오는 쿼리 구현 필요. 현재 임시.
+ */
+        SELECT
+            'Y' AS  funcView
+            ,'Y' AS  funcChange
+            ,'Y' AS  funcPrint
+            ,'Y' AS  funcUserDefine1
+            ,'Y' AS  funcUserDefine2
+            ,'Y' AS  funcUserDefine3
+            ,'Y' AS  funcUserDefine4
+            ,'Y' AS  funcUserDefine5
+        FROM dual
+    </select>
 </mapper>

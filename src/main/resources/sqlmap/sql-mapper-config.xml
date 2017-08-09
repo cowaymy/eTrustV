@@ -12,6 +12,8 @@
         <!-- 공통 -->
         <typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 		<typeAlias alias="loginVO" type="com.coway.trust.cmmn.model.LoginVO"/>
+		<typeAlias alias="sessionVO" type="com.coway.trust.cmmn.model.SessionVO"/>
+		<typeAlias alias="pageAuthVO" type="com.coway.trust.cmmn.model.PageAuthVO"/>
 		<typeAlias alias="searchVO" type="com.coway.trust.biz.sample.SampleDefaultVO"/>
 		<typeAlias alias="sampleVO" type="com.coway.trust.biz.sample.SampleVO"/>
 		<typeAlias alias="string" type="java.lang.String"/>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.MenuService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -27,7 +28,8 @@ public class MenuController {
 	private MenuService menuService;
 
 	@RequestMapping(value = "/getMenuList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getMenuList(@RequestParam Map<String, Object> params, ModelMap model) {
-		return ResponseEntity.ok(menuService.getMenuList(params));
+	public ResponseEntity<List<EgovMap>> getMenuList(@RequestParam Map<String, Object> params, SessionVO sessionVO,
+			ModelMap model) {
+		return ResponseEntity.ok(menuService.getMenuList(sessionVO));
 	}
 }

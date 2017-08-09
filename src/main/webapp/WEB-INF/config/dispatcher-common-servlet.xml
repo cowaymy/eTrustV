@@ -44,7 +44,7 @@
                 로그인 체크가 필요한 URL과 로그인 여부를 체크해준다 
         -->
         <mvc:interceptor>
-            <!-- <mvc:mapping path="/sample/*.do"/> -->
+            <mvc:mapping path="/sample/*.do"/>
             <!-- <mvc:mapping path="/api/**"/> -->
             <mvc:mapping path="/test/**"/>
             <mvc:exclude-mapping path="/login/*.do"/>
