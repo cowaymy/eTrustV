@@ -396,6 +396,12 @@
 		  </otherwise>
 		</choose>
 	</select>
+	   
+    <select id="codeNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+       SELECT CODE_NAME
+       FROM SYS0013M
+       WHERE CODE_ID = #{value}
+    </select>
 	
 	<select id="selectI18NList" parameterType="Map" resultType="egovMap">
             SELECT * FROM SYS0052M
@@ -898,6 +904,23 @@
 		     ) T
 		 WHERE ROWNUM <= 1
     ]]>
+    </select>
+    
+    <select id="selectBankList" resultType="egovMap">
+        SELECT Project1.BANK_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME  
+        FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.CODE || ' : ' || Extent1.NAME CODE_NAME  
+                   FROM SYS0004M Extent1
+                   WHERE  1 = Extent1.STUS_CODE_ID ) Project1
+        ORDER BY Project1.CODE ASC
+    </select>
+    
+    <select id="selectBankInfoById" parameterType="java.lang.String" resultType="java.lang.String">
+       SELECT CODE
+       FROM SYS0004M
+       WHERE BANK_ID = #{value}
     </select>
     
     <select id="selectDocSubmissionList" parameterType="Map" resultType="egovMap">
