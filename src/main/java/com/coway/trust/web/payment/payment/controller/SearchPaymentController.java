@@ -1,6 +1,7 @@
 package com.coway.trust.web.payment.payment.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +48,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -154,7 +156,7 @@ public class SearchPaymentController {
 	 * Search Payment (RC By Sales) 
 	 *****************************************************/	
 	/**
-	 * SearchPayment초기화 화면 
+	 * SearchPayment초기 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -651,7 +653,7 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveChanges", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveChanges(@RequestBody Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveChanges(@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
 		
         // 마스터조회
 		EgovMap viewMaster = searchPaymentService.selectPayMaster(params);
@@ -813,8 +815,8 @@ public class SearchPaymentController {
 		}
 		
 		updMap.put("payId", String.valueOf(params.get("hiddenPayId")));
-		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")))){
-			updMap.put("trNo", String.valueOf(params.get("edit_txtTRRefNo")));
+		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")).trim())){
+			updMap.put("trNo", String.valueOf(params.get("edit_txtTRRefNo")).trim());
 		}else{
 			updMap.put("trNo", "");
 		}
@@ -848,11 +850,13 @@ public class SearchPaymentController {
 		}
 		
 		String trIssueDate = CommonUtils.nvl(params.get("edit_txtTRIssueDate")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("edit_txtTRIssueDate"));
-		if(!trIssuDt.equals(String.valueOf(params.get("edit_txtTRIssueDate")))){
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date inputDate = formatter.parse(trIssueDate);
+        Date masterDate = formatter.parse(trIssuDt);
+        if(inputDate.getTime() != masterDate.getTime()){
 			updMap.put("trIssueDate", trIssueDate);
 		}else{
-			
-			updMap.put("trIssueDate", trIssueDate);
+			updMap.put("trIssueDate", "");
 		}
 		searchPaymentService.updChanges(updMap);//변경값들 마스터테이블에 업데이트.
 		
