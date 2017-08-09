@@ -4,11 +4,11 @@
 <script type="text/javaScript" language="javascript">
 
 	//AUIGrid 생성 후 반환 ID
-	var myGridID;
+	var listMyGridID;
 
-    var option = {
-    	width : "1180px", // 창 가로 크기
-        height : "800px" // 창 세로 크기
+    var _option = {
+    	width : "1200px", // 창 가로 크기
+        height : "300px" // 창 세로 크기
     };
     
     $(document).ready(function(){
@@ -16,32 +16,43 @@
         createAUIGrid();
 
         // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            fn_setDetail(myGridID, event.rowIndex);
+        AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {
+            fn_setDetail(listMyGridID, event.rowIndex);
         });
         
-        doGetCombo('/common/selectCodeList.do',       '10', '',   'appType', 'M', 'fn_multiCombo'); //Common Code
-        doGetCombo('/common/selectProductCodeList.do',  '', '', 'productId', 'S',              ''); //Product Code
+        doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
+        doGetCombo('/common/selectProductCodeList.do',  '', '', 'listProductId', 'S',              ''); //Product Code
 
-        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'keyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
-        doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
     });
 
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
-        Common.popupWin("searchForm", "/sales/order/orderDetail.do?salesOrderId="+AUIGrid.getCellValue(gridID, rowIdx, "ordId"), option);
-    }
-    
-    function Test() {    	
-    	Common.popupWin("searchForm", "/sales/order/orderRegister.do", option);
+        //Common.popupWin("listSearchForm", "/sales/order/orderDetail.do?salesOrderId="+AUIGrid.getCellValue(gridID, rowIdx, "ordId"), _option);
+        $('#listSalesOrderId').val(AUIGrid.getCellValue(gridID, rowIdx, "ordId"));
+        Common.popupDiv("/sales/order/orderDetail.do", $("#listSearchForm").serializeJSON());
     }
     
     // 리스트 조회.
     function fn_selectListAjax() {        
-        Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#searchForm").serialize(), function(result) {
-            AUIGrid.setGridData(myGridID, result);
+        Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#listSearchForm").serialize(), function(result) {
+            AUIGrid.setGridData(listMyGridID, result);
         });
     }
+
+    $(function(){
+        $('#btnNew').click(function() {
+            //Common.popupWin("listSearchForm", "/sales/order/orderRegister.do", _option);
+            Common.popupDiv("/sales/order/orderRegister.do", $("#listSearchForm").serializeJSON());
+        });
+        $('#btnEdit').click(function() {
+            alert('Edit');
+        });
+        $('#btnSrch').click(function() {
+        	fn_selectListAjax();
+        });
+    });
     
     function createAUIGrid() {
         
@@ -116,29 +127,29 @@
             groupingMessage     : "Here groupping"
         };
         
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "", gridPros);
+        listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
     }
     
     function fn_multiCombo(){
-        $('#cmbCategory').change(function() {
+//        $('#cmbCategory').change(function() {
+//            //console.log($(this).val());
+//        }).multipleSelect({
+//            selectAll: true, // 전체선택 
+//            width: '100%'
+//        });            
+        $('#listAppType').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택 
             width: '100%'
         });            
-        $('#appType').change(function() {
-            //console.log($(this).val());
-        }).multipleSelect({
-            selectAll: true, // 전체선택 
-            width: '100%'
-        });            
-        $('#keyinBrnchId').change(function() {
+        $('#listKeyinBrnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택 
             width: '100%'
         });
-        $('#dscBrnchId').change(function() {
+        $('#listDscBrnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택 
@@ -285,16 +296,16 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="javascript:Test();">New</a></p></li>
-    <li><p class="btn_blue"><a href="#" onClick="javascript:Test();">Edit</a></p></li>
-	<li><p class="btn_blue"><a href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
+    <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
+	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
 
-<form id="searchForm" name="searchForm" action="#" method="post">
-
+<form id="listSearchForm" name="listSearchForm" action="#" method="post">
+    <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -309,25 +320,25 @@
 <tr>
 	<th scope="row">Order No</th>
 	<td>
-	<input id="ordNo" name="ordNo"  type="text" title="Order No" placeholder="Order Number" class="w100p" />
+	<input id="listOrdNo" name="ordNo"  type="text" title="Order No" placeholder="Order Number" class="w100p" />
 	</td>
 	<th scope="row">Application Type</th>
 	<td>
-	<select id="appType" name="appType" class="multy_select w100p" multiple="multiple"></select>
+	<select id="listAppType" name="appType" class="multy_select w100p" multiple="multiple"></select>
 	</td>
 	<th scope="row">Order Date</th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input id="ordStartDt" name="ordStartDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="listOrdStartDt" name="ordStartDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	<span>To</span>
-	<p><input id="ordEndDt" name="ordEndDt" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="listOrdEndDt" name="ordEndDt" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	</div><!-- date_set end -->
 	</td>
 </tr>
 <tr>
 	<th scope="row">Order Status</th>
 	<td>
-	<select id="ordStusId" name="ordStusId" class="multy_select w100p" multiple="multiple">
+	<select id="listOrdStusId" name="ordStusId" class="multy_select w100p" multiple="multiple">
 		<option value="1">Active</option>
 		<option value="4">Completed</option>
 		<option value="10">Cancelled</option>
@@ -335,39 +346,39 @@
 	</td>
 	<th scope="row">Key-In Branch</th>
 	<td>
-	<select id="keyinBrnchId" name="keyinBrnchId" class="multy_select w100p" multiple="multiple"></select>
+	<select id="listKeyinBrnchId" name="keyinBrnchId" class="multy_select w100p" multiple="multiple"></select>
 	</td>
 	<th scope="row">DSC Branch</th>
 	<td>
-    <select id="dscBrnchId" name="dscBrnchId" class="multy_select w100p" multiple="multiple"></select>
+    <select id="listDscBrnchId" name="dscBrnchId" class="multy_select w100p" multiple="multiple"></select>
 	</td>
 </tr>
 <tr>
 	<th scope="row">Customer ID</th>
 	<td>
-	<input id="custId" name="custId" type="text" title="Customer ID" placeholder="Customer ID (Number Only)" class="w100p" />
+	<input id="listCustId" name="custId" type="text" title="Customer ID" placeholder="Customer ID (Number Only)" class="w100p" />
 	</td>
 	<th scope="row">Customer Name</th>
 	<td>
-	<input id="custName" name="custName" type="text" title="Customer Name" placeholder="Customer Name" class="w100p" />
+	<input id="listCustName" name="custName" type="text" title="Customer Name" placeholder="Customer Name" class="w100p" />
 	</td>
 	<th scope="row">NRIC/Company No</th>
 	<td>
-	<input id="custIc" name="custIc" type="text" title="NRIC/Company No" placeholder="NRIC/Company Number" class="w100p" />
+	<input id="listCustIc" name="custIc" type="text" title="NRIC/Company No" placeholder="NRIC/Company Number" class="w100p" />
 	</td>
 </tr>
 <tr>
 	<th scope="row">Product</th>
 	<td>
-	<select id="productId" name="productId" class="w100p"></select>
+	<select id="listProductId" name="productId" class="w100p"></select>
 	</td>
 	<th scope="row">Salesman</th>
 	<td>
-	<input id="salesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="Salesman (Member Code)" class="w100p" />
+	<input id="listSalesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="Salesman (Member Code)" class="w100p" />
 	</td>
 	<th scope="row">Rental Status</th>
 	<td>
-	<select id="rentStus" name="rentStus" class="multy_select w100p" multiple="multiple">
+	<select id="listRentStus" name="rentStus" class="multy_select w100p" multiple="multiple">
 		<option value="REG">Regular</option>
 		<option value="INV">Investigate</option>
         <option value="SUS">Suspend</option>
@@ -381,15 +392,15 @@
 <tr>
 	<th scope="row">Reference No</th>
 	<td>
-	<input id="refNo" name="refNo" type="text" title="Reference No<" placeholder="Reference Number" class="w100p" />
+	<input id="listRefNo" name="refNo" type="text" title="Reference No<" placeholder="Reference Number" class="w100p" />
 	</td>
 	<th scope="row">PO No</th>
 	<td>
-	<input id="poNo" name="poNo" type="text" title="PO No" placeholder="PO Number" class="w100p" />
+	<input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="PO Number" class="w100p" />
 	</td>
 	<th scope="row">Contact No</th>
 	<td>
-	<input id="contactNo" name="contactNo" type="text" title="Contact No" placeholder="Contact No" class="w100p" />
+	<input id="listContactNo" name="contactNo" type="text" title="Contact No" placeholder="Contact No" class="w100p" />
 	</td>
 </tr>
 <tr>
@@ -409,15 +420,15 @@
 <tr>
 	<th scope="row">Creator</th>
 	<td>
-	<input id="crtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
+	<input id="listCrtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
 	</td>
 	<th scope="row">Promotion Code</th>
 	<td>
-	<input id="promoCode" name="promoCode" type="text" title="Promotion Code" placeholder="Promotion Code" class="w100p" />
+	<input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="Promotion Code" class="w100p" />
 	</td>
 	<th scope="row">Related No(Exchange)</th>
 	<td>
-	<input id="relatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="Related No" class="w100p" />
+	<input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="Related No" class="w100p" />
 	</td>
 </tr>
 </tbody>
@@ -469,7 +480,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

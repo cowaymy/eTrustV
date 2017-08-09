@@ -11,14 +11,13 @@
 	    
 	    fn_selectDocSubmissionList();
 
-        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '',   'appType', 'S', ''); //Common Code
-	    doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dscBrnchId', 'S', ''); //Branch Code
+        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
+	    doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 	    
 	    //Payment Channel, Billing Detail TAB Visible False처리
-        $('#tabPC').addClass("blind");
-        $('#tabBD').addClass("blind");
-        $('#atcPC').addClass("blind");
-        $('#atcBD').addClass("blind");
+        fn_tabOnOffSet('PAY_CHA', 'HIDE');
+        fn_tabOnOffSet('BIL_DTL', 'HIDE');
 	});
 
     function createAUIGrid() {
@@ -365,9 +364,7 @@
                 */
     
                 $('#billMthdEstm').prop("checked", true);
-                $('#billMthdEmail1').prop("checked", true);
-    
-                $('#billMthdEmail1').removeAttr("disabled");
+                $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                 $('#billMthdEmail2').removeAttr("disabled");
     
     	    }
@@ -385,16 +382,12 @@
                     txtBillGroupEmail_2.Enabled = true;
                     */
                     $('#billMthdEstm').prop("checked", true);
-                    $('#billMthdEmail1').prop("checked", true);
-        
-                    $('#billMthdEmail1').removeAttr("disabled");
+                    $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                     $('#billMthdEmail2').removeAttr("disabled");
                 }
     
                 $('#billMthdSms').prop("checked", true);
-                $('#billMthdSms1').prop("checked", true);
-    
-                $('#billMthdSms1').removeAttr("disabled");
+                $('#billMthdSms1').prop("checked", true).removeAttr("disabled");
                 $('#billMthdSms2').removeAttr("disabled");
     	    }
     	}
@@ -427,7 +420,7 @@
 
 	$(function(){
 	    $('#saveBtn').click(function() {
-	        $('#tabPC').addClass("blind");
+	        //$('#tabPC').addClass("blind");
 	    });
 	    $('#custBtn').click(function() {
 	        $("#sUrl").val("/common/customerPop.do");
@@ -438,72 +431,274 @@
 	    });
 	    $('#billMthdSms').click(function() {
 	        
-            $('#billMthdSms1').prop("checked", false);
-            $('#billMthdSms2').prop("checked", false);
-	        $('#billMthdSms1').prop("disabled", true);
-	        $('#billMthdSms2').prop("disabled", true);
+            $('#billMthdSms1').prop("checked", false).prop("disabled", true);
+            $('#billMthdSms2').prop("checked", false).prop("disabled", true);
 	        
 	        if($("#billMthdSms").is(":checked")) {
-	            $('#billMthdSms1').removeAttr("disabled");
+	            $('#billMthdSms1').removeAttr("disabled").prop("checked", true);
 	            $('#billMthdSms2').removeAttr("disabled");
-	            
-	            $('#billMthdSms1').prop("checked", true);
 	        }
 	    });
 	    $('#billMthdEstm').click(function() {
 	        
 	        $('#spEmail1').text("");
 	        $('#spEmail2').text("");
-            $('#billMthdEmail1').prop("checked", false);
-            $('#billMthdEmail2').prop("checked", false);
-	        $('#billMthdEmailTxt1').val("");
-	        $('#billMthdEmailTxt2').val("");
-	        
-	        $('#billMthdEmail1').prop("disabled", true);
-	        $('#billMthdEmail2').prop("disabled", true);
-	        $('#billMthdEmailTxt1').prop("disabled", true);
-	        $('#billMthdEmailTxt2').prop("disabled", true);
+            $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
+            $('#billMthdEmail2').prop("checked", false).prop("disabled", true);
+	        $('#billMthdEmailTxt1').val("").prop("disabled", true);
+	        $('#billMthdEmailTxt2').val("").prop("disabled", true);
 	        
 	        if($("#billMthdEstm").is(":checked")) {
 	            $('#spEmail1').text("*");
 	            $('#spEmail2').text("*");
-	            $('#billMthdEmail1').removeAttr("disabled");
+	            $('#billMthdEmail1').removeAttr("disabled").prop("checked", true);
 	            $('#billMthdEmail2').removeAttr("disabled");
-	            $('#billMthdEmailTxt1').removeAttr("disabled");
-	            $('#billMthdEmailTxt2').removeAttr("disabled");
-	            
-	            $('#billMthdEmail1').prop("checked", true);
-	            
-	            $('#billMthdEmailTxt1').val($('#custCntcEmail').val().trim());
-	            $('#billMthdEmailTxt2').val($('#srvCntcEmail').val().trim());
+	            $('#billMthdEmailTxt1').removeAttr("disabled").val($('#custCntcEmail').val().trim());
+	            $('#billMthdEmailTxt2').removeAttr("disabled").val($('#srvCntcEmail').val().trim());
 	        }
 	    });
         $('#custId').blur(function(event) {
             
+            var strCustId = $('#custId').val();
+            alert(strCustId);
             //CLEAR CUSTOMER 
-//            this.ClearControl_Customer();
-//            this.ClearControl_MailAddress();
-//            this.ClearControl_ContactPerson();
+//          this.ClearControl_Customer();
+//          this.ClearControl_MailAddress();
+//          this.ClearControl_ContactPerson();
+            fn_clearCustomer();
+            fn_clearMailAddress();
+            fn_clearContactPerson();
 
-            if(!$('#tabPC').hasClass("blind")) {
-                $('#tabPC').addClass("blind");
-            }
-            if(!$('#tabBD').hasClass("blind")) {
-                $('#tabBD').addClass("blind");
-            }
+            //CLEAR SALES
+            fn_tabOnOffSet('PAY_CHA', 'HIDE');
+            fn_tabOnOffSet('BIL_DTL', 'HIDE');
             
-        	if(FormUtil.isNotEmpty($('#custId').val())) {
+            $('#appType').val('');
+            
+            //ClearControl_Sales();
+            fn_clearSales();
+
+            //CLEAR RENTAL PAY SETTING
+            $('#thrdParty').val('');
+            
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+            
+            //CLEAR BILLING GROUP
+            fn_clearBillGroup();
+
+            //CLEAR INSTALLATION
+            fn_clearInstallAddr();
+            fn_clearCntcPerson();
+            
+            //CLEAR Search Form
+            fn_clearSearchForm();
+            
+        	if(FormUtil.isNotEmpty(strCustId) && strCustId > 0) {
         	    
-        	    $('#tabBD').removeClass("blind");
-        	    $('#atcBD').removeClass("blind");
+        	    fn_tabOnOffSet('BIL_DTL', 'SHOW');
         	    
-        		fn_loadCustomer($('#custId').val());
+        		fn_loadCustomer(strCustId);
         	}
         	else {
-        	    
+        	    Common.alert('<b>Invalid customer ID.</b>');
         	}
         });
+        $('#appType').change(function() {
+            
+            fn_tabOnOffSet('PAY_CHA', 'HIDE');
+            
+            //Sales Order
+            $('#salesOrderForm').clearForm();
+            
+            //CLEAR RENTAL PAY SETTING
+            $('#thrdParty').val('');
+            
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+
+            //CLEAR BILLING GROUP
+            fn_clearBillGroup();
+
+            //ClearControl_Sales();
+            fn_clearSales();
+            
+            //?FD문서에서 아래 항목 빠짐
+            //this.btnAdvPayNo.Enabled = false;
+            //this.btnAdvPayYes.Enabled = false;
+        
+	        var idx    = $("#appType option").index($("#appType option:selected"));
+	        var selVal = $("#appType").val();
+	        
+	        if(idx > 0) {
+                if(FormUtil.isEmpty($('#hiddenCustId').val())) {
+                    $('#appType').val('');
+                    Common.alert('<b>Please select customer first.</b>');
+                    
+                    var e = jQuery.Event("click");
+                    $('#aCS').trigger(e);
+                }
+    	        else {
+    	            switch(selVal) {
+    	                case '66' : //RENTAL
+    	                    fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                            //?FD문서에서 아래 항목 빠짐
+                            //this.btnAdvPayNo.Enabled = true;
+                            //this.btnAdvPayYes.Enabled = true;
+                            
+    	                    break;
+    	                
+    	                case '68' : //INSTALLMENT
+                            $('#installDur').removeAttr("readonly");
+                            
+    	                    break;
+                        
+    	                case '1412' : //Outright Plus
+                            $('#installDur').prop("readonly", true);
+                            $('#installDur').val("36");
+                            
+                            //?FD문서에서 아래 항목 빠짐
+                            //this.btnAdvPayNo.Enabled = false;
+                            //this.btnAdvPayYes.Enabled = false;
+                            
+                            fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+                            
+    	                    break;
+                        
+                        default :
+                            break;
+    	            }
+    	        }
+	        }
+	        
+	    });
 	});
+	
+	//tabNm : PAY_CHA, BIL_DTL, REL_CER
+	//opt   : SHOW, HIDE
+	function fn_tabOnOffSet(tabNm, opt) {
+	    switch(tabNm) {
+	        case 'PAY_CHA' :
+	            if(opt == 'SHOW') {
+        	        if($('#tabPC').hasClass("blind")) $('#tabPC').removeClass("blind");
+        	        if($('#atcPC').hasClass("blind")) $('#atcPC').removeClass("blind");
+                } else if(opt == 'HIDE') {
+        	        if(!$('#tabPC').hasClass("blind")) $('#tabPC').addClass("blind");
+        	        if(!$('#atcPC').hasClass("blind")) $('#atcPC').addClass("blind");
+        	    }
+        	    break;
+	        case 'BIL_DTL' :
+	            if(opt == 'SHOW') {
+        	        if($('#tabBD').hasClass("blind")) $('#tabBD').removeClass("blind");
+        	        if($('#atcBD').hasClass("blind")) $('#atcBD').removeClass("blind");
+                } else if(opt == 'HIDE') {
+        	        if(!$('#tabBD').hasClass("blind")) $('#tabBD').addClass("blind");
+        	        if(!$('#atcBD').hasClass("blind")) $('#atcBD').addClass("blind");
+        	    }
+        	    break;
+	        case 'REL_CER' :
+	            if(opt == 'SHOW') {
+        	        if($('#tabRC').hasClass("blind")) $('#tabRC').removeClass("blind");
+        	        if($('#atcRC').hasClass("blind")) $('#atcRC').removeClass("blind");
+                } else if(opt == 'HIDE') {
+        	        if(!$('#tabRC').hasClass("blind")) $('#tabRC').addClass("blind");
+        	        if(!$('#atcRC').hasClass("blind")) $('#atcRC').addClass("blind");
+        	    }
+        	    break;
+            default :
+                break;
+        }
+	}
+	
+	//ClearControl_Customer(Customer)
+	function fn_clearCustomer() {
+	    $('#custForm').clearForm();
+	}
+	
+	//ClearControl_MailAddress(Billing Detail -> Billing Address)
+	function fn_clearMailAddress() {
+    	$('#liBillNewAddr').addClass("blind");
+    	$('#liBillSelAddr').addClass("blind");
+    	    
+	    $('#billAddrForm').clearForm();
+	}
+	
+	//ClearControl_ContactPerson(Billing Detail -> Billing Address)
+	function fn_clearContactPerson() {
+    	$('#liMstCntcNewAddr').addClass("blind");
+    	$('#liMstCntcSelAddr').addClass("blind");
+    	$('#liMstCntcNewAddr2').addClass("blind");
+    	$('#liMstCntcSelAddr2').addClass("blind");
+    	    
+	    $('#ownerPurchsForm').clearForm();
+	    $('#addSvcCntcForm').clearForm();
+	}
+	
+	function fn_clearSales() {
+	    $('#installDur').val('');
+	    $('#ordProudct').val('');
+	    $('#ordPromo').val('');
+	    $('#relatedNo').val('');
+	    $('#trialNoChk').prop("checked", false);
+	    $('#trialNo').val('');
+	    $('#ordPrice').val('');
+	    $('#ordPriceId').val('');
+	    $('#ordPv').val('');
+	    $('#ordRentalFees').val('');
+	}
+	
+	//ClearControl_RentPaySet_ThirdParty
+	function fn_clearRentPay3thParty() {
+	    $('#thrdPartyForm').clearForm();
+	}
+	
+	//ClearControl_RentPaySet_DD
+	function fn_clearRentPaySetDD() {
+	    $('#ddForm').clearForm();
+	}
+	
+	//ClearControl_RentPaySet_CRC
+	function fn_clearRentPaySetCRC() {
+	    $('#crcForm').clearForm();
+	}
+	
+	//ClearControl_BillGroup
+	function fn_clearBillGroup() {
+	    
+	    $('#sctBillMthd').addClass("blind");
+	    $('#sctBillAddr').addClass("blind");
+	    $('#sctBillPrefer').addClass("blind");
+	    $('#sctBillSel').addClass("blind");
+	    
+	    $('#billMthdForm').clearForm();
+	    $('#billAddrForm').clearForm();
+	    $('#billPreferForm').clearForm();
+	    $('#billSelForm').clearForm();
+	}
+	
+	//ClearControl_Installation_Address
+	function fn_clearInstallAddr() {
+	    $('#liInstNewAddr').addClass("blind");
+	    $('#liInstSelAddr').addClass("blind");
+
+	    $('#instAddrForm').clearForm();
+	}
+	
+	//ClearControl_Installation_ContactPerson
+	function fn_clearCntcPerson() {
+	    $('#liInstNewAddr2').addClass("blind");
+	    $('#liInstSelAddr2').addClass("blind");
+
+	    $('#instCntcForm').clearForm();
+	}
+	
+	//ClearControl_Installation_ContactPerson
+	function fn_clearSearchForm() {
+	    $('#searchForm').clearForm();
+	}
 	
     function chgTab(tabNm) {
     	switch(tabNm) {
@@ -518,7 +713,8 @@
 </head>
 <body>
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap">
+<!--div id="popup_wrap" class="popup_wrap pop_win"--><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>New Order</h1>
@@ -531,7 +727,7 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-    <li id="tabCS"><a href="#" class="on">Customer</a></li>
+    <li id="tabCS"><a id="aCS" href="#" class="on">Customer</a></li>
     <li id="tabMC"><a href="#">Master Contact</a></li>
     <li id="tabSO"><a href="#">Sales Order</a></li>
     <li id="tabPC"><a href="#">Payment Channel</a></li>
@@ -550,6 +746,7 @@
 <form id="searchForm" name="mainForm" action="#" method="post">
     <input id="sUrl"                name="sUrl"          type="hidden"/>
     <input id="searchCustId"        name="custId"        type="hidden"/>
+    <input id="hiddenCustId"        name="custId"        type="hidden"/>
     <input id="searchCustAddId"     name="custAddId"     type="hidden"/>
     <input id="searchCustCntcId"    name="custCntcId"    type="hidden"/>
     <input id="searchCustCareCntId" name="custCareCntId" type="hidden"/>
@@ -612,7 +809,7 @@
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><textarea  id="rem" name="rem" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>
+    <td colspan="3"><textarea  id="custRem" name="custRem" cols="20" rows="5" placeholder="Remark" readonly>xx</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -754,7 +951,6 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -775,7 +971,7 @@
 </tr>
 <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="installDur" name="installDur" type="text" title="" placeholder="" class="w100p" readonly/></td>
     <th scope="row">Salesman Code<span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
@@ -793,7 +989,7 @@
 </tr>
 <tr>
     <th scope="row">Product<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input id="ordProudct" name="ordProudct" type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">Salesman NRIC</th>
     <td><input type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
@@ -812,32 +1008,30 @@
 <tr>
     <th scope="row">Promotion<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select id="ordPromo" name="ordPromo" class="w100p"></select>
     </td>
     <th scope="row">Group Code</th>
     <td><input type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
     <th scope="row">Price/RPF (RM)</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="" class="w100p" />
+        <input id="ordPriceId" name="ordPriceId" type="text" /></td>
     <th scope="row">Organization Code</th>
     <td><input type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
     <th scope="row">Rental Fees (RM)</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Trial No </th>
-    <td><label><input type="checkbox" /><span></span></label><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+    <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" /><span></span></label>
+               <input id="trialNo" name="trialNo" type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
 </tr>
 <tr>
     <th scope="row">PV</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Related No</th>
-    <td><label><input type="checkbox" /><span></span></label><input type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+    <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -857,7 +1051,6 @@
 <article id="atcPC" class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="payChnnlForm" name="payChnnlForm" action="#" method="post">
 
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
@@ -869,7 +1062,7 @@
 <tr>
     <th scope="row">Pay By Third Party</th>
     <td colspan="3">
-    <label><input type="checkbox" /><span></span></label>
+    <label><input id="thrdParty" name="thrdParty" type="checkbox" /><span></span></label>
     </td>
 </tr>
 </tbody>
@@ -883,6 +1076,10 @@
     <li><p class="btn_grid"><a href="#">Add New Third Party</a></p></li>
 </ul>
 
+<!------------------------------------------------------------------------------
+    Third Party - Form ID(thrdPartyForm)
+------------------------------------------------------------------------------->
+<form id="thrdPartyForm" name="thrdPartyForm" action="#" method="post">
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -894,15 +1091,15 @@
 <tbody>
 <tr>
     <th scope="row">Customer ID<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">Type</th>
-    <td><input type="text" title="" placeholder="Costomer Type" class="w100p" /></td>
+    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p" /></td>
 </tr>
 <tr>
     <th scope="row">Name</th>
-    <td><input type="text" title="" placeholder="Customer Name" class="w100p" /></td>
+    <td><input id="thrdPartyName" name="thrdPartyName" type="text" title="" placeholder="Customer Name" class="w100p" /></td>
     <th scope="row">NRIC/Company No</th>
-    <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" /></td>
+    <td><input id="thrdPartyNrid" name="thrdPartyNrid" type="text" title="" placeholder="NRIC/Company Number" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -919,14 +1116,55 @@
 <tr>
     <th scope="row">Rental Paymode<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select id="rentPayMode" name="rentPayMode" class="w100p"></select>
     </td>
     <th scope="row">NRIC on DD/Passbook</th>
-    <td><input type="text" title="" placeholder="NRIC on DD/Passbook" class="w100p" /></td>
+    <td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC on DD/Passbook" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Credit Card</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a href="#">Add New Credit Card</a></p></li>
+    <li><p class="btn_grid"><a href="#">Select Another Credit Card</a></p></li>
+</ul>
+<!------------------------------------------------------------------------------
+    Credit Card - Form ID(crcForm)
+------------------------------------------------------------------------------->
+<form id="crcForm" name="crcForm" action="#" method="post">
+
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Credit Card Number<span class="must">*</span></th>
+    <td><input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p" /></td>
+    <th scope="row">Credit Card Type</th>
+    <td><input id="rentPayCRCType" name="rentPayCRCType" type="text" title="" placeholder="Credit Card Type" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Name On Card</th>
+    <td><input id="rentPayCRCName" name="rentPayCRCName" type="text" title="" placeholder="Name On Card" class="w100p" /></td>
+    <th scope="row">Expiry</th>
+    <td><input id="rentPayCRCExpiry" name="rentPayCRCExpiry" type="text" title="" placeholder="Expiry" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Issue Bank</th>
+    <td><input id="rentPayCRCBank" name="rentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p" />
+        <input id="rentPayCRCBankId" name="rentPayCRCBankId" type="text" title="" class="w100p" /></td>
+    <th scope="row">Card Type</th>
+    <td><input type="text" title="" placeholder="Card Type" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -934,8 +1172,55 @@
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#">OK</a></p></li>
 </ul>
-
 </form>
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Direct Debit</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a href="#">Add New Credit Card</a></p></li>
+    <li><p class="btn_grid"><a href="#">Select Another Credit Card</a></p></li>
+</ul>
+<!------------------------------------------------------------------------------
+    Direct Debit - Form ID(ddForm)
+------------------------------------------------------------------------------->
+<form id="ddForm" name="ddForm" action="#" method="post">
+
+<table class="type1 mb1m"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Account Number<span class="must">*</span></th>
+    <td><input id="accNo" name="accNo" type="text" title="" placeholder="Account Number" class="w100p" /></td>
+    <th scope="row">Account Type</th>
+    <td><input id="accType" name="accType" type="text" title="" placeholder="Account Type" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Account Holder</th>
+    <td><input id="accName" name="accName" type="text" title="" placeholder="Account Holder" class="w100p" /></td>
+    <th scope="row">Issue Bank Branch</th>
+    <td><input id="accBranch" name="accBranch" type="text" title="" placeholder="Issue Bank Branch" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Issue Bank</th>
+    <td colspan=3><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p" />
+        <input id="accBankId" name="accBankId" type="text" title="" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#">OK</a></p></li>
+</ul>
+</form>
+
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->
@@ -1400,7 +1685,7 @@
 <!--****************************************************************************
     Relief Certificate - Form ID(rliefForm)
 *****************************************************************************-->
-<article class="tap_area"><!-- tap_area start -->
+<article id="atcRC" class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
 <form id="rliefForm" name="rliefForm" action="#" method="post">

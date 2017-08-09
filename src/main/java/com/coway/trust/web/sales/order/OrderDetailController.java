@@ -156,7 +156,7 @@ public class OrderDetailController {
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
 		
-		List<EgovMap> memInfoList = orderDetailService.selectLast6MonthTransList(params);
+		List<EgovMap> memInfoList = null;//orderDetailService.selectLast6MonthTransList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
