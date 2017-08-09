@@ -27,6 +27,10 @@
         <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
       
+      <resultMap id="paymentDetailMap" type="EgovMap">
+        <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+      
     <!--Search Payment Order List(Master Grid) 리스트 조회  -->
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
         SELECT
@@ -1031,7 +1035,7 @@
 	                   AND ( Extent1.PAY_ITM_ID = #{value} ) AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
 	</select>
 	
-	<select id="selectPaymentDetail" parameterType="java.lang.Integer" resultType="egovMap">
+	<select id="selectPaymentDetail" parameterType="java.lang.Integer" resultMap="paymentDetailMap">
 	   SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 	       Extent1.PAY_ID PAY_ID  ,
 	       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
@@ -1076,7 +1080,158 @@
 	 FROM PAY0065D Extent1
 	 WHERE  Extent1.PAY_ITM_ID = #{value} AND ROWNUM <![CDATA[<=]]> 1
 	</select>
+
 	
+    <select id="checkORNoIsAORType" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT Limit1.OR_NO OR_NO  
+        FROM ( SELECT Extent2.OR_NO OR_NO  
+            FROM PAY0065D Extent1
+                JOIN PAY0064D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+            WHERE  Extent1.PAY_ITM_ID = #{value} AND ROWNUM <![CDATA[<= ]]>1 ) Limit1
+       WHERE  Limit1.OR_NO LIKE '%AOR%'
+    </select>
+    
+    <update id="insertPayDHistory" parameterType="PayDHistoryVO" >
+        <selectKey keyProperty="historyId" resultType="int" order="BEFORE">
+            SELECT PAY0095D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        
+        INSERT INTO PAY0095D
+        (
+            HIST_ID,
+            TYPE_ID,
+            PAY_ID,
+            PAY_ITM_ID,
+            VALU_FROM,
+            VALU_TO,
+            REF_ID_FROM,
+            REF_ID_TO,
+            CRT_DT,
+            CRT_USER_ID
+        )
+        VALUES
+        (
+            #{historyId},
+            #{typeId},
+            #{payId},
+            #{payItemId},
+            #{valueFr},
+            #{valueTo},
+            #{refIdFr},
+            #{refIdTo},
+            #{createAt},
+            #{createBy}
+        )
+    </update>
+    
+    <update id="updatePayDetail" parameterType="Map">
+        UPDATE PAY0065D
+        SET UPD_DT = SYSDATE
+        <if test="payItemRefNo != null ">
+            , PAY_ITM_REF_NO = #{payItemRefNo}
+        </if>
+        <if test="payItemIssuedBankId != null ">
+            , PAY_ITM_ISSU_BANK_ID = #{payItemIssuedBankId}
+        </if>
+        <if test="payItemRefDate != null ">
+            , PAY_ITM_REF_DT = #{payItemRefDate}
+        </if>
+        <if test="payItemRemark != null ">
+            , PAY_ITM_REM = #{payItemRemark}
+        </if>
+        <if test="payItemCCHolderName != null ">
+            , PAY_ITM_CC_HOLDER_NAME = #{payItemCCHolderName}
+        </if>
+        <if test="payItemCCExpiryDate != null ">
+            , PAY_ITM_CC_EXPR_DT = #{payItemCCExpiryDate}
+        </if>
+        <if test="payItemCCTypeId != null ">
+            , PAY_ITM_CC_TYPE_ID = #{payItemCCTypeId}
+        </if>
+        <if test="payItemEFTNo != null ">
+            , PAY_ITM_EFT_NO = #{payItemEFTNo}
+        </if>
+        <if test="payItemRunningNo != null ">
+            , PAY_ITM_RUNNG_NO = #{payItemRunningNo}
+        </if>
+        <if test="payItemCardTypeId != null ">
+            , PAY_ITM_CARD_TYPE_ID = #{payItemCardTypeId}
+        </if>
+        <if test="updator != null ">
+            , UPD_USER_ID = #{updator}
+        </if>
+         WHERE PAY_ITM_ID = #{payItemId}
+    </update>
+    
+    <select id="selectPaymentDocRelated" parameterType="java.lang.Integer" resultType="EgovMap">
+        SELECT 
+			RELATED_ID RELATED_ID, 
+			PAY_ITM_ID PAY_ITM_ID, 
+			STUS_ID STUS_ID, 
+			CRT_DT CRT_DT, 
+			CRT_USER_ID CRT_USER_ID, 
+			UPD_DT UPD_DT, 
+			UPD_USER_ID UPD_USER_ID, 
+			ITM_ID ITM_ID
+		FROM PAY0098M
+		WHERE PAY_ITM_ID = #{value} AND 1 = STUS_ID  
+    </select>
+    
+    <select id="selectPaymentDocDetail" parameterType="java.lang.Integer" resultType="EgovMap">
+        SELECT
+			ITM_ID ITM_ID, 
+			BATCH_ID BATCH_ID, 
+			ITM_STUS_ID ITM_STUS_ID, 
+			TRX_ID TRX_ID, 
+			AMT AMT, 
+			PAY_MODE_ID PAY_MODE_ID, 
+			IS_ONLINE IS_ONLINE, 
+			ORI_CC_NO ORI_CC_NO, 
+			CC_TYPE_ID CC_TYPE_ID, 
+			CC_HOLDER_NAME CC_HOLDER_NAME, 
+			CC_EXPR CC_EXPR, 
+			BANK_ID BANK_ID, 
+			REF_DT REF_DT, 
+			APPV_NO APPV_NO, 
+			REF_NO REF_NO, 
+			CRT_DT CRT_DT, 
+			CRT_USER_ID CRT_USER_ID, 
+			UPD_DT UPD_DT, 
+			UPD_USER_ID UPD_USER_ID, 
+			MID MID, 
+			BRNCH_ID BRNCH_ID, 
+			PAY_DT PAY_DT, 
+			ACC_ID ACC_ID
+		FROM PAY0097D
+		WHERE ITM_ID = #{value}
+    </select>
+    
+   <update id="updatePayDocDetail" parameterType="Map">
+        UPDATE PAY0097D
+        SET UPD_DT = SYSDATE
+        <if test="refNo != null ">
+            , REF_NO = #{refNo}
+        </if>
+        <if test="bankId != null ">
+            , BANK_ID = #{bankId}
+        </if>
+        <if test="refDate != null ">
+            , REF_DT = #{refDate}
+        </if>
+        <if test="ccHolderName != null ">
+            , CC_HOLDER_NAME = #{ccHolderName}
+        </if>
+        <if test="ccExpiry != null ">
+            , CC_EXPR = #{ccExpiry}
+        </if>
+        <if test="ccTypeId != null ">
+            , CC_TYPE_ID = #{ccTypeId}
+        </if>        
+        <if test="updator != null ">
+            , UPD_USER_ID = #{updator}
+        </if>
+         WHERE ITM_ID = #{itemId}
+    </update>
 	<select id="selectBankCode" parameterType="java.lang.String" resultType="java.lang.String">
 	   SELECT CODE
 	   FROM SYS0004M
