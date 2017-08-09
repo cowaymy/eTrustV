@@ -1,6 +1,10 @@
 package com.coway.trust.cmmn.model;
 
-public class PageAuthVO {
+import java.io.Serializable;
+
+public class PageAuthVO implements Serializable{
+	private static final long serialVersionUID = 2105136426759159071L;
+	
 	private String funcView;
 	private String funcChange;
 	private String funcPrint;
