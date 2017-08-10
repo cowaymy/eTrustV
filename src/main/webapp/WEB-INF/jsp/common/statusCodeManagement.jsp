@@ -274,13 +274,31 @@ $(document).ready(function()
 	  $("#paramCategoryId").focus();
 	  
 	  $("#paramCategoryId").keydown(function(key) 
-			  {
+	  {
 			    if (key.keyCode == 13) 
 			    {
 			    	fnSelectCategoryListAjax();
 			    }
 
-			  });
+		});
+	  
+	  $("#paramCategoryNM").keydown(function(key) 
+	  {
+			    if (key.keyCode == 13) 
+			    {
+			    	fnSelectCategoryListAjax();
+			    }
+
+		});
+	  
+	  $("#paramCreateID").keydown(function(key) 
+	  {
+			    if (key.keyCode == 13) 
+			    {
+			    	fnSelectCategoryListAjax();
+			    }
+
+		});
 
 	  var options = {
                   usePaging : true,
