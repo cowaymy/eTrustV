@@ -504,9 +504,9 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 				his.setValueFr("");
 			}
 			
-			if(!CommonUtils.isEmpty(payDet.getPayItemRefDate())){
-				if(CommonUtils.getDiffDate(payDet.getPayItemRefDate(), "01/01/1900", "DD/MM/YYYY") > 0){
-					his.setValueTo(payDet.getPayItemRefDate());
+			if(!CommonUtils.isEmpty(payDt)){
+				if(CommonUtils.getDiffDate(payDt, "1900-01-01", "YYYY-MM-DD") > 0){
+					his.setValueTo(payDt);
 				}else{
 					his.setValueTo("");
 				}
