@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,8 +80,187 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 		return memberEventMapper.getMemberEventDetailPop(params);
 	}
 	
+	
+	@Override
+	public List<EgovMap> selectPromteDemoteList(Map<String, Object> params) {
+		return memberEventMapper.selectPromteDemoteList(params);
+	}
+
+	
+	
+	public void selectMemberPromoEntries(Map<String, Object> params) {
+		
+		logger.debug("getMemberEventDetailPop serviceImpl 호출 : " + params.get("promoId"));
+		
+		EgovMap formList = memberEventMapper.selectMemberPromoEntries(params);
+		
+		String vMemTypeId =  formList.get("memTypeId").toString();
+		String vMemLvlTo = formList.get("memLvlTo").toString();
+		
+		logger.debug("vMemLvlTo::::" +vMemLvlTo);
+		logger.debug("vMemTypeId::::" + vMemTypeId );
+
+		
+		if(formList.size()>0) {
+			
+			String nextDocNo = "";
+			String newDeptCode1 = "";
+			
+			if(formList.get("memLvlTo").equals("4")) {
+				EgovMap newDeptCode = memberEventMapper.getMemberOrganizations(formList);
+				logger.debug("newDeptCode::::" + newDeptCode );
+				
+			}else {
+				//Get New Dept Code
+				int docNoID = getNewDeptCodeDocNoId(vMemTypeId ,vMemLvlTo );
+				logger.debug("DocNoID::::" + docNoID );
+				
+				EgovMap  qryDocNo = memberEventMapper.getDocNoes(docNoID);
+//				Map<String,Object> mapQryDocNo = (Map<String,Object>)qryDocNo.get(0);
+				logger.debug("qryDocNo:::: : {}" + qryDocNo );
+				
+                String vDocNo = qryDocNo.get("docNo").toString();
+                String vDocNoPrefix = qryDocNo.get("docNoPrefix").toString();
+                
+                newDeptCode1 = vDocNoPrefix + vDocNo;
+                logger.debug("DocNoID::::" + newDeptCode1 );
+                
+                nextDocNo = getNextDocNo(vDocNoPrefix, vDocNo);
+                logger.debug("nextDocNo : {}",nextDocNo);
+                
+                
+                if(qryDocNo.size()>0){
+                	vDocNo = nextDocNo;
+                	qryDocNo.put("docNo", nextDocNo);
+                	qryDocNo.put("docNoID", docNoID);
+                	memberEventMapper.updateDocNoes(qryDocNo);
+                }
+			}
+			
+			//MemberOrganization			
+			EgovMap mQryMemOrg    = memberEventMapper.getMemberOrganizationsMemId(formList.get("memId").toString());
+            EgovMap mQryMemUpOrg = memberEventMapper.getMemberOrganizationsMemUpId(mQryMemOrg.get("memUpId").toString());
+            EgovMap mQryMemPrOrg = memberEventMapper.getMemberOrganizationsMemPrId(formList.get("prMemId").toString());
+
+            
+            String prevDeptCode = mQryMemOrg.get("deptCode").toString();            
+            String prevMemberUpID;
+            String prevMemberLvl;
+            
+			if (mQryMemOrg.get("memUpId").toString() != null)
+				prevMemberUpID = mQryMemOrg.get("memUpId").toString();
+			else
+				prevMemberUpID = "0";
+            
+			if (mQryMemOrg.get("memLvl").toString() != null)
+				prevMemberLvl = mQryMemOrg.get("memLvl").toString();
+			else
+				prevMemberLvl = "0";
+			
+
+			Map<String, Object> mMemOrg = new HashMap<String, Object>();
+			mQryMemOrg.put("prevDeptCode", prevDeptCode);
+			mQryMemOrg.put("prevMemIdId", prevMemberUpID);
+			mQryMemOrg.put("prevMemLvl", prevMemberLvl);
+			mQryMemOrg.put("prevGrpCode", mQryMemUpOrg.get("deptCode"));
+			mQryMemOrg.put("deptCode", newDeptCode1);
+			mQryMemOrg.put("memUpId", formList.get("memUpId"));
+			mQryMemOrg.put("memLvlTo", formList.get("memLvlTo"));
+//			mMemOrg.put("orgUpdDt", sysdate);
+			mQryMemOrg.put("orgUpdUserId", formList.get("orgUpdUserId"));
+			mQryMemOrg.put("prCode", "");
+			mQryMemOrg.put("prMemId", 0);
+			mQryMemOrg.put("grandPrCode", mQryMemPrOrg.get("prCode"));
+			mQryMemOrg.put("grandPrMemId", mQryMemPrOrg.get("prMemId"));
+			mQryMemOrg.put("brnchId", formList.get("brnchId")  != null ? formList.get("brnchId") :0);
+
+			memberEventMapper.updateMemberOrganizations(mQryMemOrg);
+			
+			
+            //Member
+			EgovMap mQryMember    = memberEventMapper.getMemberSearch(formList.get("memId").toString());
+//			mQryMember.put("promoDt", sysdate);
+//			mQryMember.put("stusId", sysdate);
+			mQryMember.put("memId", formList.get("memId").toString());
+			mQryMember.put("orgUpdUserId", formList.get("orgUpdUserId"));
+			mQryMember.put("syncChk", false);
+
+			memberEventMapper.updateMember(mQryMember);
+			
 
 
+            //MemberPromoEntry
+			Map<String, Object> mPromoEntry = new HashMap<String, Object>();
+			mPromoEntry.put("stusId", formList.get("stusId"));
+			mPromoEntry.put("deptCode", newDeptCode1);
+			mPromoEntry.put("updDt", formList.get("updDt"));
+			mPromoEntry.put("updUserId", formList.get("updUserId"));
+			mPromoEntry.put("promoId", params.get("promoId"));
+
+            memberEventMapper.updateMemberPromoEntry(mMemOrg);
+		}
+
+	}
+	
+
+	
+	
+
+    
+	public String getNextDocNo(String prefixNo, String docNo) {
+		String nextDocNo = "";
+		int docNoLength = 0;
+		if (prefixNo != null && prefixNo != "") {
+			docNoLength = docNo.replace(prefixNo, "").length();
+			docNo = docNo.replace(prefixNo, "");
+		} else {
+			docNoLength = docNo.length();
+		}
+
+		int nextNo = Integer.parseInt(docNo) + 1;
+		nextDocNo = String.format("%0" + docNoLength + "d", nextNo);
+
+		return nextDocNo;
+	}
+    
+	
+    
+	public int getNewDeptCodeDocNoId (String memberTypeID, String level) {
+
+		int DocNoID = 0;
+		
+        if (memberTypeID.equals("1")) {
+            if (level.equals("1"))
+                DocNoID = 62;
+            else if (level.equals("2"))
+                DocNoID = 61;
+            else if (level.equals("3"))
+                DocNoID = 60;
+        }else if (memberTypeID.equals("2")) {
+            if (level.equals("1"))
+                DocNoID = 65;
+            else if (level.equals("2"))
+                DocNoID = 64;
+            else if (level.equals("3"))
+                DocNoID = 63;
+        }else if (memberTypeID.equals(3)){
+            if (level.equals("1"))
+                DocNoID = 103;
+            else if (level.equals("2"))
+                DocNoID = 104;
+            else if (level.equals("3"))
+                DocNoID = 105;
+        }
+		
+		return DocNoID;
+	}
+
+
+	
+	
+	
+	
+	
 	
 	
 	
