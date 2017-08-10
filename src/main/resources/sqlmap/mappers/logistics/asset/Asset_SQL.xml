@@ -299,6 +299,7 @@
     <!-- Asset 디테일 인서트 -->
     <insert id="insertDetailAsset" parameterType="Map">
          INSERT INTO LOG0051D(
+            ASSET_D_ID
           , STUS_ID
           , ASSET_ID
           , TYPE_ID
@@ -311,18 +312,18 @@
           ,ASSET_D_REM
          )  
         VALUES (
-    <!--      #{inassetid}
-        ,#{masterstatus}
-        ,#{mastercategory} 
-        ,#{mastertype}
-        ,#{mastercolor}
-        ,#{masterbrand}
-        ,#{masterbreanch}
-        ,#{curr_dept_id}
-        ,#{curr_user_id}    
-        ,#{masterpurchasedate}
-        ,TO_CHAR(TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY'), 'YYYY-MM-DD') 
-         -->
+         #{detailassetid}
+        ,#{detailstatus}
+        ,#{inassetid}
+        ,#{typeid} 
+        ,#{brandid}
+        ,#{add_crtuser_id}
+        ,SYSDATE
+        ,#{add_upuser_id}
+        ,SYSDATE
+        ,#{name1}    
+        ,#{assetDRem} 
+      
         )
     </insert>
     
