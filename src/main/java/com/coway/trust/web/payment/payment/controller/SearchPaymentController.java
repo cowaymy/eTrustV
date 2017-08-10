@@ -682,11 +682,11 @@ public class SearchPaymentController {
 		String trIssuDt = "";
 		
 		if(viewMaster != null){
-			trNo = (String.valueOf(viewMaster.get("trNo"))) == null ? "" : String.valueOf(viewMaster.get("trNo"));
-			brnchId = String.valueOf(viewMaster.get("brnchId")) == null ? "" : String.valueOf(viewMaster.get("brnchId"));
-			collMemId = String.valueOf(viewMaster.get("collMemId")) == null ? "" : String.valueOf(viewMaster.get("collMemId"));
-			allowComm = String.valueOf(viewMaster.get("allowComm")) == null ? "" : String.valueOf(viewMaster.get("allowComm"));
-			trIssuDt = String.valueOf(viewMaster.get("trIssuDt")) == null ? "" : String.valueOf(viewMaster.get("trIssuDt"));
+			trNo = viewMaster.get("trNo") == null ? "" : String.valueOf(viewMaster.get("trNo"));
+			brnchId = viewMaster.get("brnchId") == null ? "" : String.valueOf(viewMaster.get("brnchId"));
+			collMemId = viewMaster.get("collMemId") == null ? "" : String.valueOf(viewMaster.get("collMemId"));
+			allowComm = viewMaster.get("allowComm") == null ? "" : String.valueOf(viewMaster.get("allowComm"));
+			trIssuDt = viewMaster.get("trIssuDt") == null ? "" : String.valueOf(viewMaster.get("trIssuDt"));
 		}
 		
 		logger.debug("마스터조회값 trNo : {}", trNo);
@@ -695,11 +695,11 @@ public class SearchPaymentController {
 		logger.debug("마스터조회값 allowComm : {}", allowComm);
 		logger.debug("마스터조회값 trIssuDt : {}", trIssuDt);
 
-		Map trMap = new HashMap();
-		Map branchMap = new HashMap();
-		Map collectorMap = new HashMap();
-		Map allowMap = new HashMap();
-		Map updMap = new HashMap();
+		Map<String, Object> trMap = new HashMap<String, Object>();
+		Map<String, Object> branchMap = new HashMap<String, Object>();
+		Map<String, Object> collectorMap = new HashMap<String, Object>();
+		Map<String, Object> allowMap = new HashMap<String, Object>();
+		Map<String, Object> updMap = new HashMap<String, Object>();
 		
 		//1127 : TR Number
 		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")).trim())){
@@ -726,8 +726,8 @@ public class SearchPaymentController {
 		//1128 : Key-In Branch
 		if(!brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 			
-			Map frBranchIdMap = new HashMap();
-			Map toBranchIdMap = new HashMap();
+			Map<String, Object> frBranchIdMap = new HashMap<String, Object>();
+			Map<String, Object> toBranchIdMap = new HashMap<String, Object>();
 			String frBranchCode = "";
 			String toBranchCode = "";
 			frBranchIdMap.put("edit_branchId", brnchId);
@@ -769,8 +769,8 @@ public class SearchPaymentController {
 		//1129 : Collector
 		if(!collMemId.equals(String.valueOf(params.get("collMemId")))){
 			
-			Map frMemberIdMap = new HashMap();
-			Map toMemberIdMap = new HashMap();
+			Map<String, Object> frMemberIdMap = new HashMap<String, Object>();
+			Map<String, Object> toMemberIdMap = new HashMap<String, Object>();
 			String frMemberCode = "";
 			String toMemberCode = "";
 			frMemberIdMap.put("edit_txtCollectorId", collMemId);
@@ -856,7 +856,7 @@ public class SearchPaymentController {
 		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
 			//updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId"))); todo 입력받은 COLL_MEM_ID 로 업데이트쳐야됨
 		}else{
-			updMap.put("collMemId", "");
+			//updMap.put("collMemId", "");
 		}
 			
 		if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
@@ -866,10 +866,7 @@ public class SearchPaymentController {
 		}
 		
 		String trIssueDate = CommonUtils.nvl(params.get("edit_txtTRIssueDate")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("edit_txtTRIssueDate"));
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date inputDate = formatter.parse(trIssueDate);
-        Date masterDate = formatter.parse(trIssuDt);
-        if(inputDate.getTime() != masterDate.getTime()){
+        if(!trIssuDt.equals(CommonUtils.nvl(params.get("edit_txtTRIssueDate")))){
 			updMap.put("trIssueDate", trIssueDate);
 		}else{
 			updMap.put("trIssueDate", "");
