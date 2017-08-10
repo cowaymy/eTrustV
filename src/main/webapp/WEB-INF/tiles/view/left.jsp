@@ -33,7 +33,7 @@
         <c:when test="${preMenuLvl == list.menuLvl}">
             </li>
         </c:when>
-        <c:when test="${preMenuLvl > list.menuLvl}">
+        <c:when test="${list.menuLvl > 1 && preMenuLvl > list.menuLvl}">
             <c:forEach var="i" begin="1" end="${preMenuLvl - list.menuLvl}" step="1">
                     </li>
                 </ul>
@@ -44,24 +44,15 @@
         </c:otherwise>
     </c:choose>
 
-    <c:if test="${status.last}">
-        <c:if test="${list.menuLvl != '1'}">
-            <c:forEach var="i" begin="1" end="${list.menuLvl}" step="1">
-                </li>
-                </ul>
-            </c:forEach>
-        </c:if>
-    </c:if>
-
     <c:choose>
-        <c:when test="${ list.menuLvl == '1'}">
+        <c:when test="${ list.menuLvl == 1}">
         <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
             <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}');">${list.menuName}(LVL : ${list.menuLvl})</a>
         </c:when>
         <c:otherwise>
 
             <c:choose>
-                <c:when test="${preMenuCode != '' && ( list.menuLvl != '1' && preMenuLvl < list.menuLvl)}">
+                <c:when test="${preMenuCode != '' && preMenuLvl < list.menuLvl}">
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
                         <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}');">${list.menuName}(LVL : ${list.menuLvl})</a>
@@ -81,10 +72,14 @@
     <c:set var="preIsLeaf" value="${list.isLeaf}" />
     <c:set var="cnt" value="${cnt + 1}" />
 
-    <c:if test="${fn:length(MENU_KEY) == cnt }">
-        </li>
+    <c:if test="${status.last}">
+        <c:if test="${list.menuLvl > 1}">
+            <c:forEach var="i" begin="1" end="${list.menuLvl}" step="1">
+                </li>
+                </ul>
+            </c:forEach>
+        </c:if>
     </c:if>
-
 </c:forEach>
 </ul>
 
