@@ -432,7 +432,7 @@ function showDetailHistory(payItemId){
     });
 }
 
-function showItemEdit(payItemId, reconLock){
+function showItemEdit(payItemId){
 	
 	var defaultDate = new Date("01-01-1900");    
 	 Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
