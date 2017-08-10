@@ -1119,7 +1119,7 @@
             #{valueTo},
             #{refIdFr},
             #{refIdTo},
-            #{createAt},
+            SYSDATE,
             #{createBy}
         )
     </update>
