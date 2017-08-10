@@ -5,59 +5,59 @@
 
 var setMainRowIdx = 0;
 
-function fnSelectPgmListAjax()
+function fnSelectUpperMenuListAjax()
 {
-  if ($("#programSelectBox").val() == "01")  // program id
+  if ($("#menuSelectBox").val() == "01")  // Menu id
 	{
-	  $("#pgmCode").val($("#programCdNm").val());
-	  $("#pgmNm").val("");
+	  $("#menuCode").val($("#menuCdNm").val()); 
+	  $("#menuNm").val("");
 	}
   else
 	{
-	  $("#pgmCode").val("");
-	  $("#pgmNm").val($("#programCdNm").val());
+	  $("#menuCode").val("");
+	  $("#menuNm").val($("#menuCdNm").val());
 	}
   
 	
-   Common.ajax("GET", "/common/selectProgramList.do"
+   Common.ajax("GET", "/common/selectUpperMenuList.do"
            , $("#SearchForm").serialize()
            , function(result) 
            {
               console.log("성공 data : " + result);
-              AUIGrid.setGridData(searchGridID, result);
+              AUIGrid.setGridData(searchUpperGridID, result);
               if(result != null && result.length > 0)
               {
-                //fnSetPgmIdParamSet(searchGridID, 0);
+                //fnSetmenuIdParamSet(searchUpperGridID, 0);
               }
            });
 }
 
-var SearchColumnLayout = 
+var SearchUpperColumnLayout = 
     [      
         {    
-            dataField : "pgmCode",
+            dataField : "menuCode",
             headerText : "Id",
             width : 150
         },{
-            dataField : "pgmName",
+            dataField : "menuName",
             headerText : "Name",
             width : 250
         }
     ];
 
 /***************************************************[ Main GRID] ***************************************************/    
-var searchGridID;
+var searchUpperGridID;
 
 $(document).ready(function()
 {
 
-    $("#programCdNm").focus();
+    $("#menuCdNm").focus();
     
-    $("#programCdNm").keydown(function(key) 
+    $("#menuCdNm").keydown(function(key) 
     {
           if (key.keyCode == 13) 
           {
-            fnSelectPgmListAjax();
+            fnSelectUpperMenuListAjax();
           }
 
     });
@@ -70,26 +70,23 @@ $(document).ready(function()
 	                };
 	    
     // AUIGrid 그리드를 생성합니다.
-	    searchGridID = GridCommon.createAUIGrid("search_grid_wrap", SearchColumnLayout,null, searchOptions);
+	    searchUpperGridID = GridCommon.createAUIGrid("search_grid_wrap", SearchUpperColumnLayout,"menuCode", searchOptions);
 
 	    // cellClick event.
-	    AUIGrid.bind(searchGridID, "cellClick", function( event ) 
+	    AUIGrid.bind(searchUpperGridID, "cellClick", function( event ) 
 	    {
-	        $("#searchParamPgmId").val("");
-	        AUIGrid.clearGridData(transGridID);
-	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParamPgmId: " + $("#searchParamPgmId").val() +" / "+ $("#searchParamPgmName").val());        
+	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParammenuId: " + $("#searchParamMenuId").val() +" / "+ $("#searchParammenuName").val());        
 	    });
 
 	 // 셀 더블클릭 이벤트 바인딩
-	    AUIGrid.bind(searchGridID, "cellDoubleClick", function(event) 
+	    AUIGrid.bind(searchUpperGridID, "cellDoubleClick", function(event) 
 	    {
 	        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
-	        var SerchPgmCode = AUIGrid.getCellValue(searchGridID, event.rowIndex, "pgmCode");
-	        var SerchPgmName = AUIGrid.getCellValue(searchGridID, event.rowIndex, "pgmName");
+	        var SerchmenuCode = AUIGrid.getCellValue(searchUpperGridID, event.rowIndex, "menuCode");
+	        var SerchmenuName = AUIGrid.getCellValue(searchUpperGridID, event.rowIndex, "menuName");
 	        	        
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 5, SerchPgmCode);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 6, SerchPgmName);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 2, SerchmenuCode);
 
 	        $("#popup_wrap").remove();
 	    }); 
@@ -104,7 +101,7 @@ $(document).ready(function()
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Program Search</h1>
+<h1>Menu Search</h1>
 <ul class="right_opt">
   <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -112,16 +109,16 @@ $(document).ready(function()
 
 <section class="pop_body"><!-- pop_body start -->
 <form id="SearchForm" method="get" action="">
-<input type ="hidden" id="pgmCode" name="pgmCode" value=""/>
-<input type ="hidden" id="pgmNm" name="pgmNm" value=""/>
+<input type ="hidden" id="menuCode" name="menuCode" value=""/>
+<input type ="hidden" id="menuNm" name="menuNm" value=""/>
 
 <div class="search_100p"><!-- search_100p start -->
-<select class="" id="programSelectBox" name="programSelectBox">
-  <option value="01" selected>Program ID</option>
-  <option value="02">Program Name</option>
+<select class="" id="menuSelectBox" name="menuSelectBox">
+  <option value="01" selected>Menu ID</option>
+  <option value="02">Menu Name</option>
 </select>
-<input type="text" id="programCdNm" name="programCdNm" />
-<a onclick="fnSelectPgmListAjax();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+<input type="text" id="menuCdNm" name="menuCdNm" />
+<a onclick="fnSelectUpperMenuListAjax();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 </div><!-- search_100p end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

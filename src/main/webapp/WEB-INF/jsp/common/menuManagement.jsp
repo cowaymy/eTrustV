@@ -4,10 +4,23 @@
 .aui-grid-left-column {
   text-align:left;
 }
+
+/* 커스텀 칼럼 스타일 정의 */
+.my-column {
+    text-align:right;
+    margin-top:-20px;
+}
+
 </style>
 
 <script type="text/javaScript">
 var gSelMainRowIdx = 0;
+var StatusCdList = new Array();
+
+$(function() 
+{
+	getStatusComboListAjax();
+});
 
 var MainColumnLayout = 
     [      
@@ -18,11 +31,48 @@ var MainColumnLayout =
         }, {
             dataField : "menuLvl",
             headerText : "Lvl",
-            width : 50
+            width : 50,
+            editRenderer : {
+                type : "ComboBoxRenderer",
+                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                   return   getMenuLevel();                 
+                },
+                keyField : "id"
+            }
         }, {
+            dataField : "upperMenuCode",
+            headerText : "UpperMenu",
+            width : 180,
+            editable : false,
+            style : "aui-grid-left-column",
+             renderer : {
+                type : "IconRenderer",
+                iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                iconHeight : 13,
+                iconPosition : "aisleRight",
+                iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.gif" // 
+                  ," " : "xx"
+                  
+                },
+          
+                onclick : function(rowIndex, columnIndex, value, item) {
+                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
+                    if (item.menuLvl == "1")
+                    {
+                    	Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
+                      return false;
+                    }
+                   gSelMainRowIdx = rowIndex;
+                   fnSearchUpperMenuPopUp(); 
+                  }
+            } 
+                   
+        },{
             dataField : "menuCode",
             headerText : "MenuId",
-            width : 200
+            width : 150
         }, {
             dataField : "menuName",
             headerText : "MenuNm",
@@ -30,7 +80,8 @@ var MainColumnLayout =
         }, {
             dataField : "pgmCode",
             headerText : "ProgramId",
-            width : 100,
+            width : 180,
+            editable : false,
             style : "aui-grid-left-column",
             renderer : {
                 type : "IconRenderer",
@@ -51,32 +102,64 @@ var MainColumnLayout =
         }, {
             dataField : "pgmName",
             headerText : "ProgramNm",
-            width : 250
+            editable : false,
+            width : 230
         }, {
             dataField : "menuOrder",
             headerText : "Order",
             width : 100
         }, {
-            dataField : "upperMenuCode",
-            headerText : "UpperMenu",
-            width : 100
-        }, {
             dataField : "statusCode",
             headerText : "Status",
-            width : 100
-        }
+            //style : "my-column",
+            width : 100,
+            editRenderer : {
+                type : "ComboBoxRenderer",
+                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                listFunction : function(rowIndex, columnIndex, item, dataField) 
+                {
+                  return StatusCdList;
+                },
+                keyField : "id",
+                valueField : "value",
+              }            
+        }, {
+            dataField : "menuSeq",
+            headerText : "",
+            width : 0
+          }
     ];
 
+function getStatusComboListAjax(callBack) 
+{
+	  Common.ajaxSync("GET", "/common/selectCodeList.do"
+    	           , $("#MainForm").serialize()
+    	           , function(result) 
+    	           {
+					          for (var i = 0; i < result.length; i++) 
+						        {
+					        	  var list = new Object();
+							            list.id = result[i].code;
+							            list.value = result[i].codeName ;
+							            StatusCdList.push(list);
+							      }
+
+							      //if you need callBack Function , you can use that function
+							      if (callBack) {
+							        callBack(StatusCdList);
+							      }
+							      
+							    });
+	  return StatusCdList;
+  }
 
 //AUIGrid 메소드
 //컬럼 선택시 상세정보 세팅.
 function fnSetCategoryCd(selGrdidID, rowIdx)  
 {     
- $("#selCategoryId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryId"));
- 
- $("#paramCategoryId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryId"));
- 
- console.log("selCategoryId: "+ $("#selCategoryId").val() + "paramCategoryId: "+ $("#paramCategoryId").val() + " stusCtgryName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryName") );                
+ $("#selMenuId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "menuCode"));
+  
+ console.log("selMenuId: "+ $("#selMenuId").val() + " stusCtgryName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryName") );                
 }
 
 function auiCellEditignHandler(event) 
@@ -84,6 +167,14 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin") 
   {
       console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
+      console.log("menuSeq: " + menuSeq);
+/*       if (AUIGrid.isAddedById(myGridID,menuSeq) == false   )// add된게 아니면 수정할수없다.
+          {
+                  alert("Confirm!!");  
+                  return false;
+          } */
+
   } 
   else if(event.type == "cellEditEnd") 
   {
@@ -107,32 +198,26 @@ function addRowMenu()
 {
   var item = new Object();
   
-  item.div      ="";
-  item.menuLvl  ="";
-  item.menuCode ="";
+  item.div      ="Lvl1";
+  item.menuLvl  ="1";
+  item.menuCode =" Input MenuCode ...";
   item.menuName ="";  
   item.pgmCode  ="";
   item.pgmName  ="";
   item.menuOrder ="";
   item.upperMenuCode ="";
-  item.statusCode    ="";
+  //item.statusCode    ="00";
   // parameter
   // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
   // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
   AUIGrid.addRow(myGridID, item, "first");
 }
 
-function addRowStatusCode() 
-{
-var item = new Object();
-item.checkFlag   = 0;
-item.stusCodeId  ="";
-item.codeName    ="";
-item.code        ="-";
-  // parameter
-  // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-  // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-  AUIGrid.addRow(statusCodeGridID, item, "first");
+//Make Use_yn ComboList, tooltip
+function getMenuLevel()
+{     
+  var list =  ["1", "2", "3", "4"];   
+  return list;
 }
 
 //행 삭제 이벤트 핸들러
@@ -155,78 +240,18 @@ function removeRow()
   AUIGrid.removeRow(myGridID,"selectedIndex");
 }
 
-//Make Use_yn ComboList, tooltip
-function getDisibledComboList()
-{     
-var list =  ["N", "Y"];   
-return list;
-}
-
-function fnGetCategoryCd(myGridID, rowIndex)
-{
-  fnSetCategoryCd(myGridID, rowIndex);
-  fnSelectCategoryCdInfo();
-}
-
-//그리드 헤더 클릭 핸들러
-function headerClickHandler(event) 
-{
-  // checkFlag 칼럼 클릭 한 경우
-  if(event.dataField == "checkFlag") 
-  {
-    if(event.orgEvent.target.id == "allCheckbox") 
-    { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
-      var  isChecked = document.getElementById("allCheckbox").checked;
-      checkAll(isChecked);
-    }
-    return false;
-  }
-}
-
-//전체 체크 설정, 전체 체크 해제 하기
-function checkAll(isChecked) 
-{
-  var rowCount = AUIGrid.getRowCount(statusCodeGridID);
-  
-  if(isChecked)   // checked == true == 1
-  {
-    for(var i=0; i<rowCount; i++) 
-    {
-       AUIGrid.updateRow(statusCodeGridID, { "checkFlag" : 1 }, i);
-    }
-  } 
-  else   // unchecked == false == 0
-  {
-    for(var i=0; i<rowCount; i++) 
-    {
-       AUIGrid.updateRow(statusCodeGridID, { "checkFlag" : 0 }, i);
-    }
-  }
-  
-  // 헤더 체크 박스 일치시킴.
-  document.getElementById("allCheckbox").checked = isChecked;
-  
-  getItemsByCheckedField(statusCodeGridID);
-
-}
-
-function getItemsByCheckedField(selectedGrid) 
-{
-  // 체크된 item 반환
-  var activeItems = AUIGrid.getItemsByValue(selectedGrid, "checkFlag", true);
-  var checkedRowItem = [];
-  var str = "";
-  
-  for(var i=0, len = activeItems.length; i<len; i++) 
-  {
-      checkedRowItem = activeItems[i];
-      str += "chkRowIdx : " + checkedRowItem.rowIndex + ", chkId :" + checkedRowItem.stusCodeId + ", chkName : " + checkedRowItem.codeName  + "\n";
-  }
-}
-
 function fnSearchProgramPopUp() 
 {
  	    var popUpObj = Common.popupDiv("/common/searchProgramPop.do"
+          , $("#MainForm").serializeJSON()
+          , null
+          , "true"  // true면 close버튼 클릭시 화면 close
+          );
+        
+}
+function fnSearchUpperMenuPopUp() 
+{
+ 	    var popUpObj = Common.popupDiv("/common/searchUpperMenuPop.do"
           , $("#MainForm").serializeJSON()
           , null
           , "true"  // true면 close버튼 클릭시 화면 close
@@ -249,8 +274,14 @@ function fnSelectMenuListAjax()
            });
 }
 
-function fnSavePgmId() 
+function fnSaveMenuCode() 
 {
+
+  if (fnValidationCheck() == false)
+	{
+	  return false;
+	}
+	
   Common.ajax("POST", "/common/saveMenuId.do"
         , GridCommon.getEditData(myGridID)
         , function(result) 
@@ -286,20 +317,176 @@ function removeAllCancel()
   AUIGrid.restoreSoftRows(myGridID, "all"); 
 }
 
+function fnValidationCheck() 
+{
+    var result = true;
+    var addList = AUIGrid.getAddedRowItems(myGridID);
+    var udtList = AUIGrid.getEditedRowItems(myGridID);
+    var delList = AUIGrid.getRemovedItems(myGridID);
+        
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+    {
+      Common.alert("No Change");
+      return false;
+    }
+
+    for (var i = 0; i < addList.length; i++) 
+    {
+      var menuCode  = addList[i].menuCode;
+      var menuName  = addList[i].menuName;
+      var pgmCode   = addList[i].pgmCode;
+      var menuLvl   = addList[i].menuLvl;
+      var menuOrder = addList[i].menuOrder;
+      var statusCode = addList[i].statusCode;
+      var upperMenuCode = addList[i].upperMenuCode;
+      
+      if (menuCode == "" || menuCode.length == 0) 
+      {
+        result = false;
+        Common.alert("Please Menu Code Confirm!!");
+        break;
+      }
+      
+      if (menuCode.length != 9) 
+      {
+        result = false;
+        Common.alert("Menu Code Length Must Be 9..   ");
+        break;
+      }
+      
+      if (menuName == "" ) 
+      {
+        result = false;
+        Common.alert("Please Menu Name Confirm!!");
+        break;
+      }
+      
+      if (menuLvl == "") 
+      {
+          result = false;
+          Common.alert("Please Menu Level Confirm!!");
+          break;
+      }
+
+      if (parseInt(menuLvl) > 4) 
+      {
+          result = false;
+          Common.alert("Menu Level Can't 4 Over ");
+          break;
+      }
+      
+      if (pgmCode == "") 
+      {
+          result = false;
+          Common.alert("Please Program ID Confirm!!");
+          break;
+      }
+      
+      if (menuOrder == "") 
+      {
+          result = false;
+          Common.alert("Please Menu Order Confirm!!");
+          break;
+      }
+      
+      if (statusCode == "") 
+      {
+          result = false;
+          Common.alert("Please Status Code Confirm!!");
+          break;
+      }
+    }
+
+     
+    for (var i = 0; i < udtList.length; i++) 
+    {
+        var menuCode  = udtList[i].menuCode;
+        var menuName  = udtList[i].menuName;
+        var pgmCode   = udtList[i].pgmCode;
+        var menuLvl   = udtList[i].menuLvl;
+        var menuOrder = udtList[i].menuOrder;
+        var statusCode = udtList[i].statusCode;
+        var upperMenuCode = udtList[i].upperMenuCode;
+
+        if (menuCode == "" || menuCode.length == 0) 
+        {
+          result = false;
+          Common.alert("Please Menu Code Confirm!!");
+          break;
+        }
+        
+        if (menuCode.length != 9) 
+        {
+          result = false;
+          Common.alert("Menu Code Length Must Be 9..   ");
+          break;
+        }        
+        
+        if (menuName == "" ) 
+        {
+          result = false;
+          Common.alert("Please Menu Name Confirm!!");
+          break;
+        }
+        
+        if (menuLvl == "") 
+        {
+            result = false;
+            Common.alert("Please Menu Level Confirm!!");
+            break;
+        }
+        
+        if (pgmCode == "") 
+        {
+            result = false;
+            Common.alert("Please Program ID Confirm!!");
+            break;
+        }
+        
+        if (menuOrder == "") 
+        {
+            result = false;
+            Common.alert("Please Menu Order Confirm!!");
+            break;
+        }
+        
+        if (statusCode == "") 
+        {
+            result = false;
+            Common.alert("Please Status Code Confirm!!");
+            break;
+        }
+    } 
+    
+    return result;
+  }
+
+
+/****************************  Form Ready ******************************************/
+
 var myGridID, transGridID, statusCodeGridID;
 
 $(document).ready(function()
 {
-    $("#programId").focus();
+    $("#menuCode").focus();
     
-    $("#programId").keydown(function(key) 
-        {
-          if (key.keyCode == 13) 
-          {
-            fnSelectMenuListAjax();
-          }
+    $("#menuCode").keydown(function(key) 
+    {
+       if (key.keyCode == 13) 
+       {
+         fnSelectMenuListAjax();
+       }
 
-        });
+    });
+    
+    $("#pgmCode").keydown(function(key) 
+    {
+       if (key.keyCode == 13) 
+       {
+         fnSelectMenuListAjax();
+       }
+
+    });
 
 /***************************************************[ Main GRID] ***************************************************/    
 
@@ -342,7 +529,7 @@ $(document).ready(function()
     {
         gSelMainRowIdx = event.rowIndex;
         
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedCategoryId: " + $("#selCategoryId").val() +" / "+ $("#paramCategoryId").val());        
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedMenuId: " + $("#selMenuId").val() );        
     });
 
  // 셀 더블클릭 이벤트 바인딩
@@ -350,7 +537,6 @@ $(document).ready(function()
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
-        //fnGetCategoryCd(myGridID, event.rowIndex);
     });    
 
 
@@ -381,6 +567,8 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
+<input type ="hidden" id="groupCode" name="groupCode" value="310"/>
+<input type ="hidden" id="selMenuId" name="selMenuId" value="310"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -392,13 +580,13 @@ $(document).ready(function()
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Menu</th>
+	<th scope="row">Menu Id</th>
 	<td>
-	<input type="text" title="" placeholder="" class="w100p" />
+	<input type="text" id="menuCode" name="menuCode" title="" placeholder="" class="w100p" />
 	</td>
-	<th scope="row">Program</th>
+	<th scope="row">Program Id</th>
 	<td>
-	<input type="text" title="" placeholder="" class="w100p" />
+	<input type="text" id="pgmCode" name="pgmCode" title="" placeholder="" class="w100p" />
 	</td>
 </tr>
 </tbody>
@@ -445,7 +633,7 @@ $(document).ready(function()
   <li id="delCancel"><p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p></li>
 	<li><p class="btn_grid"><a onclick="removeRow();">DEL</a></p></li>
 	<li><p class="btn_grid"><a onclick="addRowMenu();">ADD</a></p></li>
-	<li><p class="btn_grid"><a onclick="fnSavePgmId();">SAVE</a></p></li>
+	<li><p class="btn_grid"><a onclick="fnSaveMenuCode();">SAVE</a></p></li>
 </ul>
 
 </aside><!-- title_line end -->
