@@ -610,6 +610,11 @@ public class SearchPaymentController {
 				}
 			}
 			
+			if(!valid){
+				msg.setMessage(message);
+    			return ResponseEntity.ok(msg);
+			}
+			
 			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, "", "", 0, runNo, eFTNo, 0);
 			boolean result = searchPaymentService.doEditPaymentDetails(payDet);
 			
