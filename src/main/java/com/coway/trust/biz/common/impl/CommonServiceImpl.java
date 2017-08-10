@@ -59,6 +59,11 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 	
 	@Override
+	public List<EgovMap> selectUpperMenuList(Map<String, Object> params) {
+		return commonMapper.selectUpperMenuList(params);
+	}
+	
+	@Override
 	public int deleteMenuId(List<Object> delList, Integer crtUserId) 
 	{
 		int delCnt = 0;
@@ -84,6 +89,61 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		}
 		
 		return delCnt;
+	}
+	
+	@Override
+	public int insertMenuCode(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+
+			if (String.valueOf(((Map<String, Object>) obj).get("menuCode")).length() == 0 
+					|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("menuCode")))) 
+			{
+				continue;
+			}
+			
+			logger.debug(" >>>>> insertMenuCode ");
+			logger.debug(" menuCode : {}", ((Map<String, Object>) obj).get("menuCode"));
+
+			saveCnt++;
+
+			commonMapper.insertMenuCode((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+	
+	@Override
+	public int updateMenuCode(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			if (String.valueOf(((Map<String, Object>) obj).get("menuCode")).length() == 0 
+					|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("menuCode")))) 
+			{
+				continue;
+			}
+			
+			logger.debug(" >>>>> updateMenuCode ");
+			logger.debug(" menuCode : {}", ((Map<String, Object>) obj).get("menuCode"));
+			
+			saveCnt++;
+			
+			commonMapper.updateMenuCode((Map<String, Object>) obj);
+			
+		}
+		
+		return saveCnt;
 	}	
 	
 	/************************** Program Management ****************************/

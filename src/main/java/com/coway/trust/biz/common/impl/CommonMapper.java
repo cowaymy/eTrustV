@@ -30,7 +30,10 @@ public interface CommonMapper {
 	/************************** Menu Management ****************************/
 	// selectMenuList
 	List<EgovMap> selectMenuList(Map<String, Object> params);  
-	int deleteMenuId(Map<String, Object> params); 
+	List<EgovMap> selectUpperMenuList(Map<String, Object> params);  
+	int deleteMenuId(Map<String, Object> params);  
+	int insertMenuCode(Map<String, Object> params);
+	int updateMenuCode(Map<String, Object> params);
 	
 	/************************** Program Management ****************************/	
 	

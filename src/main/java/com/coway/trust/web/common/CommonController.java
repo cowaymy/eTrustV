@@ -85,18 +85,36 @@ public class CommonController {
 	@RequestMapping(value = "/selectMenuList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectMenuList(@RequestParam Map<String, Object> params) 
 	{
-		List<EgovMap> statusCategoryList = commonService.selectMenuList(params);
+		List<EgovMap> selectMenuList = commonService.selectMenuList(params);
 
-		return ResponseEntity.ok(statusCategoryList);
+		return ResponseEntity.ok(selectMenuList);
 	}
 	
-	//popup
+	// search upperMenu popup
+	@RequestMapping(value = "/selectUpperMenuList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectUpperMenuList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectUpperMenuList = commonService.selectUpperMenuList(params);
+		
+		return ResponseEntity.ok(selectUpperMenuList);
+	}
+	
+	//program search popup
 	@RequestMapping(value = "/searchProgramPop.do")  
 	public String searchPopProgramList(@RequestParam Map<String, Object> params, ModelMap model) 
 	{
 		//model.addAttribute("url", params);
 		// 호출될 화면
 		return "/common/searchProgramPop";
+	}
+	
+	//uppermenu search popup
+	@RequestMapping(value = "/searchUpperMenuPop.do")  
+	public String searchPopUpperMenuList(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
+		//model.addAttribute("url", params);
+		// 호출될 화면
+		return "/common/searchUpperMenuPop";
 	}
 	
 	// save menuId
@@ -109,13 +127,13 @@ public class CommonController {
 
 		int cnt = 0;
 		if (addList.size() > 0) 
-		{   
-			cnt = commonService.insertPgmId(addList, getUserId);
+		{   //{add=[{div=, menuLvl=1, menuCode=ORG000000, menuName=CMM001, pgmCode=communication, pgmName=COMM, menuOrder=, upperMenuCode=, statusCode=, menuSeq=D016A60C-3131-F276-AA9D-CAAF521EF3AD}], update=[], remove=[]}
+			cnt = commonService.insertMenuCode(addList, getUserId);
 		}
 		
 		if (udtList.size() > 0) 
 		{
-			cnt = commonService.updatePgmId(udtList, getUserId);
+			cnt = commonService.updateMenuCode(udtList, getUserId);
 		}
 		
 		if (delList.size() > 0) 
@@ -124,10 +142,10 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		Logger.info("CommCd_수정 : {}", udtList.toString());
-		Logger.info("CommCd_추가 : {}", addList.toString());
-		Logger.info("CommCd_삭제 : {}", delList.toString());
-		Logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("MenuCd_수정 : {}", udtList.toString());
+		Logger.info("MenuCd_추가 : {}", addList.toString());
+		Logger.info("MenuCd_삭제 : {}", delList.toString());
+		Logger.info("MenuCd_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -209,10 +227,10 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		Logger.info("CommCd_수정 : {}", udtList.toString());
-		Logger.info("CommCd_추가 : {}", addList.toString());
-		Logger.info("CommCd_삭제 : {}", delList.toString());
-		Logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("PgmId_수정 : {}", udtList.toString());
+		Logger.info("PgmId_추가 : {}", addList.toString());
+		Logger.info("PgmId_삭제 : {}", delList.toString());
+		Logger.info("PgmId_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -244,9 +262,9 @@ public class CommonController {
 		
 		
 		// 콘솔로 찍어보기
-		Logger.info("CommCd_수정 : {}", udtList.toString());
-		Logger.info("CommCd_추가 : {}", addList.toString());
-		Logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("PgmId_수정 : {}", udtList.toString());
+		Logger.info("PgmId_추가 : {}", addList.toString());
+		Logger.info("PgmId_카운트 : {}", cnt);
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -313,9 +331,9 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		Logger.info("CommCd_수정 : {}", udtList.toString());
-		Logger.info("CommCd_추가 : {}", addList.toString());
-		Logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("StatusCategory_수정 : {}", udtList.toString());
+		Logger.info("StatusCategory_추가 : {}", addList.toString());
+		Logger.info("StatusCategory_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -366,9 +384,9 @@ public class CommonController {
 		}
 
 		// 콘솔로 찍어보기
-		Logger.info("CommCd_수정 : {}", udtList.toString());
-		Logger.info("CommCd_추가 : {}", addList.toString());
-		Logger.info("CommCd_카운트 : {}", cnt);
+		Logger.info("StatusCode_수정 : {}", udtList.toString());
+		Logger.info("StatusCode_추가 : {}", addList.toString());
+		Logger.info("StatusCode_카운트 : {}", cnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
