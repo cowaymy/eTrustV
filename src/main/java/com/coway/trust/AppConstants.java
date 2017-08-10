@@ -45,7 +45,7 @@ public class AppConstants {
 	 * MENU
 	 */
 	public static final String MENU_KEY = "MENU_KEY";
-	public static final String CURRENT_MENU_CODE = "CURRENT_MENU_CODE";
+	public static final String MENU_FAVORITES = "MENU_FAVORITES";
 	public static final String PAGE_AUTH = "PAGE_AUTH";
 
 	/**

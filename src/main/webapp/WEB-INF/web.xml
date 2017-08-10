@@ -84,7 +84,7 @@
     
 	<error-page>
 		<error-code>404</error-code>
-		<location>/common/error.jsp</location>
+		<location>/resources/common/error.jsp</location>
 	</error-page>
 <!-- 	
     <error-page>

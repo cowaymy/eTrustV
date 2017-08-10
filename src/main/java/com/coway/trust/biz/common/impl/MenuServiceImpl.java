@@ -20,9 +20,14 @@ public class MenuServiceImpl implements MenuService {
 	private MenuMapper menuMapper;
 
 	@Override
-//	@Cacheable("menu-cache")
+	// @Cacheable("menu-cache")
 	public List<EgovMap> getMenuList(SessionVO sessionVO) {
 		return menuMapper.selectMenuList(sessionVO);
+	}
+
+	@Override
+	public List<EgovMap> getFavoritesList(SessionVO sessionVO) {
+		return menuMapper.getFavoritesList(sessionVO);
 	}
 
 	@Override

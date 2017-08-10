@@ -28,10 +28,30 @@ TODO :  로그인한 유저가 가진 메뉴를 조회 하도록 구현 필요. 
                                                       /* TODO : 권한이 있는 PGM_CODE 리스트로 교체..*/
                                                       SELECT PGM_CODE
                                                         FROM SYS0050M)
+                                AND PGM.FUNC_VIEW = 'Y'
                          CONNECT BY PRIOR UPPER_MENU_CODE = MENU_CODE) MENU
         START WITH MENU.UPPER_MENU_CODE IS NULL
         CONNECT BY PRIOR MENU_CODE = UPPER_MENU_CODE
           ORDER SIBLINGS BY MENU_ORDER
+    </select>
+
+    <select id="getFavoritesList" parameterType="sessionVO" resultType="egovMap">
+        /*
+        TODO :  로그인한 유저가 가진 마이메뉴를 조회 하도록 구현 필요. 현재 임시.
+        */
+        SELECT   FAVORITES.MYMENU_CODE
+            ,FAVORITES.MYMENU_NAME
+            ,MENU.MENU_CODE
+            ,MENU.MENU_NAME
+            ,PGM.PGM_PATH
+        FROM SYS0059M FAVORITES, SYS0060D MAPP, SYS0051M MENU, SYS0050M PGM
+       WHERE FAVORITES.MYMENU_CODE = MAPP.MYMENU_CODE
+         AND MAPP.MENU_CODE = MENU.MENU_CODE
+         AND MENU.PGM_CODE = PGM.PGM_CODE
+         AND FAVORITES.USE_YN = 'Y'
+         AND PGM.FUNC_VIEW = 'Y'
+         -- AND FAVORITES.CRT_USER_ID = :CRT_USER_ID
+    ORDER BY FAVORITES.MYMENU_ORDER
     </select>
 
     <select id="selectPageAuth" parameterType="Map" resultType="pageAuthVO">

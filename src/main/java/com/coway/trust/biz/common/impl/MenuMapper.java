@@ -13,5 +13,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface MenuMapper {
 	List<EgovMap> selectMenuList(SessionVO sessionVO);
 
+	List<EgovMap> getFavoritesList(SessionVO sessionVO);
+
 	PageAuthVO selectPageAuth(Map<String, Object> params);
 }

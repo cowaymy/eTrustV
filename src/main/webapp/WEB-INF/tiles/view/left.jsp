@@ -18,7 +18,7 @@
 </header><!-- lnb_header end -->
 
 <section class="lnb_con"><!-- lnb_con start -->
-<p class="click_add_on_solo on"><a href="#">All menu</a></p>
+<p id="_leftMenu" class="click_add_on_solo<c:if test="${param.CURRENT_MENU_TYPE != 'MY_MENU'}"> on</c:if>"><a href="#">All menu</a></p>
 <ul class="inb_menu" id="leftMenu">
 
 <c:set var="cnt" value="0" />
@@ -26,7 +26,7 @@
 <c:set var="preMenuLvl" value="" />
 <c:set var="preIsLeaf" value="" />
 
-<c:forEach var="list" items="${MENU_KEY}">
+<c:forEach var="list" items="${MENU_KEY}"  varStatus="status">
 
 
     <c:choose>
@@ -43,6 +43,15 @@
 
         </c:otherwise>
     </c:choose>
+
+    <c:if test="${status.last}">
+        <c:if test="${list.menuLvl != '1'}">
+            <c:forEach var="i" begin="1" end="${list.menuLvl}" step="1">
+                </li>
+                </ul>
+            </c:forEach>
+        </c:if>
+    </c:if>
 
     <c:choose>
         <c:when test="${ list.menuLvl == '1'}">
@@ -80,50 +89,68 @@
 </ul>
 
 <!-- MY MENU -->
-<p class="click_add_on_solo"><a href="#"><span></span>My menu</a></p>
+<p id="_myMenu" class="click_add_on_solo<c:if test="${param.CURRENT_MENU_TYPE == 'MY_MENU'}"> on</c:if>"><a href="javascript:void(0);"><span></span>My menu</a></p>
 <ul class="inb_menu">
-    <li>
-    <a href="#">My menu 1depth</a>
-        <ul class="inb_menu">
-            <li>
-                <a href="#">My menu 1depth</a>
-            </li>
-        </ul>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
+
+    <c:set var="preMyMenuCode" value="" />
+
+    <c:forEach var="groupList" items="${MENU_FAVORITES}">
+
+        <c:if test="${preMyMenuCode != groupList.mymenuCode}">
+            <li id="li_${groupList.mymenuCode}">
+                <a href="javascript:void(0);">${groupList.mymenuName}</a>
+
+                    <c:set var="groupPerMenuCnt" value="0" />
+                    <c:set var="isBreak" value="0" />
+
+                    <c:forEach var="menuList" items="${MENU_FAVORITES}" varStatus="status">
+                        <c:if test="${isBreak == 0}">
+                            <c:choose>
+                                <c:when test="${groupList.mymenuCode == menuList.mymenuCode}">
+                                    <c:if test="${groupPerMenuCnt == 0}">
+                                        <ul>
+                                    </c:if>
+                                        <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
+                                            <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu('${menuList.menuCode}', '${menuList.pgmPath}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
+                                        </li>
+                                    <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
+                                </c:when>
+                                <c:when test="${groupPerMenuCnt > 0}">
+                                    </ul>
+                                    <c:set var="isBreak" value="1" />
+                                </c:when>
+                            </c:choose>
+                        </c:if>
+                    </c:forEach>
+        </c:if>
+
+        </li>
+
+        <c:set var="preMyMenuCode" value="${groupList.mymenuCode}" />
+    </c:forEach>
 </ul>
 </section><!-- lnb_con end -->
 
 </aside><!-- lnb_wrap end -->
 
 <form id="_menuForm">
-    <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${CURRENT_MENU_CODE}"/>
+    <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
+    <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
+    <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
 </form>
 
 <script type="text/javaScript">
 
 $(function() {
-    if(FormUtil.isNotEmpty($("#CURRENT_MENU_CODE").val())){
-        fn_addClass($("#CURRENT_MENU_CODE").val());
+    if($("#_leftMenu").hasClass("on") && FormUtil.isNotEmpty($("#CURRENT_MENU_CODE").val())){
+        fn_addClassLeftMenu($("#CURRENT_MENU_CODE").val());
+    }else{
+        fn_addClassMyMenu($("#CURRENT_MENU_CODE").val(), $("#CURRENT_GROUP_MY_MENU_CODE").val());
     }
 });
 
 // 현재 메뉴 표시.
-function fn_addClass(currentMenuCode){
+function fn_addClassLeftMenu(currentMenuCode){
     var $currentLitag = $("#li_" + currentMenuCode);
     var $currentAtag = $("#a_" + currentMenuCode);
     var menuLevel = $currentLitag.attr("menu_level");
@@ -136,14 +163,34 @@ function fn_addClass(currentMenuCode){
     $parentLiTag.addClass("active");
     $("#a_" + $currentLitag.attr("upper_menu_code")).addClass("on");
 
-    if(menuLevel>= 3){
-        fn_addClass($parentLiTag.attr("upper_menu_code"));
+    if(FormUtil.isNotEmpty(menuLevel) && menuLevel>= 3){
+        fn_addClassLeftMenu($parentLiTag.attr("upper_menu_code"));
     }
 }
 
+// 현재 마이메뉴 표시.
+function fn_addClassMyMenu(currentMenuCode, groupMenuCode){
+    var $currentLitag = $("#li_" + currentMenuCode + groupMenuCode);
+    var $currentAtag = $("#a_" + currentMenuCode + groupMenuCode);
+
+    $currentLitag.addClass("active");
+    $currentAtag.addClass("on");
+
+    var $parentLiTag = $("#li_" + $currentLitag.attr("group_my_menu_code"));
+    $parentLiTag.addClass("active");
+}
+
 // 선택한 메뉴화면으로 이동.
-function fn_menu(menuCode, menuPath){
+function fn_menu(menuCode, menuPath, myMenuGroupCode){
     $("#CURRENT_MENU_CODE").val(menuCode);
+
+    if($("#_myMenu").hasClass("on")){
+        $("#CURRENT_MENU_TYPE").val("MY_MENU");
+        $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
+    }else{
+        $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
+    }
+
 
     $("#_menuForm").attr({
         action : getContextPath() + menuPath,
