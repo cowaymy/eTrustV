@@ -80,7 +80,9 @@
             </c:forEach>
         </c:if>
     </c:if>
+
 </c:forEach>
+
 </ul>
 
 <!-- MY MENU -->
@@ -93,7 +95,7 @@
 
         <c:if test="${preMyMenuCode != groupList.mymenuCode}">
             <li id="li_${groupList.mymenuCode}">
-                <a href="javascript:void(0);">${groupList.mymenuName}</a>
+                <a id="a_${groupList.mymenuCode}" href="javascript:void(0);">${groupList.mymenuName}</a>
 
                     <c:set var="groupPerMenuCnt" value="0" />
                     <c:set var="isBreak" value="0" />
@@ -172,7 +174,10 @@ function fn_addClassMyMenu(currentMenuCode, groupMenuCode){
     $currentAtag.addClass("on");
 
     var $parentLiTag = $("#li_" + $currentLitag.attr("group_my_menu_code"));
+    var $parentATag = $("#a_" + $currentLitag.attr("group_my_menu_code"));
+
     $parentLiTag.addClass("active");
+    $parentATag.addClass("on");
 }
 
 // 선택한 메뉴화면으로 이동.
