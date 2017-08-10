@@ -7,7 +7,6 @@
  */
 package com.coway.trust.biz.logistics.asset.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +14,12 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.logistics.asset.AssetMngService;
-import com.coway.trust.web.logistics.LogisticsConstants;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -27,7 +28,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements AssetMngService {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	
 	@Resource(name = "AssetMngMapper")
 	private AssetMngMapper AssetMngMapper;
 
@@ -57,66 +58,41 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	}
 	
 	@Override
-	public void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList) {
-		
+	public void insertAssetMng(Map<String, Object> params,List<EgovMap> detailAddList) {
+	
 		int inassetid = AssetMngMapper.AssetCreateSeq();
-		
-		params.put("inassetid", inassetid);
-		
-		/*String chkId = LogisticsConstants.COURIER_CODE;
-		List<EgovMap> list = courierMapper.selectCourierId(chkId);
-		// params.put("curid", curid);
-		String docNoID = String.valueOf(list.get(0).get("docNoId"));
-		String docNo = String.valueOf(list.get(0).get("c1"));
-		String docNoPrefix = String.valueOf(list.get(0).get("c2"));
-		
-		logger.debug("docNoLength : {}", docNoLength);
-		logger.debug("NextNo : {}", NextNo);
-		logger.debug("nextDocNo : {}", nextDocNo);
-		logger.debug("nextDocNoLength : {}", nextDocNoLength);
-		logger.debug("docNoLength - nextDocNoLength : {}", docNoLength - nextDocNoLength);
-		logger.debug("docNoFormat : {}", docNoFormat);
 
-		Map upmap = new HashMap<String, String>();
-		upmap.put("chkId", chkId);
-		upmap.put("docNoFormat", docNoFormat);
-		courierMapper.updateDocNo(upmap);
-		String curcode = docNoPrefix + docNoFormat;
-		// params.put("chkId", chkId);
-		params.put("curcode", curcode);
-		courierMapper.insertCourier(params);*/
-		
-		Map<String, Object> detailmap = new HashMap();
+		params.put("inassetid", inassetid);
+		params.put("masterstatus", 1);
+		params.put("masterbreanch", 42);
+		params.put("curr_dept_id", 38);
+		params.put("curr_user_id", 0);
+	
+		AssetMngMapper.insertAssetMng(params);
 	
 		int detailsize=detailAddList.size();
 		logger.debug("detailsize     : {}", detailsize);	
-		System.out.println("detailsize$$$  :  "+detailsize);
 		if(detailsize > 0){
-			System.out.println("통과!!!!!");
 			for (int i = 0; i < detailAddList.size(); i++) {
-				EgovMap map = (EgovMap) detailAddList.get(i);
-			/*	detailmap.put("insdetailtype", map.get("insdetailtype"));
-				detailmap.put("insdetailBrand", map.get("insdetailBrand"));
-				detailmap.put("insdetailmodel", map.get("insdetailmodel"));
-				detailmap.put("insdetailremark", map.get("insdetailremark"));*/
-			
-		/*		logger.debug("insdetailtype     : {}", map.get("insdetailtype"));	
-				logger.debug("insdetailBrand     : {}", map.get("insdetailBrand"));	 
-				logger.debug("insdetailmodel     : {}", map.get("insdetailmodel"));	 
-				logger.debug("insdetailremark     : {}", map.get("insdetailremark"));	 */
-				logger.debug("insdetailtype     : {}", map.get("codeName"));	
-				logger.debug("insdetailBrand     : {}", map.get("name"));	 
+				int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
+				Map<String , Object> map = (Map<String , Object>)detailAddList.get(i);
+				map.put("detailassetid", detailassetid);
+				map.put("detailstatus", 1);
+				map.put("inassetid", inassetid);
+				map.put("add_crtuser_id", 99999999);
+				map.put("add_upuser_id", 99999999);
+				map.put("typeid", Integer.parseInt((String) map.get("typeid")));//
+				map.put("brandid",Integer.parseInt((String) map.get("brandid")));//
+				logger.debug("insdetailtype     : {}", map.get("typeid"));	
+				logger.debug("insdetailBrand     : {}", map.get("brandid"));	 
 				logger.debug("insdetailmodel     : {}", map.get("name1"));	 
 				logger.debug("insdetailremark     : {}", map.get("assetDRem"));	
-				
-				
+								
 				AssetMngMapper.insertDetailAsset(map);
 					
 			}
 			
 		}
-		 	//AssetMngMapper.insertAssetMng(params);
-		
 		
 		
 	}
