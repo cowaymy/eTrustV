@@ -10,23 +10,85 @@
 			      ,A.PGM_CODE
 			      ,B.PGM_NAME 
 			      ,A.STATUS_CODE
-			      ,A.UPPER_MENU_CODE
+			      ,NVL(A.UPPER_MENU_CODE,' ') UPPER_MENU_CODE
 			      ,A.MENU_ORDER 
 			   FROM SYS0051M A
 			       ,SYS0050M B
 				WHERE B.PGM_CODE(+) = A.PGM_CODE
 				 <if test='menuCode !=null and menuCode != "" '>
-				  AND UPPER(A.MENU_CODE) LIKE '%' || UPPER(:menuCode) || '%'
+				  AND UPPER(A.MENU_CODE) LIKE '%' || UPPER(#{menuCode}) || '%'
 				 </if>  
 				 <if test='pgmCode !=null and pgmCode !="" '>
-				  AND UPPER(B.PGM_CODE(+)) LIKE '%' || UPPER(:pgmCode) || '%'
+				  AND UPPER(B.PGM_CODE(+)) LIKE '%' || UPPER(#{pgmCode}) || '%'
 				 </if>
-				ORDER BY A.MENU_CODE,A.MENU_ORDER
+				ORDER BY A.MENU_CODE ,A.MENU_LVL ,A.MENU_ORDER
 	</select>
+
+	<select id="selectUpperMenuList" parameterType="Map" resultType="egovMap">
+       SELECT DISTINCT MENU_CODE
+            , MENU_NAME 
+        FROM SYS0051M 
+       WHERE 1=1
+     
+     <if test='menuCode !=null and menuCode !="" '>
+         AND UPPER(MENU_CODE) LIKE UPPER(#{menuCode}) || '%'    
+     </if>
+       
+     <if test='menuNm !=null and menuNm !="" '>
+         AND UPPER(MENU_NAME) LIKE UPPER(#{#menuNm}) || '%'
+     </if>
+       ORDER BY MENU_CODE,MENU_NAME
+  </select>
 	
   <delete id="deleteMenuId" parameterType="Map">
       DELETE SYS0051M  WHERE MENU_CODE  = #{menuCode}
-  </delete>	
+  </delete>
+  
+<insert id="insertMenuCode" parameterType="Map">
+      INSERT INTO SYS0051M
+          (                        
+            MENU_CODE
+           ,MENU_NAME
+           ,PGM_CODE
+           ,MENU_LVL
+           ,MENU_ORDER
+           ,STATUS_CODE
+           ,UPPER_MENU_CODE
+           ,CRT_USER_ID
+           ,CRT_DT
+           ,UPD_USER_ID
+           ,UPD_DT
+          ) 
+    VALUES
+       (
+             UPPER(#{menuCode}) 
+            ,#{menuName}
+            ,#{pgmCode}
+            ,#{menuLvl}
+            ,( DECODE (#{menuLvl},'1','10',NVL(#{menuOrder},10))  )
+            ,NVL(#{statusCode},'00')
+            ,( DECODE(#{menuLvl}, '1', '', #{upperMenuCode} ) )
+            ,#{crtUserId}
+            ,SYSDATE
+            ,#{updUserId}
+            ,SYSDATE
+       )
+  </insert>
+  
+  <update id="updateMenuCode" parameterType="Map">
+      UPDATE SYS0051M
+         SET MENU_NAME    = #{menuName}
+            ,PGM_CODE     = #{pgmCode}
+            ,MENU_LVL     = #{menuLvl}
+            ,MENU_ORDER   = #{menuOrder}
+            ,STATUS_CODE  = #{statusCode}
+            ,UPPER_MENU_CODE = #{upperMenuCode}
+            ,CRT_USER_ID  = #{crtUserId}
+            ,CRT_DT       = SYSDATE
+            ,UPD_USER_ID  = #{updUserId}
+            ,UPD_DT       = SYSDATE
+       WHERE MENU_CODE    =  UPPER(#{menuCode}) 
+  </update>    	
 	
 
   <delete id="deletePgmId" parameterType="Map">
@@ -383,7 +445,9 @@
 		      DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION 
 		FROM SYS0013M
 		WHERE DISAB = 0
-		AND CODE_MASTER_ID = #{groupCode}
+		<if test="groupCode != null and groupCode !=''">
+		   AND CODE_MASTER_ID = #{groupCode}
+		</if>
 		<if test="likeValue != null and likeValue !=''">
 		   AND CODE LIKE #{likeValue}||'%'
 		</if>
