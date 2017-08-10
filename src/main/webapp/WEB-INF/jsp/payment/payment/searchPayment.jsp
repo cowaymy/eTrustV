@@ -10,6 +10,9 @@ var viewHistoryGridID;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
+//Edit 등록 화면에 파라미터로 넘길 변수
+var reconLock;
+
 var gridPros_popList = {            
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
@@ -130,7 +133,7 @@ var popEditColumnLayout = [
               iconWidth : 16,
               iconHeight : 16,
              onclick : function(rowIndex, columnIndex, value, item) {
-            	 showDetailHistory(item.payItmId);
+            	 showDetailHistory(item.payItmId, reconLock);
              }
            }
     },
@@ -146,8 +149,8 @@ var popEditColumnLayout = [
               },         
               iconWidth : 16, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
               iconHeight : 16,              
-             onclick : function(rowIndex, columnIndex, value, item) {                
-                showItemEdit(item.payItmId);
+              onclick : function(rowIndex, columnIndex, value, item) {   
+                	showItemEdit(item.payItmId);
              }
            }
     },    
@@ -188,8 +191,9 @@ var popColumnLayout = [
                iconWidth : 16,
                iconHeight : 16,
               onclick : function(rowIndex, columnIndex, value, item) {
-                  showDetailHistory(item.payItmId);
-              }
+            	  showDetailHistory(item.payItmId);
+            	  
+              } 
             }
      }, 
      { dataField:"payId" ,headerText:"TEST",editable : false  },
@@ -327,8 +331,8 @@ function fn_openDivPop(val){
             editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popEditColumnLayout, null, gridPros_popList);
             
             Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
-                console.log(result);
-                
+                console.log("result : " + result);
+
                 //Payment Information
                 $('#edit_txtORNo').text(result.viewMaster.orNo);$("#edit_txtORNo").css("color","red");
                 $('#edit_txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#edit_txtLastUpdator").css("color","red");
@@ -380,6 +384,7 @@ function fn_openDivPop(val){
                 
                 if(result.passReconSize  > 0 ){
                 	$("#edit_branchId").attr('disabled', true);
+                	reconLock = 1;
                 }else{
                 	$("#edit_branchId").attr('disabled', false);
                 }
@@ -427,10 +432,18 @@ function showDetailHistory(payItemId){
     });
 }
 
-function showItemEdit(payItemId){
+function showItemEdit(payItemId, reconLock){
 	
 	var defaultDate = new Date("01-01-1900");    
 	 Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
+
+		 if(reconLock == 1){
+			 $("#txtRunNoCa").attr("readonly", true);
+			 $("#txtRunNoCh").attr("readonly", true);
+			 $("#txtRunningNoCC").attr("readonly", true);
+			 $("#txtRunNoOn").attr("readonly", true);
+		 }
+		 
 		 var payMode = result[0].payItmModeId;
 		 if(payMode == 105){ //cash
 			 $("#item_edit_cash").show();

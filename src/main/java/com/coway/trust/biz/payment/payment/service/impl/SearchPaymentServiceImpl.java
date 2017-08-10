@@ -484,7 +484,8 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		//1131 : Ref Date
 		String tmpRefDt = qryDet.get("payItmRefDt") == null ? "1900-01-01" : String.valueOf(qryDet.get("payItmRefDt"));
 		String qryRefDt = tmpRefDt.split(" ")[0];
-		String tmpPayDt[] = payDet.getPayItemRefDate().split("/");
+		String tmpPay = payDet.getPayItemRefDate().equals("") ? "01/01/1900" : payDet.getPayItemRefDate();
+		String tmpPayDt[] = tmpPay.split("/");
 		String payDt = tmpPayDt[2] + "-" + tmpPayDt[1] + "-" + tmpPayDt[0];
 		System.out.println("### tmpRefDt : " + tmpRefDt + ", qryRefDt : " + qryRefDt + ", tmpPayDt : " + tmpPayDt + ", payDt : " + payDt);
 		if(CommonUtils.getDiffDate(payDt, qryRefDt, "YYYY-MM-DD") != 0){
