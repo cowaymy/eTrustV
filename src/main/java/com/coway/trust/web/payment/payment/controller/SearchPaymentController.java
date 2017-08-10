@@ -863,8 +863,9 @@ public class SearchPaymentController {
 		
 		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
 			//updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId"))); todo 입력받은 COLL_MEM_ID 로 업데이트쳐야됨
+			updMap.put("collMemId", "");
 		}else{
-			//updMap.put("collMemId", "");
+			updMap.put("collMemId", "");
 		}
 			
 		if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
