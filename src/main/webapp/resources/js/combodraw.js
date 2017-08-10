@@ -27,7 +27,7 @@ function doGetComboData(url, pdata , selCode, obj , type, callbackFn){
 	
 	$.ajax({
         type : "GET",
-        url : url,
+        url : getContextPath() + url,
         data : pdata,
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
@@ -47,7 +47,7 @@ function doGetCombo(url, groupCd , selCode, obj , type, callbackFn){
 	
 	$.ajax({
         type : "GET",
-        url : url,
+        url : getContextPath() + url,
         data : { groupCode : groupCd},
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
@@ -67,7 +67,7 @@ function doGetProductCombo(url, stkType , selCode, obj , type, callbackFn){
 	
 	$.ajax({
         type : "GET",
-        url : url,
+        url : getContextPath() + url,
         data : {stkType : stkType},
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
@@ -87,7 +87,7 @@ function doGetComboOrder(url, groupCd, orderVal, selCode, obj , type, callbackFn
 	
 	$.ajax({
         type : "GET",
-        url : url,
+        url : getContextPath() + url,
         data : { groupCode : groupCd, orderValue : orderVal},
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
@@ -107,7 +107,7 @@ function doGetComboSepa(url, groupCd ,separator, selCode, obj , type, callbackFn
 	
 	$.ajax({
         type : "GET",
-        url : url,
+        url : getContextPath() + url,
         data : { groupCode : groupCd , separator : separator},
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
@@ -198,7 +198,7 @@ function doGetComboAddr(url, groupCd ,codevalue ,  selCode, obj , type, callback
 	
 	$.ajax({
         type : "GET",
-        url : url,
+        url : getContextPath() + url,
         data : { groupCode : groupCd , codevalue : codevalue},
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
@@ -238,7 +238,7 @@ function getCdForStockList(obj , value , tag , selvalue){
 function doGetComboForStock(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
 	$.ajax({
         type : "GET",
-        url : url,
+        url : getContextPath() + surl,
         data : { groupCode : groupCd , codevalue : codevalue},
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
