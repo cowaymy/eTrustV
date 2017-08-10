@@ -242,20 +242,20 @@ function removeRow()
 
 function fnSearchProgramPopUp() 
 {
- 	    var popUpObj = Common.popupDiv("/common/searchProgramPop.do"
-          , $("#MainForm").serializeJSON()
-          , null
-          , "true"  // true면 close버튼 클릭시 화면 close
-          );
+   var popUpObj = Common.popupDiv("/common/searchProgramPop.do"
+       , $("#MainForm").serializeJSON()
+       , null
+       , "true"  // true면 close버튼 클릭시 화면 close
+       );
         
 }
 function fnSearchUpperMenuPopUp() 
 {
- 	    var popUpObj = Common.popupDiv("/common/searchUpperMenuPop.do"
-          , $("#MainForm").serializeJSON()
-          , null
-          , "true"  // true면 close버튼 클릭시 화면 close
-          );
+   var popUpObj = Common.popupDiv("/common/searchUpperMenuPop.do"
+       , $("#MainForm").serializeJSON()
+       , null
+       , "true"  // true면 close버튼 클릭시 화면 close
+       );
         
 }
 
@@ -276,7 +276,6 @@ function fnSelectMenuListAjax()
 
 function fnSaveMenuCode() 
 {
-
   if (fnValidationCheck() == false)
 	{
 	  return false;
@@ -285,29 +284,31 @@ function fnSaveMenuCode()
   Common.ajax("POST", "/common/saveMenuId.do"
         , GridCommon.getEditData(myGridID)
         , function(result) 
-         {
+          {
             alert(result.data + " Count Save Success!");
             fnSelectMenuListAjax() ;
             
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
-         } 
-       , function(jqXHR, textStatus, errorThrown) 
-        {
-          try 
-          {
-            console.log("Fail Status : " + jqXHR.status);
-            console.log("code : "        + jqXHR.responseJSON.code);
-            console.log("message : "     + jqXHR.responseJSON.message);
-            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
           } 
-          catch (e) 
+        , function(jqXHR, textStatus, errorThrown) 
           {
-            console.log(e);
-          }
-          alert("Fail : " + jqXHR.responseJSON.message);
-        }); 
-}
+	          try 
+	          {
+	            console.log("Fail Status : " + jqXHR.status);
+	            console.log("code : "        + jqXHR.responseJSON.code);
+	            console.log("message : "     + jqXHR.responseJSON.message);
+	            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	          } 
+	          catch (e) 
+	          {
+	            console.log(e);
+	          }
+	          
+            alert("Fail : " + jqXHR.responseJSON.message);
+            
+          }); 
+  }
 
 //삭제해서 마크 된(줄이 그어진) 행을 복원 합니다.(삭제 취소)
 function removeAllCancel() 
@@ -395,7 +396,8 @@ function fnValidationCheck()
           Common.alert("Please Check Status Code.");
           break;
       }
-    }
+      
+    }  // addlist
 
      
     for (var i = 0; i < udtList.length; i++) 
@@ -456,7 +458,8 @@ function fnValidationCheck()
             Common.alert("Please Check Status Code. ");
             break;
         }
-    }
+        
+    }// udtlist
 
     for (var i = 0; i < delList.length; i++) 
     {
@@ -481,7 +484,8 @@ function fnValidationCheck()
           Common.alert("Menu Code Length must be 9 digits. ");
           break;
         }
-    } 
+        
+     } //delete
     
     return result;
   }
@@ -560,13 +564,11 @@ $(document).ready(function()
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-
     });    
 
 
     $("#delCancel").hide();
     
-
 });   //$(document).ready
 
 
