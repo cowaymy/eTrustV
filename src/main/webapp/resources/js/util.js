@@ -174,7 +174,7 @@ var FormUtil = {
 	 * 필수값 체크
 	 */
 	checkReqValue : function(obj) {
-		if (obj.val().length == 0) {
+		if (obj.val().trim().length == 0) {
 			obj.focus();
 			return true;
 		}

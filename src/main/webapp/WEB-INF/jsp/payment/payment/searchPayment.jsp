@@ -116,23 +116,41 @@ var slaveColumnLayout = [
 	{ dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
     ];
               
-var popColumnLayout = [ 
+var popEditColumnLayout = [    
     { dataField:"history" ,
-    	headerText:" ", 
-    	//headerTooltip :{ show : true, tooltipHtml : "View History" },
-    	renderer : {
-            type : "IconRenderer",
-            iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                "default" : "./assets/office_man.png"// default
-            },
-            iconWidth : 20, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-            iconHeight : 20,
-            //altField : "View History",
-            onclick : function(rowIndex, columnIndex, value, item) {
-                showDetailHistory(item.payItmId);
-            }
-    	}
+        width: 30,
+        headerText:" ", 
+        colSpan : 2,
+       renderer : 
+               {
+              type : "IconRenderer",
+              iconTableRef :  {
+                  "default" : "/resources/images/common/search.png"// default
+              },         
+              iconWidth : 16,
+              iconHeight : 16,
+             onclick : function(rowIndex, columnIndex, value, item) {
+            	 showDetailHistory(item.payItmId);
+             }
+           }
     },
+    { dataField:"history" ,
+        width: 30,
+        headerText:" ", 
+        colSpan : -1,        
+        renderer : 
+               {
+              type : "IconRenderer",
+              iconTableRef :  {
+                  "default" : "/resources/images/common/modified_icon.png"// default
+              },         
+              iconWidth : 16, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+              iconHeight : 16,              
+             onclick : function(rowIndex, columnIndex, value, item) {                
+                showItemEdit(item.payItmId);
+             }
+           }
+    },    
     { dataField:"payId" ,headerText:"TEST",editable : false  },
     { dataField:"codeName" ,headerText:"Mode",editable : false},
     { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
@@ -156,6 +174,47 @@ var popColumnLayout = [
     { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
     ];
 
+var popColumnLayout = [    
+     { dataField:"history" ,
+         width: 30,
+         headerText:" ", 
+       
+        renderer : 
+                {
+               type : "IconRenderer",
+               iconTableRef :  {
+                   "default" : "/resources/images/common/search.png"// default
+               },         
+               iconWidth : 16,
+               iconHeight : 16,
+              onclick : function(rowIndex, columnIndex, value, item) {
+                  showDetailHistory(item.payItmId);
+              }
+            }
+     }, 
+     { dataField:"payId" ,headerText:"TEST",editable : false  },
+     { dataField:"codeName" ,headerText:"Mode",editable : false},
+     { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
+     { dataField:"c7" ,headerText:"CardType",editable : false },
+     { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
+     { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
+     { dataField:"payItmCcHolderName" ,headerText:"CCHolder" ,editable : false },
+     { dataField:"payItmCcExprDt" ,headerText:"CCExpiryDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+     { dataField:"" ,headerText:"CRCNo" ,editable : false },
+     { dataField:"payItmChqNo" ,headerText:"ChequeNo" ,editable : false },
+     { dataField:"name" ,headerText:"IssueBank" ,editable : false },                   
+     { dataField:"payItmAmt" ,headerText:"Amount" ,editable : false },
+     { dataField:"c8" ,headerText:"CRCMode" ,editable : false },
+     { dataField:"accDesc" ,headerText:"BankAccount" ,editable : false },
+     { dataField:"payItmRefDt" ,headerText:"RefDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+     { dataField:"payItmAppvNo" ,headerText:"ApprNo." ,editable : false },
+     { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
+     { dataField:"c4" ,headerText:"EFT" ,editable : false },
+     { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
+     { dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false },
+     { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
+     ];
+     
 var popSlaveColumnLayout = [ 
     { dataField:"trxId" ,headerText:"TrxNo",editable : false},
     { dataField:"trxDt" ,headerText:"TrxDate",editable : false  },
@@ -265,7 +324,7 @@ function fn_openDivPop(val){
 	}else if(val == "EDIT"){
 		if(selectedGridValue !=  undefined){
             $("#popup_wrap2").show();
-            editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popColumnLayout, null, gridPros_popList);
+            editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popEditColumnLayout, null, gridPros_popList);
             
             Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#detailForm").serialize(), function(result) {
                 console.log(result);
@@ -368,25 +427,18 @@ function showDetailHistory(payItemId){
 
 function showItemEdit(payItemId){
 	
-	//var payId = 166; var payItemId = 170; //cash
-	//var payId = 2273; var payItemId = 2222; // online
-	//var payId = 3877; var payItemId = 3853; //credit card
-    //var payId = 21; var payItemId = 22; //cheque
-	
 	var defaultDate = new Date("01-01-1900");    
 	 Common.ajax("GET", "/payment/selectPaymentItem", {"payItemId" : payItemId}, function(result) {
 		 var payMode = result[0].payItmModeId;
 		 if(payMode == 105){ //cash
 			 $("#item_edit_cash").show();
-			 $("#payItemId").val(payItemId);
-			 $("#payId").val(payId);
+			 $("#payItemId").val(payItemId);			 
 			 $("#paymentCa").text(result[0].codeName);
 	         $("#amountCa").text(result[0].payItmAmt);
 	         $("#bankAccCa").text(result[0].accId + result[0].accDesc);
 		 }else if(payMode == 106){//cheque
 			 $("#item_edit_cheque").show();
-			 $("#payItemIdCh").val(payItemId);
-             $("#payIdCh").val(payId);
+			 $("#payItemIdCh").val(payItemId);             
 			 $("#paymentCh").text(result[0].codeName);
 			 $("#amountCh").text(result[0].payItmAmt);
 			 $("#bankAccCh").text(result[0].accId + result[0].accDesc);
@@ -395,16 +447,13 @@ function showItemEdit(payItemId){
 			 $("#chequeNo").val(result[0].payItmChqNo);
 			 $("#txtRefNumberCh").val(result[0].payItmRefNo);
 			 var refDate = new Date(result[0].payItmRefDt);
-			 if((refDate.getTime() > defaultDate.getTime()))
-			{    
-				 console.log("refDate > defaultDate : " + (refDate.getTime() > defaultDate.getTime()));
+			 if((refDate.getTime() > defaultDate.getTime())){
 				 $("#txtRefDateCh").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
 			}
 			 $("#txtRunNoCh").val(result[0].payItmRunngNo);
 			 $("#tareaRemarkCh").val(result[0].payItmRem);
 		}else if(payMode == 107){//creditcard
-			  $("#payItemIdCC").val(payItemId);
-			  $("#payIdCC").val(payId);
+			  $("#payItemIdCC").val(payItemId);			  
 			  $("#item_edit_credit").show();
 			  $("#paymentCC").text(result[0].codeName);
 			  $("#amountCC").text(result[0].payItmAmt);
@@ -412,16 +461,14 @@ function showItemEdit(payItemId){
 	          $("#cmbIssuedBankCC").val(result[0].payItmIssuBankId);
 	          $("#CCNo").text(result[0].payItmOriCcNo);
 	          $("#txtCrcNo").val(result[0].payItmOriCcNo);
-	          console.log("txtCrcNo : " + $("#txtCrcNo").val());
 	          $("#txtCCHolderName").val(result[0].payItmCcHolderName);
+	          
 	          var exDt =  result[0].payItmCcExprDt;
-	          //exDt = '03/15';
 	          var exMonth = 0;
 	          var exYear = 0;
 	          var exDate = new Date();
 	          if(exDt != undefined){
 	        	  var expiryDate = exDt.split('/');
-	        	  console.log("expiryDate : " + expiryDate); 
 	        	  exMonth = expiryDate[0];
 	        	  exYear = expiryDate[1];
 	        	  
@@ -436,18 +483,16 @@ function showItemEdit(payItemId){
 	        	  exDate.setDate("01");
 	        	  
 	        	  var exMonthStr = exDate.getMonth() < 10 ? "0" + exDate.getMonth() : exDate.getMonth();
-	          
-	        	  console.log("exDate : " + exDate + ", exDate > defaultDate" + (exDate > defaultDate)); 
-	              
+	            
 	              if((exDate > defaultDate))
 	                  $("#txtCCExpiry").val("01" + "/" + (exMonthStr) + "/" + exDate.getFullYear());
 	              else
-	                  $("#txtCCExpiry").val();
+	                  $("#txtCCExpiry").val("");
 	          }
 	          
 	          if(result[0].payItmCardTypeId > 0)
 	        	  $("#cmbCardTypeCC").val(result[0].payItmCardTypeId).prop("selected", true);
-	          console.log("cmbCreditCardTypeCC : " + result[0].payItmCcTypeId + ", " + $("#cmbCreditCardTypeCC").val());
+	          
 	          $("#cmbCreditCardTypeCC").val(result[0].payItmCcTypeId).prop("selected", true);
 	          if(result[0].isOnline == 'On')
 	        	  $("#creditCardModeCC").text('Online');
@@ -465,18 +510,17 @@ function showItemEdit(payItemId){
 		 }else if(payMode == 108){//online
 			 $("#item_edit_online").show();
 			 $("#payItemIdOn").val(payItemId);
-             $("#payIdOn").val(payId);
-			 $("#paymentOn").text(result[0].codeName);
+             $("#paymentOn").text(result[0].codeName);
              $("#amountOn").text(result[0].payItmAmt);
              $("#bankAccOn").text(result[0].accId + result[0].accDesc);
              $("#cmbIssuedBankOn").val(result[0].payItmIssuBankId);
              $("#txtRefNoOn").val(result[0].payItmRefNo);
+             
              var refDate = new Date(result[0].payItmRefDt);
-             if((refDate.getTime() > defaultDate.getTime()))
-            {
-                 console.log("refDate > defaultDate : " + (refDate.getTime() > defaultDate.getTime()));
+             
+             if((refDate.getTime() > defaultDate.getTime())){
                  $("#txtRefDateOn").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
-            }
+             }
              $("#txtEFTNoOn").val(result[0].payItmEftNo);
              $("#txtRunNoOn").val(result[0].payItmRunngNo);
              $("#tareaRemarkOn").val(result[0].payItmRem);
@@ -1102,8 +1146,7 @@ function goRcByBs() {
         </tr>
         </tbody>
     </table>
-    <input type="hidden" id="payItemId" name="payItemId"/>
-    <input type="hidden" id="payId" name="payId"/>
+    <input type="hidden" id="payItemId" name="payItemId"/>    
     </form>
     </section>
     <!-- pop_body end -->
@@ -1121,7 +1164,6 @@ function goRcByBs() {
     <section class="pop_body">
     <form id="creditCardForm" name="creditCardForm">
     <input type="hidden" id="payItemIdCC" name="payItemIdCC"/>
-    <input type="hidden" id="payIdCC" name="payIdCC"/>
     <input type="hidden" id="txtCrcNo" name="txtCrcNo" />
     <table class="type1">
         <colgroup>
@@ -1298,7 +1340,6 @@ function goRcByBs() {
         </tbody>
     </table>
     <input type="hidden" id="payItemIdCh" name="payItemIdCh"/>
-    <input type="hidden" id="payIdCh" name="payIdCh"/>
     <input type="hidden" id="chequeNo" name="chequeNo" />
     </form>
     </section>
@@ -1378,8 +1419,7 @@ function goRcByBs() {
         </tr>
         </tbody>
     </table>
-    <input type="hidden" id="payItemIdOn" name="payItemIdOn"/>
-    <input type="hidden" id="payIdOn" name="payIdOn"/>
+    <input type="hidden" id="payItemIdOn" name="payItemIdOn"/>    
     </form>
     </section>
     <!-- pop_body end -->
