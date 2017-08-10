@@ -1,5 +1,6 @@
 package com.coway.trust.web.organization;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,13 +11,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.organization.MemberEventService;
-
+import com.coway.trust.biz.sample.SampleDefaultVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.biz.organization.MemberPromoEntryVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller 
@@ -103,6 +109,59 @@ public class MemberEventListController {
 		
 	
 
+	
+	@RequestMapping(value = "/selectPromteDemoteList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPromteDemoteList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
+		
+		List<EgovMap> selectPromote = memberEventService.selectPromteDemoteList(params);		
+		logger.debug("selectPromote : {}", selectPromote);
+		return ResponseEntity.ok(selectPromote);
+	}
+	
+
+	@RequestMapping(value = "/selectMemberPromoEntries" , method = RequestMethod.GET)
+	public String selectMemberPromoEntries(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {	
+		String success = "0";
+//		int promoId = 0;
+//		List<EgovMap> promoEntries = null;
+		
+		Map<String, Object> param = null;
+		param = new HashMap<String, Object>();		
+		param.put("promoId", params.get("promoId"));
+		
+//		String promoId = request.getParameterValues("promoId");	
+//		params.put("promoId", promoId);
+
+		memberEventService.selectMemberPromoEntries(param);		
+		
+//		List<EgovMap> promoEntries = memberEventService.selectMemberPromoEntries(param);		
+//		logger.debug("promoEntries : {}", promoEntries);
+//
+//		model.put("promoEntries", promoEntries);
+
+		return success;
+		
+	}
+	
+	
+//	@RequestMapping(value = "/updateStockList.do", method = RequestMethod.POST)
+//	public ResponseEntity<ReturnMessage> updateMemberPromoEntry(@RequestBody FormList formList,
+//			Model model) {
+//		
+//		
+//		
+//		
+//		
+//	}
+
+	
+	
+		
+	
+	
+	
+	
+	
 	
 	
 	
