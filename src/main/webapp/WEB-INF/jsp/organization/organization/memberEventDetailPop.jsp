@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
@@ -23,9 +24,250 @@
 
 <script type="text/javaScript" language="javascript">
 
+ // AUIGrid 생성 후 반환 ID
+    var myGridID;   
+    var gridValue;
+    var newGridID;
+    
+    var option = {
+        width : "1000px", // 창 가로 크기
+        height : "600px" // 창 세로 크기
+    };
+
+
+	//Start AUIGrid
+	$(document).ready(function() {
+        createAUIGrid();
+        fn_confirm();
+
+    });
+
+
+
 	function fn_close(){
 	    window.close();
 	}
+
+
+    function fn_confirm(){
+        //체크로직
+
+        //버튼 활성화
+        
+        alert("aaaaaaaaa:::");
+        
+        //그리드 활성화
+        //조회결과 리턴
+   	            
+        Common.ajax("GET", "/organization/selectPromteDemoteList", $("#myForm").serialize(), function(result) {        
+	        AUIGrid.setGridData(myGridID, result);
+        });               
+    }
+ 
+
+
+
+     function fn_confirmMemberEventPromote(val){
+        
+//        alert("fn_confirmMemberEventPromote val::::::::"+ $("promoId"));
+//        alert("fn_confirmMemberEventPromote val::::::::"+ val);
+        alert("fn_confirmMemberEventPromote val::::::::"+ ${promoInfo.promoId});
+        
+        var jsonObj = {
+        PromoID : $("#promoId").val()
+       
+        };
+    
+        Common.ajax("GET", "/organization/selectMemberPromoEntries" ,  $("#myForm").serialize() , function(result) {
+            AUIGrid.setGridData(newGridID, result);
+        });
+    }
+
+
+
+
+/*     function fn_getNewDeptCodeDocNoID() {//
+    
+    
+    } */
+
+
+     function fn_saveEventMap(){
+        
+        //저장
+        var vPromoId = ${promoInfo.promoId}; //promoId
+        var vStatusId = ${promoInfo.stusId}; //statusId 
+        var vPromoTypeId = ${promoInfo.promoTypeId};
+         
+         alert("vStatusId::::" + vStatusId);
+         
+        if (vStatusId == 10) {
+                 alert("vStatusId == 10::::" + vStatusId);
+                //Cancel */
+
+                //as-is logic
+           /*   if (oo.DoCancelMemberEvent(promoEntry))
+			            {
+			                MemberEventView view = new MemberEventView();
+			                view = ucMemberEventView.LoadMemberEventInfo(promoEntry.PromoID);
+			                Panel_Action.Enabled = false;
+			                btnSave.Visible = false;
+			                RadWindowManager1.RadAlert("<b>This event has been cancelled.</b>", 450, 160, "Event Cancelled", "callBackFn", null);
+			            }
+			            else
+			            {
+			                RadWindowManager1.RadAlert("<b>Failed to cancel this event. Please try again later.</b>", 450, 160, "Failed To Cancel", "callBackFn", null);
+			            }  */
+			            
+			             return false;
+        
+        } else {
+             alert("vStatusId == else::::" + vStatusId);
+             
+             //Complete
+             if (vPromoTypeId == 747) {
+                 alert("vPromoTypeId::::" + vPromoTypeId);
+      
+
+      
+                   if (fn_confirmMemberEventPromote(vPromoId))  {
+                        alert("fn_confirmMemberEventPromote:::::");
+
+                   }  else  {
+
+
+                   }
+             }else if (vPromoTypeId == 748){
+                    fn_confirmMemberEventPromote(vPromoId);
+                    
+/*                     if() {
+                    
+                    }else {
+                          alert("Failed to confirm this event. Please try again later.");                    
+                    } */
+             } 
+        }
+
+        //vaildate
+        
+        
+                
+         var jsonObj = {
+            promoId : myForm.promoId.value        
+        };
+
+  	    Common.ajax("POST", "/organization/updateMemberPromoEntry.do", jsonObj ,fn_success, fn_fail);
+ 
+    } 
+   
+   
+    
+		function fn_tabSize(){
+		    AUIGrid.resize(myGridID,1000,400); 
+		}
+
+    
+        function createAUIGrid(){
+        // AUIGrid 칼럼 설정
+        var columnLayout = [ {
+                    dataField : "memId",
+                    headerText : "memId",
+                    width : 0
+                }, {
+                    dataField : "memType",
+                    headerText : "memType",
+                    width : 0
+                }, {
+                    dataField : "memberid1",
+                    headerText : "memberid1",
+                    width : 100
+                }, {
+                    dataField : "memCode",
+                    headerText : "Member Code.",
+                    width : 100
+                }, {
+                    dataField : "name",
+                    headerText : "Member Name.",
+                    width : 120
+                }, {
+                    dataField : "code",
+                    headerText : "Status",
+                    width : 120
+                }, {
+                    dataField : "",
+                    headerText : "Upcode",
+                    width : 20,
+                    colSpan : 2,
+                    renderer : {
+				            type : "CheckBoxEditRenderer",
+				            editable : true
+				      }
+                }, {
+                    dataField : "",
+                    width : 120,
+                    colSpan : -1,
+        		    editRenderer : {// 셀 자체에 드랍다운리스트 출력하고자 할 때
+			            type : "DropDownListRenderer",
+			            list : ["IPhone 5S", "Galaxy S5", "IPad Air", "Galaxy Note3", "LG G3", "Nexus 10"]
+			         }
+                }, {
+                    dataField : "status",
+                    headerText : "",
+                    width : 120,
+                    renderer : {
+				            type : "ButtonRenderer",
+				            labelText : "Transfer",
+				            onclick : function(rowIndex, columnIndex, value, item) {
+				                alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
+				            }
+				     }
+            
+            }];
+            
+            
+            var newColumn=[
+			      {dataField:"0", headerText:"OrderNo"},
+			      {dataField:"1", headerText:"Month"},
+			      {dataField:"2", headerText:"Day"},
+			      {dataField:"3", headerText:"Year"},
+			      {dataField:"4", headerText:"RejectCode"}
+			];
+
+            // 그리드 속성 설정
+            var gridPros = {
+                
+                // 페이징 사용       
+                usePaging : true,
+                
+                // 한 화면에 출력되는 행 개수 20(기본값:20)
+                pageRowCount : 20,
+                
+                editable : true,
+                
+                showStateColumn : true, 
+                
+                displayTreeOpen : true,
+                
+                selectionMode : "singleRow",
+                    
+                headerHeight : 30,
+                
+                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                skipReadonlyColumns : true,
+                
+                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                wrapSelectionMove : true,
+                
+                // 줄번호 칼럼 렌더러 출력
+                showRowNumColumn : true,
+        
+            };
+
+                myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+                newGridID = AUIGrid.create("#grid_wrap_new", newColumn, gridPros);
+    }
+    
+    
 
 </script>
 
@@ -38,6 +280,7 @@
 <h1>Member Promote/Demote Confirmation</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_confirm()">CONFIRM</a></p></li>       
 </ul>
 </header><!-- pop_header end -->
 
@@ -120,8 +363,11 @@
 </section><!-- search_table end -->
 
 <section class="search_table"><!-- search_table start -->
-
-
+ <form name="myForm" id="myForm">
+     <td>
+    <span><c:out value="${promoInfo.promoId}"/></span>
+    </td>
+    <input type="hidden" id="promoId" name="promoId" value="${promoInfo.promoId}">
 <aside class="title_line"><!-- title_line start -->
 <h2>Request Information</h2>
 </aside><!-- title_line end -->
@@ -137,9 +383,9 @@
     <th scope="row">Confirm Status</th>
     <td>
     <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+         <option value="" selected></option>
+         <option value="04">Complete this event</option>
+         <option value="10">Cancel this event</option>
     </select>
     </td>
 </tr>
@@ -152,12 +398,14 @@
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역
+<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+<div id="grid_wrap_new"  style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
-
+    </form>
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="javascript:fn_saveEventMap();">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
