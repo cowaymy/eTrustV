@@ -311,7 +311,7 @@ function fn_openDivPop(val){
 	            AUIGrid.setGridData(popSlaveGridID, result.selectPaymentDetailSlaveList);
 	            
 	        },function(jqXHR, textStatus, errorThrown) {
-	            Common.alert("실패하였습니다.");
+	            Common.alert("Invalid item selected.");
 
 	        });
 	        
@@ -341,6 +341,8 @@ function fn_openDivPop(val){
                 var defaultDate = new Date("01/01/1900");
                 if((refDate.getTime() > defaultDate.getTime())){
                     $("#edit_txtTRIssueDate").val(result.viewMaster.trIssuDt);
+                }else{
+                	$("#edit_txtTRIssueDate").val("");
                 }
                 
                 $('#edit_txtProductCategory').text(result.viewMaster.productCtgryName);
@@ -385,7 +387,7 @@ function fn_openDivPop(val){
                 //팝업그리드 뿌리기
                 AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailView);
             },function(jqXHR, textStatus, errorThrown) {
-                Common.alert("실패하였습니다.");
+            	Common.alert("Failed to update. Please try again later.");
 
             });
             
@@ -597,7 +599,7 @@ function saveChanges() {
         Common.setMsg("<spring:message code='sys.msg.success'/>");
 
 	}, function(jqXHR, textStatus, errorThrown) {
-        Common.alert("실패하였습니다.");
+        Common.alert("Failed to update. Please try again later.");
     });
 }
 
