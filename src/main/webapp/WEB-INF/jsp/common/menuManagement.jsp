@@ -53,22 +53,23 @@ var MainColumnLayout =
                 iconPosition : "aisleRight",
                 iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
                   "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.gif" // 
-                  ," " : "xx"
+                 // ," " : "xx"
                   
                 },
           
-                onclick : function(rowIndex, columnIndex, value, item) {
-                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
-                    if (item.menuLvl == "1")
-                    {
-                    	Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
-                      return false;
-                    }
-                   gSelMainRowIdx = rowIndex;
-                   fnSearchUpperMenuPopUp(); 
-                  }
-            } 
-                   
+                onclick : function(rowIndex, columnIndex, value, item) 
+                         {
+				                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
+				                    if (item.menuLvl == "1")
+				                    {
+				                    	Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
+				                      return false;
+				                    }
+				                    
+				                    gSelMainRowIdx = rowIndex;
+				                    fnSearchUpperMenuPopUp(); 
+				                  }
+                } // IconRenderer
         },{
             dataField : "menuCode",
             headerText : "MenuId",
@@ -132,14 +133,15 @@ var MainColumnLayout =
 
 function getStatusComboListAjax(callBack) 
 {
-	  Common.ajaxSync("GET", "/common/selectCodeList.do"
+	  //Common.ajaxSync("GET", "/common/selectCodeList.do"
+	  Common.ajaxSync("GET", "/common/selectStatusCategoryCdList.do"
     	           , $("#MainForm").serialize()
     	           , function(result) 
     	           {
 					          for (var i = 0; i < result.length; i++) 
 						        {
 					        	  var list = new Object();
-							            list.id = result[i].code;
+							            list.id = result[i].stusCodeId;
 							            list.value = result[i].codeName ;
 							            StatusCdList.push(list);
 							      }
@@ -206,7 +208,7 @@ function addRowMenu()
   item.pgmName  ="";
   item.menuOrder ="";
   item.upperMenuCode ="";
-  //item.statusCode    ="00";
+  item.statusCode    ="1";
   // parameter
   // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
   // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -396,6 +398,14 @@ function fnValidationCheck()
           Common.alert("Please Check Status Code.");
           break;
       }
+
+      if ( menuLvl != "1" && upperMenuCode.length != 0 && menuCode == upperMenuCode)
+      {
+          result = false;
+          Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
+          break;
+      }
+         
       
     }  // addlist
 
@@ -458,18 +468,19 @@ function fnValidationCheck()
             Common.alert("Please Check Status Code. ");
             break;
         }
+
+        if ( menuLvl != "1" && upperMenuCode.length != 0 && menuCode == upperMenuCode)
+        {
+            result = false;
+            Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
+            break;
+        }
         
     }// udtlist
 
     for (var i = 0; i < delList.length; i++) 
     {
         var menuCode  = delList[i].menuCode;
-        var menuName  = delList[i].menuName;
-        var pgmCode   = delList[i].pgmCode;
-        var menuLvl   = delList[i].menuLvl;
-        var menuOrder = delList[i].menuOrder;
-        var statusCode = delList[i].statusCode;
-        var upperMenuCode = delList[i].upperMenuCode;
         
         if (menuCode == "" || menuCode.length == 0) 
         {
@@ -507,6 +518,11 @@ $(document).ready(function()
        }
 
     });
+
+    $("#menuCode").bind("keyup", function() 
+	  {
+	    $(this).val($(this).val().toUpperCase());
+	  });
     
     $("#pgmCode").keydown(function(key) 
     {
@@ -514,7 +530,11 @@ $(document).ready(function()
        {
          fnSelectMenuListAjax();
        }
+    });
 
+    $("#pgmCode").bind("keyup", function() 
+    {
+      $(this).val($(this).val().toUpperCase());
     });
 
 /***************************************************[ Main GRID] ***************************************************/    
@@ -593,8 +613,10 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
-<input type ="hidden" id="groupCode" name="groupCode" value="310"/>
-<input type ="hidden" id="selMenuId" name="selMenuId" value="310"/>
+<!-- <input type ="hidden" id="groupCode" name="groupCode" value="310"/>
+<input type ="hidden" id="selMenuId" name="selMenuId" value="310"/> -->
+<input type ="hidden" id="selCategoryId" name="selCategoryId" value="7"/>
+<input type ="hidden" id="parmDisab" name="parmDisab" value="0"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -608,11 +630,11 @@ $(document).ready(function()
 <tr>
 	<th scope="row">Menu Id</th>
 	<td>
-	<input type="text" id="menuCode" name="menuCode" title="" placeholder="" class="w100p" />
+	 <input type="text" id="menuCode" name="menuCode" title="" placeholder="" class="w100p" style="text-transform: uppercase;"/>
 	</td>
 	<th scope="row">Program Id</th>
 	<td>
-	<input type="text" id="pgmCode" name="pgmCode" title="" placeholder="" class="w100p" />
+	 <input type="text" id="pgmCode" name="pgmCode" title="" placeholder="" class="w100p" />
 	</td>
 </tr>
 </tbody>
