@@ -338,16 +338,16 @@ public class SearchPaymentController {
     		boolean valid = true;
     		
     		String refNo = String.valueOf(params.get("txtReferenceNoCa")).trim();
-    		if(refNo.length() > 20){
-    			valid = false;
-    			message += "* Reference number cannot exceed length of 20.<br>";
-    		}
     		String refDate = String.valueOf(params.get("txtRefDateCa")).trim();
     		String remark = String.valueOf(params.get("tareaRemarkCa")).trim();
     		String runNo = String.valueOf(params.get("txtRunNoCa")).trim();
     		String EFTNo = "";
     		int payItemId = Integer.parseInt(params.get("payItemId").toString());
     
+    		if(refNo.length() > 20){
+    			valid = false;
+    			message += "* Reference number cannot exceed length of 20.<br>";
+    		}
     		
     		if(!valid){
     			msg.setMessage(message);

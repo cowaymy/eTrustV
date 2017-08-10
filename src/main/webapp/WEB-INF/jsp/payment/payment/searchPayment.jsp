@@ -434,19 +434,29 @@ function showItemEdit(payItemId){
 		 var payMode = result[0].payItmModeId;
 		 if(payMode == 105){ //cash
 			 $("#item_edit_cash").show();
-			 $("#payItemId").val(payItemId);			 
+			 $("#payItemId").val(payItemId);		
+			 
 			 $("#paymentCa").text(result[0].codeName);
 	         $("#amountCa").text(result[0].payItmAmt);
 	         $("#bankAccCa").text(result[0].accId + result[0].accDesc);
+	         $("#txtReferenceNoCa").val(result[0].payItmRefNo);
+	         var refDate = new Date(result[0].payItmRefDt)
+	         if((refDate.getTime() > defaultDate.getTime()))
+	        	 $("#txtRefDateCa").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
+	         $("#txtRunNoCa").val(result[0].payItmRunngNo);
+	         $("#tareaRemarkCa").val(result[0].payItmRem);
 		 }else if(payMode == 106){//cheque
 			 $("#item_edit_cheque").show();
-			 $("#payItemIdCh").val(payItemId);             
+		 
+			 $("#payItemIdCh").val(payItemId);  
+			 
 			 $("#paymentCh").text(result[0].codeName);
 			 $("#amountCh").text(result[0].payItmAmt);
 			 $("#bankAccCh").text(result[0].accId + result[0].accDesc);
+			 
 			 $("#sIssuedBankCh").val(result[0].payItmIssuBankId);
 			 $("#chequeNumberCh").text(result[0].payItmChqNo);
-			 $("#chequeNoCh").val(result[0].payItmChqNo);
+			 $("#chequeNoCh").val(result[0].payItmChqNo);//parameter
 			 $("#txtRefNumberCh").val(result[0].payItmRefNo);
 			 var refDate = new Date(result[0].payItmRefDt);
 			 if((refDate.getTime() > defaultDate.getTime())){
@@ -455,11 +465,14 @@ function showItemEdit(payItemId){
 			 $("#txtRunNoCh").val(result[0].payItmRunngNo);
 			 $("#tareaRemarkCh").val(result[0].payItmRem);
 		}else if(payMode == 107){//creditcard
-			  $("#payItemIdCC").val(payItemId);			  
+			  $("#payItemIdCC").val(payItemId);
+		
 			  $("#item_edit_credit").show();
+			  
 			  $("#paymentCC").text(result[0].codeName);
 			  $("#amountCC").text(result[0].payItmAmt);
 	          $("#bankAccCC").text(result[0].accId + result[0].accDesc);
+	          
 	          $("#cmbIssuedBankCC").val(result[0].payItmIssuBankId);
 	          $("#CCNo").text(result[0].payItmOriCcNo);
 	          $("#txtCrcNo").val(result[0].payItmOriCcNo);
@@ -508,21 +521,25 @@ function showItemEdit(payItemId){
 	        	  var tmpDate = refDt.getDate() < 10 ? "0" + (refDt.getDate()+1) : (refDt.getDate() + 1);
 	        	  $("#txtRefDateCC").val(refDt.getDate() + "/" + tmpMonth + "/" + refDt.getFullYear());
 	          }
+	          $("#txtRunningNoCC").val(result[0].payItmRunngNo);
 	          $("#tareaRemarkCC").val(result[0].payItmRem);
 		 }else if(payMode == 108){//online
 			 $("#item_edit_online").show();
+		 
 			 $("#payItemIdOn").val(payItemId);
+			 
              $("#paymentOn").text(result[0].codeName);
              $("#amountOn").text(result[0].payItmAmt);
              $("#bankAccOn").text(result[0].accId + result[0].accDesc);
+             
              $("#cmbIssuedBankOn").val(result[0].payItmIssuBankId);
              $("#txtRefNoOn").val(result[0].payItmRefNo);
              
              var refDate = new Date(result[0].payItmRefDt);
-             
              if((refDate.getTime() > defaultDate.getTime())){
                  $("#txtRefDateOn").val(refDate.getDate() + "/" + (refDate.getMonth()+1) + "/" + refDate.getFullYear());
              }
+             
              $("#txtEFTNoOn").val(result[0].payItmEftNo);
              $("#txtRunNoOn").val(result[0].payItmRunngNo);
              $("#tareaRemarkOn").val(result[0].payItmRem);
@@ -1324,7 +1341,7 @@ function goRcByBs() {
         <tr>
             <th>Running No</th>
             <td id="runningNoCh">
-                <p><input type="text" name="txtRunNoCh" id="txtRunNoCh" placeholder="runningNo" readonly="readonly"/></p>
+                <p><input type="text" name="txtRunNoCh" id="txtRunNoCh" placeholder="runningNo"/></p>
             </td>
         </tr>
         <tr>
@@ -1404,7 +1421,7 @@ function goRcByBs() {
         <tr>
             <th>Running No</th>
             <td id="runningNoCh">
-                <p><input type="text" name="txtRunNoOn" id="txtRunNoOn"/></p>
+                <p><input type="text" name="txtRunNoOn" id="txtRunNoOn" placeholder="runningNo"/></p>
             </td>
         </tr>
         <tr>
