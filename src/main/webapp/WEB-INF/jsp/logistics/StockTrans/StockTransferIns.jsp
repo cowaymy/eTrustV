@@ -65,7 +65,6 @@ $(document).ready(function(){
      reqcolumnLayout=[{dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
                       {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30},
                       {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30},
-                      {dataField:"avqty"     ,headerText:"Available Qty"  ,width:120    ,height:30},
                       {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
                       {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
@@ -136,6 +135,11 @@ $(function(){
     	f_AddRow();
     });
     $('#reqdel').click(function(){
+    	AUIGrid.removeRow(reqGrid, "selectedIndex");
+        AUIGrid.removeSoftRows(reqGrid);
+    });
+    $('#list').click(function(){
+    	document.location.href = '/logistics/stocktransfer/StocktransferList.do';
     });
     $('#save').click(function() {
     	if (f_validatation('save')){
@@ -482,7 +486,7 @@ function f_multiCombo() {
 </div><!-- divine_auto end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
 </ul>
 
 </section><!-- search_result end -->

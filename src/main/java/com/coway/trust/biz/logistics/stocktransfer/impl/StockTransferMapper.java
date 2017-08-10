@@ -10,6 +10,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface StockTransferMapper {
 	List<EgovMap> selectStockTransferMainList(Map<String, Object> params);
 	
+	List<EgovMap> selectStockTransferDeliveryList(Map<String, Object> params);
+	
 	String selectStockTransferSeq();
 	
 	void insStockTransferHead(Map<String, Object> params);
@@ -19,6 +21,8 @@ public interface StockTransferMapper {
 	void updStockTransfer(Map<String, Object> params);
 	
 	List<EgovMap> selectStockTransferNoList();
+	
+	List<EgovMap> selectDeliveryNoList();
 	
 	Map<String, Object> selectStockTransferHead(String param);
 	
@@ -33,4 +37,10 @@ public interface StockTransferMapper {
 	void deliveryStockTransferIns(Map<String, Object> params);
 	
 	void deliveryStockTransferDetailIns(Map<String, Object> params);
+	
+	String selectDeliveryNobyReqsNo(Map<String, Object> params);
+	
+	void StockTransferItmDel(Map<String, Object> params);
+	
+	void deliveryStockTransferItmDel(Map<String, Object> params);
 }

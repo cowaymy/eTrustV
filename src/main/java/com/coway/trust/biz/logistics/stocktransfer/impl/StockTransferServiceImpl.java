@@ -39,6 +39,12 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return stocktran.selectStockTransferMainList(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectStockTransferDeliveryList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stocktran.selectStockTransferDeliveryList(params);
+	}
 
 	@Override
 	public void insertStockTransferInfo(Map<String, Object> params) {
@@ -65,9 +71,15 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public List<EgovMap> selectStockTransferNoList() {
+	public List<EgovMap> selectStockTransferNoList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return stocktran.selectStockTransferNoList();
+		List<EgovMap> list = null;
+		if ("stock".equals((String)params.get("groupCode"))){
+			list = stocktran.selectStockTransferNoList();
+		}else{
+			list = stocktran.selectDeliveryNoList();
+		}
+		return list;
 	}
 
 	@Override
@@ -138,13 +150,17 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	
 	@Override
 	public void deliveryStockTransferInfo(Map<String, Object> params) {
-		List<Object> updList = (List<Object>) params.get("upd");
 		
-		String seq = (String)stocktran.selectDeliveryStockTransferSeq();
+		List<Object> updList = (List<Object>) params.get("upd");
 		
 		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
 		
 		fMap.put("reqno" , fMap.get("reqno")   );
+		String seq = stocktran.selectDeliveryNobyReqsNo(fMap);
+		if (seq == null || "0".equals(seq)){
+			seq = (String)stocktran.selectDeliveryStockTransferSeq(); 
+		}
+				
 		fMap.put("delno" , seq                 );
 		fMap.put("ttype" , fMap.get("smtype")  );
 		fMap.put("userId", params.get("userId"));	
@@ -161,5 +177,38 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}		
 	}
-
+	@Override
+	public void deliveryStockTransferItmDel(Map<String, Object> params) {
+		List<Object> delList = (List<Object>) params.get("del");
+		
+		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
+		
+		if (delList.size() > 0){
+			for (int i = 0 ; i < delList.size() ; i++){
+	    		Map<String, Object> insMap = (Map<String, Object>) delList.get(i);
+	    		insMap.put("reqno" , fMap.get("reqno")   );
+	    		stocktran.StockTransferItmDel(insMap);
+	    		stocktran.deliveryStockTransferItmDel(insMap);
+			}
+		}		
+	}
+	
+	@Override
+	public void StocktransferReqDelivery(Map<String, Object> params) {
+		
+		List<Object> updList = (List<Object>) params.get("check");
+		
+		String seq = (String)stocktran.selectDeliveryStockTransferSeq();
+		
+		if (updList.size() > 0){
+			Map<String, Object> insMap = null;
+			for (int i = 0 ; i < updList.size() ; i++){
+	    		insMap = (Map<String, Object>) updList.get(i);
+	    		insMap.put("delno" , seq                 );
+	    		insMap.put("userId", params.get("userId"));
+	    		stocktran.deliveryStockTransferDetailIns(insMap);
+			}
+			stocktran.deliveryStockTransferIns(insMap);
+		}		
+	}
 }

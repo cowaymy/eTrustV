@@ -28,7 +28,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
-var subGrid;
+var reqGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
@@ -52,44 +52,30 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30                },
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
+                     {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 , editable:true 
+                    	 ,dataType : "numeric" ,editRenderer : {
+                             type : "InputEditRenderer",
+                             onlyNumeric : true, // 0~9 까지만 허용
+                             allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
+                       }
+                     },
                      {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
-                     
-var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"                   ,width:120    ,height:30                },
-                       {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                       {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                       {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
-                       {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
-                       {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                       {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                       {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
-                       {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
-                       {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
-                       {dataField:"grdt"         ,headerText:"GR Date"                     ,width:120    ,height:30 },
-                       {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                       {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                       {dataField:"grqry"        ,headerText:"Good ReceiptQty"             ,width:120    ,height:30                },
-                       {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30},
-                       {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                       {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
+var reqcolumnLayout;
 
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
 		rowIdField : "rnum",			
-		//editable : true,
+		editable : true,
 		groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
+        showRowCheckColumn : true ,
         enableCellMerge : true,
-        //showStateColumn : false,
+        showStateColumn : false,
         showBranchOnGrouping : false
         };
-var reqop = {editable : false,usePaging : false ,showStateColumn : false};
+
 var paramdata;
 
 var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
@@ -102,7 +88,7 @@ $(document).ready(function(){
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    doGetCombo('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+    doGetCombo('/logistics/stocktransfer/selectStockTransferNo.do', '' , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
@@ -116,21 +102,51 @@ $(document).ready(function(){
      ***********************************/
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
-    //subGrid  = GridCommon.createAUIGrid("#sub_grid_wrap", reqcolumnLayout ,"", resop);
-    subGrid  = GridCommon.createAUIGrid("#sub_grid_wrap", reqcolumnLayout ,"", reqop);
+    //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
     
     
-    AUIGrid.bind(listGrid, "cellClick", function( event ) {
+    AUIGrid.bind(listGrid, "cellClick", function( event ) {});
+    
+    AUIGrid.bind(listGrid, "cellEditBegin", function (event){
     	
-    	if (event.dataField == "reqstno"){
-    		SearchDeliveryListAjax(event.value)
+    	if (event.dataField != "delyqty"){
+    		return false;
+    	}else{
+    		if (AUIGrid.getCellValue(listGrid, event.rowIndex, "delvno") != null && AUIGrid.getCellValue(listGrid, event.rowIndex, "delvno") != ""){
+    			Common.alert('You can not create a delivery note for the selected item.');
+    			return false;
+    		}
     	}
     });
     
+    AUIGrid.bind(listGrid, "cellEditEnd", function (event){
+        
+        if (event.dataField != "delyqty"){
+            return false;
+        }else{
+        	var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty");
+        	if (del > 0){
+	        	if (Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty"))){
+	        		Common.alert('Delivery Qty can not be greater than Request Qty.');
+	        		//AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")
+	        		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+	        	}else{
+	        		
+	        		AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
+	        	}
+        	}else{
+        		console.log('11');
+        		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+        		AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);        		
+        	}
+        }
+    });
+    
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-     	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-    	document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
-    	document.searchForm.submit();
+//      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+//      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+//     	document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
+//     	document.searchForm.submit();
     });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
@@ -149,9 +165,26 @@ $(function(){
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
-    $('#insert').click(function(){
-    	document.searchForm.action = '/logistics/stocktransfer/StocktransferIns.do';
-        document.searchForm.submit();
+    $('#delivery').click(function(){
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+    	if(checkedItems.length <= 0) {
+    		return false;
+    	}else{
+	    	var data = {};
+	    	data.checked = checkedItems; 
+	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
+	            Common.alert(result.message);
+	            AUIGrid.resetUpdatedItems(listGrid, "all");            
+	        },  function(jqXHR, textStatus, errorThrown) {
+	            try {
+	            } catch (e) {
+	            }  
+	            Common.alert("Fail : " + jqXHR.responseJSON.message);
+	        });
+	    	for (var i = 0 ; i < checkedItems.length ; i++){
+	    		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
+	    	}
+    	}
     });
 });
 
@@ -162,15 +195,6 @@ function SearchListAjax() {
     console.log(param);
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
-    });
-}
-
-function SearchDeliveryListAjax( reqno ) {
-    var url = "/logistics/stocktransfer/StocktransferRequestDeliveryList.do";
-    var param = "reqstno="+reqno;
-    
-    Common.ajax("GET" , url , param , function(data){
-        AUIGrid.setGridData(subGrid, data.data);
     });
 }
 
@@ -218,9 +242,9 @@ function f_getTtype(g , v){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
-      <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-      <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
-    </ul>
+            <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
+        </ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -295,7 +319,7 @@ function f_getTtype(g , v){
                     <td colspan="2">&nbsp;</td>              
                 </tr>
             </tbody>
-        </table><!-- table end -->
+        </table><!-- table end -->        
     </form>
 
     </section><!-- search_table end -->
@@ -303,37 +327,12 @@ function f_getTtype(g , v){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="insert"><span class="search"></span>INS</a></p></li>            
+            <li><p class="btn_grid"><a id="delivery"><span class="search"></span>DELIVERY</a></p></li>                        
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
-        
-<!--         <div id="sub_grid_wrap" class="mt10" style="height:350px"></div> -->
+        <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
 
     </section><!-- search_result end -->
-    <section class="tap_wrap"><!-- tap_wrap start -->
-		<ul class="tap_type1">
-		    <li><a href="#" class="on">Register Order</a></li>
-		    <li><a href="#">Compliance Remark</a></li>
-		</ul>
-		
-		<article class="tap_area"><!-- tap_area start -->
-		
-			<article class="grid_wrap"><!-- grid_wrap start -->
-			      <div id="sub_grid_wrap" class="mt10" style="height:150px"></div>
-			</article><!-- grid_wrap end -->
-		
-		</article><!-- tap_area end -->
-			
-		<article class="tap_area"><!-- tap_area start -->
-			
-			<article class="grid_wrap"><!-- grid_wrap start -->
-			그리드 영역
-			</article><!-- grid_wrap end -->
-			
-		</article><!-- tap_area end -->
-		
-	</section><!-- tap_wrap end -->
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
