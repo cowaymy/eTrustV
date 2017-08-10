@@ -362,6 +362,8 @@ public class SearchPaymentController {
 				message = "Payment item successfully updated.";
 			else
 				message = "Failed to Update. Please try again later.";
+		}else{
+			message = "Your login session has expired. Please relogin to our system.";
 		}
 		
 		msg.setMessage(message);
@@ -488,6 +490,8 @@ public class SearchPaymentController {
 				message = "Payment item successfully updated.";
 			else
 				message = "Failed to Update. Please try again later.";
+		}else{
+			message = "Your login session has expired. Please relogin to our system.";
 		}
 		
 		msg.setMessage(message);
@@ -534,7 +538,7 @@ public class SearchPaymentController {
 				message += "* Please select the issued bank. <br/>";
 			}
 			
-			if(String.valueOf(params.get("chequeNo")).trim().equals("")){
+			if(String.valueOf(params.get("chequeNoCh")).trim().equals("")){
 				valid = false;
 				message += "* Please key in the cheque number.<br />";
 			}
@@ -555,6 +559,8 @@ public class SearchPaymentController {
 				message = "Payment item successfully updated.";
 			else
 				message = "Failed to Update. Please try again later.";
+		}else{
+			message = "Your login session has expired. Please relogin to our system.";
 		}
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
@@ -622,6 +628,8 @@ public class SearchPaymentController {
 				message = "Payment item successfully updated.";
 			else
 				message = "Failed to Update. Please try again later.";
+		}else{
+			message = "Your login session has expired. Please relogin to our system.";
 		}
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);

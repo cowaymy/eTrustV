@@ -444,7 +444,7 @@ function showItemEdit(payItemId){
 			 $("#bankAccCh").text(result[0].accId + result[0].accDesc);
 			 $("#sIssuedBankCh").val(result[0].payItmIssuBankId);
 			 $("#chequeNumberCh").text(result[0].payItmChqNo);
-			 $("#chequeNo").val(result[0].payItmChqNo);
+			 $("#chequeNoCh").val(result[0].payItmChqNo);
 			 $("#txtRefNumberCh").val(result[0].payItmRefNo);
 			 var refDate = new Date(result[0].payItmRefDt);
 			 if((refDate.getTime() > defaultDate.getTime())){
@@ -554,6 +554,7 @@ function saveCreditCard(){
 
 function saveCheque(){
 	Common.ajax("GET", "/payment/saveCheque", $("#ChequeForm").serialize(), function(result) {
+		console.log("chequeNoCh : " + $("#chequeNoCh").val());
 		Common.alert(result.message);
     });
 }
@@ -1340,7 +1341,7 @@ function goRcByBs() {
         </tbody>
     </table>
     <input type="hidden" id="payItemIdCh" name="payItemIdCh"/>
-    <input type="hidden" id="chequeNo" name="chequeNo" />
+    <input type="hidden" id="chequeNoCh" name="chequeNoCh" />
     </form>
     </section>
     <!-- pop_body end -->
