@@ -32,4 +32,31 @@ public interface MemberEventMapper {
 	List<EgovMap> selectOrganizationEventList(Map<String, Object> params);
 	
 	EgovMap  getMemberEventDetailPop(Map<String, Object> params);
+	
+	List<EgovMap> selectPromteDemoteList(Map<String, Object> params);
+	
+	EgovMap  selectMemberPromoEntries(Map<String, Object> params);
+	
+	EgovMap  getMemberOrganizations(Map<String, Object> params);
+	
+	EgovMap  getDocNoes(int code);
+
+	EgovMap getMemberOrganizationsMemId(String memId);
+	
+	EgovMap getMemberOrganizationsMemUpId(String memUpId);
+	
+	EgovMap getMemberOrganizationsMemPrId(String memUpId);
+	
+	EgovMap getMemberSearch(String memUpId);
+	
+	void updateMemberOrganizations(Map<String, Object> params);
+	
+	void updateDocNoes(Map<String, Object> params);
+	
+	void updateMember(Map<String, Object> params);
+	
+	void updateMemberPromoEntry(Map<String, Object> params);
+	
+	
+	
 }	
