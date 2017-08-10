@@ -343,56 +343,56 @@ function fnValidationCheck()
       if (menuCode == "" || menuCode.length == 0) 
       {
         result = false;
-        Common.alert("Please Menu Code Confirm!!");
+        Common.alert("Please Check Menu Code.");
         break;
       }
       
       if (menuCode.length != 9) 
       {
         result = false;
-        Common.alert("Menu Code Length Must Be 9..   ");
+        Common.alert("Menu Code is not more then 9. ");
         break;
       }
       
       if (menuName == "" ) 
       {
         result = false;
-        Common.alert("Please Menu Name Confirm!!");
+        Common.alert("Please Check Menu Name.");
         break;
       }
       
       if (menuLvl == "") 
       {
           result = false;
-          Common.alert("Please Menu Level Confirm!!");
+          Common.alert("Please Check Menu Level.");
           break;
       }
 
       if (parseInt(menuLvl) > 4) 
       {
           result = false;
-          Common.alert("Menu Level Can't 4 Over ");
+          Common.alert("Menu Level is not more than 4. ");
           break;
       }
       
       if (pgmCode == "") 
       {
           result = false;
-          Common.alert("Please Program ID Confirm!!");
+          Common.alert("Please Check Program ID.");
           break;
       }
       
       if (menuOrder == "") 
       {
           result = false;
-          Common.alert("Please Menu Order Confirm!!");
+          Common.alert("Please Check Menu Order.");
           break;
       }
       
       if (statusCode == "") 
       {
           result = false;
-          Common.alert("Please Status Code Confirm!!");
+          Common.alert("Please Check Status Code.");
           break;
       }
     }
@@ -411,7 +411,7 @@ function fnValidationCheck()
         if (menuCode == "" || menuCode.length == 0) 
         {
           result = false;
-          Common.alert("Please Menu Code Confirm!!");
+          Common.alert("Please Check Menu Code.");
           break;
         }
         
@@ -425,36 +425,61 @@ function fnValidationCheck()
         if (menuName == "" ) 
         {
           result = false;
-          Common.alert("Please Menu Name Confirm!!");
+          Common.alert("Please Check Menu Name.");
           break;
         }
         
         if (menuLvl == "") 
         {
             result = false;
-            Common.alert("Please Menu Level Confirm!!");
+            Common.alert("Please Check Menu Level.");
             break;
         }
         
         if (pgmCode == "") 
         {
             result = false;
-            Common.alert("Please Program ID Confirm!!");
+            Common.alert("Please Check Program ID.");
             break;
         }
         
         if (menuOrder == "") 
         {
             result = false;
-            Common.alert("Please Menu Order Confirm!!");
+            Common.alert("Please Check Menu Order.");
             break;
         }
         
         if (statusCode == "") 
         {
             result = false;
-            Common.alert("Please Status Code Confirm!!");
+            Common.alert("Please Check Status Code. ");
             break;
+        }
+    }
+
+    for (var i = 0; i < delList.length; i++) 
+    {
+        var menuCode  = delList[i].menuCode;
+        var menuName  = delList[i].menuName;
+        var pgmCode   = delList[i].pgmCode;
+        var menuLvl   = delList[i].menuLvl;
+        var menuOrder = delList[i].menuOrder;
+        var statusCode = delList[i].statusCode;
+        var upperMenuCode = delList[i].upperMenuCode;
+        
+        if (menuCode == "" || menuCode.length == 0) 
+        {
+          result = false;
+          Common.alert("Please Check Menu Code. ");
+          break;
+        }
+        
+        if (menuCode.length != 9) 
+        {
+          result = false;
+          Common.alert("Menu Code Length must be 9 digits. ");
+          break;
         }
     } 
     
@@ -506,7 +531,6 @@ $(document).ready(function()
     // AUIGrid 그리드를 생성합니다.
     
     // 푸터 객체 세팅
-    //AUIGrid.setFooter(myGridID, footerObject);
     
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
