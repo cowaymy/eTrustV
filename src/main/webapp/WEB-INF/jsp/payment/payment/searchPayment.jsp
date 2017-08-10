@@ -620,9 +620,6 @@ function saveChanges() {
     });
 }
 
-function goRcByBs() {
-	location.href = "initRentalCollectionByBS.do";
-}
 </script>
 
 <!-- content start -->
@@ -758,27 +755,26 @@ function goRcByBs() {
             <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
                 <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-				<dl class="link_list">
-				    <dt>Link</dt>
-				    <dd>
-				    <ul class="btns">
-				        <li><p class="link_btn"><a href="#">Payment Listing</a></p></li>
-				        <li><p class="link_btn"><a href="#">RC By Sales</a></p></li>
-				        <li><p class="link_btn"><a href="javascript:goRcByBs();">RC By BS</a></p></li>
-				        <li><p class="link_btn"><a href="#">Daily Collection Raw</a></p></li>
-				        <li><p class="link_btn"><a href="#">Late Submission Raw</a></p></li>
-				        <li><p class="link_btn"><a href="#">Official Receipt</a></p></li>				        
-				    </ul>
-				    <ul class="btns">
-				        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
-				        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Reverse Payment(Void)</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
-				    </ul>
-				    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-				    </dd>
-				</dl>
+                <dl class="link_list">
+                    <dt>Link</dt>
+                    <dd>
+                    <ul class="btns">
+                        <li><p class="link_btn"><a href="/payment/initPaymentListing.do">Payment Listing</a></p></li>
+                        <li><p class="link_btn"><a href="/payment/initRentalCollectionBySales.do">RC By Sales</a></p></li>
+                        <li><p class="link_btn"><a href="/payment/initRentalCollectionByBS.do">RC By BS</a></p></li>
+                        <li><p class="link_btn"><a href="/payment/initDailyCollection.do">Daily Collection Raw</a></p></li>
+                        <li><p class="link_btn"><a href="/payment/initLateSubmission.do">Late Submission Raw</a></p></li>
+                        <li><p class="link_btn"><a href="#">Official Receipt</a></p></li>                       
+                    </ul>
+                    <ul class="btns">
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
+                        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>                        
+                        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
+                    </ul>
+                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    </dd>
+                </dl>
             </aside>
             <!-- link_btns_wrap end -->
         </form>
