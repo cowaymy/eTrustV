@@ -26,10 +26,10 @@
 	    AUIGrid.setSelectionMode(myGridID, "singleRow");
         
         // cellClick event.
-        AUIGrid.bind(myGridID, "cellClick", function( event ) {
+/*         AUIGrid.bind(myGridID, "cellClick", function( event ) {
             console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
             fn_setDetail(myGridID, event.rowIndex);
-        });
+        }); */
         
         
                 // 셀 더블클릭 이벤트 바인딩
@@ -181,7 +181,7 @@ function f_info(data , v){
         });
     }
 
-    doGetCombo('/common/selectCodeList.do', '165', '','requestStatus', 'M' , 'f_multiCombo'); // Request Status
+//    doGetCombo('/common/selectCodeList.do', '165', '','requestStatus', 'M' , 'f_multiCombo'); // Request Status
 //    doGetCombo('/common/selectCodeList.do', '18', '','requestPerson', 'M' , 'f_multiCombo'); //Request Person
     doGetCombo('/common/selectCodeList.do', '18', '','requestType', 'M' , 'f_multiCombo'); //Request Type
     doGetCombo('/common/selectCodeList.do', '18', '','memberType', 'M' , 'f_multiCombo'); //MemberType
@@ -242,9 +242,9 @@ function f_info(data , v){
     <th scope="row">Request Status</th>
     <td>
     <select id="requestStatus" name="requestStatus" class="multy_select w100p">
-<%--         <c:forEach var="list" items="${ reqStatusComboList}" varStatus="status">
-            <option value="${list.code}">${list.codeName } </option>
-        </c:forEach> --%>
+         <option value="60">In Progress</option>
+         <option value="04">Completed</option>
+         <option value="10">Cancelled</option>
     </select>
     </td>
     <th scope="row">Request Type</th>
@@ -254,9 +254,10 @@ function f_info(data , v){
     <th scope="row">Request Person</th>
     <td>
     <select  id="requestPerson" name="requestPerson" class="w100p">
+        <option value="" selected>Person</option>
             <c:forEach var="list" items="${ reqPersonComboList}" varStatus="status">
-            <option value="${list.userId}">${list.userName } </option>
-        </c:forEach>
+                 <option value="${list.userId}">${list.userName } </option>
+            </c:forEach>
     </select>
     </td>
     <th scope="row"></th>
