@@ -482,23 +482,21 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		
 		//1131 : Ref Date
-		String payItmRefDt = qryDet.get("payItmRefDt") == null ? "01-01-1900" : String.valueOf(qryDet.get("payItmRefDt"));
-		String temp[] = String.valueOf(payItmRefDt).split(" ");
-		String refDate[] = temp[0].split("-");
-		System.out.println("payItm : " + payItmRefDt + ", temp : " + temp[0] + ", refDate : " + refDate[0]);
-		String strRefDate = refDate[0]+"/"+refDate[1]+"/"+refDate[2];		
-		String payItemRefDt = !(payDet.getPayItemRefDate().equals("")) ? payDet.getPayItemRefDate() : "01/01/1900";
-		System.out.println("payItemRefDt : " + payItemRefDt + ", strRefDate" + strRefDate + ", getPayItemRefDate() : " + CommonUtils.getDiffDate(payItemRefDt, strRefDate, "DD/MM/YYYY") );
-		if(CommonUtils.getDiffDate(payItemRefDt, strRefDate, "DD/MM/YYYY") != 0){
+		String tmpRefDt = qryDet.get("payItmRefDt") == null ? "1900-01-01" : String.valueOf(qryDet.get("payItmRefDt"));
+		String qryRefDt = tmpRefDt.split(" ")[0];
+		String tmpPayDt[] = payDet.getPayItemRefDate().split("/");
+		String payDt = tmpPayDt[2] + "-" + tmpPayDt[1] + "-" + tmpPayDt[0];
+		System.out.println("### tmpRefDt : " + tmpRefDt + ", qryRefDt : " + qryRefDt + ", tmpPayDt : " + tmpPayDt + ", payDt : " + payDt);
+		if(CommonUtils.getDiffDate(payDt, qryRefDt, "YYYY-MM-DD") != 0){
 			PayDHistoryVO his = new PayDHistoryVO();
 			
 			his.setHistoryId(0);
 			his.setTypeId(1131);
 			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
 			his.setPayItemId(Integer.parseInt(qryDet.get("payItmId").toString()));
-			if(!CommonUtils.isEmpty(payItmRefDt)){
-				if(CommonUtils.getDiffDate(payItmRefDt, "1900-01-01", "YYYY-MM-DD") > 0){
-					his.setValueFr(payItmRefDt);
+			if(!CommonUtils.isEmpty(qryRefDt)){
+				if(CommonUtils.getDiffDate(qryRefDt, "1900-01-01", "YYYY-MM-DD") > 0){
+					his.setValueFr(qryRefDt);
 				}else{
 					his.setValueFr("");
 				}
