@@ -92,7 +92,7 @@ public class AssetMasterController {
 	@RequestMapping(value = "/selectDetailList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> selectDetailList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {	
-		System.out.println("assetid :       "+request.getParameter("assetid"));
+	
 		String assetid = request.getParameter("assetid");
 		
 		Map<String, Object> assetdetailmap = new HashMap();
@@ -143,10 +143,26 @@ public class AssetMasterController {
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 		
-		 //Map<String, Object> masterMap = (Map<String, Object>) params.get("masterForm");
-		 Map<String, Object> detailMap= (Map<String, Object>) params.get("detailAddForm");
+		//Map<String, Object> masterMap = (Map<String, Object>) params.get("masterForm");
+		//Map<String, Object> detailMap= (Map<String, Object>) params.get("detailAddForm");
+		//Map<String, Object> detailMap= (Map<String, Object>) params.get("param");
+		
+		 Map<String , Object> masterMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		 
-		 List<EgovMap> detailAddList = (List<EgovMap>) detailMap.get(AppConstants.AUIGRID_ADD);
+		 logger.debug("mastertype  : {}", masterMap.get("mastertype"));
+		 logger.debug("mastercategory  : {}", masterMap.get("mastercategory"));
+		 logger.debug("mastermodelname  : {}", masterMap.get("mastermodelname"));
+		 logger.debug("masterinvoiceno  : {}", masterMap.get("masterinvoiceno"));
+		 logger.debug("masterdealer  : {}", masterMap.get("masterdealer"));
+		 logger.debug("masterbrand  : {}", masterMap.get("masterbrand"));
+		 logger.debug("masterpurchaseamount  : {}", masterMap.get("masterpurchaseamount"));
+		 logger.debug("masterrefno  : {}", masterMap.get("masterrefno"));
+		 logger.debug("masterserialno  : {}", masterMap.get("masterserialno"));
+		 logger.debug("masterwarrantyno  : {}", masterMap.get("masterwarrantyno"));
+		 logger.debug("mastermacaddress  : {}", masterMap.get("mastermacaddress"));
+		 logger.debug("masterremark  : {}", masterMap.get("masterremark"));
+	
+		List<EgovMap> detailAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
 		 for (int i = 0; i < detailAddList.size(); i++) {
 			 logger.debug("%%%%%%%%detailAddList%%%%%%%: {}", detailAddList.get(i));	 
 		}
@@ -158,21 +174,15 @@ public class AssetMasterController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-
+		masterMap.put("crt_user_id", loginId);
+		masterMap.put("upd_user_id", loginId);
+	
 		String retMsg = AppConstants.MSG_SUCCESS;
-
-		// loginId
-		params.put("masterstatus", 1);
-		params.put("crt_user_id", loginId);
-		params.put("upd_user_id", loginId);
-		params.put("masterbreanch", 42);
-		params.put("curr_dept_id", 38);
-		params.put("curr_user_id", 0);
 			
 		Map<String, Object> map = new HashMap();
 
 		try {
-			ams.insertAssetMng(params,detailAddList);
+			ams.insertAssetMng(masterMap,detailAddList);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
