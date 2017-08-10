@@ -238,7 +238,7 @@ function getCdForStockList(obj , value , tag , selvalue){
 function doGetComboForStock(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
 	$.ajax({
         type : "GET",
-        url : getContextPath() + surl,
+        url : getContextPath() + url,
         data : { groupCode : groupCd , codevalue : codevalue},
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
