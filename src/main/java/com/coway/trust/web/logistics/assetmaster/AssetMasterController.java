@@ -55,8 +55,8 @@ public class AssetMasterController {
 	}
 
 	@RequestMapping(value = "/assetList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> selectCourierList(ModelMap model, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public ResponseEntity<Map> assetList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 
 		String searchassetid = request.getParameter("searchassetid");
 		String[] searchstatus = request.getParameterValues("searchstatus");
@@ -241,6 +241,48 @@ public class AssetMasterController {
 		return ResponseEntity.ok(map);
 	}
 
+
+	@RequestMapping(value = "/UpItemAssetMng.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> UpItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+
+		logger.debug("additemtype  : {}", params.get("additemtype"));
+		logger.debug("additemBrand  : {}", params.get("additemBrand"));
+		logger.debug("additemmodel  : {}", params.get("additemmodel"));
+		logger.debug("addremark  : {}", params.get("addremark"));
+		logger.debug("additemname  : {}", params.get("additemname"));
+		logger.debug("additemvalue  : {}", params.get("additemvalue"));
+		logger.debug("additemremark  : {}", params.get("additemremark"));
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		// loginId
+		params.put("upd_user_id", loginId);
+
+		Map<String, Object> map = new HashMap();
+
+		try {
+			// ;ams.updateItemAssetMng(params);
+			// ams.deleteAssetMng(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
+
+
 	@RequestMapping(value = "/copyAsset.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertCopyAsset(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -272,4 +314,5 @@ public class AssetMasterController {
 
 		return ResponseEntity.ok(map);
 	}
+
 }
