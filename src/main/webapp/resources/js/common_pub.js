@@ -1,10 +1,45 @@
 $(document).ready(function(){
 /* 제이쿼리 ui달력 start*/
+var holidays = {
+    /*"0809":{type:0, title:"신정", year:"2017"}*/
+};
+
+
 var pickerOpts={
 	changeMonth:true,
 	changeYear:true,
-	dateFormat: "dd/mm/yy"
+	dateFormat: "dd/mm/yy",
+		beforeShowDay: function(day) {
+		var result;
+		// 포맷에 대해선 다음 참조(http://docs.jquery.com/UI/Datepicker/formatDate)
+		var holiday = holidays[$.datepicker.formatDate("mmdd",day )];
+		var thisYear = $.datepicker.formatDate("yy", day);
+
+		// exist holiday?
+		if (holiday) {
+			if(thisYear == holiday.year || holiday.year == "") {
+				result =  [false, "date-holiday", holiday.title];
+			}
+		}
+
+		if(!result) {
+			switch (day.getDay()) {
+				case 0: // is sunday?
+					result = [false, "date-sunday"];
+					break;
+				case 6: // is saturday?
+					result = [true, "date-saturday"];
+					break;
+				default:
+					result = [true, ""];
+					break;
+			}
+		}
+
+		return result;
+		}
 };
+
 $(".j_date").datepicker(pickerOpts);
 
 var monthOptions = {
