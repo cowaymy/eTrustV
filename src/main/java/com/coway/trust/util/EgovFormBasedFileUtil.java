@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
  * @see
  */
 public class EgovFormBasedFileUtil {
+
 	/** Buffer size */
 	public static final int BUFFER_SIZE = 8192;
 

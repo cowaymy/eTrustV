@@ -441,7 +441,7 @@ var Common = {
 	setMsg : function(message){
 		try{
 			$(".bottom_msg_box").html("<p>" + message + "</p>");
-			$(".bottom_msg_box p").fadeOut(5000);			
+			$(".bottom_msg_box p").fadeOut(30000);
 		}catch(e){
 			Common.alert(message);
 		}

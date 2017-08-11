@@ -25,6 +25,8 @@ import java.sql.Wrapper;
  * </pre>
  */
 public class EgovResourceCloseHelper {
+
+	private EgovResourceCloseHelper(){}
 	/**
 	 * Resource close 처리.
 	 * @param resources

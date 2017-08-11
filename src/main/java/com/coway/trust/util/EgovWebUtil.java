@@ -16,6 +16,9 @@ import java.util.regex.Pattern;
  */
 
 public class EgovWebUtil {
+
+	private EgovWebUtil(){}
+
 	public static String clearXSSMinimum(String value) {
 		if (value == null || value.trim().equals("")) {
 			return "";

@@ -8,15 +8,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
-import com.coway.trust.util.EgovFormBasedFileUtil;
-import com.coway.trust.util.EgovFormBasedFileVo;
-import com.coway.trust.util.EgovWebUtil;
-import com.coway.trust.util.MimeTypeUtil;
+import com.coway.trust.util.*;
 
 /**
  * @Class Name : EgovFileUploadUtil.java
@@ -51,6 +49,13 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 
 		while (fileIter.hasNext()) {
 			MultipartFile mFile = mptRequest.getFile((String) fileIter.next());
+
+			if (mFile.getSize() > maxFileSize) {
+				throw new ApplicationException(AppConstants.FAIL,
+						CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class).getMessage(
+								AppConstants.MSG_FILE_MAX_LIMT,
+								new Object[] { CommonUtils.formatFileSize(maxFileSize) }));
+			}
 
 			EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
 

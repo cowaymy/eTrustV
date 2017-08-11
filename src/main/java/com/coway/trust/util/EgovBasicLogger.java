@@ -20,6 +20,8 @@ import java.util.logging.Logger;
  * </pre>
  */
 public class EgovBasicLogger {
+	private EgovBasicLogger(){}
+
 	private static final Level IGNORE_INFO_LEVEL = Level.OFF;
 	private static final Level DEBUG_INFO_LEVEL = Level.FINEST;
 	private static final Level INFO_INFO_LEVEL = Level.INFO;

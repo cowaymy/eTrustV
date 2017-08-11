@@ -105,4 +105,9 @@ public class SysTest {
 	public void differDateTest() {
 		LOGGER.debug("CommonUtils.getDiffDate : {}", CommonUtils.getDiffDate("20170724"));
 	}
+
+	@Test
+	public void formatFileSizeTest(){
+		LOGGER.debug(">>>>> {}", CommonUtils.formatFileSize(1024 * 1024 * 100));
+	}
 }

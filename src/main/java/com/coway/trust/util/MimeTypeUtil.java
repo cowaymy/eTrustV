@@ -2,16 +2,16 @@ package com.coway.trust.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.tika.Tika;
 
 public class MimeTypeUtil {
 	private MimeTypeUtil() {
 	}
 
-	private static final Map<String, String> ALLOW_MIME_TYPE = new HashedMap();
+	private static final Map<String, String> ALLOW_MIME_TYPE = new HashMap();
 
 	static {
 		ALLOW_MIME_TYPE.put("image/bmp", "image/bmp");
@@ -28,6 +28,8 @@ public class MimeTypeUtil {
 		ALLOW_MIME_TYPE.put("image/x-portable-pixmap", "image/x-portable-pixmap");
 		ALLOW_MIME_TYPE.put("application/pdf", "application/pdf");
 		ALLOW_MIME_TYPE.put("application/xls", "application/xls");
+		ALLOW_MIME_TYPE.put("application/x-tika-ooxml", "application/x-tika-ooxml");
+//		ALLOW_MIME_TYPE.put("text/plain", "text/plain");
 	}
 
 	public static boolean isAllowFile(InputStream inputStream) throws IOException {
