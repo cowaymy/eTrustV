@@ -437,15 +437,25 @@
                 masterAddForm : $("#masterForm").serializeJSON(),
                  detailAddForm : GridCommon.getEditData(AddDetailGrid)
                };   */
-         param = GridCommon.getEditData(AddDetailGrid);
-         param.form = $("#masterForm").serializeJSON();
-        selectedItem = AUIGrid.getSelectedIndex(myGridID);
-       if(div=="U"){
-           url="/logistics/assetmng/motifyAssetMng.do";
-       }else if(div=="N"){ //마스터 인서트
-           url="/logistics/assetmng/insertAssetMng.do";
+        if(div=="N"){
+            param = GridCommon.getEditData(AddDetailGrid);
+            param.form = $("#masterForm").serializeJSON();
+        }else if(div=="U"){
+        	param= $("#masterForm").serializeJSON();
+        }else if(div=="D"){
+        	param= $("#masterForm").serializeJSON();
+        }else if(div=="UI"){
+        	param= $("#updateForm").serializeJSON();
+        }
+
+       if(div=="N"){
+    	   url="/logistics/assetmng/insertAssetMng.do";    
+       }else if(div=="U"){ //마스터 인서트
+    	   url="/logistics/assetmng/motifyAssetMng.do";
        }else if(div=="D"){ //딜리트
            url="/logistics/assetmng/deleteAssetMng.do";
+       }else if(div=="UI"){
+    	   url="/logistics/assetmng/UpItemAssetMng.do";
        }
        Common.ajax("POST",url,param,function(result){
            Common.alert(result.msg);
@@ -824,6 +834,12 @@
 
           AUIGrid.removeRow(gridNm, rowIndex);
           AUIGrid.removeSoftRows(gridNm);
+      }
+      
+      
+      function updateItem() {
+    	  div="UI"; 
+                assetsaveAjax(div);   
       }
       
       
@@ -1326,7 +1342,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">Item Remark</th>
-                                <td colspan="5"><input type="text" id="additemremark" name="insdetailremark"  class="w100p" /></td>
+                                <td colspan="5"><input type="text" id="additemremark" name="additemremark"  class="w100p" /></td>
                             </tr>
                         </tbody>
                     </table>
