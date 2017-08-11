@@ -68,14 +68,15 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		params.put("curr_dept_id", 38);
 		params.put("curr_user_id", 0);
 
-		AssetMngMapper.insertAssetMng(params);
+		AssetMngMapper.insertMasterAsset(params);
 
 		int detailsize = detailAddList.size();
 		Logger.debug("detailsize     : {}", detailsize);
 		if (detailsize > 0) {
+
 			for (int i = 0; i < detailAddList.size(); i++) {
 				int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
-				Map<String, Object> map = detailAddList.get(i);
+				Map<String, Object> map = (Map<String , Object>)detailAddList.get(i);
 				map.put("detailassetid", detailassetid);
 				map.put("detailstatus", 1);
 				map.put("inassetid", inassetid);
@@ -108,6 +109,33 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		AssetMngMapper.deleteAssetMng(params);
 	}
 
+	
+	
+	@Override
+	public void updateItemAssetMng(Map<String, Object> params) {
+		
+		
+		int inassetid = AssetMngMapper.AssetCreateSeq();
+		int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
+		
+		params.put("inassetid", inassetid);
+		params.put("detailassetid", detailassetid);
+		params.put("detailstatus", 1);
+
+		AssetMngMapper.insertDetailAsset(params);
+		
+		Map<String, Object> map = new HashMap();	
+		
+		params.put("detailstatus", 1);
+		
+		
+	
+		AssetMngMapper.updateItemAssetMng(map);
+		
+	
+		
+	}
+	
 	@Override
 	public int insertCopyAsset(int assetid, int copyquantity, int loginId) {
 		int cnt = 0;
@@ -204,5 +232,5 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		List<EgovMap> list = AssetMngMapper.selectAssetDItem(assetid);
 		return list;
 	}
-
+	
 }
