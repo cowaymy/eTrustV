@@ -390,13 +390,6 @@ function fnValidationCheck()
           break;
       }
       
-/*       if (pgmCode == "") 
-      {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='Program ID' htmlEscape='false'/>");
-          break;
-      } */
-      
       if (menuLvl != "1" && menuOrder == "") 
       {
           result = false;
@@ -426,7 +419,6 @@ function fnValidationCheck()
           Common.alert("<spring:message code='sys.msg.limit' arguments='UPPER MENU ; at level 2' htmlEscape='false' argumentSeparator=';'/>");
           break;
       }
-         
       
     }  // addlist
 
@@ -468,14 +460,6 @@ function fnValidationCheck()
             Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Level' htmlEscape='false'/>");
             break;
         }
-    
-        
-/*         if (pgmCode == "") 
-        {
-            result = false;
-            Common.alert("Please Check Program ID.");
-            break;
-        } */
         
         if (menuLvl != "1" && menuOrder == "") 
         {
