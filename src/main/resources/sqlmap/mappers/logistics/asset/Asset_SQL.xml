@@ -360,6 +360,10 @@
     <select id="AssetdetailCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_D_ID),0) + 1 from LOG0051D
     </select>
+    
+      <select id="AssetItemCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 from LOG0052D
+    </select>
  
     
 </mapper>
