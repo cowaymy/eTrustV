@@ -76,7 +76,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 
 			for (int i = 0; i < detailAddList.size(); i++) {
 				int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
-				Map<String, Object> map = (Map<String , Object>)detailAddList.get(i);
+				Map<String, Object> map = detailAddList.get(i);
 				map.put("detailassetid", detailassetid);
 				map.put("detailstatus", 1);
 				map.put("inassetid", inassetid);
@@ -109,33 +109,26 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		AssetMngMapper.deleteAssetMng(params);
 	}
 
-	
-	
 	@Override
 	public void updateItemAssetMng(Map<String, Object> params) {
-		
-		
+
 		int inassetid = AssetMngMapper.AssetCreateSeq();
 		int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
-		
+
 		params.put("inassetid", inassetid);
 		params.put("detailassetid", detailassetid);
 		params.put("detailstatus", 1);
 
 		AssetMngMapper.insertDetailAsset(params);
-		
-		Map<String, Object> map = new HashMap();	
-		
+
+		Map<String, Object> map = new HashMap();
+
 		params.put("detailstatus", 1);
-		
-		
-	
+
 		AssetMngMapper.updateItemAssetMng(map);
-		
-	
-		
+
 	}
-	
+
 	@Override
 	public int insertCopyAsset(int assetid, int copyquantity, int loginId) {
 		int cnt = 0;
@@ -163,8 +156,8 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		if (copyquantity > 0) {
 			for (int i = 0; i < copyquantity; i++) {
 
-				newAssetId = AssetMngMapper.selectMaxAssestId();
-				newAssetCardId = AssetMngMapper.selectMaxCardId();
+				newAssetId = AssetMngMapper.AssetCreateSeq();
+				newAssetCardId = AssetMngMapper.AssetCardIdSeq();
 
 				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("assetid", assetid);
@@ -177,7 +170,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 
 				for (int j = 0; j < assetDList.size(); j++) {
 
-					newAssetDId = AssetMngMapper.selectMaxAssestDId();
+					newAssetDId = AssetMngMapper.AssetdetailCreateSeq();
 
 					assetDId = Integer.parseInt(String.valueOf(assetDList.get(j).get("assetDId")));
 
@@ -193,7 +186,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 
 					for (int z = 0; z < assetItemList.size(); z++) {
 
-						newAssetDItmId = AssetMngMapper.selectMaxAssetDItmId();
+						newAssetDItmId = AssetMngMapper.AssetItemCreateSeq();
 						assetDItmId = Integer.parseInt(String.valueOf(assetItemList.get(z).get("assetDItmId")));
 
 						Map<String, Object> params3 = new HashMap<String, Object>();
@@ -232,5 +225,5 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		List<EgovMap> list = AssetMngMapper.selectAssetDItem(assetid);
 		return list;
 	}
-	
+
 }

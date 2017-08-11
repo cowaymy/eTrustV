@@ -366,20 +366,10 @@
         <select id="AssetItemCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 from LOG0052D
     </select>
-    <select id="selectMaxCardId" parameterType="Map" resultType="Integer">
+    <select id="AssetCardIdSeq" parameterType="Map" resultType="Integer">
          SELECT NVL(MAX(CARD_ID),0) + 1 FROM LOG0057M
     </select>
 
-<!--      <select id="selectMaxAssestId" parameterType="Map" resultType="Integer">
-         SELECT NVL(MAX(ASSET_ID),0) + 1 FROM LOG0050M
-    </select>
-    <select id="selectMaxAssestDId" parameterType="Map" resultType="Integer">
-         SELECT NVL(MAX(ASSET_D_ID),0) + 1 FROM LOG0051D
-    </select>
-    <select id="selectMaxAssetDItmId" parameterType="Map" resultType="Integer">
-         SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 FROM LOG0052D
-    </select> -->
-    
     <select id="selectAssetM" parameterType="Map" resultMap="assetCopy">
         SELECT 
             ASSET_ID,

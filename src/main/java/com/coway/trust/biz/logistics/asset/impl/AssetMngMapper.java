@@ -18,7 +18,6 @@ public interface AssetMngMapper {
 
 	List<EgovMap> selectTypeList(Map<String, Object> params);
 
-
 	void insertMasterAsset(Map<String, Object> params);
 
 	void insertAssetMng(Map<String, Object> params);
@@ -35,19 +34,15 @@ public interface AssetMngMapper {
 
 	int AssetdetailCreateSeq();
 
+	int AssetItemCreateSeq();
+
+	int AssetCardIdSeq();
+
 	List<EgovMap> selectAssetM(int assetid);
 
 	List<EgovMap> selectAssetD(int assetid);
 
 	List<EgovMap> selectAssetDItem(int assetid);
-
-	int selectMaxAssestId();
-
-	int selectMaxAssestDId();
-
-	int selectMaxAssetDItmId();
-
-	int selectMaxCardId();
 
 	void insertCopyAssetM(Map<String, Object> params);
 
@@ -56,4 +51,5 @@ public interface AssetMngMapper {
 	void insertCopyAssetD(Map<String, Object> params2);
 
 	void insertCopyAssetDItmId(Map<String, Object> params3);
+
 }
