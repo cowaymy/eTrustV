@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
 .aui-grid-left-column {
@@ -347,7 +349,7 @@ function fnValidationCheck()
       if (menuCode == "" || menuCode.length == 0) 
       {
         result = false;
-        Common.alert("Please Check Menu Code.");
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
         break;
       }
       
@@ -361,14 +363,14 @@ function fnValidationCheck()
       if (menuName == "" ) 
       {
         result = false;
-        Common.alert("Please Check Menu Name.");
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Name' htmlEscape='false'/>");
         break;
       }
       
       if (menuLvl == "") 
       {
           result = false;
-          Common.alert("Please Check Menu Level.");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Level' htmlEscape='false'/>");
           break;
       }
 
@@ -379,24 +381,24 @@ function fnValidationCheck()
           break;
       }
       
-      if (pgmCode == "") 
+/*       if (pgmCode == "") 
       {
           result = false;
-          Common.alert("Please Check Program ID.");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Program ID' htmlEscape='false'/>");
           break;
-      }
+      } */
       
       if (menuLvl != "1" && menuOrder == "") 
       {
           result = false;
-          Common.alert("Please Check Menu Order.");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Order' htmlEscape='false'/>");
           break;
       }
       
       if (statusCode == "") 
       {
           result = false;
-          Common.alert("Please Check Status Code.");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Status Code' htmlEscape='false'/>");
           break;
       }
 
@@ -458,12 +460,12 @@ function fnValidationCheck()
             break;
         }
         
-        if (pgmCode == "") 
+/*         if (pgmCode == "") 
         {
             result = false;
             Common.alert("Please Check Program ID.");
             break;
-        }
+        } */
         
         if (menuLvl != "1" && menuOrder == "") 
         {
