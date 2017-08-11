@@ -208,6 +208,8 @@ var Common = {
 	 */
 	popupDiv : function(_url, _jsonObj, _callback, _isManualClose) {
 
+		var divId = "_popupDiv";
+
 		/*
 		 * 팝업시 left/top 제외 시킴. => /webapp/WEB-INF/tiles/layout/default.jsp
 		 *
@@ -217,11 +219,22 @@ var Common = {
 			isDiv 	: true // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp	
 		});
 
-		var $obj = $('<div id="_popupDiv" name="_popupDiv"></div>');
+        divId = generateDivId(divId);
+
+        function generateDivId(divId){
+        	alert($("#" + divId).length);
+            if ($("#" + divId).length > 0 ) {
+                divId = "_popupDiv" + ($("#" + divId).length + 1);
+                generateDivId(divId);
+            }
+            return divId;
+		}
+
+		var $obj = $('<div id="' + divId + '" name="_popupDiv"></div>');
 
 		$('body').append($obj);
 
-		$("#_popupDiv").attr("manualClose", _isManualClose);
+		$("#" + divId).attr("manualClose", _isManualClose);
 
 		$.ajax({
 			type : 'post',
@@ -239,7 +252,7 @@ var Common = {
 						_callback(_jsonObj);
 					}
 
-					if($("#_popupDiv").attr("manualClose") != "true"){
+					if($("#" + divId).attr("manualClose") != "true"){
 						$obj.remove();						
 					}
 				});

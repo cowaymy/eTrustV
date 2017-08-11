@@ -45,3 +45,5 @@
 		<input type="button" onclick="javascript:fn_openDivPop();"
 			value="DIV 팝업 예" />
 	</div>
+
+<div id="_popupDiv"></div>
