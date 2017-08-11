@@ -9,14 +9,46 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("AssetMngMapper")
 public interface AssetMngMapper {
 	List<EgovMap> selectAssetList(Map<String, Object> params);
+
 	List<EgovMap> selectDetailList(Map<String, Object> params);
+
 	List<EgovMap> selectDealerList(Map<String, Object> params);
+
 	List<EgovMap> selectBrandList(Map<String, Object> params);
+
 	List<EgovMap> selectTypeList(Map<String, Object> params);
+
 	void insertAssetMng(Map<String, Object> params);
+
 	void insertDetailAsset(Map<String, Object> params);
+
 	void motifyAssetMng(Map<String, Object> params);
+
 	void deleteAssetMng(Map<String, Object> params);
+
 	int AssetCreateSeq();
+
 	int AssetdetailCreateSeq();
+
+	List<EgovMap> selectAssetM(int assetid);
+
+	List<EgovMap> selectAssetD(int assetid);
+
+	List<EgovMap> selectAssetDItem(int assetid);
+
+	int selectMaxAssestId();
+
+	int selectMaxAssestDId();
+
+	int selectMaxAssetDItmId();
+
+	int selectMaxCardId();
+
+	void insertCopyAssetM(Map<String, Object> params);
+
+	void insertCopyAssetCard(Map<String, Object> params);
+
+	void insertCopyAssetD(Map<String, Object> params2);
+
+	void insertCopyAssetDItmId(Map<String, Object> params3);
 }
