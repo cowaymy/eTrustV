@@ -36,6 +36,7 @@ var MainColumnLayout =
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 listFunction : function(rowIndex, columnIndex, item, dataField) {
+                	gSelMainRowIdx = rowIndex;
                    return   getMenuLevel();                 
                 },
                 keyField : "id"
@@ -52,8 +53,8 @@ var MainColumnLayout =
                 iconHeight : 13,
                 iconPosition : "aisleRight",
                 iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.gif" // 
-                 // ," " : "xx"
+                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.gif"  
+                  ," " : "xx"  // null일경우, 공백으로 입력
                   
                 },
           
@@ -218,7 +219,7 @@ function addRowMenu()
 //Make Use_yn ComboList, tooltip
 function getMenuLevel()
 {     
-  var list =  ["1", "2", "3", "4"];   
+  var list =  ["2", "3", "4"];   
   return list;
 }
 
@@ -341,7 +342,7 @@ function fnValidationCheck()
       var menuLvl   = addList[i].menuLvl;
       var menuOrder = addList[i].menuOrder;
       var statusCode = addList[i].statusCode;
-      var upperMenuCode = addList[i].upperMenuCode;
+      var upperMenuCode = addList[i].upperMenuCode.fnTrim();
       
       if (menuCode == "" || menuCode.length == 0) 
       {
@@ -385,7 +386,7 @@ function fnValidationCheck()
           break;
       }
       
-      if (menuOrder == "") 
+      if (menuLvl != "1" && menuOrder == "") 
       {
           result = false;
           Common.alert("Please Check Menu Order.");
@@ -405,6 +406,13 @@ function fnValidationCheck()
           Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
           break;
       }
+
+      if ( parseInt(menuLvl) > 1 && upperMenuCode.length == 1 )
+      {
+          result = false;
+          Common.alert(" Pleae Enter 'UPPER MENU' at level 2 or higher.");
+          break;
+      }
          
       
     }  // addlist
@@ -418,7 +426,9 @@ function fnValidationCheck()
         var menuLvl   = udtList[i].menuLvl;
         var menuOrder = udtList[i].menuOrder;
         var statusCode = udtList[i].statusCode;
-        var upperMenuCode = udtList[i].upperMenuCode;
+        var upperMenuCode = udtList[i].upperMenuCode.fnTrim();
+
+        console.log("AAA: " + upperMenuCode);
 
         if (menuCode == "" || menuCode.length == 0) 
         {
@@ -455,7 +465,7 @@ function fnValidationCheck()
             break;
         }
         
-        if (menuOrder == "") 
+        if (menuLvl != "1" && menuOrder == "") 
         {
             result = false;
             Common.alert("Please Check Menu Order.");
@@ -475,6 +485,14 @@ function fnValidationCheck()
             Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
             break;
         }
+
+        if ( parseInt(menuLvl) > 1 && upperMenuCode.length == 0 )
+        {
+            result = false;
+            Common.alert(" Pleae Enter 'UPPER MENU' at level 2 or higher.");
+            AUIGrid.restoreEditedCells(myGridID, [gSelMainRowIdx, "menuLvl"] );
+            break;
+        }        
         
     }// udtlist
 
@@ -501,10 +519,16 @@ function fnValidationCheck()
     return result;
   }
 
+//trim
+String.prototype.fnTrim = function() 
+{
+    return this.replace(/(^\s*)|(\s*$)/gi, "");
+}
+
 
 /****************************  Form Ready ******************************************/
 
-var myGridID, transGridID, statusCodeGridID;
+var myGridID, transGridID;
 
 $(document).ready(function()
 {
