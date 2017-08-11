@@ -26,4 +26,8 @@ public interface OrderRegisterService {
 
 	EgovMap selectTrialNo(Map<String, Object> params);
 
+	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
+
+	List<EgovMap> selectMemberList(Map<String, Object> params);
+
 }

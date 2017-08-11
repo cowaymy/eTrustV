@@ -117,4 +117,16 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		return orderRegisterMapper.selectTrialNo(params);
 	}
 	
+	@Override
+	public EgovMap selectMemberByMemberIDCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return orderRegisterMapper.selectMemberByMemberIDCode(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectMemberList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return orderRegisterMapper.selectMemberList(params);
+	}
+	
 }

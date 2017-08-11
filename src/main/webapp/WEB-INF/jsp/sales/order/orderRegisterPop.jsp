@@ -424,9 +424,14 @@
 	        //$('#tabPC').addClass("blind");
 	    });
 	    $('#custBtn').click(function() {
-	        $("#sUrl").val("/common/customerPop.do");
+	        //$("#sUrl").val("/common/customerPop.do");
 	        //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
 	        Common.popupDiv("/common/customerPop.do", $("#searchForm").serializeJSON(), null, true);
+	    });
+	    $('#memBtn').click(function() {
+	        //$("#sUrl").val("/common/memberPop.do");
+	        //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+	        Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
 	    });
 	    $('[name="grpOpt"]').click(function() {
 	        fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
@@ -516,6 +521,14 @@
         	else {
         	    Common.alert('<b>Invalid customer ID.</b>');
         	}
+        });
+        $('#salesmanCd').blur(function(event) {
+            
+            var memCd = $('#salesmanCd').val().trim();
+            
+            if(FormUtil.isNotEmpty(memCd)) {
+                fn_loadOrderSalesman(0, memCd);
+            }
         });
         $('#appType').change(function() {
             
@@ -649,6 +662,62 @@
 	        }
 	    });
 	});
+	
+	function fn_clearOrderSalesman() {
+	    $('#salesmanId').val('');
+	    $('#salesmanCd').val('');
+	    $('#salesmanType').val('');
+	    $('#salesmanTypeId').val('');
+	    $('#salesmanNm').val('');
+	    $('#salesmanNric').val('');
+	    $('#departCd').val('');
+	    $('#departMemId').val('');
+	    $('#grpCd').val('');
+	    $('#grpMemId').val('');
+	    $('#orgCd').val('');
+	    $('#orgMemId').val('');
+	}
+	
+	function fn_loadOrderSalesman(memId, memCode) {
+        
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+        
+        fn_clearOrderSalesman();
+        
+        if(FormUtil.isNotEmpty(trialNo)) {
+            //$("#searchSalesOrdNo").val(trialNo);
+            
+            Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+                
+                if(memInfo == null || memInfo == 'undefined') {
+                    Common.alert('<b>Member not found.</br>Your input member code : '+memCd+'</b>');
+                }
+                else {               
+            	    $('#salesmanId').val(memInfo.memId);
+            	    $('#salesmanCd').val(memInfo.memCode);
+            	    $('#salesmanType').val(memInfo.codeName);
+            	    $('#salesmanTypeId').val(memInfo.memType);
+            	    $('#salesmanNm').val(memInfo.name);
+            	    $('#salesmanNric').val(memInfo.nric);
+            	    $('#departCd').val(memInfo.deptCode);
+            	    $('#departMemId').val(memInfo.lvl3UpId);
+            	    $('#grpCd').val(memInfo.grpCode);
+            	    $('#grpMemId').val(memInfo.lvl2UpId);
+            	    $('#orgCd').val(memInfo.orgCode);
+            	    $('#orgMemId').val(memInfo.lvl1UpId);
+            	    
+            	    $('#salesmanCd').removeClass("readonly");
+            	    $('#salesmanType').removeClass("readonly");
+            	    $('#salesmanNm').removeClass("readonly");
+            	    $('#salesmanNric').removeClass("readonly");
+            	    $('#departCd').removeClass("readonly");
+            	    $('#grpCd').removeClass("readonly");
+            	    $('#orgCd').removeClass("readonly");
+                }
+            });
+        }
+	}
 	    
 	function fn_loadTrialNo(trialNo) {
         
@@ -1133,13 +1202,15 @@
     <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
     <th scope="row">Salesman Code<span class="must">*</span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="" />
-        <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+        <input id="salesmanId" name="salesmanId" type="hidden"  />
+        <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row">Reference No<span class="must">*</span></th>
     <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Salesman Type</th>
-    <td><input id="salesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="w100p readonly" readonly/></td>
+    <td><input id="salesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="w100p readonly" readonly/>
+        <input id="salesmanTypeId" name="salesmanTypeId" type="hidden" /></td>
 </tr>
 <tr>
     <th scope="row">PO No<span class="must">*</span></th>
@@ -1159,7 +1230,8 @@
     <select id="ordCampgn" name="ordCampgn" class="w100p" disabled></select>
     </td>
     <th scope="row">Department Code</th>
-    <td><input id="departCd" name="departCd" type="text" title="" placeholder="Department Code" class="w100p readonly" readonly /></td>
+    <td><input id="departCd" name="departCd" type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
+        <input id="departMemId" name="departMemId" type="hidden" /></td>
 </tr>
 <tr>
     <th scope="row">Promotion<span class="must">*</span></th>
@@ -1167,7 +1239,8 @@
     <select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
     </td>
     <th scope="row">Group Code</th>
-    <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly /></td>
+    <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
+        <input id="grpMemId" name="grpMemId" type="hidden" /></td>
 </tr>
 <tr>
     <th scope="row">Price/RPF (RM)</th>
@@ -1182,7 +1255,7 @@
     <th scope="row">Trial No </th>
     <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
                <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" class="readonly" readonly />
-               <input id="trialId" name="trialId" type="text" />
+               <input id="trialId" name="trialId" type="hidden" />
                <a id="trialNoBtn" name="trialNoBtn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>

@@ -201,6 +201,11 @@ public class CommonController {
 		return "common/customerPop";
 	}
 
+	@RequestMapping(value = "/memberPop.do")
+	public String memberPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "common/memberPop";
+	}
+
 	@RequestMapping(value = "/selectBrnchIdByPostCode.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> selectBrnchIdByPostCode(@RequestParam Map<String, Object> params) {
 		EgovMap result = commonService.selectBrnchIdByPostCode(params);

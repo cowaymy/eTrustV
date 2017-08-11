@@ -138,4 +138,18 @@ public class OrderRegisterController {
     	EgovMap result = orderRegisterService.selectTrialNo(params);
     	return ResponseEntity.ok(result);
     }
+    
+    @RequestMapping(value = "/selectMemberByMemberIDCode.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectMemberByMemberIDCode(@RequestParam Map<String, Object> params)
+    {
+    	EgovMap result = orderRegisterService.selectMemberByMemberIDCode(params);
+    	return ResponseEntity.ok(result);
+    }
+    
+    @RequestMapping(value = "/selectMemberList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectMemberList(@RequestParam Map<String, Object> params)
+    {
+    	List<EgovMap> codeList = orderRegisterService.selectMemberList(params);
+    	return ResponseEntity.ok(codeList);
+    }
 }
