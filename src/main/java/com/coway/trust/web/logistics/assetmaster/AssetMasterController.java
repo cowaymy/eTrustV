@@ -1,10 +1,7 @@
 package com.coway.trust.web.logistics.assetmaster;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -39,19 +36,18 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class AssetMasterController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-@Value("${app.name}")
+
+	@Value("${app.name}")
 	private String appName;
 
 	@Resource(name = "AssetMngService")
 	private AssetMngService ams;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@Autowired
 	private SessionHandler sessionHandler;
-	
 
 	@RequestMapping(value = "/AssetMaster.do")
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -59,43 +55,42 @@ public class AssetMasterController {
 	}
 
 	@RequestMapping(value = "/assetList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> selectCourierList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {	
-		
+	public ResponseEntity<Map> selectCourierList(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
 		String searchassetid = request.getParameter("searchassetid");
 		String[] searchstatus = request.getParameterValues("searchstatus");
 		String searchbrand = request.getParameter("searchbrand");
 		String searchmodelname = request.getParameter("searchmodelname");
 		String searchpurchasedate1 = request.getParameter("searchpurchasedate1");
 		String searchpurchasedate2 = request.getParameter("searchpurchasedate2");
-//		String searchcategory = request.getParameter("searchcategory");
-//		String searchcategory = request.getParameter("searchcategory");
-//		String searchcategory = request.getParameter("searchcategory");
-					
+		// String searchcategory = request.getParameter("searchcategory");
+		// String searchcategory = request.getParameter("searchcategory");
+		// String searchcategory = request.getParameter("searchcategory");
+
 		Map<String, Object> assetmap = new HashMap();
 		assetmap.put("searchassetid", searchassetid);
-		assetmap.put("searchstatus" , searchstatus);
-		assetmap.put("searchbrand"  ,	searchbrand );
-		assetmap.put("searchmodelname"  ,	searchmodelname );
-		assetmap.put("searchpurchasedate1"  ,	searchpurchasedate1 );
-		assetmap.put("searchpurchasedate2"  ,	searchpurchasedate2 );
+		assetmap.put("searchstatus", searchstatus);
+		assetmap.put("searchbrand", searchbrand);
+		assetmap.put("searchmodelname", searchmodelname);
+		assetmap.put("searchpurchasedate1", searchpurchasedate1);
+		assetmap.put("searchpurchasedate2", searchpurchasedate2);
 
 		List<EgovMap> list = ams.selectAssetList(assetmap);
-		
+
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
-	}	
-	
-	
+	}
+
 	@RequestMapping(value = "/selectDetailList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> selectDetailList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {	
-	
+	public ResponseEntity<Map> selectDetailList(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
 		String assetid = request.getParameter("assetid");
 		logger.debug("assetid 키값 : {}", assetid);
-		
+
 		Map<String, Object> assetdetailmap = new HashMap();
 		assetdetailmap.put("assetid", assetid);
 
@@ -104,74 +99,71 @@ public class AssetMasterController {
 		for (int i = 0; i < list.size(); i++) {
 			logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.get(i));
 		}
-		
+
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
-	}	
-	
-	
-	
+	}
+
 	@RequestMapping(value = "/selectDealerList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDealerList(@RequestParam Map<String, Object> params) {
 
 		logger.debug("selectDealerListCode : {}", params.get("groupCode"));
 
 		List<EgovMap> DealerList = ams.selectDealerList(params);
-		
+
 		return ResponseEntity.ok(DealerList);
 	}
-	
+
 	@RequestMapping(value = "/selectBrandList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBrandList(@RequestParam Map<String, Object> params) {
 
 		logger.debug("selectBrandListCode : {}", params.get("groupCode"));
 
 		List<EgovMap> BrandList = ams.selectBrandList(params);
-		
+
 		return ResponseEntity.ok(BrandList);
 	}
-	
+
 	@RequestMapping(value = "/selectTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
-		
+
 		params.put("hrchytypeid", "1198");
 
 		List<EgovMap> TypeList = ams.selectTypeList(params);
-		
+
 		return ResponseEntity.ok(TypeList);
 	}
-	
-	
+
 	@RequestMapping(value = "/insertAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-		
-		//Map<String, Object> masterMap = (Map<String, Object>) params.get("masterForm");
-		//Map<String, Object> detailMap= (Map<String, Object>) params.get("detailAddForm");
-		//Map<String, Object> detailMap= (Map<String, Object>) params.get("param");
-		
-		 Map<String , Object> masterMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		 
-		 logger.debug("mastertype  : {}", masterMap.get("mastertype"));
-		 logger.debug("mastercategory  : {}", masterMap.get("mastercategory"));
-		 logger.debug("mastermodelname  : {}", masterMap.get("mastermodelname"));
-		 logger.debug("masterinvoiceno  : {}", masterMap.get("masterinvoiceno"));
-		 logger.debug("masterdealer  : {}", masterMap.get("masterdealer"));
-		 logger.debug("masterbrand  : {}", masterMap.get("masterbrand"));
-		 logger.debug("masterpurchaseamount  : {}", masterMap.get("masterpurchaseamount"));
-		 logger.debug("masterrefno  : {}", masterMap.get("masterrefno"));
-		 logger.debug("masterserialno  : {}", masterMap.get("masterserialno"));
-		 logger.debug("masterwarrantyno  : {}", masterMap.get("masterwarrantyno"));
-		 logger.debug("mastermacaddress  : {}", masterMap.get("mastermacaddress"));
-		 logger.debug("masterremark  : {}", masterMap.get("masterremark"));
-	
+
+		// Map<String, Object> masterMap = (Map<String, Object>) params.get("masterForm");
+		// Map<String, Object> detailMap= (Map<String, Object>) params.get("detailAddForm");
+		// Map<String, Object> detailMap= (Map<String, Object>) params.get("param");
+
+		Map<String, Object> masterMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
+		logger.debug("mastertype  : {}", masterMap.get("mastertype"));
+		logger.debug("mastercategory  : {}", masterMap.get("mastercategory"));
+		logger.debug("mastermodelname  : {}", masterMap.get("mastermodelname"));
+		logger.debug("masterinvoiceno  : {}", masterMap.get("masterinvoiceno"));
+		logger.debug("masterdealer  : {}", masterMap.get("masterdealer"));
+		logger.debug("masterbrand  : {}", masterMap.get("masterbrand"));
+		logger.debug("masterpurchaseamount  : {}", masterMap.get("masterpurchaseamount"));
+		logger.debug("masterrefno  : {}", masterMap.get("masterrefno"));
+		logger.debug("masterserialno  : {}", masterMap.get("masterserialno"));
+		logger.debug("masterwarrantyno  : {}", masterMap.get("masterwarrantyno"));
+		logger.debug("mastermacaddress  : {}", masterMap.get("mastermacaddress"));
+		logger.debug("masterremark  : {}", masterMap.get("masterremark"));
+
 		List<EgovMap> detailAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
-		 for (int i = 0; i < detailAddList.size(); i++) {
-			 logger.debug("%%%%%%%%detailAddList%%%%%%%: {}", detailAddList.get(i));	 
+		for (int i = 0; i < detailAddList.size(); i++) {
+			logger.debug("%%%%%%%%detailAddList%%%%%%%: {}", detailAddList.get(i));
 		}
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -181,13 +173,13 @@ public class AssetMasterController {
 		}
 		masterMap.put("crt_user_id", loginId);
 		masterMap.put("upd_user_id", loginId);
-	
+
 		String retMsg = AppConstants.MSG_SUCCESS;
-			
+
 		Map<String, Object> map = new HashMap();
 
 		try {
-			ams.insertAssetMng(masterMap,detailAddList);
+			ams.insertAssetMng(masterMap, detailAddList);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -196,14 +188,14 @@ public class AssetMasterController {
 
 		return ResponseEntity.ok(map);
 	}
-	
-	
+
 	@RequestMapping(value = "/motifyAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> motifyAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 
-		params.put("masterpurchasedate", CommonUtils.changeFormat((String)params.get("masterpurchasedate"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));		
-		
+		params.put("masterpurchasedate", CommonUtils.changeFormat((String) params.get("masterpurchasedate"),
+				SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -229,18 +221,17 @@ public class AssetMasterController {
 
 		return ResponseEntity.ok(map);
 	}
-	
-	
+
 	@RequestMapping(value = "/deleteAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> deleteAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-		
+
 		String retMsg = AppConstants.MSG_SUCCESS;
 
 		Map<String, Object> map = new HashMap();
 
 		try {
-			//ams.deleteAssetMng(params);
+			// ams.deleteAssetMng(params);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -249,5 +240,36 @@ public class AssetMasterController {
 
 		return ResponseEntity.ok(map);
 	}
-	
+
+	@RequestMapping(value = "/copyAsset.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertCopyAsset(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		int cnt = 0;
+		int assetid = Integer.parseInt(request.getParameter("assetid"));
+		int copyquantity = Integer.parseInt(request.getParameter("copyquantity"));
+
+		// Map<String, Object> params = new HashMap();
+		Map<String, Object> map = new HashMap();
+		// params.put("categoryid", assetid);
+		// params.put("materialCd", copyquantity);
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		cnt = ams.insertCopyAsset(assetid, copyquantity, loginId);
+		if (cnt < 1) {
+
+			retMsg = AppConstants.MSG_FAIL;
+		}
+		map.put("msg", retMsg);
+
+		return ResponseEntity.ok(map);
+	}
 }
