@@ -28,11 +28,11 @@ var MainColumnLayout =
     [      
         {    
             dataField : "div",
-            headerText : "Div",
+            headerText : "<spring:message code='sys.info.grid1.field_0' arguments='Div' htmlEscape='false'/>",
             width : 80
         }, {
-            dataField : "menuLvl",
-            headerText : "Lvl",
+            dataField : "menuLvl", 
+            headerText : "<spring:message code='sys.info.grid1.field_1' arguments='Lvl' htmlEscape='false'/>",  
             width : 50,
             editRenderer : {
                 type : "ComboBoxRenderer",
@@ -45,7 +45,7 @@ var MainColumnLayout =
             }
         }, {
             dataField : "upperMenuCode",
-            headerText : "UpperMenu",
+            headerText : "<spring:message code='sys.info.grid1.field_2' arguments='UpperMenu' htmlEscape='false'/>", 
             width : 180,
             editable : false,
             style : "aui-grid-left-column",
@@ -65,7 +65,8 @@ var MainColumnLayout =
 				                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
 				                    if (item.menuLvl == "1")
 				                    {
-				                    	Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
+				                    	//Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
+				                    	Common.alert("<spring:message code='sys.msg.cannot' arguments='Select UpperMenu ; Lvl 1.' htmlEscape='false' argumentSeparator=';'/>");
 				                      return false;
 				                    }
 				                    
@@ -74,16 +75,16 @@ var MainColumnLayout =
 				                  }
                 } // IconRenderer
         },{
-            dataField : "menuCode",
-            headerText : "MenuId",
+            dataField : "menuCode", 
+            headerText : "<spring:message code='sys.info.grid1.field_3' arguments='MenuId' htmlEscape='false'/>", 
             width : 150
         }, {
             dataField : "menuName",
-            headerText : "MenuNm",
+            headerText : "<spring:message code='sys.info.grid1.field_4' arguments='MenuNm' htmlEscape='false'/>", 
             width : 250
         }, {
-            dataField : "pgmCode",
-            headerText : "ProgramId",
+            dataField : "pgmCode", 
+            headerText : "<spring:message code='sys.info.grid1.field_5' arguments='ProgramId' htmlEscape='false'/>",
             width : 180,
             editable : false,
             style : "aui-grid-left-column",
@@ -105,16 +106,16 @@ var MainColumnLayout =
             
         }, {
             dataField : "pgmName",
-            headerText : "ProgramNm",
+            headerText : "<spring:message code='sys.info.grid1.field_6' arguments='ProgramNm' htmlEscape='false'/>",
             editable : false,
             width : 230
         }, {
-            dataField : "menuOrder",
-            headerText : "Order",
+            dataField : "menuOrder", 
+            headerText : "<spring:message code='sys.info.grid1.field_7' arguments='Order' htmlEscape='false'/>", 
             width : 100
         }, {
-            dataField : "statusCode",
-            headerText : "Status",
+            dataField : "statusCode", 
+            headerText : "<spring:message code='sys.info.grid1.field_8' arguments='Status' htmlEscape='false'/>", 
             //style : "my-column",
             width : 100,
             editRenderer : {
@@ -349,6 +350,7 @@ function fnValidationCheck()
       if (menuCode == "" || menuCode.length == 0) 
       {
         result = false;
+        // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
         break;
       }
@@ -356,7 +358,8 @@ function fnValidationCheck()
       if (menuCode.length != 9) 
       {
         result = false;
-        Common.alert("Menu Code is not more then 9. ");
+        //Common.alert("Menu Code length must be 9 digits. ");
+        Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");  
         break;
       }
       
@@ -377,7 +380,8 @@ function fnValidationCheck()
       if (parseInt(menuLvl) > 4) 
       {
           result = false;
-          Common.alert("Menu Level is not more than 4. ");
+          //Common.alert("Menu Level is not more than 4. ");  
+          Common.alert("<spring:message code='sys.msg.limitMore' arguments='Menu Level ; 4' htmlEscape='false' argumentSeparator=';' />");
           break;
       }
       
@@ -405,14 +409,16 @@ function fnValidationCheck()
       if ( menuLvl != "1" && upperMenuCode.length != 0 && menuCode == upperMenuCode)
       {
           result = false;
-          Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
+          //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");  
+          Common.alert("<spring:message code='sys.msg.different' arguments='UPPER MENU ; MENU CODE' htmlEscape='false' argumentSeparator=';' />");
           break;
       }
 
       if ( parseInt(menuLvl) > 1 && upperMenuCode.length == 1 )
       {
           result = false;
-          Common.alert(" Pleae Enter 'UPPER MENU' at level 2 or higher.");
+          //Common.alert(" Pleae Enter 'UPPER MENU' at level 2 or higher.");
+          Common.alert("<spring:message code='sys.msg.limit' arguments='UPPER MENU ; at level 2' htmlEscape='false' argumentSeparator=';'/>");
           break;
       }
          
@@ -430,35 +436,34 @@ function fnValidationCheck()
         var statusCode = udtList[i].statusCode;
         var upperMenuCode = udtList[i].upperMenuCode.fnTrim();
 
-        console.log("AAA: " + upperMenuCode);
-
         if (menuCode == "" || menuCode.length == 0) 
         {
           result = false;
-          Common.alert("Please Check Menu Code.");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
           break;
         }
         
         if (menuCode.length != 9) 
         {
           result = false;
-          Common.alert("Menu Code Length Must Be 9..   ");
+          Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");
           break;
         }        
         
         if (menuName == "" ) 
         {
           result = false;
-          Common.alert("Please Check Menu Name.");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Name' htmlEscape='false'/>");
           break;
         }
         
         if (menuLvl == "") 
         {
             result = false;
-            Common.alert("Please Check Menu Level.");
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Level' htmlEscape='false'/>");
             break;
         }
+    
         
 /*         if (pgmCode == "") 
         {
@@ -470,28 +475,28 @@ function fnValidationCheck()
         if (menuLvl != "1" && menuOrder == "") 
         {
             result = false;
-            Common.alert("Please Check Menu Order.");
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Order' htmlEscape='false'/>");
             break;
         }
         
         if (statusCode == "") 
         {
             result = false;
-            Common.alert("Please Check Status Code. ");
+            Common.alert("<spring:message code='sys.msg.necessary' arguments='Status Code' htmlEscape='false'/>");
             break;
         }
 
         if ( menuLvl != "1" && upperMenuCode.length != 0 && menuCode == upperMenuCode)
         {
             result = false;
-            Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
+            Common.alert("<spring:message code='sys.msg.different' arguments='UPPER MENU and ; MENU CODE' htmlEscape='false' argumentSeparator=';'/>");
             break;
         }
 
         if ( parseInt(menuLvl) > 1 && upperMenuCode.length == 0 )
         {
             result = false;
-            Common.alert(" Pleae Enter 'UPPER MENU' at level 2 or higher.");
+            Common.alert("<spring:message code='sys.msg.limit' arguments='UPPER MENU ; at level 2' htmlEscape='false' argumentSeparator=';'/>");
             AUIGrid.restoreEditedCells(myGridID, [gSelMainRowIdx, "menuLvl"] );
             break;
         }        
@@ -502,17 +507,10 @@ function fnValidationCheck()
     {
         var menuCode  = delList[i].menuCode;
         
-        if (menuCode == "" || menuCode.length == 0) 
+        if (menuCode == "" || menuCode.length == 0 || menuCode.length != 9) 
         {
           result = false;
-          Common.alert("Please Check Menu Code. ");
-          break;
-        }
-        
-        if (menuCode.length != 9) 
-        {
-          result = false;
-          Common.alert("Menu Code Length must be 9 digits. ");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
           break;
         }
         
