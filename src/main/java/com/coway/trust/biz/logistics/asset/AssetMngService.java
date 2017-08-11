@@ -17,7 +17,10 @@ public interface AssetMngService {
 
 	List<EgovMap> selectTypeList(Map<String, Object> params);
 
+
 	void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList);
+
+	void updateItemAssetMng(Map<String, Object> params);
 
 	void motifyAssetMng(Map<String, Object> params);
 
