@@ -90,7 +90,7 @@ var detailColumnLayout =
 
 function fn_getMstCommCdListAjax() 
 {        
-  Common.ajax("GET", "/common/selectMstCodeList.do"
+  Common.ajax("GET", "/general/selectMstCodeList.do"
   	   , $("#MainForm").serialize()
   	   , function(result) 
 	     {
@@ -108,7 +108,7 @@ function fn_getMstCommCdListAjax()
 
 function fn_DetailGetInfo()
 {
-   Common.ajax("GET", "/common/selectDetailCodeList.do"
+   Common.ajax("GET", "/general/selectDetailCodeList.do"
 		    , $("#MainForm").serialize()
 		    , function(result) 
 			   {
@@ -121,7 +121,7 @@ function fn_DetailGetInfo()
 // 마스터저장 서버 전송.
 function fnSaveGridMap() 
 {
-  Common.ajax("POST", "/common/saveGeneralCode.do"
+  Common.ajax("POST", "/general/saveGeneralCode.do"
 		    , GridCommon.getEditData(myGridID)
 		    , function(result) 
 		     {
@@ -151,7 +151,7 @@ function fnSaveGridMap()
 // 상세데이타 서버로 전송.
 function fnSaveDetailGridMap() 
 {
-  Common.ajax("POST", "/common/saveDetailCommCode.do"
+  Common.ajax("POST", "/general/saveDetailCommCode.do"
 	     , GridCommon.getEditData(detailGridID), function(result) 
 	       {
           alert("Success!");      
