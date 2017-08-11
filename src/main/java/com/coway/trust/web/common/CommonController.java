@@ -127,7 +127,7 @@ public class CommonController {
 
 		int cnt = 0;
 		if (addList.size() > 0) 
-		{   //{add=[{div=, menuLvl=1, menuCode=ORG000000, menuName=CMM001, pgmCode=communication, pgmName=COMM, menuOrder=, upperMenuCode=, statusCode=, menuSeq=D016A60C-3131-F276-AA9D-CAAF521EF3AD}], update=[], remove=[]}
+		{   
 			cnt = commonService.insertMenuCode(addList, getUserId);
 		}
 		
