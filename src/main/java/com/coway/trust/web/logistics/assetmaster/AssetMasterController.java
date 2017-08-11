@@ -94,11 +94,16 @@ public class AssetMasterController {
 			throws Exception {	
 	
 		String assetid = request.getParameter("assetid");
+		logger.debug("assetid 키값 : {}", assetid);
 		
 		Map<String, Object> assetdetailmap = new HashMap();
 		assetdetailmap.put("assetid", assetid);
 
 		List<EgovMap> list = ams.selectDetailList(assetdetailmap);
+		logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.size());
+		for (int i = 0; i < list.size(); i++) {
+			logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.get(i));
+		}
 		
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
