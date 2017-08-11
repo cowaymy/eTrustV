@@ -54,11 +54,6 @@ var MainColumnLayout =
                 iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
                 iconHeight : 13,
                 iconPosition : "aisleRight",
-/*                 iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.gif"  
-                  ," " : "xx"  // null일경우, 공백으로 입력
-                  
-                }, */
                 iconFunction : function(rowIndex, columnIndex, value, item) 
                 {
                     switch(item.menuLvl ) 
