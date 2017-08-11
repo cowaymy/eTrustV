@@ -9,10 +9,13 @@
         <result property="department" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         <result property="department" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         </resultMap>
-     
-  
+        <resultMap id="assetCopy" type="EgovMap">
+        <result property="assetRem" column="ASSET_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        <result property="assetDRem" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        <result property="assetDItmRem" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        </resultMap>
     <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
-		    select 
+            select 
                  E1.ASSET_ID assetId,
                  E1.BRAND_ID brandId,
                  l49.name, 
@@ -59,23 +62,23 @@
                     ELSE NULL
                  END
                     userName2       
-		       FROM LOG0050M E1 , SYS0038M s38 , LOG0049M l49
-		     , (select * from sys0013m where code_master_id = 108) s13c
-		     , (select * from sys0013m where code_master_id = 111) s13t
-		     , (select * from sys0013m where code_master_id = 112) s13r
-		     , SYS0005M s05m , SAL0030D s30 , SYS0040M s40 , SYS0047M s47
-		<!-- WHERE 1 = E1.STUS_ID -->
-		  WHERE 1 = 1
-		  and e1.stus_id  = s38.STUS_CODE_ID
-		  and e1.brand_id = l49.brand_id
-		  and e1.ctgry_id = s13c.code_id
-		  and e1.type_id  = s13t.code_id
-		  and e1.COLOR_ID = s13r.code_id
-		  and E1.CURR_BRNCH_ID = s05m.BRNCH_ID(+)
-		  and E1.DEALER_ID = s30.DEALER_ID(+)
-		  and E1.CURR_DEPT_ID = s40.DEPT_ID(+) 
-		  and E1.CURR_USER_ID = s47.USER_ID(+)
-	     <if test="searchassetid != null and searchassetid !=''">
+               FROM LOG0050M E1 , SYS0038M s38 , LOG0049M l49
+             , (select * from sys0013m where code_master_id = 108) s13c
+             , (select * from sys0013m where code_master_id = 111) s13t
+             , (select * from sys0013m where code_master_id = 112) s13r
+             , SYS0005M s05m , SAL0030D s30 , SYS0040M s40 , SYS0047M s47
+        <!-- WHERE 1 = E1.STUS_ID -->
+          WHERE 1 = 1
+          and e1.stus_id  = s38.STUS_CODE_ID
+          and e1.brand_id = l49.brand_id
+          and e1.ctgry_id = s13c.code_id
+          and e1.type_id  = s13t.code_id
+          and e1.COLOR_ID = s13r.code_id
+          and E1.CURR_BRNCH_ID = s05m.BRNCH_ID(+)
+          and E1.DEALER_ID = s30.DEALER_ID(+)
+          and E1.CURR_DEPT_ID = s40.DEPT_ID(+) 
+          and E1.CURR_USER_ID = s47.USER_ID(+)
+         <if test="searchassetid != null and searchassetid !=''">
                      AND E1.ASSET_ID = #{searchassetid}
          </if>
          <if test="searchstatus != null and searchstatus != ''">
@@ -124,7 +127,7 @@
           <if test="searchcreator != null and searchcreator !=''">
                      AND E1.CURR_USER_ID = #{searchcreator}
          </if>
-		  order by asset_id
+          order by asset_id
     </select>
     
     <select id="selectDetailList" parameterType="Map" resultMap="assetClobMap">
@@ -175,27 +178,27 @@
     </select> 
     
     <select id="selectDealerList" parameterType="Map" resultType="EgovMap">
-		  SELECT 
-		       DEALER_ID CODE_ID  ,
-		       DEALER_NRIC DEALER_NRIC  ,
-		       DEALER_NAME CODE_NAME  ,
-		       DEALER_EMAIL DEALER_EMAIL  ,
-		       DEALER_STUS_ID DEALER_STUS_ID  ,
-		       DEALER_BRNCH_ID DEALER_BRNCH_ID  ,
-		       CRT_DT CRT_DT  ,
-		       CRT_USER_ID CRT_USER_ID  ,
-		       UPD_DT UPD_DT  ,
-		       UPD_USER_ID UPD_USER_ID  ,
-		       USER_ID USER_ID  ,
-		       CUST_ID CUST_ID  ,
-		       SBO_CODE SBO_CODE  
-		  FROM SAL0030D 
-		 WHERE DEALER_STUS_ID = #{groupCode}
-		  ORDER BY DEALER_NAME ASC
+          SELECT 
+               DEALER_ID CODE_ID  ,
+               DEALER_NRIC DEALER_NRIC  ,
+               DEALER_NAME CODE_NAME  ,
+               DEALER_EMAIL DEALER_EMAIL  ,
+               DEALER_STUS_ID DEALER_STUS_ID  ,
+               DEALER_BRNCH_ID DEALER_BRNCH_ID  ,
+               CRT_DT CRT_DT  ,
+               CRT_USER_ID CRT_USER_ID  ,
+               UPD_DT UPD_DT  ,
+               UPD_USER_ID UPD_USER_ID  ,
+               USER_ID USER_ID  ,
+               CUST_ID CUST_ID  ,
+               SBO_CODE SBO_CODE  
+          FROM SAL0030D 
+         WHERE DEALER_STUS_ID = #{groupCode}
+          ORDER BY DEALER_NAME ASC
     </select>
     
     <select id="selectBrandList" parameterType="Map" resultType="EgovMap">
-	     SELECT 
+         SELECT 
                BRAND_ID CODE_ID  ,
                Name CODE_NAME  ,
                DISAB DISAB  ,
@@ -360,10 +363,237 @@
     <select id="AssetdetailCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_D_ID),0) + 1 from LOG0051D
     </select>
+    <select id="selectMaxAssestId" parameterType="Map" resultType="Integer">
+         SELECT NVL(MAX(ASSET_ID),0) + 1 FROM LOG0050M
+    </select>
+    <select id="selectMaxAssestDId" parameterType="Map" resultType="Integer">
+         SELECT NVL(MAX(ASSET_D_ID),0) + 1 FROM LOG0051D
+    </select>
+    <select id="selectMaxAssetDItmId" parameterType="Map" resultType="Integer">
+         SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 FROM LOG0052D
+    </select>
+    <select id="selectMaxCardId" parameterType="Map" resultType="Integer">
+         SELECT NVL(MAX(CARD_ID),0) + 1 FROM LOG0057M
+    </select>
+ 
+    
+    <select id="selectAssetM" parameterType="Map" resultMap="assetCopy">
+        SELECT 
+            ASSET_ID,
+            STUS_ID,
+            CTGRY_ID,
+            TYPE_ID,
+            COLOR_ID,
+            BRAND_ID,
+            CURR_BRNCH_ID,
+            CURR_DEPT_ID,
+            CURR_USER_ID,
+            PURCHS_DT,
+            PURCHS_AMT,
+            IMEI_NO,
+            WRANTY_NO,
+            SERIAL_NO,
+            REF_NO,
+            ASSET_REM,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT,
+            NAME,
+            MAC_ADDR,
+            INVC_NO,
+            DEALER_ID
+        FROM LOG0050M
+          WHERE ASSET_ID=#{assetid}
+    </select>
+    
+    <select id="selectAssetD" parameterType="Map" resultMap="assetCopy">
+        SELECT
+                l51d.ASSET_D_ID,
+                l51d.STUS_ID,
+                l51d.ASSET_ID,
+                l51d.TYPE_ID,
+                l51d.BRAND_ID,
+                l51d.CRT_USER_ID,
+                l51d.CRT_DT,
+                l51d.UPD_USER_ID,
+                l51d.UPD_DT,
+                l51d.NAME,
+                l51d.ASSET_D_REM
+        FROM LOG0051D l51d, LOG0050M l50m
+         WHERE l51d.ASSET_ID  = l50m.ASSET_ID
+            AND  l50m.ASSET_ID = #{assetid}
+            AND  l51d.STUS_ID=1
+    </select>
     
       <select id="AssetItemCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 from LOG0052D
     </select>
  
+    <select id="selectAssetDItem" parameterType="Map" resultMap="assetCopy">
+        SELECT
+                l52d.ASSET_D_ITM_ID,
+                l52d.DISAB,
+                l52d.ASSET_D_ID,
+                l52d.NAME,
+                l52d.VALU,
+                l52d.ASSET_D_ITM_REM,
+                l52d.CRT_USER_ID,
+                l52d.CRT_DT,
+                l52d.UPD_USER_ID,
+                l52d.UPD_DT
+            FROM LOG0052D l52d, LOG0051D l51d, LOG0050M l50m
+             WHERE l51d.ASSET_D_ID = l52d.ASSET_D_ID
+                    AND l51d.ASSET_ID =  l50m.ASSET_ID
+                    AND l50m.ASSET_ID = #{assetid}
+                    AND l51d.STUS_ID = 1
+                    AND l52d.DISAB = 0
+    </select>
     
+  <insert id="insertCopyAssetM"  parameterType="Map">
+       INSERT INTO LOG0050M
+            (
+                ASSET_ID,
+                STUS_ID,
+                CTGRY_ID,
+                TYPE_ID,
+                COLOR_ID,
+                BRAND_ID,
+                CURR_BRNCH_ID,
+                CURR_DEPT_ID,
+                CURR_USER_ID,
+                PURCHS_DT,
+                PURCHS_AMT,
+                IMEI_NO,
+                WRANTY_NO,
+                SERIAL_NO,
+                REF_NO,
+                ASSET_REM,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT,
+                NAME,
+                MAC_ADDR,
+                INVC_NO,
+                DEALER_ID
+            )
+         SELECT 
+            #{newAssetId},
+            STUS_ID,
+            CTGRY_ID,
+            TYPE_ID,
+            COLOR_ID,
+            BRAND_ID,
+            42,
+            38,
+            0,
+            PURCHS_DT,
+            PURCHS_AMT,
+            IMEI_NO,
+            WRANTY_NO,
+            SERIAL_NO,
+            REF_NO,
+            ASSET_REM,
+            #{loginId},
+            SYSDATE,
+            #{loginId},
+            SYSDATE,
+            NAME,
+            MAC_ADDR,
+            INVC_NO,
+            DEALER_ID
+        FROM LOG0050M
+          WHERE ASSET_ID=#{assetid}
+    </insert>
+    
+    <insert id="insertCopyAssetCard" parameterType="Map">
+     INSERT INTO LOG0057M
+                 (
+                  CARD_ID,
+                  CARD_TYPE_ID,
+                  CARD_DOC_NO,
+                  ASSET_ID,
+                  QTY,
+                  BRNCH_ID,
+                  DEPT_ID,
+                  CRT_USER_ID,
+                  CRT_DT
+                 )
+                 VALUES
+                 (
+                  #{newAssetCardId},
+                  1226,
+                  LPAD(#{newAssetId}, 10 ,0),
+                  #{newAssetId},
+                  1,
+                  42,
+                  38,
+                  #{loginId},
+                   SYSDATE
+                    )
+    </insert>
+    
+    <insert id="insertCopyAssetD" parameterType="Map">
+    INSERT INTO LOG0051D
+            (
+            ASSET_D_ID,
+            STUS_ID,
+            ASSET_ID,
+            TYPE_ID,
+            BRAND_ID,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT,
+            NAME,
+            ASSET_D_REM
+             )
+            SELECT
+                #{newAssetDId},
+                STUS_ID,
+                #{newAssetId},
+                TYPE_ID,
+                BRAND_ID,
+                #{loginId},
+                SYSDATE,
+                #{loginId},
+                SYSDATE,
+                NAME,
+                ASSET_D_REM
+             FROM LOG0051D
+               WHERE ASSET_ID =#{assetid}
+                  AND ASSET_D_ID =#{assetDId}
+    </insert>
+     <insert id="insertCopyAssetDItmId" parameterType="Map">
+      INSERT INTO LOG0052D
+      (
+        ASSET_D_ITM_ID,
+        DISAB,
+        ASSET_D_ID,
+        NAME,
+        VALU,
+        ASSET_D_ITM_REM,
+        CRT_USER_ID,
+        CRT_DT,
+        UPD_USER_ID,
+        UPD_DT      
+      )
+        SELECT
+        #{newAssetDItmId},
+        0,
+        ASSET_D_ID,
+        NAME,
+        VALU,
+        ASSET_D_ITM_REM,
+        #{loginId},
+        SYSDATE,
+        #{loginId},
+        SYSDATE
+        FROM LOG0052D
+        WHERE ASSET_D_ID=#{assetDId}
+        AND   ASSET_D_ITM_ID=#{assetDItmId}
+     </insert>  
+    
+        
 </mapper>
