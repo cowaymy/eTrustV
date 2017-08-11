@@ -571,7 +571,7 @@
         SELECT
         #{newAssetDItmId},
         0,
-        ASSET_D_ID,
+        #{newAssetDId},
         NAME,
         VALU,
         ASSET_D_ITM_REM,
