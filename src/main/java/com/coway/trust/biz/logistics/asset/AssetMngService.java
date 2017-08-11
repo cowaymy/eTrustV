@@ -5,18 +5,24 @@ import java.util.Map;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-
 public interface AssetMngService {
-	
+
 	List<EgovMap> selectAssetList(Map<String, Object> params);
+
 	List<EgovMap> selectDetailList(Map<String, Object> params);
+
 	List<EgovMap> selectDealerList(Map<String, Object> params);
+
 	List<EgovMap> selectBrandList(Map<String, Object> params);
+
 	List<EgovMap> selectTypeList(Map<String, Object> params);
-	void insertAssetMng(Map<String, Object> params,List<EgovMap> detailAddList);
+
+	void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList);
+
 	void motifyAssetMng(Map<String, Object> params);
+
 	void deleteAssetMng(Map<String, Object> params);
-	
-	
-	
+
+	int insertCopyAsset(int assetid, int copyquantity, int loginId);
+
 }
