@@ -429,5 +429,81 @@ public class CommissionSystemController {
 		// return data
 		return ResponseEntity.ok(ruleBookMngList);
 	}
+	
+	
+	
+	/**
+	 * Call run commission management
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/runCommissionMng.do")
+	public String runCommissionMng(@RequestParam Map<String, Object> params, ModelMap model) {
+	
+		List<EgovMap> orgGrList = commissionSystemService.selectOrgGrCdListAll(params);
+		model.addAttribute("orgGrList", orgGrList);		
+		
+		List<EgovMap> orgList = commissionSystemService.selectOrgCdListAll(params);
+		
+		String dt = CommonUtils.getNowDate().substring(0, 6);
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("orgGrList", orgGrList);
+		model.addAttribute("orgList", orgList);
+		// 호출될 화면
+		return "commission/commissionCalculationMng";
+	}
+	
+	@RequestMapping(value = "/selectOrgProList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrgProList( @RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {		
+		params.put("mstId", CommissionConstants.COMIS_PRO_CD);		
+		// 조회.
+		List<EgovMap> itemList = commissionSystemService.selectOrgItemList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(itemList);
+	}
+	
+	@RequestMapping(value = "/callCommissionProcedure", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> callCommissionProcedure( @RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {	
+	//public ResponseEntity<ReturnMessage> callCommissionProcedure(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		EgovMap item = new EgovMap();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";			
+		}else{
+			loginId=String.valueOf(sessionVO.getUserId());
+		}
+		params.put("taskId", "52");
+		params.put("loginId", loginId);
+		
+	
+		
+			item =  (EgovMap) commissionSystemService.callCommProcedure(params);
+			logger.debug("v_result : {}", params.get("v_result"));
+			
+			if(params.get("v_result").equals("E")){
+				/*
+				 * 1. insert common log 
+				 * 2. set error message  
+				 */
+					
+			}else{
+				/*
+				 * 1. set sucess message 
+				 */
+			}
+	
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
 
 }

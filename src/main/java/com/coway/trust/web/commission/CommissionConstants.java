@@ -15,6 +15,7 @@ public class CommissionConstants {
 	public static final String COMIS_CT_CD = "302";				//Commission CT main code
 	public static final String COMIS_HP_CD = "303";				//Commission HP main code
 	public static final String COMIS_ITEM_CD = "304";			//Commission Item code
+	public static final String COMIS_PRO_CD = "311";			//Commission Procedure code
 	public static final String COMIS_HP = "HP";					//Health Planner
 	public static final String COMIS_CD = "CD";					//Coway Lady
 	public static final String COMIS_CT = "CT";					//Coway Technician

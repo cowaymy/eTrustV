@@ -525,4 +525,10 @@
     
   </select>
   
+  <select id="callCommProcedure" parameterType="Map"  statementType="CALLABLE" resultMap="clobMap">
+        {
+        call  ${procedureNm}(${taskId},TO_CHAR(TO_DATE(#{searchDt},'MM/YYYY'),'YYYY-MM'),${loginId},#{v_result,mode=OUT,jdbcType=VARCHAR}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
+  
 </mapper>

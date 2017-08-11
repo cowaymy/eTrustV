@@ -137,4 +137,6 @@ public interface CommissionSystemService
      * @return
      */
     int udtCommissionRuleData(Map<String, Object> params, String loginId);
+    
+    Map<String, Object> callCommProcedure(Map<String, Object> param);
 }

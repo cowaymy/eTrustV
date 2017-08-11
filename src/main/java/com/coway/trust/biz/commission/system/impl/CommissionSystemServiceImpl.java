@@ -426,5 +426,10 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectRuleBookMngList(Map<java.lang.String, Object> params) {		
 		return commissionSystemMapper.selectRuleBookMngList(params);
 	}
+	
+	@Override
+	 public Map<String, Object> callCommProcedure(Map<String, Object> param){
+		return commissionSystemMapper.callCommProcedure(param);
+	}
 
 }
