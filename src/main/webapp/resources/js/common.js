@@ -211,7 +211,7 @@ var Common = {
 
 		var divId = "_popupDiv";
 
-		if(_divId){
+		if(FormUtil.isNotEmpty(_divId)){
 			divId = _divId;
 		}
 
