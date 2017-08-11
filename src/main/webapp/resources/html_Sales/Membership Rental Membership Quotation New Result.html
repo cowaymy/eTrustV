@@ -265,20 +265,88 @@
 	<th scope="row">Is Charge</th>
 	<td><span>text</span></td>
 </tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Installation Info</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:180px" />
+	<col style="width:*" />
+</colgroup>
 <tr>
-	<th scope="row" rowspan="3">Instalation Address</th>
-	<td rowspan="3" colspan="3"><span>text</span></td>
+	<th scope="row">Instalation Address</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Outstanding Info</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+</colgroup>
+<tr>
 	<th scope="row">Order Outstanding</th>
 	<td><span>text</span></td>
-</tr>
-<tr>
 	<th scope="row">AS Outstanding</th>
 	<td><span>text</span></td>
+	<th scope="row">Membership Outstanding</th>
+	<td><span>text</span></td>
 </tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Latest Membership Info</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+</colgroup>
 <tr>
+	<th scope="row">Membership Package</th>
+	<td colspan="3"><span>text</span></td>
 	<th scope="row">Membership Expire</th>
 	<td><span>text</span></td>
 </tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Customer Info</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+</colgroup>
 <tr>
 	<th scope="row">Customer ID</th>
 	<td><span>text</span></td>
@@ -325,21 +393,16 @@
 	</dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
+
 <p class="brown_text mt10">(Is Charge = Yes : Filter service charges is depends on the filter expiration date)</p>
+
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
 
-<ul class="left_btns mb10">
-	<li><p class="btn_blue2"><a href="#">Other Contact Person</a></p></li>
-	<li><p class="btn_blue2"><a href="#">New Contact Person</a></p></li>
-</ul>
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
 	<col style="width:180px" />
 	<col style="width:*" />
 	<col style="width:180px" />
@@ -351,12 +414,12 @@
 <tr>
 	<th scope="row">Name</th>
 	<td colspan="5"><span>text</span></td>
-	<th scope="row">Gender</th>
-	<td><span>text</span></td>
 </tr>
 <tr>
 	<th scope="row">NRIC</th>
-	<td colspan="5"><span>text</span></td>
+	<td><span>text</span></td>
+	<th scope="row">Gender</th>
+	<td><span>text</span></td>
 	<th scope="row">Race</th>
 	<td><span>text</span></td>
 </tr>
@@ -367,12 +430,12 @@
 	<td><span>text</span></td>
 	<th scope="row">Residence No</th>
 	<td><span>text</span></td>
-	<th scope="row">Fax No</th>
-	<td><span>text</span></td>
 </tr>
 <tr>
+	<th scope="row">Fax No</th>
+	<td><span>text</span></td>
 	<th scope="row">Email</th>
-	<td colspan="7"><span>text</span></td>
+	<td colspan="3"><span>text</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -464,16 +527,8 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Type of Package</th>
-	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	</td>
-	<th scope="row">Subscription Year</th>
-	<td>
+	<th scope="row">Type of Package<span class="must">*</span></th>
+	<td colspan="3">
 	<select class="w100p">
 		<option value="">11</option>
 		<option value="">22</option>
@@ -491,13 +546,14 @@
 		<option value="">33</option>
 	</select>
 	</td>
-	<th scope="row">Package Price</th>
+	<th scope="row">Monthly Fee</th>
 	<td><span>text</span></td>
 </tr>
 <tr>
 	<th scope="row">Filter Promotion</th>
 	<td>
-	<select class="disabled w100p" disabled="disabled">
+	<label><input type="checkbox" disabled="disabled" /><span></span></label>
+	<select class="disabled" disabled="disabled">
 		<option value="">11</option>
 		<option value="">22</option>
 		<option value="">33</option>
@@ -513,10 +569,12 @@
 	<td><span>text</span></td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
-	<td><textarea cols="20" rows="5"></textarea></td>
 	<th scope="row">BS Frequency</th>
-	<td><span>text</span></td>
+	<td colspan="3"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Remark</th>
+	<td colspan="3"><textarea cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -556,7 +614,6 @@
 
 <ul class="center_btns">
 	<li><p class="btn_blue2"><a href="#">Save</a></p></li>
-	<li><p class="btn_blue2"><a href="#">Back</a></p></li>
 </ul>
 
 </section><!-- content end -->
