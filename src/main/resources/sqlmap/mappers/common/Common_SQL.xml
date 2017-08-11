@@ -10,7 +10,7 @@
 			      ,A.PGM_CODE
 			      ,B.PGM_NAME 
 			      ,A.STATUS_CODE
-			      ,NVL(A.UPPER_MENU_CODE,' ') UPPER_MENU_CODE
+			      ,A.UPPER_MENU_CODE
 			      ,A.MENU_ORDER 
 			   FROM SYS0051M A
 			       ,SYS0050M B
