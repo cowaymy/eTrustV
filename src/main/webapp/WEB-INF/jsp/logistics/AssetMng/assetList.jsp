@@ -39,6 +39,7 @@
    // var categorycomboData = [{"codeId": "1199","codeName": "IT Equipment"}];
     //var instockgradecomboData = [{"codeId": "A","codeName": "A"}];
     
+    var url;
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"assetid"      ,headerText:"Asset ID"           ,width:"5%"  ,height:30 , visible:true},
                         {dataField:"name2"      ,headerText:"Status"           ,width:"8%" ,height:30 , visible:true},
@@ -296,6 +297,42 @@
         
          });
          
+         $("#copyAssetOpen").click(function(){
+             div="V";
+             $("#detailHead").text("Copy/Duplicate Informaton");
+             selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             if (selectedItem[0] > -1){
+                 fn_assetDetail(selectedItem[0]);
+                 fn_setVisiable(div);
+                 $("#masterWindow").show();
+                 $("#cancelPopbtn").hide();
+             }else{
+             Common.alert('Choice Data please..');
+             }
+        
+         });
+         
+         $("#copybtn").click(function(){
+             
+            div="V";
+            regex = /[^0-9]/gi;
+             v = $("#copyquantity").val();
+             if (regex.test(v)) {
+                /*  var nn = v.replace(regex, '');
+                 $("#copyquantity").val(v.replace(regex, ''));
+                 $("#copyquantity").focus();
+                 return; */
+                 Common.alert('Please Check Input Number.');
+             } 
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            for(i=0; i<selectedItems.length; i++) {
+             url="/logistics/assetmng/copyAsset.do?assetid="+selectedItems[i].item.assetid+"&copyquantity="+v;
+             console.log(url);
+             f_others(url, div);
+            }
+         });
+         
+         
          $("#updatePopbtn").click(function(){
                 div="U";
                 if (valiedcheck()){
@@ -324,7 +361,17 @@
                 return;
             }
          });
-                        
+        $("#copyquantity").keyup(function(e){
+            regex = /[^0-9]/gi;
+            v = $(this).val();
+            if (regex.test(v)) {
+                var nn = v.replace(regex, '');
+                $(this).val(v.replace(regex, ''));
+                $(this).focus();
+                return;
+            }
+            
+        });                
     });
     
     
@@ -407,7 +454,26 @@
           
        });
    } 
-         
+    
+   function f_others(url, v){
+           $.ajax({
+               type : "POST",
+               url : url,
+               dataType : "json",
+               contentType : "application/json;charset=UTF-8",
+               success : function(_data) {
+                   //var data = _data.data;
+                   //console.log(data);
+                  // f_info(data, v);
+               },
+               error : function(jqXHR, textStatus, errorThrown) {
+                   alert("실패하였습니다.");
+               }
+           });
+       
+   }
+   
+      
     function fn_assetDetail(rowid){
         $("#masterassetid").val(AUIGrid.getCellValue(myGridID ,rowid,'assetid'));
         $("#masterstatus").val(AUIGrid.getCellValue(myGridID ,rowid,'name2'));
@@ -605,21 +671,21 @@
          return true;
      }
     function detailvaliedcheck(){
-	         if($("#insdetailtype").val() == ""){
-	             Common.alert("Please select the details type.");
-	             $("#insdetailtype").focus();
-	             return false;
-	         }
-	         if($("#insdetailBrand").val() == ""){
-	             Common.alert("Please select the details brand.");
-	             $("#insdetailBrand").focus();
-	             return false;
-	         }
-	         if($("#insdetailmodel").val() == ""){
-	             Common.alert("Please key in the details model name.");
-	             $("#insdetailmodel").focus();
-	             return false;
-	         } 
+             if($("#insdetailtype").val() == ""){
+                 Common.alert("Please select the details type.");
+                 $("#insdetailtype").focus();
+                 return false;
+             }
+             if($("#insdetailBrand").val() == ""){
+                 Common.alert("Please select the details brand.");
+                 $("#insdetailBrand").focus();
+                 return false;
+             }
+             if($("#insdetailmodel").val() == ""){
+                 Common.alert("Please key in the details model name.");
+                 $("#insdetailmodel").focus();
+                 return false;
+             } 
       
 
           return true;
@@ -940,7 +1006,7 @@
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn type2"><a id="copyAssetOpen">Copy Asset</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -1088,10 +1154,31 @@
 </tr> -->
 </tbody>
 </table><!-- table end -->
+    <table class="type1">
+        <colgroup>
+        <col style="width:300px" />
+        <col style="width:*" />
+        <col style="width:120px" />
+        <col style="width:*" /> 
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row" colspan="4">Copy/Duplicate Informaton</th>
+        </tr>
+        <tr>
+            <th scope="row">Copy/Duplicate Quantity</th>
+            <td><input type="number" title="" placeholder=""  class="w100p" id="copyquantity" name="copyquantity"/>
+            </td>
+            <td><input type="button" value="Copy Asset" id="copybtn" name="copybtn"/> 
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a id="savePopbtn">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a id="updatePopbtn">UPDATE</a></p></li>
-    <li><p class="btn_blue2 big"><a onclick="javascript:fn_assetDetailCancel();">CANCEL</a></p></li>
+    <li><p class="btn_blue2 big"><a id="cancelPopbtn" onclick="javascript:fn_assetDetailCancel();">CANCEL</a></p></li>
 </ul>
 </form>
 </article>
