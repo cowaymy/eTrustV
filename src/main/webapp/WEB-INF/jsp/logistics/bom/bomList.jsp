@@ -44,14 +44,20 @@
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
      var columnLayout = [
-								{dataField:"bom",headerText:"Material Cdoe",width:"10%", cellMerge : true,visible:true},
+								//{dataField:"bom",headerText:"Material Cdoe",width:"10%", cellMerge : true,visible:true},
+								{dataField:"bom",headerText:"Material Cdoe",width:100,visible:false},
 								{dataField:"altrtivBom",headerText:"",width:100,visible:false},
-								{dataField:"plant",headerText:"Material Code Name",width:"10%",visible:true,style :"aui-grid-user-custom-left"
-									,cellMerge : true,
-							        mergeRef : "bom", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
-							        mergePolicy : "restrict"},
+								//{dataField:"plant",headerText:"Material Code Name",width:"10%",visible:true,style :"aui-grid-user-custom-left"
+								//	,cellMerge : true,
+							    //    mergeRef : "bom", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+							    //    mergePolicy : "restrict"},
+								{dataField:"matrlNo",headerText:"Material Cdoe",width:"10%",visible:true, cellMerge : true},
+								{dataField:"matrlNm",headerText:"Material Code Name",width:"10%",visible:true,
+								    style :"aui-grid-user-custom-left",
+		                            cellMerge : true,
+		                            mergeRef : "matrlNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
+		                            mergePolicy : "restrict"},
 								{dataField:"",headerText:"Base Qty",width:"5%",visible:true},
-								{dataField:"matrlNo",headerText:"",width:100,visible:false},
 								{dataField:"bomUse",headerText:"",width:100,visible:false},
 								{dataField:"bomItmNodeNo",headerText:"Component No.",width:"9%",visible:true,style :"aui-grid-user-custom-right"},
 								{dataField:"bomCtgry",headerText:"",width:100,visible:false},

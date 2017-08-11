@@ -16,6 +16,9 @@
             m.ALTRTIV_BOM  altrtiv_bom ,
             m.PLANT  plant ,
             m.MATRL_NO  matrl_no ,
+            (SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_ID = m2.STK_CTGRY_ID) matrl_nm,
             m.BOM_USE  bom_use ,
             d.BOM_ITM_NODE_NO  bom_itm_node_no ,
             d.BOM_CTGRY  bom_ctgry ,
