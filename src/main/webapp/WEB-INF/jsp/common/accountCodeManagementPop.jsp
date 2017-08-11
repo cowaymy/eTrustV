@@ -75,7 +75,7 @@ function fnSaveAccount()
 
    
 
-    Common.ajax("POST", "/common/insertAccount.do"  
+    Common.ajax("POST", "/account/insertAccount.do"  
             , $("#PopUpForm").serializeJSON({checkboxUncheckedValue: "false"})  // post 시 serializeJSON
             , function(result) 
              {

@@ -19,7 +19,7 @@ function fnSelectPgmListAjax()
 	}
   
 	
-   Common.ajax("GET", "/common/selectProgramList.do"
+   Common.ajax("GET", "/program/selectProgramList.do"
            , $("#SearchForm").serialize()
            , function(result) 
            {

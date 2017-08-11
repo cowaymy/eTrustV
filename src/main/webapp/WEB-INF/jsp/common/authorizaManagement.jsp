@@ -143,7 +143,7 @@ var MainColumnLayout =
 function getStatusComboListAjax(callBack) 
 {
     //Common.ajaxSync("GET", "/common/selectCodeList.do"
-    Common.ajaxSync("GET", "/common/selectStatusCategoryCdList.do"
+    Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
                  , $("#MainForm").serialize()
                  , function(result) 
                  {
@@ -253,7 +253,7 @@ function removeRow()
 
 function fnSearchProgramPopUp() 
 {
-   var popUpObj = Common.popupDiv("/common/searchProgramPop.do"
+   var popUpObj = Common.popupDiv("/program/searchProgramPop.do"
        , $("#MainForm").serializeJSON()
        , null
        , "true"  // true면 close버튼 클릭시 화면 close
@@ -262,7 +262,7 @@ function fnSearchProgramPopUp()
 }
 function fnSearchUpperMenuPopUp() 
 {
-   var popUpObj = Common.popupDiv("/common/searchUpperMenuPop.do"
+   var popUpObj = Common.popupDiv("/menu/searchUpperMenuPop.do"
        , $("#MainForm").serializeJSON()
        , null
        , "true"  // true면 close버튼 클릭시 화면 close
@@ -272,7 +272,7 @@ function fnSearchUpperMenuPopUp()
 
 function fnSelectMenuListAjax()
 {
-   Common.ajax("GET", "/common/selectMenuList.do"
+   Common.ajax("GET", "/menu/selectMenuList.do"
            , $("#MainForm").serialize()
            , function(result) 
            {
@@ -292,7 +292,7 @@ function fnSaveMenuCode()
     return false;
   }
   
-  Common.ajax("POST", "/common/saveMenuId.do"
+  Common.ajax("POST", "/menu/saveMenuId.do"
         , GridCommon.getEditData(myGridID)
         , function(result) 
           {

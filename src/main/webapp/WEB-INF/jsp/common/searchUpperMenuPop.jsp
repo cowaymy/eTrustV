@@ -19,7 +19,7 @@ function fnSelectUpperMenuListAjax()
 	}
   
 	
-   Common.ajax("GET", "/common/selectUpperMenuList.do"
+   Common.ajax("GET", "/menu/selectUpperMenuList.do"
            , $("#SearchForm").serialize()
            , function(result) 
            {
