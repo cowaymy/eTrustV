@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.MyMenuMapper">
+
+<select id="selectMyMenuList" parameterType="Map" resultType="egovMap">
+	SELECT a.mymenu_code
+	         , a.mymenu_name
+	         , a.mymenu_order
+	         , a.use_yn  
+	   FROM SYS0059M a
+	 WHERE a.crt_user_id = #{userId}
+	     AND (UPPER(a.mymenu_code) LIKE  UPPER(#{mymenuCode}) || '%') OR 
+	           (UPPER(a.mymenu_name) LIKE '%' || UPPER(#{mymenuCode}) || '%')
+</select>
+
+<insert id="insertMyMenu" parameterType="Map">
+	INSERT INTO sys0059m 
+	(
+	    mymenu_code,
+	    mymenu_name,
+	    mymenu_order,
+	    use_yn,
+	    crt_user_id,
+	    crt_dt,
+	    upd_user_id,
+	    upd_dt
+	) 
+	VALUES 
+	(
+	    #{mymenuCode},
+	    #{mymenuName},
+	    #{mymenuOrder},
+	    #{useYn},
+	    #{userId},
+	    SYSDATE,
+	    #{userId},
+	    SYSDATE
+	)
+</insert>
+
+<update id="updateMyMenu" parameterType="Map">
+	UPDATE SYS0059M a
+	     SET a.mymenu_name = #{mymenuName}
+	         , a.mymenu_order = #{mymenuOrder}
+	         , a.use_yn = #{useYn}
+	         , a.upd_user_id = #{userId}
+	         , a.upd_dt = SYSDATE
+	 WHERE a.mymenu_code = #{mymenuCode}    
+</update>
+
+<delete id="deleteMyMenu" parameterType="Map">
+	DELETE 
+	  FROM SYS0059M a
+	WHERE a.mymenu_code = #{mymenuCode}
+</delete>
+
+<select id="selectMyMenuProgrmList" parameterType="Map" resultType="egovMap">
+	SELECT a.mymenu_code 
+	         , a.menu_code
+	         , b.menu_name
+	         , a.pgm_ord
+	   FROM SYS0060D a
+	         , SYS0051M b
+	 WHERE a.menu_code = b.menu_code
+	     AND a.mymenu_code = #{mymenuCode}
+</select>
+
+<insert id="insertMyMenuProgrm" parameterType="Map">
+	INSERT INTO SYS0060D 
+	(
+	    mymenu_code
+	   ,menu_code
+	   ,pgm_ord
+	   ,crt_user_id
+	   ,crt_dt
+	   ,upd_user_id
+	   ,upd_dt
+	) 
+	VALUES 
+	(
+	    #{mymenuCode}
+	   ,#{mymenuName}
+	   ,#{pgmOrd}
+	   ,#{userId}
+	   ,SYSDATE
+	   ,#{userId}
+	   ,SYSDATE
+	)
+</insert>
+
+<update id="updateMyMenuProgrm" parameterType="Map">
+	UPDATE SYS0060D a
+	     SET a.pgm_ord = #{pgmOrd} 
+	         , a.upd_user_id = #{userId}
+	         , a.upd_dt = SYSDATE
+	 WHERE a.mymenu_code = #{mymenuCode}
+	     AND a.menu_code = #{menuCode}
+</update>
+
+<delete id="deleteMyMenuProgrm" parameterType="Map">
+	DELETE 
+	  FROM SYS0060D a
+	 WHERE a.mymenu_code = #{mymenuCode}
+	     AND a.menu_code = #{menuCode}
+</delete>
+
+<select id="selectMyMenuProgrmPopupList" parameterType="Map" resultType="egovMap">
+</select>
+   
+</mapper>
