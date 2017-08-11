@@ -74,6 +74,16 @@ public class CommonController {
 		return "common/main";
 	}
 	
+	/****************** authorization Management *******************/  
+	@RequestMapping(value = "/authManagement.do")
+	public String authList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		return "/common/authorizaManagement";
+	}
+	
+	
+	
+	
 	/****************** Menu Management *******************/  
 	@RequestMapping(value = "/menuManagement.do")
 	public String menuList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
