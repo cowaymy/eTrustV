@@ -92,9 +92,40 @@
                         {dataField:"assetDRem"        ,headerText:"Remark1"        ,width:"15%" ,height:30 , visible:true},
                         {dataField:"typeid"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:false}, 
                         {dataField:"brandid"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:false}, 
-                       ];
+                        {
+                            dataField : "",
+                            headerText : "",
+                            renderer : {
+                                type : "ButtonRenderer",
+                                labelText : "Remove",
+                                onclick : function(rowIndex, columnIndex, value, item) {
+                                    gridNm = AddDetailGrid;
+                                   removeRow(rowIndex, gridNm);
+                                }
+                            }
+                          }];
     
-    
+    var updateLayout = [ {dataField:"codeName"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:true}, 
+                         {dataField:"name"      ,headerText:"Brand"           ,width:"15%" ,height:30 , visible:true}, 
+                        {dataField:"name1"    ,headerText:"Model Name"    ,width:"40%" ,height:30 , visible:true},
+                        {dataField:"assetDRem"        ,headerText:"Remark1"        ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"name3"   ,headerText:"Name"         ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"valu"   ,headerText:"Value"       ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"department"   ,headerText:"Remark2"       ,width:120 ,height:30 , visible:true},
+                        {dataField:"typeid"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:false}, 
+                        {dataField:"brandid"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:false}, 
+                        {
+                            dataField : "",
+                            headerText : "",
+                            renderer : {
+                                type : "ButtonRenderer",
+                                labelText : "Remove",
+                                onclick : function(rowIndex, columnIndex, value, item) {
+                                   gridNm = UpdateGrid;
+                                   removeRow(rowIndex, gridNm);
+                                }
+                            } 
+                        }];
  /* 그리드 속성 설정
   usePaging : true, pageRowCount : 30,  fixedColumnCount : 1,// 페이지 설정
   editable : false,// 편집 가능 여부 (기본값 : false) 
@@ -130,7 +161,7 @@
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','searchdealer', 'S' , '');//dealer 
         doGetCombo('/common/selectCodeList.do', '112', '','searchcolor', 'S' , ''); //Color 리스트 조회
         doGetCombo('/common/selectCodeList.do', '112', '','mastercolor', 'S' , ''); //Color 리스트 조회
-        //doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
+        doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
         doGetCombo('/common/selectCodeList.do', '108', '','searchcategory', 'S' , ''); //category 리스트 조회
         doGetCombo('/common/selectCodeList.do', '108', '','mastercategory', 'S' , ''); //category 리스트 조회  
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
@@ -149,15 +180,15 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
         {
-        	
+            
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
                 div="V";              
                 $("#detailHead").text("AssetMng Information Details");
-                //getDetailAssetListAjax(selectedItem[0]);
                 fn_setVisiable(div); 
                 fn_assetDetail(selectedItem[0]);
                  $("#masterWindow").show();
+                 $("#Details_info").show();
                  $("#Insert_info").hide();
             }else{
             Common.alert('Choice Data please..');
@@ -205,8 +236,8 @@
          });
          
          $("#Insert_info").click(function(){
-        	 alert("인서트 인포!!!!!!!");
-            $("#add_info_div").show();  
+             alert("인서트 인포!!!!!!!");
+            $("#add_info_div").show();              
             destory(AddDetailGrid);
             AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
            // AddDetailAUIGrid(insDetailLayout);           
@@ -214,12 +245,25 @@
          
          
          $("#Details_info").click(function(){
-        	 alert("디테일 인포!!!!!!!");
-        	 destory(detailGrid)
-        	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-        	 detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
-        	 getDetailAssetListAjax(selectedItem[0]);    
+             div="viewitem";
+             alert("디테일 인포!!!!!!!");
+             destory(detailGrid);
+             $("#DtatilGrid_div_tap").show();  
+             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
+             getDetailAssetListAjax(selectedItem[0],div);    
      });
+         //Update_info tap
+         $("#Update_info").click(function(){
+             div="upitem"
+             //destory(upitemGrid);
+             alert("업데이트 인포!!!!!!!");
+             $("#Updadte_div_tap").show();  
+             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             upitemGrid  = GridCommon.createAUIGrid("#UpDetail_div", updateLayout,"", gridoptions);
+             getDetailAssetListAjax(selectedItem[0],div);    
+     });
+         
            
          
       $("#detail_info_add").click(function(){
@@ -227,6 +271,16 @@
         $("#regDetailWindow").show();
       
        });
+      
+      $("#item_info_add").click(function(){
+          $("#updateForm")[0].reset();
+          var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+          var itemtype = AUIGrid.getCellValue(myGridID ,selectedItem[0],'typeid');
+          doGetCombo('/logistics/assetmng/selectTypeList.do', itemtype, '','additemtype', 'S' , ''); //Type 리스트 조회
+          doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','additemBrand', 'S' , '');//brand
+         $("#regUpdateWindow").show();
+       
+        });
          
          $("#update").click(function(){
              div="U";
@@ -298,8 +352,9 @@
     }
 
     
-     function getDetailAssetListAjax(rowid) {
-         var assetid=AUIGrid.getCellValue(myGridID ,rowid,'assetid');      
+     function getDetailAssetListAjax(rowid,div) {
+         var assetid=AUIGrid.getCellValue(myGridID ,rowid,'assetid');
+         alert("assetid        :          "+ assetid);
          var param = "?assetid="+assetid; 
          $.ajax({
             type : "POST",
@@ -307,10 +362,17 @@
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
+                alert(div);
                  var gridData = data             
                 console.log(gridData.data);  
                  //f_dtail_info(gridData); 
+                 if(div == "viewitem"){
+                    
                   AUIGrid.setGridData(detailGrid, gridData.data);
+                 }else{
+                     
+                     AUIGrid.setGridData(upitemGrid, gridData.data);             
+                 }
                 hideModal(); 
             },
             error : function(jqXHR, textStatus, errorThrown) {
@@ -325,9 +387,9 @@
         var param;
         //param= $("#masterForm").serializeJSON();
          /* param = { 
-        		masterAddForm : $("#masterForm").serializeJSON(),
-        		 detailAddForm : GridCommon.getEditData(AddDetailGrid)
-   			   };   */
+                masterAddForm : $("#masterForm").serializeJSON(),
+                 detailAddForm : GridCommon.getEditData(AddDetailGrid)
+               };   */
          param = GridCommon.getEditData(AddDetailGrid);
          param.form = $("#masterForm").serializeJSON();
         selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -542,22 +604,24 @@
          
          return true;
      }
-     function detailvaliedcheck(){
-    	  if($("#insdetailtype").val() == ""){
-              Common.alert("Please select the details type.");
-              $("#insdetailtype").focus();
-              return false;
-          }
-          if($("#insdetailBrand").val() == ""){
-              Common.alert("Please select the details brand.");
-              $("#insdetailBrand").focus();
-              return false;
-          }
-          if($("#insdetailmodel").val() == ""){
-              Common.alert("Please key in the details model name.");
-              $("#insdetailmodel").focus();
-              return false;
-          } 
+    function detailvaliedcheck(){
+	         if($("#insdetailtype").val() == ""){
+	             Common.alert("Please select the details type.");
+	             $("#insdetailtype").focus();
+	             return false;
+	         }
+	         if($("#insdetailBrand").val() == ""){
+	             Common.alert("Please select the details brand.");
+	             $("#insdetailBrand").focus();
+	             return false;
+	         }
+	         if($("#insdetailmodel").val() == ""){
+	             Common.alert("Please key in the details model name.");
+	             $("#insdetailmodel").focus();
+	             return false;
+	         } 
+      
+
           return true;
      }
      
@@ -632,44 +696,46 @@
 }
       // AUIGrid 를 생성합니다.
      /*  function f_dtail_info(gridData) {
-    	  detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
-    	  AUIGrid.setGridData(detailGrid, gridData.data);
-    	  $("#insertdetail").hide();
+          detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
+          AUIGrid.setGridData(detailGrid, gridData.data);
+          $("#insertdetail").hide();
       } */
       
-      function f_dtail_info(detailLayout) {
+     /*  function f_dtail_info(detailLayout) {
           detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
           
-      }
+      } */
   /*     function f_dtail_set_info() {
-    	  AUIGrid.setGridData(detailGrid, gridData.data);
+          AUIGrid.setGridData(detailGrid, gridData.data);
       } */
   
-   /*     function AddDetailAUIGrid(insDetailLayout) {    	  
-    	  AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
+   /*     function AddDetailAUIGrid(insDetailLayout) {        
+          AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
       }  */
    
       function addRowFileter() {
-          var item = new Object();
-          item.codeName = $("#insdetailtype option:selected").text();
-          item.name = $("#insdetailBrand option:selected").text();
-          item.typeid = $("#insdetailtype option:selected").val();
-          item.brandid = $("#insdetailBrand option:selected").val();
-          item.name1 = $("#insdetailmodel").val();
-          item.assetDRem = $("#insdetailremark").val();
-          if(detailvaliedcheck()){
-          AUIGrid.addRow(AddDetailGrid, item, "last");
-           $("#regDetailWindow").hide(); 
-          }
-      }
+          alert(div);
+          var item = new Object();  
+              item.codeName = $("#insdetailtype option:selected").text();
+              item.name = $("#insdetailBrand option:selected").text();
+              item.typeid = $("#insdetailtype option:selected").val();
+              item.brandid = $("#insdetailBrand option:selected").val();
+              item.name1 = $("#insdetailmodel").val();
+              item.assetDRem = $("#insdetailremark").val();
+              if(detailvaliedcheck(div)){
+              AUIGrid.addRow(AddDetailGrid, item, "last");
+               $("#regDetailWindow").hide(); 
+              }      
+      }          
+          
       function cancelRowFileter() {
-    	  $("#regDetailWindow").hide(); 
+          $("#regDetailWindow").hide(); 
       }
       
       
       
       function detail_info_insert() {
-    	  $("#savePopbtn").click();  
+          $("#savePopbtn").click();  
       }
     
       function destory(gridNm){
@@ -680,7 +746,21 @@
       function popClear(){
           $("#detailForm")[0].reset();
       }
-       
+      
+      function colShowHide(gridNm,fied,checked){
+          if(checked) {
+                AUIGrid.showColumnByDataField(gridNm, fied);
+            } else {
+                AUIGrid.hideColumnByDataField(gridNm, fied);
+            }
+    }
+      function removeRow(rowIndex, gridNm) {
+
+          AUIGrid.removeRow(gridNm, rowIndex);
+          AUIGrid.removeSoftRows(gridNm);
+      }
+      
+      
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -908,6 +988,7 @@
                 <li id="Master_info" class="on"><a href="#"> Master info </a></li>
                 <li id="Details_info"><a href="#"> Details Info</a></li>
                 <li id="Insert_info"><a href="#"> insert Info</a></li>
+                <li id="Update_info"><a href="#"> update Info</a></li>
             </ul>
 
 <article class="tap_area" >
@@ -1016,11 +1097,12 @@
 </article>
 
 
-<article class="tap_area">
-<div id="DtatilGrid_div" style="width:100%;"></div>                       
+<article class="tap_area" id="DtatilGrid_div_tap"  style="display:none;">
+<div id="DtatilGrid_div" style="width:100%;"></div>             
 </article>
-<article class="tap_area">
-<div id="add_info_div" style="display:none;">
+<article class="tap_area" id ="add_info_div" style="display:none;">
+<!-- <div id="add_info_div" style="display:none;"> -->
+<div>
                 <aside class="title_line"><!-- title_line start -->
                     <h3 >Add Dtails Info</h3>
                     <ul class="left_opt">
@@ -1035,12 +1117,29 @@
  </div>  
 </article>
 
+<article class="tap_area" id ="Updadte_div_tap" style="display:none;">
+<div>
+                <aside class="title_line"><!-- title_line start -->
+                    <h3 >Update Dtails Info</h3>
+                    <ul class="left_opt">
+                    <li><p class="btn_blue"><a id="item_info_add">ADD</a></p></li>
+                    </ul>
+                </aside>
+                <div id="UpDetail_div" style="width:100%;">
+                </div>
+                <ul class="left_opt">
+                    <li><p class="btn_blue"><a onclick="javascript:a">SAVE</a></p></li>
+                </ul>         
+ </div>  
+</article>
+
+
 </section><!--  tab -->
 
 
 <div class="popup_wrap" id="regDetailWindow" style="display:none"><!-- popup_wrap start -->
     <header class="pop_header"><!-- pop_header start -->
-        <h1>Add Dtails Info</h1>
+        <h1>Add Details Info</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
         </ul>
@@ -1061,11 +1160,11 @@
                             <tr>
                                 <th scope="row">Detail Type</th>
                                 <td colspan="2">
-                                <select id="insdetailtype" name="insdetailtype" onchange=""   placeholder=""  class="w100p" disabled=true></select>
+                                <select id="insdetailtype" name="insdetailtype"   placeholder=""  class="w100p" disabled=true></select>
                                 </td>
                                 <th scope="row">Brand</th>
                                 <td colspan="2">
-                                <select id="insdetailBrand" name="insdetailBrand" onchange=""  placeholder=""  class="w100p"></select>
+                                <select id="insdetailBrand" name="insdetailBrand"  placeholder=""  class="w100p"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -1088,6 +1187,72 @@
                 </form> 
     </section>  
 </div>
+
+
+<div class="popup_wrap" id="regUpdateWindow" style="display:none"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Add Details Info</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->  
+            <!-- pop_body start -->
+                <form id="updateForm" name="updateForm" method="POST">
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Detail Type</th>
+                                <td colspan="2">
+                                <select id="additemtype" name="additemtype" onchange=""   placeholder=""  class="w100p" ></select>
+                                </td>
+                                <th scope="row">Brand</th>
+                                <td colspan="2">
+                                <select id="additemBrand" name="additemBrand" onchange=""  placeholder=""  class="w100p"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Model Name</th>
+                                <td colspan="3">
+                                <input type="text" id="additemmodel" name="additemmodel" class="w100p" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Remark</th>
+                                <td colspan="5"><input type="text" id="addremark" name="addremark"  class="w100p" /></td>
+                            </tr>        
+                            <tr>
+                                <th scope="row">Item Name</th>
+                                <td colspan="5"><input type="text" id="additemname" name="additemname"  class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Item Value</th>
+                                <td colspan="5"><input type="text" id="additemvalue" name="additemvalue"  class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Item Remark</th>
+                                <td colspan="5"><input type="text" id="additemremark" name="insdetailremark"  class="w100p" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
+                    <ul class="center_btns">
+                        <li><p class="btn_blue2 big"><a onclick="javascript:updateItem();">SAVE</a></p></li> 
+                        <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
+                    </ul>
+                </form> 
+    </section>  
+</div>
+
+
 
 
 </section>
