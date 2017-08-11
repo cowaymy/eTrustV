@@ -156,7 +156,7 @@ var mstColumnLayout =
 
 function fnGetAccountCdListAjax() 
 {        
-	  Common.ajax("GET", "/common/selectAccountCodeList.do"
+	  Common.ajax("GET", "/account/selectAccountCodeList.do"
        , $("#MainForm").serialize()
        , function(result) 
        {  
@@ -217,7 +217,7 @@ function editPopUp()
 
 	  $("#parmAddEditFlag").val("EDIT");
 
-    var popUpObj = Common.popupDiv("/common/accountCodeEditPop.do"
+    var popUpObj = Common.popupDiv("/account/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
           , null
           , "true"  // true면 close버튼 클릭시 화면 close
@@ -230,7 +230,7 @@ function addPopUp()
 {
 	  $("#parmAddEditFlag").val("ADD");
 
-    var popUpObj = Common.popupDiv("/common/accountCodeAddPop.do"
+    var popUpObj = Common.popupDiv("/account/accountCodeAddPop.do"
             , $("#MainForm").serializeJSON()
             , null
             , "true"

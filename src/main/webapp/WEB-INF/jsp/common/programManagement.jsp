@@ -410,7 +410,7 @@ function getItemsByCheckedField(selectedGrid)
 function fnSelectPgmListAjax()
 {
 	 fnTransGridReset();	 
-	 Common.ajax("GET", "/common/selectProgramList.do"
+	 Common.ajax("GET", "/program/selectProgramList.do"
 		       , $("#MainForm").serialize()
 		       , function(result) 
 		       {
@@ -427,7 +427,7 @@ function fnSelectPgmListAjax()
 function fnSelectPgmTransListAjax()
 {
 	 fnTransGridReset();  
-	 Common.ajax("GET", "/common/selectPgmTranList.do"
+	 Common.ajax("GET", "/program/selectPgmTranList.do"
 		       , $("#MainForm").serialize()
 		       , function(result) 
 		       {
@@ -445,7 +445,7 @@ function fnSelectPgmTransListAjax()
 function fnSavePgmId() 
 {
 	fnTransGridReset();
-  Common.ajax("POST", "/common/saveProgramId.do"
+  Common.ajax("POST", "/program/saveProgramId.do"
         , GridCommon.getEditData(myGridID)
         , function(result) 
          {
@@ -475,7 +475,7 @@ function fnSavePgmId()
 function fnUpdateTrans() 
 {
 	 gAddRowCnt = 0;
-	 Common.ajax("POST", "/common/updateTrans.do"
+	 Common.ajax("POST", "/program/updateTrans.do"
         , GridCommon.getEditData(transGridID)
         , function(result) 
          {

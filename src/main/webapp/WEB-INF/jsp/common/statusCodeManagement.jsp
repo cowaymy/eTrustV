@@ -452,7 +452,7 @@ $(document).ready(function()
 //ajax list 조회.
 function fnSelectCategoryListAjax() 
 {        
-  Common.ajax("GET", "/common/selectStatusCategoryList.do"
+  Common.ajax("GET", "/status/selectStatusCategoryList.do"
        , $("#MainForm").serialize()
        , function(result) 
        {
@@ -470,7 +470,7 @@ function fnSelectCategoryListAjax()
 
 function fnSelectCategoryCdInfo()
 {
-   Common.ajax("GET", "/common/selectStatusCategoryCdList.do"
+   Common.ajax("GET", "/status/selectStatusCategoryCdList.do"
         , $("#MainForm").serialize()
         , function(result) 
          {
@@ -488,7 +488,7 @@ function fnSelectCategoryCdInfo()
 
 function fnSelectStatusCdId() 
 {        
-  Common.ajax("GET", "/common/selectStatusCdIdList.do"
+  Common.ajax("GET", "/status/selectStatusCdIdList.do"
        , $("#MainForm").serialize()
        , function(result) 
        {
@@ -505,7 +505,7 @@ function saveStatusCode()
 	  return;
 	}
 	
-  Common.ajax("POST", "/common/saveStatusCode.do"
+  Common.ajax("POST", "/status/saveStatusCode.do"
 	         , GridCommon.getEditData(statusCodeGridID)
 	         , function(result) 
 	           {
@@ -536,7 +536,7 @@ function saveStatusCode()
 
 function saveCategory()
 {
-  Common.ajax("POST", "/common/saveStatusCategory.do"
+  Common.ajax("POST", "/status/saveStatusCategory.do"
 	       , GridCommon.getEditData(myGridID)
 	       , function(result) 
 	         {
@@ -584,7 +584,7 @@ function insertStatusCatalogDetail()
                         }
       };
   
-  Common.ajax("POST", "/common/insertStatusCatalogDetail.do"
+  Common.ajax("POST", "/status/insertStatusCatalogDetail.do"
          , formDataParameters
          , function(result) 
            {
@@ -632,7 +632,7 @@ function fnUpdDisabled()
                         }
       };
   
-  Common.ajax("POST", "/common/UpdCategoryCdYN.do"
+  Common.ajax("POST", "/status/UpdCategoryCdYN.do"
 	       , formDataCategoryYN
 	       , function(result) 
 	         {
