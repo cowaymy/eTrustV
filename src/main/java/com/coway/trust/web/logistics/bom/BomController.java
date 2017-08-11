@@ -75,10 +75,10 @@ public class BomController {
 	@RequestMapping(value = "/materialInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> materialInfo(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		String cmpntId = request.getParameter("cmpntId");
-		logger.debug("cmpntId : {}", request.getParameter("cmpntId"));
+		String bom = request.getParameter("bom");
+		logger.debug("bom : {}", request.getParameter("bom"));
 		Map<String, Object> params = new HashMap();
-		params.put("cmpntId", cmpntId);
+		params.put("bom", bom);
 
 		List<EgovMap> info = bomService.materialInfo(params);
 
@@ -90,12 +90,12 @@ public class BomController {
 	@RequestMapping(value = "/filterInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> filterInfo(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		String materialCd = request.getParameter("materialCd");
+		String bom = request.getParameter("bom");
 		String categoryid = request.getParameter("categoryid");
 
 		Map<String, Object> params = new HashMap();
 		params.put("categoryid", categoryid);
-		params.put("materialCd", materialCd);
+		params.put("bom", bom);
 
 		List<EgovMap> info = bomService.filterInfo(params);
 
@@ -107,12 +107,12 @@ public class BomController {
 	@RequestMapping(value = "/spareInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> spareInfo(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		String materialCd = request.getParameter("materialCd");
+		String bom = request.getParameter("bom");
 		String categoryid = request.getParameter("categoryid");
 
 		Map<String, Object> params = new HashMap();
 		params.put("categoryid", categoryid);
-		params.put("materialCd", materialCd);
+		params.put("bom", bom);
 
 		List<EgovMap> info = bomService.spareInfo(params);
 

@@ -29,8 +29,8 @@
             sm.CODE_NAME category,
             d.COMPNT_QTY  compnt_qty ,
             d.COMPNT_UNIT_OF_MEASURE  compnt_unit_of_measure ,
-            TO_CHAR(d.VALID_FROM_DT, 'YYYY-MM-DD')  valid_from_dt ,
-            TO_CHAR(d.VALID_TO_DT, 'YYYY-MM-DD')  valid_to_dt ,
+            TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY')  valid_from_dt ,
+            TO_CHAR(d.VALID_TO_DT, 'DD/MM/YYYY')  valid_to_dt ,
             d.CHNG_NO  chng_no ,
             d.DEL_INDICT  del_indict ,
             d.DT_RCORD_CRT_ON  dt_rcord_crt_on ,
@@ -43,22 +43,79 @@
               AND d.BOM_COMPNT = m2.STK_CODE
               AND sm.CODE_ID = m2.STK_TYPE_ID
              /* AND d.BOM_COMPNT = l.STK_CODE */
-              <if test="srchMaterialStart != null and srchMaterialEnd != null and srchMaterialStart != '' and srchMaterialEnd != ''">
-              AND m.BOM BETWEEN #{srchMaterialStart} AND #{srchMaterialEnd} 
-              </if>  
-             <if test="srchCdc != null and srchCdc != ''">
-               AND LOC_ID=#{srchCdc}
-              </if>  
-             <if test="srchValid != null and srchValid != ''">
-              AND TO_CHAR(d.VALID_FROM_DT, 'YYYY-MM-DD') = TO_DATE(TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'YYYYMMDD'))
-              </if>  
-              <if test="materialCd != null and categoryid != null">
-              AND m.BOM=#{materialCd}
-              AND sm.CODE_ID=#{categoryid}
-              </if>
+             <choose>
+                <when test="bom != null and categoryid != null">
+	              AND m.BOM=#{bom}
+	              AND sm.CODE_ID=#{categoryid}
+                </when>
+                <otherwise>
+	              <if test="srchMaterialStart != null and srchMaterialEnd != null and srchMaterialStart != '' and srchMaterialEnd != ''">
+	              AND m.BOM BETWEEN #{srchMaterialStart} AND #{srchMaterialEnd} 
+	              </if>  
+	             <if test="srchCdc != null and srchCdc != ''">
+	               AND LOC_ID=#{srchCdc}
+	              </if>  
+	             <if test="srchValid != null and srchValid != ''">
+	              AND TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY') = TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'DD/MM/YYYY')
+	              </if>  
+                </otherwise>
+             </choose>
               ORDER BY m.BOM, d.BOM_ITM_NODE_NO 
     </select>
      <select id="materialInfo" parameterType="Map" resultType="egovMap">
+        SELECT 
+                l43m.BOM
+               ,l43m.ALTRTIV_BOM
+               ,l43m.PLANT
+               ,l43m.BOM_USE
+               ,l43m.MATRL_NO
+               ,s26m.STK_ID
+               ,s26m.STK_CODE 
+               ,s26m.STK_DESC STK_DESC
+               ,(SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_ID = s26m.STK_CTGRY_ID) STK_CTGRY_NM
+              , (SELECT CODE_ID
+                   FROM SYS0013M
+                  WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_ID
+              , (SELECT CODE_NAME
+                   FROM SYS0013M
+                  WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_NM
+              , (SELECT NAME
+                   FROM SYS0038M
+                  WHERE STUS_CODE_ID = s26m.STUS_CODE_ID) STUS_CODE_NM
+               , CASE
+                          WHEN s26m.STK_TYPE_ID = 61
+                          THEN
+                             (SELECT 
+                                             MAX(ct.CODE_NAME)
+                                FROM SAL0016M sp, SYS0013M ct
+                               WHERE     sp.APP_TYPE_ID = 67
+                                     AND SP.MEM_PAC_ID = 0
+                                     AND sp.STUS_CODE_ID = 1
+                                     AND sp.UOM_ID = ct.CODE_ID
+                                     AND sp.STK_ID = s26m.STK_ID)
+                          ELSE
+                             (SELECT 
+                                             MAX(ct.CODE_NAME)
+                                FROM SAL0016M sp, SYS0013M ct
+                           WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
+                                     AND SP.MEM_PAC_ID = 0
+                                     AND sp.STUS_CODE_ID = 1
+                                     AND sp.UOM_ID = ct.CODE_ID
+                                     AND sp.STK_ID = s26m.STK_ID)
+                       END UOM_NAME
+              , s26m.IS_SIRIM IS_SIRIM
+              , s26m.IS_NCV    IS_NCV
+              , s26m.NET_WT NET_WT
+              , s26m.GROS_WT GROS_WT
+              , s26m.MEASURE_CBM    MEASURE_CBM
+          FROM LOG0043M l43m, SYS0026M s26m
+         WHERE 1 = 1
+           AND l43m.MATRL_NO = s26m.STK_CODE
+           AND  l43m.BOM = #{bom}
+     </select>
+     <select id="materialInfo2" parameterType="Map" resultType="egovMap">
         SELECT 
 		        l44d.BOM_COMPNT BOM_COMPNT
 		       ,s26m.STK_DESC STK_DESC

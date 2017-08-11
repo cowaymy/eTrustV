@@ -27,6 +27,7 @@
     color:#000;
 }
 
+
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -52,20 +53,20 @@
 								{dataField:"",headerText:"Base Qty",width:"5%",visible:true},
 								{dataField:"matrlNo",headerText:"",width:100,visible:false},
 								{dataField:"bomUse",headerText:"",width:100,visible:false},
-								{dataField:"bomItmNodeNo",headerText:"",width:100,visible:false},
+								{dataField:"bomItmNodeNo",headerText:"Component No.",width:"9%",visible:true,style :"aui-grid-user-custom-right"},
 								{dataField:"bomCtgry",headerText:"",width:100,visible:false},
 								{dataField:"intnlCntr",headerText:"",width:100,visible:false},
 								{dataField:"itmCtgry",headerText:"",width:100,visible:false},
 								{dataField:"bomItmNo",headerText:"",width:100,visible:false},
 								{dataField:"sortString",headerText:"",width:100,visible:false},
 								{dataField:"bomCompnt",headerText:"Component",width:"10%",visible:true},
-								{dataField:"stkDesc",headerText:"Component Name",width:"33%",visible:true,style :"aui-grid-user-custom-left"},
+								{dataField:"stkDesc",headerText:"Component Name",width:"28%",visible:true,style :"aui-grid-user-custom-left"},
 								{dataField:"categoryid",headerText:"",width:100,visible:false},
 								{dataField:"category",headerText:"Category",width:"7%",visible:true,style :"aui-grid-user-custom-left"},
 								{dataField:"compntQty",headerText:"Qty",width:"5%",visible:true,style :"aui-grid-user-custom-right"},
 								{dataField:"compntUnitOfMeasure",headerText:"",width:100,visible:false},
-								{dataField:"validFromDt",headerText:"Valid from",width:"10%",visible:true},
-								{dataField:"validToDt",headerText:"Valid to",width:"10%",visible:true},
+								{dataField:"validFromDt",headerText:"Valid from",width:"8%",visible:true},
+								{dataField:"validToDt",headerText:"Valid to",width:"8%",visible:true},
 								{dataField:"chngNo",headerText:"",width:100,visible:false},
 								{dataField:"delIndict",headerText:"",width:100,visible:false},
 								{dataField:"dtRcordCrtOn",headerText:"",width:100,visible:false},
@@ -99,18 +100,8 @@
         	 f_removeclass();
         	 $("#subDiv").show();
         	 $("#material_info").click();
-        	 if(3>event.columnIndex){
         		 $("#filter_info").show();
                  $("#spare_info").show();
-        	 }else{
-	        	 if(AUIGrid.getCellValue(myGridID, event.rowIndex,"categoryid")=="62"){
-	        		 $("#filter_info").show();
-	        		 $("#spare_info").hide();
-	        	 }else{
-	        		 $("#filter_info").hide();
-	                 $("#spare_info").show();
-	        	 }
-        	 }
         	 
         });
 
@@ -136,65 +127,50 @@
             searchAjax();
         });
        $("#material_info").click(function(){
-            
-            //if($("#material_info_div").css("display") == "none"){
                f_removeclass();
-                var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                for(i=0; i<selectedItems.length; i++) {
-                   f_view("/logistics/bom/materialInfo.do?cmpntId="+selectedItems[i].item.bomCompnt , "S");
-                }
+               
+               var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+               var bom = AUIGrid.getCellValue(myGridID ,selectedItem[0],'bom');
+               
+    	        //alert(bom);
+    	        
+                 f_view("/logistics/bom/materialInfo.do?bom="+bom, "S");
+                 
                 $("#material_info_div").show();
                 
-            //}else{
-                //var selectedItems = AUIGrid.getSelectedItems(myGridID);
-               // for(i=0; i<selectedItems.length; i++) {
-                    //$("#stkId").val(selectedItems[i].item.stkid);
-                  //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
-               // }
-           // }
             $(this).find("a").attr("class","on");
             
         });
        $("#filter_info").click(function(){
-           
-          // if($("#filter_info_div").css("display") == "none"){
+    	   
               f_removeclass();
-               var selectedItems = AUIGrid.getSelectedItems(myGridID);
-               for(i=0; i<selectedItems.length; i++) {
-                  //f_view("/logistics/bom/filterInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "F");
-                  f_view("/logistics/bom/filterInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid=62", "F");
-               }
+              
+              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+              var bom = AUIGrid.getCellValue(myGridID ,selectedItem[0],'bom');
+               
+              //alert(bom);
+               
+               f_view("/logistics/bom/filterInfo.do?bom="+bom+"&categoryid=62", "F");
+                  
                $("#filter_info_div").show();
                
-           //}else{
-               //var selectedItems = AUIGrid.getSelectedItems(myGridID);
-              // for(i=0; i<selectedItems.length; i++) {
-                   //$("#stkId").val(selectedItems[i].item.stkid);
-                 //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
-              // }
-           //}
            $(this).find("a").attr("class","on");
            
        });
         
        $("#spare_info").click(function(){
            
-           //if($("#spare_info_div").css("display") == "none"){
               f_removeclass();
-               var selectedItems = AUIGrid.getSelectedItems(myGridID);
-               for(i=0; i<selectedItems.length; i++) {
-                  //f_view("/logistics/bom/spareInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid="+selectedItems[i].item.categoryid, "R");
-                  f_view("/logistics/bom/spareInfo.do?materialCd="+selectedItems[i].item.bom+"&categoryid=63", "R");
-               }
+              
+              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+              var bom = AUIGrid.getCellValue(myGridID ,selectedItem[0],'bom');
+               
+              //alert(bom);
+              
+               f_view("/logistics/bom/spareInfo.do?bom="+bom+"&categoryid=63", "R");
+               
                $("#spare_info_div").show();
                
-          // }else{
-               //var selectedItems = AUIGrid.getSelectedItems(myGridID);
-              // for(i=0; i<selectedItems.length; i++) {
-                   //$("#stkId").val(selectedItems[i].item.stkid);
-                 //  f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
-              // }
-           //}
            $(this).find("a").attr("class","on");
            
        });
@@ -287,7 +263,7 @@
            //$("#txtStockType").text(data[0].stkCtgryID);
            $("#txtStockType").text(data[0].stkCtgryNm);
            $("#txtStatus").text(data[0].stusCodeNm);
-           $("#txtStockCode").text(data[0].bomCompnt);
+           $("#txtStockCode").text(data[0].matrlNo);
            $("#txtUOM").text(data[0].uomName);
            $("#txtStockName").text(data[0].stkDesc);
            $("#txtCategory").text(data[0].stkTypeNm );
