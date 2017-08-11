@@ -1,6 +1,7 @@
 $(document).ready(function(){
 /* 제이쿼리 ui달력 start*/
-var holidays = {
+
+var holidays = {//휴일 세팅 하기
     /*"0809":{type:0, title:"신정", year:"2017"}*/
 };
 

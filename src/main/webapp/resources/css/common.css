@@ -285,6 +285,10 @@ table.type2.acodi .aco_tr{display:none;}
 .ui-datepicker-calendar tbody tr td:first-child a{color:#cf0303!important;}
 .ui-datepicker-today{background:#ff8400!important;}
 .ui-datepicker-today a{color:#fff!important;}
+.date-holiday a,
+.date-sunday a,
+.date-holiday span,
+.date-sunday span{color:#ff0000!important;}
 div.mtz-monthpicker{width:100%; padding:5px 0; box-sizing:border-box; border-radius:3px; border-bottom:0 none;}
 table.mtz-monthpicker{background:#fff; border:1px solid #ccc;}
 table.mtz-monthpicker td{border:1px solid #ccc;}
