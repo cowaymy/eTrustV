@@ -248,7 +248,6 @@ public class CommonController {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		int cnt = 0;
-		// add=[{funcChng=Y, funcPrt=Y, funcUserDfn1=Y, descUserDfn1=1233133, funcUserDfn2=N, _$uid=8DF42F98-02D7-B787-54F9-A5DD6FBFC901, pgmCode=SVC001}], update=[], remove=[]}
 		
 		if (addList.size() > 0) 
 		{   
