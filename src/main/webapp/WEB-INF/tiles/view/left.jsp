@@ -186,6 +186,11 @@ function fn_addClassMyMenu(currentMenuCode, groupMenuCode){
 
 // 선택한 메뉴화면으로 이동.
 function fn_menu(menuCode, menuPath, myMenuGroupCode){
+
+    if(FormUtil.isEmpty(menuPath)){
+        return;
+    }
+
     $("#CURRENT_MENU_CODE").val(menuCode);
 
     if($("#_myMenu").hasClass("on")){
