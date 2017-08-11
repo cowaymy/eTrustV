@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.order.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
@@ -39,6 +40,16 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface OrderRegisterMapper {
 
 	EgovMap selectSrvCntcInfo(Map<String, Object> params);
+	
+	EgovMap selectStockPrice(Map<String, Object> params);
+	
+	List<EgovMap> selectDocSubmissionList(Map<String, Object> params);
+
+	List<EgovMap> selectPromotionByAppTypeStock(Map<String, Object> params);
+
+	EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params);
+	
+	EgovMap selectTrialNo(Map<String, Object> params);
 	
 	void insertSalesOrderM(SalesOrderMVO salesOrderMVO);
 	

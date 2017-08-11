@@ -145,6 +145,5 @@ public interface CommonService {
 	List<EgovMap> selectBankList();
 
 	EgovMap selectBrnchIdByPostCode(Map<String, Object> params);
-	
-	List<EgovMap> selectDocSubmissionList(Map<String, Object> params);
+
 }

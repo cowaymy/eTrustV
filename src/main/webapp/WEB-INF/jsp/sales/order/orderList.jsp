@@ -43,7 +43,7 @@
 
     $(function(){
         $('#btnNew').click(function() {
-            //Common.popupWin("listSearchForm", "/sales/order/orderRegister.do", _option);
+            //Common.popupWin("listSearchForm", "/sales/order/orderRegisterPop.do", _option);
             Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
         });
         $('#btnEdit').click(function() {

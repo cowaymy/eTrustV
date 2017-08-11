@@ -24,4 +24,7 @@ public class SalesConstants {
 	public static final String APP_TYPE_CODE_RENTAL = "REN"; //Rental
 	public static final String APP_TYPE_CODE_INSTALLMENT = "INS"; //Installment
 	public static final String APP_TYPE_CODE_OUTRIGHTPLUS = "OUTPLS"; //Outright Plus
+	
+	public static final String APP_TYPE_CODE_ID_RENTAL = "66"; //Rental
+	
 }

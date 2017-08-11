@@ -3,26 +3,167 @@
 <mapper namespace="com.coway.trust.biz.sales.order.impl.OrderRegisterMapper">
     
     <select id="selectSrvCntcInfo" parameterType="Map" resultType="egovMap">
-		SELECT T1.CUST_CARE_CNT_ID
-		     , T1.CUST_ID
-		     , T1.NAME
-		     , T1.CUST_INITIAL
-		     , T1.TEL_M
-		     , T1.TEL_O
-		     , T1.TEL_R
-		     , T1.EXT
-		     , T1.EMAIL
-		     , T1.STUS_CODE_ID
-		     , T1.CRT_USER_ID
-		     , T1.CRT_DT
-		     , T1.UPD_USER_ID
-		     , T1.UPD_DT
-		     , T1.TELF
-		  FROM SAL0026D T1
-		 WHERE T1.CUST_CARE_CNT_ID = #{custCareCntId}
-		   AND ROWNUM &lt;= 1
+        SELECT T1.CUST_CARE_CNT_ID
+             , T1.CUST_ID
+             , T1.NAME
+             , T1.CUST_INITIAL
+             , T1.TEL_M
+             , T1.TEL_O
+             , T1.TEL_R
+             , T1.EXT
+             , T1.EMAIL
+             , T1.STUS_CODE_ID
+             , T1.CRT_USER_ID
+             , T1.CRT_DT
+             , T1.UPD_USER_ID
+             , T1.UPD_DT
+             , T1.TELF
+          FROM SAL0026D T1
+         WHERE T1.CUST_CARE_CNT_ID = #{custCareCntId}
+           AND ROWNUM &lt;= 1
     </select>
 
+    <select id="selectStockPrice" parameterType="Map" resultType="egovMap">
+		SELECT NVL(T.PRC_ID, 0) AS PRICE_ID
+		     , NVL(T.PRC_COSTING, 0) AS COST
+		     , NVL(T.AMT, 0) AS NORMAL_PRICE
+		     , NVL(T.PRC_PV, 0) AS PV
+		     , DECODE(T.APP_TYPE_ID, 66, T.AMT, 0) AS MONTHLY_RENTAL
+		     , NVL(T.PRC_RPF, 0) RENTAL_DEPOSIT
+		     , NVL(T.TRADE_IN_PV, 0) TRADE_IN_PV
+		  FROM
+		     ( SELECT T2.PRC_ID
+		            , T2.AMT
+		            , T2.APP_TYPE_ID
+		            , T2.PRC_RPF
+		            , T2.PRC_PV
+		            , T2.TRADE_IN_PV
+		            , T2.PRC_COSTING
+		         FROM SYS0026M T1
+		         LEFT
+		         JOIN SAL0016M T2
+		           ON T2.STK_ID = T1.STK_ID
+		          AND T2.APP_TYPE_ID = #{appTypeId}
+		        WHERE T1.STK_ID = #{stkId}
+		          AND 61 = T1.STK_TYPE_ID
+		          AND ROWNUM &lt;= 1 ) T
+    </select>
+
+    <select id="selectDocSubmissionList" parameterType="Map" resultType="egovMap">
+        SELECT T.CODE_ID
+             , T.TYPE_DESC
+          FROM
+             ( SELECT T1.CODE_ID
+                    , DBMS_LOB.SUBSTR (T1.CODE_DESC, 4000) TYPE_DESC
+                    , T2.TYPE_DT_SEQ
+                 FROM SYS0013M T1
+                 JOIN ORG0013C T2 ON T1.CODE_ID = T2.TYPE_ID
+                WHERE T2.TYPE_CODE_ID = #{typeCodeId}
+                  AND 1 = T2.STUS_ID
+                  AND T2.TYPE_GRP_ID = #{typeCodeId}
+             ) T
+         ORDER BY T.TYPE_DT_SEQ ASC
+    </select>
+    
+    <select id="selectPromotionByAppTypeStock" parameterType="Map" resultType="egovMap">
+        SELECT T.PROMO_ID CODE
+             , T.PROMO_DESC CODE_NAME
+          FROM
+             ( SELECT DISTINCT T2.PROMO_ID PROMO_ID
+                    , T2.PROMO_CODE || '-' || DBMS_LOB.SUBSTR (T2.PROMO_DESC, 4000) PROMO_DESC
+                 FROM SAL0018D T1
+                 JOIN SAL0017D T2
+                   ON T2.PROMO_ID = T1.PROMO_ID
+                  AND 1 = T2.PROMO_STUS_ID
+                  AND T2.PROMO_APP_TYPE_ID = #{appTypeId}
+                  AND 1034 = T2.PROMO_TYPE_ID
+                  AND 0 = T2.PROMO_IS_TRIAL_CNVR
+                  AND T2.PROMO_DT_FROM &lt;= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+                  AND T2.PROMO_DT_END  &gt;= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+                WHERE T1.PROMO_ITM_STK_ID = #{stkId}
+                  AND 1 = T1.PROMO_ITM_STUS_ID
+             ) T
+         ORDER BY T.PROMO_DESC ASC
+    </select>
+    
+    <select id="selectProductPromotionPriceByPromoStockID" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_STUS_ID
+             , T1.PROMO_ITM_UPD_USER_ID
+             , T1.PROMO_ITM_UPD_DT
+             , T1.PROMO_ITM_RENTAL
+             , T1.PROMO_ITM_RENT_PRIOD
+             , T1.PROMO_ITM_OBLIG_PRIOD
+          FROM SAL0018D T1
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STK_ID = #{stkId}
+           AND 1 = T1.PROMO_ITM_STUS_ID
+           AND ROWNUM &lt;= 1
+    </select>
+    
+    <select id="selectTrialNo" parameterType="Map" resultType="egovMap">
+		SELECT T1.SALES_ORD_ID
+		     , T1.SALES_ORD_NO
+		     , T1.REF_NO
+		     , T1.SALES_DT
+		     , T1.CUST_ID
+		     , T1.CUST_CNT_ID
+		     , T1.CUST_ADD_ID
+		     , T1.MEM_ID
+		     , T1.BRNCH_ID
+		     , T1.APP_TYPE_ID
+		     , T1.DSCNT_AMT
+		     , T1.TAX_AMT
+		     , T1.TOT_AMT
+		     , T1.PROMO_ID
+		     , T1.BINDING_NO
+		     , T1.CC_PROMO_ID
+		     , T1.TOT_PV
+		     , T1.REM
+		     , T1.PV_MONTH
+		     , T1.PV_YEAR
+		     , T1.STUS_CODE_ID
+		     , T1.UPD_DT
+		     , T1.UPD_USER_ID
+		     , T1.SYNC_CHK
+		     , T1.CUST_PO_NO
+		     , T1.REN_CHK_ID
+		     , T1.INST_PRIOD
+		     , T1.DO_NO DO_NO
+		     , T1.DEPT_CODE
+		     , T1.GRP_CODE
+		     , T1.ORG_CODE
+		     , T1.SALES_ORD_ID_OLD
+		     , T1.EDIT_TYPE_ID
+		     , T1.CUST_BILL_ID
+		     , T1.MTH_RENT_AMT
+		     , T1.LOK
+		     , T1.AEON_STUS_ID
+		     , T1.COMM_DT
+		     , T1.CRT_USER_ID
+		     , T1.CRT_DT
+		     , T1.PAY_COM_DT
+		     , T1.DEF_RENT_AMT
+		     , T1.REF_DOC_ID
+		     , T1.RENT_PROMO_ID
+		     , T1.SALES_HM_ID
+		     , T1.SALES_SM_ID
+		     , T1.SALES_GM_ID
+		     , T1.ADV_BILL
+		     , T1.CNVR_SCHEME_ID
+		     , T1.CUST_CARE_CNT_ID
+		  FROM SAL0001D T1
+		 WHERE (T1.BINDING_NO = '' OR T1.BINDING_NO IS NULL)
+		   AND (T1.SALES_ORD_ID_OLD = 0 OR T1.SALES_ORD_ID_OLD IS NULL)
+		   AND T1.SALES_ORD_NO = #{salesOrdNo}
+		   AND ROWNUM &lt;= 1
+    </select>
+    
     <insert id="insertSalesOrderM" parameterType="salesOrderMVO">
 		INSERT
 		  INTO SAL0001D

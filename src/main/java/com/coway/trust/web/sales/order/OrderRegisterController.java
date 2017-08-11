@@ -19,6 +19,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -39,6 +40,11 @@ public class OrderRegisterController {
 	
 	@RequestMapping(value = "/orderRegisterPop.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		
 		return "sales/order/orderRegisterPop";
 	}
 	
@@ -92,4 +98,44 @@ public class OrderRegisterController {
         return ResponseEntity.ok(custAddInfo);
     }
     
+    @RequestMapping(value = "/selectStockPriceJsonInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectStockPrice(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+    
+        logger.debug("!@##############################################################################");
+        logger.debug("!@###### /selectSrvCntcJsonInfo.do : custCareCntId : "+params.get("custCareCntId"));
+        logger.debug("!@##############################################################################");
+        
+        EgovMap priceInfo = orderRegisterService.selectStockPrice(params);
+    
+        // 데이터 리턴.
+        return ResponseEntity.ok(priceInfo);
+    }
+    	
+    @RequestMapping(value = "/selectDocSubmissionList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectDocSubmissionList(@RequestParam Map<String, Object> params)
+    {
+    	List<EgovMap> codeList = orderRegisterService.selectDocSubmissionList(params);
+    	return ResponseEntity.ok(codeList);
+    }
+    
+    @RequestMapping(value = "/selectPromotionByAppTypeStock.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectPromotionByAppTypeStock(@RequestParam Map<String, Object> params)
+    {
+    	List<EgovMap> codeList = orderRegisterService.selectPromotionByAppTypeStock(params);
+    	return ResponseEntity.ok(codeList);
+    }
+    
+    @RequestMapping(value = "/selectProductPromotionPriceByPromoStockID.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectProductPromotionPriceByPromoStockID(@RequestParam Map<String, Object> params)
+    {
+    	EgovMap priceInfo = orderRegisterService.selectProductPromotionPriceByPromoStockID(params);
+    	return ResponseEntity.ok(priceInfo);
+    }
+    
+    @RequestMapping(value = "/selectTrialNo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectTrialNo(@RequestParam Map<String, Object> params)
+    {
+    	EgovMap result = orderRegisterService.selectTrialNo(params);
+    	return ResponseEntity.ok(result);
+    }
 }

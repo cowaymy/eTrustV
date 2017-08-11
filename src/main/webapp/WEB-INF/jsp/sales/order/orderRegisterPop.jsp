@@ -18,6 +18,7 @@
 	    //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
         fn_tabOnOffSet('BIL_DTL', 'HIDE');
+        
 	});
 
     function createAUIGrid() {
@@ -57,7 +58,7 @@
         
         $("#searchTypeCodeId").val("248");
         
-        Common.ajax("GET", "/common/selectDocSubmissionList.do", $("#searchForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/order/selectDocSubmissionList.do", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(docGridID, result);
         });
     }
@@ -425,10 +426,20 @@
 	    $('#custBtn').click(function() {
 	        $("#sUrl").val("/common/customerPop.do");
 	        //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
-	        Common.popupDiv("/common/customerPop.do", $("#searchForm").serializeJSON());
+	        Common.popupDiv("/common/customerPop.do", $("#searchForm").serializeJSON(), null, true);
 	    });
 	    $('[name="grpOpt"]').click(function() {
 	        fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
+	    });
+	    $('#trialNoChk').click(function() {
+	        if($('#trialNoChk').is(":checked")) {
+	            $('#trialNo').val('').removeClass("readonly");
+	            $('#trialNoBtn').removeClass("blind");
+	        }
+	        else {
+	            $('#trialNo').val('').addClass("readonly");
+	            $('#trialNoBtn').addClass("blind");
+	        }
 	    });
 	    $('#billMthdSms').click(function() {
 	        
@@ -542,23 +553,25 @@
                     $('#aCS').trigger(e);
                 }
     	        else {
+    	            var stkType = '1';
+    	            
     	            switch(selVal) {
     	                case '66' : //RENTAL
     	                    fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             //?FD문서에서 아래 항목 빠짐
                             //this.btnAdvPayNo.Enabled = true;
                             //this.btnAdvPayYes.Enabled = true;
+                            $('#installDur').val('').prop("readonly", true).addClass("readonly");
                             
     	                    break;
     	                
     	                case '68' : //INSTALLMENT
-                            $('#installDur').removeAttr("readonly");
-                            
+                            $('#installDur').removeAttr("readonly").removeClass("readonly");
+
     	                    break;
                         
     	                case '1412' : //Outright Plus
-                            $('#installDur').prop("readonly", true);
-                            $('#installDur').val("36");
+                            $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
                             
                             //?FD문서에서 아래 항목 빠짐
                             //this.btnAdvPayNo.Enabled = false;
@@ -567,18 +580,157 @@
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             fn_tabOnOffSet('REL_CER', 'HIDE');
                             
-                            doGetProductCombo('/common/selectProductCodeList.do',  '3', '', 'ordProudct', 'S', ''); //Product Code
+                            stkType = '3';
                             
     	                    break;
                         
                         default :
+                            $('#installDur').val('').prop("readonly", true).addClass("readonly")
                             break;
     	            }
+    	            
+    	            doGetProductCombo('/common/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
+    	            
+    	            $('#ordProudct').removeAttr("disabled");
     	        }
 	        }
 	        
 	    });
+        $('#ordProudct').change(function() {
+            
+	        $('#ordCampgn option').remove();
+	        $('#ordCampgn').prop("readonly", true);
+	        $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+	        $('#trialNoChk').prop("checked", false).prop("disabled", true);
+	        $('#trialNo').val('').addClass("readonly");
+	        $('#ordPrice').val('').addClass("readonly");
+	        $('#ordPriceId').val('');
+	        $('ordPv').val('').addClass("readonly");
+	        $('ordRentalFees').val('').addClass("readonly");
+
+	        var appTypeIdx = $("#appType option").index($("#appType option:selected"));
+	        var appTypeVal = $("#appType").val();
+	        var stkIdx     = $("#ordProudct option").index($("#ordProudct option:selected"));
+	        var stkIdVal   = $("#ordProudct").val();
+	        
+	        if(stkIdx > 0) {
+	            fn_loadProductPrice(appTypeVal, stkIdVal);
+	            fn_loadProductPromotion(appTypeVal, stkIdVal);
+	        }
+	    });
+        $('#ordPromo').change(function() {
+            
+	        $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+	        $('#trialNoChk').prop("checked", false).prop("disabled", true);
+	        $('#trialNo').val('').addClass("readonly");
+
+	        var appTypeIdx = $("#appType option").index($("#appType option:selected"));
+	        var appTypeVal = $("#appType").val();
+	        var stkIdIdx   = $("#ordProudct option").index($("#ordProudct option:selected"));
+	        var stkIdVal   = $("#ordProudct").val();
+	        var promoIdIdx = $("#ordPromo option").index($("#ordPromo option:selected"));
+	        var promoIdVal = $("#ordPromo").val();
+	        
+	        if(promoIdIdx > 0 && promoIdVal != '0') {
+	            
+	            $('#relatedNo').removeAttr("readonly").removeClass("readonly");
+	            
+	            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
+	                $('#trialNoChk').removeAttr("disabled");
+	            }
+	            
+	            fn_loadPromotionPrice(promoIdVal, stkIdVal);
+	            
+	            //fn_loadProductPrice(appTypeVal, stkId);
+	            //fn_loadProductPromotion(appTypeVal, stkId);
+	        }
+	        else {
+	            fn_loadProductPrice(appTypeVal, stkIdVal);
+	        }
+	    });
 	});
+	    
+	function fn_loadTrialNo(trialNo) {
+        
+        $('#trialNo').val('');
+        $('#trialId').val('');
+        
+        if(FormUtil.isNotEmpty(trialNo)) {
+            $("#searchSalesOrdNo").val(trialNo);
+            
+            Common.ajax("GET", "/sales/order/selectTrialNo.do", $("#searchForm").serialize(), function(trialInfo) {
+                
+                if(trialInfo != null) {
+                
+                    console.log("성공.");
+                    
+                    $("#trialId").val(trialInfo.salesOrdId);
+                    $("#trialNo").val(trialInfo.salesOrdNo);
+                }
+            });
+        }
+	}
+	
+	function fn_loadPromotionPrice(promoId, stkId) {
+        $("#searchStkId").val(stkId);
+        $("#searchPromoId").val(promoId);
+        
+        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", $("#searchForm").serialize(), function(promoPriceInfo) {
+            
+            if(promoPriceInfo != null) {
+            
+                console.log("성공.");
+                
+                $("#ordPrice").removeClass("readonly");
+                $("#ordPv").removeClass("readonly");
+                $("#ordRentalFees").removeClass("readonly");
+                
+                $("#ordPrice").val(promoPriceInfo.orderPrice);
+                $("#ordPv").val(promoPriceInfo.orderPV);
+                $("#ordRentalFees").val(promoPriceInfo.orderRentalFees);
+            }
+        });
+	}
+	
+	//LoadProductPromotion
+	function fn_loadProductPromotion(appTypeVal, stkId) {
+	    console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
+	    console.log('fn_loadProductPromotion --> stkId:'+stkId);
+	    
+	    $('#ordPromo').removeAttr("disabled");
+	    
+	    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId}, '', 'ordPromo', 'S', ''); //Common Code
+	}
+	
+	//LoadProductPrice
+	function fn_loadProductPrice(appTypeVal, stkId) {
+	    console.log('fn_loadProductPrice --> appTypeVal:'+appTypeVal);
+	    console.log('fn_loadProductPrice --> stkId:'+stkId);
+	    
+	    var appTypeId = 0;
+	    
+	    appTypeId = appTypeVal=='68' ? 67 : appTypeVal;
+	    
+        $("#searchAppTypeId").val(appTypeId);
+        $("#searchStkId").val(stkId);
+        
+        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", $("#searchForm").serialize(), function(stkPriceInfo) {
+            
+            if(stkPriceInfo != null) {
+            
+                console.log("성공.");
+                
+                $("#ordPrice").removeClass("readonly");
+                $("#ordPv").removeClass("readonly");
+                $("#ordRentalFees").removeClass("readonly");
+                
+                $("#ordPrice").val(stkPriceInfo.orderPrice);
+                $("#ordPv").val(stkPriceInfo.orderPV);
+                $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
+                $("#ordPriceId").val(stkPriceInfo.priceId);
+            }
+        });
+	}
 	
 	//tabNm : PAY_CHA, BIL_DTL, REL_CER
 	//opt   : SHOW, HIDE
@@ -754,6 +906,10 @@
     <input id="searchCustCntcId"    name="custCntcId"    type="hidden"/>
     <input id="searchCustCareCntId" name="custCareCntId" type="hidden"/>
     <input id="searchTypeCodeId"    name="typeCodeId"    type="hidden"/>
+    <input id="searchAppTypeId"     name="appTypeId"     type="hidden"/>
+    <input id="searchStkId"         name="stkId"         type="hidden"/>
+    <input id="searchPromoId"       name="promoId"       type="hidden"/>
+    <input id="searchSalesOrdNo"    name="salesOrdNo"       type="hidden"/>
 </form>
 <form id="custForm" name="custForm" action="#" method="post">
 
@@ -812,7 +968,7 @@
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><textarea  id="custRem" name="custRem" cols="20" rows="5" placeholder="Remark" readonly>xx</textarea></td>
+    <td colspan="3"><textarea  id="custRem" name="custRem" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -970,71 +1126,80 @@
     <select id="appType" name="appType" class="w100p"></select>
     </td>
     <th scope="row">Order Date<span class="must">*</span></th>
-    <td><span>31/07/2017</span></td>
+    <td>${toDay}</td>
 </tr>
 <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
-    <td><input id="installDur" name="installDur" type="text" title="" placeholder="" class="w100p" readonly/></td>
+    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
     <th scope="row">Salesman Code<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="" />
+        <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row">Reference No<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Salesman Type</th>
-    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input id="salesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">PO No<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Salesman Name</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Product<span class="must">*</span></th>
-    <td><select id="ordProudct" name="ordProudct" class="w100p"></select></td>
+    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
     <th scope="row">Salesman NRIC</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Campaign<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select id="ordCampgn" name="ordCampgn" class="w100p" disabled></select>
     </td>
     <th scope="row">Department Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="departCd" name="departCd" type="text" title="" placeholder="Department Code" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
     <th scope="row">Promotion<span class="must">*</span></th>
     <td>
-    <select id="ordPromo" name="ordPromo" class="w100p"></select>
+    <select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
     </td>
     <th scope="row">Group Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
     <th scope="row">Price/RPF (RM)</th>
-    <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="" class="w100p" />
-        <input id="ordPriceId" name="ordPriceId" type="text" /></td>
+    <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+        <input id="ordPriceId" name="ordPriceId" type="hidden" /></td>
     <th scope="row">Organization Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
     <th scope="row">Rental Fees (RM)</th>
-    <td><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
     <th scope="row">Trial No </th>
-    <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" /><span></span></label>
-               <input id="trialNo" name="trialNo" type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+    <td><label><input id="trialNoChk" name="trialNoChk" type="checkbox" disabled/><span></span></label>
+               <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" class="readonly" readonly />
+               <input id="trialId" name="trialId" type="text" />
+               <a id="trialNoBtn" name="trialNoBtn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row">PV</th>
-    <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly /></td>
     <th scope="row">Related No</th>
-    <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="" class="readonly" readonly="readonly" /></td>
+    <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3"><textarea  id="ordRem" name="ordRem" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>
+</tr>
+<tr>
+    <th scope="row">Advance Rental Payment<span class="must">*</span></th>
+    <td colspan="3"><sapn>Does customer make advance rental payment for 6 months and above?</sapn>
+        <input id="advPayYes" name="advPay" type="radio" disabled/><span>Yes</span>
+        <input id="advPayNo" name="advPay" type="radio" disabled/><span>No</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
