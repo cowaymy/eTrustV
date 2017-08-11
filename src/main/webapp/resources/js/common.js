@@ -222,7 +222,6 @@ var Common = {
         divId = generateDivId(divId);
 
         function generateDivId(divId){
-        	alert($("#" + divId).length);
             if ($("#" + divId).length > 0 ) {
                 divId = "_popupDiv" + ($("#" + divId).length + 1);
                 generateDivId(divId);
