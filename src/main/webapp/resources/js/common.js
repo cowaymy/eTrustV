@@ -203,12 +203,17 @@ var Common = {
 	 * @param _url
 	 * @param _jsonObj
 	 * @param _callback
+	 * @param _isManualClose : 개발자가 수동으로 div 팝업창을 닫으려면 true
+	 * @param _divId : 팝업 아이디 생성.
 	 * @returns divObj
-	 * @returns isManualClose : 개발자가 수동으로 div 팝업창을 닫으려면 true
 	 */
-	popupDiv : function(_url, _jsonObj, _callback, _isManualClose) {
+	popupDiv : function(_url, _jsonObj, _callback, _isManualClose, _divId) {
 
 		var divId = "_popupDiv";
+
+		if(_divId){
+			divId = _divId;
+		}
 
 		/*
 		 * 팝업시 left/top 제외 시킴. => /webapp/WEB-INF/tiles/layout/default.jsp
