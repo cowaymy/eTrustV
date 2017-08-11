@@ -21,7 +21,7 @@
 				 <if test='pgmCode !=null and pgmCode !="" '>
 				  AND UPPER(B.PGM_CODE(+)) LIKE '%' || UPPER(#{pgmCode}) || '%'
 				 </if>
-				ORDER BY A.MENU_CODE ,A.MENU_LVL ,A.MENU_ORDER
+				ORDER BY SUBSTR(A.MENU_CODE,1,3) ,A.MENU_LVL ,A.MENU_ORDER
 	</select>
 
 	<select id="selectUpperMenuList" parameterType="Map" resultType="egovMap">
