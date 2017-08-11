@@ -244,7 +244,7 @@
                  ORDER BY Project1.CODE_NAME ASC
     </select> 
      <!-- Asset 마스터 인서트 -->
-    <insert id="insertAssetMng" parameterType="Map">
+    <insert id="insertMasterAsset" parameterType="Map">
          INSERT INTO LOG0050M(
             ASSET_ID
           , STUS_ID
@@ -352,10 +352,10 @@
                     WHERE  ASSET_ID        =#{masterassetid}
     </update>
     
-    <delete id="deleteAssetMng" parameterType="Map">
+  <!--   <delete id="deleteAssetMng" parameterType="Map">
         DELETE FROM LOG0050M 
         WHERE ASSET_ID = #{masterassetid} 
-    </delete>
+    </delete> -->
     
     <select id="AssetCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_ID),0) + 1 from LOG0050M
@@ -363,7 +363,14 @@
     <select id="AssetdetailCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_D_ID),0) + 1 from LOG0051D
     </select>
-    <select id="selectMaxAssestId" parameterType="Map" resultType="Integer">
+        <select id="AssetItemCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 from LOG0052D
+    </select>
+    <select id="selectMaxCardId" parameterType="Map" resultType="Integer">
+         SELECT NVL(MAX(CARD_ID),0) + 1 FROM LOG0057M
+    </select>
+
+<!--      <select id="selectMaxAssestId" parameterType="Map" resultType="Integer">
          SELECT NVL(MAX(ASSET_ID),0) + 1 FROM LOG0050M
     </select>
     <select id="selectMaxAssestDId" parameterType="Map" resultType="Integer">
@@ -371,11 +378,7 @@
     </select>
     <select id="selectMaxAssetDItmId" parameterType="Map" resultType="Integer">
          SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 FROM LOG0052D
-    </select>
-    <select id="selectMaxCardId" parameterType="Map" resultType="Integer">
-         SELECT NVL(MAX(CARD_ID),0) + 1 FROM LOG0057M
-    </select>
- 
+    </select> -->
     
     <select id="selectAssetM" parameterType="Map" resultMap="assetCopy">
         SELECT 
@@ -424,10 +427,6 @@
          WHERE l51d.ASSET_ID  = l50m.ASSET_ID
             AND  l50m.ASSET_ID = #{assetid}
             AND  l51d.STUS_ID=1
-    </select>
-    
-      <select id="AssetItemCreateSeq" parameterType="Map" resultType="Integer">
-        SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 from LOG0052D
     </select>
  
     <select id="selectAssetDItem" parameterType="Map" resultMap="assetCopy">
