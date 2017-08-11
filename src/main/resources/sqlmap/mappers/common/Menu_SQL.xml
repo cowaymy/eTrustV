@@ -30,7 +30,7 @@ TODO :  로그인한 유저가 가진 메뉴를 조회 하도록 구현 필요. 
                                                         FROM SYS0050M)
                                 AND PGM.FUNC_VIEW = 'Y'
                          CONNECT BY PRIOR UPPER_MENU_CODE = MENU_CODE) MENU
-        START WITH MENU.UPPER_MENU_CODE IS NULL
+        START WITH MENU.UPPER_MENU_CODE  = ' '
         CONNECT BY PRIOR MENU_CODE = UPPER_MENU_CODE
           ORDER SIBLINGS BY MENU_ORDER
     </select>

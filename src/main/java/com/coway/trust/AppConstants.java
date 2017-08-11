@@ -2,17 +2,23 @@ package com.coway.trust;
 
 public class AppConstants {
 
+	public static final String SLASH = "/";
+
 	// API 버전
-	public static final String TAG = "/v1";
+	public static final String TAG = SLASH +"v1";
 
-	public static final String PATH_WEB = "/web";
+	public static final String MOBILE = "mobile";
 
-	public static final String PATH_API = "/api";
+	public static final String CALLCENTER = "callcenter";
+
+	public static final String PATH_API = SLASH + "api";
 
 	public static final int RECORD_COUNT_PER_PAGE = 10;
 
 	// API BASE UR
 	public static final String API_BASE_URI = AppConstants.PATH_API + AppConstants.TAG;
+	public static final String CALL_CENTER_API_BASE_URI = AppConstants.SLASH + AppConstants.CALLCENTER + AppConstants.API_BASE_URI;
+	public static final String MOBILE_API_BASE_URI = AppConstants.SLASH + AppConstants.MOBILE + AppConstants.API_BASE_URI;
 
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
@@ -90,21 +96,21 @@ public class AppConstants {
 	public static final String MSG_FAIL = "sys.msg.success";
 	public static final String MSG_NOT_EXIST = "sys.msg.notexist";
 	public static final String MSG_NECESSARY = "sys.msg.necessary";
-	
+
 	/**
-	 * 공통 코드  KEY
-	 */	
-	public static final int CODE_EMPLOYEE_TYPE		= 1;
-	public static final int CODE_RACE_TYPE				= 2;
-	public static final int CODE_LANGUAGE_TYPE		= 3;
-	public static final int CODE_MARITAL_STATUS		= 4;
-	public static final int CODE_EDUCATION_LEVEL	= 5;
-	public static final int CODE_MEMBER_RANK			= 6;
-	public static final int CODE_TRANSPORT_TYPE		= 7;
-	public static final int CODE_APPLICATION_TYPE	= 10;			
-	public static final int CODE_WAREHOUSE_TYPE	= 14;
-	public static final int CODE_PAY_MODE				= 36;
-	public static final int CODE_PAY_TYPE					= 48;
-	public static final int CODE_DISCOUNT_TYPE		= 74;
-	
+	 * 공통 코드 KEY
+	 */
+	public static final int CODE_EMPLOYEE_TYPE = 1;
+	public static final int CODE_RACE_TYPE = 2;
+	public static final int CODE_LANGUAGE_TYPE = 3;
+	public static final int CODE_MARITAL_STATUS = 4;
+	public static final int CODE_EDUCATION_LEVEL = 5;
+	public static final int CODE_MEMBER_RANK = 6;
+	public static final int CODE_TRANSPORT_TYPE = 7;
+	public static final int CODE_APPLICATION_TYPE = 10;
+	public static final int CODE_WAREHOUSE_TYPE = 14;
+	public static final int CODE_PAY_MODE = 36;
+	public static final int CODE_PAY_TYPE = 48;
+	public static final int CODE_DISCOUNT_TYPE = 74;
+
 }
