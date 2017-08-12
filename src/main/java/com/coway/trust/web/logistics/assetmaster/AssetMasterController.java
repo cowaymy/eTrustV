@@ -57,25 +57,73 @@ public class AssetMasterController {
 	@RequestMapping(value = "/assetList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> assetList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
+		
+//		logger.debug("searchassetid 값 : {}", request.getParameter("searchassetid"));
+//		logger.debug("searchstatus 값 : {}", request.getParameterValues("searchstatus"));
+//		logger.debug("searchbrand 값 : {}", request.getParameter("searchbrand"));
+//		logger.debug("searchcategory 값 : {}", request.getParameter("searchcategory"));
+//		logger.debug("searchtype 값 : {}", request.getParameterValues("searchtype"));	
+//		logger.debug("searchcolor 값 : {}", request.getParameter("searchcolor"));
+//		logger.debug("searchmodelname 값 : {}", request.getParameter("searchmodelname"));
+//		logger.debug("searchpurchasedate1 값 : {}", request.getParameter("searchpurchasedate1"));
+//		logger.debug("searchpurchasedate2 값 : {}", request.getParameter("searchpurchasedate2"));
+//		logger.debug("searchrefno 값 : {}", request.getParameter("searchrefno"));
+//		logger.debug("searchbranchid 값 : {}", request.getParameter("searchbranchid"));
+//		logger.debug("searchdepartment 값 : {}", request.getParameterValues("searchdepartment"));
+//		logger.debug("searchinvoiceno 값 : {}", request.getParameter("searchinvoiceno"));
+//		logger.debug("searchdealer 값 : {}", request.getParameter("searchdealer"));
+//		logger.debug("searchserialno 값 : {}", request.getParameter("searchserialno"));	
+//		logger.debug("searchwarrantyno 값 : {}", request.getParameter("searchwarrantyno"));
+//		logger.debug("searchimeino 값 : {}", request.getParameter("searchimeino"));
+//		logger.debug("searchmacaddress 값 : {}", request.getParameter("searchmacaddress"));		
+//		logger.debug("searchcreator 값 : {}", request.getParameter("searchcreator"));
+//		logger.debug("searchcreatedate1 값 : {}", request.getParameter("searchcreatedate1"));
+//		logger.debug("searchcreatedate2 값 : {}", request.getParameter("searchcreatedate2"));
+		
+		
 		String searchassetid = request.getParameter("searchassetid");
 		String[] searchstatus = request.getParameterValues("searchstatus");
-		String searchbrand = request.getParameter("searchbrand");
+		String[] searchtype = request.getParameterValues("searchtype");
+		String[] searchdepartment = request.getParameterValues("searchdepartment");
+		String searchbrand = request.getParameter("searchbrand");	
+		String searchcolor = request.getParameter("searchcolor");	
 		String searchmodelname = request.getParameter("searchmodelname");
 		String searchpurchasedate1 = request.getParameter("searchpurchasedate1");
 		String searchpurchasedate2 = request.getParameter("searchpurchasedate2");
-		// String searchcategory = request.getParameter("searchcategory");
-		// String searchcategory = request.getParameter("searchcategory");
-		// String searchcategory = request.getParameter("searchcategory");
+		String searchrefno = request.getParameter("searchrefno");
+		String searchbranchid = request.getParameter("searchbranchid");
+		String searchinvoiceno = request.getParameter("searchinvoiceno");
+		String searchdealer = request.getParameter("searchdealer");
+		String searchserialno = request.getParameter("searchserialno");
+		String searchwarrantyno = request.getParameter("searchwarrantyno");
+		String searchimeino = request.getParameter("searchimeino");
+		String searchmacaddress = request.getParameter("searchmacaddress");
+		String searchcreator = request.getParameter("searchcreator");
+		String searchcreatedate1 = request.getParameter("searchcreatedate1");
+		String searchcreatedate2 = request.getParameter("searchcreatedate2");
 
 		Map<String, Object> assetmap = new HashMap();
 		assetmap.put("searchassetid", searchassetid);
-		assetmap.put("searchstatus", searchstatus);
+		assetmap.put("searchstatus", searchstatus);		
+		assetmap.put("searchtype", searchtype);
+		assetmap.put("searchdepartment", searchdepartment);
 		assetmap.put("searchbrand", searchbrand);
+		assetmap.put("searchcolor", searchcolor);		
 		assetmap.put("searchmodelname", searchmodelname);
 		assetmap.put("searchpurchasedate1", searchpurchasedate1);
-		assetmap.put("searchpurchasedate2", searchpurchasedate2);
-
+		assetmap.put("searchpurchasedate2", searchpurchasedate2);						
+		assetmap.put("searchrefno", searchrefno);
+		assetmap.put("searchbranchid", searchbranchid);
+		assetmap.put("searchinvoiceno", searchinvoiceno);
+		assetmap.put("searchdealer", searchdealer);
+		assetmap.put("searchserialno", searchserialno);
+		assetmap.put("searchwarrantyno", searchwarrantyno);
+		assetmap.put("searchimeino", searchimeino);
+		assetmap.put("searchmacaddress", searchmacaddress);
+		assetmap.put("searchcreator", searchcreator);	
+		assetmap.put("searchcreatedate1", searchcreatedate1);
+		assetmap.put("searchcreatedate2", searchcreatedate2);
+		
 		List<EgovMap> list = ams.selectAssetList(assetmap);
 
 		Map<String, Object> map = new HashMap();
@@ -89,16 +137,16 @@ public class AssetMasterController {
 			HttpServletResponse response) throws Exception {
 
 		String assetid = request.getParameter("assetid");
-		logger.debug("assetid 키값 : {}", assetid);
+		//logger.debug("assetid 키값 : {}", assetid);
 
 		Map<String, Object> assetdetailmap = new HashMap();
 		assetdetailmap.put("assetid", assetid);
 
 		List<EgovMap> list = ams.selectDetailList(assetdetailmap);
-		logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.size());
+		/*logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.size());
 		for (int i = 0; i < list.size(); i++) {
 			logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.get(i));
-		}
+		}*/
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -132,17 +180,27 @@ public class AssetMasterController {
 		params.put("hrchytypeid", "1198");
 
 		List<EgovMap> TypeList = ams.selectTypeList(params);
-
+	/*	for (int i = 0; i < TypeList.size(); i++) {
+			logger.debug("%%%%%%%%TypeList%%%%%%%: {}", TypeList.get(i));
+		}*/
 		return ResponseEntity.ok(TypeList);
 	}
+	
+	@RequestMapping(value = "/selectDepartmentList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDepartmentList(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> DepartmentList = ams.selectDepartmentList(params);
+	/*	for (int i = 0; i < DepartmentList.size(); i++) {
+			logger.debug("%%%%%%%%DepartmentList%%%%%%%: {}", DepartmentList.get(i));
+		}
+*/
+		return ResponseEntity.ok(DepartmentList);
+	}
+	
 
 	@RequestMapping(value = "/insertAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-
-		// Map<String, Object> masterMap = (Map<String, Object>) params.get("masterForm");
-		// Map<String, Object> detailMap= (Map<String, Object>) params.get("detailAddForm");
-		// Map<String, Object> detailMap= (Map<String, Object>) params.get("param");
 
 		Map<String, Object> masterMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
@@ -242,10 +300,10 @@ public class AssetMasterController {
 	}
 
 
-	@RequestMapping(value = "/UpItemAssetMng.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/upItemAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> UpItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-
+		logger.debug("addassetid  : {}", params.get("addassetid"));
 		logger.debug("additemtype  : {}", params.get("additemtype"));
 		logger.debug("additemBrand  : {}", params.get("additemBrand"));
 		logger.debug("additemmodel  : {}", params.get("additemmodel"));
@@ -266,13 +324,13 @@ public class AssetMasterController {
 		String retMsg = AppConstants.MSG_SUCCESS;
 
 		// loginId
+		params.put("crt_user_id", loginId);
 		params.put("upd_user_id", loginId);
 
 		Map<String, Object> map = new HashMap();
 
-		try {
-			// ;ams.updateItemAssetMng(params);
-			// ams.deleteAssetMng(params);
+		try {			
+			ams.updateItemAssetMng(params);			
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
