@@ -46,7 +46,7 @@
                         {dataField:"codename2"    ,headerText:"Type"    ,width:"12%" ,height:30 , visible:true},
                         {dataField:"name"   ,headerText:"Brand"       ,width:120 ,height:30 , visible:true},
                         {dataField:"name1"   ,headerText:"Model Name"       ,width:140 ,height:30 , visible:true},
-                        {dataField:"colorid"   ,headerText:"Color"       ,width:90 ,height:30 , visible:true},
+                        {dataField:"codename1"   ,headerText:"Color"       ,width:90 ,height:30 , visible:true},
                         {dataField:"branch"    ,headerText:"Branch"        ,width:120 ,height:30 , visible:true},
                         {dataField:"department"    ,headerText:"Department"        ,width:140 ,height:30 , visible:true},
                         {dataField:"purchsdt"    ,headerText:"Purchase Date"        ,width:120 ,height:30 , visible:true},
@@ -57,7 +57,7 @@
                         {dataField:"brandid"  ,headerText:"brandId"     ,width:100 ,height:30 , visible:false},
                         {dataField:"ctgryid"    ,headerText:"ctgryId"        ,width:100 ,height:30 , visible:false},                      
                         {dataField:"codename"    ,headerText:"codeName"        ,width:100 ,height:30 , visible:false},                      
-                        {dataField:"codename1"  ,headerText:"codeName1"      ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"colorId"  ,headerText:"codeName1"      ,width:100 ,height:30 , visible:false},                      
                         {dataField:"crtdt"   ,headerText:"crtDt"       ,width:100 ,height:30 , visible:false},                       
                         {dataField:"crtuserid"      ,headerText:"crtUserId"          ,width:100 ,height:30 , visible:false},
                         {dataField:"currbrnchid"      ,headerText:"currBrnchId"          ,width:100 ,height:30 , visible:false},                        
@@ -168,9 +168,14 @@
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
         doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand 리스트 조회
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','searchbranchid', 'S' , ''); //청구처 리스트 조회
-
+        
+        
+        doGetCombo('/logistics/assetmng/selectDepartmentList.do', '', 'all','searchdepartment', 'M' , 'f_multiCombo'); //Type 리스트 조회
+        //doDefCombo('', '' ,'searchdepartment', 'M', 'f_multiCombo'); //Department리스트 
         //$("#searchtype option:eq(1202)").prop("selected", true);
 
+        
+        
         
         AUIGrid.bind(myGridID, "cellClick", function( event )  
         {
@@ -191,6 +196,7 @@
                  $("#masterWindow").show();
                  $("#Details_info").show();
                  $("#Insert_info").hide();
+                 $("#CopyAssetInfo").hide();
             }else{
             Common.alert('Choice Data please..');
             }
@@ -208,11 +214,16 @@
                 $('#searchtype').multipleSelect("checkAll");
             });
             
+     /*        $('#searchbranchid').change(function() {
+                $('#searchdepartment').multipleSelect("checkAll");
+            }); */
+            
+            
             $("#search").click(function(){
                 getAssetListAjax();    
             });
             $("#clear").click(function(){
-              /*   doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
+              /*   doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','id', 'S' , ''); //청구처 리스트 조회
                 doDefCombo(comboData, '' ,'status', 'S', '');
                 $("#loccd").val('');
                 $("#locdesc").val(''); */
@@ -222,9 +233,10 @@
            div="N";
            $("#detailHead").text("AssetMng Information Registration");
            fn_setVisiable(div);
-           //destory(AddDetailGrid);
+           destory(AddDetailGrid);
            $("#masterWindow").show();
            $("#Details_info").hide();
+           $("#CopyAssetInfo").hide();
            AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
           // $("#Insert_info").click();
           });
@@ -261,6 +273,7 @@
              alert("업데이트 인포!!!!!!!");
              $("#Updadte_div_tap").show();  
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             $("#addassetid").val(AUIGrid.getCellValue(myGridID ,selectedItem[0],'assetid'));
              upitemGrid  = GridCommon.createAUIGrid("#UpDetail_div", updateLayout,"", gridoptions);
              getDetailAssetListAjax(selectedItem[0],div);    
      });
@@ -455,11 +468,15 @@
        }else if(div=="D"){ //딜리트
            url="/logistics/assetmng/deleteAssetMng.do";
        }else if(div=="UI"){
-    	   url="/logistics/assetmng/UpItemAssetMng.do";
+    	   url="/logistics/assetmng/upItemAssetMng.do";
        }
        Common.ajax("POST",url,param,function(result){
            Common.alert(result.msg);
-           $("#masterWindow").hide();
+           if(div=="UI"){
+        	   
+           }else{
+           $("#masterWindow").hide();        	   
+           }
            $("#search").trigger("click");
           
        });
@@ -539,12 +556,12 @@
                  selectAll : true,
                  width : '80%'
              });
-         /*     $('#cmbStatus').change(function() {
+            $('#searchdepartment').change(function() {
 
              }).multipleSelect({
                  selectAll : true,
                  width : '80%'
-             }); */
+             });
          });
      }
      
@@ -705,11 +722,17 @@
      function getComboRelays(obj , value , tag , selvalue){
             var robj= '#'+obj;
             $(robj).attr("disabled",false);
-            doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회
+            
+            if(value == "42"){
+            	doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag , value , selvalue,obj, 'M', 'f_multiCombo'); //청구처 리스트 조회           
+            }
+            
+             doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회 	
         }
      
      
      function doGetComboSelBox(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){      
+             alert("에이작스"+codevalue);
          $.ajax({
              type : "GET",
              url : url,
@@ -732,7 +755,6 @@
         function doDefCombos(data, selCode, obj , type, callbackFn){
             var targetObj = document.getElementById(obj);
             var custom = "";
-            
             for(var i=targetObj.length-1; i>=0; i--) {
                 targetObj.remove( i );
             }
@@ -745,6 +767,8 @@
             } 
             
             $.each(data, function(index,value) {
+            	//alert(data[index].codeId);
+            	//alert(data[index].codeName);
                 //CODEID , CODE , CODENAME ,,description
                     if(selCode==data[index].codeId){
                         $('<option />', {value : data[index].codeId, text:data[index].codeName}).appendTo(obj).attr("selected", "true");
@@ -929,12 +953,12 @@
 <tr>
     <th scope="row">Branch</th>
     <td>
-    <select id="searchbranchid" name="searchbranchid" class="w100p" >
+    <select id="searchbranchid" name="searchbranchid" onchange="getComboRelays('searchdepartment' , this.value , '', '')" class="w100p" >
     </select>
     </td>
     <th scope="row">Department</th>
     <td>
-    <select class="w100p" id="searchdepartment" name="searchdepartment">
+    <select class="w100p" id="searchdepartment" name="searchdepartment"  >
     </select>
     </td>
     <th scope="row"></th>
@@ -1170,7 +1194,7 @@
 </tr> -->
 </tbody>
 </table><!-- table end -->
-    <table class="type1">
+    <table class="type1" id="CopyAssetInfo">
         <colgroup>
         <col style="width:300px" />
         <col style="width:*" />
@@ -1312,6 +1336,7 @@
                             <col style="width: *" />
                         </colgroup>
                         <tbody>
+                        <input type="hidden" id="addassetid" name="addassetid"/>
                             <tr>
                                 <th scope="row">Detail Type</th>
                                 <td colspan="2">
