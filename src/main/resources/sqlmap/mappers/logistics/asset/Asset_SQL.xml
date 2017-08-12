@@ -7,7 +7,8 @@
         <result property="department" column="department" jdbcType="CLOB" javaType="java.lang.String"/>
         <!-- <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/> -->
         <result property="department" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
-        <result property="department" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        <result property="department" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="codeName" column="CODE_NAME" jdbcType="CLOB" javaType="java.lang.String"/>  
         </resultMap>
         <resultMap id="assetCopy" type="EgovMap">
         <result property="assetRem" column="ASSET_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
@@ -33,7 +34,7 @@
                  E1.MAC_ADDR macAddr,
                  E1.NAME NAME1,
                  E1.PURCHS_AMT purchsAmt,
-                 E1.PURCHS_DT purchsDt,
+                 E1.PURCHS_DT purchsDt,     
                  E1.REF_NO refNo,
                  E1.ASSET_REM assetRem,
                  E1.SERIAL_NO serialNo,
@@ -86,7 +87,19 @@
             <foreach item="item" collection="searchstatus" index="index" open="(" separator="," close=")">
             #{item}
             </foreach>
+         </if>     
+           <if test="searchtype != null and searchtype != ''">
+                     AND E1.TYPE_ID in 
+            <foreach item="item" collection="searchtype" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
          </if>   
+         <if test="searchdepartment != null and searchdepartment != ''">
+                     AND E1.CURR_DEPT_ID in 
+            <foreach item="item" collection="searchdepartment" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+         </if>    
          <if test="searchbrand != null and searchbrand !=''">
                      AND l49.name = #{searchbrand}
          </if>
@@ -243,6 +256,19 @@
                  ) Project1
                  ORDER BY Project1.CODE_NAME ASC
     </select> 
+    
+    
+   <!-- Department리스트  -->
+    <select id="selectDepartmentList" parameterType="Map" resultMap="assetClobMap">   
+        SELECT 
+            DEPT_ID CODE_ID ,
+            DEPT_NAME CODE_NAME  
+            FROM SYS0040M 
+             WHERE  ( 1 = DEPT_STUS_ID )
+            AND ( 'tUser' = DEPT_TBL_USE )
+            AND ( 'fUserDepartmentID' = DEPT_FILD_USE )
+    </select> 
+   
      <!-- Asset 마스터 인서트 -->
     <insert id="insertMasterAsset" parameterType="Map">
          INSERT INTO LOG0050M(
@@ -326,11 +352,38 @@
         ,SYSDATE
         ,#{name1}    
         ,#{assetDRem} 
-      
         )
     </insert>
     
+      <insert id="addAssetItm" parameterType="Map">
+      INSERT INTO LOG0052D
+      (
+        ASSET_D_ITM_ID,
+        DISAB,
+        ASSET_D_ID,
+        NAME,
+        VALU,
+        ASSET_D_ITM_REM,
+        CRT_USER_ID,
+        CRT_DT,
+        UPD_USER_ID,
+        UPD_DT      
+      )
+        VALUES (
+        #{insAseetItemDid}
+        ,0
+        ,#{insdetailAssetDid} 
+        ,#{additemname}
+        ,#{additemvalue}
+        ,#{additemremark}
+        ,#{crt_user_id}
+        ,SYSDATE
+        ,#{upd_user_id}
+        ,SYSDATE
+        )
+     </insert>    
     
+ 
     <update id="motifyAssetMng" parameterType="Map">
            UPDATE LOG0050M
                     SET      
@@ -350,12 +403,13 @@
                         UPD_USER_ID          =#{upd_user_id},
                         UPD_DT                   = SYSDATE                            
                     WHERE  ASSET_ID        =#{masterassetid}
-    </update>
-    
+    </update>  
   <!--   <delete id="deleteAssetMng" parameterType="Map">
         DELETE FROM LOG0050M 
         WHERE ASSET_ID = #{masterassetid} 
     </delete> -->
+    
+    
     
     <select id="AssetCreateSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ASSET_ID),0) + 1 from LOG0050M
