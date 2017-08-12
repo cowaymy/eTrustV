@@ -63,6 +63,47 @@
         });
     }
     
+	function fn_loadThirdParty(custId, sMethd) {
+        
+        fn_clearRentPayMode();
+        fn_clearRentPay3thParty();
+        fn_clearRentPaySetCRC();
+        fn_clearRentPaySetDD();
+        
+        if(custId != $('#hiddenCustId').val()) {
+	        Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
+	        
+	        if(result != null && result.length == 1) {
+	            
+	            var custInfo = result[0];
+	            
+                $('#hiddenThrdPartyId').val(custInfo.custId)
+                $('#thrdPartyId').val(custInfo.custId)
+                $('#thrdPartyType').val(custInfo.codeName1)
+                $('#thrdPartyName').val(custInfo.name)
+                $('#thrdPartyNric').val(custInfo.nric)
+                
+                $('#thrdPartyId').removeClass("readonly");
+                $('#thrdPartyType').removeClass("readonly");
+                $('#thrdPartyName').removeClass("readonly");
+                $('#thrdPartyNric').removeClass("readonly");
+	        }
+	        else {
+	            if(sMethd == 2) {
+                    Common.alert('<b>Third party not found.<br />'
+                               + 'Your input third party ID : ' + custId + '</b>');
+	            }
+	        }
+	    });
+        }
+        else {
+            Common.alert('<b>Third party and customer cannot be same person/company.<br />'
+                       + 'Your input third party ID : ' + custId + '</b>');
+        }
+        
+        $('#sctThrdParty').removeClass("blind");
+	}
+    
 	function fn_loadCustomer(custId){
 	
 	    $("#searchCustId").val(custId);
@@ -424,13 +465,15 @@
 	        //$('#tabPC').addClass("blind");
 	    });
 	    $('#custBtn').click(function() {
-	        //$("#sUrl").val("/common/customerPop.do");
 	        //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
-	        Common.popupDiv("/common/customerPop.do", $("#searchForm").serializeJSON(), null, true);
+	        Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_CUST_CUST"}, null, true);
+	    });
+	    $('#thrdPartyBtn').click(function() {
+	        //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+	        Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_PAY_3RD_PARTY"}, null, true);
 	    });
 	    $('#memBtn').click(function() {
-	        //$("#sUrl").val("/common/memberPop.do");
-	        //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+	        //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
 	        Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
 	    });
 	    $('[name="grpOpt"]').click(function() {
@@ -446,6 +489,20 @@
 	            $('#trialNoBtn').addClass("blind");
 	        }
 	    });
+        $('#thrdParty').click(function(event) {
+            
+            fn_clearRentPayMode();
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+            
+            if($('#thrdParty').is(":checked")) {
+                $('#sctThrdParty').removeClass("blind");
+            }
+            else {
+                $('#sctThrdParty').addClass("blind");
+            }
+        });
 	    $('#billMthdSms').click(function() {
 	        
             $('#billMthdSms1').prop("checked", false).prop("disabled", true);
@@ -474,7 +531,7 @@
 	            $('#billMthdEmailTxt2').removeAttr("disabled").val($('#srvCntcEmail').val().trim());
 	        }
 	    });
-        $('#custId').blur(function(event) {
+        $('#custId').change(function(event) {
             
             var strCustId = $('#custId').val();
             
@@ -498,6 +555,7 @@
             //CLEAR RENTAL PAY SETTING
             $('#thrdParty').val('');
             
+            fn_clearRentPayMode();
             fn_clearRentPay3thParty();
             fn_clearRentPaySetCRC();
             fn_clearRentPaySetDD();
@@ -522,13 +580,16 @@
         	    Common.alert('<b>Invalid customer ID.</b>');
         	}
         });
-        $('#salesmanCd').blur(function(event) {
+        $('#salesmanCd').change(function(event) {
             
             var memCd = $('#salesmanCd').val().trim();
             
             if(FormUtil.isNotEmpty(memCd)) {
                 fn_loadOrderSalesman(0, memCd);
             }
+        });
+        $('#thrdPartyId').change(function(event) {
+            fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
         });
         $('#appType').change(function() {
             
@@ -540,6 +601,7 @@
             //CLEAR RENTAL PAY SETTING
             $('#thrdParty').val('');
             
+            fn_clearRentPayMode();
             fn_clearRentPay3thParty();
             fn_clearRentPaySetCRC();
             fn_clearRentPaySetDD();
@@ -562,8 +624,7 @@
                     $('#appType').val('');
                     Common.alert('<b>Please select customer first.</b>');
                     
-                    var e = jQuery.Event("click");
-                    $('#aCS').trigger(e);
+                    fn_createEvent('aCS', 'click');
                 }
     	        else {
     	            var stkType = '1';
@@ -662,6 +723,11 @@
 	        }
 	    });
 	});
+	
+	function fn_createEvent(objId, eventType) {
+	    var e = jQuery.Event(eventType);
+        $('#'+objId).trigger(e);
+    }
 	
 	function fn_clearOrderSalesman() {
 	    $('#salesmanId').val('');
@@ -875,6 +941,11 @@
 	}
 	
 	//ClearControl_RentPaySet_ThirdParty
+	function fn_clearRentPayMode() {
+	    $('#rentPayModeForm').clearForm();
+	}
+	
+	//ClearControl_RentPaySet_ThirdParty
 	function fn_clearRentPay3thParty() {
 	    $('#thrdPartyForm').clearForm();
 	}
@@ -968,7 +1039,6 @@
 <section class="search_table"><!-- search_table start -->
 
 <form id="searchForm" name="mainForm" action="#" method="post">
-    <input id="sUrl"                name="sUrl"          type="hidden"/>
     <input id="searchCustId"        name="custId"        type="hidden"/>
     <input id="hiddenCustId"        name="custId"        type="hidden"/>
     <input id="searchCustAddId"     name="custAddId"     type="hidden"/>
@@ -978,7 +1048,7 @@
     <input id="searchAppTypeId"     name="appTypeId"     type="hidden"/>
     <input id="searchStkId"         name="stkId"         type="hidden"/>
     <input id="searchPromoId"       name="promoId"       type="hidden"/>
-    <input id="searchSalesOrdNo"    name="salesOrdNo"       type="hidden"/>
+    <input id="searchSalesOrdNo"    name="salesOrdNo"    type="hidden"/>
 </form>
 <form id="custForm" name="custForm" action="#" method="post">
 
@@ -1309,6 +1379,8 @@
 </tbody>
 </table><!-- table end -->
 
+<section id="sctThrdParty" class="blind">
+    
 <aside class="title_line"><!-- title_line start -->
 <h2>Third Party</h2>
 </aside><!-- title_line end -->
@@ -1332,19 +1404,29 @@
 <tbody>
 <tr>
     <th scope="row">Customer ID<span class="must">*</span></th>
-    <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="Third Party ID" class="" />
+        <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="text" title="" placeholder="Third Party ID" class="" /></td>
     <th scope="row">Type</th>
-    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p" /></td>
+    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Name</th>
-    <td><input id="thrdPartyName" name="thrdPartyName" type="text" title="" placeholder="Customer Name" class="w100p" /></td>
+    <td><input id="thrdPartyName" name="thrdPartyName" type="text" title="" placeholder="Customer Name" class="w100p readonly" readonly/></td>
     <th scope="row">NRIC/Company No</th>
-    <td><input id="thrdPartyNrid" name="thrdPartyNrid" type="text" title="" placeholder="NRIC/Company Number" class="w100p" /></td>
+    <td><input id="thrdPartyNric" name="thrdPartyNric" type="text" title="" placeholder="NRIC/Company Number" class="w100p readonly" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
+</section>
 
+<!------------------------------------------------------------------------------
+    Rental Paymode - Form ID(rentPayModeForm)
+------------------------------------------------------------------------------->
+<section id="sctRentPayMode">
+
+<form id="rentPayModeForm" id="rentPayModeForm">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1360,12 +1442,16 @@
     <select id="rentPayMode" name="rentPayMode" class="w100p"></select>
     </td>
     <th scope="row">NRIC on DD/Passbook</th>
-    <td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC on DD/Passbook" class="w100p" /></td>
+    <td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC appear on DD/Passbook" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 
+</section>
+
+<section id="sctCrcCard" class="blind">
+    
 <aside class="title_line"><!-- title_line start -->
 <h2>Credit Card</h2>
 </aside><!-- title_line end -->
@@ -1414,7 +1500,10 @@
     <li><p class="btn_blue2"><a href="#">OK</a></p></li>
 </ul>
 </form>
+</section>
 
+<section id="sctDirectDebit" class="blind">
+    
 <aside class="title_line"><!-- title_line start -->
 <h2>Direct Debit</h2>
 </aside><!-- title_line end -->
@@ -1461,6 +1550,7 @@
     <li><p class="btn_blue2"><a href="#">OK</a></p></li>
 </ul>
 </form>
+</section>
 
 </section><!-- search_table end -->
 

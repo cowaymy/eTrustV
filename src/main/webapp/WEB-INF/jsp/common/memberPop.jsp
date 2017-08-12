@@ -16,6 +16,7 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
             fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), null);
+            fn_createEvent('memPopCloseBtn', 'click');
         });
     });
     
@@ -64,13 +65,11 @@
     function fn_selectMemberList() {        
         Common.ajax("GET", "/sales/order/selectMemberList.do", $("#searchMemberFormPop").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
-        }
-        );
+         });
     }
 
 	$(function(){
 	    $('#searchBtn').click(function() {
-	        alert('x');
 	        fn_selectMemberList();
 	    });
 	});
@@ -84,7 +83,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Search Member</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="memPopCloseBtn" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

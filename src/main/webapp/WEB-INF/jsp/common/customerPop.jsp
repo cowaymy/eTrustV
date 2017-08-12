@@ -15,9 +15,19 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            fn_loadCustomer(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId"));
+            fn_setData(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId"))
+            fn_createEvent('custPopCloseBtn', 'click');
         });
 	});
+	
+	function fn_setData(custId) {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CUST_CUST') {
+	        fn_loadCustomer(custId);
+	    }
+	    else if ($('#callPrgm').val() == 'ORD_REGISTER_PAY_3RD_PARTY') {
+	        fn_loadThirdParty(custId, 1)
+	    }
+	}
 	
     function createAUIGrid() {
         
@@ -75,10 +85,8 @@
     function fn_selectPstRequestDOListAjax() {        
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#custSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
-        }
-        );
+        });
     }
-    
     
 </script>
 </head>
@@ -89,7 +97,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Search Customer</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -97,7 +105,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="custSearchForm" name="searchForm" action="#" method="post">
-
+<input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

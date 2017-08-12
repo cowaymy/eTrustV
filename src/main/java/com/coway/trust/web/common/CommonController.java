@@ -198,6 +198,9 @@ public class CommonController {
 
 	@RequestMapping(value = "/customerPop.do")
 	public String customerPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("callPrgm", params.get("callPrgm"));
+		
 		return "common/customerPop";
 	}
 
