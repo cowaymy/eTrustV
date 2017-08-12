@@ -56,12 +56,18 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	public List<EgovMap> selectTypeList(Map<String, Object> params) {
 		return AssetMngMapper.selectTypeList(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectDepartmentList(Map<String, Object> params) {
+		return AssetMngMapper.selectDepartmentList(params);
+	}
 
 	@Override
 	public void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList) {
 
 		int inassetid = AssetMngMapper.AssetCreateSeq();
-
+		int newAssetCardId = AssetMngMapper.AssetCardIdSeq();
+		
 		params.put("inassetid", inassetid);
 		params.put("masterstatus", 1);
 		params.put("masterbreanch", 42);
@@ -69,6 +75,14 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		params.put("curr_user_id", 0);
 
 		AssetMngMapper.insertMasterAsset(params);
+		
+		Map<String, Object> cardmap = new HashMap<String, Object>();
+		
+		cardmap.put("newAssetCardId", newAssetCardId);
+		cardmap.put("newAssetId", inassetid);
+		cardmap.put("loginId", params.get("crt_user_id"));
+		
+		AssetMngMapper.insertCopyAssetCard(cardmap);
 
 		int detailsize = detailAddList.size();
 		Logger.debug("detailsize     : {}", detailsize);
@@ -111,21 +125,43 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 
 	@Override
 	public void updateItemAssetMng(Map<String, Object> params) {
+		
+		int insdetailAssetDid = AssetMngMapper.AssetdetailCreateSeq();
+		int insAseetItemDid = AssetMngMapper.AssetItemCreateSeq();
 
-		int inassetid = AssetMngMapper.AssetCreateSeq();
-		int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
-
-		params.put("inassetid", inassetid);
-		params.put("detailassetid", detailassetid);
+		params.put("detailassetid", insdetailAssetDid);
 		params.put("detailstatus", 1);
-
+		params.put("inassetid", params.get("addassetid"));
+		params.put("typeid", params.get("additemtype"));
+		params.put("brandid", params.get("additemBrand"));	
+		params.put("add_crtuser_id", params.get("crt_user_id"));
+		params.put("add_upuser_id", params.get("upd_user_id"));
+		params.put("name1", params.get("additemmodel"));
+		params.put("assetDRem", params.get("addremark"));
+		
+		Logger.debug("detailassetid Impl     : {}", params.get("detailassetid"));
+		Logger.debug("additemtype Impl     : {}", params.get("additemtype"));
+		Logger.debug("additemBrand   Impl   : {}", params.get("additemBrand"));
+		Logger.debug("additemmodel  Impl    : {}", params.get("additemmodel"));
+		Logger.debug("addremark  Impl   : {}", params.get("addremark"));
+		
 		AssetMngMapper.insertDetailAsset(params);
 
-		Map<String, Object> map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 
-		params.put("detailstatus", 1);
-
-		AssetMngMapper.updateItemAssetMng(map);
+		map.put("detailstatus", 1);
+		map.put("insAseetItemDid", insAseetItemDid);
+		map.put("insdetailAssetDid", insdetailAssetDid);
+		map.put("additemname", params.get("additemname"));
+		map.put("additemvalue", params.get("additemvalue"));
+		map.put("additemremark", params.get("additemremark"));
+		map.put("crt_user_id", params.get("crt_user_id"));
+		map.put("upd_user_id", params.get("upd_user_id"));
+		
+		Logger.debug("crt_user_id  Impl    : {}", params.get("crt_user_id"));
+		Logger.debug("upd_user_id  Impl   : {}", params.get("upd_user_id"));
+		
+		AssetMngMapper.addAssetItm(map);
 
 	}
 
