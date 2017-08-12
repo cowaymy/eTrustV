@@ -24,7 +24,7 @@
             $("#_custId").val(event.item.custId);
             $("#_custAddId").val(event.item.custAddId);
             $("#_custCntcId").val(event.item.custCntcId);
-            Common.popupWin("popForm", "/sales/customer/selectCustomerView.do", option);
+            Common.popupDiv("/sales/customer/selectCustomerView.do", $("#popForm").serializeJSON());
         });
         // 셀 클릭 이벤트 바인딩
     
@@ -74,11 +74,10 @@
                       labelText : "Edit",
                       onclick : function(rowIndex, columnIndex, value, item) {
                            //pupupWin
-                          $("#_custId").val(item.custId); // custCntcId
+                          $("#_custId").val(item.custId);
                           $("#_custAddId").val(item.custAddId);
                           $("#_custCntcId").val(item.custCntcId);
-                         
-                          Common.popupWin("popForm", "/sales/customer/updateCustomerBasicInfoPop.do", option);
+                          Common.popupDiv("/sales/customer/updateCustomerBasicInfoPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv1');
                       }
                }
            }];
@@ -158,20 +157,24 @@
     function fn_insert(){
         Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", option);
     }
-	
- // Popup Option     
-    var option = {
-    		
-    		location : "no", // 주소창이 활성화. (yes/no)(default : yes)
-    		width : "1200px", // 창 가로 크기
-            height : "680px" // 창 세로 크기
-        };
 </script>
 <form id="popForm" method="post">
-    <input type="hidden" name="custId" id="_custId"/>
-    <input type="hidden" name="custAddId" id="_custAddId"/>
-    <input type="hidden" name="custCntcId" id="_custCntcId">
+    <input type="hidden" name="custId"  id="_custId"/>  <!-- Cust Id  -->
+    <input type="hidden" name="custAddId"   id="_custAddId"/><!-- Address Id  -->
+    <input type="hidden" name="custCntcId"   id="_custCntcId"> <!--Contact Id  -->
+    <input type="hidden" name="custAccId"   id="_custAccId">
+    <input type="hidden" name="selectParam"  id="_selectParam" value="${selectParam}"/> <!-- Page Param  -->
 </form>
+<!-- edit Pop Form  -->
+<form id="editForm" method="post">
+    <input type="hidden" name="editCustId" id="_editCustId"/>
+    <input type="hidden" name="editCustAddId" id="_editCustAddId"/>
+    <input type="hidden" name="editCustCntcId" id="_editCustCntcId">
+    <input type="hidden" name="editCustBankId" id="_editCustBankId">
+    <input type="hidden" name="editCustCardId" id="_editCustCardId">
+</form>
+
+
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -283,19 +286,8 @@
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-	<!--<li><p class="btn_grid"><a href="#">NEW</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">INS</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
-</ul>
-
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
-
 </section><!-- search_result end -->
-
 </section><!-- content end -->

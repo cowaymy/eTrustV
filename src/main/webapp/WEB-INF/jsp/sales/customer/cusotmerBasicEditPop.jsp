@@ -1,39 +1,62 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
+	 var selCodeCustId;  
+	 var selCodeCorpId; 
+	 var selCodeNation; 
+	 var selCodeRaceId;
 $(document).ready(function(){
 	
-	var selCodeCustId = $("#selCodeCustId").val(); // TypeId 
-	var selCodeCorpId = $("#selCodeCorpId").val();
-	var selCodeNation = $("#selCodeNation").val();
-	var selCodeRaceId = $("#selCodeRaceId").val(); //race id
+	//j_date
+	var pickerOpts={
+		    changeMonth:true,
+		    changeYear:true,
+		    dateFormat: "dd/mm/yy"
+	};
 	
-	doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'cmbCorpTypeId', 'S', '');     // Company Type Combo Box
-	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'cmbCustTypeId', 'S', '');       // Customer Type Combo Box
-	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , selCodeNation,'cmdNationTypeId', 'A', '');        // Nationality Combo Box
-	doGetCombo('/common/selectCodeList.do', '2', selCodeRaceId ,'cmdRaceTypeId', 'S', ''); //cmdRaceTypeId
+	$(".j_date").datepicker(pickerOpts);
+
+	var monthOptions = {
+	    pattern: 'mm/yyyy',
+	    selectedYear: 2017,
+	    startYear: 2007,
+	    finalYear: 2027
+	};
+
+	$(".j_date2").monthpicker(monthOptions);
+	
+	//selected Codes
+	selCodeCustId = $("#selCodeCustId").val(); // TypeId 
+	selCodeCorpId = $("#selCodeCorpId").val();
+	selCodeNation = $("#selCodeNation").val();
+	selCodeRaceId = $("#selCodeRaceId").val(); //race id
+	
+	doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'basicCmbCorpTypeId', 'S', '');     // Company Type Combo Box
+	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'basicCmbCustTypeId', 'S', '');       // Customer Type Combo Box
+	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , selCodeNation,'basicCmdNationTypeId', 'A', '');        // Nationality Combo Box
+	doGetCombo('/common/selectCodeList.do', '2', selCodeRaceId ,'basicCmdRaceTypeId', 'S', ''); //cmdRaceTypeId
 	//TypeId 에 따른 수정항목 Control
 	// individual
 	if(selCodeCustId == '964'){
-		$("#cmbCustTypeId").attr("disabled" , "disabled");
-		$("#cmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
-		$("#nric").attr({"class":"readonly w100p","readonly" : "readonly"});
-		$("input[name='gender']").attr("disabled" , false);
-		$("#cmdRaceTypeId").attr("disabled" , false);
-		$("#cmdNationTypeId").attr("disabled" , "disabled");
-		$("#dob").attr("disabled" , "disabled");
+		$("#basicCmbCustTypeId").attr("disabled" , "disabled");
+		$("#basicCmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
+		$("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+		$("input[name='basicGender']").attr("disabled" , false);
+		$("#basicCmdRaceTypeId").attr("disabled" , false);
+		$("#basicCmdNationTypeId").attr("disabled" , "disabled");
+		$("#basicDob").attr("disabled" , "disabled");
 	}
 	// company
 	if(selCodeCustId == '965'){
-		$("#cmbCustTypeId").attr("disabled" , "disabled");
-		$("#cmbCorpTypeId").attr({"class" : "w100p" , "disabled" : false});
-		$("#nric").attr({"class":"readonly w100p","readonly" : "readonly"});
-		$("input[name='gender']").attr("disabled" , "disabled");
-		$("#cmdRaceTypeId").attr({"disabled" : "disabled" , "class":"disabled w100p"});
-		$("#cmdNationTypeId").attr("disabled" , "disabled");
-		$("#dob").attr("disabled" , "disabled");
+		$("#basicCmbCustTypeId").attr("disabled" , "disabled");
+		$("#basicCmbCorpTypeId").attr({"class" : "w100p" , "disabled" : false});
+		$("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+		$("input[name='basicGender']").attr("disabled" , "disabled");
+		$("#basicCmdRaceTypeId").attr({"disabled" : "disabled" , "class":"disabled w100p"});
+		$("#basicCmdNationTypeId").attr("disabled" , "disabled");
+		$("#basicDob").attr("disabled" , "disabled");
 	}
-    
+    //edit
 	 // 수정 항목 변경 
     $("#_editCustomerInfo").change(function(){
               
@@ -41,111 +64,126 @@ $(document).ready(function(){
             $("#_selectParam").val(stateVal);
     });
 	 
-    $("#_confirm").click(function () {
-        
+    $("#_confirm").click(function (currPage) {
         var status = $("#_selectParam").val();
-        
+       
         if(status == '1'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
+            $("#_close").click();
         }
         if(status == '2'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerAddressPop.do" }).submit();
+        	Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
+        	$("#_close").click();
         }
         if(status == '3'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerContactPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
+            $("#_close").click();
         }
         if(status == '4'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBankAccountPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
+            $("#_close").click();
         }
         if(status == '5'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerCreditCardPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
+            $("#_close").click();
         }
-        if(status == '6'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoLimitPop.do" }).submit();
+        if(status == '6'){ //추후 정책 
+           /*  Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#editForm").serializeJSON(), null , true , '_editDiv');
+        	$("#_editDiv"+currPage).remove(); */
         }
         
     });
 	
-    // update Button Click
+    
+ // update Button Click
     $("#_updBtn").click(function(){
        
-        /*********** individual ***********/
         if(selCodeCustId == '964'){
-        	// 1. validation
-        	//Customer Name
-        	if('' == $("#name").val() || null == $("#name").val()){
-        		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Name'/>");
-            	return;
+            // 1. validation
+            //Customer Name
+            if('' == $("#basicName").val() || null == $("#basicName").val()){
+                Common.alert("*Please enter Customer Name.");
+                return;
             }
-        	//Race
-        	if('' == $("#cmdRaceTypeId").val() || null == $("#cmdRaceTypeId").val()){
-        		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Race'/>");
-        		return;
-        	}
-        	//Email 
-        	if('' != $("#email").val() && null != $("#email").val()){
-        		
-        		if(FormUtil.checkEmail($("#email").val()) == true){
+            //Race
+            if('' == $("#basicCmdRaceTypeId").val() || null == $("#basicCmdRaceTypeId").val()){
+                Common.alert("*Please enter Race");
+                return;
+            }
+            //Email 
+            if('' != $("#basicEmail").val() && null != $("#basicEmail").val()){
+                
+                if(FormUtil.checkEmail($("#basicEmail").val()) == true){
                     Common.alert("* Invalid email address.");
                     return;
                  }
-        	}
-        	// 2. update
-        	fn_getCustomerBasicAjax();
+            }
         }
         
         /*********** company ***********/
         if(selCodeCustId == '965'){
-        	// 1. validation
-        	//Company Type
-        	if('' == $("#cmbCorpTypeId").val() || null == $("#cmbCorpTypeId").val()){
-        		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Company Type'/>");
-        		return;
-        	}
-        	//Customer Name
-        	if('' == $("#name").val() || null == $("#name").val()){
+            // 1. validation
+            //Company Type
+            if('' == $("#basicCmbCorpTypeId").val() || null == $("#basicCmbCorpTypeId").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Company Type'/>");
+                return;
+            }
+            //Customer Name
+            if('' == $("#basicName").val() || null == $("#basicName").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Name'/>");
                 return;
             }
-        	//Email 
-            if('' != $("#email").val() && null != $("#email").val()){
+            //Email 
+            if('' != $("#basicEmail").val() && null != $("#basicEmail").val()){
                 
-                if(FormUtil.checkEmail($("#email").val()) == true){
+                if(FormUtil.checkEmail($("#basicEmail").val()) == true){
                     Common.alert("* Invalid email address.");
                     return;
                  }
             }
-        	// 2. update
-        	fn_getCustomerBasicAjax();
         }
+        
+        //update
+        fn_getCustomerBasicAjax();
+        
     });
-    
+   
+}); // document ready end
+
     //update
-    function fn_getCustomerBasicAjax(){
-        Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serialize(), function(result) {
-            Common.alert(result.message, fn_reloadPage);
-        });
-    }
-    
+	function fn_getCustomerBasicAjax(){
+	    Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serialize(), function(result) {
+	        Common.alert(result.message, fn_reloadPage);
+	    });
+	}
+	
     //reload Page func
-    function fn_reloadPage(){
-    	
-    	$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoPop.do" }).submit();
+	function fn_reloadPage(){
+		//Parent Window Method Call
+    	fn_selectPstRequestDOListAjax();
+    	Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
+    	$("#_close").click();
+	}
+	
+	//close Func
+    function fn_closeFunc(){
+        $("#_selectParam").val(1);
     }
-});
 </script>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <!-- getParams  -->
 <input type="hidden" value="${result.typeId }" id="selCodeCustId"> <!-- TypeId : 964(Individual) / 965(Company)  --> 
 <input type="hidden" value="${result.corpTypeId}" id="selCodeCorpId">
 <input type="hidden" value="${result.nation }" id="selCodeNation">
 <input type="hidden" value="${result.raceId }" id="selCodeRaceId">
-<!-- move Page Form  -->
-<form id="editForm">
-    <input type="hidden" name="custId" value="${custId}"/>
-    <input type="hidden" name="custAddId" value="${custAddId}"/>
-    <input type="hidden" name="custCntcId" value="${custCntcId}" id="custCntcId"> 
-    <input type="hidden" name="selectParam"  id="_selectParam"/>
-</form>
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>PST Request Info</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
 
 <section class="pop_body"><!-- pop_body start -->
 <table class="type1"><!-- table start -->
@@ -374,8 +412,8 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 <!-- ######### Update Field Start  ######### -->
 <form id="updForm"><!-- form start -->
-<input type="hidden" value="${result.custId}" name="custID">
-<input type="hidden" value="${result.typeId }" name="typeID">
+<input type="hidden" value="${result.custId}" name="basicCustId">
+<input type="hidden" value="${result.typeId }" name="basicTypeId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -388,66 +426,67 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Customer Type</th>
     <td colspan="3">
-    <select name="cmbCustTypeId" id="cmbCustTypeId" class="disabled w100p" ></select>
+    <select name="basicCmbCustTypeId" id="basicCmbCustTypeId" class="disabled w100p" ></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Company Type<span class="must">*</span></th> 
-    <td><select name="cmbCorpTypeId" id="cmbCorpTypeId" class="disabled w100p" ></select></td> 
+    <td><select name="basicCmbCorpTypeId" id="basicCmbCorpTypeId" class="disabled w100p" ></select></td> 
     <th scope="row">NRIC/Company No<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder=""   value="${result.nric}" id="nric"/>
+    <input type="text" title="" placeholder=""   value="${result.nric}" id="basicNric"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Customer Name<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p"  name="name" value="${result.name }" id="name"/> <!-- name  -->
+    <input type="text" title="" placeholder="" class="w100p"  name="basicName" value="${result.name }" id="basicName"/> <!-- name  -->
     </td>
     <th scope="row">Nationality <span class="brown_text">#</span></th>
     <td>
-        <select class="disabled w100p" disabled="disabled" id="cmdNationTypeId" name="cmdNationTypeId"></select>
+        <select class="disabled w100p" disabled="disabled" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">DOB <span class="brown_text">#</span></th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   value="${result.dob}" name="dob" id="dob" readonly="readonly"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   value="${result.dob}" name="basicDob" id="basicDob" readonly="readonly"/>
     </td>
     <th scope="row">Passport Expire</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  value="${result.pasSportExpr}" name="pasSportExpr" readonly="readonly"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  value="${result.pasSportExpr}" name="basicPasSportExpr" readonly="readonly"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Gender <span class="brown_text">#</span></th>
     <td>
-    <label><input type="radio" name="gender"  <c:if test="${result.gender ne 'F'}">checked</c:if>  value="M"/><span>Male</span></label>
-    <label><input type="radio" name="gender"  <c:if test="${result.gender eq 'F'}">checked</c:if> value="F" /><span>Female</span></label>
+    <label><input type="radio" name="basicGender"  <c:if test="${result.gender ne 'F'}">checked</c:if>  value="M"/><span>Male</span></label>
+    <label><input type="radio" name="basicGender"  <c:if test="${result.gender eq 'F'}">checked</c:if> value="F" /><span>Female</span></label>
     </td>
     <th scope="row">Visa Expire</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${result.visaExpr }" name="visaExpr" readonly="readonly"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${result.visaExpr }" name="basicVisaExpr" readonly="readonly"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Race <span class="brown_text">#</span></th>
     <td>
-    <select class="w100p" id="cmdRaceTypeId" name="raceId"></select>
+    <select class="w100p" id="basicCmdRaceTypeId" name="basicRaceId"></select>
     </td>
     <th scope="row">Email</th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p"  value="${result.email}" name="email" id="email"/>
+    <input type="text" title="" placeholder="" class="w100p"  value="${result.email}" name="basicEmail" id="basicEmail"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Remarks</th>
-    <td colspan="3"><textarea cols="20" placeholder="Remarks" rows="5" name="rem">${result.rem}</textarea></td>
+    <td colspan="3"><textarea cols="20" placeholder="Remarks" rows="5" name="basicRem">${result.rem}</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form><!-- form end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_updBtn">Update</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#none" id="_updBtn">Update</a></p></li> 
 </ul>
 </section><!-- pop_body end -->
+</div>

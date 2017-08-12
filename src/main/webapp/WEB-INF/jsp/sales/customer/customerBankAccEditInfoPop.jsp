@@ -7,32 +7,32 @@
     	var selCodeAccType = $("#selCodeAccType").val();
     	var selCodeAccBankId = $("#selCodeAccBankId").val();
     	
-    	doGetCombo('/common/selectCodeList.do', '20', selCodeAccType, 'cmbAccTypeId', 'S', ''); // cmbAccTypeId(Type) 
-    	doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'cmbAccBankId', 'S', '')//selCodeAccBankId(Issue Bank)
+    	doGetCombo('/common/selectCodeList.do', '20', selCodeAccType, 'bankCmbAccTypeId', 'S', ''); // cmbAccTypeId(Type) 
+    	doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'bankCmbAccBankId', 'S', '')//selCodeAccBankId(Issue Bank)
     	
     	
     	$("#_updBtn").click(function(){
            
     		//Account Type
-    		if("" == $("#cmbAccTypeId").val() || null == $("#cmbAccTypeId").val()){
+    		if("" == $("#bankCmbAccTypeId").val() || null == $("#bankCmbAccTypeId").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Type'/>");
     			return;
     		}
     		
     		//Issue Bank
-    		if("" == $("#cmbAccBankId").val() || null == $("#cmbAccBankId").val()){
+    		if("" == $("#bankCmbAccBankId").val() || null == $("#bankCmbAccBankId").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Issue Bank'/>");
                 return;
     		}
     		
     		//Account No. IssueBankId = $("#cmbAccBankId").val() , AccountNo = $("#accountNo").val()
-    		if("" == $("#accountNo").val() || null == $("#accountNo").val()){
+    		if("" == $("#bankAccountNo").val() || null == $("#bankAccountNo").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Number'/>");
     			return;
     		}else{ //not Null or Empty
     			
     			//number check
-    			if(FormUtil.checkNum($("#accountNo"))){
+    			if(FormUtil.checkNum($("#bankAccountNo"))){
     				Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Number'/>");
     				return;
     			}
@@ -43,8 +43,8 @@
     			var availableResult = false; // true/false
     			
     			// 1.get Params
-    			bankId =  $("#cmbAccBankId").val();
-    			AccNo = $("#accountNo").val();
+    			bankId =  $("#bankCmbAccBankId").val();
+    			AccNo = $("#bankAccountNo").val();
     			
     			// 2. Account No Validation
     			/* length validation  */
@@ -63,7 +63,7 @@
     		}
     		
     		//Account Owner
-    		if("" == $("#custAccOwner").val() || null == $("#custAccOwner").val()){
+    		if("" == $("#bankCustAccOwner").val() || null == $("#bankCustAccOwner").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Owner'/>");
                 return;
     		}
@@ -86,8 +86,12 @@
     
     // Parent Reload Func
     function fn_parentReload() {
-        window.opener.document.location.reload();
-        window.opener.opener.parent.fn_selectPstRequestDOListAjax();
+    	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+        $("#_close1").click();
+        $("#_close").click();
+        $("#_selectParam").val('4');
+        Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
+        Common.popupDiv("/sales/customer/updateCustomerBankAccEditInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv4Pop');
     }
     
     //delete
@@ -101,10 +105,11 @@
     
     //Parent Reload and PageClose Func
     function fn_closePage(){
-        //Parent Window Method Call
-        window.opener.opener.parent.fn_selectPstRequestDOListAjax();
-        window.opener.document.location.reload();
-        window.close(); 
+    	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+        $("#_close1").click();
+        $("#_close").click();
+        $("#_selectParam").val('4');
+        Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
     }
     
     
@@ -284,11 +289,19 @@
     /*########## availability Check End ##########*/
     
 </script>
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>PST Request Info</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="_close1" >CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 <input type="hidden" value="${detailbank.custAccTypeId}" id="selCodeAccType"> 
 <input type="hidden" value="${detailbank.custAccBankId}" id="selCodeAccBankId"> 
 <section class="pop_body"><!-- pop_body start -->
 <form id="updForm"> <!-- Form Start  -->
-<input type="hidden" value="${detailbank.custAccId }" name="custAccId">
+<input type="hidden" value="${detailbank.custAccId }" name="bankCustAccId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -301,27 +314,27 @@
 <tr>
     <th scope="row">Type<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="cmbAccTypeId" name="custAccTypeId"></select>
+    <select class="w100p" id="bankCmbAccTypeId" name="bankCustAccTypeId"></select>
     </td>
     <th scope="row">Issue Bank<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="cmbAccBankId" name="custAccBankId"></select>
+    <select class="w100p" id="bankCmbAccBankId" name="bankCustAccBankId"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Account No<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailbank.custAccNo}" maxlength="16" id="accountNo" name="custAccNo"/></td>
+    <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailbank.custAccNo}" maxlength="16" id="bankAccountNo" name="bankCustAccNo"/></td>
     <th scope="row">Bank Branch</th>
-    <td><input type="text" title="" placeholder="Bank Branch" class="w100p" value="${detailbank.custAccBankBrnch}" maxlength="16" name="custAccBankBrnch"/></td>
+    <td><input type="text" title="" placeholder="Bank Branch" class="w100p" value="${detailbank.custAccBankBrnch}" maxlength="16" name="bankCustAccBankBrnch"/></td>
 </tr>
 <tr>
     <th scope="row">Account Owner<span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="Account Owner" class="w100p"  value="${detailbank.custAccOwner}" id="custAccOwner" name="custAccOwner"/></td>
+    <td colspan="3"><input type="text" title="" placeholder="Account Owner" class="w100p"  value="${detailbank.custAccOwner}" id="bankCustAccOwner" name="bankCustAccOwner"/></td>
 </tr>
 <tr>
     <th scope="row">Remarks</th>
     <td colspan="3">
-    <textarea cols="20" rows="5" name="custAccRem">${detailbank.custAccRem}</textarea>
+    <textarea cols="20" rows="5" name="bankCustAccRem">${detailbank.custAccRem}</textarea>
     </td>
 </tr>
 </tbody>
@@ -333,3 +346,4 @@
 </ul>
 
 </section><!-- pop_body end -->
+</div>

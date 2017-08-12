@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
     // 중앙 정렬
-    fn_moveCenter();
+   /*  fn_moveCenter(); */
     //AUIGrid 생성 후 반환 ID
     var addrGridID; // address list
     var contactGridID; // contact list
@@ -12,15 +12,14 @@
     var thirdPartyGridID; // third party list
     
     $(document).ready(function(){
-        //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
-        addrGridID = GridCommon.createAUIGrid("#address_grid_wrap", addrColumnLayout,'', gridPros);  // address list
-        contactGridID = GridCommon.createAUIGrid("#contact_grid_wrap", contactColumnLayout,'',gridPros); // contact list
-        bankAccountGirdID = GridCommon.createAUIGrid("#bank_grid_wrap", bankColumnLayout,'',gridPros); // bank account list
-        creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
-        ownOrderGridID = GridCommon.createAUIGrid("#ownorder_grid_wrap", ownOrderColumnLayout,'',gridPros); // own order list
-        thirdPartyGridID = GridCommon.createAUIGrid("#thirdparty_grid_wrap", thirdPartyColumnLayout,'',gridPros);// third party list 
         
-       /*  AUIGrid.setSelectionMode(addrGridID, "singleRow"); */
+    	createAddrGrid();
+    	createContactGrid();
+    	createBankGrid();
+    	createCardGrid();
+    	createOwnOrderGrid();
+    	createThirdPartyGrid();
+    	
         //Call Ajax
         fn_getCustomerAddressAjax(); // address list
         fn_getCustomerContactAjax(); // contact list
@@ -30,6 +29,307 @@
         fn_getCustomerThirdPartyAjax(); // third party list
     });
 
+    function createAddrGrid(){
+    	
+    	// Address Column
+        var addrColumnLayout = [ 
+             {dataField : "name", headerText : "Status", width : '10%'}, 
+             {dataField : "addr", headerText : "Address", width : '80%'},
+             {dataField : "custAddId", visible : false},
+             {
+                 dataField : "undefined", 
+                 headerText : "View", 
+                 width : '10%',
+                 renderer : {
+                          type : "ButtonRenderer", 
+                          labelText : "View", 
+                          onclick : function(rowIndex, columnIndex, value, item) {
+                              //pupupWin
+                              $("#getparam").val(item.custAddId);
+                             Common.popupDiv("/sales/customer/selectCustomerAddrDetailViewPop.do", $("#detailForm").serializeJSON());
+                        }
+                 }
+        }];
+    	
+        //그리드 속성 설정
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+        
+        // custInfoGridID = GridCommon.createAUIGrid("grid_custInfo_wrap", columnLayout, "", gridPros);
+    	addrGridID = GridCommon.createAUIGrid("address_grid_wrap", addrColumnLayout,'', gridPros);   // address list
+    }
+    
+    
+    function createContactGrid() {
+    	// Contact Column
+        var contactColumnLayout= [ 
+              {dataField : "name", headerText : "Status", width : '10%'},
+              {dataField : "name1", headerText : "Name", width : '40%'},
+              {dataField : "telM1", headerText : "Tel(Mobile)", width : '10%'},
+              {dataField : "telO", headerText : "Tel(Office)",width : '10%'},
+              {dataField : "telR", headerText : "Tel(Residence)", width : '10%' },
+              {dataField : "telf",headerText : "Tel(Fax)",width : '10%'},
+              {dataField : "custCntcId", visible: false },
+              {
+                  dataField : "undefined",
+                  headerText : "View",
+                  width : '10%',
+                  renderer : {
+                        type : "ButtonRenderer",
+                        labelText : "View",
+                        onclick : function(rowIndex, columnIndex, value, item) {
+                             //pupupWin
+                            $("#getparam").val(item.custCntcId);
+                            Common.popupDiv("/sales/customer/selectCustomerContactDetailViewPop.do", $("#detailForm").serializeJSON());
+                        }
+                 }
+             }];
+    	
+        //그리드 속성 설정
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+        
+        contactGridID = GridCommon.createAUIGrid("#contact_grid_wrap", contactColumnLayout,'',gridPros); // contact list
+	}
+    
+    function createBankGrid(){
+    	// Bank Column
+        var bankColumnLayout= [
+               {dataField : "custAccOwner", headerText : "Account Holder", width : '30%'}, 
+               {dataField : "codeName", headerText : "Type", width : '20%'}, 
+               {dataField : "bankName", headerText : "Issue Bank", width : '20%'},
+               {dataField : "custAccNo", headerText : "Account No", width : '20%'},
+               {dataField : "custAccId" , visible : false},
+               {
+                   dataField : "undefined",
+                   headerText : "View",
+                   width : '10%',
+                   renderer : {
+                      type : "ButtonRenderer",
+                      labelText : "View",
+                      onclick : function(rowIndex, columnIndex, value, item) {
+                          
+                          $("#getparam").val(item.custAccId);
+                          Common.popupDiv("/sales/customer/selectCustomerBankDetailViewPop.do", $("#detailForm").serializeJSON());
+                      }
+               }
+           }]; 
+    	
+         var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+         
+         bankAccountGirdID = GridCommon.createAUIGrid("#bank_grid_wrap", bankColumnLayout,'',gridPros); // bank account list
+    }
+    
+    function createCardGrid(){
+    	
+    	// CreditCard Column
+        var creditCardColumnLayout = [
+               {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
+               {dataField : "codeName", headerText : "Card Type", width : '10%'}, 
+               {dataField : "codeName1", headerText : "Type", width : '10%'},
+               {dataField : "bankName", headerText : "Issue Bank", width : '30%'},
+               {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
+               {dataField : "custCrcExpr", headerText : "Expiry", width : '10%'},
+               {dataField : "custCrcId", visible : false},
+               {
+                   dataField : "undefined",
+                   headerText : "View",
+                   width : '10%',
+                   renderer : {
+                       type : "ButtonRenderer",
+                       labelText : "View",
+                       onclick : function(rowIndex, columnIndex, value, item) {
+                          
+                           $("#getparam").val(item.custCrcId);
+                           Common.popupDiv("/sales/customer/selectCustomerCreditCardDetailViewPop.do", $("#detailForm").serializeJSON());
+                       }
+                }
+        }];
+    	
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+        
+        creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
+    	
+    }
+    
+    function createOwnOrderGrid(){
+    	// Own Order Column
+        var ownOrderColumnLayout = [
+               { dataField : "salesOrdNo", headerText : "Order No", width : '10%'},
+               { dataField : "salesDt", headerText : "Order Date", width : '10%'},
+               { dataField : "code", headerText : "App Type", width : '10%'},
+               { dataField : "code1", headerText : "Status", width : '5%'},
+               { dataField : "stkDesc", headerText : "Product", width : '15%'},
+               { dataField : "code2", headerText : "Paymode", width : '10%' },
+               { dataField : "bankCode", headerText : "Issue Bank", width : '10%'},
+               { dataField : "rentAmt", headerText : "Outstanding", width : '10%'},
+               { 
+                   dataField : "undefined", 
+                   headerText : "View Ledger", 
+                   width : '10%',
+                   renderer : {
+                       type : "ButtonRenderer",
+                       labelText : "Ledger",
+                       onclick : function(rowIndex, columnIndex, value, item) {
+                       /* value 에 해당 키값 가져가야함 */
+                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                       }
+                    }
+               },
+               {
+                   dataField : "undefined",
+                   headerText : "View Order",
+                   width : '10%',
+                   renderer : {
+                       type : "ButtonRenderer",
+                       labelText : "Order",
+                       onclick : function(rowIndex, columnIndex, value, item) {
+                       /* value 에 해당 키값 가져가야함 */
+                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                   }
+            }
+        }];
+    	
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+        
+        ownOrderGridID = GridCommon.createAUIGrid("#ownorder_grid_wrap", ownOrderColumnLayout,'',gridPros); // own order list
+    }
+    
+    function createThirdPartyGrid(){
+    	// Thrid Party Order Column
+        var thirdPartyColumnLayout = [
+             {dataField : "salesOrdNo",headerText : "Order No", width : '10%'},
+             {dataField : "salesDt", headerText : "Order Date", width : '10%'},
+             {dataField : "code", headerText : "App Type", width : '10%'},
+             {dataField : "code1", headerText : "Status", width : '5%'},
+             {dataField : "stkDesc", headerText : "Product", width : '15%'},
+             {dataField : "code2", headerText : "Paymode",width : '10%'},
+             {dataField : "bankCode", headerText : "Issue Bank", width : '10%'},
+             {dataField : "rentAmt",headerText : "Outstanding", width : '10%'},
+             {
+                 dataField : "undefined",
+                 headerText : "View Ledger",
+                 width : '10%',
+                 renderer : {
+                     type : "ButtonRenderer",
+                     labelText : "Ledger",
+                     onclick : function(rowIndex, columnIndex, value, item) {
+                         /* value 에 해당 키값 가져가야함 */
+                         alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                         }
+                 }
+             },{
+                 dataField : "undefined",
+                 headerText : "View Order",
+                 width : '10%',
+                 renderer : {
+                     type : "ButtonRenderer",
+                     labelText : "Order",
+                     onclick : function(rowIndex, columnIndex, value, item) {
+                       /* value 에 해당 키값 가져가야함 */
+                       alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
+                   }
+            }
+        }];
+    
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+        
+        thirdPartyGridID = GridCommon.createAUIGrid("#thirdparty_grid_wrap", thirdPartyColumnLayout,'',gridPros);// third party list 
+    }
     // ajax View 조회.
     // address Ajax
     function fn_getCustomerAddressAjax() {        
@@ -73,232 +373,12 @@
         });
     }
     
-    //AUIGrid 칼럼 설정
-    //데이터 형태는 다음과 같은 형태임,
-    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-    // Address Column
-    var addrColumnLayout = [ 
-         {dataField : "name", headerText : "Status", width : '10%'}, 
-         {dataField : "addr", headerText : "Address", width : '80%'},
-         {dataField : "custAddId", visible : false},
-         {
-             dataField : "undefined", 
-             headerText : "View", 
-             width : '10%',
-             renderer : {
-                      type : "ButtonRenderer", 
-                      labelText : "View", 
-                      onclick : function(rowIndex, columnIndex, value, item) {
-                          //pupupWin
-                          $("#getparam").val(item.custAddId);
-                          Common.popupWin("detailForm", "/sales/customer/selectCustomerAddrDetailViewPop.do", option);
-                    }
-             }
-    }];
-    
-    // Contact Column
-    var contactColumnLayout= [ 
-          {dataField : "name", headerText : "Status", width : '10%'},
-          {dataField : "name1", headerText : "Name", width : '40%'},
-          {dataField : "telM1", headerText : "Tel(Mobile)", width : '10%'},
-          {dataField : "telO", headerText : "Tel(Office)",width : '10%'},
-          {dataField : "telR", headerText : "Tel(Residence)", width : '10%' },
-          {dataField : "telf",headerText : "Tel(Fax)",width : '10%'},
-          {dataField : "custCntcId", visible: false },
-          {
-              dataField : "undefined",
-              headerText : "View",
-              width : '10%',
-              renderer : {
-                    type : "ButtonRenderer",
-                    labelText : "View",
-                    onclick : function(rowIndex, columnIndex, value, item) {
-                         //pupupWin
-                        $("#getparam").val(item.custCntcId);
-                        Common.popupWin("detailForm", "/sales/customer/selectCustomerContactDetailViewPop.do", option);
-                    }
-             }
-         }];
-    
-    // Bank Column
-     var bankColumnLayout= [
-            {dataField : "custAccOwner", headerText : "Account Holder", width : '30%'}, 
-            {dataField : "codeName", headerText : "Type", width : '20%'}, 
-            {dataField : "bankName", headerText : "Issue Bank", width : '20%'},
-            {dataField : "custAccNo", headerText : "Account No", width : '20%'},
-            {dataField : "custAccId" , visible : false},
-            {
-                dataField : "undefined",
-                headerText : "View",
-                width : '10%',
-                renderer : {
-                   type : "ButtonRenderer",
-                   labelText : "View",
-                   onclick : function(rowIndex, columnIndex, value, item) {
-                       
-                       $("#getparam").val(item.custAccId);
-                       Common.popupWin("detailForm", "/sales/customer/selectCustomerBankDetailViewPop.do", option);
-                   }
-            }
-        }]; 
-    
-    // CreditCard Column
-    var creditCardColumnLayout = [
-           {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
-           {dataField : "codeName", headerText : "Card Type", width : '10%'}, 
-           {dataField : "codeName1", headerText : "Type", width : '10%'},
-           {dataField : "bankName", headerText : "Issue Bank", width : '30%'},
-           {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
-           {dataField : "custCrcExpr", headerText : "Expiry", width : '10%'},
-           {dataField : "custCrcId", visible : false},
-           {
-               dataField : "undefined",
-               headerText : "View",
-               width : '10%',
-               renderer : {
-                   type : "ButtonRenderer",
-                   labelText : "View",
-                   onclick : function(rowIndex, columnIndex, value, item) {
-                      
-                       $("#getparam").val(item.custCrcId);
-                       Common.popupWin("detailForm", "/sales/customer/selectCustomerCreditCardDetailViewPop.do", option);
-                   }
-            }
-    }];
-    
-    // Own Order Column
-    var ownOrderColumnLayout = [
-           { dataField : "salesOrdNo", headerText : "Order No", width : '10%'},
-           { dataField : "salesDt", headerText : "Order Date", width : '10%'},
-           { dataField : "code", headerText : "App Type", width : '10%'},
-           { dataField : "code1", headerText : "Status", width : '5%'},
-           { dataField : "stkDesc", headerText : "Product", width : '15%'},
-           { dataField : "code2", headerText : "Paymode", width : '10%' },
-           { dataField : "bankCode", headerText : "Issue Bank", width : '10%'},
-           { dataField : "rentAmt", headerText : "Outstanding", width : '10%'},
-           { 
-               dataField : "undefined", 
-               headerText : "View Ledger", 
-               width : '10%',
-               renderer : {
-                   type : "ButtonRenderer",
-                   labelText : "Ledger",
-                   onclick : function(rowIndex, columnIndex, value, item) {
-                   /* value 에 해당 키값 가져가야함 */
-                   alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
-                   }
-                }
-           },
-           {
-               dataField : "undefined",
-               headerText : "View Order",
-               width : '10%',
-               renderer : {
-                   type : "ButtonRenderer",
-                   labelText : "Order",
-                   onclick : function(rowIndex, columnIndex, value, item) {
-                   /* value 에 해당 키값 가져가야함 */
-                   alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
-               }
-        }
-    }];
-    
-    // Thrid Party Order Column
-    var thirdPartyColumnLayout = [
-         {dataField : "salesOrdNo",headerText : "Order No", width : '10%'},
-         {dataField : "salesDt", headerText : "Order Date", width : '10%'},
-         {dataField : "code", headerText : "App Type", width : '10%'},
-         {dataField : "code1", headerText : "Status", width : '5%'},
-         {dataField : "stkDesc", headerText : "Product", width : '15%'},
-         {dataField : "code2", headerText : "Paymode",width : '10%'},
-         {dataField : "bankCode", headerText : "Issue Bank", width : '10%'},
-         {dataField : "rentAmt",headerText : "Outstanding", width : '10%'},
-         {
-             dataField : "undefined",
-             headerText : "View Ledger",
-             width : '10%',
-             renderer : {
-                 type : "ButtonRenderer",
-                 labelText : "Ledger",
-                 onclick : function(rowIndex, columnIndex, value, item) {
-                     /* value 에 해당 키값 가져가야함 */
-                     alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
-                     }
-             }
-         },{
-             dataField : "undefined",
-             headerText : "View Order",
-             width : '10%',
-             renderer : {
-                 type : "ButtonRenderer",
-                 labelText : "Order",
-                 onclick : function(rowIndex, columnIndex, value, item) {
-                   /* value 에 해당 키값 가져가야함 */
-                   alert(rowIndex +"번째 "+item.name + " 상세보기 클릭");
-               }
-        }
-    }];
-    
-    //그리드 속성 설정
-    var gridPros = {
-            
-            // 페이징 사용       
-            usePaging : true,
-            
-            // 한 화면에 출력되는 행 개수 10(기본값:10)
-            pageRowCount : 10,
-            
-            editable : true,
-            
-            fixedColumnCount : 1,
-            
-            showStateColumn : false, //true 
-            
-            displayTreeOpen : false, //true
-            
-            selectionMode : "multipleCells",
-            
-            headerHeight : 30,
-            
-            // 그룹핑 패널 사용
-            useGroupingPanel : false, //true
-            
-            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-            skipReadonlyColumns : true,
-            
-            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            wrapSelectionMove : false, //false
-            
-            // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false,
-            
-            groupingMessage : "Here groupping"
-        };
-    // Popup Option     
-    var option = {
-            winName : "popup",
-            /* isDuplicate : false, // 계속 팝업을 띄울지 여부. */
-            fullscreen : "no", // 전체 창. (yes/no)(default : no)
-            location : "no", // 주소창이 활성화. (yes/no)(default : yes)
-            menubar : "no", // 메뉴바 visible. (yes/no)(default : yes)
-            titlebar : "yes", // 타이틀바. (yes/no)(default : yes)
-            toolbar : "no", // 툴바. (yes/no)(default : yes)
-            resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
-            scrollbars : "yes", // 스크롤바. (yes/no)(default : yes)
-            width : "1200px", // 창 가로 크기
-            height : "330px" // 창 세로 크기
-        };
-    
     //resize func (tab click)
-    function fn_resizefunc(){
-        window.resizeTo(1200, 681);
-        //resize original
-        $( window ).resize(function() {
-            window.resizeTo(1200, 680);
-        });
-    }
+     function fn_resizefunc(gridName){ // 
+    	 AUIGrid.resize(gridName, 900, 300);
+    } 
     
-    function fn_moveCenter() {
+/*     function fn_moveCenter() {
            var sw = screen.width;
            var sh = screen.height;
            var cw = document.body.clientWidth;
@@ -306,9 +386,10 @@
            var top  = sh / 2 - ch / 2 - 100;
            var left = sw / 2 - cw / 2;
            window.moveTo(left, top);
-    }
+    } */
 
 </script>
+<div id="popup_wrap"><!-- popup_wrap start -->
 <!-- Pop up Form -->
 <form id="detailForm">
     <input type="hidden"  id="getparam" name="getparam"/>
@@ -319,6 +400,13 @@
     <input type="hidden" name="custId" value="${custId}"/>
     <input type="hidden" name="custCntcId" value="${custCntcId}">
 </form>
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>View Customer</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <article class="acodi_wrap"><!-- acodi_wrap start -->
@@ -513,42 +601,42 @@
     </dd>
     <!-- ######### Tab Area #########  -->
     <!-- ######### Customer Address List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc()">Customer Address List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(addrGridID)">Customer Address List</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="address_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Contact List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc()">Customer Contact List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(contactGridID)">Customer Contact List</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="contact_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Bank Account List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc()">Customer Bank Account List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(bankAccountGirdID)">Customer Bank Account List</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="bank_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Credit Card List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc()">Customer Credit Card List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(creditCardGridID)">Customer Credit Card List</a></dt>
     <dd> 
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="creditcard_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Own Order(s) List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc()">Own Order(s)</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(ownOrderGridID)">Own Order(s)</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="ownorder_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- #########hird Party Order(s) List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc()">Third Party Order(s)</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(thirdPartyGridID)">Third Party Order(s)</a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="thirdparty_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
@@ -557,3 +645,4 @@
 </dl>
 </article><!-- acodi_wrap end -->
 </section><!-- pop_body end -->
+</div>

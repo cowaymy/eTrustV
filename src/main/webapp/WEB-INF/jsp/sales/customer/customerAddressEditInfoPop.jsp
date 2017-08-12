@@ -4,7 +4,6 @@
     
     $(document).ready(function() {
     	
-    	
     	var selCodeNation = $("#selCodeNation").val();
         var selCodeState = $("#selCodeState").val();
         var selCodeArea = $("#selCodeArea").val();
@@ -58,7 +57,7 @@
     	 
     	   // Validation Success
            //Update
-    	   fn_customerAddressInfoUpdateAjax()();
+    	   fn_customerAddressInfoUpdateAjax();
     	   
 	   });
        //Delete
@@ -69,17 +68,22 @@
        
 	}); // Document Ready Func End
 	
+	
 	// Call Ajax - DB Update
     function fn_customerAddressInfoUpdateAjax(){
         Common.ajax("GET", "/sales/customer/updateCustomerAddressInfoAf.do",$("#updForm").serialize(), function(result) {
-            Common.alert(result.message, fn_parentReload);
+        	Common.alert(result.message, fn_parentReload);
         });
     }
     
     // Parent Reload Func
     function fn_parentReload() {
-        window.opener.document.location.reload();
-        window.opener.opener.parent.fn_selectPstRequestDOListAjax();
+    	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+    	$("#_close1").click();
+    	$("#_close").click();
+    	$("#_selectParam").val('2');
+    	Common.popupDiv('/sales/customer/updateCustomerAddressPop.do' , $('#popForm').serializeJSON(), null , true, '_editDiv2'); 
+    	Common.popupDiv('/sales/customer/updateCustomerAddressInfoPop.do', $('#editForm').serializeJSON(), null , true, '_editDiv2Pop'); 
     }
 	
 	//Address Relay -- onchange func
@@ -114,13 +118,22 @@
     
     // Parent Reload And Page Close
     function fn_closePage(){
-        //Parent Window Method Call
-        window.opener.opener.parent.fn_selectPstRequestDOListAjax();
-        window.opener.document.location.reload();
-        window.close(); 
+    	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+        $("#_close1").click();
+        $("#_close").click();
+        $("#_selectParam").val('2');
+        Common.popupDiv('/sales/customer/updateCustomerAddressPop.do' , $('#popForm').serializeJSON(), null , true, '_editDiv2'); 
     }
     /* ####### delete Func end ########### */
 </script>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>PST Request Info</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="_close1" >CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<!-- move Page Form  -->
 <!-- getParams  -->
 <input type="hidden" value="${detailaddr.cntyId}" id="selCodeNation">
 <input type="hidden" value="${detailaddr.stateId}" id="selCodeState">
@@ -129,7 +142,7 @@
 <input type="hidden" value="${detailaddr.stusCodeId}" id="stusCodeId"> 
 <section class="pop_body"><!-- pop_body start -->
 <form id=updForm><!-- form star -->
-<input type="hidden" name="custAddId" value="${detailaddr.custAddId}" id="custAddId">
+<input type="hidden" name="addrCustAddId" value="${detailaddr.custAddId}" id="addrCustAddId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -164,27 +177,27 @@
 <tr>
     <th scope="row">Country<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="cmdNationTypeId" onchange="javascript : fn_addressRelay('cmdNationTypeId', this.value)" name="cntyId"></select>
+    <select class="w100p" id="cmdNationTypeId" onchange="javascript : fn_addressRelay('cmdNationTypeId', this.value)" name="addrCntyId"></select>
     </td>
     <th scope="row">State<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="cmdStateTypeId" onchange="javascript : fn_addressRelay('cmdStateTypeId', this.value)" name="stateId"></select> 
+    <select class="w100p" id="cmdStateTypeId" onchange="javascript : fn_addressRelay('cmdStateTypeId', this.value)" name="addrStateId"></select> 
     </td>
 </tr>
 <tr>
     <th scope="row">Area<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="cmdAreaTypeId" onchange="javascript : fn_addressRelay('cmdAreaTypeId', this.value)" name="areaId"></select>
+    <select class="w100p" id="cmdAreaTypeId" onchange="javascript : fn_addressRelay('cmdAreaTypeId', this.value)" name="addrAreaId"></select>
     </td>
     <th scope="row">Postcode<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="cmdPostTypeId" name="postCodeId"></select>
+    <select class="w100p" id="cmdPostTypeId" name="addrPostCodeId"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Reamrk</th>
     <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="Address Reamrk" name="rem">${detailaddr.rem}</textarea>
+    <textarea cols="20" rows="5" placeholder="Address Reamrk" name="addrRem">${detailaddr.rem}</textarea>
     </td>
 </tr>
 </tbody>
@@ -194,5 +207,5 @@
     <li><p class="btn_blue2 big"><a href="#" id="_updBtn">Update</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" id="_delBtn">Delete</a></p></li>
 </ul>
-
 </section><!-- pop_body end -->
+</div>

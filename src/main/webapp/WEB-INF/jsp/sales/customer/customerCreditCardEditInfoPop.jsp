@@ -2,13 +2,32 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+		
+		//j_date
+	    var pickerOpts={
+	            changeMonth:true,
+	            changeYear:true,
+	            dateFormat: "dd/mm/yy"
+	    };
+	    
+	    $(".j_date").datepicker(pickerOpts);
+
+	    var monthOptions = {
+	        pattern: 'mm/yyyy',
+	        selectedYear: 2017,
+	        startYear: 2007,
+	        finalYear: 2027
+	    };
+
+	    $(".j_date2").monthpicker(monthOptions);
+	    
 		var tempDate;
 		//Date TransForm
 		if("" !=$("#tempCrcExpr").val() && null != $("#tempCrcExpr").val()){
 			tempDate = fn_transDateDBtoView($("#tempCrcExpr").val());
 	        $("#expDate").val(tempDate);
 		}
-		
 		
 		//select Box Combo
 		var selCodeCrcTypeId = $("#selCodeCrcTypeId").val();
@@ -142,9 +161,12 @@
     
     // Parent Reload Func
     function fn_parentReload() {
-        window.document.location.reload();
-    	window.opener.document.location.reload();
-        window.opener.opener.parent.fn_selectPstRequestDOListAjax();
+    	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+        $("#_close1").click();
+        $("#_close").click();
+        $("#_selectParam").val('5');
+        Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
+        Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv5Pop');
     }
     
     //delete
@@ -158,10 +180,11 @@
     
     //Parent Reload and PageClose Func
     function fn_closePage(){
-        //Parent Window Method Call
-        window.opener.opener.parent.fn_selectPstRequestDOListAjax();
-        window.opener.document.location.reload();
-        window.close(); 
+    	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+        $("#_close1").click();
+        $("#_close").click();
+        $("#_selectParam").val('5');
+        Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
     }
     
 	//카드번호 변경시 카드 타입 설정 func (Visa / Master)
@@ -188,6 +211,13 @@
 	}
 	
 </script>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>PST Request Info</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 <input type="hidden" value="${detailcard.custCrcTypeId}" id="selCodeCrcTypeId">
 <input type="hidden" value="${detailcard.custCrcBankId }" id="selCodeCrcBankId">
 <input type="hidden" value="${detailcard.cardTypeId}" id="selCodeCardTypeId">
@@ -243,3 +273,4 @@
 </ul>
 
 </section><!-- pop_body end -->
+</div>

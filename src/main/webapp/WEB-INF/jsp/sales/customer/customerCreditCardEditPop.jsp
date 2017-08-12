@@ -4,9 +4,13 @@
 //AUIGrid 생성 후 반환 ID
 var creditCardGridID; // credit card list
 
-
 $(document).ready(function(){
 	
+	/*  Gird */
+    //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
+    createCardGrid();
+    fn_getCustomerCreditCardAjax(); // credit card list
+    
 	/* Move Page */
     $("#_editCustomerInfo").change(function(){
           
@@ -15,113 +19,106 @@ $(document).ready(function(){
         
     });
     
-    $("#_confirm").click(function () {
-        
+    $("#_confirm").click(function (currPage) {
         var status = $("#_selectParam").val();
-        
         if(status == '1'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
+            $("#_close").click();
         }
         if(status == '2'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerAddressPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
+            $("#_close").click();
         }
         if(status == '3'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerContactPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
+            $("#_close").click();
         }
         if(status == '4'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBankAccountPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
+            $("#_close").click();
         }
         if(status == '5'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerCreditCardPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
+            $("#_close").click();
         }
-        if(status == '6'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoLimitPop.do" }).submit();
+        if(status == '6'){ //추후 정책 
+           /*  Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#editForm").serializeJSON(), null , true , '_editDiv');
+            $("#_editDiv"+currPage).remove(); */
         }
         
     });
-    
-    /*  Gird */
-    //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
-    creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
-    fn_getCustomerCreditCardAjax(); // credit card list
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(creditCardGridID, "cellDoubleClick", function(event){
        
-    	$("#custId").val(event.item.custId);
-        $("#custCrcId").val(event.item.custCrcId);
-        
-        Common.popupWin("editForm", "/sales/customer/updateCustomerCreditCardInfoPop.do", option);
+    	$("#_editCustId").val(event.item.custId);
+        $("#_editCustCardId").val(event.item.custCrcId);
+        Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv5Pop');
     });
     
 });// Document Ready End
 
+    function  createCardGrid(){
+	
+    	// CreditCard Column
+        var creditCardColumnLayout = [
+               {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
+               {dataField : "codeName", headerText : "Card Type", width : '15%'}, 
+               {dataField : "codeName1", headerText : "Type", width : '15%'},
+               {dataField : "bankName", headerText : "Issue Bank", width : '25%'},
+               {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
+               {dataField : "custCrcExpr", headerText : "Expiry", width : '15%'},
+               {dataField : "custCrcId", visible : false},
+               {dataField : "custId", visible : false}
+         ];	
+    	 
+      //그리드 속성 설정
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+        };
+      
+        creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
+      
+    }
 	//creaditcard Ajax
 	function fn_getCustomerCreditCardAjax(){
-	    Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList",$("#editForm").serialize(), function(result) {
+	    Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList",$("#popForm").serialize(), function(result) {
 	        AUIGrid.setGridData(creditCardGridID, result);
 	    });
 	}
 	
-	//그리드 속성 설정
-    var gridPros = {
-
-        // 페이징 사용       
-        usePaging : true,
-        // 한 화면에 출력되는 행 개수 10(기본값:10)
-        pageRowCount : 10,
-        // 수정 
-        editable : false,
-        // column Count
-        fixedColumnCount : 1,
-        
-        showStateColumn : false, //true
-        
-        displayTreeOpen : false, //true
-        
-        selectionMode : "multipleCells",
-        
-        headerHeight : 30,
-        // 그룹핑 패널 사용
-        useGroupingPanel : false, //true
-        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        skipReadonlyColumns : true,
-        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        wrapSelectionMove : false, //false
-        // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : false,
-        
-        groupingMessage : "Here groupping"      
-    };
-	
-    // CreditCard Column
-    var creditCardColumnLayout = [
-           {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
-           {dataField : "codeName", headerText : "Card Type", width : '15%'}, 
-           {dataField : "codeName1", headerText : "Type", width : '15%'},
-           {dataField : "bankName", headerText : "Issue Bank", width : '25%'},
-           {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
-           {dataField : "custCrcExpr", headerText : "Expiry", width : '15%'},
-           {dataField : "custCrcId", visible : false},
-           {dataField : "custId", visible : false}
-           ];
-    
-    // Popup Option     
-    var option = {
-            
-            location : "no", // 주소창이 활성화. (yes/no)(default : yes)
-            width : "1200px", // 창 가로 크기
-            height : "400px" // 창 세로 크기
-    };
-
-    
+	//close Func
+    function fn_closeFunc(){
+         $("#_selectParam").val('1');
+    }
 </script>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<header class="pop_header"><!-- pop_header start -->
+<h1>PST Request Info</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 <!-- move Page Form  -->
 <form id="editForm">
-    <input type="hidden" name="custId" value="${custId}" id="custId"/>
-    <input type="hidden" name="custAddId" value="${custAddId}" id="custAddId"/>
-    <input type="hidden" name="custCntcId" value="${custCntcId}" id="custCntcId">
-    <input type="hidden" name="custCrcId" id="custCrcId"> 
+    <input type="hidden" name="custId" value="${custId}"/>
+    <input type="hidden" name="custAddId" value="${custAddId}"/>
+    <input type="hidden" name="custCntcId" value="${custCntcId}" > 
+    <input type="hidden" name="custCrcId" id="custCrcId">
     <input type="hidden" name="selectParam"  id="_selectParam"/>
 </form>
 <section class="pop_body"><!-- pop_body start -->
@@ -353,3 +350,4 @@ $(document).ready(function(){
 </article><!-- grid_wrap end -->
 <!-- ########## Credit Card Grid End ########## -->
 </section><!-- pop_body end -->
+</div>

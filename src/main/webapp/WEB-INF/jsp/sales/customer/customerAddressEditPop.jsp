@@ -6,6 +6,10 @@
 var addrGridID; // address list
 
 $(document).ready(function(){
+	/*  Gird */
+	//AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
+	createAddrGrid();
+	fn_getCustomerAddressAjax(); // address list
 	
 	/* Move Page */
     $("#_editCustomerInfo").change(function(){
@@ -15,124 +19,117 @@ $(document).ready(function(){
         
     });
     
-    $("#_confirm").click(function () {
-        
+    $("#_confirm").click(function (currPage) {
         var status = $("#_selectParam").val();
-        
         if(status == '1'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
+            $("#_close").click();
         }
         if(status == '2'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerAddressPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
+            $("#_close").click();
         }
         if(status == '3'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerContactPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
+            $("#_close").click();
         }
         if(status == '4'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBankAccountPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
+            $("#_close").click();
         }
         if(status == '5'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerCreditCardPop.do" }).submit();
+            Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
+            $("#_close").click();
         }
-        if(status == '6'){
-            $("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerBasicInfoLimitPop.do" }).submit();
+        if(status == '6'){ //추후 정책 
+           /*  Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#editForm").serializeJSON(), null , true , '_editDiv');
+            $("#_editDiv"+currPage).remove(); */
         }
-    }); 
-	
-    /*  Gird */
-	//AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
-	addrGridID = GridCommon.createAUIGrid("#address_grid_wrap", addrColumnLayout,'', gridPros);  // address list
-	fn_getCustomerAddressAjax(); // address list
+        
+    });
 	
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(addrGridID, "cellDoubleClick", function(event){
-        $("#custId").val(event.item.custId);
-        $("#custAddId").val(event.item.custAddId);
-        
-        Common.popupWin("editForm", "/sales/customer/updateCustomerAddressInfoPop.do", option);
+        $("#_editCustId").val(event.item.custId);
+        $("#_editCustAddId").val(event.item.custAddId);
+        Common.popupDiv('/sales/customer/updateCustomerAddressInfoPop.do', $("#editForm").serializeJSON(), null , true ,'_editDiv2Pop');
     }); 
 });// Document Ready End
 	
+	function createAddrGrid(){
+	
+		var addrColumnLayout = [ {
+	        dataField : "name",
+	        headerText : "Status",
+	        width : '10%'
+	    }, {
+	        dataField : "addr",
+	        headerText : "Address",
+	        width : '80%'
+	    }, {
+	        dataField : "custAddId",
+	        visible : false
+	    },{
+	        dataField : 'custId',
+	        visible : false
+	    },{
+	        dataField : 'stusCodeId',
+	        visible : false
+	    },{ 
+	        dataField : "setMain", 
+	        headerText : "Set As Main", 
+	        width:'10%', 
+	        renderer : { 
+	            type : "TemplateRenderer", 
+	            editable : true // 체크박스 편집 활성화 여부(기본값 : false)
+	        }, 
+	        // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음. 
+	        labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성 
+	            var html = '';
+	        
+	            html += '<label><input type="radio" name="setmain"  onclick="javascript: fn_setMain(' + item.custAddId + ','+item.custId+')"';
+	            
+	            if(item.stusCodeId == 9){
+	                html+= ' checked = "checked"';
+	                html+= ' disabled = "disabled"';
+	            }
+	            
+	            html += '/></label>'; 
+	            
+	            return html;
+	        } 
+	        
+	      }];
+		
+		//그리드 속성 설정
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+		
+        addrGridID = GridCommon.createAUIGrid("#address_grid_wrap", addrColumnLayout,'', gridPros);  // address list
+	
+    }
+	
 	// Get address by Ajax
 	function fn_getCustomerAddressAjax() {        
-	    Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList",$("#editForm").serialize(), function(result) {
+	    Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList",$("#popForm").serialize(), function(result) {
 	        AUIGrid.setGridData(addrGridID, result);
 	    });
 	}
-	
-	//그리드 속성 설정
-	var gridPros = {
-
-		// 페이징 사용       
-		usePaging : true,
-		// 한 화면에 출력되는 행 개수 10(기본값:10)
-		pageRowCount : 10,
-		// 수정 
-		editable : false,
-		// column Count
-		fixedColumnCount : 1,
-		
-		showStateColumn : false, //true
-		
-		displayTreeOpen : false, //true
-		
-		selectionMode : "multipleCells",
-		
-		headerHeight : 30,
-		// 그룹핑 패널 사용
-		useGroupingPanel : false, //true
-		// 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-		skipReadonlyColumns : true,
-		// 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-		wrapSelectionMove : false, //false
-		// 줄번호 칼럼 렌더러 출력
-		showRowNumColumn : false,
-		
-		groupingMessage : "Here groupping"		
-	};
-
-	var addrColumnLayout = [ {
-		dataField : "name",
-		headerText : "Status",
-		width : '10%'
-	}, {
-		dataField : "addr",
-		headerText : "Address",
-		width : '80%'
-	}, {
-		dataField : "custAddId",
-		visible : false
-	},{
-		dataField : 'custId',
-		visible : false
-	},{
-		dataField : 'stusCodeId',
-		visible : false
-	},{ 
-        dataField : "setMain", 
-        headerText : "Set As Main", 
-        width:'10%', 
-        renderer : { 
-            type : "TemplateRenderer", 
-            editable : true // 체크박스 편집 활성화 여부(기본값 : false)
-        }, 
-        // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음. 
-        labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성 
-        	var html = '';
-        
-            html += '<label><input type="radio" name="setmain"  onclick="javascript: fn_setMain(' + item.custAddId + ','+item.custId+')"';
-            
-            if(item.stusCodeId == 9){
-            	html+= ' checked = "checked"';
-            	html+= ' disabled = "disabled"';
-            }
-            
-            html += '/></label>'; 
-            
-            return html;
-        } 
-        
-      }];
 	
 	// Popup Option     
     var option = {
@@ -143,20 +140,18 @@ $(document).ready(function(){
     };
 	
 	// set Main Func (Confirm)
-	function fn_setMain(custAddId, custId){ //sys.common.alert.save // <spring:message code='sys.common.alert.save'/>
-		$("#custId").val(custId);
-        $("#custAddId").val(custAddId);	
+	function fn_setMain(custAddId, custId){ 
+		$("#tempCustId").val(custId);
+        $("#tempCustAddr").val(custAddId);	
         Common.confirm("Are you sure want to set this address as main address ?", fn_changeMainAddr, fn_reloadPage);
-		/*
-		    1. Are you sure want to set this address as main address ?
-		    2. <spring:message code='sys.common.alert.save'/>		
-		*/
+		
 	}
 	
 	//call Ajax(Set Main Address)
 	function fn_changeMainAddr(){
-		
-		Common.ajax("GET", "/sales/customer/updateCustomerAddressSetMain.do", $("#editForm").serialize(), function(result){
+		$("#_custId").val($("#tempCustId").val());
+        $("#_custAddId").val($("#tempCustAddr").val()); 
+		Common.ajax("GET", "/sales/customer/updateCustomerAddressSetMain.do", $("#popForm").serialize(), function(result){
 			//result alert and reload
 			Common.alert(result.message, fn_reloadPage);
 		});
@@ -164,18 +159,28 @@ $(document).ready(function(){
 	
 	function fn_reloadPage(){
 		//Parent Window Method Call
-		window.opener.parent.fn_selectPstRequestDOListAjax();
-		$("#editForm").attr({"target" :"_self" , "action" : "/sales/customer/updateCustomerAddressPop.do" }).submit();
+		fn_selectPstRequestDOListAjax();
+		$("#_selectParam").val('2');
+		Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
+        $("#_close").click();
 	}
 	
+	//close Func
+    function fn_closeFunc(){
+    	 $("#_selectParam").val('1');
+    }
 </script>
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<input type="hidden" id="tempCustId">
+<input type="hidden" id="tempCustAddr">
+<header class="pop_header"><!-- pop_header start -->
+<h1>PST Request Info</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()" >CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 <!-- move Page & set Main Address Form  -->
-<form id="editForm">
-    <input type="hidden" name="custId" value="${custId}" id="custId"/>
-    <input type="hidden" name="custAddId" value="${custAddId}" id="custAddId"/>
-    <input type="hidden" name="custCntcId" value="${custCntcId}" id="custCntcId"> 
-    <input type="hidden" name="selectParam"  id="_selectParam" value="${selectParam}"/>
-</form>
+<!-- move Page Form  -->
 <section class="pop_body"><!-- pop_body start -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -404,3 +409,4 @@ $(document).ready(function(){
 </article><!-- grid_wrap end -->
 <!-- ########## Address Grid End ########## -->
 </section><!-- pop_body end -->
+</div>
