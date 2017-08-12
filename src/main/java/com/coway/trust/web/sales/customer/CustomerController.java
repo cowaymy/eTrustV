@@ -589,6 +589,7 @@ public class CustomerController {
 			EgovMap basicinfo = null;
 			EgovMap addresinfo = null;
 			EgovMap contactinfo = null;
+			// custId custAddId custCntcId
 			
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
@@ -624,6 +625,7 @@ public class CustomerController {
 			EgovMap contactinfo = null;
 			
 			logger.info("##### customer Address Edit START #####");
+			logger.info("##### selParam :  ##### = " + params.get("selectParam"));
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
@@ -766,10 +768,10 @@ public class CustomerController {
 			contactinfo = customerService.selectCustomerViewMainContact(params);
 			
 			//page param
-			model.addAttribute("custId", params.get("custId")); // cust ID
-			model.addAttribute("custAddId", params.get("custAddId")); // Address ID
+			model.addAttribute("custId", params.get("custId"));
+			model.addAttribute("custAddId", params.get("custAddId"));
 			model.addAttribute("custCntcId", params.get("custCntcId"));
-			model.addAttribute("selectParam", params.get("selectParam")); // select box 값 고정
+			model.addAttribute("selectParam", params.get("selectParam"));
 			// infomation param
 			model.addAttribute("result", basicinfo);
 			model.addAttribute("addresinfo", addresinfo);
@@ -812,6 +814,8 @@ public class CustomerController {
 		 * */
 		@RequestMapping(value = "/updateCustomerAddressSetMain.do")
 		public ResponseEntity<ReturnMessage> updateCustomerAddressSetMain(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.get("custId"));
 			//service
 			customerService.updateCustomerAddressSetActive(params);
 			customerService.updateCustomerAddressSetMain(params);
@@ -838,7 +842,7 @@ public class CustomerController {
 			/*logger.info("팝업창 파라미터 확인 :  custId = " + params.get("custId") + " , custAddId = " + params.get("custAddId"));*/
 			EgovMap detailaddr = null;
 			logger.info("##### updateCustomerAddressInfoPop START #####");
-			params.put("getparam", params.get("custAddId"));
+			params.put("getparam", params.get("editCustAddId"));
 			detailaddr = customerService.selectCustomerAddrDetailViewPop(params);
 			model.addAttribute("detailaddr", detailaddr);
 			
@@ -884,7 +888,7 @@ public class CustomerController {
 			
 			EgovMap detailcontact = null;
 			logger.info("##### updateCustomerContactInfoPop START #####");
-			params.put("getparam", params.get("custCntcId"));
+			params.put("getparam", params.get("editCustCntcId"));
 			detailcontact = customerService.selectCustomerContactDetailViewPop(params);
 			model.addAttribute("detailcontact", detailcontact);
 			
@@ -927,7 +931,7 @@ public class CustomerController {
 		public String updateCustomerBankAccEditInfoPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
 			EgovMap detailbank = null;
-			params.put("getparam", params.get("custAccId"));
+			params.put("getparam", params.get("editCustBankId"));
 			detailbank = customerService.selectCustomerBankDetailViewPop(params);
 			
 			model.addAttribute("detailbank", detailbank);
@@ -935,7 +939,6 @@ public class CustomerController {
 			return "sales/customer/customerBankAccEditInfoPop";
 			
 		}
-		
 		
 		
 		/**
@@ -988,7 +991,7 @@ public class CustomerController {
 		public String updateCustomerCreditCardInfoPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
 			EgovMap detailcard = null;
-			params.put("getparam", params.get("custCrcId"));
+			params.put("getparam", params.get("editCustCardId"));
 			detailcard = customerService.selectCustomerCreditCardDetailViewPop(params);
 			
 			model.addAttribute("detailcard", detailcard);

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.pos.impl.PosMapper">
+    <select id="selectWhList" resultType="egovMap">
+				SELECT Project4.C1 C1  ,
+				       Project4.CODE_DESC CODE_DESC  ,
+				       Project4.C2 C2  ,
+				       Project4.WH_LOC_ID WH_LOC_ID  ,
+				       Project4.DESCRIPTION1 DESCRIPTION1  ,
+				       Project4.DESC_ID,
+				       Project4.WH_LOC_CODE CODE_ID  ,
+				       Project4.WH_LOC_DESC CODE_NAME  ,
+				       Project4.WH_LOC_ADD1 WH_LOC_ADD1  ,
+				       Project4.WH_LOC_ADD2 WH_LOC_ADD2  ,
+				       Project4.WH_LOC_ADD3 WH_LOC_ADD3  ,
+				       Project4.WH_LOC_AREA_ID WH_LOC_AREA_ID  ,
+				       Project4.WH_LOC_POST_CODE_ID WH_LOC_POST_CODE_ID  ,
+				       Project4.WH_LOC_STATE_ID WH_LOC_STATE_ID  ,
+				       Project4.WH_LOC_CNTY_ID WH_LOC_CNTY_ID  ,
+				       Project4.WH_LOC_TEL1 WH_LOC_TEL1  ,
+				       Project4.WH_LOC_TEL2 WH_LOC_TEL2  ,
+				       Project4.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
+				       Project4.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
+				       Project4.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
+				       Project4.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
+				       Project4.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
+				       Project4.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
+				       Project4.CODE2 CODE2  ,
+				       Project4.DESC2 DESC2  ,
+				       Project4.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
+				       Project4.WH_LOC_MOBILE WH_LOC_MOBILE  
+				FROM ( SELECT 1 C1  ,
+				                Distinct2.CODE_DESC CODE_DESC  ,
+				                Distinct3.WH_LOC_ID WH_LOC_ID  ,
+				                Distinct3.WH_LOC_CODE WH_LOC_CODE  ,
+				                Distinct3.WH_LOC_DESC WH_LOC_DESC  ,
+				                Distinct3.WH_LOC_ADD1 WH_LOC_ADD1  ,
+				                Distinct3.WH_LOC_ADD2 WH_LOC_ADD2  ,
+				                Distinct3.WH_LOC_ADD3 WH_LOC_ADD3  ,
+				                Distinct3.WH_LOC_AREA_ID WH_LOC_AREA_ID  ,
+				                Distinct3.WH_LOC_POST_CODE_ID WH_LOC_POST_CODE_ID  ,
+				                Distinct3.WH_LOC_STATE_ID WH_LOC_STATE_ID  ,
+				                Distinct3.WH_LOC_CNTY_ID WH_LOC_CNTY_ID  ,
+				                Distinct3.WH_LOC_TEL1 WH_LOC_TEL1  ,
+				                Distinct3.WH_LOC_TEL2 WH_LOC_TEL2  ,
+				                Distinct3.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
+				                Distinct3.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
+				                Distinct3.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
+				                Distinct3.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
+				                Distinct3.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
+				                Distinct3.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
+				                Distinct3.CODE2 CODE2  ,
+				                Distinct3.DESC2 DESC2  ,
+				                Distinct3.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
+				                Distinct3.WH_LOC_MOBILE WH_LOC_MOBILE  ,
+				                Distinct3.CODE_DESC DESCRIPTION1  ,
+				                Distinct3.DESC_ID,
+				                CASE WHEN ( Distinct3.WH_LOC_ID IS NULL ) THEN UTILS.CONVERT_TO_NUMBER('',10,0) ELSE 1 END C2  
+				         FROM ( SELECT DISTINCT Distinct1.CODE_DESC CODE_DESC  
+				                FROM ( SELECT DISTINCT Extent1.WH_LOC_ID WH_LOC_ID  ,
+				                                       Extent1.WH_LOC_CODE WH_LOC_CODE  ,
+				                                       Extent1.WH_LOC_DESC WH_LOC_DESC  ,
+				                                       Extent1.WH_LOC_ADD1 WH_LOC_ADD1  ,
+				                                       Extent1.WH_LOC_ADD2 WH_LOC_ADD2  ,
+				                                       Extent1.WH_LOC_ADD3 WH_LOC_ADD3  ,
+				                                       Extent1.WH_LOC_AREA_ID WH_LOC_AREA_ID  ,
+				                                       Extent1.WH_LOC_POST_CODE_ID WH_LOC_POST_CODE_ID  ,
+				                                       Extent1.WH_LOC_STATE_ID WH_LOC_STATE_ID  ,
+				                                       Extent1.WH_LOC_CNTY_ID WH_LOC_CNTY_ID  ,
+				                                       Extent1.WH_LOC_TEL1 WH_LOC_TEL1  ,
+				                                       Extent1.WH_LOC_TEL2 WH_LOC_TEL2  ,
+				                                       Extent1.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
+				                                       Extent1.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
+				                                       Extent1.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
+				                                       Extent1.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
+				                                       Extent1.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
+				                                       Extent1.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
+				                                       Extent1.CODE2 CODE2  ,
+				                                       Extent1.DESC2 DESC2  ,
+				                                       Extent1.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
+				                                       Extent1.WH_LOC_MOBILE WH_LOC_MOBILE  ,
+				                                       DBMS_LOB.SUBSTR(Extent3.CODE_DESC, 4000)  CODE_DESC  
+				                       FROM SYS0028M Extent1
+				                              LEFT JOIN SYS0005M Extent2   ON Extent1.WH_LOC_BRNCH_ID = Extent2.BRNCH_ID
+				                              LEFT JOIN SYS0013M Extent3   ON Extent2.TYPE_ID = Extent3.CODE_ID
+				                        WHERE  ( 1 = Extent1.WH_LOC_STUS_ID )
+				                                 AND ( 277 = Extent1.WH_LOC_TYPE_ID )
+				                                 AND ( 'A' = Extent1.WH_LOC_STK_GRAD ) ) Distinct1 ) Distinct2
+				                LEFT JOIN ( SELECT DISTINCT Extent4.WH_LOC_ID WH_LOC_ID  ,
+				                                            Extent4.WH_LOC_CODE WH_LOC_CODE  ,
+				                                            DBMS_LOB.SUBSTR(Extent4.WH_LOC_DESC, 4000) WH_LOC_DESC  ,
+				                                            DBMS_LOB.SUBSTR(Extent4.WH_LOC_ADD1, 4000)  WH_LOC_ADD1  ,
+				                                            DBMS_LOB.SUBSTR(Extent4.WH_LOC_ADD2, 4000)  WH_LOC_ADD2  ,
+				                                            DBMS_LOB.SUBSTR(Extent4.WH_LOC_ADD3, 4000)  WH_LOC_ADD3  ,
+				                                            Extent4.WH_LOC_AREA_ID WH_LOC_AREA_ID  ,
+				                                            Extent4.WH_LOC_POST_CODE_ID WH_LOC_POST_CODE_ID  ,
+				                                            Extent4.WH_LOC_STATE_ID WH_LOC_STATE_ID  ,
+				                                            Extent4.WH_LOC_CNTY_ID WH_LOC_CNTY_ID  ,
+				                                            Extent4.WH_LOC_TEL1 WH_LOC_TEL1  ,
+				                                            Extent4.WH_LOC_TEL2 WH_LOC_TEL2  ,
+				                                            Extent4.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
+				                                            Extent4.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
+				                                            Extent4.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
+				                                            Extent4.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
+				                                            Extent4.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
+				                                            Extent4.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
+				                                            Extent4.CODE2 CODE2  ,
+				                                            Extent4.DESC2 DESC2  ,
+				                                            Extent4.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
+				                                            Extent4.WH_LOC_MOBILE WH_LOC_MOBILE  ,
+				                                            DBMS_LOB.SUBSTR(Extent6.CODE_DESC, 4000) CODE_DESC,
+				                                            Extent6.CODE_ID DESC_ID
+				                            FROM SYS0028M Extent4
+				                                   LEFT JOIN SYS0005M Extent5   ON Extent4.WH_LOC_BRNCH_ID = Extent5.BRNCH_ID
+				                                   LEFT JOIN SYS0013M Extent6   ON Extent5.TYPE_ID = Extent6.CODE_ID
+				                             WHERE  ( 1 = Extent4.WH_LOC_STUS_ID )
+				                                      AND ( 277 = Extent4.WH_LOC_TYPE_ID )
+				                                      AND ( 'A' = Extent4.WH_LOC_STK_GRAD ) ) Distinct3    ON ( Distinct2.CODE_DESC = Distinct3.CODE_DESC )                                                        
+				                            OR ( ( Distinct2.CODE_DESC IS NULL )
+				                            AND ( Distinct3.CODE_DESC IS NULL ) ) ) Project4
+				ORDER BY Project4.DESCRIPTION1 ASC, Project4.C2 ASC
+    </select>
+    
+    <resultMap type="egovMap" id="posListClobMap">
+        <result  property="whLocDesc" column="WH_LOC_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+    <select id="selectPosJsonList" parameterType="Map" resultMap="posListClobMap">
+				SELECT  Extent1.POS_ID , 
+				        Extent1.POS_NO ,  
+				        Extent1.POS_CUST_NAME ,
+				        TO_CHAR(TO_DATE(Extent1.POS_DT , 'YYYY-MM-DD'), 'DD-MM-YYYY') POS_DT  , 
+				        Extent1.POS_TYPE_ID   ,
+				        Extent1.POS_MODULE_TYPE_ID  ,
+				        TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999999.00') AS POS_TOT_AMT  , 
+				        Extent1.POS_WH_ID  ,
+				        Extent1.POS_MEM_ID  ,
+				        Extent1.POS_CRT_USER_ID  ,
+				        Extent2.CODE_NAME  ,
+				        Extent3.CODE_NAME CODE_NAME1 ,
+				        Extent6.USER_NAME  ,
+				        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+				        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
+				        CASE WHEN  (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME ELSE 'CASH' END NAME ,
+				        CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO  
+				FROM SAL0057D Extent1
+				        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+				        JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+				        LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+				        LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+				        JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+				        LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+				WHERE  1=1
+				  
+				<if test="posModuleTypeId != null and posModuleTypeId != '' ">
+				    AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
+				</if>
+				<if test="posTypeId != null and posTypeId != '' ">
+				    AND Extent1.POS_TYPE_ID = #{posTypeId} 
+				</if>
+				<if test="userName != null and userName != '' ">
+				    AND Extent6.USER_NAME = #{userName}
+				</if>  
+				<if test="posNo != nul and posNo != '' ">
+				    AND  Extent1.POS_NO = #{posNo}
+				</if>
+				<if test="sDate != null and sDate != '' "> <!-- to_date  --> 
+				    <![CDATA[
+				    AND  Extent1.POS_DT >=  TO_CHAR(TO_DATE(#{sDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+				     ]]>
+				</if>
+				<if test="eDate != null and eDate != '' "> <!-- to_date  -->
+				   <![CDATA[				    
+				    AND  Extent1.POS_DT <= TO_CHAR(TO_DATE(#{eDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD')  
+				    ]]>
+				</if> 
+				<if test="memId != null and memId != '' ">  
+				    AND Extent4.MEM_ID = #{memId}   
+				</if>
+				<if test="posCustName != null and posCustName != '' ">
+				    AND Extent1.POS_CUST_NAME  '%'|| #{posCustName} || '%'  ESCAPE '~'  
+				</if>
+				<if test="posWhId != null and posWhId != '' "> 
+				    AND  Extent1.POS_WH_ID = #{posWhId}
+			    </if>
+				ORDER BY Extent1.POS_ID DESC
+    </select>
+</mapper>

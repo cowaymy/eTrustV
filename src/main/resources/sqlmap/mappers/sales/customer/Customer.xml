@@ -1455,21 +1455,21 @@
             SAL0029D 
        SET 
             UPD_DT = SYSDATE,
-            NAME = #{name} , 
-            PAS_SPORT_EXPR =TO_CHAR(TO_DATE(#{pasSportExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
-            VISA_EXPR = TO_CHAR(TO_DATE(#{visaExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
-            EMAIL = #{email},
-            REM = #{rem},
-            <if test="typeID == 964">
+            NAME = #{basicName} , 
+            PAS_SPORT_EXPR =TO_CHAR(TO_DATE(#{basicPasSportExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
+            VISA_EXPR = TO_CHAR(TO_DATE(#{basicVisaExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
+            EMAIL = #{basicEmail},
+            REM = #{basicRem},
+            <if test="basicTypeId == 964">
                <!--  DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), -->
-                GENDER = #{gender},
-                RACE_ID = #{raceId}
+                GENDER = #{basicGender},
+                RACE_ID = #{basicRaceId}
             </if>
             
-            <if test="typeID == 965">
-                CORP_TYPE_ID = #{cmbCorpTypeId}
+            <if test="basicTypeId == 965">
+                CORP_TYPE_ID = #{basicCmbCorpTypeId}
             </if>
-            WHERE CUST_ID = #{custID}
+            WHERE CUST_ID = #{basicCustId}
     </update>
     
     <insert id="insertCreditCardInfo">
@@ -1597,7 +1597,8 @@
             STUS_CODE_ID = 1
         WHERE 
             CUST_ID = #{custId}
-        AND STUS_CODE_ID = 9
+        AND 
+            STUS_CODE_ID = 9
     </update>
     
     <update id="updateCustomerContactSetMain" parameterType="Map">
@@ -1615,22 +1616,22 @@
             SAL0027D
         SET 
             UPD_DT = SYSDATE,
-            CUST_INITIAL = #{initial},
-            GENDER = #{gender},    
-            NAME = #{name},
-            RACE_ID = #{cmbRaceTypeId},
-            NRIC = #{nric},
-            DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
-            TEL_M1 = #{telm},
-            TEL_O = #{telo},
-            TEL_R = #{telr},
-            TELF = #{telf},
-            DEPT = #{dept},
-            POS = #{pos},
-            EXT = #{expno},
-            EMAIL = #{email}
+            CUST_INITIAL = #{cntcInitial},
+            GENDER = #{cntcGender},    
+            NAME = #{cntcName},
+            RACE_ID = #{cntcCmbRaceTypeId},
+            NRIC = #{cntcNric},
+            DOB = TO_CHAR(TO_DATE(#{cntcDob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+            TEL_M1 = #{cntcTelm},
+            TEL_O = #{cntcTelo},
+            TEL_R = #{cntcTelr},
+            TELF = #{cntcTelf},
+            DEPT = #{cntcDept},
+            POS = #{cntcPos},
+            EXT = #{cntcExpno},
+            EMAIL = #{cntcEmail}
         WHERE
-            CUST_CNTC_ID = #{custCntcId}
+            CUST_CNTC_ID = #{cntcCustCntcId}
     </update>
     
     <select id="selectCrcBank" parameterType="Map" resultType="egovMap">
@@ -1648,14 +1649,14 @@
 			    SAL0022D
 			SET
 			    CUST_ACC_UPD_DT = SYSDATE,
-			    CUST_ACC_TYPE_ID = #{custAccTypeId},
-			    CUST_ACC_BANK_ID = #{custAccBankId},
-			    CUST_ACC_NO = #{custAccNo},
-			    CUST_ACC_BANK_BRNCH = #{custAccBankBrnch},
-			    CUST_ACC_OWNER = #{custAccOwner},
-			    CUST_ACC_REM = #{custAccRem}
+			    CUST_ACC_TYPE_ID = #{bankCustAccTypeId},
+			    CUST_ACC_BANK_ID = #{bankCustAccBankId},
+			    CUST_ACC_NO = #{bankCustAccNo},
+			    CUST_ACC_BANK_BRNCH = #{bankCustAccBankBrnch},
+			    CUST_ACC_OWNER = #{bankCustAccOwner},
+			    CUST_ACC_REM = #{bankCustAccRem}
 			WHERE
-			    CUST_ACC_ID = #{custAccId}
+			    CUST_ACC_ID = #{bankCustAccId}
     </update>
     
     <update id="updateCustomerCardInfoAf" parameterType="Map">
@@ -1680,7 +1681,7 @@
 			SET
 			    STUS_CODE_ID = 8
 			WHERE
-			    CUST_ADD_ID = #{custAddId}
+			    CUST_ADD_ID = #{addrCustAddId}
 			AND 
 			    STUS_CODE_ID !=9
     </update>
@@ -1691,7 +1692,7 @@
 			SET
 			    STUS_CODE_ID = 8
 			WHERE
-			    CUST_CNTC_ID = #{custCntcId}
+			    CUST_CNTC_ID = #{cntcCustCntcId}
 			AND
 			    STUS_CODE_ID != 9
     </update>
@@ -1702,7 +1703,7 @@
 			SET
 			    CUST_ACC_STUS_ID = 8
 			WHERE 
-			    CUST_ACC_ID = #{custAccId}
+			    CUST_ACC_ID = #{bankCustAccId}
     </update>
     
     <update id="deleteCustomerCard" parameterType="Map">
@@ -1721,12 +1722,12 @@
 			    ADD1 = #{add1},
 			    ADD2 = #{add2},
 			    ADD3 = #{add3},   
-			    CNTY_ID = #{cntyId},
-			    STATE_ID = #{stateId},
-			    AREA_ID = #{areaId},
-			    POST_CODE_ID = #{postCodeId},
-			    REM = #{rem}
+			    CNTY_ID = #{addrCntyId},
+			    STATE_ID = #{addrStateId},
+			    AREA_ID = #{addrAreaId},
+			    POST_CODE_ID = #{addrPostCodeId},
+			    REM = #{addrRem}
 			WHERE
-			    CUST_ADD_ID = #{custAddId}
+			    CUST_ADD_ID = #{addrCustAddId}
     </update>
 </mapper>
