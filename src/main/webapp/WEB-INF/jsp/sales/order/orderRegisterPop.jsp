@@ -692,6 +692,42 @@
 	            fn_loadProductPromotion(appTypeVal, stkIdVal);
 	        }
 	    });
+        $('#rentPayMode').change(function() {
+            
+            console.log('rentPayMode click event');
+            
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+            
+	        var rentPayModeIdx = $("#rentPayMode option").index($("#rentPayMode option:selected"));
+	        var rentPayModeVal = $("#rentPayMode").val();
+
+	        if(rentPayModeIdx > 0) {
+	            if(rentPayModeVal == '133' || rentPayModeVal == '134') {
+	                
+	                Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
+	                fn_clearRentPayMode();
+	            }
+	            else {
+	                if(rentPayModeVal == '131') {
+	                    if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+	                        Common.alert('<b>Please select the third party first.</b>');
+	                    }
+	                    else {
+	                        $('#sctCrCard').removeClass("blind");
+	                    }
+	                }
+	                else if(rentPayModeVal == '132') {
+	                    if($('#thrdParty').is(":checked") && FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+	                        Common.alert('<b>Please select the third party first.</b>');
+	                    }
+	                    else {
+	                        $('#sctDirectDebit').removeClass("blind");
+	                    }
+	                }
+	            }
+	        }
+	    });
         $('#ordPromo').change(function() {
             
 	        $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
@@ -1406,7 +1442,7 @@
     <th scope="row">Customer ID<span class="must">*</span></th>
     <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="Third Party ID" class="" />
         <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="text" title="" placeholder="Third Party ID" class="" /></td>
+        <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
     <th scope="row">Type</th>
     <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
 </tr>
@@ -1450,7 +1486,7 @@
 
 </section>
 
-<section id="sctCrcCard" class="blind">
+<section id="sctCrCard" class="blind">
     
 <aside class="title_line"><!-- title_line start -->
 <h2>Credit Card</h2>
@@ -1476,22 +1512,22 @@
 <tbody>
 <tr>
     <th scope="row">Credit Card Number<span class="must">*</span></th>
-    <td><input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p" /></td>
+    <td><input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p readonly" /></td>
     <th scope="row">Credit Card Type</th>
-    <td><input id="rentPayCRCType" name="rentPayCRCType" type="text" title="" placeholder="Credit Card Type" class="w100p" /></td>
+    <td><input id="rentPayCRCType" name="rentPayCRCType" type="text" title="" placeholder="Credit Card Type" class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">Name On Card</th>
-    <td><input id="rentPayCRCName" name="rentPayCRCName" type="text" title="" placeholder="Name On Card" class="w100p" /></td>
+    <td><input id="rentPayCRCName" name="rentPayCRCName" type="text" title="" placeholder="Name On Card" class="w100p readonly" /></td>
     <th scope="row">Expiry</th>
-    <td><input id="rentPayCRCExpiry" name="rentPayCRCExpiry" type="text" title="" placeholder="Expiry" class="w100p" /></td>
+    <td><input id="rentPayCRCExpiry" name="rentPayCRCExpiry" type="text" title="" placeholder="Credit Card Expiry" class="w100p readonly" /></td>
 </tr>
 <tr>
     <th scope="row">Issue Bank</th>
-    <td><input id="rentPayCRCBank" name="rentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p" />
+    <td><input id="rentPayCRCBank" name="rentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" />
         <input id="rentPayCRCBankId" name="rentPayCRCBankId" type="text" title="" class="w100p" /></td>
     <th scope="row">Card Type</th>
-    <td><input type="text" title="" placeholder="Card Type" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="Card Type" class="w100p readonly" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
