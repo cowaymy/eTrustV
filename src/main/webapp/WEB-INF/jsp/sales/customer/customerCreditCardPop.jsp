@@ -18,35 +18,6 @@
     	}
     }
     
-	function fn_cardValidation(){
-		if($("#cmbCreditCardType").val() == ''){
-            alert("Please select credit card type");
-            return false;
-        }
-		if($("#issueBank").val() == ''){
-            alert("Please select issue bank");
-            return false;
-        }
-		if($("#cardNo").val() == ''){
-            alert("Please key in credit card number");
-            return false;
-        }
-		if($("#expDate").val() == ''){
-            alert("Please select credit card expiry date");
-            return false;
-        }
-		if($("#nameOnCard").val() == ''){
-            alert("Please key in name on card");
-            return false;
-        }
-		if($("#cmbCardType").val() == ''){
-            alert("Please select the card type");
-            return false;
-        }
-		
-		return true;
-	}
-	
 	function fn_addCreditCard(){
 		var ccType = document.insCardForm.cmbCreditCardType.value;
 		var iBank = document.insCardForm.issueBank.value;
@@ -57,27 +28,39 @@
 		var bankRem = document.insCardForm.bankRem.value;
 		
 		if(ccType == ""){
-            alert("Please select credit card type.");
+			Common.alert("Please select credit card type.");
             return false;
         }
         if(iBank == ""){
-            alert("Please select issue bank.");
+            Common.alert("Please select issue bank.");
             return false;
         }
         if(cardNo == ""){
-            alert("Please key in credit card number.");
+            Common.alert("Please key in credit card number.");
             return false;
+        }else{
+        	// number Check
+            if(FormUtil.checkNum($("#cardNo"))){ 
+                Common.alert("* Invalid credit card number.");
+                return false;
+            }
+            
+            //digit 16
+            if(16 != $("#cardNo").val().length){
+                Common.alert("* Credit card number must in 16 digits.");
+                return false;
+            }
         }
         if(expDate == ""){
-            alert("Please select credit card expiry date.");
+            Common.alert("Please select credit card expiry date.");
             return false;
         }
         if(nameCard == ""){
-            alert("Please key in name on card.");
+            Common.alert("Please key in name on card.");
             return false;
         }
         if(cType == ""){
-            alert("Please select the card type.");
+            Common.alert("Please select the card type.");
             return false;
         }
 
@@ -116,7 +99,7 @@
 			<tr>
 			    <th scope="row">Credit Card No<span class="must">*</span></th>
 			    <td>
-			    <input type="text" title="" id="cardNo" name="cardNo" placeholder="Credit Card No" onBlur="fn_selectCreditCardType()" class="w100p" />
+			    <input type="text" title="" id="cardNo" name="cardNo" maxlength="16" placeholder="Credit Card No" onBlur="fn_selectCreditCardType()" class="w100p" />
 			    </td>
 			    <th scope="row">Expiry Date<span class="must">*</span></th>
 			    <td>

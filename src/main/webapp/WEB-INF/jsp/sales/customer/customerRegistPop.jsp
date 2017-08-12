@@ -159,6 +159,9 @@
 //            $("select[name=dob]").attr('readonly','readonly');
             $("#dob").attr('disabled', 'disabled');
             $("#genderForm").attr('disabled',true);
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
+            $("#genderForm").attr('checked', false);
 		}else{
 			$("#cmbCorpTypeId").val('');
 			$("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
@@ -255,57 +258,62 @@
 	// Validation Check
 	function fn_saveValidationCheck(){
 		if($("#cmbTypeId").val() == ''){
-			alert("Please select costomer type");
+			Common.alert("Please select costomer type");
 			return false;
 		}
 		if($("#nric").val() == ''){
-            alert("Please key in NRIC/Company number");
+			Common.alert("Please key in NRIC/Company number");
             return false;
+        }else{
+        	if(FormUtil.checkNum($("#nric"))){
+                Common.alert("* Invalid nric number.");
+                return;
+            }
         }
 		if($("#custName").val() == ''){
-            alert("Please key in customer name");
+			Common.alert("Please key in customer name");
             return false;
         }
 		if($("#telM1").val() == '' && $("#telR").val() == '' && $("#telF").val() == '' && $("#telO").val() == '' ){
-            alert("Please key in at least one contact number");
+			Common.alert("Please key in at least one contact number");
             return false;
         }else{
         	if($("#telM1").val() != ''){
-        		alert($("#telM1").val());
-        		//if(!FormUtil.checkNum($("#telM1").val())){
-                //    alert("* Invalid telephone number (Mobile).");
-                //}
+        		if(FormUtil.checkNum($("#telM1"))){
+        			Common.alert("* Invalid telephone number (Mobile).");
+                    return false;
+                }
                 if($("#telM1").length > 20){
-                    alert("* Telephone number (Mobile) exceed length of 20.");
+                	Common.alert("* Telephone number (Mobile) exceed length of 20.");
                     return false;
                 }
         	}
         	if($("#telO").val() != ''){
-        		alert($("#telO").val());
-                   //if(!FormUtil.checkNum($("#telO").val())){
-                   //    alert("* Invalid telephone number (Office).");
-                   //}
+
+                   if(FormUtil.checkNum($("#telO"))){
+                	   Common.alert("* Invalid telephone number (Office).");
+                       return false;
+                   }
                    if($("#telO").length > 20){
-                       alert("* Telephone number (Office) exceed length of 20.");
+                	   Common.alert("* Telephone number (Office) exceed length of 20.");
                        return false;
                    }
                }
         	if($("#telR").val() != ''){
-        		alert($("#telR").val());
-                   //if(!FormUtil.checkNum($("#telR").val())){
-                   //    alert("* Invalid telephone number (Office).");
-                   //}
+                   if(!FormUtil.checkNum($("#telR"))){
+                	   Common.alert("* Invalid telephone number (Office).");
+                   }
                    if($("#telR").length > 20){
-                       alert("* Telephone number (Office) exceed length of 20.");
+                	   Common.alert("* Telephone number (Office) exceed length of 20.");
                        return false;
                    }
                }
         	if($("#telF").val() != ''){
-                   //if(!FormUtil.checkNum($("#telF").val())){
-                   //   alert("* Invalid telephone number (Office).");
-                   //}
+                   if(!FormUtil.checkNum($("#telF").val())){
+                	   Common.alert("* Invalid telephone number (Office).");
+                   }
                    if($("#telF").length > 20){
-                       alert("* Telephone number (Office) exceed length of 20.");
+                	   Common.alert("* Telephone number (Office) exceed length of 20.");
                        return false;
                    }
                }
@@ -313,51 +321,51 @@
 		
 		if($("#cmbTypeId").val() == '964'){
 			if($("#cmbNation").val() == ''){
-				alert("* Please select nationality.");
+				Common.alert("* Please select nationality.");
 				return false;
 			}
 			if($("#dob").val() == ''){
-                   alert("* Please key in customer DOB.");
+				Common.alert("* Please key in customer DOB.");
                    return false;
             }
 			// Gender validation check (해야함.) * Customer is exist.
 			if($("#cmbRace").val() == ''){
-                   alert("* Please select customer race.");
+				Common.alert("* Please select customer race.");
                    return false;
             }
 			if($("#cmbInitials").val() == ''){
-                   alert("* Please select contact person initial.");
+				Common.alert("* Please select contact person initial.");
                    return false;
             }
 		}
 		
 		if($("#addr1").val() == ''){
-            alert("Please key in the address.");
+			Common.alert("Please key in the address.");
             return false;
         }
 		if($("#mstate").val() == ''){
-            alert("Please select the state.");
+			Common.alert("Please select the state.");
             return false;
         }
 		if($("#cmbArea").val() == ''){
-            alert("Please select the area.");
+			Common.alert("Please select the area.");
             return false;
         }
 		if($("#cmbPostCd").val() == ''){
-            alert("Please select the postcode.");
+			Common.alert("Please select the postcode.");
             return false;
         }
 		
 		if($("#asCustName").val() == ''){
-            alert("Please key in customer name.");
+			Common.alert("Please key in customer name.");
             return false;
         }
 		if($("#asTelM").val() == '' && $("#asTelR").val() == '' && $("#asTelF").val() == '' && $("#asTelO").val() == '' ){
-			alert("Please key in at least one contact number");
+			Common.alert("Please key in at least one contact number");
             return false;
         }
 		
-//		if(!FormUtil.checkNum(t$("#ext").val())){
+//		if(!FormUtil.checkNum($("#ext").val())){
 //               alert("* Invalid extension number.");
 //        }
 		return true;
@@ -404,27 +412,72 @@
         }
     }
 	
-    function fn_nricDupChk(){alert($("#nric").val());
-    	var data = {nric : $("#nric").val()}
-    	Common.ajax("POST", "/sales/customer/nricDupChk.do", data, function(result) {
-    		if(result.dup > 0){
-    			Common.alert("This is existing customer.");
-    		}else{
+//    function fn_nricDupChk(){
+//    	
+//    	var url = "/sales/customer/nricDupChk.do";
+//    	var param = {"nric" : insBasicForm.nric.value, "cmbTypeId" : insBasicForm.cmbTypeId.value};
+//    	$.ajax({
+//    		url : url,
+//    		type : 'POST',
+ //   		data : param,
+ //   		success:function(data){
+ //   			alert(data.dup);
+ //   		},
+ //   		error: function(jqXHR, textStatus, errorThrown){
+ //           },
+ //           complete: function(){
+ //           }
+ //   	},
+//    	Common.ajax("POST", url, param, function(result) {
+//    		if(result.dup > 0){
+//    			Common.alert("This is existing customer.");
+//    		}else{
     			
-    		}
+//    		}
 //            Common.alert(result.message);
 
-        }, function(jqXHR, textStatus, errorThrown) {
-            Common.alert("실패하였습니다.");
-            console.log("실패하였습니다.");
-            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+//        }, 
+//        function(jqXHR, textStatus, errorThrown) {
+//            Common.alert("실패하였습니다.");
+//            console.log("실패하였습니다.");
+//            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+//            
+//            alert(jqXHR.responseJSON.message);
+//            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
             
-            alert(jqXHR.responseJSON.message);
-            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+//        });
+//    }
+    
+    function emailCheck(){
+    	if(FormUtil.checkEmail($("#email"))){
+//    		$("input[name='email']").focus();
+            Common.alert("Invalid email address.");
             
-        });
+            $("#email").val('');
+            
+            return false;
+        }
+    }
+    
+    function asEmailCheck(){
+        if(FormUtil.checkEmail($("#asEmail"))){
+            Common.alert("Invalid email address.");
+            $("#asEmail").val('');
+//            $("#asEmail").focus();
+            return false;
+        }
     }
 	
+    function chgTab(tabNm) {
+    	switch(tabNm) {
+	    	case 'card' :
+	            AUIGrid.resize(myGridID, 1100, 380);
+	            break;
+	        case 'account' :
+	            AUIGrid.resize(myGridID1, 1100, 380);
+	            break;
+    	}
+    }
 </script>
 
 <!-- 
@@ -448,8 +501,8 @@
     <li><a href="#" class="on">Basic Info</a></li>
     <li><a href="#">Install Address</a></li>
     <li><a href="#">Additional Service Contact</a></li>
-    <li><a href="#">Credit Card</a></li>
-    <li><a href="#">Bank Account</a></li>
+    <li><a href="#" onclick="javascript:chgTab('card');">Credit Card</a></li>
+    <li><a href="#" onclick="javascript:chgTab('account');">Bank Account</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -488,7 +541,7 @@
 		<tr>
 		    <th scope="row">NRIC/Company No<span class="must">*</span></th>
 		    <td>
-		        <input type="text" title="" id="nric" name="nric" placeholder="NRIC/Company No" onBlur="fn_nricDupChk()" class="w100p" />
+		        <input type="text" title="" id="nric" name="nric" maxlength="12"  placeholder="NRIC/Company No" class="w100p" />
 		    </td>
 		    <th scope="row">GST Registration No</th>
 		    <td>
@@ -526,7 +579,7 @@
 		    </td>
 		    <th scope="row">Email(1)</th>
 		    <td>
-		    <input type="text" id="email" name="email" title="" placeholder="Email" class="w100p" />
+		      <input type="text" id="email" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" />
 		    </td>
 		</tr>
 		<tr>
@@ -537,23 +590,23 @@
 		    </td>
 		    <th scope="row">Tel(Mobile)(1)<span class="must">*</span></th>
 		    <td>
-		        <input type="text" id="telM1" name="telM1" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+		        <input type="text" id="telM1" name="telM1" maxlength="20" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
 		    </td>
 		</tr>
 		<tr>
 		    <th scope="row">Tel(Residence)(1)<span class="must">*</span></th>
 		    <td>
-		    <input type="text" id="telR" name="telR" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+		    <input type="text" id="telR" name="telR" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" />
 		    </td>
 		    <th scope="row">Tel(Fax)(1)<span class="must">*</span></th>
 		    <td>
-		    <input type="text" id="telF" name="telF" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+		    <input type="text" id="telF" name="telF" maxlength="20" title="" placeholder="Telephone Number (Fax)" class="w100p" />
 		    </td>
 		</tr>
 		<tr>
 		    <th scope="row">Tel(Office)(1)<span class="must">*</span></th>
 		    <td>
-		    <input type="text" id="telO" name="telO" title="" placeholder="Telephone Number (Office)" class="w100p" />
+		    <input type="text" id="telO" name="telO" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" />
 		    </td>
 		    <th scope="row">Ext No.</th>
 		    <td>
@@ -644,7 +697,7 @@
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
@@ -701,14 +754,14 @@
     </td>
     <th scope="row">Email(2)</th>
     <td>
-    <input type="text" id="asEmail" name="asEmail" title="" placeholder="Email" class="w100p" />
+    <input type="text" id="asEmail" name="asEmail" title="" onBlur="javascript:asEmailCheck()" placeholder="Email" class="w100p" />
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
@@ -723,7 +776,7 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
 </ul>
 </article><!-- tap_area end -->
 
@@ -737,7 +790,7 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
