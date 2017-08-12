@@ -59,6 +59,8 @@
         <typeAlias alias="srvMembershipSalesVO" type="com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO"/>
         <!-- Sales OrderCancellation -->
         <typeAlias alias="orderCancelVO" type="com.coway.trust.biz.sales.order.OrderCancelVO"/> 
+        <!-- Sales OrderCancellation -->
+        <typeAlias alias="orderInvestVO" type="com.coway.trust.biz.sales.order.OrderInvestVO"/>
         
         
         <!-- Enrollment Result Update -->

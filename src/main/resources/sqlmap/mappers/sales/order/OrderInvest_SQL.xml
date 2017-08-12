@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderInvestMapper">
+
+    <resultMap id="orderInvestClobMap" type="egovMap">
+        <result property="invReqRem" column="INV_REQ_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="invReqPartyName" column="INV_REQ_PARTY_NAME" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    <select id="orderInvestigationList" parameterType="Map" resultMap="orderInvestClobMap">
+        SELECT Filter1.INV_REQ_ID ,
+			       Filter1.INV_REQ_NO ,
+			       Filter1.SO_ID ,
+			       Filter1.INV_REQ_STUS_ID ,
+			       Filter1.INV_REQ_PARTY_ID ,
+			       Filter1.INV_REQ_REM ,
+			       Filter1.INV_REQ_CRT_DT ,
+			       Filter1.INV_REQ_CRT_USER_ID ,
+			       Filter1.INV_REQ_UPD_USER_ID ,
+			       Filter1.INV_REQ_USER_ID_AUTO ,
+			       Filter1.INV_REQ_HAS_ATTACH ,
+			       Extent5.SALES_ORD_NO ,
+			       Filter1.INV_REQ_UPD_DT ,
+			       CASE 
+			            WHEN ( Filter1.INV_REQ_ATTACH_FILE IS NULL ) THEN ''
+			       ELSE Filter1.INV_REQ_ATTACH_FILE
+			            END INV_REQ_ATTACH_FILE  ,
+			       Filter1.CODE2 CODE ,
+			       Filter1.INV_REQ_STUS_NAME ,
+			       Filter1.CODE3 CODE1  ,
+			       Filter1.INV_REQ_PARTY_NAME ,
+			       Filter1.INV_REQ_CRT_USER_NAME 
+		   FROM ( SELECT Extent1.INV_REQ_ID ,
+				                Extent1.INV_REQ_NO ,
+				                Extent1.SO_ID ,
+				                Extent1.INV_REQ_STUS_ID ,
+				                Extent1.INV_REQ_PARTY_ID ,
+				                Extent1.INV_REQ_REM ,
+				                Extent1.INV_REQ_CRT_DT,
+				                Extent1.INV_REQ_CRT_USER_ID ,
+				                Extent1.INV_REQ_UPD_DT ,
+				                Extent1.INV_REQ_UPD_USER_ID ,
+				                Extent1.INV_REQ_USER_ID_AUTO ,
+				                Extent1.INV_REQ_HAS_ATTACH ,
+				                Extent1.INV_REQ_ATTACH_FILE ,
+				                Extent2.CODE CODE2  ,
+				                Extent2.NAME INV_REQ_STUS_NAME,
+				                Extent3.CODE CODE3  ,
+				                Extent3.CODE_DESC INV_REQ_PARTY_NAME,
+				                Extent4.USER_NAME INV_REQ_CRT_USER_NAME
+				         FROM SAL0050D Extent1
+				                LEFT JOIN SYS0038M Extent2   ON Extent1.INV_REQ_STUS_ID = Extent2.STUS_CODE_ID
+				                LEFT JOIN SYS0013M Extent3   ON Extent1.INV_REQ_PARTY_ID = Extent3.CODE_ID
+				                LEFT JOIN SYS0047M Extent4   ON Extent1.INV_REQ_CRT_USER_ID = Extent4.USER_ID
+                 <![CDATA[
+				     WHERE  0 <> Extent1.INV_REQ_ID 
+				 
+				         AND  Extent1.INV_REQ_STUS_ID IN ( 1,44,5 )
+			         ) Filter1
+			         JOIN SAL0001D Extent5   ON Extent5.SALES_ORD_ID = Filter1.SO_ID
+			    WHERE Filter1.INV_REQ_NO LIKE '%' || #{invReqNo} || '%'
+			        AND Filter1.INV_REQ_CRT_DT >= #{startCrtDt} AND Filter1.INV_REQ_CRT_DT <= #{endCrtDt}
+			        AND Extent5.SALES_ORD_ID '%' || #{salesOrdId} || '%'
+			        AND Filter1.INV_REQ_PARTY_ID = #{invReqPartyId}
+			        AND Filter1.INV_REQ_CRT_USER_NAME '%' || #{invReqCrtUserName} || '%'
+			     ]]>
+    </select>
+</mapper>

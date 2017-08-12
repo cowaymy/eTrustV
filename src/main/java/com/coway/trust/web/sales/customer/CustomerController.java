@@ -407,7 +407,13 @@ public class CustomerController {
 		insmap.put("getCustId", getCustId);
 		insmap.put("custName", vo.getCustName());
 		insmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
-		insmap.put("dob", vo.getDob() != null ? vo.getDob() : defaultDate);
+		if(vo.getDob() != null && !"".equals(vo.getDob())){
+			String dob = vo.getDob().substring(6)  + "-" + vo.getDob().substring(3, 5) + "-" + vo.getDob().substring(0, 2);
+			insmap.put("dob", dob);
+		}else{
+			insmap.put("dob", defaultDate);
+		}
+//		insmap.put("dob", vo.getDob() != null ? vo.getDob() : defaultDate);
 		insmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
 		insmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
 		insmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
