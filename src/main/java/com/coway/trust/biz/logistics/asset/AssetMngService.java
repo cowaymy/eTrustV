@@ -16,7 +16,8 @@ public interface AssetMngService {
 	List<EgovMap> selectBrandList(Map<String, Object> params);
 
 	List<EgovMap> selectTypeList(Map<String, Object> params);
-
+	
+	List<EgovMap> selectDepartmentList(Map<String, Object> params);
 
 	void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList);
 
