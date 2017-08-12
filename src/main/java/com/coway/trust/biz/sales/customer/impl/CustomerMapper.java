@@ -399,7 +399,7 @@ public interface CustomerMapper {
 	 * Bank ComboBox List (Issue Bank) mapper
 	 * 
 	 * @param params
-	 * @return Boolean
+	 * @return 
 	 * @exception Exception
 	 * @author 이석희
 	 */

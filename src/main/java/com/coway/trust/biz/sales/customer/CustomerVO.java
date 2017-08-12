@@ -17,7 +17,7 @@ public class CustomerVO implements Serializable {
 	private String pasSportExpr;
 	private String visaExpr;
 	private String nation;				// Nationlity
-	private Date dob;					// DOB
+	private String dob;					// DOB
 	private String custVaNo;			// V.A Number
 	private int corpTypeId;			// Company Type
 	private String codeName;			// Company Type Name (CorpType)
@@ -113,10 +113,10 @@ public class CustomerVO implements Serializable {
 	public void setNation(String nation) {
 		this.nation = nation;
 	}
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 	public String getCustVaNo() {
