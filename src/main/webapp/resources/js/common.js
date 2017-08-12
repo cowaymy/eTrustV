@@ -224,8 +224,8 @@ var Common = {
 			isDiv 	: true // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp	
 		});
 
-        divId = generateDivId(divId);
-
+       divId = generateDivId(divId);
+	
         function generateDivId(divId){
             if ($("#" + divId).length > 0 ) {
                 divId = "_popupDiv" + ($("#" + divId).length + 1);

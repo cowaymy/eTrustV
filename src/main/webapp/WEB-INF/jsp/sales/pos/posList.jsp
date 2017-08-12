@@ -1,0 +1,443 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<script type="text/javascript">
+
+    //AUIGrid 생성 후 반환 ID
+    var posGridID;
+    
+	$(document).ready(function() {
+		  
+		  doGetCombo("/common/selectCodeList.do", "143", '', 'cmbPosTypeId', 'S', ''); 
+		  doGetCombo("/common/selectCodeList.do", "140", '', 'cmbSalesTypeId', 'S', '');
+		  
+		// AUIGrid 그리드를 생성합니다.
+        
+        posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
+        AUIGrid.setSelectionMode(posGridID, "singleRow");
+		  
+        
+        $("#_search").click(function() {
+		
+        	fn_getPosListAjax();
+		});
+        
+	});
+	
+	
+	var posColumnLayout =  [ 
+					                    {dataField : "posNo", headerText : "POS Ref No.", width : '10%'}, 
+					                    {dataField : "posDt", headerText : "Sales Date", width : '10%'},
+					                    {dataField : "codeName", headerText : "POS Type", width : '10%'},
+					                    {dataField : "codeName1", headerText : "Sales Type", width : '10%'},
+					                    {dataField : "texInvcRefNo", headerText : "Invoice No.", width : '10%'},
+					                    {dataField : "name", headerText : "Customer Name", width : '20%'},
+					                    {dataField : "whLocCode", headerText : "Warehouse", width : '10%'},
+					                    {dataField : "posTotAmt", headerText : "Total Amount", width : '10%'},
+					                    {dataField : "userName", headerText : "Sales Agent", width : '10%'},
+					                    {dataField : "posId", visible : false}
+					                   ];
+	
+	 //그리드 속성 설정
+    var gridPros = {
+            
+            // 페이징 사용       
+            usePaging : true,
+            
+            // 한 화면에 출력되는 행 개수 10(기본값:10)
+            pageRowCount : 20,
+            
+            editable : true,
+            
+            fixedColumnCount : 1,
+            
+            showStateColumn : false, //true 
+            
+            displayTreeOpen : false, //true
+            
+            selectionMode : "multipleCells",
+            
+            headerHeight : 30,
+            
+            // 그룹핑 패널 사용
+            useGroupingPanel : false, //true
+            
+            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            skipReadonlyColumns : true,
+            
+            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            wrapSelectionMove : false, //false
+            
+            // 줄번호 칼럼 렌더러 출력
+            showRowNumColumn : false,
+            
+            groupingMessage : "Here groupping"
+        };
+	 
+    
+  function fn_getPosListAjax(){
+	
+	  Common.ajax("GET", "/sales/pos/selectPosJsonList", $("#searchForm").serialize(), function(result) {
+		
+		  AUIGrid.setGridData(posGridID, result);
+	  });
+	  
+  }
+  
+  
+/*   function fn_getCustomerAddressAjax() {        
+      Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList",$("#getParamForm").serialize(), function(result) {
+          AUIGrid.setGridData(addrGridID, result);
+      });
+  } */
+  
+  
+  
+  
+  function fn_posTypeChangeFunc(codeId) {
+	
+	  if(codeId == 1343){ // Filter
+		  
+		  // 창고 select box 활성화
+		  $("#cmbWhId").attr({"disabled" : false , "class" : "w100p"});
+		  doGetComboWh("/sales/pos/selectWhList.do", '', '', 'cmbWhId', 'S', '');		  
+		  
+	  }else if(codeId == 1344){ // Item Bank & Others
+		  // 창고 select box 비활성화
+		  $("#cmbWhId option").remove();
+		  $("#cmbWhId optgroup").remove();
+		  $("#cmbWhId").attr({"disabled" : "disabled" , "class" : "disabled w100p"});
+	  }else{ // Choose One
+		  $("#cmbWhId option").remove();
+          $("#cmbWhId optgroup").remove();
+          $("#cmbWhId").attr({"disabled" : "disabled" , "class" : "disabled w100p"});
+	  }
+  }
+  
+  //def Combo(select Box OptGrouping)
+  function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
+    
+    $.ajax({
+        type : "GET",
+        url : url,
+        data : { groupCode : groupCd},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+           var rData = data;
+           fn_otpGrouping(rData, obj)
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    }); 
+ } ;
+
+ function fn_otpGrouping(data, obj){
+	 
+	 var targetObj = document.getElementById(obj);
+	 
+	 for(var i=targetObj.length-1; i>=0; i--) {
+	        targetObj.remove( i );
+	 }
+	 
+	 obj= '#'+obj;
+	 
+	 // grouping
+	 var count = 0;
+	 $.each(data, function(index, value){
+		 
+		 if(index == 0){
+			$("<option />", {value: "", text: 'Choose One'}).appendTo(obj);
+		 }
+		 
+		 if(index > 0 && index != data.length){
+			 if(data[index].description1 != data[index -1].description1){
+				 $(obj).append('</optgroup>');
+				 count = 0;
+	         }
+		 }
+		 
+		 if(data[index].descId == null  && count == 0){
+			 $(obj).append('<optgroup label="">');
+			 count++;
+		 }
+		 if(data[index].descId == 42 && count == 0){
+             $(obj).append('<optgroup label="Cody Branch">');
+             count++;
+         }
+		 if(data[index].descId == 1160  && count == 0){
+             $(obj).append('<optgroup label="Dealer Branch">');
+             count++;
+         }
+		 if(data[index].descId == 43 && count == 0){
+             $(obj).append('<optgroup label="Dream Service Center">');
+             count++;
+         }
+		 //
+		 if(data[index].descId == 46 && count == 0){
+             $(obj).append('<optgroup label="Head Quaters">');
+             count++;
+         }
+		 $('<option />', {value : data[index].whLocId, text:data[index].codeId+'-'+data[index].codeName}).appendTo(obj); // WH_LOC_ID
+		 
+		 
+		 if(index == data.length){
+			 $(obj).append('</optgroup>');
+		 }
+	 });
+	 //optgroup CSS
+	 $("optgroup").attr("class" , "optgroup_text");
+	 
+ }
+</script>
+
+<div id="wrap"><!-- wrap start -->
+<header id="header"><!-- header start -->
+<ul class="left_opt">
+    <li>Neo(Mega Deal): <span>2394</span></li> 
+    <li>Sales(Key In): <span>9304</span></li> 
+    <li>Net Qty: <span>310</span></li>
+    <li>Outright : <span>138</span></li>
+    <li>Installment: <span>4254</span></li>
+    <li>Rental: <span>4702</span></li>
+    <li>Total: <span>45080</span></li>
+</ul>
+<ul class="right_opt">
+    <li>Login as <span>KRHQ9001-HQ</span></li>
+    <li><a href="#" class="logout">Logout</a></li>
+    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
+</ul>
+</header><!-- header end -->
+<hr />
+<section id="container"><!-- container start -->
+<aside class="lnb_wrap"><!-- lnb_wrap start -->
+<header class="lnb_header"><!-- lnb_header start -->
+<form action="#" method="post">
+<h1><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a></h1>
+<p class="search">
+<input type="text" title="검색어 입력" />
+<input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
+</p>
+
+</form>
+</header><!-- lnb_header end -->
+
+<section class="lnb_con"><!-- lnb_con start -->
+<p class="click_add_on_solo on"><a href="#">All menu</a></p>
+<ul class="inb_menu">
+    <li class="active">
+    <a href="#" class="on">menu 1depth</a>
+
+    <ul>
+        <li class="active">
+        <a href="#" class="on">menu 2depth</a>
+
+        <ul>
+            <li class="active">
+            <a href="#" class="on">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+        </ul>
+
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+    </ul>
+
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+</ul>
+<p class="click_add_on_solo"><a href="#"><span></span>My menu</a></p>
+<ul class="inb_menu">
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+</ul>
+</section><!-- lnb_con end -->
+
+</aside><!-- lnb_wrap end -->
+
+<section id="content"><!-- content start -->
+<ul class="path">
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Sales</li>
+    <li>Order list</li>
+</ul>
+
+<aside class="title_line"><!-- title_line start -->
+<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<h2>POS Listing</h2>
+<ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+</ul>
+</aside><!-- title_line end -->
+
+
+<section class="search_table"><!-- search_table start -->
+<form  id="searchForm">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">POS Type</th>
+    <td>
+    <select class="w100p" id="cmbPosTypeId" onchange="javascript : fn_posTypeChangeFunc(this.value)" name="posModuleTypeId"></select>  
+    </td>
+    <th scope="row">Sales Type</th>
+    <td>
+    <select class="w100p" id="cmbSalesTypeId" name="posTypeId"></select>
+    </td>
+    <th scope="row">Sales Agent</th>
+    <td>
+    <input type="text" title="" placeholder="Sales Agent (Username)" class="w100p" name="userName"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">POS Ref No.</th>
+    <td>
+    <input type="text" title="" placeholder="POS Ref No." class="w100p"  name="posNo"/>
+    </td>
+    <th scope="row">Sales Date</th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate"/></p>
+    <span>To</span>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate" /></p>
+    </div><!-- date_set end -->
+    </td>
+    <th scope="row">Member Code</th>
+    <td>
+    <input type="text" title="" placeholder="Member Code" class="w100p" name="memId" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Warehouse</th>
+    <td>
+    <select class="disabled w100p" disabled="disabled" id="cmbWhId" name="posWhId"></select>
+    </td>
+    <th scope="row">Customer Name</th>
+    <td colspan="3">
+    <input type="text" title="" placeholder="Customer Name" class="w100p" name="posCustName" />
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+ <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+        <li><p class="link_btn"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+    </ul>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+</form>
+</section><!-- search_table end -->
+
+<section class="search_result"><!-- search_result start -->
+<article class="grid_wrap"><!-- grid_wrap start -->
+    <div id="pos_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
+
+</section><!-- content end -->
+
+<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
+<p>Information Message Area</p>
+</aside><!-- bottom_msg_box end -->
+        
+</section><!-- container end -->
+<hr />
+
+</div><!-- wrap end -->
