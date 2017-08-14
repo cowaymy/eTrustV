@@ -6,7 +6,7 @@ var holidays = {//휴일 세팅 하기
 };
 
 
-var pickerOpts={
+var pickerOpts={//일반년월일달력 세팅
 	changeMonth:true,
 	changeYear:true,
 	dateFormat: "dd/mm/yy",
@@ -41,19 +41,19 @@ var pickerOpts={
 		}
 };
 
-$(".j_date").datepicker(pickerOpts);
+$(".j_date").datepicker(pickerOpts);//일반년월일달력 실행
 
-var monthOptions = {
+var monthOptions = {//생년월일 세팅
 	pattern: 'mm/yyyy',
 	selectedYear: 2017,
 	startYear: 2007,
 	finalYear: 2027
 };
 
-$(".j_date2").monthpicker(monthOptions);
+$(".j_date2").monthpicker(monthOptions);//생년월일 실행
 
 
-var pickerOpts2 = {
+var pickerOpts2 = {//생년월일 세팅
 	changeMonth:true,
 	changeYear:true,
 	defaultDate: new Date(1960, 00, 01),
@@ -62,7 +62,7 @@ var pickerOpts2 = {
 };
 
 
-$(".j_date3").datepicker(pickerOpts2);
+$(".j_date3").datepicker(pickerOpts2);//생년월일 달력
 /* 제이쿼리 ui달력 end*/
 
 /* on클래스 넣기 start*/
