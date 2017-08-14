@@ -2,20 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.asset.impl.AssetMngMapper">
     
-        <resultMap id="assetClobMap" type="EgovMap">
+       <!--  <resultMap id="assetClobMap" type="EgovMap">
         <result property="assetrem" column="assetrem" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="department" column="department" jdbcType="CLOB" javaType="java.lang.String"/>
-        <!-- <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/> -->
+        <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="department" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         <result property="department" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="codeName" column="CODE_NAME" jdbcType="CLOB" javaType="java.lang.String"/>  
-        </resultMap>
+        <result property="codeName" column="CODE_NAME" jdbcType="CLOB" javaType="java.lang.String"/>
+        </resultMap> -->
         <resultMap id="assetCopy" type="EgovMap">
         <result property="assetRem" column="ASSET_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         <result property="assetDRem" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         <result property="assetDItmRem" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         </resultMap>
-    <select id="selectAssetList" parameterType="Map" resultMap="assetClobMap">
+    <select id="selectAssetList" parameterType="Map" resultType="EgovMap">
             select 
                  E1.ASSET_ID assetId,
                  E1.BRAND_ID brandId,
@@ -24,7 +24,7 @@
                  s13c.code_name codeName,
                  E1.COLOR_ID colorId,
                  s13r.code_name codeName1,
-                 E1.CRT_DT crtDt,
+                 TO_CHAR(E1.CRT_DT, 'DD/MM/YYYY')  crtDt,
                  E1.CRT_USER_ID crtUserId,
                  (select USER_NAME from SYS0047M where user_id = e1.CRT_USER_ID) userName ,
                  E1.CURR_BRNCH_ID currBrnchId,
@@ -34,7 +34,7 @@
                  E1.MAC_ADDR macAddr,
                  E1.NAME NAME1,
                  E1.PURCHS_AMT purchsAmt,
-                 E1.PURCHS_DT purchsDt,     
+                 TO_CHAR(TO_DATE(E1.PURCHS_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') purchsDt,     
                  E1.REF_NO refNo,
                  E1.ASSET_REM assetRem,
                  E1.SERIAL_NO serialNo,
@@ -42,7 +42,7 @@
                  s38.name name2,
                  E1.TYPE_ID typeId,
                  s13t.code_name codeName2,
-                 E1.UPD_DT updDt,
+                 TO_CHAR(E1.UPD_DT, 'DD/MM/YYYY') updDt,
                  E1.UPD_USER_ID updUserId,  
                  (select USER_NAME from SYS0047M where user_id = e1.UPD_USER_ID) userName1 ,                                                                             
                  E1.WRANTY_NO wrantyNo,
@@ -143,7 +143,7 @@
           order by asset_id
     </select>
     
-    <select id="selectDetailList" parameterType="Map" resultMap="assetClobMap">
+    <select id="selectDetailList" parameterType="Map" resultType="EgovMap">
       SELECT           
                  Project1.ASSET_D_ID  ASSET_D_ID, 
                  Project1.ASSET_ID  ASSET_ID, 
@@ -259,7 +259,7 @@
     
     
    <!-- Department리스트  -->
-    <select id="selectDepartmentList" parameterType="Map" resultMap="assetClobMap">   
+    <select id="selectDepartmentList" parameterType="Map" resultType="EgovMap">   
         SELECT 
             DEPT_ID CODE_ID ,
             DEPT_NAME CODE_NAME  
