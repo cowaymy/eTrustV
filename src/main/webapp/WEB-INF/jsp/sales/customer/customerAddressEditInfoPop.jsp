@@ -161,17 +161,17 @@
 <tr>
     <th rowspan="3" scope="row">Address<span class="must">*</span></th>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="w100p"  value="${detailaddr.add1}" id="firsAddr" name="add1"/>
+    <input type="text" title="" placeholder="" class="w100p"  value="${detailaddr.add1}" id="firsAddr" name="add1" maxlength="50"/>
     </td>
 </tr>
 <tr>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="w100p" value="${detailaddr.add2}" id="secdAddr" name="add2"/>
+    <input type="text" title="" placeholder="" class="w100p" value="${detailaddr.add2}" id="secdAddr" name="add2" maxlength="50"/>
     </td>
 </tr>
 <tr>
     <td colspan="3">
-    <input type="text" title="" placeholder="" class="w100p" value="${detailaddr.add3}" id="thirdAddr" name="add3"/>
+    <input type="text" title="" placeholder="" class="w100p" value="${detailaddr.add3}" id="thirdAddr" name="add3" maxlength="50"/>
     </td>
 </tr>
 <tr>

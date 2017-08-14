@@ -178,7 +178,7 @@ $(document).ready(function(){
 <input type="hidden" value="${result.raceId }" id="selCodeRaceId">
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST Request Info</h1>
+<h1>Customer Basic Info Maintenance</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
 </ul>
@@ -440,7 +440,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Customer Name<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p"  name="basicName" value="${result.name }" id="basicName"/> <!-- name  -->
+    <input type="text" title="" placeholder="" class="w100p"  name="basicName" value="${result.name }" id="basicName" maxlength="70"/> <!-- name  -->
     </td>
     <th scope="row">Nationality <span class="brown_text">#</span></th>
     <td>

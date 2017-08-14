@@ -102,6 +102,12 @@ $(document).ready(function(){
         });
     }
     
+    // Add New Bank
+    function fn_addNewBank(){
+    	
+    	Common.popupDiv("/sales/customer/customerAddBankAccountPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv4New');
+    }
+    
    //close Func
      function fn_closeFunc(){
           $("#_selectParam").val('1');
@@ -110,7 +116,7 @@ $(document).ready(function(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST Request Info</h1>
+<h1>Customer Bank Account Maintenance</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
 </ul>
@@ -347,7 +353,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 <!-- ########## Bank Acc Grid Start ########## -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">ADD New Bank Account</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript : fn_addNewBank()">ADD New Bank Account</a></p></li> <!-- xml :   insertBankAccountInfo -->
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="bank_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

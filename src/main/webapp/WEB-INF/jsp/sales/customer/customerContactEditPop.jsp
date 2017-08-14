@@ -166,7 +166,7 @@ $(document).ready(function(){
 <input type="hidden" id="tempCustId">
 <input type="hidden" id="tempCustCntcId">
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST Request Info</h1>
+<h1>Customer Contact Maintenance</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
 </ul>

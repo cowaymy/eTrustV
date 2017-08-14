@@ -239,7 +239,7 @@
 	            	asEmail : insContactForm.asEmail.value	            	
 	            }
 	        };
-		
+			
 			Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
 				Common.alert(result.message);
 

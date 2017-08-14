@@ -205,7 +205,7 @@ $(document).ready(function() {
 </tr>
 <tr>
     <th scope="row">Name<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.name1 }" id="cntcName" name="cntcName"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.name1 }" id="cntcName" name="cntcName" maxlength="70"/></td>
     <th scope="row">Race<span class="must">*</span></th>
     <td>    
     <select class="w100p" id="cntcCmbRaceTypeId" name="cntcCmbRaceTypeId"></select>
@@ -221,27 +221,27 @@ $(document).ready(function() {
 </tr>
 <tr>
     <th scope="row">Tel (Mobile)<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telM1}" id="cntcTelm" name="cntcTelm"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telM1}" id="cntcTelm" name="cntcTelm" maxlength="20"/></td>
     <th scope="row">Tel (Office)<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.telO}" id="cntcTelo" name="cntcTelo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.telO}" id="cntcTelo" name="cntcTelo" maxlength="20"/></td>
 </tr>
 <tr>
     <th scope="row">Tel (Residence)<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telR }" id="cntcTelr" name="cntcTelr"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcontact.telR }" id="cntcTelr" name="cntcTelr" maxlength="20"/></td>
     <th scope="row">Tel (Fax)<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"  value="${detailcontact.telf}" id="cntcTelf" name="cntcTelf"/></td>
+    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"  value="${detailcontact.telf}" id="cntcTelf" name="cntcTelf" maxlength="20"/></td>
 </tr>
 <tr>
     <th scope="row">Department</th>
     <td><input type="text" title="" placeholder="Department" class="w100p"  value="${detailcontact.dept}" name="cntcDept"/></td>
     <th scope="row">Job Position</th>
-    <td><input type="text" title="" placeholder="Job Position" class="w100p"  value="${detailcontact.pos}" name="cntcPos"/></td>
+    <td><input type="text" title="" placeholder="Job Position" class="w100p"  value="${detailcontact.pos}" name="cntcPos" maxlength="50"/></td>
 </tr>
 <tr>
     <th scope="row">Ext No.</th>
-    <td><input type="text" title="" placeholder="Extension Number" class="w100p"  value="${detailcontact.ext}" id="cntcExtNo" name="cntcExpno"/></td>
+    <td><input type="text" title="" placeholder="Extension Number" class="w100p"  value="${detailcontact.ext}" id="cntcExtNo" name="cntcExpno" maxlength="50"/></td>
     <th scope="row">Email</th>
-    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.email}" id="cntcEmail" name="cntcEmail"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" value="${detailcontact.email}" id="cntcEmail" name="cntcEmail" maxlength="70"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

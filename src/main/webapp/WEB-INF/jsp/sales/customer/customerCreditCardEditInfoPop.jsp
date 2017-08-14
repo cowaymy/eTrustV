@@ -254,7 +254,7 @@
 </tr>
 <tr>
     <th scope="row">Name On Card<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcard.custCrcOwner}" maxlength="70" name="custCrcOwner" id="custCrcOwner"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcard.custCrcOwner}" maxlength="70" name="custCrcOwner" id="custCrcOwner" /></td>
     <th scope="row">Card Type<span class="must">*</span></th>
     <td><select class="w100p" id="cmbCardTypeId" name="cardTypeId"></select></td>
 </tr>
