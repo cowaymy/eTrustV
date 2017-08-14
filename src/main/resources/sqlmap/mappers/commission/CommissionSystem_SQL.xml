@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.commission.system.impl.CommissionSystemMapper">
 
-	<resultMap id="clobMap" type="EgovMap">
+<!-- 	<resultMap id="EgovMap" type="EgovMap">
 		<result property="cdDs" column="cdDs" jdbcType="CLOB" javaType="java.lang.String" />
 		<result property="orgDs" column="orgds" jdbcType="CLOB" javaType="java.lang.String" />
-	</resultMap>
+	</resultMap> -->
 
 	<!-- searchOrganization Gruop List -->
-	<select id="selectOrgGrList" parameterType="Map" resultMap="clobMap">
+	<select id="selectOrgGrList" parameterType="Map" resultType="EgovMap">
 	   <![CDATA[
 		SELECT
 		T2.CODE_MASTER_ID AS mstId ,
@@ -32,7 +32,7 @@
 	</select>
 
 	<!-- search Organization List -->
-	<select id="selectOrgList" parameterType="Map" resultMap="clobMap">
+	<select id="selectOrgList" parameterType="Map" resultType="EgovMap">
     <![CDATA[
         SELECT
             T2.CODE_MASTER_ID AS mstId ,
@@ -55,7 +55,7 @@
 	</select>
 
 	<!-- search rule book management List -->
-	<select id="selectRuleBookOrgMngList" parameterType="Map" resultMap="clobMap">
+	<select id="selectRuleBookOrgMngList" parameterType="Map" resultType="EgovMap">
     <![CDATA[   
          SELECT
           ORG_GR_CD,
@@ -122,7 +122,7 @@
 	</insert>
 
 	<!-- search coommission rule book checking data -->
-	<select id="selectRuleBookMngChk" parameterType="Map" resultMap="clobMap">
+	<select id="selectRuleBookMngChk" parameterType="Map" resultType="EgovMap">
     <![CDATA[   
          SELECT
           ORG_GR_CD,
@@ -160,7 +160,7 @@
 	</delete>
 
 	<!-- searchOrganization Gruop Code All List -->
-	<select id="selectOrgGrCdListAll" parameterType="Map" resultMap="clobMap">
+	<select id="selectOrgGrCdListAll" parameterType="Map" resultType="EgovMap">
 	<![CDATA[
 		SELECT
 		ORG_GR_CD ,
@@ -181,7 +181,7 @@
 	</select>
 
 	<!-- searchOrganization Gruop Code All List -->
-	<select id="selectOrgCdListAll" parameterType="Map" resultMap="clobMap">
+	<select id="selectOrgCdListAll" parameterType="Map" resultType="EgovMap">
   <![CDATA[
     SELECT
     ORG_CD ,
@@ -200,7 +200,7 @@
 	</select>
 
 	<!-- search Organization Code List -->
-	<select id="selectOrgCdList" parameterType="Map" resultMap="clobMap">
+	<select id="selectOrgCdList" parameterType="Map" resultType="EgovMap">
     <![CDATA[
     SELECT
          T1.ORG_SEQ , 
@@ -220,7 +220,7 @@
 
 
 	<!-- search Organization Item List -->
-	<select id="selectOrgItemList" parameterType="Map" resultMap="clobMap">
+	<select id="selectOrgItemList" parameterType="Map" resultType="EgovMap">
     <![CDATA[
     SELECT
         T1.CODE_MASTER_ID , 
@@ -244,7 +244,7 @@
 
 
 	<!-- search rule book Item management List -->
-	<select id="selectRuleBookItemMngList" parameterType="Map" resultMap="clobMap">
+	<select id="selectRuleBookItemMngList" parameterType="Map" resultType="EgovMap">
         <![CDATA[   
 		SELECT
 		    T1.ITEM_SEQ, 
@@ -293,7 +293,7 @@
 	</select>
 
 	<!-- search coommission rule book Item checking data -->
-	<select id="selectRuleBookItemMngChk" parameterType="Map" resultMap="clobMap">
+	<select id="selectRuleBookItemMngChk" parameterType="Map" resultType="EgovMap">
     <![CDATA[   
          SELECT
           ITEM_SEQ,
@@ -375,7 +375,7 @@
 	</update>
 
   <!-- search coommission rule  checking data -->
-  <select id="selectRuleMngChk" parameterType="Map" resultMap="clobMap">
+  <select id="selectRuleMngChk" parameterType="Map" resultType="EgovMap">
     <![CDATA[   
          SELECT
           RULE_SEQ,
@@ -451,7 +451,7 @@
   </update>
   
   <!-- search rule book mng list-->
-  <select id="selectRuleBookMngList" parameterType="Map" resultMap="clobMap">
+  <select id="selectRuleBookMngList" parameterType="Map" resultType="EgovMap">
         <![CDATA[   
      SELECT
         T1.ITEM_SEQ, 
@@ -525,7 +525,7 @@
     
   </select>
   
-  <select id="callCommProcedure" parameterType="Map"  statementType="CALLABLE" resultMap="clobMap">
+  <select id="callCommProcedure" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
         {
         call  ${procedureNm}(${taskId},TO_CHAR(TO_DATE(#{searchDt},'MM/YYYY'),'YYYY-MM'),${loginId},#{v_result,mode=OUT,jdbcType=VARCHAR}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
         }
