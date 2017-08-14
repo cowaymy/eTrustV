@@ -4,7 +4,7 @@
 	namespace="com.coway.trust.biz.organization.impl.MemberListMapper">
 
 	<!-- searchOrganization Gruop List -->
-	<select id="nationality" parameterType="Map" resultMap="clobMap">
+	<select id="nationality" parameterType="Map" resultType="egovMap">
 		SELECT 
 		Extent1.CNTY_ID CountryID, 
 		Extent1.CODE Code, 
@@ -18,7 +18,7 @@
 		ORDER BY Extent1.NAME ASC
 	</select>
 	
-	<select id="selectStatus" parameterType="Map" resultMap="clobMap">
+	<select id="selectStatus" parameterType="Map" resultType="egovMap">
         SELECT 
 		Distinct1.StatusCodeID StatusCodeID, 
 		Distinct1.Code Code, 
@@ -32,7 +32,7 @@
     )  Distinct1
     </select>
     
-    <select id="selectUserBranch" parameterType="Map" resultMap="clobMap">
+    <select id="selectUserBranch" parameterType="Map" resultType="egovMap">
         SELECT 
 		Project1.BranchID AS BranchID, 
 		Project1.C1 C1
@@ -45,7 +45,7 @@
         ORDER BY Project1.C1 ASC
     </select>
     
-     <select id="selectUser" parameterType="Map" resultMap="clobMap">
+     <select id="selectUser" parameterType="Map" resultType="egovMap">
         <![CDATA[
         SELECT 
 		 Extent1 . USER_ID   UserID , 
@@ -73,7 +73,7 @@
 		 Extent1 . USER_MOBILE_NO   UserMobileNo , 
 		 Extent1 . USER_EXT_NO   UserExtNo , 
 		 Extent1 . USER_IS_PART_TM   UserIsPartTime , 
-		 Extent1 . USERDEPARTMENTID   UserDepartmentID , 
+		 Extent1 . USER_DEPT_ID   UserDepartmentID , 
 		 Extent1 . USER_IS_EXTRNL   UserIsExternal 
 		FROM SYS0047M  Extent1 
 		WHERE (1 =  Extent1 . USER_STUS_ID ) AND (1 <>  Extent1 . USER_TYPE_ID ) AND (2 <>  Extent1 . USER_TYPE_ID ) AND (3 <>  Extent1 . USER_TYPE_ID )
@@ -81,7 +81,7 @@
 		]]>
     </select>
     
-    <select id="selectMemberList" parameterType="Map" resultMap="clobMap">
+    <select id="selectMemberList" parameterType="Map" resultType="egovMap">
         <![CDATA[
 	       SELECT row_number,
 			Project1.MEM_ID MemberID, 
@@ -223,7 +223,7 @@
     </resultMap>
     
     
-    <select id="selectMemberListView" parameterType="Map" resultMap="clobMap">
+    <select id="selectMemberListView" parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT Limit1.MEM_ID MEM_ID  ,
        Limit1.ADDR1 ADDR1  ,
@@ -713,7 +713,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         <result property="REM" column="REM" jdbcType="CLOB"  javaType="java.lang.String" />
     </resultMap>
     
-    <select id="selectPromote" parameterType="Map" resultMap="clobMap1">
+    <select id="selectPromote" parameterType="Map" resultType="egovMap">
             <![CDATA[
                  SELECT 
                  Extent1.PROMO_ID PROMO_ID, 
@@ -738,7 +738,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                   ]]>
     </select>
     
-    <select id="selectDocSubmission" parameterType="Map" resultMap="clobMap">
+    <select id="selectDocSubmission" parameterType="Map" resultType="egovMap">
                     SELECT Project1.DOC_TYPE_ID DOC_TYPE_ID  ,
 			       Project1.CODE_NAME CODE_NAME  ,
 			       Project1.DOC_COPY_QTY DOC_COPY_QTY  
@@ -754,8 +754,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </select>
     
     
-    <select id="selectPaymentHistory" parameterType="Map" resultMap="clobMap">
-                    SELECT Project1.MEM_ID MEM_ID  ,
+    <select id="selectPaymentHistory" parameterType="Map" resultType="egovMap">
+           SELECT Project1.MEM_ID MEM_ID  ,
 			       Project1.OR_NO OR_NO  ,
 			       Project1.C1 C1  ,
 			       Project1.BILL_NO BILL_NO  ,
@@ -790,7 +790,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     
     
     
-    <select id="selectRenewalHistory" parameterType="Map" resultMap="clobMap">
+    <select id="selectRenewalHistory" parameterType="Map" resultType="egovMap">
              SELECT Project1.AG_ID AG_ID  ,
 			       Project1.C1 C1  ,
 			       Project1.C2 C2  ,
@@ -815,7 +815,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         <result property="CODE_NAME" column="CODE_NAME" jdbcType="CLOB"  javaType="java.lang.String" />
     </resultMap>
     
-    <select id="selectDocSubmission2" parameterType="Map" resultMap="clobMap2">
+    <select id="selectDocSubmission2" parameterType="Map" resultType="egovMap">
     <![CDATA[
             SELECT Project1.TYPE_DT_SEQ TYPE_DT_SEQ  ,
 		       Project1.TYPE_ID TYPE_ID  ,
@@ -846,7 +846,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		    ]]>
     </select>
     
-    <select id="selectIssuedBank" parameterType="Map" resultMap="clobMap">
+    <select id="selectIssuedBank" parameterType="Map" resultType="egovMap">
 		   SELECT Project1.BANK_ID BANK_ID  ,
 		       Project1.C1 C1  
 		  FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
@@ -860,7 +860,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  ORDER BY Project1.CODE ASC
     </select>
     
-     <select id="selectApplicantConfirm" parameterType="Map" resultMap="clobMap">
+     <select id="selectApplicantConfirm" parameterType="Map" resultType="egovMap">
      <![CDATA[
            SELECT Limit1.CNFM_DT CNFM_DT  
 		  FROM ( SELECT TO_CHAR(Extent2.CNFM_DT,'YYYY-MM-DD') CNFM_DT  
@@ -871,7 +871,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		]]>
     </select>
     
-    <select id="selectCodyPAExpired" parameterType="Map" resultMap="clobMap">
+    <select id="selectCodyPAExpired" parameterType="Map" resultType="egovMap">
      <![CDATA[
           SELECT Extent1.AG_EXPR_DT AG_EXPR_DT  
 		  FROM ORG0002D Extent1
@@ -881,12 +881,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </select>
     
     
-    <select id="selectDocNo" parameterType="String" resultMap="clobMap">
+    <select id="selectDocNo" parameterType="String" resultType="egovMap">
      <![CDATA[
 		 SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
 		       CASE 
 		            WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
-		       ELSE''
+		       ELSE ''
 		          END C1  ,
 		       CASE 
 		            WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
@@ -899,15 +899,16 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     
      <update id="updateDocNo" parameterType="Map">
      <![CDATA[
-        UPDATE DocNo
-         SET DocNo = (select max(doc_no)+1 from SYS0022C)
-           WHERE  ( DocNoID = #{docNoId} )
+        UPDATE SYS0022C
+         SET DOC_NO = #{nextDocNo}
+           WHERE  ( DOC_NO_ID = #{docNoId} )
         ]]>
     </update>
     
      <insert id="insertMember" parameterType="Map">
         INSERT INTO ORG0001D
-        ( MEM_CODE
+        ( MEM_ID 
+        , MEM_CODE
         , MEM_TYPE
         , NAME
         , FULL_NAME
@@ -961,14 +962,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , APLICNT_ID
         , BIZ_TYPE
         , HSPTLZ )
-            VALUES ( 
-            #{memCode}
+            VALUES (
+             (SELECT MAX(MEM_ID)+1 FROM ORG0001D )
+            , #{memberCode}
             , #{memberType}
             , #{memberNm}
             , #{fulllName}
             , #{password}
             , #{nric}
-            , #{birth}
+            , TO_CHAR(TO_DATE(#{birth},'YYYY-MM-DD'),'YYYY-MM-DD')
             , #{gender}
             , #{race}
             , #{marital}
@@ -1008,18 +1010,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{transportCd}
             , #{promoteDate}
             , #{trNo}
-            , #{created}
-            , 52366
-            , #{updated}
-            , 52366
+            , SYSDATE
+            , #{creator}
+            , SYSDATE
+            , #{updator}
             , #{memIsOutSource}
             , #{applicantID}
             , #{BusinessesType}
-            , #{Hospitalization} )
-              SELECT MEM_ID 
-			  FROM ORG0001D 
-			 WHERE  ROW_CNT > 0
-          AND MEM_ID =(SELECT MAX(MEM_ID)+1 FROM ORG0001D)
+            , #{Hospitalization}
+             )
     </insert>
     
     <select id="selectOranization" parameterType="Map" resultType="egovMap">
@@ -1050,12 +1049,73 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ]]>
     </select>
     
-      <select id="selectMemberId" parameterType="String" resultType="String">
-     <![CDATA[
-         SELECT MAX(MEM_ID)+1 MEMBERID FROM ORG0001D
-        ]]>
+      <select id="selectMemberId" parameterType="Map" resultType="String">
+      
+      <if test="code != null and code == 'mem'">
+          SELECT MAX(MEM_ID) MEMBERID FROM ORG0001D
+      </if>
+      
+      <if test="code != null and code == 'tax'">
+         SELECT MAX(TAX_INVC_ID) TAXINVCID  FROM PAY0031D
+      </if>
+      
+      <if test="code != null and code == 'memApp'">
+         SELECT MAX(TAX_INVC_ID) TAXINVCID  FROM PAY0031D
+      </if>
+
     </select>
     
+    
+    <select id="selectHpDocSubmission" parameterType="Map" resultType="egovMap">
+      <![CDATA[
+        SELECT Project1.CODE_ID CODE_ID  ,
+           Project1.TYPE_ID TYPE_ID  ,
+           Project1.CODE_DESC CODE_NAME  ,
+           Project1.C1 C1  ,
+           Project1.C2 C2  
+        FROM ( SELECT Extent1.CODE_ID CODE_ID  ,
+                    Extent1.CODE_DESC CODE_DESC ,
+                    Extent2.TYPE_ID TYPE_ID  ,
+                    Extent2.TYPE_DT_SEQ TYPE_DT_SEQ  ,
+                    0 C1  ,
+                    CASE 
+                         WHEN ( 252 = Extent1.CODE_ID ) THEN UTILS.CONVERT_TO_NUMBER(1,1,0)
+                    ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+                       END C2  
+             FROM SYS0013M Extent1
+                    JOIN ORG0013C Extent2   ON Extent1.CODE_ID = Extent2.TYPE_ID
+              WHERE  ( Extent2.TYPE_CODE_ID = 247 )
+                       AND ( 1 = Extent2.STUS_ID )
+                       AND ( Extent2.TYPE_GRP_ID = 247 ) ) Project1
+           ORDER BY Project1.TYPE_DT_SEQ
+               ]]>
+  </select>
+  
+   
+  <select id="selectCodyDocSubmission" parameterType="Map" resultType="egovMap">
+		        SELECT Project1.CODE_ID CODE_ID  ,
+		       Project1.TYPE_ID TYPE_ID  ,
+		       Project1.CODE_DESC CODE_NAME,
+		       Project1.C1 C1  ,
+		       Project1.C2 C2  
+		  FROM ( SELECT Extent1.CODE_ID CODE_ID  ,
+		                Extent1.CODE_DESC CODE_DESC,
+		                Extent2.TYPE_ID TYPE_ID  ,
+		                Extent2.TYPE_DT_SEQ TYPE_DT_SEQ  ,
+		                0 C1  ,
+		                CASE 
+		                     WHEN ( 252 = Extent1.CODE_ID ) THEN UTILS.CONVERT_TO_NUMBER(1,1,0)
+		                ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+		                   END C2  
+		         FROM SYS0013M Extent1
+		                JOIN ORG0013C Extent2   ON Extent1.CODE_ID = Extent2.TYPE_ID
+		          WHERE  ( Extent2.TYPE_CODE_ID = 1417 )
+		                   AND ( 1 = Extent2.STUS_ID )
+		                   AND ( Extent2.TYPE_GRP_ID = 1417 ) ) Project1
+		  ORDER BY Project1.TYPE_DT_SEQ ASC
+
+  </select>
+  
     <insert id="insertOrganization" parameterType="Map">
     INSERT INTO ORG0005D
         ( MEM_ID
@@ -1084,7 +1144,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
            , #{memberLvl}
            , #{deptCode}
            , #{orgUpdateBy}
-           , #{orgUpdateAt}
+           , SYSDATE
            , #{prevDeptCode}
            , #{prevGroupCode}
            , #{prevMemberUpId}
@@ -1103,7 +1163,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
   
   <insert id="insertAccBill" parameterType="Map">
     INSERT INTO PAY0007D
-        ( BILL_TYPE_ID
+        ( BILL_ID
+        , BILL_TYPE_ID
         , BILL_SO_ID
         , BILL_MEM_ID
         , BILL_AS_ID
@@ -1120,33 +1181,32 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , SYNC_CHK
         , COURS_ID
         , STUS_ID )
-          VALUES 
-          ( #{billTypeId}
+          VALUES (
+          (select max(bill_id)+1 from PAY0007D)
+          , #{billTypeId}
           , #{billSOID}
           , #{billMemId}
           , #{billASID}
           , #{billPayTypeId}
-          , #{memberCode}
+          , #{billINo}
           , #{billMemberShipNo}
-          , #{billDate}
+          , SYSDATE
           , #{billAmt}
           , #{billRemark}
           , #{billIsPaid}
           , #{billIsComm}
           , #{updator}
-          , #{updated}
+          , SYSDATE
           , #{syncCheck}
           , #{courseId}
-          , #{statusId})
-		  SELECT BILL_ID 
-		  FROM PAY0007D 
-		 WHERE  ROW_CNT > 0
-		          AND BILL_ID = select max(bill_id)+1 from PAY0007D
+          , #{statusId}
+		 )
   </insert>
   
   <insert id="insertAccOrderBill" parameterType="Map">
 	   INSERT INTO PAY0016D
-	         ( ACC_BILL_TASK_ID
+	         ( ACC_BILL_ID
+	         , ACC_BILL_TASK_ID
 	         , ACC_BILL_REF_DT
 	         , ACC_BILL_REF_NO
 	         , ACC_BILL_ORD_ID
@@ -1170,8 +1230,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	         , ACC_BILL_ACCT_CNVR
 	         , ACC_BILL_CNTRCT_ID )
 	           VALUES ( 
-	           #{accBillTaskId}
-	           , #{accBillRefDate}
+	           (SELECT MAX(ACC_BILL_ID)+1 FROM PAY0016D )
+	           , #{accBillTaskId}
+	           , SYSDATE
 	           , #{accBillRefNo}
 	           , #{accBillOrderId}
 	           , #{accBillOrderNo}
@@ -1186,23 +1247,16 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	           , #{accBillNetAmount}
 	           , #{accBillStatus}
 	           , #{accBillRemark}
-	           , #{accBillCreateAt}
+	           , SYSDATE
 	           , #{accBillCreateBy}
 	           , #{accBillGroupId}
 	           , #{accBillTaxCodeId}
 	           , #{accBillTaxRate}
 	           , #{accBillAcctConversion}
-	           , #{accBillContractId} )
+	           , #{accBillContractId} 
+	          )
   </insert>
-  
-  <update id="updateDocNoNumber" parameterType="Map">
-     <![CDATA[
-        UPDATE DocNo
-         SET DocNo = (select max(doc_no)+1 from SYS0022C)
-           WHERE  ( DocNoID = #{docNoId} )
-        ]]>
-    </update>
-    
+ 
     <select id="selectMiscList" parameterType="Map" resultType="egovMap">
      <![CDATA[
 		  SELECT Extent1.MEM_ID MEM_ID  ,
@@ -1227,7 +1281,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     
       <insert id="insertInvMISC" parameterType="Map">
 		    INSERT INTO PAY0031D
-		  ( TAX_INVC_REF_NO
+		  ( TAX_INVC_ID
+		  , TAX_INVC_REF_NO
 		  , TAX_INVC_REF_DT
 		  , TAX_INVC_SVC_NO
 		  , TAX_INVC_TYPE
@@ -1248,8 +1303,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  , TAX_INVC_CRT_DT
 		  , TAX_INVC_CRT_USER_ID )
 		  VALUES ( 
-		  #{taxInvoiceRefNo}
-		  , #{taxInvoiceRefDate}
+		  (select MAX(TAX_INVC_ID)+1 from PAY0031D)
+		  , #{taxInvoiceRefNo}
+		  , SYSDATE
 		  , #{taxInvoiceServiceNo}
 		  , #{taxInvoiceType}
 		  , #{taxInvoiceCustName}
@@ -1266,17 +1322,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  , #{taxInvoiceCharges}
 		  , #{taxInvoiceTaxes}
 		  , #{taxInvoiceAmountDue}
-		  , #{taxInvoiceCreated}
-		  , #{taxInvoiceCreated} )
-		  SELECT TAX_INVC_ID 
-		  FROM PAY0031D 
-		  WHERE ROW_CNT > 0
-		          AND TAX_INVC_ID = (select MAX(TAX_INVC_ID)+1 from PAY0031D)
-		          AND TAX_INVC_REF_NO = BR6400024460;
+		  , SYSDATE
+		  , #{taxInvoiceCreator}
+		  )
       </insert>
       <insert id="insertInvMISCD" parameterType="Map">
 	      INSERT INTO PAY0032D
-	         ( TAX_INVC_ID
+	         ( INVC_ITM_ID
+	         , TAX_INVC_ID
 	         , INVC_ITM_TYPE
 	         , INVC_ITM_ORD_NO
 	         , INVC_ITM_PO_NO
@@ -1301,8 +1354,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	         , INVC_ITM_INSTALL_DT
 	         , INVC_ITM_RETN_DT
 	         , INVC_ITM_BILL_REF_NO )
-	           VALUES 
-	           ( #{taxInvoiceID}
+	           VALUES (
+	            (select max(INVC_ITM_ID)+1 from PAY0032D)
+	           , #{taxInvoiceID}
 	           , #{invoiceItemType}
 	           , #{invoiceItemOrderNo}
 	           , #{invoiceItemPONo}
@@ -1327,22 +1381,20 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	           , NULL
 	           , NULL
 	           , NULL )
-	           SELECT INVC_ITM_ID 
-			  FROM PAY0032D 
-			 WHERE  ROW_CNT > 0
-			          AND INVC_ITM_ID = (select max(INVC_ITM_ID) from PAY0032D)
+
 	  </insert>
 	  
 	  <update id="updateBillRem" parameterType="Map">
 	  UPDATE PAY0016D
 	   SET ACC_BILL_REM = #{accBillRemark}
-	 WHERE  ( ( ACC_BILL_ID = 19583523 )
-	  AND ( ACC_BILL_TASK_ID = 0 ) );
+	 WHERE  ( ( ACC_BILL_ID = (SELECT MAX(ACC_BILL_ID) FROM PAY0016D ))
+	  AND ( ACC_BILL_TASK_ID = #{accBillTaskId} ) )
 	  </update>
 	  
 	  <insert id="insertUser" parameterType="Map">
-	  INSERT INTO USER
-        ( USER_NAME
+	  INSERT INTO SYS0047M
+        ( USER_ID
+        , USER_NAME
         , USER_PASSWD
         , USER_FULL_NAME
         , USER_EMAIL
@@ -1366,10 +1418,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , USER_MOBILE_NO
         , USER_EXT_NO
         , USER_IS_PART_TM
-        , USER_DEPT_ID
-        , USER_IS_EXTRNL )
-         VALUES
-          ( #{userName}
+        , USER_DEPT_ID1
+        , USER_IS_EXTRNL
+         )
+         VALUES (
+           (SELECT MAX(USER_ID)+1 FROM SYS0047M)
+          , #{userName}
           , #{password}
           , #{userFullName}
           , #{userEmail}
@@ -1377,12 +1431,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           , #{userBranchID}
           , #{userDeptID}
           , #{userUpdateBy}
-          , #{userUpdateAt}
+          , SYSDATE
           , #{userSyncCheck}
           , #{userNRIC}
-          , #{userDateJoin}
+          , TO_DATE(#{userDateJoin}, 'dd-mm-yyyy')
           , #{userGsecSynCheck}
-          , #{userPasswdLastUpdateAt}
+          , SYSDATE
           , #{userTypeID}
           , #{userDefaultPasswd}
           , #{userValidFrom}
@@ -1394,12 +1448,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           , #{userExtNo}
           , #{userIsPartTime}
           , #{userDepartmentID}
-          , #{userIsExternal} )
-          SELECT USER_ID 
-		  FROM USER_ 
-		 WHERE  V_ROWCOUNT > 0
-          AND USER_ID = (SELECT MAX(USER_ID) FROM USER)
+          , #{userIsExternal} 
+          )
         </insert>
+        
         <insert id="insertRoleUser" parameterType="Map">
         INSERT INTO SYS0045M
             ( ROLE_ID
@@ -1414,10 +1466,183 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ( #{roleID}
         , #{userID}
         , #{statusID}
-        , #{createdAt}
+        , SYSDATE
         , #{createdBy}
-        , #{updatedAt}
+        , SYSDATE
         , #{updatedBy}
         )
+  </insert>
+  <insert id="insertMemApp" parameterType="Map">
+	  INSERT INTO ORG0003D (
+	     APLCTN_ID
+	   , APLICNT_CODE
+	   , APLICNT_TYPE
+	   , APLICNT_NAME
+	   , APLICNT_FULL_NAME
+	   , APLICNT_IDNTFC
+	   , APLICNT_NRIC
+	   , APLICNT_DOB
+	   , APLICNT_GENDER
+	   , APLICNT_RACE
+	   , APLICNT_MARTL
+	   , APLICNT_NATION
+	   , APLICNT_ADD1
+	   , APLICNT_ADD2
+	   , APLICNT_ADD3
+	   , APLICNT_ADD4
+	   , APLICNT_AREAL_D
+	   , APLICNT_POST_CODE_ID
+	   , APLICNT_STATE_ID
+	   , APLICNT_CNTY_ID
+	   , APLICNT_TEL_OFFICE
+	   , APLICNT_TEL_HUSE
+	   , APLICNT_TEL_MOBILE
+	   , APLICNT_EMAIL
+	   , APLICNT_SPOUSE_CODE
+	   , APLICNT_SPOUSE_NAME
+	   , APLICNT_SPOUSE_NRIC
+	   , APLICNT_SPOUSE_OCPAT
+	   , APLICNT_SPOUSE_TEL_CNTC
+	   , APLICNT_SPOUSE_DOB
+	   , APLICNT_EDU_LEV
+	   , APLICNT_LANG
+	   , APLICNT_BANK_ID
+	   , APLICNT_BANK_ACC_NO
+	   , APLICNT_SPONS_CODE
+	   , APLICNT_TRNSPRT
+	   , REM, STUS_ID
+	   , CRT_DT
+	   , CRT_USER_ID
+	   , UPD_DT
+	   , UPD_USER_ID
+	   , CNFM
+	   , CNFM_DT
+	   , DEPT_CODE 
+	   )
+	  VALUES ( 
+	  (SELECT MAX(APLCTN_ID)+1 FROM ORG0003D)
+	  , #{applicantCode}
+	  , #{applicantType}
+	  , #{applicantName}
+	  , #{applicantFullName}
+	  , #{applicantIdentification}
+	  , #{applicantNRIC}
+	  , #{applicantDOB}
+	  , #{applicantGender}
+	  , #{applicantRace}
+	  , #{applicantMarital}
+	  , #{applicantNationality}
+	  , #{applicantAdd1}
+	  , #{applicantAdd2}
+	  , #{applicantAdd3}
+	  , #{applicantAdd4}
+	  , #{applicantAreald}
+	  , #{applicantPostCodeId}
+	  , #{applicantStateId}
+	  , #{applicantCountryId}
+	  , #{applicantTelOffice}
+	  , #{applicantTelHouse}
+	  , #{applicantTelMobile}
+	  , #{applicantEmail}
+	  , #{applicantSpouseCode}
+	  , #{applicantSpouseName}
+	  , #{applicantSpouseNRIC}
+	  , #{applicantSpouseOccupation}
+	  , #{applicantSpouseTelContact}
+	  , #{applicantSpouseDOB}
+	  , #{applicantEduLevel}
+	  , #{applicantLanguage}
+	  , #{applicantBankID}
+	  , #{applicantBankAccNo}
+	  , #{applicantSponsorCode}
+	  , #{applicantTransport}
+	  , #{remark}
+	  , #{statusId}
+	  , SYSDATE
+	  , 52366
+	  , SYSDATE
+	  , 52366
+	  , #{confirmation}
+	  , #{confirmDate}
+	  , #{deptCode}
+	  )
+  </insert>
+  <insert id="insertMemberAgr" parameterType="Map">
+	  INSERT INTO ORG0002D (
+	     AG_ID
+	   , AG_REF_NO
+	   , MEM_ID
+	   , AG_TYPE_ID
+	   , AG_STUS_ID
+	   , AG_REM
+	   , AG_START_DT
+	   , AG_EXPR_DT
+	   , AG_CRT_USER_ID
+	   , AG_CRT_DT
+	   , AG_UPD_USER_ID
+	   , AG_UPD_DT )
+	  VALUES (
+	  (SELECT MAX(AG_ID)+1 FROM ORG0002D)
+	   , #{agreementRefNo}
+	   , #{memberID}
+	   , #{agreementTypeID}
+	   , #{agreementStatusID}
+	   , #{agreementRemark}
+	   , #{agreementStartDate}
+	   , #{agreementExpiryDate}
+	   , #{agreementCreator}
+	   , SYSDATE
+	   , NULL
+	   , NULL )
+  </insert>
+   <insert id="insertinvWH" parameterType="Map">
+	  INSERT INTO SYS0028M (
+	     WH_LOC_ID
+	   , WH_LOC_CODE
+	   , WH_LOC_DESC
+	   , WH_LOC_ADD1
+	   , WH_LOC_ADD2
+	   , WH_LOC_ADD3
+	   , WH_LOC_AREA_ID
+	   , WH_LOC_POST_CODE_ID
+	   , WH_LOC_STATE_ID
+	   , WH_LOC_CNTY_ID
+	   , WH_LOC_TEL1
+	   , WH_LOC_TEL2
+	   , WH_LOC_BRNCH_ID
+	   , WH_LOC_TYPE_ID
+	   , WH_LOC_STK_GRAD
+	   , WH_LOC_STUS_ID
+	   , WH_LOC_UPD_USER_ID
+	   , WH_LOC_UPD_DT
+	   , CODE2
+	   , DESC2
+	   , WH_LOC_IS_SYNC
+	   , WH_LOC_MOBILE 
+	   )
+	  VALUES ( 
+	  (SELECT MAX(WH_LOC_ID)+1 FROM SYS0028M)
+	  , #{WHLocCode}
+	  , #{WHLocDesc}
+	  , #{WHLocAdd1}
+	  , #{WHLocAdd2}
+	  , #{WHLocAdd3}
+	  , #{WHLocAreaId}
+	  , #{WHLocPostcodeID}
+	  , #{WHLocStateID}
+	  , #{WHLocCountryID}
+	  , #{WHLocTel1}
+	  , #{WHLocTel2}
+	  , #{WHLocBranchID}
+	  , #{WHLocTypeID}
+	  , #{WHLocStkGrade}
+	  , #{WHLocStatusID}
+	  , 52366
+	  , SYSDATE
+	  , #{Code2}
+	  , #{Desc2}
+	  , #{WHLocIsSync}
+	  , 0 
+	  )
   </insert>
 </mapper>
