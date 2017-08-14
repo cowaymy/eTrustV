@@ -20,5 +20,7 @@ public class CommissionConstants {
 	public static final String COMIS_CD = "CD";					//Coway Lady
 	public static final String COMIS_CT = "CT";					//Coway Technician
 	public static final String COMIS_END_DT = "999999";		//Default end date
+	public static final String COMIS_SUCCESS = "0";				//Default end success
+	public static final String COMIS_FAIL = "9";					//Default end fail
 
 }

@@ -57,7 +57,7 @@ public class CommissionCalculationController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@Autowired
 	private SessionHandler sessionHandler;
 
@@ -71,12 +71,12 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/runCommissionMng.do")
 	public String runCommissionMng(@RequestParam Map<String, Object> params, ModelMap model) {
-	
+
 		List<EgovMap> orgGrList = commissionCalculationService.selectOrgGrCdListAll(params);
-		model.addAttribute("orgGrList", orgGrList);		
-		
+		model.addAttribute("orgGrList", orgGrList);
+
 		List<EgovMap> orgList = commissionCalculationService.selectOrgCdListAll(params);
-		
+
 		String dt = CommonUtils.getNowDate().substring(0, 6);
 		dt = dt.substring(4) + "/" + dt.substring(0, 4);
 
@@ -86,9 +86,9 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/commissionCalculationMng";
 	}
-	
+
 	/**
-	 *  Organization Ajax Search 
+	 * Organization Ajax Search
 	 *
 	 * @param request
 	 * @param model
@@ -96,60 +96,78 @@ public class CommissionCalculationController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectOrgCdListAll", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrgCdListAll(@RequestParam Map<String, Object> params, ModelMap model) {		
-		
+	public ResponseEntity<List<EgovMap>> selectOrgCdListAll(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		// 조회.
 		List<EgovMap> orgList = commissionCalculationService.selectOrgCdListAll(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(orgList);
 	}
-	
+
 	@RequestMapping(value = "/selectOrgProList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrgProList( @RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {		
-		params.put("mstId", CommissionConstants.COMIS_PRO_CD);		
+	public ResponseEntity<List<EgovMap>> selectOrgProList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		params.put("mstId", CommissionConstants.COMIS_PRO_CD);
 		// 조회.
 		List<EgovMap> itemList = commissionCalculationService.selectOrgItemList(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(itemList);
 	}
-	
+
 	@RequestMapping(value = "/callCommissionProcedure", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> callCommissionProcedure( @RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {	
-	//public ResponseEntity<ReturnMessage> callCommissionProcedure(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+	public ResponseEntity<ReturnMessage> callCommissionProcedure(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		// public ResponseEntity<ReturnMessage> callCommissionProcedure(@RequestBody Map<String, ArrayList<Object>>
+		// params, Model model) {
 		EgovMap item = new EgovMap();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		String loginId = "";
-		if(sessionVO==null){
-			loginId="1000000000";			
-		}else{
-			loginId=String.valueOf(sessionVO.getUserId());
+		if (sessionVO == null) {
+			loginId = "1000000000";
+		} else {
+			loginId = String.valueOf(sessionVO.getUserId());
 		}
-		params.put("taskId", "52");
+
+		String dt = String.valueOf(params.get("searchDt"));
+
+		if (dt.trim().equals("")) {
+			dt = CommonUtils.getNowDate().substring(0, 6);
+			params.put("searchDt", dt);
+		} else if (dt.contains("/")) {
+			dt = dt.replaceAll("/", "");
+			dt = dt.substring(2) + dt.substring(0, 2);
+			params.put("searchDt", dt);
+		}
+
+		int pvMonth = Integer.parseInt(dt.substring(4));
+		int pvYear = Integer.parseInt(dt.substring(0,4));
+
+		logger.debug("pvMonth : {}", pvMonth);
+		logger.debug("pvYear : {}", pvYear);
+		
+		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
+
+		params.put("taskId", String.valueOf(sTaskID));
 		params.put("loginId", loginId);
-		
-	
-		
-			item =  (EgovMap) commissionCalculationService.callCommProcedure(params);
-			logger.debug("v_result : {}", params.get("v_result"));
-			
-			if(params.get("v_result").equals("E")){
-				/*
-				 * 1. insert common log 
-				 * 2. set error message  
-				 */
-					
-			}else{
-				/*
-				 * 1. set sucess message 
-				 */
-			}
-	
+
+		item = (EgovMap) commissionCalculationService.callCommProcedure(params);
+		logger.debug("v_result : {}", params.get("v_result"));
+
+		if (params.get("v_result").equals(CommissionConstants.COMIS_FAIL)) {
+			/*
+			 * 1. insert common log 2. set error message
+			 */
+
+		} else {
+			/*
+			 * 1. set sucess message
+			 */
+		}
+
 		// 결과 만들기.
-    	ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
 	}
 
