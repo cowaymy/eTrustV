@@ -202,11 +202,11 @@
 		
     </select>
     <!-- Customer basic Info(Customer View)  -->
-    <resultMap type="egovMap" id="basicClobMap">
+    <!-- <resultMap type="egovMap" id="basicClobMap">
         <result  property="REM" column="REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
+    </resultMap> -->
     
-    <select id="selectCustomerViewBasicInfo" parameterType="Map" resultMap="basicClobMap">
+    <select id="selectCustomerViewBasicInfo" parameterType="Map" resultType="egovMap">
        <![CDATA[
         SELECT 
             Extent1.CUST_ID AS CUST_ID,
@@ -317,10 +317,10 @@
      ]]>
     </select>
     <!-- customer main Contact(Customer View) -->
-    <resultMap type="egovMap" id="mainContactClobMap">
+    <!-- <resultMap type="egovMap" id="mainContactClobMap">
            <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    <select id="selectCustomerViewMainContact" parameterType="Map" resultMap="mainContactClobMap">
+    </resultMap> -->
+    <select id="selectCustomerViewMainContact" parameterType="Map" resultType="egovMap">
         <![CDATA[
 			SELECT Limit1.CUST_CNTC_ID CUST_CNTC_ID  ,
                        Limit1.CUST_ID CUST_ID  ,
@@ -441,11 +441,11 @@
     </select>
     
     <!-- Ajax Call Contact List  -->
-    <resultMap type="EgovMap" id="contactClobMap">
+    <!-- <resultMap type="EgovMap" id="contactClobMap">
         <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>
-    
-    <select id="selectCustomerContactJsonList" parameterType="Map" resultMap="contactClobMap">
+     -->
+    <select id="selectCustomerContactJsonList" parameterType="Map" resultType="egovMap">
         <![CDATA[   
            SELECT Project1.CUST_CNTC_ID CUST_CNTC_ID  ,
                      Project1.CUST_ID CUST_ID  ,
@@ -513,14 +513,14 @@
     </select>
     
     <!-- Ajax Call Bank List  -->
-    <resultMap type="EgovMap" id="bankClobMap">
+    <!-- <resultMap type="EgovMap" id="bankClobMap">
             <result property="CUST_ENCRYPT_ACC_NO" column="CUST_ENCRYPT_ACC_NO" jdbcType="CLOB" javaType="java.lang.String"/> 
             <result property="CUST_ACC_BANK_BRNCH" column="CUST_ACC_BANK_BRNCH" jdbcType="CLOB" javaType="java.lang.String"/>
             <result property="CUST_ACC_OWNER" column="CUST_ACC_OWNER" jdbcType="CLOB" javaType="java.lang.String"/> 
-            <result property="CUST_ACC_REM" column="CUST_ACC_REM" jdbcType="CLOB" javaType="java.lang.String"/><!-- c11 -->
-    </resultMap>
+            <result property="CUST_ACC_REM" column="CUST_ACC_REM" jdbcType="CLOB" javaType="java.lang.String"/>c11
+    </resultMap> -->
     
-    <select id="selectCustomerBankAccJsonList" parameterType="Map" resultMap="bankClobMap">
+    <select id="selectCustomerBankAccJsonList" parameterType="Map" resultType="egovMap">
         <![CDATA[   
         SELECT  Project1.CUST_ACC_ID CUST_ACC_ID  ,
                     Project1.CUST_ID CUST_ID  ,
@@ -593,13 +593,13 @@
     </select>
     
     <!-- Ajax Call Credit Card List  -->
-    <resultMap type="egovMap" id="cardClobMap">
+    <!-- <resultMap type="egovMap" id="cardClobMap">
            <result property="CUST_CRC_NO" column="CUST_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
            <result property="CUST_ORI_CRC_NO" column="CUST_ORI_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
            <result property="CUST_CRC_REM" column="CUST_CRC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
+    </resultMap> -->
     
-    <select id="selectCustomerCreditCardJsonList" parameterType="Map" resultMap="cardClobMap">
+    <select id="selectCustomerCreditCardJsonList" parameterType="Map" resultType="egovMap">
    <![CDATA[   
 		SELECT   Project1.CUST_CRC_ID CUST_CRC_ID  ,
             Project1.custId CUST_ID  ,
@@ -1029,10 +1029,10 @@
     </select>
     <!-- Customer Detail Contact(PopUp View)  -->
     
-    <resultMap type="egovMap" id="detailContactClobMap">
-        <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/> <!-- user_id 밑에 2번 --> <!-- #{custCntcId}  -->
-    </resultMap>
-    <select id="selectCustomerContactDetailViewPop" parameterType="Map" resultMap="detailContactClobMap">
+    <!-- <resultMap type="egovMap" id="detailContactClobMap">
+        <result property="DEPT" column="DEPT" jdbcType="CLOB" javaType="java.lang.String"/> user_id 밑에 2번 #{custCntcId} 
+    </resultMap> -->
+    <select id="selectCustomerContactDetailViewPop" parameterType="Map" resultType="egovMap">
 			 <![CDATA[ 
 			 SELECT Limit1.CUST_CNTC_ID CUST_CNTC_ID  ,
                    Limit1.CUST_ID CUST_ID  ,
@@ -1097,14 +1097,14 @@
 			  ]]>
     </select>
     <!-- Customer Detail Bank(PopUp View)  -->    
-    <resultMap type="egovMap" id="detailBankClobMap">
+    <!-- <resultMap type="egovMap" id="detailBankClobMap">
         <result property="CUST_ACC_REM" column="CUST_ACC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="CUST_ACC_OWNER" column="CUST_ACC_OWNER" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="CUST_ACC_BANK_BRNCH" column="CUST_ACC_BANK_BRNCH" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="CUST_ENCRYPT_ACC_NO" column="CUST_ENCRYPT_ACC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
+    </resultMap> -->
     
-    <select id="selectCustomerBankDetailViewPop" parameterType="Map" resultMap="detailBankClobMap">
+    <select id="selectCustomerBankDetailViewPop" parameterType="Map" resultType="egovMap">
         <![CDATA[ 
 			  SELECT Limit1.CUST_ACC_ID CUST_ACC_ID  ,
                    Limit1.CUST_ID CUST_ID  ,
@@ -1154,12 +1154,12 @@
         ]]>
     </select>
     <!-- Customer Detail Card(PopUp View)  -->
-    <resultMap type="egovMap" id="detailCardClobMap">
+    <!-- <resultMap type="egovMap" id="detailCardClobMap">
         <result property="CUST_CRC_NO" column="CUST_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="CUST_ORI_CRC_NO" column="CUST_ORI_CRC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="CUST_CRC_REM" column="CUST_CRC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    <select id="selectCustomerCreditCardDetailViewPop" parameterType="Map" resultMap="detailCardClobMap">
+    </resultMap> -->
+    <select id="selectCustomerCreditCardDetailViewPop" parameterType="Map" resultType="egovMap">
            <![CDATA[ 
 				SELECT Limit1.CUST_CRC_ID CUST_CRC_ID  ,
 					       Limit1.custId CUST_ID  , 
