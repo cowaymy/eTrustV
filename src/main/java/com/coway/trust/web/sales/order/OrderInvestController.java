@@ -37,6 +37,20 @@ public class OrderInvestController {
 	
 	@RequestMapping(value = "/orderInvestJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> orderInvestJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		
+		logger.debug("!@###### startCrtDt : "+params.get("startCrtDt"));
+		logger.debug("!@###### ::::::::::: : "+params.toString());
+		String stDate = (String)params.get("startCrtDt");
+		if(stDate != null && stDate != ""){
+			String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
+			params.put("startCrtDt", createStDate);
+		}
+		String enDate = (String)params.get("endCrtDt");
+		if(enDate != null && enDate != ""){
+			String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
+			params.put("endCrtDt", createEnDate);
+		}
 		List<EgovMap> orderInvestList = orderInvestService.orderInvestList(params);
 		return ResponseEntity.ok(orderInvestList);
 	}
