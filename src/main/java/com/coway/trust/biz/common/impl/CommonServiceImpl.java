@@ -673,6 +673,6 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	@Override
 	public List<EgovMap> selectProductCodeList(Map<String, Object> params) {
 		// TODO ProductCodeList 호출시 error남 
-		return null;
+		return commonMapper.selectProductCodeList(params);
 	}
 }
