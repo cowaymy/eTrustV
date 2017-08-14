@@ -254,9 +254,8 @@ $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 	}else if($(this).closest('div').attr("autoClose")){
 		// manual close...
 	}else{
-		var thisNum=$(this).parents("#popup_wrap, .popup_wrap").index();
-		
-       var thisPopupWrap=$("#popup_wrap, .popup_wrap").eq(thisNum);
+
+       var thisPopupWrap=$(this).closest("#popup_wrap, .popup_wrap");
         thisPopupWrap.fadeOut();
 	}
 	return false;
