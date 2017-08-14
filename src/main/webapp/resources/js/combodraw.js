@@ -43,6 +43,16 @@ function doGetComboData(url, pdata , selCode, obj , type, callbackFn){
     });
 } ;
 
+
+function doGetComboDataAndMandatory(url, pdata , selCode, obj , type, callbackFn){
+    Common.ajax("GET", url, pdata, function(data) {
+        var rData = data;
+        doDefComboCodeAndMandatory(rData, selCode, obj , type,  callbackFn);
+    }, function(jqXHR, textStatus, errorThrown){
+        Common.alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+    });
+} ;
+
 function doGetCombo(url, groupCd , selCode, obj , type, callbackFn){
 
     $.ajax({
@@ -273,6 +283,36 @@ function doDefComboCode(data, selCode, obj , type, callbackFn){
     if (type&&type!="M") {
         custom = (type == "S") ? eTrusttext.option.choose : ((type == "A") ? eTrusttext.option.all : "");
         $("<option />", {value: "", text: custom}).appendTo(obj);
+    }else{
+        $(obj).attr("multiple","multiple");
+    }
+
+    $.each(data, function(index,value) {
+        //CODEID , CODE , CODENAME ,,description
+        if(selCode==data[index].code){
+            $('<option />', {value : data[index].code, text:data[index].codeName}).appendTo(obj).attr("selected", "true");
+        }else{
+            $('<option />', {value : data[index].code, text:data[index].codeName}).appendTo(obj);
+        }
+    });
+
+
+    if(callbackFn){
+        var strCallback = callbackFn+"()";
+        eval(strCallback);
+    }
+};
+
+function doDefComboCodeAndMandatory(data, selCode, obj , type, callbackFn){
+    var targetObj = document.getElementById(obj);
+    var custom = "";
+
+    for(var i=targetObj.length-1; i>=0; i--) {
+        targetObj.remove( i );
+    }
+    obj= '#'+obj;
+    if (type&&type!="M") {
+
     }else{
         $(obj).attr("multiple","multiple");
     }
