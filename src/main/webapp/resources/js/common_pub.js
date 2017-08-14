@@ -19,7 +19,7 @@ var pickerOpts={//일반년월일달력 세팅
 		// exist holiday?
 		if (holiday) {
 			if(thisYear == holiday.year || holiday.year == "") {
-				result =  [false, "date-holiday", holiday.title];
+				result =  [true, "date-holiday", holiday.title];
 			}
 		}
 
