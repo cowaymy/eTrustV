@@ -47,7 +47,7 @@
     <c:choose>
         <c:when test="${ list.menuLvl == 1}">
         <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-            <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}');">${list.menuName}(LVL : ${list.menuLvl})</a>
+            <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
         </c:when>
         <c:otherwise>
 
@@ -55,11 +55,11 @@
                 <c:when test="${preMenuCode != '' && preMenuLvl < list.menuLvl}">
                 <ul>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                        <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}');">${list.menuName}(LVL : ${list.menuLvl})</a>
+                        <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
                 </c:when>
                 <c:otherwise>
                     <li id="li_${list.menuCode}" upper_menu_code="${list.upperMenuCode}" menu_level="${list.menuLvl}">
-                    <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}');">${list.menuName}(LVL : ${list.menuLvl})</a>
+                    <a id="a_${list.menuCode}" href="javascript:fn_menu('${list.menuCode}', '${list.pgmPath}', '${list.pathName}');">${list.menuName}</a>
                 </c:otherwise>
             </c:choose>
 
@@ -138,6 +138,7 @@
     <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
     <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
     <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
+    <input type="hidden" id="CURRENT_MENU_PATH_NAME" name="CURRENT_MENU_PATH_NAME" value=""/>
 </form>
 
 <script type="text/javaScript">
@@ -200,6 +201,7 @@ function fn_menu(menuCode, menuPath, myMenuGroupCode){
         $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
     }
 
+    $("#CURRENT_MENU_PATH_NAME").val(myMenuGroupCode);
 
     $("#_menuForm").attr({
         action : getContextPath() + menuPath,
