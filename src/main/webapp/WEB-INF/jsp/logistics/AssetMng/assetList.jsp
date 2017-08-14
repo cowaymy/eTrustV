@@ -284,6 +284,9 @@
          
          $("#update").click(function(){
              div="U";
+             $("#Details_info").hide();
+             $("#Insert_info").hide();
+             $("#CopyAssetInfo").hide();
              $("#detailHead").text("AssetMng Information Modification");
              selectedItem = AUIGrid.getSelectedIndex(myGridID);
              if (selectedItem[0] > -1){
