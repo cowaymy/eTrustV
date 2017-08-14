@@ -633,6 +633,18 @@ function saveChanges() {
     });
 }
 
+function fn_officialReceiptReport(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){    
+        var orNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "orNo");        
+        $("#reportPDFForm #v_ORNo").val(orNo);        
+        Common.report("reportPDFForm");
+        
+    }else{
+        Common.alert('No payment selected.');
+   }
+}
 </script>
 
 <!-- content start -->
@@ -777,7 +789,7 @@ function saveChanges() {
                         <li><p class="link_btn"><a href="/payment/initRentalCollectionByBS.do">RC By BS</a></p></li>
                         <li><p class="link_btn"><a href="/payment/initDailyCollection.do">Daily Collection Raw</a></p></li>
                         <li><p class="link_btn"><a href="/payment/initLateSubmission.do">Late Submission Raw</a></p></li>
-                        <li><p class="link_btn"><a href="#">Official Receipt</a></p></li>                       
+                        <li><p class="link_btn"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>                                              
                     </ul>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
@@ -1454,3 +1466,9 @@ function saveChanges() {
     <!-- pop_body end -->
 </div>
 <!-- content end -->
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/PaymentReceipt_New.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="text" id="v_ORNo" name="v_ORNo" />
+</form>
+
