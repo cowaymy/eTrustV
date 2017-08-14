@@ -196,6 +196,7 @@
                  $("#masterWindow").show();
                  $("#Details_info").show();
                  $("#Insert_info").hide();
+                 $("#Update_info").hide();
                  $("#CopyAssetInfo").hide();
             }else{
             Common.alert('Choice Data please..');
@@ -236,7 +237,9 @@
            destory(AddDetailGrid);
            $("#masterWindow").show();
            $("#Details_info").hide();
+           $("#Update_info").hide();
            $("#CopyAssetInfo").hide();
+                    
            AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
           // $("#Insert_info").click();
           });
@@ -249,7 +252,6 @@
          });
          
          $("#Insert_info").click(function(){
-             alert("인서트 인포!!!!!!!");
             $("#add_info_div").show();              
             destory(AddDetailGrid);
             AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
@@ -259,7 +261,6 @@
          
          $("#Details_info").click(function(){
              div="viewitem";
-             alert("디테일 인포!!!!!!!");
              destory(detailGrid);
              $("#DtatilGrid_div_tap").show();  
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -414,7 +415,6 @@
     
      function getDetailAssetListAjax(rowid,div) {
          var assetid=AUIGrid.getCellValue(myGridID ,rowid,'assetid');
-         alert("assetid        :          "+ assetid);
          var param = "?assetid="+assetid; 
          $.ajax({
             type : "POST",
@@ -422,7 +422,6 @@
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
-                alert(div);
                  var gridData = data             
                 console.log(gridData.data);  
                  //f_dtail_info(gridData); 
@@ -732,7 +731,6 @@
      
      
      function doGetComboSelBox(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){      
-             alert("에이작스"+codevalue);
          $.ajax({
              type : "GET",
              url : url,
