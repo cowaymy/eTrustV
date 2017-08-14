@@ -153,7 +153,7 @@
         doDefCombo(comboData, '' ,'searchstatus', 'M', 'f_multiCombo');
         $("#searchstatus option:eq(0)").prop("selected", true);
           
-       doGetCombo('/logistics/assetmng/selectTypeList.do', '1199', 'all','searchtype', 'M' , 'f_multiCombo'); //Type 리스트 조회
+       doGetCombo('/logistics/assetmng/selectTypeList.do', '1199', 'all','searchtype', 'M' , 'f_TypeMultiCombo'); //Type 리스트 조회
              
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','searchdealer', 'S' , '');//dealer 
         doGetCombo('/common/selectCodeList.do', '112', '','searchcolor', 'S' , ''); //Color 리스트 조회
@@ -164,11 +164,8 @@
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 리스트 조회
         doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand 리스트 조회
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','searchbranchid', 'S' , ''); //청구처 리스트 조회
-        
-        
-       doGetCombo('/logistics/assetmng/selectDepartmentList.do', '', 'all','searchdepartment', 'M' , 'f_multiCombo'); //Department 리스트 조회
-       // doDefCombo('', '' ,'searchdepartment', 'M', 'f_multiCombo');
-        
+        doDefCombo('', '' ,'searchdepartment', 'M', 'f_deptmultiCombo');
+                
         
         AUIGrid.bind(myGridID, "cellClick", function( event )  
         {
@@ -262,15 +259,12 @@
          $("#Update_info").click(function(){
              div="upitem"
              //destory(upitemGrid);
-             alert("업데이트 인포!!!!!!!");
              $("#Updadte_div_tap").show();  
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              $("#addassetid").val(AUIGrid.getCellValue(myGridID ,selectedItem[0],'assetid'));
              upitemGrid  = GridCommon.createAUIGrid("#UpDetail_div", updateLayout,"", gridoptions);
              getDetailAssetListAjax(selectedItem[0],div);    
      });
-         
-           
          
       $("#detail_info_add").click(function(){
          $("#detailForm")[0].reset();
@@ -531,7 +525,7 @@
         $('div.SalesWorkDiv').unblock();
         
     }
-    
+//멀티 셀렉트 세팅 함수들    
      function f_multiCombo() {
     	 
          $(function() {
@@ -540,308 +534,335 @@
              }).multipleSelect({
                  selectAll : true, // 전체선택 
                  width : '80%'
-             });
-             $('#searchtype').change(function() {
-
-             }).multipleSelect({
-                 selectAll : true,
-                 width : '80%'
-             }).multipleSelect("disable");      
-            $('#searchdepartment').change(function() {
-                
-             }).multipleSelect({
-                 selectAll : true,
-                 width : '80%'
-             }).multipleSelect("disable");
-          
+             });       
          });
      }
      
-     function fn_setVisiable(div){
-         if(div=="V"){
-               $("#masterstatus").prop('readonly', true);
-               $("#masterbreanch").prop('readonly', true);
-               $("#masterdepartment").prop('readonly', true);
-               $("#masteruser").prop('readonly', true);
-               $("#mastercategory").prop('disabled', true);
-               $("#mastertype").prop('disabled', true);
-               $("#mastermodelname").prop('readonly', true);
-               $("#mastercolor").prop('disabled', true);
-               $("#masterinvoiceno").prop('readonly', true);
-               $("#masterdealer").prop('disabled', true);
-               $("#masterpurchasedate").prop('disabled', true);
-               $("#masterbrand").prop('disabled', true);
-               $("#masterpurchaseamount").prop('readonly', true);
-               $("#masterrefno").prop('readonly', true);
-               $("#masterserialno").prop('readonly', true);
-               $("#masterwarrantyno").prop('readonly', true);
-               $("#mastermacaddress").prop('readonly', true);
-               $("#masterimeino").prop('readonly', true);
-               $("#masterremark").prop('readonly', true);
-               $("#trinserthide1").show(); 
-               $("#trinserthide2").show(); 
-               $("#savePopbtn").hide();
-               $("#updatePopbtn").hide();
-         }else if(div=="U"){
-               $("#masterstatus").prop('readonly', true);
-               $("#masterbreanch").prop('readonly', true);
-               $("#masterdepartment").prop('readonly', true);
-               $("#masteruser").prop('readonly', false);
-               $("#mastercategory").prop('disabled', true);
-               $("#mastertype").prop('disabled', true);
-               $("#mastermodelname").prop('readonly', false);
-               $("#mastercolor").prop('disabled', false);
-               $("#masterinvoiceno").prop('readonly', false);
-               $("#masterdealer").prop('disabled', false);
-               $("#masterpurchasedate").prop('disabled', false);
-               $("#masterbrand").prop('disabled', false);
-               $("#masterpurchaseamount").prop('readonly', false);
-               $("#masterrefno").prop('readonly', false);
-               $("#masterserialno").prop('readonly', false);
-               $("#masterwarrantyno").prop('readonly', false);
-               $("#mastermacaddress").prop('readonly', false);
-               $("#masterimeino").prop('readonly', false);
-               $("#masterremark").prop('readonly', false);
-               $("#trinserthide1").show(); 
-               $("#trinserthide2").show(); 
-               $("#savePopbtn").hide();
-               $("#updatePopbtn").show();
-         }else if(div=="N"){
-             $('#masterForm')[0].reset();
-             $("#trinserthide1").hide(); 
-             $("#trinserthide2").hide();
-             $("#mastercategory").prop('disabled', false);
-             //$("#mastertype").prop('disabled', false);
-             $("#mastermodelname").prop('readonly', false);
-             $("#mastercolor").prop('disabled', false);
-             $("#masterinvoiceno").prop('readonly', false);
-             $("#masterdealer").prop('disabled', false);             
-             $("#masterpurchasedate").prop('disabled', false);       
-             $("#masterbrand").prop('disabled', false);        
-             $("#masterpurchaseamount").prop('readonly', false);
-             $("#masterrefno").prop('readonly', false);            
-             $("#masterserialno").prop('readonly', false);
-             $("#masterwarrantyno").prop('readonly', false);
-             $("#mastermacaddress").prop('readonly', false);
-             $("#masterimeino").prop('readonly', false);
-             $("#masterremark").prop('readonly', false); 
-             $("#savePopbtn").show();
-             $("#updatePopbtn").hide();
-             $("#insertdetail").show();
-             
-             combReset();
-         }
-     }
-     function combReset(){
-           doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S' , '');//brand
-           doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','insdetailBrand', 'S' , '');//detailbrand
-           doGetCombo('/common/selectCodeList.do', '111', '','mastertype', 'S' , ''); //Type 리스트 조회
-           doGetCombo('/common/selectCodeList.do', '112', '','mastercolor', 'S' , ''); //Color 리스트 조회
-           doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S' , '');//dealer 
-}
-     
-     function valiedcheck(){
-         if($("#mastercategory").val() == ""){
-             Common.alert("Please select the category.");
-             $("#mastercategory").focus();
-             return false;
-         }
-         if($("#mastertype").val() == ""){
-             Common.alert("Please select the type.");
-             $("#mastertype").focus();
-             return false;
-         }
-         if($("#mastermodelname").val() == ""){
-             Common.alert("Please key in the model name.");
-             $("#mastermodelname").focus();
-             return false;
-         }
-         if($("#mastercolor").val() == ""){
-             Common.alert("Please select the color.");
-             $("#mastercolor").focus();
-             return false;
-         }
-         if($("#masterinvoiceno").val() == ""){
-             Common.alert("Please key in the invoice.");
-             $("#masterinvoiceno").focus();
-             return false;
-         }
-         if($("#masterdealer").val() == ""){
-             Common.alert("Please select the Dealer.");
-             $("#masterdealer").focus();
-             return false;
-         }
-         if($("#masterpurchasedate").val() == ""){
-             Common.alert("Please select purchase date");
-             $("#masterpurchasedate").focus();
-             return false;
-         }
-         if($("#masterbrand").val() == ""){
-             Common.alert("Please select the brand.");
-             $("#masterbrand").focus();
-             return false;
-         }
-         if($("#masterpurchaseamount").val() == ""){
-             Common.alert("Please key in purchase Amount.");
-             $("#masterpurchaseamount").focus();
-             return false;
-         }      
-         
-         return true;
-     }
-    function detailvaliedcheck(){
-             if($("#insdetailtype").val() == ""){
-                 Common.alert("Please select the details type.");
-                 $("#insdetailtype").focus();
-                 return false;
-             }
-             if($("#insdetailBrand").val() == ""){
-                 Common.alert("Please select the details brand.");
-                 $("#insdetailBrand").focus();
-                 return false;
-             }
-             if($("#insdetailmodel").val() == ""){
-                 Common.alert("Please key in the details model name.");
-                 $("#insdetailmodel").focus();
-                 return false;
-             } 
-      
+	function f_deptmultiCombo() {
 
-          return true;
-     }
-     
-   /*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
-     function getComboRelays(obj , value , tag , selvalue){
-            var robj= '#'+obj;
-            $(robj).attr("disabled",false);
-            
-            if(value == "42"){
-            	doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag , value , selvalue,obj, 'M', ''); //청구처 리스트 조회
-            	   $('#searchdepartment').multipleSelect("enable");
-                   $('#searchdepartment').multipleSelect("checkAll");
-            }
-            
-           //  doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회 	
-        }
-     
-     
-     function doGetComboSelBox(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){      
-         $.ajax({
-             type : "GET",
-             url : url,
-             data : { groupCode : codevalue },
-             dataType : "json",
-             contentType : "application/json;charset=UTF-8",
-             success : function(data) {
-                var rData = data;
-                doDefCombos(rData, selCode, obj , type,  callbackFn);
-             },
-             error: function(jqXHR, textStatus, errorThrown){
-                 alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
-             },
-             complete: function(){
-             }
-         }); 
-     } ;
-        
-        
-        function doDefCombos(data, selCode, obj , type, callbackFn){
-            var targetObj = document.getElementById(obj);
-            var custom = "";
-            for(var i=targetObj.length-1; i>=0; i--) {
-                targetObj.remove( i );
-            }
-            obj= '#'+obj;
-             if (type&&type!="M") {
-                custom = (type == "S") ? eTrusttext.option.choose : ((type == "A") ? eTrusttext.option.all : "");               
-                $("<option />", {value: "", text: custom}).appendTo(obj);
-            }else{
-                $(obj).attr("multiple","multiple");
-            } 
-            
-            $.each(data, function(index,value) {
-            	//alert(data[index].codeId);
-            	//alert(data[index].codeName);
-                //CODEID , CODE , CODENAME ,,description
-                    if(selCode==data[index].codeId){
-                        $('<option />', {value : data[index].codeId, text:data[index].codeName}).appendTo(obj).attr("selected", "true");
-                    }else{
-                        $('<option />', {value : data[index].codeId, text:data[index].codeName}).appendTo(obj);
-                    }
-                });    
-                            
-            
-            if(callbackFn){
-                var strCallback = callbackFn+"()";
-                eval(strCallback);
-            }
-        };
-     
-  /* -----------------------------------------------  셀렉트 박스 이벤트 끝 -------------------------------------------------------------------- */
-  
-      function typeallchek(){
-        var typesize= $("#searchtype option").size();
-        alert(typesize); 
-       for (var int = 0; int < array.length; int++) {
-            
-        } 
-         
-}
-   
-      function addRowFileter() {
-          alert(div);
-          var item = new Object();  
-              item.codeName = $("#insdetailtype option:selected").text();
-              item.name = $("#insdetailBrand option:selected").text();
-              item.typeid = $("#insdetailtype option:selected").val();
-              item.brandid = $("#insdetailBrand option:selected").val();
-              item.name1 = $("#insdetailmodel").val();
-              item.assetDRem = $("#insdetailremark").val();
-              if(detailvaliedcheck(div)){
-              AUIGrid.addRow(AddDetailGrid, item, "last");
-               $("#regDetailWindow").hide(); 
-              }      
-      }          
-          
-      function cancelRowFileter() {
-          $("#regDetailWindow").hide(); 
-      }
-      
-      
-      
-      function detail_info_insert() {
-          $("#savePopbtn").click();  
-      }
-    
-      function destory(gridNm){
-          AUIGrid.destroy(gridNm);
-          popClear();
-      }
-      
-      function popClear(){
-          $("#detailForm")[0].reset();
-      }
-      
-      function colShowHide(gridNm,fied,checked){
-          if(checked) {
-                AUIGrid.showColumnByDataField(gridNm, fied);
-            } else {
-                AUIGrid.hideColumnByDataField(gridNm, fied);
-            }
-    }
-      function removeRow(rowIndex, gridNm) {
+		$(function() {
 
-          AUIGrid.removeRow(gridNm, rowIndex);
-          AUIGrid.removeSoftRows(gridNm);
-      }
-      
-      
-      function updateItem() {
-    	  div="UI"; 
-                assetsaveAjax(div);   
-      }
-      
-      
+			$('#searchdepartment').change(function() {
+
+			}).multipleSelect({
+				selectAll : true,
+				width : '80%'
+			}).multipleSelect("disable");
+
+		});
+	}
+	   function f_DepartmentList() {
+	        $('#searchdepartment')
+	        .multipleSelect()
+	        .multipleSelect("enable")
+	        .multipleSelect("checkAll");
+	    }
+	   
+	   function f_TypeMultiCombo() {
+		   $(function() {
+	             $('#searchtype').change(function() {
+
+	             }).multipleSelect({
+	                 selectAll : true,
+	                 width : '80%'
+	             }).multipleSelect("disable");      
+	         
+	         });	   
+       }
+	
+
+	function fn_setVisiable(div) {
+		if (div == "V") {
+			$("#masterstatus").prop('readonly', true);
+			$("#masterbreanch").prop('readonly', true);
+			$("#masterdepartment").prop('readonly', true);
+			$("#masteruser").prop('readonly', true);
+			$("#mastercategory").prop('disabled', true);
+			$("#mastertype").prop('disabled', true);
+			$("#mastermodelname").prop('readonly', true);
+			$("#mastercolor").prop('disabled', true);
+			$("#masterinvoiceno").prop('readonly', true);
+			$("#masterdealer").prop('disabled', true);
+			$("#masterpurchasedate").prop('disabled', true);
+			$("#masterbrand").prop('disabled', true);
+			$("#masterpurchaseamount").prop('readonly', true);
+			$("#masterrefno").prop('readonly', true);
+			$("#masterserialno").prop('readonly', true);
+			$("#masterwarrantyno").prop('readonly', true);
+			$("#mastermacaddress").prop('readonly', true);
+			$("#masterimeino").prop('readonly', true);
+			$("#masterremark").prop('readonly', true);
+			$("#trinserthide1").show();
+			$("#trinserthide2").show();
+			$("#savePopbtn").hide();
+			$("#updatePopbtn").hide();
+		} else if (div == "U") {
+			$("#masterstatus").prop('readonly', true);
+			$("#masterbreanch").prop('readonly', true);
+			$("#masterdepartment").prop('readonly', true);
+			$("#masteruser").prop('readonly', false);
+			$("#mastercategory").prop('disabled', true);
+			$("#mastertype").prop('disabled', true);
+			$("#mastermodelname").prop('readonly', false);
+			$("#mastercolor").prop('disabled', false);
+			$("#masterinvoiceno").prop('readonly', false);
+			$("#masterdealer").prop('disabled', false);
+			$("#masterpurchasedate").prop('disabled', false);
+			$("#masterbrand").prop('disabled', false);
+			$("#masterpurchaseamount").prop('readonly', false);
+			$("#masterrefno").prop('readonly', false);
+			$("#masterserialno").prop('readonly', false);
+			$("#masterwarrantyno").prop('readonly', false);
+			$("#mastermacaddress").prop('readonly', false);
+			$("#masterimeino").prop('readonly', false);
+			$("#masterremark").prop('readonly', false);
+			$("#trinserthide1").show();
+			$("#trinserthide2").show();
+			$("#savePopbtn").hide();
+			$("#updatePopbtn").show();
+		} else if (div == "N") {
+			$('#masterForm')[0].reset();
+			$("#trinserthide1").hide();
+			$("#trinserthide2").hide();
+			$("#mastercategory").prop('disabled', false);
+			//$("#mastertype").prop('disabled', false);
+			$("#mastermodelname").prop('readonly', false);
+			$("#mastercolor").prop('disabled', false);
+			$("#masterinvoiceno").prop('readonly', false);
+			$("#masterdealer").prop('disabled', false);
+			$("#masterpurchasedate").prop('disabled', false);
+			$("#masterbrand").prop('disabled', false);
+			$("#masterpurchaseamount").prop('readonly', false);
+			$("#masterrefno").prop('readonly', false);
+			$("#masterserialno").prop('readonly', false);
+			$("#masterwarrantyno").prop('readonly', false);
+			$("#mastermacaddress").prop('readonly', false);
+			$("#masterimeino").prop('readonly', false);
+			$("#masterremark").prop('readonly', false);
+			$("#savePopbtn").show();
+			$("#updatePopbtn").hide();
+			$("#insertdetail").show();
+
+			combReset();
+		}
+	}
+	function combReset() {
+		doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S', '');//brand
+		doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','insdetailBrand', 'S', '');//detailbrand
+		doGetCombo('/common/selectCodeList.do', '111', '', 'mastertype', 'S',''); //Type 리스트 조회
+		doGetCombo('/common/selectCodeList.do', '112', '', 'mastercolor', 'S',''); //Color 리스트 조회
+		doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S', '');//dealer 
+	}
+
+	function valiedcheck() {
+		if ($("#mastercategory").val() == "") {
+			Common.alert("Please select the category.");
+			$("#mastercategory").focus();
+			return false;
+		}
+		if ($("#mastertype").val() == "") {
+			Common.alert("Please select the type.");
+			$("#mastertype").focus();
+			return false;
+		}
+		if ($("#mastermodelname").val() == "") {
+			Common.alert("Please key in the model name.");
+			$("#mastermodelname").focus();
+			return false;
+		}
+		if ($("#mastercolor").val() == "") {
+			Common.alert("Please select the color.");
+			$("#mastercolor").focus();
+			return false;
+		}
+		if ($("#masterinvoiceno").val() == "") {
+			Common.alert("Please key in the invoice.");
+			$("#masterinvoiceno").focus();
+			return false;
+		}
+		if ($("#masterdealer").val() == "") {
+			Common.alert("Please select the Dealer.");
+			$("#masterdealer").focus();
+			return false;
+		}
+		if ($("#masterpurchasedate").val() == "") {
+			Common.alert("Please select purchase date");
+			$("#masterpurchasedate").focus();
+			return false;
+		}
+		if ($("#masterbrand").val() == "") {
+			Common.alert("Please select the brand.");
+			$("#masterbrand").focus();
+			return false;
+		}
+		if ($("#masterpurchaseamount").val() == "") {
+			Common.alert("Please key in purchase Amount.");
+			$("#masterpurchaseamount").focus();
+			return false;
+		}
+
+		return true;
+	}
+	function detailvaliedcheck() {
+		if ($("#insdetailtype").val() == "") {
+			Common.alert("Please select the details type.");
+			$("#insdetailtype").focus();
+			return false;
+		}
+		if ($("#insdetailBrand").val() == "") {
+			Common.alert("Please select the details brand.");
+			$("#insdetailBrand").focus();
+			return false;
+		}
+		if ($("#insdetailmodel").val() == "") {
+			Common.alert("Please key in the details model name.");
+			$("#insdetailmodel").focus();
+			return false;
+		}
+
+		return true;
+	}
+
+	/*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
+	function getComboRelays(obj, value, tag, selvalue) {
+		var robj = '#' + obj;
+		$(robj).attr("disabled", false);
+		if (value == "42") {
+			doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag, value, selvalue, obj, 'M', 'f_DepartmentList'); //Department 리스트 조회	
+		}else{
+			  $('#searchdepartment').multipleSelect("disable");  
+		}
+	}
+	
+	   function getComboRelayss(obj, value, tag, selvalue) {
+	        var robj = '#' + obj;
+	        $(robj).attr("disabled", false);
+	        alert("2222");	        
+	        doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //detail type 리스트 조회      	        
+	    }
+
+	function doGetComboSelBox(url, groupCd, codevalue, selCode, obj, type,
+			callbackFn) {
+		$.ajax({
+			type : "GET",
+			url : url,
+			data : {
+				groupCode : codevalue
+			},
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var rData = data;
+				doDefCombos(rData, selCode, obj, type, callbackFn);
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("Draw ComboBox['" + obj
+						+ "'] is failed. \n\n Please try again.");
+			},
+			complete : function() {
+			}
+		});
+	};
+
+	function doDefCombos(data, selCode, obj, type, callbackFn) {
+		var targetObj = document.getElementById(obj);
+		var custom = "";
+		for (var i = targetObj.length - 1; i >= 0; i--) {
+			targetObj.remove(i);
+		}
+		obj = '#' + obj;
+		if (type && type != "M") {
+			custom = (type == "S") ? eTrusttext.option.choose
+					: ((type == "A") ? eTrusttext.option.all : "");
+			$("<option />", {
+				value : "",
+				text : custom
+			}).appendTo(obj);
+		} else {
+			$(obj).attr("multiple", "multiple");
+		}
+
+		$.each(data, function(index, value) {
+			//CODEID , CODE , CODENAME ,,description
+			if (selCode == data[index].codeId) {
+				$('<option />', {
+					value : data[index].codeId,
+					text : data[index].codeName
+				}).appendTo(obj).attr("selected", "true");
+			} else {
+				$('<option />', {
+					value : data[index].codeId,
+					text : data[index].codeName
+				}).appendTo(obj);
+			}
+		});
+
+		if (callbackFn) {
+			var strCallback = callbackFn + "()";
+			eval(strCallback);
+		}
+	};
+
+	/* -----------------------------------------------  셀렉트 박스 이벤트 끝 -------------------------------------------------------------------- */
+
+	function typeallchek() {
+		var typesize = $("#searchtype option").size();
+		alert(typesize);
+		for (var int = 0; int < array.length; int++) {
+
+		}
+
+	}
+
+	function addRowFileter() {
+		alert(div);
+		var item = new Object();
+		item.codeName = $("#insdetailtype option:selected").text();
+		item.name = $("#insdetailBrand option:selected").text();
+		item.typeid = $("#insdetailtype option:selected").val();
+		item.brandid = $("#insdetailBrand option:selected").val();
+		item.name1 = $("#insdetailmodel").val();
+		item.assetDRem = $("#insdetailremark").val();
+		if (detailvaliedcheck(div)) {
+			AUIGrid.addRow(AddDetailGrid, item, "last");
+			$("#regDetailWindow").hide();
+		}
+	}
+
+	function cancelRowFileter() {
+		$("#regDetailWindow").hide();
+	}
+
+	function detail_info_insert() {
+		$("#savePopbtn").click();
+	}
+
+	function destory(gridNm) {
+		AUIGrid.destroy(gridNm);
+		popClear();
+	}
+
+	function popClear() {
+		$("#detailForm")[0].reset();
+	}
+
+	function colShowHide(gridNm, fied, checked) {
+		if (checked) {
+			AUIGrid.showColumnByDataField(gridNm, fied);
+		} else {
+			AUIGrid.hideColumnByDataField(gridNm, fied);
+		}
+	}
+	function removeRow(rowIndex, gridNm) {
+
+		AUIGrid.removeRow(gridNm, rowIndex);
+		AUIGrid.removeSoftRows(gridNm);
+	}
+
+	function updateItem() {
+		div = "UI";
+		assetsaveAjax(div);
+	}
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -893,7 +914,7 @@
 <tr>
     <th scope="row">Category</th>
     <td>
-    <select id="searchcategory" name="searchcategory"  onchange="getComboRelays('searchtype' , this.value , '', '')"   title="" placeholder="" class="w100p" >
+    <select id="searchcategory" name="searchcategory"   title="" placeholder="" class="w100p" >
     </select>
     </td>
     <th scope="row">Type</th>
@@ -1100,12 +1121,12 @@
 <tr>
     <th scope="row">Category</th>
     <td colspan="2" id="tdcategory">
-    <select id="mastercategory" name="mastercategory"  onchange="getComboRelays('mastertype' , this.value , '', '')"  title="" placeholder=""  class="w100p">
+    <select id="mastercategory" name="mastercategory"  onchange="getComboRelayss('mastertype' , this.value , '', '')"  title="" placeholder=""  class="w100p">
     </select>  
     </td>
     <th scope="row">Type</th>
     <td colspan="2" id="tdtype">
-    <select id="mastertype" name="mastertype" onchange="getComboRelays('insdetailtype' , this.value , 'detailtype', '')" title="" placeholder=""  class="w100p" disabled=true>
+    <select id="mastertype" name="mastertype" onchange="getComboRelayss('insdetailtype' , this.value , 'detailtype', '')" title="" placeholder=""  class="w100p" disabled=true>
     </select>
     </td>     
 </tr>
