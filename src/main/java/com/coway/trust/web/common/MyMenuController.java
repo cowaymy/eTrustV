@@ -35,7 +35,7 @@ public class MyMenuController {
 	@Autowired
 	private SessionHandler sessionHandler;
 
-	@RequestMapping(value = "/myMenu.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/myMenu.do")
 	public String myMenu(@RequestParam Map<String, Object> params, SessionVO sessionVO,
 			ModelMap model) {				
 		LOGGER.debug("Call MyMenu Init");		
