@@ -476,6 +476,18 @@
 	        //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
 	        Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
 	    });
+	    $('#addCustBtn').click(function() {
+	        Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "630x"});
+	        //Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
+	    });
+	    $('#mstCntcSelAddBtn').click(function() {
+	        //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
+	        Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_CNTC_OWN"}, null, true);
+	    });
+	    $('#mstCntcSelAddBtn2').click(function() {
+	        //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
+	        Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_CNTC_ADD"}, null, true);
+	    });
 	    $('[name="grpOpt"]').click(function() {
 	        fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
 	    });
@@ -1089,7 +1101,7 @@
 <form id="custForm" name="custForm" action="#" method="post">
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a href="#">Add New Customer</a></p></li>
+    <li><p class="btn_grid"><a id="addCustBtn" href="#">Add New Customer</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -1168,8 +1180,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li id="liMstCntcNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
-    <li id="liMstCntcSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Contact</a></p></li>
+    <li id="liMstCntcNewAddr" class="blind"><p class="btn_grid"><a id="mstCntcSelNewBtn" href="#">Add New Contact</a></p></li>
+    <li id="liMstCntcSelAddr" class="blind"><p class="btn_grid"><a id="mstCntcSelAddBtn" href="#">Select Another Contact</a></p></li>
 </ul>
 
 <!------------------------------------------------------------------------------
@@ -1228,7 +1240,7 @@
 
 <ul class="right_btns mb10">
     <li id="liMstCntcNewAddr2" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
-    <li id="liMstCntcSelAddr2" class="blind"><p class="btn_grid"><a href="#">Select Another Contact</a></p></li>
+    <li id="liMstCntcSelAddr2" class="blind"><p class="btn_grid"><a id="mstCntcSelAddBtn2" href="#">Select Another Contact</a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->

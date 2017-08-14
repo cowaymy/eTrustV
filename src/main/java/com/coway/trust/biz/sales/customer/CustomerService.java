@@ -442,6 +442,9 @@ public interface CustomerService {
 	 * @author 
 	 */
 	int nricDupChk(Map<String, Object> params);
+
+
+	List<EgovMap> selectCustCareContactList(Map<String, Object> params) throws Exception;
 	
 	
 }

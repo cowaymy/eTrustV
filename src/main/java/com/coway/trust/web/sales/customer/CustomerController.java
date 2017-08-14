@@ -170,6 +170,26 @@ public class CustomerController {
 		return ResponseEntity.ok(contactlist);
 	}
 	
+	@RequestMapping(value = "/customerConctactSearchPop.do")
+	public String customerPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("callPrgm", params.get("callPrgm"));
+		model.put("custId", params.get("custId"));
+		
+		return "sales/customer/customerContactSearchPop";
+	}
+	
+	/**
+	 * Customer 상세 조회 Contact List 
+	 * @param params
+	 * @param model
+	 * @return ResponseEntity
+	 */
+	@RequestMapping(value = "/selectCustCareContactList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCustCareContactList(@RequestParam Map<String, Object>params, ModelMap model)throws Exception{
+		List<EgovMap> contactlist = customerService.selectCustCareContactList(params);		
+		return ResponseEntity.ok(contactlist);
+	}
 	
 	/**
 	 * 

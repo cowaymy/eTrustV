@@ -113,6 +113,20 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 	
 	/**
+	 * 상세화면 조회한다. (Contact List)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.21
+	 */
+	@Override
+	public List<EgovMap> selectCustCareContactList(Map<String, Object> params)throws Exception{
+		
+		return customerMapper.selectCustCareContactList(params);
+	}
+
+	
+	/**
 	 * 상세화면 조회한다. (Bank List)
 	 * @param 
 	 * @return 
