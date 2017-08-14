@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.MyMenuService;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.web.organization.MemberListController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
