@@ -77,26 +77,39 @@
     </select>
 
     <select id="selectLatestOrderLogByOrderID" parameterType="Map" resultType="egovMap">
-		SELECT T1.LOG_ID
-		     , T1.SALES_ORD_ID
-		     , T1.PRGRS_ID
-		     , T1.LOG_DT
-		     , T1.REF_ID
-		     , T1.IS_LOK
-		     , T1.LOG_CRT_USER_ID
-		     , T1.LOG_CRT_DT
-		     , T2.PRGRS
-		     , DECODE ( T3.USER_ID, NULL, '', T3.USER_NAME) AS USER_NAME
-		  FROM SAL0009D T1
-		  JOIN SAL0010M T2
-		    ON T2.PRGRS_ID = T1.PRGRS_ID
-		  LEFT
-		  JOIN SYS0047M T3
-		    ON T3.USER_ID = T1.LOG_CRT_USER_ID
-		 WHERE T1.SALES_ORD_ID = #{salesOrderId}
-		 <if test="prgrsId > 0">
-		   AND T2.PRGRS_ID = #{prgrsId}
-		 </if>
+        SELECT T.LOG_ID
+             , T.SALES_ORD_ID
+             , T.PRGRS_ID
+             , T.LOG_DT
+             , T.REF_ID
+             , T.IS_LOK
+             , T.LOG_CRT_USER_ID
+             , T.LOG_CRT_DT
+             , T.PRGRS
+             , T.USER_NAME
+          FROM
+             ( SELECT T1.LOG_ID
+                    , T1.SALES_ORD_ID
+                    , T1.PRGRS_ID
+                    , T1.LOG_DT
+                    , T1.REF_ID
+                    , T1.IS_LOK
+                    , T1.LOG_CRT_USER_ID
+                    , T1.LOG_CRT_DT
+                    , T2.PRGRS
+                    , DECODE ( T3.USER_ID, NULL, '', T3.USER_NAME) AS USER_NAME
+   	      	     FROM SAL0009D T1
+			     JOIN SAL0010M T2
+			    ON T2.PRGRS_ID = T1.PRGRS_ID
+			     LEFT
+			     JOIN SYS0047M T3
+			       ON T3.USER_ID = T1.LOG_CRT_USER_ID
+			    WHERE T1.SALES_ORD_ID = #{salesOrderId}
+			    <if test="prgrsId > 0">
+			       AND T2.PRGRS_ID = #{prgrsId}
+			     ORDER BY T1.LOG_ID DESC
+		        </if>
+             ) T WHERE ROWNUM &lt;= 1
     </select>
     
     <select id="selectOrderAgreementByOrderID" parameterType="Map" resultType="egovMap">
