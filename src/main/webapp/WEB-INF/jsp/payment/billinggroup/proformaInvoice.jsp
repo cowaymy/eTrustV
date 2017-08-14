@@ -17,7 +17,7 @@ $(document).ready(function(){
     doGetComboSepa('/common/selectBranchCodeList.do', '2' , ' - '  ,'' , 'dscBranch' , 'M', 'f_multiCombo');
     
   //product 생성
-    doGetCombo('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');
+    doGetComboAndGroup('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');
 });
 
 function f_multiCombo() {
