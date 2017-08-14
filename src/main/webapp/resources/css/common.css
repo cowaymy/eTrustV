@@ -152,6 +152,7 @@ h3 .txt_box{font-size:16px; color:#25527c;}
 .fl_right{float:right!important;}
 select .optgroup_text {background:#aaa; color:#fff;}
 select .optgroup_text option {color:#444; background:#fff;}
+.multy_select{display:block!important;}
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
