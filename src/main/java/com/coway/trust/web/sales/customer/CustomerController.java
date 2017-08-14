@@ -432,8 +432,10 @@ public class CustomerController {
 		insmap.put("cmbTypeId", vo.getCmbTypeId());
 		insmap.put("pasSportExpr", vo.getPasSportExpr() != null ? vo.getPasSportExpr() : defaultDate);
 		insmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
-		insmap.put("cmbCorpTypeId", vo.getCmbCorpTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
+		insmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
 		insmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
+		
+		logger.info("@@@@@@@@@@@@@ " + vo.getAddr1() + "//" + vo.getAddr2() + "//" +  vo.getAddr3());
 		
 		// Address
 		insmap.put("getCustAddrId", getCustAddrId);
