@@ -44,7 +44,7 @@
              , TO_CHAR(TO_DATE(V1.CUST_VISA_EXPR, 'YYYY-MM-DD'), 'DD/MM/YYYY') CUST_VISA_EXPR
              , V1.ORD_PROMO_ID
              , V1.ORD_PROMO_CODE
-             , DBMS_LOB.SUBSTR(V1.ORD_PROMO_DESC, 4000) ORD_PROMO_DESC
+             , V1.ORD_PROMO_DESC
              , V1.ORD_MEM_ID
              , V1.ORD_MEM_CODE
              , V1.ORD_MEM_NAME
@@ -56,7 +56,7 @@
              , V1.KEYIN_BRNCH_ID
              , V1.KEYIN_BRNCH_CODE
              , V1.KEYIN_BRNCH_NAME
-             , DBMS_LOB.SUBSTR(V1.ORD_REM, 4000) ORD_REM
+             , V1.ORD_REM
              , V1.RENT_CHK_ID
              , V1.ORD_HM_ID
              , V1.ORD_SM_ID
@@ -315,7 +315,7 @@
                     , T1.IS_GL_POST_CLM
                     , T1.GL_POST_CLM_DT
                     , T1.TRX_ID
-                    , DBMS_LOB.SUBSTR(T2.CODE_DESC, 4000) CODE_DESC
+                    , T2.CODE_DESC
                     , T3.SALES_ORD_NO
                     , T4.NAME
                     , T5.CODE
@@ -396,21 +396,21 @@
              , V1.DSC_ID
              , V1.DSC_CODE
              , V1.DSC_NAME
-             , DBMS_LOB.SUBSTR(V1.INSTCT, 4000) INSTCT
+             , V1.INSTCT
              , V1.PREFER_INST_DT
              , V1.PREFER_INST_TM
              , V1.INSTALL_ADDR_ID
              , V1.INSTALL_CNTC_ID
-             , DBMS_LOB.SUBSTR(V1.INST_CNT_DEPT, 4000) INST_CNT_DEPT
+             , V1.INST_CNT_DEPT
              , V1.INST_CNT_POST
-             , DBMS_LOB.SUBSTR(V1.VRIFY_REM, 4000) VRIFY_REM
+             , V1.VRIFY_REM
           FROM SAL1010V V1
          WHERE V1.ORD_ID = #{salesOrderId}
     </select>
 
     <select id="selectOrderCCPFeedbackCodeByOrderID" parameterType="Map" resultType="egovMap">
         SELECT T2.CODE
-             , DBMS_LOB.SUBSTR(T2.RESN_DESC, 4000) RESN_DESC
+             , T2.RESN_DESC
           FROM SAL0102D T1
           JOIN SYS0032M T2
             ON T2.RESN_ID = T1.CCP_RESN_ID
@@ -633,7 +633,7 @@
              , V1.BILL_POST
              , V1.MAIL_CNTC_ID
              , V1.MAIL_ADDR_ID
-             , DBMS_LOB.SUBSTR(V1.MAIL_CNT_DEPT, 4000) MAIL_CNT_DEPT
+             , V1.MAIL_CNT_DEPT
              , V1.MAIL_CNT_POST
           FROM SAL1011V V1
          WHERE V1.ORD_ID = #{salesOrderId}
@@ -648,13 +648,13 @@
              , TO_CHAR(V1.RENT_PAY_START_DT, 'yyyy-MM-dd') RENT_PAY_START_DT
              , TO_CHAR(V1.RENT_PAY_REJCT_DT, 'yyyy-MM-dd') RENT_PAY_REJCT_DT
              , V1.RENT_PAY_REJCT_CODE
-             , DBMS_LOB.SUBSTR(V1.RENT_PAY_REJCT_DESC, 4000) RENT_PAY_REJCT_DESC
+             , V1.RENT_PAY_REJCT_DESC
              , V1.RENT_PAY_ISS_BANK_CODE
              , V1.RENT_PAY_ISS_BANK_NAME
              , V1.RENT_PAY_ACC_NO
-             , DBMS_LOB.SUBSTR(V1.RENT_PAY_ACC_OWNER, 4000) RENT_PAY_ACC_OWNER
-             <!--, pkg_crypto.DECRYPT(DBMS_LOB.SUBSTR(V1.RENT_PAY_CRC_NO, 4000)) RENT_PAY_CRC_NO-->
-             , DBMS_LOB.SUBSTR(V1.RENT_PAY_CRC_NO, 4000) RENT_PAY_CRC_NO
+             , V1.RENT_PAY_ACC_OWNER
+             <!--, pkg_crypto.DECRYPT(V1.RENT_PAY_CRC_NO) RENT_PAY_CRC_NO-->
+             , V1.RENT_PAY_CRC_NO
              , V1.RENT_PAY_CR_OWNER
              , V1.RENT_PAY_CRC_EXPR
              , V1.ISSU_NRIC
@@ -686,12 +686,12 @@
              , TO_CHAR(V1.RENT_PAY_START_DT, 'yyyy-MM-dd') RENT_PAY_START_DT
              , TO_CHAR(V1.RENT_PAY_REJCT_DT, 'yyyy-MM-dd') RENT_PAY_REJCT_DT
              , V1.RENT_PAY_REJCT_CODE
-             , DBMS_LOB.SUBSTR(V1.RENT_PAY_REJCT_DESC, 4000) RENT_PAY_REJCT_DESC
+             , V1.RENT_PAY_REJCT_DESC
              , V1.RENT_PAY_ISS_BANK_CODE
              , V1.RENT_PAY_ISS_BANK_NAME
              , V1.RENT_PAY_ACC_NO
-             , DBMS_LOB.SUBSTR(V1.RENT_PAY_ACC_OWNER, 4000) RENT_PAY_ACC_OWNER
-             , DBMS_LOB.SUBSTR(V1.RENT_PAY_CRC_NO, 4000) RENT_PAY_CRC_NO
+             , V1.RENT_PAY_ACC_OWNER
+             , V1.RENT_PAY_CRC_NO
              , V1.RENT_PAY_CR_OWNER
              , V1.RENT_PAY_CRC_EXPR
              , V1.ISSU_NRIC
@@ -832,11 +832,11 @@
     <select id="selectDiscountList" parameterType="Map" resultType="egovMap">
         SELECT T1.ORD_ID
              , T2.SALES_ORD_NO
-             , DBMS_LOB.SUBSTR(T3.CODE_DESC, 4000) CODE_DESC
+             , T3.CODE_DESC
              , T1.DC_AMT_PER_INSTLMT
              , T1.DC_START_INSTLMT
              , T1.DC_END_INSTLMT
-             , DBMS_LOB.SUBSTR(T1.REM, 4000) REM
+             , T1.REM
           FROM PAY0054D T1
           JOIN SAL0001D T2
             ON T2.SALES_ORD_ID = T1.ORD_ID
@@ -879,7 +879,7 @@
 		            , T.MEM_CODE
 		            , T.NAME
 		            , NVL(TO_CHAR(T.SETL_DT, 'DD/MM/YYYY'), '-') SETL_DT
-		            , DBMS_LOB.SUBSTR(T.CONFIG_BS_REM, 4000) CONFIG_BS_REM
+		            , T.CONFIG_BS_REM
 		            , T.CONFIG_SETT_AS
 		            , T.CONFIG_SETT_BS
 		            , T.CONFIG_SETT_INS
@@ -1027,7 +1027,7 @@
 		     , T1.EURC_REF_NO
 		     , T1.EURC_REF_DT
 		     , T1.EURC_CUST_RGS_NO
-		     , DBMS_LOB.SUBSTR(T1.EURC_REM, 4000) EURC_REM
+		     , T1.EURC_REM
 		     , T1.EURC_FILE_PATH_NAME
 		     , T1.EURC_RLIEF_APP_TYPE_ID
 		  FROM SAL0042D T1

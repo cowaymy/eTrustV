@@ -54,7 +54,7 @@
              , T.TYPE_DESC
           FROM
              ( SELECT T1.CODE_ID
-                    , DBMS_LOB.SUBSTR (T1.CODE_DESC, 4000) TYPE_DESC
+                    , T1.CODE_DESC
                     , T2.TYPE_DT_SEQ
                  FROM SYS0013M T1
                  JOIN ORG0013C T2 ON T1.CODE_ID = T2.TYPE_ID
@@ -70,7 +70,7 @@
              , T.PROMO_DESC CODE_NAME
           FROM
              ( SELECT DISTINCT T2.PROMO_ID PROMO_ID
-                    , T2.PROMO_CODE || '-' || DBMS_LOB.SUBSTR (T2.PROMO_DESC, 4000) PROMO_DESC
+                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
                  FROM SAL0018D T1
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
