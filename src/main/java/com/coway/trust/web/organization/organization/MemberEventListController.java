@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
-import com.coway.trust.biz.organization.MemberPromoEntryVO;
 import com.coway.trust.biz.organization.organization.MemberEventService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
