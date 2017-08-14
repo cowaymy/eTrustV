@@ -37,7 +37,7 @@
            <if test="smtype != null and smtype !=''">
                 AND MOV_TYPE  = #{smtype}
            </if>
-		 ORDER BY INS_DT DESC
+		 ORDER BY TRNSC_TYPE_CODE , MOV_TYPE
     </select>
     
     <insert id="insMaintainMovement" parameterType="Map">

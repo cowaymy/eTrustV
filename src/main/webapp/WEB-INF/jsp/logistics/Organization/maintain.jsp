@@ -108,7 +108,7 @@ $(document).ready(function(){
 	                    {
 	                       type : "ComboBoxRenderer",
 	                       showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-	                       list : mtypedata,
+	                       listFunction : function(rowIndex, columnIndex, value, headerText, item){var list =  mtypedata; return list; },
 	                       keyField : "code",
 	                       valueField : "code"
 	                    }
@@ -387,7 +387,7 @@ $(function(){
     });
     $('#delete').click(function(){
     	AUIGrid.removeRow(myGridID, "selectedIndex");
-    	AUIGrid.resetUpdatedItems(myGridID, "all");
+    	AUIGrid.removeSoftRows(myGridID);
     });
     $('#save').click(function() {
         

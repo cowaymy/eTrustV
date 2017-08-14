@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.common.impl.CommonServiceImpl;
 import com.coway.trust.biz.logistics.stocks.StockService;
@@ -122,7 +123,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public void addStockTransferInfo(Map<String, Object> params) {
+	public List<EgovMap> addStockTransferInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
 		List<Object> updList = (List<Object>) params.get("upd");
 		/*List<Object> delList = (List<Object>) params.get("rem");*/
@@ -145,6 +146,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	    		stocktran.insStockTransfer(insMap);
 			}
 		}
+		List<EgovMap> list = stocktran.selectStockTransferItem((String)fMap.get("reqno"));
+		return list;
 	}
 	
 	
@@ -210,5 +213,47 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 			stocktran.deliveryStockTransferIns(insMap);
 		}		
+	}
+	
+	@Override
+	public List<EgovMap> StockTransferDeliveryIssue(Map<String, Object> params) {
+		List<Object> checklist       = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		int iCnt = 0;
+		String tmpdelCd = "";
+		String delyCd = "";
+		if (checklist.size() > 0){
+			for (int i = 0 ; i < checklist.size() ; i++){
+	    		Map<String, Object> map = (Map<String, Object>) checklist.get(i);
+	    		
+	    		Map<String, Object> imap = new HashMap(); 
+	    		imap = (Map<String, Object>) map.get("item");
+	    		
+	    		String delCd =  (String)imap.get("delyno");
+	    		if (delCd != null && !(tmpdelCd.equals(delCd))){
+	    			tmpdelCd = delCd;
+	    			if (iCnt == 0 ){
+	    				delyCd = delCd;
+	    			}else{
+	    				delyCd += "∈"+delCd;
+	    			}
+	    			iCnt++;	    			
+	    		}
+			}
+		}
+		
+		String[] delvcd = delyCd.split("∈");
+		formMap.put("parray"     , delvcd);
+		formMap.put("userId"     , 999999999);
+		formMap.put("prgnm"      , "deliverylist");
+		formMap.put("refdocno"   , "");
+		formMap.put("salesorder" , "");
+		
+		stocktran.StockTransferiSsue(formMap);
+		
+		
+		List<EgovMap> list = null;
+		
+		return list;
 	}
 }

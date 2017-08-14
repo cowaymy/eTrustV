@@ -220,7 +220,7 @@ public class StocktransferController {
 	}
 	
 	@RequestMapping(value = "/StocktransferReqAdd.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> StocktransferReqAdd(@RequestBody Map<String, Object> params,
+	public ResponseEntity<Map> StocktransferReqAdd(@RequestBody Map<String, Object> params,
 			Model model) {
 
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
@@ -235,14 +235,18 @@ public class StocktransferController {
 		param.put("form", formMap);
 		param.put("userId", 999999999);
 		
-		stock.addStockTransferInfo(param);
+		List<EgovMap> list = stock.addStockTransferInfo(param);
 		
+		Map<String , Object> rmap = new HashMap();
+		rmap.put("data", list);
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		rmap.put("message", message);
 
-		return ResponseEntity.ok(message);
+		return ResponseEntity.ok(rmap);
 	}
 	
 	@RequestMapping(value = "/selectStockTransferNo.do", method = RequestMethod.GET)
@@ -380,6 +384,27 @@ public class StocktransferController {
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/StocktransferGoodIssue.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model) throws Exception {
+		
+		List<Object> checklist       = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		
+		List<EgovMap> list = stock.StockTransferDeliveryIssue(params);
+		
+		Map<String, Object> rmap = new HashMap();
+		
+		rmap.put("data", list);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		rmap.put("message", message);
+
+		return ResponseEntity.ok(rmap);
 	}
 	
 }

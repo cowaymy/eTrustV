@@ -22,7 +22,7 @@ public interface StockTransferService {
 	
 	void insertStockTransferInfo(Map<String, Object> params);
 	
-	void addStockTransferInfo(Map<String, Object> params);
+	List<EgovMap> addStockTransferInfo(Map<String, Object> params);
 	
 	List<EgovMap> selectStockTransferNoList(Map<String, Object> params);
 	
@@ -37,4 +37,6 @@ public interface StockTransferService {
 	void deliveryStockTransferItmDel(Map<String , Object> params);
 	
 	void StocktransferReqDelivery(Map<String , Object> params);
+	
+	List<EgovMap> StockTransferDeliveryIssue(Map<String, Object> params);
 }

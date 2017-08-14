@@ -187,9 +187,10 @@ $(function(){
     	var dat = GridCommon.getEditData(reqGrid);
     	dat.form = $("#headForm").serializeJSON();
     	Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqAdd.do", dat, function(result) {
-            Common.alert(result.message);
-            AUIGrid.resetUpdatedItems(reqGrid, "all");
-            
+    		
+    		Common.alert(result.message.message);
+    		AUIGrid.setGridData(reqGrid, result.data);
+    		
         },  function(jqXHR, textStatus, errorThrown) {
             try {
             } catch (e) {

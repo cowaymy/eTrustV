@@ -257,8 +257,9 @@
     </delete>
     
     <select id="selectStockTransferDeliveryList" parameterType="Map" resultType="egovMap">
-        select Rownum rnum
-             , l47.reqst_no reqstno
+        SELECT Rownum rnum , T.* FROM (
+        select 
+               l47.reqst_no reqstno
 		     , l55.delvry_no delyno
 		     , l55.delvry_no_itm 
 		     , l47.trnsc_type ttype
@@ -300,7 +301,39 @@
 		   and l48.reqst_no  = l55.reqst_no
 		   and l47.reqst_no  = l48.reqst_no
 		   <if test="reqstno != null and reqstno != ''">
-		   and l47.reqst_no  = #{reqstno}
+		      and l47.reqst_no  = #{reqstno}
 		   </if>
+		   <if test="seldelno != null and seldelno != ''">
+              and l54.delvry_no  = #{seldelno}
+           </if>
+		   <if test="smtype !=null and smtype !=''">
+              and l47.trnsc_type_dtl = #{smtype}
+           </if>
+           <if test="sttype !=null and sttype !=''">
+              and l47.trnsc_type = #{sttype}
+           </if>
+           <if test="flocation !=null and flocation !=''">
+              and l47.rciv_cdc_rdc = #{flocation}
+           </if>
+           <if test="tlocation !=null and tlocation !=''">
+              and l47.reqst_cdc_rdc = #{tlocation}
+           </if>
+           <if test="sam !=null and sam !=''">
+              and l47.PRIDIC_FRQNCY = #{sam}
+           </if>
+           <if test="crtsdt !=null and crtsdt !=''">
+              and l55.DELVRY_DT <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="crtedt !=null and crtedt !=''">
+              and l55.DELVRY_DT <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           ORDER BY l54.delvry_no
+           ) T
     </select>
+    <resultMap id="result" type="egovMap" />
+    <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
+             { call SP_LOGISTIC_DELIVERY
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=result} )
+             } 
+     </select>
 </mapper>

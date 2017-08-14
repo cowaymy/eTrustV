@@ -133,7 +133,7 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
-        console.log(event);
+        
         var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
         
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
@@ -144,6 +144,20 @@ $(document).ready(function(){
         	for (var i = 0 ; i < rown.length ; i++){
         		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
         	}
+        }
+    });
+    
+    AUIGrid.bind(listGrid, "cellDoubleClick", function( event ) {
+        var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
+        
+        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
+        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+            console.log(rown);
+            for (var i = 0 ; i < rown.length ; i++){
+                AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+            }
+        }else{
+        	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }
     });
     
@@ -180,6 +194,15 @@ $(function(){
 	    		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
 	    	}
     	}
+    });
+    $("#gissue").click(function(){
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        if(checkedItems.length <= 0) {
+        	Common.alert('No data selected.');
+            return false;
+        }else{
+        	$("#giopenwindow").show();
+        }
     });
 });
 
@@ -219,6 +242,33 @@ function f_getTtype(g , v){
        });
     
     return rData;
+}
+function giFunc(){
+	var data = {};
+	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+	var check     = AUIGrid.getCheckedRowItems(listGrid);
+	
+	data.check   = check;
+	data.checked = check;
+	data.form    = $("#giForm").serializeJSON();
+	console.log(data);
+	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
+        
+        Common.alert(result.message.message);
+//         AUIGrid.setGridData(listGrid, result.data);
+        $("#giptdate").val("");
+        $("#gipfdate").val("");
+        $("#doctext" ).val("");
+        $("#giopenwindow").hide();
+        $('#search').click();
+
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
 }
 </script>
 
@@ -286,7 +336,7 @@ function f_getTtype(g , v){
                 </tr>
                 
                 <tr>
-                    <th scope="row">Create Date</th>
+                    <th scope="row">Delivery Date</th>
                     <td>
                         <div class="date_set"><!-- date_set start -->
 					    <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
@@ -320,6 +370,46 @@ function f_getTtype(g , v){
         <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
 
     </section><!-- search_result end -->
+    
+    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
+        <header class="pop_header"><!-- pop_header start -->
+		    <h1>Good Issue Posting Data</h1>
+		    <ul class="right_opt">
+		        <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+		    </ul>
+		</header><!-- pop_header end -->
+		
+		<section class="pop_body"><!-- pop_body start -->
+		    <form id="giForm" name="giForm" method="POST">
+		    <table class="type1">
+		    <caption>search table</caption>
+		    <colgroup>
+		        <col style="width:150px" />
+		        <col style="width:*" />
+		        <col style="width:150px" />
+		        <col style="width:*" />
+		    </colgroup>
+		    <tbody>
+		        <tr>
+		            <th scope="row">GI Posting Date</th>
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <th scope="row">GI Proof Date</th>
+                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                </tr>
+                <tr>    
+                    <th scope="row">Header Text</th>
+		            <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+		        </tr>
+		    </tbody>
+		    </table>
+		
+		    <ul class="center_btns">
+		        <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li> 
+		    </ul>
+		    </form>
+		
+		</section>
+    </div>
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
