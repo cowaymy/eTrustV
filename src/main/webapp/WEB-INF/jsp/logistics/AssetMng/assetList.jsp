@@ -152,12 +152,8 @@
         
         doDefCombo(comboData, '' ,'searchstatus', 'M', 'f_multiCombo');
         $("#searchstatus option:eq(0)").prop("selected", true);
-        //doGetCombo('/common/selectCodeList.do', '111', '','searchtype', 'M' , 'f_multiCombo'); //Type 리스트 조회
-        //$("#searchtype").attr("disabled",true); 
           
        doGetCombo('/logistics/assetmng/selectTypeList.do', '1199', 'all','searchtype', 'M' , 'f_multiCombo'); //Type 리스트 조회
-       
-       //doGetCombo('/logistics/assetmng/selectTypeList.do', '1199', '','searchtype', 'S' , ''); //Type 리스트 조회
              
         doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','searchdealer', 'S' , '');//dealer 
         doGetCombo('/common/selectCodeList.do', '112', '','searchcolor', 'S' , ''); //Color 리스트 조회
@@ -170,11 +166,8 @@
         doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','searchbranchid', 'S' , ''); //청구처 리스트 조회
         
         
-        doGetCombo('/logistics/assetmng/selectDepartmentList.do', '', 'all','searchdepartment', 'M' , 'f_multiCombo'); //Type 리스트 조회
-        //doDefCombo('', '' ,'searchdepartment', 'M', 'f_multiCombo'); //Department리스트 
-        //$("#searchtype option:eq(1202)").prop("selected", true);
-
-        
+       doGetCombo('/logistics/assetmng/selectDepartmentList.do', '', 'all','searchdepartment', 'M' , 'f_multiCombo'); //Department 리스트 조회
+       // doDefCombo('', '' ,'searchdepartment', 'M', 'f_multiCombo');
         
         
         AUIGrid.bind(myGridID, "cellClick", function( event )  
@@ -212,13 +205,11 @@
         $(function(){
             //all select 값 주기
             $('#searchcategory').change(function() {
+            	$('#searchtype').multipleSelect("enable");
                 $('#searchtype').multipleSelect("checkAll");
+                
             });
-            
-     /*        $('#searchbranchid').change(function() {
-                $('#searchdepartment').multipleSelect("checkAll");
-            }); */
-            
+         
             
             $("#search").click(function(){
                 getAssetListAjax();    
@@ -542,6 +533,7 @@
     }
     
      function f_multiCombo() {
+    	 
          $(function() {
              $('#searchstatus').change(function() {
 
@@ -554,13 +546,14 @@
              }).multipleSelect({
                  selectAll : true,
                  width : '80%'
-             });
+             }).multipleSelect("disable");      
             $('#searchdepartment').change(function() {
-
+                
              }).multipleSelect({
                  selectAll : true,
                  width : '80%'
-             });
+             }).multipleSelect("disable");
+          
          });
      }
      
@@ -723,10 +716,12 @@
             $(robj).attr("disabled",false);
             
             if(value == "42"){
-            	doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag , value , selvalue,obj, 'M', 'f_multiCombo'); //청구처 리스트 조회           
+            	doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag , value , selvalue,obj, 'M', ''); //청구처 리스트 조회
+            	   $('#searchdepartment').multipleSelect("enable");
+                   $('#searchdepartment').multipleSelect("checkAll");
             }
             
-             doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회 	
+           //  doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //청구처 리스트 조회 	
         }
      
      
@@ -792,24 +787,6 @@
         } 
          
 }
-      // AUIGrid 를 생성합니다.
-     /*  function f_dtail_info(gridData) {
-          detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
-          AUIGrid.setGridData(detailGrid, gridData.data);
-          $("#insertdetail").hide();
-      } */
-      
-     /*  function f_dtail_info(detailLayout) {
-          detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
-          
-      } */
-  /*     function f_dtail_set_info() {
-          AUIGrid.setGridData(detailGrid, gridData.data);
-      } */
-  
-   /*     function AddDetailAUIGrid(insDetailLayout) {        
-          AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
-      }  */
    
       function addRowFileter() {
           alert(div);
