@@ -22,13 +22,39 @@
 	</ul>
 	</header><!-- header end -->
 	
-	<hr />        
-        
+	<hr />
+
 <script type="text/javascript">
-    
-   /*  $(function() {
-    	
-    }); */
+
+	$(function () {
+		// draw menu path.
+		var $menuPathObj = $("#content ul:first-child");
+		if($menuPathObj.hasClass("path")){
+
+		    var pathStr =
+        		'<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>';
+
+			var pathVal = $("#CURRENT_MENU_FULL_PATH_NAME").val();
+
+			if(FormUtil.isNotEmpty(pathVal)){
+                var splitPath = pathVal.split(DEFAULT_DELIMITER);
+
+                if(splitPath.length > 1){
+					$.each(splitPath, function(idx, value) {
+                            pathStr += '<li>' + value + '</li>';
+					});
+
+                    $menuPathObj.html(pathStr);
+                }else{
+                    console.log("[header.jsp] splitPath.length is 0....");
+                }
+            }else{
+			    console.log("[header.jsp] pathVal is empty....");
+            }
+		}else{
+            console.log("[header.jsp] path class is not found...");
+        }
+	});
 
 </script>
     

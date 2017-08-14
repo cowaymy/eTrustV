@@ -112,7 +112,7 @@
                                         <ul>
                                     </c:if>
                                         <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
-                                            <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu('${menuList.menuCode}', '${menuList.pgmPath}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
+                                            <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu('${menuList.menuCode}', '${menuList.pgmPath}', '${list.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
                                         </li>
                                     <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
                                 </c:when>
@@ -138,7 +138,7 @@
     <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
     <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
     <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
-    <input type="hidden" id="CURRENT_MENU_PATH_NAME" name="CURRENT_MENU_PATH_NAME" value=""/>
+    <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
 </form>
 
 <script type="text/javaScript">
@@ -186,7 +186,7 @@ function fn_addClassMyMenu(currentMenuCode, groupMenuCode){
 }
 
 // 선택한 메뉴화면으로 이동.
-function fn_menu(menuCode, menuPath, myMenuGroupCode){
+function fn_menu(menuCode, menuPath, fullPath, myMenuGroupCode){
 
     if(FormUtil.isEmpty(menuPath)){
         return;
@@ -201,7 +201,7 @@ function fn_menu(menuCode, menuPath, myMenuGroupCode){
         $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
     }
 
-    $("#CURRENT_MENU_PATH_NAME").val(myMenuGroupCode);
+    $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
 
     $("#_menuForm").attr({
         action : getContextPath() + menuPath,

@@ -16,6 +16,7 @@ TODO :  로그인한 유저가 가진 메뉴를 조회 하도록 구현 필요. 
                   ,MENU.MENU_ORDER
                   ,CONNECT_BY_ISLEAF AS IS_LEAF
                   ,SYS_CONNECT_BY_PATH (MENU.MENU_CODE, '|!|') AS PATH_CODE
+                  ,SYS_CONNECT_BY_PATH (MENU.MENU_NAME, '|!|') AS PATH_NAME
               FROM (SELECT DISTINCT MENU.*
                                    ,PGM.PGM_PATH
                                    ,PGM.FUNC_VIEW
@@ -44,6 +45,13 @@ TODO :  로그인한 유저가 가진 메뉴를 조회 하도록 구현 필요. 
             ,MENU.MENU_CODE
             ,MENU.MENU_NAME
             ,PGM.PGM_PATH
+            , (SELECT        '|!|'
+                      || RTRIM (REVERSE (SYS_CONNECT_BY_PATH (REVERSE (A.MENU_NAME), '|!|') )
+                               ,'|!|') AS PATH_NAME
+                 FROM SYS0051M A
+                WHERE CONNECT_BY_ISLEAF = 1
+           START WITH A.MENU_CODE = MENU.MENU_CODE
+           CONNECT BY PRIOR A.UPPER_MENU_CODE = A.MENU_CODE) AS PATH_NAME
         FROM SYS0059M FAVORITES, SYS0060D MAPP, SYS0051M MENU, SYS0050M PGM
        WHERE FAVORITES.MYMENU_CODE = MAPP.MYMENU_CODE
          AND MAPP.MENU_CODE = MENU.MENU_CODE
