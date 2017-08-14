@@ -9,12 +9,13 @@
         <result property="department" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         <result property="department" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="codeName" column="CODE_NAME" jdbcType="CLOB" javaType="java.lang.String"/>
-        </resultMap> -->
+        </resultMap>
         <resultMap id="assetCopy" type="EgovMap">
         <result property="assetRem" column="ASSET_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         <result property="assetDRem" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         <result property="assetDItmRem" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
         </resultMap>
+         -->
     <select id="selectAssetList" parameterType="Map" resultType="EgovMap">
             select 
                  E1.ASSET_ID assetId,
@@ -424,7 +425,7 @@
          SELECT NVL(MAX(CARD_ID),0) + 1 FROM LOG0057M
     </select>
 
-    <select id="selectAssetM" parameterType="Map" resultMap="assetCopy">
+    <select id="selectAssetM" parameterType="Map" resultType="EgovMap">
         SELECT 
             ASSET_ID,
             STUS_ID,
@@ -454,7 +455,7 @@
           WHERE ASSET_ID=#{assetid}
     </select>
     
-    <select id="selectAssetD" parameterType="Map" resultMap="assetCopy">
+    <select id="selectAssetD" parameterType="Map" resultType="EgovMap">
         SELECT
                 l51d.ASSET_D_ID,
                 l51d.STUS_ID,
@@ -473,7 +474,7 @@
             AND  l51d.STUS_ID=1
     </select>
  
-    <select id="selectAssetDItem" parameterType="Map" resultMap="assetCopy">
+    <select id="selectAssetDItem" parameterType="Map" resultType="EgovMap">
         SELECT
                 l52d.ASSET_D_ITM_ID,
                 l52d.DISAB,

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.organization.impl.LocationMapper">
-    <resultMap id="locationClobMap" type="EgovMap">
+<!--     <resultMap id="locationClobMap" type="EgovMap">
         <result property="locdesc" column="locdesc" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="locaddr1" column="locaddr1" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="locaddr2" column="locaddr2" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="locaddr3" column="locaddr3" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="descr" column="descr" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
+    </resultMap> -->
     
-	<select id="selectLocationList" parameterType="Map" resultMap="locationClobMap">
+	<select id="selectLocationList" parameterType="Map"  resultType="egovMap">
         <![CDATA[
 		  SELECT WH_LOC_ID locid,
 		         WH_LOC_CODE loccd,
@@ -200,7 +200,7 @@
         SELECT NVL(MAX(WH_LOC_ID),0) + 1 from SYS0028M
     </select>
     
-    <select id="selectLocationCodeList" parameterType="Map" resultMap="locationClobMap">
+    <select id="selectLocationCodeList" parameterType="Map"  resultType="egovMap">
      <![CDATA[
           SELECT WH_LOC_ID locid,
                  WH_LOC_CODE loccd,

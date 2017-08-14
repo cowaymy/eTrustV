@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.materialdata.impl.MaterialMapper">
-   <resultMap id="NonItemClobMap" type="EgovMap">
+<!--    <resultMap id="NonItemClobMap" type="EgovMap">
         <result property="attach_img_loc" column="ATTACH_IMG_LOC" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="itm_desc" column="ITM_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
+    </resultMap> -->
+    
    <select id="selectStockMstList" parameterType="Map" resultType="egovMap">
 	   SELECT itemid , itemname , itemcode ,cateid, catename
 	   <if test="gubun =='item'">
@@ -55,7 +56,7 @@
        </if>    			
 	</select>
 	
-	<select id="selectMaterialMstItemList" parameterType="Map" resultMap="NonItemClobMap">
+	<select id="selectMaterialMstItemList" parameterType="Map"  resultType="egovMap">
        SELECT T1.ITM_ID,
        T1.ITM_CODE,
        T1.ITM_NAME,

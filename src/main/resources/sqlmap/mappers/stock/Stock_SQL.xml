@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.stocks.impl.StockMapper">
-        <resultMap id="clobMap" type="egovMap">
+<!--         <resultMap id="clobMap" type="egovMap">
         <result property="cdname" column="cdname" jdbcType="CLOB"
             javaType="java.lang.String" />
-    </resultMap>
+    </resultMap> -->
     
 	<select id="selectStockList" parameterType="Map" resultType="egovMap">
         <![CDATA[
@@ -492,7 +492,7 @@
 		                              AND MEM_PAC_ID  = 0)
         </update>
         
-        <select id="srvMembershipList" parameterType="Map" resultMap="clobMap">
+        <select id="srvMembershipList" parameterType="Map" resultType="egovMap">
         SELECT   SRV_MEM_PAC_ID pacid
 	        ,SRV_MEM_CODE memcd
 	        , SRV_MEM_CODE || ' - ' || SRV_MEM_DESC cdname
