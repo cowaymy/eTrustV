@@ -216,7 +216,7 @@ public class SearchPaymentController {
 	
 	/**
 	 * SearchMaster 조회
-	 * @param searchVO
+	 * @param SearchVO
 	 * @param params
 	 * @param model
 	 * @return
@@ -244,7 +244,7 @@ public class SearchPaymentController {
 	
 	/**
 	 * SearchDetail 조회
-	 * @param searchVO
+	 * @param SearchVO
 	 * @param params
 	 * @param model
 	 * @return
@@ -272,7 +272,7 @@ public class SearchPaymentController {
 	
 	/**
 	 * PaymentDetailViewer 조회
-	 * @param searchVO
+	 * @param SearchVO
 	 * @param params
 	 * @param model
 	 * @return
@@ -671,7 +671,7 @@ public class SearchPaymentController {
 	
 	/**
 	 * saveChanges
-	 * @param searchVO
+	 * @param SearchVO
 	 * @param params
 	 * @param model
 	 * @return

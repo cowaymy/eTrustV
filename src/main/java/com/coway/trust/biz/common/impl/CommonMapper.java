@@ -145,4 +145,6 @@ public interface CommonMapper {
 
 	EgovMap selectBrnchIdByPostCode(Map<String, Object> params);
 
+	
+	List<EgovMap> selectProductList();
 }

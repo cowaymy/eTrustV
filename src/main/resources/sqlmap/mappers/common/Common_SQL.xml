@@ -1014,5 +1014,40 @@
        FROM SYS0004M
        WHERE BANK_ID = #{value}
     </select>
-
+    
+    <select id="selectDocSubmissionList" parameterType="Map" resultType="egovMap">
+        SELECT T.CODE_ID
+             , T.TYPE_DESC
+          FROM
+             ( SELECT T1.CODE_ID
+                    , DBMS_LOB.SUBSTR (T1.CODE_DESC, 4000) TYPE_DESC
+                    , T2.TYPE_DT_SEQ
+                 FROM SYS0013M T1
+                 JOIN ORG0013C T2 ON T1.CODE_ID = T2.TYPE_ID
+                WHERE T2.TYPE_CODE_ID = #{typeCodeId}
+                  AND 1 = T2.STUS_ID
+                  AND T2.TYPE_GRP_ID = #{typeCodeId}
+             ) T
+         ORDER BY T.TYPE_DT_SEQ ASC
+    </select>
+    <select id="selectProductList" resultType="egovMap">
+       <![CDATA[
+        SELECT Project1.STK_ID STK_ID  ,
+		       Project1.C1 C1  ,
+		       Project1.CODE_NAME CODE_NAME  
+		FROM ( SELECT Extent1.STK_ID STK_ID  ,
+		                Extent1.STK_DESC STK_DESC  ,
+		                Extent3.CODE_NAME CODE_NAME  ,
+		                Extent1.STK_CODE || ' - ' || Extent1.STK_DESC C1  
+		          FROM SYS0026M Extent1
+		                JOIN SAL0016M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
+		                JOIN SYS0013M Extent3   ON Extent1.STK_CTGRY_ID = Extent3.CODE_ID
+		          WHERE  ( 1 <> UTILS.CONVERT_TO_NUMBER(Extent1.IS_NCV,10,0) )
+		                   AND ( 1 = Extent1.STUS_CODE_ID )
+		                   AND ( 61 = Extent1.STK_TYPE_ID )
+		                   AND ( Extent2.AMT > UTILS.CONVERT_TO_FLOAT(0,53) ) 
+		) Project1
+	    ORDER BY Project1.CODE_NAME ASC, Project1.STK_DESC ASC
+	    ]]>
+    </select>
 </mapper>

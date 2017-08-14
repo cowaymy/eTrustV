@@ -2,6 +2,7 @@ package com.coway.trust.web.common;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -121,7 +122,8 @@ public class CommonController {
 	}
 
 	@RequestMapping(value = "/selectBranchCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectBranchCodeList(@RequestParam Map<String, Object> params) {
+	public ResponseEntity<List<EgovMap>> selectBranchCodeList(@RequestParam Map<String, Object> params) 
+	{
 		List<EgovMap> codeList = commonService.selectBranchList(params);
 		return ResponseEntity.ok(codeList);
 	}
@@ -215,4 +217,13 @@ public class CommonController {
 		return ResponseEntity.ok(result);
 	}
 
+	
+	@RequestMapping(value = "/selectProductList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAppTypeList(@RequestParam Map<String, Object> params)
+	{
+		List<EgovMap> codeList = commonService.selectProductList();
+		for(EgovMap em : codeList)
+			System.out.println(em);
+		return ResponseEntity.ok(codeList);
+	}
 }

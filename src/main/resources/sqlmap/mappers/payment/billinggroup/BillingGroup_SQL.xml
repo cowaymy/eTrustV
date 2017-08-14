@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billinggroup.impl.InvoiceMapper">
+
+    <!-- Reconciliation 리스트 조회 -->
+	<select id="selectCompanyInvoiceList" parameterType="Map" resultType="egovMap">
+	   <![CDATA[
+	  SELECT Project2.NAME NAME  ,
+       Project2.NRIC NRIC  ,
+       Project2.SALES_ORD_ID SALES_ORD_ID  ,
+       Project2.SALES_ORD_NO SALES_ORD_NO  ,
+       Project2.SALES_DT SALES_DT  ,
+       Project2.RENT_DOC_NO RENT_DOC_NO  ,
+       Project2.RENT_AMT RENT_AMT  ,
+       Project2.RENT_INST_NO RENT_INST_NO  ,
+       Project2.C1 C1  ,
+       Project2.TASK_ID TASK_ID  ,
+       Project2.APP_TYPE_NAME APP_TYPE_NAME  ,
+       Project2.REN_DATE_TIME REN_DATE_TIME  ,
+       Project2.REN_DATE_TIME_MONTH REN_DATE_TIME_MONTH  ,
+       Project2.REN_DATE_TIME_YEAR REN_DATE_TIME_YEAR  
+      FROM ( SELECT Distinct1.NAME NAME  ,
+		              Distinct1.NRIC NRIC  ,
+		              Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+		              Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+		              Distinct1.SALES_DT SALES_DT  ,
+		              Distinct1.RENT_DOC_NO RENT_DOC_NO  ,
+		              Distinct1.RENT_AMT RENT_AMT  ,
+		              Distinct1.RENT_INST_NO RENT_INST_NO  ,
+		              Distinct1.C1 C1  ,
+		              Distinct1.TASK_ID TASK_ID  ,
+		              Distinct1.APP_TYPE_NAME APP_TYPE_NAME  ,
+		              Distinct1.REN_DATE_TIME REN_DATE_TIME  ,
+		              Distinct1.REN_DATE_TIME_MONTH REN_DATE_TIME_MONTH  ,
+		              Distinct1.REN_DATE_TIME_YEAR REN_DATE_TIME_YEAR  
+                FROM ( SELECT DISTINCT Filter1.NAME1 NAME  ,
+		                                Filter1.NRIC1 NRIC  ,
+		                                Filter1.SALES_ORD_ID SALES_ORD_ID  ,
+		                                Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+		                                Filter1.SALES_DT SALES_DT  ,
+		                                Filter1.RENT_DOC_NO RENT_DOC_NO  ,
+		                                Filter1.RENT_AMT RENT_AMT  ,
+		                                Filter1.RENT_INST_NO RENT_INST_NO  ,
+		                                1 C1  ,
+		                                CASE 
+		                                     WHEN ( Filter1.TASK_ID IS NULL ) THEN 0
+		                                ELSE Filter1.TASK_ID
+		                                   END TASK_ID  ,
+		                                CASE 
+		                                     WHEN ( 66 = Filter1.APP_TYPE_ID ) THEN Filter1.NAME2
+		                                ELSE Filter1.NAME3
+		                                   END APP_TYPE_NAME  ,
+		                                TO_CHAR(TO_DATE(Filter1.RENT_DT_TM, 'YYYY-MM-DD'), 'YY/MM') REN_DATE_TIME ,
+		                                utils.datepart('MONTH', Filter1.RENT_DT_TM) REN_DATE_TIME_MONTH  ,
+		                                utils.datepart('YEAR', Filter1.RENT_DT_TM) REN_DATE_TIME_YEAR  
+                        FROM ( SELECT Extent1.NAME NAME1  ,
+				                              Extent1.NRIC NRIC1  ,
+				                              Extent2.SALES_ORD_ID SALES_ORD_ID  ,
+				                              Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+				                              Extent2.SALES_DT SALES_DT  ,
+				                              Extent2.APP_TYPE_ID APP_TYPE_ID  ,
+				                              Extent3.RENT_DOC_NO RENT_DOC_NO  ,
+				                              Extent3.RENT_DT_TM RENT_DT_TM  ,
+				                              Extent3.RENT_AMT RENT_AMT  ,
+				                              Extent3.RENT_INST_NO RENT_INST_NO  ,
+				                              Extent4.TASK_ID TASK_ID  ,
+				                              Extent6.NAME NAME2  ,
+				                              Extent7.NAME NAME3  
+                                 FROM SAL0029D Extent1
+                                        JOIN SAL0001D Extent2   ON ( Extent2.CUST_ID = Extent1.CUST_ID )
+                                        AND ( 8 <> Extent2.STUS_CODE_ID )
+                                        JOIN PAY0022D Extent3   ON ( Extent3.RENT_SO_ID = Extent2.SALES_ORD_ID )
+                                        AND ( Extent3.RENT_DOC_TYPE_ID IN ( 158,159,161 )
+                                   )
+	                              AND ( Extent3.RENT_DOC_NO LIKE 'BR%' )
+	                              LEFT JOIN PAY0062S Extent4   ON ( Extent4.BR_NO = Extent3.RENT_DOC_NO )
+	                              AND ( 1 = UTILS.CONVERT_TO_NUMBER(Extent4.STUS_CODE_ID,10,0) )
+	                              LEFT JOIN SAL0024D Extent5   ON ( Extent5.CUST_BILL_ID = Extent2.CUST_BILL_ID )
+	                              AND ( 66 = Extent2.APP_TYPE_ID )
+	                              LEFT JOIN SAL0027D Extent6   ON ( Extent6.CUST_CNTC_ID = Extent5.CUST_BILL_CNT_ID )
+	                              AND ( 66 = Extent2.APP_TYPE_ID )
+	                              LEFT JOIN SAL0027D Extent7   ON ( Extent7.CUST_CNTC_ID = Extent2.CUST_CNT_ID )
+	                              AND ( 66 <> Extent2.APP_TYPE_ID )
+                        WHERE  ( 965 = Extent1.TYPE_ID )
+                                 AND ( 8 <> UTILS.CONVERT_TO_NUMBER(Extent1.STUS_CODE_ID,10,0) ) ) Filter1
+                       LEFT JOIN PAY0017D Extent8   ON Extent8.ACC_INV_VOID_INVC_NO = Filter1.RENT_DOC_NO
+                 WHERE  ( Extent8.ACC_INV_VOID_REF_NO IS NULL )]]>
+                         <if test="billNo != '' ">
+                                AND  (Filter1.RENT_DOC_NO = #{billNo})
+                          </if>
+                          <if test="orderNo != '' ">
+                                AND ( Filter1.SALES_ORD_NO = #{orderNo} )
+                          </if>
+                          <if test="custName != '' ">
+                                AND ( Filter1.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~' )
+                          </if>
+                          <if test="custNRIC != '' ">
+                                AND ( Filter1.NAME1 LIKE '%' || #{custNRIC} || '%' ESCAPE '~' )
+                          </if>
+                          <if test="sMonth != '' ">
+                                AND ( (utils.datepart('MONTH', Filter1.RENT_DT_TM)) = #{sMonth} )
+                          </if>
+                          <if test="sYear != '' ">
+                                AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} ) 
+                          </if>
+               )Distinct1 ) Project2
+        ORDER BY Project2.SALES_ORD_ID DESC
+	</select>
+	
+	<select id="selectRentalStatementList" parameterType="Map" resultType="egovMap">
+	 <![CDATA[
+	   SELECT Project2.C1 C1  ,
+       Project2.TASK_ID TASK_ID  ,
+       Project2.SALES_ORD_ID SALES_ORD_ID  ,
+       Project2.SALES_ORD_NO SALES_ORD_NO  ,
+       Project2.SALES_DT SALES_DT  ,
+       Project2.NAME NAME  ,
+       Project2.NRIC NRIC  ,
+       Project2.NAME1 NAME1  ,
+       Project2.RENT_DOC_NO RENT_DOC_NO  ,
+       Project2.RENT_DT_TM RENT_DT_TM  ,
+       Project2.RDTMONTH RDTMONTH  ,
+       Project2.RDTYEAR RDTYEAR  ,
+       Project2.RENT_AMT RENT_AMT  ,
+       Project2.RENT_INST_NO RENT_INST_NO  
+  FROM ( SELECT Project2.RENT_DOC_NO RENT_DOC_NO  ,
+                Project2.RENT_AMT RENT_AMT  ,
+                Project2.RENT_INST_NO RENT_INST_NO  ,
+                Project2.C1 C1  ,
+                Project2.TASK_ID TASK_ID  ,
+                Project2.RENT_DT_TM RENT_DT_TM  ,
+                Project2.RDTMONTH RDTMONTH  ,
+                Project2.RDTYEAR RDTYEAR  ,
+                Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                Project2.SALES_DT SALES_DT  ,
+                Project2.NAME NAME  ,
+                Project2.NRIC NRIC  ,
+                Project2.NAME1 NAME1  
+         FROM ( SELECT Distinct1.RENT_DOC_NO RENT_DOC_NO  ,
+                       Distinct1.RENT_AMT RENT_AMT  ,
+                       Distinct1.RENT_INST_NO RENT_INST_NO  ,
+                       Distinct1.C1 C1  ,
+                       Distinct1.TASK_ID TASK_ID  ,
+                       Distinct1.RENT_DT_TM RENT_DT_TM  ,
+                       Distinct1.RDTMONTH RDTMONTH  ,
+                       Distinct1.RDTYEAR RDTYEAR  ,
+                       Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+                       Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+                       Distinct1.SALES_DT SALES_DT  ,
+                       Distinct1.NAME NAME  ,
+                       Distinct1.NRIC NRIC  ,
+                       Distinct1.NAME1 NAME1  
+                FROM ( SELECT DISTINCT Filter1.RENT_DOC_NO RENT_DOC_NO  ,
+                                       Filter1.RENT_AMT RENT_AMT  ,
+                                       Filter1.RENT_INST_NO RENT_INST_NO  ,
+                                       1 C1  ,
+                                       CASE 
+                                            WHEN ( Filter1.TASK_ID IS NULL ) THEN 0
+                                       ELSE Filter1.TASK_ID
+                                          END TASK_ID  ,
+                                      TO_CHAR(TO_DATE(Filter1.RENT_DT_TM, 'YYYY-MM-DD'), 'YY/MM') RENT_DT_TM ,
+                                       utils.datepart('MONTH', Filter1.RENT_DT_TM) RDTMONTH  ,
+                                       utils.datepart('YEAR', Filter1.RENT_DT_TM) RDTYEAR  ,
+                                       Filter1.SALES_ORD_ID SALES_ORD_ID  ,
+                                       Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+                                       Filter1.SALES_DT SALES_DT  ,
+                                       Filter1.NAME2 NAME  ,
+                                       Filter1.NRIC1 NRIC  ,
+                                       Filter1.NAME3 NAME1  
+                       FROM ( SELECT Extent1.RENT_DOC_NO RENT_DOC_NO  ,
+                                     Extent1.RENT_DT_TM RENT_DT_TM  ,
+                                     Extent1.RENT_AMT RENT_AMT  ,
+                                     Extent1.RENT_INST_NO RENT_INST_NO  ,
+                                     Extent2.TASK_ID TASK_ID  ,
+                                     Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+                                     Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+                                     Extent3.SALES_DT SALES_DT  ,
+                                     Extent4.NAME NAME2  ,
+                                     Extent4.NRIC NRIC1  ,
+                                     Extent5.NAME NAME3  
+                              FROM PAY0022D Extent1
+                                     LEFT JOIN PAY0084D Extent2   ON Extent1.RENT_DOC_NO = Extent2.BR_NO
+                                     LEFT JOIN SAL0001D Extent3   ON Extent1.RENT_SO_ID = Extent3.SALES_ORD_ID
+                                     LEFT JOIN SAL0029D Extent4   ON Extent3.CUST_ID = Extent4.CUST_ID
+                                     LEFT JOIN SAL0027D Extent5   ON Extent3.CUST_CNT_ID = Extent5.CUST_CNTC_ID
+                               WHERE  Extent1.RENT_DOC_TYPE_ID IN ( 158,159,161 )
+                             ) Filter1
+                              LEFT JOIN SAL0074D Extent6   ON Filter1.SALES_ORD_ID = Extent6.SALES_ORD_ID
+                        WHERE 1=1
+                        ]]>     
+                                <if test="billNo != '' ">
+                                 AND ( Filter1.RENT_DOC_NO LIKE '%' || #{billNo} || '%'ESCAPE '~' )
+                                 </if>
+                                 <if test="orderNo != '' ">
+                                 AND ( Filter1.SALES_ORD_NO LIKE '%' || #{orderNo} || '%'ESCAPE '~' )
+                                 </if>
+                                 <if test="custName != '' " >
+                                 AND ( Filter1.NAME2 LIKE '%' || #{custName} || '%' ESCAPE '~' )
+                                 </if>
+                                 <if test="custNRIC != '' ">
+                                 AND ( Filter1.NAME2 LIKE '%' || #{custNRIC} || '%' ESCAPE '~' )
+                                 </if>
+                                 <if test="sMonth != '' ">
+                                 AND ( (utils.datepart('MONTH', Filter1.RENT_DT_TM)) = #{sMonth} )
+                                 </if>
+                                 <if test="sYear != '' ">
+                                 AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} )
+                                 </if>
+                                  ) Distinct1 ) Project2 ) Project2
+  ORDER BY Project2.SALES_ORD_ID DESC
+	   
+	</select>
+	
+	<select id="selectMembershipInvoiceList" parameterType="Map" resultType="egovMap">
+<![CDATA[SELECT Project2.C1 C1  ,
+                Project2.TASK_ID TASK_ID  ,
+                Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                Project2.SALES_DT SALES_DT  ,
+                Project2.NAME NAME  ,
+                Project2.NRIC NRIC  ,
+                Project2.TEL_M1 TEL_M1  ,
+                Project2.INVC_REF_NO INVC_REF_NO  ,
+                Project2.SRV_MEM_QUOT_NO SRV_MEM_QUOT_NO  ,
+                Project2.INVC_REF_DT INVC_REF_DT  ,
+                Project2.INVC_SUB_MEM_PAC_AMT INVC_SUB_MEM_PAC_AMT  ,
+                Project2.INVC_SUB_MEM_BS_AMT INVC_SUB_MEM_BS_AMT  
+  FROM ( SELECT Project2.INVC_REF_NO INVC_REF_NO  ,
+                Project2.TASK_ID TASK_ID  ,
+                Project2.C1 C1  ,
+                Project2.INVC_REF_DT INVC_REF_DT  ,
+                Project2.INVC_SUB_MEM_PAC_AMT INVC_SUB_MEM_PAC_AMT  ,
+                Project2.INVC_SUB_MEM_BS_AMT INVC_SUB_MEM_BS_AMT  ,
+                Project2.SRV_MEM_QUOT_NO SRV_MEM_QUOT_NO  ,
+                Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                Project2.SALES_DT SALES_DT  ,
+                Project2.NAME NAME  ,
+                Project2.NRIC NRIC  ,
+                Project2.TEL_M1 TEL_M1  
+         FROM ( SELECT Distinct1.INVC_REF_NO INVC_REF_NO  ,
+                       Distinct1.TASK_ID TASK_ID  ,
+                       Distinct1.C1 C1  ,
+                       Distinct1.INVC_REF_DT INVC_REF_DT  ,
+                       Distinct1.INVC_SUB_MEM_PAC_AMT INVC_SUB_MEM_PAC_AMT  ,
+                       Distinct1.INVC_SUB_MEM_BS_AMT INVC_SUB_MEM_BS_AMT  ,
+                       Distinct1.SRV_MEM_QUOT_NO SRV_MEM_QUOT_NO  ,
+                       Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+                       Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+                       Distinct1.SALES_DT SALES_DT  ,
+                       Distinct1.NAME NAME  ,
+                       Distinct1.NRIC NRIC  ,
+                       Distinct1.TEL_M1 TEL_M1  
+                FROM ( SELECT DISTINCT Extent1.INVC_REF_NO INVC_REF_NO  ,
+                                       Extent1.TASK_ID TASK_ID  ,
+                                       1 C1  ,
+                                       TO_CHAR(TO_DATE(Extent1.INVC_REF_DT, 'YYYY-MM-DD'), 'YY/MM') INVC_REF_DT  ,
+                                       UTILS.CONVERT_TO_FLOAT(Extent2.INVC_SUB_MEM_PAC_AMT,53)  INVC_SUB_MEM_PAC_AMT,
+                                       UTILS.CONVERT_TO_FLOAT(Extent2.INVC_SUB_MEM_BS_AMT,53) INVC_SUB_MEM_BS_AMT  ,
+                                       Extent3.SRV_MEM_QUOT_NO SRV_MEM_QUOT_NO  ,
+                                       Extent4.SALES_ORD_ID SALES_ORD_ID  ,
+                                       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+                                       Extent4.SALES_DT SALES_DT  ,
+                                       Extent5.NAME NAME  ,
+                                       Extent5.NRIC NRIC  ,
+                                       Extent6.TEL_M1 TEL_M1  
+                       FROM PAY0013D Extent1
+                              LEFT JOIN PAY0014D Extent2   ON Extent1.INVC_ID = Extent2.INVC_ID
+                              LEFT JOIN SAL0093D Extent3   ON Extent2.INVC_SUB_MEM_QOTAT_ID = Extent3.SRV_MEM_QUOT_ID
+                              LEFT JOIN SAL0001D Extent4   ON Extent3.SRV_SALES_ORD_ID = Extent4.SALES_ORD_ID
+                              LEFT JOIN SAL0029D Extent5   ON Extent4.CUST_ID = Extent5.CUST_ID
+                              LEFT JOIN SAL0027D Extent6   ON Extent4.CUST_CNT_ID = Extent6.CUST_CNTC_ID
+                        WHERE  1=1 ]]>
+                        <if test="invoiceNo != '' ">
+                            AND( Extent1.INVC_REF_NO = #{invoiceNo} )
+                         </if>
+                         <if test="orderNo != '' ">
+                            AND ( Extent4.SALES_ORD_NO = #{orderNo} )
+                        </if>
+                        <if test="custName != '' ">
+                            AND ( Extent5.NAME LIKE '%' || #{custName} || '%'ESCAPE '~' )
+                        </if>
+                        <if test="custNRIC != '' ">
+                            AND ( Extent5.NAME LIKE '%' || #{custNRIC} || '%'ESCAPE '~' )
+                         </if>
+                         <if test="quotationNo != '' ">
+                            AND ( Extent3.SRV_MEM_QUOT_NO LIKE '%' || #{quotationNo} || '%'ESCAPE '~' )
+                         </if>
+                                  ) Distinct1 ) Project2 ) Project2
+  ORDER BY Project2.SALES_ORD_ID DESC 
+	</select>
+	
+	<select id="selectOutrightInvoiceList" parameterType="Map" resultType="egovMap">
+	   SELECT Project2.C1 C1  ,
+	       Project2.SALES_ORD_ID SALES_ORD_ID  ,
+	       Project2.SALES_ORD_NO SALES_ORD_NO  ,
+	       Project2.APP_TYPE_ID APP_TYPE_ID  ,
+	       Project2.CODE_NAME CODE_NAME  ,
+	       Project2.SALES_DT SALES_DT  ,
+	       Project2.NAME NAME  ,
+	       Project2.NRIC NRIC  ,
+	       Project2.C2 C2  ,
+	       Project2.C3 C3  ,
+	       Project2.C4 C4  ,
+	       Project2.MEM_CODE MEM_CODE  ,
+	       Project2.MEM_ID MEM_ID  ,
+	       Project2.MEM_TYPE MEM_TYPE  
+	   FROM ( SELECT Project2.SALES_ORD_ID SALES_ORD_ID  ,
+	                Project2.SALES_ORD_NO SALES_ORD_NO  ,
+	                Project2.SALES_DT SALES_DT  ,
+	                Project2.APP_TYPE_ID APP_TYPE_ID  ,
+	                Project2.NAME NAME  ,
+	                Project2.NRIC NRIC  ,
+	                Project2.C1 C1  ,
+	                Project2.C2 C2  ,
+	                Project2.C3 C3  ,
+	                Project2.C4 C4  ,
+	                Project2.MEM_ID MEM_ID  ,
+	                Project2.MEM_CODE MEM_CODE  ,
+	                Project2.MEM_TYPE MEM_TYPE  ,
+	                Project2.CODE_NAME CODE_NAME  
+	         FROM ( SELECT Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+	                       Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+	                       Distinct1.SALES_DT SALES_DT  ,
+	                       Distinct1.APP_TYPE_ID APP_TYPE_ID  ,
+	                       Distinct1.NAME NAME  ,
+	                       Distinct1.NRIC NRIC  ,
+	                       Distinct1.C1 C1  ,
+	                       Distinct1.C2 C2  ,
+	                       Distinct1.C3 C3  ,
+	                       Distinct1.C4 C4  ,
+	                       Distinct1.MEM_ID MEM_ID  ,
+	                       Distinct1.MEM_CODE MEM_CODE  ,
+	                       Distinct1.MEM_TYPE MEM_TYPE  ,
+	                       Distinct1.CODE_NAME CODE_NAME  
+	                FROM ( SELECT DISTINCT Filter1.SALES_ORD_ID SALES_ORD_ID  ,
+	                                       Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+	                                       Filter1.SALES_DT SALES_DT  ,
+	                                       Filter1.APP_TYPE_ID APP_TYPE_ID  ,
+	                                       Filter1.NAME1 NAME  ,
+	                                       Filter1.NRIC1 NRIC  ,
+	                                       1 C1  ,
+	                                       CASE 
+	                                            WHEN ( Filter1.ORGCODE1 IS NOT NULL ) THEN Filter1.ORGCODE1
+	                                       ELSE ''
+	                                          END C2  ,
+	                                       CASE 
+	                                            WHEN ( Filter1.GRPCODE1 IS NOT NULL ) THEN Filter1.GRPCODE1
+	                                       ELSE ''
+	                                          END C3  ,
+	                                       CASE 
+	                                            WHEN ( Filter1.DEPTCODE1 IS NOT NULL ) THEN Filter1.DEPTCODE1
+	                                       ELSE ''
+	                                          END C4  ,
+	                                       Filter1.MEMBERID1 MEM_ID  ,
+	                                       Filter1.MEMBERCODE1 MEM_CODE  ,
+	                                       Filter1.MEM_TYPE MEM_TYPE  ,
+	                                       Extent5.CODE_NAME CODE_NAME  
+	                       FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+	                                     Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+	                                     Extent1.SALES_DT SALES_DT  ,
+	                                     Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+	                                     Extent2.NAME NAME1  ,
+	                                     Extent2.NRIC NRIC1  ,
+	                                     Extent3.MEM_ID MEMBERID1  ,
+	                                     Extent3.MEM_CODE MEMBERCODE1  ,
+	                                     Extent3.MEM_TYPE MEM_TYPE  ,
+	                                     Extent4.DEPT_CODE DEPTCODE1  ,
+	                                     Extent4.GRP_CODE GRPCODE1  ,
+	                                     Extent4.ORG_CODE ORGCODE1  
+	                                FROM SAL0001D Extent1
+	                                JOIN SAL0029D Extent2   ON Extent1.CUST_ID = Extent2.CUST_ID
+								    LEFT JOIN ORG0001D Extent3   ON Extent1.MEM_ID = Extent3.MEM_ID
+								    LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+										                     vMemberOrg.MEM_CODE MEM_CODE  ,
+										                     vMemberOrg.MEM_LVL MEM_LVL  ,
+										                     vMemberOrg.DEPT_CODE DEPT_CODE  ,
+										                     vMemberOrg.GRP_CODE GRP_CODE  ,
+										                     vMemberOrg.ORG_CODE ORG_CODE  ,
+										                     vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+										                     vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+										                     vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+										                     vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+										                     vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+										                     vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+										              FROM ORG1001V vMemberOrg ) Extent4   ON Extent3.MEM_ID = Extent4.MEM_ID
+	                                
+	                                   <if test="appType != '' and appType != null">
+	                                        WHERE Extent1.APP_TYPE_ID IN (
+                                            <foreach collection="appType" index="index" separator=",">
+                                                    '${appType[index]}'
+                                            </foreach>
+                                            )
+	                                   </if>
+	                        ) Filter1
+	                              LEFT JOIN SYS0013M Extent5   ON Filter1.APP_TYPE_ID = Extent5.CODE_ID
+	                        WHERE  1=1
+	                               <if test="orderNo != '' " >
+	                               AND Filter1.SALES_ORD_NO LIKE '%' || #{orderNo}|| '%' ESCAPE '~' 
+	                               </if>
+	                               <if test="custName != '' "> 
+	                               AND Filter1.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~'  
+	                               </if>
+	    ) Distinct1 ) Project2 ) Project2
+	  ORDER BY Project2.SALES_ORD_ID DESC
+	   
+	</select>
+</mapper>
