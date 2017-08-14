@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
-import com.coway.trust.web.organization.MemberListController;
+import com.coway.trust.web.organization.organization.MemberListController;
 
 import antlr.Parser;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
