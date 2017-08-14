@@ -358,7 +358,7 @@
 			valueField : "value",
 		}
 	}, {
-		dataField : "orgDs",
+		dataField : "orgds",
 		headerText : "ORG NAME",
 		width : 200,
 		style : "my-column",
@@ -485,7 +485,7 @@
 	 rule AUIGrid 칼럼 설정
 	**********************/
 	var columnLayout2 = [   {
-	    dataField : "orgDs",
+	    dataField : "orgds",
 	    headerText : "ORG Name",
 	    width : 120,
 	    style : "my-column",
@@ -575,7 +575,7 @@
                 var list = new Object();
                 list.id = result[i].orgCd;
                 list.value = result[i].orgNm;
-                list.cdDs = result[i].cdDs;
+                list.cdDs = result[i].cdds;
                 list.orgSeq = result[i].orgSeq;
                 list.orgGrCd = result[i].orgGrCd;
                 orgGridCdList.push(list);
