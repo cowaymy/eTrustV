@@ -54,7 +54,7 @@
              , T.TYPE_DESC
           FROM
              ( SELECT T1.CODE_ID
-                    , T1.CODE_DESC
+                    , T1.CODE_DESC TYPE_DESC
                     , T2.TYPE_DT_SEQ
                  FROM SYS0013M T1
                  JOIN ORG0013C T2 ON T1.CODE_ID = T2.TYPE_ID
