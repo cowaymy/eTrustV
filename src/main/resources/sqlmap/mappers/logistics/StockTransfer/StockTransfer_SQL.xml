@@ -31,7 +31,7 @@
 		     , l48.reqst_qty     reqstqty
 		     , l55.delvry_no delvno 
              , NVL (l55.DELVRY_QTY, 0) AS delyqty
-		     , nvl(L48.RCIPT_qty , 0) as greceipt
+		     , nvl(l55.RCIPT_QTY , 0) as rciptqty
 		     , l48.uom
 		     , uomt.code_name uomnm
 		  from log0047m l47
@@ -281,6 +281,7 @@
 		     , s28q.wh_loc_code  reqlocnm
 		     , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
 		     , l48.reqst_no_itm ritmno
+		     , nvl(l55.rcipt_qty , 0) rciptqty
 		  from log0047m l47
 		     , log0048d l48
 		     , log0054m l54
@@ -327,13 +328,16 @@
            <if test="crtedt !=null and crtedt !=''">
               and l55.DELVRY_DT <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
+           <if test="gtype !=null and gtype =='receipt'">
+              and l55.rcipt_qty is not null
+           </if>
            ORDER BY l54.delvry_no
            ) T
     </select>
     <resultMap id="result" type="egovMap" />
     <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY
-                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=result} )
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=result} )
              } 
      </select>
 </mapper>

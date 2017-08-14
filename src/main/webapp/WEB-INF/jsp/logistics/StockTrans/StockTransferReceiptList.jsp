@@ -46,7 +46,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                     {dataField:"grqry"        ,headerText:"Good ReceiptQty"             ,width:120    ,height:30 , editalble:true},
+                     {dataField:"rciptqty"     ,headerText:"Good ReceiptQty"             ,width:120    ,height:30 , editalble:true},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
                      {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30}
@@ -201,7 +201,7 @@ $(function(){
         	Common.alert('No data selected.');
             return false;
         }else{
-        	$("#giopenwindow").show();
+        	$("#gropenwindow").show();
         }
     });
 });
@@ -210,7 +210,7 @@ function SearchListAjax() {
    
     var url = "/logistics/stocktransfer/StocktransferSearchDeliveryList.do";
     var param = $('#searchForm').serializeJSON();
-    
+    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
     });
@@ -243,14 +243,14 @@ function f_getTtype(g , v){
     
     return rData;
 }
-function giFunc(){
+function grFunc(){
 	var data = {};
 	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
 	var check     = AUIGrid.getCheckedRowItems(listGrid);
 	
 	data.check   = check;
 	data.checked = check;
-	data.form    = $("#giForm").serializeJSON();
+	data.form    = $("#grForm").serializeJSON();
 	console.log(data);
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
         
@@ -259,7 +259,7 @@ function giFunc(){
         $("#giptdate").val("");
         $("#gipfdate").val("");
         $("#doctext" ).val("");
-        $("#giopenwindow").hide();
+        $("#gropenwindow").hide();
         $('#search').click();
 
     },  function(jqXHR, textStatus, errorThrown) {
@@ -276,12 +276,12 @@ function giFunc(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Transfer Delivery List</li>
+    <li>Stock Transfer Good Issue List</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Stock Transfer Delivery List</h2>
+<h2>Stock Transfer Good Issue List</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -294,7 +294,7 @@ function giFunc(){
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
-        <input type="hidden" name="gtype"   id="gtype"  value="gissue" />
+        <input type="hidden" name="gtype"   id="gtype"  value="receipt" /> 
         <input type="hidden" name="rStcode" id="rStcode" />    
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
@@ -365,24 +365,24 @@ function giFunc(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="gissue"><span class="search"></span>Good Issue</a></p></li>                        
+            <li><p class="btn_grid"><a id="gissue"><span class="search"></span>Good Receipt</a></p></li>                        
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
 
     </section><!-- search_result end -->
     
-    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
+    <div class="popup_wrap" id="gropenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-		    <h1>Good Issue Posting Data</h1>
+		    <h1>Good Receipt Posting Data</h1>
 		    <ul class="right_opt">
 		        <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 		    </ul>
 		</header><!-- pop_header end -->
 		
 		<section class="pop_body"><!-- pop_body start -->
-		    <form id="giForm" name="giForm" method="POST">
-		    <input type="hidden" name="gtype" id="gtype" value="GI">
+		    <form id="grForm" name="grForm" method="POST">
+		    <input type="hidden" name="gtype" id="gtype" value="GR"> 
 		    <table class="type1">
 		    <caption>search table</caption>
 		    <colgroup>
@@ -393,9 +393,9 @@ function giFunc(){
 		    </colgroup>
 		    <tbody>
 		        <tr>
-		            <th scope="row">GI Posting Date</th>
+		            <th scope="row">GR Posting Date</th>
                     <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
-                    <th scope="row">GI Proof Date</th>
+                    <th scope="row">GR Proof Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
                 </tr>
                 <tr>    
@@ -406,7 +406,7 @@ function giFunc(){
 		    </table>
 		
 		    <ul class="center_btns">
-		        <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li> 
+		        <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li> 
 		    </ul>
 		    </form>
 		

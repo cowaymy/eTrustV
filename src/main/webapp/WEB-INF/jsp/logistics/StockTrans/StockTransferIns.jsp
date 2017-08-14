@@ -52,7 +52,7 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     ***********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
+    paramdata = { groupCode : '306' ,Codeval: 'US' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , '');

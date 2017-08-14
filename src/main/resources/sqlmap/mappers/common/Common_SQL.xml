@@ -448,6 +448,9 @@
 		<if test="groupCode != null and groupCode !=''">
 		   AND CODE_MASTER_ID = #{groupCode}
 		</if>
+		<if test="Codeval != null and Codeval !=''">
+           AND CODE = #{Codeval}
+        </if>
 		<if test="likeValue != null and likeValue !=''">
 		   AND CODE LIKE #{likeValue}||'%'
 		</if>

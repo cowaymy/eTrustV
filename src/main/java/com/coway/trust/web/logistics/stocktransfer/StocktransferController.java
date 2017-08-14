@@ -72,6 +72,12 @@ public class StocktransferController {
 		return "logistics/StockTrans/StockTransferDeliveryList";
 	}
 	
+	@RequestMapping(value = "/StockTransferReceiptList.do")
+	public String StockTransferReceiptList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/StockTrans/StockTransferReceiptList";
+	}
+	
 	@RequestMapping(value = "/StocktransferList.do")
 	public String stocklist(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String streq     = request.getParameter("streq");

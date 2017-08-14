@@ -53,7 +53,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30                },
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                     {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30                },
+                     {dataField:"rciptqty"     ,headerText:"Good Receipt"                ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
                      
@@ -74,7 +74,7 @@ var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"        
                        {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                        {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                        {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                       {dataField:"grqry"        ,headerText:"Good ReceiptQty"             ,width:120    ,height:30                },
+                       {dataField:"rciptqty"     ,headerText:"Good ReceiptQty"             ,width:120    ,height:30                },
                        {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30},
                        {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                        {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];

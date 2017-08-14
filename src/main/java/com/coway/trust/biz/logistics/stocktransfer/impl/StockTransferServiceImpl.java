@@ -251,6 +251,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		
 		stocktran.StockTransferiSsue(formMap);
 		
+		System.out.println(formMap.get("rdata"));
 		
 		List<EgovMap> list = null;
 		
