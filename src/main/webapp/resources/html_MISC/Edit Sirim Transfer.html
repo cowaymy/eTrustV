@@ -153,7 +153,7 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Sirim Receive </h2>
+<h2>Sirim Transfer</h2>
 </aside><!-- title_line end -->
 
 
@@ -161,13 +161,13 @@
 <form action="#" method="post">
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Sirim Transit Information</h3>
+<h3>Sirim Transfer Information</h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
+	<col style="width:170px" />
 	<col style="width:*" />
 	<col style="width:130px" />
 	<col style="width:*" />
@@ -184,9 +184,13 @@
 	</td>
 </tr>
 <tr>
-	<th scope="row">Transit Status </th>
+	<th scope="row">Transit Status</th>
 	<td>
-	<span>1111</span>
+	<select class="disabled" disabled="disabled">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
 	</td>
 	<th scope="row">Transit By</th>
 	<td>
@@ -202,7 +206,11 @@
 <tr>
 	<th scope="row">Courier</th>
 	<td colspan="3">
-	<span>1111</span>
+	<select class="disabled" disabled="disabled">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
 	</td>
 </tr>
 <tr>
@@ -214,39 +222,9 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Sirim To Receive</h3>
-</aside><!-- title_line end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Receive Option</th>
-	<td>
-	<label><input type="radio" name="name" /><span>Only selected item(s)</span></label>
-	<label><input type="radio" name="name" /><span>All item(s) </span></label>
-	</td>
-</tr>
-<tr>
-	<th scope="row">Receive Status</th>
-	<td>
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#">Update</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#">Back</a></p></li>
 </ul>
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
@@ -285,6 +263,7 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">Show All</a></p></li>
 	<li><p class="btn_grid"><a href="#">Only Pending</a></p></li>
 	<li><p class="btn_grid"><a href="#">Only Complete</a></p></li>
 	<li><p class="btn_grid"><a href="#">Only Incomplete</a></p></li>
