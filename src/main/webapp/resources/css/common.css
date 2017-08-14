@@ -195,9 +195,12 @@ table+.center_btns{padding-top:15px;}
 
 /* 검색 영역 */
 .search_table{margin-bottom:20px;}
+.j_date,
 .j_date2,
-.j_date{width:99px!important;}
-.j_date2.w100p{width:100%!important;}
+.j_date3{width:99px!important;}
+.j_date.w100p,
+.j_date2.w100p
+.j_date3.w100p{width:100%!important;}
 .date_set{position:relative; width:220px;}
 .date_set .w100p{position:relative; width:100%;}
 .date_set > p{float:left; width:50%; padding-left:11px; box-sizing:border-box;}

@@ -51,6 +51,18 @@ var monthOptions = {
 };
 
 $(".j_date2").monthpicker(monthOptions);
+
+
+var pickerOpts2 = {
+	changeMonth:true,
+	changeYear:true,
+	defaultDate: new Date(1960, 00, 01),
+	dateFormat: "dd/mm/yy",
+	yearRange:"1930:2000"
+};
+
+
+$(".j_date3").datepicker(pickerOpts2);
 /* 제이쿼리 ui달력 end*/
 
 /* on클래스 넣기 start*/
