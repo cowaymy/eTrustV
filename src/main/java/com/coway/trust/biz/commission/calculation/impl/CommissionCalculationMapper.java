@@ -41,5 +41,33 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("commissionCalculationMapper")
 public interface CommissionCalculationMapper {
 	
+	/**
+	 * search Organization Gruop Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgGrCdListAll(Map<String, Object> params);
+	
+	/**
+	 * search Organization Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgCdListAll(Map<String, Object> params);
+	
+	/**
+	 * search Organization Item List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgItemList(Map<String, Object> params);
+	
+	Map<String, Object> callCommProcedure(Map<String, Object> param);
 	
 }

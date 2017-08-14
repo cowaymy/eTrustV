@@ -77,7 +77,7 @@
 		
 		//Rule Book Item search
 		$("#search").click(function(){	
-			Common.ajax("GET", "/commission/system/selectOrgProList", $("#searchForm").serialize(), function(result) {
+			Common.ajax("GET", "/commission/calculation/selectOrgProList", $("#searchForm").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
 				AUIGrid.setGridData(myGridID, result);
@@ -87,7 +87,7 @@
 	
 	//get Ajax data and set organization combo data
     function fn_getOrgCdListAllAjax(callBack) {
-        Common.ajaxSync("GET", "/commission/system/selectOrgCdListAll", $("#searchForm").serialize(), function(result) {
+        Common.ajaxSync("GET", "/commission/calculation/selectOrgCdListAll", $("#searchForm").serialize(), function(result) {
             orgList = new Array();
             if (result) {
             	$("#orgCombo").append("<option value='' ></option>");
@@ -157,7 +157,7 @@
             labelText : "EXECUTE",
             onclick : function(rowIndex, columnIndex, value, item) {
             	$("#procedureNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 1));
-            	Common.ajax("GET", "/commission/system/callCommissionProcedure", $("#callForm").serialize(), function(result) {
+            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#callForm").serialize(), function(result) {
                 }); 
             }
         },

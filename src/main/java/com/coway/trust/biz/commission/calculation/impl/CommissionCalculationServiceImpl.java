@@ -50,6 +50,45 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
+	/**
+	 * search Organization Gruop Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgGrCdListAll(Map<String, Object> params) {
+		return commissionCalculationMapper.selectOrgGrCdListAll(params);
+	}
 	
+	/**
+	 * search Organization Code List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgCdListAll(Map<String, Object> params) {
+		return commissionCalculationMapper.selectOrgCdListAll(params);
+	}
+	
+	/**
+	 * search Organization Item List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectOrgItemList(Map<String, Object> params) {
+		return commissionCalculationMapper.selectOrgItemList(params);
+	}
+	
+	@Override
+	 public Map<String, Object> callCommProcedure(Map<String, Object> param){
+		return commissionCalculationMapper.callCommProcedure(param);
+	}
 
 }

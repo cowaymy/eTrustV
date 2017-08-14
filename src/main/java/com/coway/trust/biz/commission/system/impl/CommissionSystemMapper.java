@@ -239,7 +239,5 @@ public interface CommissionSystemMapper {
 	 */
 	List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
 	
-	 Map<String, Object> callCommProcedure(Map<String, Object> param);
-	
 	
 }

@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.commission.system.impl.CommissionCalculationMapper">
-	
+<mapper namespace="com.coway.trust.biz.commission.calculation.impl.CommissionCalculationMapper">
+    
+	<!-- searchOrganization Gruop Code All List -->
+    <select id="selectOrgGrCdListAll" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+        SELECT
+        ORG_GR_CD ,
+        ORG_GR_NM 
+        FROM CMM0041C
+        WHERE 1=1
+          AND START_YEARMONTH < END_YEARMONTH
+         ]]>
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND USE_YN = #{useYnCombo}
+        </if>
+        <if test="searchDt != null and searchDt != ''">
+            AND TO_CHAR(SYSDATE,'YYYYMM') BETWEEN START_YEARMONTH AND END_YEARMONTH
+        </if>
+        <![CDATA[
+        GROUP BY ORG_GR_CD, ORG_GR_NM
+         ]]>
+    </select>
+    
+    <!-- searchOrganization Gruop Code All List -->
+    <select id="selectOrgCdListAll" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+    SELECT
+    ORG_CD ,
+    ORG_NM 
+    FROM CMM0041C
+    WHERE 1=1
+      AND START_YEARMONTH < END_YEARMONTH
+     ]]>
+        <if test="orgRgCombo != null and orgRgCombo != ''">
+            AND ORG_GR_CD = #{orgRgCombo}
+        </if>    
+    <![CDATA[
+    GROUP BY ORG_CD, ORG_NM
+    ORDER BY ORG_CD
+     ]]>
+    </select>
+    
+    <!-- search Organization Item List -->
+    <select id="selectOrgItemList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+    SELECT
+        T1.CODE_MASTER_ID , 
+        T2.CODE_ID ,
+        T2.CODE ,      
+        T2.CODE_NAME ,
+        T2.CODE_DESC AS cdDs
+      FROM SYS0012M T1
+        JOIN  SYS0013M T2 
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE 1=1
+         ]]>
+        <if test="mstId != null and mstId != ''">
+            AND T1.CODE_MASTER_ID=#{mstId}
+        </if>
+        <if test="ItemOrgCd != null and ItemOrgCd != ''">
+            AND T2.CODE LIKE #{ItemOrgCd} ||'%'
+        </if>
+        ORDER BY T2.CODE
+    </select>
+    
+    <select id="callCommProcedure" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  ${procedureNm}(${taskId},TO_CHAR(TO_DATE(#{searchDt},'MM/YYYY'),'YYYY-MM'),${loginId},#{v_result,mode=OUT,jdbcType=VARCHAR}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
   
 </mapper>
