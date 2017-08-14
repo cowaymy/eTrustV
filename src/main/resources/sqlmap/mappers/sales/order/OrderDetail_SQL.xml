@@ -76,10 +76,7 @@
          WHERE V1.ORD_ID = #{salesOrderId}
     </select>
 
-    <resultMap id="orderLogClobMap" type="egovMap">
-        <result property="prgrs" column="PRGRS" jdbcType="CLOB" javaType="string"/>
-    </resultMap>
-    <select id="selectLatestOrderLogByOrderID" parameterType="Map" resultMap="orderLogClobMap">
+    <select id="selectLatestOrderLogByOrderID" parameterType="Map" resultType="egovMap">
 		SELECT T1.LOG_ID
 		     , T1.SALES_ORD_ID
 		     , T1.PRGRS_ID
