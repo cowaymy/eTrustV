@@ -246,7 +246,7 @@ $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 
 /* 팝업 닫기 start */
  $(document).on(
-	"click", ".pop_header .right_opt a:contains('CLOSE') ", function(){
+	"click", ".pop_header .right_opt a:contains('CLOSE') ,.pop_close", function(){
 
 	/* common.js 를 통한 div popup은 div remove를 해 줘야 함. */
 	if($(this).closest('div[name="_popupDiv"]').attr("manualClose")){
