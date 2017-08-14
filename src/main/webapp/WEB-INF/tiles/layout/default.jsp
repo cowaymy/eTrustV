@@ -5,8 +5,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="utf-8"/>
-	<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
+	<meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>eTrust system</title>
 
     <tiles:insertAttribute name="var" />

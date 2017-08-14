@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge">
 <title>e-TRUST</title>
 
 <tiles:insertAttribute name="var" />
