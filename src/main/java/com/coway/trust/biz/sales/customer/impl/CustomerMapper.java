@@ -514,4 +514,15 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Magic Address 
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author
+	 */
+	List<EgovMap> searchMagicAddressPop(Map<String, Object> params);
 }
