@@ -26,4 +26,7 @@ public interface MyMenuMapper {
 	
 	List<EgovMap> selectMyMenuProgrmPopupList(Map<String, Object> params);
 	
+	List<EgovMap> selectMenuPop(Map<String, Object> params);
+	
+	
 }

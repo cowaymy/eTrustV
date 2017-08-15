@@ -17,4 +17,6 @@ public interface MyMenuService {
 	List<EgovMap> selectMyMenuProgrmList(Map<String, Object> params, SessionVO sessionVO);
 	
 	void saveMyMenuProgrm(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
+	
+	List<EgovMap> selectMenuPop(Map<String, Object> params);
 }

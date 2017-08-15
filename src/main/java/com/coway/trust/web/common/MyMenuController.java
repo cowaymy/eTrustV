@@ -81,4 +81,15 @@ public class MyMenuController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/menuPop.do")
+	public String menuPop(@RequestParam Map<String, Object> params, SessionVO sessionVO,
+			ModelMap model) {							
+		return "common/commonPop";
+	}
+	
+	@RequestMapping(value = "/selectMenuPop.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMenuPop(@RequestParam Map<String, Object> params, ModelMap model) {						
+		return ResponseEntity.ok(myMenuService.selectMenuPop(params));
+	}
 }
