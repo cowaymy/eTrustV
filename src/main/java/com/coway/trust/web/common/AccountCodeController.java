@@ -39,9 +39,6 @@ public class AccountCodeController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
-	// TODO : 임시 유저. 차후 삭제 필요.
-	private int getUserId = 9999;
-
 	@RequestMapping(value = "/accountCode.do")
 	public String listAccountCode(Model model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -92,8 +89,8 @@ public class AccountCodeController {
 			}
 		}
 
-		((Map<String, Object>) params).put("crtUserId", getUserId);
-		((Map<String, Object>) params).put("updUserId", getUserId);
+		((Map<String, Object>) params).put("crtUserId", sessionVO.getUserId());
+		((Map<String, Object>) params).put("updUserId", sessionVO.getUserId());
 
 		if ("on".equals(String.valueOf(params.get("popUpIsPayCash")))) {
 			params.put("popUpIsPayCash", 1);

@@ -40,9 +40,6 @@ public class ProgramController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
-	// TODO : 임시 유저. 차후 삭제 필요.
-	private int getUserId = 9999;
-
 	@RequestMapping(value = "/pgmManagement.do")
 	public String programList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return "common/programManagement";
@@ -88,29 +85,33 @@ public class ProgramController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
-		int cnt = 0;
+		int tmpCnt = 0;
+		int totCnt = 0;
 		if (addList.size() > 0) {
-			cnt = commonService.insertPgmId(addList, getUserId);
+			tmpCnt = commonService.insertPgmId(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (udtList.size() > 0) {
-			cnt = commonService.updatePgmId(udtList, getUserId);
+			tmpCnt = commonService.updatePgmId(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (delList.size() > 0) {
-			cnt = commonService.deletePgmId(delList, getUserId);
+			tmpCnt = commonService.deletePgmId(delList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("PgmId_수정 : {}", udtList.toString());
 		LOGGER.info("PgmId_추가 : {}", addList.toString());
 		LOGGER.info("PgmId_삭제 : {}", delList.toString());
-		LOGGER.info("PgmId_카운트 : {}", cnt);
+		LOGGER.info("PgmId_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(cnt);
+		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
@@ -122,25 +123,28 @@ public class ProgramController {
 			SessionVO sessionVO) {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		int cnt = 0;
-
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
 		if (addList.size() > 0) {
-			cnt = commonService.updPgmIdTrans(addList, getUserId);
+			tmpCnt = commonService.updPgmIdTrans(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (udtList.size() > 0) {
-			cnt = commonService.updPgmIdTrans(udtList, getUserId);
+			tmpCnt = commonService.updPgmIdTrans(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("PgmId_수정 : {}", udtList.toString());
 		LOGGER.info("PgmId_추가 : {}", addList.toString());
-		LOGGER.info("PgmId_카운트 : {}", cnt);
+		LOGGER.info("PgmId_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(cnt);
+		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);

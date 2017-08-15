@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2009 the original author or authors.
+\ * Copyright 2008-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,11 +52,93 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectI18NList();
 	}
 	
+	/************************** Role Management ****************************/
+	
+	@Override
+	public List<EgovMap> selectRoleList(Map<String, Object> params) {
+		return commonMapper.selectRoleList(params);
+	}	
+	
+	/************************** Authorization Management ****************************/
+	
+	@Override
+	public List<EgovMap> selectAuthList(Map<String, Object> params) {
+		return commonMapper.selectAuthList(params);
+	}	
+	
+	@Override
+	public int insertAuth(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> insertAuth ");
+			logger.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden"));
+			
+			String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			
+
+			saveCnt++;
+
+			commonMapper.insertAuth((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+	
+	@Override
+	public int updateAuth(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> updateAuth ");
+			logger.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+			
+			saveCnt++;
+			
+			commonMapper.updateAuth((Map<String, Object>) obj);
+			
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int deleteAuth(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> deleteAuthCode ");
+			logger.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+			
+			delCnt++;
+			
+			commonMapper.deleteAuth((Map<String, Object>) obj);
+		}
+		
+		return delCnt;
+	}	
+		
 	/************************** Menu Management ****************************/
+	
 	@Override
 	public List<EgovMap> selectMenuList(Map<String, Object> params) {
 		return commonMapper.selectMenuList(params);
-	}
+	}	
 	
 	@Override
 	public int deleteMenuId(List<Object> delList, Integer crtUserId) 
@@ -67,16 +149,9 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		{
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("menuCode")).length() == 0 
-				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("menuCode")))) 
-			{
-				continue;
-			}
-			
+						
 			logger.debug(" >>>>> deleteMenuId ");
 			logger.debug(" menuId : {}", ((Map<String, Object>) obj).get("menuCode"));
-
 			
 			delCnt++;
 			
@@ -84,6 +159,49 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		}
 		
 		return delCnt;
+	}
+	
+	@Override
+	public int insertMenuCode(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> insertMenuCode ");
+			logger.debug(" menuCode : {}", ((Map<String, Object>) obj).get("menuCode"));
+
+			saveCnt++;
+
+			commonMapper.insertMenuCode((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+	
+	@Override
+	public int updateMenuCode(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> updateMenuCode ");
+			logger.debug(" menuCode : {}", ((Map<String, Object>) obj).get("menuCode"));
+			
+			saveCnt++;
+			
+			commonMapper.updateMenuCode((Map<String, Object>) obj);
+			
+		}
+		
+		return saveCnt;
 	}	
 	
 	/************************** Program Management ****************************/
@@ -652,27 +770,17 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectProductList();
 	}
 
-	@Override
-	public List<EgovMap> selectUpperMenuList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int insertMenuCode(List<Object> addList, Integer updUserId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int updateMenuCode(List<Object> addList, Integer updUserId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	@Override
 	public List<EgovMap> selectProductCodeList(Map<String, Object> params) {
 		// TODO ProductCodeList 호출시 error남 
 		return commonMapper.selectProductCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectUpperMenuList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

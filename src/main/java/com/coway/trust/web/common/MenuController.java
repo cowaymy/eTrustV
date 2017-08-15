@@ -43,9 +43,6 @@ public class MenuController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	// TODO : 임시 유저. 차후 삭제 필요.
-	private int getUserId = 9999;
-
 	@RequestMapping(value = "/getMenuList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMenuList(@RequestParam Map<String, Object> params, SessionVO sessionVO,
 			ModelMap model) {
@@ -98,29 +95,33 @@ public class MenuController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
-		int cnt = 0;
+		int tmpCnt = 0;
+		int totCnt = 0;
 		if (addList.size() > 0) {
-			cnt = commonService.insertMenuCode(addList, getUserId);
+			tmpCnt = commonService.insertMenuCode(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (udtList.size() > 0) {
-			cnt = commonService.updateMenuCode(udtList, getUserId);
+			tmpCnt = commonService.updateMenuCode(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (delList.size() > 0) {
-			cnt = commonService.deleteMenuId(delList, getUserId);
+			tmpCnt = commonService.deleteMenuId(delList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("MenuCd_수정 : {}", udtList.toString());
 		LOGGER.info("MenuCd_추가 : {}", addList.toString());
 		LOGGER.info("MenuCd_삭제 : {}", delList.toString());
-		LOGGER.info("MenuCd_카운트 : {}", cnt);
+		LOGGER.info("MenuCd_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(cnt);
+		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);

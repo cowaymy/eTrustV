@@ -39,9 +39,6 @@ public class StatusCodeController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
-	// TODO : 임시 유저. 차후 삭제 필요.
-	private int getUserId = 9999;
-
 	@RequestMapping(value = "/statusCode.do")
 	public String listStatusCode(Model model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -77,24 +74,27 @@ public class StatusCodeController {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 
-		int cnt = 0;
+		int tmpCnt = 0;
+		int totCnt = 0;
 		if (addList.size() > 0) {
-			cnt = commonService.insertStatusCategory(addList, getUserId);
+			tmpCnt = commonService.insertStatusCategory(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (udtList.size() > 0) {
-			cnt = commonService.updateStatusCategory(udtList, getUserId);
+			tmpCnt = commonService.updateStatusCategory(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("StatusCategory_수정 : {}", udtList.toString());
 		LOGGER.info("StatusCategory_추가 : {}", addList.toString());
-		LOGGER.info("StatusCategory_카운트 : {}", cnt);
+		LOGGER.info("StatusCategory_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(cnt);
+		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
@@ -104,12 +104,12 @@ public class StatusCodeController {
 	public ResponseEntity<ReturnMessage> saveStatusCatalogCode(@RequestBody CommStatusVO params, SessionVO sessionVO) {
 
 		/*
-		 * try { sessionVO.getUserId(); } catch (Exception e) { sessionVO.setUserId(7777); }
+		 * try { sessionVO.sessionVO.getUserId()(); } catch (Exception e) { sessionVO.setUserId(7777); }
 		 */
 
 		LOGGER.debug("insertStatusCatalogCode: " + params.getGridDataSet());
 
-		int cnt = commonService.insertStatusCategoryCode(params, getUserId);
+		int cnt = commonService.insertStatusCategoryCode(params, sessionVO.getUserId());
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -127,24 +127,27 @@ public class StatusCodeController {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 
-		int cnt = 0;
+		int tmpCnt = 0;
+		int totCnt = 0;
 		if (addList.size() > 0) {
-			cnt = commonService.insertStatusCode(addList, getUserId);
+			tmpCnt = commonService.insertStatusCode(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (udtList.size() > 0) {
-			cnt = commonService.updateStatusCode(udtList, getUserId);
+			tmpCnt = commonService.updateStatusCode(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("StatusCode_수정 : {}", udtList.toString());
 		LOGGER.info("StatusCode_추가 : {}", addList.toString());
-		LOGGER.info("StatusCode_카운트 : {}", cnt);
+		LOGGER.info("StatusCode_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(cnt);
+		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
@@ -155,7 +158,7 @@ public class StatusCodeController {
 	public ResponseEntity<ReturnMessage> UpdCategoryCdYN(@RequestBody CommStatusVO params, SessionVO sessionVO) {
 		int cnt = 0;
 
-		cnt = commonService.updateCategoryCodeYN(params, getUserId);
+		cnt = commonService.updateCategoryCodeYN(params, sessionVO.getUserId());
 
 		// 콘솔로 찍어보기
 		LOGGER.info("disabledYn : {}", cnt);

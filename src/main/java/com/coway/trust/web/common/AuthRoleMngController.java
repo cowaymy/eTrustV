@@ -1,0 +1,140 @@
+package com.coway.trust.web.common;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Controller
+@RequestMapping(value = "/authorization")
+public class AuthRoleMngController 
+{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthRoleMngController.class);
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
+	@Resource(name = "commonService")
+	private CommonService commonService;
+	
+	
+	/************************ UserExptAuthMapping ****************************/
+	@RequestMapping(value = "/UserExptAuthMapping.do")
+	public String UserExptAuthMappingList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		LOGGER.debug("authRoll MappingList");
+		
+		return "common/UserExceptAuthMapping";
+	}
+
+	
+	/************************ auth role mapping ****************************/
+	@RequestMapping(value = "/authRoleMapping.do")
+	public String authRoleList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		LOGGER.debug("authRoll MappingList");
+		
+		return "common/authRoleMapping";
+	}
+
+	/*********************** Auth Management ******************************/
+	@RequestMapping(value = "/authMngment.do")
+	public String authList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		LOGGER.debug("authList");
+		
+		return "common/authorizaManagement";
+	}
+	
+	// uppermenu search popup
+	@RequestMapping(value = "/searchRolePop.do")
+	public String searchRolePopUp(@RequestParam Map<String, Object> params, ModelMap model) {
+		// model.addAttribute("url", params);
+		// 호출될 화면
+		return "/common/searchRolePop";
+	}	
+	
+	
+	// search
+	@RequestMapping(value = "/selectAuthList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAuthList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectAuthList = commonService.selectAuthList(params);
+
+		return ResponseEntity.ok(selectAuthList);
+	}
+	
+	// search Role Popup
+	@RequestMapping(value = "/selectRoleList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRoleList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectRoleList = commonService.selectRoleList(params);
+		
+		return ResponseEntity.ok(selectRoleList);
+	}
+	
+	
+	// save Auth
+	@RequestMapping(value = "/saveAuth.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAuth(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO) 
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
+
+		int tmpCnt = 0;
+		int totCnt = 0;
+		if (addList.size() > 0) {
+			tmpCnt = commonService.insertAuth(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+
+		if (udtList.size() > 0) {
+			tmpCnt = commonService.updateAuth(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+		
+		if (delList.size() > 0) {
+			tmpCnt = commonService.deleteAuth(delList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+
+		// 콘솔로 찍어보기
+		LOGGER.info("AuthCd_수정 : {}", udtList.toString());
+		LOGGER.info("AuthCd_추가 : {}", addList.toString());
+		LOGGER.info("AuthCd_삭제 : {}", delList.toString());
+		LOGGER.info("AuthCd_카운트 : {}", totCnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}	
+}

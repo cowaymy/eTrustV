@@ -39,9 +39,6 @@ public class GeneralCodeController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
-	// TODO : 임시 유저. 차후 삭제 필요.
-	private int getUserId = 9999;
-
 	@RequestMapping(value = "/generalCode.do")
 	public String listCommCode(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return "common/generalCodeManagement";
@@ -68,24 +65,28 @@ public class GeneralCodeController {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-		int cnt = 0;
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
 		if (addList.size() > 0) {
-			cnt = commonService.addCommCodeGrid(addList, getUserId);
+			tmpCnt = commonService.addCommCodeGrid(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (udtList.size() > 0) {
-			cnt = commonService.udtCommCodeGrid(udtList, getUserId);
+			tmpCnt = commonService.udtCommCodeGrid(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("CommCd_수정 : {}", udtList.toString());
 		LOGGER.info("CommCd_추가 : {}", addList.toString());
-		LOGGER.info("CommCd_카운트 : {}", cnt);
+		LOGGER.info("CommCd_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(cnt);
+		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
@@ -99,23 +100,27 @@ public class GeneralCodeController {
 
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		// 조회.
-		int cnt = 0;
+		int tmpCnt = 0;
+		int totCnt = 0;
 		if (addList.size() > 0) {
-			cnt = commonService.addDetailCommCodeGrid(addList, getUserId);
+			tmpCnt = commonService.addDetailCommCodeGrid(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		if (udtList.size() > 0) {
-			cnt = commonService.udtDetailCommCodeGrid(udtList, getUserId);
+			tmpCnt = commonService.udtDetailCommCodeGrid(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
 		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("DetailCommCd_수정 : {}", udtList.toString());
 		LOGGER.info("DetailCommCd_추가 : {}", addList.toString());
-		LOGGER.info("DetailCommCd_카운트 : {}", cnt);
+		LOGGER.info("DetailCommCd_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);

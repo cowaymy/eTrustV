@@ -14,6 +14,18 @@ public interface CommonService {
 	List<EgovMap> selectI18NList();
 	
 	
+	/************************** Role Management ****************************/
+	List<EgovMap> selectRoleList(Map<String, Object> params);
+	
+	/************************** Auth Management ****************************/
+	List<EgovMap> selectAuthList(Map<String, Object> params);
+
+	int deleteAuth(List<Object> addList, Integer updUserId);
+	
+	int insertAuth(List<Object> addList, Integer updUserId);
+	
+	int updateAuth(List<Object> addList, Integer updUserId);
+	
 	/************************** Menu Management ****************************/
 	List<EgovMap> selectMenuList(Map<String, Object> params);
 	List<EgovMap> selectUpperMenuList(Map<String, Object> params);
