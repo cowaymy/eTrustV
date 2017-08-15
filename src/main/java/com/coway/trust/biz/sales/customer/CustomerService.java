@@ -450,4 +450,13 @@ public interface CustomerService {
 	List<EgovMap> selectBillingGroupByKeywordCustIDList(Map<String, Object> params) throws Exception;
 	
 	
+	/**
+	 * Customer Magic Address 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	List<EgovMap> searchMagicAddressPop(Map<String, Object> params );
+	
 }
