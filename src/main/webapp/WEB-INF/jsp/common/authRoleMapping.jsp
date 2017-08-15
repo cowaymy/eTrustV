@@ -28,17 +28,15 @@ var MainColumnLayout =
     [      
         {    
             dataField : "authCode",
-            headerText : "<spring:message code='sys.auth.grid1.Code'/>",
-            editable : false,
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Code' htmlEscape='false'/>",
             width : 120
         }, {
             dataField : "authName", 
-            headerText : "<spring:message code='sys.auth.grid1.authName'/>",
-            editable : false,
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Name' htmlEscape='false'/>",  
             width : 400
         }, {
             dataField : "roleId",
-            headerText : "<spring:message code='sys.auth.grid1.roleId'/>",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role' htmlEscape='false'/>", 
             width : 150,
             editable : false,
             style : "aui-grid-left-column",
@@ -49,13 +47,13 @@ var MainColumnLayout =
                 iconPosition : "aisleRight",
                 iconFunction : function(rowIndex, columnIndex, value, item) 
                 {
-                  if (item.roleId == null && item.lvl == null) 
+                  if (item.roleLvl == null)  // && value ==  null
                   {
                       return null;
                   }
                   else
                   {
-                  	return "${pageContext.request.contextPath}/resources/images/common/normal_search.gif";
+                    return "${pageContext.request.contextPath}/resources/images/common/normal_search.gif";
                   }
 
                 } ,// end of iconFunction                
@@ -75,29 +73,25 @@ var MainColumnLayout =
                          }
                 } // IconRenderer
         } ,{
-            dataField : "lvl", 
-            headerText : "<spring:message code='sys.auth.grid1.Lvl' />",
-            editable : false,
+            dataField : "roleLvl", 
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Lvl' htmlEscape='false'/>",
             width : 80
         }, {
-            dataField : "role1",
-            headerText : "<spring:message code='sys.auth.grid1.Role_1'/>",
-            editable : false,
+            dataField : "roleId1",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role_1' htmlEscape='false'/>",
             width : 200
         }, {
-            dataField : "role2",
-            headerText : "<spring:message code='sys.auth.grid1.Role_2'/>",
-            editable : false,
+            dataField : "roleId2",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role_2' htmlEscape='false'/>",
             width : 200
         }, {
-            dataField : "role3",
-            headerText : "<spring:message code='sys.auth.grid1.Role_3'/>",
-            editable : false,
+            dataField : "roleId3",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role_3' htmlEscape='false'/>",
             width : 200
         },{
             dataField : "hidden",
-            headerText : "hidden",
-            width : 100
+            headerText : "",
+            width : 0
           } 
     ];
 
@@ -143,7 +137,7 @@ function auiCellEditignHandler(event)
       
       if (AUIGrid.isAddedById(myGridID,authSeq) == false && authSeq.indexOf("Input authCode") == -1 && event.columnIndex == 0 )// edit
       {
-    	  return false;  // edit모드일 때만 authCode를 수정할수 있다.
+        return false;  // edit모드일 때만 authCode를 수정할수 있다.
       }
   } 
   else if(event.type == "cellEditEnd") 
@@ -160,7 +154,7 @@ function auiCellEditignHandler(event)
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) 
 {
-	  console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
+    console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
 
 //MstGrid 행 추가, 삽입
@@ -168,17 +162,17 @@ function fnAddRow()
 {
   var item = new Object();
 
-		  item.authCode ="";
-		  item.authName ="";
-		  item.roleId   ="";
-		  item.roleLvl  ="";
-		  item.roleId1  ="";
-		  item.roleId2  ="";
-		  item.roleId3  ="";
-		  // parameter
-		  // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-		  // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-		  AUIGrid.addRow(myGridID, item, 3);
+      item.authCode ="Input authCode";
+      item.authName ="The delimiter for the level is '>' ";
+      item.roleId   ="";
+      item.roleLvl  ="";
+      item.roleId1  ="";
+      item.roleId2  ="";
+      item.roleId3  ="";
+      // parameter
+      // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+      // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+      AUIGrid.addRow(myGridID, item, "first");
 }
 
 //Make Use_yn ComboList, tooltip
@@ -303,34 +297,34 @@ function fnValidationCheck()
       var authCode  = addList[i].authCode;
       var authName  = addList[i].authName;
       var roleId    = addList[i].roleId;
-      var roleLvl   = addList[i].lvl;
-      var roleId1   = addList[i].role1;
-      var roleId2   = addList[i].role2;
-      var roleId3   = addList[i].role3;
+      var roleLvl   = addList[i].roleLvl;
+      var roleId1   = addList[i].roleId1;
+      var roleId2   = addList[i].roleId2;
+      var roleId3   = addList[i].roleId3;
       
-      if (roleId == "" || roleId.length == 0) 
+      if (authCode == "" || authCode.length == 0) 
       {
         result = false;
         // {0} is required.
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='Role Id' htmlEscape='false'/>");
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
         break;
       }
       
-      if (roleLvl == "" || roleLvl.length == 0) 
-      {
-        result = false;
-        // {0} is required.
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='Role Lvl' htmlEscape='false'/>");
-        break;
-      }
-
-/*       if (authName.indexOf("delimiter") > 0 ) 
+      if (authName == "" || authName.length == 0) 
       {
         result = false;
         // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth authName' htmlEscape='false'/>");
         break;
-      } */
+      }
+
+      if (authName.indexOf("delimiter") > 0 ) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth authName' htmlEscape='false'/>");
+        break;
+      }
       
     }  // addlist
 
@@ -426,7 +420,7 @@ $(document).ready(function()
                 };
     
     // masterGrid 그리드를 생성합니다.
-    myGridID = GridCommon.createAUIGrid("grid_wrap", MainColumnLayout,"authCode", options);
+    myGridID = GridCommon.createAUIGrid("grid_wrap", MainColumnLayout,"", options);
     // AUIGrid 그리드를 생성합니다.
     
     // 푸터 객체 세팅
@@ -468,79 +462,76 @@ $(document).ready(function()
 
 
 </script>
-
+		
 <section id="content"><!-- content start -->
 <ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
+  <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+  <li>Sales</li>
+  <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-<h2>Authorization Management</h2>
+<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<h2>Role Authorization Mapping</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a onclick="fnSelectAuthListAjax();"><span class="search"></span>Search</a></p></li>
+  <li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+  <li><p class="btn_blue"><a href="#">Save</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="get" action="">
-<!-- 
-<input type ="hidden" id="authCode" name="authCode" value=""/>
-<input type ="hidden" id="authName" name="authCode" value=""/>  
--->
+<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:110px" />
-	<col style="width:*" />
-	<col style="width:110px" />
-	<col style="width:*" />
+  <col style="width:110px" />
+  <col style="width:*" />
+  <col style="width:110px" />
+  <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Auth Code</th>
-	<td>
-	<input type="text" id="authCode" name="authCode"  title="" placeholder="" class="" />
-	</td>
-	<th scope="row">Auth Name</th>
-	<td>
-	<input type="text" id="authName" name="authName"  title="" placeholder="" class="" />
-	</td>
+  <th scope="row">Role</th>
+  <td>
+  <input type="text" title="" placeholder="" class="" />
+  </td>
+  <th scope="row"></th>
+  <td>
+  <input type="text" title="" placeholder="" class="" />
+  </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><%-- <a href="javascript:;"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%></p>
+<p class="show_btn"><%-- <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%></p>
 <dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="javascript:;">menu1</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu2</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu3</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu4</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu6</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu7</a></p></li>
-		<li><p class="link_btn"><a href="javascript:;">menu8</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="javascript:;">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:;">menu8</a></p></li>
-	</ul>
-	<%-- <p class="hide_btn"><a href="javascript:;"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p> --%>
-	</dd>
+  <dt>Link</dt>
+  <dd>
+  <ul class="btns">
+    <li><p class="link_btn"><a href="#">menu1</a></p></li>
+    <li><p class="link_btn"><a href="#">menu2</a></p></li>
+    <li><p class="link_btn"><a href="#">menu3</a></p></li>
+    <li><p class="link_btn"><a href="#">menu4</a></p></li>
+    <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+    <li><p class="link_btn"><a href="#">menu6</a></p></li>
+    <li><p class="link_btn"><a href="#">menu7</a></p></li>
+    <li><p class="link_btn"><a href="#">menu8</a></p></li>
+  </ul>
+  <ul class="btns">
+    <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+    <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+    <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+    <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+    <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+    <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+    <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+    <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+  </ul>
+  <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+  </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
 
@@ -549,20 +540,46 @@ $(document).ready(function()
 
 <section class="search_result"><!-- search_result start -->
 
+<div class="divine_auto"><!-- divine_auto start -->
+
+<div style="width:60%;">
+
+<div class="border_box" style="height:450px;"><!-- border_box start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3 class="pt0">Role Auth Mapping</h3>
+</aside><!-- title_line end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</div><!-- border_box end -->
+
+</div>
+
+<div style="width:40%;">
+
+<div class="border_box" style="height:450px;"><!-- border_box start -->
+
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Auth Management</h3>
 <ul class="right_opt">
-  <li id="delCancel"><p class="btn_grid"><a onclick="removeAllCancel();">Cancel</a></p></li>
-  <li><p class="btn_grid"><a onclick="fnRemoveRow();">DEL</a></p></li>
-  <li><p class="btn_grid"><a onclick="fnAddRow();">ADD</a></p></li>
-  <li><p class="btn_grid"><a onclick="fnSaveAuthCd();">SAVE</a></p></li>
+  <li><p class="btn_grid"><a href="#">Add</a></p></li>
+  <li><p class="btn_grid"><a href="#">Del</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<!-- 그리드 영역 1-->
- <div id="grid_wrap"></div>
+그리드 영역
 </article><!-- grid_wrap end -->
+
+</div><!-- border_box end -->
+
+</div>
+
+</div><!-- divine_auto end -->
+
 
 </section><!-- search_result end -->
 
@@ -571,7 +588,7 @@ $(document).ready(function()
 <aside class="bottom_msg_box"><!-- bottom_msg_box start -->
 <p>Information Message Area</p>
 </aside><!-- bottom_msg_box end -->
-		
+    
 </section><!-- container end -->
 <hr />
 

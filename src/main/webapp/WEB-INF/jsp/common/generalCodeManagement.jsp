@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
 
@@ -8,29 +9,29 @@ var mstColumnLayout =
     [ 
         {    
             dataField : "codeMasterId",
-            headerText : "MASTER ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MASTER ID' htmlEscape='false'/>",
             width : 120
         }, {
             dataField : "codeMasterName",
-            headerText : "MASTER NAME",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MASTER NAME' htmlEscape='false'/>",
             width : 200
         }, {
             dataField : "codeDesc",
-            headerText : "CODE DESCRIPTION",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE DESCRIPTION' htmlEscape='false'/>",
             width : 200
         }, {
             dataField : "createName",
-            headerText : "CREATOR",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATOR' htmlEscape='false'/>",
             width : 200
         }, {
             dataField : "crtDt",
-            headerText : "CREATE DATE",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATE DATE' htmlEscape='false'/>",
             dataType : "date",
             formatString : "dd-mmm-yyyy HH:MM:ss",
             width : 200
         }, {
             dataField : "disabled",
-            headerText : "DISABLED",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
             width : 120,
             editRenderer : {
                 type : "ComboBoxRenderer",
@@ -48,23 +49,23 @@ var detailColumnLayout =
     [ 
         {
             dataField : "detailcodeid",
-            headerText : "CODE ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
             width : 120
         }, {
             dataField : "detailcode",
-            headerText : "CODE",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE' htmlEscape='false'/>",
             width : 120
         }, {
             dataField : "detailcodename",
-            headerText : "NAME",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='NAME' htmlEscape='false'/>",
             width : 250
         }, {
             dataField : "detailcodedesc",
-            headerText : "DESCRIPTION",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DESCRIPTION' htmlEscape='false'/>",
             width : 250
         }, {
             dataField : "detaildisabled",
-            headerText : "DISABLED",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
             width : 200,
             editRenderer : 
             {
@@ -78,7 +79,7 @@ var detailColumnLayout =
             }
         }, {
             dataField : "codeMasterId",
-            headerText : "CODE MASTER ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE MASTER ID' htmlEscape='false'/>",
             width : 200,
             editable : false
         }

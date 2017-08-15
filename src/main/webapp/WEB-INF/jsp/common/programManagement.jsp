@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
 .aui-grid-left-column {
@@ -21,12 +23,12 @@ var MainColumnLayout =
     [      
         {    
             dataField : "pgmCode",
-            headerText : "Id",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Id' htmlEscape='false'/>",
             editable : false,
             width : 150
         }, {
             dataField : "orgCode",
-            headerText : "OrgCode",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='OrgCode' htmlEscape='false'/>",
             visible : false,
             editRenderer : {
                 type : "DropDownListRenderer",
@@ -36,16 +38,16 @@ var MainColumnLayout =
             width : 100
         },{
             dataField : "pgmName",
-            headerText : "Name",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Name' htmlEscape='false'/>",
             width : 250
         }, {
             dataField : "pgmPath",
-            headerText : "Path",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Path' htmlEscape='false'/>",
             styleFunction : cellStyleFunction,
             width : 450
         }, {
             dataField : "pgmDesc",
-            headerText : "Description",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Description' htmlEscape='false'/>",
             width : 400
         }
     ];
@@ -54,7 +56,7 @@ var TransColumnLayout =
     [      
         {    
             dataField : "funcView",
-            headerText : "VIEW",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='VIEW' htmlEscape='false'/>",
             width : 70,
             renderer : 
             {
@@ -77,7 +79,7 @@ var TransColumnLayout =
 
         }, {
             dataField : "funcChng",
-            headerText : "CHANGE",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CHANGE' htmlEscape='false'/>",
             width : 70,
             editable : true,
             renderer : 
@@ -100,7 +102,7 @@ var TransColumnLayout =
             }  //renderer            
         }, {
             dataField : "funcPrt",
-            headerText : "PRINT",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='PRINT' htmlEscape='false'/>",
             width : 70,
             editable : true,
             renderer : 
@@ -122,10 +124,10 @@ var TransColumnLayout =
                  }
             }  //renderer            
         }, {
-            headerText : "User Defined #1",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #1' htmlEscape='false'/>",
               children : [ {
                               dataField : "funcUserDfn1",
-                              headerText : "Checked",
+                              headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                               editable : true,
                               renderer : 
                               {
@@ -146,15 +148,15 @@ var TransColumnLayout =
                               }  //renderer
                             }, {
                               dataField : "descUserDfn1",
-                              headerText : "Desc1",
+                              headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc1' htmlEscape='false'/>",
                               cellMerge: true,                              
                             } 
                          ]
           } , {
-              headerText : "User Defined #2",
+              headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #2' htmlEscape='false'/>",
                 children : [ {
                                 dataField : "funcUserDfn2",
-                                headerText : "Checked",
+                                headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                 editable : true,
                                 renderer : 
                                 {
@@ -176,14 +178,14 @@ var TransColumnLayout =
                                 }  //renderer
                               }, {
                                 dataField : "descUserDfn2",
-                                headerText : "Desc2",
+                                headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc2' htmlEscape='false'/>",
                               } 
                            ]
             }, {
-                headerText : "User Defined #3",
+                headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #3' htmlEscape='false'/>",
                   children : [ {
                                   dataField : "funcUserDfn3",
-                                  headerText : "Checked",
+                                  headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                   editable : true,
                                   renderer : 
                                   {
@@ -205,14 +207,14 @@ var TransColumnLayout =
                                   }  //renderer
                                 }, {
                                   dataField : "descUserDfn3",
-                                  headerText : "Desc3",
+                                  headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc3' htmlEscape='false'/>",
                                 } 
                              ]
               }, {
-                  headerText : "User Defined #4",
+                  headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #4' htmlEscape='false'/>",
                     children : [ {
                                     dataField : "funcUserDfn4",
-                                    headerText : "Checked",
+                                    headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                     editable : true,
                                     renderer : 
                                     {
@@ -234,14 +236,14 @@ var TransColumnLayout =
                                     }  //renderer
                                   }, {
                                     dataField : "descUserDfn4",
-                                    headerText : "Desc4",
+                                    headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc4' htmlEscape='false'/>",
                                   } 
                                ]
                 }, {
-                    headerText : "User Defined #5",
+                    headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #5' htmlEscape='false'/>",
                       children : [ {
                                       dataField : "funcUserDfn5",
-                                      headerText : "Checked",
+                                      headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                       editable : true,
                                       renderer : 
                                       {
@@ -264,13 +266,13 @@ var TransColumnLayout =
                                     }
                                   , {
                                       dataField : "descUserDfn5",
-                                      headerText : "Desc5",
+                                      headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc5' htmlEscape='false'/>",
                                     } 
                                  ]
                   }
                 , {    
                     dataField : "pgmCode",
-                    headerText : "Id",
+                    headerText : "<spring:message code='sys.grid.headerTxt' arguments='Id' htmlEscape='false'/>",
                     editable : false,
                     visible : false,
                     width : 150

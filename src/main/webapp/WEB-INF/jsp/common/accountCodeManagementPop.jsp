@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
 
@@ -43,19 +44,19 @@ function fnSaveAccount()
    {
      if ( parseInt($("#mstate option").index($("#mstate option:selected")))  == 0)
        {           
-         Common.alert(' Please select the state.');
+         Common.alert("<spring:message code='sys.msg.necessary' arguments='state' htmlEscape='false'/>");
          return false;
        }
        
        if (parseInt($("#marea option").index($("#marea option:selected")))  == 0)
        {
-           Common.alert(' Please select the area.');
+           Common.alert("<spring:message code='sys.msg.necessary' arguments='area' htmlEscape='false'/>");
            return false;
        }
 
        if (parseInt($("#mpostcd option").index($("#mpostcd option:selected"))) == 0)
        {
-           Common.alert(' Please select the postcode.');
+           Common.alert("<spring:message code='sys.msg.necessary' arguments='postcode' htmlEscape='false'/>");
            return false;
        }
    }
@@ -63,17 +64,15 @@ function fnSaveAccount()
 
    if ($("#popUpAccCode").val().length == 0)
    {
-     Common.alert(' Please key in the account code.');
+     Common.alert("<spring:message code='sys.msg.necessary' arguments='Account Code' htmlEscape='false'/>");
      return false;
    }
    
    if ($("#popUpAccDesc").val().length == 0)
    {
-     Common.alert(' Please key in the account description.');
+     Common.alert("<spring:message code='sys.msg.necessary' arguments='Account Description' htmlEscape='false'/>");
      return false;
    }
-
-   
 
     Common.ajax("POST", "/account/insertAccount.do"  
             , $("#PopUpForm").serializeJSON({checkboxUncheckedValue: "false"})  // post 시 serializeJSON
@@ -82,7 +81,7 @@ function fnSaveAccount()
                 if(result.code == 99){
                   Common.alert(result.message);
                 }else{
-                  alert(result.data + " Count Save Success!");
+                  Common.alert(result.data + "<spring:message code='sys.msg.savedCnt'/>");
                   console.log("성공." + JSON.stringify(result));
                   console.log("data : " + result.data);
                   fnGetAccountCdListAjax();                 

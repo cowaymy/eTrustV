@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
 
@@ -8,29 +9,29 @@ var statusCategoryLayout =
     [      
         {    
             dataField : "stusCtgryId",
-            headerText : "CATEGORY ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CATEGORY ID' htmlEscape='false'/>",
             width : 200
         }, {
             dataField : "stusCtgryName",
-            headerText : "CATEGORY NAME",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CATEGORY NAME' htmlEscape='false'/>",
             width : 250
         }, {
             dataField : "stusCtgryDesc",
-            headerText : "CATEGORY DESCRIPTION",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CATEGORY DESCRIPTION' htmlEscape='false'/>",
             width : 250
         }, {
             dataField : "crtUserId",
-            headerText : "CREATE USER ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATE USER ID' htmlEscape='false'/>",
             width : 200
            ,editable : false
         }, {
             dataField : "updUserId",
-            headerText : "LAST UPDATE USER ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='LAST UPDATE USER ID' htmlEscape='false'/>",
             width : 200
            ,editable : false            
         }, {
             dataField : "updDt",
-            headerText : "LAST UPDATE",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='LAST UPDATE' htmlEscape='false'/>",
             dataType : "date",
             formatString : "dd-mmm-yyyy HH:MM:ss",
             width : 200
@@ -43,17 +44,17 @@ var detailColumnLayout =
     [  
         {
             dataField : "stusCodeId",
-            headerText : "CODE ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
             width : 200
            ,editable : false
         }, {
             dataField : "codeName",
-            headerText : "CODE NAME",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE NAME' htmlEscape='false'/>",
             width : 200
            ,editable : false
         }, {
             dataField : "codeDisab",
-            headerText : "DISABLED",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
             width : 150,
             visible : true,
             editRenderer : 
@@ -97,15 +98,15 @@ var codeIDColumnLayout =
           }  //renderer
       },{
             dataField : "stusCodeId",
-            headerText : "CODE ID",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
             width : 100
       },{
           dataField : "codeName",
-          headerText : "CODE NAME",
+          headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE NAME' htmlEscape='false'/>",
           width : 200
       },{
           dataField : "code",
-          headerText : "CODE",
+          headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE' htmlEscape='false'/>",
           width : 70
       }
 
@@ -569,7 +570,7 @@ function insertStatusCatalogDetail()
 {
   //getItemsByCheckedField();
   
-    if ($("#selCategoryId").val().length < 1 )
+  if ($("#selCategoryId").val().length < 1 )
   {
     Common.alert(' Please Select the Category ID 1.');
     return;

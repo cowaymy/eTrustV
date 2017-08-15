@@ -28,11 +28,11 @@ var MainColumnLayout =
     [      
         {    
             dataField : "div",
-            headerText : "<spring:message code='sys.info.grid1.field_0' arguments='Div' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Div' htmlEscape='false'/>",
             width : 80
         }, {
             dataField : "menuLvl", 
-            headerText : "<spring:message code='sys.info.grid1.field_1' arguments='Lvl' htmlEscape='false'/>",  
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Lvl' htmlEscape='false'/>",  
             width : 50,
             editRenderer : {
                 type : "ComboBoxRenderer",
@@ -45,11 +45,12 @@ var MainColumnLayout =
             }
         }, {
             dataField : "upperMenuCode",
-            headerText : "<spring:message code='sys.info.grid1.field_2' arguments='UpperMenu' htmlEscape='false'/>", 
-            width : 180,
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='UpperMenu' htmlEscape='false'/>", 
+            width : 140,
             editable : false,
             style : "aui-grid-left-column",
-             renderer : {
+            renderer : 
+            {
                 type : "IconRenderer",
                 iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
                 iconHeight : 13,
@@ -78,22 +79,23 @@ var MainColumnLayout =
 				                    gSelMainRowIdx = rowIndex;
 				                    fnSearchUpperMenuPopUp(); 
 				                  }
-                } // IconRenderer
+            } // IconRenderer
         },{
             dataField : "menuCode", 
-            headerText : "<spring:message code='sys.info.grid1.field_3' arguments='MenuId' htmlEscape='false'/>", 
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuId' htmlEscape='false'/>", 
             width : 150
         }, {
             dataField : "menuName",
-            headerText : "<spring:message code='sys.info.grid1.field_4' arguments='MenuNm' htmlEscape='false'/>", 
-            width : 250
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuNm' htmlEscape='false'/>", 
+            width : 270
         }, {
             dataField : "pgmCode", 
-            headerText : "<spring:message code='sys.info.grid1.field_5' arguments='ProgramId' htmlEscape='false'/>",
-            width : 180,
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramId' htmlEscape='false'/>",
+            width : 140,
             editable : false,
             style : "aui-grid-left-column",
-            renderer : {
+            renderer : 
+            {
                 type : "IconRenderer",
                 iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
                 iconHeight : 13,
@@ -101,29 +103,31 @@ var MainColumnLayout =
                 iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
                   "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.gif" // 
                 },
-            onclick : function(rowIndex, columnIndex, value, item) {
-                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.pgmCode + " POPUP 클릭");
+                onclick : function(rowIndex, columnIndex, value, item) 
+                {
+                   console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.pgmCode + " POPUP 클릭");
                     //setPopAcctSrchList(rowIndex);
                    gSelMainRowIdx = rowIndex;
-                	fnSearchProgramPopUp(); 
-                  }
+                	 fnSearchProgramPopUp(); 
+                }
             }
             
         }, {
             dataField : "pgmName",
-            headerText : "<spring:message code='sys.info.grid1.field_6' arguments='ProgramNm' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramNm' htmlEscape='false'/>",
             editable : false,
-            width : 230
+            width : 250
         }, {
             dataField : "menuOrder", 
-            headerText : "<spring:message code='sys.info.grid1.field_7' arguments='Order' htmlEscape='false'/>", 
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Order' htmlEscape='false'/>", 
             width : 100
         }, {
             dataField : "statusCode", 
-            headerText : "<spring:message code='sys.info.grid1.field_8' arguments='Status' htmlEscape='false'/>", 
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Status' htmlEscape='false'/>", 
             //style : "my-column",
             width : 100,
-            editRenderer : {
+            editRenderer : 
+            {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 listFunction : function(rowIndex, columnIndex, item, dataField) 
@@ -132,12 +136,12 @@ var MainColumnLayout =
                 },
                 keyField : "id",
                 valueField : "value",
-              }            
+            }            
         }, {
             dataField : "menuSeq",
             headerText : "",
             width : 0
-          }
+           }
     ];
 
 function getStatusComboListAjax(callBack) 
@@ -296,7 +300,8 @@ function fnSaveMenuCode()
         , GridCommon.getEditData(myGridID)
         , function(result) 
           {
-            alert(result.data + " Count Save Success!");
+            //alert(result.data + " Count Save Success!");
+            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSelectMenuListAjax() ;
             
             console.log("성공." + JSON.stringify(result));
@@ -626,10 +631,10 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
-<!-- <input type ="hidden" id="groupCode" name="groupCode" value="310"/>
-<input type ="hidden" id="selMenuId" name="selMenuId" value="310"/> -->
-<input type ="hidden" id="selCategoryId" name="selCategoryId" value="7"/>
-<input type ="hidden" id="parmDisab" name="parmDisab" value="0"/>
+<!-- 
+<input type ="hidden" id="groupCode" name="groupCode" value="310"/>
+<input type ="hidden" id="selMenuId" name="selMenuId" value="310"/> 
+-->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

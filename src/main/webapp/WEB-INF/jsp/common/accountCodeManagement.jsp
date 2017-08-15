@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
 //
@@ -211,7 +212,7 @@ function editPopUp()
 {
 	  if ($("#paramAccCode").val().length < 1)
 	  {
-		  alert( "One Item Choose!" );
+		  Common.alert("<spring:message code='sys.msg.necessary' arguments='At least one item' htmlEscape='false'/>");
 		  return false;
 	  } 
 
