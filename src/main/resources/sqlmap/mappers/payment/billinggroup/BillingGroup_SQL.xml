@@ -404,6 +404,68 @@
 	                               </if>
 	    ) Distinct1 ) Project2 ) Project2
 	  ORDER BY Project2.SALES_ORD_ID DESC
-	   
+	</select>
+	<select id="selectCompanyStatementList" parameterType="Map" resultType="egovMap">
+	    <![CDATA[
+	    SELECT Project2.C1 C1  ,
+		       Project2.BILL_ID BILL_ID  ,
+		       Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+		       Project2.YEAR YEAR  ,
+		       Project2.MONTH MONTH  ,
+		       Project2.SO_NO SO_NO  ,
+		       Project2.CUST_NAME CUST_NAME  
+	   FROM ( SELECT Project2.BILL_ID BILL_ID  ,
+		                Project2.CUST_NAME CUST_NAME  ,
+		                Project2.SO_NO SO_NO  ,
+		                Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+		                Project2.C1 C1  ,
+		                Project2.YEAR YEAR  ,
+		                Project2.MONTH MONTH  
+		         FROM ( SELECT Distinct1.BILL_ID BILL_ID  ,
+		                       Distinct1.CUST_NAME CUST_NAME  ,
+		                       Distinct1.SO_NO SO_NO  ,
+		                       Distinct1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+		                       Distinct1.C1 C1  ,
+		                       Distinct1.YEAR YEAR  ,
+		                       Distinct1.MONTH MONTH  
+		                   FROM ( SELECT DISTINCT Extent1.BILL_ID BILL_ID  ,
+		                                       Extent1.CUST_NAME CUST_NAME  ,
+		                                       Extent2.SO_NO SO_NO  ,
+		                                       Extent3.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+		                                       1 C1  ,
+		                                       UTILS.CONVERT_TO_NUMBER(Extent1.PV_YEAR,10,0) YEAR  ,
+		                                       UTILS.CONVERT_TO_NUMBER(Extent1.PV_MONTH,10,0) MONTH  
+		                             FROM PAY0082D Extent1
+		                              JOIN PAY0083D Extent2   ON ( Extent2.BILL_ID = Extent1.BILL_ID )
+		                              AND ( UTILS.CONVERT_TO_NUMBER(Extent2.PV_MONTH,10,0) = UTILS.CONVERT_TO_NUMBER(Extent1.PV_MONTH,10,0) )
+		                              AND ( UTILS.CONVERT_TO_NUMBER(Extent2.PV_YEAR,10,0) = UTILS.CONVERT_TO_NUMBER(Extent1.PV_YEAR,10,0) )
+		                              JOIN SAL0024D Extent3   ON Extent1.BILL_ID = Extent3.CUST_BILL_ID
+		                              LEFT JOIN ( SELECT StatementCompanyRelatedOrder.PV_MONTH PV_MONTH  ,
+		                                                 StatementCompanyRelatedOrder.PV_YEAR PV_YEAR  ,
+		                                                 StatementCompanyRelatedOrder.BILL_ID BILL_ID  ,
+		                                                 StatementCompanyRelatedOrder.SO_ID SO_ID  ,
+		                                                 StatementCompanyRelatedOrder.CRT_DT CRT_DT  
+		                                              FROM PAY0101M StatementCompanyRelatedOrder ) Extent4   ON Extent1.BILL_ID = Extent4.BILL_ID
+						                              LEFT JOIN SAL0001D Extent5   ON Extent4.SO_ID = Extent5.SALES_ORD_ID
+						                              LEFT JOIN PAY0022D Extent6   ON ( Extent5.SALES_ORD_ID = Extent6.RENT_SO_ID )
+						                              AND ( Extent6.RENT_AMT > UTILS.CONVERT_TO_FLOAT(0,53) )
+		                              WHERE  1=1]]>
+		                              <if test="billNo != '' ">
+		                                 AND ( Extent3.CUST_BILL_GRP_NO LIKE '%' || #{billNo} || '%'ESCAPE '~' )
+		                              </if>
+		                              <if test="orderNo != '' ">
+		                                 AND ( Extent2.SO_NO LIKE '%' || #{orderNo} || '%' ESCAPE '~' )
+		                              </if>
+		                              <if test="custName != '' ">  
+		                                 AND ( Extent1.CUST_NAME LIKE '%' || #{custName} || '%' ESCAPE '~' )
+		                              </if>   
+		                              <if test="sMonth != '' ">
+		                                 AND ( UTILS.CONVERT_TO_NUMBER(Extent1.PV_MONTH,10,0) = #{sMonth} )
+		                              </if>
+		                              <if test="sYear != '' ">
+		                                 AND ( UTILS.CONVERT_TO_NUMBER(Extent1.PV_YEAR,10,0) = #{sYear} ) 
+		                               </if>
+		                               ) Distinct1 ) Project2 ) Project2
+		  ORDER BY Project2.BILL_ID DESC
 	</select>
 </mapper>
