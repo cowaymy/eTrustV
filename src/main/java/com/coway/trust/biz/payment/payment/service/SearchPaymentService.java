@@ -94,13 +94,6 @@ public interface SearchPaymentService
 	List<EgovMap> selectPaymentDetail(int payItemId);
 	
 	/**
-	 * PaymentHistory 저장
-	 * @param params
-	 * @return
-	 */
-	int insertPayHistory(PayDVO pay, EgovMap qryDet);
-	
-	/**
 	 * PaymentBankCode 조회
 	 * @param params
 	 * @return

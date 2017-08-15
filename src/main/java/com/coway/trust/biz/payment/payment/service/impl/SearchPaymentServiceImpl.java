@@ -185,13 +185,6 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return searchPaymentMapper.selectPaymentDetail(payItemId);
 	}
-	
-	@Override
-	public int insertPayHistory(PayDVO pay, EgovMap qryDet ){
-		
-		
-		return 0;
-	}
 
 	@Override
 	public String selectBankCode(String payItmIssuBankId) {
