@@ -1846,4 +1846,19 @@
 			WHERE
 			    CUST_ADD_ID = #{addrCustAddId}
     </update>
+    
+    <select id="searchMagicAddressPop" parameterType="Map" resultType="egovMap">
+           <![CDATA[ 
+                SELECT ID STREET_ID
+				         , REGION1 State
+				         , REGION2 City
+				         , LOCALITY Town
+				         , POSTCODE postCd
+				         , STREET
+				         , REGION1 || ' ' || REGION2 || ' ' || LOCALITY || ' ' || POSTCODE || ' ' || STREET AS FULLADDRESS
+				   FROM SYS0064M
+				 WHERE ISO = 'MY'
+				     AND UPPER(STREET) LIKE UPPER('%'|| #{searchStreet} || '%')
+           ]]>
+    </select>
 </mapper>
