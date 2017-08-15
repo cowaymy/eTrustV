@@ -40,6 +40,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @return 글 목록
 	 * @exception Exception
 	 */
+	@Override
 	public List<EgovMap> selectCustomerList(Map<String, Object> params) {
 		
 		return customerMapper.selectCustomerList(params);
@@ -635,4 +636,17 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 	}
 	
+	
+	/**
+	 * Customer Magic Address 
+	 * 
+	 * @param 
+	 * @return Customer Magic Address 
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> searchMagicAddressPop(Map<String, Object> params) {
+		
+		return customerMapper.searchMagicAddressPop(params);
+	}
 }
