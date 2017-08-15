@@ -106,7 +106,7 @@
 			(
 				#{crcStateId},				
 				TO_CHAR(TO_DATE(#{crcStateRefDt},'DD/MM/YYYY'),'YYYY-MM-DD'),
-				GET_DOCNO('110'),
+				FN_GET_DOCNO('110'),
 				#{crcStateRunngNo},
 				#{crcStateAccId},
 				'',

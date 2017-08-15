@@ -40,10 +40,10 @@
                     </div><!-- auto_file end -->
                 </td>
                 <td>
-                    <a href="javascript:fn_saveGridMap();"><img src="../resources/images/common/btn.gif" alt="Read CSV" /></a>
+                    <a href="javascript:fn_saveGridMap();"><img src="${pageContext.request.contextPath}/resources/images/common/btn.gif" alt="Read CSV" /></a>
                 </td>
                 <td>
-                    <a href="#" class="search_btn"><img src="../resources/images/common/btn.gif" alt="Download CSV Format" /></a>
+                    <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/btn.gif" alt="Download CSV Format" /></a>
                 </td>
             </tr>
         </tbody>

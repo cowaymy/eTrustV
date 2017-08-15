@@ -46,7 +46,7 @@ function fn_getOrderListAjax() {
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Rental Collection</li>
         <li>Organization By Sales Account</li>

@@ -2,35 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.payment.service.impl.SearchPaymentMapper">
     
-    <resultMap id="paymentListResultMap" type="EgovMap">
-        <result property="payItmCcNo" column="PAY_ITM_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="c1" column="C1" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="byte[]"/>
-        <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    
-    <resultMap id="orderStatusMap" type="EgovMap">
-        <result property="rem" column="REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    
-    <resultMap id="paymenDetailResultMap" type="EgovMap">
-        <result property="payItmCcNo" column="PAY_ITM_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="c1" column="C1" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="byte[]"/>
-        <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-    
-    <resultMap id="paymentItemMap" type="EgovMap">
-        <result property="payItmCcNo" column="PAY_ITM_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
-        <result property="payItmOriCcNo" column="PAY_ITM_ORI_CC_NO" jdbcType="CLOB" javaType="java.lang.String"/>
-         <result property="payItmEncryptCcNo" column="PAY_ITM_ENCRYPT_CC_NO" jdbcType="BLOB" javaType="byte[]"/>
-        <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-      
-      <resultMap id="paymentDetailMap" type="EgovMap">
-        <result property="payItmRem" column="PAY_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>
-      
     <!--Search Payment Order List(Master Grid) 리스트 조회  -->
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
         SELECT
@@ -144,7 +115,7 @@
     </select>
     
     <!--Search Payment : PaymentList (Slave Grid) 리스트 조회  -->
-    <select id="selectPaymentList" parameterType="Map" resultMap="paymentListResultMap">
+    <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
         SELECT 
             Extent1.PAY_ITM_ID, 
             Extent1.PAY_ID, 
@@ -152,7 +123,7 @@
             Extent2.CODE_NAME, 
             Extent1.PAY_ITM_REF_NO, 
             Extent1.PAY_ITM_CC_NO, 
-            CASE WHEN Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL THEN Extent1.PAY_ITM_ORI_CC_NO ELSE empty_clob() END AS C1, 
+            CASE WHEN Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL THEN Extent1.PAY_ITM_ORI_CC_NO ELSE '' END AS C1, 
 		    Extent1.PAY_ITM_ENCRYPT_CC_NO,
 		    Extent1.PAY_ITM_CC_TYPE_ID, 
 		    Extent3.CODE_NAME AS CODE_NAME1, 
@@ -408,7 +379,7 @@
         WHERE  Extent1.PAY_ID = #{payId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
      
-     <select id="selectOrderProgressStatus" parameterType="Map" resultMap="orderStatusMap">
+     <select id="selectOrderProgressStatus" parameterType="Map" resultType="egovMap">
           SELECT 
                 Extent1.INSTALL_ENTRY_ID  ,
                 Extent2.REM   ,
@@ -422,7 +393,7 @@
             WHERE  Extent5.SALES_ORD_ID = #{salesOrdId} ) GroupBy1   ON Extent1.INSTALL_ENTRY_ID = GroupBy1.A1 WHERE ROWNUM <![CDATA[   <= ]]> 1
      </select>
      
-     <select id="selectPaymentDetailView" parameterType="Map" resultMap="paymenDetailResultMap">
+     <select id="selectPaymentDetailView" parameterType="Map" resultType="egovMap">
           SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 		       Extent1.PAY_ID PAY_ID  ,
 		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
@@ -431,7 +402,7 @@
 		       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
 		       CASE 
 		            WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO
-		       ELSE empty_clob()
+		       ELSE ''
 		          END C1  ,
 		       Extent1.PAY_ITM_ENCRYPT_CC_NO   ,
 		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
@@ -939,7 +910,7 @@
 	 WHERE  Extent1.GL_RECIPT_ITM_ID = #{payItmId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
 
-	<select id="selectPaymentItem" parameterType="java.lang.Integer" resultMap="paymentItemMap">
+	<select id="selectPaymentItem" parameterType="java.lang.Integer" resultType="egovMap">
 	   SELECT
 	       Limit1.PAY_ITM_ID PAY_ITM_ID  ,
 	       Limit1.PAY_ID PAY_ID  ,
@@ -1011,7 +982,7 @@
 	                Extent4.NAME NAME  ,
 	                Extent5.ACC_DESC ACC_DESC  ,
 	                Extent6.NAME NAME1  ,
-	                CASE WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO ELSE empty_clob() END C1  ,
+	                CASE WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO ELSE '' END C1  ,
 	                CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE ' ' END C2  ,
 	                CASE WHEN ( Extent5.ACC_ID IS NOT NULL ) THEN Extent5.ACC_CODE ELSE ' ' END C3  ,
 	                CASE WHEN ( Extent1.PAY_ITM_EFT_NO IS NOT NULL ) THEN Extent1.PAY_ITM_EFT_NO ELSE ' ' END C4  ,
@@ -1035,7 +1006,7 @@
 	                   AND ( Extent1.PAY_ITM_ID = #{value} ) AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
 	</select>
 	
-	<select id="selectPaymentDetail" parameterType="java.lang.Integer" resultMap="paymentDetailMap">
+	<select id="selectPaymentDetail" parameterType="java.lang.Integer" resultType="egovMap">
 	   SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 	       Extent1.PAY_ID PAY_ID  ,
 	       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,

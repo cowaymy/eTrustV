@@ -30,7 +30,7 @@ function fn_genDocument(){
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Payment</li>
         <li>Late Submission List</li>

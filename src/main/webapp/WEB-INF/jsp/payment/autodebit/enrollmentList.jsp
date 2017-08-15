@@ -280,7 +280,7 @@ var columnLayout2 = [
 <form name="searchForm" id="searchForm">
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Auto Debit</li>
         <li>Enrollment</li>
@@ -348,7 +348,7 @@ var columnLayout2 = [
     <section class="search_result">
           <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
@@ -358,7 +358,7 @@ var columnLayout2 = [
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()">New Enrollment</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="fn_goEnrollmentResult();">Enrollment Result</a></p></li>
                     </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
         </aside>

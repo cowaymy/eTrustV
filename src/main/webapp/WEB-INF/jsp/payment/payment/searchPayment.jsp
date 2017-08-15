@@ -128,7 +128,7 @@ var popEditColumnLayout = [
                {
               type : "IconRenderer",
               iconTableRef :  {
-                  "default" : "/resources/images/common/search.png"// default
+                  "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
               },         
               iconWidth : 16,
               iconHeight : 16,
@@ -145,7 +145,7 @@ var popEditColumnLayout = [
                {
               type : "IconRenderer",
               iconTableRef :  {
-                  "default" : "/resources/images/common/modified_icon.png"// default
+                  "default" : "${pageContext.request.contextPath}/resources/images/common/modified_icon.png"// default
               },         
               iconWidth : 16, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
               iconHeight : 16,              
@@ -186,7 +186,7 @@ var popColumnLayout = [
                 {
                type : "IconRenderer",
                iconTableRef :  {
-                   "default" : "/resources/images/common/search.png"// default
+                   "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
                },         
                iconWidth : 16,
                iconHeight : 16,
@@ -650,7 +650,7 @@ function fn_officialReceiptReport(){
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Payment</li>
         <li>Search Payment</li>
@@ -779,7 +779,7 @@ function fn_officialReceiptReport(){
 
             <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
                 <dl class="link_list">
                     <dt>Link</dt>
                     <dd>
@@ -797,7 +797,7 @@ function fn_officialReceiptReport(){
                         <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>                        
                         <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
                     </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
             </aside>
@@ -1469,6 +1469,6 @@ function fn_officialReceiptReport(){
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/PaymentReceipt_New.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
-    <input type="text" id="v_ORNo" name="v_ORNo" />
+    <input type="hidden" id="v_ORNo" name="v_ORNo" />
 </form>
 

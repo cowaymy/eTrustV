@@ -112,7 +112,7 @@ function fn_genDocument(docVal){
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Payment</li>
         <li>Payment Listing</li>
@@ -230,18 +230,19 @@ function fn_genDocument(docVal){
 <form name="reportExcelForm" id="reportExcelForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/PaymentListing_Excel.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
-    <input type="text" id="V_WHERESQL" name="V_WHERESQL" />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
 </form>
 
 
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/PaymentListing_PDF.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
-    <input type="text" id="V_WHERESQL" name="V_WHERESQL" />    
-    <input type="text" id="V_SHOWPAYMENTDATE" name="V_SHOWPAYMENTDATE" />                                   
-    <input type="text" id="V_SHOWKEYINBRANCH" name="V_SHOWKEYINBRANCH" />                                   
-    <input type="text" id="V_SHOWRECEIPTNO" name="V_SHOWRECEIPTNO" />                                   
-    <input type="text" id="V_SHOWTRNO" name="V_SHOWTRNO" />                                   
-    <input type="text" id="V_SHOWKEYINUSER" name="V_SHOWKEYINUSER" />                                   
-    <input type="text" id="V_SHOWBATCHPAYMENTID" name="V_SHOWBATCHPAYMENTID" />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />    
+    <input type="hidden" id="V_SHOWPAYMENTDATE" name="V_SHOWPAYMENTDATE" />                                   
+    <input type="hidden" id="V_SHOWKEYINBRANCH" name="V_SHOWKEYINBRANCH" />                                   
+    <input type="hidden" id="V_SHOWRECEIPTNO" name="V_SHOWRECEIPTNO" />                                   
+    <input type="hidden" id="V_SHOWTRNO" name="V_SHOWTRNO" />                                   
+    <input type="hidden" id="V_SHOWKEYINUSER" name="V_SHOWKEYINUSER" />                                   
+    <input type="hidden" id="V_SHOWBATCHPAYMENTID" name="V_SHOWBATCHPAYMENTID" />
+    <input type="hidden" id="V_UserTotal" name="@UserTotal" />
 </form>

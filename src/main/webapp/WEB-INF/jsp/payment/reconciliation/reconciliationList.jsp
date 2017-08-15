@@ -91,7 +91,7 @@ var columnLayout = [
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Reconciliation</li>
         <li>Reconciliation Search</li>
@@ -179,7 +179,7 @@ var columnLayout = [
         
         <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
@@ -203,7 +203,7 @@ var columnLayout = [
                         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
                         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
                     </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
         </aside>
