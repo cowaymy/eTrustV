@@ -124,7 +124,7 @@ public class StockMovementController {
 		return ResponseEntity.ok(codeList);
 	}
 
-	@RequestMapping(value = "/stockMovementSearchList.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/StockMovementSearchList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> selectStockMovementSearchList(@RequestBody Map<String, Object> params, Model model)
 			throws Exception {
 

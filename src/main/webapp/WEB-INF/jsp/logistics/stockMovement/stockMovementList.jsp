@@ -99,13 +99,13 @@ $(document).ready(function(){
 	/**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
+    doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
-    doDefCombo(amdata, '${searchVal.smvpath}' ,'smvpath', 'S', '');
+    //doDefCombo(amdata, '${searchVal.smvpath}' ,'smvpath', 'S', '');
     $("#crtsdt").val('${searchVal.crtsdt}');
     $("#crtedt").val('${searchVal.crtedt}');
     $("#reqsdt").val('${searchVal.reqsdt}');
@@ -150,7 +150,7 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $('#insert').click(function(){
-    	document.searchForm.action = '/logistics/stockMovement/StocktransferIns.do';
+    	document.searchForm.action = '/logistics/stockMovement/StockMovementIns.do';
         document.searchForm.submit();
     });
 });
@@ -158,7 +158,7 @@ $(function(){
 function SearchListAjax() {
    
     //var url = "/logistics/stockMovement/StocktransferSearchList.do";
-    var url = "/logistics/stockMovement/stockMovementSearchList.do";
+    var url = "/logistics/stockMovement/StockMovementSearchList.do";
     var param = $('#searchForm').serializeJSON();
     console.log(param);
     Common.ajax("POST" , url , param , function(data){
@@ -291,7 +291,12 @@ function f_getTtype(g , v){
                     </td>
                     <th scope="row">Movement Path</th>
                     <td> 
-                        <select class="w100p" id="smvpath" name="smvpath"></select>
+                       <!--  <select class="w100p" id="smvpath" name="smvpath"></select> -->
+                            <select class="w100p">
+					            <option value=" "></option>
+					            <option value="1">RDC to CT/Cody</option>
+					            <option value="2">CT/Cody to CT/Cody</option>
+					        </select>
                     </td>
                     <td colspan="2">&nbsp;</td>              
                 </tr>
