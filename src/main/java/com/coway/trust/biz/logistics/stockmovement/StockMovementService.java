@@ -12,4 +12,9 @@ public interface StockMovementService {
 	List<EgovMap> selectStockMovementNoList(Map<String, Object> params);
 
 	List<EgovMap> selectStockMovementMainList(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementDeliveryList(Map<String, Object> params);
+
+	List<EgovMap> selectTolocationItemList(Map<String, Object> smap);
+
 }

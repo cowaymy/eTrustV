@@ -135,6 +135,36 @@ public class StockMovementController {
 
 		return ResponseEntity.ok(map);
 	}
+
+	@RequestMapping(value = "/StockMovementRequestDeliveryList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectStockMovementRequestDeliveryList(@RequestParam Map<String, Object> params,
+			Model model) throws Exception {
+
+		List<EgovMap> list = stockMovementService.selectStockMovementDeliveryList(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/StockMovementTolocationItemList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectStockTransferTolocationItemList(Model model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		String[] type = request.getParameterValues("cType");
+		String toloc = request.getParameter("slocation");
+
+		Map<String, Object> smap = new HashMap();
+		smap.put("ctype", type);
+		smap.put("toloc", toloc);
+
+		List<EgovMap> list = stockMovementService.selectTolocationItemList(smap);
+
+		smap.put("data", list);
+
+		return ResponseEntity.ok(smap);
+	}
 	/*
 	 * @RequestMapping(value = "/StockTransferDeliveryList.do") public String stockTransferDeliveryList(Model model,
 	 * HttpServletRequest request, HttpServletResponse response) throws Exception {

@@ -21,4 +21,8 @@ public interface StockMovementMapper {
 
 	List<EgovMap> selectStockMovementMainList(Map<String, Object> params);
 
+	List<EgovMap> selectStockMovementDeliveryList(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementToItem(Map<String, Object> params);
+
 }

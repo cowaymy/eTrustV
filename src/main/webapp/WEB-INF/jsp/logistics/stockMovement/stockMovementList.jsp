@@ -129,7 +129,7 @@ $(document).ready(function(){
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-    	document.searchForm.action = '/logistics/stockMovement/StocktransferView.do';
+    	document.searchForm.action = '/logistics/stockMovement/StockMovementView.do';
     	document.searchForm.submit();
     });
     
@@ -167,7 +167,7 @@ function SearchListAjax() {
 }
 
 function SearchDeliveryListAjax( reqno ) {
-    var url = "/logistics/stockMovement/StocktransferRequestDeliveryList.do";
+    var url = "/logistics/stockMovement/StockMovementRequestDeliveryList.do";
     var param = "reqstno="+reqno;
     
     Common.ajax("GET" , url , param , function(data){

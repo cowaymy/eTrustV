@@ -65,4 +65,16 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return stockMoveMapper.selectStockMovementMainList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectStockMovementDeliveryList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMoveMapper.selectStockMovementDeliveryList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectTolocationItemList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMoveMapper.selectStockMovementToItem(params);
+	}
 }
