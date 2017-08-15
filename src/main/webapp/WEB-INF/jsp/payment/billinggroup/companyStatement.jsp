@@ -6,6 +6,7 @@ var myGridID;
 
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    $('input:radio[name=printMethod]').is(':checked');
     
 });
 
@@ -16,12 +17,11 @@ var gridPros = {
 };
 
 var columnLayout=[              
-    {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"name1", headerText:"Customer Name"},
-    {dataField:"invcRefNo", headerText:"Invoice No"},
-    {dataField:"invcRefDt", headerText:"Invoice Date"},
-    {dataField:"invcSubMemPacAmt", headerText:"Invoice Amount"},
-    {dataField:"srvMemQuotNo", headerText:"Installment No"}
+    {dataField:"custBillGrpNo", headerText:"Group No"},
+    {dataField:"year", headerText:"Year"},
+    {dataField:"month", headerText:"Month"},
+    {dataField:"soNo", headerText:"Order No"},
+    {dataField:"custName", headerText:"Customer Name"}
 ];
 
 function fn_getOrderListAjax() {        
@@ -29,7 +29,7 @@ function fn_getOrderListAjax() {
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
 	}else{
-		Common.ajax("GET", "/payment/selectMembershipList", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/payment/selectCompStatementList", $("#searchForm").serialize(), function(result) {
 	    	AUIGrid.setGridData(myGridID, result);
 	    });
 	}
@@ -38,7 +38,7 @@ function fn_getOrderListAjax() {
 function ValidRequiredField(){
 	var valid = true;
 	
-	if($("#invoiceNo").val() == "" && $("#orderNo").val() == "")
+	if($("#brNumber").val() == "" && $("#orderNo").val() == "")
 		valid = false;
 	
 	return valid;
@@ -51,13 +51,13 @@ function ValidRequiredField(){
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Billing</li>
         <li>Billing Group</li>
-        <li>Membership Invoice</li>
+        <li>Company Statement</li>
     </ul>
     
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Service Membership Invoice</h2>   
+        <h2>Company Rental Statement Of Account</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
@@ -79,9 +79,9 @@ function ValidRequiredField(){
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Invoice Number</th>
+                        <th scope="row">Billing Number</th>
                         <td>
-                            <input id="invoiceNo" name="invoiceNo" type="text" class="w100p" />
+                            <input id="brNumber" name="brNumber" type="text" class="w100p" />
                         </td>
                         <th scope="row">Statement Period</th>
                         <td>
@@ -95,17 +95,7 @@ function ValidRequiredField(){
                         </td>
                         <th scope="row">Customer Name</th>
                         <td>
-                           <input id="custName" name="custName" type="text" class="w100p" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Customer NRIC</th>
-                        <td>
-                            <input id="custNRIC" name="custNRIC" type="text" class="w100p" />
-                        </td>
-                        <th scope="row">Quotation No</th>
-                        <td>
-                            <input id="quotationNo" name="quotationNo" type="text" class="w100p" />
+                           <input id="customerName" name="customerName" type="text" class="w100p" />
                         </td>
                     </tr>
                     </tbody>
@@ -127,7 +117,7 @@ function ValidRequiredField(){
                     </ul>
                     <!-- <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
-                    </ul> -->
+                    </ul>-->
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>

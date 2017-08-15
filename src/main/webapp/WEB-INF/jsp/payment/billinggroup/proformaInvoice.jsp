@@ -7,17 +7,22 @@ var myGridID;
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
-    //Application Type 생성
-    doGetCombo('/common/selectCodeList.do', '10' , ''   , 'appType' , 'M', 'f_multiCombo');
+    doGetCombo('/common/selectCodeList.do', '10' , ''   , 'appType' , 'M', 'f_multiCombo');//Application Type 생성
+    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'keyBranch' , 'M', 'f_multiCombo'); //key-in Branch 생성
+    doGetComboSepa('/common/selectBranchCodeList.do', '2' , ' - '  ,'' , 'dscBranch' , 'M', 'f_multiCombo');//Branch생성
+    doGetComboAndGroup('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');//product 생성
   
-    //key-in Branch 생성
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'keyBranch' , 'M', 'f_multiCombo');
-  
-    //Branch생성
-    doGetComboSepa('/common/selectBranchCodeList.do', '2' , ' - '  ,'' , 'dscBranch' , 'M', 'f_multiCombo');
+   // $("#orderStatus").attr('disabled', true);
     
-  //product 생성
-    doGetComboAndGroup('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');
+    $("#custId").keyup(function() {
+    	 var str = $("#custId").val();
+    	 var pattern_special = /[~!@\#$%<>^&*\()\-=+_\’]/gi, pattern_eng = /[A-za-z]/g;
+
+    	  if (pattern_special.test(str) || pattern_eng.test(str)) {
+    		  $("#custId").val(str.replace(/[^0-9]/g, ""));
+    	  }
+    });
+    
 });
 
 function f_multiCombo() {
@@ -60,7 +65,7 @@ function fn_getOrderListAjax() {
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
 	}else{
-		Common.ajax("GET", "/payment/selectMembershipList", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/payment/selectProformaInvoiceList", $("#searchForm").serialize(), function(result) {
 	    	AUIGrid.setGridData(myGridID, result);
 	    });
 	}
@@ -74,6 +79,9 @@ function ValidRequiredField(){
 	
 	return valid;
 }
+
+
+
 </script>
 
 <!-- content start -->
@@ -129,7 +137,11 @@ function ValidRequiredField(){
                     <tr>
                         <th scope="row">Order Status</th>
                         <td>
-                            <select id="orderStatus" name="orderStatus" class="w100p"></select>
+                            <select id="orderStatus" name="orderStatus" class="multy_select w100p" multiple="multiple" >
+                                <option value="1">Active</option>
+                                <option value="4">Completed</option>
+                                <option value="10">Cancelled</option>
+                            </select>
                         </td>
                         <th scope="row">Key-In Branch</th>
                         <td>
@@ -151,7 +163,7 @@ function ValidRequiredField(){
                         </td>
                         <th scope="row">NRIC/Company No</th>
                         <td>
-                            <input id="nricNo" name="nricNo" type="text" class="w100p" />
+                            <input id="custIc" name="custIc" type="text" class="w100p" />
                         </td>
                     </tr>
                     <tr>
@@ -161,11 +173,11 @@ function ValidRequiredField(){
                         </td>
                         <th scope="row">Salesman</th>
                         <td>
-                            <input id="salesMan" name="salesMan" type="text" class="w100p" />
+                            <input id="memberCode" name="memberCode" type="text" class="w100p" />
                         </td>
                         <th scope="row">Rental Status</th>
                         <td>
-                            <select id="product" name="product"class="multy_select w100p" multiple="multiple" >
+                            <select id="rentalStatus" name="rentalStatus" class="multy_select w100p" multiple="multiple" >
                                 <option value="REG">Regular</option>
                                 <option value="INV">Investigate</option>
                                 <option value="SUS">Suspend</option>

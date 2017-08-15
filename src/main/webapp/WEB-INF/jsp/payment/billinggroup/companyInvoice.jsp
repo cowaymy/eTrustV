@@ -52,7 +52,7 @@ function ValidRequiredField(){
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Billing</li>
         <li>Billing Group</li>
-        <li>Company Rental Invoice</li>
+        <li>Company Invoice</li>
     </ul>
     
     <!-- title_line start -->

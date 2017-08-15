@@ -52,13 +52,13 @@ function ValidRequiredField(){
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Billing</li>
         <li>Billing Group</li>
-        <li>Company Rental Invoice</li>
+        <li>Individual Statement</li>
     </ul>
     
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Company Rental Invoice</h2>   
+        <h2>Individual Rental Statement</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
@@ -123,11 +123,11 @@ function ValidRequiredField(){
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="#">Generate Invoice</a></p></li>
+                        <li><p class="link_btn"><a href="#">Statement Generate</a></p></li>
                     </ul>
-                    <ul class="btns">
+                    <!-- <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
-                    </ul>
+                    </ul>-->
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
