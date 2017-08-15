@@ -1168,4 +1168,40 @@ public class CustomerController {
 			
 			return ResponseEntity.ok(message);
 		}
+		
+		
+		/**
+		 * Magic Address
+		 * @param params
+		 * @param model
+		 * @return
+		 */
+		@RequestMapping(value = "/searchMagicAddressPop.do")
+		public String searchMagicAddressPop(@RequestParam Map<String, Object>params, ModelMap model){
+			
+			
+			model.addAttribute("searchStreet", params.get("searchSt"));
+			
+			// 데이터 리턴.
+			return "sales/customer/customerMagicAddrPop";
+		}
+		
+		
+		/**
+		 * Magic Address
+		 * @param params
+		 * @param model
+		 * @return
+		 */
+		@RequestMapping(value = "/searchMagicAddressPopJsonList", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> searchMagicAddressPopJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+			
+			List<EgovMap> searchMagicAddrList = null;
+			
+			logger.info("##### searchMagicAddrList START #####");
+			searchMagicAddrList = customerService.searchMagicAddressPop(params);
+			
+			// 데이터 리턴.
+			return ResponseEntity.ok(searchMagicAddrList);
+		}
 }
