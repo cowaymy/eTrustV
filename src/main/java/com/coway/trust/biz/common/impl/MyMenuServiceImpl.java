@@ -70,16 +70,39 @@ public class MyMenuServiceImpl implements MyMenuService {
 		return myMenuMapper.selectMyMenuProgrmList(params);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void saveMyMenuProgrm(Map<String, ArrayList<Object>> params,SessionVO sessionVO) {
-		/*
-		if("C".equals(params.get("status"))){
-			myMenuMapper.insertMyMenuProgrm(params);
-		}else if("U".equals(params.get("status"))){
-			myMenuMapper.updateMyMenuProgrm(params);
-		}else if("D".equals(params.get("status"))){
-			myMenuMapper.deleteMyMenuProgrm(params);
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList		
+		List<Object> deleteList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList				
+		
+		int loginId = 0;
+		if(sessionVO != null){		
+			loginId = sessionVO.getUserId();
 		}
-		*/
+		
+		for (Object list : addList){
+			Map<String, Object> map = (Map<String, Object>) list;
+			map.put("userId", loginId);
+			myMenuMapper.insertMyMenuProgrm(map);			
+		}
+		
+		for (Object list : updateList){
+			Map<String, Object> map = (Map<String, Object>) list;
+			map.put("userId", loginId);
+			myMenuMapper.updateMyMenuProgrm(map);
+		}
+
+		for (Object list : deleteList){
+			Map<String, Object> map = (Map<String, Object>) list;
+			map.put("userId", loginId);
+			myMenuMapper.deleteMyMenuProgrm(map);
+		}
+	}
+
+	@Override
+	public List<EgovMap> selectMenuPop(Map<String, Object> params) {		
+		return myMenuMapper.selectMenuPop(params);
 	}
 }
