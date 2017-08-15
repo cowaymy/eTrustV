@@ -478,6 +478,16 @@
 	            break;
     	}
     }
+    
+    function fn_addrSearch(){
+    	if($("#searchSt").val() == ''){
+            Common.alert("Please search.");
+            return false;
+        }
+    	Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv');
+    }
+    
+    
 </script>
 
 <!-- 
@@ -637,64 +647,65 @@
 </aside><!-- title_line end -->
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row" rowspan="3">Address<span class="must">*</span></th>
-    <td colspan="3">
-    <input type="text" id="addr1" name="addr1" title="" placeholder="Address(1)" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <td colspan="3">
-    <input type="text" id="addr2" name="addr2" title="" placeholder="Address(2)" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <td colspan="3">
-    <input type="text" id="addr3" name="addr3" title="" placeholder="Address(3)" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Country<span class="must">*</span></th>
-    <td>
-	    <select class="w100p disabled" id="cmbCountry" name="cmbCountry" disabled="disabled">
-	       <option value="1">MALAYSIA</option>
-	    </select>
-    </td>
-    <th scope="row">State<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="mstate" name="mstate" onchange="getAddrRelay('cmbArea' , this.value , 'area', this.value)">
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Area<span class="must">*</span></th>
-    <td>
-	    <select class="w100p" id="cmbArea" name="cmbArea" onchange="getAddrRelay('cmbPostCd' , this.value , 'post', this.value)" disabled="disabled">
-	    </select>
-    </td>
-    <th scope="row">Postcode<span class="must">*</span></th>
-    <td>
-	    <select class="w100p" id="cmbPostCd" name="cmbPostCd" disabled="disabled">
-	    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Remarks</th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" id="addrRem" name="addrRem" placeholder="Remark"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+    <input type="hidden" id="streetId" name="streetId">
+	<table class="type1"><!-- table start -->
+	<caption>table</caption>
+	<colgroup>
+	    <col style="width:135px" />
+	    <col style="width:*" />
+	    <col style="width:130px" />
+	    <col style="width:*" />
+	</colgroup>
+		<tbody>
+			<tr>
+			    <th scope="row">Street search<span class="must">*</span></th>
+			    <td colspan="3">
+			    <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row" rowspan="2">Address<span class="must">*</span></th>
+			    <td colspan="3">
+			    <input type="text" title="" id="mAddr1" name="mAddr1" placeholder="Address(1)" class="w100p" />
+			    </td>
+			</tr>
+			<tr>
+			    <td colspan="3">
+			    <input type="text" title="" id="mAddr2" name="mAddr2" placeholder="Address(2)" class="w100p" />
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row">Country<span class="must">*</span></th>
+			    <td>
+			    <input type="text" title="" id="mAddr2" name="mAddr2" placeholder="" class="w100p readonly" readonly="readonly" />
+			    </td>
+			    <th scope="row">Region<span class="must">*</span></th>
+			    <td>
+			    <input type="text" title="" id="mAddr2" name="mAddr2" placeholder="" class="w100p readonly" readonly="readonly" />
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row">City<span class="must">*</span></th>
+			    <td>
+			    <input type="text" title="" id="mCity" name="mCity" placeholder="" class="w100p readonly" readonly="readonly" />
+			    </td>
+			    <th scope="row">Town<span class="must">*</span></th>
+			    <td>
+			    <input type="text" title="" id="mTown" name="mTown" placeholder="" class="w100p readonly" readonly="readonly" />
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row">Street<span class="must">*</span></th>
+			    <td>
+			    <input type="text" title="" id="mStreet" name="mStreet" placeholder="" class="w100p readonly" readonly="readonly" />
+			    </td>
+			    <th scope="row">PostCode<span class="must">*</span></th>
+			    <td>
+			    <input type="text" title="" id="mPostCd" name="mPostCd" placeholder="" class="w100p readonly" readonly="readonly" />
+			    </td>
+			</tr>
+		</tbody>
+	</table><!-- table end -->
 </form>
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
