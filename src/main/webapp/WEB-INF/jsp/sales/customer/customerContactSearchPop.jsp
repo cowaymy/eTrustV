@@ -11,25 +11,36 @@
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN') {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
+
+            // 셀 더블클릭 이벤트 바인딩
+            AUIGrid.bind(contactGridID, "cellDoubleClick", function(event) {
+                fn_setData(AUIGrid.getCellValue(contactGridID , event.rowIndex , "custCntcId"))
+                fn_createEvent('custPopCloseBtn', 'click');
+            });
 	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {
+	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
+	         || $('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
 	        createAUIGrid2();
 	        fn_getCustomerCareAjax();
+	        
+            // 셀 더블클릭 이벤트 바인딩
+            AUIGrid.bind(contactGridID, "cellDoubleClick", function(event) {
+                fn_setData(AUIGrid.getCellValue(contactGridID , event.rowIndex , "custCareCntId"))
+                fn_createEvent('custPopCloseBtn', 'click');
+            });
 	    }
 	    
-        // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(contactGridID, "cellDoubleClick", function(event) {
-            fn_setData(AUIGrid.getCellValue(contactGridID , event.rowIndex , "custId"))
-            fn_createEvent('custPopCloseBtn', 'click');
-        });
 	});
 	
-	function fn_setData(custId) {
+	function fn_setData(cntcId) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN') {
-	        fn_loadCntcPerson(custId);
+	        fn_loadCntcPerson(cntcId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {
-	        fn_loadSrvCntcPerson(custId);
+	        fn_loadSrvCntcPerson(cntcId);
+	    }
+	    else if($('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
+	        fn_loadBillingPreference(cntcId);
 	    }
 	}
 	
@@ -72,7 +83,7 @@
 	            headerText : "Tel (Fax)",
 	            width : 100
 	        },{
-	            dataField : "custId",
+	            dataField : "custCntcId",
 	            visible : false
             }];
 
@@ -128,7 +139,7 @@
 	            headerText : "Tel (Fax)",
 	            width : 100
 	        },{
-	            dataField : "custId",
+	            dataField : "custCareCntId",
 	            visible : false
             }];
 

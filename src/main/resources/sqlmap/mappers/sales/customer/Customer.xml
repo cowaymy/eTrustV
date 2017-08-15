@@ -436,8 +436,18 @@
                         WHERE  ( 8 <> Extent1.STUS_CODE_ID )
                               AND ( Extent1.CUST_ID = #{custId} ) 
                         ) Project1
+                ]]>
+                  <if test='searchWord != null and searchWord !=""'>
+                    WHERE (UPPER(Project1.add1)     LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(Project1.add2)     LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(Project1.add3)     LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(Project1.postCode) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(Project1.areaName) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(Project1.name1)    LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(Project1.Name2)    LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(Project1.NAME)     LIKE '%' || UPPER(#{searchWord}) || '%')
+                  </if>
                 ORDER BY Project1.Name DESC
-		 ]]>
     </select>
     
     <!-- Ajax Call Contact List  -->
@@ -558,6 +568,64 @@
              OR UPPER(T1.TELF)  LIKE '%' || UPPER(#{searchWord}) || '%')
           </if>
          ORDER BY T1.NAME DESC
+    </select>
+    
+    <select id="selectBillingGroupByKeywordCustIDList" parameterType="Map" resultType="egovMap">
+		SELECT T1.CUST_BILL_ID
+		     , T1.CUST_BILL_SO_ID
+		     , T1.CUST_BILL_CUST_ID
+		     , T1.CUST_BILL_CNT_ID
+		     , T1.CUST_BILL_ADD_ID
+		     , T1.CUST_BILL_STUS_ID
+		     , T1.CUST_BILL_UPD_USER_ID
+		     , T1.CUST_BILL_GRP_NO
+		     , T1.CUST_BILL_CRT_USER_ID
+		     , T1.CUST_BILL_PAY_TRM
+		     , T1.CUST_BILL_INCHG_MEM_ID
+		     , T1.CUST_BILL_IS_ESTM
+		     , T1.CUST_BILL_IS_SMS
+		     , T1.CUST_BILL_IS_POST
+		     , NVL(T2.ADD1, '') ADD1
+		     , NVL(T2.ADD2, '') ADD2
+		     , NVL(T2.ADD3, '') ADD3
+		     , NVL(T3.POST_CODE, '') POST_CODE
+		     , NVL(T4.AREA_NAME, '') AREA_NAME
+		     , NVL(T5.NAME, '') STATE_NAME
+		     , NVL(T6.NAME, '') CNTY_NAME
+		     , NVL(T1.CUST_BILL_EMAIL, '') CUST_BILL_EMAIL
+		     , NVL(T1.CUST_BILL_CRT_DT, TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) CUST_BILL_CRT_DT
+		     , NVL(T7.USER_NAME, '') USER_NAME
+		     , NVL(T1.CUST_BILL_REM, '') CUST_BILL_REM
+		     , NVL(T9.MEM_CODE, '') MEM_CODE
+		     , NVL(T9.NAME, '') MEM_NAME
+		     , NVL(T9.NRIC, '') NRIC
+		     , NVL(T10.CODE_NAME, '') CODE_NAME
+		     , NVL(T8.USER_NAME, '') USER_NAME
+		     , NVL(T1.CUST_BILL_UPD_DT, TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) CUST_BILL_UPD_DT
+		  FROM SAL0024D T1
+		  LEFT JOIN SAL0023D T2  ON T2.CUST_ADD_ID = T1.CUST_BILL_ADD_ID
+		  LEFT JOIN SYS0030C T3  ON T3.POST_CODE_ID = T2.POST_CODE_ID
+		  LEFT JOIN SYS0039M T4  ON T4.AREA_ID = T2.AREA_ID
+		  LEFT JOIN SYS0035M T5  ON T5.STATE_ID = T2.STATE_ID
+		  LEFT JOIN SYS0015M T6  ON T6.CNTY_ID = T2.CNTY_ID
+		  LEFT JOIN SYS0047M T7  ON T7.USER_ID = T1.CUST_BILL_CRT_USER_ID
+		  LEFT JOIN SYS0047M T8  ON T8.USER_ID = T1.CUST_BILL_UPD_USER_ID
+		  LEFT JOIN ORG0001D T9  ON T9.MEM_ID = T1.CUST_BILL_INCHG_MEM_ID
+		  LEFT JOIN SYS0013M T10 ON T10.CODE_ID = T1.CUST_BILL_PAY_TRM
+		 WHERE 1 = T1.CUST_BILL_STUS_ID
+		   AND T1.CUST_BILL_CUST_ID = #{custId}
+         <if test='searchWord != null and searchWord !=""'>
+           AND (UPPER(T1.CUST_BILL_GRP_NO)  LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T2.ADD1) LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T2.ADD2) LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T2.ADD3) LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.POST_CODE) LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T4.AREA_NAME) LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T5.NAME) LIKE '%' || UPPER(#{searchWord}) || '%')
+             OR UPPER(T6.NAME) LIKE '%' || UPPER(#{searchWord}) || '%')
+             OR UPPER(DECODE(T1.CUST_BILL_IS_POST, 1, 'Post', '')||' '||DECODE(T1.CUST_BILL_IS_SMS, 1, 'SMS', '')||' '||DECODE(T1.CUST_BILL_IS_ESTM, 1, 'EStatement', ''))  LIKE '%' || UPPER(#{searchWord}) || '%')
+          </if>
+		 ORDER BY T1.CUST_BILL_GRP_NO ASC
     </select>
     
     <!-- Ajax Call Bank List  -->

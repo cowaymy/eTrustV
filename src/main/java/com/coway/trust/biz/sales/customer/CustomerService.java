@@ -445,6 +445,9 @@ public interface CustomerService {
 
 
 	List<EgovMap> selectCustCareContactList(Map<String, Object> params) throws Exception;
+
+
+	List<EgovMap> selectBillingGroupByKeywordCustIDList(Map<String, Object> params) throws Exception;
 	
 	
 }

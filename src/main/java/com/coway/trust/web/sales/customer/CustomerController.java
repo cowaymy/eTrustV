@@ -192,6 +192,36 @@ public class CustomerController {
 	}
 	
 	/**
+	 * Billing Group 상세 조회 Contact List 
+	 * @param params
+	 * @param model
+	 * @return ResponseEntity
+	 */
+	@RequestMapping(value = "/selectBillingGroupByKeywordCustIDList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBillingGroupByKeywordCustIDList(@RequestParam Map<String, Object>params, ModelMap model)throws Exception{
+		List<EgovMap> grpList = customerService.selectBillingGroupByKeywordCustIDList(params);		
+		return ResponseEntity.ok(grpList);
+	}
+	
+	@RequestMapping(value = "/customerAddressSearchPop.do")
+	public String customerAddressSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("callPrgm", params.get("callPrgm"));
+		model.put("custId", params.get("custId"));
+		
+		return "sales/customer/customerAddressSearchPop";
+	}
+	
+	@RequestMapping(value = "/customerBillGrpSearchPop.do")
+	public String customerBillGrpSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("callPrgm", params.get("callPrgm"));
+		model.put("custId", params.get("custId"));
+		
+		return "sales/customer/customerBillGrpSearchPop";
+	}
+	
+	/**
 	 * 
 	 * Customer View Bank List
 	 * @param params

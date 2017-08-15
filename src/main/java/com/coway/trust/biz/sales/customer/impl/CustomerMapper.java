@@ -90,6 +90,17 @@ public interface CustomerMapper {
 	
 	
 	/**
+	 * Billing Group List mapper
+	 * 
+	 * @param params
+	 * @return List<EgovMap>
+	 * @exception Exception
+	 * @author Yunseok Jang
+	 */
+	List<EgovMap> selectBillingGroupByKeywordCustIDList(Map<String, Object> params)throws Exception;
+	
+	
+	/**
 	 * Customer View Bank List mapper
 	 * 
 	 * @param params

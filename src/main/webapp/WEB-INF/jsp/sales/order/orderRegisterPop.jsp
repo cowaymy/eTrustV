@@ -13,6 +13,7 @@
 
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
 	    doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 	    
 	    //Payment Channel, Billing Detail TAB Visible False처리
@@ -376,17 +377,12 @@
     	    $('#liBillNewAddr').removeClass("blind");
     	    $('#liBillSelAddr').removeClass("blind");
     	    $('#liBillPreferNewAddr').removeClass("blind");
-    	    $('#liBillPreferNewAddr').removeClass("blind");
+    	    $('#liBillPreferSelAddr').removeClass("blind");
     	    
-    	    $('#billMthdForm').clearForm();
-    	    $('#billAddrForm').clearForm();
-    	    $('#billPreferForm').clearForm();
+    	    fn_clearBillGroup();
     
     	    $('#billMthdEmailTxt1').val($('#custCntcEmail').val().trim());
     	    $('#billMthdEmailTxt2').val($('#srvCntcEmail').val().trim());
-    
-            $('#billRem').val("");
-            $('#billRem').removeAttr("readonly");
     
     	    if($('#typeId').val() == '965') { //Company
     	        
@@ -394,7 +390,7 @@
     
     	        $('#sctBillPrefer').removeClass("blind");
     
-    	        fn_loadBillingPreference();
+    	        fn_loadBillingPreference($('#srvCntcId').val());
     	        
     	        /*
                 btnBillGroupEStatement.Checked = true;
@@ -434,6 +430,7 @@
     	    }
     	}
     	else if(grpOpt == 'exist') {
+    	    
     	    $('#sctBillMthd').addClass("blind");
     	    $('#sctBillAddr').addClass("blind");
     	    $('#sctBillPrefer').addClass("blind");
@@ -442,22 +439,25 @@
     	    $('#liBillNewAddr').removeClass("blind");
     	    $('#liBillSelAddr').removeClass("blind");
     	    $('#liBillPreferNewAddr').removeClass("blind");
-    	    $('#liBillPreferNewAddr').removeClass("blind");
+    	    $('#liBillPreferSelAddr').removeClass("blind");
     	    
-    	    $('#billMthdForm').clearForm();
-    	    $('#billAddrForm').clearForm();
-    	    $('#billPreferForm').clearForm();
-    	    
-    	    $('#billRem').val("");
-    	    $('#billRem').prop("readonly", true);
+    	    fn_clearBillGroup();
+    	    $('#billGrp').val('');
     	}
 	}
 	
-	function fn_loadBillingPreference() {
-        $("#billPreferInitial").val($("#srvInitial").val().trim());
-        $("#billPreferName").val($("#srvCntcName").val().trim());
-        $("#billPreferTelO").val($("#srvCntcTelO").val().trim());
-        $("#billPreferExt").val($("#srvCntcExt").val().trim());
+	function fn_loadBillingPreference(custCareCntId) {
+	    
+        Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
+            
+            if(srvCntcInfo != null) {
+                $("#billPreferInitial").val(srvCntcInfo.custInitial);
+                $("#billPreferName").val(srvCntcInfo.name);
+                $("#billPreferTelO").val(srvCntcInfo.telO);
+                $("#billPreferExt").val(srvCntcInfo.ext);
+            }
+        });
+
 	}
 
 	$(function(){
@@ -487,6 +487,22 @@
 	    $('#mstCntcSelAddBtn2').click(function() {
 	        //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
 	        Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_CNTC_ADD"}, null, true);
+	    });
+	    $('#billPreferSelAddrBtn').click(function() {
+	        //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
+	        Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_PRF"}, null, true);
+	    });
+	    $('#billSelAddrBtn').click(function() {
+	        //Common.popupWin("searchForm", "/sales/customer/customerAddressSearchPop.do", {width : "1200px", height : "630x"});
+	        Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_MTH"}, null, true);
+	    });
+	    $('#instSelAddrBtn').click(function() {
+	        //Common.popupWin("searchForm", "/sales/customer/customerAddressSearchPop.do", {width : "1200px", height : "630x"});
+	        Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_INST_ADD"}, null, true);
+	    });
+	    $('#billGrpBtn').click(function() {
+	        //Common.popupWin("searchForm", "/customerBillGrpSearchPop.do", {width : "1200px", height : "630x"});
+	        Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_GRP"}, null, true);
 	    });
 	    $('[name="grpOpt"]').click(function() {
 	        fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
@@ -792,6 +808,15 @@
 	    $('#orgMemId').val('');
 	}
 	
+	function fn_loadBillingGroup(custBillCustId, billType, billAddrFull, custBillRem, custBillAddId) {	    
+	    $('#billGrp').removeClass("readonly").val(custBillCustId);
+	    $('#billType').removeClass("readonly").val(billType);
+	    $('#billAddr').removeClass("readonly").val(billAddrFull);
+	    $('#billRem').removeClass("readonly").val(custBillRem);
+	    
+	    fn_loadMailAddr(custBillAddId);
+	}
+	
 	function fn_loadOrderSalesman(memId, memCode) {
         
         console.log('fn_loadOrderSalesman memId:'+memId);
@@ -1010,16 +1035,19 @@
 	
 	//ClearControl_BillGroup
 	function fn_clearBillGroup() {
-	    
+	    /*
 	    $('#sctBillMthd').addClass("blind");
 	    $('#sctBillAddr').addClass("blind");
 	    $('#sctBillPrefer').addClass("blind");
 	    $('#sctBillSel').addClass("blind");
+	    */
 	    
-	    $('#billMthdForm').clearForm();
+	    //$('#billMthdForm').clearForm();
 	    $('#billAddrForm').clearForm();
 	    $('#billPreferForm').clearForm();
 	    $('#billSelForm').clearForm();
+	    
+	    $('#billRem').clearForm();
 	}
 	
 	//ClearControl_Installation_Address
@@ -1698,8 +1726,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li id="liBillNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Address</a></p></li>
-    <li id="liBillSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Address</a></p></li>
+    <li id="liBillNewAddr" class="blind"><p class="btn_grid"><a id="billNewAddrBtn" href="#">Add New Address</a></p></li>
+    <li id="liBillSelAddr" class="blind"><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
 </ul>
 
 <table class="type1 mb1m"><!-- table start -->
@@ -1747,7 +1775,7 @@
 
 <ul class="right_btns mb10">
     <li id="liBillPreferNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
-    <li id="liBillPreferSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Contact</a></p></li>
+    <li id="liBillPreferSelAddr" class="blind"><p class="btn_grid"><a id="billPreferSelAddrBtn" href="#">Select Another Contact</a></p></li>
 </ul>
 
 <!------------------------------------------------------------------------------
@@ -1767,7 +1795,8 @@
 <tbody>
 <tr>
     <th scope="row">Initials<span class="must">*</span></th>
-    <td colspan="3"><input id="billPreferInitial" name="billPreferInitial" type="text" title="" placeholder="Initial" class="w100p" readonly/></td>
+    <td colspan="3"><select id="billPreferInitial" name="billPreferInitial" class="w100p" disabled></select>
+        </td>
 </tr>
 <tr>
     <th scope="row">Name<span class="must">*</span></th>
@@ -1781,7 +1810,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-
+</form>
 </section><!-- search_table end -->
 </section>
 
@@ -1789,7 +1818,7 @@
     Billing Group Selection - Form ID(billPreferForm)
 ------------------------------------------------------------------------------->
 <section id="sctBillSel" class="blind">
-<form id=billSelForm name="billSelForm" action="#" method="post">
+<form id="billSelForm" name="billSelForm" action="#" method="post">
     
 <aside class="title_line"><!-- title_line start -->
 <h2>Billing Group Selection</h2>
@@ -1806,13 +1835,13 @@
 <tbody>
 <tr>
     <th scope="row">Billing Group<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input id="billGrp" name="billGrp" type="text" title="" placeholder="Billing Group" class="readonly" readonly/><a id="billGrpBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">Billing Type<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input id="billType" name="billType" type="text" title="" placeholder="Billing Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Billing Address</th>
-    <td colspan="3"><textarea cols="20" rows="5"></textarea></td>
+    <td colspan="3"><textarea id="billAddr" name="billAddr" cols="20" rows="5" readonly></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1828,7 +1857,7 @@
 <tbody>
 <tr>
     <th scope="row">Remark</th>
-    <td><textarea id="billRem" name="billRem" cols="20" rows="5"></textarea></td>
+    <td><textarea id="billRem" name="billRem" cols="20" rows="5" readonly></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1855,8 +1884,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li id="liInstNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Address</a></p></li>
-    <li id="liInstSelAddr" class="blind"><p class="btn_grid"><a href="#">Select Another Address</a></p></li>
+    <li id="liInstNewAddr" class="blind"><p class="btn_grid"><a id="instNewAddrBtn" href="#">Add New Address</a></p></li>
+    <li id="liInstSelAddr" class="blind"><p class="btn_grid"><a id="instSelAddrBtn" href="#">Select Another Address</a></p></li>
 </ul>
 
 <!------------------------------------------------------------------------------

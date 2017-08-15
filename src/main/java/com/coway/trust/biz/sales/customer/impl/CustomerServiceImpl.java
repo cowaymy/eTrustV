@@ -1,5 +1,7 @@
 package com.coway.trust.biz.sales.customer.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,8 @@ import com.coway.trust.biz.sales.customer.CustomerBVO;
 import com.coway.trust.biz.sales.customer.CustomerCVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
+import com.coway.trust.util.CommonUtils;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -123,6 +127,54 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	public List<EgovMap> selectCustCareContactList(Map<String, Object> params)throws Exception{
 		
 		return customerMapper.selectCustCareContactList(params);
+	}
+
+	
+	/**
+	 * 상세화면 조회한다. (Contact List)
+	 * @param 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.21
+	 */
+	@Override
+	public List<EgovMap> selectBillingGroupByKeywordCustIDList(Map<String, Object> params)throws Exception{
+		
+		List<EgovMap> result = customerMapper.selectBillingGroupByKeywordCustIDList(params);
+		
+		List<EgovMap> resultNew = new ArrayList<>();
+		
+		for(EgovMap eMap : result) {
+			
+			String billAddrFull = "";
+			String billType = "";
+
+			if(CommonUtils.isNotEmpty(eMap.get("add1")))      billAddrFull += eMap.get("add1") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("add2")))      billAddrFull += eMap.get("add2") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("add3")))      billAddrFull += eMap.get("add3") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("postCode")))  billAddrFull += eMap.get("postCode") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("areaName")))  billAddrFull += eMap.get("areaName") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("stateName"))) billAddrFull += eMap.get("stateName") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("cntyName")))  billAddrFull += eMap.get("cntyName") + " ";
+			
+			if(((BigDecimal)eMap.get("custBillIsPost")).compareTo(BigDecimal.ONE) == 0) {
+				billType += "Post";
+			}
+			if(((BigDecimal)eMap.get("custBillIsSms")).compareTo(BigDecimal.ONE) == 0) {
+				billType += CommonUtils.isNotEmpty(billType) ? ",SMS" : "SMS"; 
+			}
+			if(((BigDecimal)eMap.get("custBillIsEstm")).compareTo(BigDecimal.ONE) == 0) {
+				billType += CommonUtils.isNotEmpty(billType) ? ",EStatement" : "EStatement"; 
+			}
+			
+			eMap.put("billAddrFull", billAddrFull);
+			eMap.put("billType", billType);
+			
+			resultNew.add(eMap);
+		}
+		
+		
+		return resultNew;
 	}
 
 	
