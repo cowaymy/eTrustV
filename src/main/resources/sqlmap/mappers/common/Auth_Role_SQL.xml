@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
+
+<select id="selectRoleList" parameterType="Map" resultType="egovMap">
+SELECT 
+       TO_CHAR(ROLE_ID) ROLE_ID
+      , SUBSTR(ROLE_PATH,3,LENGTH(ROLE_PATH)) ROLE_NAME
+      , STEP_LEVEL
+      , PARENT_ROLE 
+      , ROLE_NAME
+      , ROLE_LEV ROLE_LEV
+      , L1 ROLE_1
+      , L2 ROLE_2
+      , L3 ROLE_3
+      
+  FROM
+  (
+    SELECT LEVEL  STEP_LEVEL        
+           ,ROLE_ID
+           ,PARENT_ROLE
+           ,ROLE_CODE ROLE_NAME
+           ,ROLE_LEV
+           ,CASE WHEN ROLE_LEV = 1 THEN ROLE_ID 
+                 WHEN ROLE_LEV = 2 THEN PARENT_ROLE
+                 WHEN ROLE_LEV = 3 THEN CONNECT_BY_ROOT ROLE_ID ELSE NULL END L1
+           
+           , CASE WHEN ROLE_LEV = 2 THEN ROLE_ID
+                  WHEN ROLE_LEV = 3 THEN PARENT_ROLE ELSE NULL END L2
+           
+           , CASE WHEN ROLE_LEV = 3 THEN ROLE_ID ELSE NULL END L3    
+
+           , CONNECT_BY_ROOT ROLE_CODE ROOT_NAME
+           , SYS_CONNECT_BY_PATH(ROLE_CODE,' > ') ROLE_PATH 
+           , CONNECT_BY_ISCYCLE  ISCYCLE_YN 
+           , CONNECT_BY_ISLEAF LAST_STEP_YN
+     
+    FROM SYS0044M
+    START WITH PARENT_ROLE = 0   
+    CONNECT BY NOCYCLE 
+    PRIOR ROLE_ID = PARENT_ROLE   
+)
+  WHERE 1 = 1 
+		<if test='roleId !=null and roleId != "" '>  
+		  AND UPPER(ROLE_ID) LIKE UPPER(#{roleId}) || '%'
+		</if>
+		<if test='roleNm !=null and roleNm != "" '>
+		  AND UPPER(ROLE_NAME) LIKE  UPPER(#{roleNm})  || '%'
+		</if>  
+</select>
+  
+<select id="selectAuthList" parameterType="Map" resultType="egovMap">
+    
+    WITH AUTH_ROLE
+    AS
+    (
+        SELECT TO_CHAR(CODE) AUTH_CODE
+              ,CODE_NAME  AUTH_NAME
+              ,NULL ROLE_ID
+              ,NULL LVL 
+              ,NULL ROLE_1
+              ,NULL ROLE_2
+              ,NULL ROLE_3
+         FROM SYS0013M  
+        WHERE CODE_MASTER_ID = 313
+     )
+      SELECT AUTH_CODE
+            ,AUTH_NAME
+            ,ROLE_ID
+            ,LVL
+            ,ROLE_1
+            ,ROLE_2
+            ,ROLE_3
+        FROM AUTH_ROLE
+        
+        UNION ALL
+        
+        SELECT AUTH_CODE
+              ,AUTH_NAME AUTH_NAME
+              ,TO_CHAR(ROLE_ID) ROLE_ID
+              ,ROLE_LVL LVL
+              ,ROLE_ID1
+              ,ROLE_ID2
+              ,ROLE_ID3 
+        FROM SYS0053M
+       WHERE 1 = 1 
+     <if test='authCode !=null and authCode != "" '>
+         AND UPPER(AUTH_CODE) LIKE UPPER(#{authCode}) || '%'
+     </if>
+     <if test='authName !=null and authName != "" '>
+         AND UPPER(AUTH_NAME) LIKE '%' || UPPER(#{authName}) || '%'
+     </if>  
+</select>
+  
+<insert id="insertAuth" parameterType="Map">
+      INSERT INTO SYS0053M
+          (                        
+             AUTH_CODE
+           , AUTH_NAME
+           , ROLE_ID
+           , ROLE_ID1
+           , ROLE_ID2
+           , ROLE_ID3
+           , ROLE_LVL
+           , CRT_USER_ID
+           , CRT_DT
+           , UPD_USER_ID
+           , UPD_DT
+          )
+    VALUES
+         (
+           (SELECT (COUNT(1) +1) CNT FROM SYS0053M)
+          ,#{authName}
+          ,#{roleId}
+          ,#{role1}
+          ,#{role2}
+          ,#{role3}
+          ,#{lvl}
+          ,#{crtUserId}
+          ,SYSDATE
+          ,#{updUserId}
+          ,SYSDATE
+         )
+  </insert>
+  
+  <update id="updateAuth" parameterType="Map">
+      UPDATE  SYS0053M
+         SET  AUTH_NAME   = #{authName}  
+            , ROLE_ID     = #{roleId}   
+            , ROLE_ID1    = #{role1}  
+            , ROLE_ID2    = #{role2}  
+            , ROLE_ID3    = #{role3}  
+            , ROLE_LVL    = #{lvl}     
+            , UPD_USER_ID = #{updUserId}
+            , UPD_DT      = SYSDATE     
+       WHERE  AUTH_CODE   = UPPER(#{authCode}) 
+  </update>
+  
+  <delete id="deleteAuth" parameterType="Map">
+      DELETE SYS0053M  WHERE AUTH_CODE  = #{authCode}
+  </delete>
+     
+
+</mapper>
