@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.stocks.impl.StockMapper">
+<!--         <resultMap id="clobMap" type="egovMap">
+        <result property="cdname" column="cdname" jdbcType="CLOB"
+            javaType="java.lang.String" />
+    </resultMap> -->
+    
+	<select id="selectStockList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+			SELECT 
+			    Project1.StkID AS StkID, 
+			    Project1.StkCode AS StkCode, 
+			    Project1.StkDesc AS StkDesc, 
+			    Project1.StkCategoryID AS StkCategoryID, 
+			    Project1.CodeName AS CodeName, 
+			    Project1.StkTypeID AS StkTypeID, 
+			    Project1.CodeName1 AS CodeName1, 
+			    Project1.StatusCodeID AS StatusCodeID, 
+			    Project1.Name AS Name, 
+			    Project1.IsSirim AS IsSirim, 
+			    Project1.IsNCV AS IsNCV, 
+			    Project1.QtyPerCarton AS QtyPerCarton, 
+			    Project1.Updator AS Updator, 
+			    Project1.C1 AS C1, 
+			    Project1.Updated AS Updated, 
+			    Project1.NetWeight AS NetWeight, 
+			    Project1.GrossWeight AS GrossWeight, 
+			    Project1.MeasurementCBM AS MeasurementCBM, 
+			    Project1.StkGrade AS StkGrade, 
+			    Project1.BSPoint AS BSPoint, 
+			    Project1.UnitValue AS UnitValue, 
+			    Project1.C2 AS C2, 
+			    Project1.C3 AS C3, 
+			    Project1.C4 AS C4, 
+			    Project1.C5 AS C5, 
+			    Project1.C6 AS C6, 
+			    Project1.C7 AS C7, 
+			    Project1.C8 AS C8, 
+			    Project1.C9 AS C9, 
+			    Project1.C10 AS C10, 
+			    Project1.C11 AS C11
+			    FROM ( /* Formatted on 2017/07/07 오후 2:26:18 (QP5 v5.215.12089.38647) */
+			SELECT stk.STK_ID AS StkID,
+			       stk.STK_CODE AS StkCode,
+			       stk.STK_DESC AS StkDesc,
+			       stk.STK_CTGRY_ID AS StkCategoryID,
+			       stk.STK_TYPE_ID AS StkTypeID,
+			       stk.STUS_CODE_ID AS StatusCodeID,
+			       stk.IS_SIRIM AS IsSirim,
+			       stk.IS_NCV AS IsNCV,
+			       stk.QTY_PER_CARTON AS QtyPerCarton,
+			       stk.UPD_USER_ID AS Updator,
+			       stk.UPD_DT AS Updated,
+			       stk.NET_WT AS NetWeight,
+			       stk.GROS_WT AS GrossWeight,
+			       stk.MEASURE_CBM AS MeasurementCBM,
+			       stk.STK_GRAD AS StkGrade,
+			       stk.BS_POINT AS BSPoint,
+			       stk.UNIT_VALU AS UnitValue,
+			       (SELECT CODE_NAME
+			          FROM SYS0013M
+			         WHERE CODE_ID = stk.STK_CTGRY_ID)
+			          CodeName,
+			       (SELECT CODE_NAME
+			          FROM SYS0013M
+			         WHERE CODE_ID = stk.STK_TYPE_ID)
+			          CodeName1,
+			       (SELECT NAME
+			          FROM SYS0038M
+			         WHERE STUS_CODE_ID = stk.STUS_CODE_ID)
+			          Name,
+			       CASE WHEN (usr.USER_ID IS NOT NULL) THEN usr.USER_NAME ELSE 'N' END
+			          AS C1,
+			       CASE
+			          WHEN (61 = stk.STK_TYPE_ID)
+			          THEN
+			             CASE WHEN (sp1.UOM_ID IS NOT NULL) THEN sp1.UOM_ID ELSE 0 END
+			          WHEN (sp2.UOM_ID IS NOT NULL)
+			          THEN
+			             sp2.UOM_ID
+			          ELSE
+			             0
+			       END
+			          AS C2,
+			       CASE
+			          WHEN (61 = stk.STK_TYPE_ID)
+			          THEN
+			             (SELECT CODE_NAME
+			                FROM SYS0013M
+			               WHERE CODE_ID = sp1.UOM_ID)
+			          ELSE
+			             (SELECT CODE_NAME
+			                FROM SYS0013M
+			               WHERE CODE_ID = sp2.UOM_ID)
+			       END
+			          AS C3,
+			       CASE
+			          WHEN (61 = stk.STK_TYPE_ID)
+			          THEN
+			             CASE
+			                WHEN (sp1.AMT IS NOT NULL) THEN sp1.AMT
+			                ELSE CAST (0 AS FLOAT (53))
+			             END
+			          WHEN (sp2.AMT IS NOT NULL)
+			          THEN
+			             sp2.AMT
+			          ELSE
+			             CAST (0 AS FLOAT (53))
+			       END
+			          AS C4,
+			       CASE
+			          WHEN (stk.MASTER_STK_ID IS NOT NULL) THEN stk.MASTER_STK_ID
+			          ELSE 0
+			       END
+			          AS C5,
+			       CASE
+			          WHEN (stk.STK_COMM_AS IS NOT NULL) THEN stk.STK_COMM_AS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C6,
+			       CASE
+			          WHEN (stk.STK_COMM_OS_AS IS NOT NULL) THEN stk.STK_COMM_OS_AS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C7,
+			       CASE
+			          WHEN (stk.STK_COMM_BS IS NOT NULL) THEN stk.STK_COMM_BS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C8,
+			       CASE
+			          WHEN (stk.STK_COMM_OS_BS IS NOT NULL) THEN stk.STK_COMM_OS_BS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C9,
+			       CASE
+			          WHEN (stk.STK_COMM_INS IS NOT NULL) THEN stk.STK_COMM_INS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C10,
+			       CASE
+			          WHEN (stk.STK_COMM_OS_INS IS NOT NULL) THEN stk.STK_COMM_OS_INS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C11
+			  FROM SYS0026M stk
+			       LEFT OUTER JOIN SYS0047M usr
+			          ON usr.USER_ID = stk.UPD_USER_ID
+			       LEFT OUTER JOIN SAL0016M sp1
+			          ON     (67 = sp1.APP_TYPE_ID)
+			             AND (61 = stk.STK_TYPE_ID)
+			             AND (sp1.STK_ID = stk.STK_ID)
+			             AND (0 = sp1.MEM_PAC_ID)
+			             AND (1 = sp1.STUS_CODE_ID)
+			       LEFT OUTER JOIN SAL0016M sp2
+			          ON     (61 <> stk.STK_TYPE_ID)
+			             AND (sp2.STK_ID = stk.STK_ID)
+			             AND (0 = sp2.MEM_PAC_ID)
+			             AND (1 = sp2.STUS_CODE_ID)
+			    )  Project1
+			    ]]>
+			    WHERE 1 = 1
+			        <if test="cateList != null and cateList != ''">
+			        AND stkCategoryID in 
+			        <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+			        #{item}
+			        </foreach>
+			</if>
+			<if test="typeList != null and typeList != ''">
+			AND StkTypeID in 
+			<foreach item="item" collection="typeList" index="index" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+			</if>
+			<if test="statList != null and statList != ''">
+			AND StatusCodeID in 
+			<foreach item="item" collection="statList" index="index" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+			</if>
+			<if test="stkNm !=null and stkNm != ''">
+			AND StkDesc like '%'|| #{stkNm} || '%'
+			</if>
+			<if test="stkCd !=null and stkCd != ''">
+			AND StkCode = #{stkCd} || '%'
+			</if>
+		ORDER BY StkCode    			
+	</select>
+	<select id="selectStockInfo" parameterType="Map" resultType="egovMap">
+	   
+	       SELECT
+	              <if test="mode !=null and mode == 'save'">
+	               (SELECT CODE_ID
+	                  FROM SYS0013M
+	                 WHERE CODE_ID = inv.STK_TYPE_ID)
+	                  typeid,
+	              </if> 
+	             (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = inv.STK_TYPE_ID)
+		          typenm,
+		       (SELECT name
+		          FROM SYS0038M
+		         WHERE STUS_CODE_ID = INV.STUS_CODE_ID)
+		          statusname,
+		       inv.IS_SIRIM issirim,
+		       inv.IS_NCV isncv,
+		       inv.STK_CODE stockcode,
+	           CASE
+		          WHEN INV.STK_TYPE_ID = 61
+		          THEN
+		             (SELECT 
+		                      <choose>
+                	              <when test="mode !=null and mode == 'edit'">
+					                 MAX(ct.CODE_ID)
+					              </when>
+					              <otherwise>
+					                 MAX(ct.CODE_NAME)
+					              </otherwise>
+					          </choose>		                      
+		                FROM SAL0016M sp, SYS0013M ct
+		               WHERE     sp.APP_TYPE_ID = 67
+		                     AND SP.MEM_PAC_ID = 0
+		                     AND sp.STUS_CODE_ID = 1
+		                     AND sp.UOM_ID = ct.CODE_ID
+		                     AND sp.STK_ID = inv.STK_ID)
+		          ELSE
+		             (SELECT <choose>
+                                  <when test="mode !=null and mode == 'edit'">
+                                     MAX(ct.CODE_ID)
+                                  </when>
+                                  <otherwise>
+                                     MAX(ct.CODE_NAME)
+                                  </otherwise>
+                              </choose>
+		                FROM SAL0016M sp, SYS0013M ct
+		               WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
+		                     AND SP.MEM_PAC_ID = 0
+		                     AND sp.STUS_CODE_ID = 1
+		                     AND sp.UOM_ID = ct.CODE_ID
+		                     AND sp.STK_ID = inv.STK_ID)
+		       END
+		          uomname,
+		       inv.STK_DESC stockname,
+		       (SELECT <choose>
+                            <when test="mode !=null and mode == 'edit'">
+                               MAX(CODE_ID)
+                            </when>
+                            <otherwise>
+                               MAX(CODE_NAME)
+                            </otherwise>
+                        </choose>
+		          FROM SYS0013M
+		         WHERE CODE_ID = inv.STK_CTGRY_ID)
+		          categotynm,
+		       INV.NET_WT netweight,
+		       INV.GROS_WT grossweight,
+		       inv.MEASURE_CBM mcbm,
+		       inv.STK_TYPE_ID typeid
+		  FROM SYS0026M inv
+		 WHERE inv.STK_ID = #{stockId}   
+	 
+	</select>
+	<select id="selectPriceInfo" parameterType="Map" resultType="egovMap">
+	       select 
+	               <if test="typeId !=null and typeId == '61'">
+	               <![CDATA[
+	               nvl(op.PRC_COSTING , 0) pricecost,
+	               nvl(op.amt , 0) amt ,
+	               nvl(op.PRC_PV , 0) pricepv ,
+	               nvl(sp.amt , 0) mrental ,
+	               nvl(sp.PRC_RPF , 0) pricerpf ,
+	               0 as penalty ,
+	               nvl(op.TRADE_IN_PV , 0) tradeinpv
+	               ]]>
+	               </if>
+	               <if test="typeId !=null and typeId != '61'">
+	               <![CDATA[
+	               nvl(op.PRC_COSTING , 0) pricecost,
+	               nvl(op.amt , 0) amt ,
+	               0 as pricepv ,
+	               0 as mrental ,
+	               0 as pricerpf ,
+	               nvl(op.PRC_CHRG , 0) penalty ,
+	               0 as tradeinpv
+	               ]]>
+	               </if>
+	          from 
+	              <if test="typeId !=null and typeId == '61'">
+	              <![CDATA[
+	               SYS0026M inv
+	             , (select * from SAL0016M where APP_TYPE_ID = 66 and MEM_PAC_ID  = 0) sp 
+	             , (select * from SAL0016M where APP_TYPE_ID = 67 and MEM_PAC_ID  = 0) op
+	             ]]>
+	             </if>
+	             <if test="typeId !=null and typeId != '61'">
+	             <![CDATA[
+	             SAL0016M op
+	             ]]>
+	             </if>
+	         where 1 = 1
+	           <if test="typeId !=null and typeId == '61'">
+	               and inv.STK_ID = sp.STK_ID
+	               and inv.STK_ID = op.STK_ID
+	               and inv.STK_ID = #{stockId}
+	           </if>
+	           <if test="typeId !=null and typeId != '61'">
+	              and op.STK_ID = #{stockId}
+	              and op.APP_TYPE_ID = 69
+	              and op.MEM_PAC_ID = 0
+	              and op.STUS_CODE_ID = 1
+	           </if>
+        </select>
+        <select id="selectPriceHistoryInfo" parameterType="Map" resultType="egovMap">
+           select 
+					op.ROW_NO, 
+					op.PRC_ID, 
+					op.MEM_PAC_ID, 
+					op.STK_ID,                     
+					op.UOM_ID, 
+					op.UOM_CONV, 
+					op.APP_TYPE_ID, 
+					NVL(op.PRIOD, 0) ,
+					op.STUS_CODE_ID, 
+					op.CRT_USER_ID, 
+					op.CRT_DT,
+                   <if test="typeId !=null and typeId == '61'">
+                   <![CDATA[
+                   nvl(op.PRC_COSTING , 0) pricecost,
+                   nvl(op.amt , 0) amt ,
+                   nvl(op.PRC_PV , 0) pricepv ,
+                   nvl(sp.amt , 0) mrental ,
+                   nvl(sp.PRC_RPF , 0) pricerpf ,
+                   0 as penalty ,
+                   nvl(op.TRADE_IN_PV , 0) tradeinpv
+                   ]]>
+                   </if>
+                   <if test="typeId !=null and typeId != '61'">
+                   <![CDATA[
+                   nvl(op.PRC_COSTING , 0) pricecost,
+                   nvl(op.amt , 0) amt ,
+                   0 as pricepv ,
+                   0 as mrental ,
+                   0 as pricerpf ,
+                   nvl(op.PRC_CHRG , 0) penalty ,
+                   0 as tradeinpv
+                   ]]>
+                   </if>
+              from 
+                  <if test="typeId !=null and typeId == '61'">
+                  <![CDATA[
+                   SYS0026M inv
+                 , (select * from LOG0058D where APP_TYPE_ID = 66 and MEM_PAC_ID  = 0) sp 
+                 , (select * from LOG0058D where APP_TYPE_ID = 67 and MEM_PAC_ID  = 0) op
+                 ]]>
+                 </if>
+                 <if test="typeId !=null and typeId != '61'">
+                 <![CDATA[
+                 LOG0058D op
+                 ]]>
+                 </if>
+             where 1 = 1
+               <if test="typeId !=null and typeId == '61'">
+                   and inv.STK_ID = sp.STK_ID
+                   and inv.STK_ID = op.STK_ID
+                   and inv.STK_ID = #{stockId}
+               </if>
+               <if test="typeId !=null and typeId != '61'">
+                  and op.STK_ID = #{stockId}
+                  and op.APP_TYPE_ID = 69
+                  and op.MEM_PAC_ID = 0
+                  and op.STUS_CODE_ID = 1
+               </if>
+               ORDER BY ROW_NO DESC             
+        </select>
+        
+        <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT BOM.BOM_PART_ID STOCKID
+			     , STK.STK_CODE ||' - '||STK.STK_DESC STOCKNAME
+			     , BOM.BOM_PART_TYPE_ID TYPEID
+			     , CD.CODE_NAME TYPENM
+			     , BOM.BOM_PART_PRIOD PERIOD
+			     , BOM.BOM_PART_QTY QTY
+			  FROM LOG0001M BOM , SYS0026M STK ,SYS0013M CD 
+			 WHERE 1 = 1
+			 ]]> 
+			   AND BOM.BOM_STK_ID = #{stockId}
+			   AND BOM.BOM_PART_STUS_ID = 1
+			   <if test="grid !=null and grid == 'spare'">
+			   AND BOM.BOM_TYPE_ID = 548
+			   </if>
+			   <if test="grid !=null and grid == 'filter'">
+               AND BOM.BOM_TYPE_ID = 547
+               </if>
+			   AND BOM.BOM_PART_ID = STK.STK_ID
+			   AND BOM.BOM_PART_TYPE_ID = CD.CODE_ID
+			 order by STOCKNAME 
+        </select>
+        
+        <select id="selectServiceInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+	        SELECT  SP.STK_ID STKID , SP.MEM_PAC_ID PACKAGEID
+			     , PM.SRV_MEM_CODE || ' - ' ||DBMS_LOB.SUBSTR (PM.SRV_MEM_DESC, 4000)  PACKAGENAME
+			     , NVL(SP.AMT , 0) CHARGEAMT
+			  FROM SAL0016M SP , 
+			       SAL0091M PM
+			 WHERE 1 = 1
+		]]>
+			   AND SP.STK_ID = #{stockId} 
+			   AND SP.APP_TYPE_ID = 69
+			   AND SP.MEM_PAC_ID <![CDATA[<>]]> 0
+			   AND SP.MEM_PAC_ID = PM.SRV_MEM_PAC_ID
+			 ORDER BY PACKAGENAME
+		</select>
+		
+		<select id="selectStockImgList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+			SELECT CD.CODE_NAME codenm
+			     , ISI.IMG_ANGLE_ID angeid
+			     , ISI.CRT_DT cdate
+			     , ISI.CRT_USER_ID cuser
+			     , ISI.IMG_URL imgurl
+			     , ISI.STUS_CODE_ID scodeid
+			     , ISI.STK_ID stkid
+			     , ISI.STK_IMG_ID imgid
+			     , ISI.UPD_DT udate
+			     , ISI.UPD_USER_ID uuser
+			  FROM SYS0027M ISI ,
+			       SYS0013M CD
+			 WHERE 1 = 1
+        ]]>
+			   AND ISI.IMG_ANGLE_ID = CD.CODE_ID
+			   AND ISI.STUS_CODE_ID = 1
+			   AND ISI.STK_ID = #{stockId}
+			  ORDER BY imgid
+        </select>
+        
+        
+        <update id="updateStockInfo" parameterType="Map">
+            UPDATE SYS0026M
+               SET STK_DESC     = #{stock_name}
+                 , STK_CTGRY_ID = #{stock_category}
+                 , IS_SIRIM     = #{cbSirim}
+                 , IS_NCV       = #{cbNCV}
+                 , NET_WT       = #{netweight}
+                 , GROS_WT      = #{grossweight}
+                 , MEASURE_CBM  = #{measurement}
+                 , UPD_DT       = SYSDATE
+                 , UPD_USER_ID  = #{upd_user}
+            WHERE STK_ID        = #{stockId}
+        </update>
+        
+        
+        <update id="updateSalePriceUOM" parameterType="Map">
+            UPDATE SAL0016M
+			   SET UOM_ID = #{stock_uom}
+				 , UPD_DT = SYSDATE
+		     WHERE PRC_ID = (SELECT PRC_ID FROM SAL0016M
+                              WHERE STK_ID = #{stockId}
+                                AND APP_TYPE_ID = #{app_type_id}
+                                AND ROWNUM = 1)
+        </update>
+        
+        
+        <update id="updateSalePriceInfo" parameterType="Map">
+           update SAL0016M
+			   set UPD_DT      = SYSDATE 
+			       <if test="apptypeid !=null and apptypeid == '69'">
+			     , AMT         = #{amt} 
+			     , PRC_CHRG    = #{pricecharges}  
+			     , PRC_COSTING = #{pricecosting}
+			       </if>
+			       <if test="apptypeid !=null and apptypeid == '66'">
+			     ,  AMT         = #{amt}
+			     ,  PRC_RPF     = #{pricerpf} 
+			     ,  PRC_PV      = #{pricepv} 
+			     ,  TRADE_IN_PV = #{tradeinpv} 
+			     ,  PRC_COSTING = #{pricecosting}
+			       </if>
+			       <if test="apptypeid !=null and apptypeid == '67'">
+			     ,  AMT         = #{amt}
+			     ,  PRC_PV      = #{pricepv}
+			     ,  TRADE_IN_PV = #{tradeinpv}
+			     ,  PRC_COSTING = #{pricecosting}
+			       </if>
+			     ,  UPD_USER_ID = #{upd_user} 
+			 where PRC_ID      =  (SELECT PRC_ID FROM SAL0016M
+		                            WHERE STK_ID = #{stockid}
+		                              AND APP_TYPE_ID = #{apptypeid}
+		                              AND MEM_PAC_ID  = 0)
+        </update>
+        
+        <select id="srvMembershipList" parameterType="Map" resultType="egovMap">
+        SELECT   SRV_MEM_PAC_ID pacid
+	        ,SRV_MEM_CODE memcd
+	        , SRV_MEM_CODE || ' - ' || SRV_MEM_DESC cdname
+	    FROM SAL0091M
+	       WHERE SRV_MEM_STUS_ID = 1
+	       ORDER BY SRV_MEM_CODE
+        </select>
+        
+        
+       <insert id="addServiceInfoGrid" parameterType="Map">
+           INSERT INTO SAL0016M
+            (PRC_ID
+            ,MEM_PAC_ID
+            ,STK_ID
+            ,AMT
+            ,UOM_ID
+            ,UOM_CONV
+            ,START_DT
+            ,END_DT
+            ,CNTY_ID
+            ,APP_TYPE_ID
+            ,PRIOD
+            ,PRC_RPF
+            ,PRC_PV
+            ,TRADE_IN_PV
+            ,CRT_USER_ID
+            ,CRT_DT
+            ,UPD_USER_ID
+            ,UPD_DT
+            ,PRC_CHRG
+            ,PRC_COSTING
+            ,STUS_CODE_ID
+            )
+     VALUES (
+           #{pac_id}
+            ,#{packagename}
+            ,#{stockId}
+             <choose>
+             <when test="chargeamt !=null and chargeamt > 0 ">
+               ,#{chargeamt}
+             </when>
+            <otherwise>
+              , 0
+            </otherwise>
+            </choose>
+            ,0
+            ,1
+            ,sysdate
+            ,sysdate
+            ,1
+            ,69
+            ,0
+            ,0
+            ,0
+            ,0
+            ,#{crtUserId}
+            ,sysdate
+            ,#{crtUserId}
+            ,sysdate
+            ,0
+            ,0
+            ,1
+            )
+        </insert>
+         
+         <select id="selectPacId" parameterType="Map" resultType="Integer">
+            SELECT NVL(MAX(PRC_ID),0)+1 FROM SAL0016M
+         </select>
+         <select id="selectBomId" parameterType="Map" resultType="Integer">
+            SELECT NVL(MAX(BOM_ID),0)+1 FROM LOG0001M
+         </select>
+         
+<!--          <update id="removeServiceInfoGrid" parameterType="Map">
+            UPDATE SAL0016M
+              SET MEM_PACT_ID  = 0
+              , UPD_USER_ID       = 
+              , UPD_DT               =
+             WHERE 1=1
+               AND STK_ID=
+               AND MEM_PAC_ID
+         </update> -->
+         
+         
+         <delete id="removeServiceInfoGrid" parameterType="Map" >
+            DELETE FROM SAL0016M
+            WHERE 
+                 MEM_PAC_ID = #{packageid}
+                 AND STK_ID   = #{stockId}
+         </delete>
+         
+         <insert id="addFilterInfoGrid" parameterType="Map">
+         INSERT INTO LOG0001M
+		   (
+		  BOM_ID
+		, BOM_STK_ID
+		, BOM_PART_ID
+		, BOM_PART_QTY
+		, BOM_PART_TYPE_ID
+		, BOM_PART_STUS_ID
+		, BOM_PART_PRIOD
+		, BOM_CRT_DT
+		, BOM_CRT_USER_ID
+		, BOM_UPD_DT
+		, BOM_UPD_USER_ID
+		, BOM_TYPE_ID)
+		 VALUES
+		   (
+		  #{bom_id}
+		, #{stockId}
+		, #{bom_stk_id}
+		 <choose>
+             <when test="bom_part_qty !=null and bom_part_qty > 0 ">
+               ,#{bom_part_qty}
+             </when>
+            <otherwise>
+              , 0
+            </otherwise>
+            </choose>
+         <choose>  
+            <when test="bom_part_id !=null and bom_part_id >0">
+			, #{bom_part_id}
+			</when>
+			  <otherwise>
+              , 310
+            </otherwise>
+		</choose>
+		, 1
+		 <choose>
+             <when test="bom_part_priod !=null and bom_part_priod > 0 ">
+             ,#{bom_part_priod}
+             </when>
+            <otherwise>
+              , 0
+            </otherwise>
+            </choose>
+		, sysdate
+		,  #{crtUserId}
+		, sysdate
+		, #{crtUserId}
+		 <choose>
+             <when test="revalue !=null and revalue == 'filter_info'">
+             ,547
+             </when>
+             <when test="revalue !=null and revalue == 'spare_info'">
+             ,548
+             </when>
+         </choose>
+		
+		)
+         </insert>
+         
+        <delete id="removeFilterInfoGrid" parameterType="Map" >
+            DELETE FROM LOG0001M
+            WHERE BOM_STK_ID    =#{stockId}
+			AND BOM_PART_ID      =#{bom_part_id}
+			<choose>
+             <when test="revalue !=null and revalue == 'filter_info'">
+			 AND BOM_TYPE_ID      =547
+             </when>
+             <when test="revalue !=null and revalue == 'spare_info'">
+			 AND BOM_TYPE_ID      =548
+             </when>
+         </choose>
+         </delete>
+         
+          <insert id="insertSalePriceInfoHistory" parameterType="Map">
+          INSERT INTO LOG0058D
+						          (ROW_NO,
+									PRC_ID,
+									MEM_PAC_ID,
+									STK_ID,
+									AMT,
+									UOM_ID,
+									UOM_CONV,
+									APP_TYPE_ID,
+									PRIOD,
+									PRC_RPF,
+									PRC_PV,
+									TRADE_IN_PV,
+									PRC_CHRG,
+									PRC_COSTING,
+									STUS_CODE_ID,
+									CRT_USER_ID,
+									CRT_DT) 
+			SELECT LOG0058D_ROW_NO.NEXTVAL,
+			                        PRC_ID,
+                                    MEM_PAC_ID,
+                                    STK_ID,
+                                    AMT,
+                                    UOM_ID,
+                                    UOM_CONV,
+                                    APP_TYPE_ID,
+                                    PRIOD,
+                                    PRC_RPF,
+                                    PRC_PV,
+                                    TRADE_IN_PV,
+                                    PRC_CHRG,
+                                    PRC_COSTING,
+                                    STUS_CODE_ID,
+                                    #{upd_user},
+                                    SYSDATE
+               FROM  SAL0016M  
+                        WHERE PRC_ID      =  (SELECT PRC_ID 
+                                                                FROM SAL0016M
+                                                                WHERE STK_ID = #{stockid}
+                                                                AND APP_TYPE_ID = #{apptypeid}
+                                                                AND MEM_PAC_ID  = 0)    
+         </insert>
+         
+</mapper>
