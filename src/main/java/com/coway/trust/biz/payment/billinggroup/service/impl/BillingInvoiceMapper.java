@@ -20,7 +20,7 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Mapper("invoiceMapper")
+@Mapper("billingInvoiceMapper")
 public interface BillingInvoiceMapper {
 	/**
 	 * CompanyList 조회

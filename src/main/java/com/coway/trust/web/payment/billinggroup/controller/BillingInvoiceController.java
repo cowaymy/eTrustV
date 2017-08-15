@@ -29,7 +29,7 @@ public class BillingInvoiceController {
 
 	private static final Logger logger = LoggerFactory.getLogger(BillingInvoiceController.class);
 	
-	@Resource(name = "invoiceService")
+	@Resource(name = "billingInvoiceService")
 	private BillingInvoiceService invoiceService;
 
 	// DataBase message accessor....
@@ -47,6 +47,7 @@ public class BillingInvoiceController {
 	 */
 	@RequestMapping(value = "/initCompanyInvoice.do")
 	public String initCompanyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+		System.out.println("ttt");
 		return "payment/billinggroup/companyInvoice";
 	}
 	

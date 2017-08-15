@@ -12,10 +12,10 @@ import com.coway.trust.biz.payment.billinggroup.service.BillingInvoiceService;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Service("invoiceService")
+@Service("billingInvoiceService")
 public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implements BillingInvoiceService{
 
-	@Resource(name = "invoiceMapper")
+	@Resource(name = "billingInvoiceMapper")
 	private BillingInvoiceMapper invoiceMapper;
 	
 	@Override
