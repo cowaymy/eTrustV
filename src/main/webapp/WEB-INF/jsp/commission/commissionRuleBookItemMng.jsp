@@ -207,6 +207,7 @@
             Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {
                 console.log("성공.");
                 console.log("data : " + result);
+                $("#insertFormRule [name=orgDs]").val(result[0].orgds);
                 //to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
                 $("#popup_wrap2").show();
 

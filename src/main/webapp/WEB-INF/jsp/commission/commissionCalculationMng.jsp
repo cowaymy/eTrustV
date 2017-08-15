@@ -272,9 +272,6 @@
 	       <input type="hidden" name="procedureNm" id="procedureNm"/>
 			<!-- search_result start -->
 			<ul class="right_btns">
-	            <li>
-	                <input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width:200px;" />
-	            </li>
 				<li><p class="btn_grid">
 	                    <a href="#" id="execute">execute</a>
 	                </p></li>

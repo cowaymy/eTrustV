@@ -3,7 +3,7 @@
  */
 package com.coway.trust.web.commission.calculation;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -17,16 +17,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.commission.calculation.CommissionCalculationService;
-import com.coway.trust.biz.commission.system.CommissionSystemService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -127,28 +124,19 @@ public class CommissionCalculationController {
 		} else {
 			loginId = String.valueOf(sessionVO.getUserId());
 		}
-
-		String dt = String.valueOf(params.get("searchDt"));
-
-		if (dt.trim().equals("")) {
-			dt = CommonUtils.getNowDate().substring(0, 6);
-			params.put("searchDt", dt);
-		} else if (dt.contains("/")) {
-			dt = dt.replaceAll("/", "");
-			dt = dt.substring(2) + dt.substring(0, 2);
-			params.put("searchDt", dt);
-		}
-
-		int pvMonth = Integer.parseInt(dt.substring(4));
-		int pvYear = Integer.parseInt(dt.substring(0,4));
-
-		logger.debug("pvMonth : {}", pvMonth);
-		logger.debug("pvYear : {}", pvYear);
 		
-		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
+		Calendar cal = Calendar.getInstance();
+		String month = cal.get ( cal.MONTH )<10?"0"+cal.get ( cal.MONTH ):""+cal.get ( cal.MONTH );
+		String searchDt = cal.get ( cal.YEAR )+"-"+month+"-01";
+		
+		int sTaskID = (((cal.get ( cal.MONTH )) + (cal.get ( cal.YEAR )) * 12) - 24157);
+		
+		logger.debug("searchDt : {}", searchDt);
+		logger.debug("taskId : {}", sTaskID);
 
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("loginId", loginId);
+		params.put("searchDt",searchDt);
 
 		item = (EgovMap) commissionCalculationService.callCommProcedure(params);
 		logger.debug("v_result : {}", params.get("v_result"));
