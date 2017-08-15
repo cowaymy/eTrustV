@@ -174,7 +174,7 @@
 		 ORDER BY l48.REQST_NO_ITM 
     </select>
     
-    <select id="selectStockTransferToItem" parameterType="Map" resultType="egovMap">
+    <select id="selectStockMovementToItem" parameterType="Map" resultType="egovMap">
         select l56.loc_id locid, l56.stk_code stkcd, DBMS_LOB.SUBSTR (l56.stk_desc, 4000) stknm
 		     , l56.stk_type_id typeid , s15.code_name typenm
 		     , l56.stk_ctgry_id cateid , s11.code_name catenm
@@ -256,7 +256,7 @@
         delete from LOG0048D where REQST_NO = #{reqno} and REQST_NO_ITM = #{resnoitm}
     </delete>
     
-    <select id="selectStockTransferDeliveryList" parameterType="Map" resultType="egovMap">
+    <select id="selectStockMovementDeliveryList" parameterType="Map" resultType="egovMap">
         SELECT Rownum rnum , T.* FROM (
         select 
                l47.reqst_no reqstno
