@@ -1,10 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>                              
 <script type="text/javaScript">
-/********************************Function  Start***************************************/ 
+/********************************Global Variable Start***********************************/
 // 행 추가, 삽입
 var cnt = 0;
-
+var selectedRow = -1;
+var popSelectedRow = -1;
+var myGridID = "";
+var myGridDetailID = "";
+var gridDataLength=0;
+/********************************Global Variable End************************************/
+/********************************Function  Start***************************************/ 
 function addRow() {
            
     var item = new Object();
@@ -24,6 +30,29 @@ function addRow() {
 function delRow() {			
     var rowPos = "selectedIndex"; //'selectedIndex'은 선택행 또는 rowposition : ex) 5        
     AUIGrid.removeRow(myGridID, "selectedIndex");
+};
+
+function addDetailRow() {
+    var item = new Object();
+    //Column Layout에 없더라도 추가됨
+    item.mymenuCode = AUIGrid.getCellValue(myGridID, selectedRow, "mymenuCode");
+    item.mymenuName = AUIGrid.getCellValue(myGridID, selectedRow, "mymenuName");
+    	    
+    if(item.mymenuCode == "" || item.mymenuCode == null) {
+    	alert("My Menu Code is Null or not saved.");
+    	return;
+    }
+    
+    // parameter
+    // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+    AUIGrid.addRow(myGridDetailID, item, "first");
+};
+
+// 행 삭제
+function delDetailRow() {         
+    var rowPos = "selectedIndex"; //'selectedIndex'은 선택행 또는 rowposition : ex) 5        
+    AUIGrid.removeRow(myGridDetailID, "selectedIndex");
 };
 
 //그리드 헤더 클릭 핸들러
@@ -54,23 +83,47 @@ function checkAll(isChecked) {
 };
 
 //필드값으로 아이템들 얻기
-function getItemsByField() {    
+function getItemsByField() {
     // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
     var activeItems = AUIGrid.getItemsByValue(myGridID, "chkAll", "Y");            
 };
 
-/**************************** Function  End ***********************************/
-/**
- *  Transaction Start
- */
 
-function fn_search(){
+function popupCallback(result){		
+	AUIGrid.setCellValue(myGridDetailID, popSelectedRow, "menuCode", result.menuCode);
+	AUIGrid.setCellValue(myGridDetailID, popSelectedRow, "menuName", result.menuName);
+}
+
+
+function fn_checkChangeRows(gridId,mandatoryItems){
+    var addList = AUIGrid.getAddedRowItems(gridId);
+    // 수정된 행 아이템들(배열)
+    //var updateList = AUIGrid.getEditedRowColumnItems(gridId);
+    var updateList = AUIGrid.getEditedRowItems(gridId); 
+    // 삭제된 행 아이템들(배열)
+    var removeList = AUIGrid.getRemovedItems(gridId);
+    
+    var totalLength = 0;
+    totalLength = addList.length + updateList.length + removeList.length;
+    
+	if(totalLength == 0){
+		alert("No Change Data.");
+		return true; /* Failed */
+	}
+
+	return false; /* Success */
+}
+/****************************Function  End***********************************/
+/****************************Transaction Start********************************/ 
+
+function fn_search(){		
 	Common.ajax(
 		    "GET", 
 		    "/common/selectMyMenuList.do", 
 		    $("#searchForm").serialize(), 
-		    function(data, textStatus, jqXHR){ // Success		  		    	
-		    	AUIGrid.setGridData(myGridID, data);
+		    function(data, textStatus, jqXHR){ // Success
+		    	AUIGrid.clearGridData(myGridDetailID);
+		    	AUIGrid.setGridData(myGridID, data);				    	
 		    },
 		    function(jqXHR, textStatus, errorThrown){ // Error
 		    	alert("Fail : " + jqXHR.responseJSON.message);
@@ -79,6 +132,20 @@ function fn_search(){
 };
 
 function fn_save(){
+	if(fn_checkChangeRows(myGridID)){        
+        return;
+    }
+	var addList = AUIGrid.getAddedRowItems(myGridID);
+    if(addList.length > 0){
+        for(var idx = 0 ; idx < addList.length ; idx++){
+            if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
+                AUIGrid.selectRowsByRowId(myGridID, addList[idx].rowId);
+                alert("My Menu Code is essential field.");
+                return;
+            }            
+        }   
+    }
+    
 	if(confirm("Do you want to save it?")){				
 		Common.ajax(
 	            "POST", 
@@ -94,17 +161,70 @@ function fn_save(){
 	    )	
 	}	
 };
- 
- 
-/**
- *  Transaction End
- */
- 
- 
- 
+
+function fn_detailSearch(mymenuCode){		
+    Common.ajax(
+            "GET", 
+            "/common/selectMyMenuProgrmList.do", 
+            "mymenuCode="+mymenuCode, 
+            function(data, textStatus, jqXHR){ // Success                       
+                AUIGrid.setGridData(myGridDetailID, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }           
+    )
+};
+
+function fn_detailSave(){	
+	if(fn_checkChangeRows(myGridDetailID)){
+		alert("No changed Data.");
+		return;
+	}
+	
+	var addList = AUIGrid.getAddedRowItems(myGridDetailID);
+	if(addList.length > 0){
+		for(var idx = 0 ; idx < addList.length ; idx++){
+			if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
+				AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
+				alert("My Menu Code is essential field.");
+                return;
+            }
+			if(addList[idx].menuCode == "" || typeof(addList[idx].menuCode) == "undefined"){				
+				AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
+				alert("Menu Code is essential field.");
+				return;
+			}			
+		}	
+	}
+	
+	
+    if(confirm("Do you want to save it?")){             
+        Common.ajax(
+                "POST", 
+                "/common/savetMyMenuProgrmList.do", 
+                GridCommon.getEditData(myGridDetailID),
+                function(data, textStatus, jqXHR){ // Success
+                    alert("Saved.");
+                    fn_search();
+                },
+                function(jqXHR, textStatus, errorThrown){ // Error
+                    alert("Fail : " + jqXHR.responseJSON.message);
+                }           
+        )   
+    }   
+};
+
+/****************************Transaction End**********************************/ 
 /**************************** Grid setting Start ********************************/
 var gridMasterColumnLayout =
 [ 
+     /* PK , rowid 용 칼럼*/
+	 {       
+	     dataField : "rowId",
+	     dataType : "string",
+	     visible : false
+	 },
     /*
 	{
         dataField : "chkAll",
@@ -123,7 +243,24 @@ var gridMasterColumnLayout =
         dataField : "mymenuCode",
         /* dataType : "string", */
         headerText : "Grp Code",
-        width : "20%"
+        editable : true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
+        width : "20%",
+        editRenderer : {
+            type : "InputEditRenderer",
+            
+            // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item, dataField) {
+                var isValid = false;
+                var matcher = /^[A-Za-z0-9+]{1,10}$/;                 
+                
+                if(matcher.test(newValue)) { 
+                    isValid = true;
+                }
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : "Only numbers can be entered.[Digits 10]" };
+            }        
+        }    
+        
     }, 
     {
         dataField : "mymenuName",
@@ -134,7 +271,21 @@ var gridMasterColumnLayout =
     {
         dataField : "mymenuOrder",
         headerText : "Order",
-        width : "15%"
+        width : "15%",
+        editRenderer : {
+            type : "InputEditRenderer",
+            onlyNumeric : true, // Input 에서 숫자만 가능케 설정
+            // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item) {
+                var isValid = false;
+                var numVal = Number(newValue);
+                if(!isNaN(numVal) && numVal < 100) {
+                    isValid = true;
+                }
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : "Only numbers can be entered.[Below 100]" };
+            }
+        }
     }, 
     {
         dataField : "useYn",
@@ -170,18 +321,114 @@ var gridMasterColumnLayout =
     }    
 ];
 
+//selectionMode (String) : 설정하고자 하는 selectionMode(유효값 : singleCell, singleRow, multipleCells, multipleRows, none)
+
 var options = 
-{
+{				
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
         applyRestPercentWidth  : false,
+        rowIdField : "rowId", // PK행 지정
+        selectionMode : "multipleRows",
+        editBeginMode : "click", // 편집모드 클릭
+        softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제 
+};
+
+var gridDetailColumnLayout =
+[
+     /* PK , rowid 용 칼럼*/
+	 {       
+	     dataField : "rowId",
+	     dataType : "string",            
+	     visible : false
+	 },
+	{       
+	    dataField : "mymenuCode",
+	    /* dataType : "string", */
+	    headerText : "Grp Code",
+	    editable : false, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
+	    width : "15%"
+	}, 
+	{
+	    dataField : "mymenuName",
+	    headerText : "Grp Name",
+	    width : "20%",
+	    editable : false,
+	    style : "aui-grid-user-custom-left"
+	},
+    {       
+        dataField : "menuCode",
+        /* dataType : "string", */
+        headerText : "Menu Code",
+        editable : false,
+        width : "20%",
+           renderer : {
+               type : "IconRenderer",
+               iconWidth : 14, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+               iconHeight : 13,
+               iconPosition : "aisleRight",
+               iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+                 "default" : "/resources/images/common/normal_search.png" // 
+               },
+               onclick : function(rowIndex, columnIndex, value, item) {                                              
+                  if(AUIGrid.isAddedById("#myMenu", item.rowId)) {   
+                	  popSelectedRow = rowIndex;
+                      var popUpObj = Common.popupDiv
+                      (
+                           "/common/menuPop.do"
+                   	       , ""
+                   	       , null     
+                   	       , "false"
+                   	       , "menuPop"
+                   	  );
+
+                  }
+               }
+           }
+    }, 
+    {
+        dataField : "menuName",
+        headerText : "Menu Name",
+        width : "25%",
+        editable : false,
+        style : "aui-grid-user-custom-left"
+    },
+    {
+        dataField : "pgmOrd",
+        headerText : "Order",
+       	editRenderer : {
+               type : "InputEditRenderer",
+               onlyNumeric : true, // Input 에서 숫자만 가능케 설정
+               // 에디팅 유효성 검사
+               validator : function(oldValue, newValue, item) {
+                   var isValid = false;
+                   var numVal = Number(newValue);
+                   if(!isNaN(numVal) && numVal < 100) {
+                       isValid = true;
+                   }
+                   // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                   return { "validate" : isValid, "message"  : "Only numbers can be entered.[Below 100]" };
+               }
+           }
+    }	       
+];
+
+var detailOptions = 
+{
+		editable : true,
+        usePaging : true, //페이징 사용
+        useGroupingPanel : false, //그룹핑 숨김
+        showRowNumColumn : false, // 순번 칼럼 숨김
+        applyRestPercentWidth  : false,
+        rowIdField : "rowId", // PK행 지정
+        selectionMode : "multipleRows",
+        editBeginMode : "click", // 편집모드 클릭
         softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
 };
 
-var myGridID = "";
-var gridDataLength=0;
 
+/****************************Program Init Start********************************/
 $(document).ready(function(){
     // AUIGrid 그리드를 생성
     myGridID = GridCommon.createAUIGrid("myMenuGrp", gridMasterColumnLayout,"", options);
@@ -193,9 +440,24 @@ $(document).ready(function(){
     // 헤더 클릭 핸들러 바인딩(checkAll)
     AUIGrid.bind(myGridID, "headerClick", headerClickHandler); 
     
+    // click 이벤트 바인딩
+    AUIGrid.bind(myGridID, ["cellClick"], function(event) {    	
+    	selectedRow = event.rowIndex; 
+    	fn_detailSearch(event.item.mymenuCode);                   	        
+    });
+     
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, ["cellEditBegin"], function(event) {
-        /*
+    	if(event.dataField == "mymenuCode") {
+            // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
+            if(AUIGrid.isAddedById(event.pid, event.item.rowId)) {
+                return true; 
+            } else {
+                return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
+            }
+        }
+        return true; // 다른 필드들은 편집 허용
+    	/*
     	// Country 가 "Korea", "UK" 인 경우, Name, Product 수정 못하게 하기        
         if(event.dataField == "name" || event.dataField == "product") {
             if(event.item.country == "Korea" || event.item.country == "UK") {
@@ -220,8 +482,15 @@ $(document).ready(function(){
             }
         }
     });
+        
+    myGridDetailID = GridCommon.createAUIGrid("myMenu", gridDetailColumnLayout,"", detailOptions);
+    
+    AUIGrid.bind(myGridDetailID, ["cellClick"], function(event) {     
+                     
+    });
+    
 });
-/*Grid Setting End*/
+/****************************Program Init End********************************/
 </script>
 
 <style type="text/css">
@@ -270,7 +539,7 @@ $(document).ready(function(){
     </td>
     <th scope="row"></th>
     <td>
-    <input type="text" title="" placeholder="" class="" />
+    <!-- <input type="text" title="" placeholder="" class="" /> -->
     </td>
 </tr>
 </tbody>
@@ -343,9 +612,9 @@ $(document).ready(function(){
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">My Menu</h3>
 <ul class="right_opt">
-    <li><p class="btn_grid"><a onclick="addRow()">Add</a></p></li>
-    <li><p class="btn_grid"><a onclick="delRow()">Del</a></p></li>
-    <li><p class="btn_grid"><a onclick="fn_save()">Save</a></p></li>
+    <li><p class="btn_grid"><a onclick="addDetailRow()">Add</a></p></li>
+    <li><p class="btn_grid"><a onclick="delDetailRow()">Del</a></p></li>
+    <li><p class="btn_grid"><a onclick="fn_detailSave()">Save</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
