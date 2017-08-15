@@ -1,4 +1,4 @@
-package com.coway.trust.web.payment.billinggroup;
+package com.coway.trust.web.payment.billinggroup.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,29 +17,30 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.coway.trust.biz.payment.billinggroup.InvoiceService;
-import com.coway.trust.biz.payment.billinggroup.impl.SearchVO;
+import com.coway.trust.biz.payment.billinggroup.service.BillingInvoiceService;
+import com.coway.trust.biz.payment.billinggroup.service.impl.ProformaSearchVO;
+import com.coway.trust.biz.payment.billinggroup.service.impl.SearchVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/payment")
-public class BillingGroupController {
+public class BillingInvoiceController {
 
-	private static final Logger logger = LoggerFactory.getLogger(BillingGroupController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BillingInvoiceController.class);
 	
 	@Resource(name = "invoiceService")
-	private InvoiceService invoiceService;
+	private BillingInvoiceService invoiceService;
 
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
 	/******************************************************
-	 * Search Payment  
+	 *   Company Statement
 	 *****************************************************/	
 	/**
-	 * SearchPayment초기화 화면 
+	 * Company Statement초기화 화면 
 	 * @param params
 	 * @param model
 	 * @return
@@ -70,7 +71,7 @@ public class BillingGroupController {
 			sYear = Integer.parseInt(tmp[1]);
 		}
 		
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("billNo", brNumber);
 		map.put("orderNo", orderNo);
@@ -90,6 +91,16 @@ public class BillingGroupController {
 		
 		return ResponseEntity.ok(list);
 	}
+	
+	/******************************************************
+	 *   Individual Statement
+	 *****************************************************/	
+	/**
+	 * Individual Statement초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	
 	@RequestMapping(value = "/initIndividualRentalStatement.do")
 	public String initIndividualRentalStatement(@RequestParam Map<String, Object> params, ModelMap model) {	
@@ -118,7 +129,7 @@ public class BillingGroupController {
 			sYear = Integer.parseInt(tmp[1]);
 		}
 		
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("billNo", brNumber);
 		map.put("orderNo", orderNo);
@@ -137,6 +148,16 @@ public class BillingGroupController {
 		
 		return ResponseEntity.ok(list);
 	}
+	
+	/******************************************************
+	 *   Membership Invoice
+	 *****************************************************/	
+	/**
+	 * Membership Invoice초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
 	
 	@RequestMapping(value = "/initMembershipInvoice.do")
 	public String initMembershipInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
@@ -166,7 +187,7 @@ public class BillingGroupController {
 			sYear = Integer.parseInt(tmp[1]);
 		}
 		
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("invoiceNo", invoiceNo);
 		map.put("sMonth", sMonth);
@@ -181,6 +202,16 @@ public class BillingGroupController {
 		return ResponseEntity.ok(list);
 	}
 	
+	/******************************************************
+	 *   Outright Invoice
+	 *****************************************************/	
+	/**
+	 * Outright Invoice초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	
 	@RequestMapping(value = "/initOutrightInvoice.do")
 	public String initOutrightInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
 	
@@ -191,7 +222,7 @@ public class BillingGroupController {
 	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")SearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("orcGode","");
 		map.put("grpCode", "");
@@ -214,11 +245,96 @@ public class BillingGroupController {
 		return ResponseEntity.ok(list);
 	}
 	
+	/******************************************************
+	 *   Proforma Invoice
+	 *****************************************************/	
+	/**
+	 * Proforma Invoice초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	
 	@RequestMapping(value = "/initProformaInvoice.do")
 	public String initProformaInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
 	
 		return "payment/billinggroup/proformaInvoice";
 	}
 	
+	@RequestMapping(value = "/selectProformaInvoiceList")
+	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
+		List<EgovMap> list = null;
+		
+		System.out.println(searchVO);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("orderNo", searchVO.getOrderNo().trim());
+		map.put("appTypeList", searchVO.getAppType());
+		map.put("orderDateFrom", searchVO.getOrderDt1());
+		map.put("orderDateTo", searchVO.getOrderDt2());
+		map.put("orderStatusList", searchVO.getOrderStatus());
+		map.put("keyInBranchList", searchVO.getKeyBranch());
+		map.put("dscBranchList", searchVO.getDscBranch());
+		map.put("custId", searchVO.getCustId().trim());
+		map.put("custName", searchVO.getCustName().trim());
+		map.put("custIC", searchVO.getCustIc().trim());
+		map.put("productId", searchVO.getProduct());
+		map.put("memberCode", searchVO.getMemberCode().trim());
+		map.put("rentStatus", searchVO.getRentalStatus());
+		map.put("refNo", searchVO.getRefNo().trim());
+		map.put("poNo", searchVO.getPoNo().trim());
+		map.put("contactNo", searchVO.getContactNo());
+		
+		return ResponseEntity.ok(list);
+	}
 	
+	/******************************************************
+	 *   Company Statement
+	 *****************************************************/	
+	/**
+	 * Company Statement초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/initCompanyStatement.do")
+	public String initCompanyStatement(@RequestParam Map<String, Object> params, ModelMap model) {	
+	
+		return "payment/billinggroup/companyStatement";
+	}
+	
+	@RequestMapping(value = "/selectCompStatementList")
+	public ResponseEntity<List<EgovMap>> selectCompStatementList(@RequestParam Map<String, Object> params, ModelMap model) {	
+		List<EgovMap> list = null;
+		
+		System.out.println("params : " + params);
+		
+		String brNumber = String.valueOf(params.get("brNumber"));
+		String period = String.valueOf(params.get("period"));
+		String orderNo = String.valueOf(params.get("orderNo"));
+		String customerName = String.valueOf(params.get("customerName"));
+		
+		int sMonth = 0;
+		int sYear = 0;
+		
+		if((!period.equals("null")) && (!period.equals(""))){
+			String tmp[] = period.split("/");
+			sMonth = Integer.parseInt(tmp[0]);
+			sYear = Integer.parseInt(tmp[1]);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("billNo", brNumber);
+		map.put("orderNo", orderNo);
+		map.put("custName", customerName);
+		map.put("sMonth", sMonth);
+		map.put("sYear", sYear);
+		
+		list = invoiceService.selectCompanyStatementList(map);
+		
+		return ResponseEntity.ok(list);
+	}
 }
