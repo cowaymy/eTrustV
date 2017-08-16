@@ -235,8 +235,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         showStateColumn : true,                
         // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
         displayTreeOpen : true,                
-        noDataMessage : "출력할 데이터가 없습니다.",                
-        groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다.",                
+        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",                
+        groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",                
         //selectionMode : "multipleCells",
         //rowIdField : "stkid",
         enableSorting : true,
@@ -249,7 +249,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         usePaging : true,                
                         pageRowCount : 10,                
                         editable : true,                
-                        noDataMessage : "출력할 데이터가 없습니다.",
+                        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
                         enableSorting : true,
                         softRemoveRowMode:false
                         };
@@ -258,7 +258,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         usePaging : true,                
                         pageRowCount : 10,                
                         editable : false,                
-                        noDataMessage : "출력할 데이터가 없습니다.",
+                        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
                         enableSorting : true,
                         softRemoveRowMode:false,
                         reverseRowNum : true
