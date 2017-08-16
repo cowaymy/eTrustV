@@ -523,4 +523,5 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .cal_td{min-height:50px;}
 
 /* 그리드 추가 */
+.aui-grid-icon-renderer,
 .aui-grid-icon-renderer span{line-height:26px!important;}
