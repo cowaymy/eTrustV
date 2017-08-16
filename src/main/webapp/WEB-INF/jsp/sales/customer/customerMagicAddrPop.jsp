@@ -31,30 +31,35 @@
 	
 	function createAUIGrid() {
         var columnLayout = [ {
-            dataField : "state",
-            visible : false
-        }, {
-            dataField : "city",
-            visible : false
-        }, {
-            dataField : "town",
-            visible : false
+            dataField : "street",
+            headerText : "STREET",
+            editable : false
         }, {
             dataField : "postcd",
-            visible : false
+            headerText : "POSTCODE",
+            width : 100,
+            editable : false
         }, {
-            dataField : "street",
-            visible : false
+            dataField : "town",
+            headerText : "Town",
+            width : 100,
+            editable : false
+        }, {
+            dataField : "city",
+            headerText : "City",
+            width : 150,
+            editable : false
+        }, {
+            dataField : "state",
+            headerText : "Region",
+            width : 80,
+            editable : false
         }, {
             dataField : "streetId",
             visible : false
         }, {
             dataField : "iso",
             visible : false
-        }, {
-            dataField : "fulladdress",
-            headerText : "Search Address",
-            editable : false
         }];
    
         // 그리드 속성 설정
@@ -88,7 +93,7 @@
             wrapSelectionMove : true,
             
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
+            showRowNumColumn : false,
             
             groupingMessage : "Here groupping"
         };
