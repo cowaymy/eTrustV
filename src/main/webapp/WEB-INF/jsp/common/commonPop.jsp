@@ -89,7 +89,7 @@ $(document).ready(function(){
 
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>title</h1>
+<h1>Menu Popup</h1>
 <ul class="right_opt">       
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -99,11 +99,7 @@ $(document).ready(function(){
 <form id="searchPopForm" action="#" method="post">
 
 <div class="search_100p"><!-- search_100p start -->
-<select class="w100p">
-    <option value="">Menu</option>
-    <!-- <option value="">Program ID</option> -->
-</select>
-<input id="popMenuCode" name="popMenuCode" type="text" />
+<input id="popMenuCode" class="w100p" name="popMenuCode" type="text" />
 <a onclick="fn_searchPop()" class="search_btn"><img src="/resources/images/common/normal_search.gif" alt="search" /></a>
 </div><!-- search_100p end -->
 
