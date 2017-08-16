@@ -25,9 +25,9 @@
 	<hr />
 
 <script type="text/javascript">
-
-	$(function () {
-		// draw menu path.
+   
+   $(function() {
+       // draw menu path.
 		var $menuPathObj = $("#content ul:first-child");
 		if($menuPathObj.hasClass("path")){
 
@@ -54,8 +54,72 @@
 		}else{
             console.log("[header.jsp] path class is not found...");
         }
-	});
-
+        
+	   $(".fav a").bind("click",function(){		   		   
+		   if($(".fav a").attr("class")=="on"){	
+			   var closeTag = false;
+		        Common.ajax(
+		                "POST", 
+		                "/common/savetMyMenuProgrmList.do", 
+		                {add:[],update:[],remove:[{menuCode:$("input[name=CURRENT_MENU_CODE]").attr("value")}]},
+		                function(data, textStatus, jqXHR){ // Success
+		                	$(".fav a").removeClass("on");		                 
+		                	alert("Removed menu.");
+		                	closeTag = true;
+		                },
+		                function(jqXHR, textStatus, errorThrown){ // Error
+		                    alert("Fail : " + jqXHR.responseJSON.message);
+		                }           
+		        )   			       
+		        if(closeTag) mymenuPop.remove();		        
+		   }else{			   			   			
+			   var popUpObj = Common.popupDiv
+               (
+                    "/common/mymenuPop.do"
+                    , "" 
+                    , null     
+                    , "false"
+                    , "mymenuPop"
+               );
+		   }			   		   		   
+	   })	   	  
+   });
+      
+   
+   function mymenuPopSelect(_mymenuCode){	   		 
+	   var closeTag = false;
+	   Common.ajax(
+               "POST", 
+               "/common/savetMyMenuProgrmList.do", 
+               {add:[{mymenuCode:_mymenuCode,menuCode:$("input[name=CURRENT_MENU_CODE]").attr("value")}],update:[],remove:[]},
+               function(data, textStatus, jqXHR){ // Success
+            	   $(".fav a").addClass("on");
+            	   alert("Registered menu.");
+            	   mymenuPop.remove();                   
+               },
+               function(jqXHR, textStatus, errorThrown){ // Error
+                   alert("Fail : " + jqXHR.responseJSON.message);
+               }           
+       );                         
+       
+   };
+   
+   $(document).ready(function(){	   
+       Common.ajax(
+            "GET", 
+            "/common/selectMyMenuProgrmList.do",
+            "menuCode="+$("input[name=CURRENT_MENU_CODE]").attr("value"),
+            function(data, textStatus, jqXHR){ // Success                       
+            	$(".fav a").removeClass("click_add_on");
+            	if(data.length>0){            		
+            		$(".fav a").addClass("on");
+            	}          	
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }           
+    )
+   });
 </script>
     
     
