@@ -256,10 +256,11 @@ table.type2.acodi .aco_tr{display:none;}
 .page_size select{float:left;  height:20px; border:1px solid #d2d2d2; border-radius:0; box-sizing:border-box; font-size:11px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
 .table_bottom_info{padding-top:10px; font-size:12px;}
 .table_bottom_info span{font-size:12px; font-weight:bold;}
-
 .search_btn{display:block; height:30px;}
 .search_btn img{position:relative; top:6px;}
 .search_100p{position:relative; width:100%; padding-right:25px; box-sizing:border-box;}
+.search_100p.select{padding-right:82px;}
+.search_100p.select .btn_sky,
 .search_100p .search_btn{position:absolute; top:0; right:0;}
 .search_100p input[type=text]{width:59%; height:30px; line-height:28px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px; vertical-align:top;}
 .search_100p select{width:39%; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif; vertical-align:top;}
