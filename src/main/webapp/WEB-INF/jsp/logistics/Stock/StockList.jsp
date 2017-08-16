@@ -617,16 +617,19 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 						$("#filter_info").show();
 						$("#spare_info").show();
 						$("#service_info").hide();
+						$("#stock_commisssion").show();
 					} else {
 						$("#service_info").show();
 						$("#filter_info").hide();
 						$("#spare_info").hide();
+						$("#stock_commisssion").hide();
 					}
 					$("#stock_info_div").show();
 					$("#price_info_div").hide();
 					$("#filter_info_div").hide();
 					$("#service_info_div").hide();
 					$("#stock_img_td").hide();
+					$("#stock_commisssion_div").hide();
 					$("#imgShow").html("");
 					$("#stock_info").find("a").attr("class", "on");
 					/*if (){
@@ -1133,6 +1136,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         <h2>Stocks</h2>
         <ul class="right_opt">
             <%//@ include file="/WEB-INF/jsp/common/contentButton.jsp" %>
+            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -1176,10 +1181,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             </tbody>
         </table><!-- table end -->
 
-        <ul class="right_btns">
-            <li><p class="btn_gray"><a id="clear"><span class="clear"></span>Clear</a></p></li>
-            <li><p class="btn_gray"><a id="search"><span class="search"></span>Search</a></p></li>
-        </ul>
     </form>
 
     </section><!-- search_table end -->
@@ -1203,8 +1204,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <li id="price_info"><a href="#"> Price & Value Information</a></li>
                 <li id="filter_info"><a href="#"> Filter Info</a></li>
                 <li id="spare_info"><a href="#"> Spare Part Info</a></li>
-                <li id="service_info"><a href="#"> Service Charge Info</a></li>
-                <li id="stock_image"><a href="#"> Stock Image</a></li>
+                <li id="service_info"><a href="#">Service Charge Info</a></li>
+                <li id="stock_image"><a href="#">Stock Image</a></li>
+                <li id="stock_commisssion"><a href="#">Stock Commission Setting</a></li>
             </ul>
             <article class="tap_area" id="stock_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
@@ -1366,6 +1368,93 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     </tr>
                 </table>                        
             </article>
+             <article class="tap_area" id="stock_commisssion_div" style="display:none;">
+                 <div class="divine_auto"><!-- divine_auto start -->
+                 <div style="width:50%;">
+                 <aside class="title_line">
+                <!-- <h3>Stock Information</h3> -->
+                <ul class="right_opt">
+                    <li><p class="btn_blue"><a id="stock_comm_edit"><spring:message code='sys.btn.save' /></a></p></li>
+                </ul> 
+                </aside>
+                <form id='commForm' name='commForm' method='post'>
+                <!-- <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/> -->
+								<table class="type1">
+									<caption>search table</caption>
+									<colgroup>
+										<col style="width: 150px" />
+										<col style="width: *" />
+										<col style="width: 160px" />
+										<col style="width: *" />
+									</colgroup>
+									<tbody>
+										<tr>
+											<td colspan="4">
+												<aside class="title_line">
+													<!-- title_line start -->
+													<h3>Stock Information</h3>
+													</aside>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">Stock Code</th>
+											<td ID="txtStckCd"></td>
+											<th scope="row">Category</th>
+											<td ID="txtStckCtgry"></td>
+										</tr>
+										<tr>
+											<th scope="row">Stock Name</th>
+											<td ID="txtStckNm" colspan="3"></td>
+										</tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <aside class="title_line">
+                                                    <!-- title_line start -->
+                                                    <h3>Commission Setting - Installation</h3>
+                                                </aside>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Rate</th>
+                                            <td ID="txtRate_install"></td>
+                                            <th scope="row">Outsource Rate</th>
+                                            <td ID="txtOutRate_install"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <aside class="title_line">
+                                                    <!-- title_line start -->
+                                                    <h3>Commission Setting - Before Service (BS)</h3>
+                                                </aside>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Rate</th>
+                                            <td ID="txtRate_bs"></td>
+                                            <th scope="row">Outsource Rate</th>
+                                            <td ID="txtOutRate_bs"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <aside class="title_line">
+                                                    <!-- title_line start -->
+                                                    <h3>Commission Setting - After Service (AS)</h3>
+                                                </aside>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Rate</th>
+                                            <td ID="txtRate_as"></td>
+                                            <th scope="row">Outsource Rate</th>
+                                            <td ID="txtOutRate_as"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+							</form>
+							
+                </div>
+                </div><!-- divine_auto end -->
+             </article>
         </section><!--  tab -->
     </section><!-- data body end -->
 
