@@ -31,7 +31,7 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
 	@Resource(name = "orderListMapper")
 	private OrderListMapper orderListMapper;
 	
-	@Autowired
+//	@Autowired
 //	private MessageSourceAccessor messageSourceAccessor;
 	
 	@Override

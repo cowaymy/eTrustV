@@ -13,5 +13,5 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  */
 public interface OrderListService {
-	public List<EgovMap> selectOrderList(Map<String, Object> params);
+	List<EgovMap> selectOrderList(Map<String, Object> params);
 }
