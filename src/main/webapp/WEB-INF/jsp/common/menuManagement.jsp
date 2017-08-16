@@ -632,62 +632,59 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
-<!-- 
-<input type ="hidden" id="groupCode" name="groupCode" value="310"/>
-<input type ="hidden" id="selMenuId" name="selMenuId" value="310"/> 
--->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:150px" />
-	<col style="width:*" />
-	<col style="width:150px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">Menu Id</th>
-	<td>
-	 <input type="text" id="menuCode" name="menuCode" title="" placeholder="" class="w100p" style="text-transform: uppercase;"/>
-	</td>
-	<th scope="row">Program Id</th>
-	<td>
-	 <input type="text" id="pgmCode" name="pgmCode" title="" placeholder="" class="w100p" />
-	</td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><%-- <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%></p>
-<dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn"><a href="#">menu2</a></p></li>
-		<li><p class="link_btn"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn"><a href="#">menu8</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-	</ul>
-	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
+	<input type ="hidden" id="selCategoryId" name="selCategoryId" value="1"/>
+	
+	<table class="type1"><!-- table start -->
+	<caption>table</caption>
+	<colgroup>
+		<col style="width:150px" />
+		<col style="width:*" />
+		<col style="width:150px" />
+		<col style="width:*" />
+	</colgroup>
+	<tbody>
+	<tr>
+		<th scope="row">Menu Id</th>
+		<td>
+		 <input type="text" id="menuCode" name="menuCode" title="" placeholder="" class="w100p" style="text-transform: uppercase;"/>
+		</td>
+		<th scope="row">Program Id</th>
+		<td>
+		 <input type="text" id="pgmCode" name="pgmCode" title="" placeholder="" class="w100p" />
+		</td>
+	</tr>
+	</tbody>
+	</table><!-- table end -->
+	
+	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+	<p class="show_btn"><%-- <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%></p>
+	<dl class="link_list">
+		<dt>Link</dt>
+		<dd>
+		<ul class="btns">
+			<li><p class="link_btn"><a href="#">menu1</a></p></li>
+			<li><p class="link_btn"><a href="#">menu2</a></p></li>
+			<li><p class="link_btn"><a href="#">menu3</a></p></li>
+			<li><p class="link_btn"><a href="#">menu4</a></p></li>
+			<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+			<li><p class="link_btn"><a href="#">menu6</a></p></li>
+			<li><p class="link_btn"><a href="#">menu7</a></p></li>
+			<li><p class="link_btn"><a href="#">menu8</a></p></li>
+		</ul>
+		<ul class="btns">
+			<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+			<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+			<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+			<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+			<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+			<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+			<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+			<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+		</ul>
+		<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+		</dd>
+	</dl>
+	</aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
