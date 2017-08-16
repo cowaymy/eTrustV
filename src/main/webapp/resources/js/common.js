@@ -24,6 +24,8 @@ var Common = {
 	 */
 	ajax : function(_method, _url, _jsonObj, _callback, _errcallback, _options, _header) {
 
+		var _params = {};
+
 		if (_method.toLowerCase() == 'get') {
 			_params = _jsonObj;
 		} else {
