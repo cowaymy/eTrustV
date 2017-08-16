@@ -12,7 +12,7 @@ $(document).ready(function(){
     doGetComboSepa('/common/selectBranchCodeList.do', '2' , ' - '  ,'' , 'dscBranch' , 'M', 'f_multiCombo');//Branch생성
     doGetComboAndGroup('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');//product 생성
   
-   // $("#orderStatus").attr('disabled', true);
+
     
     $("#custId").keyup(function() {
     	 var str = $("#custId").val();
@@ -23,6 +23,11 @@ $(document).ready(function(){
     	  }
     });
     
+   $(function() {
+  	   $("#orderStatus").multipleSelect("disable");
+   });//AS-IS에서 1일 때만 체크해서 넘김, -> TO-BE에서 DB조회시 1과 일치하는 것만 검색해오게 함
+
+    
 });
 
 function f_multiCombo() {
@@ -30,15 +35,13 @@ function f_multiCombo() {
         $('#appType').multipleSelect({
             selectAll : true, // 전체선택 
             width : '80%'
-        });
+        }).multipleSelect("checkAll");
         
         $("#keyBranch").multipleSelect({
-            selectAll : true, // 전체선택 
             width : '80%'
         });
         
         $("#dscBranch").multipleSelect({
-            selectAll : true, // 전체선택 
             width : '80%'
         });
         
@@ -52,12 +55,14 @@ var gridPros = {
 };
 
 var columnLayout=[              
-    {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"name1", headerText:"Customer Name"},
-    {dataField:"invcRefNo", headerText:"Invoice No"},
-    {dataField:"invcRefDt", headerText:"Invoice Date"},
-    {dataField:"invcSubMemPacAmt", headerText:"Invoice Amount"},
-    {dataField:"srvMemQuotNo", headerText:"Installment No"}
+    {dataField:"orderno", headerText:"Order No"},
+    {dataField:"orderstatuscode", headerText:"Status"},
+    {dataField:"apptypecode", headerText:"App Type"},
+    {dataField:"orderdate", headerText:"Order Date"},
+    {dataField:"stockdesc", headerText:"Product"},
+    {dataField:"customername", headerText:"Customer Name"},
+    {dataField:"customeric", headerText:"NRIC/Company No"},
+    {dataField:"creator", headerText:"Creator"}
 ];
 
 function fn_getOrderListAjax() {        
@@ -90,13 +95,13 @@ function ValidRequiredField(){
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Billing</li>
         <li>Billing Group</li>
-        <li>Company Rental Invoice</li>
+        <li>Proforma Invoice</li>
     </ul>
     
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Company Rental Invoice</h2>   
+        <h2> Proforma Invoice</h2>   
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
@@ -130,14 +135,17 @@ function ValidRequiredField(){
                         </td>
                         <th scope="row">Order Date</th>
                         <td>
-                           <input type="text" name="orderDt1" placeholder="dd/MM/yyyy" class="j_date" /> To
-                           <input type="text" name="orderDt2" placeholder="dd/MM/yyyy" class="j_date" />
+                           <div class="date_set w100p"><!-- date_set start -->
+                           <p><input type="text" name="orderDt1" placeholder="dd/MM/yyyy" class="j_date" readonly/></p>
+                           <span>To</span>
+                           <p><input type="text" name="orderDt2" placeholder="dd/MM/yyyy" class="j_date" readonly/></p>
+                           </div><!-- date_set end -->
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Order Status</th>
                         <td>
-                            <select id="orderStatus" name="orderStatus" class="multy_select w100p" multiple="multiple" >
+                            <select id="orderStatus" name="orderStatus"  class="multy_select w100p" multiple="multiple">
                                 <option value="1">Active</option>
                                 <option value="4">Completed</option>
                                 <option value="10">Cancelled</option>
@@ -219,9 +227,9 @@ function ValidRequiredField(){
                     <ul class="btns">
                         <li><p class="link_btn"><a href="#">Generate Invoice</a></p></li>
                     </ul>
-                    <ul class="btns">
+                    <!-- <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
-                    </ul>
+                    </ul> -->
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>

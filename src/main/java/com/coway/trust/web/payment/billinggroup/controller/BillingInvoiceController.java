@@ -1,5 +1,6 @@
 package com.coway.trust.web.payment.billinggroup.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -269,11 +270,9 @@ public class BillingInvoiceController {
 		System.out.println(searchVO);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("orderNo", searchVO.getOrderNo().trim());
 		map.put("appTypeList", searchVO.getAppType());
-		map.put("orderDateFrom", searchVO.getOrderDt1());
-		map.put("orderDateTo", searchVO.getOrderDt2());
 		map.put("orderStatusList", searchVO.getOrderStatus());
 		map.put("keyInBranchList", searchVO.getKeyBranch());
 		map.put("dscBranchList", searchVO.getDscBranch());
@@ -287,6 +286,23 @@ public class BillingInvoiceController {
 		map.put("poNo", searchVO.getPoNo().trim());
 		map.put("contactNo", searchVO.getContactNo());
 		
+		String orderDtFr = "";
+		String orderDtTo = "";
+		if(searchVO.getOrderDt1() != null && !searchVO.getOrderDt1().equals("")){
+			String tempOrderDtFr[] = searchVO.getOrderDt1().split("/");
+			orderDtFr = tempOrderDtFr[2] + "-" + tempOrderDtFr[1] + "-" + tempOrderDtFr[0] + " 00:00:00";
+		}
+		if(searchVO.getOrderDt2() != null && !searchVO.getOrderDt2().equals("")){
+			String tempOrderDtTo[] = searchVO.getOrderDt2().split("/");
+			orderDtTo = tempOrderDtTo[2] + "-" + tempOrderDtTo[1] + "-" + tempOrderDtTo[0] + " 00:00:00";
+		}
+		
+		map.put("orderDateFrom", orderDtFr);
+		map.put("orderDateTo", orderDtTo);
+		
+		list = invoiceService.selectProformaInvoiceList(map);
+		
+		System.out.println("map: " + map);
 		return ResponseEntity.ok(list);
 	}
 	
