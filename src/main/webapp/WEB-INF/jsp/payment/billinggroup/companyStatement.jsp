@@ -24,7 +24,7 @@ var columnLayout=[
     {dataField:"custName", headerText:"Customer Name"}
 ];
 
-function fn_getOrderListAjax() {        
+function fn_getCompanyStatementListAjax() {        
 	var valid = ValidRequiredField();
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
@@ -57,9 +57,9 @@ function ValidRequiredField(){
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Company Rental Statement Of Account</h2>   
+        <h2>Company Statement</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getCompanyStatementListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

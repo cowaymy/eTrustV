@@ -25,7 +25,7 @@ var columnLayout=[
     {dataField:"rentInstNo", headerText:"Installment No"}
 ];
 
-function fn_getOrderListAjax() {        
+function fn_getCompanyInvoiceListtAjax() {        
 	var valid = ValidRequiredField();
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
@@ -58,9 +58,9 @@ function ValidRequiredField(){
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Company Rental Invoice</h2>   
+        <h2>Company Invoice</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getCompanyInvoiceListtAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->
@@ -128,7 +128,7 @@ function ValidRequiredField(){
                         <li><p class="link_btn"><a href="#">Generate Invoice</a></p></li>
                     </ul>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
+                        <li><p class="link_btn type2"><a href="#">Send E-Invoice</a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>

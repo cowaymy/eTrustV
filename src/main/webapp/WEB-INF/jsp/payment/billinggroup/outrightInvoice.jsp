@@ -6,7 +6,6 @@ var myGridID;
 
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    $('input:radio[name=printMethod]').is(':checked');
     
 });
 
@@ -23,33 +22,13 @@ var columnLayout=[
     {dataField:"name", headerText:"customerName"}
 ];
 
-function fn_getOrderListAjax() {     
+function fn_getOutrightInvoiceListAjax() {     
 	
 	console.log("appType : " + $("#appType").val());
 	console.log($("searchForm").serialize());
 	Common.ajax("GET", "/payment/selectOutrightInvoiceList ", $("#searchForm").serialize(), function(result) {
     	AUIGrid.setGridData(myGridID, result);
     });
-	
-	
-	/*var param = $('#searchForm').serializeJSON();
-    
-    console.log("param : " + param);
-    $.ajax({
-        type : "POST",
-        url : "/payment/selectOutrightInvoiceList?" + param,
-        //url : "/stock/StockList.do",
-        //data : param,
-        dataType : "json",
-        contentType : "application/json;charset=UTF-8",
-        success : function(data) {
-        },
-        error : function(jqXHR, textStatus, errorThrown) {
-            alert("실패하였습니다.");
-        },
-       
-    })*/;
-
 }
 
 </script>
@@ -68,7 +47,7 @@ function fn_getOrderListAjax() {
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Outright Invoice</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getOutrightInvoiceListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

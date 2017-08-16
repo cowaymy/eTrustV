@@ -6,7 +6,6 @@ var myGridID;
 
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    
 });
 
 var gridPros = {
@@ -24,7 +23,7 @@ var columnLayout=[
     {dataField:"srvMemQuotNo", headerText:"Installment No"}
 ];
 
-function fn_getOrderListAjax() {        
+function fn_getMembershipInvoiceListAjax() {        
 	var valid = ValidRequiredField();
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
@@ -57,9 +56,9 @@ function ValidRequiredField(){
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Service Membership Invoice</h2>   
+        <h2>Membership Invoice</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getMembershipInvoiceListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

@@ -65,7 +65,7 @@ var columnLayout=[
     {dataField:"creator", headerText:"Creator"}
 ];
 
-function fn_getOrderListAjax() {        
+function fn_getProformaInvoiceListAjax() {        
 	var valid = ValidRequiredField();
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
@@ -103,7 +103,7 @@ function ValidRequiredField(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2> Proforma Invoice</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getProformaInvoiceListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->
