@@ -210,6 +210,7 @@ table+.center_btns{padding-top:15px;}
 .date_set > p:first-child{padding-left:0; padding-right:11px;}
 .date_set > p input[type=text].j_date{width:100%!important;}
 .date_set > span{position:absolute; top:0; left:50%; width:22px; margin-left:-11px; line-height:30px; text-align:center;}
+.w100p{width:100%!important;}
 .ms-parent.multy_select{width:237px!important;}
 .ms-parent.multy_select.w100p{width:100%!important;}
 
