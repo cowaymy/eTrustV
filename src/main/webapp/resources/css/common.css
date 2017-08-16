@@ -103,6 +103,7 @@
 .title_line .left_opt{float:left;}
 .title_line .left_opt:after{content:""; display:block; clear:both;}
 .title_line .left_opt li{float:left; margin-left:5px;}
+
 table+.title_line{margin-top:20px;}
 .h70{height:70px;}
 .mb1m{margin-bottom:-1px!important;}
@@ -484,7 +485,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto .left_btns:first-child,
 .divine_auto .center_btns:first-child,
 .divine_auto .right_btns:first-child{padding-top:20px;}
-
+.divine_auto .title_line .right_btns{margin-bottom:-10px; top:0!important;}
 
 /* 로딩바 */
 .prog{display:block; position:fixed; top:0; left:0; z-index:1002; width:100%; height:100%; background:rgba(0,0,0,0.6);}
