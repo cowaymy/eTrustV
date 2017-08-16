@@ -1379,78 +1379,99 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 </aside>
                 <form id='commForm' name='commForm' method='post'>
                 <!-- <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/> -->
-								<table class="type1">
-									<caption>search table</caption>
-									<colgroup>
-										<col style="width: 150px" />
-										<col style="width: *" />
-										<col style="width: 160px" />
-										<col style="width: *" />
-									</colgroup>
-									<tbody>
-										<tr>
-											<td colspan="4">
-												<aside class="title_line">
-													<!-- title_line start -->
-													<h3>Stock Information</h3>
-													</aside>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">Stock Code</th>
-											<td ID="txtStckCd"></td>
-											<th scope="row">Category</th>
-											<td ID="txtStckCtgry"></td>
-										</tr>
-										<tr>
-											<th scope="row">Stock Name</th>
-											<td ID="txtStckNm" colspan="3"></td>
-										</tr>
-                                        <tr>
-                                            <td colspan="4">
-                                                <aside class="title_line">
-                                                    <!-- title_line start -->
-                                                    <h3>Commission Setting - Installation</h3>
-                                                </aside>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Rate</th>
-                                            <td ID="txtRate_install"></td>
-                                            <th scope="row">Outsource Rate</th>
-                                            <td ID="txtOutRate_install"></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="4">
-                                                <aside class="title_line">
-                                                    <!-- title_line start -->
-                                                    <h3>Commission Setting - Before Service (BS)</h3>
-                                                </aside>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Rate</th>
-                                            <td ID="txtRate_bs"></td>
-                                            <th scope="row">Outsource Rate</th>
-                                            <td ID="txtOutRate_bs"></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="4">
-                                                <aside class="title_line">
-                                                    <!-- title_line start -->
-                                                    <h3>Commission Setting - After Service (AS)</h3>
-                                                </aside>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Rate</th>
-                                            <td ID="txtRate_as"></td>
-                                            <th scope="row">Outsource Rate</th>
-                                            <td ID="txtOutRate_as"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-							</form>
+                
+                <aside class="title_line"><!-- title_line start -->
+                <h3>Stock Information</h3>
+                </aside><!-- title_line end -->
+                
+					<table class="type1">
+						<caption>search table</caption>
+						<colgroup>
+							<col style="width: 150px" />
+							<col style="width: *" />
+							<col style="width: 160px" />
+							<col style="width: *" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<th scope="row">Stock Code</th>
+								<td ID="txtStckCd"></td>
+								<th scope="row">Category</th>
+								<td ID="txtStckCtgry"></td>
+							</tr>
+							<tr>
+								<th scope="row">Stock Name</th>
+								<td ID="txtStckNm" colspan="3"></td>
+							</tr>
+						</tbody>
+						</table>
+						
+						<aside class="title_line"><!-- title_line start -->
+		                <h3>Commission Setting - Installation</h3>
+		                </aside><!-- title_line end -->
+                
+                        <table class="type1">
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                         <tr>
+                             <th scope="row">Rate</th>
+                             <td ID="txtRate_install"></td>
+                             <th scope="row">Outsource Rate</th>
+                             <td ID="txtOutRate_install"></td>
+                         </tr>
+                         </tbody>
+                        </table>
+                        
+                        <aside class="title_line"><!-- title_line start -->
+                        <h3>Commission Setting - Before Service (BS)</h3>
+                        </aside><!-- title_line end -->
+
+                        <table class="type1">
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                         <tr>
+                             <th scope="row">Rate</th>
+                             <td ID="txtRate_bs"></td>
+                             <th scope="row">Outsource Rate</th>
+                             <td ID="txtOutRate_bs"></td>
+                         </tr>
+                         </tbody>
+                        </table>
+                        
+                        <aside class="title_line"><!-- title_line start -->
+                        <h3>Commission Setting - After Service (AS)</h3>
+                        </aside><!-- title_line end -->
+                         
+                        <table class="type1">
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>          
+                         <tr>
+                             <th scope="row">Rate</th>
+                             <td ID="txtRate_as"></td>
+                             <th scope="row">Outsource Rate</th>
+                             <td ID="txtOutRate_as"></td>
+                         </tr>
+                         </tbody>
+                         </table>
+				</form>
 							
                 </div>
                 </div><!-- divine_auto end -->
