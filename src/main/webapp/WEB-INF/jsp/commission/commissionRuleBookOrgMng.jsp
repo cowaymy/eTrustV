@@ -37,7 +37,7 @@
 
 	//Start AUIGrid
 	$(document).ready(function() {
-alert("ready");
+
 		// AUIGrid 그리드를 생성합니다.
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"orgSeq");
 
@@ -65,7 +65,6 @@ alert("ready");
 		//change orgCombo List
 	
 	$("#orgRgCombo").change(function() {
-		alert("orgRgCombo");
 			$("#orgCombo").find('option').each(function() {
 				$(this).remove();
 			});
@@ -80,8 +79,6 @@ alert("ready");
 
 	//event management
 	function auiCellEditingHandler(event) {
-
-		console.log("AAA");
 		if (event.type == "cellEditEnd") {
 			if (event.columnIndex == 0) {
 				var val = event.value;
@@ -92,7 +89,6 @@ alert("ready");
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 3, "");
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 4, "");
 			} else if (event.columnIndex == 2) {
-				console.log("bbbb");
 				var val = event.value;
 				$("#orgGubun").val("G");
 				var orgNm = AUIGrid.getCellFormatValue(myGridID, event.rowIndex, event.columnIndex);
@@ -101,17 +97,14 @@ alert("ready");
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 2, data.split(",")[1]);
 			}
 		} else if (event.type == "cellEditBegin") {
-			console.log("cccc");
 			var orgSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 7);
-			alert("orgSeq_: " + orgSeq);
+			
 			if (!AUIGrid.isAddedById(myGridID, orgSeq) && event.columnIndex != 5) {
-				alert('aaaa');
 				return false;
 			}
 			if (event.columnIndex == 2) {
-				console.log("ddd");
 				var val = AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex - 2);
-				if (val == null || val == "" || val == "Please select_5" || val == "선택하세요.") {
+				if (val == null || val == "" || val == "Please select" || val == "선택하세요.") {
 					Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
 					return false;
 				}
@@ -133,7 +126,6 @@ alert("ready");
 	
 	//get Group Organization Combo Data
 	function getOrgRgName(val) {
-		alert("getOrgRgName");
 		var retStr = "";
 		$("#orgRgCombo").find('option').each(function() {
 			if (val == $(this).val()) {
@@ -145,7 +137,6 @@ alert("ready");
 
 	//get Organization Combo Data
 	function getOrgData(val) {
-		alert("getOrgData");
 		var retStr = "";
 		$.each(orgList, function(key, value) {
 			var id = value.id;
@@ -156,30 +147,16 @@ alert("ready");
 		});
 		return retStr;
 	}
-/*
- * 
- Common.ajaxSync("GET", "/commission/system/selectOrgList", $("#searchForm").serialize(), function(result) {
-     orgList = new Array();
-     var orgGubun = $("#orgGubun").val();
-     if (orgGubun == "G") { //get Grid Combo Data
-       for (var i = 0; i < result.length; i++) {
-         var list = new Object();
-         list.id = result[i].cdid;
-         list.value = result[i].cd;
-         list.cdnm = result[i].cdnm;
-         orgList.push(list);
- 
- */
+
 	//Make orgRgComboList
 	function getOrgRgComboList() {
-		alert("getOrgRgComboList");
 		grpOrgList = new Array();
 		$("#orgRgCombo").find('option').each(function() {
 			var list = new Object();
 			list.id = $(this).val();
 			list.value = $(this).text();
 			grpOrgList.push(list);
-	});
+		});
 		return grpOrgList;
 	}
 
@@ -191,7 +168,6 @@ alert("ready");
 	
 	// get Ajax Data and set grid data
     function fn_getRuleBookMngListAjax() {
-        alert('vvv');
         Common.ajax("GET", "/commission/system/selectRuleBookOrgMngList", $("#searchForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
@@ -309,8 +285,7 @@ alert("ready");
 	//get Ajax data and set organization combo data
 
 	function fn_getOrgListAjax(callBack) {
-//chagned orgGroup
-  alert("a");
+
 		Common.ajaxSync("GET", "/commission/system/selectOrgList", $("#searchForm").serialize(), function(result) {
 			orgList = new Array();
 			var orgGubun = $("#orgGubun").val();
@@ -353,7 +328,7 @@ alert("ready");
 			var useYn = addList[i].useYn;
 			var endDt = addList[i].endDt;
 			var orgSeq = addList[i].orgSeq;
-			if (orgGrCd == "" || orgGrCd == "Please select_1" || orgGrCd == "선택하세요.") {
+			if (orgGrCd == "" || orgGrCd == "Please select" || orgGrCd == "선택하세요.") {
 				result = false;
 				Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
 				break;
@@ -363,7 +338,7 @@ alert("ready");
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR NM' htmlEscape='false'/>");
                 break;
             }
-			if (orgCd == "" || orgCd == "Please select_2" || orgCd == "선택하세요.") {
+			if (orgCd == "" || orgCd == "Please select" || orgCd == "선택하세요.") {
                 result = false;
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG CD' htmlEscape='false'/>");
                 break;
@@ -388,7 +363,7 @@ alert("ready");
 			var useYn = udtList[i].useYn;
 			var endDt = udtList[i].endDt;
 			var orgSeq = udtList[i].orgSeq;
-			if (orgGrCd == "" || orgGrCd == "Please select_3" || orgGrCd == "선택하세요.") {
+			if (orgGrCd == "" || orgGrCd == "Please select" || orgGrCd == "선택하세요.") {
                 result = false;
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR CD' htmlEscape='false'/>");
                 break;
@@ -398,7 +373,7 @@ alert("ready");
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG GR NM' htmlEscape='false'/>");
                 break;
             }
-            if (orgCd == "" || orgCd == "Please select_4" || orgCd == "선택하세요.") {
+            if (orgCd == "" || orgCd == "Please select" || orgCd == "선택하세요.") {
                 result = false;
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='ORG CD' htmlEscape='false'/>");
                 break;
