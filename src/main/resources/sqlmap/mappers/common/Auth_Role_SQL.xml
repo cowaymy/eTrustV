@@ -2,6 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
 
+
+
+<select id="selectRoleAuthMappingList" parameterType="Map" resultType="egovMap">
+       SELECT 
+       TO_CHAR(ROLE_ID) ROLE_ID
+      , SUBSTR(ROLE_PATH,3,LENGTH(ROLE_PATH)) ROLE_NAME
+      , ROLE_LEV ROLE_LEV
+      , PARENT_ROLE 
+      , ROLE_NAME
+      , L1 ROLE_1
+      , L2 ROLE_2
+      , L3 ROLE_3
+      
+  FROM
+  (
+    SELECT  LEVEL  STEP_LEVEL        
+          , ROLE_ID
+          , PARENT_ROLE
+          , ROLE_CODE ROLE_NAME
+          , ROLE_LEV
+          , CASE WHEN ROLE_LEV = 1 THEN ROLE_ID 
+                WHEN ROLE_LEV = 2 THEN PARENT_ROLE
+                WHEN ROLE_LEV = 3 THEN CONNECT_BY_ROOT ROLE_ID ELSE NULL END L1
+            
+          , CASE WHEN ROLE_LEV = 2 THEN ROLE_ID
+                 WHEN ROLE_LEV = 3 THEN PARENT_ROLE ELSE NULL END L2
+            
+          , CASE WHEN ROLE_LEV = 3 THEN ROLE_ID ELSE NULL END L3    
+            
+          , CONNECT_BY_ROOT ROLE_CODE ROOT_NAME
+          , SYS_CONNECT_BY_PATH(ROLE_CODE,' > ') ROLE_PATH 
+          , CONNECT_BY_ISCYCLE  ISCYCLE_YN 
+          , CONNECT_BY_ISLEAF LAST_STEP_YN
+     FROM SYS0044M
+    START WITH PARENT_ROLE = 0   
+    CONNECT BY NOCYCLE 
+    PRIOR ROLE_ID = PARENT_ROLE   
+)
+  WHERE 1 = 1 
+    <if test='roleId !=null and roleId != "" '>  
+      AND UPPER(ROLE_ID) LIKE UPPER(#{roleId}) || '%'
+    </if>  
+</select>
+
 <select id="selectRoleList" parameterType="Map" resultType="egovMap">
 SELECT 
        TO_CHAR(ROLE_ID) ROLE_ID
@@ -45,22 +89,27 @@ SELECT
 		  AND UPPER(ROLE_ID) LIKE UPPER(#{roleId}) || '%'
 		</if>
 		<if test='roleNm !=null and roleNm != "" '>
-		  AND UPPER(ROLE_NAME) LIKE  UPPER(#{roleNm})  || '%'
+		  AND UPPER(ROLE_NAME) LIKE '%' || UPPER(#{roleNm})  || '%'
 		</if>  
 </select>
   
 <select id="selectAuthList" parameterType="Map" resultType="egovMap">
     
-    WITH AUTH_ROLE
+WITH AUTH_ROLE
     AS
     (
         SELECT TO_CHAR(CODE) AUTH_CODE
               ,CODE_NAME  AUTH_NAME
               ,NULL ROLE_ID
               ,NULL LVL 
-              ,NULL ROLE_1
-              ,NULL ROLE_2
-              ,NULL ROLE_3
+              
+              ,NULL ROLE_ID1
+              ,NULL LEVEL_NM1
+              ,NULL ROLE_ID2
+              ,NULL LEVEL_NM2
+              ,NULL ROLE_ID3
+              ,NULL LEVEL_NM3
+              ,NULL RNK
          FROM SYS0013M  
         WHERE CODE_MASTER_ID = 313
      )
@@ -68,20 +117,37 @@ SELECT
             ,AUTH_NAME
             ,ROLE_ID
             ,LVL
-            ,ROLE_1
-            ,ROLE_2
-            ,ROLE_3
+            ,ROLE_ID1
+            ,LEVEL_NM1
+            ,ROLE_ID2
+            ,LEVEL_NM2
+            ,ROLE_ID3
+            ,LEVEL_NM3
+            ,RNK
         FROM AUTH_ROLE
         
         UNION ALL
         
         SELECT AUTH_CODE
-              ,AUTH_NAME AUTH_NAME
+              ,AUTH_NAME AUTH_NAME              
               ,TO_CHAR(ROLE_ID) ROLE_ID
               ,ROLE_LVL LVL
               ,ROLE_ID1
+              ,CASE WHEN ROLE_LVL = 1 THEN FN_GET_SPLIT_DATA(AUTH_NAME,1)     
+                    WHEN ROLE_LVL = 2 THEN FN_GET_SPLIT_DATA(AUTH_NAME,1)    
+                    WHEN ROLE_LVL = 3 THEN FN_GET_SPLIT_DATA(AUTH_NAME,1)  
+                    ELSE '' 
+               END LEVEL_NM1
               ,ROLE_ID2
+              ,CASE WHEN ROLE_LVL = 2 THEN FN_GET_SPLIT_DATA(AUTH_NAME,1)  
+                    WHEN ROLE_LVL = 3 THEN FN_GET_SPLIT_DATA(AUTH_NAME,2)  
+                    ELSE '' 
+               END LEVEL_NM2
               ,ROLE_ID3 
+              ,CASE WHEN ROLE_LVL = 3 THEN FN_GET_SPLIT_DATA(AUTH_NAME,3)       
+                    ELSE '' 
+               END LEVEL_NM3
+              ,(ROW_NUMBER() OVER(ORDER BY AUTH_CODE)) RNK
         FROM SYS0053M
        WHERE 1 = 1 
      <if test='authCode !=null and authCode != "" '>
@@ -112,9 +178,9 @@ SELECT
            (SELECT (COUNT(1) +1) CNT FROM SYS0053M)
           ,#{authName}
           ,#{roleId}
-          ,#{role1}
-          ,#{role2}
-          ,#{role3}
+          ,#{roleId1}          
+          ,#{roleId2}
+          ,#{roleId3}          
           ,#{lvl}
           ,#{crtUserId}
           ,SYSDATE
@@ -127,9 +193,9 @@ SELECT
       UPDATE  SYS0053M
          SET  AUTH_NAME   = #{authName}  
             , ROLE_ID     = #{roleId}   
-            , ROLE_ID1    = #{role1}  
-            , ROLE_ID2    = #{role2}  
-            , ROLE_ID3    = #{role3}  
+            , ROLE_ID1    = #{roleId1}  
+            , ROLE_ID2    = #{roleId2}  
+            , ROLE_ID3    = #{roleId3}  
             , ROLE_LVL    = #{lvl}     
             , UPD_USER_ID = #{updUserId}
             , UPD_DT      = SYSDATE     

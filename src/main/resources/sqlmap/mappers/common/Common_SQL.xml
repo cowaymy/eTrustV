@@ -29,13 +29,12 @@
             , MENU_NAME 
         FROM SYS0051M 
        WHERE 1=1
-     
-     <if test='menuCode !=null and menuCode !="" '>
-         AND UPPER(MENU_CODE) LIKE UPPER(#{menuCode}) || '%'    
+     <if test='menuSelectBox == "01" '>
+         AND UPPER(MENU_CODE) LIKE UPPER(#{menuCdNm}) || '%'    
      </if>
        
-     <if test='menuNm !=null and menuNm !="" '>
-         AND UPPER(MENU_NAME) LIKE UPPER(#{#menuNm}) || '%'
+     <if test='menuSelectBox == "02"  '>
+         AND UPPER(MENU_NAME) LIKE UPPER(#{menuCdNm}) || '%'
      </if>
        ORDER BY MENU_CODE,MENU_NAME
   </select>
@@ -219,7 +218,7 @@
             )          
             ,#{pgmName}
             ,#{pgmPath}
-            ,#{pgmDesc}
+            ,NVL(#{pgmDesc},#{pgmName})
             ,'N'
             ,'N'
             ,'N'
@@ -261,12 +260,21 @@
 		      ,UPD_DT
 		  FROM SYS0050M
 		 WHERE 1 = 1
+		
       <if test="pgmCode !=null and pgmCode != ''">
-        AND UPPER(PGM_CODE) LIKE '%' || UPPER(#{pgmCode}) || '%'
-      </if>     
+        AND UPPER(PGM_CODE) LIKE UPPER(#{pgmCode}) || '%'
+      </if> 
       <if test="pgmNm !=null and pgmNm != ''">
         AND UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmNm}) || '%'         
       </if>     
+      
+      <if test='programSelectBox == "01" '>
+         AND UPPER(PGM_CODE) LIKE UPPER(#{programCdNm}) || '%'    
+      </if>
+      <if test='programSelectBox == "02" '>
+         AND UPPER(PGM_NAME) LIKE '%' || UPPER(#{programCdNm}) || '%'    
+      </if> 
+  
      ORDER BY  PGM_CODE
   </select>
 
