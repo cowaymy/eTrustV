@@ -412,7 +412,7 @@ public class CustomerController {
 		return "sales/customer/customerViewPop";
 	}
 
-	
+
 	/**
 	 * 
 	 * Basic Customer Info 등록
@@ -485,22 +485,21 @@ public class CustomerController {
 		insmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
 		insmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
 		
-		logger.info("@@@@@@@@@@@@@ " + vo.getAddr1() + "//" + vo.getAddr2() + "//" +  vo.getAddr3());
-		
 		// Address
 		insmap.put("getCustAddrId", getCustAddrId);
 		insmap.put("addr1", vo.getAddr1());
 		insmap.put("addr2", vo.getAddr2());
-		insmap.put("addr3", vo.getAddr3());
-		insmap.put("addr4", "");										//고정
-		insmap.put("postCodeId", String.valueOf(vo.getCmbPostCd()) != null ? vo.getCmbPostCd() : 0);
-		insmap.put("postCode", "");								//고정
-		insmap.put("areaId", String.valueOf(vo.getCmbArea()) != null ? vo.getCmbArea() : 0);
-		insmap.put("area", "");										//고정
-		insmap.put("stateId", String.valueOf(vo.getMstate()) != null ? vo.getMstate() : 0);
-		insmap.put("cntyId", 1);									//고정 (cmbCoountry)
+		insmap.put("streetId", vo.getStreetId());
+//		insmap.put("addr3", vo.getAddr3());
+//		insmap.put("addr4", "");										//고정
+//		insmap.put("postCodeId", String.valueOf(vo.getCmbPostCd()) != null ? vo.getCmbPostCd() : 0);
+//		insmap.put("postCode", "");								//고정
+//		insmap.put("areaId", String.valueOf(vo.getCmbArea()) != null ? vo.getCmbArea() : 0);
+//		insmap.put("area", "");										//고정
+//		insmap.put("stateId", String.valueOf(vo.getMstate()) != null ? vo.getMstate() : 0);
+//		insmap.put("cntyId", 1);									//고정 (cmbCoountry)
 		insmap.put("stusCodeId", 9);								//고정
-		insmap.put("addrRem", vo.getAddrRem());				//고정
+//		insmap.put("addrRem", vo.getAddrRem());				//고정
 		insmap.put("idOld", 0);										//고정
 		insmap.put("soId", 0);										//고정
 		insmap.put("idcm", 0);										//고정

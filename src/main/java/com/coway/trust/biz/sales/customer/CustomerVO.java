@@ -64,6 +64,7 @@ public class CustomerVO implements Serializable {
 	private int accBankId;
 	private String accBankBrnch;
 	private String accRem;
+	private int streetId;
 	
 	public int getCustId() {
 		return custId;
@@ -383,6 +384,12 @@ public class CustomerVO implements Serializable {
 	}
 	public void setAccRem(String accRem) {
 		this.accRem = accRem;
+	}
+	public int getStreetId() {
+		return streetId;
+	}
+	public void setStreetId(int streetId) {
+		this.streetId = streetId;
 	}
 	
 	
