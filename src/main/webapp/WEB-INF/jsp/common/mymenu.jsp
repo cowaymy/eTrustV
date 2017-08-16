@@ -365,8 +365,8 @@ var gridDetailColumnLayout =
         width : "20%",
            renderer : {
                type : "IconRenderer",
-               iconWidth : 14, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-               iconHeight : 13,
+               iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+               iconHeight : 24,
                iconPosition : "aisleRight",
                iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
                  "default" : "/resources/images/common/normal_search.png" // 
