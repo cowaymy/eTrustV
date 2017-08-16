@@ -485,7 +485,8 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto .left_btns:first-child,
 .divine_auto .center_btns:first-child,
 .divine_auto .right_btns:first-child{padding-top:20px;}
-.divine_auto .title_line .right_btns{margin-bottom:-10px; top:0!important;}
+.divine_auto .title_line h3,
+.divine_auto .title_line h4{line-height:24px!important;}
 
 /* 로딩바 */
 .prog{display:block; position:fixed; top:0; left:0; z-index:1002; width:100%; height:100%; background:rgba(0,0,0,0.6);}
