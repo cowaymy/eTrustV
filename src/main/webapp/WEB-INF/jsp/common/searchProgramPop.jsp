@@ -16,8 +16,7 @@ function fnSelectPgmListAjax()
 	{
 	  $("#pgmCode").val("");
 	  $("#pgmNm").val($("#programCdNm").val());
-	}
-  
+	} 
 	
    Common.ajax("GET", "/program/selectProgramList.do"
            , $("#SearchForm").serialize()

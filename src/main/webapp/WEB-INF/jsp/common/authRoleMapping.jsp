@@ -21,73 +21,54 @@ var StatusCdList = new Array();
 
 $(function() 
 {
-  //getStatusComboListAjax();
+	fnSelectRoleAuthMappingListAjax();
 });
 
 var MainColumnLayout = 
     [      
         {    
-            dataField : "authCode",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Code' htmlEscape='false'/>",
-            width : 120
-        }, {
-            dataField : "authName", 
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Name' htmlEscape='false'/>",  
-            width : 400
-        }, {
-            dataField : "roleId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role' htmlEscape='false'/>", 
-            width : 150,
-            editable : false,
-            style : "aui-grid-left-column",
-             renderer : {
-                type : "IconRenderer",
-                iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-                iconHeight : 13,
-                iconPosition : "aisleRight",
-                iconFunction : function(rowIndex, columnIndex, value, item) 
-                {
-                  if (item.roleLvl == null)  // && value ==  null
-                  {
-                      return null;
-                  }
-                  else
-                  {
-                    return "${pageContext.request.contextPath}/resources/images/common/normal_search.gif";
-                  }
-
-                } ,// end of iconFunction                
-          
-                onclick : function(rowIndex, columnIndex, value, item) 
-                         {
-                            console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.authLvl + " POPUP 클릭");
-                            if (item.authLvl == "1")
-                            {
-                              //Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
-                              Common.alert("<spring:message code='sys.msg.cannot' arguments='Select UpperAuth ; Lvl 1.' htmlEscape='false' argumentSeparator=';'/>");
-                              return false;
-                            }
-                            
-                            gSelMainRowIdx = rowIndex;
-                            fnSearchRolePopUp(); 
-                         }
-                } // IconRenderer
-        } ,{
-            dataField : "roleLvl", 
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Lvl' htmlEscape='false'/>",
+        	  dataField : "roleId",
+            headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             width : 80
         }, {
-            dataField : "roleId1",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role_1' htmlEscape='false'/>",
-            width : 200
+        	  dataField : "roleName",
+            headerText : "<spring:message code='sys.authRolePop.grid1.RoleName' />",
+            width : 400
         }, {
-            dataField : "roleId2",
+        	  dataField : "roleLev",
+            headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
+            width : 70
+        },{
+            dataField : "hidden",
+            headerText : "",
+            width : 0
+          } 
+    ];
+    
+var AuthColumnLayout = 
+    [      
+        {    
+            dataField : "authCode",
+            headerText : "<spring:message code='sys.auth.grid1.Code'/>",
+            editable : false,
+            width : 80
+        }, {
+            dataField : "authName", 
+            headerText : "<spring:message code='sys.auth.grid1.authName'/>",
+            editable : false,
+            width : 400
+        }, {
+        	  dataField : "roleLev",   
+            headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
+            width : 70
+        }, {
+            dataField : "From_To",
+            headerText : "<spring:message code='sys.authRoleMapping.grid2.From_To' />",
+            width :200
+        }, {
+            dataField : "validDtTo",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role_2' htmlEscape='false'/>",
-            width : 200
-        }, {
-            dataField : "roleId3",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Role_3' htmlEscape='false'/>",
-            width : 200
+            width : 0
         },{
             dataField : "hidden",
             headerText : "",
@@ -123,7 +104,7 @@ function getStatusComboListAjax(callBack)
 //컬럼 선택시 상세정보 세팅.
 function fnSetSelectedColumn(selGrdidID, rowIdx)  
 {     
- $("#selAuthId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "authCode"));
+ $("#selAuthId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "roleCode"));
   
  console.log("selAuthId: "+ $("#selAuthId").val() + " authName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "authName") );                
 }
@@ -133,11 +114,11 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin") 
   {
       console.log("에디팅 시작(cellEditBegin) : (rowIdx: " + event.rowIndex + ",columnIdx: " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-      var authSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, "authCode");
+      var authSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, "roleCode");
       
-      if (AUIGrid.isAddedById(myGridID,authSeq) == false && authSeq.indexOf("Input authCode") == -1 && event.columnIndex == 0 )// edit
+      if (AUIGrid.isAddedById(myGridID,authSeq) == false && authSeq.indexOf("Input roleCode") == -1 && event.columnIndex == 0 )// edit
       {
-        return false;  // edit모드일 때만 authCode를 수정할수 있다.
+        return false;  // edit모드일 때만 roleCode를 수정할수 있다.
       }
   } 
   else if(event.type == "cellEditEnd") 
@@ -161,14 +142,12 @@ function auiAddRowHandler(event)
 function fnAddRow() 
 {
   var item = new Object();
+  
+      item.authCode     ="";
+      item.authName     ="select... ";
+      item.roleLev      ="";
+      item.validDtFrom  ="";
 
-      item.authCode ="Input authCode";
-      item.authName ="The delimiter for the level is '>' ";
-      item.roleId   ="";
-      item.roleLvl  ="";
-      item.roleId1  ="";
-      item.roleId2  ="";
-      item.roleId3  ="";
       // parameter
       // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
       // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -214,13 +193,13 @@ function fnSearchRolePopUp()
 
 function fnSetParamAuthCd(myGridID, rowIndex)
 {
-  $("#authCode").val(AUIGrid.getCellValue(myGridID, rowIndex, "authCode"));
+  $("#roleCode").val(AUIGrid.getCellValue(myGridID, rowIndex, "roleCode"));
   $("#authName").val(AUIGrid.getCellValue(myGridID, rowIndex, "authName"));
    
-  console.log("authCode: "+ $("#authCode").val() + "authName: "+ $("#authName").val() );     
+  console.log("roleCode: "+ $("#roleCode").val() + "authName: "+ $("#authName").val() );     
 }
 
-function fnSelectAuthListAjax()
+function fnSelectRoleAuthMappingListAjax()
 {
    Common.ajax("GET", "/authorization/selectAuthList.do"
            , $("#MainForm").serialize()
@@ -247,7 +226,7 @@ function fnSaveAuthCd()
         , function(result) 
           {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-            fnSelectAuthListAjax() ;
+            fnSelectRoleAuthMappingListAjax() ;
             
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
@@ -270,6 +249,33 @@ function fnSaveAuthCd()
             
           }); 
   }
+
+// ROLE search
+function fnSelectRoleAuthMappingListAjax()
+{
+/*   if ($("#roleCode").val() == "01")  // role id
+  {
+    $("#roleId").val($("#roleIdNm").val());   
+    $("#roleNm").val("");
+  }
+  else
+  {
+    $("#roleId").val("");
+    $("#roleNm").val($("#roleIdNm").val());
+  } */
+  
+   Common.ajax("GET", "/authorization/selectRoleAuthMappingList.do"
+           , $("#MainForm").serialize()
+           , function(result) 
+           {
+              console.log("성공 data : " + result);
+              AUIGrid.setGridData(myGridID, result);
+              if(result != null && result.length > 0)
+              {
+                //fnSetroleIdParamSet(searchRoleGridID, 0);
+              }
+           });
+}
 
 //삭제해서 마크 된(줄이 그어진) 행을 복원 합니다.(삭제 취소)
 function removeAllCancel() 
@@ -294,7 +300,7 @@ function fnValidationCheck()
 
     for (var i = 0; i < addList.length; i++) 
     {  
-      var authCode  = addList[i].authCode;
+      var roleCode  = addList[i].roleCode;
       var authName  = addList[i].authName;
       var roleId    = addList[i].roleId;
       var roleLvl   = addList[i].roleLvl;
@@ -302,7 +308,7 @@ function fnValidationCheck()
       var roleId2   = addList[i].roleId2;
       var roleId3   = addList[i].roleId3;
       
-      if (authCode == "" || authCode.length == 0) 
+      if (roleCode == "" || roleCode.length == 0) 
       {
         result = false;
         // {0} is required.
@@ -331,7 +337,7 @@ function fnValidationCheck()
      
     for (var i = 0; i < udtList.length; i++) 
     {
-        var authCode  = udtList[i].authCode;
+        var roleCode  = udtList[i].roleCode;
         var authName  = udtList[i].authName;
         var roleId    = udtList[i].roleId;
         var roleLvl   = udtList[i].roleLvl;
@@ -339,7 +345,7 @@ function fnValidationCheck()
         var roleId2   = udtList[i].roleId2;
         var roleId3   = udtList[i].roleId3;
 
-        if (authCode == "" || authCode.length == 0) 
+        if (roleCode == "" || roleCode.length == 0) 
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
@@ -350,9 +356,9 @@ function fnValidationCheck()
 
     for (var i = 0; i < delList.length; i++) 
     {
-        var authCode  = delList[i].authCode;
+        var roleCode  = delList[i].roleCode;
         
-        if (authCode == "" || authCode.length == 0 ) 
+        if (roleCode == "" || roleCode.length == 0 ) 
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
@@ -373,22 +379,22 @@ String.prototype.fnTrim = function()
 
 /****************************  Form Ready ******************************************/
 
-var myGridID;
+var myGridID, AuthGridID;
 
 $(document).ready(function()
 {
-    $("#authCode").focus();
+    $("#roleId").focus();
     
-    $("#authCode").keydown(function(key) 
+    $("#roleId").keydown(function(key) 
     {
        if (key.keyCode == 13) 
        {
-         fnSelectAuthListAjax();
+         fnSelectRoleAuthMappingListAjax();
        }
 
     });
 
-    $("#authCode").bind("keyup", function() 
+    $("#roleCode").bind("keyup", function() 
     {
       $(this).val($(this).val().toUpperCase());
     });
@@ -397,7 +403,7 @@ $(document).ready(function()
     {
        if (key.keyCode == 13) 
        {
-         fnSelectAuthListAjax();
+         fnSelectRoleAuthMappingListAjax();
        }
     });
 
@@ -406,7 +412,7 @@ $(document).ready(function()
       $(this).val($(this).val().toUpperCase());
     });
 
-/***************************************************[ Main GRID] ***************************************************/    
+/***************************************************[ Role Auth Mapping GRID] ***************************************************/    
 
     var options = {
                   usePaging : true,
@@ -458,6 +464,58 @@ $(document).ready(function()
 
     $("#delCancel").hide();
     
+/***************************************************[ Auth GRID] ***************************************************/    
+
+    var AuthGridOptions = {
+                  usePaging : true,
+                  useGroupingPanel : false,
+                  selectionMode : "multipleRows",
+                  // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
+                  rowSelectionWithMerge : true,
+                  editable : true,
+                  // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
+                  enableRestore : true,
+                };
+    
+    // masterGrid 그리드를 생성합니다.
+    AuthGridID = GridCommon.createAUIGrid("auth_grid_wrap", AuthColumnLayout,"", AuthGridOptions);
+    // AUIGrid 그리드를 생성합니다.
+    
+    // 푸터 객체 세팅
+    
+    // 에디팅 시작 이벤트 바인딩
+    AUIGrid.bind(AuthGridID, "cellEditBegin", auiCellEditignHandler);
+    
+    // 에디팅 정상 종료 이벤트 바인딩
+    AUIGrid.bind(AuthGridID, "cellEditEnd", auiCellEditignHandler);
+    
+    // 에디팅 취소 이벤트 바인딩
+    AUIGrid.bind(AuthGridID, "cellEditCancel", auiCellEditignHandler);
+    
+    // 행 추가 이벤트 바인딩 
+    AUIGrid.bind(AuthGridID, "addRow", auiAddRowHandler);
+    
+    // 행 삭제 이벤트 바인딩 
+    AUIGrid.bind(AuthGridID, "removeRow", auiRemoveRowHandler);
+
+
+    // cellClick event.
+    AUIGrid.bind(AuthGridID, "cellClick", function( event ) 
+    {
+        gSelMainRowIdx = event.rowIndex;
+        
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedAuthId: " + $("#selAuthId").val() );        
+    });
+
+ // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(AuthGridID, "cellDoubleClick", function(event) 
+    {
+        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
+    });    
+
+
+    $("#delCancel").hide();
+    
 });   //$(document).ready
 
 
@@ -473,15 +531,15 @@ $(document).ready(function()
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Role Authorization Mapping</h2>
-<ul class="right_btns">
-  <li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+<ul class="right_btns">  
+  <li><p class="btn_blue"><a onclick="fnSelectRoleAuthMappingAuthListAjax();"><span class="search"></span>Search</a></p></li>
   <li><p class="btn_blue"><a href="#">Save</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form id="MainForm" method="get" action="">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -494,13 +552,13 @@ $(document).ready(function()
 <tbody>
 <tr>
   <th scope="row">Role</th>
+    <td>
+      <input type="text" id="roleId" name="roleId" width="250" title="" placeholder="" class="" />
+    </td>
+<!--   <th scope="row"></th>
   <td>
   <input type="text" title="" placeholder="" class="" />
-  </td>
-  <th scope="row"></th>
-  <td>
-  <input type="text" title="" placeholder="" class="" />
-  </td>
+  </td> -->
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -542,7 +600,7 @@ $(document).ready(function()
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-<div style="width:60%;">
+<div style="width:55%;">
 
 <div class="border_box" style="height:450px;"><!-- border_box start -->
 
@@ -551,14 +609,15 @@ $(document).ready(function()
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<!-- 그리드 영역 1-->
+ <div id="grid_wrap"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
 
 </div>
 
-<div style="width:40%;">
+<div style="width:45%;">
 
 <div class="border_box" style="height:450px;"><!-- border_box start -->
 
@@ -571,7 +630,8 @@ $(document).ready(function()
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<!-- 그리드 영역 2-->
+ <div id="auth_grid_wrap"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

@@ -17,8 +17,7 @@ function fnSelectUpperMenuListAjax()
 	  $("#menuCode").val("");
 	  $("#menuNm").val($("#menuCdNm").val());
 	}
-  
-	
+
    Common.ajax("GET", "/menu/selectUpperMenuList.do"
            , $("#SearchForm").serialize()
            , function(result) 
@@ -50,18 +49,23 @@ var searchUpperGridID;
 
 $(document).ready(function()
 {
-
     $("#menuCdNm").focus();
     
-    $("#menuCdNm").keydown(function(key) 
+    $("#menuCdNm").bind("keyup", function() 
     {
-          if (key.keyCode == 13) 
-          {
-            fnSelectUpperMenuListAjax();
-          }
+    	$(this).val($(this).val().toUpperCase());
 
     });
-	
+
+    $("#menuCdNm").keydown(function(key) 
+    {
+        if (key.keyCode == 13) 
+        {
+          fnSelectUpperMenuListAjax();
+        }
+
+    });
+    
 
 	var searchOptions = {
 	                  usePaging : true,
@@ -109,8 +113,8 @@ $(document).ready(function()
 
 <section class="pop_body"><!-- pop_body start -->
 <form id="SearchForm" method="get" action="">
-<input type ="hidden" id="menuCode" name="menuCode" value=""/>
-<input type ="hidden" id="menuNm" name="menuNm" value=""/>
+<input type ="hidden" id="menuCode" name="menuCode" />
+<input type ="hidden" id="menuNm" name="menuNm" />
 
 <div class="search_100p"><!-- search_100p start -->
 <select class="" id="menuSelectBox" name="menuSelectBox">

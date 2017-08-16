@@ -10,7 +10,7 @@ function fnSelectRoleListAjax()
 {
   if ($("#roleSelectBox").val() == "01")  // role id
 	{
-	  $("#roleId").val($("#roleIdNm").val());   //{roleId=, roleNm=, roleSelectBox=01, roleIdNm=11}
+	  $("#roleId").val($("#roleIdNm").val());   
 	  $("#roleNm").val("");
 	}
   else
@@ -18,9 +18,6 @@ function fnSelectRoleListAjax()
 	  $("#roleId").val("");
 	  $("#roleNm").val($("#roleIdNm").val());
 	}
-
-
-  //{roleId=, roleNm=, roleSelectBox=01, roleIdNm=11}
 	
    Common.ajax("GET", "/authorization/selectRoleList.do"
            , $("#SearchForm").serialize()
@@ -41,27 +38,27 @@ var SearchRoleColumnLayout =
         {    
             dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
-            width : 80
+            width : 60
         },{
             dataField : "roleName",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleName' />",
-            width : 360
+            width : 300
         },{
             dataField : "roleLev",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
-            width : 30
+            width : 40
         },{
             dataField : "role1",
             headerText : "role1",
-            width : 30
+            width : 0
         },{
             dataField : "role2",
             headerText : "role2",
-            width : 30
+            width : 0
         },{
             dataField : "role3",
             headerText : "role3",
-            width : 30
+            width : 0
         }
     ];
 
@@ -156,8 +153,11 @@ $(document).ready(function()
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 5, role_2);
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 6, role_3);
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 7, hiddenRoleCode);
-	        
-	        $("#popup_wrap").remove();
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 8, SerchRoleCd1);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 9, SerchRoleCd2);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 10, SerchRoleCd3);
+
+	        $("#SearchRolePop").remove();
 	    }); 
 	
 });   //$(document).ready

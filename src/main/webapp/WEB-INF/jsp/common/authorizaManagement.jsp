@@ -80,25 +80,40 @@ var MainColumnLayout =
             editable : false,
             width : 80
         }, {
-            dataField : "role1",
+            dataField : "levelNm1",
             headerText : "<spring:message code='sys.auth.grid1.Role_1'/>",
             editable : false,
             width : 200
         }, {
-            dataField : "role2",
+            dataField : "levelNm2",
             headerText : "<spring:message code='sys.auth.grid1.Role_2'/>",
             editable : false,
             width : 200
         }, {
-            dataField : "role3",
+            dataField : "levelNm3",
             headerText : "<spring:message code='sys.auth.grid1.Role_3'/>",
             editable : false,
             width : 200
         },{
             dataField : "hidden",
             headerText : "hidden",
-            width : 100
-          } 
+            width : 0
+        },{  
+            dataField : "roleId1",
+            headerText : "<spring:message code='sys.auth.grid1.Role_1'/>",
+            editable : false,
+            width : 0
+        },{
+            dataField : "roleId2",
+            headerText : "<spring:message code='sys.auth.grid1.Role_2'/>",
+            editable : false,
+            width : 0
+        },{
+            dataField : "roleId3",
+            headerText : "<spring:message code='sys.auth.grid1.Role_3'/>",
+            editable : false,
+            width : 0
+        }
     ];
 
 function getStatusComboListAjax(callBack) 
@@ -139,12 +154,12 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin") 
   {
       console.log("에디팅 시작(cellEditBegin) : (rowIdx: " + event.rowIndex + ",columnIdx: " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-      var authSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, "authCode");
+/*       var authSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, "authCode");
       
       if (AUIGrid.isAddedById(myGridID,authSeq) == false && authSeq.indexOf("Input authCode") == -1 && event.columnIndex == 0 )// edit
       {
     	  return false;  // edit모드일 때만 authCode를 수정할수 있다.
-      }
+      } */
   } 
   else if(event.type == "cellEditEnd") 
   {
@@ -182,11 +197,7 @@ function fnAddRow()
 }
 
 //Make Use_yn ComboList, tooltip
-function getAuthLevel()
-{     
-  var list =  ["2", "3", "4"];   
-  return list;
-}
+
 
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) 
@@ -213,7 +224,8 @@ function fnSearchRolePopUp()
    var popUpObj = Common.popupDiv("/authorization/searchRolePop.do"
        , $("#MainForm").serializeJSON()
        , null
-       , "true"  // true면 close버튼 클릭시 화면 close
+       , true  
+       , "SearchRolePop"
        );
         
 }
@@ -423,6 +435,11 @@ $(document).ready(function()
                   editable : true,
                   // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
                   enableRestore : true,
+                  
+                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+
+                  //fixedRowCount :3,
+                  
                 };
     
     // masterGrid 그리드를 생성합니다.
@@ -460,7 +477,6 @@ $(document).ready(function()
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
     });    
-
 
     $("#delCancel").hide();
     

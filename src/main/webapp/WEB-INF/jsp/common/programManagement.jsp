@@ -328,7 +328,7 @@ function fnAddRowTrans()
 {
   if ($("#paramPgmId").val().length == 0)
 	{
-	   alert("choose the programID");
+	   Common.alert("<spring:message code='sys.msg.necessary' arguments='programID' htmlEscape='false'/>");
 	   return false;
 	}
 
@@ -336,7 +336,7 @@ function fnAddRowTrans()
   
   if ( gAddRowCnt > 1)
   {
-    alert("Only One Add..." );
+	  Common.alert("<spring:message code='sys.msg.limitMore' arguments='Data Add ; 1' htmlEscape='false' argumentSeparator=';' />");
     return false;
   }
 	
@@ -573,16 +573,37 @@ var myGridID, transGridID;
 
 $(document).ready(function()
 {
-    $("#pgmId").focus();
+
+    $("#pgmCode").focus();
     
-    $("#pgmId").keydown(function(key) 
+    $("#pgmCode").keydown(function(key) 
     {
-          if (key.keyCode == 13) 
-          {
-            fnSelectPgmListAjax();
-          }
+       if (key.keyCode == 13) 
+       {
+    	   fnSelectPgmListAjax();
+       }
 
     });
+
+    $("#pgmCode").bind("keyup", function() 
+    {
+      $(this).val($(this).val().toUpperCase());
+    });
+    
+    
+    $("#pgmNm").keydown(function(key) 
+    {
+       if (key.keyCode == 13) 
+       {
+    	   fnSelectPgmListAjax();
+       }
+    });
+
+    $("#pgmNm").bind("keyup", function() 
+    {
+      $(this).val($(this).val().toUpperCase());
+    });
+    
 
 /***************************************************[ Main GRID] ***************************************************/    
 
@@ -594,6 +615,7 @@ $(document).ready(function()
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
+                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
                   editable : true
                 };
     
@@ -623,7 +645,11 @@ $(document).ready(function()
     AUIGrid.bind(myGridID, "cellClick", function( event ) 
     {
         $("#paramPgmId").val("");
-        AUIGrid.clearGridData(transGridID);
+        
+        fnTransGridReset();
+
+        fnSetPgmIdParamSet(myGridID, event.rowIndex);
+        fnSelectPgmTransListAjax(); 
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParamPgmId: " + $("#paramPgmId").val() +" / "+ $("#paramPgmName").val());        
     });
 
@@ -631,18 +657,18 @@ $(document).ready(function()
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-        fnTransGridReset();
+/*         fnTransGridReset();
         
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
-            || String(event.value).length < 1)
+        || String(event.value).length < 1)
         {
-                alert("Program ID Confirm!!");
+                //alert("Program ID Confirm!!");
                 $("#paramPgmId").val("");
                 return false;
         } 
 
         fnSetPgmIdParamSet(myGridID, event.rowIndex);
-        fnSelectPgmTransListAjax();
+        fnSelectPgmTransListAjax(); */
          
     });    
 
