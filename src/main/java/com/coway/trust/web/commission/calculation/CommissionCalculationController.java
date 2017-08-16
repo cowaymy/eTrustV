@@ -3,8 +3,11 @@
  */
 package com.coway.trust.web.commission.calculation;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -124,19 +127,32 @@ public class CommissionCalculationController {
 		} else {
 			loginId = String.valueOf(sessionVO.getUserId());
 		}
+	
 		
-		Calendar cal = Calendar.getInstance();
-		String month = cal.get ( cal.MONTH )<10?"0"+cal.get ( cal.MONTH ):""+cal.get ( cal.MONTH );
-		String searchDt = cal.get ( cal.YEAR )+"-"+month+"-01";
+		String dt = "";
+		if(params.get("searchDt")==null || String.valueOf(params.get("searchDt")).equals("")){
+			dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
+		}else{
+			dt = String.valueOf(params.get("searchDt"));
+		}
 		
-		int sTaskID = (((cal.get ( cal.MONTH )) + (cal.get ( cal.YEAR )) * 12) - 24157);
+		int pvMonth = Integer.parseInt(dt.substring(0,2))-1;
+		int pvYear = Integer.parseInt(dt.substring(3));
 		
-		logger.debug("searchDt : {}", searchDt);
-		logger.debug("taskId : {}", sTaskID);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(pvYear, pvMonth, 1);
+		calendar.add(calendar.MONTH, -1);		
+		Date date = calendar.getTime();
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
+		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);	
+		params.put("searchDt",df.format(date));
+
+		logger.debug("pvMonth : {}", pvMonth);
+		logger.debug("pvYear : {}", pvYear);
+		logger.debug("searchDt : {}", params.get("searchDt"));
 
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("loginId", loginId);
-		params.put("searchDt",searchDt);
 
 		item = (EgovMap) commissionCalculationService.callCommProcedure(params);
 		logger.debug("v_result : {}", params.get("v_result"));
