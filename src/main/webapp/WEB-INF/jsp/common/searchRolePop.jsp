@@ -105,7 +105,7 @@ $(document).ready(function()
 	        var SerchRoleLev = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "roleLev");
 	        var SerchRoleCd1 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role1");
 	        var SerchRoleCd2 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role2");
-	        var SerchRoleCd3 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role3");
+	        var SerchRoleCd3 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role3"); 
 
           var strRoleSplit = SerchRoleName.split(" > ");
           var role_1 =  String(strRoleSplit[0]).fnTrim();
@@ -126,7 +126,7 @@ $(document).ready(function()
           {
     	      role_3 ="";
           }
-          if (SerchRoleCd1 == undefined)
+           if (SerchRoleCd1 == undefined)
           {
         	  SerchRoleCd1 ="";
           }
@@ -139,10 +139,9 @@ $(document).ready(function()
         	  SerchRoleCd3 ="";
           }
 
-          var hiddenRoleCode = SerchRoleCd1+","+SerchRoleCd2+","+SerchRoleCd3+",";
-
-          console.log ("RoleCodeConCat: " + hiddenRoleCode);
-             
+         /*  var hiddenRoleCode = SerchRoleCd1+","+SerchRoleCd2+","+SerchRoleCd3+",";
+          console.log ("RoleCodeConCat: " + hiddenRoleCode); */
+              
 	        console.log("SerchRoleId: " + SerchRoleId +" / SerchRoleName: " + SerchRoleName +" / SerchRoleLev1: " + role_1
 	                   +" / SerchRoleLev2: " + role_2+" / SerchRoleLev3: " + role_3  );
 	        	        
@@ -152,7 +151,7 @@ $(document).ready(function()
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 4, role_1);
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 5, role_2);
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 6, role_3);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 7, hiddenRoleCode);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 7, '');
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 8, SerchRoleCd1);
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 9, SerchRoleCd2);
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 10, SerchRoleCd3);
