@@ -352,11 +352,11 @@ var columnLayout2 = [
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
-
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:view_Enrollment()">View Enrollment</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()">New Enrollment</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="fn_goEnrollmentResult();">Enrollment Result</a></p></li>
+                        <li><p class="link_btn type2"><a href="/payment/initClaimList.do">Claim List</a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
