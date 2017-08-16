@@ -60,6 +60,16 @@ public class AuthRoleMngController
 		
 		return "common/authRoleMapping";
 	}
+	
+	
+	// search
+	@RequestMapping(value = "/selectRoleAuthMappingList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRoleAuthMappingList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectRoleAuthMappingList = commonService.selectRoleAuthMappingList(params);
+
+		return ResponseEntity.ok(selectRoleAuthMappingList);
+	}	
 
 	/*********************** Auth Management ******************************/
 	@RequestMapping(value = "/authMngment.do")

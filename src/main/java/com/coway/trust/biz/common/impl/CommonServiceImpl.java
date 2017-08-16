@@ -52,6 +52,13 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectI18NList();
 	}
 	
+	/************************** Role Auth Mapping ****************************/
+	
+	@Override
+	public List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params) {
+		return commonMapper.selectRoleAuthMappingList(params);
+	}	
+	
 	/************************** Role Management ****************************/
 	
 	@Override
@@ -781,6 +788,7 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	@Override
 	public List<EgovMap> selectUpperMenuList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return null;
+		return commonMapper.selectUpperMenuList(params);
+		
 	}
 }

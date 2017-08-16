@@ -27,6 +27,9 @@ public interface CommonMapper {
 
 	List<EgovMap> selectI18NList();
 	
+	/************************** Role Auth Mapping ****************************/
+	List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params);  
+	
 	/************************** Role Management ****************************/
 	List<EgovMap> selectRoleList(Map<String, Object> params);  
 	
