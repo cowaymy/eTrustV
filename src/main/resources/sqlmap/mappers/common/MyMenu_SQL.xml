@@ -10,8 +10,13 @@
 	         , a.mymenu_code as row_id /* PK, AUIGrid key row setting */  
 	   FROM SYS0059M a
 	 WHERE a.crt_user_id = #{userId}
+	     <if test="useYn != null and useYn !=''">
+	     AND a.use_yn = #{useYn}
+	     </if>
+	     <if test="mymenuCode != null and mymenuCode !=''">
 	     AND (UPPER(a.mymenu_code) LIKE  UPPER(#{mymenuCode}) || '%' OR 
 	             UPPER(a.mymenu_name) LIKE '%' || UPPER(#{mymenuCode}) || '%')
+	     </if>        
 </select>
 
 <insert id="insertMyMenu" parameterType="Map">
@@ -71,7 +76,12 @@
    WHERE a.menu_code = b.menu_code
        AND b.pgm_code = c.pgm_code
        AND a.mymenu_code = d.mymenu_code
+       <if test="mymenuCode != null and mymenuCode !=''">
 	   AND a.mymenu_code = #{mymenuCode}
+	   </if>
+	   <if test="menuCode != null and menuCode !=''">
+       AND a.menu_code = #{menuCode}
+       </if>
 </select>
 
 <insert id="insertMyMenuProgrm" parameterType="Map">
@@ -109,7 +119,10 @@
 <delete id="deleteMyMenuProgrm" parameterType="Map">
 	DELETE 
 	  FROM SYS0060D a
-	 WHERE a.mymenu_code = #{mymenuCode}
+	 WHERE 1=1
+	     <if test="mymenuCode != null and mymenuCode !=''">
+	     AND a.mymenu_code = #{mymenuCode}
+	     </if>
 	     AND a.menu_code = #{menuCode}
 </delete>
 
