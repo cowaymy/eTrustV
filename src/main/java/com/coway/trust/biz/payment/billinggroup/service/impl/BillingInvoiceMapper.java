@@ -56,4 +56,11 @@ public interface BillingInvoiceMapper {
 	 * @return 
 	 */
 	List<EgovMap> selectCompanyStatementList(Map<String, Object> params);
+	
+	/**
+	 * Statement Company List 조회
+	 * @param params
+	 * @return 
+	 */
+	List<EgovMap> selectStatementCompanyList(Map<String, Object> params);
 }

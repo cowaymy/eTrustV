@@ -306,6 +306,7 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/companyStatement";
 	}
 	
+
 	@RequestMapping(value = "/selectCompStatementList")
 	public ResponseEntity<List<EgovMap>> selectCompStatementList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
@@ -335,6 +336,54 @@ public class BillingInvoiceController {
 		map.put("sYear", sYear);
 		
 		list = invoiceService.selectCompanyStatementList(map);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	/******************************************************
+	 *   Statement Company
+	 *****************************************************/	
+	/**
+	 * Statement Company(Rental)초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/initStatementCompany.do")
+	public String initStatementCompany(@RequestParam Map<String, Object> params, ModelMap model) {	
+		return "payment/billinggroup/statementCompany";
+	}
+	
+	@RequestMapping(value = "/selectStatementCompanyList")
+	public ResponseEntity<List<EgovMap>> selectStatementCompanyList(@RequestParam Map<String, Object> params, ModelMap model) {	
+		List<EgovMap> list = null;
+		
+		logger.debug("params {}", params);
+		
+		String billNo = String.valueOf(params.get("billNo")).trim();
+		String orderNo = String.valueOf(params.get("orderNo")).trim();
+		String period = String.valueOf(params.get("period"));
+		String custName = String.valueOf(params.get("custName")).trim();
+		
+		int sMonth = 0;
+		int sYear = 0;
+		
+		if((!period.equals("null")) && (!period.equals(""))){
+			String tmp[] = period.split("/");
+			sMonth = Integer.parseInt(tmp[0]);
+			sYear = Integer.parseInt(tmp[1]);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("billNo", billNo);
+		map.put("orderNo", orderNo);
+		map.put("month", sMonth);
+		map.put("year", sYear);
+		map.put("custName", custName);
+		
+		list = invoiceService.selectStatementCompanyList(map);
 		
 		return ResponseEntity.ok(list);
 	}

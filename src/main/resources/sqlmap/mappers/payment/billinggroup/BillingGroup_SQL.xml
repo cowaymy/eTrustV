@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.payment.billinggroup.impl.InvoiceMapper">
+<mapper namespace="com.coway.trust.biz.payment.billinggroup.service.impl.BillingInvoiceMapper">
 
     <!-- Reconciliation 리스트 조회 -->
 	<select id="selectCompanyInvoiceList" parameterType="Map" resultType="egovMap">
@@ -467,5 +467,44 @@
 		                               </if>
 		                               ) Distinct1 ) Project2 ) Project2
 		  ORDER BY Project2.BILL_ID DESC
+	</select>
+	
+	<select id="selectStatementCompanyList" parameterType="Map" resultType="egovMap">
+		   SELECT Project1.STATE_ID STATE_ID  ,
+			       Project1.STATE_REF_NO STATE_REF_NO  ,
+			       Project1.STATE_CUST_NAME STATE_CUST_NAME  ,
+			       Project1.MONTH MONTH  ,
+			       Project1.YEAR YEAR  ,
+			       Project1.STATE_ITM_REF_NO STATE_ITM_REF_NO  ,
+			       Project1.STATE_ITM_TYPE STATE_ITM_TYPE  ,
+			       Project1.STATE_ITM_ORD_NO STATE_ITM_ORD_NO  
+			  FROM ( SELECT Extent1.STATE_ID STATE_ID  ,
+			                Extent1.STATE_REF_NO STATE_REF_NO  ,
+			                Extent1.STATE_CUST_NAME STATE_CUST_NAME  ,
+			                Extent2.STATE_ITM_ORD_NO STATE_ITM_ORD_NO  ,
+			                Extent2.STATE_ITM_TYPE STATE_ITM_TYPE  ,
+			                Extent2.STATE_ITM_REF_NO STATE_ITM_REF_NO  ,
+			                UTILS.CONVERT_TO_NUMBER(Extent1.STATE_MONTH,10,0) MONTH  ,
+			                UTILS.CONVERT_TO_NUMBER(Extent1.STATE_YEAR,10,0) YEAR  
+			         FROM PAY0025D Extent1
+			                JOIN PAY0026D Extent2   ON Extent2.STATE_ID = Extent1.STATE_ID
+			          WHERE  1=1
+			          <if test="billNo != '' ">
+			                   AND ( Extent2.STATE_ITM_REF_NO = #{billNo} )
+			         </if>
+			         <if test="orderNo != '' ">
+			                   AND ( Extent2.STATE_ITM_ORD_NO = #{orderNo} )
+			         </if>
+			         <if test="month != '' ">
+			                   AND ( UTILS.CONVERT_TO_NUMBER(Extent1.STATE_MONTH,10,0) = #{month} )
+			        </if>
+			        <if test="year != '' ">
+			                   AND ( UTILS.CONVERT_TO_NUMBER(Extent1.STATE_YEAR,10,0) = #{year} )
+			        </if>
+			        <if test="custName != '' ">
+			                   AND ( Extent1.STATE_CUST_NAME LIKE '%' || #{custName} || '%' ESCAPE '~' ) 
+			        </if>
+			         ) Project1
+			  ORDER BY Project1.STATE_ITM_ORD_NO DESC
 	</select>
 </mapper>
