@@ -48,15 +48,12 @@ public class BillingInvoiceController {
 	 */
 	@RequestMapping(value = "/initCompanyInvoice.do")
 	public String initCompanyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
-		System.out.println("ttt");
 		return "payment/billinggroup/companyInvoice";
 	}
 	
 	@RequestMapping(value = "/selectInvoiceList")
 	public ResponseEntity<List<EgovMap>> searchReconciliationList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
-
-		System.out.println("params : " + params);
 		
 		String brNumber = String.valueOf(params.get("brNumber"));
 		String period = String.valueOf(params.get("period"));
@@ -84,13 +81,6 @@ public class BillingInvoiceController {
 		
 		list = invoiceService.selectCompanyInvoice(map);
 		
-		if(list != null  && list.size() > 0){
-    		for(int i =0; i<list.size(); i++){
-    			System.out.println(list.get(i));
-    		}
-		}
-		
-		
 		return ResponseEntity.ok(list);
 	}
 	
@@ -113,8 +103,6 @@ public class BillingInvoiceController {
 	@RequestMapping(value = "/selectRentalList")
 	public ResponseEntity<List<EgovMap>> searchRentalList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
-
-		System.out.println("params : " + params);
 		
 		String brNumber = String.valueOf(params.get("brNumber"));
 		String period = String.valueOf(params.get("period"));
@@ -142,12 +130,6 @@ public class BillingInvoiceController {
 		
 		list = invoiceService.selectRentalStatementList(map);
 		
-		if(list != null  && list.size() > 0){
-    		for(int i =0; i<list.size(); i++){
-    			System.out.println(list.get(i));
-    		}
-		}
-		
 		return ResponseEntity.ok(list);
 	}
 	
@@ -170,8 +152,6 @@ public class BillingInvoiceController {
 	@RequestMapping(value = "/selectMembershipList")
 	public ResponseEntity<List<EgovMap>> searchMembershipList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
-		
-		System.out.println("params : " + params);
 		
 		String invoiceNo = String.valueOf(params.get("invoiceNo"));
 		String period = String.valueOf(params.get("period"));
@@ -236,13 +216,7 @@ public class BillingInvoiceController {
 		map.put("custName", searchVO.getCustName());
 		map.put("appType", searchVO.getAppType());
 		
-		System.out.println(map);
-		
 		list = invoiceService.selectOutrightInvoiceList(map);
-		
-		for(EgovMap em : list){
-				System.out.print(em);
-		}
 		
 		return ResponseEntity.ok(list);
 	}
@@ -266,8 +240,6 @@ public class BillingInvoiceController {
 	@RequestMapping(value = "/selectProformaInvoiceList")
 	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
-		
-		System.out.println(searchVO);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -301,8 +273,7 @@ public class BillingInvoiceController {
 		map.put("orderDateTo", orderDtTo);
 		
 		list = invoiceService.selectProformaInvoiceList(map);
-		
-		System.out.println("map: " + map);
+
 		return ResponseEntity.ok(list);
 	}
 	
@@ -326,8 +297,7 @@ public class BillingInvoiceController {
 	@RequestMapping(value = "/selectCompStatementList")
 	public ResponseEntity<List<EgovMap>> selectCompStatementList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
-		
-		System.out.println("params : " + params);
+
 		
 		String brNumber = String.valueOf(params.get("brNumber"));
 		String period = String.valueOf(params.get("period"));
@@ -374,8 +344,6 @@ public class BillingInvoiceController {
 	@RequestMapping(value = "/selectStatementCompanyList")
 	public ResponseEntity<List<EgovMap>> selectStatementCompanyList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
-		
-		logger.debug("params {}", params);
 		
 		String billNo = String.valueOf(params.get("billNo")).trim();
 		String orderNo = String.valueOf(params.get("orderNo")).trim();
