@@ -65,7 +65,7 @@ var pickerOpts2 = {//생년월일 세팅
 $(".j_date3").datepicker(pickerOpts2);//생년월일 달력
 /* 제이쿼리 ui달력 end*/
 
-/* on클래스 넣기 start*/
+/* on클래스 넣기 start
 $(document).on(
 	"click", ".click_add_on", function(){
 
@@ -75,7 +75,7 @@ $(document).on(
 	thisAddOn.toggleClass("on");
 	return false;
 });
-/* on클래스 넣기 end*/
+ on클래스 넣기 end*/
 
 /* on클래스 넣기(type2) start*/
 $(document).on(
