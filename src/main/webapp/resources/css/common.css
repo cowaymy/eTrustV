@@ -153,6 +153,8 @@ h3 .txt_box{font-size:16px; color:#25527c;}
 .fl_right{float:right!important;}
 select .optgroup_text {background:#aaa; color:#fff;}
 select .optgroup_text option {color:#444; background:#fff;}
+.old_price{color:#ff0000; font-weight:bold; text-decoration:line-through;}
+.max-image img{max-width:100%; max-height:100%;}
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
@@ -209,7 +211,7 @@ table+.center_btns{padding-top:15px;}
 .date_set > p input[type=text].j_date{width:100%!important;}
 .date_set > span{position:absolute; top:0; left:50%; width:22px; margin-left:-11px; line-height:30px; text-align:center;}
 .ms-parent.multy_select{width:237px!important;}
-.w100p{width:100%!important;}
+.ms-parent.multy_select.w100p{width:100%!important;}
 
 /* 테이블 */
 table.type1{margin-bottom:5px; border-top:1px solid #d3d9dd;}
@@ -527,3 +529,17 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 /* 그리드 추가 */
 .aui-grid-icon-renderer,
 .aui-grid-icon-renderer span{line-height:26px!important;}
+
+/* 코웨이 아이템 */
+.item_list{}
+.item_list:after{content:""; display:block; clear:both;}
+.item_list > li{position:relative; float:left; width:150px; height:150px; overflow:hidden; margin:0 5px 5px 0; border:1px solid #ccc; box-sizing:border-box;}
+.item_list > li.check_item{border:2px solid #ff5400;}
+.item_list > li .inner{position:relative;}
+.item_list > li .inner > a{display:block;}
+.item_list > li .inner > a .thum{width:150px; height:150px; text-align:center;}
+.item_list > li .inner > a .thum img{max-width:100%; max-height:100%;}
+.item_list > li .inner > a .item_num{position:absolute; z-index:10; top:118px; left:0; height:20px; line-height:20px; padding:0 5px; background:rgba(255,255,255,0.4); font-size:12px; font-weight:bold;}
+.item_list > li .inner > a .infos{width:150px; height:150px; padding:5px; background:#000; box-sizing:border-box;}
+.item_list > li .inner > a .infos li{margin-bottom:5px; font-size:12px; color:#ccc;}
+.item_list > li .inner > a .infos li span{font-size:12px; color:#ccc;}
