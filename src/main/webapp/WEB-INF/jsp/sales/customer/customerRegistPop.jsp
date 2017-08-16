@@ -223,13 +223,9 @@
 	            	telO : insBasicForm.telO.value,
 	            	ext : insBasicForm.ext.value,
 	            	rem : insBasicForm.rem.value,
-	            	addr1 : insAddressForm.addr1.value,
-	            	addr2 : insAddressForm.addr2.value,
-	            	addr3 : insAddressForm.addr3.value,
-	            	mstate : insAddressForm.mstate.value,
-	            	cmbArea : insAddressForm.cmbArea.value,
-	            	cmbPostCd : insAddressForm.cmbPostCd.value,
-	            	addrRem : insAddressForm.addrRem.value,
+	            	addr1 : insAddressForm.mAddr1.value,
+	            	addr2 : insAddressForm.mAddr2.value,
+	            	streetId : insAddressForm.streetId.value,
 	            	asCustName : insContactForm.asCustName.value,
 	            	asTelM : insContactForm.asTelM.value,
 	            	asTelO : insContactForm.asTelO.value,
@@ -339,20 +335,32 @@
             }
 		}
 		
-		if($("#addr1").val() == ''){
+		if($("#mAddr1").val() == ''){
 			Common.alert("Please key in the address.");
             return false;
         }
-		if($("#mstate").val() == ''){
-			Common.alert("Please select the state.");
+		if($("#mAddr2").val() == ''){
+            Common.alert("Please key in the address.");
             return false;
         }
-		if($("#cmbArea").val() == ''){
-			Common.alert("Please select the area.");
+		if($("#mState").val() == ''){
+			Common.alert("Please key in the state.");
             return false;
         }
-		if($("#cmbPostCd").val() == ''){
-			Common.alert("Please select the postcode.");
+		if($("#mCity").val() == ''){
+			Common.alert("Please key in the city.");
+            return false;
+        }
+		if($("#mTown").val() == ''){
+            Common.alert("Please key in the town.");
+            return false;
+        }
+		if($("#mStreet").val() == ''){
+            Common.alert("Please key in the street.");
+            return false;
+        }
+		if($("#mPostCd").val() == ''){
+			Common.alert("Please key in the postcode.");
             return false;
         }
 		
@@ -409,6 +417,22 @@
             accItem.accOwner = accOwner;
             accItem.accRem = accRem;
             AUIGrid.addRow(myGridID1, accItem, "last"); 
+        }
+    }
+    
+    function fn_addMaddr(mstate,mcity,mtown,mpostCd,mstreet,miso,mstreetId){
+     
+        if(mstate != "" && mcity != "" && mtown != "" && mpostCd != "" && mstreet != "" && mstreetId != ""){
+            $("#mState").val(mstate);
+            $("#mCity").val(mcity);
+            $("#mTown").val(mtown);
+            $("#mPostCd").val(mpostCd);
+            $("#mStreet").val(mstreet);
+            $("#mCountry").val(miso);
+            $("#streetId").val(mstreetId);
+            $("#_searchDiv").remove();
+        }else{
+        	Common.alert("Please check your address.");
         }
     }
 	
@@ -486,8 +510,7 @@
         }
     	Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv');
     }
-    
-    
+
 </script>
 
 <!-- 
@@ -677,11 +700,11 @@
 			<tr>
 			    <th scope="row">Country<span class="must">*</span></th>
 			    <td>
-			    <input type="text" title="" id="mAddr2" name="mAddr2" placeholder="" class="w100p readonly" readonly="readonly" />
+			    <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" />
 			    </td>
 			    <th scope="row">Region<span class="must">*</span></th>
 			    <td>
-			    <input type="text" title="" id="mAddr2" name="mAddr2" placeholder="" class="w100p readonly" readonly="readonly" />
+			    <input type="text" title="" id="mState" name="mState" placeholder="" class="w100p readonly" readonly="readonly" />
 			    </td>
 			</tr>
 			<tr>

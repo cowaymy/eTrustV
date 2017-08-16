@@ -12,10 +12,18 @@
 	    // AUIGrid.setSelectionMode(myGridID, "singleRow");
 	    
 	    // 셀 더블클릭 이벤트 바인딩
-	    //AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
-	    //    $("#_custId").val(event.item.custId);
-	    //    Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#popForm").serializeJSON());
-	    //});
+	    AUIGrid.bind(mAddrGridID, "cellDoubleClick", function(event){
+	    	var mstate = event.item.state;
+	    	var mcity = event.item.city;
+	    	var mtown = event.item.town;
+	    	var mpostCd = event.item.postcd;
+	    	var mstreet = event.item.street;
+	    	var miso = event.item.iso;
+	    	var mstreetId = event.item.streetId;
+
+	    	fn_addMaddr(mstate,mcity,mtown,mpostCd,mstreet,miso,mstreetId);
+
+	    });
 	    // 셀 클릭 이벤트 바인딩
 	
 	    fn_searchMagicAddressPopJsonListAjax();
@@ -32,14 +40,21 @@
             dataField : "town",
             visible : false
         }, {
-            dataField : "postCd",
+            dataField : "postcd",
             visible : false
         }, {
             dataField : "street",
             visible : false
         }, {
+            dataField : "streetId",
+            visible : false
+        }, {
+            dataField : "iso",
+            visible : false
+        }, {
             dataField : "fulladdress",
-            headerText : "Search Address"
+            headerText : "Search Address",
+            editable : false
         }];
    
         // 그리드 속성 설정
@@ -88,13 +103,15 @@
         }
         );
     }
+	
+	
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Search Magic Address</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li id="mClose"><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -107,7 +124,13 @@
 <form action="" id="searchAddrForm" name="searchAddrForm" method="POST">
     <input type="hidden" id="searchStreet" name="searchStreet" value="${searchStreet }">
 </form>
-
+<form id="mAddrForm" method="post">
+    <input type="hidden" name="custId"  id="_custId"/>  <!-- Cust Id  -->
+    <input type="hidden" name="custAddId"   id="_custAddId"/><!-- Address Id  -->
+    <input type="hidden" name="custCntcId"   id="_custCntcId"> <!--Contact Id  -->
+    <input type="hidden" name="custAccId"   id="_custAccId">
+    <input type="hidden" name="selectParam"  id="_selectParam" value="${selectParam}"/> <!-- Page Param  -->
+</form>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="maddr_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div> 
     </article><!-- grid_wrap end -->
