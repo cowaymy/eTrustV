@@ -43,4 +43,6 @@ public interface StockMapper {
 	void insertSalePriceInfoHistory(Map<String, Object> smap);
 
 	List<EgovMap> selectPriceHistoryInfo(Map<String, Object> param);
+
+	List<EgovMap> selectStockCommisionSetting(Map<String, Object> param);
 }

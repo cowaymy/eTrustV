@@ -377,6 +377,27 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $(this).find("a").attr("class","on");
         });
         
+         $("#stock_commisssion").click(function(){
+            var type;
+           // if($("#stock_commisssion_div").css("display") == "none"){
+            f_removeclass();
+            var selectedItems = AUIGrid.getSelectedIndex(myGridID);
+            var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
+            var stusid = AUIGrid.getCellValue(myGridID, selectedItems[0], "statuscodeid")              
+            alert(stusid);
+            if(stusid ==1){
+                    $("#stock_comm_edit").show();
+                
+            }else{
+            	$("#stock_comm_edit").hide();
+            }
+                f_view("/stock/StockCommisionSetting.do?stkid="+stkid, "C");
+            $(this).find("a").attr("class","on");
+            
+        });
+        
+        
+        
         $("#search").click(function(){
             $('#subDiv').hide();
             getSampleListAjax();
@@ -618,6 +639,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 						$("#spare_info").show();
 						$("#service_info").hide();
 						$("#stock_commisssion").show();
+						//alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "statuscodeid"));
+				/* 		if(AUIGrid.getCellValue(myGridID, event.rowIndex, "statuscodeid") == 1){
+							$("#stock_comm_edit").show();
+							
+						} */
 					} else {
 						$("#service_info").show();
 						$("#filter_info").hide();
@@ -728,7 +754,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 	function f_info(_data, v) {
 		var data = _data.data;
 		var data2 = _data.data2;
-		console.log(data2);
+		console.log(data);
+		//console.log(data2);
 		if (v == 'S') {
 			$("#txtStockType").empty();
 			$("#txtStockCode").empty();
@@ -1374,7 +1401,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                  <aside class="title_line">
                 <!-- <h3>Stock Information</h3> -->
                 <ul class="right_opt">
-                    <li><p class="btn_blue"><a id="stock_comm_edit"><spring:message code='sys.btn.save' /></a></p></li>
+                    <li><p class="btn_blue"><a id="stock_comm_edit" style="display: none;"><spring:message code='sys.btn.save' /></a></p></li>
                 </ul> 
                 </aside>
                 <form id='commForm' name='commForm' method='post'>

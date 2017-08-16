@@ -31,14 +31,15 @@ var resGrid;
 var reqGrid;
 
 var rescolumnLayout=[{dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
-                     {dataField:"stkid"     ,headerText:"ITEM CD"           ,width:120    ,height:30 ,visible:false},
+                     {dataField:"stkid"     ,headerText:"ITEM ID"           ,width:120    ,height:30 ,visible:false},
                      {dataField:"stkcd"     ,headerText:"ITEM CD"           ,width:120    ,height:30},
                      {dataField:"stknm"     ,headerText:"ITEM NAME"         ,width:120    ,height:30},
                      {dataField:"typeid"    ,headerText:"Type Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30},
+                     {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30,visible:false},
                      {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
                      {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30},
-                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:true}
+                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:true},
+                     {dataField:""      ,headerText:"Serial"    ,width:120    ,height:30}
                     ];
                     
 var reqcolumnLayout;
@@ -67,6 +68,7 @@ $(document).ready(function(){
      reqcolumnLayout=[{dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
                       {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30},
                       {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30},
+                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30},
                       {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
                       {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
@@ -87,7 +89,8 @@ $(document).ready(function(){
                              keyField : "codeId",
                              valueField : "codeName"
                           }
-                      }
+                      },
+                      {dataField:""      ,headerText:"Serial"    ,width:120    ,height:30},
                      ];
     
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);

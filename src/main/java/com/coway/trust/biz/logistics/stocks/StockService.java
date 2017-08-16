@@ -42,4 +42,6 @@ public interface StockService {
 
 	List<EgovMap> selectPriceHistoryInfo(Map<String, Object> params);
 
+	List<EgovMap> selectStockCommisionSetting(Map<String, Object> param);
+
 }

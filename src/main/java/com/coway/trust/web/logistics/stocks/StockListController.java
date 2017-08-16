@@ -298,4 +298,21 @@ public class StockListController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/StockCommisionSetting.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> selectStockCommisionSetting(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String stkid = request.getParameter("stkid");
+		// String mode = CommonUtils.nvl(request.getParameter("mode"));
+
+		Map<String, Object> param = new HashMap();
+		param.put("stockId", stkid);
+		// smap.put("mode", mode);
+
+		List<EgovMap> info = stock.selectStockCommisionSetting(param);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", info);
+		return ResponseEntity.ok(map);
+	}
+
 }

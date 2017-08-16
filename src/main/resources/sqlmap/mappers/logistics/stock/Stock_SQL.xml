@@ -183,7 +183,7 @@
 			AND StkDesc like '%'|| #{stkNm} || '%'
 			</if>
 			<if test="stkCd !=null and stkCd != ''">
-			AND StkCode = #{stkCd} || '%'
+			AND StkCode like #{stkCd} || '%'
 			</if>
 		ORDER BY StkCode    			
 	</select>
@@ -701,5 +701,151 @@
                                                                 AND APP_TYPE_ID = #{apptypeid}
                                                                 AND MEM_PAC_ID  = 0)    
          </insert>
+         <select id="selectStockCommisionSetting" parameterType="Map" resultType="egovMap">
+         <![CDATA[ 
+           SELECT LIMIT1.STK_ID STK_ID
+		      ,LIMIT1.STK_CODE STK_CODE
+		      ,LIMIT1.STK_DESC STK_DESC
+		      ,LIMIT1.STK_CTGRY_ID STK_CTGRY_ID
+		      ,LIMIT1.CODE_NAME CODE_NAME
+		      ,LIMIT1.STK_TYPE_ID STK_TYPE_ID
+		      ,LIMIT1.CODENAME1 CODENAME1
+		      ,LIMIT1.STUS_CODE_ID STUS_CODE_ID
+		      ,LIMIT1.NAME NAME
+		      ,LIMIT1.IS_SIRIM IS_SIRIM
+		      ,LIMIT1.IS_NCV IS_NCV
+		      ,LIMIT1.QTY_PER_CARTON QTY_PER_CARTON
+		      ,LIMIT1.UPD_USER_ID UPD_USER_ID
+		      ,LIMIT1.C1 C1
+		      ,LIMIT1.UPD_DT UPD_DT
+		      ,LIMIT1.NET_WT NET_WT
+		      ,LIMIT1.GROS_WT GROS_WT
+		      ,LIMIT1.MEASURE_CBM MEASURE_CBM
+		      ,LIMIT1.STK_GRAD STK_GRAD
+		      ,LIMIT1.BS_POINT BS_POINT
+		      ,LIMIT1.UNIT_VALU UNIT_VALU
+		      ,LIMIT1.C2 C2
+		      ,LIMIT1.C3 C3
+		      ,LIMIT1.C4 C4
+		      ,LIMIT1.C5 C5
+		      ,LIMIT1.C6 C6
+		      ,LIMIT1.C7 C7
+		      ,LIMIT1.C8 C8
+		      ,LIMIT1.C9 C9
+		      ,LIMIT1.C10 C10
+		      ,LIMIT1.C11 C11
+		  FROM (SELECT EXTENT1.STK_ID STK_ID
+		              ,EXTENT1.STK_CODE STK_CODE
+		              ,EXTENT1.STK_DESC STK_DESC
+		              ,EXTENT1.STK_CTGRY_ID STK_CTGRY_ID
+		              ,EXTENT1.STK_TYPE_ID STK_TYPE_ID
+		              ,EXTENT1.STUS_CODE_ID STUS_CODE_ID
+		              ,EXTENT1.IS_SIRIM IS_SIRIM
+		              ,EXTENT1.IS_NCV IS_NCV
+		              ,EXTENT1.QTY_PER_CARTON QTY_PER_CARTON
+		              ,EXTENT1.UPD_USER_ID UPD_USER_ID
+		              ,EXTENT1.UPD_DT UPD_DT
+		              ,EXTENT1.NET_WT NET_WT
+		              ,EXTENT1.GROS_WT GROS_WT
+		              ,EXTENT1.MEASURE_CBM MEASURE_CBM
+		              ,EXTENT1.STK_GRAD STK_GRAD
+		              ,EXTENT1.BS_POINT BS_POINT
+		              ,EXTENT1.UNIT_VALU UNIT_VALU
+		              ,EXTENT2.CODE_NAME CODE_NAME
+		              ,EXTENT3.CODE_NAME CODENAME1
+		              ,EXTENT4.NAME NAME
+		              ,CASE
+		                  WHEN (EXTENT5.USER_ID IS NOT NULL)
+		                     THEN EXTENT5.USER_NAME
+		                  ELSE ''
+		               END C1
+		              ,CASE
+		                  WHEN (61 = EXTENT1.STK_TYPE_ID)
+		                     THEN CASE
+		                            WHEN (EXTENT6.UOM_ID IS NOT NULL)
+		                               THEN EXTENT6.UOM_ID
+		                            ELSE 0
+		                         END
+		                  WHEN (EXTENT7.UOM_ID IS NOT NULL)
+		                     THEN EXTENT7.UOM_ID
+		                  ELSE 0
+		               END C2
+		              ,CASE
+		                  WHEN (61 = EXTENT1.STK_TYPE_ID)
+		                     THEN EXTENT8.CODE_NAME
+		                  ELSE EXTENT9.CODE_NAME
+		               END C3
+		              ,CASE
+		                  WHEN (61 = EXTENT1.STK_TYPE_ID)
+		                     THEN CASE
+		                            WHEN (EXTENT6.AMT IS NOT NULL)
+		                               THEN EXTENT6.AMT
+		                            ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		                         END
+		                  WHEN (EXTENT7.AMT IS NOT NULL)
+		                     THEN EXTENT7.AMT
+		                  ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		               END C4
+		              ,CASE
+		                  WHEN (EXTENT1.MASTER_STK_ID IS NOT NULL)
+		                     THEN EXTENT1.MASTER_STK_ID
+		                  ELSE 0
+		               END C5
+		              ,CASE
+		                  WHEN (EXTENT1.STK_COMM_AS IS NOT NULL)
+		                     THEN EXTENT1.STK_COMM_AS
+		                  ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		               END C6
+		              ,CASE
+		                  WHEN (EXTENT1.STK_COMM_OS_AS IS NOT NULL)
+		                     THEN EXTENT1.STK_COMM_OS_AS
+		                  ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		               END C7
+		              ,CASE
+		                  WHEN (EXTENT1.STK_COMM_BS IS NOT NULL)
+		                     THEN EXTENT1.STK_COMM_BS
+		                  ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		               END C8
+		              ,CASE
+		                  WHEN (EXTENT1.STK_COMM_OS_BS IS NOT NULL)
+		                     THEN EXTENT1.STK_COMM_OS_BS
+		                  ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		               END C9
+		              ,CASE
+		                  WHEN (EXTENT1.STK_COMM_INS IS NOT NULL)
+		                     THEN EXTENT1.STK_COMM_INS
+		                  ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		               END C10
+		              ,CASE
+		                  WHEN (EXTENT1.STK_COMM_OS_INS IS NOT NULL)
+		                     THEN EXTENT1.STK_COMM_OS_INS
+		                  ELSE UTILS.CONVERT_TO_FLOAT (0, 53)
+		               END C11
+		          FROM SYS0026M EXTENT1 LEFT JOIN SYS0013M EXTENT2 ON EXTENT2.CODE_ID = EXTENT1.STK_CTGRY_ID
+		               LEFT JOIN SYS0013M EXTENT3 ON EXTENT3.CODE_ID = EXTENT1.STK_TYPE_ID
+		               LEFT JOIN SYS0038M EXTENT4 ON EXTENT4.STUS_CODE_ID = EXTENT1.STUS_CODE_ID
+		               LEFT JOIN SYS0047M EXTENT5 ON EXTENT5.USER_ID = EXTENT1.UPD_USER_ID
+		               LEFT JOIN SAL0016M EXTENT6
+		               ON (67 = EXTENT6.APP_TYPE_ID)
+		             AND (61 = EXTENT1.STK_TYPE_ID)
+		             AND (EXTENT6.STK_ID = EXTENT1.STK_ID)
+		             AND (0 = EXTENT6.MEM_PAC_ID)
+		             AND (1 = EXTENT6.STUS_CODE_ID)
+		               LEFT JOIN SAL0016M EXTENT7
+		               ON (61 <> EXTENT1.STK_TYPE_ID)
+		             AND (EXTENT7.STK_ID = EXTENT1.STK_ID)
+		             AND (0 = EXTENT7.MEM_PAC_ID)
+		             AND (1 = EXTENT7.STUS_CODE_ID)
+		               LEFT JOIN SYS0013M EXTENT8
+		               ON (61 = EXTENT1.STK_TYPE_ID)
+		             AND (EXTENT8.CODE_ID = EXTENT6.UOM_ID)
+		               LEFT JOIN SYS0013M EXTENT9
+		               ON (61 <> EXTENT1.STK_TYPE_ID)
+		             AND (EXTENT9.CODE_ID = EXTENT7.UOM_ID)
+		         WHERE EXTENT1.STK_ID = #{stockId} 
+		           AND ROWNUM <= 1) LIMIT1
+         ]]>
+         
+         </select>
          
 </mapper>

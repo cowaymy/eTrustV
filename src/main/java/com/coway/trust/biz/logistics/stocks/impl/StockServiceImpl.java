@@ -240,4 +240,10 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		return stockMapper.selectPriceHistoryInfo(params);
 	}
 
+	@Override
+	public List<EgovMap> selectStockCommisionSetting(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return stockMapper.selectStockCommisionSetting(param);
+	}
+
 }
