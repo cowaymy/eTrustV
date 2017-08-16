@@ -301,7 +301,7 @@
                             CASE  WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  ,
                             CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END USER_NAME  ,
                             CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('1900-01-01' , 'YYYY-MM-DD'))) THEN Extent1.CRT_DT ELSE TO_DATE('1900-01-01' , 'YYYY-MM-DD') END CRT_DT ,
-                            CASE  WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01')) THEN Extent1.UPD_DT ELSE '1900-01-01' END UPD_DT  ,
+                            CASE  WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('1900-01-01' , 'YYYY-MM-DD'))) THEN Extent1.UPD_DT ELSE TO_DATE('1900-01-01' , 'YYYY-MM-DD') END UPD_DT  ,
                             CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END UPD_USER_ID ,
                             CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END USER_NAME1  
                      FROM SAL0023D Extent1
@@ -422,7 +422,7 @@
                                CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END stusCodeId  ,
                                CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END userName  ,
                                CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.CRT_DT ELSE TO_DATE('19000101','YYYYMMDD') END crtDt  ,
-                               CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.UPD_DT ELSE '1900-01-01 00:00:00' END updDt  ,
+                               CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.UPD_DT ELSE TO_DATE('19000101','YYYYMMDD') END updDt  ,
                                CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END updUser  ,
                                CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END userName1  
                         FROM SAL0023D Extent1
@@ -1128,7 +1128,7 @@
                             CASE  WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END stusCodeId  , 
                             CASE  WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME ELSE '' END userName  , 
                             CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD'))) THEN Extent1.CRT_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END crtDt  , 
-                            CASE  WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > '1900-01-01')) THEN Extent1.UPD_DT ELSE '1900-01-01' END updDt  ,
+                            CASE  WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD'))) THEN Extent1.UPD_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END updDt  ,
                             CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END updUserId  , 
                             CASE  WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME ELSE '' END userName1  
                      FROM SAL0023D Extent1
