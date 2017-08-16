@@ -6,11 +6,12 @@
 	SELECT a.mymenu_code
 	         , a.mymenu_name
 	         , a.mymenu_order
-	         , a.use_yn  
+	         , a.use_yn
+	         , a.mymenu_code as row_id /* PK, AUIGrid key row setting */  
 	   FROM SYS0059M a
 	 WHERE a.crt_user_id = #{userId}
-	     AND (UPPER(a.mymenu_code) LIKE  UPPER(#{mymenuCode}) || '%') OR 
-	           (UPPER(a.mymenu_name) LIKE '%' || UPPER(#{mymenuCode}) || '%')
+	     AND (UPPER(a.mymenu_code) LIKE  UPPER(#{mymenuCode}) || '%' OR 
+	             UPPER(a.mymenu_name) LIKE '%' || UPPER(#{mymenuCode}) || '%')
 </select>
 
 <insert id="insertMyMenu" parameterType="Map">
@@ -56,13 +57,21 @@
 
 <select id="selectMyMenuProgrmList" parameterType="Map" resultType="egovMap">
 	SELECT a.mymenu_code 
+	         , d.mymenu_name
 	         , a.menu_code
 	         , b.menu_name
 	         , a.pgm_ord
-	   FROM SYS0060D a
-	         , SYS0051M b
-	 WHERE a.menu_code = b.menu_code
-	     AND a.mymenu_code = #{mymenuCode}
+	         , b.pgm_code
+	         , c.pgm_name
+	         , a.mymenu_code||a.menu_code as row_id /* PK, AUIGrid key row setting */
+	 FROM SYS0060D a
+             , SYS0051M b
+             , SYS0050M c
+             , SYS0059M d
+   WHERE a.menu_code = b.menu_code
+       AND b.pgm_code = c.pgm_code
+       AND a.mymenu_code = d.mymenu_code
+	   AND a.mymenu_code = #{mymenuCode}
 </select>
 
 <insert id="insertMyMenuProgrm" parameterType="Map">
@@ -79,7 +88,7 @@
 	VALUES 
 	(
 	    #{mymenuCode}
-	   ,#{mymenuName}
+	   ,#{menuCode}
 	   ,#{pgmOrd}
 	   ,#{userId}
 	   ,SYSDATE
@@ -104,7 +113,18 @@
 	     AND a.menu_code = #{menuCode}
 </delete>
 
-<select id="selectMyMenuProgrmPopupList" parameterType="Map" resultType="egovMap">
+<select id="selectMenuPop" parameterType="Map" resultType="egovMap">
+	SELECT a.menu_code
+	         , a.menu_name     
+	         , b.pgm_code
+	         , b.pgm_name
+	  FROM SYS0051M a
+	         , SYS0050M b
+	 WHERE a.pgm_code = b.pgm_code	     
+	     <if test="popMenuCode != null and popMenuCode !=''">
+	     AND (UPPER(a.menu_code) LIKE  UPPER(#{popMenuCode}) || '%'  OR 
+                UPPER(a.menu_name) LIKE '%' || UPPER(#{popMenuCode}) || '%')
+	     </if>
 </select>
    
 </mapper>
