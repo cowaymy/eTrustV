@@ -45,6 +45,8 @@ import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
@@ -324,9 +326,10 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveCash", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveCash(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveCash(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	
-		int userId = 12345;
+		
+		int userId = sessionVO.getUserId();
 		String message = "";
 		
 		ReturnMessage msg = new ReturnMessage();
@@ -377,9 +380,9 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveCreditCard", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveCreditCard(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveCreditCard(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	
-		int userId = 12345;
+		int userId = sessionVO.getUserId();
 		String message = "";
 		
 		ReturnMessage msg = new ReturnMessage();
@@ -505,9 +508,9 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveCheque", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveCheque(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveCheque(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	
-		int userId = 12345;
+		int userId = sessionVO.getUserId();
 		String message="";
 		
 		ReturnMessage msg = new ReturnMessage();
@@ -573,9 +576,9 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveOnline", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveOnline(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveOnline(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	
-		int userId = 12345;
+		int userId = sessionVO.getUserId();
 		String message = "";
 		
 		ReturnMessage msg = new ReturnMessage();

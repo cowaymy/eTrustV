@@ -32,6 +32,7 @@ import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO;
 import com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -84,7 +85,7 @@ public class EnrollResultController {
 	 */
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> uploadFile(
-			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model) {
+			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 		String message = "";
 		
 		// 결과 만들기.
@@ -92,8 +93,7 @@ public class EnrollResultController {
     	msg.setCode(AppConstants.SUCCESS);
     	msg.setMessage(message );
     	
-		//TODO userId값 변경 필요
-		int userId = 98765;
+    	int userId = sessionVO.getUserId();
 	
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
