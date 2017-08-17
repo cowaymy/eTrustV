@@ -78,6 +78,10 @@ public interface MemberListMapper {
 	
 	List<EgovMap> selectHpDocSubmission(Map<String, Object> params);
 	
+	void insertDocSubmission(Map<String, Object> params);
 	
+	void insertSmsEntry(Map<String, Object> params);
+	
+	void insertSmsReply(Map<String, Object> params);
 	
 }

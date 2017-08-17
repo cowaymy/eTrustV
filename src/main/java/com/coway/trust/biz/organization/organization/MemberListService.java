@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.organization;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,9 +37,11 @@ public interface MemberListService {
 	
 	EgovMap selectCodyPAExpired(Map<String, Object> params);
 	
-	Boolean saveMember(Map<String, Object> params);
+	Boolean saveMember(Map<String, Object> params, List<Object> docType);
 
 	List<EgovMap> selectCodyDocSubmission(Map<String, Object> params);
 	
 	List<EgovMap> selectHpDocSubmission(Map<String, Object> params);
+
+	
 }

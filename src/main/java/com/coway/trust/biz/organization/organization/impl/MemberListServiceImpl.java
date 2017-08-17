@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.organization.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.organization.organization.MemberListService;
-import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.web.organization.organization.MemberListController;
 
-import antlr.Parser;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -117,7 +115,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	
 	
 	@Override
-	public Boolean saveMember(Map<String, Object> params) {
+	public Boolean saveMember(Map<String, Object> params, List<Object> docType) {
 		
 		String appId="";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
@@ -177,7 +175,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			logger.debug("appNo : {}",appNo);
 			updateDocNoNumber("145");
 			
-			//memberListMapper.insertMemApp(MemApp);
+			memberListMapper.insertMemApp(MemApp);
 			codeMap1.put("code", "memApp");
 			appId = memberListMapper.selectMemberId(codeMap1);
 		}
@@ -224,7 +222,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("email", params.get("email").toString().trim()!=null ? params.get("email").toString().trim() : "");
 		params.put("educationLvl", params.get("educationLvl")!=null ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
 		params.put("language", params.get("language")!=null ? Integer.parseInt(params.get("language").toString().trim()) : 0);
-		params.put("bank", params.get("bank")!=null ? params.get("bank").toString().trim() : "");
+		params.put("issuedBank", params.get("issuedBank")!=null ? params.get("issuedBank").toString().trim() : "");
 		params.put("bankAccNo", params.get("bankAccNo").toString().trim()!=null ? params.get("bankAccNo").toString().trim() : "");
 		params.put("sponsorCd", params.get("sponsorCd").toString().trim()!=null ? params.get("sponsorCd").toString().trim() : "");
 		params.put("reSignDate","1900-01-01");
@@ -243,7 +241,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("updated",new Date());
 		params.put("updator",52366);
 		params.put("memIsOutSource",false);
-		params.put("applicantID",appId);
+		params.put("applicantID", appId != null ? appId : 0);
 		params.put("BusinessesType",1375);
 		params.put("Hospitalization",false);
 		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
@@ -255,20 +253,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("spouseName", params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
 		params.put("spouseNric", params.get("spouseNRIC").toString().trim()!=null ? params.get("spouseNRIC").toString().trim() : "");
 		params.put("spouseOcc", params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
-		params.put("spouseDob", params.get("spouseDOB").toString().trim()!=null ? params.get("spouseDOB").toString().trim() :"01/01/1900");
+		params.put("spouseDob", params.get("spouseDOB").toString().trim()!=null ? params.get("spouseDOB").toString().trim() :"1900-01-01");
 		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
 		
 		Boolean success = false;
 		if(params != null){
-			success = doSaveMember(params);
+			success = doSaveMember(params, docType);
 			
-			if(success){
+			/*if(success){
 				if(Integer.parseInt((String) params.get("memberType")) == 2){
 					if(MemApp != null){
-						
+						//sendSMS(params);
 					}
 				}
-			}
+			}*/
 		}
 		
 		
@@ -276,6 +274,54 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return success;
 	}
 	
+	
+	public void sendSMS(Map<String, Object> params){
+		String phoneNumber = params.get("mobileNo").toString();
+		
+		String msg = "RM0.00 Your Cody application is successful. Cody Code: " +//MemberCode +
+                ". Password: 6 digit at the back from your NRIC no. Kindly login Cody Web for activation in 2 day.";
+		//PhoneNumber, Message, li.UserID, 1, 1, 975, "", 1, 0,success,,2
+		//string MobileNo, string Message, int SenderUserID,
+       // int Priority, int ExpireDayAdd, int SMSType, string Remark, int StatusID,
+       // int RetryNo
+		
+		Map<String, Object> smsEntry =new HashMap<String, Object>();
+		
+		smsEntry.put("smsId", 0);
+		smsEntry.put("SMSMessage", "");
+		smsEntry.put("SMSMSISDN", phoneNumber);
+		smsEntry.put("SMSTypeID", 1);
+		smsEntry.put("SMSPriority", 1);
+		smsEntry.put("SMSReferenceNo", "");
+		smsEntry.put("SMSBatchUploadID", 0);
+		smsEntry.put("SMSRemark", "");
+		smsEntry.put("SMSStartAt", new Date());
+		smsEntry.put("SMSExpiredAt","");
+		smsEntry.put("SMSStatusID",1);
+		smsEntry.put("SMSRetry",1);
+		smsEntry.put("SMSCreateAt",params.get("creator"));
+		smsEntry.put("SMSCreateBy",1);
+		smsEntry.put("SMSUpdateAt",params.get("creator"));
+		smsEntry.put("SMSUpdateBy",1);
+		smsEntry.put("SMSVendorID",1);
+		
+		logger.debug("smsEntry : {}",smsEntry);
+		//memberListMapper.insertSmsEntry(smsEntry);
+		
+		Map<String, Object> smsReply =new HashMap<String, Object>();
+		
+		smsReply.put("replyID", 0);
+		smsReply.put("SMSID", 0);
+		smsReply.put("replyCode", 0);
+		smsReply.put("replyRemark", 0);
+		smsReply.put("replyCreateAt", new Date());
+		smsReply.put("replyCreateBy", params.get("Creator"));
+		smsReply.put("replyFeedbackID", "");
+		
+		logger.debug("smsReply : {}",smsReply);
+		//memberListMapper.insertSmsReply(smsReply);
+		
+	}
 	public EgovMap getDocNo(String docNoId){
 		int tmp = Integer.parseInt(docNoId);
 		String docNo = "";
@@ -290,7 +336,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			}else{
 				prefix = "";
 			}
-			docNo = prefix+(String) selectDocNo.get("c1");
+			docNo = prefix.trim()+(String) selectDocNo.get("c1");
 			//prefix = (selectDocNo.get("c2")).toString();
 			logger.debug("prefix : {}",prefix);
 			selectDocNo.put("docNo", docNo);
@@ -347,7 +393,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 	
 	@Transactional
-	public Boolean doSaveMember(Map<String, Object> params) {
+	public Boolean doSaveMember(Map<String, Object> params,List<Object> docType) {
 			Boolean success = false;
 			String memberCode = "";
 			int ID = 0;
@@ -588,10 +634,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISC.put("taxInvoiceType", 117);
     				InvMISC.put("taxInvoiceCustName",selectMiscList.get("c2"));
     				InvMISC.put("taxInvoiceContactPerson",selectMiscList.get("c1"));
-    				InvMISC.put("taxInvoiceAddress1",selectMiscList.get("address1"));
-    				InvMISC.put("taxInvoiceAddress2",selectMiscList.get("address2"));
-    				InvMISC.put("taxInvoiceAddress3",selectMiscList.get("address3"));
-    				InvMISC.put("taxInvoiceAddress4",selectMiscList.get("address4"));
+    				InvMISC.put("taxInvoiceAddress1",selectMiscList.get("c3"));
+    				InvMISC.put("taxInvoiceAddress2",selectMiscList.get("c4"));
+    				InvMISC.put("taxInvoiceAddress3",selectMiscList.get("c5"));
+    				InvMISC.put("taxInvoiceAddress4",selectMiscList.get("c6"));
     				InvMISC.put("taxInvoicePostCode",selectMiscList.get("postCode"));
     				InvMISC.put("taxInvoiceStateName",selectMiscList.get("name"));
     				InvMISC.put("taxInvoiceCountry",selectMiscList.get("name1"));
@@ -615,7 +661,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISCD.put("invoiceItemPONo", "");
     				InvMISCD.put("invoiceItemCode", params.get("deptCode"));
     				InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c2"));
-    				InvMISCD.put("invoiceItemDescription2",selectMiscList.get("nric"));
+    				InvMISCD.put("invoiceItemDescription2",selectMiscList.get("c7"));
     				InvMISCD.put("invoiceItemSerialNo","");
     				InvMISCD.put("invoiceItemQuantity",1);
     				InvMISCD.put("invoiceItemGSTRate",6);
@@ -639,8 +685,55 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			
 			}
 			
+			//Save DocSubmission (For HP)
+			if(params.get("memberType").toString().equals("1") && docType.size() > 0){
+				for(int i=0; i< docType.size(); i++){
+					Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
+					docSub.put("docSubId", 0);
+					docSub.put("docSubTypeId", 247);
+					docSub.put("docTypeID", docSub.get("typeId"));
+					docSub.put("docSOID", 0);
+					docSub.put("docMemId", MemberId);
+					docSub.put("docSubDate", new Date());
+					docSub.put("docCopyQty", docSub.get("c1"));
+					docSub.put("statusID", 1);
+					docSub.put("creator", params.get("creator"));
+					docSub.put("Created",  new Date());
+					docSub.put("Updator", params.get("creator"));
+					docSub.put("Updated",  new Date());
+					docSub.put("docSubBatchId",  0);
+					
+					memberListMapper.insertDocSubmission(docSub);
+					logger.debug("docSub : {}",docSub);
+				}
+			}
+			
+			//Save DocSubmission( For Cody)
+			
+			if(params.get("memberType").toString().equals("2") && docType.size() > 0){
+				for(int i=0; i< docType.size(); i++){
+					Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
+					docSub.put("docSubId", 0);
+					docSub.put("docSubTypeId", 1417);
+					docSub.put("docTypeID", docSub.get("typeId"));
+					docSub.put("docSOID", 0);
+					docSub.put("docMemId", MemberId);
+					docSub.put("docSubDate", new Date());
+					docSub.put("docCopyQty", docSub.get("c1"));
+					docSub.put("statusID", 1);
+					docSub.put("creator", params.get("creator"));
+					docSub.put("Created",  new Date());
+					docSub.put("Updator", params.get("creator"));
+					docSub.put("Updated",  new Date());
+					docSub.put("docSubBatchId",  0);
+					
+					memberListMapper.insertDocSubmission(docSub);
+					logger.debug("docSub : {}",docSub);
+				}
+			}
+			
 			//Save MemberAgreement
-			if(params.get("codyPaExpr").toString() != null){
+			if(params.get("codyPaExpr").toString().equals(null) && params.get("codyPaExpr").toString().equals("")){
 				Map<String, Object>  MA = new HashMap<String, Object>();
 				MA.put("agreementID", 0);
 				MA.put("agreementRefNo", "");
@@ -695,6 +788,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				
 				
 				//Save SystemRoleUser(For HP & CD)
+				CodeMap.put("code", "user");
+				String userId = memberListMapper.selectMemberId(CodeMap);//userid에 넣을 값을 select
 				if(params.get("memberType").toString().equals("1")|| params.get("memberType").toString().equals("2")){
 					Map<String, Object>  roleuser = new HashMap<String, Object>();
 					if(params.get("memberType").toString().equals("1")){
@@ -702,7 +797,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					}else{
 						roleuser.put("roleID", 121);
 					}
-					roleuser.put("userID", "");
+					roleuser.put("userID", userId);
 					roleuser.put("statusID", 1);
 					//roleuser.put("createdAt", a.format(LocalDate.now()));
 					roleuser.put("createdBy", params.get("creator"));
@@ -720,7 +815,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				Map<String, Object>  invWH = new HashMap<String, Object>();
 				invWH.put("WHLocID", 0);
 				invWH.put("WHLocCode", memberCode);
-				invWH.put("WHLocDesc", params.get("fullName"));
+				invWH.put("WHLocDesc", params.get("fulllName"));
 				invWH.put("WHLocAdd1", "");
 				invWH.put("WHLocAdd2", "");
 				invWH.put("WHLocAdd3", "");
@@ -742,7 +837,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				
 				logger.debug("invWH : {}",invWH);
 				memberListMapper.insertinvWH(invWH);
-				//쿼리 없으니 asis 테스트
 			}
 			success=true;
 		
