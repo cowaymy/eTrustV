@@ -226,6 +226,7 @@
 	            	addr1 : insAddressForm.mAddr1.value,
 	            	addr2 : insAddressForm.mAddr2.value,
 	            	streetId : insAddressForm.streetId.value,
+	                addrRem : insAddressForm.addrRem.value,
 	            	asCustName : insContactForm.asCustName.value,
 	            	asTelM : insContactForm.asTelM.value,
 	            	asTelO : insContactForm.asTelO.value,
@@ -729,6 +730,12 @@
 			    <th scope="row">PostCode<span class="must">*</span></th>
 			    <td>
 			    <input type="text" title="" id="mPostCd" name="mPostCd" placeholder="" class="w100p readonly" readonly="readonly" />
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row">Remarks</th>
+			    <td colspan="3">
+			    <textarea cols="20" rows="5" id="addrRem" name="addrRem" placeholder="Remark"></textarea>
 			    </td>
 			</tr>
 		</tbody>
