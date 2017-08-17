@@ -492,6 +492,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto .left_btns:first-child,
 .divine_auto .center_btns:first-child,
 .divine_auto .right_btns:first-child{padding-top:20px;}
+.divine_auto .title_line h2,
 .divine_auto .title_line h3,
 .divine_auto .title_line h4{line-height:24px!important;}
 
