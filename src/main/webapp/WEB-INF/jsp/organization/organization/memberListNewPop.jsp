@@ -19,7 +19,9 @@
 <script type="text/javaScript">
 
 function fn_memberSave(){
-	Common.ajax("POST", "/organization/memberSave",  $('#searchForm').serializeJSON(), function(result) {
+			    var jsonObj =  GridCommon.getEditData(myGridID);
+			    jsonObj.form = $("#searchForm").serializeJSON();
+	Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
 	});
 }
 
