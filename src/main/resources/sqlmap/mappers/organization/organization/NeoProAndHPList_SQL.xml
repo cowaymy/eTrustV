@@ -11,7 +11,7 @@
         <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap>    
     
-        <select id="selectNeoProAndHPList" parameterType="Map" resultMap="clobMap">
+        <select id="selectNeoProAndHPList" parameterType="Map" resultType="egovMap">
         <![CDATA[
 SELECT GroupBy1.A1 C1  
   FROM ( SELECT COUNT(1)  A1  

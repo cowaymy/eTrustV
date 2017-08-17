@@ -113,13 +113,13 @@
 			     
 			         
                  <if test="requestDateF != '' and requestDateT == '' " >    
-                    <![CDATA[  AND AND TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') <=  #{requestDateF} ]]>   
+                    <![CDATA[  AND AND Project1.CRT_DT <=  TO_DATE(#{requestDateF},'DD/MM/YYYY') ]]>   
                  </if>
                  <if test="requestDateF != '' and requestDateT != '' ">
-                     <![CDATA[ AND TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') <= #{requestDateF} AND TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') <= #{requestDateT} ]]>   
+                     <![CDATA[ AND Project1.CRT_DT <= TO_DATE(#{requestDateF},'DD/MM/YYYY') AND Project1.CRT_DT <= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>   
                  </if>
                  <if test="requestDateF == '' and requestDateT != '' ">
-                     <![CDATA[ AND AND TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') <= #{requestDateT} ]]>
+                     <![CDATA[ AND AND Project1.CRT_DT <= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>
                  </if>
 
 
