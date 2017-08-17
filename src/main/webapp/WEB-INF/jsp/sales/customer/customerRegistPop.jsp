@@ -339,10 +339,10 @@
 			Common.alert("Please key in the address.");
             return false;
         }
-		if($("#mAddr2").val() == ''){
-            Common.alert("Please key in the address.");
-            return false;
-        }
+//		if($("#mAddr2").val() == ''){
+//            Common.alert("Please key in the address.");
+//            return false;
+//        }
 		if($("#mState").val() == ''){
 			Common.alert("Please key in the state.");
             return false;
@@ -473,18 +473,22 @@
 //    }
     
     function emailCheck(){
-    	if(FormUtil.checkEmail($("#email"))){
-//    		$("input[name='email']").focus();
-            Common.alert("Invalid email address.");
-            
-            $("#email").val('');
-            
-            return false;
-        }
+    	if($("#email").val() == ""){
+    		return
+    	}else{
+    		if(FormUtil.checkEmail($("#email").val())){
+//              $("input[name='email']").focus();
+                Common.alert("Invalid email address.");
+                
+                $("#email").val('');
+                
+                return false;
+            }
+    	}
     }
     
     function asEmailCheck(){
-        if(FormUtil.checkEmail($("#asEmail"))){
+        if(FormUtil.checkEmail($("#asEmail").val())){
             Common.alert("Invalid email address.");
             $("#asEmail").val('');
 //            $("#asEmail").focus();
@@ -806,7 +810,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="card_grid" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="card_grid" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
@@ -820,7 +824,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="account_grid" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="account_grid" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">

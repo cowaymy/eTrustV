@@ -37,22 +37,22 @@
         }, {
             dataField : "postcd",
             headerText : "POSTCODE",
-            width : 100,
+            width : 90,
             editable : false
         }, {
             dataField : "town",
             headerText : "Town",
-            width : 100,
+            width : 160,
             editable : false
         }, {
             dataField : "city",
             headerText : "City",
-            width : 150,
+            width : 180,
             editable : false
         }, {
             dataField : "state",
             headerText : "Region",
-            width : 80,
+            width : 130,
             editable : false
         }, {
             dataField : "streetId",
@@ -114,7 +114,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Search Magic Address</h1>
+<h1>Search Address</h1>
 <ul class="right_opt">
     <li id="mClose"><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -123,7 +123,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Search Magic Address</h2>
+<h2>Search Address</h2>
 </aside><!-- title_line end -->
 
 <form action="" id="searchAddrForm" name="searchAddrForm" method="POST">
