@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.coway.trust.biz.organization.impl.MemberListMapper">
+	namespace="com.coway.trust.biz.organization.organization.impl.MemberListMapper">
 
 	<!-- searchOrganization Gruop List -->
 	<select id="nationality" parameterType="Map" resultType="egovMap">
@@ -970,10 +970,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{fulllName}
             , #{password}
             , #{nric}
-            , TO_CHAR(TO_DATE(#{birth},'YYYY-MM-DD'),'YYYY-MM-DD')
+            , TO_CHAR(TO_DATE(#{Birth},'dd-mm-yyyy'),'yyyy-mm-dd')
             , #{gender}
             , #{race}
-            , #{marital}
+            , #{marrital}
             , #{nation}
             , #{address1}
             , #{address2}
@@ -995,13 +995,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{spouseDob}
             , #{educationLvl}
             , #{language}
-            , #{bank}
+            , #{issuedBank}
             , #{bankAccNo}
             , #{sponsorCd}
-            , #{joinDate}
+            , TO_CHAR(TO_DATE(#{joinDate},'dd-mm-yyyy'),'yyyy-mm-dd')
             , #{reSignDate}
             , #{termDate}
-            , #{RenewDate}
+            , TO_CHAR(TO_DATE(#{RenewDate},'dd-mm-yyyy'),'yyyy-mm-dd')
             , #{AgrmntNo}
             , #{branch}
             , #{status}
@@ -1062,7 +1062,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
       <if test="code != null and code == 'memApp'">
          SELECT MAX(TAX_INVC_ID) TAXINVCID  FROM PAY0031D
       </if>
-
+       <if test="code != null and code == 'user'">
+        SELECT MAX(USER_ID)+1 FROM SYS0047M
+       </if>
     </select>
     
     
@@ -1232,7 +1234,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	           VALUES ( 
 	           (SELECT MAX(ACC_BILL_ID)+1 FROM PAY0016D )
 	           , #{accBillTaskId}
-	           , SYSDATE
+	           ,TO_CHAR(SYSDATE,'YYYY-MM-DD')
 	           , #{accBillRefNo}
 	           , #{accBillOrderId}
 	           , #{accBillOrderNo}
@@ -1275,7 +1277,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		         LEFT JOIN SYS0035M Extent3   ON UTILS.CONVERT_TO_NUMBER(Extent1.STATE,10,0) = Extent3.STATE_ID
 		         LEFT JOIN SYS0039M Extent4   ON Extent1.AREAL = Extent4.AREA_ID
 		         LEFT JOIN SYS0030C Extent5   ON Extent1.POST_CODE = Extent5.POST_CODE_ID
-		 WHERE  Extent1.MEM_ID = 66640 AND ROWNUM <= 1
+		 WHERE  Extent1.MEM_ID = #{memberId} AND ROWNUM <= 1
         ]]>
     </select>
     
@@ -1434,12 +1436,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           , SYSDATE
           , #{userSyncCheck}
           , #{userNRIC}
-          , TO_DATE(#{userDateJoin}, 'dd-mm-yyyy')
+          , TO_CHAR(TO_DATE(#{userDateJoin},'dd-mm-yyyy'),'yyyy-mm-dd')
           , #{userGsecSynCheck}
           , SYSDATE
           , #{userTypeID}
           , #{userDefaultPasswd}
-          , #{userValidFrom}
+          , TO_CHAR(TO_DATE(#{userValidFrom},'dd-mm-yyyy'),'yyyy-mm-dd')
           , #{userValidTo}
           , #{userSecQuesID}
           , #{userSecQuesAns}
@@ -1645,4 +1647,99 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , 0 
 	  )
   </insert>
+  
+  <insert id="insertDocSubmission" parameterType="Map">
+	  INSERT INTO ORG0010D (
+	     DOC_SUB_ID
+	   , DOC_SUB_TYPE_ID
+	   , DOC_TYPE_ID
+	   , DOC_SO_ID
+	   , DOC_MEM_ID
+	   , DOC_SUB_DT
+	   , DOC_COPY_QTY
+	   , STUS_ID
+	   , CRT_USER_ID
+	   , CRT_DT
+	   , UPD_USER_ID
+	   , UPD_DT
+	   , DOC_SUB_BATCH_ID 
+	   )
+	  VALUES (
+	  (SELECT MAX(DOC_SUB_ID)+1 FROM ORG0010D ) 
+	  , #{docSubTypeId}
+	  , #{docTypeID}
+	  , #{docSOID}
+	  , #{docMemId}
+	  , SYSDATE
+	  , #{docCopyQty}
+	  , #{statusID}
+	  , #{creator}
+	  , SYSDATE
+	  , #{creator}
+	  , SYSDATE
+	  , #{docSubBatchId}
+	  )
+  </insert>
+  
+  <insert id="insertSmsEntry" parameterType="Map">
+	  INSERT INTO MSC0015D (
+	     SMS_ID
+       , SMS_MSG
+       , SMS_MSISDN
+       , SMS_TYPE_ID
+       , SMS_PRIO
+       , SMS_REF_NO
+       , SMS_BATCH_UPLOAD_ID
+       , SMS_REM
+       , SMS_START_DT
+       , SMS_EXPR_DT
+       , SMS_STUS_ID
+       , SMS_RETRY
+       , SMS_CRT_DT
+       , SMS_CRT_USER_ID
+       , SMS_UPD_DT
+       , SMS_UPD_USER_ID
+       , SMS_VENDOR_ID 
+       )
+        VALUES (
+        (SELECT MAX(SMS_ID)+1 FROM MSC0015D) 
+         , #{SMSMessage}
+         , #{SMSMSISDN}
+         , #{SMSTypeID}
+         , #{SMSPriority}
+         , #{SMSReferenceNo}
+         , #{SMSBatchUploadID}
+         , #{SMSRemark}
+         , SYSDATE
+         , SYSDATE
+         , #{SMSStatusID}
+         , #{SMSRetry}
+         , SYSDATE
+         , 52366
+         , SYSDATE
+         , 52366
+         , #{SMSVendorID}
+         )
+   </insert>
+  
+   <insert id="insertSmsReply" parameterType="Map">
+	  INSERT INTO MSC0017D (
+	     REPLY_ID
+	   , SMS_ID
+	   , REPLY_CODE
+	   , REPLY_REM
+	   , REPLY_CRT_DT
+	   , REPLY_CRT_USER_ID
+	   , REPLY_FDBCK_ID
+	    )
+	  VALUES (
+	  (SELECT MAX(REPLY_ID)+1 FROM MSC0017D) 
+	  ,#{SMSID}
+	  , #{replyCode}
+	  , #{replyRemark}
+	  , SYSDATE
+	  , #{replyCreateBy}
+	  , #{replyFeedbackID}
+	  )
+   </insert>
 </mapper>
