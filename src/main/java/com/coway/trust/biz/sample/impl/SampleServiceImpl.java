@@ -20,6 +20,8 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Class Name : EgovSampleServiceImpl.java
@@ -138,6 +140,7 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 	}
 
 	@Override
+	//@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String insertSample(Map<String, Object> params) {
 		sampleMapper.insertSampleByMap(params);
 		return "";
