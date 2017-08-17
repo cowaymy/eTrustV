@@ -39,7 +39,11 @@ public class SessionHandler {
 	 * @return
 	 */
 	public SessionVO getCurrentSessionInfo() {
-		return (SessionVO) getCurrentSession().getAttribute(AppConstants.SESSION_INFO);
+		SessionVO session = (SessionVO) getCurrentSession().getAttribute(AppConstants.SESSION_INFO);
+		if (session == null) {
+			session = new SessionVO();
+		}
+		return session;
 	}
 
 	public WebApplicationContext getWebApplicationContext() {
@@ -49,10 +53,10 @@ public class SessionHandler {
 	/**
 	 * 세션 초기화.
 	 */
-	public void clearSessionInfo(){
-		// 
-        if (getCurrentSession().getAttribute(AppConstants.SESSION_INFO) != null) {
-        	getCurrentSession().removeAttribute(AppConstants.SESSION_INFO);
-        }
+	public void clearSessionInfo() {
+		//
+		if (getCurrentSession().getAttribute(AppConstants.SESSION_INFO) != null) {
+			getCurrentSession().removeAttribute(AppConstants.SESSION_INFO);
+		}
 	}
 }
