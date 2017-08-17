@@ -170,6 +170,7 @@ select .optgroup_text option {color:#444; background:#fff;}
 .btn_grid a{display:inline-block; min-width:60px;height:22px; line-height:22px; padding:0 10px; background:#e0e8ec; border:1px solid #90a9b7; color:#25527c; font-size:10px; font-weight:bold; border-radius:3px; border-radius:3px; text-align:center;}
 .right_btns{text-align:right;}
 .right_btns li{display:inline-block; vertical-align:top;}
+.right_btns li *{text-align:left;}
 .left_btns{text-align:left;}
 .left_btns li{display:inline-block; vertical-align:top;}
 .center_btns{text-align:center;}
