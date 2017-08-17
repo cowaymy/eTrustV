@@ -499,7 +499,7 @@ public class CustomerController {
 //		insmap.put("stateId", String.valueOf(vo.getMstate()) != null ? vo.getMstate() : 0);
 //		insmap.put("cntyId", 1);									//고정 (cmbCoountry)
 		insmap.put("stusCodeId", 9);								//고정
-//		insmap.put("addrRem", vo.getAddrRem());				//고정
+		insmap.put("addrRem", vo.getAddrRem());				//고정
 		insmap.put("idOld", 0);										//고정
 		insmap.put("soId", 0);										//고정
 		insmap.put("idcm", 0);										//고정
