@@ -16,11 +16,12 @@ var gridPros = {
 
 var columnLayout=[              
     {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"name1", headerText:"Customer Name"},
+    {dataField:"name", headerText:"Customer Name"},
+    {dataField:"srvMemQuotNo", headerText:"Quotation No"},
     {dataField:"invcRefNo", headerText:"Invoice No"},
     {dataField:"invcRefDt", headerText:"Invoice Date"},
     {dataField:"invcSubMemPacAmt", headerText:"Invoice Amount"},
-    {dataField:"srvMemQuotNo", headerText:"Installment No"}
+    {dataField:"invcSubMemBsAmt", headerText:"Installment No"}
 ];
 
 function fn_getMembershipInvoiceListAjax() {        

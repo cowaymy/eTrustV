@@ -19,7 +19,7 @@ var columnLayout=[
     {dataField:"salesOrdNo", headerText:"Order No"},
     {dataField:"name", headerText:"Customer Name"},
     {dataField:"rentDocNo", headerText:"Invoice No"},
-    {dataField:"renDateTime", headerText:"Invoice Date"},
+    {dataField:"salesDt", headerText:"Invoice Date"},
     {dataField:"rentAmt", headerText:"Invoice Amount"},
     {dataField:"rentInstNo", headerText:"Installment No"}
 ];
