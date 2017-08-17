@@ -40,14 +40,7 @@ public interface BillingInvoiceService {
   	 * @return 
   	 */
   	List<EgovMap> selectCompanyStatementList(Map<String, Object> params);
-  	
-  	/**
-  	 * StatementCompany List 조회
-  	 * @param params
-  	 * @return 
-  	 */
-  	List<EgovMap> selectStatementCompanyList(Map<String, Object> params);
-  	
+ 
   	/**
 	 * ProformaInvoice List 조회
 	 * @param params
