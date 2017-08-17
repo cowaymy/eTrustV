@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.sirim.impl.SirimMapper">
+    
+    
+<select id="selectWarehouseList" parameterType="Map" resultType="EgovMap">  
+    SELECT Extent1.WH_LOC_ID CODE_ID  ,
+	           Extent1.WH_LOC_CODE CODE  ,
+	           Extent1.WH_LOC_DESC CODE_NAME  
+      FROM SYS0028M Extent1
+      WHERE  ( 1 = Extent1.WH_LOC_STUS_ID ) 
+      AND ( 'B' <![CDATA[<> ]]> Extent1.WH_LOC_STK_GRAD ) 
+      AND ( 277 = Extent1.WH_LOC_TYPE_ID )
+</select>
+
+
+<select id="selectSirimList" parameterType="Map" resultType="EgovMap">  
+SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+       Project1.SIRIM_NO SIRIM_NO  ,
+       Project1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+       Project1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+       Project1.SIRIM_LOC SIRIM_LOC  ,
+       Project1.SIRIM_QTY SIRIM_QTY  
+  FROM ( SELECT Extent1.SIRIM_LOC SIRIM_LOC  ,
+                Extent1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                Extent1.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                Extent1.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                Extent1.SIRIM_QTY SIRIM_QTY  ,
+                LTRIM(RTRIM(Extent1.SIRIM_NO)) SIRIM_NO  
+         FROM ( SELECT LOG1002V.SIRIM_NO SIRIM_NO  ,
+                       LOG1002V.SIRIM_LOC SIRIM_LOC  ,
+                       LOG1002V.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
+                       LOG1002V.SIRIM_TYPE_CODE SIRIM_TYPE_CODE  ,
+                       LOG1002V.SIRIM_TYPE_NAME SIRIM_TYPE_NAME  ,
+                       LOG1002V.SIRIM_QTY SIRIM_QTY  
+                FROM LOG1002V ) Extent1
+                WHERE 1 = 1
+               <if test="searchSirimNo != null and searchSirimNo !=''">
+                    AND  (LTRIM(RTRIM(Extent1.SIRIM_NO)))= #{searchSirimNo}                         
+		       </if> 
+		       <if test="searchCategory != null and searchCategory !=''">
+		             AND Extent1.SIRIM_TYPE_ID = #{searchCategory}             
+		       </if>
+		       <if test="searchWarehouse != null and searchWarehouse !=''">
+		             AND Extent1.SIRIM_LOC = #{searchWarehouse}
+		       </if>
+		       ) Project1
+  ORDER BY Project1.SIRIM_NO ASC
+</select>   
+
+
+   
+        
+</mapper>
