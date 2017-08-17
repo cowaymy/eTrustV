@@ -387,9 +387,10 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             alert(stusid);
             if(stusid ==1){
                     $("#stock_comm_edit").show();
-                
+                    type="CE";
             }else{
             	$("#stock_comm_edit").hide();
+            	   type="C";
             }
                 f_view("/stock/StockCommisionSetting.do?stkid="+stkid, "C");
             $(this).find("a").attr("class","on");
@@ -639,11 +640,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 						$("#spare_info").show();
 						$("#service_info").hide();
 						$("#stock_commisssion").show();
-						//alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "statuscodeid"));
-				/* 		if(AUIGrid.getCellValue(myGridID, event.rowIndex, "statuscodeid") == 1){
-							$("#stock_comm_edit").show();
-							
-						} */
 					} else {
 						$("#service_info").show();
 						$("#filter_info").hide();
@@ -945,7 +941,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 			AUIGrid.setGridData(imgGrid, data);
 			//colShowHide(imgGrid,"",false);
 
-		}
+	  } else if (v == 'I') {
+		  
+	  }
 	}
 
 	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
