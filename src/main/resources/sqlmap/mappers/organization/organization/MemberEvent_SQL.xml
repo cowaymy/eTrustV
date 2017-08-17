@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.organization.impl.MemberEventMapper">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.MemberEventMapper">
 
     <!-- 
         CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
@@ -17,7 +17,7 @@
     </resultMap>    
     
 	
-	<select id="selectOrganizationEventList" parameterType="Map" resultMap="clobMap">
+	<select id="selectOrganizationEventList" parameterType="Map" resultType="egovMap">
 
        <![CDATA[
           SELECT * 
@@ -381,7 +381,7 @@
     
     
 
-    <select id="selectMemberPromoEntries" parameterType="Map" resultMap="clobMap_1">
+    <select id="selectMemberPromoEntries" parameterType="Map" resultType="egovMap">
             SELECT Extent1.PROMO_ID PROMO_ID  ,
 				       Extent1.REQST_NO REQST_NO  ,
 				       Extent1.STUS_ID STUS_ID  ,
