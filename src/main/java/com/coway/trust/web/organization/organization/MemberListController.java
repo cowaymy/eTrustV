@@ -1,6 +1,6 @@
 package com.coway.trust.web.organization.organization;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +23,6 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
-import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -284,15 +283,26 @@ public class MemberListController {
 		logger.debug("memberType : {}", params.get("memberType"));
 		logger.debug("joinDate : {}", params.get("joinDate"));
 		logger.debug("gender : {}", params.get("gender"));
+		logger.debug("gender : {}", params.get("gender"));
+		logger.debug("update : {}", params.get("docType"));
+		logger.debug("myGridID : {}", params.get("params"));
 		
-		success = memberListService.saveMember(params);
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		
+		logger.debug("udtList : {}", updList);
+		logger.debug("formMap : {}", formMap);
+
+		success = memberListService.saveMember(formMap, updList); 
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
 //    	message.setCode(AppConstants.SUCCESS);
 //    	message.setData(map);
 //    	message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
    	
-   	System.out.println("msg   " + msg);
+   	System.out.println("msg   " + success);
 //		
 	return ResponseEntity.ok(message);
 	}
