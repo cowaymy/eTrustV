@@ -315,4 +315,34 @@ public class StockListController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/StockCommisionUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> modifyStockCommision(@RequestBody Map<String, Object> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		// int stockId = (int) params.get("stockId");
+		// List<Object> removeLIst = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		// List<Object> addLIst = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		// logger.debug("수정 : {}", addLIst.toString());
+		// logger.debug("delete : {}", removeLIst.toString());
+		// logger.debug("stockId id : {}", params.get("stockId"));
+
+		/*
+		 * //int cnt = 0;
+		 * 
+		 * //if (!removeLIst.isEmpty()) { if (removeLIst.size() > 0) { cnt = stock.removeServiceInfoGrid(stockId,
+		 * removeLIst, loginId); }
+		 * 
+		 * } else if (!addLIst.isEmpty()) { if (addLIst.size() > 0) { cnt = stock.addServiceInfoGrid(stockId, addLIst,
+		 * loginId); } }
+		 */
+		stock.updateStockCommision(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
 }

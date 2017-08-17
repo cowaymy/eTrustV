@@ -204,13 +204,13 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                           {dataField:"cuser"          ,headerText:"cuser"     ,width:120 , visible : false}];
     
     var pricehiscolumn=[
-								{dataField:"pricecost"          ,headerText:"Cost"               ,width:"14%" , visible : true},
-								{dataField:"amt"          ,headerText:"Normal Price"     ,width:"14%" , visible : true},
-								{dataField:"pricepv"          ,headerText:"Point of <br> Value (PV)"     ,width:"15%" , visible : true},
-								{dataField:"mrental"          ,headerText:"Monthly <br> Rental"     ,width:"14%" , visible : true},
-								{dataField:"pricerpf"          ,headerText:"Rental <br> Deposit"     ,width:"14%" , visible : true},
-								{dataField:"penalty"          ,headerText:"Penalty <br> Charges"     ,width:"14%" , visible : true},
-								{dataField:"tradeinpv"          ,headerText:"Trade In <br> (PV) Value"     ,width:"15%" , visible : true},
+                                {dataField:"pricecost"          ,headerText:"Cost"               ,width:"14%" , visible : true},
+                                {dataField:"amt"          ,headerText:"Normal Price"     ,width:"14%" , visible : true},
+                                {dataField:"pricepv"          ,headerText:"Point of <br> Value (PV)"     ,width:"15%" , visible : true},
+                                {dataField:"mrental"          ,headerText:"Monthly <br> Rental"     ,width:"14%" , visible : true},
+                                {dataField:"pricerpf"          ,headerText:"Rental <br> Deposit"     ,width:"14%" , visible : true},
+                                {dataField:"penalty"          ,headerText:"Penalty <br> Charges"     ,width:"14%" , visible : true},
+                                {dataField:"tradeinpv"          ,headerText:"Trade In <br> (PV) Value"     ,width:"15%" , visible : true},
                                ];
 
  // 그리드 속성 설정
@@ -318,7 +318,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 $("#price_info_div").show();
                 
             }else{
-            	 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                  for(i=0; i<selectedItems.length; i++) {
                      f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
                  }
@@ -384,15 +384,14 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             var selectedItems = AUIGrid.getSelectedIndex(myGridID);
             var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
             var stusid = AUIGrid.getCellValue(myGridID, selectedItems[0], "statuscodeid")              
-            alert(stusid);
             if(stusid ==1){
                     $("#stock_comm_edit").show();
                     type="CE";
             }else{
-            	$("#stock_comm_edit").hide();
-            	   type="C";
+                $("#stock_comm_edit").hide();
+                   type="C";
             }
-                f_view("/stock/StockCommisionSetting.do?stkid="+stkid, "C");
+                f_view("/stock/StockCommisionSetting.do?stkid="+stkid, type);
             $(this).find("a").attr("class","on");
             
         });
@@ -465,12 +464,12 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         });
         
         $("#filter_info_edit").click(function(){
-        if($("#filter_info_edit").text() == "EDIT"){	
-        	colShowHide(filterGrid,"",true);
-        	$("#filter_info_edit").text("Add Filter");
+        if($("#filter_info_edit").text() == "EDIT"){    
+            colShowHide(filterGrid,"",true);
+            $("#filter_info_edit").text("Add Filter");
         }else if ($("#filter_info_edit").text() == "Add Filter"){
-        	popClear();
-        	$("#regFilterWindow").show();
+            popClear();
+            $("#regFilterWindow").show();
             var comUrl= "/common/selectCodeList.do";
             doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
             //doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
@@ -478,619 +477,695 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         }else if($("#filter_info_edit").text() == "SAVE"){
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             
-        	
+            
             f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
-        	
+            
         }
-        	 
+             
         
     });
         
  
-	$("#spare_info_edit").click(function() {
-		                    if($("#spare_info_edit").text() == "EDIT"){
-		                    	colShowHide(spareGrid,"",true);
-		                    	$("#spare_info_edit").text("Add Spare Part");
-		                    } else if ($("#spare_info_edit").text() == "Add Spare Part") {
-		                    	popClear();
-		                    	$("#regSpareWindow").show();
-								var comUrl = "/common/selectCodeList.do";
-								doGetCombo(comUrl, '11', '', 'categoryPop_sp',
-										'S', '');
+    $("#spare_info_edit").click(function() {
+                            if($("#spare_info_edit").text() == "EDIT"){
+                                colShowHide(spareGrid,"",true);
+                                $("#spare_info_edit").text("Add Spare Part");
+                            } else if ($("#spare_info_edit").text() == "Add Spare Part") {
+                                popClear();
+                                $("#regSpareWindow").show();
+                                var comUrl = "/common/selectCodeList.do";
+                                doGetCombo(comUrl, '11', '', 'categoryPop_sp',
+                                        'S', '');
 
-							} else if ($("#spare_info_edit").text() == "SAVE") {
-								var selectedItems = AUIGrid
-										.getSelectedItems(myGridID);
+                            } else if ($("#spare_info_edit").text() == "SAVE") {
+                                var selectedItems = AUIGrid
+                                        .getSelectedItems(myGridID);
 
 
-								f_info_save("/stock/modifyFilterInfo.do",
-										selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
-										"spare_info");
-							}
+                                f_info_save("/stock/modifyFilterInfo.do",
+                                        selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
+                                        "spare_info");
+                            }
 
-						});
+                        });
 
-	});
-	$(".numberAmt").keyup(function(e) {
-		//regex = /^[0-9]+(\.[0-9]+)?$/g;
-		regex = /[^.0-9]/gi;
+    $("#stock_comm_edit").click(function(){
+    	var selectedItems = AUIGrid.getSelectedIndex(myGridID);
+        var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
+    	f_info_save("/stock/StockCommisionUpdate.do" , stkid , "commForm" ,"");
+        
+    });
+ 
 
-		v = $(this).val();
-		if (regex.test(v)) {
-			var nn = v.replace(regex, '');
-			$(this).val(v.replace(regex, ''));
-			$(this).focus();
-			return;
-		}
-	});
+    });
+    $(".numberAmt").keyup(function(e) {
+        //regex = /^[0-9]+(\.[0-9]+)?$/g;
+        regex = /[^.0-9]/gi;
 
-	function f_info_save(url, key, v, f) {
-		var fdata;
-		if (f == "service_info" || f == "filter_info" || f == "spare_info") {
-			fdata = v;
-		} else {
-			fdata = $("#" + v).serializeJSON();
-		}
-		var keys = Object.keys(fdata);
-		//console.log("keys " + keys);
-		for ( var i in keys) {
-			//console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
-			//+ ",  data="+ obj[keys[i]]);
-		}
-		if (v == "stockInfo") {
-			if ($("#cbSirim").is(":checked") == true) {
-				$.extend(fdata, {
-					'cbSirim' : '1'
-				});
-			} else {
-				$.extend(fdata, {
-					'cbSirim' : '0'
-				});
-			}
-			if ($("#cbNCV").is(":checked") == true) {
-				$.extend(fdata, {
-					'cbNCV' : '1'
-				});
-			} else {
-				$.extend(fdata, {
-					'cbNCV' : '0'
-				});
-			}
-		}
-		$.extend(fdata, {
-			'stockId' : key
-		});
-		$.extend(fdata, {
-			'revalue' : f
-		});
+        v = $(this).val();
+        if (regex.test(v)) {
+            var nn = v.replace(regex, '');
+            $(this).val(v.replace(regex, ''));
+            $(this).focus();
+            return;
+        }
+    });
+    
+    
 
-		Common.ajax("POST", url, fdata, function(data) {
-			//alert("msg "+data.msg);
-			Common.alert(data.message);
-			if (v == "stockInfo") {
-				$("#stock_info_edit").text("EDIT");
-			} else if (v == "priceForm") {
-				$("#price_info_edit").text("EDIT");
-			} else if(f == "filter_info"){
-				$("#filter_info_edit").text("EDIT");
-				colShowHide(filterGrid,"",false);
-				$("#filter_info").trigger("click");
-			} else if(f == "spare_info"){
-				$("#spare_info_edit").text("EDIT");
-				colShowHide(spareGrid,"",false);
-				$("#spare_info").trigger("click");
-            } else if(f == "service_info"){
-            	$("#service_info_edit").text("EDIT");
-               	colShowHide(serviceGrid,"",false);
-               	$("#service_info").trigger("click");
+
+    function f_info_save(url, key, v, f) {
+        var fdata;
+        if (f == "service_info" || f == "filter_info" || f == "spare_info") {
+            fdata = v;
+        } else {
+            fdata = $("#" + v).serializeJSON();
+        }
+        var keys = Object.keys(fdata);
+        console.log("keys " + keys);
+        for ( var i in keys) {
+            //console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
+            //+ ",  data="+ obj[keys[i]]);
+        }
+        if (v == "stockInfo") {
+            if ($("#cbSirim").is(":checked") == true) {
+                $.extend(fdata, {
+                    'cbSirim' : '1'
+                });
+            } else {
+                $.extend(fdata, {
+                    'cbSirim' : '0'
+                });
             }
-			getMainListAjax(data);
-		});
-	}
+            if ($("#cbNCV").is(":checked") == true) {
+                $.extend(fdata, {
+                    'cbNCV' : '1'
+                });
+            } else {
+                $.extend(fdata, {
+                    'cbNCV' : '0'
+                });
+            }
+        }
+        $.extend(fdata, {
+            'stockId' : key
+        });
+        $.extend(fdata, {
+            'revalue' : f
+        });
 
-	function getMainListAjax(_da) {
+        Common.ajax("POST", url, fdata, function(data) {
+            //alert("msg "+data.msg);
+            Common.alert(data.message);
+            if (v == "stockInfo") {
+                $("#stock_info_edit").text("EDIT");
+            } else if (v == "priceForm") {
+                $("#price_info_edit").text("EDIT");
+            } else if(f == "filter_info"){
+                $("#filter_info_edit").text("EDIT");
+                colShowHide(filterGrid,"",false);
+                $("#filter_info").trigger("click");
+            } else if(f == "spare_info"){
+                $("#spare_info_edit").text("EDIT");
+                colShowHide(spareGrid,"",false);
+                $("#spare_info").trigger("click");
+            } else if(f == "service_info"){
+                $("#service_info_edit").text("EDIT");
+                colShowHide(serviceGrid,"",false);
+                $("#service_info").trigger("click");
+            }
+            getMainListAjax(data);
+        });
+    }
 
-		var param = $('#listForm').serialize();
-		var selcell = 0;
-		var selectedItems = AUIGrid.getSelectedItems(myGridID);
-		for (i = 0; i < selectedItems.length; i++) {
-			selcell = selectedItems[i].rowIndex;
-		}
+    function getMainListAjax(_da) {
 
-		$.ajax({
-			type : "POST",
-			url : "/stock/StockList.do?" + param,
-			//url : "/stock/StockList.do",
-			//data : param,
-			dataType : "json",
-			contentType : "application/json;charset=UTF-8",
-			success : function(data) {
-				var gridData = data;
-				AUIGrid.setGridData(myGridID, gridData.data);
-				AUIGrid.setSelectionByIndex(myGridID, selcell, 3);
+        var param = $('#listForm').serialize();
+        var selcell = 0;
+        var selectedItems = AUIGrid.getSelectedItems(myGridID);
+        for (i = 0; i < selectedItems.length; i++) {
+            selcell = selectedItems[i].rowIndex;
+        }
 
-				$("#" + _da.revalue).click();
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("실패하였습니다.");
-			},
-			complete : function() {
-			}
-		});
-	}
+        $.ajax({
+            type : "POST",
+            url : "/stock/StockList.do?" + param,
+            //url : "/stock/StockList.do",
+            //data : param,
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+                var gridData = data;
+                AUIGrid.setGridData(myGridID, gridData.data);
+                AUIGrid.setSelectionByIndex(myGridID, selcell, 3);
 
-	// AUIGrid 를 생성합니다.
-	function createAUIGrid(columnLayout) {
+                $("#" + _da.revalue).click();
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert("실패하였습니다.");
+            },
+            complete : function() {
+            }
+        });
+    }
 
-		// 실제로 #grid_wrap 에 그리드 생성
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+    // AUIGrid 를 생성합니다.
+    function createAUIGrid(columnLayout) {
 
-		//
-		AUIGrid.bind(myGridID, "cellClick",
-				function(event) {
-					f_removeclass();
-					var selectedItems = event.selectedItems;
-					f_view("/stock/StockInfo.do?stkid="
-							+ AUIGrid.getCellValue(myGridID, event.rowIndex,
-									"stkid"), "S");
-					$("#subDiv").show();
-					if (AUIGrid.getCellValue(myGridID, event.rowIndex,
-							"stktypeid") == "61") {
-						$("#filter_info").show();
-						$("#spare_info").show();
-						$("#service_info").hide();
-						$("#stock_commisssion").show();
-					} else {
-						$("#service_info").show();
-						$("#filter_info").hide();
-						$("#spare_info").hide();
-						$("#stock_commisssion").hide();
-					}
-					$("#stock_info_div").show();
-					$("#price_info_div").hide();
-					$("#filter_info_div").hide();
-					$("#service_info_div").hide();
-					$("#stock_img_td").hide();
-					$("#stock_commisssion_div").hide();
-					$("#imgShow").html("");
-					$("#stock_info").find("a").attr("class", "on");
-					/*if (){
-					    
-					}*/
-				});
-	}
+        // 실제로 #grid_wrap 에 그리드 생성
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+
+        //
+        AUIGrid.bind(myGridID, "cellClick",
+                function(event) {
+                    f_removeclass();
+                    var selectedItems = event.selectedItems;
+                    f_view("/stock/StockInfo.do?stkid="
+                            + AUIGrid.getCellValue(myGridID, event.rowIndex,
+                                    "stkid"), "S");
+                    $("#subDiv").show();
+                    if (AUIGrid.getCellValue(myGridID, event.rowIndex,
+                            "stktypeid") == "61") {
+                        $("#filter_info").show();
+                        $("#spare_info").show();
+                        $("#service_info").hide();
+                        $("#stock_commisssion").show();
+                    } else {
+                        $("#service_info").show();
+                        $("#filter_info").hide();
+                        $("#spare_info").hide();
+                        $("#stock_commisssion").hide();
+                    }
+                    $("#stock_info_div").show();
+                    $("#price_info_div").hide();
+                    $("#filter_info_div").hide();
+                    $("#service_info_div").hide();
+                    $("#stock_img_td").hide();
+                    $("#stock_commisssion_div").hide();
+                    $("#imgShow").html("");
+                    $("#stock_info").find("a").attr("class", "on");
+                    /*if (){
+                        
+                    }*/
+                });
+    }
 
 
-	// AUIGrid 를 생성합니다.
-	function filterAUIGrid(filtercolumn) {
-		filterGrid = AUIGrid.create("#filter_grid", filtercolumn, subgridpros);
-	}
+    // AUIGrid 를 생성합니다.
+    function filterAUIGrid(filtercolumn) {
+        filterGrid = AUIGrid.create("#filter_grid", filtercolumn, subgridpros);
+    }
 
-	function spareAUIGrid(sparecolumn) {
-		spareGrid = AUIGrid.create("#spare_grid", sparecolumn, subgridpros);
-	}
+    function spareAUIGrid(sparecolumn) {
+        spareGrid = AUIGrid.create("#spare_grid", sparecolumn, subgridpros);
+    }
 
-	function serviceAUIGrid(servicecolumn) {
-		serviceGrid = AUIGrid.create("#service_grid", servicecolumn,subgridpros);
-	}
+    function serviceAUIGrid(servicecolumn) {
+        serviceGrid = AUIGrid.create("#service_grid", servicecolumn,subgridpros);
+    }
 
-	function imgAUIGrid(stockimgcolumn) {
-		imgGrid = AUIGrid.create("#stock_img_div", stockimgcolumn, subgridpros);
-	}
-	function priceHistoryAUIGrid(pricehiscolumn) {
-		priceHistoryGrid = AUIGrid.create("#priceHistory_div", pricehiscolumn, subgridpros2);
-	}
+    function imgAUIGrid(stockimgcolumn) {
+        imgGrid = AUIGrid.create("#stock_img_div", stockimgcolumn, subgridpros);
+    }
+    function priceHistoryAUIGrid(pricehiscolumn) {
+        priceHistoryGrid = AUIGrid.create("#priceHistory_div", pricehiscolumn, subgridpros2);
+    }
 
-	function getSampleListAjax() {
+    function getSampleListAjax() {
 
-		//$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
-		f_showModal();
-		var param = $('#listForm').serialize();
+        //$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
+        f_showModal();
+        var param = $('#listForm').serialize();
 
-		$.ajax({
-			type : "POST",
-			url : "/stock/StockList.do?" + param,
-			//url : "/stock/StockList.do",
-			//data : param,
-			dataType : "json",
-			contentType : "application/json;charset=UTF-8",
-			success : function(data) {
-				var gridData = data;
+        $.ajax({
+            type : "POST",
+            url : "/stock/StockList.do?" + param,
+            //url : "/stock/StockList.do",
+            //data : param,
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+                var gridData = data;
 
-				AUIGrid.setGridData(myGridID, gridData.data);
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("실패하였습니다.");
-			},
-			complete : function() {
-				hideModal();
-				//$.unblockUI();
-			}
-		});
-	}
+                AUIGrid.setGridData(myGridID, gridData.data);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert("실패하였습니다.");
+            },
+            complete : function() {
+                hideModal();
+                //$.unblockUI();
+            }
+        });
+    }
 
-	function f_showModal() {
-		$.blockUI.defaults.css = {
-			textAlign : 'center'
-		}
-		$('div.SalesWorkDiv')
-				.block(
-						{
-							message : "<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
-							centerY : false,
-							centerX : true,
-							css : {
-								top : '300px',
-								border : 'none'
-							}
-						});
-	}
-	function hideModal() {
-		$('div.SalesWorkDiv').unblock();
+    function f_showModal() {
+        $.blockUI.defaults.css = {
+            textAlign : 'center'
+        }
+        $('div.SalesWorkDiv')
+                .block(
+                        {
+                            message : "<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
+                            centerY : false,
+                            centerX : true,
+                            css : {
+                                top : '300px',
+                                border : 'none'
+                            }
+                        });
+    }
+    function hideModal() {
+        $('div.SalesWorkDiv').unblock();
 
-	}
+    }
 
-	function f_view(url, v) {
-		f_clearForm();
-		$.ajax({
-			type : "POST",
-			url : url,
-			dataType : "json",
-			contentType : "application/json;charset=UTF-8",
-			success : function(_data) {
-				//var data = _data.data;
-				f_info(_data, v);
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("실패하였습니다.");
-			}
-		});
-	}
+    function f_view(url, v) {
+        f_clearForm();
+        $.ajax({
+            type : "POST",
+            url : url,
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(_data) {
+                //var data = _data.data;
+                f_info(_data, v);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert("실패하였습니다.");
+            }
+        });
+    }
 
-	function f_info(_data, v) {
-		var data = _data.data;
-		var data2 = _data.data2;
-		console.log(data);
-		//console.log(data2);
-		if (v == 'S') {
-			$("#txtStockType").empty();
-			$("#txtStockCode").empty();
-			$("#txtUOM").empty();
+    function f_info(_data, v) {
+        var data = _data.data;
+        var data2 = _data.data2;
+        
+    
 
-			$("#txtStockName").empty();
-			$("#txtCategory").empty();
+        console.log(data);
+        //console.log(data2);
+        if (v == 'S') {
+            $("#txtStockType").empty();
+            $("#txtStockCode").empty();
+            $("#txtUOM").empty();
 
-			$("#txtNetWeight").empty();
-			$("#txtMeasurement").empty();
+            $("#txtStockName").empty();
+            $("#txtCategory").empty();
 
-			$("#txtStockType").text(data[0].typenm);
-			$("#txtStatus").text(data[0].statusname);
-			$("#txtStockCode").text(data[0].stockcode);
-			$("#txtUOM").text(data[0].uomname);
-			$("#txtStockName").text(data[0].stockname);
-			$("#txtCategory").text(data[0].categotynm);
+            $("#txtNetWeight").empty();
+            $("#txtMeasurement").empty();
 
-			$("#txtNetWeight").text(data[0].netweight);
-			$("#txtGrossWeight").text(data[0].grossweight);
-			$("#txtMeasurement").text(data[0].mcbm);
+            $("#txtStockType").text(data[0].typenm);
+            $("#txtStatus").text(data[0].statusname);
+            $("#txtStockCode").text(data[0].stockcode);
+            $("#txtUOM").text(data[0].uomname);
+            $("#txtStockName").text(data[0].stockname);
+            $("#txtCategory").text(data[0].categotynm);
 
-			if (data[0].isncv == 1) {
-				$("#cbNCV").prop("checked", true);
-			}
-			if (data[0].issirim == 1) {
-				$("#cbSirim").prop("checked", true);
-			}
-			$("#cbNCV").prop("disabled", true);
-			$("#cbSirim").prop("disabled", true);
+            $("#txtNetWeight").text(data[0].netweight);
+            $("#txtGrossWeight").text(data[0].grossweight);
+            $("#txtMeasurement").text(data[0].mcbm);
 
-			$("#typeid").val(data[0].typeid);
-		} else if (v == 'ES') {
-			$("#cbNCV").prop("disabled", false);
-			$("#cbSirim").prop("disabled", false);
+            if (data[0].isncv == 1) {
+                $("#cbNCV").prop("checked", true);
+            }
+            if (data[0].issirim == 1) {
+                $("#cbSirim").prop("checked", true);
+            }
+            $("#cbNCV").prop("disabled", true);
+            $("#cbSirim").prop("disabled", true);
 
-			$("#txtStockType").text(data[0].typenm);
-			$("#txtStockType")
-					.append(
-							"<input type='hidden' name='stock_type' id='stock_type' value=''/>");
-			$("#stock_type").val(data[0].typeid);
-			$("#txtStatus").text(data[0].statusname);
-			$("#txtStockCode")
-					.html(
-							"<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
-			$("#stock_code").val(data[0].stockcode);
-			$("#txtUOM").html(
-					"<select id='stock_uom' name='stock_uom'></select>");
-			doGetCombo('/common/selectCodeList.do', '42', data[0].uomname,
-					'stock_uom', 'S'); //청구처 리스트 조회
-			$("#txtStockName")
-					.html(
-							"<input type='text' name='stock_name' id='stock_name' value=''/>");
-			$("#stock_name").val(data[0].stockname);
-			$("#txtCategory")
-					.html(
-							"<select id='stock_category' name='stock_category' class='w100p'></select>");
-			doGetCombo('/common/selectCodeList.do', '11', data[0].categotynm,
-					'stock_category', 'S'); //청구처 리스트 조회
-			$("#txtNetWeight")
-					.html(
-							"<input type='text' name='netweight' id='netweight' class='w100p' value=''/>");
-			$("#netweight").val(data[0].netweight);
-			$("#txtGrossWeight")
-					.html(
-							"<input type='text' name='grossweight' class='w100p' id='grossweight' value=''/>");
-			$("#grossweight").val(data[0].grossweight);
-			$("#txtMeasurement")
-					.html(
-							"<input type='text' name='measurement' class='w100p' id='measurement' value=''/>");
-			$("#measurement").val(data[0].mcbm);
+            $("#typeid").val(data[0].typeid);
+        } else if (v == 'ES') {
+            $("#cbNCV").prop("disabled", false);
+            $("#cbSirim").prop("disabled", false);
 
-			if (data[0].isncv == 1) {
-				$("#cbNCV").prop("checked", true);
-			}
-			if (data[0].issirim == 1) {
-				$("#cbSirim").prop("checked", true);
-			}
-			$("#typeid").val(data[0].typeid);
-			$("#stock_info_edit").text("SAVE");
-		} else if (v == 'P') {
-			$("#txtCost").empty();
-			$("#txtNormalPrice").empty();
-			$("#txtPV").empty();
-			$("#txtMonthlyRental").empty();
-			$("#txtRentalDeposit").empty();
-			$("#txtPenaltyCharge").empty();
-			$("#txtTradeInPV").empty();
+            $("#txtStockType").text(data[0].typenm);
+            $("#txtStockType")
+                    .append(
+                            "<input type='hidden' name='stock_type' id='stock_type' value=''/>");
+            $("#stock_type").val(data[0].typeid);
+            $("#txtStatus").text(data[0].statusname);
+            $("#txtStockCode")
+                    .html(
+                            "<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
+            $("#stock_code").val(data[0].stockcode);
+            $("#txtUOM").html(
+                    "<select id='stock_uom' name='stock_uom'></select>");
+            doGetCombo('/common/selectCodeList.do', '42', data[0].uomname,
+                    'stock_uom', 'S'); //청구처 리스트 조회
+            $("#txtStockName")
+                    .html(
+                            "<input type='text' name='stock_name' id='stock_name' value=''/>");
+            $("#stock_name").val(data[0].stockname);
+            $("#txtCategory")
+                    .html(
+                            "<select id='stock_category' name='stock_category' class='w100p'></select>");
+            doGetCombo('/common/selectCodeList.do', '11', data[0].categotynm,
+                    'stock_category', 'S'); //청구처 리스트 조회
+            $("#txtNetWeight")
+                    .html(
+                            "<input type='text' name='netweight' id='netweight' class='w100p' value=''/>");
+            $("#netweight").val(data[0].netweight);
+            $("#txtGrossWeight")
+                    .html(
+                            "<input type='text' name='grossweight' class='w100p' id='grossweight' value=''/>");
+            $("#grossweight").val(data[0].grossweight);
+            $("#txtMeasurement")
+                    .html(
+                            "<input type='text' name='measurement' class='w100p' id='measurement' value=''/>");
+            $("#measurement").val(data[0].mcbm);
 
-			$("#txtCost").text(data[0].pricecost);
-			$("#txtNormalPrice").text(data[0].amt);
-			$("#txtPV").text(data[0].pricepv);
-			$("#txtMonthlyRental").text(data[0].mrental);
-			$("#txtRentalDeposit").text(data[0].pricerpf);
-			$("#txtPenaltyCharge").text(data[0].penalty);
-			$("#txtTradeInPV").text(data[0].tradeinpv);
-			
-	            destory(priceHistoryGrid);
-	            priceHistoryAUIGrid(pricehiscolumn);
-	            AUIGrid.setGridData(priceHistoryGrid, data2); 
-		} else if (v == 'EP') {
-			var selectedItems = AUIGrid.getSelectedItems(myGridID);
-			var typeid = "";
-			for (i = 0; i < selectedItems.length; i++) {
-				typeid = selectedItems[i].item.stktypeid;
-			}
-			$("#priceTypeid").val(typeid);
-			if (typeid == '61') {
-				$("#txtPenaltyCharge")
-						.html(
-								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='w100p numberAmt'/>"); //PriceCharges
-				$("#dPenaltyCharge").val(data[0].penalty);
-				$("#txtPV")
-						.html(
-								"<input type='text' name='dPV' id='dPV' value='' class='w100p numberAmt'/>"); //PricePV
-				$("#dPV").val(data[0].pricepv);
-				$("#txtMonthlyRental")
-						.html(
-								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='w100p numberAmt'/>"); //amt
-				$("#dMonthlyRental").val(data[0].mrental);
-				$("#txtRentalDeposit")
-						.html(
-								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='w100p numberAmt'/>"); //PriceRPF
-				$("#dRentalDeposit").val(data[0].pricerpf);
-				$("#txtTradeInPV")
-						.html(
-								"<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='w100p numberAmt'/>"); //TradeInPV
-				$("#dTradeInPV").val(data[0].tradeinpv);
-			} else {
-				$("#txtPenaltyCharge")
-						.html(
-								"<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='w100p numberAmt'/>"); //PriceCharges
-				$("#dPenaltyCharge").val(data[0].penalty);
-				$("#txtPV")
-						.html(
-								"<input type='text' name='dPV' id='dPV' disabled=true value='' class='w100p numberAmt'/>"); //PricePV
-				$("#dPV").val(data[0].pricepv);
-				$("#txtMonthlyRental")
-						.html(
-								"<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='w100p numberAmt'/>"); //amt
-				$("#dMonthlyRental").val(data[0].mrental);
-				$("#txtRentalDeposit")
-						.html(
-								"<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='w100p numberAmt'/>"); //PriceRPF
-				$("#dRentalDeposit").val(data[0].pricerpf);
-				$("#txtTradeInPV")
-						.html(
-								"<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='w100p numberAmt'/>"); //TradeInPV
-				$("#dTradeInPV").val(data[0].tradeinpv);
-			}
-			$("#txtCost")
-					.html(
-							"<input type='text' name='dCost' id='dCost' value='' class='w100p numberAmt'/>"); //PriceCosting
-			$("#dCost").val(data[0].pricecost);
-			$("#txtNormalPrice")
-					.html(
-							"<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='w100p numberAmt'/>"); // amt
-			$("#dNormalPrice").val(data[0].amt);
+            if (data[0].isncv == 1) {
+                $("#cbNCV").prop("checked", true);
+            }
+            if (data[0].issirim == 1) {
+                $("#cbSirim").prop("checked", true);
+            }
+            $("#typeid").val(data[0].typeid);
+            $("#stock_info_edit").text("SAVE");
+        } else if (v == 'P') {
+            $("#txtCost").empty();
+            $("#txtNormalPrice").empty();
+            $("#txtPV").empty();
+            $("#txtMonthlyRental").empty();
+            $("#txtRentalDeposit").empty();
+            $("#txtPenaltyCharge").empty();
+            $("#txtTradeInPV").empty();
 
-			$("#price_info_edit").text("SAVE");
+            $("#txtCost").text(data[0].pricecost);
+            $("#txtNormalPrice").text(data[0].amt);
+            $("#txtPV").text(data[0].pricepv);
+            $("#txtMonthlyRental").text(data[0].mrental);
+            $("#txtRentalDeposit").text(data[0].pricerpf);
+            $("#txtPenaltyCharge").text(data[0].penalty);
+            $("#txtTradeInPV").text(data[0].tradeinpv);
+            
+                destory(priceHistoryGrid);
+                priceHistoryAUIGrid(pricehiscolumn);
+                AUIGrid.setGridData(priceHistoryGrid, data2); 
+        } else if (v == 'EP') {
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            var typeid = "";
+            for (i = 0; i < selectedItems.length; i++) {
+                typeid = selectedItems[i].item.stktypeid;
+            }
+            $("#priceTypeid").val(typeid);
+            if (typeid == '61') {
+                $("#txtPenaltyCharge")
+                        .html(
+                                "<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='w100p numberAmt'/>"); //PriceCharges
+                $("#dPenaltyCharge").val(data[0].penalty);
+                $("#txtPV")
+                        .html(
+                                "<input type='text' name='dPV' id='dPV' value='' class='w100p numberAmt'/>"); //PricePV
+                $("#dPV").val(data[0].pricepv);
+                $("#txtMonthlyRental")
+                        .html(
+                                "<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='w100p numberAmt'/>"); //amt
+                $("#dMonthlyRental").val(data[0].mrental);
+                $("#txtRentalDeposit")
+                        .html(
+                                "<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='w100p numberAmt'/>"); //PriceRPF
+                $("#dRentalDeposit").val(data[0].pricerpf);
+                $("#txtTradeInPV")
+                        .html(
+                                "<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='w100p numberAmt'/>"); //TradeInPV
+                $("#dTradeInPV").val(data[0].tradeinpv);
+            } else {
+                $("#txtPenaltyCharge")
+                        .html(
+                                "<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='w100p numberAmt'/>"); //PriceCharges
+                $("#dPenaltyCharge").val(data[0].penalty);
+                $("#txtPV")
+                        .html(
+                                "<input type='text' name='dPV' id='dPV' disabled=true value='' class='w100p numberAmt'/>"); //PricePV
+                $("#dPV").val(data[0].pricepv);
+                $("#txtMonthlyRental")
+                        .html(
+                                "<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='w100p numberAmt'/>"); //amt
+                $("#dMonthlyRental").val(data[0].mrental);
+                $("#txtRentalDeposit")
+                        .html(
+                                "<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='w100p numberAmt'/>"); //PriceRPF
+                $("#dRentalDeposit").val(data[0].pricerpf);
+                $("#txtTradeInPV")
+                        .html(
+                                "<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='w100p numberAmt'/>"); //TradeInPV
+                $("#dTradeInPV").val(data[0].tradeinpv);
+            }
+            $("#txtCost")
+                    .html(
+                            "<input type='text' name='dCost' id='dCost' value='' class='w100p numberAmt'/>"); //PriceCosting
+            $("#dCost").val(data[0].pricecost);
+            $("#txtNormalPrice")
+                    .html(
+                            "<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='w100p numberAmt'/>"); // amt
+            $("#dNormalPrice").val(data[0].amt);
+
+            $("#price_info_edit").text("SAVE");
 
             destory(priceHistoryGrid);
             priceHistoryAUIGrid(pricehiscolumn);
             AUIGrid.setGridData(priceHistoryGrid, data2);  
             
-		} else if (v == 'F') {
-			destory(filterGrid);
-			filterAUIGrid(filtercolumn)
-			AUIGrid.setGridData(filterGrid, data);
-			colShowHide(filterGrid,"",false);
+        } else if (v == 'F') {
+            destory(filterGrid);
+            filterAUIGrid(filtercolumn)
+            AUIGrid.setGridData(filterGrid, data);
+            colShowHide(filterGrid,"",false);
 
-		} else if (v == 'R') {
-			destory(spareGrid);
+        } else if (v == 'R') {
+            destory(spareGrid);
             spareAUIGrid(sparecolumn);
-			AUIGrid.setGridData(spareGrid, data);
-			colShowHide(spareGrid,"",false);
+            AUIGrid.setGridData(spareGrid, data);
+            colShowHide(spareGrid,"",false);
 
-		} else if (v == 'V') {
-			destory(serviceGrid);
+        } else if (v == 'V') {
+            destory(serviceGrid);
             serviceAUIGrid(servicecolumn);
-			AUIGrid.setGridData(serviceGrid, data);
-			colShowHide(serviceGrid,"",false);
+            AUIGrid.setGridData(serviceGrid, data);
+            colShowHide(serviceGrid,"",false);
 
-		} else if (v == 'I') {
-			destory(imgGrid);
-			imgAUIGrid(stockimgcolumn);
-			AUIGrid.setGridData(imgGrid, data);
-			//colShowHide(imgGrid,"",false);
+        } else if (v == 'I') {
+            destory(imgGrid);
+            imgAUIGrid(stockimgcolumn);
+            AUIGrid.setGridData(imgGrid, data);
+            //colShowHide(imgGrid,"",false);
 
-	  } else if (v == 'I') {
-		  
-	  }
-	}
+      } else if (v == 'C') {
+          $("#txtStckCd").text(data[0].stkCode);
+          $("#txtStckCtgry").text(data[0].codeName);
+          $("#txtStckNm").text(data[0].stkDesc);
+          $("#txtRate_as").text(decimalSetting(data[0].c6));
+          $("#txtOutRate_as").text(decimalSetting(data[0].c7));
+          $("#txtRate_bs").text(decimalSetting(data[0].c8));
+          $("#txtOutRate_bs").text(decimalSetting(data[0].c9));
+          $("#txtRate_install").text(decimalSetting(data[0].c10));
+          $("#txtOutRate_install").text(decimalSetting(data[0].c11));
+        
+      } else if (v == 'CE') {    
+          $("#txtStckCd").text(data[0].stkCode);
+          $("#txtRate_as").append("<input type='hidden' name='stckcd' id='stckcd' value=''/>");
+          $("#stckcd").val(data[0].stkCode);
+          $("#txtStckCtgry").text(data[0].codeName);
+          $("#txtStckNm").text(data[0].stkDesc);        
+          $("#txtRate_as").html("<input type='text' name='rate_as' id='rate_as' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' onclick='setRate(event)'/>");
+          $("#txtOutRate_as").html("<input type='text' name='outrate_as' id='outrate_as' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  onclick='setRate(event)'/>");
+          $("#txtRate_bs").html("<input type='text' name='rate_bs' id='rate_bs' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  onclick='setRate(event)'/>");
+          $("#txtOutRate_bs").html("<input type='text' name='outrate_bs' id='outrate_bs' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  onclick='setRate(event)'/>");
+          $("#txtRate_install").html("<input type='text' name='rate_install' id='rate_install' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  onclick='setRate(event)'/>");
+          $("#txtOutRate_install").html("<input type='text' name='outrate_install' id='outrate_install' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  onclick='setRate(event)'/>");
+          $("#rate_as").val(decimalSetting(data[0].c6));
+          $("#outrate_as").val(decimalSetting(data[0].c7));
+          $("#rate_bs").val(decimalSetting(data[0].c8));
+          $("#outrate_bs").val(decimalSetting(data[0].c9));
+          $("#rate_install").val(decimalSetting(data[0].c10));
+          $("#outrate_install").val(decimalSetting(data[0].c11));
+          
+      }
+          
+          
+    }
 
-	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-	//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-	// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-	doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M',
-			'f_multiCombo'); //청구처 리스트 조회
-	doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M',
-			'f_multiCombo'); //청구처 리스트 조회
-	//doDefCombo(comboData, '' ,'cmbStatus', 'M', 'f_multiCombo');
+    function decimalSetting(str){
+/*        var nf = new Intl.NumberFormat(["en-US"], {
+                //style: "currency",
+                //currency: "CNY",
+                //currencyDisplay: "symbol",
+                //maximumFractionDigits:2,
+                minimumIntegerDigits:3,
+                minimumFractionDigits:3,
+                maximumFractionDigits:3,
+                minimumSignificantDigits:3,
+                maximumSignificantDigits:3
+            });
+        //var num=nf.format(Number(str));
+        //alert(num); */
+        var num=Number(str).toFixed(2);
+        
+         
+        return num;
+    }
+    
+ 
+    //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
+    //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
+    //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
+    // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
+    doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M',
+            'f_multiCombo'); //청구처 리스트 조회
+    doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M',
+            'f_multiCombo'); //청구처 리스트 조회
+    //doDefCombo(comboData, '' ,'cmbStatus', 'M', 'f_multiCombo');
 
-	function f_multiCombo() {
-		$(function() {
-			$('#cmbCategory').change(function() {
+    function f_multiCombo() {
+        $(function() {
+            $('#cmbCategory').change(function() {
 
-			}).multipleSelect({
-				selectAll : true, // 전체선택 
-				width : '80%'
-			});
-			$('#cmbType').change(function() {
+            }).multipleSelect({
+                selectAll : true, // 전체선택 
+                width : '80%'
+            });
+            $('#cmbType').change(function() {
 
-			}).multipleSelect({
-				selectAll : true,
-				width : '80%'
-			});
-			$('#cmbStatus').change(function() {
+            }).multipleSelect({
+                selectAll : true,
+                width : '80%'
+            });
+            $('#cmbStatus').change(function() {
 
-			}).multipleSelect({
-				selectAll : true,
-				width : '80%'
-			});
-		});
-	}
+            }).multipleSelect({
+                selectAll : true,
+                width : '80%'
+            });
+        });
+    }
 
-	function f_clearForm() {
-		$("#typeid").val("");
-		$("#txtStockType").text();
-		$("#txtStatus").text();
-		$("#txtStockCode").text();
-		$("#txtUOM").text();
-		$("#txtStockName").text();
-		$("#txtCategory").text();
-		$("#txtNetWeight").text();
-		$("#txtGrossWeight").text();
-		$("#txtMeasurement").text();
-		$("#cbNCV").prop("checked", false);
-		$("#cbSirim").prop("checked", false);
-		$("#txtCost").text();
-		$("#txtNormalPrice").text();
-		$("#txtPV").text();
-		$("#txtMonthlyRental").text();
-		$("#txtRentalDeposit").text();
-		$("#txtPenaltyCharge").text();
-		$("#txtTradeInPV").text();
-	}
+    function f_clearForm() {
+        $("#typeid").val("");
+        $("#txtStockType").text();
+        $("#txtStatus").text();
+        $("#txtStockCode").text();
+        $("#txtUOM").text();
+        $("#txtStockName").text();
+        $("#txtCategory").text();
+        $("#txtNetWeight").text();
+        $("#txtGrossWeight").text();
+        $("#txtMeasurement").text();
+        $("#cbNCV").prop("checked", false);
+        $("#cbSirim").prop("checked", false);
+        $("#txtCost").text();
+        $("#txtNormalPrice").text();
+        $("#txtPV").text();
+        $("#txtMonthlyRental").text();
+        $("#txtRentalDeposit").text();
+        $("#txtPenaltyCharge").text();
+        $("#txtTradeInPV").text();
+    }
 
-	function f_isNumeric(val) {
-		var num = $(val).val();
+    function f_isNumeric(val) {
+        var num = $(val).val();
 
-		// 좌우 trim(공백제거)을 해준다.
-		num = String(num).replace(/^\s+|\s+$/g, "");
+        // 좌우 trim(공백제거)을 해준다.
+        num = String(num).replace(/^\s+|\s+$/g, "");
 
-		/*if(typeof opt == "undefined" || opt == "1"){
-		  // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
-		  var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
-		}else if(opt == "2"){
-		  // 부호 미사용, 자릿수구분기호 선택, 소수점 선택
-		  var regex = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
-		}else if(opt == "3"){*/
-		// 부호 미사용, 자릿수구분기호 미사용, 소수점 선택
-		var regex = /^[0-9]+(\.[0-9]+)?$/g;
-		/*}else{
-		  // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
-		  var regex = /^[0-9]$/g;
-		}*/
-		
-		/*  var re = /[~!@\#$%^&*\()\-=+_']/gi; 
-		 if(re.test(num)){ //특수문자가 포함되면 삭제하여 값으로 다시셋팅
-		 $(this).val(num.replace(re,"")); }  */
+        /*if(typeof opt == "undefined" || opt == "1"){
+          // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
+          var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+        }else if(opt == "2"){
+          // 부호 미사용, 자릿수구분기호 선택, 소수점 선택
+          var regex = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+        }else if(opt == "3"){*/
+        // 부호 미사용, 자릿수구분기호 미사용, 소수점 선택
+        var regex = /^[0-9]+(\.[0-9]+)?$/g;
+        /*}else{
+          // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
+          var regex = /^[0-9]$/g;
+        }*/
+        
+        /*  var re = /[~!@\#$%^&*\()\-=+_']/gi; 
+         if(re.test(num)){ //특수문자가 포함되면 삭제하여 값으로 다시셋팅
+         $(this).val(num.replace(re,"")); }  */
 
 
-		if (regex.test(num)) {
-			num = num.replace(/,/g, "");
-			return isNaN(num) ? false : true;
-		} else {
-			return false;
-		}
-	}
+        if (regex.test(num)) {
+            num = num.replace(/,/g, "").toFixed(2);
+            return isNaN(num) ? false : true;
+        } else {
+            return false;
+        }
+    }
 
-	
-	function onlyNumber(event){
+    
+    function onlyNumber(event){
         event = event || window.event;
         var keyID = (event.which) ? event.which : event.keyCode;
-        if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
-            return;
-        else
-            return false;
+            if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 110 || keyID == 190){ 
+                return;
+        }else{
+                return false;
+        }
     }
     function removeChar(event) {
         event = event || window.event;
+        var tmp=event.target.value;
         var keyID = (event.which) ? event.which : event.keyCode;
-        if ( keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
+        if ( keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 190) {
             return;
-        else
-            event.target.value = event.target.value.replace(/[^0-9]/g, "");
+        }else{
+              event.target.value = event.target.value.replace(/[^.0-9]/g, "");
+        }     //event.target.value =  event.target.value.replace(/[^0-9]([^0-9]|[\.]{1})[^0-9]{1,2}/g, "");
     }
     
+    function setRate(event){
+        event = event || window.event;
+        var tmp=event.target.value;
+        if(tmp == 0.00){
+           event.target.value="";
+       }
+        event.target.focus;
+    }
     
-	function removeRow(rowIndex, gridNm, num) {
+    function removeRow(rowIndex, gridNm, num) {
 
-		AUIGrid.removeRow(gridNm, rowIndex);
-		AUIGrid.removeSoftRows(gridNm);
-		
-	      if (num == 1) {
-	    	  $("#filter_info_edit").text("SAVE");
+        AUIGrid.removeRow(gridNm, rowIndex);
+        AUIGrid.removeSoftRows(gridNm);
+        
+          if (num == 1) {
+              $("#filter_info_edit").text("SAVE");
         } else if (num == 2) {
-        	  $("#spare_info_edit").text("SAVE");
+              $("#spare_info_edit").text("SAVE");
         } else if (num == 3){
-        	  $("#service_info_edit").text("SAVE");
+              $("#service_info_edit").text("SAVE");
         }
-	}
+    }
 
-	function addRowSvr() {
-		var item = new Object();
-		AUIGrid.addRow(serviceGrid, item, "last");
-		$("#service_info_edit").text("SAVE");
-	}
-	function addRowFileter() {
-		var item = new Object();
-		item.stockid = $("#filtercdPop").val();
-		item.stockname = $("#filtercdPop option:selected").text();
-		//item.stock     =   $("#").val();
-		item.typeid = $("#filtertypePop").val();
-		item.typenm = $("#filtertypePop option:selected").text();
-		item.period = $("#lifeperiodPop").val();
-		item.qty = $("#quantityPop").val();
-		AUIGrid.addRow(filterGrid, item, "last");
-		$("#filter_info_edit").text("SAVE");
-		 $("#regFilterWindow").hide(); 
-	}
-	
-	 function cancelRowFileter(){
+    function addRowSvr() {
+        var item = new Object();
+        AUIGrid.addRow(serviceGrid, item, "last");
+        $("#service_info_edit").text("SAVE");
+    }
+    function addRowFileter() {
+        var item = new Object();
+        item.stockid = $("#filtercdPop").val();
+        item.stockname = $("#filtercdPop option:selected").text();
+        //item.stock     =   $("#").val();
+        item.typeid = $("#filtertypePop").val();
+        item.typenm = $("#filtertypePop option:selected").text();
+        item.period = $("#lifeperiodPop").val();
+        item.qty = $("#quantityPop").val();
+        AUIGrid.addRow(filterGrid, item, "last");
+        $("#filter_info_edit").text("SAVE");
+         $("#regFilterWindow").hide(); 
+    }
+    
+     function cancelRowFileter(){
          $("#regFilterWindow").hide();  
       }
-	
-	function addRowSparePart(){
+    
+    function addRowSparePart(){
         var item = new Object();
         item.stockid = $("#sparecdPop").val();
         item.stockname = $("#sparecdPop option:selected").text();
@@ -1102,49 +1177,49 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         AUIGrid.addRow(spareGrid, item, "last");
         $("#spare_info_edit").text("SAVE");
         $("#regSpareWindow").hide();          
-	}
-	
-	   function cancelRowSparePart(){
-		   $("#regSpareWindow").hide();  
-	    }
-	
-	
-	function fn_srvMembershipList() {
-		Common.ajaxSync("GET", "/stock/srvMembershipList ", "",
-				function(result) {
-					srvMembershipList = new Array();
-					for (var i = 0; i < result.length; i++) {
-						var list = new Object();
-						list.pacid = result[i].pacid;
-						list.memcd = result[i].memcd;
-						list.cdname = result[i].cdname;
-						srvMembershipList.push(list);
-					}
-				});
-	}
-	
-	function destory(gridNm){
-		AUIGrid.destroy(gridNm);
-		$("#service_info_edit").text( "EDIT");
-		$("#filter_info_edit").text("EDIT");
-		$("#spare_info_edit").text("EDIT");
-		popClear();
-	}
-	function popClear(){
-		$("#filterForm")[0].reset();
-		$("#filtercdPop").attr("disabled",true);
-		$("#spareForm")[0].reset();
-		$("#sparecdPop").attr("disabled",true);
-		
-	}
-	
-	function colShowHide(gridNm,fied,checked){
-	      if(checked) {
-	            AUIGrid.showColumnByDataField(gridNm, fied);
-	        } else {
-	            AUIGrid.hideColumnByDataField(gridNm, fied);
-	        }
-	}
+    }
+    
+       function cancelRowSparePart(){
+           $("#regSpareWindow").hide();  
+        }
+    
+    
+    function fn_srvMembershipList() {
+        Common.ajaxSync("GET", "/stock/srvMembershipList ", "",
+                function(result) {
+                    srvMembershipList = new Array();
+                    for (var i = 0; i < result.length; i++) {
+                        var list = new Object();
+                        list.pacid = result[i].pacid;
+                        list.memcd = result[i].memcd;
+                        list.cdname = result[i].cdname;
+                        srvMembershipList.push(list);
+                    }
+                });
+    }
+    
+    function destory(gridNm){
+        AUIGrid.destroy(gridNm);
+        $("#service_info_edit").text( "EDIT");
+        $("#filter_info_edit").text("EDIT");
+        $("#spare_info_edit").text("EDIT");
+        popClear();
+    }
+    function popClear(){
+        $("#filterForm")[0].reset();
+        $("#filtercdPop").attr("disabled",true);
+        $("#spareForm")[0].reset();
+        $("#sparecdPop").attr("disabled",true);
+        
+    }
+    
+    function colShowHide(gridNm,fied,checked){
+          if(checked) {
+                AUIGrid.showColumnByDataField(gridNm, fied);
+            } else {
+                AUIGrid.hideColumnByDataField(gridNm, fied);
+            }
+    }
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv">
@@ -1336,16 +1411,16 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 </div>
                 <div style="width:1%;" >
                 </div>
-				<div style="width:49%;">
-				
-				<aside class="title_line"><!-- title_line start -->
-				<h3>Price & Value Information History</h3>
-				</aside><!-- title_line end -->
-				
-				<div id="priceHistory_div"></div>
-				</div>
-				
-				</div><!-- divine_auto end -->
+                <div style="width:49%;">
+                
+                <aside class="title_line"><!-- title_line start -->
+                <h3>Price & Value Information History</h3>
+                </aside><!-- title_line end -->
+                
+                <div id="priceHistory_div"></div>
+                </div>
+                
+                </div><!-- divine_auto end -->
             </article>
             
             <article class="tap_area" id="filter_info_div" style="display:none;">
@@ -1409,31 +1484,31 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 <h3>Stock Information</h3>
                 </aside><!-- title_line end -->
                 
-					<table class="type1">
-						<caption>search table</caption>
-						<colgroup>
-							<col style="width: 150px" />
-							<col style="width: *" />
-							<col style="width: 160px" />
-							<col style="width: *" />
-						</colgroup>
-						<tbody>
-							<tr>
-								<th scope="row">Stock Code</th>
-								<td ID="txtStckCd"></td>
-								<th scope="row">Category</th>
-								<td ID="txtStckCtgry"></td>
-							</tr>
-							<tr>
-								<th scope="row">Stock Name</th>
-								<td ID="txtStckNm" colspan="3"></td>
-							</tr>
-						</tbody>
-						</table>
-						
-						<aside class="title_line"><!-- title_line start -->
-		                <h3>Commission Setting - Installation</h3>
-		                </aside><!-- title_line end -->
+                    <table class="type1">
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Stock Code</th>
+                                <td ID="txtStckCd"></td>
+                                <th scope="row">Category</th>
+                                <td ID="txtStckCtgry"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Stock Name</th>
+                                <td ID="txtStckNm" colspan="3"></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                        
+                        <aside class="title_line"><!-- title_line start -->
+                        <h3>Commission Setting - Installation</h3>
+                        </aside><!-- title_line end -->
                 
                         <table class="type1">
                         <caption>search table</caption>
@@ -1496,8 +1571,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                          </tr>
                          </tbody>
                          </table>
-				</form>
-							
+                </form>
+                            
                 </div>
                 </div><!-- divine_auto end -->
              </article>
@@ -1508,66 +1583,66 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 <!-- registr filter-->
 <div class="popup_wrap" id="regFilterWindow" style="display:none"><!-- popup_wrap start -->
     <header class="pop_header"><!-- pop_header start -->
-		<h1>Add Filter</h1>
-		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-		</ul>
+        <h1>Add Filter</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+        </ul>
     </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->  
-			<!-- pop_body start -->
-				<form id="filterForm" name="filterForm" method="POST">
-					<table class="type1">
-						<!-- table start -->
-						<caption>search table</caption>
-						<colgroup>
-							<col style="width: 150px" />
-							<col style="width: *" />
-							<col style="width: 160px" />
-							<col style="width: *" />
-						</colgroup>
-						<tbody>
-							<tr>
-								<th scope="row">Category</th>
-								<td colspan="3"><select id="categoryPop" name="categoryPop"
-									onchange="getCdForStockList('filtercdPop' , this.value , 'filtercd', '')"></select></td>
-							</tr>
-							<tr>
-								<th scope="row">Filter Code</th>
-								<td colspan="3" class="w100p"><select id="filtercdPop"
-									class="w100p" name="filtercdPop"></select></td>
-							</tr>
-							<tr>
-								<th scope="row">Filter Type</th>
-								<td colspan="3"><select id="filtertypePop">
-										<option value="310">Default</option>
-										<option value="311">Optional</option>
-								</select></td>
-							</tr>
-							<tr>
-								<th scope="row">Life Period</th>
-								<td colspan="2"><input type="text" id="lifeperiodPop"
-									name="lifeperiodPop" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'/></td>
-								<td align="left">month(s)</td>
-							</tr>
-							<tr>
-								<th scope="row" rowspan="3">Quantity</th>
-								<td colspan="3"><input type="text" id="quantityPop"
-									name="quantityPop" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'/></td>
-							</tr>
-						</tbody>
-					</table>
-					<!-- table end -->
-					<ul class="center_btns">
+            <!-- pop_body start -->
+                <form id="filterForm" name="filterForm" method="POST">
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Category</th>
+                                <td colspan="3"><select id="categoryPop" name="categoryPop"
+                                    onchange="getCdForStockList('filtercdPop' , this.value , 'filtercd', '')"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Filter Code</th>
+                                <td colspan="3" class="w100p"><select id="filtercdPop"
+                                    class="w100p" name="filtercdPop"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Filter Type</th>
+                                <td colspan="3"><select id="filtertypePop">
+                                        <option value="310">Default</option>
+                                        <option value="311">Optional</option>
+                                </select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Life Period</th>
+                                <td colspan="2"><input type="text" id="lifeperiodPop"
+                                    name="lifeperiodPop" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'/></td>
+                                <td align="left">month(s)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" rowspan="3">Quantity</th>
+                                <td colspan="3"><input type="text" id="quantityPop"
+                                    name="quantityPop" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
+                    <ul class="center_btns">
                         <li><p class="btn_blue2 big"><a onclick="javascript:addRowFileter();">SAVE</a></p></li> 
                         <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
                     </ul>
-				</form>	
-	</section>	
+                </form> 
+    </section>  
 </div>
-		
-		
-	
-	<!-- register spare part-->
+        
+        
+    
+    <!-- register spare part-->
 <div class="popup_wrap" id="regSpareWindow" style="display:none"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1>Add Spare Part</h1>
@@ -1604,15 +1679,15 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         </tbody>
                     </table>
                     <ul class="center_btns">
-					    <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li> 
-					    <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowSparePart();">CANCEL</a></p></li>
-				    </ul>
+                        <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li> 
+                        <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowSparePart();">CANCEL</a></p></li>
+                    </ul>
                 </form>       
  </section>     
-</div>		
-		
-		
-	</section><!-- content end -->
+</div>      
+        
+        
+    </section><!-- content end -->
 </div>
 
 

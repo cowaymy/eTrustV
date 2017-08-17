@@ -848,4 +848,16 @@
          
          </select>
          
+         <update id="updateStockCommision"  parameterType="Map">
+            UPDATE SYS0026M
+			   SET UPD_DT = SYSDATE,
+			       UPD_USER_ID=  #{loginId},
+			       STK_COMM_OS_AS =#{outrate_as},
+			       STK_COMM_AS =#{rate_as},
+			       STK_COMM_OS_BS = #{outrate_bs},
+			       STK_COMM_BS = #{rate_bs},
+			       STK_COMM_OS_INS =#{outrate_install},
+			       STK_COMM_INS =#{rate_install}
+			 WHERE  STK_ID = #{stockId}
+         </update>
 </mapper>

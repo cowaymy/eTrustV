@@ -246,4 +246,11 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		return stockMapper.selectStockCommisionSetting(param);
 	}
 
+	@Override
+	public void updateStockCommision(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		logger.debug("stckcd : {}", params.get("stckcd"));
+		stockMapper.updateStockCommision(params);
+	}
+
 }
