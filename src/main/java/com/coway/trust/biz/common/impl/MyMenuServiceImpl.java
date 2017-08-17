@@ -67,6 +67,13 @@ public class MyMenuServiceImpl implements MyMenuService {
 
 	@Override
 	public List<EgovMap> selectMyMenuProgrmList(Map<String, Object> params,SessionVO sessionVO) {
+		int loginId = 0;
+		if(sessionVO != null){		
+			loginId = sessionVO.getUserId();
+		}								
+		
+		params.put("userId", loginId); // session Id Setting
+		
 		return myMenuMapper.selectMyMenuProgrmList(params);
 	}
 

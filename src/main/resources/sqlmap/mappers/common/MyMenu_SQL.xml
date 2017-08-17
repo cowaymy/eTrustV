@@ -3,13 +3,14 @@
 <mapper namespace="com.coway.trust.biz.common.impl.MyMenuMapper">
 
 <select id="selectMyMenuList" parameterType="Map" resultType="egovMap">
-	SELECT a.mymenu_code
+	SELECT a.user_id
+	         , a.mymenu_code
 	         , a.mymenu_name
 	         , a.mymenu_order
 	         , a.use_yn
-	         , a.mymenu_code as row_id /* PK, AUIGrid key row setting */  
+	         , a.user_id||a.mymenu_code as row_id /* PK, AUIGrid key row setting */  
 	   FROM SYS0059M a
-	 WHERE a.crt_user_id = #{userId}
+	 WHERE a.user_id = #{userId}
 	     <if test="useYn != null and useYn !=''">
 	     AND a.use_yn = #{useYn}
 	     </if>
@@ -22,6 +23,7 @@
 <insert id="insertMyMenu" parameterType="Map">
 	INSERT INTO sys0059m 
 	(
+	    user_id,
 	    mymenu_code,
 	    mymenu_name,
 	    mymenu_order,
@@ -33,6 +35,7 @@
 	) 
 	VALUES 
 	(
+	    #{userId},
 	    #{mymenuCode},
 	    #{mymenuName},
 	    #{mymenuOrder},
@@ -51,24 +54,27 @@
 	         , a.use_yn = #{useYn}
 	         , a.upd_user_id = #{userId}
 	         , a.upd_dt = SYSDATE
-	 WHERE a.mymenu_code = #{mymenuCode}    
+	 WHERE a.user_id = #{userId}
+	     AND a.mymenu_code = #{mymenuCode}    
 </update>
 
 <delete id="deleteMyMenu" parameterType="Map">
 	DELETE 
 	  FROM SYS0059M a
-	WHERE a.mymenu_code = #{mymenuCode}
+	WHERE a.user_id
+	    AND a.mymenu_code = #{mymenuCode}
 </delete>
 
 <select id="selectMyMenuProgrmList" parameterType="Map" resultType="egovMap">
-	SELECT a.mymenu_code 
+	SELECT a.user_id
+	         , a.mymenu_code 
 	         , d.mymenu_name
 	         , a.menu_code
 	         , b.menu_name
 	         , a.pgm_ord
 	         , b.pgm_code
 	         , c.pgm_name
-	         , a.mymenu_code||a.menu_code as row_id /* PK, AUIGrid key row setting */
+	         , a.user_id||a.mymenu_code||a.menu_code as row_id /* PK, AUIGrid key row setting */
 	 FROM SYS0060D a
              , SYS0051M b
              , SYS0050M c
@@ -76,6 +82,7 @@
    WHERE a.menu_code = b.menu_code
        AND b.pgm_code = c.pgm_code
        AND a.mymenu_code = d.mymenu_code
+       AND a.user_id = #{userId}
        <if test="mymenuCode != null and mymenuCode !=''">
 	   AND a.mymenu_code = #{mymenuCode}
 	   </if>
@@ -87,7 +94,8 @@
 <insert id="insertMyMenuProgrm" parameterType="Map">
 	INSERT INTO SYS0060D 
 	(
-	    mymenu_code
+	   user_id
+	   ,mymenu_code
 	   ,menu_code
 	   ,pgm_ord
 	   ,crt_user_id
@@ -97,7 +105,8 @@
 	) 
 	VALUES 
 	(
-	    #{mymenuCode}
+	   #{userId}
+	   ,#{mymenuCode}
 	   ,#{menuCode}
 	   ,#{pgmOrd}
 	   ,#{userId}
@@ -112,7 +121,8 @@
 	     SET a.pgm_ord = #{pgmOrd} 
 	         , a.upd_user_id = #{userId}
 	         , a.upd_dt = SYSDATE
-	 WHERE a.mymenu_code = #{mymenuCode}
+	 WHERE a.user_id = #{userId}
+	     AND a.mymenu_code = #{mymenuCode}
 	     AND a.menu_code = #{menuCode}
 </update>
 
@@ -120,6 +130,7 @@
 	DELETE 
 	  FROM SYS0060D a
 	 WHERE 1=1
+	     AND a.user_id = #{userId}
 	     <if test="mymenuCode != null and mymenuCode !=''">
 	     AND a.mymenu_code = #{mymenuCode}
 	     </if>
@@ -133,7 +144,7 @@
 	         , b.pgm_name
 	  FROM SYS0051M a
 	         , SYS0050M b
-	 WHERE a.pgm_code = b.pgm_code	     
+	 WHERE a.pgm_code = b.pgm_code	    	     
 	     <if test="popMenuCode != null and popMenuCode !=''">
 	     AND (UPPER(a.menu_code) LIKE  UPPER(#{popMenuCode}) || '%'  OR 
                 UPPER(a.menu_name) LIKE '%' || UPPER(#{popMenuCode}) || '%')
