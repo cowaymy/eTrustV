@@ -1835,7 +1835,7 @@
     
     <select id="searchMagicAddressPop" parameterType="Map" resultType="egovMap">
            <![CDATA[ 
-                SELECT ID STREET_ID
+                SELECT STREET_ID
 				         , REGION1 State
 				         , REGION2 City
 				         , LOCALITY Town

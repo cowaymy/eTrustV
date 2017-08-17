@@ -674,7 +674,7 @@
 </aside><!-- title_line end -->
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
-    <input type="hidden" id="streetId" name="streetId">
+    <input type="text" id="streetId" name="streetId">
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
