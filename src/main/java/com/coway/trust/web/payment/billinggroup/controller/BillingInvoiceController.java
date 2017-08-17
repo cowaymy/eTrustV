@@ -206,7 +206,7 @@ public class BillingInvoiceController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("orcGode","");
+		map.put("orcCode","");
 		map.put("grpCode", "");
 		map.put("deptCode", "");
 		map.put("memberId", 0);
