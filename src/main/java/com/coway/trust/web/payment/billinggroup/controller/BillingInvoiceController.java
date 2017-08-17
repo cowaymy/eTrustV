@@ -55,11 +55,11 @@ public class BillingInvoiceController {
 	public ResponseEntity<List<EgovMap>> searchReconciliationList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
-		String brNumber = String.valueOf(params.get("brNumber"));
-		String period = String.valueOf(params.get("period"));
-		String orderNo = String.valueOf(params.get("orderNo"));
-		String customerName = String.valueOf(params.get("customerName"));
-		String custNRIC = String.valueOf(params.get("customerNRIC"));
+		String brNumber = String.valueOf(params.get("brNumber")).trim();
+		String period = String.valueOf(params.get("period")).trim();
+		String orderNo = String.valueOf(params.get("orderNo")).trim();
+		String customerName = String.valueOf(params.get("customerName")).trim();
+		String custNRIC = String.valueOf(params.get("customerNRIC")).trim();
 		
 		int sMonth = 0;
 		int sYear = 0;
@@ -104,11 +104,11 @@ public class BillingInvoiceController {
 	public ResponseEntity<List<EgovMap>> searchRentalList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
-		String brNumber = String.valueOf(params.get("brNumber"));
-		String period = String.valueOf(params.get("period"));
-		String orderNo = String.valueOf(params.get("orderNo"));
-		String customerName = String.valueOf(params.get("customerName"));
-		String custNRIC = String.valueOf(params.get("customerNRIC"));
+		String brNumber = String.valueOf(params.get("brNumber")).trim();
+		String period = String.valueOf(params.get("period")).trim();
+		String orderNo = String.valueOf(params.get("orderNo")).trim();
+		String customerName = String.valueOf(params.get("customerName")).trim();
+		String custNRIC = String.valueOf(params.get("customerNRIC")).trim();
 		
 		int sMonth = 0;
 		int sYear = 0;
@@ -153,12 +153,12 @@ public class BillingInvoiceController {
 	public ResponseEntity<List<EgovMap>> searchMembershipList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
-		String invoiceNo = String.valueOf(params.get("invoiceNo"));
-		String period = String.valueOf(params.get("period"));
-		String orderNo = String.valueOf(params.get("orderNo"));
-		String custName = String.valueOf(params.get("custName"));
-		String custNRIC = String.valueOf(params.get("custNRIC"));
-		String quotationNo = String.valueOf(params.get("quotationNo"));
+		String invoiceNo = String.valueOf(params.get("invoiceNo")).trim();
+		String period = String.valueOf(params.get("period")).trim();
+		String orderNo = String.valueOf(params.get("orderNo")).trim();
+		String custName = String.valueOf(params.get("custName")).trim();
+		String custNRIC = String.valueOf(params.get("custNRIC")).trim();
+		String quotationNo = String.valueOf(params.get("quotationNo")).trim();
 		
 		int sMonth = 0;
 		int sYear = 0;
@@ -299,10 +299,10 @@ public class BillingInvoiceController {
 		List<EgovMap> list = null;
 
 		
-		String brNumber = String.valueOf(params.get("brNumber"));
-		String period = String.valueOf(params.get("period"));
-		String orderNo = String.valueOf(params.get("orderNo"));
-		String customerName = String.valueOf(params.get("customerName"));
+		String brNumber = String.valueOf(params.get("brNumber")).trim();
+		String period = String.valueOf(params.get("period")).trim();
+		String orderNo = String.valueOf(params.get("orderNo")).trim();
+		String customerName = String.valueOf(params.get("customerName")).trim();
 		
 		int sMonth = 0;
 		int sYear = 0;
