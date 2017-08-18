@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.sirim.SirimService;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -66,9 +68,9 @@ public class SirimController {
 	@RequestMapping(value = "/selectSirimList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectSirimList(@RequestBody Map<String, Object> params, Model model) {
 		
-		logger.debug("%%%%%%%%sirimList%%%%%%%: {}",params.get("searchSirimNo") );
-		logger.debug("%%%%%%%%sirimList%%%%%%%: {}",params.get("searchCategory") );
-		logger.debug("%%%%%%%%sirimList%%%%%%%: {}",params.get("searchWarehouse") );
+//		logger.debug("%%%%%%%%sirimList%%%%%%%: {}",params.get("searchSirimNo") );
+//		logger.debug("%%%%%%%%sirimList%%%%%%%: {}",params.get("searchCategory") );
+//		logger.debug("%%%%%%%%sirimList%%%%%%%: {}",params.get("searchWarehouse") );
 		
 		List<EgovMap> list = SirimService.selectSirimList(params);
 		
@@ -76,6 +78,45 @@ public class SirimController {
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
+	}
+	
+	
+	@RequestMapping(value = "/insertSirimList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertSirimList(@RequestBody Map<String, Object> params, Model model) {
+		
+//		logger.debug("%%%%%%%%addWarehouse%%%%%%%: {}",params.get("addWarehouse") );
+//		logger.debug("%%%%%%%%addTypeSirim%%%%%%%: {}",params.get("addTypeSirim") );
+//		logger.debug("%%%%%%%%addPrefixNo%%%%%%%: {}",params.get("addPrefixNo") );
+//		logger.debug("%%%%%%%%addQuantity%%%%%%%: {}",params.get("addQuantity") );
+//		logger.debug("%%%%%%%%addSirimNoFirst%%%%%%%: {}",params.get("addSirimNoFirst") );
+//		logger.debug("%%%%%%%%addSirimNoLast%%%%%%%: {}",params.get("addSirimNoLast") );
+		
+	
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		
+		params.put("crtuser_id", loginId);
+		params.put("upuser_id", loginId);
+		
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		Map<String, Object> map = new HashMap();
+
+		try {
+		 SirimService.insertSirimList(params);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+
 	}
 	
 	
