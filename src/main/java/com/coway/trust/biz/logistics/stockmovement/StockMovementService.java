@@ -17,4 +17,14 @@ public interface StockMovementService {
 
 	List<EgovMap> selectTolocationItemList(Map<String, Object> smap);
 
+	int stockMovementItemDeliveryQty(Map<String, Object> params);
+
+	Map<String, Object> selectStockMovementDataDetail(String param);
+
+	void deleteDeliveryStockMovement(Map<String, Object> param);
+
+	List<EgovMap> addStockMovementInfo(Map<String, Object> param);
+
+	void stockMovementReqDelivery(Map<String, Object> param);
+
 }

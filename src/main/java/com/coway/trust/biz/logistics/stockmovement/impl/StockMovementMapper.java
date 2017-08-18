@@ -25,4 +25,20 @@ public interface StockMovementMapper {
 
 	List<EgovMap> selectStockMovementToItem(Map<String, Object> params);
 
+	Map<String, Object> selectStockMovementItemDeliveryQty(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementItem(String param);
+
+	Map<String, Object> selectStockMovementHead(String param);
+
+	void deleteStockMovementItm(Map<String, Object> insMap);
+
+	void deleteDeliveryStockMovementItm(Map<String, Object> insMap);
+
+	String selectDeliveryStockMovementSeq();
+
+	void insertDeliveryStockMovementDetail(Map<String, Object> insMap);
+
+	void insertDeliveryStockMovement(Map<String, Object> insMap);
+
 }

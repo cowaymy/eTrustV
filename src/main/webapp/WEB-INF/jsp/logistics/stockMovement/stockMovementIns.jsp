@@ -30,21 +30,23 @@
 var resGrid;
 var reqGrid;
 
-var rescolumnLayout=[{dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
-                     {dataField:"stkid"     ,headerText:"ITEM ID"           ,width:120    ,height:30 ,visible:false},
+var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
+                     {dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
+                     {dataField:"stkid"     ,headerText:"ITEM CD"           ,width:120    ,height:30 ,visible:false},
                      {dataField:"stkcd"     ,headerText:"ITEM CD"           ,width:120    ,height:30},
                      {dataField:"stknm"     ,headerText:"ITEM NAME"         ,width:120    ,height:30},
                      {dataField:"typeid"    ,headerText:"Type Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30,visible:false},
+                     {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30},
                      {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
                      {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30},
-                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:true},
+                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
+                     {dataField:"uom"       ,headerText:"UOM"               ,width:120    ,height:30, visible:false},
                      {dataField:""      ,headerText:"Serial"    ,width:120    ,height:30}
                     ];
                     
 var reqcolumnLayout;
 
-var resop = {showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
+var resop = {rowIdField : "rnum", showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
 var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
 
 var uomlist = f_getTtype('42' , '');
@@ -55,8 +57,8 @@ $(document).ready(function(){
     ***********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
     doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , '');
-    paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'UM'};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
+    paramdata2 = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'UM'};
+    doGetComboData('/common/selectCodeList.do', paramdata2, '','smtype', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
@@ -66,9 +68,9 @@ $(document).ready(function(){
      ***********************************/
     
      reqcolumnLayout=[{dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
-                      {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30},
-                      {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30},
-                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30},
+                      {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30 , editable:true},
+                      {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30 , editable:false},
+                      {dataField:"aqty"      ,headerText:"Available Qty"    ,width:120    ,height:30 , editable:false},
                       {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
                       {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
@@ -101,17 +103,25 @@ $(document).ready(function(){
     
     AUIGrid.bind(resGrid, "cellEditBegin", function (event){});
     AUIGrid.bind(reqGrid, "cellEditBegin", function (event){
-    	
+        
     });
     
     AUIGrid.bind(resGrid, "cellEditEnd", function (event){});
     AUIGrid.bind(reqGrid, "cellEditEnd", function (event){
-    	
-    	if(event.dataField == "itmcd"){
-    		$("#svalue").val(AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd"));
-    		$("#sUrl").val("/logistics/material/materialcdsearch.do");
-    		Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
-    	}
+        
+        if(event.dataField == "itmcd"){
+            $("#svalue").val(AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd"));
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
+            Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
+        }
+        
+        if(event.dataField == "rqty"){
+            if(AUIGrid.getCellValue(reqGrid, event.rowIndex, "rqty") > AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")){
+                Common.alert('The requested quantity is up to '+AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")+'.');
+                AUIGrid.setCellValue(reqGrid, event.rowIndex, "rqty", 0);
+                return false;
+            }
+        }
     });
     
     AUIGrid.bind(resGrid, "cellClick", function( event ) {});
@@ -128,43 +138,42 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	//if (f_validatation('search')){
-    		console.log($("#tlocation").val());
-    	    $("#slocation").val($("#tlocation").val());
-    	    SearchListAjax();
-    	//}
+        //if (f_validatation('search')){
+            console.log($("#tlocation").val());
+            $("#slocation").val($("#tlocation").val());
+            SearchListAjax();
+        //}
     });
     $('#clear').click(function() {
     });
     $('#reqadd').click(function() {
-    	f_AddRow();
+        f_AddRow();
     });
     $('#reqdel').click(function(){
-    	AUIGrid.removeRow(reqGrid, "selectedIndex");
+        AUIGrid.removeRow(reqGrid, "selectedIndex");
         AUIGrid.removeSoftRows(reqGrid);
     });
     $('#list').click(function(){
-    	document.location.href = '/logistics/stockMovement/StockMovementList.do';
+        document.location.href = '/logistics/stockMovement/StockMovementList.do';
     });
     $('#save').click(function() {
-    	if (f_validatation('save')){
-	    	var dat = GridCommon.getEditData(reqGrid);
-	    	dat.form = $("#headForm").serializeJSON();
-	    	Common.ajax("POST", "/logistics/stockMovement/StockMovementAdd.do", dat, function(result) {
-	            Common.alert(result.message);
-	            AUIGrid.resetUpdatedItems(reqGrid, "all");
-	            
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }
-	
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
-    	}
+        if (f_validatation('save')){
+            var dat = GridCommon.getEditData(reqGrid);
+            dat.form = $("#headForm").serializeJSON();
+            Common.ajax("POST", "/logistics/stockMovement/StockMovementAdd.do", dat, function(result) {
+            	Common.alert(result.message , locationList);
+                AUIGrid.resetUpdatedItems(reqGrid, "all");
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
+    
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+        }
     });
     $("#sttype").change(function(){
-    	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+        paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
     });
     $("#smtype").change(function(){
@@ -172,26 +181,35 @@ $(function(){
     });
     $("#rightbtn").click(function(){
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
+        var bool = true;
         if (checkedItems.length > 0){
-	        var rowPos = "first";
-	        var item = new Object();
-	        var rowList = [];
-	        
-	        for (var i = 0 ; i < checkedItems.length ; i++){
-	            rowList[i] = {
-	                itmid : checkedItems[i].stkid,
-	                itmcd : checkedItems[i].stkcd,
-	                itmname : checkedItems[i].stknm
-	            }
-	        }
-	        
-	        AUIGrid.addRow(reqGrid, rowList, rowPos);
+            var rowPos = "first";
+            var item = new Object();
+            var rowList = [];
+            
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                
+                rowList[i] = {
+                            itmid : checkedItems[i].stkid,
+                            itmcd : checkedItems[i].stkcd,
+                            itmname : checkedItems[i].stknm,
+                            aqty : checkedItems[i].qty,
+                            uom : checkedItems[i].uom
+                        }
+                
+                AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
+            }
+            
+            AUIGrid.addRow(reqGrid, rowList, rowPos);
         }
     });
 });
 
+function locationList(){
+    $('#list').click();
+}
 function f_validatation(v){
-	if ($("#sttype").val() == null || $("#sttype").val() == undefined || $("#sttype").val() == ""){
+    if ($("#sttype").val() == null || $("#sttype").val() == undefined || $("#sttype").val() == ""){
         Common.alert("Please select one of Transaction Type.");
         return false;
     }
@@ -208,10 +226,10 @@ function f_validatation(v){
         return false;
     }
     if (v == 'save'){
-    	if ($("#reqcrtdate").val() == null || $("#reqcrtdate").val() == undefined || $("#reqcrtdate").val() == ""){
-    		Common.alert("Please enter Document Date.");
-    		return false;
-    	}
+        if ($("#reqcrtdate").val() == null || $("#reqcrtdate").val() == undefined || $("#reqcrtdate").val() == ""){
+            Common.alert("Please enter Document Date.");
+            return false;
+        }
     }
     return true;
     
@@ -223,7 +241,7 @@ function SearchListAjax() {
     var param = $('#searchForm').serialize();
     console.log(param);
     Common.ajax("GET" , url , param , function(result){
-    	AUIGrid.setGridData(resGrid, result.data);
+        AUIGrid.setGridData(resGrid, result.data);
     });
 }
 
@@ -236,19 +254,19 @@ function addRow() {
 }
 
 function fn_itempopList(data){
-	
+    
     var rowPos = "first";
     var rowList = [];
-   	
+    
     AUIGrid.removeRow(reqGrid, "selectedIndex");
-   	AUIGrid.removeSoftRows(reqGrid);
-   	for (var i = 0 ; i < data.length ; i++){
-    	rowList[i] = {
-	    	itmid : data[i].item.itemid,
-	    	itmcd : data[i].item.itemcode,
-	    	itmname : data[i].item.itemname
-    	}
-	}
+    AUIGrid.removeSoftRows(reqGrid);
+    for (var i = 0 ; i < data.length ; i++){
+        rowList[i] = {
+            itmid : data[i].item.itemid,
+            itmcd : data[i].item.itemcode,
+            itmname : data[i].item.itemname
+        }
+    }
     
     AUIGrid.addRow(reqGrid, rowList, rowPos);
     
@@ -334,11 +352,11 @@ function f_multiCombo() {
     <td><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Movement Path</th>
     <td> 
-	    <select class="w100p">
-	        <option value=" "></option>
-	        <option value="1">RDC to CT/Cody</option>
-	        <option value="2">CT/Cody to CT/Cody</option>
-	    </select>
+        <select class="w100p">
+            <option value=" "></option>
+            <option value="1">RDC to CT/Cody</option>
+            <option value="2">CT/Cody to CT/Cody</option>
+        </select>
     </td>
 </tr>
 <tr>
@@ -497,7 +515,7 @@ function f_multiCombo() {
 
 <ul class="btns">
     <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
-    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li>
+<%--     <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li> --%>
 </ul>
 
 </div><!-- border_box end -->
