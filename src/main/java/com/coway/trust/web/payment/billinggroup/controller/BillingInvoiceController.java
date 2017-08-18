@@ -47,8 +47,8 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/companyInvoice";
 	}
 	
-	@RequestMapping(value = "/selectInvoiceList")
-	public ResponseEntity<List<EgovMap>> searchReconciliationList(@RequestParam Map<String, Object> params, ModelMap model) {	
+	@RequestMapping(value = "/selectInvoiceList.do")
+	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
 		LOGGER.debug("params : {}", params);
@@ -98,7 +98,7 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/individualRentalStatement";
 	}
 	
-	@RequestMapping(value = "/selectRentalList")
+	@RequestMapping(value = "/selectRentalList.do")
 	public ResponseEntity<List<EgovMap>> searchRentalList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
@@ -147,7 +147,7 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/membershipInvoice";
 	}
 	
-	@RequestMapping(value = "/selectMembershipList")
+	@RequestMapping(value = "/selectMembershipList.do")
 	public ResponseEntity<List<EgovMap>> searchMembershipList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
@@ -198,7 +198,7 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/outrightInvoice";
 	}
 	
-	@RequestMapping(value = "/selectOutrightInvoiceList")
+	@RequestMapping(value = "/selectOutrightInvoiceList.do")
 	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")SearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
@@ -235,7 +235,7 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/proformaInvoice";
 	}
 	
-	@RequestMapping(value = "/selectProformaInvoiceList")
+	@RequestMapping(value = "/selectProformaInvoiceList.do")
 	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		

@@ -29,7 +29,7 @@ function fn_getIndividualStatementListAjax() {
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
 	}else{
-		Common.ajax("GET", "/payment/selectRentalList", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/payment/selectRentalList.do", $("#searchForm").serialize(), function(result) {
 	    	AUIGrid.setGridData(myGridID, result);
 	    });
 	}

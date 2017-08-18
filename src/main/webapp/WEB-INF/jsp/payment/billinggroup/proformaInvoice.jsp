@@ -70,7 +70,7 @@ function fn_getProformaInvoiceListAjax() {
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
 	}else{
-		Common.ajax("GET", "/payment/selectProformaInvoiceList", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/payment/selectProformaInvoiceList.do", $("#searchForm").serialize(), function(result) {
 	    	AUIGrid.setGridData(myGridID, result);
 	    });
 	}

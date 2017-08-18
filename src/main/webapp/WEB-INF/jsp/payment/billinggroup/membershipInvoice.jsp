@@ -29,7 +29,7 @@ function fn_getMembershipInvoiceListAjax() {
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
 	}else{
-		Common.ajax("GET", "/payment/selectMembershipList", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/payment/selectMembershipList.do", $("#searchForm").serialize(), function(result) {
 	    	AUIGrid.setGridData(myGridID, result);
 	    });
 	}

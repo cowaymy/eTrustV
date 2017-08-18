@@ -26,7 +26,7 @@ function fn_getOutrightInvoiceListAjax() {
 	
 	console.log("appType : " + $("#appType").val());
 	console.log($("searchForm").serialize());
-	Common.ajax("GET", "/payment/selectOutrightInvoiceList ", $("#searchForm").serialize(), function(result) {
+	Common.ajax("GET", "/payment/selectOutrightInvoiceList.do", $("#searchForm").serialize(), function(result) {
     	AUIGrid.setGridData(myGridID, result);
     });
 }

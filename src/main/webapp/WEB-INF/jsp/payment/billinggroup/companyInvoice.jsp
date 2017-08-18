@@ -30,7 +30,7 @@ function fn_getCompanyInvoiceListtAjax() {
 	if(!valid){
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
 	}else{
-		Common.ajax("GET", "/payment/selectInvoiceList", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/payment/selectInvoiceList.do", $("#searchForm").serialize(), function(result) {
 	    	AUIGrid.setGridData(myGridID, result);
 	    });
 	}
