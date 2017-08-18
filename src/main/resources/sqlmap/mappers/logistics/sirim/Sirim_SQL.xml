@@ -49,6 +49,110 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 </select>   
 
 
+
+ <insert id="insertSirimM" parameterType="Map">
+    INSERT INTO LOG0033D(
+        SRM_BATCH_ID,
+        SRM_BATCH_NO, 
+        SRM_NO_FROM, 
+        SRM_NO_TO, 
+        SRM_WH_LOC, 
+        SRM_STUS_ID, 
+        SRM_CRT_USER_ID, 
+        SRM_CRT_DT, 
+        SRM_QTY, 
+        SRM_REM, 
+        SRM_UPD_USER_ID, 
+        SRM_UPD_DT )
+     VALUES 
+        ( 
+        #{srmBatchId},
+        FN_GET_DOCNO('75'),
+        #{SrmNoFrom},
+        #{SrmNoTo},
+        #{addWarehouse},
+        1, 
+        #{crtuser_id},
+        SYSDATE,
+        #{addQuantity},
+        '',
+        #{upuser_id},
+        SYSDATE
+        )
+</insert> 
+
+
+<insert id="insertSirimD" parameterType="Map">
+    INSERT INTO LOG0034D(
+        SRM_DET_ID, 
+	    SRM_BATCH_ID, 
+	    SRM_DCF_ID, 
+	    SRM_NO, 
+	    SRM_STUS_ID, 
+	    SRM_CRT_USER_ID, 
+	    SRM_CRT_DT, 
+	    SRM_UPD_USER_ID, 
+	    SRM_UPD_DT )
+  VALUES 
+  (
+   #{srdBatchId}, 
+   #{srmBatchId},
+   0,
+   #{saveSirimNo},
+   1,
+   #{crtuser_id},
+   SYSDATE,
+   #{upuser_id},
+   SYSDATE
+  )    
+</insert>
+
+
+<insert id="insertSirimCrd_Pos" parameterType="Map">
+    INSERT INTO LOG0040D( 
+    SIRIM_ID,
+    SIRIM_NO, 
+    SIRIM_TYPE_ID, 
+    SIRIM_LOC, 
+    SIRIM_QTY, 
+    SIRIM_DOC_NO, 
+    SIRIM_REM, 
+    SIRIM_CRT_DT, 
+    SIRIM_CRT_USER_ID, 
+    SIRIM_SYNC_CHK, 
+    SIRIM_ENTRY_POINT, 
+    SIRIM_AFT_WEB_SYS )
+  VALUES 
+  ( 
+  #{CrdSirimId},
+  #{saveSirimNo},
+  #{addTypeSirim},
+  #{addSirimLoc},                   
+  #{addSirimQty},
+  #{getdocNo},
+  '',
+  (SELECT TO_CHAR(SYSDATE,'YYYY-MM-DD') FROM DUAL),
+  #{crtuser_id},
+  1,
+  1,
+  1 
+  )
+</insert>
+
+
+<select id="SirimMCreateSeq" resultType="Integer">
+     SELECT NVL(MAX(SRM_BATCH_ID),0) + 1 from LOG0033D
+</select>
+<select id="SirimDCreateSeq" resultType="Integer">
+     SELECT NVL(MAX(SRM_DET_ID),0) + 1 from LOG0034D
+</select> 
+<select id="CrdPosCreateSeq" resultType="Integer">
+     SELECT NVL(MAX(SIRIM_ID),0) + 1 from LOG0040D
+</select>
+<select id="docNoCreateSeq" resultType="String">
+      select FN_GET_DOCNO('75') from dual
+</select>   
+   
    
         
 </mapper>
