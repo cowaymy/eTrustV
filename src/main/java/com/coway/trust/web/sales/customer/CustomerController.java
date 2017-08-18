@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,7 +45,6 @@ public class CustomerController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	
 	@RequestMapping(value = "/selectIssueBank.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectIssueBank(@RequestParam Map<String, Object> params, Model model) {
 		List<EgovMap> bankList = customerService.selectIssueBank(params);
@@ -145,7 +145,6 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerAddressJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> addresslist = null;
-		logger.info("44444444444444444444 test param 4444444444 : {}" , params.get("custID"));
 		logger.info("##### customer Address Parsing START #####");
 		addresslist = customerService.selectCustomerAddressJsonList(params);
 		
@@ -645,7 +644,6 @@ public class CustomerController {
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
-			
 			//page param
 			model.addAttribute("custId", params.get("custId"));
 			model.addAttribute("custAddId", params.get("custAddId"));
@@ -714,7 +712,6 @@ public class CustomerController {
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
-			
 			//page param
 			model.addAttribute("custId", params.get("custId"));
 			model.addAttribute("custAddId", params.get("custAddId"));
@@ -868,7 +865,7 @@ public class CustomerController {
 			
 			logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.get("custId"));
 			//service
-			customerService.updateCustomerAddressSetActive(params);
+			/*customerService.updateCustomerAddressSetActive(params);*/
 			customerService.updateCustomerAddressSetMain(params);
 			// set message
 			ReturnMessage message = new ReturnMessage();
@@ -914,7 +911,7 @@ public class CustomerController {
 			
 			
 			//service
-			customerService.updateCustomerContactSetActive(params);
+			/*customerService.updateCustomerContactSetActive(params);*/
 			customerService.updateCustomerContactSetMain(params);
 			// set message
 			ReturnMessage message = new ReturnMessage();
@@ -1203,4 +1200,145 @@ public class CustomerController {
 			// 데이터 리턴.
 			return ResponseEntity.ok(searchMagicAddrList);
 		}
+		
+		
+		/**
+		 * Add new Address(Edit)
+		 * @param model
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/updateCustomerNewAddressPop.do")
+		public String updateCustomerNewAddressPop(@RequestParam Map<String, Object> params , ModelMap model) throws Exception{
+			
+			model.addAttribute("insCustId", params.get("custId"));
+			
+			return "sales/customer/customerNewAddressPop";
+		}
+		
+		
+		/**
+		 * Add new Contact(Edit)
+		 * @param model
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/updateCustomerNewContactPop.do")
+		public String updateCustomerNewContactPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			model.addAttribute("insCustId", params.get("custId"));
+		   
+			return "sales/customer/customerNewContactPop";
+		}
+		
+		
+		/**
+		 * Add new Bank Account(Edit)
+		 * @param model
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/updateCustomerNewBankPop.do")
+		public String updateCustomerNewBankPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			model.addAttribute("insCustId", params.get("custId"));
+			
+			return "sales/customer/customerNewBankPop";
+		}
+		
+		
+		/**
+		 * Add new Card Account(Edit)
+		 * @param model
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/updateCustomerNewCardPop.do")
+		public String updateCustomerNewCardPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			model.addAttribute("insCustId", params.get("custId"));
+			
+			return "sales/customer/customerNewCardPop";
+		}
+		
+		
+		/**
+		 * Add new Address(Edit) After
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/insertCustomerAddressInfoAf.do")
+		public ResponseEntity<ReturnMessage> insertCustomerAddressInfoAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			
+			customerService.insertCustomerAddressInfoAf(params	);
+			
+			// 결과 만들기 예.
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			
+			return ResponseEntity.ok(message);
+		}
+		
+		
+		/**
+		 * Add new Contact(Edit) After
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/insertCustomerContactAddAf.do")
+		public ResponseEntity<ReturnMessage> insertCustomerContactAddAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			
+			customerService.insertCustomerContactAddAf(params	);
+			
+			// 결과 만들기 예.
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			
+			return ResponseEntity.ok(message);
+		}
+		
+		
+		/**
+		 * Add new Bank(Edit) After
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/insertCustomerBankAddAf.do")
+		public ResponseEntity<ReturnMessage> insertCustomerBankAddAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			customerService.insertCustomerBankAddAf(params	);
+			
+			// 결과 만들기 예.
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			
+			return ResponseEntity.ok(message);
+			
+		}
+		
+		
+		/**
+		 * Add new Credit Card(Edit) After
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/insertCustomerCardAddAf.do")
+		public ResponseEntity<ReturnMessage> insertCustomerCardAddAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			customerService.insertCustomerCardAddAf(params	);
+			
+			// 결과 만들기 예.
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			
+			return ResponseEntity.ok(message);
+			
+		}
+		
 }
