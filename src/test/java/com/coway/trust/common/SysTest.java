@@ -3,7 +3,13 @@ package com.coway.trust.common;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -107,7 +113,30 @@ public class SysTest {
 	}
 
 	@Test
-	public void formatFileSizeTest(){
+	public void formatFileSizeTest() {
 		LOGGER.debug(">>>>> {}", CommonUtils.formatFileSize(1024 * 1024 * 100));
+	}
+
+	@Test
+	public void jndiConnectTest() {
+		Hashtable<String, String> h = new Hashtable<String, String>(7);
+		h.put(Context.INITIAL_CONTEXT_FACTORY, "weblogic.jndi.WLInitialContextFactory");
+		h.put(Context.PROVIDER_URL, "t3://etrustdev.my.coway.com:7001");// add ur url
+		h.put(Context.SECURITY_PRINCIPAL, "weblogic");// add username
+		h.put(Context.SECURITY_CREDENTIALS, "weblogic12!@");// add password
+
+		// Bundle bundle;
+		try {
+			InitialContext ctx = new InitialContext(h);
+			// DataSource dataSource = ((DataSource) ctx.lookup("etrust-jndi"));
+			DataSource dataSource = ((DataSource) ctx.lookup("eTRUST_DEV"));
+
+			// bundle = (Bundle) ctx.lookup(BUNDLE_JNDI_NAME);
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -591,5 +591,123 @@ var Common = {
 
 };
 
+/////////////////////////////////////
+//  공통 combo
+/////////////////////////////////////
+var CommonCombo = {
+        /**
+         * 공통 콤보박스 : option 으로 처리.
+         *
+         * @param _comboId           : 콤보박스 id     String               => "comboId" or "#comboId"
+         * @param _url                  : 호출 URL
+         * @param _jsonParam        : 넘길 파라미터  json object      => {id : "im7015", name : "lim"}
+         * @param _sSelectData      : 선택될 id        String              =>단건 : "aaa", 다건 :  "aaa|!|bbb|!|ccc"
+         * @param _option              : 옵션.             소스내                => var option 참조.
+         * @param _callback            : 콜백함수         function           => function(){..........}
+         */
+        make: function (_comboId, _url, _jsonParam, _sSelectData, _option, _callback) {
 
+            Common.ajax("GET", _url, _jsonParam, function (data) {
+
+                // default value....
+                var option = {
+                    id: "codeId",              // 콤보박스 value 에 지정할 필드명.
+                    name: "codeName",  // 콤보박스 text 에 지정할 필드명.
+                    type: "S",                   // 'S' : 싱글, 'M' : 멀티.
+                    chooseMessage: "",
+                    width: '80%',              // width
+                    isEnable: true,            // true : enable, false : disable
+                    isCheckAll: true,          // true : checkAll, false : not check
+                    isShowChoose: true  // Choose One 등 문구 보여줄지 여부.
+                };
+
+                option = $.extend(option, _option);
+
+                if (option.type == "S") {
+                    option.isCheckAll = false;
+                }
+
+                var targetObj = document.getElementById(_comboId);
+                var custom = "";
+
+                for (var i = targetObj.length - 1; i >= 0; i--) {
+                    targetObj.remove(i);
+                }
+
+                var $_comboId = GridCommon.makeGridId(_comboId);
+
+                if (option.type && option.type != "M") {
+                    if (option.isShowChoose) {
+                        if (FormUtil.isNotEmpty(option.chooseMessage)) {
+                            custom = option.chooseMessage;
+                        } else {
+                            custom = (option.type == "S") ? eTrusttext.option.choose : ((option.type == "A") ? eTrusttext.option.all : "");
+                        }
+
+                        $("<option />", {value: "", text: custom}).appendTo($_comboId);
+                    }
+
+                } else {
+                    $($_comboId).attr("multiple", "multiple");
+                }
+
+                var selectArray = [];
+
+                if (FormUtil.isNotEmpty(_sSelectData)) {
+                    selectArray = _sSelectData.split(DEFAULT_DELIMITER);
+                }
+
+                var dataObj = (data);
+
+                $.each(data, function (index, value) {
+                    console.log("selectArray.length(" + index + ") : " + selectArray.length + "   >    " + dataObj[index][option.id]);
+                    if (selectArray.length > 0 && $.inArray(dataObj[index][option.id], selectArray) > 0) {
+                        $('<option />', {
+                            value: dataObj[index][option.id],
+                            text: dataObj[index][option.name]
+                        }).appendTo($_comboId).attr("selected", "true");
+                    } else {
+                        $('<option />', {
+                            value: dataObj[index][option.id],
+                            text: dataObj[index][option.name]
+                        }).appendTo($_comboId);
+                    }
+                });
+
+                if (option.type == "M") {
+                    $($_comboId).multipleSelect({
+                        selectAll: true,
+                        width: option.width
+                    });
+
+                    if (option.isCheckAll) {
+                        $($_comboId).multipleSelect("checkAll");
+                    }
+
+                    if (!option.isEnable) {
+                        $($_comboId).multipleSelect("disable");
+                    }
+                }
+
+                if (_callback) {
+                    _callback(data);
+                }
+
+            }, function (jqXHR, textStatus, errorThrown) {
+                Common.alert("Draw ComboBox['" + _comboId + "'] is failed. \n\n Please try again.");
+            });
+
+        },
+
+    /**
+	 * 아이디로 콤보 초기화
+     * @param _comboId
+     */
+        initById: function (_comboId) {
+            var targetObj = document.getElementById(_comboId);
+            for (var i = targetObj.length - 1; i >= 0; i--) {
+                targetObj.remove(i);
+            }
+        }
+};
 

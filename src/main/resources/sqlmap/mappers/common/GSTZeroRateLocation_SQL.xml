@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.GSTZeroRateLocationMapper">
+
+    <select id="selectStateCodeList" parameterType="Map" resultType="egovMap">
+        SELECT STATECODE.STATE_ID,
+               STATECODE.CODE,
+               STATECODE.NAME,
+               STATECODE.CNTY_ID,
+               STATECODE.STUS_CODE_ID,
+               STATECODE.CRT_DT
+        FROM   SYS0035M STATECODE
+        WHERE  STATECODE.STUS_CODE_ID = #{stusCodeId}
+        ORDER  BY STATECODE.NAME ASC
+    </select>
+
+    <select id="selectSubAreaList" parameterType="Map" resultType="egovMap">
+        SELECT   SUBAREA.AREA_ID
+                ,SUBAREA.AREA_NAME
+                ,SUBAREA.AREA_STATE_ID
+                ,SUBAREA.AREA_IDCM
+                ,SUBAREA.AREA_STUS_ID
+            FROM SYS0039M SUBAREA
+           WHERE SUBAREA.AREA_STUS_ID = #{areaStusId}
+             AND SUBAREA.AREA_STATE_ID = #{areaStateId}
+        ORDER BY SUBAREA.AREA_NAME ASC
+    </select>
+
+    <select id="selectZRLocationList" parameterType="Map" resultType="egovMap">
+        SELECT
+             EXTENT1.ZR_LOC_ID
+            ,EXTENT1.ZR_LOC_STATE_ID
+            ,EXTENT1.ZR_LOC_STUS_ID
+            ,EXTENT1.ZR_LOC_REM
+            ,EXTENT1.ZR_LOC_CRT_DT
+            ,EXTENT1.ZR_LOC_CRT_USER_ID
+            ,EXTENT2.CODE
+            ,EXTENT2.NAME
+            ,EXTENT3.AREA_ID
+            ,EXTENT3.AREA_NAME
+            ,EXTENT4.POST_CODE_ID
+            ,EXTENT4.POST_CODE
+            ,EXTENT5.NAME  AS STUS_CODE_NAME
+        FROM SAL0044D EXTENT1 LEFT JOIN SYS0035M EXTENT2 ON EXTENT2.STATE_ID = EXTENT1.ZR_LOC_STATE_ID
+            LEFT JOIN SYS0039M EXTENT3 ON EXTENT3.AREA_ID = EXTENT1.ZR_LOC_AREA_ID
+            LEFT JOIN SYS0030C EXTENT4 ON EXTENT4.POST_CODE_ID = EXTENT1.ZR_LOC_POST_CODE_ID
+            LEFT JOIN SYS0038M EXTENT5 ON EXTENT5.STUS_CODE_ID = EXTENT1.ZR_LOC_STUS_ID
+        WHERE 'T'  = CASE
+                                 WHEN #{zrLocStusId} IS NULL OR EXTENT1.ZR_LOC_STUS_ID = #{zrLocStusId}
+                                    THEN 'T'
+                                 ELSE 'F'
+                              END
+            AND 'T' = CASE
+                                 WHEN #{zrLocId} IS NULL OR EXTENT1.ZR_LOC_ID = #{zrLocId}
+                                    THEN 'T'
+                                 ELSE 'F'
+                              END
+            AND 'T' = CASE
+                                 WHEN #{zrLocStateId} IS NULL OR EXTENT1.ZR_LOC_STATE_ID = #{zrLocStateId}
+                                    THEN 'T'
+                                 ELSE 'F'
+                              END
+            AND 'T' = CASE
+                                 WHEN #{areaId} IS NULL OR EXTENT3.AREA_ID = #{areaId}
+                                    THEN 'T'
+                                 ELSE 'F'
+                              END
+            AND EXTENT4.POST_CODE LIKE '%' || #{postCode} || '%'
+        ORDER BY EXTENT1.ZR_LOC_ID ASC
+    </select>
+
+</mapper>
