@@ -893,4 +893,21 @@ public final class CommonUtils {
 
 		return (T) wContext.getBean(beanName);
 	}
+	
+	/**
+	 * AS-IS : CommonFunction.cs - GetRandomNumber 변환 method
+	 * @param size
+	 * @return
+	 */
+	public static String getRandomNumber(int size){
+        Random random = new Random();        
+        char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < size; i++){            
+            int num = random.nextInt(chars.length);            
+            sb.append(chars[num]);
+        }        
+        return sb.toString();
+    }
 }
