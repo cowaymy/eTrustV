@@ -992,7 +992,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{spouseNric}
             , #{spouseOcc}
             , #{spouseContat}
+            <if test="spouseDob != null and spouseDob != '' and spouseDob != '1900-01-01'" >
+            , TO_CHAR(TO_DATE(#{spouseDob},'dd-mm-yyyy'),'yyyy-mm-dd')
+            </if>
+             <if test="spouseDob != null and spouseDob != '' and spouseDob == '1900-01-01'" >
             , #{spouseDob}
+            </if>
             , #{educationLvl}
             , #{language}
             , #{issuedBank}
@@ -1234,7 +1239,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	           VALUES ( 
 	           (SELECT MAX(ACC_BILL_ID)+1 FROM PAY0016D )
 	           , #{accBillTaskId}
-	           ,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	           ,  SYSDATE
 	           , #{accBillRefNo}
 	           , #{accBillOrderId}
 	           , #{accBillOrderNo}
@@ -1551,7 +1556,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{applicantSpouseNRIC}
 	  , #{applicantSpouseOccupation}
 	  , #{applicantSpouseTelContact}
-	  , #{applicantSpouseDOB}
+	  , TO_CHAR(TO_DATE(#{applicantSpouseDOB},'dd-mm-yyyy'),'yyyy-mm-dd')
 	  , #{applicantEduLevel}
 	  , #{applicantLanguage}
 	  , #{applicantBankID}
@@ -1670,7 +1675,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{docTypeID}
 	  , #{docSOID}
 	  , #{docMemId}
-	  , SYSDATE
+	  ,  TO_CHAR(SYSDATE,'YYYY-MM-DD')
 	  , #{docCopyQty}
 	  , #{statusID}
 	  , #{creator}
