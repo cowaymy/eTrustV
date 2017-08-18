@@ -134,6 +134,7 @@ table+.title_line{margin-top:20px;}
 .pink_text{color:#f0008d;}
 .black_text{color:#000;}
 .blue_text{color:#25527c;}
+.bold_text{font-weight:bold;}
 .txt_box{position:Relative;}
 .txt_box i{display:none;}
 .txt_box:hover i{display:block; position:Absolute; top:15px; left:0; z-index:90; border:1px solid #06a7e2; background:#f5f5f5; padding:5px 10px; white-space:nowrap; font-style:normal; font-size:12px; border-radius:3px; font-weight:normal; line-height:1.3;}
@@ -242,6 +243,8 @@ table.type1 td > label input[type=checkbox]{position:relative; top:2px; margin:0
 table.type1 td > label input[type=radio]{position:relative; top:2px; margin:0 5px 0 0; padding:0; border:1px solid #d2d2d2;}
 table.type1 td > label span,
 table.type1 tbody td.col_all > span{line-height:26px;}
+table.type1 tbody td.bg-black {background:black;}
+table.type1 tbody td.bg-black > span {color:#fff;}
 
 table.type2{border-top:1px solid #d3d9dd;}
 table.type2 thead th,
