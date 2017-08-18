@@ -12,8 +12,8 @@
 	       Filter1.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
 	       Filter1.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
 	       Filter1.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO  ,
-	       Filter1.TAX_INVC_MONTH ,
-	       Filter1.TAX_INVC_YEAR  
+	       Filter1.TAX_INVC_MONTH MONTH,
+	       Filter1.TAX_INVC_YEAR YEAR 
 	    FROM
 	            (
 	            SELECT

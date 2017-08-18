@@ -47,6 +47,7 @@ function f_multiCombo() {
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
+    { dataField:"taxInvcId" ,headerText:"Tax Invoice ID",width: 100 , editable : false ,visible : false},
     { dataField:"taxInvcRefNo" ,headerText:"Invoice No.",width: 180 , editable : false },
     { dataField:"taxInvcRefDt" ,headerText:"Invoice Date",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
     { dataField:"invcItmOrdNo" ,headerText:"Order No.",width: 200, editable : false },
@@ -68,6 +69,27 @@ function fn_getTaxInvoiceListAjax() {
     Common.ajax("POST", "/payment/selectTaxInvoiceOutrightList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
+}
+
+
+//크리스탈 레포트
+function fn_generateInvoice(){
+  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+  
+  if (selectedItem[0] > -1){
+      //report form에 parameter 세팅      
+      $("#reportPDFForm #v_taxInvoiceId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
+      
+      //report 호출
+      var option = {
+              isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+      };
+
+      Common.report("reportPDFForm", option);
+       
+  }else{
+      Common.alert('<b>No print type selected.</b>');
+  }
 }
 
 </script>
@@ -141,7 +163,7 @@ function fn_getTaxInvoiceListAjax() {
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">Generate Invoice</a></p></li>                                                                
+                        <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>                                                                
                     </ul>
                     <ul class="btns">                       
                     </ul>
@@ -163,3 +185,8 @@ function fn_getTaxInvoiceListAjax() {
     <!-- search_result end -->
 </section>
 <!-- content end --> 
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_Outright_PDF.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_taxInvoiceId" name="v_taxInvoiceId" />
+</form>

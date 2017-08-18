@@ -43,6 +43,7 @@ $(document).ready(function(){
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
+    { dataField:"taxInvcType" ,headerText:"Tax Invoice Type",width: 100 , editable : false ,visible : false},
     { dataField:"taxInvcRefNo" ,headerText:"Invoice No.",width: 200 , editable : false },
     { dataField:"taxInvcSvcNo" ,headerText:"Service No.",width: 200  , editable : false },
     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },
@@ -61,6 +62,65 @@ function fn_getTaxInvoiceListAjax() {
     Common.ajax("POST", "/payment/selectTaxInvoiceMiscellaneousList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
+}
+
+
+//크리스탈 레포트
+function fn_generateInvoice(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+        //report form에 parameter 세팅
+        var taxInvcType = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType");             //taxInvoice Id
+        var taxInvcSvcNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"); //service No
+        var taxInvcRefNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo");               //br No. = invoiceNo
+        
+        switch (taxInvcType){
+            case 117 :
+            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF.rpt');
+            	break;
+            case 118 :
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF.rpt');
+                break;
+            case 121 :
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_POS_PDF.rpt');
+                break;
+            case 122 :
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
+                break;
+            case 123 :
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF.rpt');
+                break;
+            case 124 :
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF.rpt');
+                break;
+            case 125 :
+            	if(taxInvcSvcNo.indexOf('SCT') > -1){
+            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF.rpt');	
+            	}else{
+            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF.rpt');	
+            	}                
+                break;
+            case 142 :
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
+                break;
+            default:
+                break;
+        }        
+        
+        $("#reportPDFForm #v_serviceNo").val(taxInvcSvcNo);
+        $("#reportPDFForm #v_invoiceType").val(taxInvcType);                    
+        
+        //report 호출
+        var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+
+        Common.report("reportPDFForm", option);
+         
+    }else{
+        Common.alert('<b>No print type selected.</b>');
+    }
 }
 
 </script>
@@ -136,7 +196,7 @@ function fn_getTaxInvoiceListAjax() {
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">Generate Invoice</a></p></li>                                                                
+                        <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>                                                                
                     </ul>
                     <ul class="btns">                       
                     </ul>
@@ -157,4 +217,12 @@ function fn_getTaxInvoiceListAjax() {
     </section>
     <!-- search_result end -->
 </section>
-<!-- content end --> 
+<!-- content end -->
+ 
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />    
+    <input type="hidden" id="v_serviceNo" name="v_serviceNo" />
+    <input type="hidden" id="v_invoiceType" name="v_invoiceType" />    
+</form>
+ 

@@ -31,6 +31,7 @@ $(document).ready(function(){
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
+    { dataField:"taxInvcId" ,headerText:"Tax Invoice ID",width: 100 , editable : false ,visible : false},
     { dataField:"taxInvcRefNo" ,headerText:"BR No.",width: 180 , editable : false },    
     { dataField:"invcItmOrdNo" ,headerText:"Order No.",width: 200, editable : false },    
     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },    
@@ -54,6 +55,29 @@ function fn_getTaxInvoiceListAjax() {
     Common.ajax("POST", "/payment/selectTaxInvoiceRenMembershipList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
+}
+
+
+//크리스탈 레포트
+function fn_generateInvoice(){
+  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+  
+  if (selectedItem[0] > -1){
+      //report form에 parameter 세팅      
+      $("#reportPDFForm #V_REFERENCEID").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
+      $("#reportPDFForm #V_TYPE").val(134);
+      console.log("referenceId :  "  + AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
+      
+      //report 호출
+      var option = {
+              isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+      };
+
+      Common.report("reportPDFForm", option);
+       
+  }else{
+      Common.alert('<b>No print type selected.</b>');
+  }
 }
 
 </script>
@@ -127,7 +151,7 @@ function fn_getTaxInvoiceListAjax() {
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">Generate Invoice</a></p></li>                                                                
+                        <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>                                                                
                     </ul>
                     <ul class="btns">                       
                     </ul>
@@ -149,3 +173,12 @@ function fn_getTaxInvoiceListAjax() {
     <!-- search_result end -->
 </section>
 <!-- content end --> 
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_ServiceContract_PDF.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="V_TYPE" name="V_TYPE" />
+    <input type="hidden" id="V_TASKID" name="V_TASKID" value="0"/>
+    <input type="hidden" id="V_REFMONTH" name="V_REFMONTH" value="0" />
+    <input type="hidden" id="V_REFYEAR" name="V_REFYEAR" value="0" />
+    <input type="hidden" id="V_REFERENCEID" name="V_REFERENCEID" />
+</form>
