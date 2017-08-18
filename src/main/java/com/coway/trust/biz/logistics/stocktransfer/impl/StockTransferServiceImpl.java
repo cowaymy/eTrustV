@@ -206,6 +206,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		if (updList.size() > 0){
 			Map<String, Object> insMap = null;
 			for (int i = 0 ; i < updList.size() ; i++){
+				
 	    		insMap = (Map<String, Object>) updList.get(i);
 	    		insMap.put("delno" , seq                 );
 	    		insMap.put("userId", params.get("userId"));
