@@ -106,8 +106,7 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     var totalLength = 0;
     totalLength = addList.length + updateList.length + removeList.length;
     
-	if(totalLength == 0){
-		alert("No Change Data.");
+	if(totalLength == 0){		
 		return true; /* Failed */
 	}
 
