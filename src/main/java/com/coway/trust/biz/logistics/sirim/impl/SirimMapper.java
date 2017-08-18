@@ -10,7 +10,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface SirimMapper {
 
 	List<EgovMap> selectWarehouseList(Map<String, Object> params);
-	
 	List<EgovMap> selectSirimList(Map<String, Object> params);
-
+	
+	int SirimMCreateSeq();
+	int SirimDCreateSeq();
+	int CrdPosCreateSeq();
+	String docNoCreateSeq();
+	
+	void insertSirimM(Map<String, Object> params);
+	void insertSirimD(Map<String, Object> params);
+	void insertSirimCrd_Pos(Map<String, Object> params);
+	
 }
