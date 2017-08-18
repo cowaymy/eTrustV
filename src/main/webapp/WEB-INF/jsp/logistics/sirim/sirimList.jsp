@@ -101,6 +101,14 @@
     	    
    	    $("#insert").click(function(){
    	       $("#newSirimWindow").show();
+   	       doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','addWarehouse', 'S' , ''); //Type 리스트 조회
+   	       //$("#addWarehouse option:eq(CDB-HQ)").prop("selected", true);
+   	       //$("#addWarehouse > option[@value=CDB-HQ]").attr("selected", true);
+   	         //$("#addWarehouse").val("CDB-HQ").attr("selected", "selected");
+   	         $("#addWarehouse").val("CDB-HQ").prop("selected", true);
+   	         $("#addWarehouse").find("option:eq(3)").prop("selected", true);
+   	         
+   	         
    	       doGetCombo('/common/selectCodeList.do', '11', '','addTypeSirim', 'S' , ''); //Type 리스트 조회
    	       }); 
    	    
@@ -112,24 +120,27 @@
    	      
    	         lNo= getLastNo(SirimNoFirst,quantity);
    	        
-   	        alert("lNo     :     "+lNo);
-   	        
-	   	     if (lNo.length > SirimNoFirst.length){
+   	         $("#addSirimNoLast").val(lNo); 
+   	         
+	   	    /*  if (lNo.length > SirimNoFirst.length){
 	             alert("* Invalid first number. Ending number exceed length.");
 	         }else{
-	        	  alert("통과!!!!!!");
-	        	 $("#addSirimNoLast").text(lNo); 
-	         } 	        
+	        	 $("#addSirimNoLast").val(lNo); 
+	         } 	  */       
    	        
      }); 
-    	  
+   	    
+   	 $("#btnRekey_Add_Click").click(function(){
+   		$("#addSirimNoFirst").val(""); 
+   		$("#addSirimNoLast").val("");       
+   	  });   
 	  
     	  
     });
     
     
     function getSirimListAjax() {  
-        Common.ajax("POST", "/logistics/sirim/selectSirimList.do",  $('#searchForm').serializeJSON(), function(result) {
+        Common.ajax("POST", "/logistics/sirim/selectSirimList.do",  $('#SearchForm').serializeJSON(), function(result) {
       	  var gridData = result;             
           //console.log(gridData.data);            
           AUIGrid.setGridData(myGridID, gridData.data);	
@@ -141,9 +152,26 @@
         });
 }    
     
+    function newSirimAjax() {  
+        Common.ajax("POST", "/logistics/sirim/insertSirimList.do",  $('#AddSirimForm').serializeJSON(), function(result) {
+          var gridData = result;             
+          //console.log(gridData.data);            
+         
+        // 공통 메세지 영역에 메세지 표시.
+        Common.setMsg("<spring:message code='sys.msg.success'/>");
+        //searchList();
+        }, function(jqXHR, textStatus, errorThrown) {
+            Common.alert("실패하였습니다.");
+        });
+}    
+    
+    
+    
     function addSirim(){
-      
+  
     	if(valiedcheck()){
+    		$("#addSirimNoLast").attr("disabled",false); 
+    		newSirimAjax()
     		alert("에이작스 시작!");
     	}
     	
@@ -407,7 +435,7 @@
 
 
 <section class="search_table"><!-- search_table start -->
-<form id="searchForm" name="searchForm"   method="post">
+<form id="SearchForm" name="SearchForm"   method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -513,9 +541,7 @@
 <tr>
     <th scope="row">Warehouse<span class="must">*</span></th>
     <td>
-    <select class="disabled w100p" disabled="disabled">
-        <option value="">DSC-CSP - DSC HQ Warehouse</option>
-    </select>
+     <select id="addWarehouse" name="addWarehouse" onchange=""  placeholder=""  class="w100p"></select> 
     </td>
     <th scope="row">Type of Sirim<span class="must">*</span></th>
     <td>
@@ -539,7 +565,7 @@
     </td>
     <th scope="row">Sirim No (Last)<span class="must">*</span></th>
     <td>
-    <input type="text" id="addSirimNoLast" name="addSirimNoLast" title="" placeholder="" class="" style="width:200px;"  /><p class="btn_sky"><a href="#">Re-Key</a></p>
+    <input type="text" id="addSirimNoLast" name="addSirimNoLast" title="" placeholder="" class="" style="width:200px;" disabled=true  /><p class="btn_sky"><a id="btnRekey_Add_Click">Re-Key</a></p>
     </td>
 </tr>
 </tbody>
