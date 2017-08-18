@@ -51,6 +51,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30                },
+                     {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 , editable:true 
                     	 ,dataType : "numeric" ,editRenderer : {
@@ -88,7 +89,7 @@ $(document).ready(function(){
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    doGetCombo('/logistics/stocktransfer/selectStockTransferNo.do', '' , '${searchVal.streq}','streq', 'S' , '');
+    doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
@@ -112,10 +113,14 @@ $(document).ready(function(){
     	if (event.dataField != "delyqty"){
     		return false;
     	}else{
-    		if (AUIGrid.getCellValue(listGrid, event.rowIndex, "delvno") != null && AUIGrid.getCellValue(listGrid, event.rowIndex, "delvno") != ""){
-    			Common.alert('You can not create a delivery note for the selected item.');
-    			return false;
-    		}
+//     		if (AUIGrid.getCellValue(listGrid, event.rowIndex, "delvno") != null && AUIGrid.getCellValue(listGrid, event.rowIndex, "delvno") != ""){
+//     			Common.alert('You can not create a delivery note for the selected item.');
+//     			return false;
+//     		}
+    	    if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0){
+    	    	Common.alert('Delivery Qty can not be greater than Request Qty.');
+    	    	return false;
+    	    }
     	}
     });
     
@@ -126,7 +131,8 @@ $(document).ready(function(){
         }else{
         	var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty");
         	if (del > 0){
-	        	if (Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty"))){
+	        	if ((Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty"))) 
+	        		||(Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty")))){
 	        		Common.alert('Delivery Qty can not be greater than Request Qty.');
 	        		//AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")
 	        		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
@@ -149,7 +155,23 @@ $(document).ready(function(){
 //     	document.searchForm.submit();
     });
     
+    AUIGrid.bind(listGrid, "rowCheckClick", function(event){
+    	
+    	if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0 || AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "delyqty")){
+            Common.alert('Delivery Qty can not be greater than Request Qty.');
+            AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+            return false;
+        }
+    	
+    });
+    
     AUIGrid.bind(listGrid, "ready", function(event) {
+    	var rowCnt = AUIGrid.getRowCount(listGrid);
+    	for (var i = 0 ; i < rowCnt ; i++){
+    		var qty = AUIGrid.getCellValue(listGrid , i , 'reqstqty') - AUIGrid.getCellValue(listGrid , i , 'delyqty');
+    		AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
+    	}
+    	AUIGrid.resetUpdatedItems(listGrid, "all");
     });
     
 });
@@ -167,13 +189,14 @@ $(function(){
     });
     $('#delivery').click(function(){
     	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+    	console.log(checkedItems);
     	if(checkedItems.length <= 0) {
     		return false;
     	}else{
 	    	var data = {};
 	    	data.checked = checkedItems; 
 	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-	            Common.alert(result.message);
+	            Common.alert(result.message , SearchListAjax);
 	            AUIGrid.resetUpdatedItems(listGrid, "all");            
 	        },  function(jqXHR, textStatus, errorThrown) {
 	            try {

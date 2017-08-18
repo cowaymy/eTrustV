@@ -30,7 +30,8 @@
 var resGrid;
 var reqGrid;
 
-var rescolumnLayout=[{dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
+var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
+                     {dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
                      {dataField:"stkid"     ,headerText:"ITEM CD"           ,width:120    ,height:30 ,visible:false},
                      {dataField:"stkcd"     ,headerText:"ITEM CD"           ,width:120    ,height:30},
                      {dataField:"stknm"     ,headerText:"ITEM NAME"         ,width:120    ,height:30},
@@ -38,12 +39,13 @@ var rescolumnLayout=[{dataField:"locid"     ,headerText:"Location"          ,wid
                      {dataField:"typenm"    ,headerText:"TYPE Name"         ,width:120    ,height:30},
                      {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
                      {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30},
-                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:true}
+                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
+                     {dataField:"uom"       ,headerText:"UOM"               ,width:120    ,height:30, visible:false}
                     ];
                     
 var reqcolumnLayout;
 
-var resop = {showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
+var resop = {rowIdField : "rnum", showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
 var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
 
 var uomlist = f_getTtype('42' , '');
@@ -63,8 +65,9 @@ $(document).ready(function(){
      ***********************************/
     
      reqcolumnLayout=[{dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
-                      {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30},
-                      {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30},
+                      {dataField:"itmcd"     ,headerText:"ITEM CD"        ,width:120    ,height:30 , editable:true},
+                      {dataField:"itmname"   ,headerText:"ITEM NAME"      ,width:120    ,height:30 , editable:false},
+                      {dataField:"aqty"      ,headerText:"Available Qty"    ,width:120    ,height:30 , editable:false},
                       {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
                       {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
@@ -107,6 +110,14 @@ $(document).ready(function(){
     		$("#sUrl").val("/logistics/material/materialcdsearch.do");
     		Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
     	}
+    	
+    	if(event.dataField == "rqty"){
+            if(AUIGrid.getCellValue(reqGrid, event.rowIndex, "rqty") > AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")){
+            	Common.alert('The requested quantity is up to '+AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")+'.');
+            	AUIGrid.setCellValue(reqGrid, event.rowIndex, "rqty", 0);
+            	return false;
+            }
+        }
     });
     
     AUIGrid.bind(resGrid, "cellClick", function( event ) {});
@@ -146,9 +157,8 @@ $(function(){
 	    	var dat = GridCommon.getEditData(reqGrid);
 	    	dat.form = $("#headForm").serializeJSON();
 	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
-	            Common.alert(result.message);
+	            Common.alert(result.message , locationList);
 	            AUIGrid.resetUpdatedItems(reqGrid, "all");
-	            
 	        },  function(jqXHR, textStatus, errorThrown) {
 	            try {
 	            } catch (e) {
@@ -167,17 +177,23 @@ $(function(){
     });
     $("#rightbtn").click(function(){
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
+        var bool = true;
         if (checkedItems.length > 0){
 	        var rowPos = "first";
 	        var item = new Object();
 	        var rowList = [];
 	        
 	        for (var i = 0 ; i < checkedItems.length ; i++){
-	            rowList[i] = {
-	                itmid : checkedItems[i].stkid,
-	                itmcd : checkedItems[i].stkcd,
-	                itmname : checkedItems[i].stknm
-	            }
+	        	
+	        	rowList[i] = {
+                            itmid : checkedItems[i].stkid,
+                            itmcd : checkedItems[i].stkcd,
+                            itmname : checkedItems[i].stknm,
+                            aqty : checkedItems[i].qty,
+                            uom : checkedItems[i].uom
+                        }
+	        	
+	            AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
 	        }
 	        
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);
@@ -185,6 +201,9 @@ $(function(){
     });
 });
 
+function locationList(){
+	$('#list').click();
+}
 function f_validatation(v){
 	if ($("#sttype").val() == null || $("#sttype").val() == undefined || $("#sttype").val() == ""){
         Common.alert("Please select one of Transaction Type.");
@@ -476,7 +495,7 @@ function f_multiCombo() {
 
 <ul class="btns">
     <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
-    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li>
+<%--     <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li> --%>
 </ul>
 
 </div><!-- border_box end -->
