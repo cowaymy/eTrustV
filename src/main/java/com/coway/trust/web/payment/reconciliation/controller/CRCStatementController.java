@@ -48,20 +48,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/payment")
 public class CRCStatementController {
 
-	private static final Logger logger = LoggerFactory.getLogger(CRCStatementController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CRCStatementController.class);
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
 	
 	@Resource(name = "crcStatementService")
 	private CRCStatementService crcStatementService;
-
-	
-	@Value("${app.name}")
-	private String appName;
-
-	@Value("${com.file.upload.path}")
-	private String uploadDir;
 
 	// DataBase message accessor....
 	@Autowired
@@ -134,9 +127,9 @@ public class CRCStatementController {
     	crcSatementMap.put("crcStateRunngNo", runningNo);
     	
     	
-    	logger.debug("crcStateRefDt : {}", crcSatementMap.get("crcStateRefDt"));
-    	logger.debug("crcStateRunngNo : {}", crcSatementMap.get("crcStateRunngNo"));
-    	logger.debug("crcStateAccId : {}", crcSatementMap.get("crcStateAccId"));
+    	LOGGER.debug("crcStateRefDt : {}", crcSatementMap.get("crcStateRefDt"));
+    	LOGGER.debug("crcStateRunngNo : {}", crcSatementMap.get("crcStateRunngNo"));
+    	LOGGER.debug("crcStateAccId : {}", crcSatementMap.get("crcStateAccId"));
     	
     	
     	//CRC Transaction 정보 Map
@@ -153,12 +146,12 @@ public class CRCStatementController {
     		for (Object map : gridList) {
     			hm = (HashMap<String, Object>) map;
     			
-    			logger.debug("crcTrnscDt : {}", hm.get("0"));
-                logger.debug("crcTrnscNo : {}", hm.get("1"));					
-                logger.debug("crcTrnscAppv : {}", hm.get("2"));
-                logger.debug("crcTrnscMid : {}", hm.get("3"));
-                logger.debug("crcTrnscRefNo : {}", hm.get("4"));
-                logger.debug("crcTrnsAmt : {}", hm.get("5"));
+    			LOGGER.debug("crcTrnscDt : {}", hm.get("0"));
+    			LOGGER.debug("crcTrnscNo : {}", hm.get("1"));					
+    			LOGGER.debug("crcTrnscAppv : {}", hm.get("2"));
+    			LOGGER.debug("crcTrnscMid : {}", hm.get("3"));
+    			LOGGER.debug("crcTrnscRefNo : {}", hm.get("4"));
+    			LOGGER.debug("crcTrnsAmt : {}", hm.get("5"));
                 
                 crcTransactionMap = new HashMap<String, Object>();
                 
@@ -178,7 +171,7 @@ public class CRCStatementController {
     		
     	//CRCStatement Total Amount 설정하기
     	crcSatementMap.put("crcStateTot", totalTrnscAmt);
-		logger.debug("crcTrnsAmt : {}", totalTrnscAmt);
+    	LOGGER.debug("crcTrnsAmt : {}", totalTrnscAmt);
     	
     	// 데이터 등록
     	crcStatementService.updateCRCStatementUpload(crcSatementMap, transactionList);	
@@ -233,12 +226,12 @@ public class CRCStatementController {
 				@RequestParam Map<String, Object> params, ModelMap model) {
 
 		//검색 파라미터 확인.(화면 Form객체 입력값)
-        logger.debug("refNo : {}", params.get("refNo"));
-        logger.debug("cardAccount : {}", params.get("cardAccount"));
-        logger.debug("status : {}", params.get("status"));
-        logger.debug("account : {}", params.get("account"));
-        logger.debug("updateDt1 : {}", params.get("updateDt1"));
-        logger.debug("updateDt2 : {}", params.get("updateDt2"));
+		LOGGER.debug("refNo : {}", params.get("refNo"));
+		LOGGER.debug("cardAccount : {}", params.get("cardAccount"));
+		LOGGER.debug("status : {}", params.get("status"));
+		LOGGER.debug("account : {}", params.get("account"));
+        LOGGER.debug("updateDt1 : {}", params.get("updateDt1"));
+        LOGGER.debug("updateDt2 : {}", params.get("updateDt2"));
         
         // 조회.
         List<EgovMap> crcStatementList = crcStatementService.selectCRCStatementTranList(params);
@@ -266,13 +259,13 @@ public class CRCStatementController {
                 Map<String, Object> map = (Map<String, Object>) obj;
                 
                 //수정할 데이터 확인.(그리드 값)
-				logger.debug("crcTrnscId : {}", map.get("crcTrnscId"));
-                logger.debug("crcTrnscDt : {}", map.get("crcTrnscDt"));					
-                logger.debug("crcTrnscNo : {}", map.get("crcTrnscNo"));
-                logger.debug("crcTrnscAppv : {}", map.get("crcTrnscAppv"));
-                logger.debug("crcTrnscMid : {}", map.get("crcTrnscMid"));
-                logger.debug("crcTrnscRefNo : {}", map.get("crcTrnscRefNo"));
-                logger.debug("crcTrnscAmt : {}", map.get("crcTrnscAmt"));
+                LOGGER.debug("crcTrnscId : {}", map.get("crcTrnscId"));
+                LOGGER.debug("crcTrnscDt : {}", map.get("crcTrnscDt"));					
+                LOGGER.debug("crcTrnscNo : {}", map.get("crcTrnscNo"));
+                LOGGER.debug("crcTrnscAppv : {}", map.get("crcTrnscAppv"));
+                LOGGER.debug("crcTrnscMid : {}", map.get("crcTrnscMid"));
+                LOGGER.debug("crcTrnscRefNo : {}", map.get("crcTrnscRefNo"));
+                LOGGER.debug("crcTrnscAmt : {}", map.get("crcTrnscAmt"));
                 
                 // 수정처리
                 crcStatementService.updateCRCStatementTranList(map);
@@ -309,7 +302,7 @@ public class CRCStatementController {
     	List<EgovMap> resultMapList = (List<EgovMap>)param.get("p1");
     	
 
-		logger.debug("size : {}", resultMapList.size());
+    	LOGGER.debug("size : {}", resultMapList.size());
         
         if (resultMapList.size() > 0) {
         	
@@ -317,15 +310,15 @@ public class CRCStatementController {
                 Map<String, Object> map = (Map<String, Object>) obj;
                 
                 //수정할 데이터 확인.(그리드 값)
-				logger.debug("ENRL_ID : {}", map.get("enrlId"));
-                logger.debug("BANK_ID : {}", map.get("bankId"));					
-                logger.debug("DEBT_DT_FROM : {}", map.get("debtDtFrom"));
-                logger.debug("DEBT_DT_TO : {}", map.get("debtDtTo"));
-                logger.debug("CRT_USER_ID : {}", map.get("crtUserId"));
-                logger.debug("CRT_DT : {}", map.get("crtDt"));
-                logger.debug("UPD_USER_ID : {}", map.get("updUserId"));
-                logger.debug("UPD_DT : {}", map.get("updDt"));
-                logger.debug("STUS_CODE_ID : {}", map.get("stusCodeId"));
+                LOGGER.debug("ENRL_ID : {}", map.get("enrlId"));
+                LOGGER.debug("BANK_ID : {}", map.get("bankId"));					
+                LOGGER.debug("DEBT_DT_FROM : {}", map.get("debtDtFrom"));
+                LOGGER.debug("DEBT_DT_TO : {}", map.get("debtDtTo"));
+                LOGGER.debug("CRT_USER_ID : {}", map.get("crtUserId"));
+                LOGGER.debug("CRT_DT : {}", map.get("crtDt"));
+                LOGGER.debug("UPD_USER_ID : {}", map.get("updUserId"));
+                LOGGER.debug("UPD_DT : {}", map.get("updDt"));
+                LOGGER.debug("STUS_CODE_ID : {}", map.get("stusCodeId"));
     		});
     	}
         

@@ -98,7 +98,7 @@ public interface SearchPaymentService
 	 * @param params
 	 * @return
 	 */
-	String selectBankCode(String PayItemIssuedBankID);
+	String selectBankCode(String payItemIssuedBankID);
 	
 	/**
 	 * PaymentCodeDetail 조회

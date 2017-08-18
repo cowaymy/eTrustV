@@ -22,7 +22,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 @RequestMapping(value = "/payment")
 public class LateSubmissionController {
 
-	private static final Logger Logger = LoggerFactory.getLogger(LateSubmissionController.class);
+	//private static final Logger LOGGER = LoggerFactory.getLogger(LateSubmissionController.class);
 
 	/******************************************************
 	 * Late Submission Raw 

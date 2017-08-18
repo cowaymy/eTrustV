@@ -40,24 +40,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/payment")
 public class EnrollController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EnrollController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EnrollController.class);
 
-	@Resource(name = "commonService")
-	private CommonService commonService;
-	
 	@Resource(name = "enrollService")
 	private EnrollService enrollService ;
 
-	@Value("${app.name}")
-	private String appName;
-
-	@Value("${com.file.upload.path}")
-	private String uploadDir;
-
-	// DataBase message accessor....
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
-	
 	/******************************************************
 	 * EnrollmentList  
 	 *****************************************************//*	
@@ -110,6 +97,7 @@ public class EnrollController {
 	@RequestMapping(value = "/selectViewEnrollmentList")
 	public ResponseEntity<List<EgovMap>> selectViewEnrollmentList(@RequestParam Map<String, Object>params, ModelMap model) {
 			
+		LOGGER.debug("params : {} ", params);
 		params.put("enrollId", params.get("enrollId"));
 		List<EgovMap> result = enrollService.selectViewEnrollmentList(params);
 		
@@ -267,7 +255,7 @@ public class EnrollController {
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String emailTitle = "ALB Enrollment File - Debit Date From" + String.valueOf(enrollMap.get("debtDtFrom")) + " To " + String.valueOf(enrollMap.get("debtDtTo"));
+		String emailTitle = "ALB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	
@@ -302,9 +290,9 @@ public class EnrollController {
 		String hCompanyName = "Coway (M) Sdn Bhd";
 		String hFileBatchRefNo = String.valueOf(enrollMap.get("enrlId"));
 		String hSellerID = "AD10000101";
-		String HeaderStr = hRecordType + "|" + hCreditAccNo + "|" + hCompanyName + "|" + hFileBatchRefNo + "|" + hSellerID + "|";
+		String headerStr = hRecordType + "|" + hCreditAccNo + "|" + hCompanyName + "|" + hFileBatchRefNo + "|" + hSellerID + "|";
 
-        out.write(HeaderStr);
+        out.write(headerStr);
 		out.newLine();
 		out.flush();
 		
@@ -319,13 +307,13 @@ public class EnrollController {
         String dMaxAmount = "";
         String dFreqMode = "M";
         String dNoFreq = "0008";
-        String OrderNo = "";
-        String SellerInternalRefNo = "";
-        String CommencementDate = todayDate;
-        String ExpiryDate = "31122099";
-        String Email1 = "";
-        String Email2 = "";
-        String DetailStr = "";
+        String orderNo = "";
+        String sellerInternalRefNo = "";
+        String commencementDate = todayDate;
+        String expiryDate = "31122099";
+        String email1 = "";
+        String email2 = "";
+        String detailStr = "";
 		
 		if (enrollDetailList.size() > 0) {
 			for(int i = 0 ; i < enrollDetailList.size() ; i++){
@@ -335,15 +323,15 @@ public class EnrollController {
                 dDebitAccName = (String.valueOf(map.get("accName"))).length() > 40 ? (String.valueOf(map.get("accName"))).substring(0,40) :  String.valueOf(map.get("accName"));
                 dBuyerIDNo = (String.valueOf(map.get("accNric"))).length() > 20 ? (String.valueOf(map.get("accNric"))).substring(0,20) :  String.valueOf(map.get("accNric"));
                 dMaxAmount =  CommonUtils.getNumberFormat( String.valueOf(map.get("billAmt")), "####0.00");
-                OrderNo = (String.valueOf(map.get("cntrctNOrdNo"))).trim(); 
+                orderNo = (String.valueOf(map.get("cntrctNOrdNo"))).trim(); 
 
                 hashTotal += Long.parseLong(CommonUtils.right(dDebtiAccNo, 10));
 
-                DetailStr = dRecordType + "|" + dReqType + "|" + dDebtiAccNo + "|" + dDebitAccName + "|" +
-                    dBankCode + "|" + dBuyerIDNo + "|" + dMaxAmount + "|" + dFreqMode + "|" + dNoFreq + "|" + OrderNo + "|" +
-                    SellerInternalRefNo + "|" + CommencementDate + "|" + ExpiryDate + "|" + Email1 + "|" + Email2 + "|";
+                detailStr = dRecordType + "|" + dReqType + "|" + dDebtiAccNo + "|" + dDebitAccName + "|" +
+                    dBankCode + "|" + dBuyerIDNo + "|" + dMaxAmount + "|" + dFreqMode + "|" + dNoFreq + "|" + orderNo + "|" +
+                    sellerInternalRefNo + "|" + commencementDate + "|" + expiryDate + "|" + email1 + "|" + email2 + "|";
 				
-				out.write(DetailStr);
+				out.write(detailStr);
 				out.newLine();
 				out.flush();
 				
@@ -354,17 +342,17 @@ public class EnrollController {
 		String tRecordType = "T";
 		String tTotalRecord = String.valueOf(enrollDetailList.size());
 		String tHashTotal = CommonUtils.getNumberFormat( String.valueOf(hashTotal), "0000000000");
-		String TrailerStr = "";
-        TrailerStr = tRecordType + "|" + tTotalRecord + "|" + tHashTotal + "|";
+		String trailerStr = "";
+        trailerStr = tRecordType + "|" + tTotalRecord + "|" + tHashTotal + "|";
         
-		out.write(TrailerStr);
+		out.write(trailerStr);
 		out.newLine();
 		out.flush();
 		out.close();
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String emailTitle = "ALB Enrollment File - Debit Date From" + String.valueOf(enrollMap.get("debtDtFrom")) + " To " + String.valueOf(enrollMap.get("debtDtTo"));
+		String emailTitle = "ALB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	
@@ -438,7 +426,7 @@ public class EnrollController {
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String emailTitle = "CIMB Enrollment File - Debit Date From" + String.valueOf(enrollMap.get("debtDtFrom")) + " To " + String.valueOf(enrollMap.get("debtDtTo"));
+		String emailTitle = "CIMB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	
@@ -469,16 +457,16 @@ public class EnrollController {
 		************************************************/
 		//헤더 작성
 		String strHeader = "";
-        String strHeader_Fix = "ENROL";
-        String strHeader_BankCode = "27";
-        String strHeader_OriginatorID = "02172";
-        String strHeader_OriginatorName = StringUtils.rightPad("WJIN COWAY", 13, " ");
+        String strHeaderFix = "ENROL";
+        String strHeaderBankCode = "27";
+        String strHeaderOriginatorID = "02172";
+        String strHeaderOriginatorName = StringUtils.rightPad("WJIN COWAY", 13, " ");
         
-        String strHeader_EnrollDate = CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "yyyyMMdd");
-        String strHeader_Filler = StringUtils.rightPad("", 117, " ");
+        String strHeaderEnrollDate = CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "yyyyMMdd");
+        String strHeaderFiller = StringUtils.rightPad("", 117, " ");
         
-        strHeader = strHeader_Fix + strHeader_BankCode + strHeader_OriginatorID +
-        					strHeader_OriginatorName + strHeader_EnrollDate + strHeader_Filler;
+        strHeader = strHeaderFix + strHeaderBankCode + strHeaderOriginatorID +
+        					strHeaderOriginatorName + strHeaderEnrollDate + strHeaderFiller;
     	        
         out.write(strHeader);
 		out.newLine();
@@ -490,40 +478,40 @@ public class EnrollController {
 				Map<String, Object> map = (Map<String, Object>)enrollDetailList.get(i);
 				
 				String strRecord = "";
-				String strRecord_Fix = "00";
-				String strRecord_TransCode = "A";
-				String strRecord_RefNo =  (String.valueOf(map.get("cntrctNOrdNo"))).trim().length() > 14 ?
+				String strRecordFix = "00";
+				String strRecordTransCode = "A";
+				String strRecordRefNo =  (String.valueOf(map.get("cntrctNOrdNo"))).trim().length() > 14 ?
 						 								(String.valueOf(map.get("cntrctNOrdNo"))).trim().substring(0,14) :
 						 										StringUtils.rightPad((String.valueOf(map.get("cntrctNOrdNo"))).trim(), 14, " ");
-				String strRecord_Reserve = StringUtils.rightPad("", 6, " ");
-				String strRecord_AccNo =  (String.valueOf(map.get("accNo"))).trim().length() > 12 ?
+				String strRecordReserve = StringUtils.rightPad("", 6, " ");
+				String strRecordAccNo =  (String.valueOf(map.get("accNo"))).trim().length() > 12 ?
 						 								(String.valueOf(map.get("accNo"))).trim().substring(0,12) :
 						 									StringUtils.rightPad((String.valueOf(map.get("accNo"))).trim(), 12, " ");
-				String strRecord_IssueIC = (String.valueOf(map.get("accNric"))).trim();
-				String strRecord_OldIC = "";
-				String strRecord_NRIC = "";
+				String strRecordIssueIC = (String.valueOf(map.get("accNric"))).trim();
+				String strRecordOldIC = "";
+				String strRecordNRIC = "";
 				
-                if (strRecord_IssueIC.length() >= 12) {
-                    strRecord_OldIC = StringUtils.rightPad("", 12, " ");                    
-                    strRecord_NRIC = strRecord_IssueIC.substring(0,  12);
+                if (strRecordIssueIC.length() >= 12) {
+                    strRecordOldIC = StringUtils.rightPad("", 12, " ");                    
+                    strRecordNRIC = strRecordIssueIC.substring(0,  12);
                 } else {
-                    strRecord_OldIC = StringUtils.rightPad(strRecord_IssueIC, 12, " ");  
-                    strRecord_NRIC = StringUtils.rightPad("", 12, " ");
+                    strRecordOldIC = StringUtils.rightPad(strRecordIssueIC, 12, " ");  
+                    strRecordNRIC = StringUtils.rightPad("", 12, " ");
                 }
                 
-                String strRecord_Name =  (String.valueOf(map.get("accName"))).trim().length() > 20 ?
+                String strRecordName =  (String.valueOf(map.get("accName"))).trim().length() > 20 ?
                 										(String.valueOf(map.get("accName"))).trim().substring(0,20) :
                 											StringUtils.rightPad((String.valueOf(map.get("accName"))).trim(), 20, " ");
                 
-                String strRecord_AuthLimit = StringUtils.leftPad(CommonUtils.getNumberFormat( String.valueOf(map.get("billAmt")), "00000"),5,"0");
-                String strRecord_ValidValue = "";
+                String strRecordAuthLimit = StringUtils.leftPad(CommonUtils.getNumberFormat( String.valueOf(map.get("billAmt")), "00000"),5,"0");
+                String strRecordValidValue = "";
                 int validValue = this.calChkSum((String.valueOf( map.get("cntrctNOrdNo"))).trim(), (String.valueOf(map.get("accNo"))).trim());
-                strRecord_ValidValue = StringUtils.leftPad(String.valueOf(validValue), 12, "0");
-                String strRecord_Filler = StringUtils.rightPad("", 54, " ");
+                strRecordValidValue = StringUtils.leftPad(String.valueOf(validValue), 12, "0");
+                String strRecordFiller = StringUtils.rightPad("", 54, " ");
                 
-                strRecord = strRecord_Fix + strRecord_TransCode + strRecord_RefNo + strRecord_Reserve +
-                					strRecord_AccNo + strRecord_OldIC + strRecord_NRIC + strRecord_Name +
-                					strRecord_AuthLimit + strRecord_ValidValue + strRecord_Filler;
+                strRecord = strRecordFix + strRecordTransCode + strRecordRefNo + strRecordReserve +
+                					strRecordAccNo + strRecordOldIC + strRecordNRIC + strRecordName +
+                					strRecordAuthLimit + strRecordValidValue + strRecordFiller;
                 iHashTot = iHashTot + validValue;
 				
 				out.write(strRecord);
@@ -535,13 +523,13 @@ public class EnrollController {
 		
 		//footer 작성
         String strTrailer = "";
-        String strTrailer_Fix = "FF";
-        String strTrailer_TotalAdd = StringUtils.leftPad(String.valueOf(enrollDetailList.size()),6,"0");        
-        String strTrailer_TotalDel = StringUtils.leftPad("", 6, "0");        
-        String strTrailer_HashTotal = StringUtils.leftPad(String.valueOf(iHashTot),12,"0");        
-        String strTrailer_Filler = StringUtils.rightPad("", 124, " ");
+        String strTrailerFix = "FF";
+        String strTrailerTotalAdd = StringUtils.leftPad(String.valueOf(enrollDetailList.size()),6,"0");        
+        String strTrailerTotalDel = StringUtils.leftPad("", 6, "0");        
+        String strTrailerHashTotal = StringUtils.leftPad(String.valueOf(iHashTot),12,"0");        
+        String strTrailerFiller = StringUtils.rightPad("", 124, " ");
         
-        strTrailer = strTrailer_Fix + strTrailer_TotalAdd + strTrailer_TotalDel + strTrailer_HashTotal + strTrailer_Filler;
+        strTrailer = strTrailerFix + strTrailerTotalAdd + strTrailerTotalDel + strTrailerHashTotal + strTrailerFiller;
         
         out.write(strTrailer);
 		out.newLine();
@@ -550,7 +538,7 @@ public class EnrollController {
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String emailTitle = "MBB Enrollment File - Debit Date From" + String.valueOf(enrollMap.get("debtDtFrom")) + " To " + String.valueOf(enrollMap.get("debtDtTo"));
+		String emailTitle = "MBB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	
@@ -624,7 +612,7 @@ public class EnrollController {
 		fileWriter.close();
 		
 		//메일 보내기는 나중에
-		String emailTitle = "RHB Enrollment File - Debit Date From" + String.valueOf(enrollMap.get("debtDtFrom")) + " To " + String.valueOf(enrollMap.get("debtDtTo"));
+		String emailTitle = "RHB Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 	
@@ -679,7 +667,7 @@ public class EnrollController {
 		fileWriter.close();
 		
 		// 메일 보내기는 나중에
-		String emailTitle = "BSN Enrollment File - Debit Date From" + String.valueOf(enrollMap.get("debtDtFrom")) + " To " + String.valueOf(enrollMap.get("debtDtTo"));
+		String emailTitle = "BSN Enrollment File - Debit Date From" + enrollMap.get("debtDtFrom") + " To " + enrollMap.get("debtDtTo");
 		//SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
 

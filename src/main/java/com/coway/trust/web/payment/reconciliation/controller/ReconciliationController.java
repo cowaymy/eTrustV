@@ -51,23 +51,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/payment")
 public class ReconciliationController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReconciliationController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReconciliationController.class);
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
 	
 	@Resource(name="ReconciliationService")
 	private ReconciliationListService rService;
-	
-	@Value("${app.name}")
-	private String appName;
-
-	@Value("${com.file.upload.path}")
-	private String uploadDir;
-
-	// DataBase message accessor....
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
 
 	
 	/******************************************************
@@ -81,23 +71,6 @@ public class ReconciliationController {
 	 */
 	@RequestMapping(value = "/initReconciliationList.do")
 	public String initReconciliationList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		Map<String, Object> param = null;
-		
-		//Branch 리스트 조회
-		param = new HashMap<String, Object>();
-		param.put("kind","1");
-		param.put("separator","-");
-		List<EgovMap> branchList  = commonService.selectBranchList(param);
-		
-		//은행 계좌 정보 조회
-		param = new HashMap<String, Object>();		
-		param.put("accountType","CASH");		
-		List<EgovMap> bankComboList  = commonService.getAccountList(param);
-		
-		// 화면 단으로 전달할 데이터.
-		model.addAttribute("branchList", branchList);
-		model.addAttribute("bankComboList", bankComboList);	
 		
 		return "payment/reconciliation/reconciliationList";
 	}
@@ -115,6 +88,7 @@ public class ReconciliationController {
 	@RequestMapping(value = "/searchReconciliationList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<ReconciliationListVO>> searchReconciliationList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 	
+		LOGGER.debug("params : {} ", params);
 		List<ReconciliationListVO> list = rService.selectReconciliationList(searchVO);
 
 		return ResponseEntity.ok(list);
@@ -129,8 +103,6 @@ public class ReconciliationController {
 	 */
 	@RequestMapping(value = "/initReconciliationView.do")
 	public String initReconciliationView(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		System.out.println("id : " + params.get("id"));
 		return "payment/reconciliation/reconciliationView";
 	}
 }

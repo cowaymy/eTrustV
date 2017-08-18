@@ -38,19 +38,9 @@ import org.apache.commons.lang.StringUtils;
 @Service("enrollService")
 public class EnrollServiceImpl extends EgovAbstractServiceImpl implements EnrollService {
 
-	private static final Logger logger = LoggerFactory.getLogger(EnrollServiceImpl.class);
-
-	@Value("${app.name}")
-	private String appName;
-
 	@Resource(name = "enrollMapper")
 	private EnrollMapper enrollMapper;
 
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
-
-	
-	
 	/**
 	 * EnrollmentList(Master Grid) 조회
 	 * @param params

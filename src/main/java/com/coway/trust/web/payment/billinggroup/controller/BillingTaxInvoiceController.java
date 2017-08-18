@@ -25,7 +25,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/payment")
 public class BillingTaxInvoiceController {
 
-	private static final Logger Logger = LoggerFactory.getLogger(BillingTaxInvoiceController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BillingTaxInvoiceController.class);
 
 	@Resource(name = "billingTaxInvoiceService")
 	private BillingTaxInvoiceService billingTaxInvoiceService;
@@ -56,6 +56,8 @@ public class BillingTaxInvoiceController {
 	public ResponseEntity<List<EgovMap>> selectTaxInvoiceRentalList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
 				, @RequestBody Map<String, Object> params, ModelMap model) {
 
+		LOGGER.debug("params : {} ", params);
+		
 		if(params.get("invoicePeriod") != null && !"".equals(String.valueOf(params.get("invoicePeriod")))){
 			params.put("month",Integer.parseInt((String.valueOf(params.get("invoicePeriod"))).substring(0, 2)));
 			params.put("year",Integer.parseInt((String.valueOf(params.get("invoicePeriod"))).substring(3, 7)));

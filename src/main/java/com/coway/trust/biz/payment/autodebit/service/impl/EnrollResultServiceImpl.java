@@ -39,17 +39,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("enrollResultService")
 public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements EnrollResultService {
 
-	private static final Logger logger = LoggerFactory.getLogger(EnrollResultServiceImpl.class);
-
-	@Value("${app.name}")
-	private String appName;
-
 	@Resource(name = "enrollResultMapper")
 	private EnrollResultMapper enrollResultMapper;
-
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
-
+	
 	/**
 	 * SearchEnrollment Result List(Master Grid) 조회
 	 * @param params

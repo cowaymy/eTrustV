@@ -14,9 +14,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("billingTaxInvoiceService")
 public class BillingTaxInvoiceServiceImpl extends EgovAbstractServiceImpl implements BillingTaxInvoiceService {
 
-	private static final Logger Logger = LoggerFactory.getLogger(BillingTaxInvoiceServiceImpl.class);
-
-
 	@Resource(name = "billingTaxInvoiceMapper")
 	private BillingTaxInvoiceMapper billingTaxInvoiceMapper;
 	

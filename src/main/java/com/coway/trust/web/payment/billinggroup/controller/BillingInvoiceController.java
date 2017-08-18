@@ -28,14 +28,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/payment")
 public class BillingInvoiceController {
 
-	private static final Logger logger = LoggerFactory.getLogger(BillingInvoiceController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BillingInvoiceController.class);
 	
 	@Resource(name = "billingInvoiceService")
 	private BillingInvoiceService invoiceService;
-
-	// DataBase message accessor....
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
 	
 	/******************************************************
 	 *   Company Statement
@@ -55,6 +51,8 @@ public class BillingInvoiceController {
 	public ResponseEntity<List<EgovMap>> searchReconciliationList(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		
+		LOGGER.debug("params : {}", params);
+	
 		String brNumber = String.valueOf(params.get("brNumber")).trim();
 		String period = String.valueOf(params.get("period")).trim();
 		String orderNo = String.valueOf(params.get("orderNo")).trim();

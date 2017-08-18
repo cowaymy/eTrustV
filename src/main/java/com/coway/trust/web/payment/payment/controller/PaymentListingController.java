@@ -23,7 +23,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 @RequestMapping(value = "/payment")
 public class PaymentListingController {
 
-	private static final Logger Logger = LoggerFactory.getLogger(PaymentListingController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentListingController.class);
 
 	/******************************************************
 	 * Payment Listing   
@@ -50,6 +50,8 @@ public class PaymentListingController {
     @RequestMapping(value = "/generateReportParam.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> generateReportParam(@RequestBody Map<String, Object> params,
     		Model model) {
+    	
+    	LOGGER.debug("params : {}",params);
     	
     	//레포트 표지에 보여질 데이터
     	String showPaymentDate = "";

@@ -49,22 +49,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("searchPaymentService")
 public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements SearchPaymentService {
 
-	private static final Logger logger = LoggerFactory.getLogger(SearchPaymentServiceImpl.class);
-
-	@Value("${app.name}")
-	private String appName;
-
 	@Resource(name = "searchPaymentMapper")
 	private SearchPaymentMapper searchPaymentMapper;
 	
 	@Resource(name = "commonMapper")
 	private CommonMapper commonMapper;
 
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
-
-	
-	
 	/**
 	 * SearchPayment Order List(Master Grid) 조회
 	 * @param params
@@ -269,19 +259,12 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	public boolean doEditPaymentDetails(PayDVO payDet){
 		
 		EgovMap qryDet = selectPaymentDetail(payDet.getPayItemId()).get(0);
-		System.out.println("qryDET : " + qryDet);
 		
 		List<PayDHistoryVO> list = setHistoryList(payDet, qryDet);
-		
-		//list insert필요 
-		for(int i=0; i<list.size(); i++){
-			System.out.println(list.get(i).toString());
-			searchPaymentMapper.insertPayDHistory(list.get(i));
-		}
 			
 		//update 필요. PAY0065D
 		
-		HashMap map = new HashMap();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("payItemId", qryDet.get("payItmId"));
 		
@@ -311,12 +294,10 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		if(!(payDet.getPayItemRefDate().equals("")) && !(payDet.getPayItemRefDate().equals("null"))){
     		String temp[] = payDet.getPayItemRefDate().split("/");
     		payDate = temp[2] + "-" + temp[1] + "-" + temp[0];
-    		System.out.println("@@@@payDate : " + payDate);
 		}else{
 			payDate = "1900-01-01";
 		}
 		if(CommonUtils.getDiffDate(refDate, payDate, "YYYY-MM-DD") != 0){
-			System.out.println("refDate : " + refDate + ", payDate : " + payDate);
 			map.put("payItemRefDate", payDate);
 		}
 		
@@ -360,7 +341,6 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		String cardTypeId = String.valueOf(qryDet.get("payItmCardTypeId")).trim().equals("null") 
 				|| String.valueOf(qryDet.get("payItmCardTypeId")).trim().equals("") ? "" : String.valueOf(qryDet.get("payItmCardTypeId")).trim();
 		if(!(cardTypeId.equals(String.valueOf(payDet.getPayItemCardTypeId())))){
-			System.out.println("cardTypeId : " + cardTypeId + ", " + payDet.getPayItemCardTypeId());
 			map.put("payItemCardTypeId", payDet.getPayItemCardTypeId());
 		}
 		
@@ -371,8 +351,7 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		if(!(userId.equals(payDet.getUpdator()))){
 			map.put("updator", payDet.getUpdator());
 		}
-		
-		System.out.println("map : " + map);
+
 		searchPaymentMapper.updatePayDetail(map);
 		
 		//Type이 107일 경우 Update
@@ -381,13 +360,11 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 			List<EgovMap> tmpRelated = searchPaymentMapper.selectPaymentDocRelated(payItemId);
 			if(tmpRelated.size() > 0){
 				EgovMap qryRelated = tmpRelated.get(0);
-				System.out.println("qryRelated : " + qryRelated);
 				List<EgovMap> tmpDocDet = searchPaymentMapper.selectPaymentDocDetail(Integer.parseInt(String.valueOf(qryRelated.get("itmId"))));
 				if(tmpDocDet.size() > 0){
 					EgovMap qryDocDet = tmpDocDet.get(0);
-					System.out.println("qryDocDet : " + qryDocDet);
-					
-					Map docDet = new HashMap();
+
+					Map<String, Object> docDet = new HashMap<String, Object>();
 					docDet.put("itemId", String.valueOf(qryDocDet.get("itmId")));
 					
 					String docRefNo = String.valueOf(qryDocDet.get("refNo")).trim().equals("null") 
@@ -412,13 +389,10 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 					if(!(payDet.getPayItemRefDate().equals("")) && !(payDet.getPayItemRefDate().equals("null"))){
 			    		String temp[] = payDet.getPayItemRefDate().split("/");
 			    		docPayDate = temp[2] + "-" + temp[1] + "-" + temp[0];
-			    		System.out.println("@@@@docPayDate : " + docPayDate + ", temp : " + temp[0]);
 					}else{
 						docPayDate = "1900-01-01";
 					}
-					System.out.println("@@@@docRefDate : " + docRefDate + ", docPayDate : " + docPayDate);
 					if(CommonUtils.getDiffDate(docRefDate, docPayDate, "YYYY-MM-DD") != 0){
-						System.out.println("refDate : " + docRefDate + ", payDate : " + docPayDate);
 						docDet.put("refDate", docPayDate);
 					}
 					
@@ -442,8 +416,6 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 					}
 					
 					docDet.put("updator", payDet.getUpdator() > 0 ? userId : 0);
-					
-					System.out.println("docDet : " + docDet);
 					
 					searchPaymentMapper.updatePayDocDetail(docDet);
 				}
@@ -480,7 +452,6 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		String tmpPay = payDet.getPayItemRefDate().equals("") ? "01/01/1900" : payDet.getPayItemRefDate();
 		String tmpPayDt[] = tmpPay.split("/");
 		String payDt = tmpPayDt[2] + "-" + tmpPayDt[1] + "-" + tmpPayDt[0];
-		System.out.println("### tmpRefDt : " + tmpRefDt + ", qryRefDt : " + qryRefDt + ", tmpPayDt : " + tmpPayDt + ", payDt : " + payDt);
 		if(CommonUtils.getDiffDate(payDt, qryRefDt, "YYYY-MM-DD") != 0){
 			PayDHistoryVO his = new PayDHistoryVO();
 			
@@ -614,9 +585,6 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 			String qryTypeFr = selectCodeDetail(Integer.parseInt(String.valueOf(payItmCcTypeId).equals("") ? "-1": String.valueOf(payItmCcTypeId)));
 			String qryTypeTo = selectCodeDetail(Integer.parseInt(String.valueOf(payDet.getPayItemCCTypeId()).equals("") ? "-1": String.valueOf(payDet.getPayItemCCTypeId())));
 			
-			System.out.println("qryTypeFr" + qryTypeFr + ", qryTypeTo" + qryTypeTo);
-			System.out.println("payItmCcTypeId : " + payItmCcTypeId + ", payDet.getPayItemCCExpiryDate : " + payDet.getPayItemCCExpiryDate());
-			
 			his.setHistoryId(0);
 			his.setTypeId(1136);
 			his.setPayId(Integer.parseInt(qryDet.get("payId").toString()));
@@ -700,10 +668,8 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 			}else{
 				his.setValueTo("");
 			}
-			System.out.println(qryDet.get("payItmCardTypeId") != null);
 			if(!String.valueOf(qryDet.get("payItmCardTypeId")).equals("null"))
 			{
-				System.out.println("not null");
 				his.setRefIdFr(Integer.parseInt(qryDet.get("payItmCardTypeId").toString()));
 			}
 			his.setRefIdTo(payDet.getPayItemCardTypeId());

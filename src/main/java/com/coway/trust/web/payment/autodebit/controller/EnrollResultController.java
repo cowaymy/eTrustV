@@ -41,7 +41,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/payment")
 public class EnrollResultController {
-	private static final Logger logger = LoggerFactory.getLogger(EnrollResultController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EnrollResultController.class);
 
 	@Resource(name = "enrollResultService")
 	private EnrollResultService enrollResultService;
@@ -70,7 +70,9 @@ public class EnrollResultController {
 	@RequestMapping(value = "/selectResultList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSalesList(
 				 @RequestParam Map<String, Object> params, ModelMap model) {
-
+		
+		LOGGER.debug("params : {} ", params);
+		
         List<EgovMap> resultList = enrollResultService.selectEnrollmentResultrList(params);
         
         return ResponseEntity.ok(resultList);
@@ -99,7 +101,6 @@ public class EnrollResultController {
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
     	Map<String, Object> formInfo = new HashMap<String, Object> ();
-    	System.out.println("formList : " + formList.size());
     	if(formList.size() > 0){
     		for(Object obj : formList){
     			Map<String, Object> map = (Map<String, Object>) obj;
@@ -168,10 +169,7 @@ public class EnrollResultController {
     		}else{
     			message = "Your login session was expired. Please relogin to our system.\n";
     			
-    		//msg = enrollResultService.saveNewEnrollment(gridList, formInfo);
     		}
-    	}else{
-    		//message = "temp";
     	}
     	
     	msg.setMessage(message);
