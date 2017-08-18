@@ -144,7 +144,7 @@
         editable : false,
         width : "20%"
 	}, {
-		dataField : "cdDs",
+		dataField : "cdds",
         headerText : "Description",
         style : "my-column",
         editable : false
