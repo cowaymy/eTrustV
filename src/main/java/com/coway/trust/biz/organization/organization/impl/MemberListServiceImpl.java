@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -127,7 +128,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("applicantType",Integer.parseInt((String) params.get("memberType")));
 			MemApp.put("applicantName",params.get("memberNm").toString());
 			MemApp.put("applicantFullName",params.get("memberNm").toString());
-			MemApp.put("applicantIdentification","");// 랜덤 어쩌구 만들어야함
+			MemApp.put("applicantIdentification",getRandomNumber(5));
 			MemApp.put("applicantNRIC",params.get("nric").toString());
 			MemApp.put("applicantDOB",params.get("Birth").toString());
 			MemApp.put("applicantGender", params.get("gender"));
@@ -166,7 +167,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("updator",52366);
 			MemApp.put("confirmation",false);
 			MemApp.put("confirmDate","1900-01-01");
-			MemApp.put("deptCode",params.get("deptCode"));
+			MemApp.put("deptCode",params.get("deptCd").toString());
 			
 			logger.debug("MemApp : {}",MemApp);
 			
@@ -241,7 +242,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("updated",new Date());
 		params.put("updator",52366);
 		params.put("memIsOutSource",false);
-		params.put("applicantID", appId != null ? appId : 0);
+		params.put("applicantID", appId !=null ? appId : 0);
 		params.put("BusinessesType",1375);
 		params.put("Hospitalization",false);
 		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
@@ -253,7 +254,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("spouseName", params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
 		params.put("spouseNric", params.get("spouseNRIC").toString().trim()!=null ? params.get("spouseNRIC").toString().trim() : "");
 		params.put("spouseOcc", params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
-		params.put("spouseDob", params.get("spouseDOB").toString().trim()!=null ? params.get("spouseDOB").toString().trim() :"1900-01-01");
+		params.put("spouseDob", params.get("spouseDOB").toString().equals("") ? "1900-01-01":params.get("spouseDOB").toString().trim() );
 		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
 		
 		Boolean success = false;
@@ -272,6 +273,19 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		
 		return success;
+	}
+	
+	public String getRandomNumber(int a){
+		Random random = new Random();
+		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i=0; i<a; i++){
+			int num = random.nextInt(a);
+			sb.append(chars[num]);
+		}
+		
+		return sb.toString();
 	}
 	
 	
@@ -703,8 +717,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					docSub.put("Updated",  new Date());
 					docSub.put("docSubBatchId",  0);
 					
-					memberListMapper.insertDocSubmission(docSub);
 					logger.debug("docSub : {}",docSub);
+					memberListMapper.insertDocSubmission(docSub);
 				}
 			}
 			
@@ -727,13 +741,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					docSub.put("Updated",  new Date());
 					docSub.put("docSubBatchId",  0);
 					
-					memberListMapper.insertDocSubmission(docSub);
 					logger.debug("docSub : {}",docSub);
+					memberListMapper.insertDocSubmission(docSub);
 				}
 			}
 			
 			//Save MemberAgreement
-			if(params.get("codyPaExpr").toString().equals(null) && params.get("codyPaExpr").toString().equals("")){
+			if(! params.get("codyPaExpr").toString().equals(null) &&! params.get("codyPaExpr").toString().equals("")){
 				Map<String, Object>  MA = new HashMap<String, Object>();
 				MA.put("agreementID", 0);
 				MA.put("agreementRefNo", "");
