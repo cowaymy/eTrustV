@@ -965,7 +965,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
           $("#txtRate_install").text(decimalSetting(data[0].c10));
           $("#txtOutRate_install").text(decimalSetting(data[0].c11));
         
-      } else if (v == 'CE') {    
+      } else if (v == 'CE') {
+    	    //TODO 숫자 포맷 및 입력 제한 해야함
           $("#txtStckCd").text(data[0].stkCode);
           $("#txtRate_as").append("<input type='hidden' name='stckcd' id='stckcd' value=''/>");
           $("#stckcd").val(data[0].stkCode);

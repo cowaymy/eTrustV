@@ -90,7 +90,7 @@ $(document).ready(function(){
                              valueField : "codeName"
                           }
                       },
-                      {dataField:""      ,headerText:"Serial"    ,width:120    ,height:30},
+                      {dataField:""      ,headerText:"Serial"    ,width:120    ,height:30}
                      ];
     
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
