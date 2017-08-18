@@ -66,14 +66,14 @@ public class PaymentListingController {
     	int runNo = 0;
     	
     	if(!"".equals(String.valueOf(params.get("payDate1"))) &&  !"".equals(String.valueOf(params.get("payDate2")))){
-    		whereSQL += " AND pm.CRT_DT  >= TO_DATE(TO_CHAR(TO_DATE('" + String.valueOf(params.get("payDate1")) + "','DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')";
-    		whereSQL += " AND pm.CRT_DT  < TO_DATE(TO_CHAR(TO_DATE('" + String.valueOf(params.get("payDate2")) + "','DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1";
+    		whereSQL += " AND pm.CRT_DT  >= TO_DATE(TO_CHAR(TO_DATE('" + params.get("payDate1") + "','DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')";
+    		whereSQL += " AND pm.CRT_DT  < TO_DATE(TO_CHAR(TO_DATE('" + params.get("payDate2") + "','DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1";
     		
-    		showPaymentDate = String.valueOf(params.get("payDate1")) + " To " + String.valueOf(params.get("payDate2"));
+    		showPaymentDate = params.get("payDate1") + " To " + params.get("payDate2");
     	}
     	
     	if(!"".equals(String.valueOf(params.get("branchId")))){
-    		whereSQL += " AND pm.BRNCH_ID  = " + String.valueOf(params.get("branchId"));
+    		whereSQL += " AND pm.BRNCH_ID  = " + params.get("branchId");
     		showKeyInBranch = String.valueOf(params.get("branchName"));
     	}
     	
@@ -120,29 +120,29 @@ public class PaymentListingController {
     		showBatchID = String.valueOf(params.get("batchId"));
     		
     		if ("Payment".equals(String.valueOf(params.get("batchType")))){
-    			whereSQL += " AND pm.BATCH_PAY_ID = '" + String.valueOf(params.get("batchId")).trim() + "' ";
+    			whereSQL += " AND pm.BATCH_PAY_ID = '" + params.get("batchId") + "' ";
             } else {
-            	whereSQL += " AND brd.BATCH_ID = '" + String.valueOf(params.get("batchId")).trim() + "' ";
+            	whereSQL += " AND brd.BATCH_ID = '" + params.get("batchId") + "' ";
             }
     	}
     	
     	if(!"".equals(String.valueOf(params.get("receiptNoFr"))) && !"".equals(String.valueOf(params.get("receiptNoTo")))){        	
-        	showReceiptNo = String.valueOf(params.get("receiptNoFr")) + " To " + String.valueOf(params.get("receiptNoTo"));        	
-        	whereSQL += "AND (pm.OR_NO BETWEEN '" + String.valueOf(params.get("receiptNoFr")) + "' AND '" + String.valueOf(params.get("receiptNoTo")) + "') ";
+        	showReceiptNo = params.get("receiptNoFr") + " To " + params.get("receiptNoTo");        	
+        	whereSQL += "AND (pm.OR_NO BETWEEN '" + params.get("receiptNoFr") + "' AND '" + params.get("receiptNoTo") + "') ";
         }
     	
         if (!"".equals(String.valueOf(params.get("trNoFr"))) && !"".equals(String.valueOf(params.get("trNoTo")))) {        	
-            showTRNo = String.valueOf(params.get("trNoFr")) + " To " + String.valueOf(params.get("trNoTo"));            
-            whereSQL += "AND (pm.TR_NO BETWEEN '" + String.valueOf(params.get("trNoFr")) + "' AND '" + String.valueOf(params.get("trNoTo")) + "') ";
+            showTRNo = params.get("trNoFr") + " To " + params.get("trNoTo");            
+            whereSQL += "AND (pm.TR_NO BETWEEN '" + params.get("trNoFr") + "' AND '" + params.get("trNoTo") + "') ";
         }
         
         if (!"".equals(String.valueOf(params.get("collector")))) {
-        	whereSQL += " AND m.MEM_CODE = '" + String.valueOf(params.get("collector")) + "' ";
+        	whereSQL += " AND m.MEM_CODE = '" + params.get("collector") + "' ";
         }
         
         if (!"".equals(String.valueOf(params.get("userId")))) {        
             showKeyInUser = String.valueOf(params.get("userNm"));
-            whereSQL += "AND pm.CRT_USER_ID = " +String.valueOf(params.get("userId")) + " ";
+            whereSQL += "AND pm.CRT_USER_ID = " + params.get("userId") + " ";
         }
         
     	//결과 데이터 만들기

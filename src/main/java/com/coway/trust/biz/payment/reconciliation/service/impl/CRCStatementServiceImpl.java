@@ -41,18 +41,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("crcStatementService")
 public class CRCStatementServiceImpl extends EgovAbstractServiceImpl implements CRCStatementService {
 
-	private static final Logger logger = LoggerFactory.getLogger(CRCStatementServiceImpl.class);
-
-	@Value("${app.name}")
-	private String appName;
-
 	@Resource(name = "crcStatementMapper")
 	private CRCStatementMapper crcStatementMapper;
 
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
-
-	
 	
 	/**
 	 * CRC Statement Transaction 리스트 조회

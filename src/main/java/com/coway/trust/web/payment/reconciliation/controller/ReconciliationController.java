@@ -53,9 +53,6 @@ public class ReconciliationController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReconciliationController.class);
 
-	@Resource(name = "commonService")
-	private CommonService commonService;
-	
 	@Resource(name="ReconciliationService")
 	private ReconciliationListService rService;
 

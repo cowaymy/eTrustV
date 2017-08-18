@@ -22,8 +22,6 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 @RequestMapping(value = "/payment")
 public class DailyCollectionController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DailyCollectionController.class);
-
 	/******************************************************
 	 * Daily Collection Raw 
 	 *****************************************************/	
