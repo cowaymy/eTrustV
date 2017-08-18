@@ -28,7 +28,7 @@
    
    $(function() {
        // draw menu path.
-		var $menuPathObj = $("#content ul:first-child");
+		var $menuPathObj = $("#content > ul:first-child");
 		if($menuPathObj.hasClass("path")){
 
 		    var pathStr =
