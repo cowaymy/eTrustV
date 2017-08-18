@@ -57,7 +57,7 @@
     			/* availability validation */
     			availableResult = fn_availabilityCheck(bankId, AccNo);
     			if(availableResult == true){
-    				Common.alert("* Invalid bank account number(A).");
+    				Common.alert("* Invalid bank account number.");
                     return;
     			}
     		}
@@ -292,7 +292,7 @@
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST Request Info</h1>
+<h1>EDIT CUSTOMER BANK INFO</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close1" >CLOSE</a></p></li>
 </ul>

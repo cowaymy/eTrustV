@@ -56,6 +56,11 @@ $(document).ready(function(){
         Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv5Pop');
     });
     
+    
+    $("#_newCard").click(function() {
+    	Common.popupDiv('/sales/customer/updateCustomerNewCardPop.do', $("#popForm").serializeJSON(), null , true ,'_editDiv5New');
+	});
+    
 });// Document Ready End
 
     function  createCardGrid(){
@@ -251,10 +256,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Full Address</th>
     <td>
-        <span>
-                ${addresinfo.add1}&nbsp;${addresinfo.add2}&nbsp;${addresinfo.add3}&nbsp;
-                ${addresinfo.postCode}&nbsp;${addresinfo.areaName}&nbsp;${addresinfo.name1}&nbsp;${addresinfo.name2}
-        </span>
+        <span>${addresinfo.fullAddress}</span>
     </td>
 </tr>
 <tr>
@@ -343,7 +345,7 @@ $(document).ready(function(){
 <!-- ########## Basic Info End ##########  -->
 <!-- ########## Credit Card Grid Start ########## -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">ADD New Credit Card Account</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="_newCard">ADD New Credit Card Account</a></p></li>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="creditcard_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

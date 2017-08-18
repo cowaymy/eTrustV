@@ -58,6 +58,11 @@ $(document).ready(function(){
          Common.popupDiv("/sales/customer/updateCustomerContactInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv3Pop');
      });
     
+    
+    $("#_newContact").click(function() {
+		
+    	Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', $("#popForm").serializeJSON(), null , true ,'_editDiv3New');
+	});
 });// Document Ready End
 
 
@@ -161,6 +166,7 @@ $(document).ready(function(){
     function fn_closeFunc(){
          $("#_selectParam").val('1');
     }
+   
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <input type="hidden" id="tempCustId">
@@ -300,10 +306,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Full Address</th>
     <td>
-        <span>
-                ${addresinfo.add1}&nbsp;${addresinfo.add2}&nbsp;${addresinfo.add3}&nbsp;
-                ${addresinfo.postCode}&nbsp;${addresinfo.areaName}&nbsp;${addresinfo.name1}&nbsp;${addresinfo.name2}
-        </span>
+        <span>${addresinfo.fullAddress}</span>
     </td>
 </tr>
 <tr>
@@ -392,7 +395,7 @@ $(document).ready(function(){
 <!-- ########## Basic Info End ##########  -->
 <!-- ########## Contact Grid Start ########## -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">ADD New Contact</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="_newContact">ADD New Contact</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

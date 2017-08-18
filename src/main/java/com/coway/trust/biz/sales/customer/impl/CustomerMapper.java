@@ -430,7 +430,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Card ComboBox List (Issue Bank) mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -441,7 +440,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Bank update mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -452,7 +450,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Card update mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -463,7 +460,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Address Delete mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -474,7 +470,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Contact Delete mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -485,7 +480,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Bank Delete mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -496,7 +490,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Card Delete mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -507,7 +500,6 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Address Update mapper
-	 * 
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -518,11 +510,48 @@ public interface CustomerMapper {
 	
 	/**
 	 * Customer Magic Address 
-	 * 
 	 * @param params
 	 * @return EgovMap
 	 * @exception Exception
 	 * @author
 	 */
 	List<EgovMap> searchMagicAddressPop(Map<String, Object> params);
+	
+	
+	/**
+	 * Customer Add new Address
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author
+	 */
+	void insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Add new Contact Account
+	 * @param params
+	 * @exception Exception
+	 * @author
+	 */
+	void insertCustomerContactAddAf(Map<String, Object> params) throws Exception;
+	
+
+
+	/**
+	 * Customer Add new Bank Account
+	 * @param params
+	 * @exception Exception
+	 * @author
+	 */
+	void insertCustomerBankAddAf(Map<String, Object> params) throws Exception;
+	
+
+	/**
+	 * Customer Add new Card Account
+	 * @param params
+	 * @exception Exception
+	 * @author
+	 */
+	void insertCustomerCardAddAf(Map<String, Object> params) throws Exception;
 }

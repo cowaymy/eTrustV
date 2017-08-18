@@ -30,4 +30,30 @@ public class PosServiceImpl implements PosService {
 		
 		return posMapper.selectPosJsonList(params);
 	}
+
+	@Override
+	public EgovMap selectPosViewPurchaseInfo(Map<String, Object> params) {
+		
+		return posMapper.selectPosViewPurchaseInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPosDetailJsonList(Map<String, Object> params) {
+		
+		return posMapper.selectPosDetailJsonList(params);
+	}
+
+	@Override
+	public EgovMap selectPosViewPayInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return posMapper.selectPosViewPayInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPosPaymentJsonList(Map<String, Object> params) {
+		
+		return posMapper.selectPosPaymentJsonList(params);
+	}
+	
+	
 }

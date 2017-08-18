@@ -8,12 +8,14 @@
     
 	$(document).ready(function() {
 		  
+		createAUIGrid();
+		
 		  doGetCombo("/common/selectCodeList.do", "143", '', 'cmbPosTypeId', 'S', ''); 
 		  doGetCombo("/common/selectCodeList.do", "140", '', 'cmbSalesTypeId', 'S', '');
 		  
 		// AUIGrid 그리드를 생성합니다.
         
-        posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
+       
         AUIGrid.setSelectionMode(posGridID, "singleRow");
 		  
         
@@ -22,58 +24,52 @@
         	fn_getPosListAjax();
 		});
         
+        // 셀 더블클릭 이벤트 바인딩
+        AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
+            
+            $("#_posNo").val(event.item.posNo);
+            $("#detailForm").attr({'target' : '_self' , 'action' : '/sales/pos/selectPosViewDetail.do'}).submit();
+            
+        });
+        
 	});
 	
-	
-	var posColumnLayout =  [ 
-					                    {dataField : "posNo", headerText : "POS Ref No.", width : '10%'}, 
-					                    {dataField : "posDt", headerText : "Sales Date", width : '10%'},
-					                    {dataField : "codeName", headerText : "POS Type", width : '10%'},
-					                    {dataField : "codeName1", headerText : "Sales Type", width : '10%'},
-					                    {dataField : "texInvcRefNo", headerText : "Invoice No.", width : '10%'},
-					                    {dataField : "name", headerText : "Customer Name", width : '20%'},
-					                    {dataField : "whLocCode", headerText : "Warehouse", width : '10%'},
-					                    {dataField : "posTotAmt", headerText : "Total Amount", width : '10%'},
-					                    {dataField : "userName", headerText : "Sales Agent", width : '10%'},
-					                    {dataField : "posId", visible : false}
-					                   ];
-	
-	 //그리드 속성 설정
-    var gridPros = {
-            
-            // 페이징 사용       
-            usePaging : true,
-            
-            // 한 화면에 출력되는 행 개수 10(기본값:10)
-            pageRowCount : 20,
-            
-            editable : true,
-            
-            fixedColumnCount : 1,
-            
-            showStateColumn : false, //true 
-            
-            displayTreeOpen : false, //true
-            
-            selectionMode : "multipleCells",
-            
-            headerHeight : 30,
-            
-            // 그룹핑 패널 사용
-            useGroupingPanel : false, //true
-            
-            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-            skipReadonlyColumns : true,
-            
-            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            wrapSelectionMove : false, //false
-            
-            // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false,
-            
-            groupingMessage : "Here groupping"
+	function createAUIGrid(){
+		
+		var posColumnLayout =  [ 
+                                {dataField : "posNo", headerText : "POS Ref No.", width : '10%'}, 
+                                {dataField : "posDt", headerText : "Sales Date", width : '10%'},
+                                {dataField : "codeName", headerText : "POS Type", width : '10%'},
+                                {dataField : "codeName1", headerText : "Sales Type", width : '10%'},
+                                {dataField : "texInvcRefNo", headerText : "Invoice No.", width : '10%'},
+                                {dataField : "name", headerText : "Customer Name", width : '20%'},
+                                {dataField : "whLocCode", headerText : "Warehouse", width : '10%'},
+                                {dataField : "posTotAmt", headerText : "Total Amount", width : '10%'},
+                                {dataField : "userName", headerText : "Sales Agent", width : '10%'},
+                                {dataField : "posId", visible : false}
+                               ];
+		
+		//그리드 속성 설정
+        var gridPros = {
+                
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
         };
-	 
+		
+        posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
+	}
     
   function fn_getPosListAjax(){
 	
@@ -83,16 +79,6 @@
 	  });
 	  
   }
-  
-  
-/*   function fn_getCustomerAddressAjax() {        
-      Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList",$("#getParamForm").serialize(), function(result) {
-          AUIGrid.setGridData(addrGridID, result);
-      });
-  } */
-  
-  
-  
   
   function fn_posTypeChangeFunc(codeId) {
 	
@@ -195,6 +181,10 @@
 </script>
 
 <div id="wrap"><!-- wrap start -->
+<!-- Detail Form -->
+<form id="detailForm" method="get">
+    <input type="hidden" id="_posNo" name="posNo"> 
+</form>
 <header id="header"><!-- header start -->
 <ul class="left_opt">
     <li>Neo(Mega Deal): <span>2394</span></li> 
@@ -321,7 +311,7 @@
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
-    <li>Order list</li>
+    <li>POS</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->

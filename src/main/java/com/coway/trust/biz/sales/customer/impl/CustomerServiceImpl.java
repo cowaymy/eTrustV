@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.customer.CustomerBVO;
 import com.coway.trust.biz.sales.customer.CustomerCVO;
@@ -381,22 +382,6 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		customerMapper.updateCustomerBasicInfoAf(params);
 	}
 
-	
-	/**
-	 * Main Address 업데이트 (Set Active)
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 이석희 2017.08.01
-	 */
-	@Override
-	public void updateCustomerAddressSetActive(Map<String, Object> params) throws Exception {
-		
-		customerMapper.updateCustomerAddressSetActive(params);
-		
-	}
-
-
 	/**
 	 * Main Address 업데이트 (Set Main)
 	 * @param 
@@ -405,24 +390,11 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.08.01
 	 */
 	@Override
+	@Transactional
 	public void updateCustomerAddressSetMain(Map<String, Object> params) throws Exception {
-
+		
+		customerMapper.updateCustomerAddressSetActive(params);
 		customerMapper.updateCustomerAddressSetMain(params);
-	}
-
-
-	/**
-	 * Main Contact 업데이트 (Set Active)
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 이석희 2017.08.03
-	 */
-	@Override
-	public void updateCustomerContactSetActive(Map<String, Object> params) throws Exception {
-		
-		customerMapper.updateCustomerContactSetActive(params);
-		
 	}
 
 
@@ -434,9 +406,10 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 이석희 2017.08.03
 	 */
 	@Override
+	@Transactional
 	public void updateCustomerContactSetMain(Map<String, Object> params) throws Exception {
 		
-		
+		customerMapper.updateCustomerContactSetActive(params);
 		//set STUS_CODE_ID == 9 <MAIN>
 		customerMapper.updateCustomerContactSetMain(params);
 	}
@@ -649,4 +622,62 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.searchMagicAddressPop(params);
 	}
+
+
+	/**
+	 * Customer Add New Address  (Af)  
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception {
+		
+		customerMapper.insertCustomerAddressInfoAf(params);
+	}
+	
+	
+	/**
+	 * Customer Add New Contact (Af)  
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void insertCustomerContactAddAf(Map<String, Object> params) throws Exception {
+		customerMapper.insertCustomerContactAddAf(params);
+		
+	}
+
+
+	/**
+	 * Customer Add New Bank Account (Af)  
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void insertCustomerBankAddAf(Map<String, Object> params) throws Exception {
+		
+		customerMapper.insertCustomerBankAddAf(params);
+		
+	}
+
+
+	/**
+	 * Customer Add New Card Account (Af)  
+	 * 
+	 * @param 
+	 * @return void
+	 * @exception Exception
+	 */
+	@Override
+	public void insertCustomerCardAddAf(Map<String, Object> params) throws Exception {
+		
+		customerMapper.insertCustomerCardAddAf(params);
+	}
+
 }

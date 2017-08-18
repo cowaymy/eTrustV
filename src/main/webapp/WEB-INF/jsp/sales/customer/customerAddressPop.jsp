@@ -43,13 +43,13 @@
         <th scope="row">Postcode</th>
         <td>${detailaddr.postCode}</td>
         <th scope="row">Area</th>
-        <td>${detailaddr.areaName }</td>
+        <td>${detailaddr.region2 }</td>
     </tr>
     <tr>
         <th scope="row">State</th>
-        <td>${detailaddr.stateName}</td>
+        <td>${detailaddr.region1}</td>
         <th scope="row">Country</th>
-        <td>${detailaddr.cntyName}</td>
+        <td>${detailaddr.country}</td>
     </tr>
     <tr>
         <th scope="row">Remark</th>

@@ -12,4 +12,12 @@ public interface PosMapper {
 	List<EgovMap> selectWhList();
 	
 	List<EgovMap> selectPosJsonList(Map<String, Object> params);
+	
+	EgovMap selectPosViewPurchaseInfo(Map<String, Object> params);
+	
+	List<EgovMap> selectPosDetailJsonList(Map<String, Object> params);
+	
+	EgovMap selectPosViewPayInfo(Map<String, Object> params);
+	
+	List<EgovMap> selectPosPaymentJsonList(Map<String, Object> params);
 }

@@ -56,6 +56,10 @@ $(document).ready(function(){
         Common.popupDiv("/sales/customer/updateCustomerBankAccEditInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv4Pop');
     });
     
+    $("#_newBank").click(function() {
+    	Common.popupDiv('/sales/customer/updateCustomerNewBankPop.do', $("#popForm").serializeJSON(), null , true ,'_editDiv4New');
+	});
+    
 });// Document Ready End
      
     function createBankGrid(){
@@ -93,19 +97,11 @@ $(document).ready(function(){
 	
     }
 
-
-
     //Get address by Ajax
      function fn_getCustomerBankAjax(){
         Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList",$("#popForm").serialize(), function(result) {
             AUIGrid.setGridData(bankAccountGirdID, result);
         });
-    }
-    
-    // Add New Bank
-    function fn_addNewBank(){
-    	
-    	Common.popupDiv("/sales/customer/customerAddBankAccountPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv4New');
     }
     
    //close Func
@@ -258,10 +254,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Full Address</th>
     <td>
-        <span>
-                ${addresinfo.add1}&nbsp;${addresinfo.add2}&nbsp;${addresinfo.add3}&nbsp;
-                ${addresinfo.postCode}&nbsp;${addresinfo.areaName}&nbsp;${addresinfo.name1}&nbsp;${addresinfo.name2}
-        </span>
+        <span>${addresinfo.fullAddress}</span>
     </td>
 </tr>
 <tr>
@@ -353,7 +346,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 <!-- ########## Bank Acc Grid Start ########## -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="javascript : fn_addNewBank()">ADD New Bank Account</a></p></li> <!-- xml :   insertBankAccountInfo -->
+    <li><p class="btn_grid"><a href="#" id="_newBank">ADD New Bank Account</a></p></li> <!-- xml :   insertBankAccountInfo -->
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="bank_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

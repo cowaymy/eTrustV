@@ -313,12 +313,7 @@ $(document).ready(function(){
 <tbody>
 <tr>
     <th scope="row">Full Address</th>
-    <td>
-        <span>
-                ${addresinfo.add1}&nbsp;${addresinfo.add2}&nbsp;${addresinfo.add3}&nbsp;
-                ${addresinfo.postCode}&nbsp;${addresinfo.areaName}&nbsp;${addresinfo.name1}&nbsp;${addresinfo.name2}
-        </span>
-    </td>
+    <td><span>${addresinfo.fullAddress}</span></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>

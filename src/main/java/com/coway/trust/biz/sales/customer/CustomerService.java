@@ -245,7 +245,7 @@ public interface CustomerService {
 	 * @exception Exception
 	 * @author 이석희 2017.08.02
 	 */
-	void updateCustomerAddressSetActive(Map<String, Object> params) throws Exception;
+	/*void updateCustomerAddressSetActive(Map<String, Object> params) throws Exception;*/
 	
 	
 	/**
@@ -265,7 +265,7 @@ public interface CustomerService {
 	 * @exception Exception
 	 * @author 이석희 2017.08.02
 	 */
-	void updateCustomerContactSetActive(Map<String, Object> params) throws Exception;
+	/*void updateCustomerContactSetActive(Map<String, Object> params) throws Exception;*/
 	
 	
 	/**
@@ -444,9 +444,23 @@ public interface CustomerService {
 	int nricDupChk(Map<String, Object> params);
 
 
+	/**
+	 * CustCareContact
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
 	List<EgovMap> selectCustCareContactList(Map<String, Object> params) throws Exception;
 
 
+	/**
+	 * BillingGroupByKeyword
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
 	List<EgovMap> selectBillingGroupByKeywordCustIDList(Map<String, Object> params) throws Exception;
 	
 	
@@ -459,4 +473,43 @@ public interface CustomerService {
 	 */
 	List<EgovMap> searchMagicAddressPop(Map<String, Object> params );
 	
+	
+	/**
+	 * Customer Add New Address (After) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Add New Contact (After) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertCustomerContactAddAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Add New Bank Account (After) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertCustomerBankAddAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Customer Add New Card Account (After) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	void insertCustomerCardAddAf(Map<String, Object> params) throws Exception;
 }
