@@ -69,4 +69,8 @@
         ORDER BY EXTENT1.ZR_LOC_ID ASC
     </select>
 
+    <select id="selectPostCodeList" parameterType="Map" resultType="egovMap">
+
+    </select>
+
 </mapper>

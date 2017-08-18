@@ -18,6 +18,7 @@ public class LoginVO {
 	private int userIsExternal;
 	private String statusName;
 	private String code;
+	private int userBranchId;
 	private String branchName;
 	private String deptName;
 
@@ -131,6 +132,14 @@ public class LoginVO {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public int getUserBranchId() {
+		return userBranchId;
+	}
+
+	public void setUserBranchId(int userBranchId) {
+		this.userBranchId = userBranchId;
 	}
 
 	public String getBranchName() {

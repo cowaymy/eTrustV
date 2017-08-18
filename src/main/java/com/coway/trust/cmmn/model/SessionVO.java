@@ -18,6 +18,7 @@ public class SessionVO {
 	private int userIsExternal;
 	private String statusName;
 	private String code;
+	private int userBranchId;
 	private String branchName;
 	private String deptName;
 
@@ -133,6 +134,14 @@ public class SessionVO {
 		this.code = code;
 	}
 
+	public int getUserBranchId() {
+		return userBranchId;
+	}
+
+	public void setUserBranchId(int userBranchId) {
+		this.userBranchId = userBranchId;
+	}
+
 	public String getBranchName() {
 		return branchName;
 	}
@@ -168,6 +177,7 @@ public class SessionVO {
 			sessionVO.setStatusName(loginVO.getStatusName());
 			sessionVO.setCode(loginVO.getCode());
 			sessionVO.setBranchName(loginVO.getBranchName());
+			sessionVO.setUserBranchId(loginVO.getUserBranchId());
 			sessionVO.setDeptName(loginVO.getDeptName());
 		}
 
