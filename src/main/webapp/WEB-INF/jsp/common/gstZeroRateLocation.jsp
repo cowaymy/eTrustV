@@ -1,22 +1,23 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 <script type="text/javaScript">
 
     var locationGridId;
     var gridColumnLayout = [{
         dataField: "zrLocId",
-        headerText: "id"
+        headerText: "<spring:message code='sys.title.location' /> <spring:message code='sys.info.id' />"
     }, {
         dataField: "name",
-        headerText: "State Name"
+        headerText: "<spring:message code='sys.title.state' /> <spring:message code='sys.title.name' />"
     }, {
         dataField: "areaName",
-        headerText: "AREA NAME"
+        headerText: "<spring:message code='sys.title.area' /> <spring:message code='sys.title.name' />"
     }, {
         dataField: "postCode",
-        headerText: "Post Code"
+        headerText: "<spring:message code='sys.title.post.code' />"
     }, {
         dataField: "stusCodeName",
-        headerText: "Status"
+        headerText: "<spring:message code='sys.title.status' />"
     }];
 
     $(function () {
@@ -56,9 +57,21 @@
             fn_initSearch();
         });
 
+        $("#btnDel").on("click", function () {
+            fn_deleteRow();
+        });
+
+        $("#btnAdd").on("click", function () {
+            fn_addRow();
+        });
+
+        $("#btnSave").on("click", function () {
+            fn_save();
+        });
+
     });
 
-    function fn_initSearch(){
+    function fn_initSearch() {
         $("#sLocationId").val("");
         $("#sStateCode").val("");
         CommonCombo.initById("sSubAreaCode");
@@ -71,6 +84,19 @@
             AUIGrid.setGridData(locationGridId, data);
         });
     }
+
+    function fn_deleteRow(){
+
+    }
+
+    function fn_addRow() {
+        // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+        AUIGrid.addRow(locationGridId, "", "first");
+    }
+
+    function fn_save() {
+
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -81,7 +107,7 @@
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
         <h2>GST Zero Rate Location Search</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:void(0);" id="btnSearch"><span class="search"></span>Search</a>
@@ -141,33 +167,33 @@
             </table><!-- table end -->
 
             <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-                <p class="show_btn"><a href="#"><img
+                <p class="show_btn"><a href="javascript:void(0);"><img
                         src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show"/></a>
                 </p>
                 <dl class="link_list">
                     <dt>Link</dt>
                     <dd>
                         <ul class="btns">
-                            <li><p class="link_btn"><a href="#">menu1</a></p></li>
-                            <li><p class="link_btn"><a href="#">menu2</a></p></li>
-                            <li><p class="link_btn"><a href="#">menu3</a></p></li>
-                            <li><p class="link_btn"><a href="#">menu4</a></p></li>
-                            <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-                            <li><p class="link_btn"><a href="#">menu6</a></p></li>
-                            <li><p class="link_btn"><a href="#">menu7</a></p></li>
-                            <li><p class="link_btn"><a href="#">menu8</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
+                            <li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
                         </ul>
                         <ul class="btns">
-                            <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-                            <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                            <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-                            <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-                            <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                            <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-                            <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-                            <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
+                            <li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
                         </ul>
-                        <p class="hide_btn"><a href="#"><img
+                        <p class="hide_btn"><a href="javascript:void(0);"><img
                                 src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
                                 alt="hide"/></a>
                         </p>
@@ -181,11 +207,11 @@
     <section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
-            <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-            <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-            <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-            <li><p class="btn_grid"><a href="#">INS</a></p></li>
-            <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_grid"><a href="javascript:void(0);" id="btnDel"><spring:message code='sys.btn.del'/></a></p></li>
+                <li><p class="btn_grid"><a href="javascript:void(0);" id="btnAdd"><spring:message code='sys.btn.add'/></a></p></li>
+                <li><p class="btn_grid"><a href="javascript:void(0);" id="btnSave"><spring:message code='sys.btn.save'/></a></p></li>
+            </c:if>
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
