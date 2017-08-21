@@ -680,4 +680,32 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		customerMapper.insertCustomerCardAddAf(params);
 	}
 
+
+	/**
+	 * Get Customer Detail Main Address 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public EgovMap selectCustomerMainAddr(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCustomerMainAddr(params);
+	}
+
+
+	/**
+	 * Get Customer Detail Main Contact 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public EgovMap selectCustomerMainContact(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectCustomerMainContact(params);
+	}
+	
 }

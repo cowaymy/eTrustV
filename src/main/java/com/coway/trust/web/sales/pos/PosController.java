@@ -133,13 +133,74 @@ public class PosController {
 		return ResponseEntity.ok(paymentlList);
 	}
 	
-	
-	@RequestMapping(value = "/insertPosSystem.do")
-	public String insertPosSystem (@RequestParam Map<String, Object> params) throws Exception{
+	/**
+	 *  Pos System Start
+	 * @param params
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/insertPosSystem.do") 
+	public String insertPosSystem (@RequestParam Map<String, Object> params , ModelMap model) throws Exception{
 		
 		LOGGER.info("############### Go insertPosSystem #####################");
+		
+		
+		//TODO 추후 삭제 (임시 Session)
+		params.put("userId", "KRHQ9001");
+		params.put("password", "zaq12w");
+		LoginVO loginVO = loginService.getLoginInfo(params);
+		HttpSession session = sessionHandler.getCurrentSession();
+		session.setAttribute(AppConstants.SESSION_INFO,SessionVO.create(loginVO));
+		LOGGER.info("########### Session Created !!! @@@@@@@@@@@@@");
+		
 		
 		return "sales/pos/posSystem";
 		
 	}
+	
+	
+	@RequestMapping(value = "/selectPosSalesTypeJsonList")
+	public ResponseEntity<List<EgovMap>> selectPosSalesTypeJsonList (@RequestParam Map<String, Object> params, HttpSession session) throws Exception{
+		
+		// 세션에서 가져온 userId를 이용해서 ModuleUnit Id List 검색
+		session = sessionHandler.getCurrentSession();
+		
+		SessionVO sessionVO = null;
+		sessionVO = (SessionVO)session.getAttribute(AppConstants.SESSION_INFO);
+		
+		LOGGER.info("#################### USERID TEST :  {}" , sessionVO.getUserId() );
+		
+		params.put("userId", sessionVO.getUserId());
+		List<EgovMap> userInfoList = posService.selectPosUserInfo(params); // Module Unit List 가지고있음
+		
+		return ResponseEntity.ok(userInfoList);
+	}
+	
+	
+	@RequestMapping(value = "/selectPosUserWarehoseIdJson")
+	public ResponseEntity<EgovMap> selectPosUserWarehoseIdJson (@RequestParam Map<String, Object> params, HttpSession session) throws Exception{
+		
+		session = sessionHandler.getCurrentSession();
+		SessionVO sessionVO = null;
+		sessionVO = (SessionVO)session.getAttribute(AppConstants.SESSION_INFO);
+		
+		params.put("userId", sessionVO.getUserId());
+		
+		EgovMap userWhIdVO = posService.selectPosUserWarehoseIdJson(params);
+		
+		return ResponseEntity.ok(userWhIdVO);
+	}
+	
+	
+	@RequestMapping(value = "/selectPosReasonJsonList")
+	public ResponseEntity<List<EgovMap>> selectPosReasonJsonList() throws Exception{
+		
+		List<EgovMap> reasonList = null;
+		
+		reasonList = posService.selectPosReasonJsonList();
+		
+		return ResponseEntity.ok(reasonList);
+	}
+ 	
 }

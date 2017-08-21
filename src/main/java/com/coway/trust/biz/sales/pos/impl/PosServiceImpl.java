@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.sales.pos.PosService;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("posService")
-public class PosServiceImpl implements PosService {
+public class PosServiceImpl extends EgovAbstractServiceImpl implements PosService {
 
 	private static final Logger logger = LoggerFactory.getLogger(PosServiceImpl.class);
 	
@@ -54,6 +56,23 @@ public class PosServiceImpl implements PosService {
 		
 		return posMapper.selectPosPaymentJsonList(params);
 	}
-	
+
+	@Override
+	public List<EgovMap> selectPosUserInfo(Map<String, Object> params) {
+		
+		return posMapper.selectPosUserInfo(params);
+	}
+
+	@Override
+	public EgovMap selectPosUserWarehoseIdJson(Map<String, Object> params) {
+		
+		return posMapper.selectPosUserWarehoseIdJson(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPosReasonJsonList() {
+		
+		return posMapper.selectPosReasonJsonList();
+	}
 	
 }

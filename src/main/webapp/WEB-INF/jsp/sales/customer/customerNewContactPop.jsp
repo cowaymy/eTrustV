@@ -2,7 +2,11 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 $(document).ready(function() {
-
+	
+	/* ##### cust CNTCID ##### */
+	fn_getCustCntcId();
+	/* ###  Page Param #### */
+    fn_selectPage();
     //j_date
     var pickerOpts={
             changeMonth:true,
@@ -116,6 +120,42 @@ $(document).ready(function() {
         
     });
     
+    $("#_copyBtn").click(function() {
+        
+        //custAddrId
+        var cntcId = $("#_tempContactId").val();
+        
+        $.ajax({
+            type : "GET",
+            url : getContextPath() + "/sales/customer/selectCustomerCopyContactJson",
+            data : { getparam : cntcId}, 
+            dataType: "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+                   $("#cntcCmbInitialTypeId").val(data.custInitial);
+                   $("input[name='cntcGender']").val(data.gender);
+                   $("#cntcName").val(data.name1);
+                   $("#cntcCmbRaceTypeId").val(data.raceId);
+                   $("#cntcNric").val(data.nric);
+                   $("input[name='cntcDob']").val(data.dob);
+                   $("#cntcTelm").val(data.telM1);
+                   $("#cntcTelo").val(data.telO);
+                   $("#cntcTelr").val(data.telR);
+                   $("#cntcTelf").val(data.telf);
+                   $("input[name='cntcDept']").val(data.dept);
+                   $("input[name='cntcPos']").val(data.pos);
+                   $("#cntcExtNo").val(data.ext);
+                   $("#cntcEmail").val(data.email);
+            },
+            error: function(){
+               alert("Get Contact Detail was Failed!");
+            },
+            complete: function(){
+            }
+            
+        });
+   });
+    
 }); // Document Ready Func End
 
 /* ####### update Func ########### */
@@ -138,7 +178,36 @@ $(document).ready(function() {
     }
 /* ####### update Func  End########### */
 
+    function fn_getCustCntcId(){
+        
+        var getparam = $("#_insCustId").val();
+        $.ajax({
+            
+            type: "GET",
+            url : getContextPath() + "/sales/customer/selectCustomerMainContact",
+            data : {getparam : getparam},
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+                   
+            	    $("#_tempContactId").val(data.custCntcId);
+                    
+            },
+            error: function(){
+                alert("Get Contact Id was Failed!");
+            },
+            complete: function(){
+            }
+        });
+        
+    }
     
+    function fn_selectPage(){
+        
+        if("" != $("#_callParam").val() && null != $("#_callParam").val()){
+             $("#_copyBtn").css("display" , "");
+        }
+    }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -151,7 +220,10 @@ $(document).ready(function() {
 <section class="pop_body"><!-- pop_body start -->
 <form id="addForm"> <!-- Form Start  -->
 <input type="hidden" value="${insCustId}" id="_insCustId" name="insCustId">
-
+<!-- Temp Contact Id -->
+<input type="hidden" id="_tempContactId" name="tempContactId">
+<!-- Page Param -->
+<input type="hidden" name="callParam" id="_callParam" value="${callParam}">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -211,6 +283,13 @@ $(document).ready(function() {
     <td><input type="text" title="" placeholder="Extension Number" class="w100p"  id="cntcExtNo" name="cntcExpno" maxlength="50"/></td>
     <th scope="row">Email</th>
     <td><input type="text" title="" placeholder="" class="w100p"  id="cntcEmail" name="cntcEmail" maxlength="70"/></td>
+</tr>
+<tr>
+    <td>
+        <ul class="center_btns">
+            <li><p class="btn_blue big"><a href="#" id="_copyBtn" style="display: none;">Copy</a></p></li>
+        </ul>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

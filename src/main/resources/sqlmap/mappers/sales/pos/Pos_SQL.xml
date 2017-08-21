@@ -345,4 +345,72 @@
 				         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent2.PAY_ITM_CARD_MODE_ID
 				WHERE  Extent1.PAY_ID = #{payId}
     </select>
+    
+    <select id="selectPosUserInfo" parameterType="Map" resultType="egovMap">
+					SELECT Extent2.AC_LID AC_LID  ,
+					       Extent2.BIZ_ROLE_ID BIZ_ROLE_ID  ,
+					       Extent2.MODULE_UNIT_ID MODULE_UNIT_ID  ,
+					       Extent2.CAN_EXECUTE CAN_EXECUTE  ,
+					       Extent2.CAN_CRT CAN_CRT  ,
+					       Extent2.CAN_READ CAN_READ  ,
+					       Extent2.CAN_UPD CAN_UPD  ,
+					       Extent2.CAN_DEL CAN_DEL  ,
+					       Extent2.STUS_ID STUS_ID  
+					  FROM SYS0045M Extent1
+					         JOIN SYS0003M Extent2   ON ( Extent2.BIZ_ROLE_ID = Extent1.ROLE_ID )
+					         AND ( 1 = Extent2.STUS_ID )
+					 WHERE  ( Extent1.USER_ID = #{userId} )
+					          AND ( 1 = Extent1.STUS_ID )
+					 ORDER BY  Extent2.MODULE_UNIT_ID         
+    </select>
+    
+    <select id="selectPosUserWarehoseIdJson" parameterType="Map" resultType="egovMap">
+					SELECT Extent3.WH_LOC_ID WH_LOC_ID  ,
+					       Extent3.WH_LOC_CODE WH_LOC_CODE  ,
+					       Extent3.WH_LOC_DESC WH_LOC_DESC  ,
+					       Extent3.WH_LOC_ADD1 WH_LOC_ADD1  ,
+					       Extent3.WH_LOC_ADD2 WH_LOC_ADD2  ,
+					       Extent3.WH_LOC_ADD3 WH_LOC_ADD3  ,
+					       Extent3.WH_LOC_AREA_ID WH_LOC_AREA_ID  ,
+					       Extent3.WH_LOC_POST_CODE_ID WH_LOC_POST_CODE_ID  ,
+					       Extent3.WH_LOC_STATE_ID WH_LOC_STATE_ID  ,
+					       Extent3.WH_LOC_CNTY_ID WH_LOC_CNTY_ID  ,
+					       Extent3.WH_LOC_TEL1 WH_LOC_TEL1  ,
+					       Extent3.WH_LOC_TEL2 WH_LOC_TEL2  ,
+					       Extent3.WH_LOC_BRNCH_ID WH_LOC_BRNCH_ID  ,
+					       Extent3.WH_LOC_TYPE_ID WH_LOC_TYPE_ID  ,
+					       Extent3.WH_LOC_STK_GRAD WH_LOC_STK_GRAD  ,
+					       Extent3.WH_LOC_STUS_ID WH_LOC_STUS_ID  ,
+					       Extent3.WH_LOC_UPD_USER_ID WH_LOC_UPD_USER_ID  ,
+					       Extent3.WH_LOC_UPD_DT WH_LOC_UPD_DT  ,
+					       Extent3.CODE2 CODE2  ,
+					       Extent3.DESC2 DESC2  ,
+					       Extent3.WH_LOC_IS_SYNC WH_LOC_IS_SYNC  ,
+					       Extent3.WH_LOC_MOBILE WH_LOC_MOBILE  
+					  FROM SYS0047M Extent1
+					         LEFT JOIN SYS0005M Extent2   ON Extent1.USER_BRNCH_ID = Extent2.BRNCH_ID
+					         JOIN SYS0028M Extent3   ON ( Extent1.USER_BRNCH_ID = Extent3.WH_LOC_BRNCH_ID )
+					         OR ( Extent1.USER_BRNCH_ID IS NULL )
+					         AND ( Extent3.WH_LOC_BRNCH_ID IS NULL )
+					 WHERE  ( Extent1.USER_ID = #{userId} )
+					          AND ( 277 = Extent3.WH_LOC_TYPE_ID )
+					          AND ( 1 = Extent3.WH_LOC_STUS_ID )
+					          AND ( 'A' = Extent3.WH_LOC_STK_GRAD )
+    </select>
+    
+    <select id="selectPosReasonJsonList" resultType="egovMap">
+				SELECT 
+				       RESN_ID CODE_ID ,
+				       CODE || ' - ' || RESN_DESC AS CODE_NAME  
+				FROM 
+				       SYS0032M 
+				WHERE
+				       1 = STUS_CODE_ID 
+				       
+				<if test="groupCode != null and groupCode !=''">
+		           AND RESN_TYPE_ID = #{groupCode}
+		            
+		        </if>
+        
+    </select>
 </mapper>

@@ -775,7 +775,7 @@
                     Project6.modeId MODE_ID  , 
                     Project6.code2 CODE2  ,
                     Project6.bankCode BANK_CODE  , 
-                    Project6.rentAmt RENT_AMT  
+                    TO_CHAR(Project6.rentAmt, 'FM9999999999990.00') AS RENT_AMT 
              FROM ( SELECT  Project6.C1 C1  , 
                             Project6.SALES_ORD_ID SALES_ORD_ID  , 
                             Project6.SALES_ORD_NO SALES_ORD_NO  , 
@@ -1954,4 +1954,35 @@
                                     SYSDATE,
                                     #{cardTypeId})
   </insert>
+  
+  <select id="selectCustomerMainAddr"  parameterType="Map"  resultType="egovMap">
+          <![CDATA[  
+					SELECT 
+					    CUST_ADD_ID,
+					    STREET_ID 
+					FROM 
+					    SAL0023D 
+					WHERE 
+					    CUST_ID = #{getparam} 
+					AND 
+					    STUS_CODE_ID = 9 
+					AND 
+					    ROWNUM <= 1
+           ]]>
+  </select>
+  
+  <select id="selectCustomerMainContact" parameterType="Map" resultType="egovMap">
+                  <![CDATA[  
+                    SELECT 
+                        CUST_CNTC_ID
+                    FROM 
+                        SAL0027D 
+                    WHERE 
+                        CUST_ID = #{getparam}
+                    AND 
+                        STUS_CODE_ID = 9 
+                    AND 
+                        ROWNUM <= 1
+                   ]]>
+  </select>
 </mapper>

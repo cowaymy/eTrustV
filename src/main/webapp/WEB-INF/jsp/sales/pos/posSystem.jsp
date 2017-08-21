@@ -1,70 +1,257 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
+Common.getLoadingObj(); 
+
+$(document).ready(function() {
+	
+    $("#_paymentModeTab").css("display" , "none");
+    doGetSalesType('/sales/pos/selectPosSalesTypeJsonList', 'cmbSalesTypeId');
+    doGetComboWh("/sales/pos/selectWhList.do", '', '', 'cmbWarehouseId', 'S', '');
     
-    $(document).ready(function() {
+});
+
+ 
+  function fn_getUserWarehoseId(url){
+	  
+	  $.ajax({
+	        type : "GET",
+	        url : url,
+	        dataType : "json",
+	        contentType : "application/json;charset=UTF-8",
+	        success : function(data) {
+	           //get whLocId
+	           Common.showLoader();
+	           $("#cmbWarehouseId").val(data.whLocId);
+	        },
+	        error: function(jqXHR, textStatus, errorThrown){
+	            alert("No Search Data Warehose Id.");
+	        },
+	        complete: function(){
+	        	Common.removeLoader();
+	        }
+	    }); 
+  }
+/* ################ Warehose Combo Box  Start #########################*/
+ //def Combo(select Box OptGrouping)
+  function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
+    
+    $.ajax({
+        type : "GET",
+        url : url,
+        data : { groupCode : groupCd},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+           var rData = data;
+           Common.showLoader();
+           fn_otpGrouping(rData, obj)
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        	Common.removeLoader();
+        }
+    }); 
+ } ;
+
+ function fn_otpGrouping(data, obj){
+     
+     var targetObj = document.getElementById(obj);
+     
+     for(var i=targetObj.length-1; i>=0; i--) {
+            targetObj.remove( i );
+     }
+     
+     obj= '#'+obj;
+     
+     // grouping
+     var count = 0;
+     $.each(data, function(index, value){
+         
+         if(index == 0){
+            $("<option />", {value: "", text: 'Choose One'}).appendTo(obj);
+         }
+         
+         if(index > 0 && index != data.length){
+             if(data[index].description1 != data[index -1].description1){
+                 $(obj).append('</optgroup>');
+                 count = 0;
+             }
+         }
+         
+         if(data[index].descId == null  && count == 0){
+             $(obj).append('<optgroup label="">');
+             count++;
+         }
+         if(data[index].descId == 42 && count == 0){
+             $(obj).append('<optgroup label="Cody Branch">');
+             count++;
+         }
+         if(data[index].descId == 1160  && count == 0){
+             $(obj).append('<optgroup label="Dealer Branch">');
+             count++;
+         }
+         if(data[index].descId == 43 && count == 0){
+             $(obj).append('<optgroup label="Dream Service Center">');
+             count++;
+         }
+         //
+         if(data[index].descId == 46 && count == 0){
+             $(obj).append('<optgroup label="Head Quaters">');
+             count++;
+         }
+         $('<option />', {value : data[index].whLocId, text:data[index].codeId+'-'+data[index].codeName}).appendTo(obj); // WH_LOC_ID
+         
+         
+         if(index == data.length){
+             $(obj).append('</optgroup>');
+         }
+     });
+     //optgroup CSS
+     $("optgroup").attr("class" , "optgroup_text");
+ }
+     /* ################ Warehose Combo Box  End #########################*/
+
+
+
+/* ################ Sales Type Combo Box  Start #########################*/
+function doGetSalesType(url, obj){
+
+    $.ajax({
+        type : "GET",
+        url : getContextPath() + url,
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+        	var rData = data;
+        	Common.showLoader();
+            doGetDefSalesOpt(rData, obj);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        	Common.removeLoader();
+        }
+    });
+} ;
+
+function doGetDefSalesOpt(data, obj){
+    var targetObj = document.getElementById(obj);
+    var custom = "";
+
+    for(var i=targetObj.length-1; i>=0; i--) {
+        targetObj.remove( i );
+    }
+    
+    obj= '#'+obj;
+    
+    $('<option />', {value : '' , text:'Choose One'}).appendTo(obj).attr("selected", "true");
+    
+    $.each(data, function(index,value) {
+    	//value =  1352, 1353, 1358, 1357, 1361
+    	
+        if( 322 == data[index].moduleUnitId){
+           $('<option />', {value : '1352' , text:'POS - Filter / Spare Part / Miscellaneous'}).appendTo(obj);
+        }
+        if( 326 == data[index].moduleUnitId){
+           $('<option />', {value :  '1353', text:'POS - Item Bank'}).appendTo(obj);
+        }
+        if( 327 == data[index].moduleUnitId){
+            $('<option />', {value :  '1357', text:'POS - Other Income'}).appendTo(obj);
+        }
+        if( 328 == data[index].moduleUnitId){
+            $('<option />', {value :  '1358', text:'POS - Item Bank (HQ)'}).appendTo(obj);
+         }
+        
+    });
+    
+};
+/* ################ Sales Type Combo Box  End #########################*/
+ 
+
+
+    function fn_memSearch(){
+    	alert("성공!!!");
+    }
+    
+    function fn_clearField(){
+    	
     	$("#_paymentModeTab").css("display" , "none");
-    	
-    	doGetCombo("/common/selectCodeList.do", "140", '', 'cmbSalesTypeId', 'S', '');
-    	
-	});
+        $("#_memberCode").attr("disabled" , "disabled");
+        $("#_memberSearchBtn").attr("onclick", "");
+        $('#_salesDate').val($.datepicker.formatDate('dd-mm-yy', ''));
+        $("#_customerName").val('');
+        $("#cmbWarehouseId").attr("disabled" , "disabled");
+        $("#cmbWarehouseId").val('');
+    	$("#cmdPosReasonId").attr("disabled" , "disabled");
+    }
     
     function fn_selectSalesTypeRelay(value){
     	
     	//value =  1352, 1353, 1358, 1357, 1361
+    	// 1 . Clear
+        fn_clearField();
     	
-    	if('' == value || null == value){
-    		$("#_paymentModeTab").css("display" , "none");
-    	}
-    	
-    	// 재귀 수정 필요 
-    	if(value == 1361){
-            $("#cmbSalesTypeId option[value='1361']").remove();
-            fn_selectSalesTypeRelay();
-           
-        }
-    	
-    	/* #########  Active ############### */
-    	if(value == 1352){       //--------------------POS - Filter                                       
-    		/* payment Tab Acive Controll */
-    		$("#_paymentModeTab").css("display" , "");
-    		/* 1. Purchase Info */
+    	// 2. Setting
+    	if('' != value && null != value){
+    		 
+    		/* 선택시 공통사항 */
     		//MemberCode Search Button 활성화
-    		//Sale Date 오늘 날짜로 Disable
-    	    //세션으로 설정된 Warehose 번호 가져오기
-    		//Warehose 활성화 & 선택하기
-    		//Customer Name 가져오기
-    		//POS Reason 활성화
-    		/* 1-1. 우측 */
-    		//Part Item 활성화 (ComboBox)
-    		//Quantity 활성화 
-    		
-    		/*2. Payment Mode  */
-    		//Payment Mode 활성화
-    		//Payment Mode가 cash 일 경우 Bank 불러오기
-    		//
-    		//RefDate 활성화
-    		//
+    		$("#_memberCode").attr("disabled" , false);
+            $("#_memberSearchBtn").attr("onclick", "javascript : fn_memSearch()");
+            //Sale Date 오늘 날짜로 Disable
+            $('#_salesDate').val($.datepicker.formatDate('dd-mm-yy', new Date()));
+            //Customer Name 가져오기
+            $("#_customerName").val('CASH');
+            
+            /* #########  Active ############### */
+            if(value == 1352){       //--------------------POS - Filter                                       
+                /* payment Tab Acive Controll */
+                $("#_paymentModeTab").css("display" , "");
+                /* 1. Purchase Info */
+                //세션으로 설정된 Warehose 번호 가져오기
+                $("#cmbWarehouseId").attr("disabled" , false);
+                //Warehose 활성화 & 선택하기
+                fn_getUserWarehoseId("/sales/pos/selectPosUserWarehoseIdJson");
+                //POS Reason 활성화
+                doGetCombo("/sales/pos/selectPosReasonJsonList", '1363', '', 'cmdPosReasonId', 'S', '');
+                $("#cmdPosReasonId").attr("disabled" , false);
+                /* 1-1. 우측 */
+                //Part Item 활성화 (ComboBox)
+                //Quantity 활성화 
+                
+                /*2. Payment Mode  */
+                //Payment Mode 활성화
+                //Payment Mode가 cash 일 경우 Bank 불러오기
+                //
+                //RefDate 활성화
+                //
+            }
+            
+            if(value == 1353){ //------------------------POS - Item Bank
+                /* payment Tab Acive Controll */
+                $("#_paymentModeTab").css("display" , "");
+                
+            }
+            
+            if(value == 1358){ //-------------------------POS - Item Bank (HQ)
+                /* payment Tab Acive Controll */    
+                $("#_paymentModeTab").css("display" , "none");
+            
+            }
+            
+            if(value == 1357){   //------------------------POS - Other Income POS
+                /* payment Tab Acive Controll */
+                $("#_paymentModeTab").css("display" , "none");
+            }
     	}
     	
-    	if(value == 1353){ //------------------------POS - Item Bank
-    		/* payment Tab Acive Controll */
-    		$("#_paymentModeTab").css("display" , "");
-    	}
-    	
-    	if(value == 1358){ //-------------------------POS - Item Bank (HQ)
-    		/* payment Tab Acive Controll */	
-    	    $("#_paymentModeTab").css("display" , "none");
-    	}
-    	
-        if(value == 1357){   //------------------------POS - Other Income POS
-        	/* payment Tab Acive Controll */
-        	$("#_paymentModeTab").css("display" , "none");
-        }
-    }
+    };
 </script>
 <div id="wrap"><!-- wrap start -->
-
 <header id="header"><!-- header start -->
 <ul class="left_opt">
     <li>Neo(Mega Deal): <span>2394</span></li> 
@@ -293,29 +480,25 @@
 <tr>
     <th scope="row">Member Code</th>
     <td>
-    <input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    <input type="text" title="" placeholder="" class=""  disabled="disabled" id="_memberCode"/><a href="#" class="search_btn" id="_memberSearchBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search"/></a>
     </td>
 </tr>
 <tr>
     <th scope="row">Sales Date</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  id="_salesDate" disabled="disabled"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Warehouse</th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p" id="cmbWarehouseId" disabled="disabled"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Customer Name</th>
     <td>
-    <input type="text" title="" placeholder="" class="w100p" />
+    <input type="text" title="" placeholder="" class="w100p"  id="_customerName"/>
     </td>
 </tr>
 <tr>
@@ -345,11 +528,7 @@
 <tr>
     <th scope="row">POS Reason</th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p" id="cmdPosReasonId" disabled="disabled"></select>
     </td>
 </tr>
 <tr>

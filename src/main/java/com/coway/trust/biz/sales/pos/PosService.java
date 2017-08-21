@@ -19,4 +19,9 @@ public interface PosService {
 	
 	List<EgovMap> selectPosPaymentJsonList(Map<String, Object> params);
 	
+	List<EgovMap> selectPosUserInfo(Map<String, Object> params);
+	
+	EgovMap selectPosUserWarehoseIdJson(Map<String, Object> params);
+	
+	List<EgovMap> selectPosReasonJsonList();
 }

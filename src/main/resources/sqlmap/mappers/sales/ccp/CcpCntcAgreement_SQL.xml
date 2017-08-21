@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper">
+
+    <select id="selectContactAgreementList" parameterType="Map" resultType="egovMap">
+			 <![CDATA[       
+			  SELECT
+			       Project2.GOV_AG_ID   ,
+			       Project2.GOV_AG_BATCH_NO   ,
+			       Project2.GOV_AG_SALES_ORD_ID   ,
+			       Project2.SALES_ORD_NO   ,
+			       Project2.NAME1 NAME  ,
+			       Project2.GOV_AG_STUS_ID   ,
+			       Project2.NAME NAME1  ,
+			       Project2.GOV_AG_PRGRS_ID   ,
+			       Project2.GOV_AG_PRGRS_NAME   ,
+			       Project2.GOV_AG_TYPE_ID   ,
+			       Project2.CODE   ,
+			       TO_CHAR(TO_DATE(Project2.GOV_AG_CRT_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS GOV_AG_CRT_DT,
+			       Project2.USER_NAME   ,
+			       Project2.GOV_AG_ROLE_DESC   ,
+			       Project2.MEM_CODE   ,
+			       TO_CHAR(TO_DATE( Project2.GOV_AG_START_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS GOV_AG_START_DT,
+			       TO_CHAR(TO_DATE( Project2.GOV_AG_END_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS GOV_AG_END_DT   
+			      
+			  FROM ( SELECT Extent1.GOV_AG_ID GOV_AG_ID  ,
+			                Extent1.GOV_AG_SALES_ORD_ID GOV_AG_SALES_ORD_ID  ,
+			                Extent1.GOV_AG_BATCH_NO GOV_AG_BATCH_NO  ,
+			                Extent1.GOV_AG_STUS_ID GOV_AG_STUS_ID  ,
+			                Extent1.GOV_AG_PRGRS_ID GOV_AG_PRGRS_ID  ,
+			                Extent1.GOV_AG_TYPE_ID GOV_AG_TYPE_ID  ,
+			                Extent1.GOV_AG_START_DT GOV_AG_START_DT  ,
+			                Extent1.GOV_AG_END_DT GOV_AG_END_DT  ,
+			                Extent1.GOV_AG_CRT_DT GOV_AG_CRT_DT  ,
+			                Extent2.MEM_CODE MEM_CODE  ,
+			                Extent3.NAME NAME  ,
+			                Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+			                Extent5.NAME NAME1  ,
+			                Extent6.USER_NAME USER_NAME  ,
+			                Extent7.GOV_AG_PRGRS_NAME GOV_AG_PRGRS_NAME  ,
+			                Extent8.GOV_AG_MSG_ID GOV_AG_MSG_ID  ,
+			                Extent10.GOV_AG_ROLE_DESC GOV_AG_ROLE_DESC  ,
+			                Extent11.CODE CODE ,
+			                (SELECT 
+			                    MAX(GOV_AG_MSG_ID)
+			                FROM 
+			                    SAL0036D Extent12
+			                WHERE 
+			                    Extent12.GOV_AG_ID = Extent1.GOV_AG_ID
+			                AND ROWNUM = 1
+			                ) C1
+			                    
+			
+			         FROM SAL0033D Extent1
+			                LEFT JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.GOV_AG_MEM_ID
+			                LEFT JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.GOV_AG_STUS_ID
+			                LEFT JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.GOV_AG_SALES_ORD_ID
+			                LEFT JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
+			                LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.GOV_AG_CRT_USER_ID
+			                LEFT JOIN SAL0037C Extent7   ON Extent7.GOV_AG_PRGRS_ID = Extent1.GOV_AG_PRGRS_ID
+			                LEFT JOIN SAL0036D Extent8   ON Extent8.GOV_AG_ID = Extent1.GOV_AG_ID
+			                LEFT JOIN ( SELECT GovAgreementUserRole.GOV_AG_USER_ID GOV_AG_USER_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_ROLE_ID GOV_AG_ROLE_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_DEPT_ID GOV_AG_USER_DEPT_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_STUS_ID GOV_AG_USER_STUS_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID GOV_AG_USER_UPD_USER_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_UPD_DT GOV_AG_USER_UPD_DT  
+			                            FROM SAL0040D GovAgreementUserRole ) Extent9   ON Extent9.GOV_AG_USER_ID = Extent8.GOV_AG_MSG_CRT_USER_ID
+			                LEFT JOIN SAL0039M Extent10   ON Extent10.GOV_AG_ROLE_ID = Extent9.GOV_AG_ROLE_ID
+			                LEFT JOIN SYS0013M Extent11   ON Extent11.CODE_ID = Extent1.GOV_AG_TYPE_ID ) Project2
+			        
+			 WHERE   0 <> Project2.GOV_AG_STUS_ID
+			 AND Project2.GOV_AG_MSG_ID = Project2.C1
+			   
+			   ]]>
+		        
+		        <!--   Agreement No.  -->
+		        <if test="null != govAgBatchNo and '' !=  govAgBatchNo ">
+		              AND Project2.GOV_AG_BATCH_NO LIKE  '%'|| #{govAgBatchNo} || '%'
+		        </if>
+		        
+		        <!-- CRT_DT // FROM -->		        
+		        <if test="null != govAgCrtDtFrom and '' != govAgCrtDtFrom">
+		              AND Project2.GOV_AG_CRT_DT >= TO_CHAR(TO_DATE(#{govAgCrtDtFrom}, 'DD-MM-YYYY'), 'YYYY-MM-DD' )
+		        </if> 
+		        
+		         <!-- CRT_DT // TO -->			         	         
+		         <if test="null != govAgCrtDtTo and '' != govAgCrtDtTo">
+		             
+		             <![CDATA[   
+		              AND Project2.GOV_AG_CRT_DT <= TO_CHAR(TO_DATE(#{govAgCrtDtTo}, 'DD-MM-YYYY'), 'YYYY-MM-DD')  
+		             ]]>
+		             
+		         </if> 
+		       
+		          <if test="null != salesOrdNo and  '' != salesOrdNo ">
+		              <if test=" exist == 1 ">
+                            AND Project2.GOV_AG_BATCH_NO IN
+                            <foreach collection="getBatchNoList" item="value" open="(" separator="," close=")">
+                                #{value}
+                            </foreach>
+		              </if>
+		              <if test=" exist == 0 ">
+		                    AND 1= 0
+		              </if>
+		          </if>         
+		        
+		         <if test="null != govAgStartDtFrom and  '' != govAgStartDtFrom ">
+		              AND Project2.GOV_AG_START_DT >= TO_CHAR(TO_DATE(#{govAgStartDtFrom}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+		         </if>
+		        
+		        
+                 <if test="null != govAgStartDtTo and  '' != govAgStartDtTo ">
+	                
+	                 <![CDATA[
+	                      AND Project2.GOV_AG_START_DT <= TO_CHAR(TO_DATE(#{govAgStartDtTo}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+	                 ]]>
+	                 
+                 </if>
+                 
+                 
+		         <if test=" null != name and '' != name ">
+	                   AND Project2.NAME1 LIKE '%' || #{name} || '%'
+		         </if>
+		        
+		       
+		        <if test=" null != govAgEndDtFrom  and '' != govAgEndDtFrom">
+	                   AND Project2.GOV_AG_END_DT >= TO_CHAR(TO_DATE(#{govAgEndDtFrom}, 'DD-MM-YYYY'), 'YYYY-MM-DD') 
+		        </if>
+		        
+		        
+		        <if test=" null != govAgEndDtTo and '' != govAgEndDtTo ">
+	                   <![CDATA[
+	                   AND Project2.GOV_AG_END_DT <= TO_CHAR(TO_DATE(#{govAgEndDtTo}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+	                     ]]>
+		        </if>
+		         
+                <if test=" null != progressVal and '' != progressVal">
+	                   AND  Project2.GOV_AG_PRGRS_ID IN
+	                   <foreach collection="govAgPrgsIdList" item="value" open="(" separator="," close=")">
+	                      #{value}
+	                   </foreach>
+		         </if>
+		         
+		         <if test=" null != statusVal and '' != statusVal ">
+		                AND  Project2.GOV_AG_STUS_ID IN
+		                <foreach collection="govAgStusIdList" item="value" open="(" separator="," close=")">
+		                  #{value}
+		                </foreach>
+		         </if> 
+		          
+		         <if test=" null != typeVal and '' != typeVal">
+		              AND  Project2.GOV_AG_TYPE_ID IN 
+		              <foreach collection="govAgTypeIdList" item="value" open="(" separator="," close=")">
+		                  #{value}
+		              </foreach>       
+		          </if>
+		          
+		          <if test=" null != memCode and '' != memCode">
+		              AND Project2.MEM_CODE LIKE '%' || #{memCode} || '%'
+		          </if> 
+		           
+		          <if test=" null != userName and '' != userName">
+		              AND Project2.USER_NAME LIKE '%' || #{userName} || '%'  
+		          </if>
+		          
+			  ORDER BY Project2.GOV_AG_ID DESC
+			  
+    </select>
+
+    <select id="selectItemBatchNofromSalesOrdNo" parameterType="Map" resultType="java.lang.String">
+				SELECT 
+				    Extent2.GOV_AG_ITM_BATCH_NO
+				FROM 
+				    SAL0001D Extent1
+				    JOIN SAL0034D Extent2   ON Extent2.GOV_AG_ITM_SALES_ORD_ID = Extent1.SALES_ORD_ID
+				 WHERE  Extent1.SALES_ORD_NO = #{salesOrdNo}
+     </select>
+</mapper>

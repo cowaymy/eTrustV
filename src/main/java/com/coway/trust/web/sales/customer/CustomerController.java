@@ -1213,6 +1213,9 @@ public class CustomerController {
 			
 			model.addAttribute("insCustId", params.get("custId"));
 			
+			//Page Param
+			model.addAttribute("callParam" , params.get("callParam"));
+			
 			return "sales/customer/customerNewAddressPop";
 		}
 		
@@ -1227,7 +1230,10 @@ public class CustomerController {
 		public String updateCustomerNewContactPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
 			model.addAttribute("insCustId", params.get("custId"));
-		   
+			
+			//Page Param
+			model.addAttribute("callParam" , params.get("callParam"));
+			
 			return "sales/customer/customerNewContactPop";
 		}
 		
@@ -1341,4 +1347,44 @@ public class CustomerController {
 			
 		}
 		
+		
+		@RequestMapping(value = "/selectCustomerCopyAddressJson")
+		public ResponseEntity<EgovMap> selectCustomerCopyAddressJson(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			EgovMap addrMap = null;
+			
+			addrMap = customerService.selectCustomerAddrDetailViewPop(params);
+			
+			return ResponseEntity.ok(addrMap);
+		}
+		
+		
+		@RequestMapping(value = "/selectCustomerCopyContactJson")
+		public ResponseEntity<EgovMap> selectCustomerCopyContactJson(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			EgovMap contactMap = null;
+			
+			contactMap = customerService.selectCustomerContactDetailViewPop(params);
+			
+			return ResponseEntity.ok(contactMap);
+		}
+		
+		@RequestMapping(value = "/selectCustomerMainAddr")
+		public ResponseEntity<EgovMap> selectCustomerMainAddr (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			EgovMap mainAddidMap = null;
+			mainAddidMap = customerService.selectCustomerMainAddr(params);
+			
+			return ResponseEntity.ok(mainAddidMap);
+		}
+		
+		
+		@RequestMapping(value = "/selectCustomerMainContact")
+		public ResponseEntity<EgovMap> selectCustomerMainContact (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			EgovMap mainContactidMap = null;
+			mainContactidMap = customerService.selectCustomerMainContact(params);
+			
+			return ResponseEntity.ok(mainContactidMap);
+		}
 }

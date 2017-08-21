@@ -512,4 +512,24 @@ public interface CustomerService {
 	 * @author 
 	 */
 	void insertCustomerCardAddAf(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Get Customer Detail Main Address 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	EgovMap selectCustomerMainAddr(Map<String, Object> params) throws Exception;
+	
+	
+	 /**
+	 * Get Customer Detail Main Contact 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	EgovMap selectCustomerMainContact(Map<String, Object> params) throws Exception;
 }
