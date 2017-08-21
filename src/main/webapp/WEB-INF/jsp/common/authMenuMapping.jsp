@@ -113,8 +113,8 @@ function fn_search(){
 function fn_detailSearch(authCode){		
     Common.ajax(
             "GET", 
-            "/common/selectAuthMenuMappingList.do", 
-            "authCode="+authCode, 
+            "/common/selectAuthMenuMappingList.do",             
+            "authCode="+authCode+"&menuCode="+$("#menuCode").val(),
             function(data, textStatus, jqXHR){ // Success
 //             	alert(JSON.stringify(data));
                 AUIGrid.setGridData(grdMenuMapping, data);
@@ -424,7 +424,7 @@ $(document).ready(function(){
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form id="searchForm" action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -438,11 +438,11 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Auth</th>
     <td>
-    <input type="text" title="" placeholder="" class="" />
+    <input id="authCode" name="authCode" type="text" title="" value="" placeholder="" class="" />
     </td>
     <th scope="row">Menu</th>
     <td>
-    <input type="text" title="" placeholder="" class="" />
+    <input id="menuCode" name="menuCode" type="text" title="" value="" placeholder="" class="" />
     </td>
 </tr>
 </tbody>
