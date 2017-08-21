@@ -11,6 +11,7 @@ public interface SirimMapper {
 
 	List<EgovMap> selectWarehouseList(Map<String, Object> params);
 	List<EgovMap> selectSirimList(Map<String, Object> params);
+	int selectSirimNo(Map<String, Object> params);
 	
 	int SirimMCreateSeq();
 	int SirimDCreateSeq();
