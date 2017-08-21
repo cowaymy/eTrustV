@@ -153,10 +153,11 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Stock Card Report</h2>
+<h2>Stock Balance List</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a href="#">Generate To PDF</a></p></li>
 	<li><p class="btn_blue"><a href="#">Generate To Excel</a></p></li>
+	<li><p class="btn_blue"><a href="#">Generate To Raw</a></p></li>
 	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -168,16 +169,40 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:170px" />
+	<col style="width:180px" />
 	<col style="width:*" />
 	<col style="width:110px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Type of Warehouse</th>
-	<td colspan="3">
-	<select>
+	<th scope="row">Report Method</th>
+	<td>
+	<label><input type="radio" name="name" /><span>Details</span></label>
+	<label><input type="radio" name="name" /><span>Summary</span></label>
+	</td>
+	<th scope="row">Date</th>
+	<td>
+	<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Report Type</th>
+	<td>
+	<select class="">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	<select class="ml10">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Warehouse</th>
+	<td>
+	<select class="disabled" disabled="disabled">
 		<option value="">11</option>
 		<option value="">22</option>
 		<option value="">33</option>
@@ -185,14 +210,6 @@
 	</td>
 </tr>
 <tr>
-	<th scope="row">Warehouse</th>
-	<td>
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	</td>
 	<th scope="row">Stock Code</th>
 	<td>
 
@@ -203,25 +220,19 @@
 	</div><!-- date_set end -->
 
 	</td>
+	<th scope="row">Option</th>
+	<td>
+	<select class="multy_select" multiple="multiple">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
 </tr>
 <tr>
-	<th scope="row">Transaction Date</th>
-	<td>
-
-	<div class="date_set"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	</div><!-- date_set end -->
-
-	</td>
-	<th scope="row">Stock</th>
-	<td>
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+	<th scope="row">SSub Branch Report</th>
+	<td colspan="3">
+	<label><input type="checkbox" /><span class="red_text">(Only applicable to DSC) </span></label>
 	</td>
 </tr>
 </tbody>
