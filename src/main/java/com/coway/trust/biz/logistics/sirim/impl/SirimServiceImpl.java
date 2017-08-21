@@ -40,13 +40,44 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 		// TODO Auto-generated method stub
 		return SirimMapper.selectSirimList(params);
 	}
+	
+	@Override
+	public String selectSirimNo(Map<String, Object> params) {
+		Logger.debug("@@@@@imlpeprefix&&&: {}",params.get("prefix"));
+		Logger.debug("####implfirst&&&: {}",params.get("first"));
+		Logger.debug("@@@@@impliCnt&&&: {}",params.get("iCnt"));
+		int first = Integer.parseInt((String) params.get("first"));
+		String prefix=(String) params.get("prefix");
+		//String StartSirimNo ="";
+		// TODO Auto-generated method stub
+		//currentInt++;
+	for (int i = 0 ; i < (int)params.get("iCnt") ; i++){
+		 int firstNo=first++;
+		 //String StartSirimNo = prefix + firstNo.toString;
+		 Logger.debug("@@@@first!!!!!@@@@ : {}", firstNo);
+		// params.put("StartSirimNo", StartSirimNo);
+		}
+		
+	
+	
+	
+		String reval = "";
+		
+		//int iCnt = SirimMapper.selectSirimNo(params);
+		//if (iCnt > 0) reval = "N";
+		//else reval = "Y";
+		return reval; //SirimMapper.selectSirimNo(params);
+	}
+	
+	
 
 	@Override
 	public void insertSirimList(Map<String, Object> params) {
 
 		int srmBatchId = SirimMapper.SirimMCreateSeq();
 		String getdocNo = SirimMapper.docNoCreateSeq();
-
+		
+		 Logger.debug("@@@@getdocNo@@@@ : {}", getdocNo);
 		// Logger.debug("@@@@srmBatchId@@@@ : {}", srmBatchId);
 		// Logger.debug("addWarehouse! : {}", params.get("addWarehouse"));
 		// Logger.debug("addTypeSirim! : {}", params.get("addTypeSirim"));
@@ -68,25 +99,26 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 		// Logger.debug("@@@@SrmNoFrom@@@@ : {}", SrmNoFrom);
 		String SrmNoTo = addPrefixNo + addSirimNoLast;
 		// Logger.debug("@@@@SrmNoTo@@@@ : {}", SrmNoTo);
-
+		
+		params.put("getdocNo", getdocNo);
 		params.put("srmBatchId", srmBatchId);
 		params.put("SrmNoFrom", SrmNoFrom);
 		params.put("SrmNoTo", SrmNoTo);
 
-		SirimMapper.insertSirimM(params);
-
+		//SirimMapper.insertSirimM(params);
+		
 		for (int i = 0; i < Qty; i++) {
 			int srdBatchId = SirimMapper.SirimDCreateSeq();
 			String saveSirimNo = GetNextRunningNumber(addPrefixNo, addSirimNoFirst, i);
-
+			 Logger.debug("@@@@saveSirimNo@@@@ : {}", saveSirimNo);
 			Map<String, Object> SirimdMap = new HashMap<String, Object>();
 			SirimdMap.put("srdBatchId", srdBatchId);
 			SirimdMap.put("srmBatchId", srmBatchId);
 			SirimdMap.put("saveSirimNo", saveSirimNo);
 			SirimdMap.put("crtuser_id", params.get("crtuser_id"));
 			SirimdMap.put("upuser_id", params.get("upuser_id"));
-			SirimMapper.insertSirimD(SirimdMap);
-
+			//SirimMapper.insertSirimD(SirimdMap);
+			
 			Map<String, Object> CrdPosMap = new HashMap<String, Object>();
 			int CrdSirimId = SirimMapper.CrdPosCreateSeq();
 			CrdPosMap.put("CrdSirimId", CrdSirimId);
@@ -96,7 +128,8 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 			CrdPosMap.put("addSirimQty", 1);
 			CrdPosMap.put("getdocNo", getdocNo);
 			CrdPosMap.put("crtuser_id", params.get("crtuser_id"));
-			SirimMapper.insertSirimCrd_Pos(CrdPosMap);
+			//SirimMapper.insertSirimCrd_Pos(CrdPosMap);
+			
 
 			Map<String, Object> CrdNegMap = new HashMap<String, Object>();
 			CrdSirimId = SirimMapper.CrdPosCreateSeq();
@@ -107,7 +140,8 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 			CrdNegMap.put("addSirimQty", -1);
 			CrdNegMap.put("getdocNo", getdocNo);
 			CrdNegMap.put("crtuser_id", params.get("crtuser_id"));
-			SirimMapper.insertSirimCrd_Pos(CrdNegMap);
+			//SirimMapper.insertSirimCrd_Pos(CrdNegMap);
+			
 
 			Map<String, Object> CrdWHMap = new HashMap<String, Object>();
 			CrdSirimId = SirimMapper.CrdPosCreateSeq();
@@ -118,7 +152,8 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 			CrdWHMap.put("addSirimQty", 1);
 			CrdWHMap.put("getdocNo", getdocNo);
 			CrdWHMap.put("crtuser_id", params.get("crtuser_id"));
-			SirimMapper.insertSirimCrd_Pos(CrdWHMap);
+			//SirimMapper.insertSirimCrd_Pos(CrdWHMap);
+			
 
 		}
 
@@ -132,7 +167,7 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 		String StartNoFormat = "";
 		int currentInt = Integer.parseInt(StartNo);
 		for (int i = 0; i <= increment; i++) {
-			StartNoFormat = String.format("%0" + PrefixNo.length() + "d", currentInt++);
+			StartNoFormat = String.format("%0" + StartNo.length() + "d", currentInt++);
 		}
 		return PrefixNo + StartNoFormat;
 	}
