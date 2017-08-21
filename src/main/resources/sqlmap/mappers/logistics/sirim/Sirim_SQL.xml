@@ -49,6 +49,24 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 </select>   
 
 
+<!-- <select id="selectSirimNo" parameterType="Map" resultType="EgovMap">  
+    select count(*) 
+    from LOG0033D 
+    where SRM_NO_FROM = #{StartSirimNo}
+    AND SRM_NO_TO =#{EndSirimNo}
+</select>   -->  
+
+<!-- <select id="selectSirimNo" parameterType="Map" resultType="Integer">  
+   select count(*) 
+   from LOG0040D 
+   where SIRIM_NO in
+    <foreach item="item" collection="StartSirimNo" index="index" open="(" separator="," close=")">
+            #{item}
+    </foreach>
+   
+   
+</select>  -->
+
 
  <insert id="insertSirimM" parameterType="Map">
     INSERT INTO LOG0033D(
@@ -67,7 +85,7 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
      VALUES 
         ( 
         #{srmBatchId},
-        FN_GET_DOCNO('75'),
+        #{getdocNo},
         #{SrmNoFrom},
         #{SrmNoTo},
         #{addWarehouse},
