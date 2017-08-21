@@ -45,12 +45,7 @@
             LEFT JOIN SYS0039M EXTENT3 ON EXTENT3.AREA_ID = EXTENT1.ZR_LOC_AREA_ID
             LEFT JOIN SYS0030C EXTENT4 ON EXTENT4.POST_CODE_ID = EXTENT1.ZR_LOC_POST_CODE_ID
             LEFT JOIN SYS0038M EXTENT5 ON EXTENT5.STUS_CODE_ID = EXTENT1.ZR_LOC_STUS_ID
-        WHERE 'T'  = CASE
-                                 WHEN #{zrLocStusId} IS NULL OR EXTENT1.ZR_LOC_STUS_ID = #{zrLocStusId}
-                                    THEN 'T'
-                                 ELSE 'F'
-                              END
-            AND 'T' = CASE
+        WHERE 'T' = CASE
                                  WHEN #{zrLocId} IS NULL OR EXTENT1.ZR_LOC_ID = #{zrLocId}
                                     THEN 'T'
                                  ELSE 'F'
@@ -65,12 +60,56 @@
                                     THEN 'T'
                                  ELSE 'F'
                               END
+        <if test="zrLocStusIds != null and zrLocStusIds != ''">
+            AND EXTENT1.ZR_LOC_STUS_ID  IN
+            <foreach item="item" collection="zrLocStusIds" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
             AND EXTENT4.POST_CODE LIKE '%' || #{postCode} || '%'
         ORDER BY EXTENT1.ZR_LOC_ID ASC
     </select>
 
     <select id="selectPostCodeList" parameterType="Map" resultType="egovMap">
-
+        SELECT POST.POST_CODE_ID
+              ,POST.POST_CODE
+          FROM SYS0030C POST
+         WHERE POST.AREA_ID = #{areaId}
+           AND POST.STUS_CODE_ID = '1'
     </select>
+
+    <insert id="insertZrLocStusId" parameterType="Map">
+
+        INSERT INTO SAL0044D (
+           ZR_LOC_ID,
+           ZR_LOC_STATE_ID,
+           ZR_LOC_AREA_ID,
+           ZR_LOC_POST_CODE_ID,
+           ZR_LOC_STUS_ID,
+           ZR_LOC_REM,
+           ZR_LOC_CRT_DT,
+           ZR_LOC_CRT_USER_ID)
+        VALUES (
+            (SELECT NVL(MAX(ZR_LOC_ID),0) + 1 from SAL0044D)
+           ,#{zrLocStateId}
+           ,#{areaId}
+           ,#{postCodeId}
+           ,1
+           ,''
+           ,SYSDATE
+           ,#{userId}
+        )
+
+    </insert>
+
+    <update id="updateZrLocStusId" parameterType="Map">
+        UPDATE SAL0044D
+        SET
+            ZR_LOC_STATE_ID = #{zrLocStusId},
+            ZR_LOC_AREA_ID = #{areaId},
+            ZR_LOC_POST_CODE_ID = #{postCodeId},
+            ZR_LOC_STUS_ID = #{stusCodeName}
+        WHERE ZR_LOC_ID        = #{zrLocId}
+    </update>
 
 </mapper>

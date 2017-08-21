@@ -80,6 +80,8 @@ var Common = {
                 } else {
                     if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
                         Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                    }else{
+                        Common.setMsg("Fail ........ ");
                     }
                 }
             }

@@ -13,4 +13,10 @@ public interface GSTZeroRateLocationMapper {
 	List<EgovMap> selectSubAreaList(Map<String, Object> params);
 
 	List<EgovMap> selectZRLocationList(Map<String, Object> params);
+
+	List<EgovMap> selectPostCodeList(Map<String, Object> params);
+
+	void updateZrLocStusId(Map<String, Object> params);
+
+	void insertZrLocStusId(Map<String, Object> params);
 }

@@ -1,23 +1,100 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 <script type="text/javaScript">
 
     var locationGridId;
+
+    var sLocationId = "<spring:message code='sys.title.location' /> <spring:message code='sys.info.id' />";
+    var sStateName = "<spring:message code='sys.title.state' /> <spring:message code='sys.title.name' />";
+    var sAreaName = "<spring:message code='sys.title.area' /> <spring:message code='sys.title.name' />";
+
+    var subAreaList = [];
+    var postCodeList = [];
+
+    var locations = $.parseJSON('${stateCodeList}');
     var gridColumnLayout = [{
         dataField: "zrLocId",
-        headerText: "<spring:message code='sys.title.location' /> <spring:message code='sys.info.id' />"
+        editable : false,
+        headerText:sLocationId
     }, {
-        dataField: "name",
-        headerText: "<spring:message code='sys.title.state' /> <spring:message code='sys.title.name' />"
+        dataField : "zrLocStateId",
+        headerText : "zrLocStateId",
+        visible : false
+    }, {
+        dataField : "areaId",
+        headerText : "areaId",
+        visible : false
+    }, {
+        dataField : "postCodeId",
+        headerText : "postCodeId",
+        visible : false
+    },{
+            dataField: "name",
+            headerText: sStateName,
+            renderer : {
+                type : "DropDownListRenderer",
+                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                    return locations;
+                },
+                keyField : "stateId",
+                valueField : "name"
+            }
     }, {
         dataField: "areaName",
-        headerText: "<spring:message code='sys.title.area' /> <spring:message code='sys.title.name' />"
+        headerText: sAreaName,
+        editRenderer : {
+            type : "ComboBoxRenderer",
+            showEditorBtnOver : true,
+            listFunction : function(rowIndex, columnIndex, item, dataField) {
+                fn_getSubAreaListByAsync(item.zrLocStateId);
+                return subAreaList;
+            },
+            keyField : "areaId",
+            valueField : "areaName"
+        },
+        labelFunction: function(rowIndex, columnIndex, value, headerText, item) {
+            var retStr = "";
+            for (var i = 0, len = subAreaList.length; i < len; i++) {
+                if (subAreaList[i]["areaId"] == value) {
+                    retStr = subAreaList[i]["areaName"];
+                    break;
+                }
+            }
+            return retStr == "" ? value : retStr;
+        }
     }, {
         dataField: "postCode",
-        headerText: "<spring:message code='sys.title.post.code' />"
+        headerText: "<spring:message code='sys.title.post.code' />",
+        editRenderer : {
+            type : "ComboBoxRenderer",
+            showEditorBtnOver : true,
+            listFunction : function(rowIndex, columnIndex, item, dataField) {
+                fn_getPostCodeListByAsync(item.areaId);
+                return postCodeList;
+            },
+            keyField : "postCodeId",
+            valueField : "postCode"
+        },
+        labelFunction: function(rowIndex, columnIndex, value, headerText, item) {
+            var retStr = "";
+            for (var i = 0, len = postCodeList.length; i < len; i++) {
+                if (postCodeList[i]["postCodeId"] == value) {
+                    retStr = postCodeList[i]["postCode"];
+                    break;
+                }
+            }
+            return retStr == "" ? value : retStr;
+        }
     }, {
         dataField: "stusCodeName",
-        headerText: "<spring:message code='sys.title.status' />"
+        headerText: "<spring:message code='sys.title.status' />",
+        renderer : {
+            type : "DropDownListRenderer",
+            list : [{key : "1", value : "Active"}, {key : "8", value : "InActive"}],
+            keyField : "key",
+            valueField : "value"
+        }
+
     }];
 
     $(function () {
@@ -49,6 +126,45 @@
             name: "name"
         }, calback);
 
+        // 에디팅 시작 이벤트 바인딩
+        AUIGrid.bind(locationGridId, "cellEditBegin", function(event){
+            if (event.dataField == "areaName") {
+                var stateId = AUIGrid.getCellValue(locationGridId, event.rowIndex, "zrLocStateId");
+
+                if (FormUtil.isEmpty(stateId)) {
+                    Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + sStateName + "' htmlEscape='false'/>");
+                    return false;
+                }
+            }else if (event.dataField == "postCode") {
+                var areaId = AUIGrid.getCellValue(locationGridId, event.rowIndex, "areaId");
+
+                if (FormUtil.isEmpty(areaId)) {
+                    Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + sAreaName + "' htmlEscape='false'/>");
+                    return false;
+                }
+            }
+        });
+
+        // 에디팅 종료 이벤트 바인딩
+        AUIGrid.bind(locationGridId, "cellEditEnd", function (event) {
+
+            //alert(JSON.stringify(event));
+
+            if (event.dataField == "name") {
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "zrLocStateId", event.value);
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "areaName", "");
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "areaId", "");
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "postCodeId", "");
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "postCode", "");
+            }else if(event.dataField == "areaName"){
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "areaId", event.value);
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "postCodeId", "");
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "postCode", "");
+            }else if(event.dataField == "postCode"){
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "postCodeId", event.value);
+            }
+        });
+
         $("#btnSearch").on("click", function () {
             fn_getZRLocationList();
         });
@@ -71,6 +187,23 @@
 
     });
 
+    function fn_getSubAreaListByAsync(areaStateId, _callback){
+        Common.ajaxSync("GET", "/common/getSubAreaList.do", {
+            areaStusId: 1,
+            areaStateId: areaStateId
+        }, function (data) {
+            subAreaList = data;
+        });
+    }
+
+    function fn_getPostCodeListByAsync(areaId, _callback){
+        Common.ajaxSync("GET", "/common/getPostCodeList.do", {
+            areaId: areaId
+        }, function (data) {
+            postCodeList = data;
+        });
+    }
+
     function fn_initSearch() {
         $("#sLocationId").val("");
         $("#sStateCode").val("");
@@ -86,16 +219,25 @@
     }
 
     function fn_deleteRow(){
-
+        AUIGrid.removeRow(locationGridId, "selectedIndex");
     }
 
     function fn_addRow() {
+        var item = {"zrLocId": "", "name": "<spring:message code='sys.info.grid.selectMessage'/>", "areaName": "", "postCode": "", "stusCodeName": "1"};
         // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-        AUIGrid.addRow(locationGridId, "", "first");
+        AUIGrid.addRow(locationGridId, item, "first");
     }
 
     function fn_save() {
+        Common.ajax("POST", "/common/saveZRLocation.do", GridCommon.getEditData(locationGridId), function(result) {
+            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            fn_getZRLocationList();
+        });
+    }
 
+    function resetUpdatedItems() {
+        // init editing grid data
+        AUIGrid.resetUpdatedItems(myGridID, "a");
     }
 </script>
 
