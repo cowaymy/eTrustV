@@ -153,12 +153,11 @@
     
     function newSirimAjax() {  
         Common.ajax("POST", "/logistics/sirim/insertSirimList.do",  $('#AddSirimForm').serializeJSON(), function(result) {
-          var gridData = result;             
+          var gridData = result;
+          cancelAddSirim()
           //console.log(gridData.data);            
-        // SirimNoValiedCheck(result);
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
-        //searchList();
         }, function(jqXHR, textStatus, errorThrown) {
             Common.alert("실패하였습니다.");
         });
@@ -185,30 +184,28 @@
     			"first" :  first,
     			"iCnt" :  iCnt
                };
-	        Common.ajax("post", "/logistics/sirim/selectSirimNo.do", param, function(result) {
+	        Common.ajaxSync("post", "/logistics/sirim/selectSirimNo.do", param, function(result) {
 	//           var gridData = result;    
 	//           var count = gridData.
 	//           console.log(gridData.data);
 	        console.log(result);
 	        chekFlag=result.data;
-	        //f_sirimNochek(chekFlag);
 	         return chekFlag;
+	    
 	        // 공통 메세지 영역에 메세지 표시.
 	        //Common.setMsg("<spring:message code='sys.msg.success'/>");
 	        }, function(jqXHR, textStatus, errorThrown) {
 	            Common.alert("실패하였습니다.");
 	        });
-	        alert("chekFlag   "+ chekFlag);
 	        return chekFlag;
-}  
+}       
     
     function addSirim(){
   
     	if(valiedcheck()){
     		$("#addWarehouse").attr("disabled",false); 
     		$("#addSirimNoLast").attr("disabled",false); 
-    		newSirimAjax()
-    		alert("에이작스 시작!");
+    		newSirimAjax();
     	}
     	
     	
@@ -247,7 +244,7 @@
     
     
     function valiedcheck() {
-    	//var StartSirimNo = $("#addPrefixNo").val() + $("#addSirimNoFirst").val();
+    	var StartSirimNo = $("#addPrefixNo").val() + $("#addSirimNoFirst").val();
     	//var EndSirimNo =  $("#addPrefixNo").val() + $("#addSirimNoLast").val();
     	
     	
@@ -276,31 +273,22 @@
             Common.alert("* Generate Last Number Summary.");
             $("#addSirimNoLast").focus();
             return false;
-        }
+        }      
         
-/*       var aa=  SirimNocheckAjax();
-        alert("aa   :::::"+aa);
-        if(aa=="N"){
-        	alert("Sirim No 있습니다!! 새로운걸로 다시 만들어주세요!");
-        	return false;  
-        } */
+        if (StartSirimNo.length >10) {
+            Common.alert("* Generate SirimNo no lenth.");
+            $("#addSirimNoFirst").focus();
+            return false;
+        }  
         
           if(SirimNocheckAjax() == "N"){
-        	alert("Sirim No 있습니다!! 새로운걸로 다시 만들어주세요!");
+        	alert("* This sirim number is existing or it might be used.");
         	return false;
         }  
        
         return true;
     }
-    
-/*    function SirimNoValiedCheck(count){
-	   alert("count"+count);
-	   if(count > 0){
-		   
-	   }
-       
-    }   */    
-    
+     
     
 //Warehouse 셀렉트박스 CODE+CODENAME    
     function doGetCombos(url, groupCd , selCode, obj , type, callbackFn){
@@ -364,13 +352,6 @@
           });       
     }
     
-    
- /*    function f_sirimNochek(chekFlag) {
-        if(chekFlag=="N"){
-        alert("* This sirim number is existing or it might be used.");
-        return false; 	
-        }
-    } */
 
 </script>
 </head>
