@@ -94,7 +94,7 @@
            ,#{zrLocStateId}
            ,#{areaId}
            ,#{postCodeId}
-           ,1
+           ,nvl(#{zrLocStusId}, 1)
            ,''
            ,SYSDATE
            ,#{userId}
@@ -105,10 +105,10 @@
     <update id="updateZrLocStusId" parameterType="Map">
         UPDATE SAL0044D
         SET
-            ZR_LOC_STATE_ID = #{zrLocStusId},
+            ZR_LOC_STATE_ID = #{zrLocStateId},
             ZR_LOC_AREA_ID = #{areaId},
             ZR_LOC_POST_CODE_ID = #{postCodeId},
-            ZR_LOC_STUS_ID = #{stusCodeName}
+            ZR_LOC_STUS_ID = #{zrLocStusId}
         WHERE ZR_LOC_ID        = #{zrLocId}
     </update>
 

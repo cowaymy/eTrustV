@@ -15,6 +15,4 @@
 	</div><!-- prog end -->
 	
 	</div><!-- wrap end -->
-</body>
-</html>
 

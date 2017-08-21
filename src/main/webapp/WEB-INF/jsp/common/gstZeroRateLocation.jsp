@@ -1,4 +1,4 @@
-z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 <script type="text/javaScript">
 
@@ -7,6 +7,7 @@ z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     var sLocationId = "<spring:message code='sys.title.location' /> <spring:message code='sys.info.id' />";
     var sStateName = "<spring:message code='sys.title.state' /> <spring:message code='sys.title.name' />";
     var sAreaName = "<spring:message code='sys.title.area' /> <spring:message code='sys.title.name' />";
+    var sPostCode = "<spring:message code='sys.title.post.code' />";
 
     var subAreaList = [];
     var postCodeList = [];
@@ -27,6 +28,10 @@ z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     }, {
         dataField : "postCodeId",
         headerText : "postCodeId",
+        visible : false
+    }, {
+        dataField : "zrLocStusId",
+        headerText : "zrLocStusId",
         visible : false
     },{
             dataField: "name",
@@ -64,7 +69,7 @@ z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
         }
     }, {
         dataField: "postCode",
-        headerText: "<spring:message code='sys.title.post.code' />",
+        headerText: sPostCode,
         editRenderer : {
             type : "ComboBoxRenderer",
             showEditorBtnOver : true,
@@ -162,6 +167,8 @@ z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
                 AUIGrid.setCellValue(locationGridId, event.rowIndex, "postCode", "");
             }else if(event.dataField == "postCode"){
                 AUIGrid.setCellValue(locationGridId, event.rowIndex, "postCodeId", event.value);
+            }else if(event.dataField == "stusCodeName"){
+                AUIGrid.setCellValue(locationGridId, event.rowIndex, "zrLocStusId", event.value);
             }
         });
 
@@ -223,16 +230,49 @@ z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     }
 
     function fn_addRow() {
-        var item = {"zrLocId": "", "name": "<spring:message code='sys.info.grid.selectMessage'/>", "areaName": "", "postCode": "", "stusCodeName": "1"};
+        var item = {"zrLocId": "", "name": "<spring:message code='sys.info.grid.selectMessage'/>", "areaName": "", "postCode": "", "stusCodeName": "1", "zrLocStusId": "1"};
         // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
         AUIGrid.addRow(locationGridId, item, "first");
     }
 
     function fn_save() {
+
+        var addList = AUIGrid.getAddedRowItems(locationGridId);
+        if(!fn_validate(addList)){
+            return false;
+        }
+
+        var updateList = AUIGrid.getEditedRowItems(locationGridId);
+        if(!fn_validate(updateList)){
+            return false;
+        }
+
         Common.ajax("POST", "/common/saveZRLocation.do", GridCommon.getEditData(locationGridId), function(result) {
             Common.setMsg("<spring:message code='sys.msg.success'/>");
             fn_getZRLocationList();
         });
+    }
+
+    function fn_validate(gridDataList){
+        var retValue = true;
+
+        $.each(gridDataList, function(index, item){
+            if(FormUtil.isEmpty(item.zrLocStateId)){
+                retValue = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + sStateName + "' htmlEscape='false'/>");
+                return false;
+            }else if(FormUtil.isEmpty(item.areaId)){
+                retValue = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + sAreaName + "' htmlEscape='false'/>");
+                return false;
+            }else if(FormUtil.isEmpty(item.postCodeId)){
+                retValue = false;
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + sPostCode + "' htmlEscape='false'/>");
+                return false;
+            }
+        });
+
+        return retValue;
     }
 
     function resetUpdatedItems() {
@@ -350,7 +390,6 @@ z<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                <li><p class="btn_grid"><a href="javascript:void(0);" id="btnDel"><spring:message code='sys.btn.del'/></a></p></li>
                 <li><p class="btn_grid"><a href="javascript:void(0);" id="btnAdd"><spring:message code='sys.btn.add'/></a></p></li>
                 <li><p class="btn_grid"><a href="javascript:void(0);" id="btnSave"><spring:message code='sys.btn.save'/></a></p></li>
             </c:if>
