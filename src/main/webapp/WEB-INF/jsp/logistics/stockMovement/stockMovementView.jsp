@@ -440,13 +440,13 @@ function f_multiCombo() {
     <td><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
-    <th scope="row">Transfer Type</th>
+    <th scope="row">Movement Type</th>
     <td>
     <select class="w100p" id="sttype" name="sttype"></select>
     </td>
-    <th scope="row">Transfer Type Detail</th>
+    <th scope="row">Movement Type Detail</th>
     <td>
-    <select class="w100p" id="smtype" name="smtype"><option>Transfer Type Selected</option></select>
+    <select class="w100p" id="smtype" name="smtype"><option>Movement Type Selected</option></select>
     </td>
 </tr>
 <tr>

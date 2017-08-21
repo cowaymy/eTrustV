@@ -7,6 +7,9 @@
 .aui-grid-user-custom-left {
     text-align:left;
 }
+.aui-grid-user-custom-right {
+    text-align:right;
+}
 
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
@@ -32,9 +35,9 @@ var reqGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30                },
+                     {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30                },
                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
-                     {dataField:"reqitmno"     ,headerText:"Stock Transfer Request Item" ,width:120    ,height:30 , visible:false},
+                     {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
@@ -64,6 +67,52 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
 var reqcolumnLayout;
+var serialcolumnLayout =[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
+                         {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
+                         {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:"20%"    ,height:30   ,cellMerge : true            },
+                         {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30 , visible:false                },
+                         {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
+                         {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
+                         {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30   , visible:false              },
+                         {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
+                         {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30  , visible:false               },
+                         {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30  , visible:false               },
+                         {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30    , visible:false             },
+                         {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30   , visible:false              },
+                         {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
+                         {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
+                         {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30     , visible:false            },
+                         {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
+                         {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
+                         {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30     , visible:false            },
+                         {dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 ,cellMerge : true  },
+                         {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 ,cellMerge : true                 },
+                         {dataField:"num"     ,headerText:"Seq."                 ,width:"5%"    ,height:30   ,style :"aui-grid-user-custom-right"          },
+                         {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30   , visible:false              },
+                         {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30    , visible:false             },
+                         {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
+                         {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 , editable:true 
+                             ,dataType : "numeric" ,editRenderer : {
+                                 type : "InputEditRenderer",
+                                 onlyNumeric : true, // 0~9 까지만 허용
+                                 allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
+                           } , visible:false
+                         },
+                         {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30     , visible:false            },
+                         {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
+                         {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30  , visible:false              },
+                         {dataField:"serial"      ,headerText:"Serial"    ,width:"30%"    ,height:30,editable:true,
+                        	 editRenderer : {
+                        		    type : "InputEditRenderer",
+                        		    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                        		    onlyNumeric : false, // 0~9만 입력가능
+                        		    allowPoint : false, // 소수점( . ) 도 허용할지 여부
+                        		    allowNegative : false, // 마이너스 부호(-) 허용 여부
+                        		    textAlign : "center", // 오른쪽 정렬로 입력되도록 설정
+                        		    autoThousandSeparator : false // 천단위 구분자 삽입 여부
+                        		}	 
+                         } 
+                        ];
 
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
@@ -72,6 +121,15 @@ var resop = {
 		groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
         showRowCheckColumn : true ,
+        enableCellMerge : true,
+        showStateColumn : false,
+        showBranchOnGrouping : false
+        };
+var serialop = {
+		rowIdField : "rnum",			
+		editable : true,
+        displayTreeOpen : true,
+        //showRowCheckColumn : true ,
         enableCellMerge : true,
         showStateColumn : false,
         showBranchOnGrouping : false
@@ -86,13 +144,16 @@ $(document).ready(function(){
 	/**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
+	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
+    //doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+    //doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
-    doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
+    //doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
     $("#crtsdt").val('${searchVal.crtsdt}');
     $("#crtedt").val('${searchVal.crtedt}');
     $("#reqsdt").val('${searchVal.reqsdt}');
@@ -103,6 +164,7 @@ $(document).ready(function(){
      ***********************************/
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
+    serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumnLayout, serialop);
     //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
     
     
@@ -141,7 +203,6 @@ $(document).ready(function(){
 	        		AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
 	        	}
         	}else{
-        		console.log('11');
         		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
         		AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);        		
         	}
@@ -188,8 +249,7 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $('#delivery').click(function(){
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	console.log(checkedItems);
+    	/* var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
     	if(checkedItems.length <= 0) {
     		return false;
     	}else{
@@ -207,7 +267,29 @@ $(function(){
 	    	for (var i = 0 ; i < checkedItems.length ; i++){
 	    		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
 	    	}
-    	}
+    	} */
+    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{
+            var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+            var str = "";
+            var rowItem;
+            for(var i=0, len = checkedItems.length; i<len; i++) {
+                rowItem = checkedItems[i];
+                if(rowItem.item.delyqty==0){
+                str += "row : " + rowItem.rowIndex + ", rnum :" + rowItem.item.rnum + ", reqstno : " + rowItem.item.reqstno  + ", itmcd :" + rowItem.item.itmcd + ", itmname : " + rowItem.item.itmname
+                + ", delyqty :" + rowItem.item.delyqty + "\n";
+                
+                }
+            }
+            Common.alert(str); 
+            $("#giopenwindow").show();
+           AUIGrid.resize(serialGrid); 
+           fn_itempopList(checkedItems);
+        }
+    	
     });
 });
 
@@ -215,7 +297,6 @@ function SearchListAjax() {
    
     var url = "/logistics/stockMovement/StockMovementSearchList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
     });
@@ -247,6 +328,36 @@ function f_getTtype(g , v){
        });
     
     return rData;
+}
+
+
+function fn_itempopList(data){
+    var rowPos = "first";
+    var rowList = [];
+    var str = "";
+    var rowItem;
+    var cnt=0;
+    for(var i=0, len = data.length; i<len; i++) {
+        rowItem = data[i];
+         var num=1;
+        
+        for (var j = 0 ; j < rowItem.item.delyqty ; j++){
+        	//if(rowItem.item.delyqty==0) break;
+        rowList[cnt] = {
+                rnum : rowItem.item.rnum,
+                reqstno : rowItem.item.reqstno,
+                itmcd : rowItem.item.itmcd,
+                itmname : rowItem.item.itmname,
+                num : num,
+                delyqty : rowItem.item.delyqty
+        }       
+        
+                cnt++;
+                num++;
+        }
+    }
+    AUIGrid.addRow(serialGrid, rowList, rowPos); 
+    
 }
 </script>
 
@@ -285,11 +396,11 @@ function f_getTtype(g , v){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">Stock Transfer Request</th>
+                    <th scope="row">Stock Movement Request</th>
                     <td>
                         <select class="w100p" id="streq" name="streq"></select>
                     </td>
-                    <th scope="row">Stock Transfer Type</th>
+                    <th scope="row">Stock Movement Type</th>
                     <td>
                         <select class="w100p" id="sttype" name="sttype"></select>
                     </td>
@@ -337,7 +448,7 @@ function f_getTtype(g , v){
                     </td>
                     <th scope="row">Auto / Manual</th>
                     <td>
-                        <select class="w100p" id="sam" name="sam"></select>
+                        <!-- <select class="w100p" id="sam" name="sam"></select> -->
                     </td>
                     <td colspan="2">&nbsp;</td>              
                 </tr>
@@ -348,7 +459,7 @@ function f_getTtype(g , v){
     </section><!-- search_table end -->
 
     <!-- data body start -->
-    <section class="search_result"><!-- search_result start -->
+   <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
             <li><p class="btn_grid"><a id="delivery"><span class="search"></span>DELIVERY</a></p></li>                        
         </ul>
@@ -356,6 +467,49 @@ function f_getTtype(g , v){
         <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
 
     </section><!-- search_result end -->
+    
+    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
+        <header class="pop_header"><!-- pop_header start -->
+            <h1>Serial Check</h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
+        
+        <section class="pop_body"><!-- pop_body start -->
+            <form id="giForm" name="giForm" method="POST">
+            <input type="hidden" name="gtype" id="gtype" value="GI">
+            <table class="type1">
+            <caption>search table</caption>
+            <colgroup>
+                <col style="width:150px" />
+                <col style="width:*" />
+                <col style="width:150px" />
+                <col style="width:*" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th scope="row">GI Posting Date</th>
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <th scope="row">GI Proof Date</th>
+                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                </tr>
+                <tr>    
+                    <th scope="row">Header Text</th>
+                    <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+                </tr>
+            </tbody>
+            </table>
+            <article class="grid_wrap"><!-- grid_wrap start -->
+			<div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
+			</article><!-- grid_wrap end -->
+            <ul class="center_btns">
+                <!-- <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>  -->
+            </ul>
+            </form>
+        
+        </section>
+    </div>
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">

@@ -214,7 +214,7 @@ function f_validatation(v){
         return false;
     }
     if ($("#smtype").val() == null || $("#smtype").val() == undefined || $("#smtype").val() == ""){
-        Common.alert("Please select one of Transfer Type Detail.");
+        Common.alert("Please select one of Movement Type Detail.");
         return false;
     }
     if ($("#tlocation").val() == null || $("#tlocation").val() == undefined || $("#tlocation").val() == ""){
@@ -360,13 +360,13 @@ function f_multiCombo() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Transfer Type</th>
+    <th scope="row">Movement Type</th>
     <td>
     <select class="w100p" id="sttype" name="sttype"></select>
     </td>
     <th scope="row">Movement Type</th>
     <td>
-    <select class="w100p" id="smtype" name="smtype"><option>Transfer Type Selected</option></select>
+    <select class="w100p" id="smtype" name="smtype"><option>Movement Type Selected</option></select>
     </td>
 </tr>
 <tr>
