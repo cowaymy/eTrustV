@@ -124,24 +124,15 @@ public class SirimController {
 	public ResponseEntity<Map<String, Object>> selectSirimNo(@RequestBody Map<String, Object> params,  
 			HttpServletRequest request, HttpServletResponse response,Model model) {
 		
-		//logger.debug("%%%%%%%%StartSirimNo%%%%%%%: {}",params.get("StartSirimNo") );
-		//logger.debug("%%%%%%%%EndSirimNo%%%%%%%: {}",params.get("EndSirimNo") );
-//		String[] prefix = request.getParameterValues("prefix");
-//		String[] first = request.getParameterValues("first");
-//		String[] iCnt = request.getParameterValues("iCnt");
 		logger.debug("####prefix&&&: {}",params.get("prefix"));
 		logger.debug("####first&&&: {}",params.get("first"));
 		logger.debug("####iCnt&&&: {}",params.get("iCnt"));
 		//List<EgovMap> list = SirimService.selectSirimNo(params);
 		String count = SirimService.selectSirimNo(params);
-		//logger.debug("####count&&&: {}",count);
-		/*for (int i = 0; i < list.size(); i++) {
-			logger.debug("####selectSirimNolist&&&: {}",list.get(i));
-			
-		}*/
+
 		
 		Map<String, Object> map = new HashMap();
-		//map.put("data", count);
+		map.put("data", count);
 
 		return ResponseEntity.ok(map);
 	}
