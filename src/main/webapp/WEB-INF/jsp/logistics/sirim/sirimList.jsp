@@ -74,7 +74,7 @@
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
         doGetCombo('/common/selectCodeList.do', '11', '','searchCategory', 'S' , ''); //Type 리스트 조회
-        doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','searchWarehouse', 'S' , ''); //Type 리스트 조회
+        doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','searchWarehouse', 'S' , ''); //Warehouse 리스트 조회
         
         AUIGrid.bind(myGridID, "cellClick", function( event )  
         {
@@ -101,14 +101,7 @@
     	    
    	    $("#insert").click(function(){
    	       $("#newSirimWindow").show();
-   	       doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','addWarehouse', 'S' , ''); //Type 리스트 조회
-   	       //$("#addWarehouse option:eq(CDB-HQ)").prop("selected", true);
-   	       //$("#addWarehouse > option[@value=CDB-HQ]").attr("selected", true);
-   	         //$("#addWarehouse").val("CDB-HQ").attr("selected", "selected");
-   	         $("#addWarehouse").val("CDB-HQ").prop("selected", true);
-   	         $("#addWarehouse").find("option:eq(3)").prop("selected", true);
-   	         
-   	         
+   	       doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','addWarehouse', 'S' , 'f_WarehouseCombo'); //Warehouse 리스트 조회      
    	       doGetCombo('/common/selectCodeList.do', '11', '','addTypeSirim', 'S' , ''); //Type 리스트 조회
    	       }); 
    	    
@@ -117,17 +110,23 @@
  	        var SirimNoFirst = $("#addSirimNoFirst").val();
  	        var quantity = $("#addQuantity").val();
  	         quantity=parseInt(quantity);
-   	      
-   	         lNo= getLastNo(SirimNoFirst,quantity);
-   	        
-   	         $("#addSirimNoLast").val(lNo); 
-   	         
-	   	    /*  if (lNo.length > SirimNoFirst.length){
-	             alert("* Invalid first number. Ending number exceed length.");
-	         }else{
-	        	 $("#addSirimNoLast").val(lNo); 
-	         } 	  */       
-   	        
+ 	       
+ 	        if ($("#addQuantity").val() == "") {
+ 	            Common.alert("* Please key in quantity.");
+ 	            $("#addQuantity").focus();
+ 	            return ;
+ 	        }else{
+ 	        	 lNo= getLastNo(SirimNoFirst,quantity);
+ 	            
+ 	             $("#addSirimNoLast").val(lNo); 
+ 	             
+ 	              if (lNo.length > SirimNoFirst.length){
+ 	                 alert("* Invalid first number. Ending number exceed length.");
+ 	             }else{
+ 	                 $("#addSirimNoLast").val(lNo); 
+ 	             }      
+ 	        }
+ 	           	        
      }); 
    	    
    	 $("#btnRekey_Add_Click").click(function(){
@@ -156,7 +155,7 @@
         Common.ajax("POST", "/logistics/sirim/insertSirimList.do",  $('#AddSirimForm').serializeJSON(), function(result) {
           var gridData = result;             
           //console.log(gridData.data);            
-         
+        // SirimNoValiedCheck(result);
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
         //searchList();
@@ -165,11 +164,48 @@
         });
 }    
     
+    function SirimNocheckAjax() {
     
+    	var prefix = $("#addPrefixNo").val();
+    	var first = $("#addSirimNoFirst").val();
+    	var iCnt = $("#addQuantity").val();
+    	
+     	var param = "";//StartSirimNo;
+    	var chekFlag ="";
+/*       	for(var i = 0 ; i < iCnt ; i++){
+    		
+    		if (i == 0 ) param += "param="+startSirimNo;
+    		else  param += "&param="+startSirimNo;
+    	}   */
+     	
+    	//param = "prefix="+prefix+"&first="+first+"&iCnt="iCnt; 
+    	//alert(param);
+    	param = { 
+    			"prefix" : prefix,
+    			"first" :  first,
+    			"iCnt" :  iCnt
+               };
+	        Common.ajax("post", "/logistics/sirim/selectSirimNo.do", param, function(result) {
+	//           var gridData = result;    
+	//           var count = gridData.
+	//           console.log(gridData.data);
+	        console.log(result);
+	        chekFlag=result.data;
+	        //f_sirimNochek(chekFlag);
+	         return chekFlag;
+	        // 공통 메세지 영역에 메세지 표시.
+	        //Common.setMsg("<spring:message code='sys.msg.success'/>");
+	        }, function(jqXHR, textStatus, errorThrown) {
+	            Common.alert("실패하였습니다.");
+	        });
+	        alert("chekFlag   "+ chekFlag);
+	        return chekFlag;
+}  
     
     function addSirim(){
   
     	if(valiedcheck()){
+    		$("#addWarehouse").attr("disabled",false); 
     		$("#addSirimNoLast").attr("disabled",false); 
     		newSirimAjax()
     		alert("에이작스 시작!");
@@ -196,13 +232,12 @@
     	  	
      	firstNoInt = parseInt(SirimNoFirst);
      	lastNoInt = firstNoInt + (quantity - 1);
-    	
-     	alert("lastNoInt :  "+lastNoInt);   	
+     
     	retLastNo = lastNoInt.toString();
-     	               
+    	
       	  if (SirimNoFirst.length  > retLastNo.length ){
-             var lengthToRun = (SirimNoFirst.length - retLastNo.length);
-             for (var int = 0; int <= lengthToRun; int++) {
+             var lengthToRun = (SirimNoFirst.length - retLastNo.length); 
+             for (var int = 1; int <= lengthToRun; int++) {
                 retLastNo = "0" + retLastNo;	
 			}   
             
@@ -212,6 +247,10 @@
     
     
     function valiedcheck() {
+    	//var StartSirimNo = $("#addPrefixNo").val() + $("#addSirimNoFirst").val();
+    	//var EndSirimNo =  $("#addPrefixNo").val() + $("#addSirimNoLast").val();
+    	
+    	
         if ($("#addTypeSirim").val() == "") {
             Common.alert("* Please select the type of Sirim.");
             $("#addTypeSirim").focus();
@@ -238,17 +277,29 @@
             $("#addSirimNoLast").focus();
             return false;
         }
-      
-
+        
+/*       var aa=  SirimNocheckAjax();
+        alert("aa   :::::"+aa);
+        if(aa=="N"){
+        	alert("Sirim No 있습니다!! 새로운걸로 다시 만들어주세요!");
+        	return false;  
+        } */
+        
+          if(SirimNocheckAjax() == "N"){
+        	alert("Sirim No 있습니다!! 새로운걸로 다시 만들어주세요!");
+        	return false;
+        }  
+       
         return true;
     }
     
-    
-    
-    
-    
-    
-    
+/*    function SirimNoValiedCheck(count){
+	   alert("count"+count);
+	   if(count > 0){
+		   
+	   }
+       
+    }   */    
     
     
 //Warehouse 셀렉트박스 CODE+CODENAME    
@@ -303,6 +354,23 @@
             eval(strCallback);
         }
     };
+    
+    
+    function f_WarehouseCombo() {
+        $(function() {
+              $("#addWarehouse").val("CDB-HQ").prop("selected", true);
+              
+   
+          });       
+    }
+    
+    
+ /*    function f_sirimNochek(chekFlag) {
+        if(chekFlag=="N"){
+        alert("* This sirim number is existing or it might be used.");
+        return false; 	
+        }
+    } */
 
 </script>
 </head>
@@ -541,7 +609,7 @@
 <tr>
     <th scope="row">Warehouse<span class="must">*</span></th>
     <td>
-     <select id="addWarehouse" name="addWarehouse" onchange=""  placeholder=""  class="w100p"></select> 
+     <select id="addWarehouse" name="addWarehouse" onchange=""  placeholder=""  class="w100p" disabled=true></select> 
     </td>
     <th scope="row">Type of Sirim<span class="must">*</span></th>
     <td>
