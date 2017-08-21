@@ -11,6 +11,8 @@ public interface SirimService {
 	
 	List<EgovMap> selectSirimList(Map<String, Object> params);
 	
+	String selectSirimNo(Map<String, Object> params);
+	
 	void insertSirimList(Map<String, Object> params);
 	
 	
