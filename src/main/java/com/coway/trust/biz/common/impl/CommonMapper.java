@@ -25,8 +25,16 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface CommonMapper {
 	List<EgovMap> selectCodeList(Map<String, Object> params);
 
+	List<EgovMap> selectCommonCodes(Map<String, Object> params);
+
+	List<EgovMap> selectAllCommonCodes(Map<String, Object> params);
+
+	List<EgovMap> selectCommonCodesPage(Map<String, Object> params);
+
+	int selectCommonCodeTotalCount(Map<String, Object> params);
+
 	List<EgovMap> selectI18NList();
-	
+
 	/************************** Role Auth Mapping ****************************/
 	List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params);  
 	List<EgovMap> selectRoleAuthMappingBtn(Map<String, Object> params);  

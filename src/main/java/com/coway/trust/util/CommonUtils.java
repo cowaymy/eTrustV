@@ -31,8 +31,6 @@ import com.coway.trust.web.common.CommonController;
  * <pre>
  * 서비스 요청 데이타를 처리함에 있어 공통적으로 처리 될 수 있는 유틸리티성 기능들을 제공하는 클래스
  * </pre>
- *
- * @author aider
  */
 public final class CommonUtils {
 
@@ -893,21 +891,22 @@ public final class CommonUtils {
 
 		return (T) wContext.getBean(beanName);
 	}
-	
+
 	/**
 	 * AS-IS : CommonFunction.cs - GetRandomNumber 변환 method
+	 * 
 	 * @param size
 	 * @return
 	 */
-	public static String getRandomNumber(int size){
-        Random random = new Random();        
-        char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-        
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < size; i++){            
-            int num = random.nextInt(chars.length);            
-            sb.append(chars[num]);
-        }        
-        return sb.toString();
-    }
+	public static String getRandomNumber(int size) {
+		Random random = new Random();
+		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < size; i++) {
+			int num = random.nextInt(chars.length);
+			sb.append(chars[num]);
+		}
+		return sb.toString();
+	}
 }

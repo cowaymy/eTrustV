@@ -471,6 +471,8 @@
 		  </otherwise>
 		</choose>
 	</select>
+
+
 	   
     <select id="codeNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
        SELECT CODE_NAME
@@ -644,7 +646,79 @@
             AND IS_PAY_CRC = 1
           </if>               
          ORDER BY ACC_CODE ASC
-  </select>    
+  </select>
+
+    <select id="selectCommonCodes" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT CD_DTL.CODE_ID
+                        ,CD_DTL.CODE
+                        ,CD_DTL.DISAB AS CODE_DISAB
+            FROM SYS0013M CD_DTL
+            WHERE 1=1
+            AND 'T' =  CASE WHEN #{codeDisab} = 99
+                                                  OR CD_DTL.DISAB = #{codeDisab}
+                                        THEN 'T'
+                                        ELSE 'F'
+                              END
+            AND CD_DTL.CODE_MASTER_ID = #{codeMasterId}
+            ORDER BY CD_DTL.CODE_MASTER_ID
+        ]]>
+    </select>
+
+    <select id="selectAllCommonCodes" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT CD_MST.CODE_MASTER_ID
+                        ,CD_MST.CODE_MASTER_NAME
+                        ,CD_MST.DISAB AS CODE_MASTER_DISAB
+                        ,CD_DTL.CODE_ID
+                        ,CD_DTL.CODE
+                        ,CD_DTL.DISAB AS CODE_DISAB
+                        ,CD_DTL.OLD_CODE_ID
+            FROM SYS0012M CD_MST, SYS0013M CD_DTL
+            WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
+            ORDER BY CODE_MASTER_ID
+        ]]>
+    </select>
+
+    <select id="selectCommonCodesPage" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (
+                                SELECT CD_MST.CODE_MASTER_ID
+                                            ,CD_MST.CODE_MASTER_NAME
+                                            ,CD_MST.DISAB AS CODE_MASTER_DISAB
+                                            ,CD_DTL.CODE_ID
+                                            ,CD_DTL.CODE
+                                            ,CD_DTL.DISAB AS CODE_DISAB
+                                            ,CD_DTL.OLD_CODE_ID
+                                FROM SYS0012M CD_MST, SYS0013M CD_DTL
+                                WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
+                                AND 'T' =  CASE WHEN #{codeMasterId} = 0
+                                                                      OR CD_MST.CODE_MASTER_ID = #{codeMasterId}
+                                                            THEN 'T'
+                                                            ELSE 'F'
+                                                  END
+                                ORDER BY CODE_MASTER_ID
+                    ) Z
+                    WHERE ROWNUM <= ( (#{pageNo} + 1) * #{contentSize}) )
+        WHERE RNUM > (#{pageNo} * #{contentSize})
+
+        ]]>
+    </select>
+
+    <select id="selectCommonCodeTotalCount" parameterType="Map" resultType="Integer">
+        SELECT   COUNT(1) AS cnt
+        FROM SYS0012M CD_MST, SYS0013M CD_DTL
+        WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
+        AND 'T' = CASE WHEN #{codeMasterId} = 0 OR CD_MST.CODE_MASTER_ID = #{codeMasterId}
+                                    THEN 'T'
+                                    ELSE 'F'
+                          END
+        ORDER BY CD_MST.CODE_MASTER_ID
+    </select>
     
     <select id="getMstCommonCodeList" parameterType="Map" resultType="egovMap">
     

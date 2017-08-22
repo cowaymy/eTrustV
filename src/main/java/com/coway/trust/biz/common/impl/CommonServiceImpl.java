@@ -48,6 +48,26 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 
 	@Override
+	public List<EgovMap> getCommonCodes(Map<String, Object> params) {
+		return commonMapper.selectCommonCodes(params);
+	}
+
+	@Override
+	public List<EgovMap> getAllCommonCodes(Map<String, Object> params) {
+		return commonMapper.selectAllCommonCodes(params);
+	}
+
+	@Override
+	public List<EgovMap> getCommonCodesPage(Map<String, Object> params) {
+		return commonMapper.selectCommonCodesPage(params);
+	}
+
+	@Override
+	public int getCommonCodeTotalCount(Map<String, Object> params) {
+		return commonMapper.selectCommonCodeTotalCount(params);
+	}
+
+	@Override
 	public List<EgovMap> selectI18NList() {
 		return commonMapper.selectI18NList();
 	}

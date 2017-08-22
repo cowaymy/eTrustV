@@ -11,17 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.cmmn.model.DisplayPagination;
@@ -38,6 +35,9 @@ import io.swagger.annotations.ApiOperation;
 public class SampleApiController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SampleApiController.class);
 
+	@Resource(name = "commonService")
+	private CommonService commonService;
+
 	@Resource(name = "sampleService")
 	private SampleService sampleService;
 
@@ -47,7 +47,27 @@ public class SampleApiController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@ApiOperation(value = "샘플 목록 조회")
+	@ApiOperation(value = "샘플 공통코드 목록 조회(page)", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/codes", method = RequestMethod.GET)
+	public ResponseEntity<DisplayPagination<CommonCodeDto>> getCommonCodesPage(
+			@ModelAttribute CommonCodePageForm commonCodePageForm) throws Exception {
+
+		LOGGER.debug("MasterCodeId : {}", commonCodePageForm.getCodeMasterId());
+		LOGGER.debug("PageNo : {}", commonCodePageForm.getPageNo());
+		LOGGER.debug("ContentSize : {}", commonCodePageForm.getContentSize());
+
+		Map<String, Object> params = commonCodePageForm.createMap(commonCodePageForm);
+
+		List<EgovMap> commonCodes = commonService.getCommonCodesPage(params);
+		List<CommonCodeDto> list = commonCodes.stream().map(r -> CommonCodeDto.create(r)).collect(Collectors.toList());
+
+		int totCnt = commonService.getCommonCodeTotalCount(params);
+		DisplayPagination<CommonCodeDto> dto = DisplayPagination.create(commonCodePageForm.getPageNo(), totCnt, list);
+
+		return ResponseEntity.ok(dto);
+	}
+
+	@ApiOperation(value = "샘플 목록 조회", produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/contents", method = RequestMethod.GET)
 	public ResponseEntity<DisplayPagination<SampleDto>> selectSampleList(@ModelAttribute SampleForm sampleForm,
 			ModelMap model) throws Exception {
@@ -77,7 +97,7 @@ public class SampleApiController {
 		return ResponseEntity.ok(dto);
 	}
 
-	@ApiOperation(value = "샘플 저장")
+	@ApiOperation(value = "샘플 저장", produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/contents", method = RequestMethod.POST)
 	public void saveSample(@RequestBody SampleForm regForm, Model model) throws Exception {
 
