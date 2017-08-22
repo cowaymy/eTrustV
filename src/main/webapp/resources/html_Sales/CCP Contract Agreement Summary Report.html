@@ -153,8 +153,13 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Rental Membership Cancellation Request</h2>
+<h2>Contract Agreement Summary Report</h2>
+<ul class="right_btns">
+	<li><p class="btn_blue"><a href="#"><span class="search"></span>Generate</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+</ul>
 </aside><!-- title_line end -->
+
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post">
@@ -162,14 +167,14 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:110px" />
+	<col style="width:180px" />
 	<col style="width:*" />
-	<col style="width:200px" />
+	<col style="width:180px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Select Type</th>
+	<th scope="row">Agreement Type</th>
 	<td>
 	<select class="w100p">
 		<option value="">11</option>
@@ -177,8 +182,53 @@
 		<option value="">33</option>
 	</select>
 	</td>
-	<th scope="row">Rental Membership No.</th>
-	<td><input type="text" title="" placeholder="" class="" /><p class="btn_sky"><a href="#">Search</a></p><p class="btn_sky"><a href="#">Clear</a></p></td>
+	<th scope="row">Agreement Start</th>
+	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span>To</span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	</div><!-- date_set end -->
+	</td>
+</tr>
+<tr>
+	<th scope="row">Search By</th>
+	<td>
+	<label><input type="radio" name="searchby" /><span>Daily</span></label>
+	<label><input type="radio" name="searchby" /><span>Monthly</span></label>
+	</td>
+	<th scope="row">Agreement Expiry</th>
+	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span>To</span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	</div><!-- date_set end -->
+	</td>
+</tr>
+<tr>
+	<th scope="row">Created Date</th>
+	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span>To</span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	</div><!-- date_set end -->
+	</td>
+	<th scope="row">Agreement Status</th>
+	<td>
+	<select class="multy_select w100p" multiple="multiple">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Month / Year</th>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<th scope="row"></th>
+	<td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -215,22 +265,6 @@
 
 </form>
 </section><!-- search_table end -->
-
-<section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">INS</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</section><!-- search_result end -->
 
 </section><!-- content end -->
 

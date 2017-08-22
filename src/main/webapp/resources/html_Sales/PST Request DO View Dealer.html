@@ -153,7 +153,11 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Rental Membership Cancellation Request</h2>
+<h2>PST Dealer View</h2>
+<ul class="right_btns">
+	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -162,14 +166,24 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:110px" />
+	<col style="width:180px" />
 	<col style="width:*" />
-	<col style="width:200px" />
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Select Type</th>
+	<th scope="row">Dealer ID</th>
+	<td><input type="text" title="" placeholder="Dealer ID (Number Only)" class="w100p" /></td>
+	<th scope="row">Dealer Name</th>
+	<td><input type="text" title="" placeholder="Dealer Name" class="w100p" /></td>
+	<th scope="row">Contact Name</th>
+	<td><input type="text" title="" placeholder="Contact Name" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Country</th>
 	<td>
 	<select class="w100p">
 		<option value="">11</option>
@@ -177,8 +191,22 @@
 		<option value="">33</option>
 	</select>
 	</td>
-	<th scope="row">Rental Membership No.</th>
-	<td><input type="text" title="" placeholder="" class="" /><p class="btn_sky"><a href="#">Search</a></p><p class="btn_sky"><a href="#">Clear</a></p></td>
+	<th scope="row">State</th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Status</th>
+	<td>
+	<select class="multy_select w100p" multiple="multiple">
+		<option value="1">11</option>
+		<option value="2">22</option>
+		<option value="3">33</option>
+	</select>
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->

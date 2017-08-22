@@ -153,8 +153,24 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Rental Membership Cancellation Request</h2>
+<h2>title</h2>
 </aside><!-- title_line end -->
+
+<ul class="right_btns">
+	<li><p class="red_text">* Compulsory Field</p></li>
+	<li><p class="brown_text"># Compulsory Field (For Individual Type)</p></li>
+</ul>
+
+<section class="tap_wrap"><!-- tap_wrap start -->
+<ul class="tap_type1">
+	<li><a href="#" class="on">Basic Info</a></li>
+	<li><a href="#">Install Address</a></li>
+	<li><a href="#">Additional Service Contact</a></li>
+	<li><a href="#">Credit Card</a></li>
+	<li><a href="#">Bank Account</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post">
@@ -162,14 +178,14 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:110px" />
+	<col style="width:180px" />
 	<col style="width:*" />
-	<col style="width:200px" />
+	<col style="width:180px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Select Type</th>
+	<th scope="row">Customer Type<span class="must">*</span></th>
 	<td>
 	<select class="w100p">
 		<option value="">11</option>
@@ -177,8 +193,91 @@
 		<option value="">33</option>
 	</select>
 	</td>
-	<th scope="row">Rental Membership No.</th>
-	<td><input type="text" title="" placeholder="" class="" /><p class="btn_sky"><a href="#">Search</a></p><p class="btn_sky"><a href="#">Clear</a></p></td>
+	<th scope="row">Company Type</th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Initials<span class="must">*</span></th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row"></th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">Customer Name<span class="must">*</span></th>
+	<td colspan="3"><input type="text" title="" placeholder="Customer Name" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">NRIC/Company No<span class="must">*</span></th>
+	<td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" /></td>
+	<th scope="row">GST Registration No</th>
+	<td><input type="text" title="" placeholder="GST Registration No" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Nationality <span class="brown_text">#</span></th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Passport Expire</th>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">DOB <span class="brown_text">#</span></th>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<th scope="row">Visa Expire</th>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Gender <span class="brown_text">#</span></th>
+	<td>
+	<label><input type="radio" name="gender" /><span>Male</span></label>
+	<label><input type="radio" name="gender" /><span>Female</span></label>
+	</td>
+	<th scope="row">Email(1)</th>
+	<td><input type="text" title="" placeholder="Email" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Race <span class="brown_text">#</span></th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Tel(Mobile)(1)<span class="must">*</span></th>
+	<td><input type="text" title="" placeholder="Telephone Number(Mobile)" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Tel(Residence)(1)<span class="must">*</span></th>
+	<td><input type="text" title="" placeholder="Telephone Number(Residence)" class="w100p" /></td>
+	<th scope="row">Tel(Fax)(1)<span class="must">*</span></th>
+	<td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Tel(Office)(1)<span class="must">*</span></th>
+	<td><input type="text" title="" placeholder="Telephone Number(Office)" class="w100p" /></td>
+	<th scope="row">Ext No.</th>
+	<td><input type="text" title="" placeholder="Extension Number" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Remarks</th>
+	<td colspan="3"><textarea cols="20" rows="5" placeholder="Remarks"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -215,6 +314,26 @@
 
 </form>
 </section><!-- search_table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+tap2
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+tap3
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+tap4
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+tap5
+</article><!-- tap_area end -->
+
+</section><!-- tap_wrap end -->
 
 <section class="search_result"><!-- search_result start -->
 
