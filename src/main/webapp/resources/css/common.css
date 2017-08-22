@@ -210,9 +210,12 @@ table+.center_btns{padding-top:15px;}
 .j_date3.w100p{width:100%!important;}
 .date_set{position:relative; width:220px;}
 .date_set .w100p{position:relative; width:100%;}
-.date_set > p{float:left; width:50%; padding-left:11px; box-sizing:border-box;}
-.date_set > p:first-child{padding-left:0; padding-right:11px;}
-.date_set > p input[type=text].j_date{width:100%!important;}
+.date_set > p,
+.date_set > .time_picker{float:left!important; width:50%!important; padding-left:11px; box-sizing:border-box;}
+.date_set > p:first-child,
+.date_set > .time_picker:first-child{padding-left:0; padding-right:11px;}
+.date_set > p input[type=text].j_date,
+.date_set .time_date{width:100%!important;}
 .date_set > span{position:absolute; top:0; left:50%; width:22px; margin-left:-11px; line-height:30px; text-align:center;}
 .w100p{width:100%!important;}
 .ms-parent.multy_select{width:237px!important;}
