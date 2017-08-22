@@ -116,8 +116,6 @@ $(document).ready(function()
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 1, SerchAuthName);
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 2, SerchAuthId);
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 3, SerchAuthLev);
-        
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 10, SerchRoleCd3); 
 
 	        $("#searchRoleAuthMappingPop").remove();
 	    }); 
