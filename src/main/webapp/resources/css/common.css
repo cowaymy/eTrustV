@@ -349,7 +349,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 #popup_wrap.msg_box,
 .popup_wrap.msg_box{width:400px; height:200px; top:50%; margin:-100px 0 0 -200px; border:1px solid #0c3a65}
 #popup_wrap.msg_box.msg_big,
-.popup_wrap.msg_box.msg_big{width:500px; height:300px; margin:-150px 0 0- 250px;}
+.popup_wrap.msg_box.msg_big{width:500px; height:300px; margin:-150px 0 0 -250px;}
 #popup_wrap.msg_box .pop_header,
 .popup_wrap.msg_box .pop_header{padding:10px 20px; background:#0c3a65; border-bottom:0 none;}
 #popup_wrap.msg_box .pop_header h1,
