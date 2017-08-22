@@ -39,6 +39,7 @@
            ,UPD_USER_ID   = #{updUserId}
            ,UPD_DT        = SYSDATE   
      WHERE AUTH_CODE = UPPER(#{authCode}) 
+       AND ROLE_ID   = #{roleId}
   </update>
   
 <delete id="deleteRoleAuthMapping" parameterType="Map">
@@ -91,7 +92,8 @@
    WHERE F.ROLE_ID = G.ROLE_ID
      AND G.ROLE_ID = H.ROLE_ID
      AND F.AUTH_CODE = H.AUTH_CODE 
-             
+     AND H.VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+     AND H.VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')            
    UNION
          
    SELECT 
@@ -122,6 +124,8 @@
      AND A.ROLE_ID = C.ROLE_ID(+)
      AND D.CODE_MASTER_ID = 313
      AND C.AUTH_CODE = D.CODE
+     AND VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+     AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
    ORDER BY ROLE_LVL,AUTH_NAME   
 </select>
 
@@ -134,8 +138,8 @@
 		      END AUTH_NAME          
 		     ,TO_CHAR(ROLE_ID) ROLE_ID
 		     ,ROLE_LVL 
-		     ,VALID_DT_FROM
-		     ,VALID_DT_TO
+		     ,VALID_DT_FROM FROM_DT
+		     ,VALID_DT_TO TO_DT
 		     ,AUTH_CODE HIDDEN
    FROM SYS0054M SYS54M         
   WHERE 1 = 1
@@ -144,7 +148,9 @@
  </if> 
  <if test='roleId !=null and roleId != "" '>    
     AND ROLE_ID = #{roleId}
- </if>  
+ </if>
+    AND VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+    AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')  
 </select>
 
 <select id="selectRoleAuthMappingList" parameterType="Map" resultType="egovMap">
