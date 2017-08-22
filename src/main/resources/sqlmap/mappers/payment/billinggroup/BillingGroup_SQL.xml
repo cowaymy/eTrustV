@@ -257,19 +257,19 @@
 	                              AND ( Extent6.RENT_AMT > 0 )
 			   WHERE  1=1]]>
                 <if test="billNo != '' ">
-                   AND ( Extent3.CUST_BILL_GRP_NO LIKE '%' || #{billNo} || '%'ESCAPE '~' )
+                   AND Extent3.CUST_BILL_GRP_NO =  #{billNo}
                 </if>
                 <if test="orderNo != '' ">
-                   AND ( Extent2.SO_NO LIKE '%' || #{orderNo} || '%' ESCAPE '~' )
+                   AND Extent2.SO_NO = #{orderNo}
                 </if>
                 <if test="custName != '' ">  
                    AND ( Extent1.CUST_NAME LIKE '%' || #{custName} || '%' ESCAPE '~' )
                 </if>   
                 <if test="sMonth != '' ">
-                   AND ( UTILS.CONVERT_TO_NUMBER(Extent1.PV_MONTH,10,0) = #{sMonth} )
+                   AND Extent1.PV_MONTH = #{sMonth} 
                 </if>
                 <if test="sYear != '' ">
-                   AND ( UTILS.CONVERT_TO_NUMBER(Extent1.PV_YEAR,10,0) = #{sYear} ) 
+                   AND Extent1.PV_YEAR = #{sYear}  
                  </if>
 		          ORDER BY Extent1.BILL_ID DESC
 	</select>
