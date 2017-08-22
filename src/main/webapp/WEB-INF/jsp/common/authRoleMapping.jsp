@@ -559,11 +559,9 @@ var myGridID, AuthGridID;
 
 $(document).ready(function()
 {
-    $("#roleId").focus();
+  $("#roleId").focus();
     
-/*     
-
- $("#roleId").bind("keyup", function() 
+  $("#roleId").bind("keyup", function() 
 		   {
 		       $(this).val($(this).val().toUpperCase());
 		    });
@@ -575,7 +573,7 @@ $(document).ready(function()
          fnSearchBtnClickAjax();
        } 
 
-    }); */
+    }); 
 
 
 
@@ -713,7 +711,7 @@ $(document).ready(function()
 
 
 <section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="get" action="">    
+<form id="MainForm" method="get" action="" onsubmit="return false;">    
   <input type="hidden" id="CodeMasterId" name="CodeMasterId" value="313" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
