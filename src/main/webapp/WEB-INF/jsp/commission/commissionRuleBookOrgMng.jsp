@@ -188,13 +188,15 @@
 				return list;
 			},
 			keyField : "id",
-			valueField : "value",
-		}
+			valueField : "value"
+		},
+        width : "10%"
 	}, {
 		dataField : "orgGrNm",
 		headerText : "ORG GR NM",
 		//width : 120,
-		editable : false
+		editable : false,
+        width : "10%"
 	}, {
 		dataField : "orgCd",
 		headerText : "ORG CD",
@@ -218,14 +220,16 @@
 			},
 			keyField : "id",
 			valueField : "value"
-		}
+		},
+        width : "10%"
 	}, {
 		dataField : "orgNm",
 		headerText : "ORG NAME",
 		//width : 120,
-		editable : false
+		editable : false,
+        width : "10%"
 	}, {
-		dataField : "cdDs",
+		dataField : "cdds",
 		headerText : "Description",
 		editable : false,
 		//width : 180,
@@ -247,7 +251,8 @@
 		dataField : "endDt",
 		headerText : "END DATE",
 		//width : 120,
-		editable : false
+		editable : false,
+        width : "10%"
 	}, {
 		dataField : "orgSeq",
 		headerText : "",
