@@ -510,12 +510,19 @@ var Common = {
     alertBase : function (_options, callback){
 
         var option = {
-            title : "Message"
+            title : "Message",
+            isBig : false
         };
 
         option = $.extend(option, _options);
 
-        var msgHtml = '<div id="popup_wrap" alert="Y" class="popup_wrap msg_box">'
+        var bigClass = "";
+
+        if(option.isBig){
+            bigClass = "msg_big";
+        }
+
+        var msgHtml = '<div id="popup_wrap" alert="Y" class="popup_wrap msg_box ' + bigClass + '">'
             + '	<header class="pop_header">'
             + '<h1>' + option.title + '</h1>'
             + '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
@@ -590,12 +597,19 @@ var Common = {
     confirmBase : function (_options, okCallback, cancelCallback) {
 
         var option = {
-            title : "Message"
+            title : "Message",
+            isBig : false
         };
 
         option = $.extend(option, _options);
 
-        var msgHtml = '<div id="_popup_wrap_confirm"  confirm="Y" class="popup_wrap msg_box">'
+        var bigClass = "";
+
+        if(option.isBig){
+            bigClass = "msg_big";
+        }
+
+        var msgHtml = '<div id="_popup_wrap_confirm"  confirm="Y" class="popup_wrap msg_box ' + bigClass + '">'
             + '	<header class="pop_header">'
             + '<h1>' + option.title + '</h1>'
             + '<p class="pop_close" id="_popClose"><a href="#">close</a></p>'
