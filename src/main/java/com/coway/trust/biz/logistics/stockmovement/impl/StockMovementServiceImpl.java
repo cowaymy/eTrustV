@@ -13,8 +13,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -23,6 +26,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("stockMovementService")
 public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements StockMovementService {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "stockMoveMapper")
 	private StockMovementMapper stockMoveMapper;
 
@@ -158,21 +162,52 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public void stockMovementReqDelivery(Map<String, Object> params) {
-		List<Object> updList = (List<Object>) params.get("check");
+		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
-		String seq = stockMoveMapper.selectDeliveryStockMovementSeq();
+		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
 
-		if (updList.size() > 0) {
+		if (checkList.size() > 0) {
 			Map<String, Object> insMap = null;
-			for (int i = 0; i < updList.size(); i++) {
+			for (int i = 0; i < checkList.size(); i++) {
 
-				insMap = (Map<String, Object>) updList.get(i);
-				insMap.put("delno", seq);
+				// logger.info(" checkList.get(i) : {}", checkList.get(i).toString());
+				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
+				insMap = (Map<String, Object>) tmpMap.get("item");
+
+				insMap.put("delno", deliSeq);
 				insMap.put("userId", params.get("userId"));
 				stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
 			}
 			stockMoveMapper.insertDeliveryStockMovement(insMap);
 		}
+		String[] delvcd = { deliSeq };
+		formMap.put("parray", delvcd);
+		formMap.put("userId", params.get("userId"));
+		formMap.put("prgnm", "deliverylist");
+		formMap.put("refdocno", "");
+		formMap.put("salesorder", "");
 
+		stockMoveMapper.stockMoveiSsue(formMap);
+
+		logger.info(" serialList  size : {}", serialList.size());
+		logger.info(" serialList : {}", serialList.toString());
+		if (serialList.size() > 0) {
+			for (int i = 0; i < serialList.size(); i++) {
+				Map<String, Object> insSerial = null;
+				insSerial = (Map<String, Object>) serialList.get(i);
+				insSerial.put("delno", deliSeq);
+				insSerial.put("userId", params.get("userId"));
+				// stockMoveMapper.insertMovementSerial(insSerial);
+			}
+		}
+
+	}
+
+	@Override
+	public int selectStockMovementSerial(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMoveMapper.selectStockMovementSerial(params);
 	}
 }

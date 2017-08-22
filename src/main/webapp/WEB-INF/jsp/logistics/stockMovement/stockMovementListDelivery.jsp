@@ -208,10 +208,21 @@ $(document).ready(function(){
         	}
         }
     });
-    
+    AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+       var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
+       serial=serial.trim();
+        	if(""==serial || null ==serial){
+        		//alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
+            //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
+        	Common.alert('Please input Serial Number.');
+        	}else{
+            fn_serialChck(serial);
+        	}
+    	
+    });
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
 //      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-//      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+
 //     	document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
 //     	document.searchForm.submit();
     });
@@ -249,25 +260,7 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $('#delivery').click(function(){
-    	/* var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	if(checkedItems.length <= 0) {
-    		return false;
-    	}else{
-	    	var data = {};
-	    	data.checked = checkedItems; 
-	    	Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
-	            Common.alert(result.message , SearchListAjax);
-	            AUIGrid.resetUpdatedItems(listGrid, "all");            
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }  
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
-	    	for (var i = 0 ; i < checkedItems.length ; i++){
-	    		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
-	    	}
-    	} */
+    	var checkDelqty= false; 
     	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
@@ -279,15 +272,26 @@ $(function(){
             for(var i=0, len = checkedItems.length; i<len; i++) {
                 rowItem = checkedItems[i];
                 if(rowItem.item.delyqty==0){
-                str += "row : " + rowItem.rowIndex + ", rnum :" + rowItem.item.rnum + ", reqstno : " + rowItem.item.reqstno  + ", itmcd :" + rowItem.item.itmcd + ", itmname : " + rowItem.item.itmname
-                + ", delyqty :" + rowItem.item.delyqty + "\n";
-                
+                str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
+                checkDelqty= true;
                 }
             }
-            Common.alert(str); 
-            $("#giopenwindow").show();
-           AUIGrid.resize(serialGrid); 
-           fn_itempopList(checkedItems);
+            if(checkDelqty){
+            	var option = {
+           			content : str,
+           			isBig:true
+            	};
+	            Common.alertBase(option); 
+            }else{
+	            $("#giopenwindow").show();
+	            $("#giptdate").val("");
+	            $("#gipfdate").val("");
+	            $("#doctext").val("");
+	            AUIGrid.clearGridData(serialGrid);
+	           AUIGrid.resize(serialGrid); 
+	           fn_itempopList(checkedItems);
+            	
+            }
         }
     	
     });
@@ -340,24 +344,83 @@ function fn_itempopList(data){
     for(var i=0, len = data.length; i<len; i++) {
         rowItem = data[i];
          var num=1;
+                
         
         for (var j = 0 ; j < rowItem.item.delyqty ; j++){
-        	//if(rowItem.item.delyqty==0) break;
         rowList[cnt] = {
                 rnum : rowItem.item.rnum,
                 reqstno : rowItem.item.reqstno,
                 itmcd : rowItem.item.itmcd,
                 itmname : rowItem.item.itmname,
                 num : num,
-                delyqty : rowItem.item.delyqty
+                delyqty : rowItem.item.delyqty,
+                serial : num
         }       
-        
+                 
                 cnt++;
                 num++;
         }
     }
     AUIGrid.addRow(serialGrid, rowList, rowPos); 
     
+}
+
+function giFunc(){
+    var data = {};
+    var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+    var check     = AUIGrid.getCheckedRowItems(listGrid);
+    var serials     = AUIGrid.getAddedRowItems(serialGrid);
+    
+    data.check   = check;
+    data.checked = check;
+    data.add = serials;
+    data.form    = $("#giForm").serializeJSON();
+    console.log(data);
+    Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
+       
+//        Common.alert(result.message.message);
+//         AUIGrid.setGridData(listGrid, result.data);
+            Common.alert(result.message , SearchListAjax);
+            AUIGrid.resetUpdatedItems(listGrid, "all");    
+        //$("#giptdate").val("");
+       // $("#gipfdate").val("");
+        //$("#doctext" ).val("");
+        $("#giopenwindow").hide();
+        $('#search').click();
+
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
+        for (var i = 0 ; i < checkdata.length ; i++){
+            AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
+        }
+}
+
+function fn_serialChck(str){
+    var data = { serial : str };
+    
+    //data.form    = $("#giForm").serializeJSON();
+    console.log(data);
+    Common.ajax("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
+       
+            //Common.alert(result.message , SearchListAjax);
+            //AUIGrid.resetUpdatedItems(listGrid, "all");    
+            
+          //alert(result);
+          if(0== result){
+        	  Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. ");
+        	  $("#giopenwindow").hide();
+          }
+          
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
 }
 </script>
 
@@ -504,7 +567,7 @@ function fn_itempopList(data){
 			<div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
 			</article><!-- grid_wrap end -->
             <ul class="center_btns">
-                <!-- <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>  -->
+                <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
             </ul>
             </form>
         

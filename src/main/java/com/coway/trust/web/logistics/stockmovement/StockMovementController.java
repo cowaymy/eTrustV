@@ -344,18 +344,15 @@ public class StockMovementController {
 	 * @param model
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/StockMovementReqDelivery.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> StockMovementReqDelivery(@RequestBody Map<String, Object> params,
 			Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
-		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		params.put("userId", loginId);
 
-		Map<String, Object> param = new HashMap();
-		param.put("check", list);
-		param.put("userId", loginId);
-
-		stockMovementService.stockMovementReqDelivery(param);
+		stockMovementService.stockMovementReqDelivery(params);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -363,6 +360,15 @@ public class StockMovementController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/StockMovementSerialCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<Integer> stockMovementSerialCheck(@RequestParam Map<String, Object> params) {
+
+		logger.debug("serial : {}", params.get("serial"));
+
+		int cnt = stockMovementService.selectStockMovementSerial(params);
+		return ResponseEntity.ok(cnt);
 	}
 
 }

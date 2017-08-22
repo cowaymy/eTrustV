@@ -353,10 +353,45 @@
            ORDER BY l54.delvry_no
            ) T
     </select>
-    <resultMap id="PRCDATA" type="egovMap" />
-    <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
+    <resultMap id="MOVEDATA" type="egovMap" />
+    <select id="stockMoveiSsue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY
-                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=PRCDATA} )
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=MOVEDATA} )
              } 
      </select>
+     <select id="selectStockMovementSerial" parameterType="Map" resultType="Integer">
+     SELECT COUNT(1) 
+                FROM LOG0062M
+                 WHERE SERIAL_NO = #{serial}
+     </select>
+     <insert id="insertMovementSerial" parameterType="Map">
+     INSERT INTO LOG0061D (
+										SERIAL_NO,
+										DELVRY_NO,
+										PDELVRY_NO_ITM,
+										TTYP,
+										CRT_DT,
+										CRT_USER_ID
+										)
+					   SELECT 
+					               #{serial},
+					               #{delno},
+					                PDELVRY_NO_ITM,
+					                TTYP,
+					                SYSDATE,
+					                #{userId}
+									    FROM(
+												    SELECT 
+														l55d.DELVRY_NO_ITM AS PDELVRY_NO_ITM,
+														l54m.TRNSC_TYPE AS TTYP,
+														FROM LOG0054M l54m,LOG0055D l55d
+														WHERE 1=1
+														AND l54m.DELVRY_NO = l55d.DELVRY_NO
+														AND l54m.TRNSC_TYPE ='UM'
+														AND l55d.DELVRY_NO= #{delno}
+														AND l55d.ITM_CODE ={itmcd}
+									            )             
+					                       
+					   
+     </insert>
 </mapper>
