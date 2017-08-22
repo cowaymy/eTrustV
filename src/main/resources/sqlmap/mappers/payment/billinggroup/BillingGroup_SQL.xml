@@ -40,7 +40,7 @@
                                    )
                                   AND ( Extent3.RENT_DOC_NO LIKE 'BR%' )
                                   LEFT JOIN PAY0062S Extent4   ON ( Extent4.BR_NO = Extent3.RENT_DOC_NO )
-                                  AND ( 1 = UTILS.CONVERT_TO_NUMBER(Extent4.STUS_CODE_ID,10,0) )
+                                  AND ( 1 = TO_NUMBER(Extent4.STUS_CODE_ID) )
                                   LEFT JOIN SAL0024D Extent5   ON ( Extent5.CUST_BILL_ID = Extent2.CUST_BILL_ID )
                                   AND ( 66 = Extent2.APP_TYPE_ID )
                                   LEFT JOIN SAL0027D Extent6   ON ( Extent6.CUST_CNTC_ID = Extent5.CUST_BILL_CNT_ID )
