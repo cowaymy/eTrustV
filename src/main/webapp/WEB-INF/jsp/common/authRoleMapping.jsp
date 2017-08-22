@@ -109,7 +109,7 @@ var AuthColumnLayout =
             dataField : "roleId",   
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
-            width : 70,
+            width : 0,
         }, {
         	  dataField : "roleLvl",   
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
@@ -145,7 +145,7 @@ var AuthColumnLayout =
             dataField : "hidden",
             headerText : "hidden",
             editable   : false,
-            width : 100
+            width : 0
           } 
     ];  
 
