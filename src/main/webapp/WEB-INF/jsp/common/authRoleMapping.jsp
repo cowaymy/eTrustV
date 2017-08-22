@@ -277,10 +277,10 @@ function auiCellEditignHandler(event)
 
               if (selAuthCode == gridAuthCode1)
               {
-            	  Common.alert("이미 등록된 authCode.");
-                  //AUIGrid.setCellValue(AuthGridID, event.rowIndex, 0, AUIGrid.getCellValue(AuthGridID, event.rowIndex, "hidden"));
-                  AUIGrid.restoreEditedCells(AuthGridID, [0, "authCode"] );
-                  return false;
+            	  //Common.alert("이미 등록된 authCode.");
+            	  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Auth Code' htmlEscape='false'/>");
+                AUIGrid.restoreEditedCells(AuthGridID, [0, "authCode"] );
+                return false;
               }
               
             }
