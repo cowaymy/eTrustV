@@ -505,6 +505,14 @@ var Common = {
     /**
      * 공통 alert BASE....
      * @param _options
+     *
+     *           예) var option = {
+                            title : title,                  // 헤더 제목
+                            content : content,      // 메세지
+                            isBig : true                // 창 크기 : default = false
+                        };
+     *
+     *
      * @param callback
      */
     alertBase : function (_options, callback){
@@ -591,6 +599,13 @@ var Common = {
     /**
      * 공통 confirm BASE....
      * @param option
+     *
+     *           예) var option = {
+                            title : title,                  // 헤더 제목
+                            content : content,      // 메세지
+                            isBig : true                // 창 크기 : default = false
+                        };
+     *
      * @param okCallback
      * @param cancelCallback
      */
