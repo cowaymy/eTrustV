@@ -62,7 +62,7 @@ public class AuthRoleMngController
 	}
 	
 	
-	// search
+	// Left SYS0044M_SYSROLE
 	@RequestMapping(value = "/selectRoleAuthMappingList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectRoleAuthMappingList(@RequestParam Map<String, Object> params) 
 	{
@@ -70,6 +70,83 @@ public class AuthRoleMngController
 
 		return ResponseEntity.ok(selectRoleAuthMappingList);
 	}	
+	
+	// SYS0054M SerchBtn
+	@RequestMapping(value = "/selectSearchBtnList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRoleAuthMappingBtn(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectRoleAuthMappingBtnList = commonService.selectRoleAuthMappingBtn(params);
+		
+		return ResponseEntity.ok(selectRoleAuthMappingBtnList);
+	}	
+	
+	// SYS0054M CellClick
+	@RequestMapping(value = "/selectRoleAuthMappingAdjustList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRoleAuthMappingAdjustList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectRoleAuthMappingAdjustList = commonService.selectRoleAuthMappingAdjustList(params);
+		
+		return ResponseEntity.ok(selectRoleAuthMappingAdjustList);
+	}	
+	
+	// 
+	@RequestMapping(value = "/selectRoleAuthMappingPopUpList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRoleAuthMappingPopUpList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectRoleAuthMappingPopUpList = commonService.selectRoleAuthMappingPopUpList(params);
+		
+		return ResponseEntity.ok(selectRoleAuthMappingPopUpList);
+	}
+	
+	// save Auth
+	@RequestMapping(value = "/saveAuthRoleMapping.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAuthRoleMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO) 
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
+
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		if (addList.size() > 0) {
+			tmpCnt = commonService.insertRoleAuthMapping(addList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+
+		if (udtList.size() > 0) {
+			tmpCnt = commonService.updateRoleAuthMapping(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+		
+		if (delList.size() > 0) {
+			tmpCnt = commonService.deleteRoleAuthMapping(delList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+
+		// 콘솔로 찍어보기
+		LOGGER.info("AuthCd_수정 : {}", udtList.toString());
+		LOGGER.info("AuthCd_추가 : {}", addList.toString());
+		LOGGER.info("AuthCd_삭제 : {}", delList.toString());
+		LOGGER.info("AuthCd_카운트 : {}", totCnt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}	
+	
+	
+	// uppermenu search popup view
+	@RequestMapping(value = "/searchRoleAuthMappingPop.do")
+	public String searchRoleAuthMappingPopUp(@RequestParam Map<String, Object> params, ModelMap model) {
+		// model.addAttribute("url", params);
+		// 호출될 화면
+		return "/common/searchRoleAuthMappingPop";
+	}
 
 	/*********************** Auth Management ******************************/
 	@RequestMapping(value = "/authMngment.do")

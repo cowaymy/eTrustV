@@ -17,6 +17,18 @@ public interface CommonService {
 	/************************** Role Auth Mapping ****************************/
 	List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params);
 	
+	List<EgovMap> selectRoleAuthMappingBtn(Map<String, Object> params);
+	
+	List<EgovMap> selectRoleAuthMappingAdjustList(Map<String, Object> params);
+	
+	List<EgovMap> selectRoleAuthMappingPopUpList(Map<String, Object> params);
+	
+	int insertRoleAuthMapping(List<Object> addList, Integer updUserId);
+	
+	int updateRoleAuthMapping(List<Object> addList, Integer updUserId);
+	
+	int deleteRoleAuthMapping(List<Object> addList, Integer updUserId);
+	
 	/************************** Role Management ****************************/
 	List<EgovMap> selectRoleList(Map<String, Object> params);
 	

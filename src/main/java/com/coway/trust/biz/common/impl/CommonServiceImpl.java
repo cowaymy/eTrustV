@@ -55,9 +55,91 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	/************************** Role Auth Mapping ****************************/
 	
 	@Override
+	public List<EgovMap> selectRoleAuthMappingPopUpList(Map<String, Object> params) {
+		return commonMapper.selectRoleAuthMappingPopUpList(params);
+	}	
+	
+	@Override
+	public List<EgovMap> selectRoleAuthMappingBtn(Map<String, Object> params) {
+		return commonMapper.selectRoleAuthMappingBtn(params);
+	}	
+	
+	@Override
+	public List<EgovMap> selectRoleAuthMappingAdjustList(Map<String, Object> params) {
+		return commonMapper.selectRoleAuthMappingAdjustList(params);
+	}	
+	
+	@Override
 	public List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params) {
 		return commonMapper.selectRoleAuthMappingList(params);
+	}
+	
+	@Override
+	public int insertRoleAuthMapping(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> insertRoleAuthMapping ");
+			logger.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden"));
+			
+			String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			
+
+			saveCnt++;
+
+			commonMapper.insertRoleAuthMapping((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
 	}	
+	
+	@Override
+	public int updateRoleAuthMapping(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> updateRoleAuthMapping ");
+			logger.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+			
+			saveCnt++;
+			
+			commonMapper.updateRoleAuthMapping((Map<String, Object>) obj);
+			
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int deleteRoleAuthMapping(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> deleteRoleAuthMapping ");
+			logger.debug(" authCode : {}", ((Map<String, Object>) obj).get("authCode"));
+			
+			delCnt++;
+			
+			commonMapper.deleteRoleAuthMapping((Map<String, Object>) obj);
+		}
+		
+		return delCnt;
+	}		
 	
 	/************************** Role Management ****************************/
 	
