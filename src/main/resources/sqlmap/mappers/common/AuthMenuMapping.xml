@@ -36,15 +36,8 @@
 		       #{authCode} AS auth_code,		       
 		       z.pgm_trn_code ,
 		       z.pgm_trn_name ,
-		       y.func_yn as own_func_yn,
-               CASE WHEN w.auth_code IS NOT NULL AND y.func_yn = 'Y'
-                       THEN 'Y' ELSE 'N' END AS func_yn,
-		       CASE WHEN w.auth_code = #{authCode}
-		               THEN 'Y' ELSE 'N' END AS owner_yn,      
-		       CASE WHEN w.auth_code <![CDATA[<>]]> #{authCode}
-		               THEN 'Y' ELSE 'N' END AS exist_yn,              
-		       CASE WHEN w.auth_code IS NOT NULL AND w.role_lvl = '0'
-		               THEN 'Y' ELSE 'N' END AS base_yn,          		               
+		       NVL(y.func_yn,'N') AS func_yn ,
+		       NVL(y.exist_yn,'N') AS exist_yn,
 		       z.menu_code||z.pgm_trn_code as row_id /* PK, AUIGrid key row setting */     
 		  FROM (SELECT a.menu_code ,                
 			               a.menu_name ,
@@ -94,45 +87,50 @@
 		                                WHERE ROWNUM <![CDATA[<]]> 9) c ) d 
 		                WHERE NVL(d.transaction_yn,'N') = 'Y') b
 		            WHERE a.pgm_code = b.pgm_code(+) ) z,
-		         SYS0056M y ,
-		         (SELECT f.auth_code ,
-		                     g.role_id ,
-		                     f.role_lvl
-		            FROM SYS0053M f,
-		                    (SELECT b.auth_code ,
-		                                a.role_id ,
-		                                a.role_lev                       
-		                        FROM SYS0044M a ,
-		                                SYS0053M b
-		                      WHERE a.role_id = b.role_id(+)
-		                          AND b.auth_code(+) = #{authCode}
-		                       START WITH a.role_id = b.role_id         
-		                   CONNECT BY a.role_id = PRIOR a.parent_role) g
-		         WHERE f.role_id = g.role_id
-		         UNION
-		         SELECT c.auth_code ,
-		                    a.role_id ,
-		                    '0'
-		           FROM SYS0053M a ,          
-		                (SELECT b.auth_code ,
-		                            a.role_id ,
-		                            a.role_lev                       
-		                    FROM SYS0044M a ,
-		                            SYS0053M b
-		                  WHERE a.role_id = b.role_id(+)
-		                      AND b.auth_code(+) = #{authCode}
-		                      AND a.role_lev = 1
-		                  START WITH a.role_id = b.role_id         
-		                CONNECT BY a.role_id = PRIOR a.parent_role) b ,
-		                SYS0054M c ,
-		                SYS0013M d 
-		          WHERE a.role_id = b.role_id(+)
-		              AND a.role_id = c.role_id(+)
-		              AND d.code_master_id = 313
-		              AND c.auth_code = d.code) w
+		         (SELECT menu_code 
+                   , pgm_trn_code        
+                   , max(a.func_yn) as func_yn
+                   , max(case when a.auth_code = #{authCode} then 'N' else a.func_yn end) as exist_yn       
+                FROM SYS0056M a ,
+                     (SELECT f.auth_code ,
+                             g.role_id ,
+                             f.role_lvl
+                        FROM SYS0053M f,
+                             (SELECT b.auth_code ,
+                                     a.role_id ,
+                                     a.role_lev                       
+                                FROM SYS0044M a ,
+                                     SYS0053M b
+                               WHERE a.role_id = b.role_id(+)
+                                 AND b.auth_code(+) = #{authCode}
+                               START WITH a.role_id = b.role_id         
+                             CONNECT BY a.role_id = PRIOR a.parent_role) g
+                       WHERE f.role_id = g.role_id
+                     UNION
+                     SELECT c.auth_code ,
+                            a.role_id ,
+                            '0'
+                       FROM SYS0053M a ,          
+                            (SELECT b.auth_code ,
+                                    a.role_id ,
+                                    a.role_lev                       
+                               FROM SYS0044M a ,
+                                    SYS0053M b
+                              WHERE a.role_id = b.role_id(+)
+                                AND b.auth_code(+) = #{authCode}
+                                AND a.role_lev = 1
+                              START WITH a.role_id = b.role_id         
+                            CONNECT BY a.role_id = PRIOR a.parent_role) b ,
+                            SYS0054M c ,
+                            SYS0013M d 
+                      WHERE a.role_id = b.role_id(+)
+                        AND a.role_id = c.role_id(+)
+                        AND d.code_master_id = 313
+                        AND c.auth_code = d.code) b
+               WHERE a.auth_code = b.auth_code          
+              GROUP BY menu_code , pgm_trn_code) y 		         
 		  WHERE z.menu_code = y.menu_code(+)
-		      AND z.pgm_trn_code = y.pgm_trn_code(+)
-		      AND y.auth_code = w.auth_code(+)		  
+		      AND z.pgm_trn_code = y.pgm_trn_code(+)		       
 	    <if test="menuCode != null and menuCode !=''">
               AND (UPPER(z.menu_code) LIKE  UPPER(#{menuCode}) || '%' OR 
                      UPPER(z.menu_name) LIKE '%' || UPPER(#{menuCode}) || '%')
