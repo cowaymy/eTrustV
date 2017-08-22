@@ -4,10 +4,18 @@
 <script type="text/javaScript">
 var myGridID;
 
+//Grid에서 선택된 RowID
+var selectedGridValue;
+
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    $('input:radio[name=printMethod]').is(':checked');
+    //$('input:radio[name=printMethod]').is(':checked');
+    $('input:radio[name=printMethod]').eq(0).attr("checked", true);  
     
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });  
 });
 
 var gridPros = {
@@ -16,10 +24,13 @@ var gridPros = {
         pageRowCount : 25
 };
 
-var columnLayout=[              
+var columnLayout=[
+    {dataField:"taskId", headerText:"Task ID",visible : false},
+    {dataField:"renDateTimeYear", headerText:"Year",visible : false},
+    {dataField:"renDateTimeMonth", headerText:"Month",visible : false},
     {dataField:"salesOrdNo", headerText:"Order No"},
     {dataField:"name", headerText:"Customer Name"},
-    {dataField:"rentDocNo", headerText:"Invoice No"},
+    {dataField:"rentDocNo", headerText:"Invoice No"}, 
     {dataField:"renDateTime", headerText:"Invoice Date"},
     {dataField:"rentAmt", headerText:"Invoice Amount"},
     {dataField:"rentInstNo", headerText:"Installment No"}
@@ -44,6 +55,38 @@ function ValidRequiredField(){
 	
 	return valid;
 }
+
+
+
+//크리스탈 레포트
+function fn_generateInvoice(){
+  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+  if (selectedItem[0] > -1){
+      //report form에 parameter 세팅
+      $("#reportPDFForm #v_month").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth"));
+      //$("#reportPDFForm #v_monthDetail").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth"));
+      $("#reportPDFForm #v_year").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear"));
+      //$("#reportPDFForm #v_yearDetail").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear"));
+      $("#reportPDFForm #v_brNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo"));
+      $("#reportPDFForm #v_type").val(6);
+      $("#reportPDFForm #v_printLive").val(0);
+      $("#reportPDFForm #v_taskId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taskId"));      
+      
+      
+        
+      //report 호출
+      var option = {
+          isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+          };
+
+      Common.report("reportPDFForm", option);
+   
+  }else{
+      Common.alert('<b>No print type selected.</b>');
+  }
+}
+
 </script>
 
 <!-- content start -->
@@ -106,8 +149,8 @@ function ValidRequiredField(){
                         </td>
                         <th scope="row">Print Method</th>
                         <td>
-                           <label><input type="radio" name="printMethod" value=""/><span>With Hearder</span></label>
-                           <label><input type="radio" name="printMethod" value=""/><span>No Hearder</span></label>
+                           <label><input type="radio" name="printMethod" value="" /><span>With Hearder</span></label>
+                           <label><input type="radio" name="printMethod" value="" /><span>No Hearder</span></label>
                         </td>
                     </tr>
                     </tbody>
@@ -125,7 +168,7 @@ function ValidRequiredField(){
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="#">Generate Invoice</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
                     </ul>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#">Send E-Invoice</a></p></li>
@@ -141,4 +184,20 @@ function ValidRequiredField(){
     <!-- grid_wrap end -->
 </section>
 </section>
-
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/Official_Invoice_PDF.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    
+    v_month: <input type="text" id="v_month" name="v_month" />
+    
+    <br>v_year: <input type="text" id="v_year" name="v_year" />
+    
+    <br>v_brNo : <input type="text" id="v_brNo" name="v_brNo" />
+    <br>v_type : <input type="text" id="v_type" name="v_type" />
+    <br>v_printLive : <input type="text" id="v_printLive" name="v_printLive" />
+    <br>v_taskId : <input type="text" id="v_taskId" name="v_taskId" />
+    
+    
+    
+    
+</form>

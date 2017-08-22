@@ -4,6 +4,9 @@
 <script type="text/javaScript">
 var myGridID;
 
+//Grid에서 선택된 RowID
+var selectedGridValue;
+
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
@@ -13,6 +16,10 @@ $(document).ready(function(){
     doGetComboAndGroup('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');//product 생성
   
 
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });  
     
     $("#custId").keyup(function() {
     	 var str = $("#custId").val();
@@ -54,7 +61,8 @@ var gridPros = {
         pageRowCount : 25
 };
 
-var columnLayout=[              
+var columnLayout=[
+    {dataField:"orderid", headerText:"Order ID",visible : false},
     {dataField:"orderno", headerText:"Order No"},
     {dataField:"orderstatuscode", headerText:"Status"},
     {dataField:"apptypecode", headerText:"App Type"},
@@ -86,6 +94,61 @@ function ValidRequiredField(){
 }
 
 
+
+//Layer close
+hideViewPopup=function(val){   
+  $(val).hide();
+}
+
+
+//Crystal Report Option Pop-UP
+function fn_openDivPop(){
+	
+	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+	
+	if (selectedItem[0] > -1){
+		
+		$('input:checkbox[name=boosterPump]').eq(0).attr("checked", false);
+		$('input:radio[name=advance]').attr("checked", false);
+		//$('input:radio[name=printMethod]').eq(0).attr("checked", false);
+		
+		$('#popup_wrap').show();
+	}else{
+		Common.alert('<b>No print type selected.</b>');
+	}  
+}
+
+//크리스탈 레포트
+function fn_generateStatement(){    
+    //옵션 팝업 닫기
+    $('#popup_wrap').hide();
+    
+	//report form에 parameter 세팅
+	//옵션 초기화
+	$("#reportPDFForm #v_adv1Boolean").val(0);
+    $("#reportPDFForm #v_adv2Boolean").val(0);
+    $("#reportPDFForm #v_bustPump").val(0);
+    
+    //옵션 세팅
+	$("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid"));
+	
+	
+	if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
+    if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
+    if ($("#boosterPump").is(":checked")) $("#reportPDFForm #v_bustPump").val(1);    
+    
+        
+        
+	
+	//report 호출
+	//var option = {
+	//	isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	//};
+	
+	//Common.report("reportPDFForm", option);
+    Common.report("reportPDFForm");
+	
+}
 
 </script>
 
@@ -225,7 +288,7 @@ function ValidRequiredField(){
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="#">Generate Invoice</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop();">Generate Invoice</a></p></li>
                     </ul>
                     <!-- <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
@@ -241,4 +304,61 @@ function ValidRequiredField(){
     <!-- grid_wrap end -->
 </section>
 </section>
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_Performa_PDF.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_orderId" name="v_orderId" />    
+    <input type="hidden" id="v_adv1Boolean" name="v_adv1Boolean" />
+    <input type="hidden" id="v_adv2Boolean" name="v_adv2Boolean" />
+    <input type="hidden" id="v_bustPump" name="v_bustPump" />    
+</form>
 
+
+
+<!--------------------------------------------------------------- 
+    POP-UP (PRINT OPTION)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="popup_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>PRINT OPTION</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#popup_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="optionForm" id="optionForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Option</th>
+                        <td>
+                            <label><input type="checkbox" id="boosterPump" name="boosterPump"/><span>Booster Pump</span></label>
+                            <label><input type="radio" id="advance1" name="advance" /><span>Advanced 1 Year</span></label>
+                            <label><input type="radio" id="advance2" name="advance" /><span>Advanced 2 Year</span></label>
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>        
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="javascript:fn_generateStatement();">Generate</a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->

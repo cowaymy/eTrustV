@@ -4,10 +4,18 @@
 <script type="text/javaScript">
 var myGridID;
 
+//Grid에서 선택된 RowID
+var selectedGridValue;
+
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     $('input:radio[name=printMethod]').is(':checked');
     
+     // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });  
+ 
 });
 
 var gridPros = {
@@ -16,11 +24,12 @@ var gridPros = {
         pageRowCount : 25
 };
 
-var columnLayout=[              
-    {dataField:"custBillGrpNo", headerText:"Group No"},
-    {dataField:"year", headerText:"Year"},
-    {dataField:"month", headerText:"Month"},
-    {dataField:"soNo", headerText:"Order No"},
+var columnLayout=[             
+    {dataField:"billId" ,headerText:"Bill ID",visible : false},
+    {dataField:"custBillGrpNo", headerText:"Group No",width: 200 , editable : false },
+    {dataField:"year", headerText:"Year",width: 100 , editable : false },
+    {dataField:"month", headerText:"Month",width: 100 , editable : false },
+    {dataField:"soNo", headerText:"Order No",width: 250 , editable : false },
     {dataField:"custName", headerText:"Customer Name"}
 ];
 
@@ -42,6 +51,29 @@ function ValidRequiredField(){
 		valid = false;
 	
 	return valid;
+}
+
+
+//크리스탈 레포트
+function fn_generateStatement(){
+  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+  if (selectedItem[0] > -1){
+      //report form에 parameter 세팅      
+      $("#reportPDFForm #v_billId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "billId"));
+      $("#reportPDFForm #v_year").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "year"));
+      $("#reportPDFForm #v_month").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "month"));
+    	    
+      //report 호출
+      var option = {
+          isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+          };
+
+      Common.report("reportPDFForm", option);
+   
+  }else{
+      Common.alert('<b>No print type selected.</b>');
+  }
 }
 </script>
 
@@ -72,9 +104,9 @@ function ValidRequiredField(){
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:144px" />
+                    <col style="width:160px" />
                     <col style="width:*" />
-                    <col style="width:144px" />
+                    <col style="width:160px" />
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
@@ -113,7 +145,7 @@ function ValidRequiredField(){
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="#">Statement Generate</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
                     </ul>
                     <!-- <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
@@ -129,4 +161,11 @@ function ValidRequiredField(){
     <!-- grid_wrap end -->
 </section>
 </section>
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/Official_StatementOfAccount(COMPANY)_PDF.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_month" name="v_month" />
+    <input type="hidden" id="v_year" name="v_year" />
+    <input type="hidden" id="v_billId" name="v_billId" />
+</form>
 
