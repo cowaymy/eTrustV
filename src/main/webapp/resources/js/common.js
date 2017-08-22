@@ -1,4 +1,5 @@
 // Common.
+var _loading_count = 0;
 var Common = {
 
     /**
@@ -192,13 +193,18 @@ var Common = {
         } else {
             $("body").append(Common.getLoadingObj());
         }
+
+        _loading_count += 1;
     },
 
     /**
      * 화면 loading .... 해제.
      */
     removeLoader: function () {
-        $("#_loading").hide();
+        _loading_count -= 1;
+        if(_loading_count == 0){
+            $("#_loading").hide();
+        }
     },
 
     /**
