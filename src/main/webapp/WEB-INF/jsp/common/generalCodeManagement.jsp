@@ -326,6 +326,19 @@ $(document).ready(function()
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
+
+        if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
+                || String(event.value).length < 1)
+            {
+                   // alert("CodeMasterID Confirm!!");
+                    return false;
+            } 
+
+            $("#mstCdId").val( event.value);
+            
+            fn_getDetailCode(myGridID, event.rowIndex);
+
+        
     });
 
  // 셀 더블클릭 이벤트 바인딩
@@ -333,16 +346,7 @@ $(document).ready(function()
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
-        if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
-        	  || String(event.value).length < 1)
-		    {
-		            alert("CodeMasterID Confirm!!");
-		            return false;
-		    } 
 
-        $("#mstCdId").val( event.value);
-        
-        fn_getDetailCode(myGridID, event.rowIndex);
     });    
 
 /***********************************************[ DETAIL GRID] ************************************************/
