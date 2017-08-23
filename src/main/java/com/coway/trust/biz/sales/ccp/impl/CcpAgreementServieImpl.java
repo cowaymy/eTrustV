@@ -65,4 +65,26 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		return ccpAgreementMapper.selectBeforeServiceJsonList(params);
 	}
+
+
+	@Override
+	public List<EgovMap> selectSearchOrderNo(Map<String, Object> params) throws Exception {
+		
+		return ccpAgreementMapper.selectSearchOrderNo(params);
+	}
+
+
+	@Override
+	public List<EgovMap> selectSearchMemberCode(Map<String, Object> params) throws Exception {
+		
+		return ccpAgreementMapper.selectSearchMemberCode(params);
+	}
+
+
+	@Override
+	public EgovMap getMemCodeConfirm(Map<String, Object> params) throws Exception {
+		
+		return ccpAgreementMapper.getMemCodeConfirm(params);
+	}
+	
 }

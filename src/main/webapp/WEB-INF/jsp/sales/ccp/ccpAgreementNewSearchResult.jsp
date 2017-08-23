@@ -18,6 +18,9 @@
     
     $(document).ready(function() {
         
+    	//Button Hide
+    	$("#_memReSelected").css("display" , "none");
+    	
         createAUIGrid();
         createAUIGrid2();
         createAUIGrid3();
@@ -39,7 +42,6 @@
         fn_selectTransList();
         fn_selectAutoDebitList();
         fn_selectDiscountList();
-        
         fn_selectAfterServiceList();
         fn_selectBeforeServiceList();
         
@@ -51,8 +53,24 @@
 		});
         
         $("#_memSearch").click(function() {
-			alert("1");
+			Common.popupDiv('/sales/ccp/searchMemberPop.do' , $('#_searchForm').serializeJSON(), null , true, '_searchDiv');
+			
 		});
+        
+        //Reselect
+        $("#_memReSelected").click(function() {
+
+        	fn_reSelected();
+		});
+        
+        //confirm click
+        $("#_memConfirm").click(function() {
+            
+            
+            var inputVal = $("#_inputMemCode").val();
+            fn_getMemCodeConfirm(inputVal);
+            
+        });
     });
     
     ////////////////////////////////////////////////////////////////////////////////////
@@ -366,18 +384,18 @@
 
         //그리드 속성 설정
         var gridPros = {
-        		 usePaging           : true,         //페이징 사용
+        		 usePaging           : false,         //페이징 사용
                  pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
                  editable            : false,            
                  fixedColumnCount    : 0,            
-                 showStateColumn     : true,             
+                 showStateColumn     : false,             
                  displayTreeOpen     : false,            
                  selectionMode       : "singleRow",  //"multipleCells",            
                  headerHeight        : 30,       
                  useGroupingPanel    : false,        //그룹핑 패널 사용
-                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                 showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                 skipReadonlyColumns : false,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                 wrapSelectionMove   : false,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                 showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
                  noDataMessage       : "No order found.",
                  groupingMessage     : "Here groupping"
         };
@@ -732,9 +750,56 @@
         AUIGrid.resize(beforeServceGridID, 1600, 380);
     }
     
+    
+    function fn_getMemCodeConfirm(inputVal){
+        
+        $.ajax({
+            
+            type : "GET",
+            url : getContextPath() + "/sales/ccp/getMemCodeConfirm",
+            contentType: "application/json;charset=UTF-8",
+            crossDomain: true,
+            data: {inputMemCode : inputVal},
+            dataType: "json",
+            success : function (data) {
+                
+             
+                $("#_inputMemCode").val(data.memCode);
+            	fn_selected();
+                
+            },
+            error : function (data) {
+                Common.removeLoader();
+                if(data == null){               //error
+                    Common.alert("fail to Load DB");
+                }else{                            // No data
+                    Common.alert("Unable to find ["+inputVal+"] in system. Please ensure you key in the correct member code.");
+                }
+                
+                
+            }
+        });
+    }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    function fn_selected(){
+    	
+    	  $("#_inputMemCode").attr({"readonly" : "readonly" , "class" : "w100 readonly"});
+          $("#_memReSelected").css("display" , "");
+          $("#_memConfirm").css("display" , "none");
+          $("#_memSearch").css("display" , "none");
+          $("#_closeMemPop").click();
+    	
+    }
     
+    function fn_reSelected(){
+        $("#_inputMemCode").val('');
+        $("#_inputMemCode").attr({"readonly" : false , "class" : ""});
+        $("#_memReSelected").css("display" , "none");
+        $("#_memConfirm").css("display" , "");
+        $("#_memSearch").css("display" , "");
+    	
+    }
 </script>
 <section id="content"> <!-- content start -->
 <ul class="path">
@@ -1634,7 +1699,12 @@
 <tbody>
 <tr>
     <th scope="row">Member Code<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="" style="width:80px" /><p class="btn_sky"><a href="#">Confirm</a></p><p class="btn_sky"><a href="#" id="_memSearch">Search</a></p></td>
+    <td>
+        <input type="text" title="" placeholder="" class="" style="width:100px" id="_inputMemCode" name="inputMemCode"/>
+	    <p class="btn_sky"><a href="#" id="_memConfirm">Confirm</a></p>
+	    <p class="btn_sky"><a href="#" id="_memSearch">Search</a></p>
+	    <p class="btn_sky"><a  id="_memReSelected">Reselect</a></p>
+    </td>
     <th scope="row">Document Quantity<span class="must">*</span></th>
     <td>
     <select class="w100p">

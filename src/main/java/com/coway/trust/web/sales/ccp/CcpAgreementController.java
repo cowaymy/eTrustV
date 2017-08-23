@@ -126,5 +126,44 @@ public class CcpAgreementController {
 		return "sales/ccp/ccpAgreementSearchOrderNoPop";
 	}
 	
+	
+	@RequestMapping(value = "/selectsearchOrderNo")
+	public ResponseEntity<List<EgovMap>> selectsearchOrderNo (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> ordList = null;
+		
+		ordList = ccpAgreementService.selectSearchOrderNo(params);
+		
+		return ResponseEntity.ok(ordList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/searchMemberPop.do")
+	public String searchMemberPop (@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/ccp/ccpAgreementSearchMemberPop";
+	}
+	
+	
+	@RequestMapping(value = "/selectSearchMemberCode")
+	public ResponseEntity<List<EgovMap>> selectSearchMemberCode (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> memList = null;
+		
+		memList = ccpAgreementService.selectSearchMemberCode(params);
+		
+		return ResponseEntity.ok(memList);
+	}
+	
+	@RequestMapping(value = "/getMemCodeConfirm")
+	public ResponseEntity<EgovMap> getMemCodeConfirm (@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap memMap = null;
+		
+		memMap = ccpAgreementService.getMemCodeConfirm(params);
+		
+		return ResponseEntity.ok(memMap);
+	}
 }
 
