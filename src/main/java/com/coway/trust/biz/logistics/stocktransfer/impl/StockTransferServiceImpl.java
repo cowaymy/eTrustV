@@ -244,7 +244,13 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
-		stocktran.StockTransferiSsue(formMap);
+		if ("RC".equals((String)formMap.get("gtype"))){
+			//System.out.println(" ::::: 254Line :::::: ");
+			stocktran.StockTransferCancelIssue(formMap);
+		}else{
+			//System.out.println(" ::::: 256Line :::::: ");
+			stocktran.StockTransferiSsue(formMap);
+		}
 
 		System.out.println(formMap.get("rdata"));
 

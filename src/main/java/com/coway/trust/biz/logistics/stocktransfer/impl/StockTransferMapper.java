@@ -45,4 +45,6 @@ public interface StockTransferMapper {
 	void deliveryStockTransferItmDel(Map<String, Object> params);
 	
 	void StockTransferiSsue(Map<String, Object> params);
+	
+	void StockTransferCancelIssue(Map<String, Object> params);
 }

@@ -395,8 +395,6 @@ public class StocktransferController {
 	@RequestMapping(value = "/StocktransferGoodIssue.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model) throws Exception {
 		
-		List<Object> checklist       = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		
 		List<EgovMap> list = stock.StockTransferDeliveryIssue(params);
 		
 		Map<String, Object> rmap = new HashMap();

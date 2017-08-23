@@ -46,10 +46,12 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
                      {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                     {dataField:"grqry"        ,headerText:"Good ReceiptQty"             ,width:120    ,height:30 , editalble:true},
+                     {dataField:"rciptqty"     ,headerText:"Good ReceiptQty"             ,width:120    ,height:30 , editalble:true},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
-                     {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30}
+                     {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30},
+                     {dataField:"gicmplt"      ,headerText:"GI COMPLET"                  ,width:120    ,height:30 , visible:true},
+                     {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:true}
                      ];
                      
 var resop = {
@@ -201,7 +203,34 @@ $(function(){
         	Common.alert('No data selected.');
             return false;
         }else{
+        	for (var i = 0 ; i < checkedItems.length ; i++){
+                if(checkedItems[i].gicmplt == 'Y'){
+                    Common.alert('Already processed.');
+                    return false;
+                    break;
+                }
+            }
+        	document.giForm.gtype.value="GI";
+            $("#dataTitle").text("Good Issue Posting Data");
         	$("#giopenwindow").show();
+        }
+    });
+    $("#gcissue").click(function(){
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{
+        	for (var i = 0 ; i < checkedItems.length ; i++){
+                if(checkedItems[i].grcmplt == 'Y'){
+                    Common.alert('Already processed.');
+                    return false;
+                    break;
+                }
+            }
+        	document.giForm.gtype.value="GC";
+            $("#dataTitle").text("Issue Cancel Posting Data");
+            $("#giopenwindow").show();
         }
     });
 });
@@ -365,7 +394,8 @@ function giFunc(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="gissue"><span class="search"></span>Good Issue</a></p></li>                        
+            <li><p class="btn_grid"><a id="gissue"><span class="search"></span>Good Issue</a></p></li>
+            <li><p class="btn_grid"><a id="gcissue"><span class="search"></span>Issue Cancel</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
@@ -374,7 +404,7 @@ function giFunc(){
     
     <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-		    <h1>Good Issue Posting Data</h1>
+		    <h1 id="dataTitle">Good Issue Posting Data</h1>
 		    <ul class="right_opt">
 		        <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 		    </ul>
