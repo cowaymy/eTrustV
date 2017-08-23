@@ -21,7 +21,7 @@
       ,#{roleId}
       ,DECODE( #{authCode},'EXT','0','MGR','0','INT','0',#{roleLvl})           
       ,NVL(REPLACE(#{fromDt},'/',''),TO_CHAR(SYSDATE,'YYYYMMDD') )
-      ,NVL(REPLACE(#{toDt},  '/',''),'20201231')          
+      ,NVL(REPLACE(#{toDt},  '/',''),TO_CHAR(SYSDATE+365,'YYYYMMDD') )    
       ,#{crtUserId}
       ,SYSDATE
       ,#{updUserId}
@@ -101,8 +101,8 @@
           D.CODE_NAME, 
           A.ROLE_ID ,
           '0' ROLE_LVL,
-          '19990101' FROM_DT,
-          '29991231' TO_DT,
+          NVL(C.VALID_DT_FROM  ,TO_CHAR(SYSDATE, 'YYYYMMDD'))  FROM_DT,
+          NVL(C.VALID_DT_TO  ,TO_CHAR(SYSDATE+365, 'YYYYMMDD')) TO_DT, 
           C.AUTH_CODE HIDDEN
     FROM SYS0053M A ,          
           (SELECT B.AUTH_CODE ,
@@ -150,7 +150,8 @@
     AND ROLE_ID = #{roleId}
  </if>
     AND VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
-    AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')  
+    AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') 
+  ORDER BY ROLE_LVL,AUTH_NAME 
 </select>
 
 <select id="selectRoleAuthMappingList" parameterType="Map" resultType="egovMap">
