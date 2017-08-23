@@ -169,34 +169,47 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
 
 		if (checkList.size() > 0) {
+
 			Map<String, Object> insMap = null;
+
 			for (int i = 0; i < checkList.size(); i++) {
 
-				// logger.info(" checkList.get(i) : {}", checkList.get(i).toString());
 				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
+
 				insMap = (Map<String, Object>) tmpMap.get("item");
+
+				logger.info(" item : {}", tmpMap.get("item"));
+				logger.info(" reqstno : {}", insMap.get("reqstno"));
 
 				insMap.put("delno", deliSeq);
 				insMap.put("userId", params.get("userId"));
-				stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
+				// stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
+				stockMoveMapper.selectNewDeliveryNum(insMap);
+
 			}
-			stockMoveMapper.insertDeliveryStockMovement(insMap);
+			// stockMoveMapper.insertDeliveryStockMovement(insMap);
 		}
 		String[] delvcd = { deliSeq };
+
 		formMap.put("parray", delvcd);
 		formMap.put("userId", params.get("userId"));
 		formMap.put("prgnm", "deliverylist");
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
-		stockMoveMapper.stockMoveiSsue(formMap);
+		// stockMoveMapper.stockMoveiSsue(formMap);
 
 		logger.info(" serialList  size : {}", serialList.size());
 		logger.info(" serialList : {}", serialList.toString());
+
 		if (serialList.size() > 0) {
+
 			for (int i = 0; i < serialList.size(); i++) {
+
 				Map<String, Object> insSerial = null;
+
 				insSerial = (Map<String, Object>) serialList.get(i);
+
 				insSerial.put("delno", deliSeq);
 				insSerial.put("userId", params.get("userId"));
 				// stockMoveMapper.insertMovementSerial(insSerial);
