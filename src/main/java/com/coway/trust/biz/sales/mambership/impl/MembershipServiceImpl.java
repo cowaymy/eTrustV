@@ -1,0 +1,225 @@
+/**
+ * 
+ */
+package com.coway.trust.biz.sales.mambership.impl;
+
+import java.util.List;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import com.coway.trust.biz.sales.mambership.MembershipService;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+/**
+ * @author goo
+ *
+ */
+@Service("membershipService")
+public class MembershipServiceImpl extends EgovAbstractServiceImpl implements MembershipService {
+
+//	private static Logger logger = LoggerFactory.getLogger(OrderListServiceImpl.class);
+	
+	@Resource(name = "membershipMapper")
+	private MembershipMapper membershipMapper;
+	
+	//@Autowired
+	//private MessageSourceAccessor messageSourceAccessor;  
+	
+	@Override
+	public List<EgovMap> selectMembershipList(Map<String, Object> params) {
+		return membershipMapper.selectMembershipList(params);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectOderInfoTab(java.util.Map)
+	 */
+	@Override
+	public EgovMap selectMembershipInfoTab(Map<String, Object> params) {
+		return membershipMapper.selectMembershipInfoTab(params);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectOderInfoTab(java.util.Map)
+	 */
+	@Override
+	public  EgovMap selectOderInfoTab(Map<String, Object> params) {
+		return membershipMapper.selectOderInfoTab(params);
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectInstallAddr(java.util.Map)
+	 */
+	@Override
+	public EgovMap  selectInstallAddr(Map<String, Object> params) {
+		return membershipMapper.selectInstallAddr(params);
+	}
+	
+    	
+    /*
+     * (non-Javadoc)
+     * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipQuotInfo(java.util.Map)
+     */
+	@Override
+	public List<EgovMap>    selectMembershipQuotInfo(Map<String, Object> params) {
+		return membershipMapper.selectMembershipQuotInfo(params);
+	}
+	/*
+     * (non-Javadoc)
+     * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipQuotInfo(java.util.Map)
+     */
+	@Override
+	public List<EgovMap>    selectMembershipQuotFilter(Map<String, Object> params) {
+		return membershipMapper.selectMembershipQuotFilter(params);
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipViewLeader(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipViewLeader(Map<String, Object> params) {
+		return membershipMapper.selectMembershipViewLeader(params);
+	}
+	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipFreeConF(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipFreeConF(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFreeConF(params);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipFree_Basic(java.util.Map)
+	 */
+	@Override
+	public EgovMap selectMembershipFree_Basic(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_Basic(params);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipFree_installation(java.util.Map)
+	 */
+	@Override
+	public EgovMap selectMembershipFree_installation(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_installation(params);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipFree_srvconfig(java.util.Map)
+	 */
+	@Override
+	public EgovMap selectMembershipFree_srvconfig(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_srvconfig(params);
+	}
+	
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipViewLeader(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipFree_bs(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_bs(params);
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipViewLeader(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipFree_oList(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_oList(params);
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipViewLeader(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipFree_cPerson(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_cPerson(params);
+	}
+	
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#callOutOutsProcedure(java.util.Map)
+	 */
+	@Override
+	public EgovMap callOutOutsProcedure(Map<String, Object> params) {
+		return membershipMapper.callOutOutsProcedure(params);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipFree_Packg(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipFree_Packg(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_Packg(params);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipFree_PChange(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipFree_PChange(Map<String, Object> params) {
+		return membershipMapper.selectMembershipFree_PChange(params);
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipFree_save(java.util.Map)
+	 */
+	@Override
+	public int  membershipFree_save(Map<String, Object> params) {
+		return  membershipMapper.membershipFree_save(params);    
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#srvConfigPeriod(java.util.Map)
+	 */
+	@Override
+	public void   srvConfigPeriod(Map<String, Object> params) {
+		  membershipMapper.srvConfigPeriod(params);    
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#callOutOutsProcedure(java.util.Map)
+	 */
+	@Override
+	public EgovMap getSAL0095d_SEQ(Map<String, Object> params) {
+		return membershipMapper.getSAL0095d_SEQ(params);
+	}
+	
+	
+	
+	
+}
