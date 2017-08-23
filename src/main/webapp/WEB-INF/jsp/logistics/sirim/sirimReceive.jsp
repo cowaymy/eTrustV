@@ -115,9 +115,12 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
             // 페이지 설정
             usePaging : true,                
             pageRowCount : 10,                
-            editable : true,                
+            editable : false,                
             noDataMessage : "출력할 데이터가 없습니다.",
             enableSorting : true,
+            selectionMode : "multipleRows",
+            //selectionMode : "multipleCells",
+            useGroupingPanel : true,
             softRemoveRowMode:false
             };
     
@@ -179,13 +182,13 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
          trnsitId = AUIGrid.getCellValue(myGridID ,selectedItem[0],'trnsitId');
          if(trnsitStusCode == "ACT" || trnsitStusCode == "PEN" || trnsitStusCode == "CLO"){
         	 SirimReceiveInfoAjax(trnsitId);
-        	 receiveInfoGridID = GridCommon.createAUIGrid("detailGrid_wrap", receiveInfoLayout,"", gridoptions); 
+        	 receiveInfoGridID = GridCommon.createAUIGrid("detailGrid_wrap", receiveInfoLayout,"", subgridpros); 
         	 fn_sirimReceiveInfo(selectedItem[0]);
         	 $("#ReceivePopUp_wrap").show();
         	 doDefCombo(ReceiveStatusCombo, '' ,'receiveStatus', 'S', ''); //Transit Status 리스트 조회
         	 $('input:radio[value=S]').is(':checked');
              getSirimReceiveListAjax(trnsitId,div); 
-             PendingGridID = GridCommon.createAUIGrid("ReceivePendingGrid_wrap", detailLayout,"", gridoptions);  	 
+             PendingGridID = GridCommon.createAUIGrid("ReceivePendingGrid_wrap", detailLayout,"", subgridpros);  	 
          }else{
         	 Common.alert("Only active/pending sirim transit can do receive result.");
          }
@@ -325,21 +328,23 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         });
 }    
     function InsertReceiveInfoAjax() {
+    	var param;
+    	var SelectedItems =  AUIGrid.getSelectedItems(PendingGridID);
+    	var data = {};
+    	data.select = SelectedItems;
+	
+        data.form = $("#InsertReceiveForm").serializeJSON();
     	
-    	//param = GridCommon.getEditData(PendingGridID);
-    	param = AUIGrid.getSelectedItems(PendingGridID);
-        //param.form = $("#InsertReceiveForm").serializeJSON();
-    	
-        Common.ajax("POST", "/logistics/sirim/InsertReceiveInfo.do",param , function(result) {
+       Common.ajax("POST", "/logistics/sirim/InsertReceiveInfo.do",data , function(result) {
           var gridData = result;             
           //console.log(gridData.data);            
             
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
         //searchList();
-        }, function(jqXHR, textStatus, errorThrown) {
-            Common.alert("실패하였습니다.");
-        });
+//         }, function(jqXHR, textStatus, errorThrown) {
+//             Common.alert("실패하였습니다.");
+         });
 }  
     
     
