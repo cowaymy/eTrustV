@@ -85,7 +85,7 @@ public class MyMenuController {
 	@RequestMapping(value = "/menuPop.do")
 	public String menuPop(@RequestParam Map<String, Object> params, SessionVO sessionVO,
 			ModelMap model) {							
-		return "common/commonPop";
+		return "common/menuPop";
 	}
 	
 	@RequestMapping(value = "/selectMenuPop.do", method = RequestMethod.GET)
