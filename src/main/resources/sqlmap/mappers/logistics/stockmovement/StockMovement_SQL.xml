@@ -365,35 +365,6 @@
                  WHERE SERIAL_NO = #{serial}
      </select>
      <insert id="insertMovementSerial" parameterType="Map">
-   <!--  
-    INSERT INTO LOG0061D (
-										SERIAL_NO,
-										DELVRY_NO,
-										PDELVRY_NO_ITM,
-										TTYPE,
-										CRT_DT,
-										CRT_USER_ID
-										)
-					   SELECT 
-					               #{serial},
-					               #{delno},
-					                PDELVRY_NO_ITM,
-					                TTYPE,
-					                SYSDATE,
-					                #{userId}
-									    FROM(
-												    SELECT 
-															l55d.DELVRY_NO_ITM AS PDELVRY_NO_ITM,
-															l54m.TRNSC_TYPE AS TTYPE
-														FROM LOG0054M l54m,LOG0055D l55d
-															WHERE 1=1
-																AND l54m.DELVRY_NO = l55d.DELVRY_NO
-																AND l54m.TRNSC_TYPE ='UM'
-																AND l55d.DELVRY_NO= #{delno}
-																AND l55d.ITM_CODE =#{itmcd}
-																AND l55d.REQST_NO =#{reqstno}
-									            )    
-  -->
      INSERT INTO LOG0061D (
                                         SERIAL_NO,
                                         DELVRY_NO,
@@ -406,7 +377,7 @@
                                    #{serial},
                                    #{delno},
                                    DELVRY_NO_ITM,
-                                    (SELECT TRNSC_TYPE FROM LOG0054M WHERE DELVRY_NO= #{delno}),
+                                    (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) ,
                                     SYSDATE,
                                     #{userId}
                                     FROM LOG0055D
