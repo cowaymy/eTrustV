@@ -332,7 +332,10 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 			obligationYear = (int)basicInfo.get("obligtYear");
 		}
 		else if(SalesConstants.APP_TYPE_CODE_INSTALLMENT.equals(basicInfo.get("appTypeCode"))) {
-			installmentDuration = (String)basicInfo.get("instlmtPriod");
+			
+			installmentDuration = String.valueOf(basicInfo.get("instlmtPriod"));
+		//	installmentDuration = (String)basicInfo.get("instlmtPriod");
+			
 		}
 
 		basicInfo.put("mthRentalFees",       mthRentalFees);

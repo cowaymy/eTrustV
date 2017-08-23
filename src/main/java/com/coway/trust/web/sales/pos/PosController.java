@@ -46,7 +46,7 @@ public class PosController {
 	private PosService posService;
 	
 	@RequestMapping(value = "/selectPosList.do")
-	public String selectPosList(@RequestParam Map<String, Object> params, ModelMap model){
+	public String selectPosList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		LOGGER.info("###### Post List Start ###########");
 		
@@ -86,7 +86,7 @@ public class PosController {
 	
 	
 	@RequestMapping(value = "/selectPosJsonList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectPosJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectPosJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) throws Exception {
 		
 		List<EgovMap> posList = null;
 		LOGGER.info("^^^^^^^^^^^^^^^^^^  posWhId TEST  : ^^^^^^^^^^^^^^^^ {}" , params.get("posWhId") );

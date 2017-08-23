@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.ccp.CcpAgreementService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -24,17 +25,20 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class CcpAgreementController {
 
 	
-	private static final Logger logger = LoggerFactory.getLogger(CcpAgreementController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CcpAgreementController.class);
 	
 	@Resource(name = "ccpAgreementService")
 	private CcpAgreementService ccpAgreementService;
 	
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
 	
 	@RequestMapping(value = "/selectCcpAgreementList.do")
 	public String selectCcpAgreementList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		return "sales/ccp/ccpAgreementList";
 	}
+	
 	
 	@RequestMapping(value = "/selectCcpAgreementJsonList" , method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCcpAgreementJsonList (@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) throws Exception{
@@ -49,12 +53,77 @@ public class CcpAgreementController {
 		params.put("govAgStusIdList", govAgStusIdList);
 		params.put("govAgTypeIdList", govAgTypeIdList);
 		
-		logger.info("########## selectCcpAgreementJsonList Start ############");
+		LOGGER.info("########## selectCcpAgreementJsonList Start ############");
 		
 	    ccpAgrList = ccpAgreementService.selectContactAgreementList(params);
 		
 		return ResponseEntity.ok(ccpAgrList);
 		
+	}
+	
+	
+	@RequestMapping(value = "/insertCcpAgreementSearch.do") 
+	public String insertCcpAgreementSearch (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		return "sales/ccp/ccpAgreementNewSearch";
+	}
+	
+	
+	@RequestMapping(value = "/getOrderId", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> getOrderId(@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap resultMap = null;
+		//서비스
+		resultMap = ccpAgreementService.getOrderId(params);
+		
+		return ResponseEntity.ok(resultMap);
+	}
+	
+	
+	@RequestMapping(value = "/getOrderDetailInfo.do", method = RequestMethod.POST)
+	public String getOrderDetailInfo (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		int prgrsId = 0;
+		
+		params.put("prgrsId", prgrsId);
+
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		
+		model.put("orderDetail", orderDetail);
+		model.put("salesOrderNo", params.get("salesOrderNo"));
+		
+		return "sales/ccp/ccpAgreementNewSearchResult";
+	}
+	
+	
+	@RequestMapping(value = "/selectAfterServiceJsonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAfterServiceJsonList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> afServiceList = null;
+		
+		afServiceList = ccpAgreementService.selectAfterServiceJsonList(params);
+		
+		return ResponseEntity.ok(afServiceList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/selectBeforeServiceJsonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBeforeServiceJsonList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> afServiceList = null;
+		
+		afServiceList = ccpAgreementService.selectBeforeServiceJsonList(params);
+		
+		return ResponseEntity.ok(afServiceList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/searchOrderNoPop.do")
+	public String	searchOrderNoPop (@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/ccp/ccpAgreementSearchOrderNoPop";
 	}
 	
 }

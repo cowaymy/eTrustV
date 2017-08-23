@@ -176,4 +176,59 @@
 				    JOIN SAL0034D Extent2   ON Extent2.GOV_AG_ITM_SALES_ORD_ID = Extent1.SALES_ORD_ID
 				 WHERE  Extent1.SALES_ORD_NO = #{salesOrdNo}
      </select>
+     
+     <select id="getOrderId" parameterType="Map" resultType="egovMap" >
+				 SELECT 
+				    ORD_ID 
+				 FROM 
+				    SAL1006V
+				 WHERE 
+				    ORD_NO = #{salesOrderNo}
+     </select>
+     
+     <select id="selectAfterServiceJsonList" parameterType="Map" resultType="egovMap">
+		        SELECT DISTINCT Extent1.AS_NO AS_NO  ,
+		                  TO_CHAR(Extent1.AS_REQST_DT, 'DD-MM-YYYY')  AS_REQST_DT  ,  
+		                  Extent2.CODE CODE  ,
+		                  1 C1  ,
+		                  CASE WHEN ( Extent3.AS_RESULT_ID IS NOT NULL ) THEN Extent3.AS_RESULT_NO ELSE '-' END AS_RESULT_NO  , 
+		                  CASE WHEN ( Extent4.RESN_ID IS NOT NULL ) THEN Extent4.RESN_DESC ELSE '-' END RESN_DESC  ,  
+		                  CASE WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.RESN_DESC ELSE '-' END RESN_DESC1  ,
+		                  CASE WHEN ( Extent6.MEM_ID IS NOT NULL ) THEN Extent6.MEM_CODE ELSE '-' END MEM_CODE  , 
+		                  CASE WHEN ( Extent7.RESN_ID IS NOT NULL ) THEN Extent7.RESN_DESC ELSE '-' END RESN_DESC2  , 
+		                  CASE WHEN ( Extent3.AS_RESULT_ID IS NOT NULL ) THEN TO_CHAR(Extent3.AS_TOT_AMT, 'FM9999999999990.00') ELSE TO_CHAR(UTILS.CONVERT_TO_FLOAT(0,53), 'FM9999999999990.00')END AS_TOT_AMT  ,
+		                  TO_CHAR( Extent3.AS_SETL_DT, 'DD-MM-YYYY')  AS_SETL_DT  
+		         FROM SVC0001D Extent1
+		                JOIN SYS0038M Extent2   ON Extent1.AS_STUS_ID = Extent2.STUS_CODE_ID
+		                LEFT JOIN SVC0004D Extent3   ON  Extent1.AS_ID = Extent3.AS_ENTRY_ID 
+		                AND  1 = Extent3.AS_RESULT_IS_CURR 
+		                AND  457 = Extent3.AS_RESULT_TYPE_ID 
+		                LEFT JOIN SYS0032M Extent4   ON Extent1.AS_MALFUNC_ID = Extent4.RESN_ID
+		                LEFT JOIN SYS0032M Extent5   ON Extent1.AS_MALFUNC_RESN_ID = Extent5.RESN_ID
+		                LEFT JOIN ORG0001D Extent6   ON Extent3.AS_CT_ID = Extent6.MEM_ID
+		                LEFT JOIN SYS0032M Extent7   ON Extent3.AS_SLUTN_RESN_ID = Extent7.RESN_ID
+		          WHERE  Extent1.AS_SO_ID = #{salesOrderId}
+     </select>
+     
+     <select id="selectBeforeServiceJsonList" parameterType="Map" resultType="egovMap">
+				SELECT Extent1.NO   ,
+				    Extent1.MONTH  || ' - ' || Extent1.YEAR  BS_MONTH,
+				    Extent2.CODE   ,
+				    Extent3.CODE CODE1  ,
+				    Extent4.MEM_CODE   ,
+				    TO_CHAR(Extent5.SETL_DT, 'DD-MM-YYYY') SETL_DT,
+				    Extent5.NO NO1  ,
+				    Extent6.CODE CODE2  ,
+				    Extent7.CODE CODE3  
+				FROM SVC0008D Extent1
+				    JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
+				    JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
+				    JOIN ORG0001D Extent4   ON Extent1.CODY_ID = Extent4.MEM_ID
+				    LEFT JOIN SVC0006D Extent5   ON ( Extent1.SCHDUL_ID = Extent5.SCHDUL_ID )
+				    AND ( 1 = Extent5.RESULT_IS_CURR )
+				    LEFT JOIN SYS0032M Extent6   ON Extent5.REN_COLCT_ID = Extent6.RESN_ID
+				    LEFT JOIN SYS0032M Extent7   ON Extent5.FAIL_RESN_ID = Extent7.RESN_ID
+				WHERE  Extent1.SALES_ORD_ID = #{salesOrderId}
+				ORDER BY Extent1.NO DESC  
+     </select>
 </mapper>

@@ -16,61 +16,61 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("posService")
 public class PosServiceImpl extends EgovAbstractServiceImpl implements PosService {
 
-	private static final Logger logger = LoggerFactory.getLogger(PosServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PosServiceImpl.class);
 	
 	@Resource(name = "posMapper")
 	private PosMapper posMapper;
 	
 	@Override
-	public List<EgovMap> selectWhList() {
+	public List<EgovMap> selectWhList() throws Exception{
 		
 		return posMapper.selectWhList();
 	}
 
 	@Override
-	public List<EgovMap> selectPosJsonList(Map<String, Object> params) {
+	public List<EgovMap> selectPosJsonList(Map<String, Object> params)  throws Exception{
 		
 		return posMapper.selectPosJsonList(params);
 	}
 
 	@Override
-	public EgovMap selectPosViewPurchaseInfo(Map<String, Object> params) {
+	public EgovMap selectPosViewPurchaseInfo(Map<String, Object> params) throws Exception{
 		
 		return posMapper.selectPosViewPurchaseInfo(params);
 	}
 
 	@Override
-	public List<EgovMap> selectPosDetailJsonList(Map<String, Object> params) {
+	public List<EgovMap> selectPosDetailJsonList(Map<String, Object> params) throws Exception{
 		
 		return posMapper.selectPosDetailJsonList(params);
 	}
 
 	@Override
-	public EgovMap selectPosViewPayInfo(Map<String, Object> params) {
+	public EgovMap selectPosViewPayInfo(Map<String, Object> params) throws Exception{
 		// TODO Auto-generated method stub
 		return posMapper.selectPosViewPayInfo(params);
 	}
 
 	@Override
-	public List<EgovMap> selectPosPaymentJsonList(Map<String, Object> params) {
+	public List<EgovMap> selectPosPaymentJsonList(Map<String, Object> params) throws Exception{
 		
 		return posMapper.selectPosPaymentJsonList(params);
 	}
 
 	@Override
-	public List<EgovMap> selectPosUserInfo(Map<String, Object> params) {
+	public List<EgovMap> selectPosUserInfo(Map<String, Object> params) throws Exception{
 		
 		return posMapper.selectPosUserInfo(params);
 	}
 
 	@Override
-	public EgovMap selectPosUserWarehoseIdJson(Map<String, Object> params) {
+	public EgovMap selectPosUserWarehoseIdJson(Map<String, Object> params) throws Exception{
 		
 		return posMapper.selectPosUserWarehoseIdJson(params);
 	}
 
 	@Override
-	public List<EgovMap> selectPosReasonJsonList() {
+	public List<EgovMap> selectPosReasonJsonList() throws Exception{
 		
 		return posMapper.selectPosReasonJsonList();
 	}

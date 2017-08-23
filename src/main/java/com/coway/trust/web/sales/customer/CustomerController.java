@@ -37,7 +37,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/sales/customer")
 public class CustomerController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
 	
 	@Resource(name = "customerService")
 	private CustomerService customerService;
@@ -48,7 +48,7 @@ public class CustomerController {
 	@RequestMapping(value = "/selectIssueBank.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectIssueBank(@RequestParam Map<String, Object> params, Model model) {
 		List<EgovMap> bankList = customerService.selectIssueBank(params);
-		logger.debug("bankList :::::   " + bankList.toString());
+		LOGGER.debug("bankList :::::   " + bankList.toString());
 		return ResponseEntity.ok(bankList);
 	}
 	
@@ -82,7 +82,7 @@ public class CustomerController {
 		params.put("typeIdList", typeId);
 		params.put("cmbCorpTypeIdList", cmbCorpTypeId);
 		
-		logger.info("##### customerList START #####");
+		LOGGER.info("##### customerList START #####");
 		customerList = customerService.selectCustomerList(params);
 		
 		// 데이터 리턴.
@@ -98,7 +98,7 @@ public class CustomerController {
 	 */
 	@RequestMapping(value = "/customerRegistPop.do")
 	public String insertPop(ModelMap model){
-		logger.info("##### customerRegist START #####");
+		LOGGER.info("##### customerRegist START #####");
 		return "sales/customer/customerRegistPop";
 	}
 	
@@ -111,7 +111,7 @@ public class CustomerController {
 	 */
 	@RequestMapping(value = "/customerAddCreditCardPop.do")
 	public String customerAddCreditCardPop(@RequestParam Map<String, Object> params, ModelMap model){
-		logger.info("##### customerRegist START #####");
+		LOGGER.info("##### customerRegist START #####");
 		
 		List<EgovMap> bankList = customerService.selectIssueBank(params);
 		model.addAttribute("bankList", bankList);
@@ -145,7 +145,7 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerAddressJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> addresslist = null;
-		logger.info("##### customer Address Parsing START #####");
+		LOGGER.info("##### customer Address Parsing START #####");
 		addresslist = customerService.selectCustomerAddressJsonList(params);
 		
 		return ResponseEntity.ok(addresslist);
@@ -163,7 +163,7 @@ public class CustomerController {
 		
 		List<EgovMap> contactlist = null;
 		//params
-		logger.info("##### customer Contact Parsing START #####");
+		LOGGER.info("##### customer Contact Parsing START #####");
 		contactlist = customerService.selectCustomerContactJsonList(params);
 		// 데이터 리턴.
 		return ResponseEntity.ok(contactlist);
@@ -233,7 +233,7 @@ public class CustomerController {
 		
 		List<EgovMap> banklist = null;
 		//params
-		logger.info("##### customer Bank List Parsing START #####");
+		LOGGER.info("##### customer Bank List Parsing START #####");
 		banklist = customerService.selectCustomerBankAccJsonList(params);
 		
 		return ResponseEntity.ok(banklist);
@@ -252,7 +252,7 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerCreditCardJsonList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		List<EgovMap> cardlist = null;
-		logger.info("##### customer Card List Parsing START #####");
+		LOGGER.info("##### customer Card List Parsing START #####");
 		cardlist = customerService.selectCustomerCreditCardJsonList(params);
 		
 		return ResponseEntity.ok(cardlist);
@@ -271,7 +271,7 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerOwnOrderJsonList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		List<EgovMap> ownorderlist = null;
-		logger.info("##### customer Own Order Parsing START #####");
+		LOGGER.info("##### customer Own Order Parsing START #####");
 		ownorderlist = customerService.selectCustomerOwnOrderJsonList(params);
 		
 		return ResponseEntity.ok(ownorderlist);
@@ -290,7 +290,7 @@ public class CustomerController {
 	public ResponseEntity<List<EgovMap>> selectCustomerThirdPartyJsonList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		List<EgovMap> thirdpartylist = null;
-		logger.info("##### customer Third Party Parsing START #####");
+		LOGGER.info("##### customer Third Party Parsing START #####");
 		thirdpartylist = customerService.selectCustomerThirdPartyJsonList(params);
 		
 		return ResponseEntity.ok(thirdpartylist);
@@ -309,7 +309,7 @@ public class CustomerController {
 	public String selectCustomerAddrDetailViewPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		EgovMap detailaddr = null;
-		logger.info("##### selectCustomerDetailAddr START #####");
+		LOGGER.info("##### selectCustomerDetailAddr START #####");
 		detailaddr = customerService.selectCustomerAddrDetailViewPop(params);
 		model.addAttribute("detailaddr", detailaddr);
 		
@@ -330,7 +330,7 @@ public class CustomerController {
 		
 		EgovMap detailcontact = null;
 		
-		logger.info("##### selectCustomerDetailContact START #####");
+		LOGGER.info("##### selectCustomerDetailContact START #####");
 		detailcontact = customerService.selectCustomerContactDetailViewPop(params);
 		model.addAttribute("detailcontact", detailcontact);
 		
@@ -350,7 +350,7 @@ public class CustomerController {
 	public String selectCustomerBankDetailViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		EgovMap detailbank = null;
-		logger.info("##### selectCustomerDetailBank START #####");
+		LOGGER.info("##### selectCustomerDetailBank START #####");
 		detailbank = customerService.selectCustomerBankDetailViewPop(params);
 		model.addAttribute("detailbank", detailbank);
 		
@@ -370,7 +370,7 @@ public class CustomerController {
 	public String selectCustomerCreditCardDetailViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		EgovMap detailcard = null;
-		logger.info("##### selectCustomerDetail Credit Card START #####");
+		LOGGER.info("##### selectCustomerDetail Credit Card START #####");
 		detailcard = customerService.selectCustomerCreditCardDetailViewPop(params);
 		
 		model.addAttribute("detailcard", detailcard);
@@ -394,7 +394,7 @@ public class CustomerController {
 		EgovMap addresinfo = null;
 		EgovMap contactinfo = null;
 		
-		logger.info("##### customeView START #####");
+		LOGGER.info("##### customeView START #####");
 		basicinfo = customerService.selectCustomerViewBasicInfo(params);
 		addresinfo = customerService.selectCustomerViewMainAddress(params);
 		contactinfo = customerService.selectCustomerViewMainContact(params);
@@ -446,10 +446,10 @@ public class CustomerController {
 		
 //		String getCustVano = "98 9920 " + String.Format("{0:0000 0000}", "50158");
 
-		logger.info("##########getCustId ::::::::::::::::   " + getCustId);
-		logger.info("##########getCustAddrId :::::::::::   " + getCustAddrId);
-		logger.info("##########getCustCntcId :::::::::::   " + getCustCntcId);
-		logger.info("##########getCustCareCntId :::::::   " + getCustCareCntId);
+		LOGGER.info("##########getCustId ::::::::::::::::   " + getCustId);
+		LOGGER.info("##########getCustAddrId :::::::::::   " + getCustAddrId);
+		LOGGER.info("##########getCustCntcId :::::::::::   " + getCustCntcId);
+		LOGGER.info("##########getCustCareCntId :::::::   " + getCustCareCntId);
 		
 		Map<String, Object> insmap = new HashMap();	
 		// Basic Info
@@ -564,7 +564,7 @@ public class CustomerController {
 			});
 			
 			customerService.insertCreditCardInfo(customerCardVOList);
-			logger.info("추가 : {}", addList.toString());
+			LOGGER.info("추가 : {}", addList.toString());
 		}
 		
 		// insert Bank Account Info
@@ -593,7 +593,7 @@ public class CustomerController {
 			});
 			
 			customerService.insertBankAccountInfo(customerBankVOList);
-			logger.info("Bank추가 : {}", addBankList.toString());
+			LOGGER.info("Bank추가 : {}", addBankList.toString());
 		}
 		
 		
@@ -615,7 +615,7 @@ public class CustomerController {
 	 * */
 	@RequestMapping(value = "/nricDupChk.do", method = RequestMethod.POST)
 	public int nricDupChk(@RequestParam Map<String, Object> params, ModelMap model) {
-		logger.debug("NRIC  :::::::::::::::::::::::::::::::::::::::::::::: {}", params.get("nric"));
+		LOGGER.debug("NRIC  :::::::::::::::::::::::::::::::::::::::::::::: {}", params.get("nric"));
 		int dup = 0;
 		
 		dup = customerService.nricDupChk(params);
@@ -673,8 +673,8 @@ public class CustomerController {
 			EgovMap addresinfo = null;
 			EgovMap contactinfo = null;
 			
-			logger.info("##### customer Address Edit START #####");
-			logger.info("##### selParam :  ##### = " + params.get("selectParam"));
+			LOGGER.info("##### customer Address Edit START #####");
+			LOGGER.info("##### selParam :  ##### = " + params.get("selectParam"));
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
@@ -708,7 +708,7 @@ public class CustomerController {
 			EgovMap addresinfo = null;
 			EgovMap contactinfo = null;
 			
-			logger.info("##### customer Contact Edit START #####");
+			LOGGER.info("##### customer Contact Edit START #####");
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
@@ -741,7 +741,7 @@ public class CustomerController {
 			EgovMap addresinfo = null;
 			EgovMap contactinfo = null;
 			
-			logger.info("##### customer Bank Acc Edit START #####");
+			LOGGER.info("##### customer Bank Acc Edit START #####");
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
@@ -775,7 +775,7 @@ public class CustomerController {
 			EgovMap addresinfo = null;
 			EgovMap contactinfo = null;
 			
-			logger.info("##### customer Credit Card Edit START #####");
+			LOGGER.info("##### customer Credit Card Edit START #####");
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
@@ -810,7 +810,7 @@ public class CustomerController {
 			EgovMap addresinfo = null;
 			EgovMap contactinfo = null;
 			
-			logger.info("##### customer Address Edit START #####");
+			LOGGER.info("##### customer Address Edit START #####");
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
@@ -863,7 +863,7 @@ public class CustomerController {
 		@RequestMapping(value = "/updateCustomerAddressSetMain.do")
 		public ResponseEntity<ReturnMessage> updateCustomerAddressSetMain(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
-			logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.get("custId"));
+			LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.get("custId"));
 			//service
 			/*customerService.updateCustomerAddressSetActive(params);*/
 			customerService.updateCustomerAddressSetMain(params);
@@ -887,9 +887,9 @@ public class CustomerController {
 		@RequestMapping(value = "/updateCustomerAddressInfoPop.do")
 		public String updateCustomerAddressInfoPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
-			/*logger.info("팝업창 파라미터 확인 :  custId = " + params.get("custId") + " , custAddId = " + params.get("custAddId"));*/
+			/*LOGGER.info("팝업창 파라미터 확인 :  custId = " + params.get("custId") + " , custAddId = " + params.get("custAddId"));*/
 			EgovMap detailaddr = null;
-			logger.info("##### updateCustomerAddressInfoPop START #####");
+			LOGGER.info("##### updateCustomerAddressInfoPop START #####");
 			params.put("getparam", params.get("editCustAddId"));
 			detailaddr = customerService.selectCustomerAddrDetailViewPop(params);
 			model.addAttribute("detailaddr", detailaddr);
@@ -935,7 +935,7 @@ public class CustomerController {
 			
 			
 			EgovMap detailcontact = null;
-			logger.info("##### updateCustomerContactInfoPop START #####");
+			LOGGER.info("##### updateCustomerContactInfoPop START #####");
 			params.put("getparam", params.get("editCustCntcId"));
 			detailcontact = customerService.selectCustomerContactDetailViewPop(params);
 			model.addAttribute("detailcontact", detailcontact);
@@ -1000,7 +1000,7 @@ public class CustomerController {
 		@RequestMapping(value = "/selectAccBank.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectAccBank(@RequestParam Map<String, Object> params)throws Exception {
 
-			logger.debug("groupCode : {}", params.get("groupCode"));
+			LOGGER.debug("groupCode : {}", params.get("groupCode"));
 
 			List<EgovMap> codeList = customerService.selectAccBank(params);
 			return ResponseEntity.ok(codeList);
@@ -1019,7 +1019,7 @@ public class CustomerController {
 		@RequestMapping(value = "/selectCrcBank.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectCrcBank(@RequestParam Map<String, Object> params)throws Exception {
 
-			logger.debug("groupCode : {}", params.get("groupCode"));
+			LOGGER.debug("groupCode : {}", params.get("groupCode"));
 
 			List<EgovMap> codeList = customerService.selectCrcBank(params);
 			
@@ -1194,7 +1194,7 @@ public class CustomerController {
 			
 			List<EgovMap> searchMagicAddrList = null;
 			
-			logger.info("##### searchMagicAddrList START #####");
+			LOGGER.info("##### searchMagicAddrList START #####");
 			searchMagicAddrList = customerService.searchMagicAddressPop(params);
 			
 			// 데이터 리턴.

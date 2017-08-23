@@ -25,7 +25,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("customerService")
 public class CustomerServiceImpl extends EgovAbstractServiceImpl implements CustomerService {
 
-	private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
 	
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
@@ -573,7 +573,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	public void insertCreditCardInfo(List<CustomerCVO> customerCardVOList) {
 		
 		for(CustomerCVO customerCVO : customerCardVOList) {
-			logger.debug("##### Impl >> getCreditCardNo :"+customerCVO.getCreditCardNo());
+			LOGGER.debug("##### Impl >> getCreditCardNo :"+customerCVO.getCreditCardNo());
 			customerMapper.insertCreditCardInfo(customerCVO);
 		}
 		
