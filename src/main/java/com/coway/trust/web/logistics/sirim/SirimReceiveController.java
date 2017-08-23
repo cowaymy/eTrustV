@@ -126,7 +126,7 @@ public class SirimReceiveController {
 	@RequestMapping(value = "/InsertReceiveInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> InsertReceiveInfo(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-
+		
 		Map<String, Object> InsertReceiveMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
 		logger.debug("receiveInfoTransitNo  : {}", InsertReceiveMap.get("receiveInfoTransitNo"));
@@ -141,11 +141,15 @@ public class SirimReceiveController {
 		
 
 		
-		List<EgovMap> ItemsAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		List<EgovMap> ItemsAddList = (List<EgovMap>) params.get("arrays");
 		for (int i = 0; i < ItemsAddList.size(); i++) {
-			logger.debug("%%%%%%%%detailAddList%%%%%%%: {}", ItemsAddList.get(i));
+			logger.debug("%%%%%%%%ItemsAddList%%%%%%%: {}", ItemsAddList.get(i));
 		}
-
+		
+//		System.out.println("ItemsAddList :::::   "+ItemsAddList.get(0).get("srmTransItmId"));
+//		System.out.println("ItemsAddList :::::   "+ItemsAddList.get(0).get("item"));
+		
+		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
