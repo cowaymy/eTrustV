@@ -276,7 +276,7 @@ function auiCellEditignHandler(event)
                  && (authCode == "INT" || authCode == "EXT"  || authCode == "MGR") )
          { 
              //Common.alert("Can't Edit Date In 'Base Auth.' ");
-             Common.alert("<spring:message code='sys.msg.cannot' arguments='Edit Date ; Base Auth.' htmlEscape='false' argumentSeparator=';'/>");
+           Common.alert("<spring:message code='sys.msg.cannot' arguments='Edit Date ; Base Auth.' htmlEscape='false' argumentSeparator=';'/>");
            return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임) 
          } 
       }
@@ -358,6 +358,7 @@ function auiCellEditignHandler(event)
 		             {
 		               Common.alert("<spring:message code='sys.msg.already.Registered' arguments='EXT' htmlEscape='false'/>");
 		               AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+		               AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
 		               return false;
 		             }
             }
@@ -367,6 +368,7 @@ function auiCellEditignHandler(event)
 		            {
 		               Common.alert("<spring:message code='sys.msg.already.Registered' arguments='INT' htmlEscape='false'/>");
 		               AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+		               AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
 		               return false;
 		            }
             }
@@ -380,6 +382,7 @@ function auiCellEditignHandler(event)
                 	//The {0} Must Exist.
                 	Common.alert("<spring:message code='sys.msg.Exists' arguments='INT' htmlEscape='false'/>");
                 	AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                	AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
                   return false;
                 }                 
             }
@@ -436,11 +439,9 @@ function auiCellEditignHandler(event)
             if (parseInt(validFrom) >= parseInt(validTo) )
             {
                Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
-               //AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "fromDt"] );   
-               //AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "toDt"] );  
-              // AUIGrid.setCellValue(AuthGridID, event.rowIndex, event.columnIndex, "");
-               AUIGrid.setCellValue(AuthGridID, event.rowIndex, event.columnIndex, "");
+               //AUIGrid.setCellValue(AuthGridID, event.rowIndex, event.columnIndex, "");
                //validFrom = "";
+               AUIGrid.setCellValue(AuthGridID, event.rowIndex, event.columnIndex, "");
                validTo = ""; 
                return false;
             }
