@@ -300,6 +300,8 @@
 		     , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
 		     , l48.reqst_no_itm ritmno
 		     , nvl(l55.rcipt_qty , 0) rciptqty
+		     , NVL (L54.DELVRY_GR_CMPLT , 'N') grcmplt
+		     , NVL (L54.DELVRY_GI_CMPLT , 'N') gicmplt
 		  from log0047m l47
 		     , log0048d l48
 		     , log0054m l54
@@ -347,15 +349,24 @@
               and l55.DELVRY_DT <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
            <if test="gtype !=null and gtype =='receipt'">
-              and l55.rcipt_qty is not null
+              and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'
+           </if>
+           <if test="gtype !=null and gtype =='receiptList'">
+              and L54.DELVRY_GR_CMPLT <![CDATA[=]]> 'Y'
            </if>
            ORDER BY l54.delvry_no
            ) T
     </select>
-    <resultMap id="TRNSDATA" type="egovMap" />
+    <resultMap id="STOPRCDATA" type="egovMap" />
     <select id="StockTransferiSsue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY
-                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=TRNSDATA} )
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=PRCDATA} )
+             } 
+     </select>
+     <resultMap id="PRCCANCLEDATA" type="egovMap" />
+     <select id="StockTransferCancelIssue"  statementType="CALLABLE" parameterType="Map"> 
+             { call SP_LOGISTIC_DELIVERY_CANCEL
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=PRCCANCLEDATA} )
              } 
      </select>
 </mapper>
