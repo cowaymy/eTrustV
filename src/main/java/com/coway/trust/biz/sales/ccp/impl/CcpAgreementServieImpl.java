@@ -17,13 +17,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("ccpAgreementService")
 public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements CcpAgreementService {
 
-	private static final Logger logger = LoggerFactory.getLogger(CcpAgreementServieImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CcpAgreementServieImpl.class);
 	
 	@Resource(name = "ccpAgreementMapper")
 	private CcpAgreementMapper ccpAgreementMapper;
 	
 	@Override
-	public List<EgovMap> selectContactAgreementList(Map<String, Object> params) {
+	public List<EgovMap> selectContactAgreementList(Map<String, Object> params) throws Exception {
 		
 		if("" != params.get("salesOrdNo") && null != params.get("salesOrdNo")){
 			
@@ -37,7 +37,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 				params.put("getBatchNoList", tempList);
 				
 			}else{
-				logger.info(" ############## 임플 결과 없음 exist 0 처리 ###############");
+				
 				params.put("exist", "0");
 			}
 			
@@ -45,5 +45,24 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		return ccpAgreementMapper.selectContactAgreementList(params);
 	}
+
 	
+	@Override
+	public EgovMap getOrderId(Map<String, Object> params) throws Exception {
+		
+		return ccpAgreementMapper.getOrderId(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAfterServiceJsonList(Map<String, Object> params) throws Exception {
+		
+		return ccpAgreementMapper.selectAfterServiceJsonList(params);
+	}
+
+
+	@Override
+	public List<EgovMap> selectBeforeServiceJsonList(Map<String, Object> params) throws Exception {
+		
+		return ccpAgreementMapper.selectBeforeServiceJsonList(params);
+	}
 }
