@@ -402,14 +402,19 @@
                                         CRT_DT,
                                         CRT_USER_ID
                                         )
-                         VALUES(
+                          SELECT
                                    #{serial},
                                    #{delno},
-                                   #{delvryNoItm},
-                                    (SELECT TRNSC_TYPE FROM WHERE DELVRY_NO= #{delno}),
+                                   DELVRY_NO_ITM,
+                                    (SELECT TRNSC_TYPE FROM LOG0054M WHERE DELVRY_NO= #{delno}),
                                     SYSDATE,
                                     #{userId}
-                                    )                      
+                                    FROM LOG0055D
+                                    WHERE 1=1
+		                                      AND DELVRY_NO= #{delno}
+		                                      AND ITM_CODE =#{itmcd}
+		                                      AND REQST_NO =#{reqstno}                                      
+                                                       
      </insert>
      <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
 			SELECT
