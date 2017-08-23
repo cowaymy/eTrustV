@@ -190,6 +190,7 @@
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span>NEW</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" ><span></span>Print</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
