@@ -183,11 +183,32 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 				insMap.put("delno", deliSeq);
 				insMap.put("userId", params.get("userId"));
-				// stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
-				stockMoveMapper.selectNewDeliveryNum(insMap);
+				stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
+				List<EgovMap> delNumItm = stockMoveMapper.selectNewDeliveryNoITM(insMap); // LOG0055D에서 delvery no itm 값
+				logger.info(" delNumItm : {}", delNumItm.toString());
+				logger.info(" serialList  size : {}", serialList.size());
+				logger.info(" serialList : {}", serialList.toString());
 
+				if (serialList.size() > 0) {
+
+					for (int j = 0; j < serialList.size(); j++) {
+
+						Map<String, Object> insSerial = null;
+						Map<String, Object> tmpMap2 = null;
+
+						// Map<String, Object> tmpMap2 = delNumItm.get(0);
+
+						tmpMap2 = (Map<String, Object>) serialList.get(j);
+						insSerial = delNumItm.get(0);
+
+						insSerial.put("delno", deliSeq);
+						insSerial.put("userId", params.get("userId"));
+						insSerial.put("userId", tmpMap2.get("serial"));
+						stockMoveMapper.insertMovementSerial(insSerial);
+					}
+				}
 			}
-			// stockMoveMapper.insertDeliveryStockMovement(insMap);
+			stockMoveMapper.insertDeliveryStockMovement(insMap);
 		}
 		String[] delvcd = { deliSeq };
 
@@ -197,24 +218,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
-		// stockMoveMapper.stockMoveiSsue(formMap);
-
-		logger.info(" serialList  size : {}", serialList.size());
-		logger.info(" serialList : {}", serialList.toString());
-
-		if (serialList.size() > 0) {
-
-			for (int i = 0; i < serialList.size(); i++) {
-
-				Map<String, Object> insSerial = null;
-
-				insSerial = (Map<String, Object>) serialList.get(i);
-
-				insSerial.put("delno", deliSeq);
-				insSerial.put("userId", params.get("userId"));
-				// stockMoveMapper.insertMovementSerial(insSerial);
-			}
-		}
+		stockMoveMapper.stockMoveiSsue(formMap);
 
 	}
 

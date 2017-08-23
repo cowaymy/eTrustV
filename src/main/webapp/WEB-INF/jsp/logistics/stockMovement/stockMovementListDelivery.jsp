@@ -216,7 +216,7 @@ $(document).ready(function(){
             //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
         	Common.alert('Please input Serial Number.');
         	}else{
-            fn_serialChck(serial);
+           // fn_serialChck(serial);
         	}
     	
     });

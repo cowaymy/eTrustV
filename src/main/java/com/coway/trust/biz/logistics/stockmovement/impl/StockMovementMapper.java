@@ -47,4 +47,8 @@ public interface StockMovementMapper {
 
 	void insertMovementSerial();
 
+	List<EgovMap> selectNewDeliveryNoITM(Map<String, Object> params);
+
+	void insertMovementSerial(Map<String, Object> insSerial);
+
 }

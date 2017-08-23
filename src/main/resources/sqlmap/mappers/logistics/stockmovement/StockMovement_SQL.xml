@@ -365,11 +365,12 @@
                  WHERE SERIAL_NO = #{serial}
      </select>
      <insert id="insertMovementSerial" parameterType="Map">
-     INSERT INTO LOG0061D (
+   <!--  
+    INSERT INTO LOG0061D (
 										SERIAL_NO,
 										DELVRY_NO,
 										PDELVRY_NO_ITM,
-										TTYP,
+										TTYPE,
 										CRT_DT,
 										CRT_USER_ID
 										)
@@ -377,21 +378,49 @@
 					               #{serial},
 					               #{delno},
 					                PDELVRY_NO_ITM,
-					                TTYP,
+					                TTYPE,
 					                SYSDATE,
 					                #{userId}
 									    FROM(
 												    SELECT 
-														l55d.DELVRY_NO_ITM AS PDELVRY_NO_ITM,
-														l54m.TRNSC_TYPE AS TTYP,
+															l55d.DELVRY_NO_ITM AS PDELVRY_NO_ITM,
+															l54m.TRNSC_TYPE AS TTYPE
 														FROM LOG0054M l54m,LOG0055D l55d
-														WHERE 1=1
-														AND l54m.DELVRY_NO = l55d.DELVRY_NO
-														AND l54m.TRNSC_TYPE ='UM'
-														AND l55d.DELVRY_NO= #{delno}
-														AND l55d.ITM_CODE ={itmcd}
-									            )             
-					                       
-					   
+															WHERE 1=1
+																AND l54m.DELVRY_NO = l55d.DELVRY_NO
+																AND l54m.TRNSC_TYPE ='UM'
+																AND l55d.DELVRY_NO= #{delno}
+																AND l55d.ITM_CODE =#{itmcd}
+																AND l55d.REQST_NO =#{reqstno}
+									            )    
+  -->
+     INSERT INTO LOG0061D (
+                                        SERIAL_NO,
+                                        DELVRY_NO,
+                                        PDELVRY_NO_ITM,
+                                        TTYPE,
+                                        CRT_DT,
+                                        CRT_USER_ID
+                                        )
+                         VALUES(
+                                   #{serial},
+                                   #{delno},
+                                   #{delvryNoItm},
+                                    (SELECT TRNSC_TYPE FROM WHERE DELVRY_NO= #{delno}),
+                                    SYSDATE,
+                                    #{userId}
+                                    )                      
      </insert>
+     <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
+			SELECT
+				DELVRY_NO,
+				DELVRY_NO_ITM,
+				ITM_CODE,
+				REQST_NO
+			FROM LOG0055D
+			WHERE 1=1
+						AND DELVRY_NO = #{delno}
+						AND ITM_CODE  =  #{itmcd}
+						AND REQST_NO  =  #{reqstno}
+     </select>
 </mapper>
