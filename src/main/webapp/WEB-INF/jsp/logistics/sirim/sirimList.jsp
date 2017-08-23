@@ -169,16 +169,9 @@
     	var first = $("#addSirimNoFirst").val();
     	var iCnt = $("#addQuantity").val();
     	
-     	var param = "";//StartSirimNo;
+     	var param = "";
     	var chekFlag ="";
-/*       	for(var i = 0 ; i < iCnt ; i++){
-    		
-    		if (i == 0 ) param += "param="+startSirimNo;
-    		else  param += "&param="+startSirimNo;
-    	}   */
-     	
-    	//param = "prefix="+prefix+"&first="+first+"&iCnt="iCnt; 
-    	//alert(param);
+
     	param = { 
     			"prefix" : prefix,
     			"first" :  first,
@@ -186,7 +179,6 @@
                };
 	        Common.ajaxSync("post", "/logistics/sirim/selectSirimNo.do", param, function(result) {
 	//           var gridData = result;    
-	//           var count = gridData.
 	//           console.log(gridData.data);
 	        console.log(result);
 	        chekFlag=result.data;
