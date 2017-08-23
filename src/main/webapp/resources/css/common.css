@@ -134,6 +134,7 @@ table+.title_line{margin-top:20px;}
 .pink_text{color:#f0008d!important;}
 .black_text{color:#000!important;}
 .blue_text{color:#25527c!important;}
+.orange_text{color:#ff4800!important;}
 .bold_text{font-weight:bold!important;}
 .txt_box{position:Relative;}
 .txt_box i{display:none;}
@@ -199,6 +200,9 @@ table+.center_btns{padding-top:15px;}
 .left_btns .search_btn{display:inline-block; height:30px; margin-left:5px;}
 .right_btns .search_btn img,
 .left_btns .search_btn img{position:relative; top:-3px;}
+.side_btns:after{content:""; display:block; clear:both;}
+.side_btns .left_btns{float:left; padding-top:0!important;}
+.side_btns .right_btns{float:right;}
 
 /* 검색 영역 */
 .search_table{margin-bottom:20px;}
