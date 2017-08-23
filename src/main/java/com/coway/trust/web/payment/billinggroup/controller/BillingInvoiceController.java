@@ -323,4 +323,20 @@ public class BillingInvoiceController {
 		
 		return ResponseEntity.ok(list);
 	}
+	
+	/******************************************************
+	 *   Invoice Issue
+	 *****************************************************/	
+	/**
+	 * Company Statement초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/initInvoiceIssue.do")
+	public String initInvoiceIssue(@RequestParam Map<String, Object> params, ModelMap model) {	
+	
+		return "payment/billinggroup/invoiceIssue";
+	}
 }
