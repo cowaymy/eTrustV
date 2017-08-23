@@ -106,7 +106,7 @@ function fnSaveAccount()
 }
 
  function fn_close(){
-	 $("#_popupDiv").remove(); // hide();
+	 $("#accountCodeManagementPop").remove(); // hide();
 }
 
 

@@ -221,7 +221,8 @@ function editPopUp()
     var popUpObj = Common.popupDiv("/account/accountCodeEditPop.do"
     	    , $("#MainForm").serializeJSON()
           , null
-          , "true"  // true면 close버튼 클릭시 화면 close
+          , true  // true면 더블클릭시 close
+          , "accountCodeManagementPop"
     	    );
 
     return ;
@@ -234,7 +235,8 @@ function addPopUp()
     var popUpObj = Common.popupDiv("/account/accountCodeAddPop.do"
             , $("#MainForm").serializeJSON()
             , null
-            , "true"
+            , true
+            , "accountCodeManagementPop"
             );
 
     return ;

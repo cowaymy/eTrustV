@@ -92,7 +92,7 @@ $(document).ready(function()
 	        	        
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 2, SerchmenuCode);
 
-	        $("#popup_wrap").remove();
+	        $("#searchUpperMenuPop").remove();
 	    }); 
 	
 });   //$(document).ready

@@ -126,7 +126,7 @@ function fnSaveGridMap()
 		    , GridCommon.getEditData(myGridID)
 		    , function(result) 
 		     {
-		        alert(result.data + " Count Save Success!");
+		        Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 		        fn_getMstCommCdListAjax() ;
 		        
 		        console.log("성공." + JSON.stringify(result));
@@ -155,7 +155,7 @@ function fnSaveDetailGridMap()
   Common.ajax("POST", "/general/saveDetailCommCode.do"
 	     , GridCommon.getEditData(detailGridID), function(result) 
 	       {
-          alert("Success!");      
+          Common.alert("<spring:message code='sys.msg.success'/>");  
           fn_getMstCommCdListAjax() ;     
           console.log("성공.");
           console.log("data : " + result);
@@ -330,7 +330,6 @@ $(document).ready(function()
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
                 || String(event.value).length < 1)
             {
-                   // alert("CodeMasterID Confirm!!");
                     return false;
             } 
 

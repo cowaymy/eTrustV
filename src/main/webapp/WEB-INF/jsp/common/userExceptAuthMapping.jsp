@@ -42,8 +42,8 @@ var MainColumnLayout =
             style : "aui-grid-left-column",
              renderer : {
                 type : "IconRenderer",
-                iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-                iconHeight : 13,
+                iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                iconHeight : 24,
                 iconPosition : "aisleRight",
                 iconFunction : function(rowIndex, columnIndex, value, item) 
                 {
@@ -53,7 +53,7 @@ var MainColumnLayout =
                   }
                   else
                   {
-                    return "${pageContext.request.contextPath}/resources/images/common/normal_search.gif";
+                    return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
                   }
 
                 } ,// end of iconFunction                

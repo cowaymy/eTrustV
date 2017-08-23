@@ -90,7 +90,7 @@ $(document).ready(function()
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 5, SerchPgmCode);
 	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 6, SerchPgmName);
 
-	        $("#popup_wrap").remove();
+	        $("#searchProgramPop").remove();
 	    }); 
 	
 });   //$(document).ready

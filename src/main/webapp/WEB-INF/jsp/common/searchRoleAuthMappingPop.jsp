@@ -108,7 +108,8 @@ $(document).ready(function()
 	        
 	        if (gSelMstRolLvl !=  SerchAuthLev )
 		      {
-	        	Common.alert("Can not be modified. Not at the same level");
+	        	//Common.alert("Can not be modified. Not at the same level");
+            Common.alert("<spring:message code='sys.msg.cannot' arguments='Modified ; Different Levels.' htmlEscape='false' argumentSeparator=';'/>");
 	        	return false;
 		      }
 

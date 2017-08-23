@@ -26,6 +26,7 @@ $(function()
 
 var MainColumnLayout = 
     [      
+
         {    
             dataField : "div",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Div' htmlEscape='false'/>",
@@ -52,8 +53,8 @@ var MainColumnLayout =
             renderer : 
             {
                 type : "IconRenderer",
-                iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-                iconHeight : 13,
+                iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                iconHeight : 24,
                 iconPosition : "aisleRight",
                 iconFunction : function(rowIndex, columnIndex, value, item) 
                 {
@@ -62,7 +63,7 @@ var MainColumnLayout =
                       case "1":
                        return  null; // null 반환하면 아이콘 표시 안함.
                       default:
-                       return "${pageContext.request.contextPath}/resources/images/common/normal_search.gif"; 
+                       return "${pageContext.request.contextPath}/resources/images/common/normal_search.png"; 
                     }
                 } ,// end of iconFunction                
           
@@ -83,6 +84,7 @@ var MainColumnLayout =
         },{
             dataField : "menuCode", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuId' htmlEscape='false'/>", 
+            editable : true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
             width : 150
         }, {
             dataField : "menuName",
@@ -97,11 +99,11 @@ var MainColumnLayout =
             renderer : 
             {
                 type : "IconRenderer",
-                iconWidth : 13, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-                iconHeight : 13,
+                iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                iconHeight : 24,
                 iconPosition : "aisleRight",
                 iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.gif" // 
+                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png" // 
                 },
                 onclick : function(rowIndex, columnIndex, value, item) 
                 {
@@ -120,7 +122,8 @@ var MainColumnLayout =
         }, {
             dataField : "menuOrder", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Order' htmlEscape='false'/>", 
-            width : 100
+            width : 100,
+            editable : true,
         }, {
             dataField : "statusCode", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Status' htmlEscape='false'/>", 
@@ -141,7 +144,11 @@ var MainColumnLayout =
             dataField : "menuSeq",
             headerText : "",
             width : 0
-           }
+       },{     /* PK , rowid 용 칼럼*/
+           dataField : "rowId",
+           dataType : "string",
+           visible : false
+       },
     ];
 
 function getStatusComboListAjax(callBack) 
@@ -173,8 +180,6 @@ function getStatusComboListAjax(callBack)
 function fnSetCategoryCd(selGrdidID, rowIdx)  
 {     
  $("#selMenuId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "menuCode"));
-  
- console.log("selMenuId: "+ $("#selMenuId").val() + " stusCtgryName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryName") );                
 }
 
 function auiCellEditignHandler(event) 
@@ -182,14 +187,25 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin") 
   {
       console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-      var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
-      console.log("menuSeq: " + menuSeq);
-/*       if (AUIGrid.isAddedById(myGridID,menuSeq) == false   )// add된게 아니면 수정할수없다.
-          {
-                  alert("Confirm!!");  
-                  return false;
-          } */
+      //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
 
+      if(event.dataField == "menuCode") 
+      { 
+          // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
+         if(AUIGrid.isAddedById(myGridID, event.item.rowId) == false && (event.item.rowId =="PkAddNew") )  //추가된 Row 
+         { 
+        	  return true; // 수정가능
+         } 
+         else 
+         { 
+            return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임) 
+         } 
+      }
+      else
+      {
+    	   return true; // 다른 필드들은 편집 허용 
+      }
+        
   } 
   else if(event.type == "cellEditEnd") 
   {
@@ -213,15 +229,17 @@ function addRowMenu()
 {
   var item = new Object();
   
-  item.div      ="Lvl1";
-  item.menuLvl  ="1";
-  item.menuCode =" Input MenuCode ...";
-  item.menuName ="";  
-  item.pgmCode  ="";
-  item.pgmName  ="";
-  item.menuOrder ="";
+  item.div        ="Lvl1";
+  item.menuLvl    ="1";
   item.upperMenuCode ="";
-  item.statusCode    ="1";
+  item.menuCode   ="";
+  item.menuName   ="";  
+  item.pgmCode    ="";
+  item.pgmName    ="";
+  //item.menuOrder  ="";
+  item.statusCode ="1";
+  item.menuSeq    ="";
+  item.rowId      ="PkAddNew";
   // parameter
   // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
   // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -260,7 +278,8 @@ function fnSearchProgramPopUp()
    var popUpObj = Common.popupDiv("/menu/searchProgramPop.do"
        , $("#MainForm").serializeJSON()
        , null
-       , "true"  // true면 close버튼 클릭시 화면 close
+       , true  // true면 더블클릭시 close 
+       , "searchProgramPop"
        );
         
 }
@@ -269,7 +288,8 @@ function fnSearchUpperMenuPopUp()
    var popUpObj = Common.popupDiv("/menu/searchUpperMenuPop.do"
        , $("#MainForm").serializeJSON()
        , null
-       , "true"  // true면 close버튼 클릭시 화면 close
+       , true  // true면 더블클릭시 close 
+       , "searchUpperMenuPop"
        );
         
 }
@@ -558,15 +578,16 @@ $(document).ready(function()
 /***************************************************[ Main GRID] ***************************************************/    
 
     var options = {
+    		          //rowIdField : "rowId", // PK행 지정
                   usePaging : true,
                   useGroupingPanel : false,
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
-                  editable : true,
+                  //editable : true,
                   // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
                   enableRestore : true,
-                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제                 
                 };
     
     // masterGrid 그리드를 생성합니다.
