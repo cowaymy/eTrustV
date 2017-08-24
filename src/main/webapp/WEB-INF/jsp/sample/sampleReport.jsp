@@ -66,7 +66,7 @@
 	<section class="search_table">
 		<!-- search_table start -->
 		<form id="dataForm">
-			/etrust/src/main/webapp/resources/report 이후 경로를 보내 줘야 함.(name 을 반드시 reportFileName 전송해야 함.) :
+			/etrust/src/main/webapp/resources/report 이후 경로를 보내 줘야 함. :<br /><br />
 			<!--
                         <input type="text" id="reportFileName" name="reportFileName" value="/sample/CowayDailySalesStatusHP.rpt" /><br />
                         <input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br />
@@ -74,8 +74,8 @@
              -->
 <!-- ### 필수 파라미터 start ### -->
 			<!-- 리포트 파일명 -->
-			리포트 파일명 :
-			<input type="text" id="reportFileName" name="reportFileName" value="/sample/PaymentListing_Excel.rpt" /><br />
+			리포트 파일명(필수 : reportFileName) :
+			<input type="text" id="reportFileName" name="reportFileName" value="/sample/PaymentListing_Excel.rpt" /><br /><br />
 
 			<!-- view type
 			WINDOW : window popup
@@ -83,11 +83,11 @@
 			EXCEL : EXCEL 다운로드
 			CVS : CVS 다운로드
 			-->
-			<input type="text" id="viewType" name="viewType" value="PDF" /><br />
+			viewType(필수 : viewType) : <input type="text" id="viewType" name="viewType" value="PDF" /><br /><br />
 <!-- ### 필수 파라미터 end ### -->
 
 			<!-- 다운로드될 파일명 지정 -->
-			다운로드될 파일명 지정 : <input type="text" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" /><br />
+			다운로드될 파일명 지정(옵션 : reportDownFileName) : <input type="text" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" /><br /><br />
 
 			<!-- 리포트에서 사용할 파라미터 start-->
 			리포트 파일에 전달될 파라미터 설정 : <br/>
