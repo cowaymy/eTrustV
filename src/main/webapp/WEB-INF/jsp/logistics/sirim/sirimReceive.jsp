@@ -40,7 +40,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
     var receiveInfoGridID;
     var div;
     var trnsitId;
-    
+    var TransitStatusID;
     
         
 
@@ -62,7 +62,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
                         {dataField:"trnsitId"    ,headerText:"TRNSIT_ID"    ,width:"15%" ,height:30 , visible:false},
                        ];
     
-    var detailLayout = [{dataField:"codeDesc"      ,headerText:"Type"           ,width:"15%"  ,height:30 , visible:true},
+    var detailLayout = [{dataField:"codeDesc"      ,headerText:"Type"           ,width:"15%"  ,height:30 ,  visible:true},
                         {dataField:"srmNo"      ,headerText:"Sirim No"           ,width:"15%" ,height:30 , visible:true},
                         {dataField:"code"    ,headerText:"Status"    ,width:"15%" ,height:30 , visible:true},
                         {dataField:"trTransClosDt"    ,headerText:"Close Date"    ,width:"20%" ,height:30 , visible:true},
@@ -121,6 +121,10 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
             selectionMode : "multipleRows",
             //selectionMode : "multipleCells",
             useGroupingPanel : true,
+            // 체크박스 표시 설정
+            showRowCheckColumn : true,
+            // 전체 체크박스 표시 설정
+            showRowAllCheckBox : true,
             softRemoveRowMode:false
             };
     
@@ -188,11 +192,12 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         	 doDefCombo(ReceiveStatusCombo, '' ,'receiveStatus', 'S', ''); //Transit Status 리스트 조회
         	 $('input:radio[value=S]').is(':checked');
              getSirimReceiveListAjax(trnsitId,div); 
+             TransitStatusID="44";
+             $("#ResultStusId").val(TransitStatusID);
              PendingGridID = GridCommon.createAUIGrid("ReceivePendingGrid_wrap", detailLayout,"", subgridpros);  	 
          }else{
         	 Common.alert("Only active/pending sirim transit can do receive result.");
          }
-         alert("trnsitStusCode :      "+trnsitStusCode);
          }else{
          Common.alert('Choice Data please..');
          }
@@ -235,32 +240,35 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         $("#ReceivePending_info").click(function(){
             destory(PendingGridID);
             div="Pending";
+            TransitStatusID="44";
+            $("#ResultStusId").val(TransitStatusID);
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             trnsitId = AUIGrid.getCellValue(myGridID ,selectedItem[0],'trnsitId');
             getSirimReceiveListAjax(trnsitId,div); 
-            PendingGridID = GridCommon.createAUIGrid("ReceivePendingGrid_wrap", detailLayout,"", gridoptions);     
+            PendingGridID = GridCommon.createAUIGrid("ReceivePendingGrid_wrap", detailLayout,"", subgridpros);     
         });
         $("#ReceiveComplete_info").click(function(){
             destory(CompleteGridID);
             div="Complete";
+            TransitStatusID="4";
+            $("#ResultStusId").val(TransitStatusID);
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             trnsitId = AUIGrid.getCellValue(myGridID ,selectedItem[0],'trnsitId');
             getSirimReceiveListAjax(trnsitId,div); 
-            CompleteGridID = GridCommon.createAUIGrid("ReceiveCompleteGrid_wrap", detailLayout,"", gridoptions);       
+            CompleteGridID = GridCommon.createAUIGrid("ReceiveCompleteGrid_wrap", detailLayout,"", subgridpros);       
         });
         $("#ReceiveIncomplete_info").click(function(){    
             destory(IncompleteGridID);
             div="Incomplete";
+            TransitStatusID="50";
+            $("#ResultStusId").val(TransitStatusID);
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             trnsitId = AUIGrid.getCellValue(myGridID ,selectedItem[0],'trnsitId');
             getSirimReceiveListAjax(trnsitId,div); 
-            IncompleteGridID = GridCommon.createAUIGrid("ReceiveIncompleteGrid_wrap", detailLayout,"", gridoptions);
+            IncompleteGridID = GridCommon.createAUIGrid("ReceiveIncompleteGrid_wrap", detailLayout,"", subgridpros);
             AUIGrid.resize(IncompleteGridID); 
         });
-        
-        
-
-      
+         
           
     });
     
@@ -327,24 +335,57 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
             Common.alert("실패하였습니다.");
         });
 }    
-    function InsertReceiveInfoAjax() {
+    function InsertReceiveInfoAjax(TransitStatusID) {
     	var param;
-    	var SelectedItems =  AUIGrid.getSelectedItems(PendingGridID);
-    	var data = {};
-    	data.select = SelectedItems;
-	
-        data.form = $("#InsertReceiveForm").serializeJSON();
+    	var SelectedItems;
+    	var checkedItems;
+         if(TransitStatusID == "44" ){
+          checkedItems = AUIGrid.getCheckedRowItemsAll(PendingGridID);   
+	    }else if(TransitStatusID == "4"){
+	      checkedItems = AUIGrid.getCheckedRowItemsAll(CompleteGridID);
+	    }else if(TransitStatusID == "50"){
+	       checkedItems = AUIGrid.getCheckedRowItemsAll(IncompleteGridID);
+	    } 
+
+        console.log(checkedItems);
+        if(checkedItems.length <= 0) {
+            return false;
+        }else{
+            var data = {};
+            data.checked = checkedItems; 
+            data.form = $("#InsertReceiveForm").serializeJSON();
+         
     	
-       Common.ajax("POST", "/logistics/sirim/InsertReceiveInfo.do",data , function(result) {
+    	/* if(TransitStatusID == "44" ){
+    		SelectedItems =  AUIGrid.getSelectedItems(PendingGridID);	
+    	}else if(TransitStatusID == "4"){
+    	    SelectedItems =  AUIGrid.getSelectedItems(CompleteGridID);   	
+    	}else if(TransitStatusID == "50"){
+    		SelectedItems =  AUIGrid.getSelectedItems(IncompleteGridID);
+    	} */
+    	
+    	/* var data = {};
+    	data.select = SelectedItems;
+        data.form = $("#InsertReceiveForm").serializeJSON(); */
+       
+    Common.ajax("POST", "/logistics/sirim/InsertReceiveInfo.do",data , function(result) {
           var gridData = result;             
-          //console.log(gridData.data);            
-            
+          //console.log(gridData.data);
+                
+        if(TransitStatusID == "44" ){
+        	 $("#ReceivePending_info").click(); 
+        }else if(TransitStatusID == "4"){
+        	 $("#ReceiveComplete_info").click();      
+        }else if(TransitStatusID == "50"){
+        	 $("#ReceiveIncomplete_info").click();
+        }  
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
         //searchList();
-//         }, function(jqXHR, textStatus, errorThrown) {
-//             Common.alert("실패하였습니다.");
-         });
+        }, function(jqXHR, textStatus, errorThrown) {
+            Common.alert("실패하였습니다.");
+         }); 
+        }
 }  
     
     
@@ -372,30 +413,33 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         $("#receiveInfoTransitLocation").val(AUIGrid.getCellValue(myGridID ,rowid,'trnsitFrom') +" To "+ AUIGrid.getCellValue(myGridID ,rowid,'trnsitTo'));     
         $("#receiveInfoCourier").val(AUIGrid.getCellValue(myGridID ,rowid,'trnsitCurier'));
         $("#receiveInfoTotalSirimTransit").val(AUIGrid.getCellValue(myGridID ,rowid,'totTrnsitItm'));
+        $("#SirimLocTo").val(AUIGrid.getCellValue(myGridID ,rowid,'trnsitTo'));
+        $("#SirimLocFrom").val(AUIGrid.getCellValue(myGridID ,rowid,'trnsitFrom'));
        
         //$("#masterWindow").show();
     }
     
    function fn_insertReceiveInfo(){
-   alert("인서트!!!!");
-/*    var array =  AUIGrid.getSelectedItems(PendingGridID);
-   alert(array); */
-   
-   
-   var ReceiveOption = $("input[name='receiveRadio']").val();
-   alert("라디오???:::::   "+ReceiveOption);
-   InsertReceiveInfoAjax();
-   
-   
-   
-	    
-   }
-   
-    
-    
-    
+	  
+	 var  TransitStatusID = $("#ResultStusId").val();  
+	 var ReceiveOption = $('input:radio[name="receiveRadio"]:checked').val();
 
+	  if(ReceiveOption == "S"){
+	   if(TransitStatusID == "44"){
+		  if(valiedcheck()){
+	      InsertReceiveInfoAjax(TransitStatusID);		   
+		  }
+	   }else{
+		   alert("You must select item in the pending list.");
+	   }
+	  }else{
+		  if(valiedcheck()){
+	          InsertReceiveInfoAjax(TransitStatusID);          
+		  }
+	  }
     
+}
+   
   
 //Warehouse 셀렉트박스 CODE+CODENAME    
   function doGetCombos(url, groupCd , selCode, obj , type, callbackFn){
@@ -461,7 +505,18 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
     function destory(gridNm) {
         AUIGrid.destroy(gridNm);
     }
-
+    
+    function valiedcheck() {   
+        
+        if ($("#receiveStatus").val() == "") {
+            Common.alert("* Please select the Receive Status.");
+            $("#receiveStatus").focus();
+            return false;
+        }
+       
+       
+        return true;
+    }
     
 
 </script>
@@ -809,6 +864,9 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 </aside><!-- title_line end -->
 
 <form id="InsertReceiveForm" name="InsertReceiveForm"   method="post">
+<input type="hidden" id="SirimLocTo" name="SirimLocTo"/>
+<input type="hidden" id="SirimLocFrom" name="SirimLocFrom"/>
+<input type="hidden" id="ResultStusId" name="ResultStusId"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -859,7 +917,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 <tr>
     <th scope="row">Receive Option</th>
     <td>
-    <label><input type="radio" name="receiveRadio" value="S"  checked="checked" /><span>Only selected item(s)</span></label>
+    <label><input type="radio" name="receiveRadio" value="S" checked /><span>Only selected item(s)</span></label>
     <label><input type="radio" name="receiveRadio" value="A"  /><span>All item(s)</span></label>
     </td>
 </tr>
