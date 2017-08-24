@@ -113,7 +113,12 @@
 	// Call Ajax - DB Insert
     function fn_customerAddressInfoAddAjax(){
         Common.ajax("GET", "/sales/customer/insertCustomerAddressInfoAf.do",$("#insAddressForm").serialize(), function(result) {
-            Common.alert(result.message, fn_parentReload);
+            
+        	if( null != $("#_callParam").val() && "" != $("#_callParam").val()){
+        		Common.alert(result.message);
+        	}else{
+        		Common.alert(result.message, fn_parentReload);
+        	}
         });
     }
 	 

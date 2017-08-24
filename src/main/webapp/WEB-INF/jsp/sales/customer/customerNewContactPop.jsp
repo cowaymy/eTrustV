@@ -162,7 +162,13 @@ $(document).ready(function() {
     // Call Ajax - DB Update
    function fn_customerContactInfoAddAjax(){
         Common.ajax("GET", "/sales/customer/insertCustomerContactAddAf.do",$("#addForm").serialize(), function(result) {
-            Common.alert(result.message, fn_parentReload);
+            
+        	if("" != $("#_callParam").val() && null != $("#_callParam").val()){
+        	   Common.alert(result.message);	
+        	}else{
+        	   Common.alert(result.message, fn_parentReload);
+        	}
+        	
         });
     }
     
