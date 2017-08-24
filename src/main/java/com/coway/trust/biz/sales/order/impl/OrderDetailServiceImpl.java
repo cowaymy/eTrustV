@@ -352,7 +352,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     			installationInfo.put("preferInstDt", "-");
     		}
     		else {
-    			installationInfo.put("preferInstDt", CommonUtils.changeFormat((String)installationInfo.get("preferInstDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+    			installationInfo.put("preferInstDt", CommonUtils.changeFormat(String.valueOf(installationInfo.get("preferInstDt")), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+    			/* TypeCast Exception*/
+    			//installationInfo.put("preferInstDt", CommonUtils.changeFormat((String)installationInfo.get("preferInstDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
     			
     		}
     		
@@ -364,7 +366,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     			installationInfo.put("firstInstallDt", "-");
     		}
     		else {
-    			installationInfo.put("firstInstallDt", CommonUtils.changeFormat((String)installationInfo.get("firstInstallDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+    			installationInfo.put("firstInstallDt", CommonUtils.changeFormat(String.valueOf(installationInfo.get("firstInstallDt")), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+    			/* TypeCast Exception*/
+    			//installationInfo.put("firstInstallDt", CommonUtils.changeFormat((String)installationInfo.get("firstInstallDt"), SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
     		}
     		
     		if(CommonUtils.isEmpty(installationInfo.get("instCntGender"))) {
