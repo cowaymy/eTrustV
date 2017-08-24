@@ -31,6 +31,8 @@ public interface CommonMapper {
 
 	List<EgovMap> selectCommonCodesPage(Map<String, Object> params);
 
+	List<EgovMap> selectBanks(Map<String, Object> params);
+
 	int selectCommonCodeTotalCount(Map<String, Object> params);
 
 	List<EgovMap> selectI18NList();

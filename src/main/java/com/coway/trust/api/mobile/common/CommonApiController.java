@@ -64,4 +64,19 @@ public class CommonApiController {
 
 		return ResponseEntity.ok(list);
 	}
+
+	@ApiOperation(value = "BANK 목록 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/banks", method = RequestMethod.GET)
+	public ResponseEntity<List<BankAllDto>> getBanks(@ModelAttribute BankAllForm bankAllForm) throws Exception {
+
+		LOGGER.debug("StusCodeId : {}", bankAllForm.getStusCodeId());
+
+		Map<String, Object> params = BankAllForm.createMap(bankAllForm);
+
+		List<EgovMap> banks = commonService.getBanks(params);
+		List<BankAllDto> list = banks.stream().map(r -> BankAllDto.create(r)).collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+
 }

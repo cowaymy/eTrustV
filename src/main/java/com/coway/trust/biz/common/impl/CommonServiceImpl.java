@@ -63,6 +63,11 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 
 	@Override
+	public List<EgovMap> getBanks(Map<String, Object> params) {
+		return commonMapper.selectBanks(params);
+	}
+
+	@Override
 	public int getCommonCodeTotalCount(Map<String, Object> params) {
 		return commonMapper.selectCommonCodeTotalCount(params);
 	}

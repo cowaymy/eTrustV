@@ -1099,6 +1099,32 @@
                    WHERE  1 = Extent1.STUS_CODE_ID ) Project1
         ORDER BY Project1.CODE ASC
     </select>
+
+    <select id="selectBanks" parameterType="Map" resultType="egovMap">
+        SELECT BANK.BANK_ID BANK_ID
+              ,BANK.CODE BANK_CODE
+              ,BANK.NAME BANK_NAME
+              ,BANK.STUS_CODE_ID
+          FROM SYS0004M BANK
+         WHERE 'T' = CASE WHEN #{stusCodeId} = 99 OR BANK.STUS_CODE_ID = #{stusCodeId}
+                                        THEN 'T'
+                                        ELSE  'F'
+                              END
+          ORDER BY BANK.CODE
+    </select>
+
+    <select id="selectDefectCodes" parameterType="Map" resultType="egovMap">
+        SELECT BANK.BANK_ID BANK_ID
+            ,BANK.CODE BANK_CODE
+            ,BANK.NAME BANK_NAME
+            ,BANK.STUS_CODE_ID
+        FROM SYS0004M BANK
+        WHERE 'T' = CASE WHEN #{stusCodeId} IS NULL OR BANK.STUS_CODE_ID = #{stusCodeId}
+                                    THEN 'T'
+                                    ELSE  'F'
+                            END
+        ORDER BY BANK.CODE
+    </select>
     
     <select id="selectBankInfoById" parameterType="java.lang.String" resultType="java.lang.String">
        SELECT CODE
