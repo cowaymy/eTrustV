@@ -410,7 +410,7 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Movement Request</h2>
+<h2>View-Stock Movement Request</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
