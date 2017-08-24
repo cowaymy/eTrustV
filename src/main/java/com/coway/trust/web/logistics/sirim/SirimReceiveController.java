@@ -96,9 +96,9 @@ public class SirimReceiveController {
 		logger.debug("srmResultStusId   ?? ::::::: {}",params.get("srmResultStusId") );
 		
 		List<EgovMap> list = SirimReceiveService.detailReceiveList(params);
-//		for (int i = 0; i < list.size(); i++) {
-//			logger.debug("detailReceiveList   ?? ::::::: {}",list.get(i) );
-//		}
+	/*for (int i = 0; i < list.size(); i++) {
+			logger.debug("detailReceiveList ************  ?? ::::::: {}",list.get(i) );
+	}*/
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
 
@@ -128,6 +128,18 @@ public class SirimReceiveController {
 			throws Exception {
 		
 		Map<String, Object> InsertReceiveMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		//List<EgovMap> ItemsAddList = (List<EgovMap>) params.get("select");
+		List<EgovMap> ItemsAddList = (List<EgovMap>) params.get("checked");
+		
+		for (int i = 0; i < ItemsAddList.size(); i++) {
+			logger.debug("ItemsAddList ???????? : {}", ItemsAddList.get(i));
+		}
+		
+//		for (int i = 0 ; i < ItemsAddList.size() ; i++){
+//			Map<String, Object> ItemsList = ItemsAddList.get(i);
+//			Map<String, Object> ItemsListMap = (Map<String, Object>)ItemsList.get("item");
+//			logger.debug("srmNo ???????? : {}", ItemsListMap.get("srmNo"));
+//		}
 
 		logger.debug("receiveInfoTransitNo  : {}", InsertReceiveMap.get("receiveInfoTransitNo"));
 		logger.debug("receiveInfoTransitDate  : {}", InsertReceiveMap.get("receiveInfoTransitDate"));
@@ -138,16 +150,8 @@ public class SirimReceiveController {
 		logger.debug("receiveInfoTotalSirimTransit  : {}", InsertReceiveMap.get("receiveInfoTotalSirimTransit"));
 		logger.debug("receiveStatus  : {}", InsertReceiveMap.get("receiveStatus"));
 		logger.debug("receiveRadio  : {}", InsertReceiveMap.get("receiveRadio"));
-		
-
-		
-		List<EgovMap> ItemsAddList = (List<EgovMap>) params.get("arrays");
-		for (int i = 0; i < ItemsAddList.size(); i++) {
-			logger.debug("%%%%%%%%ItemsAddList%%%%%%%: {}", ItemsAddList.get(i));
-		}
-		
-//		System.out.println("ItemsAddList :::::   "+ItemsAddList.get(0).get("srmTransItmId"));
-//		System.out.println("ItemsAddList :::::   "+ItemsAddList.get(0).get("item"));
+		logger.debug("SirimLocTo  : {}", InsertReceiveMap.get("SirimLocTo"));
+		logger.debug("SirimLocFrom  : {}", InsertReceiveMap.get("SirimLocFrom"));
 		
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -163,7 +167,7 @@ public class SirimReceiveController {
 		Map<String, Object> map = new HashMap();
 
 		try {
-			//SirimReceiveService.InsertReceiveInfo(masterMap, detailAddList,loginId);
+			SirimReceiveService.InsertReceiveInfo(InsertReceiveMap, ItemsAddList,loginId);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
