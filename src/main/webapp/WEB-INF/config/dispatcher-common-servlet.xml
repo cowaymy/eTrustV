@@ -11,6 +11,10 @@
 			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
 
+    <bean id="excelXlsView" class="com.coway.trust.cmmn.view.ExcelXlsView" />
+    <bean id="excelXlsxView" class="com.coway.trust.cmmn.view.ExcelXlsxView" />
+    <bean id="excelXlsxStreamingView" class="com.coway.trust.cmmn.view.ExcelXlsxStreamingView" />
+
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="webBindingInitializer">
             <bean class="com.coway.trust.cmmn.web.EgovBindingInitializer"/>

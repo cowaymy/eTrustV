@@ -450,6 +450,12 @@ public class SampleController {
 		return "sample/sampleUploadView";
 	}
 
+	@RequestMapping(value = "/sampleExcelUploadView.do")
+	public String sampleExcelUploadView(@RequestParam Map<String, Object> params, ModelMap model) {
+		LOGGER.debug(" appName : {}", appName);
+		return "sample/sampleExcelUploadView";
+	}
+
 	/**
 	 * Upload를 처리한다.
 	 *

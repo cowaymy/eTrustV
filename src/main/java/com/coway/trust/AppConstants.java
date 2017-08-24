@@ -5,7 +5,7 @@ public class AppConstants {
 	public static final String SLASH = "/";
 
 	// API 버전
-	public static final String TAG = SLASH +"v1";
+	public static final String TAG = SLASH + "v1";
 
 	public static final String MOBILE = "mobile";
 
@@ -17,8 +17,10 @@ public class AppConstants {
 
 	// API BASE UR
 	public static final String API_BASE_URI = AppConstants.PATH_API + AppConstants.TAG;
-	public static final String CALL_CENTER_API_BASE_URI = AppConstants.SLASH + AppConstants.CALLCENTER + AppConstants.API_BASE_URI;
-	public static final String MOBILE_API_BASE_URI = AppConstants.SLASH + AppConstants.MOBILE + AppConstants.API_BASE_URI;
+	public static final String CALL_CENTER_API_BASE_URI = AppConstants.SLASH + AppConstants.CALLCENTER
+			+ AppConstants.API_BASE_URI;
+	public static final String MOBILE_API_BASE_URI = AppConstants.SLASH + AppConstants.MOBILE
+			+ AppConstants.API_BASE_URI;
 
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
@@ -41,6 +43,16 @@ public class AppConstants {
 	 */
 	public static final long UPLOAD_MAX_FILE_SIZE = 1024 * 1024 * 100; // 업로드 최대 사이즈 설정 (100M)
 	public static final String MSG_IS_NOT_ALLOW = " is not allow.";
+
+	/**
+	 * excel config
+	 */
+	public static final String FILE_NAME = "fileName";
+	public static final String HEAD = "head";
+	public static final String BODY = "body";
+
+	public static final String XLS = "xls";
+	public static final String XLSX = "xlsx";
 
 	/**
 	 * session info

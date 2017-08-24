@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 		LOGGER.debug("request : {}", request.getRequestURI());
 
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
-		if (request.getRequestURI().contains(AppConstants.API_BASE_URI) || rest(contentType)) {
+		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(String.valueOf(HttpStatus.NOT_FOUND.value()));
 			message.setMessage("Resource not found for HTTP request with URI");
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
 		LOGGER.error("[applicationException]message : {}", ex.getMessage());
 		LOGGER.error("[applicationException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
-		if (request.getRequestURI().contains(AppConstants.API_BASE_URI) || rest(contentType)) {
+		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(ex.getCode());
 			message.setMessage(ex.getMessage());
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
 		LOGGER.error("[authException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 
-		if (request.getRequestURI().contains(AppConstants.API_BASE_URI) || rest(contentType)) {
+		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
 			message.setMessage("Exception : " + ex.getMessage());
@@ -104,7 +104,7 @@ public class GlobalExceptionHandler {
 		LOGGER.error("[defaultException]ex : {}", ex);
 		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
 
-		if (request.getRequestURI().contains(AppConstants.API_BASE_URI) || rest(contentType)) {
+		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
 			message.setMessage("Exception : " + ex.getMessage());
@@ -118,11 +118,13 @@ public class GlobalExceptionHandler {
 		}
 	}
 
-	private boolean rest(String contentType) {
-		if (contentType == null) {
-			return false;
+	private boolean isRest(String uri, String contentType) {
+		if (uri.contains(AppConstants.API_BASE_URI)) {
+			return true;
 		}
-		if (contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)) {
+
+		if (contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)
+				|| contentType.startsWith(MediaType.MULTIPART_FORM_DATA_VALUE)) {
 			return true;
 		}
 		return false;
