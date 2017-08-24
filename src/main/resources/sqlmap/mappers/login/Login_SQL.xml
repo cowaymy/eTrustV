@@ -4,7 +4,7 @@
 
 	<select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
 	<![CDATA[
-        SELECT 
+        SELECT
             USR.USER_ID AS userId
 	       ,USR.USER_NAME AS userName
 	       ,USR.USER_FULL_NAME AS userFullName
@@ -41,11 +41,11 @@
 	   AND 3 <> USR.USER_TYPE_ID
 	   AND 1161 <> USR.USER_TYPE_ID
 	   AND 1165 <> USR.USER_TYPE_ID
-       AND USR.USER_VAL_ID_TO >= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+       AND TO_CHAR(USR.USER_VAL_ID_TO,'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
 	   AND ROWNUM = 1
 	]]>
 	</select>
-	
+
 	<select id="selectLanguages" resultType="egovMap">
     <![CDATA[
         SELECT   LANGUAGE
@@ -53,6 +53,6 @@
 		GROUP BY LANGUAGE
     ]]>
     </select>
-	
+
 
 </mapper>
