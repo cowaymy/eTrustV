@@ -136,7 +136,7 @@
     SELECT DISTINCT Extent1.INVC_REF_NO INVC_REF_NO  ,
                Extent1.TASK_ID TASK_ID  ,
                1 C1  ,
-               TO_CHAR(TO_DATE(Extent1.INVC_REF_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') INVC_REF_DT  ,
+               TO_CHAR(Extent1.INVC_REF_DT, 'DD-MM-YYYY') INVC_REF_DT  ,
                TO_NUMBER(Extent2.INVC_SUB_MEM_PAC_AMT)  INVC_SUB_MEM_PAC_AMT,
                TO_NUMBER(Extent2.INVC_SUB_MEM_BS_AMT) INVC_SUB_MEM_BS_AMT  ,
                Extent3.SRV_MEM_QUOT_NO SRV_MEM_QUOT_NO  ,
