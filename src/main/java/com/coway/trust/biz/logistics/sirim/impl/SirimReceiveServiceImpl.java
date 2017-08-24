@@ -7,6 +7,7 @@
  */
 package com.coway.trust.biz.logistics.sirim.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,20 +40,66 @@ public class SirimReceiveServiceImpl extends EgovAbstractServiceImpl implements 
 		// TODO Auto-generated method stub
 		return SirimReceiveMapper.selectReceiveList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> detailReceiveList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return SirimReceiveMapper.detailReceiveList(params);
 	}
-	
-	
+
 	@Override
 	public List<EgovMap> getSirimReceiveInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return SirimReceiveMapper.getSirimReceiveInfo(params);
 	}
-	
-	
+
+	@Override
+	public void InsertReceiveInfo(Map<String, Object> InsertReceiveMap, List<EgovMap> ItemsAddList, int loginId) {
+
+		int receiveStatus = Integer.parseInt((String) InsertReceiveMap.get("receiveStatus"));
+
+		String getdocNo = SirimReceiveMapper.docNoCreateSeq();
+		String SirimLoc="";
+		if(receiveStatus == 4){
+			Logger.debug("SirimLocTo!!!!!!!!!!!");
+			SirimLoc = (String) InsertReceiveMap.get("SirimLocTo");
+			
+		}else{
+			Logger.debug("SirimLocFrom !!!!!!!!!!!");
+			SirimLoc = (String) InsertReceiveMap.get("SirimLocFrom");
+		}
+		
+		
+		for (int i = 0; i < ItemsAddList.size(); i++) {
+			
+			Map<String, Object> ItemsListMap = ItemsAddList.get(i);
+			ItemsListMap.put("upuser_id", loginId);
+			SirimReceiveMapper.SrmResultStatusUpdate(ItemsListMap);
+
+			Map<String, Object> sirimNegMap = new HashMap<String, Object>();
+			int CrdSirimId = SirimReceiveMapper.ReceiveCreateSeq();
+			sirimNegMap.put("CrdSirimId", CrdSirimId);
+			sirimNegMap.put("saveSirimNo", ItemsListMap.get("srmNo"));
+			sirimNegMap.put("addTypeSirim", ItemsListMap.get("srmTypeId"));
+			sirimNegMap.put("addSirimLoc", InsertReceiveMap.get("receiveInfoCourier"));
+			sirimNegMap.put("addSirimQty", -1);
+			sirimNegMap.put("getdocNo", getdocNo);
+			sirimNegMap.put("crtuser_id", loginId);
+			SirimReceiveMapper.insertReceiveSirim(sirimNegMap);
+
+			Map<String, Object> sirimPosMap = new HashMap<String, Object>();
+			CrdSirimId = SirimReceiveMapper.ReceiveCreateSeq();
+			sirimPosMap.put("CrdSirimId", CrdSirimId);
+			sirimPosMap.put("saveSirimNo", ItemsListMap.get("srmNo"));
+			sirimPosMap.put("addTypeSirim", ItemsListMap.get("srmTypeId"));
+			sirimPosMap.put("addSirimLoc", SirimLoc);
+			sirimPosMap.put("addSirimQty", 1);
+			sirimPosMap.put("getdocNo", getdocNo);
+			sirimPosMap.put("crtuser_id", loginId);
+			SirimReceiveMapper.insertReceiveSirim(sirimPosMap);
+
+		}
+
+	}
 
 }
