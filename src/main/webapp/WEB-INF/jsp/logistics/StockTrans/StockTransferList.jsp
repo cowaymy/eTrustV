@@ -159,7 +159,6 @@ function SearchListAjax() {
    
     var url = "/logistics/stocktransfer/StocktransferSearchList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
     });

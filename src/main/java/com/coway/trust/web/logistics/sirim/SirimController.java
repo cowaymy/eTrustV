@@ -53,6 +53,11 @@ public class SirimController {
 		return "logistics/sirim/sirimList";
 	}
 	
+	@RequestMapping(value = "/sirimtransferList.do")
+	public String transdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		return "logistics/sirim/sirimTran";
+	}
+	
 	//셀렉트박스 조회
 	@RequestMapping(value = "/selectWarehouseList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectWarehouseList(@RequestParam Map<String, Object> params) {
@@ -138,8 +143,27 @@ public class SirimController {
 	}
 	
 	
+	@RequestMapping(value = "/selectSirimTransList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSirimTransList(@RequestBody Map<String, Object> params, Model model) {
+		
+		List<EgovMap> list = SirimService.selectSirimTransList(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
 	
-	
-	
+	@RequestMapping(value = "/selectSirimToTransit.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSirimToTransit(@RequestParam Map<String, Object> params, Model model) {
+		
+		
+		List<EgovMap> list = SirimService.selectSirimToTransit(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}	
 
 }

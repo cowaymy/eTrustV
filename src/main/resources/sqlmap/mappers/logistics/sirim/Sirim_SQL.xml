@@ -170,7 +170,66 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
 <select id="docNoCreateSeq" resultType="String">
       select FN_GET_DOCNO('75') from dual
 </select>   
-   
-   
+
+<select id="selectSirimTransList" parameterType="Map" resultType="EgovMap">  
+	SELECT TRNSIT_ID                     AS trnsitid     ,
+	       TRNSIT_NO                     AS trnsitno     ,
+	       TRNSIT_DT                     AS trnsitdt     ,
+	       TRNSIT_FROM                   AS trnsitfr     ,
+	       TRNSIT_TO                     AS trnsitto     ,
+	       TRNSIT_CURIER                 AS trnsitcur    ,
+	       TRNSIT_STUS_ID                AS trnsitstusid ,
+	       TRNSIT_STUS_CODE              AS trnsitstuscd ,
+	       TRNSIT_STUS_NAME              AS trnsitstusnm ,
+	       TRNSIT_CRT_USER_ID_ID         AS crtuserid    ,
+	       TRNSIT_CRT_USER_ID_USER_NAME  AS crtusernm    ,
+	       TRNSIT_CLOS_DT                AS trnsitcdt    ,
+	       TOT_TRNSIT_ITM                AS totitm       ,
+	       TOT_CNT                       AS totcnt      
+	  FROM LOG1003V LV
+	     , SYS0028M S28
+	 WHERE LV.TRNSIT_TO = S28.WH_LOC_CODE
+	   <if test="strnsitno != null and strnsitno !=''">
+	       AND LV.TRNSIT_NO = #{strnsitno}
+	   </if> 
+	   <if test="sStatus != null and sStatus !=''">
+           AND LV.TRNSIT_STUS_ID = #{sStatus}
+       </if>
+       <if test="sfrloc != null and sfrloc !=''">
+           AND LV.TRNSIT_FROM = #{sfrloc}
+       </if> 
+       <if test="stoloc != null and stoloc !=''">
+           AND LV.TRNSIT_TO = #{stoloc}
+       </if> 
+	   ORDER BY LV.TRNSIT_NO
+	   
+</select>
+
+<select id="selectSirimToTransit" parameterType="Map" resultType="EgovMap">
+    select ROWNUM RNUM 
+	     , L36.SRM_TRANS_ITM_ID STII
+	     , L36.SRM_TYPE_ID  STID
+	     , L36.SRM_NO SNO
+	     , L36.SRM_RESULT_STUS_ID SRSI
+	     , L36.SRM_TRANS_UPD_DT STOD
+	     , L36.TR_TRANS_CLOS_DT TTCD
+	     , S13.CODE_DESC CDESC
+	     , S38.CODE CODE
+	     , DECODE(S47.USER_ID , NULL , '-' ,  S47.USER_NAME) UNAME 
+	  from LOG0036D L36
+	     , SYS0013M S13
+	     , SYS0038M S38
+	     , SYS0047M S47
+	 WHERE 1 = 1
+	   AND L36.SRM_TYPE_ID = S13.CODE_ID
+	   AND L36.SRM_TRANS_STUS_ID = S38.STUS_CODE_ID
+	   AND L36.SRM_TRANS_UPD_USER_ID = S47.USER_ID(+)
+	   AND SRM_TRANS_STUS_ID = 1
+	   AND SRM_TRANSF_ID = #{trnsitid}
+	   <if test="statusid != null and statusid !=''">
+	       AND SRM_RESULT_STUS_ID = #{statusid}
+	   </if>
+	   order by SRM_TRANS_ITM_ID
+</select> 
         
 </mapper>

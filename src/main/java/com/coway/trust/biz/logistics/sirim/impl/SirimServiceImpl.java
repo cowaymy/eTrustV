@@ -173,4 +173,16 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 		return PrefixNo + StartNoFormat;
 	}
 
+	@Override
+	public List<EgovMap> selectSirimTransList(Map<String, Object> params) {
+		
+		return SirimMapper.selectSirimTransList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectSirimToTransit(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return SirimMapper.selectSirimToTransit(params);
+	}
+
 }

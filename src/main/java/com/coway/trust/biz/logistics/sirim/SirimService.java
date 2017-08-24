@@ -15,5 +15,7 @@ public interface SirimService {
 	
 	void insertSirimList(Map<String, Object> params);
 	
+	List<EgovMap> selectSirimTransList(Map<String, Object> params);
 	
+	List<EgovMap> selectSirimToTransit(Map<String, Object> params);
 }

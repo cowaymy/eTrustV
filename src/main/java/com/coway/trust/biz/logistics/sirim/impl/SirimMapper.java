@@ -22,4 +22,7 @@ public interface SirimMapper {
 	void insertSirimD(Map<String, Object> params);
 	void insertSirimCrd_Pos(Map<String, Object> params);
 	
+	List<EgovMap> selectSirimTransList(Map<String, Object> params);
+	
+	List<EgovMap> selectSirimToTransit(Map<String, Object> params);
 }
