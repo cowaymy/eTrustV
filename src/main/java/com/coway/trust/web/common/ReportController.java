@@ -41,6 +41,7 @@ public class ReportController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
+	private static final String REPORT_DOWN_FILE_NAME = "reportDownFileName";
 	private static final String REPORT_FILE_NAME = "reportFileName";
 	private static final String REPORT_VIEW_TYPE = "viewType";
 	private static final String REPORT_CLIENT_DOCUMENT = "com.crystaldecisions.sdk.occa.report.application.ReportClientDocument";
@@ -185,15 +186,18 @@ public class ReportController {
 
 	private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
 			ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer) throws ReportSDKExceptionBase {
+
+		String downFileName = request.getParameter(REPORT_DOWN_FILE_NAME);
+
 		switch (viewType) {
 		case CSV:
-			viewCSV(response, clientDoc);
+			viewCSV(response, clientDoc, downFileName);
 			break;
 		case PDF:
-			viewPDF(response, clientDoc);
+			viewPDF(response, clientDoc, downFileName);
 			break;
 		case EXCEL:
-			viewEXCEL(response, clientDoc);
+			viewEXCEL(response, clientDoc, downFileName);
 			break;
 		default:
 			viewWindow(request, response, crystalReportViewer);
@@ -201,27 +205,27 @@ public class ReportController {
 		}
 	}
 
-	private void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc) throws ReportSDKExceptionBase {
+	private void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) throws ReportSDKExceptionBase {
 		try {
-			CRJavaHelper.exportExcelDataOnly(clientDoc, response, true);
+			CRJavaHelper.exportExcelDataOnly(clientDoc, response, true, downFileName);
 		} catch (IOException ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);
 		}
 	}
 
-	private void viewCSV(HttpServletResponse response, ReportClientDocument clientDoc) throws ReportSDKExceptionBase {
+	private void viewCSV(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) throws ReportSDKExceptionBase {
 		try {
-			CRJavaHelper.exportCSV(clientDoc, response, true);
+			CRJavaHelper.exportCSV(clientDoc, response, true, downFileName);
 		} catch (IOException ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);
 		}
 	}
 
-	private void viewPDF(HttpServletResponse response, ReportClientDocument clientDoc) throws ReportSDKExceptionBase {
+	private void viewPDF(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) throws ReportSDKExceptionBase {
 		try {
-			CRJavaHelper.exportPDF(clientDoc, response, true);
+			CRJavaHelper.exportPDF(clientDoc, response, true, downFileName);
 		} catch (IOException ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);

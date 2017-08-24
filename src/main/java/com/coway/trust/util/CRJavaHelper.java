@@ -36,6 +36,7 @@ import com.crystaldecisions.sdk.occa.report.lib.IStrings;
 import com.crystaldecisions.sdk.occa.report.lib.PropertyBag;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKException;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * crystal report helper
@@ -439,14 +440,12 @@ public class CRJavaHelper {
      * 
      * @param clientDoc        The reportClientDocument representing the report being used
      * @param response        The HttpServletResponse object
-     * @param startPage        Starting page
-     * @param endPage        Ending page
      * @param attachment    true to prompts for open or save; false opens the report
      *                         in the specified format after exporting.
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    public static void exportPDF(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment) throws ReportSDKExceptionBase, IOException {
+    public static void exportPDF(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
         // PDF export allows page range export. The following routine ensures
         // that the requested page range is valid
         PDFExportFormatOptions  pdfOptions = new PDFExportFormatOptions();
@@ -454,7 +453,7 @@ public class CRJavaHelper {
         exportOptions.setExportFormatType(ReportExportFormat.PDF);        
         exportOptions.setFormatOptions(pdfOptions);
 
-        export(clientDoc, exportOptions, response, attachment, "application/pdf", "pdf");
+        export(clientDoc, exportOptions, response, attachment, "application/pdf", "pdf", downFileName);
     }
     
     /**
@@ -469,7 +468,7 @@ public class CRJavaHelper {
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    public static void exportPDF(ReportClientDocument clientDoc, HttpServletResponse response, ServletContext  context, int startPage, int endPage,boolean attachment) throws ReportSDKExceptionBase, IOException {
+    public static void exportPDF(ReportClientDocument clientDoc, HttpServletResponse response, ServletContext  context, int startPage, int endPage,boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
         // PDF export allows page range export. The following routine ensures
         // that the requested page range is valid
         PDFExportFormatOptions  pdfOptions = new PDFExportFormatOptions();
@@ -479,7 +478,7 @@ public class CRJavaHelper {
         exportOptions.setExportFormatType(ReportExportFormat.PDF);        
         exportOptions.setFormatOptions(pdfOptions);
 
-        export(clientDoc, exportOptions, response, attachment, "application/pdf", "pdf");
+        export(clientDoc, exportOptions, response, attachment, "application/pdf", "pdf", downFileName);
 
     }
     
@@ -493,7 +492,7 @@ public class CRJavaHelper {
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    public static void exportRTF(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment) throws ReportSDKExceptionBase, IOException {
+    public static void exportRTF(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
         // RTF export allows page range export. The following routine ensures
         // that the requested page range is valid
         RTFWordExportFormatOptions  rtfOptions = new RTFWordExportFormatOptions();
@@ -501,7 +500,7 @@ public class CRJavaHelper {
         exportOptions.setExportFormatType(ReportExportFormat.RTF);        
         exportOptions.setFormatOptions(rtfOptions);
 
-        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf");
+        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf", downFileName);
     }
     
     /**
@@ -526,7 +525,7 @@ public class CRJavaHelper {
         exportOptions.setExportFormatType(ReportExportFormat.RTF);        
         exportOptions.setFormatOptions(rtfOptions);
 
-        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf");
+        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf", "");
     }
 
     /**
@@ -539,7 +538,7 @@ public class CRJavaHelper {
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    public static void exportRTFEditable(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment) throws ReportSDKExceptionBase, IOException {
+    public static void exportRTFEditable(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
         // RTF export allows page range export. The following routine ensures
         // that the requested page range is valid
         EditableRTFExportFormatOptions  rtfOptions = new EditableRTFExportFormatOptions();
@@ -547,7 +546,7 @@ public class CRJavaHelper {
         exportOptions.setExportFormatType(ReportExportFormat.editableRTF);      
         exportOptions.setFormatOptions(rtfOptions);
 
-        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf");
+        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf", downFileName);
     }    
     
     /**
@@ -562,7 +561,7 @@ public class CRJavaHelper {
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    public static void exportRTFEditable(ReportClientDocument clientDoc, HttpServletResponse response, ServletContext  context, int startPage, int endPage,boolean attachment) throws ReportSDKExceptionBase, IOException {
+    public static void exportRTFEditable(ReportClientDocument clientDoc, HttpServletResponse response, ServletContext  context, int startPage, int endPage,boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
         // RTF export allows page range export. The following routine ensures
         // that the requested page range is valid
         EditableRTFExportFormatOptions  rtfOptions = new EditableRTFExportFormatOptions();
@@ -572,7 +571,7 @@ public class CRJavaHelper {
         exportOptions.setExportFormatType(ReportExportFormat.editableRTF);      
         exportOptions.setFormatOptions(rtfOptions);
 
-        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf");
+        export(clientDoc, exportOptions, response, attachment, "text/rtf", "rtf", downFileName);
     }
     
     /**
@@ -585,13 +584,13 @@ public class CRJavaHelper {
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    public static void exportExcelDataOnly(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment) throws ReportSDKExceptionBase, IOException {
+    public static void exportExcelDataOnly(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
         DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
         ExportOptions exportOptions = new ExportOptions();
         exportOptions.setExportFormatType(ReportExportFormat.recordToMSExcel);      
         exportOptions.setFormatOptions(excelOptions );
 
-        export(clientDoc, exportOptions, response, attachment, "application/excel", "xls");
+        export(clientDoc, exportOptions, response, attachment, "application/excel", "xls", downFileName);
     }
 
     /**
@@ -604,7 +603,7 @@ public class CRJavaHelper {
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    public static void exportCSV(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment) throws ReportSDKExceptionBase, IOException {
+    public static void exportCSV(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
         CharacterSeparatedValuesExportFormatOptions csvOptions = new CharacterSeparatedValuesExportFormatOptions();
         csvOptions.setSeparator(",");
         csvOptions.setDelimiter("\n");
@@ -612,7 +611,7 @@ public class CRJavaHelper {
         exportOptions.setExportFormatType(ReportExportFormat.characterSeparatedValues);        
         exportOptions.setFormatOptions(csvOptions);
 
-        export(clientDoc, exportOptions, response, attachment, "text/csv", "csv");
+        export(clientDoc, exportOptions, response, attachment, "text/csv", "csv", downFileName);
     }
     
     /**
@@ -625,10 +624,11 @@ public class CRJavaHelper {
      *                        in the specified format after exporting.
      * @param mimeType        MIME type of the format being exported
      * @param extension       file extension of the format (e.g., "pdf" for Acrobat)
+     * @param downFileName
      * @throws ReportSDKExceptionBase
      * @throws IOException
      */
-    private static void export(ReportClientDocument clientDoc, ExportOptions exportOptions, HttpServletResponse response, boolean attachment, String mimeType, String extension)
+    private static void export(ReportClientDocument clientDoc, ExportOptions exportOptions, HttpServletResponse response, boolean attachment, String mimeType, String extension, String downFileName)
         throws ReportSDKExceptionBase, IOException {
         
         InputStream is = null;
@@ -639,14 +639,17 @@ public class CRJavaHelper {
             response.setContentType(mimeType);
             if (attachment)
             {
-                String name = clientDoc.getReportSource().getReportTitle();
-                if (name == null)
+                String name = "";
+                if(StringUtils.isNotEmpty(downFileName)){
+                    name = downFileName;
+                }else if (StringUtils.isEmpty(name))
                 {
-                    name = "CrystalReportViewer";
-                }
-                else
-                {
+                    name = clientDoc.getReportSource().getReportTitle();
                     name = name.replaceAll("\"", "");
+                }
+
+                if (StringUtils.isEmpty(name)){
+                    name = "Report-" + extension;
                 }
                 
                 response.setHeader("Content-Disposition",

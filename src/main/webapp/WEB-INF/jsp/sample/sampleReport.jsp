@@ -72,8 +72,9 @@
                         <input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br />
                         <input type="text" id="reportFileName" name="reportFileName" value="/payment/PaymentListing_Excel.rpt" /><br />
              -->
-			<!-- 필수 파라미터 start-->
+<!-- ### 필수 파라미터 start ### -->
 			<!-- 리포트 파일명 -->
+			리포트 파일명 :
 			<input type="text" id="reportFileName" name="reportFileName" value="/sample/PaymentListing_Excel.rpt" /><br />
 
 			<!-- view type
@@ -83,9 +84,13 @@
 			CVS : CVS 다운로드
 			-->
 			<input type="text" id="viewType" name="viewType" value="PDF" /><br />
-			<!-- 필수 파라미터 end-->
+<!-- ### 필수 파라미터 end ### -->
+
+			<!-- 다운로드될 파일명 지정 -->
+			다운로드될 파일명 지정 : <input type="text" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" /><br />
 
 			<!-- 리포트에서 사용할 파라미터 start-->
+			리포트 파일에 전달될 파라미터 설정 : <br/>
 			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="and pm.OR_NO = 'OR312430'" /><br />
 			<input type="text" id="@WhereSQL" name="@WhereSQL" value="and pm.OR_NO = 'OR312430'" /><br /><!-- AS-IS 파라미터로 설정된 값 -->
 			<!-- 리포트에서 사용할 파라미터 end-->
