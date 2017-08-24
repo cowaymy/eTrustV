@@ -17,5 +17,10 @@ public interface SirimReceiveMapper {
 	
 	List<EgovMap> getSirimReceiveInfo(Map<String, Object> params);
 
+	void SrmResultStatusUpdate(Map<String, Object> params);
 	
+	void insertReceiveSirim(Map<String, Object> params);
+	
+	String docNoCreateSeq();
+	int ReceiveCreateSeq();
 }
