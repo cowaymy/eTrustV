@@ -17,7 +17,6 @@
 
 <script type="text/javaScript">
 var gSelMainRowIdx = 0;
-var StatusCdList = new Array();
 var gSelMstRolLvl = "";
 var gAuthList =   ["EXT", "INT", "MGR"];
 var validFrom;
@@ -79,20 +78,7 @@ var AuthColumnLayout =
                 iconPosition : "aisleRight",
                 iconFunction : function(rowIndex, columnIndex, value, item) 
                 { 
-/*                     switch(rowIndex ) 
-                    {
-                      case 0:
-                        return null;
-                        break;
-                      case 1:
-                        return null;
-                        break;
-                      default:
-                        return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
-                        break;
-                    }   */              
                   return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
-                	 
                 } ,// end of iconFunction                
           
                 onclick : function(rowIndex, columnIndex, value, item) 
@@ -476,7 +462,7 @@ function fnAddRow()
       item.authCode ="";
       item.authName ="";
       item.roleId   ="";
-      item.rollvl   ="";
+      item.roleLvl  ="";
       item.fromDt   ="";
       item.toDt     ="";
       item.hidden   ="";
