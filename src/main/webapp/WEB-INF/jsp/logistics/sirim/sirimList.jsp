@@ -72,7 +72,7 @@
     $(document).ready(function(){
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
-        
+               
         doGetCombo('/common/selectCodeList.do', '11', '','searchCategory', 'S' , ''); //Type 리스트 조회
         doGetCombos('/logistics/sirim/selectWarehouseList.do', '', '','searchWarehouse', 'S' , ''); //Warehouse 리스트 조회
         
@@ -361,7 +361,6 @@
 <p class="search">
 <input type="text" title="검색어 입력" />
 <input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
-
 </p>
 
 </form>
