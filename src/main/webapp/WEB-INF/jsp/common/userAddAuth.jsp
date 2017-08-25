@@ -720,25 +720,25 @@ $(document).ready(function(){
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-<div style="width:25%;">
+<!-- <div style="width:25%;"> -->
 
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div class="border_box" style="width:25%;"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">User</h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdUser"  style="height:420px;"></div>
+    <div id="grdUser"  style="height:425px;"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
 
-</div>
+<!-- </div> -->
 
-<div style="width:75%;">
+<!-- <div style="width:75%;"> -->
 
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div class="border_box" style="width:75%;"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Auth</h3>
@@ -749,12 +749,12 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap autoHeight"><!-- grid_wrap start -->
-    <div id="grdAddAuth"  style="height:420px;"></div>
+    <div id="grdAddAuth"  style="height:425px;"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
 
-</div>
+<!-- </div> -->
 
 </div><!-- divine_auto end -->
 
