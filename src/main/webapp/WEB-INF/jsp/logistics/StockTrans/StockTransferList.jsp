@@ -29,6 +29,7 @@
 <script type="text/javaScript" language="javascript">
 var listGrid;
 var subGrid;
+var mdcGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
@@ -79,11 +80,35 @@ var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"        
                        {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                        {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
 
+var mtrcolumnLayout = [
+                        {dataField:"matrlDocNo", headerText:"" ,width:120    ,height:30},
+                        {dataField:"matrlDocItm", headerText:"" ,width:120    ,height:30},
+                        {dataField:"trnscTypeCode", headerText:"" ,width:120    ,height:30},
+                        {dataField:"invntryMovType", headerText:"" ,width:120    ,height:30},
+                        {dataField:"matrlDocYear", headerText:"" ,width:120    ,height:30},
+                        {dataField:"autoCrtItm", headerText:"" ,width:120    ,height:30},
+                        {dataField:"debtCrditIndict", headerText:"" ,width:120    ,height:30},
+                        {dataField:"matrlNo", headerText:"" ,width:120    ,height:30},
+                        {dataField:"itmName", headerText:"" ,width:120    ,height:30},
+                        {dataField:"qty", headerText:"" ,width:120    ,height:30},
+                        {dataField:"codeName", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rqloc", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rqlocid", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rqlocnm", headerText:"" ,width:120    ,height:30},
+                        {dataField:"delvryNo", headerText:"" ,width:120    ,height:30},
+                        {dataField:"itmCode", headerText:"" ,width:120    ,height:30},
+                        {dataField:"stockTrnsfrReqst", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rcloc", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rclocid", headerText:"" ,width:120    ,height:30},
+                        {dataField:"rclocnm", headerText:"" ,width:120    ,height:30},
+                        {dataField:"uom", headerText:"" ,width:120    ,height:30},
+                        {dataField:"uomnm", headerText:"" ,width:120    ,height:30}
+           ];
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
-		rowIdField : "rnum",			
-		//editable : true,
-		groupingFields : ["reqstno", "staname"],
+        rowIdField : "rnum",            
+        //editable : true,
+        groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
         enableCellMerge : true,
         //showStateColumn : false,
@@ -96,7 +121,7 @@ var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Man
 var uomlist = f_getTtype('42' , '');
 var paramdata;
 $(document).ready(function(){
-	/**********************************
+    /**********************************
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
@@ -116,43 +141,49 @@ $(document).ready(function(){
      ***********************************/
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
-    //subGrid  = GridCommon.createAUIGrid("#sub_grid_wrap", reqcolumnLayout ,"", resop);
     subGrid  = GridCommon.createAUIGrid("#sub_grid_wrap", reqcolumnLayout ,"", reqop);
-    
+    mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", mtrcolumnLayout ,"", reqop);
+    $("#sub_grid_wrap").hide(); 
+    $("#mdc_grid").hide(); 
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
-    	
-    	if (event.dataField == "reqstno"){
-    		SearchDeliveryListAjax(event.value)
-    	}
+        $("#sub_grid_wrap").hide(); 
+        $("#mdc_grid").hide(); 
+        if (event.dataField == "reqstno"){
+            SearchDeliveryListAjax(event.value)
+        }
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-     	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-    	document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
-    	document.searchForm.submit();
+        $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+        document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
+        document.searchForm.submit();
     });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
     
 });
+
 function f_change(){
-	$("#sttype").change();
+    $("#sttype").change();
 }
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	SearchListAjax();
+        SearchListAjax();
     });
     $("#sttype").change(function(){
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $('#insert').click(function(){
-    	document.searchForm.action = '/logistics/stocktransfer/StocktransferIns.do';
+        document.searchForm.action = '/logistics/stocktransfer/StocktransferIns.do';
         document.searchForm.submit();
     });
+/*     $('#com_rmk_info').click(function(){
+        mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
+    }); */
 });
 
 function SearchListAjax() {
@@ -161,15 +192,22 @@ function SearchListAjax() {
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
+        
     });
 }
 
 function SearchDeliveryListAjax( reqno ) {
     var url = "/logistics/stocktransfer/StocktransferRequestDeliveryList.do";
     var param = "reqstno="+reqno;
+    $("#sub_grid_wrap").show(); 
+    $("#mdc_grid").show(); 
     
     Common.ajax("GET" , url , param , function(data){
         AUIGrid.setGridData(subGrid, data.data);
+        //mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
+        AUIGrid.resize(mdcGrid,1620,150); 
+        AUIGrid.setGridData(mdcGrid, data.data2);
+        console.log(data.data2);
     });
 }
 
@@ -266,10 +304,10 @@ function f_getTtype(g , v){
                     <th scope="row">Create Date</th>
                     <td>
                         <div class="date_set"><!-- date_set start -->
-					    <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-					    <span> ~ </span>
-					    <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-					    </div><!-- date_set end -->                        
+                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <span> ~ </span>
+                        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div><!-- date_set end -->                        
                     </td>
                     <th scope="row">Required Date</th>
                     <td >
@@ -311,28 +349,26 @@ function f_getTtype(g , v){
 
     </section><!-- search_result end -->
     <section class="tap_wrap"><!-- tap_wrap start -->
-		<ul class="tap_type1">
-		    <li><a href="#" class="on">Register Order</a></li>
-		    <li><a href="#">Compliance Remark</a></li>
-		</ul>
-		
-		<article class="tap_area"><!-- tap_area start -->
-		
-			<article class="grid_wrap"><!-- grid_wrap start -->
-			      <div id="sub_grid_wrap" class="mt10" style="height:150px"></div>
-			</article><!-- grid_wrap end -->
-		
-		</article><!-- tap_area end -->
-			
-		<article class="tap_area"><!-- tap_area start -->
-			
-			<article class="grid_wrap"><!-- grid_wrap start -->
-			그리드 영역
-			</article><!-- grid_wrap end -->
-			
-		</article><!-- tap_area end -->
-		
-	</section><!-- tap_wrap end -->
+        <ul class="tap_type1">
+            <li><a href="#" class="on">Register Order</a></li>
+            <li><a href="#">Compliance Remark</a></li>
+        </ul>
+        
+        <article class="tap_area"><!-- tap_area start -->
+        
+            <article class="grid_wrap"><!-- grid_wrap start -->
+                  <div id="sub_grid_wrap" class="mt10" style="height:150px"></div>
+            </article><!-- grid_wrap end -->
+        
+        </article><!-- tap_area end -->
+            
+        <article class="tap_area"><!-- tap_area start -->
+            <article class="grid_wrap"><!-- grid_wrap start -->
+                 <div id="mdc_grid"  class="mt10" ></div>
+            </article><!-- grid_wrap end -->
+        </article><!-- tap_area end -->
+        
+    </section><!-- tap_wrap end -->
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">

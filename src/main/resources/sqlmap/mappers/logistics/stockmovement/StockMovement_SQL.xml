@@ -301,6 +301,8 @@
              , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
              , l48.reqst_no_itm ritmno
              , nvl(l55.rcipt_qty , 0) rciptqty
+             , NVL (L54.DELVRY_GR_CMPLT , 'N') grcmplt
+             , NVL (L54.DELVRY_GI_CMPLT , 'N') gicmplt
           from log0047m l47
              , log0048d l48
              , log0054m l54
@@ -348,15 +350,24 @@
               and l55.DELVRY_DT <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
            <if test="gtype !=null and gtype =='receipt'">
-              and l55.rcipt_qty is not null
+              and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'
+           </if>
+           <if test="gtype !=null and gtype =='receiptList'">
+              and L54.DELVRY_GR_CMPLT <![CDATA[=]]> 'Y'
            </if>
            ORDER BY l54.delvry_no
            ) T
     </select>
     <resultMap id="MOVEDATA" type="egovMap" />
-    <select id="stockMoveiSsue"  statementType="CALLABLE" parameterType="Map"> 
+    <select id="StockMovementIssue"  statementType="CALLABLE" parameterType="Map"> 
              { call SP_LOGISTIC_DELIVERY
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=MOVEDATA} )
+             } 
+     </select>
+          <resultMap id="MoveCANCLEDATA" type="egovMap" />
+     <select id="StockMovementCancelIssue"  statementType="CALLABLE" parameterType="Map"> 
+             { call SP_LOGISTIC_DELIVERY_CANCEL
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=MoveCANCLEDATA} )
              } 
      </select>
      <select id="selectStockMovementSerial" parameterType="Map" resultType="Integer">
@@ -382,21 +393,86 @@
                                     #{userId}
                                     FROM LOG0055D
                                     WHERE 1=1
-		                                      AND DELVRY_NO= #{delno}
-		                                      AND ITM_CODE =#{itmcd}
-		                                      AND REQST_NO =#{reqstno}                                      
+                                              AND DELVRY_NO= #{delno}
+                                              AND ITM_CODE =#{itmcd}
+                                              AND REQST_NO =#{reqstno}                                      
                                                        
      </insert>
      <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
-			SELECT
-				DELVRY_NO,
-				DELVRY_NO_ITM,
-				ITM_CODE,
-				REQST_NO
-			FROM LOG0055D
-			WHERE 1=1
-						AND DELVRY_NO = #{delno}
-						AND ITM_CODE  =  #{itmcd}
-						AND REQST_NO  =  #{reqstno}
+            SELECT
+                DELVRY_NO,
+                DELVRY_NO_ITM,
+                ITM_CODE,
+                REQST_NO
+            FROM LOG0055D
+            WHERE 1=1
+                        AND DELVRY_NO = #{delno}
+                        AND ITM_CODE  =  #{itmcd}
+                        AND REQST_NO  =  #{reqstno}
+     </select>
+     
+     <select id="selectStockMovementDeliverySerial" parameterType="Map" resultType="egovMap">
+             SELECT 
+                        l55d.DELVRY_NO,
+                        l55d.DELVRY_NO_ITM,
+                        l55d.ITM_CODE,
+                        l55d.ITM_NAME,
+                        l61d.SERIAL_NO,
+                        l61d.DELVRY_NO DELVRY_NO2,
+                        l61d.PDELVRY_NO_ITM,
+                        l61d.TTYPE,
+                        TO_CHAR(l61d.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+                        l61d.CRT_USER_ID
+            FROM LOG0055D l55d, LOG0061D l61d
+                        WHERE l55d.DELVRY_NO = l61d.DELVRY_NO
+                                AND  l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM
+                                AND  l61d.DELVRY_NO = #{delno}
+                                ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
+     </select>
+         <select id="selectStockMovementMtrDocInfoList"  parameterType="Map" resultType="egovMap">
+        SELECT
+                    lg59m.MATRL_DOC_NO,
+                    lg60d.MATRL_DOC_ITM,
+                    lg59m.TRNSC_TYPE_CODE,
+                    tran.CODE_NAME,
+                    lg60d.INVNTRY_MOV_TYPE,
+                    tranD.CODE_NAME,
+                    lg59m.MATRL_DOC_YEAR,
+                    lg60d.AUTO_CRT_ITM,
+                    lg60d.DEBT_CRDIT_INDICT,
+                    lg60d.MATRL_NO,
+                    lg48d.ITM_NAME,
+                    lg60d.QTY,
+                    lg48d.UOM,
+                    uomt.CODE_NAME uomnm,
+                    lg47m.REQST_CDC_RDC rqloc,
+                    sy28rq.WH_LOC_ID rqlocid,
+                    sy28rq.WH_LOC_DESC rqlocnm,
+                    lg60d.DELVRY_NO,
+                    lg48d.ITM_CODE,
+                    lg60d.STOCK_TRNSFR_REQST,
+                    lg47m.RCIV_CDC_RDC rcloc,
+                    sy28rc.WH_LOC_ID rclocid,
+                    sy28rc.WH_LOC_DESC rclocnm
+            FROM LOG0059M lg59m JOIN LOG0060D lg60d
+                    ON (lg59m.MATRL_DOC_NO = lg60d.MATRL_DOC_NO) 
+                JOIN LOG0047M lg47m
+                    ON (LG60D.STOCK_TRNSFR_REQST = lg47m.REQST_NO)
+                JOIN LOG0048D lg48d 
+                    ON (LG60D.STOCK_TRNSFR_REQST = lg48d.REQST_NO 
+                          AND LG60D.DELVRY_ITM_NO = lg48d.REQST_NO_ITM
+                          AND lg60d.MATRL_NO = lg48d.ITM_CODE)
+                JOIN (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 306) tran
+                    ON (lg47m.TRNSC_TYPE = tran.CODE)
+                JOIN (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 308) tranD
+                    ON (lg47m.TRNSC_TYPE_DTL = tranD.CODE)
+                JOIN (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 42) uomt
+                    ON (lg48d.UOM = uomt.CODE_ID)
+                JOIN SYS0028M sy28rq
+                    ON (lg47m.REQST_CDC_RDC = sy28rq.WH_LOC_ID)
+                JOIN SYS0028M sy28rc
+                    ON (lg47m.RCIV_CDC_RDC = sy28rc.WH_LOC_ID)
+            WHERE lg60d.STOCK_TRNSFR_REQST= #{reqstno}              
+            ORDER BY lg59m.MATRL_DOC_NO, lg60d.MATRL_DOC_ITM
      </select>
 </mapper>

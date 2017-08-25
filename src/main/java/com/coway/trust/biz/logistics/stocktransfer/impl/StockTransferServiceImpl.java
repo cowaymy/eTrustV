@@ -244,11 +244,11 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
-		if ("RC".equals((String)formMap.get("gtype"))){
-			//System.out.println(" ::::: 254Line :::::: ");
+		if ("RC".equals(formMap.get("gtype"))) {
+			// System.out.println(" ::::: 254Line :::::: ");
 			stocktran.StockTransferCancelIssue(formMap);
-		}else{
-			//System.out.println(" ::::: 256Line :::::: ");
+		} else {
+			// System.out.println(" ::::: 256Line :::::: ");
 			stocktran.StockTransferiSsue(formMap);
 		}
 
@@ -257,5 +257,11 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		List<EgovMap> list = null;
 
 		return list;
+	}
+
+	@Override
+	public List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stocktran.selectStockTransferMtrDocInfoList(params);
 	}
 }

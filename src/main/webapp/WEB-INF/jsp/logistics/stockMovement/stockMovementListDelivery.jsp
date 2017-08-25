@@ -32,6 +32,7 @@
 <script type="text/javaScript" language="javascript">
 var listGrid;
 var reqGrid;
+var serialGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
@@ -149,8 +150,7 @@ $(document).ready(function(){
     //doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
-    //doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+    doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
     //doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
@@ -165,7 +165,6 @@ $(document).ready(function(){
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumnLayout, serialop);
-    //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
     
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
@@ -428,12 +427,12 @@ function fn_serialChck(str){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Movement Request List</li>
+    <li>Stock Movement Delivery</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Movement Request List</h2>
+<h2>New-Stock Movement Request List For Delivery</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->

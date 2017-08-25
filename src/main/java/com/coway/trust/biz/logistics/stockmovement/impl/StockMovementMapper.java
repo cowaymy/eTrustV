@@ -43,12 +43,18 @@ public interface StockMovementMapper {
 
 	int selectStockMovementSerial(Map<String, Object> params);
 
-	void stockMoveiSsue(Map<String, Object> formMap);
-
 	void insertMovementSerial();
 
 	List<EgovMap> selectNewDeliveryNoITM(Map<String, Object> params);
 
 	void insertMovementSerial(Map<String, Object> insSerial);
+
+	void StockMovementCancelIssue(Map<String, Object> formMap);
+
+	void StockMovementIssue(Map<String, Object> formMap);
+
+	List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
 
 }

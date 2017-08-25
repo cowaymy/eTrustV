@@ -203,7 +203,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
-		stockMoveMapper.stockMoveiSsue(formMap);
+		stockMoveMapper.StockMovementIssue(formMap);
 
 	}
 
@@ -211,5 +211,66 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public int selectStockMovementSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return stockMoveMapper.selectStockMovementSerial(params);
+	}
+
+	@Override
+	public List<EgovMap> stockMovementDeliveryIssue(Map<String, Object> params) {
+		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		int iCnt = 0;
+		String tmpdelCd = "";
+		String delyCd = "";
+		if (checklist.size() > 0) {
+			for (int i = 0; i < checklist.size(); i++) {
+				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
+
+				Map<String, Object> imap = new HashMap();
+				imap = (Map<String, Object>) map.get("item");
+
+				String delCd = (String) imap.get("delyno");
+				if (delCd != null && !(tmpdelCd.equals(delCd))) {
+					tmpdelCd = delCd;
+					if (iCnt == 0) {
+						delyCd = delCd;
+					} else {
+						delyCd += "∈" + delCd;
+					}
+					iCnt++;
+				}
+			}
+		}
+
+		String[] delvcd = delyCd.split("∈");
+		formMap.put("parray", delvcd);
+		formMap.put("userId", 999999999);
+		formMap.put("prgnm", "deliverylist");
+		formMap.put("refdocno", "");
+		formMap.put("salesorder", "");
+
+		if ("RC".equals(formMap.get("gtype"))) {
+			// System.out.println(" ::::: 254Line :::::: ");
+			stockMoveMapper.StockMovementCancelIssue(formMap);
+		} else {
+			// System.out.println(" ::::: 256Line :::::: ");
+			stockMoveMapper.StockMovementIssue(formMap);
+		}
+
+		System.out.println(formMap.get("rdata"));
+
+		List<EgovMap> list = null;
+
+		return list;
+	}
+
+	@Override
+	public List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMoveMapper.selectStockMovementDeliverySerial(params);
+	}
+
+	@Override
+	public List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMoveMapper.selectStockMovementMtrDocInfoList(params);
 	}
 }

@@ -29,4 +29,10 @@ public interface StockMovementService {
 
 	int selectStockMovementSerial(Map<String, Object> params);
 
+	List<EgovMap> stockMovementDeliveryIssue(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
+
 }

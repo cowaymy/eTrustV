@@ -141,9 +141,10 @@ public class StockMovementController {
 			Model model) throws Exception {
 
 		List<EgovMap> list = stockMovementService.selectStockMovementDeliveryList(params);
-
+		List<EgovMap> mtrList = stockMovementService.selectStockMovementMtrDocInfoList(params);
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
+		map.put("data2", mtrList);
 
 		return ResponseEntity.ok(map);
 	}
@@ -220,7 +221,7 @@ public class StockMovementController {
 	}
 
 	@RequestMapping(value = "/StockMovementDataDetail.do", method = RequestMethod.GET)
-	public ResponseEntity<Map> StocktransferDataDetail(Model model, HttpServletRequest request,
+	public ResponseEntity<Map> stocktransferDataDetail(Model model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		String rstonumber = request.getParameter("rStcode");
@@ -236,17 +237,10 @@ public class StockMovementController {
 
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
-		// if (sessionVO == null) {
-		// loginId = 99999999;
-		// } else {
-		// loginId = sessionVO.getUserId();
-		// }
 
 		List<Object> delList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-
-		// Map<String , Object> formMap = (Map<String, Object>) formList.get(0);
 
 		Map<String, Object> param = new HashMap();
 		param.put("del", delList);
@@ -346,7 +340,7 @@ public class StockMovementController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/StockMovementReqDelivery.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> StockMovementReqDelivery(@RequestBody Map<String, Object> params,
+	public ResponseEntity<ReturnMessage> stockMovementReqDelivery(@RequestBody Map<String, Object> params,
 			Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
@@ -371,4 +365,63 @@ public class StockMovementController {
 		return ResponseEntity.ok(cnt);
 	}
 
+	@RequestMapping(value = "/StockMovementReceiptList.do")
+	public String stockMovementReceiptList(Model model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return "logistics/stockMovement/stockMovementReceiptList";
+	}
+
+	@RequestMapping(value = "/StockMovementGoodIssue.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+
+		List<EgovMap> list = stockMovementService.stockMovementDeliveryIssue(params);
+
+		Map<String, Object> rmap = new HashMap();
+
+		rmap.put("data", list);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		rmap.put("message", message);
+
+		return ResponseEntity.ok(rmap);
+	}
+
+	@RequestMapping(value = "/StockMoveSearchDeliveryList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> StocktransferSearchDeliveryList(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+
+		List<EgovMap> list = stockMovementService.selectStockMovementDeliveryList(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+
+	/**
+	 * View Serial Pop up In Good Receipt
+	 * 
+	 * @param params
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+
+	@RequestMapping(value = "/StockMovementDeliverySerialView.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> stockMovementDeliverySerialView(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+
+		List<EgovMap> list = stockMovementService.selectStockMovementDeliverySerial(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
 }

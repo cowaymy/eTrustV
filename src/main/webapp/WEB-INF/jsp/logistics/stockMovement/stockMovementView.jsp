@@ -404,8 +404,8 @@ function f_multiCombo() {
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
+    <li>logistics</li>
+    <li>View - Stock Movement</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
