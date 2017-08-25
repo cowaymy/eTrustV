@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.util.CommonUtils;
 
 public class SmsVO {
 	private String message;
@@ -43,7 +44,7 @@ public class SmsVO {
 			this.mobiles = new ArrayList<>();
 		}
 
-		String[] mobileArray = mobile.split(AppConstants.DEFAULT_DELIMITER);
+		String[] mobileArray = CommonUtils.getDelimiterValues(mobile);
 		if (mobileArray.length > 0) {
 			this.mobiles.addAll(Arrays.asList(mobileArray));
 		} else {

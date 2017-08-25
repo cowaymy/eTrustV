@@ -77,6 +77,21 @@ public class AppConstants {
 	public static final String AUIGRID_FORM = "form";
 
 	/**
+	 * CrystalReport
+	 */
+	public static final String REPORT_DOWN_FILE_NAME = "reportDownFileName";
+	public static final String REPORT_FILE_NAME = "reportFileName";
+	public static final String REPORT_VIEW_TYPE = "viewType";
+	public static final String REPORT_CLIENT_DOCUMENT = "com.crystaldecisions.sdk.occa.report.application.ReportClientDocument";
+
+	/**
+	 * Email
+	 */
+	public static final String EMAIL_SUBJECT = "emailSubject";
+	public static final String EMAIL_TEXT = "emailText";
+	public static final String EMAIL_TO = "emailTo";
+
+	/**
 	 * 5 hours
 	 */
 	public static final int SESSION_MAX_INACTIVE_INTERVAL = 5 * 60 * 60;

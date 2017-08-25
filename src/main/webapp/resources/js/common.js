@@ -432,8 +432,14 @@ var Common = {
             reportViewUrl = "/report/view-proc.do"; // procedure로 구성된 report를 보기 위한 uri
         }
 
-        if ($("#viewType").val() == "WINDOW") {
+        var viewType = $("#viewType").val();
+
+        if (viewType == "WINDOW") {
             Common.popupWin(_formId, reportViewUrl, option);
+        }else if (viewType.match("^MAIL_")) {
+            Common.ajax("POST", reportViewUrl, $("#" + _formId).serializeJSON(), function (data) {
+                Common.setMsg("<spring:message code='sys.msg.success'/>");
+            });
         } else {
             $("#" + _formId).attr({
                 action: getContextPath() + reportViewUrl,

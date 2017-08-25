@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -287,5 +288,14 @@ public class EgovFormBasedFileUtil {
 		} finally {
 			EgovResourceCloseHelper.close(outs, fin);
 		}
+	}
+
+	public static File streamToFile (InputStream in, String fileName, String extension) throws IOException {
+		final File tempFile = File.createTempFile(fileName + "_", "." + extension);
+		tempFile.deleteOnExit();
+		try (FileOutputStream out = new FileOutputStream(tempFile)) {
+			IOUtils.copy(in, out);
+		}
+		return tempFile;
 	}
 }

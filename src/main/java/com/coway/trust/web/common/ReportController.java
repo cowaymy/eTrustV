@@ -1,5 +1,7 @@
 package com.coway.trust.web.common;
 
+import static com.coway.trust.AppConstants.*;
+
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
@@ -14,11 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CRJavaHelper;
@@ -32,6 +34,7 @@ import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.FieldDisplayNameType;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
+import com.crystaldecisions.sdk.occa.report.exportoptions.ExportOptions;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKException;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
@@ -40,11 +43,6 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 public class ReportController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
-
-	private static final String REPORT_DOWN_FILE_NAME = "reportDownFileName";
-	private static final String REPORT_FILE_NAME = "reportFileName";
-	private static final String REPORT_VIEW_TYPE = "viewType";
-	private static final String REPORT_CLIENT_DOCUMENT = "com.crystaldecisions.sdk.occa.report.application.ReportClientDocument";
 
 	@Value("${report.datasource.driver-class-name}")
 	private String reportDriverClass;
@@ -70,9 +68,21 @@ public class ReportController {
 	@Autowired
 	private ServletContext context;
 
-	@RequestMapping(value = "/view-proc.do")
-	public void view2(HttpServletRequest request, HttpServletResponse response,
+	@RequestMapping(value = "/view-proc.do", method = RequestMethod.GET)
+	public void viewProcGet(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, Object> params) {
+		this.viewProcedure(request, response, params);
+	}
+
+	@RequestMapping(value = "/view-proc.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity viewProcPost(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Map<String, Object> params) {
+		this.viewProcedure(request, response, params);
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
+
+	private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
 		this.checkArgument(params);
 		String reportFile = (String) params.get(REPORT_FILE_NAME);
 		String reportName = reportFilePath + reportFile;
@@ -94,16 +104,29 @@ public class ReportController {
 			Fields fields = clientDoc.getDataDefinition().getParameterFields();
 			this.setReportParameter(params, paramController, fields);
 			this.viewHandle(request, response, viewType, clientDoc,
-					this.getCrystalReportViewer(clientDoc.getReportSource()));
+					this.getCrystalReportViewer(clientDoc.getReportSource()), params);
 		} catch (Exception ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);
 		}
 	}
 
-	@RequestMapping(value = "/view.do")
-	public void view(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, Object> params) {
+	@RequestMapping(value = "/view.do", method = RequestMethod.GET)
+	public void viewGet(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> params) throws IOException {
+		this.view(request, response, params);
+	}
+
+	@RequestMapping(value = "/view.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity viewPost(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Map<String, Object> params) throws IOException {
+		this.view(request, response, params);
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
+
+	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
+			throws IOException {
 		checkArgument(params);
 		String reportFile = (String) params.get(REPORT_FILE_NAME);
 		ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
@@ -148,7 +171,7 @@ public class ReportController {
 			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 			Fields fields = clientDoc.getDataDefinition().getParameterFields();
 			this.setReportParameter(params, paramController, fields);
-			this.viewHandle(request, response, viewType, clientDoc, this.getCrystalReportViewer(reportSource));
+			this.viewHandle(request, response, viewType, clientDoc, this.getCrystalReportViewer(reportSource), params);
 
 		} catch (ReportSDKExceptionBase ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
@@ -161,9 +184,9 @@ public class ReportController {
 		LOGGER.debug("{} : {}", REPORT_VIEW_TYPE, params.get(REPORT_VIEW_TYPE));
 
 		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
+				messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_FILE_NAME }));
 		Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_VIEW_TYPE)),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
+				messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
 	}
 
 	private CrystalReportViewer getCrystalReportViewer(Object reportSource) throws ReportSDKExceptionBase {
@@ -185,9 +208,10 @@ public class ReportController {
 	}
 
 	private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
-			ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer) throws ReportSDKExceptionBase {
+			ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
+			throws ReportSDKExceptionBase, IOException {
 
-		String downFileName = request.getParameter(REPORT_DOWN_FILE_NAME);
+		String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
 
 		switch (viewType) {
 		case CSV:
@@ -199,34 +223,63 @@ public class ReportController {
 		case EXCEL:
 			viewEXCEL(response, clientDoc, downFileName);
 			break;
+		case MAIL_CSV:
+		case MAIL_PDF:
+		case MAIL_EXCEL:
+			sendMail(request, response, clientDoc, viewType, params);
+			break;
 		default:
 			viewWindow(request, response, crystalReportViewer);
 			break;
 		}
 	}
 
-	private void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) throws ReportSDKExceptionBase {
-		try {
-			CRJavaHelper.exportExcelDataOnly(clientDoc, response, true, downFileName);
-		} catch (IOException ex) {
-			LOGGER.error(CommonUtils.printStackTraceToString(ex));
-			throw new ApplicationException(ex);
+	private void sendMail(HttpServletRequest request, HttpServletResponse response, ReportClientDocument clientDoc,
+			ViewType viewType, Map<String, Object> params) throws IOException, ReportSDKExceptionBase {
+
+		ExportOptions exportOptions;
+		String extension;
+
+		switch (viewType) {
+		case MAIL_CSV:
+			exportOptions = CRJavaHelper.getCSVExportOptions();
+			extension = CRJavaHelper.CSV;
+			break;
+		case MAIL_PDF:
+			exportOptions = CRJavaHelper.getPDFExportOptions();
+			extension = CRJavaHelper.PDF;
+			break;
+		case MAIL_EXCEL:
+			exportOptions = CRJavaHelper.getExcelExportOptions();
+			extension = CRJavaHelper.XLS;
+			break;
+		default:
+			throw new ApplicationException(FAIL, "Invalid viewType !!!!!!!!!!");
 		}
+
+		CRJavaHelper.exportToMail(clientDoc, exportOptions, extension, params);
 	}
 
-	private void viewCSV(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) throws ReportSDKExceptionBase {
-		try {
-			CRJavaHelper.exportCSV(clientDoc, response, true, downFileName);
-		} catch (IOException ex) {
-			LOGGER.error(CommonUtils.printStackTraceToString(ex));
-			throw new ApplicationException(ex);
-		}
+	private void viewEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
+		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper
+				.exportExcelDataOnly(clientDoc, response, true, downFileName), response, clientDoc, downFileName);
 	}
 
-	private void viewPDF(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) throws ReportSDKExceptionBase {
+	private void viewCSV(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
+		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportCSV(clientDoc,
+				response, true, downFileName), response, clientDoc, downFileName);
+	}
+
+	private void viewPDF(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
+		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportPDF(clientDoc,
+				response, true, downFileName), response, clientDoc, downFileName);
+	}
+
+	private void exportFile(ExportFile exportFile, HttpServletResponse response, ReportClientDocument clientDoc,
+			String downFileName) {
 		try {
-			CRJavaHelper.exportPDF(clientDoc, response, true, downFileName);
-		} catch (IOException ex) {
+			exportFile.export(clientDoc, response, true, downFileName);
+		} catch (Exception ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);
 		}
@@ -252,6 +305,11 @@ public class ReportController {
 	}
 
 	enum ViewType {
-		WINDOW, PDF, EXCEL, CSV
+		WINDOW, PDF, EXCEL, CSV, MAIL_PDF, MAIL_EXCEL, MAIL_CSV
+	}
+
+	interface ExportFile {
+		void export(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
+				String downFileName) throws ReportSDKExceptionBase, IOException;
 	}
 }

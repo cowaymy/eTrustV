@@ -82,12 +82,18 @@
 			PDF : PDF 다운로드
 			EXCEL : EXCEL 다운로드
 			CVS : CVS 다운로드
+			MAIL_PDF, MAIL_EXCEL, MAIL_CVS:  이메일 전송
 			-->
-			viewType(필수 : viewType) : <input type="text" id="viewType" name="viewType" value="PDF" /><br /><br />
+			viewType(필수 : viewType) : <input type="text" id="viewType" name="viewType" value="MAIL_EXCEL" /><br /><br />
 <!-- ### 필수 파라미터 end ### -->
 
 			<!-- 다운로드될 파일명 지정 -->
 			다운로드될 파일명 지정(옵션 : reportDownFileName) : <input type="text" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" /><br /><br />
+
+			<!-- 이메일 전송인 경우 모두 필수-->
+			email subject : <input type="text" id="emailSubject" name="emailSubject" value="[제목]리포트 엑셀 메일 전송 테스트" /><br />
+			email text : <input type="text" id="emailText" name="emailText" value="[내용]리포트 엑셀 메일 전송 테스트" /><br />
+			email to [구분자 = |!| : var.jsp =>  DEFAULT_DELIMITER 참고] : <input type="text" id="emailTo" name="emailTo" value="t1706042@partner.coway.co.kr|!|t1706036@partner.coway.co.kr" /><br />
 
 			<!-- 리포트에서 사용할 파라미터 start-->
 			리포트 파일에 전달될 파라미터 설정 : <br/>
