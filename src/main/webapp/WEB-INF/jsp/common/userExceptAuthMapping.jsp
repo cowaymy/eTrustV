@@ -31,12 +31,12 @@ var MainColumnLayout =
             dataField : "userId",
             headerText : "<spring:message code='sys.userexcept.grid1.userId' />",
             editable : false,
-            width : 150
+            width : 100
         }, {
             dataField : "userName",
             headerText : "<spring:message code='sys.userexcept.grid1.userName' />",
             editable : false,
-            width : 350
+            width : 150
         }, {
             dataField : "hidden",
             headerText : "",
@@ -722,8 +722,8 @@ $(document).ready(function()
 <colgroup>
   <col style="width:110px" />
   <col style="width:*" />
-  <col style="width:110px" />
-  <col style="width:*" />
+<!--   <col style="width:110px" />
+  <col style="width:*" /> -->
 </colgroup>
 <tbody>
  <tr>
@@ -775,15 +775,15 @@ $(document).ready(function()
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-<div style="width:50%;">
+<div style="width:30%;">
 
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">User Auth Mapping</h3>
 </aside><!-- title_line end -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap" ><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
  <div id="grid_wrap"></div>
 </article><!-- grid_wrap end -->
@@ -792,9 +792,9 @@ $(document).ready(function()
 
 </div>
 
-<div style="width:50%;">
+<div style="width:70%;">
 
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Auth Management</h3>
@@ -805,7 +805,7 @@ $(document).ready(function()
 </ul>
 </aside><!-- title_line end -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap" ><!-- grid_wrap start -->
 <!-- 그리드 영역 2-->
  <div id="auth_grid_wrap"></div>
 </article><!-- grid_wrap end -->
@@ -821,13 +821,13 @@ $(document).ready(function()
 
 </section><!-- content end -->
 
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
+<!-- <aside class="bottom_msg_box">bottom_msg_box start
 <p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
+</aside>bottom_msg_box end
     
-</section><!-- container end -->
+</section>container end
 <hr />
 
-</div><!-- wrap end -->
+</div>wrap end
 </body>
-</html>
+</html> -->
