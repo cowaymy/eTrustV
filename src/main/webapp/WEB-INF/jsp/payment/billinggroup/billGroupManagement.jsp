@@ -394,7 +394,8 @@ var addOrderLayout = [
     		Common.ajax("GET","/payment/selectBillGroup.do", {"orderNo":orderNo}, function(result){
                 console.log(result);
                 if(result.data.selectBasicInfo != null){
-                    $("#orderNo").attr('readonly', true);               
+                	
+                    $("#orderNo").addClass('readonly');
                     $("#custBillId").val(result.data.custBillId);//히든값
                     $("#custBillCustId").val(result.data.selectBasicInfo.custBillCustId);//히든값
                     $("#custBillGrpNo").text(result.data.selectBasicInfo.custBillGrpNo);
@@ -448,7 +449,7 @@ var addOrderLayout = [
                     
                 }else{
                     $("#displayVisible").hide();
-                    $("#orderNo").attr('readonly', false);
+                    $("#orderNo").removeClass('readonly');
                     Common.alert("No billing group found for this order.");
                     
                 }
@@ -512,6 +513,8 @@ var addOrderLayout = [
     function fn_changeOrderClose() {
         $('#changeMainOrderPop').hide();
         $('#change_reasonUpd').val("");
+        $("#salesOrdNo").val("");
+        selectedGridValue = undefined;
         searchList();
     }
     
@@ -556,9 +559,8 @@ var addOrderLayout = [
                 Common.alert(result.message);
                 $("#newRem").val("");
                 $("#reasonUpd").val("");
-                $("#updRem_remark").val(newRem);
+                fn_updRemark();
                 
-
             });
         }
         
@@ -963,9 +965,9 @@ var addOrderLayout = [
                 
                 Common.alert(result.message);
                 
-                $("#changeMail_currAddr").val(newAddr);
                 $("#changeMail_newAddr").val("");
                 $("#changeMail_resUpd").val("");
+                fn_changeMaillAddr();
                 
             });
     	}
@@ -1064,13 +1066,8 @@ var addOrderLayout = [
                 
                 Common.alert(result.message);
                 
-                fn_chgContPerson(custCntcId);
                 if(result.code =="00"){
-                	$('#curr_contPerson').text($("#newContactPerson").text());
-                    $('#curr_contMobNum').text($("#newMobNo").text());
-                    $('#curr_contOffNum').text($("#newOffNo").text());
-                    $('#curr_resNum').text($("#newResNo").text());
-                    $('#curr_faxNum').text($("#newFaxNo").text());
+
                     
                     $("#newContactPerson").text("");
                     $("#newMobNo").text("");
@@ -1078,7 +1075,10 @@ var addOrderLayout = [
                     $("#newResNo").text("");
                     $("#newFaxNo").text("");
                     $("#newContPerReason").val("");
+                    
+                    fn_chgContPerson();
                 }
+                
                 
             });
         }else{
@@ -1139,6 +1139,10 @@ var addOrderLayout = [
         }else{
         	Common.alert(message);
         }
+    }
+    
+    function fn_estmReqPopClose(){
+    	fn_changeBillType();
     }
     
     function fn_changeBillSave(){
@@ -1219,7 +1223,7 @@ var addOrderLayout = [
         $("#displayVisible").hide();
         $("#reSelect").hide();
         $("#orderNo").val("");
-        $("#orderNo").attr('readonly', false);
+        $("#orderNo").removeClass('readonly');
     }
     
     function showDetailEstmHistory(val, gubun){
@@ -2094,7 +2098,7 @@ var addOrderLayout = [
 <div id="chgMailAddrPop" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Billing Group Maintenance - Remark</h1>
+<h1>Billing Group Maintenance - Mailing Address</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" onclick="fn_chgMailClose();">CLOSE</a></p></li>
 </ul>
@@ -2133,7 +2137,7 @@ var addOrderLayout = [
 <tr>
     <th scope="row">New Address</th>
     <td colspan="3">
-    <textarea cols="20" rows="5" placeholder="" id="changeMail_newAddr"></textarea>
+    <textarea cols="20" rows="5" placeholder="" id="changeMail_newAddr" readonly="readonly" class="readonly"></textarea>
     </td>
 </tr>
 <tr>
@@ -2410,7 +2414,7 @@ var addOrderLayout = [
 <header class="pop_header"><!-- pop_header start -->
 <h1>E-Statement - New Request</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_estmReqPopClose();">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2429,12 +2433,6 @@ var addOrderLayout = [
     <input type="text" id="newReqEmail" name="newReqEmail" title="" placeholder="" class="w100p" />
     </td>
 </tr>
-<!-- <tr>
-    <th scope="row">Additional Email</th>
-    <td>
-    <input type="text" title="" placeholder="" class="w100p" />
-    </td>
-</tr> -->
 <tr>
     <th scope="row">Reason Update</th>
     <td>
