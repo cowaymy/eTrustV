@@ -671,7 +671,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row">User</th>
     <td>
-    <input id="userCode" name="userCode" type="text" title="" value="" placeholder="" class="" />
+    <input id="userCode" name="userCode" type="text" title="" value=""  placeholder="User ID or Name" class="" />
     </td>
     <!-- <th scope="row">Menu</th>
     <td>
@@ -722,7 +722,7 @@ $(document).ready(function(){
 
 <!-- <div style="width:25%;"> -->
 
-<div class="border_box" style="width:25%;"><!-- border_box start -->
+<div class="border_box" style="width:35%;"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">User</h3>
@@ -738,7 +738,7 @@ $(document).ready(function(){
 
 <!-- <div style="width:75%;"> -->
 
-<div class="border_box" style="width:75%;"><!-- border_box start -->
+<div class="border_box" style="width:65%;"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Auth</h3>

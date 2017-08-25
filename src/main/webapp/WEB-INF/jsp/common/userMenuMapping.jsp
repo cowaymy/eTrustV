@@ -562,11 +562,11 @@ $(document).ready(function(){
 <tr>
     <th scope="row">User</th>
     <td>
-    <input id="userCode" name="userCode" type="text" title="" value="" placeholder="" class="" />
+    <input id="userCode" name="userCode" type="text" title="" value="" placeholder="User ID or Name" class="" />
     </td>
     <th scope="row">Menu</th>
     <td>
-    <input id="menuCode" name="menuCode" type="text" title="" value="" placeholder="" class="" />
+    <input id="menuCode" name="menuCode" type="text" title="" value="" placeholder="Menu Code or Name" class="" />
     </td>
 </tr>
 </tbody>
@@ -611,9 +611,7 @@ $(document).ready(function(){
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-<div style="width:25%;">
-
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div class="border_box" style="width:25%;height:450px;"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">User</h3>
@@ -625,11 +623,7 @@ $(document).ready(function(){
 
 </div><!-- border_box end -->
 
-</div>
-
-<div style="width:75%;">
-
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div class="border_box" style="width:75%;height:450px;"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Menu</h3>
@@ -641,10 +635,7 @@ $(document).ready(function(){
 
 </div><!-- border_box end -->
 
-</div>
-
 </div><!-- divine_auto end -->
-
 
 </section><!-- search_result end -->
 
