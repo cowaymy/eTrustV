@@ -3,8 +3,8 @@
 <mapper namespace="com.coway.trust.biz.payment.billinggroup.service.impl.BillingInvoiceMapper">
 
     <!-- Reconciliation 리스트 조회 -->
-	<select id="selectCompanyInvoiceList" parameterType="Map" resultType="egovMap">
-	   <![CDATA[
+    <select id="selectCompanyInvoiceList" parameterType="Map" resultType="egovMap">
+       <![CDATA[
             SELECT DISTINCT Filter1.NAME1 NAME  ,
                                         Filter1.NRIC1 NRIC  ,
                                         Filter1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -70,11 +70,11 @@
                                 AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} ) 
                           </if>
         ORDER BY Filter1.SALES_ORD_ID DESC
-	</select>
-	
-	<select id="selectRentalStatementList" parameterType="Map" resultType="egovMap">
-	 <![CDATA[
-	   SELECT DISTINCT Filter1.RENT_DOC_NO RENT_DOC_NO  ,
+    </select>
+    
+    <select id="selectRentalStatementList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+       SELECT DISTINCT Filter1.RENT_DOC_NO RENT_DOC_NO  ,
                        Filter1.RENT_AMT RENT_AMT  ,
                        Filter1.RENT_INST_NO RENT_INST_NO  ,
                        1 C1  ,
@@ -128,10 +128,10 @@
         AND ( (utils.datepart('YEAR', Filter1.RENT_DT_TM)) = #{sYear} )
         </if>
   ORDER BY Filter1.SALES_ORD_ID DESC
-	   
-	</select>
-	
-	<select id="selectMembershipInvoiceList" parameterType="Map" resultType="egovMap">
+       
+    </select>
+    
+    <select id="selectMembershipInvoiceList" parameterType="Map" resultType="egovMap">
 <![CDATA[
     SELECT DISTINCT Extent1.INVC_REF_NO INVC_REF_NO  ,
                Extent1.TASK_ID TASK_ID  ,
@@ -169,93 +169,104 @@
                             AND ( Extent3.SRV_MEM_QUOT_NO LIKE '%' || #{quotationNo} || '%'ESCAPE '~' )
                          </if>
         ORDER BY Extent4.SALES_ORD_ID DESC 
-	</select>
-	
-	<select id="selectOutrightInvoiceList" parameterType="Map" resultType="egovMap">
-		SELECT DISTINCT Filter1.SALES_ORD_ID SALES_ORD_ID  ,
-                   Filter1.SALES_ORD_NO SALES_ORD_NO  ,
-                   Filter1.SALES_DT SALES_DT  ,
-                   Filter1.APP_TYPE_ID APP_TYPE_ID  ,
-                   Filter1.NAME1 NAME  ,
-                   Filter1.NRIC1 NRIC  ,
-                   1 C1  ,
-                   CASE WHEN ( Filter1.ORGCODE1 IS NOT NULL ) THEN Filter1.ORGCODE1 ELSE '' END OrgCode1  ,
-                   CASE WHEN ( Filter1.GRPCODE1 IS NOT NULL ) THEN Filter1.GRPCODE1 ELSE '' END GrpCode1  ,
-                   CASE WHEN ( Filter1.DEPTCODE1 IS NOT NULL ) THEN Filter1.DEPTCODE1 ELSE '' END DeptCode1  ,
-                   Filter1.MEMBERID1 MEM_ID  ,
-                   Filter1.MEMBERCODE1 MEM_CODE  ,
-                   Filter1.MEM_TYPE MEM_TYPE  ,
-                   Extent5.CODE_NAME CODE_NAME  
-		   FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
-		                 Extent1.SALES_ORD_NO SALES_ORD_NO  ,
-		                 Extent1.SALES_DT SALES_DT  ,
-		                 Extent1.APP_TYPE_ID APP_TYPE_ID  ,
-		                 Extent2.NAME NAME1  ,
-		                 Extent2.NRIC NRIC1  ,
-		                 Extent3.MEM_ID MEMBERID1  ,
-		                 Extent3.MEM_CODE MEMBERCODE1  ,
-		                 Extent3.MEM_TYPE MEM_TYPE  ,
-		                 Extent4.DEPT_CODE DEPTCODE1  ,
-		                 Extent4.GRP_CODE GRPCODE1  ,
-		                 Extent4.ORG_CODE ORGCODE1  
-			            FROM SAL0001D Extent1
-			            JOIN SAL0029D Extent2   ON Extent1.CUST_ID = Extent2.CUST_ID
-			            LEFT JOIN ORG0001D Extent3   ON Extent1.MEM_ID = Extent3.MEM_ID
-		               LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
-		                                     vMemberOrg.MEM_CODE MEM_CODE  ,
-		                                     vMemberOrg.MEM_LVL MEM_LVL  ,
-		                                     vMemberOrg.DEPT_CODE DEPT_CODE  ,
-		                                     vMemberOrg.GRP_CODE GRP_CODE  ,
-		                                     vMemberOrg.ORG_CODE ORG_CODE  ,
-		                                     vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
-		                                     vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
-		                                     vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
-		                                     vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
-		                                     vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
-		                                     vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
-                                        FROM ORG1001V vMemberOrg ) Extent4   ON Extent3.MEM_ID = Extent4.MEM_ID
-	                                   <if test="appType != '' and appType != null">
-	                                        WHERE Extent1.APP_TYPE_ID IN (
-                                            <foreach collection="appType" index="index" separator=",">
-                                                    '${appType[index]}'
-                                            </foreach>
-                                            )
-	                                   </if>
-	                        ) Filter1
-	                              LEFT JOIN SYS0013M Extent5   ON Filter1.APP_TYPE_ID = Extent5.CODE_ID
-	                        WHERE  1=1
-	                               <if test="orderNo != '' " >
-	                               AND Filter1.SALES_ORD_NO LIKE '%' || #{orderNo}|| '%' ESCAPE '~' 
-	                               </if>
-	                               <if test="custName != '' "> 
-	                               AND Filter1.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~'  
-	                               </if>
-	  ORDER BY Filter1.SALES_ORD_ID DESC
-	</select>
-	<select id="selectCompanyStatementList" parameterType="Map" resultType="egovMap">
-	    <![CDATA[
-			SELECT DISTINCT Extent1.BILL_ID BILL_ID  ,
-		               Extent1.CUST_NAME CUST_NAME  ,
-		               Extent2.SO_NO SO_NO  ,
-		               Extent3.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
-		               1 C1  ,
-		               TO_NUMBER(Extent1.PV_YEAR) YEAR  ,
-		               TO_NUMBER(Extent1.PV_MONTH) MONTH  
+    </select>
+    
+    <select id="selectOutrightInvoiceList" parameterType="Map" resultType="egovMap">        
+      SELECT 
+            DISTINCT Filter1.SALES_ORD_ID SALES_ORD_ID , 
+            Filter1.SALES_ORD_NO SALES_ORD_NO , 
+            Filter1.SALES_DT SALES_DT , 
+            Filter1.APP_TYPE_ID APP_TYPE_ID , 
+            Filter1.NAME1 NAME , 
+            Filter1.NRIC1 NRIC ,
+            1 C1 , 
+            CASE WHEN ( Filter1.ORGCODE1 IS NOT NULL ) THEN Filter1.ORGCODE1 ELSE '' END OrgCode1 , 
+            CASE WHEN ( Filter1.GRPCODE1 IS NOT NULL ) THEN Filter1.GRPCODE1 ELSE '' END GrpCode1 , 
+            CASE WHEN ( Filter1.DEPTCODE1 IS NOT NULL ) THEN Filter1.DEPTCODE1 ELSE '' END DeptCode1 , 
+            Filter1.MEMBERID1 MEM_ID , 
+            Filter1.MEMBERCODE1 MEM_CODE , 
+            Filter1.MEM_TYPE MEM_TYPE , 
+            Extent5.CODE_NAME CODE_NAME 
+        FROM 
+            (
+            SELECT 
+                Extent1.SALES_ORD_ID SALES_ORD_ID , 
+                Extent1.SALES_ORD_NO SALES_ORD_NO , 
+                Extent1.SALES_DT SALES_DT , 
+                Extent1.APP_TYPE_ID APP_TYPE_ID , 
+                Extent2.NAME NAME1 , 
+                Extent2.NRIC NRIC1 , 
+                Extent3.MEM_ID MEMBERID1 , 
+                Extent3.MEM_CODE MEMBERCODE1 , 
+                Extent3.MEM_TYPE MEM_TYPE , 
+                Extent4.DEPT_CODE DEPTCODE1 , 
+                Extent4.GRP_CODE GRPCODE1 , 
+                Extent4.ORG_CODE ORGCODE1 
+            FROM 
+                SAL0001D Extent1 
+                JOIN SAL0029D Extent2 ON Extent1.CUST_ID = Extent2.CUST_ID 
+                LEFT JOIN ORG0001D Extent3 ON Extent1.MEM_ID = Extent3.MEM_ID 
+                LEFT JOIN 
+                      (SELECT vMemberOrg.MEM_ID MEM_ID , 
+                             vMemberOrg.MEM_CODE MEM_CODE , 
+                             vMemberOrg.MEM_LVL MEM_LVL , 
+                             vMemberOrg.DEPT_CODE DEPT_CODE , 
+                             vMemberOrg.GRP_CODE GRP_CODE , 
+                             vMemberOrg.ORG_CODE ORG_CODE , 
+                             vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE , 
+                             vMemberOrg.MEM_UP_ID MEM_UP_ID , 
+                             vMemberOrg.LVL3_UP_ID LVL3_UP_ID , 
+                             vMemberOrg.LVL2_UP_ID LVL2_UP_ID , 
+                             vMemberOrg.LVL1_UP_ID LVL1_UP_ID , 
+                             vMemberOrg.LVL0_UP_ID LVL0_UP_ID 
+                        FROM ORG1001V vMemberOrg ) Extent4 ON Extent3.MEM_ID = Extent4.MEM_ID 
+                WHERE 
+                    Extent1.APP_TYPE_ID IN (67,68)
+                    AND  Extent1.STUS_CODE_ID = 4 
+               ) Filter1 
+           LEFT JOIN SYS0013M Extent5 ON Filter1.APP_TYPE_ID = Extent5.CODE_ID 
+        WHERE 
+            1=1 
+            <if test="orderNo != '' " > 
+            AND Filter1.SALES_ORD_NO LIKE '%' || #{orderNo}|| '%' ESCAPE '~' 
+            </if> 
+            <if test="custName != '' "> 
+            AND Filter1.NAME1 LIKE '%' || #{custName} || '%' ESCAPE '~' 
+            </if>
+            <if test="appType != '' and appType != null">
+            AND Filter1.APP_TYPE_ID IN (
+                <foreach collection="appType" index="index" separator=",">
+                    '${appType[index]}'
+                </foreach>
+                )
+            </if> 
+        ORDER BY Filter1.SALES_ORD_ID DESC
+              
+    </select>
+    <select id="selectCompanyStatementList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT DISTINCT Extent1.BILL_ID BILL_ID  ,
+                       Extent1.CUST_NAME CUST_NAME  ,
+                       Extent2.SO_NO SO_NO  ,
+                       Extent3.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+                       1 C1  ,
+                       TO_NUMBER(Extent1.PV_YEAR) YEAR  ,
+                       TO_NUMBER(Extent1.PV_MONTH) MONTH  
               FROM PAY0082D Extent1
-	          JOIN PAY0083D Extent2   ON ( Extent2.BILL_ID = Extent1.BILL_ID )
-	          AND ( TO_NUMBER(Extent2.PV_MONTH) = TO_NUMBER(Extent1.PV_MONTH) )
-	          AND ( TO_NUMBER(Extent2.PV_YEAR) = TO_NUMBER(Extent1.PV_YEAR) )
-	          JOIN SAL0024D Extent3   ON Extent1.BILL_ID = Extent3.CUST_BILL_ID
-	          LEFT JOIN ( SELECT StatementCompanyRelatedOrder.PV_MONTH PV_MONTH  ,
-			                             StatementCompanyRelatedOrder.PV_YEAR PV_YEAR  ,
-			                             StatementCompanyRelatedOrder.BILL_ID BILL_ID  ,
-			                             StatementCompanyRelatedOrder.SO_ID SO_ID  ,
-			                             StatementCompanyRelatedOrder.CRT_DT CRT_DT  
+              JOIN PAY0083D Extent2   ON ( Extent2.BILL_ID = Extent1.BILL_ID )
+              AND ( TO_NUMBER(Extent2.PV_MONTH) = TO_NUMBER(Extent1.PV_MONTH) )
+              AND ( TO_NUMBER(Extent2.PV_YEAR) = TO_NUMBER(Extent1.PV_YEAR) )
+              JOIN SAL0024D Extent3   ON Extent1.BILL_ID = Extent3.CUST_BILL_ID
+              LEFT JOIN ( SELECT StatementCompanyRelatedOrder.PV_MONTH PV_MONTH  ,
+                                         StatementCompanyRelatedOrder.PV_YEAR PV_YEAR  ,
+                                         StatementCompanyRelatedOrder.BILL_ID BILL_ID  ,
+                                         StatementCompanyRelatedOrder.SO_ID SO_ID  ,
+                                         StatementCompanyRelatedOrder.CRT_DT CRT_DT  
                                FROM PAY0101M StatementCompanyRelatedOrder ) Extent4   ON Extent1.BILL_ID = Extent4.BILL_ID
                           LEFT JOIN SAL0001D Extent5   ON Extent4.SO_ID = Extent5.SALES_ORD_ID
                           LEFT JOIN PAY0022D Extent6   ON ( Extent5.SALES_ORD_ID = Extent6.RENT_SO_ID )
-	                              AND ( Extent6.RENT_AMT > 0 )
-			   WHERE  1=1]]>
+                                  AND ( Extent6.RENT_AMT > 0 )
+               WHERE  1=1]]>
                 <if test="billNo != '' ">
                    AND Extent3.CUST_BILL_GRP_NO =  #{billNo}
                 </if>
@@ -271,11 +282,11 @@
                 <if test="sYear != '' ">
                    AND Extent1.PV_YEAR = #{sYear}  
                  </if>
-		          ORDER BY Extent1.BILL_ID DESC
-	</select>
-	
-	<select id="selectProformaInvoiceList" parameterType="Map" resultType="egovMap">
-	 SELECT DISTINCT Filter1.AppTypeCode AppTypeCode  ,
+                  ORDER BY Extent1.BILL_ID DESC
+    </select>
+    
+    <select id="selectProformaInvoiceList" parameterType="Map" resultType="egovMap">
+     SELECT DISTINCT Filter1.AppTypeCode AppTypeCode  ,
              Filter1.AppTypeName AppTypeName  ,
              Filter1.Creator Creator  ,
              Filter1.CustomerIC CustomerIC  ,
@@ -383,48 +394,48 @@
                                vOrderView.ORD_INST_TEL_R ORD_INST_TEL_R  ,
                                vOrderView.ORD_INST_TEL_F ORD_INST_TEL_F  
                         FROM SAL1015V vOrderView ) Extent1
-						  JOIN ( SELECT vOrderInstallationInfo.ORD_ID ORD_ID  ,
-						                vOrderInstallationInfo.INST_ADDR1 INST_ADDR1  ,
-						                vOrderInstallationInfo.INST_ADDR2 INST_ADDR2  ,
-						                vOrderInstallationInfo.INST_ADDR3 INST_ADDR3  ,
-						                vOrderInstallationInfo.INST_CNTY INST_CNTY  ,
-						                vOrderInstallationInfo.INST_STATE INST_STATE  ,
-						                vOrderInstallationInfo.INST_AREA INST_AREA  ,
-						                vOrderInstallationInfo.INST_POST_CODE INST_POST_CODE  ,
-						                vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME  ,
-						                vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC  ,
-						                vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL  ,
-						                vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M  ,
-						                vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O  ,
-						                vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R  ,
-						                vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F  ,
-						                vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER  ,
-						                vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO  ,
-						                vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE  ,
-						                vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME  ,
-						                vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT  ,
-						                vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM  ,
-						                vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO  ,
-						                vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO  ,
-						                vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO  ,
-						                vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE  ,
-						                vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME  ,
-						                vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT  ,
-						                vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM  ,
-						                vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO  ,
-						                vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO  ,
-						                vOrderInstallationInfo.DSC_ID DSC_ID  ,
-						                vOrderInstallationInfo.DSC_CODE DSC_CODE  ,
-						                vOrderInstallationInfo.DSC_NAME DSC_NAME  ,
-						                vOrderInstallationInfo.INSTCT INSTCT  ,
-						                vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT  ,
-						                vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM  ,
-						                vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID  ,
-						                vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID  ,
-						                vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT  ,
-						                vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST  ,
-						                vOrderInstallationInfo.VRIFY_REM VRIFY_REM  
-						         FROM SAL1010V vOrderInstallationInfo ) Extent2   ON Extent2.ORD_ID = Extent1.ORD_ID
+                          JOIN ( SELECT vOrderInstallationInfo.ORD_ID ORD_ID  ,
+                                        vOrderInstallationInfo.INST_ADDR1 INST_ADDR1  ,
+                                        vOrderInstallationInfo.INST_ADDR2 INST_ADDR2  ,
+                                        vOrderInstallationInfo.INST_ADDR3 INST_ADDR3  ,
+                                        vOrderInstallationInfo.INST_CNTY INST_CNTY  ,
+                                        vOrderInstallationInfo.INST_STATE INST_STATE  ,
+                                        vOrderInstallationInfo.INST_AREA INST_AREA  ,
+                                        vOrderInstallationInfo.INST_POST_CODE INST_POST_CODE  ,
+                                        vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME  ,
+                                        vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC  ,
+                                        vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL  ,
+                                        vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M  ,
+                                        vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O  ,
+                                        vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R  ,
+                                        vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F  ,
+                                        vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER  ,
+                                        vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO  ,
+                                        vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE  ,
+                                        vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME  ,
+                                        vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT  ,
+                                        vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM  ,
+                                        vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO  ,
+                                        vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO  ,
+                                        vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO  ,
+                                        vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE  ,
+                                        vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME  ,
+                                        vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT  ,
+                                        vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM  ,
+                                        vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO  ,
+                                        vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO  ,
+                                        vOrderInstallationInfo.DSC_ID DSC_ID  ,
+                                        vOrderInstallationInfo.DSC_CODE DSC_CODE  ,
+                                        vOrderInstallationInfo.DSC_NAME DSC_NAME  ,
+                                        vOrderInstallationInfo.INSTCT INSTCT  ,
+                                        vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT  ,
+                                        vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM  ,
+                                        vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID  ,
+                                        vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID  ,
+                                        vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT  ,
+                                        vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST  ,
+                                        vOrderInstallationInfo.VRIFY_REM VRIFY_REM  
+                                 FROM SAL1010V vOrderInstallationInfo ) Extent2   ON Extent2.ORD_ID = Extent1.ORD_ID
                                WHERE  1=1
                                         <if test="appTypeList != '' and appTypeList != null">
                                         AND ( (CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID ELSE 0 END) IN ( 
@@ -504,5 +515,31 @@
                                          OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' ) ) 
                                  </if>
                                 ORDER BY Filter1.OrderNo ASC
-	</select>
+    </select>
+    
+    <select id="selectPenaltyBillDate" parameterType="Map" resultType="egovMap">
+       SELECT 
+            Extent1.SALES_ORD_ID   ,
+            Extent1.SALES_ORD_NO   ,
+            Extent2.STK_RETN_ID ,
+            Extent2.RETN_NO ,
+            NVL(TO_NUMBER(TO_CHAR(Extent2.UPD_DT,'YYYY')),1900) AS BILL_DT_YEAR,
+            NVL(TO_NUMBER(TO_CHAR(Extent2.UPD_DT,'MM')),1) AS BILL_DT_MONTH,
+            NVL(Extent2.UPD_DT,TO_DATE('1900-01-01','YYYY-MM-DD')) AS BILL_DT
+        FROM 
+            SAL0001D Extent1
+            JOIN LOG0038D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID 
+            AND Extent2.STUS_CODE_ID = 4
+            AND Extent2.TYPE_ID = 296
+        WHERE   
+            1=1
+            <if test="orderNo != null and orderNo != '' ">            
+            AND Extent1.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="billNo != null and billNo != '' ">
+            AND  Extent2.RETN_NO = #{billNo}
+            </if>
+        ORDER BY Extent2.STK_RETN_ID DESC
+              
+    </select>
 </mapper>

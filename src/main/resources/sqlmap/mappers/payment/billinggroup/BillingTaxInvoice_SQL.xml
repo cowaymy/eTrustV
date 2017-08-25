@@ -251,5 +251,5 @@
                 AND Extent1.STATE_CUST_NAME LIKE '%' || #{custName}  || '%'
                 </if>
             ORDER BY Extent2.STATE_ITM_ORD_NO DESC
-    </select>
+    </select>   
 </mapper>

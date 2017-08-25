@@ -243,6 +243,5 @@ function fn_genDocument(docVal){
     <input type="hidden" id="V_SHOWRECEIPTNO" name="V_SHOWRECEIPTNO" />                                   
     <input type="hidden" id="V_SHOWTRNO" name="V_SHOWTRNO" />                                   
     <input type="hidden" id="V_SHOWKEYINUSER" name="V_SHOWKEYINUSER" />                                   
-    <input type="hidden" id="V_SHOWBATCHPAYMENTID" name="V_SHOWBATCHPAYMENTID" />
-    <input type="hidden" id="V_UserTotal" name="@UserTotal" />
+    <input type="hidden" id="V_SHOWBATCHPAYMENTID" name="V_SHOWBATCHPAYMENTID" />    
 </form>

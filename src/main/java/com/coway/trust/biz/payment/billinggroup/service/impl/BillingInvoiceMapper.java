@@ -63,4 +63,11 @@ public interface BillingInvoiceMapper {
 	 * @return 
 	 */
 	List<EgovMap> selectProformaInvoiceList(Map<String, Object> params);
+	
+	/**
+	 * Penalty Invoice Bill Date 조회
+	 * @param params
+	 * @return 
+	 */
+	List<EgovMap> selectPenaltyBillDate(Map<String, Object> params);
 }

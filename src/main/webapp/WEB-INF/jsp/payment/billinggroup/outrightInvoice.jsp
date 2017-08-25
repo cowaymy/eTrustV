@@ -4,8 +4,16 @@
 <script type="text/javaScript">
 var myGridID;
 
+//Grid에서 선택된 RowID
+var selectedGridValue;
+
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });  
     
 });
 
@@ -15,7 +23,8 @@ var gridPros = {
         pageRowCount : 25
 };
 
-var columnLayout=[              
+var columnLayout=[             
+    {dataField:"salesOrdId", headerText:"Order ID" ,visible : false},
     {dataField:"salesOrdNo", headerText:"Order No"},
     {dataField:"codeName", headerText:"App Type"},
     {dataField:"salesDt", headerText:"Order Date"},
@@ -30,6 +39,22 @@ function fn_getOutrightInvoiceListAjax() {
     	AUIGrid.setGridData(myGridID, result);
     });
 }
+
+
+//크리스탈 레포트
+function fn_generateStatement(){
+  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+  if (selectedItem[0] > -1){
+      //report form에 parameter 세팅
+      $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "salesOrdId"));
+      Common.report("reportPDFForm");
+   
+  }else{
+      Common.alert('<b>No print type selected.</b>');
+  }
+}
+
 
 </script>
 
@@ -100,7 +125,7 @@ function fn_getOutrightInvoiceListAjax() {
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="#">Statement Generate</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
                     </ul>
                     <!-- <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
@@ -116,4 +141,10 @@ function fn_getOutrightInvoiceListAjax() {
     <!-- grid_wrap end -->
 </section>
 </section>
+
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/InstOutInvoice_PDF.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_orderId" name="v_orderId" />
+</form>
 

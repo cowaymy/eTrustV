@@ -4,8 +4,17 @@
 <script type="text/javaScript">
 var myGridID;
 
+//Grid에서 선택된 RowID
+var selectedGridValue;
+
+
 $(document).ready(function(){
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    
+    // Master Grid 셀 클릭시 이벤트
+    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        selectedGridValue = event.rowIndex;
+    });  
 });
 
 var gridPros = {
@@ -43,6 +52,25 @@ function ValidRequiredField(){
 	
 	return valid;
 }
+
+//크리스탈 레포트
+function fn_generateStatement(){
+	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+	
+	if (selectedItem[0] > -1){
+		//report form에 parameter 세팅
+		$("#reportPDFForm #v_invoiceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "invcRefNo"));
+		//report 호출
+        var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+
+        Common.report("reportPDFForm", option);
+	}else{
+		Common.alert('<b>No print type selected.</b>');
+	}
+}
+
 </script>
 
 <!-- content start -->
@@ -123,7 +151,7 @@ function ValidRequiredField(){
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="#">Statement Generate</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
                     </ul>
                     <!-- <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
@@ -139,4 +167,9 @@ function ValidRequiredField(){
     <!-- grid_wrap end -->
 </section>
 </section>
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/SrvMembership_Invoice.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_invoiceNo" name="v_invoiceNo" />
+</form>
 

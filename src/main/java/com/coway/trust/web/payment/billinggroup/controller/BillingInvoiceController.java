@@ -15,12 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.payment.billinggroup.service.BillingInvoiceService;
 import com.coway.trust.biz.payment.billinggroup.service.impl.ProformaSearchVO;
 import com.coway.trust.biz.payment.billinggroup.service.impl.SearchVO;
+import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -322,6 +325,40 @@ public class BillingInvoiceController {
 		list = invoiceService.selectCompanyStatementList(map);
 		
 		return ResponseEntity.ok(list);
+	}
+	
+	/******************************************************
+	 *   Penalty Invoice
+	 *****************************************************/	
+	/**
+	 * Penalty Invoice초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/initPenaltyInvoice.do")
+	public String initPenaltyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
+		return "payment/billinggroup/penaltyInvoice";
+	}
+	
+	/**
+	 * Penalty Invoice - Bill Date 조회 
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectPenaltyBillDate.do", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>> selectPenaltyBillDate(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+				, @RequestBody Map<String, Object> params, ModelMap model) {
+
+		LOGGER.debug("params : {} ", params);
+        // 조회.
+        List<EgovMap> resultList = invoiceService.selectPenaltyBillDate(params);		
+        
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
 	}
 	
 	/******************************************************

@@ -60,27 +60,49 @@ function ValidRequiredField(){
 
 //크리스탈 레포트
 function fn_generateInvoice(){
-  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-
-  if (selectedItem[0] > -1){
-      //report form에 parameter 세팅
-      $("#reportPDFForm #v_month").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth"));
-      //$("#reportPDFForm #v_monthDetail").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth"));
-      $("#reportPDFForm #v_year").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear"));
-      //$("#reportPDFForm #v_yearDetail").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear"));
-      $("#reportPDFForm #v_brNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo"));
-      $("#reportPDFForm #v_type").val(6);
-      $("#reportPDFForm #v_printLive").val(0);
-      $("#reportPDFForm #v_taskId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taskId"));      
-      
-      
-        
-      //report 호출
-      var option = {
-          isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-          };
-
-      Common.report("reportPDFForm", option);
+	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+	
+	if (selectedItem[0] > -1){
+		
+		var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear");
+		var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth");
+		
+		//report form에 parameter 세팅
+        if($('input:radio[name=printMethod]').eq(0).is(':checked')){
+            if(parseInt(year) < 2014){
+                $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF.rpt');
+            }else{
+                if( parseInt(year) == 2014 && parseInt(month) < 5){
+                    $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF.rpt');
+                }else{
+                    $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF201405.rpt');
+                }
+            }
+        }else{
+            if(parseInt(year) < 2014){
+                $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF_NoHearder.rpt');
+            }else{
+                if( parseInt(year) == 2014 && parseInt(month) < 5){
+                    $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF_NoHearder.rpt');
+                }else{
+                    $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF201405_NoHearder.rpt');
+                }
+            }
+        }
+		
+		$("#reportPDFForm #v_month").val(month);
+		$("#reportPDFForm #v_year").val(year);
+		$("#reportPDFForm #v_brNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo"));
+		$("#reportPDFForm #v_type").val(6);
+		$("#reportPDFForm #v_printLive").val(0);
+		$("#reportPDFForm #v_taskId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taskId")); 
+		
+		//report 호출
+		var option = {
+				isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+		};
+		
+		Common.report("reportPDFForm", option);
    
   }else{
       Common.alert('<b>No print type selected.</b>');
@@ -185,19 +207,12 @@ function fn_generateInvoice(){
 </section>
 </section>
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/Official_Invoice_PDF.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />    
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
-    
-    v_month: <input type="text" id="v_month" name="v_month" />
-    
-    <br>v_year: <input type="text" id="v_year" name="v_year" />
-    
-    <br>v_brNo : <input type="text" id="v_brNo" name="v_brNo" />
-    <br>v_type : <input type="text" id="v_type" name="v_type" />
-    <br>v_printLive : <input type="text" id="v_printLive" name="v_printLive" />
-    <br>v_taskId : <input type="text" id="v_taskId" name="v_taskId" />
-    
-    
-    
-    
+    <input type="hidden" id="v_month" name="v_month" />
+    <input type="hidden" id="v_year" name="v_year" />
+    <input type="hidden" id="v_brNo" name="v_brNo" />
+    <input type="hidden" id="v_type" name="v_type" />
+    <input type="hidden" id="v_printLive" name="v_printLive" />
+    <input type="hidden" id="v_taskId" name="v_taskId" />
 </form>
