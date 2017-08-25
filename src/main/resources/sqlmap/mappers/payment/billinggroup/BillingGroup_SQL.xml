@@ -1347,7 +1347,7 @@
 	       Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD  ,
 	       Extent1.EDIT_TYPE_ID EDIT_TYPE_ID  ,
 	       Extent1.CUST_BILL_ID CUST_BILL_ID  ,
-	       TO_CHAR(Extent1.MTH_RENT , 'FM9999999999990.00') MTH_RENT_AMT  , 
+	       TO_CHAR(Extent1.MTH_RENT_AMT , 'FM9999999999990.00') MTH_RENT_AMT  , 
 	       Extent1.LOK LOK  ,
 	       Extent1.AEON_STUS_ID AEON_STUS_ID  ,
 	       Extent1.COMM_DT COMM_DT  ,
