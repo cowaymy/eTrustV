@@ -623,7 +623,7 @@ public class BillingGroupController {
 				
 				Map<String, Object> updSalesMap = new HashMap<String, Object>();
 				updSalesMap.put("salesOrdId", salesOrdId);
-				updSalesMap.put("custAddId", String.valueOf(params.get("custAddId")));
+				updSalesMap.put("addressIDNew", String.valueOf(params.get("custAddId")));
 				updSalesMap.put("addrFlag", "Y");
 				//SALES ORDER MASTER UPDATE
 				billGroupService.updSalesOrderMaster(updSalesMap);
