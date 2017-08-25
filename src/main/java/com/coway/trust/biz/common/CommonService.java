@@ -18,7 +18,18 @@ public interface CommonService {
 	int getCommonCodeTotalCount(Map<String, Object> params);
 	List<EgovMap> selectI18NList();
 
-
+	/************************** Role Auth Mapping ****************************/
+	List<EgovMap> selectUserExceptionInfoList(Map<String, Object> params);
+	
+	List<EgovMap> selectUserExceptAdjustList(Map<String, Object> params); 
+	
+	int insertUserExceptAuthMapping(List<Object> addList, Integer updUserId);
+	
+	int updateUserExceptAuthMapping(List<Object> addList, Integer updUserId);
+	
+	int deleteUserExceptAuthMapping(List<Object> addList, Integer updUserId);
+	
+	
 	/************************** Role Auth Mapping ****************************/
 	List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params);
 

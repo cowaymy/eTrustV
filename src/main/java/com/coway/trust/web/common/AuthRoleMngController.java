@@ -43,24 +43,85 @@ public class AuthRoleMngController
 	
 	
 	/************************ UserExptAuthMapping ****************************/
-	@RequestMapping(value = "/UserExptAuthMapping.do")
-	public String UserExptAuthMappingList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	
+	@RequestMapping(value = "/userExceptAuthMapping.do")
+	public String userExceptAuthMapping(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
 	{
-		LOGGER.debug("authRoll MappingList");
-		
-		return "common/UserExceptAuthMapping";
+		return "common/userExceptAuthMapping";  
 	}
+	
+	@RequestMapping(value = "/searchAuthUserExceptMappingPop.do")
+	public String searchAuthUserExceptMappingPop(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		return "common/searchAuthUserExceptMappingPop";  
+	}
+	
+	// user Info Select
+	@RequestMapping(value = "/selectUserInfoList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectUserInfoList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectUserExceptionInfoList = commonService.selectUserExceptionInfoList(params);
+		
+		return ResponseEntity.ok(selectUserExceptionInfoList);
+	}		
+	
+	// userExceptional Mapping with AuthUserId
+	@RequestMapping(value = "/selectUserExceptAdjustList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectUserExceptAdjustList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> selectUserExceptAdjustList = commonService.selectUserExceptAdjustList(params);
+		
+		return ResponseEntity.ok(selectUserExceptAdjustList);
+	}
+	
+	// save UserExptAuth
+		@RequestMapping(value = "/saveUserExceptAuthMapping.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO) 
+		{
+			List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+			List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+			List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 
+			int tmpCnt = 0;
+			int totCnt = 0;
+			
+			if (addList.size() > 0) {
+				tmpCnt = commonService.insertUserExceptAuthMapping(addList, sessionVO.getUserId());
+				totCnt = totCnt + tmpCnt;
+			}
+
+			if (udtList.size() > 0) {
+				tmpCnt = commonService.updateUserExceptAuthMapping(udtList, sessionVO.getUserId());
+				totCnt = totCnt + tmpCnt;
+			}
+			
+			if (delList.size() > 0) {
+				tmpCnt = commonService.deleteUserExceptAuthMapping(delList, sessionVO.getUserId());
+				totCnt = totCnt + tmpCnt;
+			}
+
+			// 콘솔로 찍어보기
+			LOGGER.info("UserExcept_수정 : {}", udtList.toString());
+			LOGGER.info("UserExcept_추가 : {}", addList.toString());
+			LOGGER.info("UserExcept_삭제 : {}", delList.toString());
+			LOGGER.info("UserExcept_카운트 : {}", totCnt);
+
+			// 결과 만들기 예.
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+			return ResponseEntity.ok(message);
+		}	
 	
 	/************************ auth role mapping ****************************/
+	
 	@RequestMapping(value = "/authRoleMapping.do")
 	public String authRoleList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception 
 	{
-		LOGGER.debug("authRoll MappingList");
-		
 		return "common/authRoleMapping";
 	}
-	
 	
 	// Left SYS0044M_SYSROLE
 	@RequestMapping(value = "/selectRoleAuthMappingList.do", method = RequestMethod.GET)

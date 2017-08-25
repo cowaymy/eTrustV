@@ -36,6 +36,13 @@ public interface CommonMapper {
 	int selectCommonCodeTotalCount(Map<String, Object> params);
 
 	List<EgovMap> selectI18NList();
+	
+	/************************** User Exceptional Auth Mapping ****************************/
+	List<EgovMap> selectUserExceptionInfoList(Map<String, Object> params); 	
+	List<EgovMap> selectUserExceptAdjustList(Map<String, Object> params);  	
+	int insertUserExceptAuthMapping(Map<String, Object> params); 
+	int updateUserExceptAuthMapping(Map<String, Object> params); 
+	int deleteUserExceptAuthMapping(Map<String, Object> params); 
 
 	/************************** Role Auth Mapping ****************************/
 	List<EgovMap> selectRoleAuthMappingList(Map<String, Object> params);  

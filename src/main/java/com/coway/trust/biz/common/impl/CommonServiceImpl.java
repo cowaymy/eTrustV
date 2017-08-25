@@ -77,6 +77,88 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectI18NList();
 	}
 	
+	/************************** User Exceptional Auth Mapping ****************************/
+	
+	@Override
+	public List<EgovMap> selectUserExceptionInfoList(Map<String, Object> params) {
+		return commonMapper.selectUserExceptionInfoList(params);
+	}	
+	
+	@Override
+	public List<EgovMap> selectUserExceptAdjustList(Map<String, Object> params) {
+		return commonMapper.selectUserExceptAdjustList(params);
+	}
+	
+	@Override
+	public int insertUserExceptAuthMapping(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> insertUserExceptAuthMapping ");
+			logger.debug(" userId : {}", ((Map<String, Object>) obj).get("userId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			
+			saveCnt++;
+
+			commonMapper.insertUserExceptAuthMapping((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
+	
+	@Override
+	public int updateUserExceptAuthMapping(List<Object> updList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : updList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> updateUserExceptAuthMapping ");
+			/*logger.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden"));			
+			((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("hidden") );*/
+			
+			logger.debug("UserId : {}", ((Map<String, Object>) obj).get("userId"));
+			
+			saveCnt++;
+			
+			commonMapper.updateUserExceptAuthMapping((Map<String, Object>) obj);
+			
+		}
+		
+		return saveCnt;
+	}	
+	
+	@Override
+	public int deleteUserExceptAuthMapping(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> deleteUserExceptAuthMapping ");
+			logger.debug("UserId : {}", ((Map<String, Object>) obj).get("userId"));
+			
+			delCnt++;
+			
+			commonMapper.deleteUserExceptAuthMapping((Map<String, Object>) obj);
+		}
+		
+		return delCnt;
+	}		
+	
 	/************************** Role Auth Mapping ****************************/
 	
 	@Override
