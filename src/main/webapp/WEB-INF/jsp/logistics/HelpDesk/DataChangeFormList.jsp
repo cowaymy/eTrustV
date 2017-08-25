@@ -563,6 +563,16 @@ var comboData = [{"codeId": "0","codeName": "New"},{"codeId": "61","codeName": "
 
 <div id="ViewPopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
 
+<header class="pop_header"><!-- pop_header start -->
+<h1>title</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on">DCF Info</a></li>
     <li><a href="#">Approval Info</a></li>
@@ -745,6 +755,9 @@ var comboData = [{"codeId": "0","codeName": "New"},{"codeId": "61","codeName": "
 </article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
+
+</section><!-- pop_body end -->
+
 </div>
 
 </div><!-- wrap end -->
