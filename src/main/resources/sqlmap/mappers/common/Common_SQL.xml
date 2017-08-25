@@ -625,13 +625,13 @@
             AND ACC_ID = #{accId}
           </if>
           <if test="accCode !=null and accCode != ''">
-            AND ACC_CODE = #{accCode}
+            AND ACC_CODE LIKE #{accCode} || '%' 
           </if>         
           <if test="accDesc !=null and accDesc != ''">
-            AND ACC_DESC LIKE  '%' || #{accDesc} || '%'
+            AND UPPER(ACC_DESC) LIKE  '%' || UPPER(#{accDesc}) || '%'
           </if>         
           <if test="sapAccCode !=null and sapAccCode != ''">
-            AND SAP_ACC_CODE = #{sapAccCode}
+            AND SAP_ACC_CODE LIKE #{sapAccCode} || '%' 
           </if>  
           <if test="paymentCd !=null and paymentCd == 'CSH' ">
             AND IS_PAY_CASH = 1

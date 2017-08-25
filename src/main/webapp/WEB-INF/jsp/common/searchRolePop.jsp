@@ -32,6 +32,12 @@ function fnSelectRoleListAjax()
            });
 }
 
+function fnSelectBoxChanged()
+{
+    $("#roleIdNm").val("");
+    $("#roleIdNm").focus();
+}
+
 
 var SearchRoleColumnLayout = 
     [      
@@ -181,7 +187,7 @@ $(document).ready(function()
 <input type ="hidden" id="roleNm" name="roleNm" value=""/>
 
 <div class="search_100p"><!-- search_100p start -->
-<select class="" id="roleSelectBox" name="roleSelectBox">
+<select class="" id="roleSelectBox" name="roleSelectBox" onchange="fnSelectBoxChanged();">
   <option value="01" selected>Role ID</option>
   <option value="02">Role Name</option>
 </select>

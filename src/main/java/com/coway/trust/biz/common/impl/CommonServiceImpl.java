@@ -276,7 +276,6 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			logger.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden"));
 			
 			String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
-			
 
 			saveCnt++;
 

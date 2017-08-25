@@ -8,33 +8,33 @@ var mstColumnLayout =
     [ 
         {    
             dataField : "accId",
-            headerText : "ID",
-            width : 120
+            headerText : "<spring:message code='sys.info.id' />",
+            width : 70
            ,editable : false
         }, {
             dataField : "accCode",
-            headerText : "CODE",
-            width : 200
+            headerText : "<spring:message code='sys.account.grid1.CODE' />",
+            width : 100
            ,editable : false
         }, {
             dataField : "accDesc",
-            headerText : "DESCRIPTION",
-            width : 170
+            headerText : "<spring:message code='sys.account.grid1.DESCRIPTION' />",
+            width : 320
             ,editable : false
         }, {
             dataField : "sapAccCode",
-            headerText : "SAP CODE",
-            width : 140
+            headerText : "<spring:message code='sys.account.grid1.SAPCODE' />",
+            width : 100
             ,editable : false
         }, {
             dataField : "statusCode",
-            headerText : "STATUS",
-            width : 140
+            headerText : "<spring:message code='sys.account.grid1.STATUS' />",
+            width : 100
             ,editable : false
         }, {
             dataField : "isPayCash",
-            headerText : "CASH",
-            width : 140
+            headerText : "<spring:message code='sys.account.grid1.CASH' />",
+            width : 100
           , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -59,8 +59,8 @@ var mstColumnLayout =
                       
         }, {
             dataField : "isPayChq",
-            headerText : "CHEQUE",
-            width : 140
+            headerText : "<spring:message code='sys.account.grid1.CHEQUE' />", 
+            width : 100
           , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -83,8 +83,8 @@ var mstColumnLayout =
         
         }, {
             dataField : "isPayOnline",
-            headerText : "ONLINE",
-            width : 140
+            headerText : "<spring:message code='sys.account.grid1.ONLINE' />",  
+            width : 100
             , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -107,8 +107,8 @@ var mstColumnLayout =
                     
         }, {
             dataField : "isPayCrc",
-            headerText : "CREDIT CARD",
-            width : 140
+            headerText : "<spring:message code='sys.account.grid1.CREDITCARD' />",  
+            width : 150
             , renderer : 
             {
                 type : "CheckBoxEditRenderer",
@@ -131,22 +131,22 @@ var mstColumnLayout =
                  
        },{
            dataField : "accAddCntyId",
-           headerText : "CNTY ID",
+           headerText : "<spring:message code='sys.account.grid1.CNTYID' />",
            width : 50,
            visible : false
        },{
            dataField : "accAddStateId",
-           headerText : "STATUS ID",
+           headerText : "<spring:message code='sys.account.grid1.STATUSID' />",
            width : 50,
            visible : false
        },{
            dataField : "accAddAreaId",
-           headerText : "AREA ID",
+           headerText : "<spring:message code='sys.account.grid1.AREAID' />",
            width : 50,
            visible : false
        },{
            dataField : "accAddPostCodeId",
-           headerText : "POST CODE",
+           headerText : "<spring:message code='sys.account.grid1.POSTCODE' />",
            width : 50,
            visible : false
        }
@@ -258,7 +258,7 @@ function fnSetDetail(selGrdidID, rowIdx)  //cdMstId
    $("#paramAddStateId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddStateId"));  
    $("#paramAddAreaId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddAreaId"));  
    $("#pramAddPostCodeId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accAddPostCodeId"));  
-   $("#accId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accId"));
+   //$("#accId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "accId"));
 
    console.log(" paramAccCodeId:"+ $("#paramAccCodeId").val() +" paramAccCode:  "+ $("#paramAccCode").val() + " paramAccDesc: " + $("#paramAccDesc").val() + " paramSapAccCode: " + $("#paramSapAccCode").val() 
 		           + " parmIsPayCash: "+ $("#parmIsPayCash").val() + " parmIsPayChq: " + $("#parmIsPayChq").val() + " parmIsPayOnline: " + $("#parmIsPayOnline").val()
@@ -275,6 +275,30 @@ $(document).ready(function()
 	$("#accId").focus();
 	
 	$("#accId").keydown(function(key) 
+	{
+		if (key.keyCode == 13) 
+		{
+			fnGetAccountCdListAjax();
+		}
+
+	});
+	$("#accCode").keydown(function(key) 
+	{
+		if (key.keyCode == 13) 
+		{
+			fnGetAccountCdListAjax();
+		}
+
+	});
+	$("#accDesc").keydown(function(key) 
+	{
+		if (key.keyCode == 13) 
+		{
+			fnGetAccountCdListAjax();
+		}
+
+	});
+	$("#sapAccCode").keydown(function(key) 
 	{
 		if (key.keyCode == 13) 
 		{
@@ -335,9 +359,11 @@ $(document).ready(function()
         else
         {
            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-           console.log("selectedItem: " + event.value);  // rowIndex.. data exists
-           console.log(">> " + AUIGrid.getCellValue(myGridID, event.rowIndex, "accCode"));
-           fnSetDetail(myGridID,event.rowIndex);
+		           console.log("selectedItem: " + event.value);  // rowIndex.. data exists
+		           console.log(">> " + AUIGrid.getCellValue(myGridID, event.rowIndex, "accCode"));
+		           
+		           $("#accId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "accId"));
+		           fnSetDetail(myGridID,event.rowIndex);
         	 return true;
         } 
     });

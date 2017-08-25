@@ -145,7 +145,7 @@ function fnSaveGridMap()
 		      {
 		        console.log(e);
 		      }
-	        alert("Fail : " + jqXHR.responseJSON.message);
+		      Common.alert("Fail : " + jqXHR.responseJSON.message);
 	      }); 
 }
 
@@ -175,7 +175,7 @@ function fnSaveDetailGridMap()
 	            console.log(e);
 	          }
          
-          alert("Fail : " + jqXHR.responseJSON.message);
+	          Common.alert("Fail : " + jqXHR.responseJSON.message);
         }); 
 }
 

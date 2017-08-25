@@ -284,7 +284,7 @@ function fnSaveAuthCd()
               console.log(e);
             }
             
-            alert("Fail : " + jqXHR.responseJSON.message);
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
             
           }); 
   }
