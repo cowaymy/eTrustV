@@ -451,7 +451,7 @@ function fnSavePgmId()
         , GridCommon.getEditData(myGridID)
         , function(result) 
          {
-            alert(result.data + " Count Save Success!");
+            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSelectPgmListAjax() ;
             
             console.log("성공." + JSON.stringify(result));
@@ -481,7 +481,7 @@ function fnUpdateTrans()
         , GridCommon.getEditData(transGridID)
         , function(result) 
          {
-            alert(result.data + " Count Save Success!");
+            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSelectPgmListAjax() ;
             fnSelectPgmTransListAjax();
             console.log("성공." + JSON.stringify(result));
@@ -550,8 +550,6 @@ function removeAllCancel()
 
 function fnClear()
 { 
-/* 	alert('bax');
-	AUIGrid.restoreEditedCells(transGridID, 'xxxxxxxxx' ); */
 }
 
 function fnSelectTransGrid(tGrid, mGrid, evntRowIdx)
