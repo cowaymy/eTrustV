@@ -18,4 +18,10 @@ public interface SirimService {
 	List<EgovMap> selectSirimTransList(Map<String, Object> params);
 	
 	List<EgovMap> selectSirimToTransit(Map<String, Object> params);
+	
+	List<EgovMap> selectTransitItemlist(Map<String, Object> params);
+	
+	String insertSirimToTransitItem(Map<String, Object> params , int lid);
+	
+	void updateSirimTranItemDetail(Map<String, Object> params);
 }

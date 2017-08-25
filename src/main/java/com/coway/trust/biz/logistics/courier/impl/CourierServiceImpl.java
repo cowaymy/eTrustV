@@ -70,5 +70,11 @@ public class CourierServiceImpl implements CourierService {
 		courierMapper.insertCourier(params);
 
 	}
+	
+	@Override
+	public List<EgovMap> selectCourierComboList(Map<String, Object> params) {
+		return courierMapper.selectCourierComboList(params);
+
+	}
 
 }

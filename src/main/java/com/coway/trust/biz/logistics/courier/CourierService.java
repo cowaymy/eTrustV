@@ -21,5 +21,7 @@ public interface CourierService {
 	void motifyCourier(Map<String, Object> params);
 
 	void insertCourier(Map<String, Object> params);
+	
+	List<EgovMap> selectCourierComboList(Map<String, Object> params);
 
 }

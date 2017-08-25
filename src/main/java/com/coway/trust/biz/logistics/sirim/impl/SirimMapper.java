@@ -25,4 +25,18 @@ public interface SirimMapper {
 	List<EgovMap> selectSirimTransList(Map<String, Object> params);
 	
 	List<EgovMap> selectSirimToTransit(Map<String, Object> params);
+	
+	List<EgovMap> selectTransitItemlist(Map<String, Object> params);
+	
+	List<EgovMap> selectTransitDoctype(int params);
+	
+	void updateTransitDocNo(Map<String, Object> params);
+	
+	void insertSirimTransferMst(Map<String, Object> params);
+	
+	void insertSirimTransferDtl(Map<String, Object> params);
+	
+	void insertSirimTransferStk(Map<String, Object> params);
+	
+	void updateSirimTranItemDetail(Map<String, Object> params);
 }

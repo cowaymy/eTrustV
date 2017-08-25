@@ -1052,16 +1052,20 @@
            AND S28M.WH_LOC_STUS_ID = 1
            AND S28M.WH_LOC_TYPE_ID = 277
            <if test="grade != null and grade != ''">
-              AND S28M.WH_LOC_STK_GRAD = #{grade}
-           </if>
-           <if test="grade != null and grade != '' and equv != null and equv == 'N' ">
-              AND S28M.WH_LOC_STK_GRAD <![CDATA[!=]]> #{grade}
-           </if>
+              <choose>
+                  <when test='equv !=null and equv == "N"'>
+                    AND S28M.WH_LOC_STK_GRAD <![CDATA[<>]]> #{grade}
+                  </when>
+                  <otherwise>
+                     AND S28M.WH_LOC_STK_GRAD = #{grade}
+                  </otherwise>
+              </choose>
+           </if>              
            <if test="sLoc != null and sLoc != ''">
               AND S28M.WH_LOC_CODE = #{sLoc}
            </if>
            <if test="brnch != null and brnch != ''">
-              AND S28M.WH_LOC_BRNCH_ID = #{sLoc}
+              AND S28M.WH_LOC_BRNCH_ID = #{brnch}
            </if>
            <if test="groupCode != null and groupCode == 'CODY'">
               AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)

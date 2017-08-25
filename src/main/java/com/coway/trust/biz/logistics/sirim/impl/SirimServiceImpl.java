@@ -16,9 +16,13 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.sirim.SirimService;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -27,7 +31,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimService {
 
 	private static final Logger Logger = LoggerFactory.getLogger(SirimServiceImpl.class);
-
+	
 	@Resource(name = "SirimMapper")
 	private SirimMapper SirimMapper;
 
@@ -183,6 +187,77 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 	public List<EgovMap> selectSirimToTransit(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return SirimMapper.selectSirimToTransit(params);
+	}
+
+	@Override
+	public List<EgovMap> selectTransitItemlist(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return SirimMapper.selectTransitItemlist(params);
+	}
+
+	@Override
+	public String insertSirimToTransitItem(Map<String, Object> params , int lid) {
+		//String key = "";
+		List<Object> grid            = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		int docype = AppConstants.SIRIM_TRANSFER;
+		String transitNo = "";
+		
+		String tmpDocno = "";
+		
+		List<EgovMap> doctype = SirimMapper.selectTransitDoctype(docype);
+		
+		if (doctype.isEmpty()){
+			return "Fail";
+		}else{
+			Map<String , Object> hmap = (Map<String, Object>)doctype.get(0);
+			//DOC_NO_PREFIX, DOC_NO
+			transitNo = (String)hmap.get("docNoPrefix") + (String)hmap.get("docNo");
+			System.out.println("213Line ::::: " + transitNo);
+			tmpDocno = (String)hmap.get("docNo");
+			System.out.println("215Line ::::: " + tmpDocno);
+			int serial = Integer.parseInt(tmpDocno);
+			tmpDocno = String.format("%0"+tmpDocno.length()+"d", (serial + 1));
+			System.out.println("218Line ::::: " + tmpDocno);
+			for (int i  = 0; i < grid.size() ; i++){
+				//LOG0036D INSERT : SirimTransferD
+				Map<String , Object> mMap =  (Map<String, Object>)grid.get(i);
+				mMap.put("suserid" , lid);
+				mMap.put("tsid" , 1);
+				mMap.put("rsid" , 44);
+				SirimMapper.insertSirimTransferDtl(mMap);
+				// LOG0040D INSERT : STKSIRIM
+				mMap.put("fsqty", -1);
+				mMap.put("docno", transitNo);
+				mMap.put("rmark", "");
+				mMap.put("schk", "1");
+				mMap.put("sepo", 1);
+				mMap.put("saws", "1");
+				SirimMapper.insertSirimTransferStk(mMap);
+				// LOG0040D INSERT : STKSIRIM 
+				mMap.put("fsqty", 1);
+				SirimMapper.insertSirimTransferStk(mMap);
+			}
+			
+			// LOG0035D INSERT : SirimTransferM
+			formMap.put("statusid" , 1);
+            formMap.put("strn" , transitNo);
+            formMap.put("suserid" , lid);
+            SirimMapper.insertSirimTransferMst(formMap);
+			// update docNo
+			Map<String , Object> dmap = new HashMap();
+			dmap.put("dno", docype);
+			dmap.put("nno", tmpDocno);
+			dmap.put("suserid" , lid);
+			SirimMapper.updateTransitDocNo(dmap);
+		}
+		
+		return transitNo;
+	}
+
+	@Override
+	public void updateSirimTranItemDetail(Map<String, Object> params) {
+		SirimMapper.updateSirimTranItemDetail(params);		
 	}
 
 }

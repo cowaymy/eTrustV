@@ -253,6 +253,13 @@
 
     </select>
     
+    <select id="selectCourierComboList"  parameterType="Map" resultType="egovMap">
+        SELECT CURIER_ID as CODE_ID , CURIER_CODE as CODE , CURIER_NAME as CODE_NAME
+		  FROM SYS0016M
+		 WHERE CURIER_STUS_ID = 1
+		 ORDER BY CURIER_CODE
+    </select>
+    
     <update id="updateDocNo"  parameterType="Map">
      UPDATE SYS0022C
 		   SET DOC_NO =  #{docNoFormat}

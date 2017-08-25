@@ -164,6 +164,58 @@ public class SirimController {
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
-	}	
+	}
+	
+	@RequestMapping(value = "/selectTransitItemlist.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectTransitItemlist(@RequestParam Map<String, Object> params, Model model) {
+		
+		
+		List<EgovMap> list = SirimService.selectTransitItemlist(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/insertSirimToTransitItem.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertSirimToTransitItem(@RequestBody Map<String, Object> params, Model model) {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		
+		String key = SirimService.insertSirimToTransitItem(params , loginId);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", key);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		map.put("message", message);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/updateSirimTranItemDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> updateSirimTranItemDetail(@RequestParam Map<String, Object> params, Model model) {
+		
+		
+		SirimService.updateSirimTranItemDetail(params);
+		
+		Map<String, Object> map = new HashMap();
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		map.put("message", message);
+
+		return ResponseEntity.ok(map);
+	}
 
 }

@@ -124,5 +124,8 @@ public class AppConstants {
 	public static final int CODE_PAY_MODE = 36;
 	public static final int CODE_PAY_TYPE = 48;
 	public static final int CODE_DISCOUNT_TYPE = 74;
+	
+	
+	public static final int SIRIM_TRANSFER = 72;
 
 }

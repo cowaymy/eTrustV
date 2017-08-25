@@ -141,4 +141,13 @@ public class CourierController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	
+	@RequestMapping(value = "/selectCourierComboList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCourierComboList(@RequestParam Map<String, Object> params,
+			ModelMap model) {
+
+		List<EgovMap> codeList = courierService.selectCourierComboList(params);
+		return ResponseEntity.ok(codeList);
+	}
 }
