@@ -2,6 +2,97 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
 
+<delete id="deleteUserExceptAuthMapping" parameterType="Map">
+      DELETE SYS0055M  WHERE USER_ID  = #{userId} AND AUTH_CODE = #{oldAuthCode} AND VALID_DT_FROM = #{oldFromDt}
+</delete>
+
+<update id="updateUserExceptAuthMapping" parameterType="Map">
+   UPDATE SYS0055M
+      SET  AUTH_CODE     = #{authCode} 
+          ,VALID_DT_FROM = #{validDtFrom}
+          ,VALID_DT_TO   = #{validDtTo}
+          ,UPD_USER_ID   = #{updUserId}
+          ,UPD_DT        = SYSDATE   
+    WHERE  AUTH_CODE     = #{oldAuthCode} 
+      AND  USER_ID       = #{userId}
+      AND  VALID_DT_FROM = #{oldFromDt}
+</update>
+
+<insert id="insertUserExceptAuthMapping" parameterType="Map">
+  INSERT INTO SYS0055M
+    (
+       USER_ID
+      ,AUTH_CODE
+      ,VALID_DT_FROM
+      ,VALID_DT_TO
+      ,CRT_USER_ID
+      ,CRT_DT
+      ,UPD_USER_ID
+      ,UPD_DT  
+    )
+  VALUES
+    (
+       #{userId}
+      ,#{authCode}  
+      ,#{validDtFrom}
+      ,#{validDtTo}   
+      ,#{crtUserId}
+      ,SYSDATE
+      ,#{updUserId}
+      ,SYSDATE    
+    )
+</insert>
+
+<select id="selectUserExceptAdjustList" parameterType="Map" resultType="egovMap">
+ SELECT SYS55M.AUTH_CODE
+      ,(SELECT DISTINCT AUTH_NAME FROM SYS0053M SYS53M WHERE SYS53M.AUTH_CODE = SYS55M.AUTH_CODE ) AUTH_NAME
+      ,SYS55M.VALID_DT_FROM
+      ,SYS55M.VALID_DT_TO
+      ,SYS55M.VALID_DT_FROM OLD_FROM_DT
+      ,SYS55M.AUTH_CODE OLD_AUTH_CODE
+      ,SYS55M.USER_ID 
+  FROM SYS0047M SYS47M
+     , SYS0055M SYS55M
+WHERE  1 = 1
+    <![CDATA[
+       AND SYS47M.USER_ID = SYS55M.USER_ID
+       AND 1 = SYS47M.USER_STUS_ID
+       AND 1 <> SYS47M.USER_TYPE_ID
+       AND 2 <> SYS47M.USER_TYPE_ID
+       AND 3 <> SYS47M.USER_TYPE_ID
+       AND 1161 <> SYS47M.USER_TYPE_ID
+       AND 1165 <> SYS47M.USER_TYPE_ID
+       AND SYS47M.USER_VAL_ID_TO  >=  SYSDATE
+    ]]>
+		<if test='userId != null and userId !="" '>
+		   AND (UPPER(SYS47M.USER_ID) LIKE  UPPER(#{userId}) || '%' 
+		    OR UPPER(SYS47M.USER_NAME) LIKE '%' || UPPER(#{userId}) || '%')
+		</if>
+      ORDER BY AUTH_NAME 
+</select>
+
+<select id="selectUserExceptionInfoList" parameterType="Map" resultType="egovMap">  
+ SELECT USR.USER_ID ,
+        USR.USER_NAME
+   FROM SYS0047M USR INNER JOIN SYS0038M STATUS
+     ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
+   WHERE 1=1
+    <![CDATA[
+       AND 1 = USR.USER_STUS_ID
+       AND 1 <> USR.USER_TYPE_ID
+       AND 2 <> USR.USER_TYPE_ID
+       AND 3 <> USR.USER_TYPE_ID
+       AND 1161 <> USR.USER_TYPE_ID
+       AND 1165 <> USR.USER_TYPE_ID
+       AND USR.USER_VAL_ID_TO  >=  SYSDATE
+    ]]>
+       <if test="userId != null and userId !=''">
+       AND (UPPER(USR.USER_ID) LIKE  UPPER(#{userId}) || '%' 
+        OR UPPER(USR.USER_NAME) LIKE '%' || UPPER(#{userId}) || '%')
+       </if>
+    ORDER BY USER_ID
+</select>
+
 <insert id="insertRoleAuthMapping" parameterType="Map">
   INSERT INTO SYS0054M
      (
@@ -20,8 +111,8 @@
        #{authCode}
       ,#{roleId}
       ,DECODE( #{authCode},'EXT','0','MGR','0','INT','0',#{roleLvl})           
-      ,NVL(REPLACE(#{fromDt},'/',''),TO_CHAR(SYSDATE,'YYYYMMDD') )
-      ,NVL(REPLACE(#{toDt},  '/',''),TO_CHAR(SYSDATE+365,'YYYYMMDD') )    
+      ,#{fromDt}
+      ,#{toDt}    
       ,#{crtUserId}
       ,SYSDATE
       ,#{updUserId}
@@ -34,33 +125,32 @@
         SET AUTH_CODE = UPPER(#{authCode})
            ,ROLE_ID   = #{roleId}
            ,ROLE_LVL  = DECODE( #{authCode},'EXT','0','MGR','0','INT','0',#{roleLvl}) 
-           ,VALID_DT_FROM = REPLACE(#{fromDt},'/','')
-           ,VALID_DT_TO   = REPLACE(#{toDt},'/','')
+           ,VALID_DT_FROM = #{fromDt}
+           ,VALID_DT_TO   = #{toDt}
            ,UPD_USER_ID   = #{updUserId}
            ,UPD_DT        = SYSDATE   
-     WHERE AUTH_CODE = UPPER(#{authCode}) 
-       AND ROLE_ID   = #{roleId}
+     WHERE AUTH_CODE = UPPER(#{hidden}) 
+       AND ROLE_ID   = #{oldRoleId}
+       AND VALID_DT_FROM   = #{oldFromDt}
   </update>
   
 <delete id="deleteRoleAuthMapping" parameterType="Map">
-      DELETE SYS0054M  WHERE AUTH_CODE  = #{authCode}
+      DELETE SYS0054M  WHERE AUTH_CODE  = #{hidden} AND ROLE_ID   = #{oldRoleId} AND VALID_DT_FROM = #{oldFromDt}
 </delete>
 
 <select id="selectRoleAuthMappingPopUpList" parameterType="Map" resultType="egovMap">
       SELECT AUTH_CODE
-            , AUTH_NAME
-            , ROLE_ID
-            , ROLE_LVL
+           , AUTH_NAME
+           , ROLE_ID
+           , ROLE_LVL
         FROM SYS0053M A
        WHERE 1 = 1 
        <choose>
-         <when test='roleSelectBox == "01" and roleIdNm != null and roleIdNm != ""'>
-             AND ROLE_ID = #{roleIdNm}
-         </when>
-         <when test='roleSelectBox == "02" and roleIdNm != null and roleIdNm != "" '>
-             AND UPPER(AUTH_NAME) LIKE  '%' || UPPER(#{roleIdNm}) || '%'
+         <when test='authSelectBox == "01" and AuthIdNm != null and AuthIdNm != ""'>
+             AND AUTH_CODE = #{AuthIdNm}
          </when>
          <otherwise>
+             AND UPPER(AUTH_NAME) LIKE  '%' || UPPER(#{AuthIdNm}) || '%'
          </otherwise>
        </choose>
        
@@ -75,7 +165,9 @@
          F.ROLE_LVL,
          H.VALID_DT_FROM FROM_DT,
          H.VALID_DT_TO TO_DT,
-         F.AUTH_CODE HIDDEN
+         F.AUTH_CODE HIDDEN, /*old_auth_code*/
+         G.ROLE_ID  OLD_ROLE_ID,
+         H.VALID_DT_FROM OLD_FROM_DT
     FROM SYS0053M F
         ,SYS0054M H
         ,(SELECT B.AUTH_CODE ,
@@ -103,7 +195,9 @@
           '0' ROLE_LVL,
           NVL(C.VALID_DT_FROM  ,TO_CHAR(SYSDATE, 'YYYYMMDD'))  FROM_DT,
           NVL(C.VALID_DT_TO  ,TO_CHAR(SYSDATE+365, 'YYYYMMDD')) TO_DT, 
-          C.AUTH_CODE HIDDEN
+          C.AUTH_CODE HIDDEN,  /*old_auth_code*/
+          A.ROLE_ID  OLD_ROLE_ID,
+          NVL(C.VALID_DT_FROM  ,TO_CHAR(SYSDATE, 'YYYYMMDD')) OLD_FROM_DT
     FROM SYS0053M A ,          
           (SELECT B.AUTH_CODE ,
                   A.ROLE_ID ,
@@ -132,15 +226,17 @@
 <select id="selectRoleAuthMappingBtn" parameterType="Map" resultType="egovMap">
    SELECT SYS54M.AUTH_CODE
 		     ,CASE SYS54M.AUTH_CODE WHEN 'INT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
-		                     WHEN 'EXT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
-		                     WHEN 'MGR' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
-		                     ELSE (SELECT DISTINCT AUTH_NAME FROM SYS0053M SYS53M WHERE SYS53M.AUTH_CODE = SYS54M.AUTH_CODE  AND SYS53M.ROLE_ID = SYS54M.ROLE_ID  ) 
+		                            WHEN 'EXT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
+		                            WHEN 'MGR' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
+		                            ELSE (SELECT DISTINCT AUTH_NAME FROM SYS0053M SYS53M WHERE SYS53M.AUTH_CODE = SYS54M.AUTH_CODE  AND SYS53M.ROLE_ID = SYS54M.ROLE_ID  ) 
 		      END AUTH_NAME          
 		     ,TO_CHAR(ROLE_ID) ROLE_ID
 		     ,ROLE_LVL 
 		     ,VALID_DT_FROM FROM_DT
 		     ,VALID_DT_TO TO_DT
 		     ,AUTH_CODE HIDDEN
+         ,TO_CHAR(ROLE_ID) OLD_ROLE_ID
+         ,VALID_DT_FROM OLD_FROM_DT
    FROM SYS0054M SYS54M         
   WHERE 1 = 1
  <if test='authCode !=null and authCode != "" '>  
