@@ -40,8 +40,8 @@
              , V1.CUST_RACE
              , V1.CUST_EMAIL
              , V1.CUST_VA_NO
-             , TO_CHAR(TO_DATE(V1.CUST_PASSPORT_EXPR, 'YYYY-MM-DD'), 'DD/MM/YYYY') CUST_PASSPORT_EXPR
-             , TO_CHAR(TO_DATE(V1.CUST_VISA_EXPR, 'YYYY-MM-DD'), 'DD/MM/YYYY') CUST_VISA_EXPR
+             , TO_CHAR(V1.CUST_PASSPORT_EXPR, 'DD/MM/YYYY') CUST_PASSPORT_EXPR
+             , TO_CHAR(V1.CUST_VISA_EXPR, 'DD/MM/YYYY') CUST_VISA_EXPR
              , V1.ORD_PROMO_ID
              , V1.ORD_PROMO_CODE
              , V1.ORD_PROMO_DESC
@@ -1055,4 +1055,5 @@
             call  SP_GET_ORD_LAST_6_MTH_TRNSC(#{salesOrderId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=transMap})
         }
     </select>
+    
 </mapper>
