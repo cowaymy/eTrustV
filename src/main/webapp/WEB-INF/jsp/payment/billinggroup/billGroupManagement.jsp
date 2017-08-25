@@ -1347,6 +1347,7 @@ var addOrderLayout = [
         var message = "";
     	
         $("#removeOrderPop").show();
+        $("#btnSave").show();
         
         Common.ajax("GET","/payment/selectDetailOrdGrp.do", {"custBillId":custBillId, "salesOrdId" : salesOrdId}, function(result){
             console.log(result);
