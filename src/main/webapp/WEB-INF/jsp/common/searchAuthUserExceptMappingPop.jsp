@@ -20,10 +20,10 @@ function fnRoleAuthMappingPopSearch()
            , function(result) 
            {
               console.log("성공 data : " + result);
-              AUIGrid.setGridData(searchRoleGridID, result);
+              AUIGrid.setGridData(searchPopAuthGridID, result);
               if(result != null && result.length > 0)
               {
-                //fnSetroleIdParamSet(searchRoleGridID, 0);
+                //fnSetroleIdParamSet(searchPopAuthGridID, 0);
               }
            });
 }
@@ -35,38 +35,23 @@ var SearchRoleColumnLayout =
             dataField : "authCode",
             headerText : "<spring:message code='sys.auth.grid1.AuthCode' />",
             editable : false,
-            width : 100
+            width : 90
         },{
             dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
-            width : 100
+            width : 70
         },{
             dataField : "authName",
-            headerText : "<spring:message code='sys.auth.grid1.authName' />",
-            editable : false,           
+            headerText : "<spring:message code='sys.auth.grid1.authName' />",           
             style : "aui-grid-left-column",
-            width : 250
-        },{
-            dataField : "roleLvl",
-            headerText :"<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
             editable : false,
-            width : 100
-        },{
-            dataField : "role2",
-            headerText : "role2",
-            editable : false,
-            width : 0
-        },{
-            dataField : "role3",
-            headerText : "role3",
-            editable : false,
-            width : 0
+            width : 240
         }
     ];
 
 /***************************************************[ Main GRID] ***************************************************/    
-var searchRoleGridID;
+var searchPopAuthGridID;
 
 $(document).ready(function()
 {
@@ -91,38 +76,36 @@ $(document).ready(function()
 	                };
 	    
     // AUIGrid 그리드를 생성합니다.
-	    searchRoleGridID = GridCommon.createAUIGrid("search_grid_wrap", SearchRoleColumnLayout,"roleId", searchOptions);
+	    searchPopAuthGridID = GridCommon.createAUIGrid("search_grid_wrap", SearchRoleColumnLayout,"roleId", searchOptions);
 
 	    // cellClick event.
-	    AUIGrid.bind(searchRoleGridID, "cellClick", function( event ) 
+	    AUIGrid.bind(searchPopAuthGridID, "cellClick", function( event ) 
 	    {
 	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " event_value: " + event.value );
 	    });
 
 	 // 셀 더블클릭 이벤트 바인딩
-	    AUIGrid.bind(searchRoleGridID, "cellDoubleClick", function(event) 
+	    AUIGrid.bind(searchPopAuthGridID, "cellDoubleClick", function(event) 
 	    {
 	        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
-	        var SerchAuthCd = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "authCode");
-	        var SerchAuthId = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "roleId");
-	        var SerchAuthName = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "authName");
-	        var SerchAuthLev = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "roleLvl");
-	        
-	        if (gSelMstRolLvl !=  SerchAuthLev )
-		      {
-	        	//Common.alert("Can not be modified. Not at the same level");
-            Common.alert("<spring:message code='sys.msg.cannot' arguments='Modified ; Different Levels.' htmlEscape='false' argumentSeparator=';'/>");
-	        	return false;
-		      }
+	        fnGetToday();
+
+	        var SerchAuthCd = AUIGrid.getCellValue(searchPopAuthGridID, event.rowIndex, "authCode");
+	        var SerchAuthId = AUIGrid.getCellValue(searchPopAuthGridID, event.rowIndex, "roleId");
+	        var SerchAuthName = AUIGrid.getCellValue(searchPopAuthGridID, event.rowIndex, "authName");
+	        var SerchAuthLev = AUIGrid.getCellValue(searchPopAuthGridID, event.rowIndex, "roleLvl");
 
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 0, SerchAuthCd);
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 1, SerchAuthName);
-	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 2, SerchAuthId);
-	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 3, SerchAuthLev);
-	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 4, fnGetToday());
+	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 2, fnGetToday());
+	        if (AUIGrid.getCellValue(AuthGridID, gSelMainRowIdx, "validDtTo") == null)
+		      {
+	          AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 3, "");
+			    }
+	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 4, $("#userId").val());
 
-	        $("#searchRoleAuthMappingPop").remove();
+	        $("#searchAuthUserExceptMappingPop").remove();
 	    }); 
 	
 });   //$(document).ready
@@ -131,7 +114,7 @@ $(document).ready(function()
 function fnSelectBoxOnChange()
 {
 	  $("#AuthIdNm").val("");
-	  AUIGrid.clearGridData(searchRoleGridID);  //grid data clear
+	  AUIGrid.clearGridData(searchPopAuthGridID);  //grid data clear
 }
 
 function fnGetToday()
@@ -148,12 +131,11 @@ function fnGetToday()
   return ("" + year + month + day);  
        
 }
-
 </script>
 
 <body>
 
-<div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Auth Search</h1>

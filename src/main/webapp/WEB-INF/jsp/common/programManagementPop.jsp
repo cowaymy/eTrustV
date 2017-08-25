@@ -6,33 +6,6 @@
 
 $(function()
 {
-  /* var cntyId = "${inputParams.parmAddCntyId}";
-  var areaId = "${inputParams.paramAddAreaId}";
-  var stateId = "${inputParams.paramAddStateId}";
-  var postId  = "${inputParams.pramAddPostCodeId}";
-
-  console.log("parmAddCntyId: " + cntyId +" paramAddStateId: " + stateId + " paramAddAreaId: " + areaId +" pramAddPostCodeId: " + postId )
-                                
-  doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , cntyId      ,'mcountry' , 'S', '');
-
-  doDefCombo('', '' ,'mstate', 'S', '');
-  doDefCombo('', '' ,'marea', 'S', '');
-  doDefCombo('', '' ,'mpostcd', 'S', ''); 
-
-  if (cntyId != "" && cntyId != undefined)
-  {
-    getAddrRelay('mstate' , cntyId , 'state' , stateId);
-  }
-
-  if (stateId != "" && stateId != undefined)
-  {
-      getAddrRelay('marea' , stateId , 'area' , areaId);
-  }
-
-  if (areaId != "" && areaId != undefined){
-      getAddrRelay('mpostcd' , areaId , 'post', postId);
-  } */
-
   
 });
 

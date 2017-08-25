@@ -63,11 +63,11 @@ var AuthColumnLayout =
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 list : gAuthList
             },
-            width : 80
+            width : 70
         }, {
             dataField : "authName", 
             headerText : "<spring:message code='sys.auth.grid1.authName'/>",
-            width : 200,
+            width : 230,
             editable : false,
             style : "aui-grid-left-column",
             renderer : 
@@ -109,10 +109,9 @@ var AuthColumnLayout =
         }, {
             dataField : "fromDt",
             headerText : "<spring:message code='sys.authRoleMapping.grid2.ValidDateFrom' />",
-            style : "aui-grid-left-column",
             dataType : "date",
             formatString : "dd-mmm-yyyy",
-            width:130,
+            width:120,
             editable : true,
             editRenderer : {
               type : "CalendarRenderer",
@@ -123,10 +122,9 @@ var AuthColumnLayout =
         }, {
             dataField : "toDt",
             headerText : "<spring:message code='sys.authRoleMapping.grid2.ValidDateTo' />",
-            style : "aui-grid-left-column",
             dataType : "date",
             formatString : "dd-mmm-yyyy",
-            width:130,
+            width:120,
             editable : true,
             editRenderer : {
               type : "CalendarRenderer",
@@ -135,15 +133,25 @@ var AuthColumnLayout =
               showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
               }
         },{
-            dataField : "hidden",
-            headerText : "hidden",
-            editable   : true,
-            width : 0
+	            dataField : "hidden",  //oldAuthCode
+	            headerText : "hidden",
+	            editable   : false,
+	            width : 0
         } , {     // PK , rowid 용 칼럼
-            dataField : "rowId",
-            dataType : "string",
-            visible : false
-        },   
+	            dataField : "rowId",
+	            dataType : "string",
+	            visible : false
+        },  {
+	            dataField : "oldRoleId",   
+	            headerText : "oldRoleId",
+	            editable : false,
+	            width : 0,
+        },  {
+	            dataField : "oldFromDt",   
+	            headerText : "oldFromDt",
+	            editable : false,
+	            width : 0,
+        },
     ];  
 
 // Ajax
@@ -160,7 +168,8 @@ function fnSaveRoleAuthCd()
         , function(result) 
           {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-            fnSearchBtnClickAjax() ;
+           // fnSearchBtnClickAjax() ;
+            fnCellClickSelectRoleAuthListAjax();
             
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
@@ -226,7 +235,7 @@ function fnSearchBtnClickAjax()
               console.log("성공 data : " + result);
               AUIGrid.setGridData(AuthGridID, result);
               if(result != null && result.length > 0)
-              {
+              {                  
                 if ($("#roleId").val().length > 0)
                 {
                   fnCellClickSelectRoleAuthListAjax();
@@ -391,11 +400,11 @@ function auiCellEditignHandler(event)
             }
         }
 
-        if ( (event.headerText = "Valid_From" && event.columnIndex == 4)  )
+        if ( (event.headerText == "Valid_From" && event.columnIndex == 4)  )
         {
            validFrom =  event.value;
         }
-        else if (event.headerText = "Valid_To" && event.columnIndex == 5)
+        else if (event.headerText == "Valid_To" && event.columnIndex == 5)
         {
             validTo =  event.value;
         }
@@ -431,6 +440,11 @@ function auiCellEditignHandler(event)
                validTo = ""; 
                return false;
             }
+            else
+            {
+            	 AUIGrid.setCellValue(AuthGridID, event.rowIndex, 4, validFrom);
+            	 AUIGrid.setCellValue(AuthGridID, event.rowIndex, 5, validTo);
+            }
         }
 
   } 
@@ -465,8 +479,11 @@ function fnAddRow()
       item.roleLvl  ="";
       item.fromDt   ="";
       item.toDt     ="";
-      item.hidden   ="";
+      item.hidden   ="";  // old_auth_code
       item.rowId   ="PkAddNew";
+      item.oldRoleId = "";
+      item.oldFromDt = "";
+      
       // parameter
       // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
       // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -560,7 +577,7 @@ function fnValidationCheck()
       {
         result = false;
         // {0} is required.
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth authName' htmlEscape='false'/>");
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Name' htmlEscape='false'/>");
         break;
       }
 
