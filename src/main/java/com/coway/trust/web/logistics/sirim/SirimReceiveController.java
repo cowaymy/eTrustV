@@ -81,7 +81,7 @@ public class SirimReceiveController {
 		//params.put("searchWarehouse", "null");
 		
 		List<EgovMap> list = SirimReceiveService.selectReceiveList(params);
-		
+			
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
 
@@ -94,8 +94,13 @@ public class SirimReceiveController {
 		
 		logger.debug("rnsitId   ?? ::::::: {}",params.get("trnsitId") );
 		logger.debug("srmResultStusId   ?? ::::::: {}",params.get("srmResultStusId") );
+		logger.debug("SRM_TRANSF_ID   ?? ::::::: {}",params.get("srmResultStusId") );
+		
+		
 		
 		List<EgovMap> list = SirimReceiveService.detailReceiveList(params);
+		
+		//int PendingCnt = SirimReceiveService.getPendingCnt(params);
 	/*for (int i = 0; i < list.size(); i++) {
 			logger.debug("detailReceiveList ************  ?? ::::::: {}",list.get(i) );
 	}*/
@@ -141,17 +146,17 @@ public class SirimReceiveController {
 //			logger.debug("srmNo ???????? : {}", ItemsListMap.get("srmNo"));
 //		}
 
-		logger.debug("receiveInfoTransitNo  : {}", InsertReceiveMap.get("receiveInfoTransitNo"));
-		logger.debug("receiveInfoTransitDate  : {}", InsertReceiveMap.get("receiveInfoTransitDate"));
-		logger.debug("receiveInfoTransitStatus  : {}", InsertReceiveMap.get("receiveInfoTransitStatus"));
-		logger.debug("receiveInfoTransitBy  : {}", InsertReceiveMap.get("receiveInfoTransitBy"));
-		logger.debug("receiveInfoTransitLocation  : {}", InsertReceiveMap.get("receiveInfoTransitLocation"));
-		logger.debug("receiveInfoCourier  : {}", InsertReceiveMap.get("receiveInfoCourier"));
-		logger.debug("receiveInfoTotalSirimTransit  : {}", InsertReceiveMap.get("receiveInfoTotalSirimTransit"));
+//		logger.debug("receiveInfoTransitNo  : {}", InsertReceiveMap.get("receiveInfoTransitNo"));
+//		logger.debug("receiveInfoTransitDate  : {}", InsertReceiveMap.get("receiveInfoTransitDate"));
+//		logger.debug("receiveInfoTransitStatus  : {}", InsertReceiveMap.get("receiveInfoTransitStatus"));
+//		logger.debug("receiveInfoTransitBy  : {}", InsertReceiveMap.get("receiveInfoTransitBy"));
+//		logger.debug("receiveInfoTransitLocation  : {}", InsertReceiveMap.get("receiveInfoTransitLocation"));
+//		logger.debug("receiveInfoCourier  : {}", InsertReceiveMap.get("receiveInfoCourier"));
+//		logger.debug("receiveInfoTotalSirimTransit  : {}", InsertReceiveMap.get("receiveInfoTotalSirimTransit"));
 		logger.debug("receiveStatus  : {}", InsertReceiveMap.get("receiveStatus"));
-		logger.debug("receiveRadio  : {}", InsertReceiveMap.get("receiveRadio"));
-		logger.debug("SirimLocTo  : {}", InsertReceiveMap.get("SirimLocTo"));
-		logger.debug("SirimLocFrom  : {}", InsertReceiveMap.get("SirimLocFrom"));
+//		logger.debug("receiveRadio  : {}", InsertReceiveMap.get("receiveRadio"));
+//		logger.debug("SirimLocTo  : {}", InsertReceiveMap.get("SirimLocTo"));
+//		logger.debug("SirimLocFrom  : {}", InsertReceiveMap.get("SirimLocFrom"));
 		
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
