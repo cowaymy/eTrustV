@@ -97,7 +97,7 @@ SELECT Distinct1.TRNSIT_ID TRNSIT_ID  ,
                 Project1.TR_TRANS_CLOS_DT TR_TRANS_CLOS_DT  ,
                 Project1.CODE_DESC CODE_DESC  ,
                 Project1.CODE CODE  ,
-                Project1.USER_NAME USER_NAME  ,
+                Project1.USER_NAME USER_NAME  , 
                 ROW_NUMBER() OVER ( ORDER BY Project1.SRM_TRANS_ITM_ID ASC  ) ROW_NUMBER  
          FROM ( SELECT Extent1.SRM_TRANS_ITM_ID SRM_TRANS_ITM_ID  ,
                        Extent1.SRM_TYPE_ID SRM_TYPE_ID  ,
@@ -158,9 +158,22 @@ SELECT Extent1.TRNSIT_ID TRNSIT_ID  ,
 </select>  
 
 
+<!-- <select id="getPendingCnt" parameterType="Map" resultType="Integer">   
+SELECT GroupBy1.A1 C1  
+  FROM ( SELECT COUNT(1)  A1  
+         FROM LOG0036D Extent1
+                JOIN SYS0013M Extent2   ON Extent1.SRM_TYPE_ID = Extent2.CODE_ID
+                JOIN SYS0038M Extent3   ON Extent1.SRM_RESULT_STUS_ID = Extent3.STUS_CODE_ID
+                LEFT JOIN SYS0047M Extent4   ON Extent1.SRM_TRANS_UPD_USER_ID = Extent4.USER_ID
+          WHERE  ( 1 = Extent1.SRM_TRANS_STUS_ID )
+                   AND ( Extent1.SRM_TRANSF_ID = 429 )
+                   AND ( Extent1.SRM_RESULT_STUS_ID = 44 ) ) GroupBy1
+</select>   -->
+
+
 <update id="SrmResultStatusUpdate" parameterType="Map">
         UPDATE LOG0036D
-		   SET SRM_RESULT_STUS_ID = #{srmResultStusId},
+		   SET SRM_RESULT_STUS_ID = #{receiveStatus},
 		       SRM_TRANS_UPD_USER_ID =#{upuser_id} ,
 		       SRM_TRANS_UPD_DT =SYSDATE ,
 		       TR_TRANS_CLOS_DT =SYSDATE 
