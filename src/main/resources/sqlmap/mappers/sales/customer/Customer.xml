@@ -264,6 +264,14 @@
                            Extent5.ISO,
                            Extent5.ID STREET_ID,
                            Extent5.SUBURB,
+				           NVL(Extent1.ADD1, '') ADD1,
+				           NVL(Extent1.ADD2, '') ADD2,
+				           NVL(Extent5.STREET, '') STREET,
+				           NVL(Extent5.POSTCODE, '') POSTCODE,
+				           NVL(Extent5.LOCALITY, '') TOWN,
+				           NVL(Extent5.REGION2, '') CITY,
+				           NVL(Extent5.REGION1, '') STATE,
+				           NVL(Extent5.COUNTRY, '') COUNTRY,
                            CASE  WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END ||' '|| CASE WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END
                            ||' '|| Extent5.STREET ||' '|| Extent5.POSTCODE ||' '|| Extent5.LOCALITY ||' '|| Extent5.REGION2 ||' '|| Extent5.REGION1 ||' '|| Extent5.COUNTRY AS FULL_ADDRESS,                            
                            CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM ELSE '' END REM  ,
@@ -543,13 +551,14 @@
 		     , T1.CUST_BILL_IS_ESTM
 		     , T1.CUST_BILL_IS_SMS
 		     , T1.CUST_BILL_IS_POST
-		     , NVL(T2.ADD1, '') ADD1
-		     , NVL(T2.ADD2, '') ADD2
-		     , NVL(T2.ADD3, '') ADD3
-		     , NVL(T3.POST_CODE, '') POST_CODE
-		     , NVL(T4.AREA_NAME, '') AREA_NAME
-		     , NVL(T5.NAME, '') STATE_NAME
-		     , NVL(T6.NAME, '') CNTY_NAME
+		     , NVL(T2.ADD1,     '') ADD1
+		     , NVL(T2.ADD2,     '') ADD2
+             , NVL(T3.STREET,   '') STREET
+             , NVL(T3.POSTCODE, '') POSTCODE
+             , NVL(T3.LOCALITY, '') TOWN
+             , NVL(T3.REGION2,  '') CITY
+             , NVL(T3.REGION1,  '') STATE
+		     , NVL(T3.COUNTRY,  '') COUNTRY
 		     , NVL(T1.CUST_BILL_EMAIL, '') CUST_BILL_EMAIL
 		     , NVL(T1.CUST_BILL_CRT_DT, TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) CUST_BILL_CRT_DT
 		     , NVL(T7.USER_NAME, '') USER_NAME
@@ -562,10 +571,7 @@
 		     , NVL(T1.CUST_BILL_UPD_DT, TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) CUST_BILL_UPD_DT
 		  FROM SAL0024D T1
 		  LEFT JOIN SAL0023D T2  ON T2.CUST_ADD_ID = T1.CUST_BILL_ADD_ID
-		  LEFT JOIN SYS0030C T3  ON T3.POST_CODE_ID = T2.POST_CODE_ID
-		  LEFT JOIN SYS0039M T4  ON T4.AREA_ID = T2.AREA_ID
-		  LEFT JOIN SYS0035M T5  ON T5.STATE_ID = T2.STATE_ID
-		  LEFT JOIN SYS0015M T6  ON T6.CNTY_ID = T2.CNTY_ID
+		  LEFT JOIN SYS0064M T3  ON T3.STREET_ID = T2.STREET_ID
 		  LEFT JOIN SYS0047M T7  ON T7.USER_ID = T1.CUST_BILL_CRT_USER_ID
 		  LEFT JOIN SYS0047M T8  ON T8.USER_ID = T1.CUST_BILL_UPD_USER_ID
 		  LEFT JOIN ORG0001D T9  ON T9.MEM_ID = T1.CUST_BILL_INCHG_MEM_ID
@@ -574,13 +580,14 @@
 		   AND T1.CUST_BILL_CUST_ID = #{custId}
          <if test='searchWord != null and searchWord !=""'>
            AND (UPPER(T1.CUST_BILL_GRP_NO)  LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T2.ADD1) LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T2.ADD2) LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T2.ADD3) LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T3.POST_CODE) LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T4.AREA_NAME) LIKE '%' || UPPER(#{searchWord}) || '%'
-             OR UPPER(T5.NAME) LIKE '%' || UPPER(#{searchWord}) || '%')
-             OR UPPER(T6.NAME) LIKE '%' || UPPER(#{searchWord}) || '%')
+             OR UPPER(T2.ADD1)     LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T2.ADD2)     LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.POSTCODE) LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.STREET)   LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.LOCALITY) LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.REGION2)  LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.REGION1)  LIKE '%' || UPPER(#{searchWord}) || '%'
+             OR UPPER(T3.COUNTRY)  LIKE '%' || UPPER(#{searchWord}) || '%'
              OR UPPER(DECODE(T1.CUST_BILL_IS_POST, 1, 'Post', '')||' '||DECODE(T1.CUST_BILL_IS_SMS, 1, 'SMS', '')||' '||DECODE(T1.CUST_BILL_IS_ESTM, 1, 'EStatement', ''))  LIKE '%' || UPPER(#{searchWord}) || '%')
           </if>
 		 ORDER BY T1.CUST_BILL_GRP_NO ASC
@@ -749,10 +756,19 @@
 				                       JOIN SYS0013M Extent6 ON Extent6.CODE_ID = Extent1.CARD_TYPE_ID
 			                 WHERE  8 <> Extent1.CUST_CRC_STUS_ID
 			                          AND  CASE WHEN Extent1.CUST_ID IS NOT NULL THEN Extent1.CUST_ID ELSE 0 END = #{custId}
+         ]]>   
+							         <if test='searchWord != null and searchWord !=""'>
+							           AND (UPPER(Extent1.CUST_ORI_CRC_NO)  LIKE '%' || UPPER(#{searchWord}) || '%'
+							             OR UPPER(Extent3.CODE_NAME)        LIKE '%' || UPPER(#{searchWord}) || '%'
+							             OR UPPER(Extent1.CUST_CRC_OWNER)   LIKE '%' || UPPER(#{searchWord}) || '%'
+							             OR UPPER(Extent1.CUST_CRC_EXPR)    LIKE '%' || UPPER(#{searchWord}) || '%'
+							             OR UPPER(Extent2.CODE)             LIKE '%' || UPPER(#{searchWord}) || '%'
+							             OR UPPER(Extent2.NAME)             LIKE '%' || UPPER(#{searchWord}) || '%'
+							             OR UPPER(Extent6.CODE_NAME)        LIKE '%' || UPPER(#{searchWord}) || '%')
+							          </if>        
                 ) Project1 
             ) Project1 
           ORDER BY Project1.CUST_CRC_ID ASC
-         ]]>   
     </select>
     <!-- Ajax Call Own Order List  -->
     <select id="selectCustomerOwnOrderJsonList" parameterType="Map" resultType="egovMap">

@@ -220,6 +220,15 @@ public class CustomerController {
 		return "sales/customer/customerBillGrpSearchPop";
 	}
 	
+	@RequestMapping(value = "/customerCreditCardSearchPop.do")
+	public String customerCreditCardSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("callPrgm", params.get("callPrgm"));
+		model.put("custId", params.get("custId"));
+		
+		return "sales/customer/customerCreditCardSearchPop";
+	}
+	
 	/**
 	 * 
 	 * Customer View Bank List
