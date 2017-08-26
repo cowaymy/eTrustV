@@ -4,27 +4,33 @@
 <script type="text/javaScript" language="javascript">
 
 	//AUIGrid 생성 후 반환 ID
-	var addrGridID;
+	var crcGridID;
 
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        fn_getCustomerAddressAjax();
+        fn_getCreditCardAjax();
 
         // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(addrGridID, "cellDoubleClick", function(event) {
-            fn_setData(AUIGrid.getCellValue(addrGridID , event.rowIndex , "custAddId"))
+        AUIGrid.bind(crcGridID, "cellDoubleClick", function(event) {
+            fn_setData(AUIGrid.getCellValue(crcGridID , event.rowIndex , "custCrcId")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "custOriCrcNo")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "custCrcNo")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "codeName1")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "custCrcOwner")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "custCrcExpr")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "bankName")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "custCrcBankId")
+                      ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "codeName")
+                      );
             fn_createEvent('custPopCloseBtn', 'click');
         });
 	    
 	});
 	
-	function fn_setData(custAddId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_MTH') {
-	        fn_loadMailAddr(custAddId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD') {
-	        fn_loadInstallAddr(custAddId);
+	function fn_setData(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName) {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
+	        fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
 	    }
 	}
 	
@@ -32,15 +38,34 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [{
-	            dataField : "name",
-	            headerText : "Status",
-	            width : 80
+	            dataField : "codeName",
+	            headerText : "Card Type",
+	            width : 120
 	        }, {
-	            dataField : "addr",
-	            headerText : "Address"
+	            dataField : "custOriCrcNo",
+	            headerText : "Credit Card No",
+	            width : 140
+	        }, {
+	            dataField : "custCrcOwner",
+	            headerText : "Name On Card"
+	        }, {
+	            dataField : "codeName1",
+	            headerText : "Type",
+	            width : 120
+	        }, {
+	            dataField : "custCrcExpr",
+	            headerText : "Expiry",
+	            width : 100
+	        }, {
+	            dataField : "bankName",
+	            headerText : "Issue Bank",
+	            width : 160
 	        },{
-	            dataField : "custAddId",
-	            visible : false
+	            dataField : "custCrcId"
+	        },{
+	            dataField : "custCrcNo"
+	        },{
+	            dataField : "custCrcBankId"
             }];
 
         //그리드 속성 설정
@@ -61,19 +86,19 @@
             groupingMessage     : "Here groupping"
         };
         
-        addrGridID = GridCommon.createAUIGrid("grid_addr_wrap", columnLayout, "", gridPros);
+        crcGridID = GridCommon.createAUIGrid("grid_addr_wrap", columnLayout, "", gridPros);
     }
 
 	$(function(){
-	    $('#cntcSearchBtn').click(function() {
-	        fn_getCustomerAddressAjax();
+	    $('#crcSearchBtn').click(function() {
+	        fn_getCreditCardAjax();
 	    });
 	});
 	
-    //Get Contact by Ajax
-    function fn_getCustomerAddressAjax(){
-        Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList", $("#addrSearchForm").serializeJSON(), function(result) {
-            AUIGrid.setGridData(addrGridID, result);
+    //Get Credit Card by Ajax
+    function fn_getCreditCardAjax(){
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", $("#creditCardSearchForm").serializeJSON(), function(result) {
+            AUIGrid.setGridData(crcGridID, result);
         });
     }
   
@@ -84,7 +109,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Address</h1>
+<h1>Customer Credit Card</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#">CLOSE</a></p></li>
 </ul>
@@ -93,7 +118,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="addrSearchForm" name="cnctSearchForm" action="#" method="post">
+<form id="creditCardSearchForm" name="cnctSearchForm" action="#" method="post">
 <input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
 <input id="custId" name="custId" value="${custId}" type="hidden" />
 
@@ -105,7 +130,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Address Keyword</th>
+	<th scope="row">Contact Keyword</th>
 	<td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>
@@ -114,7 +139,7 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="cntcSearchBtn" href="#"">SEARCH</a></p></li>
+	<li><p class="btn_grid"><a id="crcSearchBtn" href="#"">SEARCH</a></p></li>
 	<li><p class="btn_grid"><a href="#">CLEAR</a></p></li>
 </ul>
 

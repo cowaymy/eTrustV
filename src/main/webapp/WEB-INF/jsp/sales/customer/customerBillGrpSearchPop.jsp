@@ -13,7 +13,8 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(billGrpGridID, "cellDoubleClick", function(event) {
-            fn_setData(AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "custBillCustId")
+            fn_setData(AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "custBillId")
+                     , AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "custBillGrpNo")
                      , AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "billType")
                      , AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "billAddrFull")
                      , AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "custBillRem")
@@ -23,9 +24,9 @@
 	    
 	});
 	
-	function fn_setData(custBillCustId, billType, billAddrFull, custBillRem, custBillAddId) {
+	function fn_setData(custBillId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_GRP') {
-	        fn_loadBillingGroup(custBillCustId, billType, billAddrFull, custBillRem, custBillAddId);
+	        fn_loadBillingGroup(custBillId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId);
 	    }
 	}
 	
@@ -48,6 +49,9 @@
 	            visible : false
 	        },{
 	            dataField : "custBillAddId",
+	            visible : false
+	        },{
+	            dataField : "custBillId",
 	            visible : false
             }];
 
@@ -80,7 +84,7 @@
 	
     //Get Contact by Ajax
     function fn_getCustomerBillGrpAjax(){
-        Common.ajax("GET", "/sales/customer/selectBillingGroupByKeywordCustIDList.do", {custId : $('#custId').val()}, function(result) {
+        Common.ajax("GET", "/sales/customer/selectBillingGroupByKeywordCustIDList.do", $("#billGroupSearchForm").serializeJSON(), function(result) {
             AUIGrid.setGridData(billGrpGridID, result);
         });
     }
@@ -92,7 +96,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Address</h1>
+<h1>Customer Billing Group</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#">CLOSE</a></p></li>
 </ul>
@@ -101,7 +105,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form id="addrSearchForm" name="cnctSearchForm" action="#" method="post">
+<form id="billGroupSearchForm" name="cnctSearchForm" action="#" method="post">
 <input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
 <input id="custId" name="custId" value="${custId}" type="hidden" />
 
