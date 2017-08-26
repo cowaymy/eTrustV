@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.mambership.MembershipService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -190,6 +194,34 @@ public class  MembershipController {
 	}
 	
 	
+	@RequestMapping(value = "/memberFreeContactPop.do")
+	public String memberFreePop_contactPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		logger.debug("in  memberFreeContactPop ");
+		
+		
+		logger.debug("			pram set  log");
+		logger.debug("					"+params.toString());  
+		logger.debug("			pram set end  ");
+		
+		return "sales/membership/memberFreeContactPop";
+	}
+	
+	
+
+	@RequestMapping(value = "/memberFreeNewContactPop.do")
+	public String memberFreeNewContactPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		logger.debug("in  memberFreeNewContactPop ");
+		
+		
+		logger.debug("			pram set  log");
+		logger.debug("					"+params.toString());  
+		logger.debug("			pram set end  ");
+		
+		return "sales/membership/memberFreeNewContactPop";
+	}
+	
 	
 
 	@RequestMapping(value = "/selectMembershipFreeConF", method = RequestMethod.GET)
@@ -301,15 +333,21 @@ public class  MembershipController {
 	
 	
 	@RequestMapping(value = "/callOutOutsProcedure", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> callOutOutsProcedure(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+	public ResponseEntity<Map> callOutOutsProcedure(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 	
 		EgovMap item = new EgovMap();
 	
 		item = (EgovMap) membershipService.callOutOutsProcedure(params);  
 		
-		logger.debug("v_result : {}", params.get("v_result"));
+		logger.debug("v_result : {}", params.get("p1"));
+		
 
-		return ResponseEntity.ok(item);
+		Map<String, Object> map = new HashMap();
+		map.put("outSuts", params.get("p1"));
+	 
+		
+
+		return ResponseEntity.ok(map);
 	}
 	
 	
@@ -392,6 +430,64 @@ public class  MembershipController {
 		return ResponseEntity.ok(rtnMap);
 	}
 	
+	
+
+	@RequestMapping(value = "/selectMembershipContatList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMembershipContatList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap>  oList     = null;	
+		
+		logger.debug("in  selectMembershipContatList ");
+		
+	      
+		logger.debug("			pram set  log");
+		logger.debug("					"+params.toString());  
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipService.selectMembershipContatList(params);  
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	@RequestMapping(value = "/membershipNewContatSave", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> membershipNewContatSave(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+		
+		logger.debug("in  membershipNewContatSave ");
+		
+		
+		params.put("user_id", sessionVO.getUserId());
+		
+		logger.debug("			pram set  log");
+		logger.debug("					"+params.toString());  
+		logger.debug("			pram set end  ");
+		
+		
+
+		int  resultUpc=0;
+		
+		//main contact 설정 
+		if("on".equals(params.get("NEW_MAIN_SET"))){
+			//update 
+			resultUpc = membershipService.membershipNewContatUpdate(params); 			
+		}
+		
+		int  resultInt = membershipService.membershipNewContatSave(params); 
+		
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(message);
+	}
+	
+
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 	
 	
 }

@@ -96,6 +96,7 @@ function fn_doConfirm (){
              fn_getDataInfo();
              fn_getDataOList ();
              fn_getDatabsHistory();
+             fn_outspro();
 		 }
 		
    });
@@ -107,6 +108,17 @@ function fn_getDataInfo (){
          console.log( result);
          setText(result);
          setPackgCombo();
+    });
+ }
+ 
+function fn_outspro (){
+    Common.ajax("GET", "/sales/membership/callOutOutsProcedure", $("#getDataForm").serialize(), function(result) {
+    	console.log(result);
+    	
+    	if(result.outSuts.length >0 ){
+            $("#ordOtstnd").html (result.outSuts[0].ordOtstnd);
+            $("#asOtstnd").html (result.outSuts[0].asOtstnd);
+    	}
     });
  }
 
@@ -128,6 +140,9 @@ function fn_getDataCPerson (){
          console.log( result);
          //custCntc_Id     custInitial    codeName     nameName    dob    gender     raceId     codename1     telM1     telM2     telO     telR     telf     nric     pos     email     dept     stusCodeId     updUserId     updDt     idOld     dcm     crtUserId     crtDt   
      	//set 1ros
+     	
+     	fn_doClearPersion();
+         
 		$("#name").html(result[0].name);
 		$("#gender").html(result[0].gender);
 		$("#nric").html(result[0].nric);
@@ -143,6 +158,21 @@ function fn_getDataCPerson (){
     });
   }
   
+  
+ function fn_doClearPersion(){
+	 
+	 $("#name").html("");
+     $("#gender").html("");
+     $("#nric").html("");
+     $("#codename1").html("");
+     $("#telM1").html("");
+     $("#telO").html("");
+     $("#telR").html("");
+     $("#telf").html("");
+     $("#email").html("");
+     $("#SAVE_CUST_CNTC_ID").val("");
+ }
+  
  /*bs_history*/ 
 function fn_getDatabsHistory(){
     Common.ajax("GET", "/sales/membership/selectMembershipFree_bs", $("#getDataForm").serialize(), function(result) {
@@ -153,7 +183,11 @@ function fn_getDatabsHistory(){
          AUIGrid.resize(bsHistoryGridID, 1120,250);  
          
     });
-  }
+ }
+ 
+ function  fn_goCustSearch(){
+     Common.alert(" 차후 오더 조회  공통팝업 호출[미 개발] !!!  ");
+ }
   
 
 
@@ -360,6 +394,38 @@ function fn_doReset() {
 
 
 
+
+
+function fn_addContactPersonInfo(objInfo){
+          console.log(objInfo);       
+          
+          fn_doClearPersion();
+          
+          $("#name").html(objInfo.name);
+          $("#gender").html(objInfo.gender);
+          $("#nric").html(objInfo.nric);
+          $("#codename1").html(objInfo.codename1);
+          $("#telM1").html(objInfo.telM1);
+          $("#telO").html(objInfo.telO);
+          $("#telR").html(objInfo.telR);
+          $("#telf").html(objInfo.telf);
+          $("#email").html(objInfo.email);
+          $("#SAVE_CUST_CNTC_ID").val(objInfo.custCntcId);
+          
+          
+}
+
+
+function  fn_goContactPersonPop(){
+    Common.popupDiv("/sales/membership/memberFreeContactPop.do");
+}
+
+
+function  fn_goNewContactPersonPop(){
+    Common.popupDiv("/sales/membership/memberFreeNewContactPop.do");
+}
+
+
 function fn_doSave(){
 	
 	if (fn_validReqField()){
@@ -464,15 +530,13 @@ function fn_validStartDate(){
 
 
 <form id="getDataForm" method="post">
-<div style="display:inline">
+<div style="display:none">
     <input type="text" name="ORD_ID"     id="ORD_ID"/>  
     <input type="text" name="CUST_ID"    id="CUST_ID"/>  
     <input type="text" name="IS_EXPIRE"  id="IS_EXPIRE"/>   <!--  1: EXPIRE  -->
     <input type="text" name="STOCK_ID"  id="STOCK_ID"/>  
     <input type="text" name="PAC_ID"  id="PAC_ID"/>  
     <input type="text" name="TOYYMM"  id="TOYYMM"/>  
-    
-    
 </div>
 </form>
 
@@ -505,10 +569,9 @@ function fn_validStartDate(){
     <th scope="row"  >Order No</th>
     <td >
  
-          <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> Confirm</a></p>   <p class="btn_sky" id='sbt'><a href="#">Search</a></p>
+          <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> Confirm</a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()">Search</a></p>
           <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()">Reselect</a></p>
     
-      
 	    </div> 
     </td>
 </tr>
@@ -579,12 +642,12 @@ function fn_validStartDate(){
 <tr>
 	<th scope="row" rowspan="3">Instalation Address</th>
 	<td colspan="3" rowspan="3"><span id='instalationAddress'></span></td>
-	<th scope="row">Order Outstanding</th>
-	<td><span></span></td>
+	<th scope="row">Order Outstanding</th> 
+	<td><span id="ordOtstnd"></span></td>
 </tr>
 <tr>
 	<th scope="row">AS Outstanding</th>
-	<td><span></span></td>
+	<td><span  id="asOtstnd"></span></td>
 </tr>
 <tr>
 	<th scope="row">Membership Expire</th>
@@ -617,8 +680,8 @@ function fn_validStartDate(){
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="left_btns mb10">
-	<li><p class="btn_blue2"><a href="#">Other Contact Person</a></p></li>
-	<li><p class="btn_blue2"><a href="#">New Contact Person</a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -716,7 +779,7 @@ function fn_validStartDate(){
 </tbody>
 </table><!-- table end -->
 
-<div  style="display:inline">
+<div  style="display:none">
 	<input type="text" name="SAVE_ORD_ID"  id="SAVE_ORD_ID"/>  
 	<input type="text" name="SAVE_PAC_ID"  id="SAVE_PAC_ID"/>  
 	<input type="text" name="SAVE_BS_FREQ"  id="SAVE_BS_FREQ"/>  

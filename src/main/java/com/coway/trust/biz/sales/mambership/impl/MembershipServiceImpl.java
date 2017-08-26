@@ -220,6 +220,38 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 	
 	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectMembershipViewLeader(java.util.Map)
+	 */
+	@Override
+	public List<EgovMap>    selectMembershipContatList(Map<String, Object> params) {
+		return membershipMapper.selectMembershipContatList(params);
+	}
+	
+	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#membershipNewContatSave(java.util.Map)
+	 */
+	@Override
+	public  int    membershipNewContatSave(Map<String, Object> params) {
+		return membershipMapper.membershipNewContatSave(params);
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#membershipNewContatUpdate(java.util.Map)
+	 */
+	@Override
+	public  int    membershipNewContatUpdate(Map<String, Object> params) {
+		return membershipMapper.membershipNewContatUpdate(params);
+	}
+	
+	
 	
 	
 }

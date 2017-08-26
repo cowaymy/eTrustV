@@ -138,5 +138,9 @@ public interface MembershipMapper {
 	
 	EgovMap getSAL0095d_SEQ(Map<String, Object> params);
 
+	List<EgovMap>  selectMembershipContatList(Map<String, Object> params);
 	
+	int  membershipNewContatSave(Map<String, Object> params);
+	
+	int  membershipNewContatUpdate(Map<String, Object> params);
 }

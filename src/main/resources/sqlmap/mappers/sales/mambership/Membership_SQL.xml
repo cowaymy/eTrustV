@@ -1003,11 +1003,16 @@
                    ]]>
       </select>
 		 
-		  
-	<select id="callOutOutsProcedure" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+	<resultMap id="outOutsMap" type="egovMap" >	  
+	   <result property="ordId" column="ordId" /> 
+	   <result property="ordOtstnd" column="ordOtstnd" />
+	   <result property="asOtstnd" column="asOtstnd" />
+	</resultMap>
+	
+	<select id="callOutOutsProcedure" parameterType="Map"  statementType="CALLABLE" >
 	   <![CDATA[  
 	        {
-	             call  ${procedureNm}(${ORD_ID}#{v_result,mode=OUT,jdbcType=VARCHAR}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
+	              call SP_TRACE_ORD_OTSTND( #{ORD_ID},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outOutsMap})
 	        }
          ]]>
       </select>     
@@ -1128,5 +1133,175 @@
 			             0
 	            )
    </insert>
+   
+    <select id="selectMembershipContatList" parameterType="Map" resultType="egovMap">
+              
+                          SELECT P1.CUST_CNTC_ID   ,
+								       P1.CUST_INITIAL  ,
+								       P1.CODE_NAME   ,
+								       P1.NAME NAME  ,
+								       P1.DOB   ,
+								       P1.GENDER   ,
+								       P1.RACE_ID   ,
+								       P1.CODENAME1   ,
+								       P1.TEL_M1   ,
+								       P1.TEL_M2   ,
+								       P1.TEL_O   ,
+								       P1.TEL_R   ,
+								       P1.TELF   ,
+								       P1.NRIC   ,
+								       P1.POS   ,
+								       P1.EMAIL   ,
+								       P1.DEPT   ,
+								       P1.STUS_CODE_ID   ,
+								       P1.NAME1   ,
+								       P1.UPD_USER_ID   ,
+								       P1.UPD_DT   ,
+								       P1.ID_OLD   ,
+								       P1.DCM   ,
+								       P1.CRT_USER_ID   ,
+								       P1.CRT_DT   
+								  FROM ( SELECT CASE 
+								                     WHEN ( 9 = UTILS.CONVERT_TO_NUMBER(F1.STUS_CODE_ID,10,0) ) THEN UTILS.CONVERT_TO_NUMBER(0,5,0)
+								                ELSE F1.STUS_CODE_ID
+								                   END C1  ,
+								                F1.CUST_CNTC_ID CUST_CNTC_ID  ,
+								                F1.NAME NAME  ,
+								                F1.CUST_INITIAL CUST_INITIAL  ,
+								                F1.NRIC NRIC  ,
+								                F1.POS POS  ,
+								                F1.TEL_M1 TEL_M1  ,
+								                F1.TEL_M2 TEL_M2  ,
+								                F1.TEL_O TEL_O  ,
+								                F1.TEL_R TEL_R  ,
+								                F1.TELF TELF  ,
+								                F1.DOB DOB  ,
+								                F1.GENDER GENDER  ,
+								                F1.RACE_ID RACE_ID  ,
+								                F1.EMAIL EMAIL  ,
+								                F1.STUS_CODE_ID STUS_CODE_ID  ,
+								                F1.UPDATED1 UPD_DT  ,
+								                F1.UPDATOR1 UPD_USER_ID  ,
+								                F1.ID_OLD ID_OLD  ,
+								                F1.DEPT DEPT  ,
+								                F1.DCM DCM  ,
+								                F1.CREATED1 CRT_DT  ,
+								                F1.CREATOR1 CRT_USER_ID  ,
+								                F1.CODENAME1 CODE_NAME  ,
+								                F1.CODENAME2 CODENAME1  ,
+								                E4.NAME NAME1  
+								         FROM ( SELECT E1.CUST_CNTC_ID CUST_CNTC_ID  ,
+								                       E1.CUST_ID CUST_ID  ,
+								                       E1.NAME NAME  ,
+								                       E1.CUST_INITIAL CUST_INITIAL  ,
+								                       E1.NRIC NRIC  ,
+								                       E1.POS POS  ,
+								                       E1.TEL_M1 TEL_M1  ,
+								                       E1.TEL_M2 TEL_M2  ,
+								                       E1.TEL_O TEL_O  ,
+								                       E1.TEL_R TEL_R  ,
+								                       E1.TELF TELF  ,
+								                       E1.DOB DOB  ,
+								                       E1.GENDER GENDER  ,
+								                       E1.RACE_ID RACE_ID  ,
+								                       E1.EMAIL EMAIL  ,
+								                       E1.STUS_CODE_ID STUS_CODE_ID  ,
+								                       E1.UPD_DT UPDATED1  ,
+								                       E1.UPD_USER_ID UPDATOR1  ,
+								                       E1.ID_OLD ID_OLD  ,
+								                       E1.DEPT DEPT  ,
+								                       E1.DCM DCM  ,
+								                       E1.CRT_DT CREATED1  ,
+								                       E1.CRT_USER_ID CREATOR1  ,
+								                       E2.CODE_NAME CODENAME1  ,
+								                       E3.CODE_NAME CODENAME2  
+								                FROM SAL0027D E1
+								                       LEFT JOIN SYS0013M E2   ON E1.CUST_INITIAL = E2.CODE_ID
+								                       LEFT JOIN SYS0013M E3   ON UTILS.CONVERT_TO_NUMBER(E1.RACE_ID,10,0) = E3.CODE_ID
+								                 WHERE  8 <![CDATA[<>]]>UTILS.CONVERT_TO_NUMBER(E1.STUS_CODE_ID,10,0) 
+								                ) F1
+								                LEFT JOIN SYS0038M E4   ON UTILS.CONVERT_TO_NUMBER(F1.STUS_CODE_ID,10,0) = E4.STUS_CODE_ID
+								          WHERE  1=1
+								                   
+								                   <if test="CUST_ID != null and CUST_ID != ''">
+                                                      AND (F1.CUST_ID =#{CUST_ID})  
+                                                   </if>
+								                   <if test="NAME != null and NAME != ''">
+								                      AND (F1.NAME LIKE '%'||#{NAME}||'%')   
+									               </if>
+								                   <if test="NRIC != null and NRIC != ''">
+								                       AND (F1.NRIC LIKE '%'||#{NRIC}||'%')  
+                                                   </if>
+                                                      
+                                                    <if test="CONTACT_NO != null and CONTACT_NO != ''">
+                                                          AND (   (F1.TelF LIKE '%'||#{CONTACT_NO}||'%' )  OR (F1.TEL_M1 LIKE '%'||#{CONTACT_NO}||'%' ) OR (F1.TEL_O LIKE  '%'||#{CONTACT_NO}||'%' ) OR (F1.TEL_R LIKE '%'||#{CONTACT_NO}||'%')   ) 
+                                                   </if>
+								          ) P1
+								  ORDER BY P1.C1 ASC
+  
+    </select>
+    
+    
+   <insert id="membershipNewContatSave" parameterType="Map" >
+       
+			INSERT INTO sal0027d (cust_cntc_id 
+                             ,cust_id
+                             ,NAME
+                             ,CUST_INITIAL
+                             ,nric
+                             ,pos
+                             ,tel_m1
+                             ,tel_o
+                             ,tel_r
+                             ,telf
+                             ,dob
+                             ,gender
+                             ,race_id
+                             ,email
+                             ,stus_code_id
+                             ,upd_dt
+                             ,upd_user_id
+                             ,id_old
+                             ,dept
+                             ,dcm
+                             ,crt_dt
+                             ,crt_user_id,
+                         ext ) VALUES ( SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL 
+                                         ,    #{NEW_CUST_ID}
+                                         ,    #{NEW_NAME}
+                                         ,    #{NEW_INITIALl} 
+                                         ,    #{NEW_NRIC}
+                                         ,    #{NEW_POST} 
+                                         ,    #{NEW_TELM1} 
+                                         ,    #{NEW_TELO}
+                                         ,    #{NEW_TELR} 
+                                         ,    #{NEW_TELF}
+                                         ,    to_date (#{NEW_DOB},'dd-mm-yyyy hh24miss')   
+                                         ,    #{NEW_GENDER}
+                                         ,    #{NEW_RACE}
+                                         ,    #{NEW_EMAIL}
+                                         ,    decode(#{NEW_MAIN_SET} ,'on' ,9, 1) 
+                                         ,    sysdate 
+                                         ,    #{user_id}
+                                         ,    0
+                                         ,    #{NEW_DEPT}
+                                         ,    0
+                                         ,    sysdate
+                                         ,    #{user_id}
+                                         ,    NULL 
+                                         )
+                                         
+                                         
+   </insert>
+   
+   
+   <insert id="membershipNewContatUpdate" parameterType="Map" >
+            UPDATE SAL0027D
+			   SET STUS_CODE_ID = 1,
+			       UPD_DT = SYSDATE,
+			       UPD_USER_ID = #{user_id}
+			 WHERE  CUST_ID = #{NEW_CUST_ID} 
+   </insert>
+   
     
 </mapper>
