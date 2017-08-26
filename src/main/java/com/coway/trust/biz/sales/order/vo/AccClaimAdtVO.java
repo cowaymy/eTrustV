@@ -24,23 +24,23 @@ public class AccClaimAdtVO implements Serializable {
 
 	private String accClBankCode;
 
-	private BigDecimal accClBankId;
+	private int accClBankId;
 
 	private BigDecimal accClBillClmAmt;
 
-	private BigDecimal accClBillDt;
+	private int accClBillDt;
 
 	private BigDecimal accClClmAmt;
 
-	private BigDecimal accClClmLimit;
+	private int accClClmLimit;
 
 	private Date accClInsertDt;
 
 	private String accClPayMode;
 
-	private BigDecimal accClPayModeId;
+	private int accClPayModeId;
 
-	private BigDecimal accClPromo;
+	private int accClPromo;
 
 	private String accClPromoChkId;
 
@@ -52,7 +52,7 @@ public class AccClaimAdtVO implements Serializable {
 
 	private String accClReqstMCode;
 
-	private BigDecimal accClSoId;
+	private int accClSoId;
 
 	private String accClSoNo;
 
@@ -62,11 +62,11 @@ public class AccClaimAdtVO implements Serializable {
 
 	private String accClSubmitDt;
 
-	private BigDecimal accClSvcCntrctId;
+	private int accClSvcCntrctId;
 
 	private Date accClUpdDt;
 
-	private BigDecimal accClUpdUserId;
+	private int accClUpdUserId;
 
 	private String accClUserName;
 
@@ -76,7 +76,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClAccNric() {
-		return this.accClAccNric;
+		return accClAccNric;
 	}
 
 	public void setAccClAccNric(String accClAccNric) {
@@ -84,7 +84,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClAccTName() {
-		return this.accClAccTName;
+		return accClAccTName;
 	}
 
 	public void setAccClAccTName(String accClAccTName) {
@@ -92,7 +92,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClApplyDt() {
-		return this.accClApplyDt;
+		return accClApplyDt;
 	}
 
 	public void setAccClApplyDt(String accClApplyDt) {
@@ -100,7 +100,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClAppvDt() {
-		return this.accClAppvDt;
+		return accClAppvDt;
 	}
 
 	public void setAccClAppvDt(String accClAppvDt) {
@@ -108,7 +108,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClBankAccNo() {
-		return this.accClBankAccNo;
+		return accClBankAccNo;
 	}
 
 	public void setAccClBankAccNo(String accClBankAccNo) {
@@ -116,55 +116,55 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClBankCode() {
-		return this.accClBankCode;
+		return accClBankCode;
 	}
 
 	public void setAccClBankCode(String accClBankCode) {
 		this.accClBankCode = accClBankCode;
 	}
 
-	public BigDecimal getAccClBankId() {
-		return this.accClBankId;
+	public int getAccClBankId() {
+		return accClBankId;
 	}
 
-	public void setAccClBankId(BigDecimal accClBankId) {
+	public void setAccClBankId(int accClBankId) {
 		this.accClBankId = accClBankId;
 	}
 
 	public BigDecimal getAccClBillClmAmt() {
-		return this.accClBillClmAmt;
+		return accClBillClmAmt;
 	}
 
 	public void setAccClBillClmAmt(BigDecimal accClBillClmAmt) {
 		this.accClBillClmAmt = accClBillClmAmt;
 	}
 
-	public BigDecimal getAccClBillDt() {
-		return this.accClBillDt;
+	public int getAccClBillDt() {
+		return accClBillDt;
 	}
 
-	public void setAccClBillDt(BigDecimal accClBillDt) {
+	public void setAccClBillDt(int accClBillDt) {
 		this.accClBillDt = accClBillDt;
 	}
 
 	public BigDecimal getAccClClmAmt() {
-		return this.accClClmAmt;
+		return accClClmAmt;
 	}
 
 	public void setAccClClmAmt(BigDecimal accClClmAmt) {
 		this.accClClmAmt = accClClmAmt;
 	}
 
-	public BigDecimal getAccClClmLimit() {
-		return this.accClClmLimit;
+	public int getAccClClmLimit() {
+		return accClClmLimit;
 	}
 
-	public void setAccClClmLimit(BigDecimal accClClmLimit) {
+	public void setAccClClmLimit(int accClClmLimit) {
 		this.accClClmLimit = accClClmLimit;
 	}
 
 	public Date getAccClInsertDt() {
-		return this.accClInsertDt;
+		return accClInsertDt;
 	}
 
 	public void setAccClInsertDt(Date accClInsertDt) {
@@ -172,31 +172,31 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClPayMode() {
-		return this.accClPayMode;
+		return accClPayMode;
 	}
 
 	public void setAccClPayMode(String accClPayMode) {
 		this.accClPayMode = accClPayMode;
 	}
 
-	public BigDecimal getAccClPayModeId() {
-		return this.accClPayModeId;
+	public int getAccClPayModeId() {
+		return accClPayModeId;
 	}
 
-	public void setAccClPayModeId(BigDecimal accClPayModeId) {
+	public void setAccClPayModeId(int accClPayModeId) {
 		this.accClPayModeId = accClPayModeId;
 	}
 
-	public BigDecimal getAccClPromo() {
-		return this.accClPromo;
+	public int getAccClPromo() {
+		return accClPromo;
 	}
 
-	public void setAccClPromo(BigDecimal accClPromo) {
+	public void setAccClPromo(int accClPromo) {
 		this.accClPromo = accClPromo;
 	}
 
 	public String getAccClPromoChkId() {
-		return this.accClPromoChkId;
+		return accClPromoChkId;
 	}
 
 	public void setAccClPromoChkId(String accClPromoChkId) {
@@ -204,7 +204,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClPromoStartDt() {
-		return this.accClPromoStartDt;
+		return accClPromoStartDt;
 	}
 
 	public void setAccClPromoStartDt(String accClPromoStartDt) {
@@ -212,7 +212,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClRejctDt() {
-		return this.accClRejctDt;
+		return accClRejctDt;
 	}
 
 	public void setAccClRejctDt(String accClRejctDt) {
@@ -220,7 +220,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClRejctId() {
-		return this.accClRejctId;
+		return accClRejctId;
 	}
 
 	public void setAccClRejctId(String accClRejctId) {
@@ -228,23 +228,23 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClReqstMCode() {
-		return this.accClReqstMCode;
+		return accClReqstMCode;
 	}
 
 	public void setAccClReqstMCode(String accClReqstMCode) {
 		this.accClReqstMCode = accClReqstMCode;
 	}
 
-	public BigDecimal getAccClSoId() {
-		return this.accClSoId;
+	public int getAccClSoId() {
+		return accClSoId;
 	}
 
-	public void setAccClSoId(BigDecimal accClSoId) {
+	public void setAccClSoId(int accClSoId) {
 		this.accClSoId = accClSoId;
 	}
 
 	public String getAccClSoNo() {
-		return this.accClSoNo;
+		return accClSoNo;
 	}
 
 	public void setAccClSoNo(String accClSoNo) {
@@ -252,7 +252,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public BigDecimal getAccClSplClmAmt() {
-		return this.accClSplClmAmt;
+		return accClSplClmAmt;
 	}
 
 	public void setAccClSplClmAmt(BigDecimal accClSplClmAmt) {
@@ -260,7 +260,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClStusId() {
-		return this.accClStusId;
+		return accClStusId;
 	}
 
 	public void setAccClStusId(String accClStusId) {
@@ -268,39 +268,39 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccClSubmitDt() {
-		return this.accClSubmitDt;
+		return accClSubmitDt;
 	}
 
 	public void setAccClSubmitDt(String accClSubmitDt) {
 		this.accClSubmitDt = accClSubmitDt;
 	}
 
-	public BigDecimal getAccClSvcCntrctId() {
-		return this.accClSvcCntrctId;
+	public int getAccClSvcCntrctId() {
+		return accClSvcCntrctId;
 	}
 
-	public void setAccClSvcCntrctId(BigDecimal accClSvcCntrctId) {
+	public void setAccClSvcCntrctId(int accClSvcCntrctId) {
 		this.accClSvcCntrctId = accClSvcCntrctId;
 	}
 
 	public Date getAccClUpdDt() {
-		return this.accClUpdDt;
+		return accClUpdDt;
 	}
 
 	public void setAccClUpdDt(Date accClUpdDt) {
 		this.accClUpdDt = accClUpdDt;
 	}
 
-	public BigDecimal getAccClUpdUserId() {
-		return this.accClUpdUserId;
+	public int getAccClUpdUserId() {
+		return accClUpdUserId;
 	}
 
-	public void setAccClUpdUserId(BigDecimal accClUpdUserId) {
+	public void setAccClUpdUserId(int accClUpdUserId) {
 		this.accClUpdUserId = accClUpdUserId;
 	}
 
 	public String getAccClUserName() {
-		return this.accClUserName;
+		return accClUserName;
 	}
 
 	public void setAccClUserName(String accClUserName) {
@@ -308,7 +308,7 @@ public class AccClaimAdtVO implements Serializable {
 	}
 
 	public String getAccDecBankAccNo() {
-		return this.accDecBankAccNo;
+		return accDecBankAccNo;
 	}
 
 	public void setAccDecBankAccNo(String accDecBankAccNo) {

@@ -12,147 +12,147 @@ import java.util.Date;
 public class SrvMembershipSalesVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long srvMemId;
+	private int srvMemId;
 
-	private BigDecimal srvBsQty;
+	private int srvBsQty;
 
 	private Date srvCrtDt;
 
-	private BigDecimal srvCrtUserId;
+	private int srvCrtUserId;
 
-	private BigDecimal srvDur;
+	private int srvDur;
 
 	private Date srvExprDt;
 
-	private BigDecimal srvFreq;
+	private int srvFreq;
 
 	private String srvMemBillNo;
 
-	private BigDecimal srvMemBrnchId;
+	private int srvMemBrnchId;
 
 	private BigDecimal srvMemBsAmt;
 
 	private BigDecimal srvMemBs12Amt;
 
-	private BigDecimal srvMemCustCntId;
+	private int srvMemCustCntId;
 
 	private String srvMemFormNo;
 
-	private BigDecimal srvMemIsMnl;
+	private int srvMemIsMnl;
 
-	private BigDecimal srvMemIsSynch;
+	private int srvMemIsSynch;
 
 	private String srvMemNo;
 
 	private BigDecimal srvMemPacAmt;
 
-	private BigDecimal srvMemPacId;
+	private int srvMemPacId;
 
-	private BigDecimal srvMemPacPromoId;
+	private int srvMemPacPromoId;
 
-	private BigDecimal srvMemPromoId;
+	private int srvMemPromoId;
 
-	private BigDecimal srvMemPv;
+	private int srvMemPv;
 
-	private BigDecimal srvMemPvMonth;
+	private int srvMemPvMonth;
 
-	private BigDecimal srvMemPvYear;
+	private int srvMemPvYear;
 
-	private BigDecimal srvMemQty;
+	private int srvMemQty;
 
-	private BigDecimal srvMemQuotId;
+	private int srvMemQuotId;
 
-	private BigDecimal srvMemSalesMemId;
+	private int srvMemSalesMemId;
 
 	private String srvRem;
 
-	private BigDecimal srvSalesOrdId;
+	private int srvSalesOrdId;
 
 	private Date srvStartDt;
 
-	private BigDecimal srvStusCodeId;
+	private int srvStusCodeId;
 
 	private Date srvUpdDt;
 
-	private BigDecimal srvUpdUserId;
+	private int srvUpdUserId;
 
 	public SrvMembershipSalesVO() {
 	}
 
-	public long getSrvMemId() {
-		return this.srvMemId;
+	public int getSrvMemId() {
+		return srvMemId;
 	}
 
-	public void setSrvMemId(long srvMemId) {
+	public void setSrvMemId(int srvMemId) {
 		this.srvMemId = srvMemId;
 	}
 
-	public BigDecimal getSrvBsQty() {
-		return this.srvBsQty;
+	public int getSrvBsQty() {
+		return srvBsQty;
 	}
 
-	public void setSrvBsQty(BigDecimal srvBsQty) {
+	public void setSrvBsQty(int srvBsQty) {
 		this.srvBsQty = srvBsQty;
 	}
 
 	public Date getSrvCrtDt() {
-		return this.srvCrtDt;
+		return srvCrtDt;
 	}
 
 	public void setSrvCrtDt(Date srvCrtDt) {
 		this.srvCrtDt = srvCrtDt;
 	}
 
-	public BigDecimal getSrvCrtUserId() {
-		return this.srvCrtUserId;
+	public int getSrvCrtUserId() {
+		return srvCrtUserId;
 	}
 
-	public void setSrvCrtUserId(BigDecimal srvCrtUserId) {
+	public void setSrvCrtUserId(int srvCrtUserId) {
 		this.srvCrtUserId = srvCrtUserId;
 	}
 
-	public BigDecimal getSrvDur() {
-		return this.srvDur;
+	public int getSrvDur() {
+		return srvDur;
 	}
 
-	public void setSrvDur(BigDecimal srvDur) {
+	public void setSrvDur(int srvDur) {
 		this.srvDur = srvDur;
 	}
 
 	public Date getSrvExprDt() {
-		return this.srvExprDt;
+		return srvExprDt;
 	}
 
 	public void setSrvExprDt(Date srvExprDt) {
 		this.srvExprDt = srvExprDt;
 	}
 
-	public BigDecimal getSrvFreq() {
-		return this.srvFreq;
+	public int getSrvFreq() {
+		return srvFreq;
 	}
 
-	public void setSrvFreq(BigDecimal srvFreq) {
+	public void setSrvFreq(int srvFreq) {
 		this.srvFreq = srvFreq;
 	}
 
 	public String getSrvMemBillNo() {
-		return this.srvMemBillNo;
+		return srvMemBillNo;
 	}
 
 	public void setSrvMemBillNo(String srvMemBillNo) {
 		this.srvMemBillNo = srvMemBillNo;
 	}
 
-	public BigDecimal getSrvMemBrnchId() {
-		return this.srvMemBrnchId;
+	public int getSrvMemBrnchId() {
+		return srvMemBrnchId;
 	}
 
-	public void setSrvMemBrnchId(BigDecimal srvMemBrnchId) {
+	public void setSrvMemBrnchId(int srvMemBrnchId) {
 		this.srvMemBrnchId = srvMemBrnchId;
 	}
 
 	public BigDecimal getSrvMemBsAmt() {
-		return this.srvMemBsAmt;
+		return srvMemBsAmt;
 	}
 
 	public void setSrvMemBsAmt(BigDecimal srvMemBsAmt) {
@@ -160,47 +160,47 @@ public class SrvMembershipSalesVO implements Serializable {
 	}
 
 	public BigDecimal getSrvMemBs12Amt() {
-		return this.srvMemBs12Amt;
+		return srvMemBs12Amt;
 	}
 
 	public void setSrvMemBs12Amt(BigDecimal srvMemBs12Amt) {
 		this.srvMemBs12Amt = srvMemBs12Amt;
 	}
 
-	public BigDecimal getSrvMemCustCntId() {
-		return this.srvMemCustCntId;
+	public int getSrvMemCustCntId() {
+		return srvMemCustCntId;
 	}
 
-	public void setSrvMemCustCntId(BigDecimal srvMemCustCntId) {
+	public void setSrvMemCustCntId(int srvMemCustCntId) {
 		this.srvMemCustCntId = srvMemCustCntId;
 	}
 
 	public String getSrvMemFormNo() {
-		return this.srvMemFormNo;
+		return srvMemFormNo;
 	}
 
 	public void setSrvMemFormNo(String srvMemFormNo) {
 		this.srvMemFormNo = srvMemFormNo;
 	}
 
-	public BigDecimal getSrvMemIsMnl() {
-		return this.srvMemIsMnl;
+	public int getSrvMemIsMnl() {
+		return srvMemIsMnl;
 	}
 
-	public void setSrvMemIsMnl(BigDecimal srvMemIsMnl) {
+	public void setSrvMemIsMnl(int srvMemIsMnl) {
 		this.srvMemIsMnl = srvMemIsMnl;
 	}
 
-	public BigDecimal getSrvMemIsSynch() {
-		return this.srvMemIsSynch;
+	public int getSrvMemIsSynch() {
+		return srvMemIsSynch;
 	}
 
-	public void setSrvMemIsSynch(BigDecimal srvMemIsSynch) {
+	public void setSrvMemIsSynch(int srvMemIsSynch) {
 		this.srvMemIsSynch = srvMemIsSynch;
 	}
 
 	public String getSrvMemNo() {
-		return this.srvMemNo;
+		return srvMemNo;
 	}
 
 	public void setSrvMemNo(String srvMemNo) {
@@ -208,130 +208,130 @@ public class SrvMembershipSalesVO implements Serializable {
 	}
 
 	public BigDecimal getSrvMemPacAmt() {
-		return this.srvMemPacAmt;
+		return srvMemPacAmt;
 	}
 
 	public void setSrvMemPacAmt(BigDecimal srvMemPacAmt) {
 		this.srvMemPacAmt = srvMemPacAmt;
 	}
 
-	public BigDecimal getSrvMemPacId() {
-		return this.srvMemPacId;
+	public int getSrvMemPacId() {
+		return srvMemPacId;
 	}
 
-	public void setSrvMemPacId(BigDecimal srvMemPacId) {
+	public void setSrvMemPacId(int srvMemPacId) {
 		this.srvMemPacId = srvMemPacId;
 	}
 
-	public BigDecimal getSrvMemPacPromoId() {
-		return this.srvMemPacPromoId;
+	public int getSrvMemPacPromoId() {
+		return srvMemPacPromoId;
 	}
 
-	public void setSrvMemPacPromoId(BigDecimal srvMemPacPromoId) {
+	public void setSrvMemPacPromoId(int srvMemPacPromoId) {
 		this.srvMemPacPromoId = srvMemPacPromoId;
 	}
 
-	public BigDecimal getSrvMemPromoId() {
-		return this.srvMemPromoId;
+	public int getSrvMemPromoId() {
+		return srvMemPromoId;
 	}
 
-	public void setSrvMemPromoId(BigDecimal srvMemPromoId) {
+	public void setSrvMemPromoId(int srvMemPromoId) {
 		this.srvMemPromoId = srvMemPromoId;
 	}
 
-	public BigDecimal getSrvMemPv() {
-		return this.srvMemPv;
+	public int getSrvMemPv() {
+		return srvMemPv;
 	}
 
-	public void setSrvMemPv(BigDecimal srvMemPv) {
+	public void setSrvMemPv(int srvMemPv) {
 		this.srvMemPv = srvMemPv;
 	}
 
-	public BigDecimal getSrvMemPvMonth() {
-		return this.srvMemPvMonth;
+	public int getSrvMemPvMonth() {
+		return srvMemPvMonth;
 	}
 
-	public void setSrvMemPvMonth(BigDecimal srvMemPvMonth) {
+	public void setSrvMemPvMonth(int srvMemPvMonth) {
 		this.srvMemPvMonth = srvMemPvMonth;
 	}
 
-	public BigDecimal getSrvMemPvYear() {
-		return this.srvMemPvYear;
+	public int getSrvMemPvYear() {
+		return srvMemPvYear;
 	}
 
-	public void setSrvMemPvYear(BigDecimal srvMemPvYear) {
+	public void setSrvMemPvYear(int srvMemPvYear) {
 		this.srvMemPvYear = srvMemPvYear;
 	}
 
-	public BigDecimal getSrvMemQty() {
-		return this.srvMemQty;
+	public int getSrvMemQty() {
+		return srvMemQty;
 	}
 
-	public void setSrvMemQty(BigDecimal srvMemQty) {
+	public void setSrvMemQty(int srvMemQty) {
 		this.srvMemQty = srvMemQty;
 	}
 
-	public BigDecimal getSrvMemQuotId() {
-		return this.srvMemQuotId;
+	public int getSrvMemQuotId() {
+		return srvMemQuotId;
 	}
 
-	public void setSrvMemQuotId(BigDecimal srvMemQuotId) {
+	public void setSrvMemQuotId(int srvMemQuotId) {
 		this.srvMemQuotId = srvMemQuotId;
 	}
 
-	public BigDecimal getSrvMemSalesMemId() {
-		return this.srvMemSalesMemId;
+	public int getSrvMemSalesMemId() {
+		return srvMemSalesMemId;
 	}
 
-	public void setSrvMemSalesMemId(BigDecimal srvMemSalesMemId) {
+	public void setSrvMemSalesMemId(int srvMemSalesMemId) {
 		this.srvMemSalesMemId = srvMemSalesMemId;
 	}
 
 	public String getSrvRem() {
-		return this.srvRem;
+		return srvRem;
 	}
 
 	public void setSrvRem(String srvRem) {
 		this.srvRem = srvRem;
 	}
 
-	public BigDecimal getSrvSalesOrdId() {
-		return this.srvSalesOrdId;
+	public int getSrvSalesOrdId() {
+		return srvSalesOrdId;
 	}
 
-	public void setSrvSalesOrdId(BigDecimal srvSalesOrdId) {
+	public void setSrvSalesOrdId(int srvSalesOrdId) {
 		this.srvSalesOrdId = srvSalesOrdId;
 	}
 
 	public Date getSrvStartDt() {
-		return this.srvStartDt;
+		return srvStartDt;
 	}
 
 	public void setSrvStartDt(Date srvStartDt) {
 		this.srvStartDt = srvStartDt;
 	}
 
-	public BigDecimal getSrvStusCodeId() {
-		return this.srvStusCodeId;
+	public int getSrvStusCodeId() {
+		return srvStusCodeId;
 	}
 
-	public void setSrvStusCodeId(BigDecimal srvStusCodeId) {
+	public void setSrvStusCodeId(int srvStusCodeId) {
 		this.srvStusCodeId = srvStusCodeId;
 	}
 
 	public Date getSrvUpdDt() {
-		return this.srvUpdDt;
+		return srvUpdDt;
 	}
 
 	public void setSrvUpdDt(Date srvUpdDt) {
 		this.srvUpdDt = srvUpdDt;
 	}
 
-	public BigDecimal getSrvUpdUserId() {
-		return this.srvUpdUserId;
+	public int getSrvUpdUserId() {
+		return srvUpdUserId;
 	}
 
-	public void setSrvUpdUserId(BigDecimal srvUpdUserId) {
+	public void setSrvUpdUserId(int srvUpdUserId) {
 		this.srvUpdUserId = srvUpdUserId;
 	}
 

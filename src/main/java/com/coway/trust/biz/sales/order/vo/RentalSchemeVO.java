@@ -11,63 +11,63 @@ import java.math.BigDecimal;
 public class RentalSchemeVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long renSchId;
+	private int renSchId;
 
-	private BigDecimal isSync;
+	private int isSync;
 
 	private String renSchDt;
 
-	private BigDecimal renSchTerms;
+	private int renSchTerms;
 
-	private BigDecimal salesOrdId;
+	private int salesOrdId;
 
 	private String stusCodeId;
 
 	public RentalSchemeVO() {
 	}
 
-	public long getRenSchId() {
-		return this.renSchId;
+	public int getRenSchId() {
+		return renSchId;
 	}
 
-	public void setRenSchId(long renSchId) {
+	public void setRenSchId(int renSchId) {
 		this.renSchId = renSchId;
 	}
 
-	public BigDecimal getIsSync() {
-		return this.isSync;
+	public int getIsSync() {
+		return isSync;
 	}
 
-	public void setIsSync(BigDecimal isSync) {
+	public void setIsSync(int isSync) {
 		this.isSync = isSync;
 	}
 
 	public String getRenSchDt() {
-		return this.renSchDt;
+		return renSchDt;
 	}
 
 	public void setRenSchDt(String renSchDt) {
 		this.renSchDt = renSchDt;
 	}
 
-	public BigDecimal getRenSchTerms() {
-		return this.renSchTerms;
+	public int getRenSchTerms() {
+		return renSchTerms;
 	}
 
-	public void setRenSchTerms(BigDecimal renSchTerms) {
+	public void setRenSchTerms(int renSchTerms) {
 		this.renSchTerms = renSchTerms;
 	}
 
-	public BigDecimal getSalesOrdId() {
-		return this.salesOrdId;
+	public int getSalesOrdId() {
+		return salesOrdId;
 	}
 
-	public void setSalesOrdId(BigDecimal salesOrdId) {
+	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 
 	public String getStusCodeId() {
-		return this.stusCodeId;
+		return stusCodeId;
 	}
 
 	public void setStusCodeId(String stusCodeId) {

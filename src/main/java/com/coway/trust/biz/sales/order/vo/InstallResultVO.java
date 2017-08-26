@@ -12,31 +12,31 @@ import java.util.Date;
 public class InstallResultVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long resultId;
+	private int resultId;
 
 	private BigDecimal adjAmt;
 
-	private BigDecimal allowComm;
+	private int allowComm;
 
 	private Date crtDt;
 
-	private BigDecimal crtUserId;
+	private int crtUserId;
 
-	private BigDecimal ctId;
+	private int ctId;
 
 	private String docRefNo1;
 
 	private String docRefNo2;
 
-	private BigDecimal entryId;
+	private int entryId;
 
-	private BigDecimal failId;
+	private int failId;
 
-	private BigDecimal glPost;
+	private int glPost;
 
 	private Date installDt;
 
-	private BigDecimal isTradeIn;
+	private int isTradeIn;
 
 	private String mobileId;
 
@@ -44,71 +44,71 @@ public class InstallResultVO implements Serializable {
 
 	private String rem;
 
-	private BigDecimal requireSms;
+	private int requireSms;
 
 	private String serialNo;
 
 	private String sirimNo;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
 
 	public InstallResultVO() {
 	}
 
-	public long getResultId() {
-		return this.resultId;
+	public int getResultId() {
+		return resultId;
 	}
 
-	public void setResultId(long resultId) {
+	public void setResultId(int resultId) {
 		this.resultId = resultId;
 	}
 
 	public BigDecimal getAdjAmt() {
-		return this.adjAmt;
+		return adjAmt;
 	}
 
 	public void setAdjAmt(BigDecimal adjAmt) {
 		this.adjAmt = adjAmt;
 	}
 
-	public BigDecimal getAllowComm() {
-		return this.allowComm;
+	public int getAllowComm() {
+		return allowComm;
 	}
 
-	public void setAllowComm(BigDecimal allowComm) {
+	public void setAllowComm(int allowComm) {
 		this.allowComm = allowComm;
 	}
 
 	public Date getCrtDt() {
-		return this.crtDt;
+		return crtDt;
 	}
 
 	public void setCrtDt(Date crtDt) {
 		this.crtDt = crtDt;
 	}
 
-	public BigDecimal getCrtUserId() {
-		return this.crtUserId;
+	public int getCrtUserId() {
+		return crtUserId;
 	}
 
-	public void setCrtUserId(BigDecimal crtUserId) {
+	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
 
-	public BigDecimal getCtId() {
-		return this.ctId;
+	public int getCtId() {
+		return ctId;
 	}
 
-	public void setCtId(BigDecimal ctId) {
+	public void setCtId(int ctId) {
 		this.ctId = ctId;
 	}
 
 	public String getDocRefNo1() {
-		return this.docRefNo1;
+		return docRefNo1;
 	}
 
 	public void setDocRefNo1(String docRefNo1) {
@@ -116,55 +116,55 @@ public class InstallResultVO implements Serializable {
 	}
 
 	public String getDocRefNo2() {
-		return this.docRefNo2;
+		return docRefNo2;
 	}
 
 	public void setDocRefNo2(String docRefNo2) {
 		this.docRefNo2 = docRefNo2;
 	}
 
-	public BigDecimal getEntryId() {
-		return this.entryId;
+	public int getEntryId() {
+		return entryId;
 	}
 
-	public void setEntryId(BigDecimal entryId) {
+	public void setEntryId(int entryId) {
 		this.entryId = entryId;
 	}
 
-	public BigDecimal getFailId() {
-		return this.failId;
+	public int getFailId() {
+		return failId;
 	}
 
-	public void setFailId(BigDecimal failId) {
+	public void setFailId(int failId) {
 		this.failId = failId;
 	}
 
-	public BigDecimal getGlPost() {
-		return this.glPost;
+	public int getGlPost() {
+		return glPost;
 	}
 
-	public void setGlPost(BigDecimal glPost) {
+	public void setGlPost(int glPost) {
 		this.glPost = glPost;
 	}
 
 	public Date getInstallDt() {
-		return this.installDt;
+		return installDt;
 	}
 
 	public void setInstallDt(Date installDt) {
 		this.installDt = installDt;
 	}
 
-	public BigDecimal getIsTradeIn() {
-		return this.isTradeIn;
+	public int getIsTradeIn() {
+		return isTradeIn;
 	}
 
-	public void setIsTradeIn(BigDecimal isTradeIn) {
+	public void setIsTradeIn(int isTradeIn) {
 		this.isTradeIn = isTradeIn;
 	}
 
 	public String getMobileId() {
-		return this.mobileId;
+		return mobileId;
 	}
 
 	public void setMobileId(String mobileId) {
@@ -172,7 +172,7 @@ public class InstallResultVO implements Serializable {
 	}
 
 	public Date getNextCallDt() {
-		return this.nextCallDt;
+		return nextCallDt;
 	}
 
 	public void setNextCallDt(Date nextCallDt) {
@@ -180,23 +180,23 @@ public class InstallResultVO implements Serializable {
 	}
 
 	public String getRem() {
-		return this.rem;
+		return rem;
 	}
 
 	public void setRem(String rem) {
 		this.rem = rem;
 	}
 
-	public BigDecimal getRequireSms() {
-		return this.requireSms;
+	public int getRequireSms() {
+		return requireSms;
 	}
 
-	public void setRequireSms(BigDecimal requireSms) {
+	public void setRequireSms(int requireSms) {
 		this.requireSms = requireSms;
 	}
 
 	public String getSerialNo() {
-		return this.serialNo;
+		return serialNo;
 	}
 
 	public void setSerialNo(String serialNo) {
@@ -204,34 +204,34 @@ public class InstallResultVO implements Serializable {
 	}
 
 	public String getSirimNo() {
-		return this.sirimNo;
+		return sirimNo;
 	}
 
 	public void setSirimNo(String sirimNo) {
 		this.sirimNo = sirimNo;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 

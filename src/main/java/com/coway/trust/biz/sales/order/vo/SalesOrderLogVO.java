@@ -12,86 +12,86 @@ import java.util.Date;
 public class SalesOrderLogVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long logId;
+	private int logId;
 
-	private BigDecimal isLok;
+	private int isLok;
 
 	private Date logCrtDt;
 
-	private BigDecimal logCrtUserId;
+	private int logCrtUserId;
 
 	private Date logDt;
 
-	private BigDecimal prgrsId;
+	private int prgrsId;
 
-	private BigDecimal refId;
+	private int refId;
 
-	private BigDecimal salesOrdId;
+	private int salesOrdId;
 
 	public SalesOrderLogVO() {
 	}
 
-	public long getLogId() {
-		return this.logId;
+	public int getLogId() {
+		return logId;
 	}
 
-	public void setLogId(long logId) {
+	public void setLogId(int logId) {
 		this.logId = logId;
 	}
 
-	public BigDecimal getIsLok() {
-		return this.isLok;
+	public int getIsLok() {
+		return isLok;
 	}
 
-	public void setIsLok(BigDecimal isLok) {
+	public void setIsLok(int isLok) {
 		this.isLok = isLok;
 	}
 
 	public Date getLogCrtDt() {
-		return this.logCrtDt;
+		return logCrtDt;
 	}
 
 	public void setLogCrtDt(Date logCrtDt) {
 		this.logCrtDt = logCrtDt;
 	}
 
-	public BigDecimal getLogCrtUserId() {
-		return this.logCrtUserId;
+	public int getLogCrtUserId() {
+		return logCrtUserId;
 	}
 
-	public void setLogCrtUserId(BigDecimal logCrtUserId) {
+	public void setLogCrtUserId(int logCrtUserId) {
 		this.logCrtUserId = logCrtUserId;
 	}
 
 	public Date getLogDt() {
-		return this.logDt;
+		return logDt;
 	}
 
 	public void setLogDt(Date logDt) {
 		this.logDt = logDt;
 	}
 
-	public BigDecimal getPrgrsId() {
-		return this.prgrsId;
+	public int getPrgrsId() {
+		return prgrsId;
 	}
 
-	public void setPrgrsId(BigDecimal prgrsId) {
+	public void setPrgrsId(int prgrsId) {
 		this.prgrsId = prgrsId;
 	}
 
-	public BigDecimal getRefId() {
-		return this.refId;
+	public int getRefId() {
+		return refId;
 	}
 
-	public void setRefId(BigDecimal refId) {
+	public void setRefId(int refId) {
 		this.refId = refId;
 	}
 
-	public BigDecimal getSalesOrdId() {
-		return this.salesOrdId;
+	public int getSalesOrdId() {
+		return salesOrdId;
 	}
 
-	public void setSalesOrdId(BigDecimal salesOrdId) {
+	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 

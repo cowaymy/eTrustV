@@ -12,23 +12,23 @@ import java.util.Date;
 public class InstallationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long installId;
+	private int installId;
 
 	private String actDt;
 
 	private String actTm;
 
-	private BigDecimal addId;
+	private int addId;
 
-	private BigDecimal brnchId;
+	private int brnchId;
 
-	private BigDecimal cntId;
+	private int cntId;
 
-	private BigDecimal editTypeId;
+	private int editTypeId;
 
 	private String instct;
 
-	private BigDecimal isTradeIn;
+	private int isTradeIn;
 
 	private String preCallDt;
 
@@ -36,29 +36,26 @@ public class InstallationVO implements Serializable {
 
 	private String preTm;
 
-	private BigDecimal salesOrdId;
+	private int salesOrdId;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
 
 	private String vrifyRem;
 
-	public InstallationVO() {
+	public int getInstallId() {
+		return installId;
 	}
 
-	public long getInstallId() {
-		return this.installId;
-	}
-
-	public void setInstallId(long installId) {
+	public void setInstallId(int installId) {
 		this.installId = installId;
 	}
 
 	public String getActDt() {
-		return this.actDt;
+		return actDt;
 	}
 
 	public void setActDt(String actDt) {
@@ -66,63 +63,63 @@ public class InstallationVO implements Serializable {
 	}
 
 	public String getActTm() {
-		return this.actTm;
+		return actTm;
 	}
 
 	public void setActTm(String actTm) {
 		this.actTm = actTm;
 	}
 
-	public BigDecimal getAddId() {
-		return this.addId;
+	public int getAddId() {
+		return addId;
 	}
 
-	public void setAddId(BigDecimal addId) {
+	public void setAddId(int addId) {
 		this.addId = addId;
 	}
 
-	public BigDecimal getBrnchId() {
-		return this.brnchId;
+	public int getBrnchId() {
+		return brnchId;
 	}
 
-	public void setBrnchId(BigDecimal brnchId) {
+	public void setBrnchId(int brnchId) {
 		this.brnchId = brnchId;
 	}
 
-	public BigDecimal getCntId() {
-		return this.cntId;
+	public int getCntId() {
+		return cntId;
 	}
 
-	public void setCntId(BigDecimal cntId) {
+	public void setCntId(int cntId) {
 		this.cntId = cntId;
 	}
 
-	public BigDecimal getEditTypeId() {
-		return this.editTypeId;
+	public int getEditTypeId() {
+		return editTypeId;
 	}
 
-	public void setEditTypeId(BigDecimal editTypeId) {
+	public void setEditTypeId(int editTypeId) {
 		this.editTypeId = editTypeId;
 	}
 
 	public String getInstct() {
-		return this.instct;
+		return instct;
 	}
 
 	public void setInstct(String instct) {
 		this.instct = instct;
 	}
 
-	public BigDecimal getIsTradeIn() {
-		return this.isTradeIn;
+	public int getIsTradeIn() {
+		return isTradeIn;
 	}
 
-	public void setIsTradeIn(BigDecimal isTradeIn) {
+	public void setIsTradeIn(int isTradeIn) {
 		this.isTradeIn = isTradeIn;
 	}
 
 	public String getPreCallDt() {
-		return this.preCallDt;
+		return preCallDt;
 	}
 
 	public void setPreCallDt(String preCallDt) {
@@ -130,7 +127,7 @@ public class InstallationVO implements Serializable {
 	}
 
 	public String getPreDt() {
-		return this.preDt;
+		return preDt;
 	}
 
 	public void setPreDt(String preDt) {
@@ -138,47 +135,47 @@ public class InstallationVO implements Serializable {
 	}
 
 	public String getPreTm() {
-		return this.preTm;
+		return preTm;
 	}
 
 	public void setPreTm(String preTm) {
 		this.preTm = preTm;
 	}
 
-	public BigDecimal getSalesOrdId() {
-		return this.salesOrdId;
+	public int getSalesOrdId() {
+		return salesOrdId;
 	}
 
-	public void setSalesOrdId(BigDecimal salesOrdId) {
+	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 
 	public String getVrifyRem() {
-		return this.vrifyRem;
+		return vrifyRem;
 	}
 
 	public void setVrifyRem(String vrifyRem) {

@@ -12,83 +12,83 @@ import java.util.Date;
 public class SrvConfigurationVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long srvConfigId;
+	private int srvConfigId;
 
-	private BigDecimal srvBsGen;
+	private int srvBsGen;
 
-	private BigDecimal srvBsWeek;
+	private int srvBsWeek;
 
-	private BigDecimal srvCodyId;
+	private int srvCodyId;
 
 	private Date srvCrtDt;
 
-	private BigDecimal srvCrtUserId;
+	private int srvCrtUserId;
 
 	private Date srvPrevDt;
 
 	private String srvRem;
 
-	private BigDecimal srvSoId;
+	private int srvSoId;
 
-	private BigDecimal srvStusId;
+	private int srvStusId;
 
 	private Date srvUpdDt;
 
-	private BigDecimal srvUpdUserId;
+	private int srvUpdUserId;
 
 	public SrvConfigurationVO() {
 	}
 
-	public long getSrvConfigId() {
-		return this.srvConfigId;
+	public int getSrvConfigId() {
+		return srvConfigId;
 	}
 
-	public void setSrvConfigId(long srvConfigId) {
+	public void setSrvConfigId(int srvConfigId) {
 		this.srvConfigId = srvConfigId;
 	}
 
-	public BigDecimal getSrvBsGen() {
-		return this.srvBsGen;
+	public int getSrvBsGen() {
+		return srvBsGen;
 	}
 
-	public void setSrvBsGen(BigDecimal srvBsGen) {
+	public void setSrvBsGen(int srvBsGen) {
 		this.srvBsGen = srvBsGen;
 	}
 
-	public BigDecimal getSrvBsWeek() {
-		return this.srvBsWeek;
+	public int getSrvBsWeek() {
+		return srvBsWeek;
 	}
 
-	public void setSrvBsWeek(BigDecimal srvBsWeek) {
+	public void setSrvBsWeek(int srvBsWeek) {
 		this.srvBsWeek = srvBsWeek;
 	}
 
-	public BigDecimal getSrvCodyId() {
-		return this.srvCodyId;
+	public int getSrvCodyId() {
+		return srvCodyId;
 	}
 
-	public void setSrvCodyId(BigDecimal srvCodyId) {
+	public void setSrvCodyId(int srvCodyId) {
 		this.srvCodyId = srvCodyId;
 	}
 
 	public Date getSrvCrtDt() {
-		return this.srvCrtDt;
+		return srvCrtDt;
 	}
 
 	public void setSrvCrtDt(Date srvCrtDt) {
 		this.srvCrtDt = srvCrtDt;
 	}
 
-	public BigDecimal getSrvCrtUserId() {
-		return this.srvCrtUserId;
+	public int getSrvCrtUserId() {
+		return srvCrtUserId;
 	}
 
-	public void setSrvCrtUserId(BigDecimal srvCrtUserId) {
+	public void setSrvCrtUserId(int srvCrtUserId) {
 		this.srvCrtUserId = srvCrtUserId;
 	}
 
 	public Date getSrvPrevDt() {
-		return this.srvPrevDt;
+		return srvPrevDt;
 	}
 
 	public void setSrvPrevDt(Date srvPrevDt) {
@@ -96,42 +96,42 @@ public class SrvConfigurationVO implements Serializable {
 	}
 
 	public String getSrvRem() {
-		return this.srvRem;
+		return srvRem;
 	}
 
 	public void setSrvRem(String srvRem) {
 		this.srvRem = srvRem;
 	}
 
-	public BigDecimal getSrvSoId() {
-		return this.srvSoId;
+	public int getSrvSoId() {
+		return srvSoId;
 	}
 
-	public void setSrvSoId(BigDecimal srvSoId) {
+	public void setSrvSoId(int srvSoId) {
 		this.srvSoId = srvSoId;
 	}
 
-	public BigDecimal getSrvStusId() {
-		return this.srvStusId;
+	public int getSrvStusId() {
+		return srvStusId;
 	}
 
-	public void setSrvStusId(BigDecimal srvStusId) {
+	public void setSrvStusId(int srvStusId) {
 		this.srvStusId = srvStusId;
 	}
 
 	public Date getSrvUpdDt() {
-		return this.srvUpdDt;
+		return srvUpdDt;
 	}
 
 	public void setSrvUpdDt(Date srvUpdDt) {
 		this.srvUpdDt = srvUpdDt;
 	}
 
-	public BigDecimal getSrvUpdUserId() {
-		return this.srvUpdUserId;
+	public int getSrvUpdUserId() {
+		return srvUpdUserId;
 	}
 
-	public void setSrvUpdUserId(BigDecimal srvUpdUserId) {
+	public void setSrvUpdUserId(int srvUpdUserId) {
 		this.srvUpdUserId = srvUpdUserId;
 	}
 

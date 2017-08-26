@@ -12,49 +12,49 @@ import java.util.Date;
 public class CallResultVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long callResultId;
+	private int callResultId;
 
 	private Date callActnDt;
 
 	private Date callCrtDt;
 
-	private BigDecimal callCrtUserId;
+	private int callCrtUserId;
 
-	private BigDecimal callCrtUserIdDept;
+	private int callCrtUserIdDept;
 
-	private BigDecimal callCtId;
+	private int callCtId;
 
 	private Date callDt;
 
-	private BigDecimal callEntryId;
+	private int callEntryId;
 
-	private BigDecimal callFdbckId;
+	private int callFdbckId;
 
-	private BigDecimal callHcId;
+	private int callHcId;
 
 	private String callRem;
 
 	private BigDecimal callRosAmt;
 
-	private BigDecimal callSms;
+	private int callSms;
 
 	private String callSmsRem;
 
-	private BigDecimal callStusId;
+	private int callStusId;
 
 	public CallResultVO() {
 	}
 
-	public long getCallResultId() {
-		return this.callResultId;
+	public int getCallResultId() {
+		return callResultId;
 	}
 
-	public void setCallResultId(long callResultId) {
+	public void setCallResultId(int callResultId) {
 		this.callResultId = callResultId;
 	}
 
 	public Date getCallActnDt() {
-		return this.callActnDt;
+		return callActnDt;
 	}
 
 	public void setCallActnDt(Date callActnDt) {
@@ -62,71 +62,71 @@ public class CallResultVO implements Serializable {
 	}
 
 	public Date getCallCrtDt() {
-		return this.callCrtDt;
+		return callCrtDt;
 	}
 
 	public void setCallCrtDt(Date callCrtDt) {
 		this.callCrtDt = callCrtDt;
 	}
 
-	public BigDecimal getCallCrtUserId() {
-		return this.callCrtUserId;
+	public int getCallCrtUserId() {
+		return callCrtUserId;
 	}
 
-	public void setCallCrtUserId(BigDecimal callCrtUserId) {
+	public void setCallCrtUserId(int callCrtUserId) {
 		this.callCrtUserId = callCrtUserId;
 	}
 
-	public BigDecimal getCallCrtUserIdDept() {
-		return this.callCrtUserIdDept;
+	public int getCallCrtUserIdDept() {
+		return callCrtUserIdDept;
 	}
 
-	public void setCallCrtUserIdDept(BigDecimal callCrtUserIdDept) {
+	public void setCallCrtUserIdDept(int callCrtUserIdDept) {
 		this.callCrtUserIdDept = callCrtUserIdDept;
 	}
 
-	public BigDecimal getCallCtId() {
-		return this.callCtId;
+	public int getCallCtId() {
+		return callCtId;
 	}
 
-	public void setCallCtId(BigDecimal callCtId) {
+	public void setCallCtId(int callCtId) {
 		this.callCtId = callCtId;
 	}
 
 	public Date getCallDt() {
-		return this.callDt;
+		return callDt;
 	}
 
 	public void setCallDt(Date callDt) {
 		this.callDt = callDt;
 	}
 
-	public BigDecimal getCallEntryId() {
-		return this.callEntryId;
+	public int getCallEntryId() {
+		return callEntryId;
 	}
 
-	public void setCallEntryId(BigDecimal callEntryId) {
+	public void setCallEntryId(int callEntryId) {
 		this.callEntryId = callEntryId;
 	}
 
-	public BigDecimal getCallFdbckId() {
-		return this.callFdbckId;
+	public int getCallFdbckId() {
+		return callFdbckId;
 	}
 
-	public void setCallFdbckId(BigDecimal callFdbckId) {
+	public void setCallFdbckId(int callFdbckId) {
 		this.callFdbckId = callFdbckId;
 	}
 
-	public BigDecimal getCallHcId() {
-		return this.callHcId;
+	public int getCallHcId() {
+		return callHcId;
 	}
 
-	public void setCallHcId(BigDecimal callHcId) {
+	public void setCallHcId(int callHcId) {
 		this.callHcId = callHcId;
 	}
 
 	public String getCallRem() {
-		return this.callRem;
+		return callRem;
 	}
 
 	public void setCallRem(String callRem) {
@@ -134,34 +134,34 @@ public class CallResultVO implements Serializable {
 	}
 
 	public BigDecimal getCallRosAmt() {
-		return this.callRosAmt;
+		return callRosAmt;
 	}
 
 	public void setCallRosAmt(BigDecimal callRosAmt) {
 		this.callRosAmt = callRosAmt;
 	}
 
-	public BigDecimal getCallSms() {
-		return this.callSms;
+	public int getCallSms() {
+		return callSms;
 	}
 
-	public void setCallSms(BigDecimal callSms) {
+	public void setCallSms(int callSms) {
 		this.callSms = callSms;
 	}
 
 	public String getCallSmsRem() {
-		return this.callSmsRem;
+		return callSmsRem;
 	}
 
 	public void setCallSmsRem(String callSmsRem) {
 		this.callSmsRem = callSmsRem;
 	}
 
-	public BigDecimal getCallStusId() {
-		return this.callStusId;
+	public int getCallStusId() {
+		return callStusId;
 	}
 
-	public void setCallStusId(BigDecimal callStusId) {
+	public void setCallStusId(int callStusId) {
 		this.callStusId = callStusId;
 	}
 

@@ -12,137 +12,168 @@ import java.util.Date;
 public class DocSubmissionVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long docSubId;
+	private int docSubId;
 
 	private Date crtDt;
 
-	private BigDecimal crtUserId;
+	private int crtUserId;
 
-	private BigDecimal docCopyQty;
+	private int docCopyQty;
 
-	private BigDecimal docMemId;
+	private int docMemId;
 
-	private BigDecimal docSoId;
+	private int docSoId;
 
-	private BigDecimal docSubBatchId;
+	private int docSubBatchId;
 
 	private String docSubDt;
 
-	private BigDecimal docSubTypeId;
+	private int docSubTypeId;
 
-	private BigDecimal docTypeId;
+	private int docTypeId;
 
-	private BigDecimal stusId;
+	private int stusId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
+	
+	private int codeId;
+	
+	private String typeDesc;
+	
+	private int chkfield;
 
 	public DocSubmissionVO() {
 	}
 
-	public long getDocSubId() {
-		return this.docSubId;
+	public int getDocSubId() {
+		return docSubId;
 	}
 
-	public void setDocSubId(long docSubId) {
+	public void setDocSubId(int docSubId) {
 		this.docSubId = docSubId;
 	}
 
 	public Date getCrtDt() {
-		return this.crtDt;
+		return crtDt;
 	}
 
 	public void setCrtDt(Date crtDt) {
 		this.crtDt = crtDt;
 	}
 
-	public BigDecimal getCrtUserId() {
-		return this.crtUserId;
+	public int getCrtUserId() {
+		return crtUserId;
 	}
 
-	public void setCrtUserId(BigDecimal crtUserId) {
+	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
 
-	public BigDecimal getDocCopyQty() {
-		return this.docCopyQty;
+	public int getDocCopyQty() {
+		return docCopyQty;
 	}
 
-	public void setDocCopyQty(BigDecimal docCopyQty) {
+	public void setDocCopyQty(int docCopyQty) {
 		this.docCopyQty = docCopyQty;
 	}
 
-	public BigDecimal getDocMemId() {
-		return this.docMemId;
+	public int getDocMemId() {
+		return docMemId;
 	}
 
-	public void setDocMemId(BigDecimal docMemId) {
+	public void setDocMemId(int docMemId) {
 		this.docMemId = docMemId;
 	}
 
-	public BigDecimal getDocSoId() {
-		return this.docSoId;
+	public int getDocSoId() {
+		return docSoId;
 	}
 
-	public void setDocSoId(BigDecimal docSoId) {
+	public void setDocSoId(int docSoId) {
 		this.docSoId = docSoId;
 	}
 
-	public BigDecimal getDocSubBatchId() {
-		return this.docSubBatchId;
+	public int getDocSubBatchId() {
+		return docSubBatchId;
 	}
 
-	public void setDocSubBatchId(BigDecimal docSubBatchId) {
+	public void setDocSubBatchId(int docSubBatchId) {
 		this.docSubBatchId = docSubBatchId;
 	}
 
 	public String getDocSubDt() {
-		return this.docSubDt;
+		return docSubDt;
 	}
 
 	public void setDocSubDt(String docSubDt) {
 		this.docSubDt = docSubDt;
 	}
 
-	public BigDecimal getDocSubTypeId() {
-		return this.docSubTypeId;
+	public int getDocSubTypeId() {
+		return docSubTypeId;
 	}
 
-	public void setDocSubTypeId(BigDecimal docSubTypeId) {
+	public void setDocSubTypeId(int docSubTypeId) {
 		this.docSubTypeId = docSubTypeId;
 	}
 
-	public BigDecimal getDocTypeId() {
-		return this.docTypeId;
+	public int getDocTypeId() {
+		return docTypeId;
 	}
 
-	public void setDocTypeId(BigDecimal docTypeId) {
+	public void setDocTypeId(int docTypeId) {
 		this.docTypeId = docTypeId;
 	}
 
-	public BigDecimal getStusId() {
-		return this.stusId;
+	public int getStusId() {
+		return stusId;
 	}
 
-	public void setStusId(BigDecimal stusId) {
+	public void setStusId(int stusId) {
 		this.stusId = stusId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
+
+	public int getCodeId() {
+		return codeId;
+	}
+
+	public void setCodeId(int codeId) {
+		this.codeId = codeId;
+	}
+
+	public String getTypeDesc() {
+		return typeDesc;
+	}
+
+	public void setTypeDesc(String typeDesc) {
+		this.typeDesc = typeDesc;
+	}
+
+	public int getChkfield() {
+		return chkfield;
+	}
+
+	public void setChkfield(int chkfield) {
+		this.chkfield = chkfield;
+	}
+
 
 }

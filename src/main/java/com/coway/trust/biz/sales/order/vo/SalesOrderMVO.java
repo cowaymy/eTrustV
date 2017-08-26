@@ -10,39 +10,40 @@ import java.util.Date;
  * 
  */
 public class SalesOrderMVO implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 
 	private long salesOrdId;
 
-	private BigDecimal advBill;
+	private int advBill;
 
-	private BigDecimal aeonStusId;
+	private int aeonStusId;
 
-	private BigDecimal appTypeId;
+	private int appTypeId;
 
 	private String bindingNo;
 
-	private BigDecimal brnchId;
+	private int brnchId;
 
-	private BigDecimal ccPromoId;
+	private int ccPromoId;
 
-	private BigDecimal cnvrSchemeId;
+	private int cnvrSchemeId;
 
 	private String commDt;
 
 	private Date crtDt;
 
-	private BigDecimal crtUserId;
+	private int crtUserId;
 
-	private BigDecimal custAddId;
+	private int custAddId;
 
-	private BigDecimal custBillId;
+	private int custBillId;
 
-	private BigDecimal custCareCntId;
+	private int custCareCntId;
 
-	private BigDecimal custCntId;
+	private int custCntId;
 
-	private BigDecimal custId;
+	private int custId;
 
 	private String custPoNo;
 
@@ -54,15 +55,15 @@ public class SalesOrderMVO implements Serializable {
 
 	private BigDecimal dscntAmt;
 
-	private BigDecimal editTypeId;
+	private int editTypeId;
 
 	private String grpCode;
 
-	private BigDecimal instPriod;
+	private int instPriod;
 
-	private BigDecimal lok;
+	private int lok;
 
-	private BigDecimal memId;
+	private int memId;
 
 	private BigDecimal mthRentAmt;
 
@@ -70,37 +71,37 @@ public class SalesOrderMVO implements Serializable {
 
 	private String payComDt;
 
-	private BigDecimal promoId;
+	private int promoId;
 
-	private BigDecimal pvMonth;
+	private int pvMonth;
 
-	private BigDecimal pvYear;
+	private int pvYear;
 
-	private BigDecimal refDocId;
+	private int refDocId;
 
 	private String refNo;
 
 	private String rem;
 
-	private BigDecimal renChkId;
+	private int renChkId;
 
-	private BigDecimal rentPromoId;
+	private int rentPromoId;
 
 	private Date salesDt;
 
-	private BigDecimal salesGmId;
+	private int salesGmId;
 
-	private BigDecimal salesHmId;
+	private int salesHmId;
 
-	private BigDecimal salesOrdIdOld;
+	private int salesOrdIdOld;
 
 	private String salesOrdNo;
 
-	private BigDecimal salesSmId;
+	private int salesSmId;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
-	private BigDecimal syncChk;
+	private int syncChk;
 
 	private BigDecimal taxAmt;
 
@@ -110,77 +111,76 @@ public class SalesOrderMVO implements Serializable {
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
-
-	public SalesOrderMVO() {
-	}
+	private int updUserId;
+	
+	private String billGroup;
 
 	public long getSalesOrdId() {
-		return this.salesOrdId;
+		return salesOrdId;
 	}
 
 	public void setSalesOrdId(long salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 
-	public BigDecimal getAdvBill() {
-		return this.advBill;
+	public int getAdvBill() {
+		return advBill;
 	}
 
-	public void setAdvBill(BigDecimal advBill) {
+	public void setAdvBill(int advBill) {
 		this.advBill = advBill;
 	}
 
-	public BigDecimal getAeonStusId() {
-		return this.aeonStusId;
+	public int getAeonStusId() {
+		return aeonStusId;
 	}
 
-	public void setAeonStusId(BigDecimal aeonStusId) {
+	public void setAeonStusId(int aeonStusId) {
 		this.aeonStusId = aeonStusId;
 	}
 
-	public BigDecimal getAppTypeId() {
-		return this.appTypeId;
+	public int getAppTypeId() {
+		return appTypeId;
 	}
 
-	public void setAppTypeId(BigDecimal appTypeId) {
+	public void setAppTypeId(int appTypeId) {
 		this.appTypeId = appTypeId;
 	}
 
 	public String getBindingNo() {
-		return this.bindingNo;
+		return bindingNo;
 	}
 
 	public void setBindingNo(String bindingNo) {
 		this.bindingNo = bindingNo;
 	}
 
-	public BigDecimal getBrnchId() {
-		return this.brnchId;
+	public int getBrnchId() {
+		return brnchId;
 	}
 
-	public void setBrnchId(BigDecimal brnchId) {
+	public void setBrnchId(int brnchId) {
 		this.brnchId = brnchId;
 	}
 
-	public BigDecimal getCcPromoId() {
-		return this.ccPromoId;
+	public int getCcPromoId() {
+		return ccPromoId;
 	}
 
-	public void setCcPromoId(BigDecimal ccPromoId) {
+	public void setCcPromoId(int ccPromoId) {
 		this.ccPromoId = ccPromoId;
 	}
 
-	public BigDecimal getCnvrSchemeId() {
-		return this.cnvrSchemeId;
+	public int getCnvrSchemeId() {
+		return cnvrSchemeId;
 	}
 
-	public void setCnvrSchemeId(BigDecimal cnvrSchemeId) {
+	public void setCnvrSchemeId(int cnvrSchemeId) {
 		this.cnvrSchemeId = cnvrSchemeId;
 	}
 
 	public String getCommDt() {
-		return this.commDt;
+		return commDt;
 	}
 
 	public void setCommDt(String commDt) {
@@ -188,63 +188,63 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public Date getCrtDt() {
-		return this.crtDt;
+		return crtDt;
 	}
 
 	public void setCrtDt(Date crtDt) {
 		this.crtDt = crtDt;
 	}
 
-	public BigDecimal getCrtUserId() {
-		return this.crtUserId;
+	public int getCrtUserId() {
+		return crtUserId;
 	}
 
-	public void setCrtUserId(BigDecimal crtUserId) {
+	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
 
-	public BigDecimal getCustAddId() {
-		return this.custAddId;
+	public int getCustAddId() {
+		return custAddId;
 	}
 
-	public void setCustAddId(BigDecimal custAddId) {
+	public void setCustAddId(int custAddId) {
 		this.custAddId = custAddId;
 	}
 
-	public BigDecimal getCustBillId() {
-		return this.custBillId;
+	public int getCustBillId() {
+		return custBillId;
 	}
 
-	public void setCustBillId(BigDecimal custBillId) {
+	public void setCustBillId(int custBillId) {
 		this.custBillId = custBillId;
 	}
 
-	public BigDecimal getCustCareCntId() {
-		return this.custCareCntId;
+	public int getCustCareCntId() {
+		return custCareCntId;
 	}
 
-	public void setCustCareCntId(BigDecimal custCareCntId) {
+	public void setCustCareCntId(int custCareCntId) {
 		this.custCareCntId = custCareCntId;
 	}
 
-	public BigDecimal getCustCntId() {
-		return this.custCntId;
+	public int getCustCntId() {
+		return custCntId;
 	}
 
-	public void setCustCntId(BigDecimal custCntId) {
+	public void setCustCntId(int custCntId) {
 		this.custCntId = custCntId;
 	}
 
-	public BigDecimal getCustId() {
-		return this.custId;
+	public int getCustId() {
+		return custId;
 	}
 
-	public void setCustId(BigDecimal custId) {
+	public void setCustId(int custId) {
 		this.custId = custId;
 	}
 
 	public String getCustPoNo() {
-		return this.custPoNo;
+		return custPoNo;
 	}
 
 	public void setCustPoNo(String custPoNo) {
@@ -252,7 +252,7 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public BigDecimal getDefRentAmt() {
-		return this.defRentAmt;
+		return defRentAmt;
 	}
 
 	public void setDefRentAmt(BigDecimal defRentAmt) {
@@ -260,7 +260,7 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public String getDeptCode() {
-		return this.deptCode;
+		return deptCode;
 	}
 
 	public void setDeptCode(String deptCode) {
@@ -268,7 +268,7 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public String getDoNo() {
-		return this.doNo;
+		return doNo;
 	}
 
 	public void setDoNo(String doNo) {
@@ -276,55 +276,55 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public BigDecimal getDscntAmt() {
-		return this.dscntAmt;
+		return dscntAmt;
 	}
 
 	public void setDscntAmt(BigDecimal dscntAmt) {
 		this.dscntAmt = dscntAmt;
 	}
 
-	public BigDecimal getEditTypeId() {
-		return this.editTypeId;
+	public int getEditTypeId() {
+		return editTypeId;
 	}
 
-	public void setEditTypeId(BigDecimal editTypeId) {
+	public void setEditTypeId(int editTypeId) {
 		this.editTypeId = editTypeId;
 	}
 
 	public String getGrpCode() {
-		return this.grpCode;
+		return grpCode;
 	}
 
 	public void setGrpCode(String grpCode) {
 		this.grpCode = grpCode;
 	}
 
-	public BigDecimal getInstPriod() {
-		return this.instPriod;
+	public int getInstPriod() {
+		return instPriod;
 	}
 
-	public void setInstPriod(BigDecimal instPriod) {
+	public void setInstPriod(int instPriod) {
 		this.instPriod = instPriod;
 	}
 
-	public BigDecimal getLok() {
-		return this.lok;
+	public int getLok() {
+		return lok;
 	}
 
-	public void setLok(BigDecimal lok) {
+	public void setLok(int lok) {
 		this.lok = lok;
 	}
 
-	public BigDecimal getMemId() {
-		return this.memId;
+	public int getMemId() {
+		return memId;
 	}
 
-	public void setMemId(BigDecimal memId) {
+	public void setMemId(int memId) {
 		this.memId = memId;
 	}
 
 	public BigDecimal getMthRentAmt() {
-		return this.mthRentAmt;
+		return mthRentAmt;
 	}
 
 	public void setMthRentAmt(BigDecimal mthRentAmt) {
@@ -332,7 +332,7 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public String getOrgCode() {
-		return this.orgCode;
+		return orgCode;
 	}
 
 	public void setOrgCode(String orgCode) {
@@ -340,47 +340,47 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public String getPayComDt() {
-		return this.payComDt;
+		return payComDt;
 	}
 
 	public void setPayComDt(String payComDt) {
 		this.payComDt = payComDt;
 	}
 
-	public BigDecimal getPromoId() {
-		return this.promoId;
+	public int getPromoId() {
+		return promoId;
 	}
 
-	public void setPromoId(BigDecimal promoId) {
+	public void setPromoId(int promoId) {
 		this.promoId = promoId;
 	}
 
-	public BigDecimal getPvMonth() {
-		return this.pvMonth;
+	public int getPvMonth() {
+		return pvMonth;
 	}
 
-	public void setPvMonth(BigDecimal pvMonth) {
+	public void setPvMonth(int pvMonth) {
 		this.pvMonth = pvMonth;
 	}
 
-	public BigDecimal getPvYear() {
-		return this.pvYear;
+	public int getPvYear() {
+		return pvYear;
 	}
 
-	public void setPvYear(BigDecimal pvYear) {
+	public void setPvYear(int pvYear) {
 		this.pvYear = pvYear;
 	}
 
-	public BigDecimal getRefDocId() {
-		return this.refDocId;
+	public int getRefDocId() {
+		return refDocId;
 	}
 
-	public void setRefDocId(BigDecimal refDocId) {
+	public void setRefDocId(int refDocId) {
 		this.refDocId = refDocId;
 	}
 
 	public String getRefNo() {
-		return this.refNo;
+		return refNo;
 	}
 
 	public void setRefNo(String refNo) {
@@ -388,95 +388,95 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public String getRem() {
-		return this.rem;
+		return rem;
 	}
 
 	public void setRem(String rem) {
 		this.rem = rem;
 	}
 
-	public BigDecimal getRenChkId() {
-		return this.renChkId;
+	public int getRenChkId() {
+		return renChkId;
 	}
 
-	public void setRenChkId(BigDecimal renChkId) {
+	public void setRenChkId(int renChkId) {
 		this.renChkId = renChkId;
 	}
 
-	public BigDecimal getRentPromoId() {
-		return this.rentPromoId;
+	public int getRentPromoId() {
+		return rentPromoId;
 	}
 
-	public void setRentPromoId(BigDecimal rentPromoId) {
+	public void setRentPromoId(int rentPromoId) {
 		this.rentPromoId = rentPromoId;
 	}
 
 	public Date getSalesDt() {
-		return this.salesDt;
+		return salesDt;
 	}
 
 	public void setSalesDt(Date salesDt) {
 		this.salesDt = salesDt;
 	}
 
-	public BigDecimal getSalesGmId() {
-		return this.salesGmId;
+	public int getSalesGmId() {
+		return salesGmId;
 	}
 
-	public void setSalesGmId(BigDecimal salesGmId) {
+	public void setSalesGmId(int salesGmId) {
 		this.salesGmId = salesGmId;
 	}
 
-	public BigDecimal getSalesHmId() {
-		return this.salesHmId;
+	public int getSalesHmId() {
+		return salesHmId;
 	}
 
-	public void setSalesHmId(BigDecimal salesHmId) {
+	public void setSalesHmId(int salesHmId) {
 		this.salesHmId = salesHmId;
 	}
 
-	public BigDecimal getSalesOrdIdOld() {
-		return this.salesOrdIdOld;
+	public int getSalesOrdIdOld() {
+		return salesOrdIdOld;
 	}
 
-	public void setSalesOrdIdOld(BigDecimal salesOrdIdOld) {
+	public void setSalesOrdIdOld(int salesOrdIdOld) {
 		this.salesOrdIdOld = salesOrdIdOld;
 	}
 
 	public String getSalesOrdNo() {
-		return this.salesOrdNo;
+		return salesOrdNo;
 	}
 
 	public void setSalesOrdNo(String salesOrdNo) {
 		this.salesOrdNo = salesOrdNo;
 	}
 
-	public BigDecimal getSalesSmId() {
-		return this.salesSmId;
+	public int getSalesSmId() {
+		return salesSmId;
 	}
 
-	public void setSalesSmId(BigDecimal salesSmId) {
+	public void setSalesSmId(int salesSmId) {
 		this.salesSmId = salesSmId;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
-	public BigDecimal getSyncChk() {
-		return this.syncChk;
+	public int getSyncChk() {
+		return syncChk;
 	}
 
-	public void setSyncChk(BigDecimal syncChk) {
+	public void setSyncChk(int syncChk) {
 		this.syncChk = syncChk;
 	}
 
 	public BigDecimal getTaxAmt() {
-		return this.taxAmt;
+		return taxAmt;
 	}
 
 	public void setTaxAmt(BigDecimal taxAmt) {
@@ -484,7 +484,7 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public BigDecimal getTotAmt() {
-		return this.totAmt;
+		return totAmt;
 	}
 
 	public void setTotAmt(BigDecimal totAmt) {
@@ -492,7 +492,7 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public BigDecimal getTotPv() {
-		return this.totPv;
+		return totPv;
 	}
 
 	public void setTotPv(BigDecimal totPv) {
@@ -500,19 +500,26 @@ public class SalesOrderMVO implements Serializable {
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 
+	public String getBillGroup() {
+		return billGroup;
+	}
+
+	public void setBillGroup(String billGroup) {
+		this.billGroup = billGroup;
+	}
 }

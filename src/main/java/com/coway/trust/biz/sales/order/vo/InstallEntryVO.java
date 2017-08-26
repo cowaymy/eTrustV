@@ -12,101 +12,101 @@ import java.util.Date;
 public class InstallEntryVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long installEntryId;
+	private int installEntryId;
 
-	private BigDecimal allowComm;
+	private int allowComm;
 
-	private BigDecimal callEntryId;
+	private int callEntryId;
 
 	private Date crtDt;
 
-	private BigDecimal crtUserId;
+	private int crtUserId;
 
 	private String ctGrp;
 
-	private BigDecimal ctId;
+	private int ctId;
 
 	private Date installDt;
 
 	private String installEntryNo;
 
-	private BigDecimal installResultId;
+	private int installResultId;
 
-	private BigDecimal installStkId;
+	private int installStkId;
 
-	private BigDecimal isTradeIn;
+	private int isTradeIn;
 
-	private BigDecimal revId;
+	private int revId;
 
-	private BigDecimal salesOrdId;
+	private int salesOrdId;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
 
 	public InstallEntryVO() {
 	}
 
-	public long getInstallEntryId() {
-		return this.installEntryId;
+	public int getInstallEntryId() {
+		return installEntryId;
 	}
 
-	public void setInstallEntryId(long installEntryId) {
+	public void setInstallEntryId(int installEntryId) {
 		this.installEntryId = installEntryId;
 	}
 
-	public BigDecimal getAllowComm() {
-		return this.allowComm;
+	public int getAllowComm() {
+		return allowComm;
 	}
 
-	public void setAllowComm(BigDecimal allowComm) {
+	public void setAllowComm(int allowComm) {
 		this.allowComm = allowComm;
 	}
 
-	public BigDecimal getCallEntryId() {
-		return this.callEntryId;
+	public int getCallEntryId() {
+		return callEntryId;
 	}
 
-	public void setCallEntryId(BigDecimal callEntryId) {
+	public void setCallEntryId(int callEntryId) {
 		this.callEntryId = callEntryId;
 	}
 
 	public Date getCrtDt() {
-		return this.crtDt;
+		return crtDt;
 	}
 
 	public void setCrtDt(Date crtDt) {
 		this.crtDt = crtDt;
 	}
 
-	public BigDecimal getCrtUserId() {
-		return this.crtUserId;
+	public int getCrtUserId() {
+		return crtUserId;
 	}
 
-	public void setCrtUserId(BigDecimal crtUserId) {
+	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
 
 	public String getCtGrp() {
-		return this.ctGrp;
+		return ctGrp;
 	}
 
 	public void setCtGrp(String ctGrp) {
 		this.ctGrp = ctGrp;
 	}
 
-	public BigDecimal getCtId() {
-		return this.ctId;
+	public int getCtId() {
+		return ctId;
 	}
 
-	public void setCtId(BigDecimal ctId) {
+	public void setCtId(int ctId) {
 		this.ctId = ctId;
 	}
 
 	public Date getInstallDt() {
-		return this.installDt;
+		return installDt;
 	}
 
 	public void setInstallDt(Date installDt) {
@@ -114,74 +114,74 @@ public class InstallEntryVO implements Serializable {
 	}
 
 	public String getInstallEntryNo() {
-		return this.installEntryNo;
+		return installEntryNo;
 	}
 
 	public void setInstallEntryNo(String installEntryNo) {
 		this.installEntryNo = installEntryNo;
 	}
 
-	public BigDecimal getInstallResultId() {
-		return this.installResultId;
+	public int getInstallResultId() {
+		return installResultId;
 	}
 
-	public void setInstallResultId(BigDecimal installResultId) {
+	public void setInstallResultId(int installResultId) {
 		this.installResultId = installResultId;
 	}
 
-	public BigDecimal getInstallStkId() {
-		return this.installStkId;
+	public int getInstallStkId() {
+		return installStkId;
 	}
 
-	public void setInstallStkId(BigDecimal installStkId) {
+	public void setInstallStkId(int installStkId) {
 		this.installStkId = installStkId;
 	}
 
-	public BigDecimal getIsTradeIn() {
-		return this.isTradeIn;
+	public int getIsTradeIn() {
+		return isTradeIn;
 	}
 
-	public void setIsTradeIn(BigDecimal isTradeIn) {
+	public void setIsTradeIn(int isTradeIn) {
 		this.isTradeIn = isTradeIn;
 	}
 
-	public BigDecimal getRevId() {
-		return this.revId;
+	public int getRevId() {
+		return revId;
 	}
 
-	public void setRevId(BigDecimal revId) {
+	public void setRevId(int revId) {
 		this.revId = revId;
 	}
 
-	public BigDecimal getSalesOrdId() {
-		return this.salesOrdId;
+	public int getSalesOrdId() {
+		return salesOrdId;
 	}
 
-	public void setSalesOrdId(BigDecimal salesOrdId) {
+	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 

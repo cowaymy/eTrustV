@@ -12,13 +12,13 @@ import java.util.Date;
 public class GSTEURCertificateVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long eurcId;
+	private int eurcId;
 
 	private Date eurcCrtDt;
 
-	private BigDecimal eurcCrtUserId;
+	private int eurcCrtUserId;
 
-	private BigDecimal eurcCustId;
+	private int eurcCustId;
 
 	private String eurcCustRgsNo;
 
@@ -30,55 +30,55 @@ public class GSTEURCertificateVO implements Serializable {
 
 	private String eurcRem;
 
-	private BigDecimal eurcRliefAppTypeId;
+	private int eurcRliefAppTypeId;
 
-	private BigDecimal eurcRliefTypeId;
+	private int eurcRliefTypeId;
 
-	private BigDecimal eurcSalesOrdId;
+	private int eurcSalesOrdId;
 
-	private BigDecimal eurcStusCodeId;
+	private int eurcStusCodeId;
 
 	private Date eurcUpdDt;
 
-	private BigDecimal eurcUpdUserId;
+	private int eurcUpdUserId;
 
 	public GSTEURCertificateVO() {
 	}
 
-	public long getEurcId() {
-		return this.eurcId;
+	public int getEurcId() {
+		return eurcId;
 	}
 
-	public void setEurcId(long eurcId) {
+	public void setEurcId(int eurcId) {
 		this.eurcId = eurcId;
 	}
 
 	public Date getEurcCrtDt() {
-		return this.eurcCrtDt;
+		return eurcCrtDt;
 	}
 
 	public void setEurcCrtDt(Date eurcCrtDt) {
 		this.eurcCrtDt = eurcCrtDt;
 	}
 
-	public BigDecimal getEurcCrtUserId() {
-		return this.eurcCrtUserId;
+	public int getEurcCrtUserId() {
+		return eurcCrtUserId;
 	}
 
-	public void setEurcCrtUserId(BigDecimal eurcCrtUserId) {
+	public void setEurcCrtUserId(int eurcCrtUserId) {
 		this.eurcCrtUserId = eurcCrtUserId;
 	}
 
-	public BigDecimal getEurcCustId() {
-		return this.eurcCustId;
+	public int getEurcCustId() {
+		return eurcCustId;
 	}
 
-	public void setEurcCustId(BigDecimal eurcCustId) {
+	public void setEurcCustId(int eurcCustId) {
 		this.eurcCustId = eurcCustId;
 	}
 
 	public String getEurcCustRgsNo() {
-		return this.eurcCustRgsNo;
+		return eurcCustRgsNo;
 	}
 
 	public void setEurcCustRgsNo(String eurcCustRgsNo) {
@@ -86,7 +86,7 @@ public class GSTEURCertificateVO implements Serializable {
 	}
 
 	public String getEurcFilePathName() {
-		return this.eurcFilePathName;
+		return eurcFilePathName;
 	}
 
 	public void setEurcFilePathName(String eurcFilePathName) {
@@ -94,7 +94,7 @@ public class GSTEURCertificateVO implements Serializable {
 	}
 
 	public String getEurcRefDt() {
-		return this.eurcRefDt;
+		return eurcRefDt;
 	}
 
 	public void setEurcRefDt(String eurcRefDt) {
@@ -102,7 +102,7 @@ public class GSTEURCertificateVO implements Serializable {
 	}
 
 	public String getEurcRefNo() {
-		return this.eurcRefNo;
+		return eurcRefNo;
 	}
 
 	public void setEurcRefNo(String eurcRefNo) {
@@ -110,58 +110,58 @@ public class GSTEURCertificateVO implements Serializable {
 	}
 
 	public String getEurcRem() {
-		return this.eurcRem;
+		return eurcRem;
 	}
 
 	public void setEurcRem(String eurcRem) {
 		this.eurcRem = eurcRem;
 	}
 
-	public BigDecimal getEurcRliefAppTypeId() {
-		return this.eurcRliefAppTypeId;
+	public int getEurcRliefAppTypeId() {
+		return eurcRliefAppTypeId;
 	}
 
-	public void setEurcRliefAppTypeId(BigDecimal eurcRliefAppTypeId) {
+	public void setEurcRliefAppTypeId(int eurcRliefAppTypeId) {
 		this.eurcRliefAppTypeId = eurcRliefAppTypeId;
 	}
 
-	public BigDecimal getEurcRliefTypeId() {
-		return this.eurcRliefTypeId;
+	public int getEurcRliefTypeId() {
+		return eurcRliefTypeId;
 	}
 
-	public void setEurcRliefTypeId(BigDecimal eurcRliefTypeId) {
+	public void setEurcRliefTypeId(int eurcRliefTypeId) {
 		this.eurcRliefTypeId = eurcRliefTypeId;
 	}
 
-	public BigDecimal getEurcSalesOrdId() {
-		return this.eurcSalesOrdId;
+	public int getEurcSalesOrdId() {
+		return eurcSalesOrdId;
 	}
 
-	public void setEurcSalesOrdId(BigDecimal eurcSalesOrdId) {
+	public void setEurcSalesOrdId(int eurcSalesOrdId) {
 		this.eurcSalesOrdId = eurcSalesOrdId;
 	}
 
-	public BigDecimal getEurcStusCodeId() {
-		return this.eurcStusCodeId;
+	public int getEurcStusCodeId() {
+		return eurcStusCodeId;
 	}
 
-	public void setEurcStusCodeId(BigDecimal eurcStusCodeId) {
+	public void setEurcStusCodeId(int eurcStusCodeId) {
 		this.eurcStusCodeId = eurcStusCodeId;
 	}
 
 	public Date getEurcUpdDt() {
-		return this.eurcUpdDt;
+		return eurcUpdDt;
 	}
 
 	public void setEurcUpdDt(Date eurcUpdDt) {
 		this.eurcUpdDt = eurcUpdDt;
 	}
 
-	public BigDecimal getEurcUpdUserId() {
-		return this.eurcUpdUserId;
+	public int getEurcUpdUserId() {
+		return eurcUpdUserId;
 	}
 
-	public void setEurcUpdUserId(BigDecimal eurcUpdUserId) {
+	public void setEurcUpdUserId(int eurcUpdUserId) {
 		this.eurcUpdUserId = eurcUpdUserId;
 	}
 

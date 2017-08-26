@@ -12,83 +12,83 @@ import java.util.Date;
 public class SrvConfigFilterVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long srvFilterId;
+	private int srvFilterId;
 
-	private BigDecimal srvConfigId;
+	private int srvConfigId;
 
 	private Date srvFilterCrtDt;
 
-	private BigDecimal srvFilterCrtUserId;
+	private int srvFilterCrtUserId;
 
 	private Date srvFilterExprDt;
 
-	private BigDecimal srvFilterPriod;
+	private int srvFilterPriod;
 
 	private Date srvFilterPrvChgDt;
 
 	private String srvFilterRem;
 
-	private BigDecimal srvFilterStkId;
+	private int srvFilterStkId;
 
-	private BigDecimal srvFilterStusId;
+	private int srvFilterStusId;
 
 	private Date srvFilterUpdDt;
 
-	private BigDecimal srvFilterUpdUserId;
+	private int srvFilterUpdUserId;
 
 	public SrvConfigFilterVO() {
 	}
 
-	public long getSrvFilterId() {
-		return this.srvFilterId;
+	public int getSrvFilterId() {
+		return srvFilterId;
 	}
 
-	public void setSrvFilterId(long srvFilterId) {
+	public void setSrvFilterId(int srvFilterId) {
 		this.srvFilterId = srvFilterId;
 	}
 
-	public BigDecimal getSrvConfigId() {
-		return this.srvConfigId;
+	public int getSrvConfigId() {
+		return srvConfigId;
 	}
 
-	public void setSrvConfigId(BigDecimal srvConfigId) {
+	public void setSrvConfigId(int srvConfigId) {
 		this.srvConfigId = srvConfigId;
 	}
 
 	public Date getSrvFilterCrtDt() {
-		return this.srvFilterCrtDt;
+		return srvFilterCrtDt;
 	}
 
 	public void setSrvFilterCrtDt(Date srvFilterCrtDt) {
 		this.srvFilterCrtDt = srvFilterCrtDt;
 	}
 
-	public BigDecimal getSrvFilterCrtUserId() {
-		return this.srvFilterCrtUserId;
+	public int getSrvFilterCrtUserId() {
+		return srvFilterCrtUserId;
 	}
 
-	public void setSrvFilterCrtUserId(BigDecimal srvFilterCrtUserId) {
+	public void setSrvFilterCrtUserId(int srvFilterCrtUserId) {
 		this.srvFilterCrtUserId = srvFilterCrtUserId;
 	}
 
 	public Date getSrvFilterExprDt() {
-		return this.srvFilterExprDt;
+		return srvFilterExprDt;
 	}
 
 	public void setSrvFilterExprDt(Date srvFilterExprDt) {
 		this.srvFilterExprDt = srvFilterExprDt;
 	}
 
-	public BigDecimal getSrvFilterPriod() {
-		return this.srvFilterPriod;
+	public int getSrvFilterPriod() {
+		return srvFilterPriod;
 	}
 
-	public void setSrvFilterPriod(BigDecimal srvFilterPriod) {
+	public void setSrvFilterPriod(int srvFilterPriod) {
 		this.srvFilterPriod = srvFilterPriod;
 	}
 
 	public Date getSrvFilterPrvChgDt() {
-		return this.srvFilterPrvChgDt;
+		return srvFilterPrvChgDt;
 	}
 
 	public void setSrvFilterPrvChgDt(Date srvFilterPrvChgDt) {
@@ -96,42 +96,42 @@ public class SrvConfigFilterVO implements Serializable {
 	}
 
 	public String getSrvFilterRem() {
-		return this.srvFilterRem;
+		return srvFilterRem;
 	}
 
 	public void setSrvFilterRem(String srvFilterRem) {
 		this.srvFilterRem = srvFilterRem;
 	}
 
-	public BigDecimal getSrvFilterStkId() {
-		return this.srvFilterStkId;
+	public int getSrvFilterStkId() {
+		return srvFilterStkId;
 	}
 
-	public void setSrvFilterStkId(BigDecimal srvFilterStkId) {
+	public void setSrvFilterStkId(int srvFilterStkId) {
 		this.srvFilterStkId = srvFilterStkId;
 	}
 
-	public BigDecimal getSrvFilterStusId() {
-		return this.srvFilterStusId;
+	public int getSrvFilterStusId() {
+		return srvFilterStusId;
 	}
 
-	public void setSrvFilterStusId(BigDecimal srvFilterStusId) {
+	public void setSrvFilterStusId(int srvFilterStusId) {
 		this.srvFilterStusId = srvFilterStusId;
 	}
 
 	public Date getSrvFilterUpdDt() {
-		return this.srvFilterUpdDt;
+		return srvFilterUpdDt;
 	}
 
 	public void setSrvFilterUpdDt(Date srvFilterUpdDt) {
 		this.srvFilterUpdDt = srvFilterUpdDt;
 	}
 
-	public BigDecimal getSrvFilterUpdUserId() {
-		return this.srvFilterUpdUserId;
+	public int getSrvFilterUpdUserId() {
+		return srvFilterUpdUserId;
 	}
 
-	public void setSrvFilterUpdUserId(BigDecimal srvFilterUpdUserId) {
+	public void setSrvFilterUpdUserId(int srvFilterUpdUserId) {
 		this.srvFilterUpdUserId = srvFilterUpdUserId;
 	}
 

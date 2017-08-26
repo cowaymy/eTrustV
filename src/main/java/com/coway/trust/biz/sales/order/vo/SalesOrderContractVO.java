@@ -12,106 +12,106 @@ import java.util.Date;
 public class SalesOrderContractVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long cntrctId;
+	private int cntrctId;
 
 	private Date cntrctCrtDt;
 
-	private BigDecimal cntrctCrtUserId;
+	private int cntrctCrtUserId;
 
-	private BigDecimal cntrctObligtPriod;
+	private int cntrctObligtPriod;
 
 	private String cntrctRem;
 
-	private BigDecimal cntrctRentalPriod;
+	private int cntrctRentalPriod;
 
-	private BigDecimal cntrctSalesOrdId;
+	private int cntrctSalesOrdId;
 
-	private BigDecimal cntrctStusId;
+	private int cntrctStusId;
 
 	private Date cntrctUpdDt;
 
-	private BigDecimal cntrctUpdUserId;
+	private int cntrctUpdUserId;
 
 	public SalesOrderContractVO() {
 	}
 
-	public long getCntrctId() {
-		return this.cntrctId;
+	public int getCntrctId() {
+		return cntrctId;
 	}
 
-	public void setCntrctId(long cntrctId) {
+	public void setCntrctId(int cntrctId) {
 		this.cntrctId = cntrctId;
 	}
 
 	public Date getCntrctCrtDt() {
-		return this.cntrctCrtDt;
+		return cntrctCrtDt;
 	}
 
 	public void setCntrctCrtDt(Date cntrctCrtDt) {
 		this.cntrctCrtDt = cntrctCrtDt;
 	}
 
-	public BigDecimal getCntrctCrtUserId() {
-		return this.cntrctCrtUserId;
+	public int getCntrctCrtUserId() {
+		return cntrctCrtUserId;
 	}
 
-	public void setCntrctCrtUserId(BigDecimal cntrctCrtUserId) {
+	public void setCntrctCrtUserId(int cntrctCrtUserId) {
 		this.cntrctCrtUserId = cntrctCrtUserId;
 	}
 
-	public BigDecimal getCntrctObligtPriod() {
-		return this.cntrctObligtPriod;
+	public int getCntrctObligtPriod() {
+		return cntrctObligtPriod;
 	}
 
-	public void setCntrctObligtPriod(BigDecimal cntrctObligtPriod) {
+	public void setCntrctObligtPriod(int cntrctObligtPriod) {
 		this.cntrctObligtPriod = cntrctObligtPriod;
 	}
 
 	public String getCntrctRem() {
-		return this.cntrctRem;
+		return cntrctRem;
 	}
 
 	public void setCntrctRem(String cntrctRem) {
 		this.cntrctRem = cntrctRem;
 	}
 
-	public BigDecimal getCntrctRentalPriod() {
-		return this.cntrctRentalPriod;
+	public int getCntrctRentalPriod() {
+		return cntrctRentalPriod;
 	}
 
-	public void setCntrctRentalPriod(BigDecimal cntrctRentalPriod) {
+	public void setCntrctRentalPriod(int cntrctRentalPriod) {
 		this.cntrctRentalPriod = cntrctRentalPriod;
 	}
 
-	public BigDecimal getCntrctSalesOrdId() {
-		return this.cntrctSalesOrdId;
+	public int getCntrctSalesOrdId() {
+		return cntrctSalesOrdId;
 	}
 
-	public void setCntrctSalesOrdId(BigDecimal cntrctSalesOrdId) {
+	public void setCntrctSalesOrdId(int cntrctSalesOrdId) {
 		this.cntrctSalesOrdId = cntrctSalesOrdId;
 	}
 
-	public BigDecimal getCntrctStusId() {
-		return this.cntrctStusId;
+	public int getCntrctStusId() {
+		return cntrctStusId;
 	}
 
-	public void setCntrctStusId(BigDecimal cntrctStusId) {
+	public void setCntrctStusId(int cntrctStusId) {
 		this.cntrctStusId = cntrctStusId;
 	}
 
 	public Date getCntrctUpdDt() {
-		return this.cntrctUpdDt;
+		return cntrctUpdDt;
 	}
 
 	public void setCntrctUpdDt(Date cntrctUpdDt) {
 		this.cntrctUpdDt = cntrctUpdDt;
 	}
 
-	public BigDecimal getCntrctUpdUserId() {
-		return this.cntrctUpdUserId;
+	public int getCntrctUpdUserId() {
+		return cntrctUpdUserId;
 	}
 
-	public void setCntrctUpdUserId(BigDecimal cntrctUpdUserId) {
+	public void setCntrctUpdUserId(int cntrctUpdUserId) {
 		this.cntrctUpdUserId = cntrctUpdUserId;
 	}
 

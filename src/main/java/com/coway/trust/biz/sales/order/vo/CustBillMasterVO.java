@@ -12,19 +12,19 @@ import java.util.Date;
 public class CustBillMasterVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long custBillId;
+	private int custBillId;
 
-	private BigDecimal custBillAddId;
+	private int custBillAddId;
 
-	private BigDecimal custBillCntId;
+	private int custBillCntId;
 
 	private Date custBillCrtDt;
 
-	private BigDecimal custBillCrtUserId;
+	private int custBillCrtUserId;
 
-	private BigDecimal custBillCustCareCntId;
+	private int custBillCustCareCntId;
 
-	private BigDecimal custBillCustId;
+	private int custBillCustId;
 
 	private String custBillEmail;
 
@@ -32,97 +32,97 @@ public class CustBillMasterVO implements Serializable {
 
 	private String custBillGrpNo;
 
-	private BigDecimal custBillInchgMemId;
+	private int custBillInchgMemId;
 
-	private BigDecimal custBillIsEstm;
+	private int custBillIsEstm;
 
-	private BigDecimal custBillIsPost;
+	private int custBillIsPost;
 
-	private BigDecimal custBillIsSms;
+	private int custBillIsSms;
 
-	private BigDecimal custBillIsSms2;
+	private int custBillIsSms2;
 
-	private BigDecimal custBillIsWebPortal;
+	private int custBillIsWebPortal;
 
 	private String custBillPayRefNo1;
 
 	private String custBillPayRefNo2;
 
-	private BigDecimal custBillPayTrm;
+	private int custBillPayTrm;
 
 	private String custBillRem;
 
-	private BigDecimal custBillSoId;
+	private int custBillSoId;
 
-	private BigDecimal custBillStusId;
+	private int custBillStusId;
 
 	private Date custBillUpdDt;
 
-	private BigDecimal custBillUpdUserId;
+	private int custBillUpdUserId;
 
 	private String custBillWebPortalUrl;
 
 	public CustBillMasterVO() {
 	}
 
-	public long getCustBillId() {
-		return this.custBillId;
+	public int getCustBillId() {
+		return custBillId;
 	}
 
-	public void setCustBillId(long custBillId) {
+	public void setCustBillId(int custBillId) {
 		this.custBillId = custBillId;
 	}
 
-	public BigDecimal getCustBillAddId() {
-		return this.custBillAddId;
+	public int getCustBillAddId() {
+		return custBillAddId;
 	}
 
-	public void setCustBillAddId(BigDecimal custBillAddId) {
+	public void setCustBillAddId(int custBillAddId) {
 		this.custBillAddId = custBillAddId;
 	}
 
-	public BigDecimal getCustBillCntId() {
-		return this.custBillCntId;
+	public int getCustBillCntId() {
+		return custBillCntId;
 	}
 
-	public void setCustBillCntId(BigDecimal custBillCntId) {
+	public void setCustBillCntId(int custBillCntId) {
 		this.custBillCntId = custBillCntId;
 	}
 
 	public Date getCustBillCrtDt() {
-		return this.custBillCrtDt;
+		return custBillCrtDt;
 	}
 
 	public void setCustBillCrtDt(Date custBillCrtDt) {
 		this.custBillCrtDt = custBillCrtDt;
 	}
 
-	public BigDecimal getCustBillCrtUserId() {
-		return this.custBillCrtUserId;
+	public int getCustBillCrtUserId() {
+		return custBillCrtUserId;
 	}
 
-	public void setCustBillCrtUserId(BigDecimal custBillCrtUserId) {
+	public void setCustBillCrtUserId(int custBillCrtUserId) {
 		this.custBillCrtUserId = custBillCrtUserId;
 	}
 
-	public BigDecimal getCustBillCustCareCntId() {
-		return this.custBillCustCareCntId;
+	public int getCustBillCustCareCntId() {
+		return custBillCustCareCntId;
 	}
 
-	public void setCustBillCustCareCntId(BigDecimal custBillCustCareCntId) {
+	public void setCustBillCustCareCntId(int custBillCustCareCntId) {
 		this.custBillCustCareCntId = custBillCustCareCntId;
 	}
 
-	public BigDecimal getCustBillCustId() {
-		return this.custBillCustId;
+	public int getCustBillCustId() {
+		return custBillCustId;
 	}
 
-	public void setCustBillCustId(BigDecimal custBillCustId) {
+	public void setCustBillCustId(int custBillCustId) {
 		this.custBillCustId = custBillCustId;
 	}
 
 	public String getCustBillEmail() {
-		return this.custBillEmail;
+		return custBillEmail;
 	}
 
 	public void setCustBillEmail(String custBillEmail) {
@@ -130,7 +130,7 @@ public class CustBillMasterVO implements Serializable {
 	}
 
 	public String getCustBillEmailAdd() {
-		return this.custBillEmailAdd;
+		return custBillEmailAdd;
 	}
 
 	public void setCustBillEmailAdd(String custBillEmailAdd) {
@@ -138,63 +138,63 @@ public class CustBillMasterVO implements Serializable {
 	}
 
 	public String getCustBillGrpNo() {
-		return this.custBillGrpNo;
+		return custBillGrpNo;
 	}
 
 	public void setCustBillGrpNo(String custBillGrpNo) {
 		this.custBillGrpNo = custBillGrpNo;
 	}
 
-	public BigDecimal getCustBillInchgMemId() {
-		return this.custBillInchgMemId;
+	public int getCustBillInchgMemId() {
+		return custBillInchgMemId;
 	}
 
-	public void setCustBillInchgMemId(BigDecimal custBillInchgMemId) {
+	public void setCustBillInchgMemId(int custBillInchgMemId) {
 		this.custBillInchgMemId = custBillInchgMemId;
 	}
 
-	public BigDecimal getCustBillIsEstm() {
-		return this.custBillIsEstm;
+	public int getCustBillIsEstm() {
+		return custBillIsEstm;
 	}
 
-	public void setCustBillIsEstm(BigDecimal custBillIsEstm) {
+	public void setCustBillIsEstm(int custBillIsEstm) {
 		this.custBillIsEstm = custBillIsEstm;
 	}
 
-	public BigDecimal getCustBillIsPost() {
-		return this.custBillIsPost;
+	public int getCustBillIsPost() {
+		return custBillIsPost;
 	}
 
-	public void setCustBillIsPost(BigDecimal custBillIsPost) {
+	public void setCustBillIsPost(int custBillIsPost) {
 		this.custBillIsPost = custBillIsPost;
 	}
 
-	public BigDecimal getCustBillIsSms() {
-		return this.custBillIsSms;
+	public int getCustBillIsSms() {
+		return custBillIsSms;
 	}
 
-	public void setCustBillIsSms(BigDecimal custBillIsSms) {
+	public void setCustBillIsSms(int custBillIsSms) {
 		this.custBillIsSms = custBillIsSms;
 	}
 
-	public BigDecimal getCustBillIsSms2() {
-		return this.custBillIsSms2;
+	public int getCustBillIsSms2() {
+		return custBillIsSms2;
 	}
 
-	public void setCustBillIsSms2(BigDecimal custBillIsSms2) {
+	public void setCustBillIsSms2(int custBillIsSms2) {
 		this.custBillIsSms2 = custBillIsSms2;
 	}
 
-	public BigDecimal getCustBillIsWebPortal() {
-		return this.custBillIsWebPortal;
+	public int getCustBillIsWebPortal() {
+		return custBillIsWebPortal;
 	}
 
-	public void setCustBillIsWebPortal(BigDecimal custBillIsWebPortal) {
+	public void setCustBillIsWebPortal(int custBillIsWebPortal) {
 		this.custBillIsWebPortal = custBillIsWebPortal;
 	}
 
 	public String getCustBillPayRefNo1() {
-		return this.custBillPayRefNo1;
+		return custBillPayRefNo1;
 	}
 
 	public void setCustBillPayRefNo1(String custBillPayRefNo1) {
@@ -202,63 +202,63 @@ public class CustBillMasterVO implements Serializable {
 	}
 
 	public String getCustBillPayRefNo2() {
-		return this.custBillPayRefNo2;
+		return custBillPayRefNo2;
 	}
 
 	public void setCustBillPayRefNo2(String custBillPayRefNo2) {
 		this.custBillPayRefNo2 = custBillPayRefNo2;
 	}
 
-	public BigDecimal getCustBillPayTrm() {
-		return this.custBillPayTrm;
+	public int getCustBillPayTrm() {
+		return custBillPayTrm;
 	}
 
-	public void setCustBillPayTrm(BigDecimal custBillPayTrm) {
+	public void setCustBillPayTrm(int custBillPayTrm) {
 		this.custBillPayTrm = custBillPayTrm;
 	}
 
 	public String getCustBillRem() {
-		return this.custBillRem;
+		return custBillRem;
 	}
 
 	public void setCustBillRem(String custBillRem) {
 		this.custBillRem = custBillRem;
 	}
 
-	public BigDecimal getCustBillSoId() {
-		return this.custBillSoId;
+	public int getCustBillSoId() {
+		return custBillSoId;
 	}
 
-	public void setCustBillSoId(BigDecimal custBillSoId) {
+	public void setCustBillSoId(int custBillSoId) {
 		this.custBillSoId = custBillSoId;
 	}
 
-	public BigDecimal getCustBillStusId() {
-		return this.custBillStusId;
+	public int getCustBillStusId() {
+		return custBillStusId;
 	}
 
-	public void setCustBillStusId(BigDecimal custBillStusId) {
+	public void setCustBillStusId(int custBillStusId) {
 		this.custBillStusId = custBillStusId;
 	}
 
 	public Date getCustBillUpdDt() {
-		return this.custBillUpdDt;
+		return custBillUpdDt;
 	}
 
 	public void setCustBillUpdDt(Date custBillUpdDt) {
 		this.custBillUpdDt = custBillUpdDt;
 	}
 
-	public BigDecimal getCustBillUpdUserId() {
-		return this.custBillUpdUserId;
+	public int getCustBillUpdUserId() {
+		return custBillUpdUserId;
 	}
 
-	public void setCustBillUpdUserId(BigDecimal custBillUpdUserId) {
+	public void setCustBillUpdUserId(int custBillUpdUserId) {
 		this.custBillUpdUserId = custBillUpdUserId;
 	}
 
 	public String getCustBillWebPortalUrl() {
-		return this.custBillWebPortalUrl;
+		return custBillWebPortalUrl;
 	}
 
 	public void setCustBillWebPortalUrl(String custBillWebPortalUrl) {

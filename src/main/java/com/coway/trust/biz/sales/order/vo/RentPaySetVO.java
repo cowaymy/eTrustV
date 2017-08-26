@@ -14,15 +14,15 @@ public class RentPaySetVO implements Serializable {
 
 	private long rentPayId;
 
-	private BigDecimal aeonCnvr;
+	private int aeonCnvr;
 
-	private BigDecimal bankId;
+	private int bankId;
 
-	private BigDecimal custAccId;
+	private int custAccId;
 
-	private BigDecimal custCrcId;
+	private int custCrcId;
 
-	private BigDecimal custId;
+	private int custId;
 
 	private Date ddApplyDt;
 
@@ -32,87 +32,87 @@ public class RentPaySetVO implements Serializable {
 
 	private Date ddSubmitDt;
 
-	private BigDecimal editTypeId;
+	private int editTypeId;
 
-	private BigDecimal failResnId;
+	private int failResnId;
 
-	private BigDecimal is3rdParty;
+	private int is3rdParty;
 
 	private String issuNric;
 
-	private BigDecimal lastApplyUser;
+	private int lastApplyUser;
 
-	private BigDecimal modeId;
+	private int modeId;
 
 	private String nricOld;
 
-	private BigDecimal payTrm;
+	private int payTrm;
 
 	private String rem;
 
-	private BigDecimal salesOrdId;
+	private int salesOrdId;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
-	private BigDecimal svcCntrctId;
+	private int svcCntrctId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
 
 	public RentPaySetVO() {
 	}
 
 	public long getRentPayId() {
-		return this.rentPayId;
+		return rentPayId;
 	}
 
 	public void setRentPayId(long rentPayId) {
 		this.rentPayId = rentPayId;
 	}
 
-	public BigDecimal getAeonCnvr() {
-		return this.aeonCnvr;
+	public int getAeonCnvr() {
+		return aeonCnvr;
 	}
 
-	public void setAeonCnvr(BigDecimal aeonCnvr) {
+	public void setAeonCnvr(int aeonCnvr) {
 		this.aeonCnvr = aeonCnvr;
 	}
 
-	public BigDecimal getBankId() {
-		return this.bankId;
+	public int getBankId() {
+		return bankId;
 	}
 
-	public void setBankId(BigDecimal bankId) {
+	public void setBankId(int bankId) {
 		this.bankId = bankId;
 	}
 
-	public BigDecimal getCustAccId() {
-		return this.custAccId;
+	public int getCustAccId() {
+		return custAccId;
 	}
 
-	public void setCustAccId(BigDecimal custAccId) {
+	public void setCustAccId(int custAccId) {
 		this.custAccId = custAccId;
 	}
 
-	public BigDecimal getCustCrcId() {
-		return this.custCrcId;
+	public int getCustCrcId() {
+		return custCrcId;
 	}
 
-	public void setCustCrcId(BigDecimal custCrcId) {
+	public void setCustCrcId(int custCrcId) {
 		this.custCrcId = custCrcId;
 	}
 
-	public BigDecimal getCustId() {
-		return this.custId;
+	public int getCustId() {
+		return custId;
 	}
 
-	public void setCustId(BigDecimal custId) {
+	public void setCustId(int custId) {
 		this.custId = custId;
 	}
 
 	public Date getDdApplyDt() {
-		return this.ddApplyDt;
+		return ddApplyDt;
 	}
 
 	public void setDdApplyDt(Date ddApplyDt) {
@@ -120,7 +120,7 @@ public class RentPaySetVO implements Serializable {
 	}
 
 	public Date getDdRejctDt() {
-		return this.ddRejctDt;
+		return ddRejctDt;
 	}
 
 	public void setDdRejctDt(Date ddRejctDt) {
@@ -128,7 +128,7 @@ public class RentPaySetVO implements Serializable {
 	}
 
 	public Date getDdStartDt() {
-		return this.ddStartDt;
+		return ddStartDt;
 	}
 
 	public void setDdStartDt(Date ddStartDt) {
@@ -136,122 +136,122 @@ public class RentPaySetVO implements Serializable {
 	}
 
 	public Date getDdSubmitDt() {
-		return this.ddSubmitDt;
+		return ddSubmitDt;
 	}
 
 	public void setDdSubmitDt(Date ddSubmitDt) {
 		this.ddSubmitDt = ddSubmitDt;
 	}
 
-	public BigDecimal getEditTypeId() {
-		return this.editTypeId;
+	public int getEditTypeId() {
+		return editTypeId;
 	}
 
-	public void setEditTypeId(BigDecimal editTypeId) {
+	public void setEditTypeId(int editTypeId) {
 		this.editTypeId = editTypeId;
 	}
 
-	public BigDecimal getFailResnId() {
-		return this.failResnId;
+	public int getFailResnId() {
+		return failResnId;
 	}
 
-	public void setFailResnId(BigDecimal failResnId) {
+	public void setFailResnId(int failResnId) {
 		this.failResnId = failResnId;
 	}
 
-	public BigDecimal getIs3rdParty() {
-		return this.is3rdParty;
+	public int getIs3rdParty() {
+		return is3rdParty;
 	}
 
-	public void setIs3rdParty(BigDecimal is3rdParty) {
+	public void setIs3rdParty(int is3rdParty) {
 		this.is3rdParty = is3rdParty;
 	}
 
 	public String getIssuNric() {
-		return this.issuNric;
+		return issuNric;
 	}
 
 	public void setIssuNric(String issuNric) {
 		this.issuNric = issuNric;
 	}
 
-	public BigDecimal getLastApplyUser() {
-		return this.lastApplyUser;
+	public int getLastApplyUser() {
+		return lastApplyUser;
 	}
 
-	public void setLastApplyUser(BigDecimal lastApplyUser) {
+	public void setLastApplyUser(int lastApplyUser) {
 		this.lastApplyUser = lastApplyUser;
 	}
 
-	public BigDecimal getModeId() {
-		return this.modeId;
+	public int getModeId() {
+		return modeId;
 	}
 
-	public void setModeId(BigDecimal modeId) {
+	public void setModeId(int modeId) {
 		this.modeId = modeId;
 	}
 
 	public String getNricOld() {
-		return this.nricOld;
+		return nricOld;
 	}
 
 	public void setNricOld(String nricOld) {
 		this.nricOld = nricOld;
 	}
 
-	public BigDecimal getPayTrm() {
-		return this.payTrm;
+	public int getPayTrm() {
+		return payTrm;
 	}
 
-	public void setPayTrm(BigDecimal payTrm) {
+	public void setPayTrm(int payTrm) {
 		this.payTrm = payTrm;
 	}
 
 	public String getRem() {
-		return this.rem;
+		return rem;
 	}
 
 	public void setRem(String rem) {
 		this.rem = rem;
 	}
 
-	public BigDecimal getSalesOrdId() {
-		return this.salesOrdId;
+	public int getSalesOrdId() {
+		return salesOrdId;
 	}
 
-	public void setSalesOrdId(BigDecimal salesOrdId) {
+	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
-	public BigDecimal getSvcCntrctId() {
-		return this.svcCntrctId;
+	public int getSvcCntrctId() {
+		return svcCntrctId;
 	}
 
-	public void setSvcCntrctId(BigDecimal svcCntrctId) {
+	public void setSvcCntrctId(int svcCntrctId) {
 		this.svcCntrctId = svcCntrctId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 

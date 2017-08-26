@@ -12,7 +12,7 @@ import java.util.Date;
 public class EStatementReqVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long reqId;
+	private int reqId;
 
 	private String cnfmCode;
 
@@ -20,9 +20,9 @@ public class EStatementReqVO implements Serializable {
 
 	private Date crtDt;
 
-	private BigDecimal crtUserId;
+	private int crtUserId;
 
-	private BigDecimal custBillId;
+	private int custBillId;
 
 	private String email;
 
@@ -30,29 +30,29 @@ public class EStatementReqVO implements Serializable {
 
 	private String emailFailDesc;
 
-	private BigDecimal emailFailInd;
+	private int emailFailInd;
 
 	private String refNo;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
 
 	public EStatementReqVO() {
 	}
 
-	public long getReqId() {
-		return this.reqId;
+	public int getReqId() {
+		return reqId;
 	}
 
-	public void setReqId(long reqId) {
+	public void setReqId(int reqId) {
 		this.reqId = reqId;
 	}
 
 	public String getCnfmCode() {
-		return this.cnfmCode;
+		return cnfmCode;
 	}
 
 	public void setCnfmCode(String cnfmCode) {
@@ -60,7 +60,7 @@ public class EStatementReqVO implements Serializable {
 	}
 
 	public Date getCnfmDt() {
-		return this.cnfmDt;
+		return cnfmDt;
 	}
 
 	public void setCnfmDt(Date cnfmDt) {
@@ -68,31 +68,31 @@ public class EStatementReqVO implements Serializable {
 	}
 
 	public Date getCrtDt() {
-		return this.crtDt;
+		return crtDt;
 	}
 
 	public void setCrtDt(Date crtDt) {
 		this.crtDt = crtDt;
 	}
 
-	public BigDecimal getCrtUserId() {
-		return this.crtUserId;
+	public int getCrtUserId() {
+		return crtUserId;
 	}
 
-	public void setCrtUserId(BigDecimal crtUserId) {
+	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
 
-	public BigDecimal getCustBillId() {
-		return this.custBillId;
+	public int getCustBillId() {
+		return custBillId;
 	}
 
-	public void setCustBillId(BigDecimal custBillId) {
+	public void setCustBillId(int custBillId) {
 		this.custBillId = custBillId;
 	}
 
 	public String getEmail() {
-		return this.email;
+		return email;
 	}
 
 	public void setEmail(String email) {
@@ -100,7 +100,7 @@ public class EStatementReqVO implements Serializable {
 	}
 
 	public String getEmailAdd() {
-		return this.emailAdd;
+		return emailAdd;
 	}
 
 	public void setEmailAdd(String emailAdd) {
@@ -108,50 +108,50 @@ public class EStatementReqVO implements Serializable {
 	}
 
 	public String getEmailFailDesc() {
-		return this.emailFailDesc;
+		return emailFailDesc;
 	}
 
 	public void setEmailFailDesc(String emailFailDesc) {
 		this.emailFailDesc = emailFailDesc;
 	}
 
-	public BigDecimal getEmailFailInd() {
-		return this.emailFailInd;
+	public int getEmailFailInd() {
+		return emailFailInd;
 	}
 
-	public void setEmailFailInd(BigDecimal emailFailInd) {
+	public void setEmailFailInd(int emailFailInd) {
 		this.emailFailInd = emailFailInd;
 	}
 
 	public String getRefNo() {
-		return this.refNo;
+		return refNo;
 	}
 
 	public void setRefNo(String refNo) {
 		this.refNo = refNo;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 

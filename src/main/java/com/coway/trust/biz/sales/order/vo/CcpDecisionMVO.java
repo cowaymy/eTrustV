@@ -12,143 +12,143 @@ import java.util.Date;
 public class CcpDecisionMVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long ccpId;
+	private int ccpId;
 
 	private String ccpCtosBatchNo;
 
-	private BigDecimal ccpFico;
+	private int ccpFico;
 
-	private BigDecimal ccpFicoLok;
+	private int ccpFicoLok;
 
-	private BigDecimal ccpHasGrnt;
+	private int ccpHasGrnt;
 
-	private BigDecimal ccpIncomeRangeId;
+	private int ccpIncomeRangeId;
 
-	private BigDecimal ccpIsCurr;
+	private int ccpIsCurr;
 
-	private BigDecimal ccpIsHold;
+	private int ccpIsHold;
 
-	private BigDecimal ccpIsLou;
+	private int ccpIsLou;
 
-	private BigDecimal ccpIsSaman;
+	private int ccpIsSaman;
 
-	private BigDecimal ccpIsSync;
+	private int ccpIsSync;
 
 	private String ccpPncRem;
 
 	private String ccpRem;
 
-	private BigDecimal ccpResnId;
+	private int ccpResnId;
 
-	private BigDecimal ccpRjStusId;
+	private int ccpRjStusId;
 
-	private BigDecimal ccpSalesOrdId;
+	private int ccpSalesOrdId;
 
-	private BigDecimal ccpSchemeTypeId;
+	private int ccpSchemeTypeId;
 
-	private BigDecimal ccpStusId;
+	private int ccpStusId;
 
 	private BigDecimal ccpTotScrePoint;
 
-	private BigDecimal ccpTypeId;
+	private int ccpTypeId;
 
 	private Date ccpUpdDt;
 
-	private BigDecimal ccpUpdUserId;
+	private int ccpUpdUserId;
 
 	public CcpDecisionMVO() {
 	}
 
-	public long getCcpId() {
-		return this.ccpId;
+	public int getCcpId() {
+		return ccpId;
 	}
 
-	public void setCcpId(long ccpId) {
+	public void setCcpId(int ccpId) {
 		this.ccpId = ccpId;
 	}
 
 	public String getCcpCtosBatchNo() {
-		return this.ccpCtosBatchNo;
+		return ccpCtosBatchNo;
 	}
 
 	public void setCcpCtosBatchNo(String ccpCtosBatchNo) {
 		this.ccpCtosBatchNo = ccpCtosBatchNo;
 	}
 
-	public BigDecimal getCcpFico() {
-		return this.ccpFico;
+	public int getCcpFico() {
+		return ccpFico;
 	}
 
-	public void setCcpFico(BigDecimal ccpFico) {
+	public void setCcpFico(int ccpFico) {
 		this.ccpFico = ccpFico;
 	}
 
-	public BigDecimal getCcpFicoLok() {
-		return this.ccpFicoLok;
+	public int getCcpFicoLok() {
+		return ccpFicoLok;
 	}
 
-	public void setCcpFicoLok(BigDecimal ccpFicoLok) {
+	public void setCcpFicoLok(int ccpFicoLok) {
 		this.ccpFicoLok = ccpFicoLok;
 	}
 
-	public BigDecimal getCcpHasGrnt() {
-		return this.ccpHasGrnt;
+	public int getCcpHasGrnt() {
+		return ccpHasGrnt;
 	}
 
-	public void setCcpHasGrnt(BigDecimal ccpHasGrnt) {
+	public void setCcpHasGrnt(int ccpHasGrnt) {
 		this.ccpHasGrnt = ccpHasGrnt;
 	}
 
-	public BigDecimal getCcpIncomeRangeId() {
-		return this.ccpIncomeRangeId;
+	public int getCcpIncomeRangeId() {
+		return ccpIncomeRangeId;
 	}
 
-	public void setCcpIncomeRangeId(BigDecimal ccpIncomeRangeId) {
+	public void setCcpIncomeRangeId(int ccpIncomeRangeId) {
 		this.ccpIncomeRangeId = ccpIncomeRangeId;
 	}
 
-	public BigDecimal getCcpIsCurr() {
-		return this.ccpIsCurr;
+	public int getCcpIsCurr() {
+		return ccpIsCurr;
 	}
 
-	public void setCcpIsCurr(BigDecimal ccpIsCurr) {
+	public void setCcpIsCurr(int ccpIsCurr) {
 		this.ccpIsCurr = ccpIsCurr;
 	}
 
-	public BigDecimal getCcpIsHold() {
-		return this.ccpIsHold;
+	public int getCcpIsHold() {
+		return ccpIsHold;
 	}
 
-	public void setCcpIsHold(BigDecimal ccpIsHold) {
+	public void setCcpIsHold(int ccpIsHold) {
 		this.ccpIsHold = ccpIsHold;
 	}
 
-	public BigDecimal getCcpIsLou() {
-		return this.ccpIsLou;
+	public int getCcpIsLou() {
+		return ccpIsLou;
 	}
 
-	public void setCcpIsLou(BigDecimal ccpIsLou) {
+	public void setCcpIsLou(int ccpIsLou) {
 		this.ccpIsLou = ccpIsLou;
 	}
 
-	public BigDecimal getCcpIsSaman() {
-		return this.ccpIsSaman;
+	public int getCcpIsSaman() {
+		return ccpIsSaman;
 	}
 
-	public void setCcpIsSaman(BigDecimal ccpIsSaman) {
+	public void setCcpIsSaman(int ccpIsSaman) {
 		this.ccpIsSaman = ccpIsSaman;
 	}
 
-	public BigDecimal getCcpIsSync() {
-		return this.ccpIsSync;
+	public int getCcpIsSync() {
+		return ccpIsSync;
 	}
 
-	public void setCcpIsSync(BigDecimal ccpIsSync) {
+	public void setCcpIsSync(int ccpIsSync) {
 		this.ccpIsSync = ccpIsSync;
 	}
 
 	public String getCcpPncRem() {
-		return this.ccpPncRem;
+		return ccpPncRem;
 	}
 
 	public void setCcpPncRem(String ccpPncRem) {
@@ -156,82 +156,82 @@ public class CcpDecisionMVO implements Serializable {
 	}
 
 	public String getCcpRem() {
-		return this.ccpRem;
+		return ccpRem;
 	}
 
 	public void setCcpRem(String ccpRem) {
 		this.ccpRem = ccpRem;
 	}
 
-	public BigDecimal getCcpResnId() {
-		return this.ccpResnId;
+	public int getCcpResnId() {
+		return ccpResnId;
 	}
 
-	public void setCcpResnId(BigDecimal ccpResnId) {
+	public void setCcpResnId(int ccpResnId) {
 		this.ccpResnId = ccpResnId;
 	}
 
-	public BigDecimal getCcpRjStusId() {
-		return this.ccpRjStusId;
+	public int getCcpRjStusId() {
+		return ccpRjStusId;
 	}
 
-	public void setCcpRjStusId(BigDecimal ccpRjStusId) {
+	public void setCcpRjStusId(int ccpRjStusId) {
 		this.ccpRjStusId = ccpRjStusId;
 	}
 
-	public BigDecimal getCcpSalesOrdId() {
-		return this.ccpSalesOrdId;
+	public int getCcpSalesOrdId() {
+		return ccpSalesOrdId;
 	}
 
-	public void setCcpSalesOrdId(BigDecimal ccpSalesOrdId) {
+	public void setCcpSalesOrdId(int ccpSalesOrdId) {
 		this.ccpSalesOrdId = ccpSalesOrdId;
 	}
 
-	public BigDecimal getCcpSchemeTypeId() {
-		return this.ccpSchemeTypeId;
+	public int getCcpSchemeTypeId() {
+		return ccpSchemeTypeId;
 	}
 
-	public void setCcpSchemeTypeId(BigDecimal ccpSchemeTypeId) {
+	public void setCcpSchemeTypeId(int ccpSchemeTypeId) {
 		this.ccpSchemeTypeId = ccpSchemeTypeId;
 	}
 
-	public BigDecimal getCcpStusId() {
-		return this.ccpStusId;
+	public int getCcpStusId() {
+		return ccpStusId;
 	}
 
-	public void setCcpStusId(BigDecimal ccpStusId) {
+	public void setCcpStusId(int ccpStusId) {
 		this.ccpStusId = ccpStusId;
 	}
 
 	public BigDecimal getCcpTotScrePoint() {
-		return this.ccpTotScrePoint;
+		return ccpTotScrePoint;
 	}
 
 	public void setCcpTotScrePoint(BigDecimal ccpTotScrePoint) {
 		this.ccpTotScrePoint = ccpTotScrePoint;
 	}
 
-	public BigDecimal getCcpTypeId() {
-		return this.ccpTypeId;
+	public int getCcpTypeId() {
+		return ccpTypeId;
 	}
 
-	public void setCcpTypeId(BigDecimal ccpTypeId) {
+	public void setCcpTypeId(int ccpTypeId) {
 		this.ccpTypeId = ccpTypeId;
 	}
 
 	public Date getCcpUpdDt() {
-		return this.ccpUpdDt;
+		return ccpUpdDt;
 	}
 
 	public void setCcpUpdDt(Date ccpUpdDt) {
 		this.ccpUpdDt = ccpUpdDt;
 	}
 
-	public BigDecimal getCcpUpdUserId() {
-		return this.ccpUpdUserId;
+	public int getCcpUpdUserId() {
+		return ccpUpdUserId;
 	}
 
-	public void setCcpUpdUserId(BigDecimal ccpUpdUserId) {
+	public void setCcpUpdUserId(int ccpUpdUserId) {
 		this.ccpUpdUserId = ccpUpdUserId;
 	}
 

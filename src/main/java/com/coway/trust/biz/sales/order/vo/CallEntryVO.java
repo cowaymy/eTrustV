@@ -12,146 +12,146 @@ import java.util.Date;
 public class CallEntryVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long callEntryId;
+	private int callEntryId;
 
-	private Date callDt;
+	private String callDt;
 
 	private Date crtDt;
 
-	private BigDecimal crtUserId;
+	private int crtUserId;
 
-	private BigDecimal docId;
+	private int docId;
 
-	private BigDecimal hapyCallerId;
+	private int hapyCallerId;
 
-	private BigDecimal isWaitForCancl;
+	private int isWaitForCancl;
 
 	private String oriCallDt;
 
-	private BigDecimal resultId;
+	private int resultId;
 
-	private BigDecimal salesOrdId;
+	private int salesOrdId;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
-	private BigDecimal typeId;
+	private int typeId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
 
 	public CallEntryVO() {
 	}
 
-	public long getCallEntryId() {
-		return this.callEntryId;
+	public int getCallEntryId() {
+		return callEntryId;
 	}
 
-	public void setCallEntryId(long callEntryId) {
+	public void setCallEntryId(int callEntryId) {
 		this.callEntryId = callEntryId;
 	}
 
-	public Date getCallDt() {
-		return this.callDt;
+	public String getCallDt() {
+		return callDt;
 	}
 
-	public void setCallDt(Date callDt) {
+	public void setCallDt(String callDt) {
 		this.callDt = callDt;
 	}
 
 	public Date getCrtDt() {
-		return this.crtDt;
+		return crtDt;
 	}
 
 	public void setCrtDt(Date crtDt) {
 		this.crtDt = crtDt;
 	}
 
-	public BigDecimal getCrtUserId() {
-		return this.crtUserId;
+	public int getCrtUserId() {
+		return crtUserId;
 	}
 
-	public void setCrtUserId(BigDecimal crtUserId) {
+	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
 
-	public BigDecimal getDocId() {
-		return this.docId;
+	public int getDocId() {
+		return docId;
 	}
 
-	public void setDocId(BigDecimal docId) {
+	public void setDocId(int docId) {
 		this.docId = docId;
 	}
 
-	public BigDecimal getHapyCallerId() {
-		return this.hapyCallerId;
+	public int getHapyCallerId() {
+		return hapyCallerId;
 	}
 
-	public void setHapyCallerId(BigDecimal hapyCallerId) {
+	public void setHapyCallerId(int hapyCallerId) {
 		this.hapyCallerId = hapyCallerId;
 	}
 
-	public BigDecimal getIsWaitForCancl() {
-		return this.isWaitForCancl;
+	public int getIsWaitForCancl() {
+		return isWaitForCancl;
 	}
 
-	public void setIsWaitForCancl(BigDecimal isWaitForCancl) {
+	public void setIsWaitForCancl(int isWaitForCancl) {
 		this.isWaitForCancl = isWaitForCancl;
 	}
 
 	public String getOriCallDt() {
-		return this.oriCallDt;
+		return oriCallDt;
 	}
 
 	public void setOriCallDt(String oriCallDt) {
 		this.oriCallDt = oriCallDt;
 	}
 
-	public BigDecimal getResultId() {
-		return this.resultId;
+	public int getResultId() {
+		return resultId;
 	}
 
-	public void setResultId(BigDecimal resultId) {
+	public void setResultId(int resultId) {
 		this.resultId = resultId;
 	}
 
-	public BigDecimal getSalesOrdId() {
-		return this.salesOrdId;
+	public int getSalesOrdId() {
+		return salesOrdId;
 	}
 
-	public void setSalesOrdId(BigDecimal salesOrdId) {
+	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
-	public BigDecimal getTypeId() {
-		return this.typeId;
+	public int getTypeId() {
+		return typeId;
 	}
 
-	public void setTypeId(BigDecimal typeId) {
+	public void setTypeId(int typeId) {
 		this.typeId = typeId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 

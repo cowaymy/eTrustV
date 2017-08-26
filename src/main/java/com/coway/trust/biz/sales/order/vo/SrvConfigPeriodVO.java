@@ -12,19 +12,19 @@ import java.util.Date;
 public class SrvConfigPeriodVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long srvPrdId;
+	private int srvPrdId;
 
-	private BigDecimal srvConfigId;
+	private int srvConfigId;
 
-	private BigDecimal srvMbrshId;
+	private int srvMbrshId;
 
-	private BigDecimal srvPrdCntrctId;
+	private int srvPrdCntrctId;
 
 	private Date srvPrdCrtDt;
 
-	private BigDecimal srvPrdCrtUserId;
+	private int srvPrdCrtUserId;
 
-	private BigDecimal srvPrdDur;
+	private int srvPrdDur;
 
 	private Date srvPrdExprDt;
 
@@ -32,73 +32,73 @@ public class SrvConfigPeriodVO implements Serializable {
 
 	private Date srvPrdStartDt;
 
-	private BigDecimal srvPrdStusId;
+	private int srvPrdStusId;
 
 	private Date srvPrdUpdDt;
 
-	private BigDecimal srvPrdUpdUserId;
+	private int srvPrdUpdUserId;
 
 	public SrvConfigPeriodVO() {
 	}
 
-	public long getSrvPrdId() {
-		return this.srvPrdId;
+	public int getSrvPrdId() {
+		return srvPrdId;
 	}
 
-	public void setSrvPrdId(long srvPrdId) {
+	public void setSrvPrdId(int srvPrdId) {
 		this.srvPrdId = srvPrdId;
 	}
 
-	public BigDecimal getSrvConfigId() {
-		return this.srvConfigId;
+	public int getSrvConfigId() {
+		return srvConfigId;
 	}
 
-	public void setSrvConfigId(BigDecimal srvConfigId) {
+	public void setSrvConfigId(int srvConfigId) {
 		this.srvConfigId = srvConfigId;
 	}
 
-	public BigDecimal getSrvMbrshId() {
-		return this.srvMbrshId;
+	public int getSrvMbrshId() {
+		return srvMbrshId;
 	}
 
-	public void setSrvMbrshId(BigDecimal srvMbrshId) {
+	public void setSrvMbrshId(int srvMbrshId) {
 		this.srvMbrshId = srvMbrshId;
 	}
 
-	public BigDecimal getSrvPrdCntrctId() {
-		return this.srvPrdCntrctId;
+	public int getSrvPrdCntrctId() {
+		return srvPrdCntrctId;
 	}
 
-	public void setSrvPrdCntrctId(BigDecimal srvPrdCntrctId) {
+	public void setSrvPrdCntrctId(int srvPrdCntrctId) {
 		this.srvPrdCntrctId = srvPrdCntrctId;
 	}
 
 	public Date getSrvPrdCrtDt() {
-		return this.srvPrdCrtDt;
+		return srvPrdCrtDt;
 	}
 
 	public void setSrvPrdCrtDt(Date srvPrdCrtDt) {
 		this.srvPrdCrtDt = srvPrdCrtDt;
 	}
 
-	public BigDecimal getSrvPrdCrtUserId() {
-		return this.srvPrdCrtUserId;
+	public int getSrvPrdCrtUserId() {
+		return srvPrdCrtUserId;
 	}
 
-	public void setSrvPrdCrtUserId(BigDecimal srvPrdCrtUserId) {
+	public void setSrvPrdCrtUserId(int srvPrdCrtUserId) {
 		this.srvPrdCrtUserId = srvPrdCrtUserId;
 	}
 
-	public BigDecimal getSrvPrdDur() {
-		return this.srvPrdDur;
+	public int getSrvPrdDur() {
+		return srvPrdDur;
 	}
 
-	public void setSrvPrdDur(BigDecimal srvPrdDur) {
+	public void setSrvPrdDur(int srvPrdDur) {
 		this.srvPrdDur = srvPrdDur;
 	}
 
 	public Date getSrvPrdExprDt() {
-		return this.srvPrdExprDt;
+		return srvPrdExprDt;
 	}
 
 	public void setSrvPrdExprDt(Date srvPrdExprDt) {
@@ -106,7 +106,7 @@ public class SrvConfigPeriodVO implements Serializable {
 	}
 
 	public String getSrvPrdRem() {
-		return this.srvPrdRem;
+		return srvPrdRem;
 	}
 
 	public void setSrvPrdRem(String srvPrdRem) {
@@ -114,34 +114,34 @@ public class SrvConfigPeriodVO implements Serializable {
 	}
 
 	public Date getSrvPrdStartDt() {
-		return this.srvPrdStartDt;
+		return srvPrdStartDt;
 	}
 
 	public void setSrvPrdStartDt(Date srvPrdStartDt) {
 		this.srvPrdStartDt = srvPrdStartDt;
 	}
 
-	public BigDecimal getSrvPrdStusId() {
-		return this.srvPrdStusId;
+	public int getSrvPrdStusId() {
+		return srvPrdStusId;
 	}
 
-	public void setSrvPrdStusId(BigDecimal srvPrdStusId) {
+	public void setSrvPrdStusId(int srvPrdStusId) {
 		this.srvPrdStusId = srvPrdStusId;
 	}
 
 	public Date getSrvPrdUpdDt() {
-		return this.srvPrdUpdDt;
+		return srvPrdUpdDt;
 	}
 
 	public void setSrvPrdUpdDt(Date srvPrdUpdDt) {
 		this.srvPrdUpdDt = srvPrdUpdDt;
 	}
 
-	public BigDecimal getSrvPrdUpdUserId() {
-		return this.srvPrdUpdUserId;
+	public int getSrvPrdUpdUserId() {
+		return srvPrdUpdUserId;
 	}
 
-	public void setSrvPrdUpdUserId(BigDecimal srvPrdUpdUserId) {
+	public void setSrvPrdUpdUserId(int srvPrdUpdUserId) {
 		this.srvPrdUpdUserId = srvPrdUpdUserId;
 	}
 

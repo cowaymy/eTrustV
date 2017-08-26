@@ -12,156 +12,156 @@ import java.util.Date;
 public class SalesOrderDVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private BigDecimal editTypeId;
+	private int editTypeId;
 
-	private BigDecimal itmCallEntryId;
+	private int itmCallEntryId;
 
-	private BigDecimal itmDscnt;
+	private int itmDscnt;
 
-	private BigDecimal itmId;
+	private int itmId;
 
-	private BigDecimal itmNo;
+	private int itmNo;
 
 	private BigDecimal itmPrc;
 
-	private BigDecimal itmPrcId;
+	private int itmPrcId;
 
 	private BigDecimal itmPv;
 
-	private BigDecimal itmQty;
+	private int itmQty;
 
-	private BigDecimal itmStkId;
+	private int itmStkId;
 
-	private BigDecimal itmTax;
+	private int itmTax;
 
-	private BigDecimal salesOrdId;
+	private int salesOrdId;
 
-	private BigDecimal stusCodeId;
+	private int stusCodeId;
 
 	private Date updDt;
 
-	private BigDecimal updUserId;
+	private int updUserId;
 
 	public SalesOrderDVO() {
 	}
 
-	public BigDecimal getEditTypeId() {
-		return this.editTypeId;
+	public int getEditTypeId() {
+		return editTypeId;
 	}
 
-	public void setEditTypeId(BigDecimal editTypeId) {
+	public void setEditTypeId(int editTypeId) {
 		this.editTypeId = editTypeId;
 	}
 
-	public BigDecimal getItmCallEntryId() {
-		return this.itmCallEntryId;
+	public int getItmCallEntryId() {
+		return itmCallEntryId;
 	}
 
-	public void setItmCallEntryId(BigDecimal itmCallEntryId) {
+	public void setItmCallEntryId(int itmCallEntryId) {
 		this.itmCallEntryId = itmCallEntryId;
 	}
 
-	public BigDecimal getItmDscnt() {
-		return this.itmDscnt;
+	public int getItmDscnt() {
+		return itmDscnt;
 	}
 
-	public void setItmDscnt(BigDecimal itmDscnt) {
+	public void setItmDscnt(int itmDscnt) {
 		this.itmDscnt = itmDscnt;
 	}
 
-	public BigDecimal getItmId() {
-		return this.itmId;
+	public int getItmId() {
+		return itmId;
 	}
 
-	public void setItmId(BigDecimal itmId) {
+	public void setItmId(int itmId) {
 		this.itmId = itmId;
 	}
 
-	public BigDecimal getItmNo() {
-		return this.itmNo;
+	public int getItmNo() {
+		return itmNo;
 	}
 
-	public void setItmNo(BigDecimal itmNo) {
+	public void setItmNo(int itmNo) {
 		this.itmNo = itmNo;
 	}
 
 	public BigDecimal getItmPrc() {
-		return this.itmPrc;
+		return itmPrc;
 	}
 
 	public void setItmPrc(BigDecimal itmPrc) {
 		this.itmPrc = itmPrc;
 	}
 
-	public BigDecimal getItmPrcId() {
-		return this.itmPrcId;
+	public int getItmPrcId() {
+		return itmPrcId;
 	}
 
-	public void setItmPrcId(BigDecimal itmPrcId) {
+	public void setItmPrcId(int itmPrcId) {
 		this.itmPrcId = itmPrcId;
 	}
 
 	public BigDecimal getItmPv() {
-		return this.itmPv;
+		return itmPv;
 	}
 
 	public void setItmPv(BigDecimal itmPv) {
 		this.itmPv = itmPv;
 	}
 
-	public BigDecimal getItmQty() {
-		return this.itmQty;
+	public int getItmQty() {
+		return itmQty;
 	}
 
-	public void setItmQty(BigDecimal itmQty) {
+	public void setItmQty(int itmQty) {
 		this.itmQty = itmQty;
 	}
 
-	public BigDecimal getItmStkId() {
-		return this.itmStkId;
+	public int getItmStkId() {
+		return itmStkId;
 	}
 
-	public void setItmStkId(BigDecimal itmStkId) {
+	public void setItmStkId(int itmStkId) {
 		this.itmStkId = itmStkId;
 	}
 
-	public BigDecimal getItmTax() {
-		return this.itmTax;
+	public int getItmTax() {
+		return itmTax;
 	}
 
-	public void setItmTax(BigDecimal itmTax) {
+	public void setItmTax(int itmTax) {
 		this.itmTax = itmTax;
 	}
 
-	public BigDecimal getSalesOrdId() {
-		return this.salesOrdId;
+	public int getSalesOrdId() {
+		return salesOrdId;
 	}
 
-	public void setSalesOrdId(BigDecimal salesOrdId) {
+	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
 
-	public BigDecimal getStusCodeId() {
-		return this.stusCodeId;
+	public int getStusCodeId() {
+		return stusCodeId;
 	}
 
-	public void setStusCodeId(BigDecimal stusCodeId) {
+	public void setStusCodeId(int stusCodeId) {
 		this.stusCodeId = stusCodeId;
 	}
 
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 
-	public BigDecimal getUpdUserId() {
-		return this.updUserId;
+	public int getUpdUserId() {
+		return updUserId;
 	}
 
-	public void setUpdUserId(BigDecimal updUserId) {
+	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
 

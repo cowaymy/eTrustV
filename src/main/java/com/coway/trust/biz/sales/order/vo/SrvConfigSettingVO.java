@@ -12,76 +12,76 @@ import java.util.Date;
 public class SrvConfigSettingVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long srvSettId;
+	private int srvSettId;
 
-	private BigDecimal srvConfigId;
+	private int srvConfigId;
 
 	private Date srvSettCrtDt;
 
-	private BigDecimal srvSettCrtUserId;
+	private int srvSettCrtUserId;
 
 	private String srvSettRem;
 
-	private BigDecimal srvSettStusId;
+	private int srvSettStusId;
 
-	private BigDecimal srvSettTypeId;
+	private int srvSettTypeId;
 
 	public SrvConfigSettingVO() {
 	}
 
-	public long getSrvSettId() {
-		return this.srvSettId;
+	public int getSrvSettId() {
+		return srvSettId;
 	}
 
-	public void setSrvSettId(long srvSettId) {
+	public void setSrvSettId(int srvSettId) {
 		this.srvSettId = srvSettId;
 	}
 
-	public BigDecimal getSrvConfigId() {
-		return this.srvConfigId;
+	public int getSrvConfigId() {
+		return srvConfigId;
 	}
 
-	public void setSrvConfigId(BigDecimal srvConfigId) {
+	public void setSrvConfigId(int srvConfigId) {
 		this.srvConfigId = srvConfigId;
 	}
 
 	public Date getSrvSettCrtDt() {
-		return this.srvSettCrtDt;
+		return srvSettCrtDt;
 	}
 
 	public void setSrvSettCrtDt(Date srvSettCrtDt) {
 		this.srvSettCrtDt = srvSettCrtDt;
 	}
 
-	public BigDecimal getSrvSettCrtUserId() {
-		return this.srvSettCrtUserId;
+	public int getSrvSettCrtUserId() {
+		return srvSettCrtUserId;
 	}
 
-	public void setSrvSettCrtUserId(BigDecimal srvSettCrtUserId) {
+	public void setSrvSettCrtUserId(int srvSettCrtUserId) {
 		this.srvSettCrtUserId = srvSettCrtUserId;
 	}
 
 	public String getSrvSettRem() {
-		return this.srvSettRem;
+		return srvSettRem;
 	}
 
 	public void setSrvSettRem(String srvSettRem) {
 		this.srvSettRem = srvSettRem;
 	}
 
-	public BigDecimal getSrvSettStusId() {
-		return this.srvSettStusId;
+	public int getSrvSettStusId() {
+		return srvSettStusId;
 	}
 
-	public void setSrvSettStusId(BigDecimal srvSettStusId) {
+	public void setSrvSettStusId(int srvSettStusId) {
 		this.srvSettStusId = srvSettStusId;
 	}
 
-	public BigDecimal getSrvSettTypeId() {
-		return this.srvSettTypeId;
+	public int getSrvSettTypeId() {
+		return srvSettTypeId;
 	}
 
-	public void setSrvSettTypeId(BigDecimal srvSettTypeId) {
+	public void setSrvSettTypeId(int srvSettTypeId) {
 		this.srvSettTypeId = srvSettTypeId;
 	}
 
