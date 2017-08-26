@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.order.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("orderRegisterMapper")
 public interface OrderRegisterMapper {
 
+	String selectDocNo(int docNoId);
+	
 	EgovMap selectSrvCntcInfo(Map<String, Object> params);
 	
 	EgovMap selectStockPrice(Map<String, Object> params);
@@ -54,6 +57,26 @@ public interface OrderRegisterMapper {
 	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
 	
 	List<EgovMap> selectMemberList(Map<String, Object> params);
+	
+	EgovMap selectBankById(Map<String, Object> params);
+	
+	List<EgovMap> selectBOMList(Map<String, Object> params);
+
+	EgovMap selectOldOrderId(String salesOrdNo);
+
+	EgovMap selectSvcExpire(int srvSoId);
+
+	EgovMap selectVerifyOldSalesOrderNoValidity(int salesOrdIdOld);
+
+	EgovMap selectSalesOrderM(Map<String, Object> params);
+
+	EgovMap selectSalesOrderRentalScheme(int salesOrdId);
+
+	EgovMap selectAccRentLedgers(int salesOrdId);
+
+	BigDecimal selectRentAmt(int salesOrdId);
+
+	EgovMap selectPromoDesc(int promoId);
 
 	void insertSalesOrderM(SalesOrderMVO salesOrderMVO);
 	

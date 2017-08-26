@@ -3,8 +3,14 @@
  */
 package com.coway.trust.biz.sales.order;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -29,5 +35,9 @@ public interface OrderRegisterService {
 	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
 
 	List<EgovMap> selectMemberList(Map<String, Object> params);
+
+	public void registerOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException;
+
+	EgovMap checkOldOrderId(Map<String, Object> params);
 
 }
