@@ -1,6 +1,20 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 칼럼 스타일 전체 재정의 */
+.aui-grid-left-column {
+  text-align:left;
+}
+
+/* 커스텀 칼럼 스타일 정의 */
+.my-column {
+    text-align:right;
+    margin-top:-20px;
+}
+
+</style>
+
 <script type="text/javaScript">
 //
 
@@ -9,33 +23,34 @@ var mstColumnLayout =
         {    
             dataField : "accId",
             headerText : "<spring:message code='sys.info.id' />",
-            width : 70
-           ,editable : false
+            width : "5%",
+            editable : false
         }, {
             dataField : "accCode",
             headerText : "<spring:message code='sys.account.grid1.CODE' />",
-            width : 100
-           ,editable : false
+            width : "10%",
+            editable : false
         }, {
             dataField : "accDesc",
             headerText : "<spring:message code='sys.account.grid1.DESCRIPTION' />",
-            width : 320
-            ,editable : false
+            style : "aui-grid-left-column",
+            width : "30%",
+            editable : false
         }, {
             dataField : "sapAccCode",
             headerText : "<spring:message code='sys.account.grid1.SAPCODE' />",
-            width : 100
-            ,editable : false
+            width : "9%",
+            editable : false
         }, {
             dataField : "statusCode",
             headerText : "<spring:message code='sys.account.grid1.STATUS' />",
-            width : 100
-            ,editable : false
+            width : "7%",
+            editable : false
         }, {
             dataField : "isPayCash",
             headerText : "<spring:message code='sys.account.grid1.CASH' />",
-            width : 100
-          , renderer : 
+            width : "10%",
+            renderer : 
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -60,8 +75,8 @@ var mstColumnLayout =
         }, {
             dataField : "isPayChq",
             headerText : "<spring:message code='sys.account.grid1.CHEQUE' />", 
-            width : 100
-          , renderer : 
+            width : "10%",
+            renderer : 
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -84,8 +99,8 @@ var mstColumnLayout =
         }, {
             dataField : "isPayOnline",
             headerText : "<spring:message code='sys.account.grid1.ONLINE' />",  
-            width : 100
-            , renderer : 
+            width : "10%",
+            renderer : 
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -108,8 +123,8 @@ var mstColumnLayout =
         }, {
             dataField : "isPayCrc",
             headerText : "<spring:message code='sys.account.grid1.CREDITCARD' />",  
-            width : 150
-            , renderer : 
+            width : "10%",
+            renderer : 
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -310,6 +325,7 @@ $(document).ready(function()
   var options = {
                   usePaging : true,
                   useGroupingPanel : false,
+                  showRowNumColumn : false, // 순번 칼럼 숨김
                   //showRowCheckColumn : true
                 };
     
@@ -506,14 +522,3 @@ $(document).ready(function()
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-		
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->
-</body>
-</html>

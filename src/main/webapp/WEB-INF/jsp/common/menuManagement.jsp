@@ -30,11 +30,12 @@ var MainColumnLayout =
         {    
             dataField : "div",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Div' htmlEscape='false'/>",
-            width : 80
+            editable: false,
+            width : "5%"
         }, {
             dataField : "menuLvl", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Lvl' htmlEscape='false'/>",  
-            width : 50,
+            width : "5%",
             editRenderer : {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -47,7 +48,7 @@ var MainColumnLayout =
         }, {
             dataField : "upperMenuCode",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='UpperMenu' htmlEscape='false'/>", 
-            width : 140,
+            width : "11%",
             editable : false,
             style : "aui-grid-left-column",
             renderer : 
@@ -85,15 +86,16 @@ var MainColumnLayout =
             dataField : "menuCode", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuId' htmlEscape='false'/>", 
             editable : true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
-            width : 150
+            width : "11%"
         }, {
             dataField : "menuName",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuNm' htmlEscape='false'/>", 
-            width : 270
+            style : "aui-grid-left-column",
+            width : "22%"
         }, {
             dataField : "pgmCode", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramId' htmlEscape='false'/>",
-            width : 140,
+            width : "10%",
             editable : false,
             style : "aui-grid-left-column",
             renderer : 
@@ -118,17 +120,18 @@ var MainColumnLayout =
             dataField : "pgmName",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramNm' htmlEscape='false'/>",
             editable : false,
-            width : 250
+            style : "aui-grid-left-column",
+            width : "22%"
         }, {
             dataField : "menuOrder", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Order' htmlEscape='false'/>", 
-            width : 100,
+            width : "8%",
             editable : true,
         }, {
             dataField : "statusCode", 
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Status' htmlEscape='false'/>", 
             //style : "my-column",
-            width : 100,
+            width : "6%",
             editRenderer : 
             {
                 type : "ComboBoxRenderer",
@@ -341,7 +344,7 @@ function fnSaveMenuCode()
 	            console.log(e);
 	          }
 	          
-            alert("Fail : " + jqXHR.responseJSON.message);
+	          Common.alert("Fail : " + jqXHR.responseJSON.message);
             
           }); 
   }
@@ -412,6 +415,7 @@ function fnValidationCheck()
           result = false;
           //Common.alert("Menu Level is not more than 4. ");  
           Common.alert("<spring:message code='sys.msg.limitMore' arguments='Menu Level ; 4' htmlEscape='false' argumentSeparator=';' />");
+          AUIGrid.restoreEditedCells(myGridID, [gSelMainRowIdx, "menuLvl"] );
           break;
       }
       
@@ -434,6 +438,14 @@ function fnValidationCheck()
           result = false;
           //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");  
           Common.alert("<spring:message code='sys.msg.different' arguments='UPPER MENU ; MENU CODE' htmlEscape='false' argumentSeparator=';' />");
+          break;
+      }
+      
+      if ( menuLvl > 4)
+      {
+          result = false;
+          //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");  
+          Common.alert("<spring:message code='sys.msg.limitMore' arguments='MENU LVL; 5' htmlEscape='false' argumentSeparator=';' />");
           break;
       }
 
@@ -486,12 +498,22 @@ function fnValidationCheck()
             break;
         }
         
+        if ( menuLvl > 4)
+        {
+            result = false;
+            //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");  
+            Common.alert("<spring:message code='sys.msg.limitMore' arguments='MENU LVL; 5' htmlEscape='false' argumentSeparator=';' />");
+            AUIGrid.restoreEditedCells(myGridID, [gSelMainRowIdx, "menuLvl"] );
+            break;
+        }
+
         if (menuLvl != "1" && menuOrder == "") 
         {
             result = false;
             Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Order' htmlEscape='false'/>");
             break;
         }
+
         
         if (statusCode == "") 
         {
@@ -582,6 +604,7 @@ $(document).ready(function()
                   usePaging : true,
                   useGroupingPanel : false,
                   selectionMode : "multipleRows",
+                  showRowNumColumn : false, // 순번 칼럼 숨김
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
                   //editable : true,

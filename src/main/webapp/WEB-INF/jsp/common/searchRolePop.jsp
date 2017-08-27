@@ -2,6 +2,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+
+<style type="text/css">
+/* 칼럼 스타일 전체 재정의 */
+.aui-grid-left-column {
+  text-align:left;
+}
+</style>
+
+
 <script type="text/javaScript">
 
 var setMainRowIdx = 0;
@@ -34,25 +43,25 @@ function fnSelectRoleListAjax()
 
 function fnSelectBoxChanged()
 {
-    $("#roleIdNm").val("");
-    $("#roleIdNm").focus();
+   $("#roleIdNm").val("");
+   $("#roleIdNm").focus();
 }
-
 
 var SearchRoleColumnLayout = 
     [      
         {    
             dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
-            width : 60
+            width : "15%"
         },{
             dataField : "roleName",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleName' />",
-            width : 300
+            style : "aui-grid-left-column",
+            width : "70%"
         },{
             dataField : "roleLev",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
-            width : 40
+            width : "15%"
         },{
             dataField : "role1",
             headerText : "role1",

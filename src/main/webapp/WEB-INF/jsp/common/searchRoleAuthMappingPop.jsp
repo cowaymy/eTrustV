@@ -35,23 +35,23 @@ var SearchRoleColumnLayout =
             dataField : "authCode",
             headerText : "<spring:message code='sys.auth.grid1.AuthCode' />",
             editable : false,
-            width : 100
+            width : "15%",
         },{
             dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
-            width : 100
+            width : "20%",
         },{
             dataField : "authName",
             headerText : "<spring:message code='sys.auth.grid1.authName' />",
             editable : false,           
             style : "aui-grid-left-column",
-            width : 250
+            width : "45%",
         },{
             dataField : "roleLvl",
             headerText :"<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
             editable : false,
-            width : 100
+            width : "15%"
         },{
             dataField : "role2",
             headerText : "role2",
@@ -84,6 +84,7 @@ $(document).ready(function()
 
 	var searchOptions = {
 	                  usePaging : false,
+	                  showRowNumColumn : false, // 순번 칼럼 숨김
 	                  useGroupingPanel : false,
 	                  editable : true,
 	                  enableRestore : true,

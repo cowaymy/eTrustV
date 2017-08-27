@@ -1,9 +1,23 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<style type="text/css">
+/* 칼럼 스타일 전체 재정의 */
+.aui-grid-left-column {
+  text-align:left;
+}
+</style>
 
 <script type="text/javaScript">
 
 var setMainRowIdx = 0;
+
+function fnSelectBoxChanged()
+{
+   $("#menuCdNm").val("");
+   $("#menuCdNm").focus();
+}
 
 function fnSelectUpperMenuListAjax()
 {
@@ -36,11 +50,13 @@ var SearchUpperColumnLayout =
         {    
             dataField : "menuCode",
             headerText : "Id",
-            width : 150
+            headerText : "<spring:message code='sys.info.id' />",
+            width : "30%",
         },{
             dataField : "menuName",
-            headerText : "Name",
-            width : 250
+            headerText : "<spring:message code='sys.title.name' />",
+            style : "aui-grid-left-column",
+            width : "70%"
         }
     ];
 
@@ -71,6 +87,7 @@ $(document).ready(function()
 	                  usePaging : true,
 	                  useGroupingPanel : false,
 	                  editable : false,
+	                  showRowNumColumn : false  // 그리드 넘버링
 	                };
 	    
     // AUIGrid 그리드를 생성합니다.
@@ -117,7 +134,7 @@ $(document).ready(function()
 <input type ="hidden" id="menuNm" name="menuNm" />
 
 <div class="search_100p"><!-- search_100p start -->
-<select class="" id="menuSelectBox" name="menuSelectBox">
+<select class="" id="menuSelectBox" name="menuSelectBox" onchange="fnSelectBoxChanged();">
   <option value="01" selected>Menu ID</option>
   <option value="02">Menu Name</option>
 </select>

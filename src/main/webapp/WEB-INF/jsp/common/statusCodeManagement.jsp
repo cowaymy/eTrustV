@@ -1,6 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+
+<style type="text/css">
+/* 칼럼 스타일 전체 재정의 */
+.aui-grid-left-column {
+  text-align:left;
+}
+</style>
+
 <script type="text/javaScript">
 
 var gSelRowIdx = 0;
@@ -9,32 +17,34 @@ var statusCategoryLayout =
     [      
         {    
             dataField : "stusCtgryId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CATEGORY ID' htmlEscape='false'/>",
-            width : 200
+            headerText : "<spring:message code='sys.status.grid1.CATEGORY_ID' />",
+            width : "12%"
         }, {
             dataField : "stusCtgryName",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CATEGORY NAME' htmlEscape='false'/>",
-            width : 250
+            headerText : "<spring:message code='sys.status.grid1.CATEGORY_NAME'/>",
+            style : "aui-grid-left-column",
+            width : "20%"
         }, {
             dataField : "stusCtgryDesc",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CATEGORY DESCRIPTION' htmlEscape='false'/>",
-            width : 250
+            headerText : "<spring:message code='sys.status.grid1.CATEGORY_DESCRIPTION'/>",
+            style : "aui-grid-left-column",
+            width : "22%"
         }, {
             dataField : "crtUserId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATE USER ID' htmlEscape='false'/>",
-            width : 200
+            headerText : "<spring:message code='sys.status.grid1.CREATE_USER_ID'/>",
+            width : "12%"
            ,editable : false
         }, {
             dataField : "updUserId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='LAST UPDATE USER ID' htmlEscape='false'/>",
-            width : 200
+            headerText : "<spring:message code='sys.status.grid1.LAST_UPDATE_USER_ID'/>",
+            width : "16%"
            ,editable : false            
         }, {
             dataField : "updDt",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='LAST UPDATE' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.status.grid1.LAST_UPDATE'/>",
             dataType : "date",
             formatString : "dd-mmm-yyyy HH:MM:ss",
-            width : 200
+            width : "18%"
            ,editable : false
         }
     ];
@@ -45,17 +55,17 @@ var detailColumnLayout =
         {
             dataField : "stusCodeId",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
-            width : 200
+            width : "20%"
            ,editable : false
         }, {
             dataField : "codeName",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE NAME' htmlEscape='false'/>",
-            width : 200
+            width : "60%"
            ,editable : false
         }, {
             dataField : "codeDisab",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
-            width : 150,
+            width : "20%",
             visible : true,
             editRenderer : 
             {
@@ -76,7 +86,7 @@ var codeIDColumnLayout =
       {
           dataField : "checkFlag",
           headerText : '<input type="checkbox" id="allCheckbox" name="allCheckbox" style="width:15px;height:15px;">',
-          width : 50,
+          width : "10%",
           editable : false,
           renderer : 
           {
@@ -99,15 +109,16 @@ var codeIDColumnLayout =
       },{
             dataField : "stusCodeId",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
-            width : 100
+            width : "20%"
       },{
           dataField : "codeName",
           headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE NAME' htmlEscape='false'/>",
-          width : 200
+          style : "aui-grid-left-column",
+          width : "50%"
       },{
           dataField : "code",
           headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE' htmlEscape='false'/>",
-          width : 70
+          width : "20%"
       }
 
     ];
@@ -303,7 +314,8 @@ $(document).ready(function()
 
 	  var options = {
                   usePaging : true,
-                  useGroupingPanel : false
+                  useGroupingPanel : false,
+                  showRowNumColumn : false  // 그리드 넘버링
                 };
     
     // masterGrid 그리드를 생성합니다.
@@ -335,6 +347,15 @@ $(document).ready(function()
         $("#selCategoryId").val("");
         $("#paramCategoryId").val(""); 
         gSelRowIdx = event.rowIndex;
+
+        if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
+                || String(event.value).length < 1)
+            {
+                    Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
+                    return false;
+            } 
+
+            fnGetCategoryCd(myGridID, event.rowIndex);
         
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedCategoryId: " + $("#selCategoryId").val() +" / "+ $("#paramCategoryId").val());        
     });
@@ -343,15 +364,6 @@ $(document).ready(function()
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-
-        if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
-            || String(event.value).length < 1)
-        {
-                alert("Status Category ID Confirm!!");
-                return false;
-        } 
-
-        fnGetCategoryCd(myGridID, event.rowIndex);
     });    
 
 /***********************************************[ DETAIL GRID] ************************************************/
@@ -359,15 +371,9 @@ $(document).ready(function()
     var dtailOptions = 
         {
             usePaging : false,
-            // 체크박스 표시 설정
-           // showRowCheckColumn : true,
-            // 전체 체크박스 표시 설정
-            //showRowAllCheckBox : true,          
-            //showEditedCellMarker : true,
+            showRowNumColumn : false , // 그리드 넘버링
             useGroupingPanel : false,
-
             editable : true,
-             
         };
  
     // detailGrid 생성
@@ -405,6 +411,7 @@ $(document).ready(function()
             usePaging : false,
             useGroupingPanel : false,
             editable : true,
+            showRowNumColumn : false  // 그리드 넘버링
         };
  
     // detailGrid 생성
@@ -502,7 +509,7 @@ function saveStatusCode()
 {
   if ($("#selCategoryId").val().length < 1 )
 	{
-	  Common.alert(' Please Select the Category ID.');
+	  Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
 	  return;
 	}
 	
@@ -530,7 +537,7 @@ function saveStatusCode()
 	                console.log(e);
 	              }
 	           
-	            alert("Fail : " + jqXHR.responseJSON.message);
+	              Common.alert("Fail : " + jqXHR.responseJSON.message);
 	          }); 
   
 }
@@ -561,7 +568,7 @@ function saveCategory()
 	              console.log(e);
 	            }
 	         
-	          alert("Fail : " + jqXHR.responseJSON.message);
+	            Common.alert("Fail : " + jqXHR.responseJSON.message);
 	        }); 
   
 }
@@ -592,7 +599,7 @@ function insertStatusCatalogDetail()
             fnSelectCategoryListAjax() ;     
             console.log("saveCategoryDetail 성공.");
             console.log("dataSuccess : " + result.data);
-	          Common.alert("[ Success: " + result.data + " Count ]");     
+	          Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>"); 
            } 
 
          , function(jqXHR, textStatus, errorThrown) 
@@ -609,7 +616,7 @@ function insertStatusCatalogDetail()
                 console.log(e);
               }
            
-            alert("Fail : " + jqXHR.responseJSON.message);
+              Common.alert("Fail : " + jqXHR.responseJSON.message);
           }); 
   
 }
@@ -620,7 +627,7 @@ function fnUpdDisabled()
   
   if ($("#selCategoryId").val().length < 1 )
   {
-    Common.alert(' Please Select the Category ID.');
+    Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
     return;
   }
   
@@ -656,7 +663,7 @@ function fnUpdDisabled()
 	              console.log(e);
 	            }
 	         
-	          alert("Fail : " + jqXHR.responseJSON.message);
+	            Common.alert("Fail : " + jqXHR.responseJSON.message);
 	        }); 
   
 }
@@ -787,12 +794,3 @@ function fnUpdDisabled()
 
 </form>
 </section><!-- content end -->
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-    
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->
-

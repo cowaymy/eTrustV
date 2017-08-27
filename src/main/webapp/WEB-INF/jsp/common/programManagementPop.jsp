@@ -75,7 +75,7 @@ function fnSaveAccount()
               {
                 console.log("error: " + e);
               }
-              alert("Fail : " + jqXHR.responseJSON.message);
+              Common.alert("Fail : " + jqXHR.responseJSON.message);
             });
 
 }

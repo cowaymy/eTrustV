@@ -35,7 +35,7 @@ var SearchRoleColumnLayout =
             dataField : "authCode",
             headerText : "<spring:message code='sys.auth.grid1.AuthCode' />",
             editable : false,
-            width : 90
+            width : "10%"
         },{
             dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
@@ -70,6 +70,7 @@ $(document).ready(function()
 	var searchOptions = {
 	                  usePaging : false,
 	                  useGroupingPanel : false,
+	                  showRowNumColumn : false, // 순번 칼럼 숨김
 	                  editable : true,
 	                  enableRestore : true,
 	                  softRemovePolicy : "exceptNew",

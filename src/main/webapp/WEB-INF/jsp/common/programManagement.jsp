@@ -25,30 +25,33 @@ var MainColumnLayout =
             dataField : "pgmCode",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Id' htmlEscape='false'/>",
             editable : false,
-            width : 150
+            width : "10%",
         }, {
             dataField : "orgCode",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='OrgCode' htmlEscape='false'/>",
+            style : "aui-grid-left-column",
             visible : false,
             editRenderer : {
                 type : "DropDownListRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 list : gOrgList
             },
-            width : 100
+            width : "10%",
         },{
             dataField : "pgmName",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Name' htmlEscape='false'/>",
-            width : 250
+            style : "aui-grid-left-column",
+            width : "25%",
         }, {
             dataField : "pgmPath",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Path' htmlEscape='false'/>",
             styleFunction : cellStyleFunction,
-            width : 450
+            width : "40%",
         }, {
             dataField : "pgmDesc",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Description' htmlEscape='false'/>",
-            width : 400
+            style : "aui-grid-left-column",
+            width : "25%",
         }
     ];
 
@@ -608,6 +611,7 @@ $(document).ready(function()
     var options = {
                   usePaging : true,
                   useGroupingPanel : false,
+                  showRowNumColumn : false, // 순번 칼럼 숨김
                   // 셀 병합 실행
                   enableCellMerge : true,
                   selectionMode : "multipleRows",
@@ -792,8 +796,8 @@ $(document).ready(function()
 <colgroup>
   <col style="width:150px" />
   <col style="width:*" />
-  <col style="width:150px" />
-  <col style="width:*" />
+<!--   <col style="width:150px" />
+  <col style="width:*" /> -->
 </colgroup>
 <tbody>
 <tr>
@@ -856,7 +860,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:650px";></div>
+ <div id="grid_wrap" style="height:500px;"></div>
 </article><!-- grid_wrap end -->
 
 
@@ -870,20 +874,10 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역2 -->
- <div id="transGrid" style="height:150px";></div>
+ <div id="transGrid" style="height:200px;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
     
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->
-</body>
-</html>

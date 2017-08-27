@@ -1,9 +1,23 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<style type="text/css">
+/* 칼럼 스타일 전체 재정의 */
+.aui-grid-left-column {
+  text-align:left;
+}
+</style>
 
 <script type="text/javaScript">
 
 var setMainRowIdx = 0;
+
+function fnSelectBoxChanged()
+{
+   $("#programCdNm").val("");
+   $("#programCdNm").focus();
+}
 
 function fnSelectPgmListAjax()
 {
@@ -35,12 +49,13 @@ var SearchColumnLayout =
     [      
         {    
             dataField : "pgmCode",
-            headerText : "Id",
-            width : 150
+            headerText : "<spring:message code='sys.info.id' />",
+            width : "30%"
         },{
             dataField : "pgmName",
-            headerText : "Name",
-            width : 250
+            headerText : "<spring:message code='sys.title.name' />",
+            style : "aui-grid-left-column",
+            width : "70%"
         }
     ];
 
@@ -65,6 +80,7 @@ $(document).ready(function()
 	var searchOptions = {
 	                  usePaging : true,
 	                  useGroupingPanel : false,
+	                  showRowNumColumn : false, // 순번 칼럼 숨김
 	                  editable : false,
 	                };
 	    
@@ -115,7 +131,7 @@ $(document).ready(function()
 <input type ="hidden" id="pgmNm" name="pgmNm" value=""/>
 
 <div class="search_100p"><!-- search_100p start -->
-<select class="" id="programSelectBox" name="programSelectBox">
+<select class="" id="programSelectBox" name="programSelectBox" onchange="fnSelectBoxChanged();">
   <option value="01" selected>Program ID</option>
   <option value="02">Program Name</option>
 </select>

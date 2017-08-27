@@ -30,16 +30,17 @@ var MainColumnLayout =
             dataField : "authCode",
             headerText : "<spring:message code='sys.auth.grid1.Code'/>",
             editable : false,
-            width : 120
+            width : "10%",
         }, {
             dataField : "authName", 
             headerText : "<spring:message code='sys.auth.grid1.authName'/>",
             editable : false,
-            width : 400
+            style : "aui-grid-left-column",
+            width : "30%",
         }, {
             dataField : "roleId",
             headerText : "<spring:message code='sys.auth.grid1.roleId'/>",
-            width : 150,
+            width : "8%",
             editable : false,
             style : "aui-grid-left-column",
              renderer : {
@@ -78,22 +79,25 @@ var MainColumnLayout =
             dataField : "lvl", 
             headerText : "<spring:message code='sys.auth.grid1.Lvl' />",
             editable : false,
-            width : 80
+            width : "7%",
         }, {
             dataField : "levelNm1",
             headerText : "<spring:message code='sys.auth.grid1.Role_1'/>",
             editable : false,
-            width : 200
+            style : "aui-grid-left-column",
+            width : "15%",
         }, {
             dataField : "levelNm2",
             headerText : "<spring:message code='sys.auth.grid1.Role_2'/>",
             editable : false,
-            width : 200
+            style : "aui-grid-left-column",
+            width : "15%",
         }, {
             dataField : "levelNm3",
             headerText : "<spring:message code='sys.auth.grid1.Role_3'/>",
             editable : false,
-            width : 200
+            style : "aui-grid-left-column",
+            width : "15%",
         },{
             dataField : "hidden",
             headerText : "hidden",
@@ -429,6 +433,7 @@ $(document).ready(function()
     var options = {
                   usePaging : true,
                   useGroupingPanel : false,
+                  showRowNumColumn : false, // 순번 칼럼 숨김
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
@@ -577,20 +582,9 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap"></div>
+ <div id="grid_wrap" style="height:420px;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-		
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->
-</body>
-</html>

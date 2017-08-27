@@ -1,6 +1,20 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 칼럼 스타일 전체 재정의 */
+.aui-grid-left-column {
+  text-align:left;
+}
+
+/* 커스텀 칼럼 스타일 정의 */
+.my-column {
+    text-align:right;
+    margin-top:-20px;
+}
+
+</style>
+
 <script type="text/javaScript">
 
 var gSelRowIdx = 0;
@@ -10,29 +24,32 @@ var mstColumnLayout =
         {    
             dataField : "codeMasterId",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='MASTER ID' htmlEscape='false'/>",
-            width : 120
+            width : "8%",
         }, {
             dataField : "codeMasterName",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='MASTER NAME' htmlEscape='false'/>",
-            width : 200
+            style : "aui-grid-left-column",
+            width : "25%",
         }, {
             dataField : "codeDesc",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE DESCRIPTION' htmlEscape='false'/>",
-            width : 200
+            style : "aui-grid-left-column",
+            width : "30%",
         }, {
             dataField : "createName",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATOR' htmlEscape='false'/>",
-            width : 200
+            style : "aui-grid-left-column",
+            width : "13%",
         }, {
             dataField : "crtDt",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATE DATE' htmlEscape='false'/>",
             dataType : "date",
             formatString : "dd-mmm-yyyy HH:MM:ss",
-            width : 200
+            width : "15%",
         }, {
             dataField : "disabled",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
-            width : 120,
+            width : "9%",
             editRenderer : {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -50,23 +67,25 @@ var detailColumnLayout =
         {
             dataField : "detailcodeid",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
-            width : 120
+            width : "8%"
         }, {
             dataField : "detailcode",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE' htmlEscape='false'/>",
-            width : 120
+            width : "10%"
         }, {
             dataField : "detailcodename",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='NAME' htmlEscape='false'/>",
-            width : 250
+            style : "aui-grid-left-column",
+            width : "25%"
         }, {
             dataField : "detailcodedesc",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='DESCRIPTION' htmlEscape='false'/>",
-            width : 250
+            style : "aui-grid-left-column",
+            width : "30%"
         }, {
             dataField : "detaildisabled",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
-            width : 200,
+            width : "10%",
             editRenderer : 
             {
                type : "ComboBoxRenderer",
@@ -80,7 +99,7 @@ var detailColumnLayout =
         }, {
             dataField : "codeMasterId",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE MASTER ID' htmlEscape='false'/>",
-            width : 200,
+            width : "10%",
             editable : false
         }
 
@@ -294,7 +313,8 @@ $(document).ready(function()
 	
 	var options = {
 								  usePaging : true,
-								  useGroupingPanel : false
+								  useGroupingPanel : false,
+								  showRowNumColumn : false, // 순번 칼럼 숨김
 								};
     
     // masterGrid 그리드를 생성합니다.
@@ -353,7 +373,8 @@ $(document).ready(function()
     var dtailOptions = 
         {
             usePaging : true,
-            useGroupingPanel : false
+            useGroupingPanel : false,
+            showRowNumColumn : false, // 순번 칼럼 숨김
         };
  
     // detailGrid 생성
@@ -483,7 +504,7 @@ $(document).ready(function()
 	<li><p class="btn_grid"><a onclick="fnSaveDetailGridMap();">Save</a></p></li>
 </ul>
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap" style="height:200px;"><!-- grid_wrap start -->
 <!--  그리드 영역2  -->
   <div id="detailGrid"></div> 
 </article><!-- grid_wrap end -->

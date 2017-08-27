@@ -33,18 +33,18 @@ var MainColumnLayout =
         	  dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
-            width : 80
+            width : "20%",
         }, {
         	  dataField : "roleName",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleName' />",
             style : "aui-grid-left-column",
             editable : false,
-            width : 400
+            width : "60%",
         }, {
         	  dataField : "roleLev",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
             editable : false,
-            width : 70
+            width : "20%",
         },{
             dataField : "hidden",
             headerText : "",
@@ -63,11 +63,11 @@ var AuthColumnLayout =
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 list : gAuthList
             },
-            width : 70
+            width : "15%"
         }, {
             dataField : "authName", 
             headerText : "<spring:message code='sys.auth.grid1.authName'/>",
-            width : 230,
+            width : "40%",
             editable : false,
             style : "aui-grid-left-column",
             renderer : 
@@ -105,13 +105,13 @@ var AuthColumnLayout =
         	  dataField : "roleLvl",   
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
             editable : false,
-            width : 70
+            width : "15%"
         }, {
             dataField : "fromDt",
             headerText : "<spring:message code='sys.authRoleMapping.grid2.ValidDateFrom' />",
             dataType : "date",
             formatString : "dd-mmm-yyyy",
-            width:120,
+            width:"15%",
             editable : true,
             editRenderer : {
               type : "CalendarRenderer",
@@ -124,7 +124,7 @@ var AuthColumnLayout =
             headerText : "<spring:message code='sys.authRoleMapping.grid2.ValidDateTo' />",
             dataType : "date",
             formatString : "dd-mmm-yyyy",
-            width:120,
+            width:"15%",
             editable : true,
             editRenderer : {
               type : "CalendarRenderer",
@@ -713,6 +713,7 @@ $(document).ready(function()
     var options = {
     		          usePaging : true,
                   useGroupingPanel : false,
+                  showRowNumColumn : false, // 순번 칼럼 숨김
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
@@ -770,6 +771,7 @@ $(document).ready(function()
     var AuthGridOptions = {
     		          //rowIdField : "rowId", // PK행 지정
                   usePaging : true,
+                  showRowNumColumn : false, // 순번 칼럼 숨김
                   useGroupingPanel : false,
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
@@ -903,9 +905,9 @@ $(document).ready(function()
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-<div style="width:50%;">
+<div style="width:30%;">
 
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Role Auth Mapping</h3>
@@ -913,16 +915,16 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap"></div>
+ <div id="grid_wrap" style="height:420px;"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
 
 </div>
 
-<div style="width:50%;">
+<div style="width:70%;">
 
-<div class="border_box" style="height:450px;"><!-- border_box start -->
+<div><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Auth Management</h3>
@@ -935,7 +937,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 2-->
- <div id="auth_grid_wrap"></div>
+ <div id="auth_grid_wrap" style="height:420px;"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -952,10 +954,10 @@ $(document).ready(function()
 <aside class="bottom_msg_box"><!-- bottom_msg_box start -->
 <p>Information Message Area</p>
 </aside><!-- bottom_msg_box end -->
-    
-</section><!-- container end -->
+<!--     
+</section>container end
 <hr />
 
-</div><!-- wrap end -->
+</div>wrap end
 </body>
-</html>
+</html> -->
