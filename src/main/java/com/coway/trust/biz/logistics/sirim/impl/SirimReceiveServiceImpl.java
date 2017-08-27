@@ -53,11 +53,6 @@ public class SirimReceiveServiceImpl extends EgovAbstractServiceImpl implements 
 		return SirimReceiveMapper.getSirimReceiveInfo(params);
 	}
 	
-	/*@Override
-	public int getPendingCnt(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return SirimReceiveMapper.getPendingCnt(params);
-	}*/
 
 	@Override
 	public void InsertReceiveInfo(Map<String, Object> InsertReceiveMap, List<EgovMap> ItemsAddList, int loginId) {
