@@ -100,7 +100,6 @@ public class SirimReceiveController {
 		
 		List<EgovMap> list = SirimReceiveService.detailReceiveList(params);
 		
-		//int PendingCnt = SirimReceiveService.getPendingCnt(params);
 	/*for (int i = 0; i < list.size(); i++) {
 			logger.debug("detailReceiveList ************  ?? ::::::: {}",list.get(i) );
 	}*/
