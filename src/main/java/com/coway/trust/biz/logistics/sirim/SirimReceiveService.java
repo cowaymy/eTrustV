@@ -14,8 +14,6 @@ public interface SirimReceiveService {
 	List<EgovMap> detailReceiveList(Map<String, Object> params);
 	
 	List<EgovMap> getSirimReceiveInfo(Map<String, Object> params);
-	
-	//int getPendingCnt(Map<String, Object> params);
 
 	void InsertReceiveInfo(Map<String, Object> InsertReceiveMap, List<EgovMap> ItemsAddList,int loginId );
 }
