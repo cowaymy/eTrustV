@@ -63,6 +63,7 @@ WHERE  1 = 1
        AND 1161 <> SYS47M.USER_TYPE_ID
        AND 1165 <> SYS47M.USER_TYPE_ID
        AND SYS47M.USER_VAL_ID_TO  >=  SYSDATE
+       AND SYS55M.VALID_DT_TO >= TO_CHAR(SYSDATE,'YYYYMMDD')
     ]]>
 		<if test='userId != null and userId !="" '>
 		   AND (UPPER(SYS47M.USER_ID) LIKE  UPPER(#{userId}) || '%' 
