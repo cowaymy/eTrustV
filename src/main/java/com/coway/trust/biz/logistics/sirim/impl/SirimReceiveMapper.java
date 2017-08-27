@@ -16,8 +16,6 @@ public interface SirimReceiveMapper {
 	List<EgovMap> detailReceiveList(Map<String, Object> params);
 	
 	List<EgovMap> getSirimReceiveInfo(Map<String, Object> params);
-	
-	//int getPendingCnt(Map<String, Object> params);
 
 	void SrmResultStatusUpdate(Map<String, Object> params);
 	
