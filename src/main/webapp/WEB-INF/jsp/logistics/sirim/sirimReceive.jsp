@@ -42,7 +42,6 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
     var trnsitId;
     var TransitStatusID;
     
-        
 
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"trnsitNo"      ,headerText:"Transit No"           ,width:"15%"  ,height:30 , visible:true},
@@ -270,7 +269,8 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         $("input:radio[name=receiveRadio]").click(function(){
         var radioValue =	$("input:radio[name=receiveRadio]:checked").val();
             if(radioValue == "A" ){
-            	setAllCheckedRows()
+            	//setAllCheckedRows();
+            	setCheckedRowsByValue();
             }else{
             	var allChecked = false;
                 AUIGrid.setAllCheckedRows(PendingGridID, allChecked);
@@ -350,9 +350,9 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
          if(TransitStatusID == "44" ){
           checkedItems = AUIGrid.getCheckedRowItemsAll(PendingGridID);   
 	    }else if(TransitStatusID == "4"){
-	      checkedItems = AUIGrid.getCheckedRowItemsAll(CompleteGridID);
+	      checkedItems = AUIGrid.getCheckedRowItemsAll(PendingGridID);
 	    }else if(TransitStatusID == "50"){
-	       checkedItems = AUIGrid.getCheckedRowItemsAll(IncompleteGridID);
+	       checkedItems = AUIGrid.getCheckedRowItemsAll(PendingGridID);
 	    } 
 
         console.log(checkedItems);
@@ -513,14 +513,20 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
     }
     
     function valiedcheck() {   
-        
+    	  
         if ($("#receiveStatus").val() == "") {
             Common.alert("* Please select the Receive Status.");
             $("#receiveStatus").focus();
             return false;
         }
-       
-       
+
+        var checkedItems = AUIGrid.getCheckedRowItems(PendingGridID);
+        if(checkedItems.length <= 0) {
+            Common.alert('Pending Have No Data');
+            return false;
+        }    
+        
+        
         return true;
     }
     
@@ -540,6 +546,20 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
         AUIGrid.setAllCheckedRows(PendingGridID, allChecked);
     };
   
+    function setCheckedRowsByValue() {
+        
+        // rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
+        // 행아이템의 name 필드 중 Anna 라는 사람을 모두 체크함
+        AUIGrid.setCheckedRowsByValue(PendingGridID, "code", "PEN");
+        
+        // 만약 복수 값(Anna, Steve) 체크 하고자 한다면 다음과 같이 배열로 삽입
+        //AUIGrid.setCheckedRowsByValue(myGridID, "name", ["Anna", "Steve"]);
+    };
+    function addUncheckedRowsByValue() {
+        // 행아이템의 name 필드 중 Emma 라는 사람을 모두 체크 해제함
+        AUIGrid.addUncheckedRowsByValue(PendingGridID, "code", "PEN");
+    };
+    
     
 
 </script>
@@ -750,7 +770,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap"></div>
-그리드영역
+
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
@@ -826,7 +846,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap" ><!-- grid_wrap start -->
 <div id="detailGrid_wrap"></div>
-그리드 영역
+
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -835,7 +855,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="PendingGrid_wrap"></div>
-그리드 영역2
+
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -844,7 +864,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="CompleteGrid_wrap"></div>
-그리드 영역3
+
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -853,7 +873,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="IncompleteGrid_wrap"></div>
-그리드 영역4
+
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -970,7 +990,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="ReceivePendingGrid_wrap"></div>
-그리드 영역
+
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -979,7 +999,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="ReceiveCompleteGrid_wrap"></div>
-그리드 영역2
+
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -988,7 +1008,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="ReceiveIncompleteGrid_wrap"></div>
-그리드 영역3
+
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
