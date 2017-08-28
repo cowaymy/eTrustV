@@ -168,8 +168,9 @@ function fnSaveRoleAuthCd()
         , function(result) 
           {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-           // fnSearchBtnClickAjax() ;
-            fnCellClickSelectRoleAuthListAjax();
+            fnSearchBtnClickAjax() ;
+           
+           // fnCellClickSelectRoleAuthListAjax();  // union
             
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
@@ -755,7 +756,7 @@ $(document).ready(function()
         fnSetRoleIdLvl(myGridID, event.rowIndex);
 
         //fnCellClickSelectRoleAuthListAjax();
-        fnSearchBtnClickAjax();
+        fnSearchBtnClickAjax();  // just 54m
     });
 
  // 셀 더블클릭 이벤트 바인딩

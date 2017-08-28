@@ -600,10 +600,13 @@ $(document).ready(function()
     });
 
 /***************************************************[ Main GRID] ***************************************************/
-
     var options = {
     		          //rowIdField : "rowId", // PK행 지정
                   usePaging : true,
+                  // 한 화면에 출력되는 행 개수 20개로 지정
+                  //pageRowCount : 20,
+                  // 워드랩 사용
+                  wordWrap : true,
                   useGroupingPanel : false,
                   selectionMode : "multipleRows",
                   showRowNumColumn : false, // 순번 칼럼 숨김
@@ -613,6 +616,7 @@ $(document).ready(function()
                   // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
                   enableRestore : true,
                   softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+                  
                 };
 
     // masterGrid 그리드를 생성합니다.
@@ -643,6 +647,9 @@ $(document).ready(function()
         gSelMainRowIdx = event.rowIndex;
 
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedMenuId: " + $("#selMenuId").val() );
+
+        $("#menuCode").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "menuCode"));
+        
     });
 
  // 셀 더블클릭 이벤트 바인딩
@@ -650,8 +657,7 @@ $(document).ready(function()
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
     });
-
-
+    
     $("#delCancel").hide();
 
 });   //$(document).ready
@@ -723,7 +729,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:420px"></div>
+ <div id="grid_wrap" style="height:450px"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

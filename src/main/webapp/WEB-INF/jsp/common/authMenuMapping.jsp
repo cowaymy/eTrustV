@@ -213,6 +213,7 @@ var options =
         selectionMode : "singleRow",
         editBeginMode : "click", // 편집모드 클릭
         softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
+            
 };
 
 var gridMenuMappingColumnLayout =
