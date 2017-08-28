@@ -448,24 +448,6 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 
-			if (String.valueOf(((Map<String, Object>) obj).get("orgCode")).length() == 0 
-				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("orgCode"))) ) 
-			{
-				continue;
-			}
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("pgmName")).length() == 0 
-				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmName"))) ) 
-			{
-				continue;
-			}
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("pgmPath")).length() == 0 
-				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmPath"))) ) 
-			{
-				continue;
-			}
-			
 			logger.debug(" >>>>> InsertPgmId ");
 			logger.debug(" orgCode : {}", ((Map<String, Object>) obj).get("orgCode"));
 			logger.debug(" pgmName : {}", ((Map<String, Object>) obj).get("pgmName"));
@@ -489,22 +471,6 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		{
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("pgmCode")).length() == 0
-				|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmCode"))) )  
-			{
-				continue;
-			}
-			if (String.valueOf(((Map<String, Object>) obj).get("pgmName")).length() == 0
-					|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmName"))) )  
-			{
-				continue;
-			}
-			if (String.valueOf(((Map<String, Object>) obj).get("pgmPath")).length() == 0
-					|| "null".equals(String.valueOf(((Map<String, Object>) obj).get("pgmPath"))) )  
-			{
-				continue;
-			}
 			
 			logger.debug(" ========= updPgmIdTrans ============== ");
 			logger.debug(" pgmCode : {}", ((Map<String, Object>) obj).get("pgmCode"));
@@ -656,11 +622,6 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			logger.debug("[insertStatusCode]");
 			logger.debug(" codeName : {}", ((Map<String, Object>) obj).get("codeName"));
 			logger.debug(" code : {}", ((Map<String, Object>) obj).get("code"));
-			
-			if (String.valueOf(((Map<String, Object>) obj).get("codeName")).length() == 0) 
-			{
-				continue;
-			}
 
 			saveCnt++;
 
@@ -802,11 +763,6 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 
-			if (String.valueOf(((Map<String, Object>) obj).get("codeMasterName")).length() == 0) 
-			{
-				continue;
-			}
-
 			logger.debug(" InsertMstCommCd ");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
 			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
@@ -833,11 +789,6 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			((Map<String, Object>) obj).put("crtUserId", updUserId);
 			((Map<String, Object>) obj).put("updUserId", updUserId);
 
-			if (String.valueOf(((Map<String, Object>) obj).get("codeDesc")).trim().length() == 0) 
-			{
-				((Map<String, Object>) obj).put("codeDesc", "");
-			}
-
 			logger.debug(" update CommCode");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
 			logger.debug(" disabled : {}", ((Map<String, Object>) obj).get("disabled"));
@@ -857,14 +808,12 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	@Override
 	public int addDetailCommCodeGrid(List<Object> addList, Integer crtUserId) 
 	{
+		int saveCnt = 0;
+		
 		for (Object obj : addList) 
 		{
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
-
-			if (String.valueOf(((Map<String, Object>) obj).get("detailcodename")).length() == 0) {
-				continue;
-			}
 
 			logger.debug(" [[Insert Deatail]] ");
 			logger.debug(" codeMasterId : {}", ((Map<String, Object>) obj).get("codeMasterId"));
@@ -874,16 +823,20 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			logger.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
 			logger.debug(" crtUserId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
+			
+			saveCnt++;
 
 			commonMapper.addDetailCommCodeGrid((Map<String, Object>) obj);
 		}
 
-		return 0;// commit;
+		return saveCnt;// commit;
 	}
 
 	@Override
 	public int udtDetailCommCodeGrid(List<Object> udtList, Integer updUserId) 
 	{
+		int saveCnt = 0;
+		
 		for (Object obj : udtList) 
 		{
 			((Map<String, Object>) obj).put("crtUserId", updUserId);
@@ -896,10 +849,13 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			logger.debug(" detaildisabled : {}", ((Map<String, Object>) obj).get("detaildisabled"));
 			logger.debug(" updUserId : {}", ((Map<String, Object>) obj).get("updUserId"));
 			logger.debug(" detailcodeid : {}", ((Map<String, Object>) obj).get("detailcodeid"));
+			
+			saveCnt++;
 
 			commonMapper.updDetailCommCodeGrid((Map<String, Object>) obj);
 		}
-		return 0;
+		
+		return saveCnt;
 	}
 
 	@Override
