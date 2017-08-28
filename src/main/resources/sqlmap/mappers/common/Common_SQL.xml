@@ -100,10 +100,6 @@
             ,FUNC_CHNG        = #{funcChng}
             ,FUNC_PRT         = #{funcPrt}
        <choose>
-         <when test='funcUserDfn1 == "Y" and descUserDfn1 == null '>
-             ,FUNC_USER_DFN1   = 'N'
-             ,DESC_USER_DFN1   = ''
-         </when>
          <when test='funcUserDfn1 == "N" '>
              ,FUNC_USER_DFN1   = 'N'
              ,DESC_USER_DFN1   = ''
@@ -115,10 +111,6 @@
        </choose>
        
        <choose>
-         <when test='funcUserDfn2 == "Y" and descUserDfn2 == null '>
-             ,FUNC_USER_DFN2   = 'N'
-             ,DESC_USER_DFN2   = ''
-         </when>
          <when test='funcUserDfn2 == "N" '>
              ,FUNC_USER_DFN2   = 'N'
              ,DESC_USER_DFN2   = ''
@@ -130,10 +122,6 @@
        </choose>
        
        <choose>
-         <when test='funcUserDfn3 == "Y" and descUserDfn3 == null '>
-             ,FUNC_USER_DFN3   = 'N'
-             ,DESC_USER_DFN3   = ''
-         </when>
          <when test='funcUserDfn3 == "N" '>
              ,FUNC_USER_DFN3   = 'N'
              ,DESC_USER_DFN3   = ''
@@ -145,10 +133,6 @@
        </choose>
        
        <choose>
-         <when test='funcUserDfn4 == "Y" and descUserDfn4 == null '>
-             ,FUNC_USER_DFN4   = 'N'
-             ,DESC_USER_DFN4   = ''
-         </when>
          <when test='funcUserDfn4 == "N" '>
              ,FUNC_USER_DFN4   = 'N'
              ,DESC_USER_DFN4   = ''
@@ -160,10 +144,6 @@
        </choose>
        
        <choose>
-         <when test='funcUserDfn5 == "Y" and descUserDfn5 == null '>
-             ,FUNC_USER_DFN5   = 'N'
-             ,DESC_USER_DFN5   = ''
-         </when>
          <when test='funcUserDfn5 == "N" '>
              ,FUNC_USER_DFN5   = 'N'
              ,DESC_USER_DFN5   = ''
@@ -173,6 +153,8 @@
              ,DESC_USER_DFN5   = #{descUserDfn5} 
          </otherwise>
        </choose>
+       
+      
             ,UPD_USER_ID      = #{updUserId}
             ,UPD_DT           = SYSDATE
        WHERE PGM_CODE         = #{pgmCode}
@@ -392,7 +374,7 @@
   <select id="selectStatusCategoryList" parameterType="Map" resultType="egovMap">
     SELECT  A.STUS_CTGRY_ID  
            ,A.STUS_CTGRY_NAME
-           ,DBMS_LOB.SUBSTR (A.STUS_CTGRY_DESC, 4000) STUS_CTGRY_DESC
+           ,A.STUS_CTGRY_DESC
            ,A.CRT_USER_ID
            ,A.UPD_USER_ID
            ,A.UPD_DT
@@ -835,7 +817,7 @@
 		         , #{codeMasterId}
 		         , #{detailcode}
 		         , #{detailcodename}
-		         , DBMS_LOB.SUBSTR (#{detailcodedesc}, 4000) 
+		         , NVL(#{detailcodedesc}, #{detailcodename}) 
 		         , DECODE(#{detaildisabled},'N',0,'Y',1,0)
 		         , SYSDATE  
 		         , #{crtUserId} 
@@ -849,7 +831,7 @@
 		UPDATE SYS0013M
 		   SET CODE        = #{detailcode}
 		     , CODE_NAME   = #{detailcodename}
-		     , CODE_DESC   = DBMS_LOB.SUBSTR (#{detailcodedesc}, 4000)  
+		     , CODE_DESC   = #{detailcodedesc}
 		     , DISAB       = DECODE(#{detaildisabled},'N',0,'Y',1,0)
 		     , UPD_USER_ID = #{updUserId}
 		     , UPD_DT      = SYSDATE  

@@ -186,14 +186,15 @@ WHERE  1 = 1
      AND G.ROLE_ID = H.ROLE_ID
      AND F.AUTH_CODE = H.AUTH_CODE 
      AND H.VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
-     AND H.VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')            
+     AND H.VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') 
+                
    UNION
          
    SELECT 
-          C.AUTH_CODE , 
-          D.CODE_NAME, 
-          A.ROLE_ID ,
-          '0' ROLE_LVL,
+          C.AUTH_CODE, 
+          A.AUTH_NAME,  
+          A.ROLE_ID  ,
+          C.ROLE_LVL ,
           NVL(C.VALID_DT_FROM  ,TO_CHAR(SYSDATE, 'YYYYMMDD'))  FROM_DT,
           NVL(C.VALID_DT_TO  ,TO_CHAR(SYSDATE+365, 'YYYYMMDD')) TO_DT, 
           C.AUTH_CODE HIDDEN,  /*old_auth_code*/
@@ -213,12 +214,9 @@ WHERE  1 = 1
             START WITH A.ROLE_ID = B.ROLE_ID         
           CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE
           ) B ,
-          SYS0054M C, 
-          SYS0013M D 
+          SYS0054M C
    WHERE A.ROLE_ID = B.ROLE_ID(+)
      AND A.ROLE_ID = C.ROLE_ID(+)
-     AND D.CODE_MASTER_ID = 313
-     AND C.AUTH_CODE = D.CODE
      AND VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
      AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
    ORDER BY ROLE_LVL,AUTH_NAME   
