@@ -13,7 +13,7 @@
 			    
 			 
 			 /* addr1 addr2 null check */
-			 if( ( "" == $("#mAddr1").val() || null == $("#mAddr1").val()) &&  ( "" == $("#mAddr2").val() || null == $("#mAddr2").val()) ){
+			 if( ( "" == $("#addrDtl").val() || null == $("#addrDtl").val())){
 				 Common.alert("* Please key in the address.");
 				 return;
 			 }
@@ -190,14 +190,9 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row" rowspan="2">Address<span class="must">*</span></th>
+                <th scope="row" >Address<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="mAddr1" name="mAddr1" placeholder="Address(1)" class="w100p"  />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                <input type="text" title="" id="mAddr2" name="mAddr2" placeholder="Address(2)" class="w100p" />
+                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>

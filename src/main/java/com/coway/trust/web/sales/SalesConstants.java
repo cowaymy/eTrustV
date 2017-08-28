@@ -85,4 +85,7 @@ public class SalesConstants {
 	//Document Submission Type(Master Code : 16) 
 	public static final int CCP_DOC_SUB_CODE_ID_ICS = 248; //CCP Document Submission
 	public static final String CCP_DOC_SUB_CODE_NM_ICS = "CCPDOC"; //CCP Document Submission
+	
+	//CCP
+	public static final String  AGREEMENT_CODEID = "51"; // Agreement
 }

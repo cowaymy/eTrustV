@@ -30,13 +30,7 @@
         <td>${detailaddr.userName1}(${detailaddr.updDt})</td>
     </tr>
     <tr>
-        <th scope="row" rowspan="3">Address</th>
-        <td colspan="3"><span>${detailaddr.add1}</span></td>
-    </tr>
-    <tr>
-        <td colspan="3"><span>${detailaddr.add2}</span></td>
-    </tr>
-    <tr>
+        <th scope="row">Address</th>
         <td colspan="3"><span>${detailaddr.add3}</span></td>
     </tr>
     <tr>

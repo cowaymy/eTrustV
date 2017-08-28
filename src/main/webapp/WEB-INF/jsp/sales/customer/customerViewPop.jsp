@@ -489,7 +489,7 @@
     </tr>
     <tr>
         <th scope="row">Passport Expire</th>
-        <td>${result.pasSportExpr}</td>
+        <td>${result.pasSportExpr}</td> 
         <th scope="row">Visa Expire</th>
         <td>${result.visaExpr}</td>
         <th scope="row">VA Number</th>

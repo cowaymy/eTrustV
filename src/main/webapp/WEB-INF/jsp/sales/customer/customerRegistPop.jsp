@@ -73,12 +73,12 @@
     	// bank account
         var columnLayout1 = [ 
             {         
-                dataField : "accType",
+                dataField : "accTypeId",
                 headerText : "Type",
                 width : 100,
                 editable : true
             },{
-                dataField : "accBank",
+                dataField : "accBankId",
                 headerText : "Bank",
                 width : 100,
                 editable : true
@@ -223,8 +223,7 @@
 	            	telO : insBasicForm.telO.value,
 	            	ext : insBasicForm.ext.value,
 	            	rem : insBasicForm.rem.value,
-	            	addr1 : insAddressForm.mAddr1.value,
-	            	addr2 : insAddressForm.mAddr2.value,
+	            	addrDtl : insAddressForm.addrDtl.value,
 	            	streetId : insAddressForm.streetId.value,
 	                addrRem : insAddressForm.addrRem.value,
 	            	asCustName : insContactForm.asCustName.value,
@@ -336,14 +335,11 @@
             }
 		}
 		
-		if($("#mAddr1").val() == ''){
+		if($("#addrDtl").val() == ''){
 			Common.alert("Please key in the address.");
             return false;
         }
-//		if($("#mAddr2").val() == ''){
-//            Common.alert("Please key in the address.");
-//            return false;
-//        }
+
 		if($("#mState").val() == ''){
 			Common.alert("Please key in the state.");
             return false;
@@ -411,8 +407,8 @@
         var accItem = new Object();
         
         if(accType != "" && accBank != "" && accNo != "" && accOwner != ""){
-            accItem.accType = accType;
-            accItem.accBank = accBank;
+            accItem.accTypeId = accType;
+            accItem.accBankId = accBank;
             accItem.accNo = accNo;
             accItem.bankBranch = bankBranch;
             accItem.accOwner = accOwner;
@@ -692,14 +688,9 @@
 			    </td>
 			</tr>
 			<tr>
-			    <th scope="row" rowspan="2">Address<span class="must">*</span></th>
+			    <th scope="row" >Address<span class="must">*</span></th>
 			    <td colspan="3">
-			    <input type="text" title="" id="mAddr1" name="mAddr1" placeholder="Address(1)" class="w100p" />
-			    </td>
-			</tr>
-			<tr>
-			    <td colspan="3">
-			    <input type="text" title="" id="mAddr2" name="mAddr2" placeholder="Address(2)" class="w100p" />
+			    <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" />
 			    </td>
 			</tr>
 			<tr>

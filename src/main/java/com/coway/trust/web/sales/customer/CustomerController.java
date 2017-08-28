@@ -36,7 +36,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/sales/customer")
 public class CustomerController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
 	
 	@Resource(name = "customerService")
@@ -495,8 +495,7 @@ public class CustomerController {
 		
 		// Address
 		insmap.put("getCustAddrId", getCustAddrId);
-		insmap.put("addr1", vo.getAddr1());
-		insmap.put("addr2", vo.getAddr2());
+		insmap.put("addrDtl", vo.getAddrDtl());
 		insmap.put("streetId", vo.getStreetId());
 //		insmap.put("addr3", vo.getAddr3());
 //		insmap.put("addr4", "");										//고정

@@ -257,23 +257,22 @@
     <!--  Customer Main Address(Customer View) -->
     <select id="selectCustomerViewMainAddress" parameterType="Map" resultType="egovMap">
       <![CDATA[ 
-			  SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+			   SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
                            Extent1.CUST_ID CUST_ID  ,
                            Extent1.CRT_USER_ID CRT_USER_ID  ,
                            Extent2.NAME NAME  ,
                            Extent5.ISO,
                            Extent5.STREET_ID,
                            Extent5.SUBURB,
-				           NVL(Extent1.ADD1, '') ADD1,
-				           NVL(Extent1.ADD2, '') ADD2,
-				           NVL(Extent5.STREET, '') STREET,
-				           NVL(Extent5.POSTCODE, '') POSTCODE,
-				           NVL(Extent5.LOCALITY, '') TOWN,
-				           NVL(Extent5.REGION2, '') CITY,
-				           NVL(Extent5.REGION1, '') STATE,
-				           NVL(Extent5.COUNTRY, '') COUNTRY,
-                           CASE  WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END ||' '|| CASE WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END
-                           ||' '|| Extent5.STREET ||' '|| Extent5.POSTCODE ||' '|| Extent5.LOCALITY ||' '|| Extent5.REGION2 ||' '|| Extent5.REGION1 ||' '|| Extent5.COUNTRY AS FULL_ADDRESS,                            
+                           Extent1.ADDR_DTL,
+                           NVL(Extent5.STREET, '') STREET,
+                           NVL(Extent5.POSTCODE, '') POSTCODE,
+                           NVL(Extent5.LOCALITY, '') TOWN,
+                           NVL(Extent5.REGION2, '') CITY,
+                           NVL(Extent5.REGION1, '') STATE,
+                           NVL(Extent5.COUNTRY, '') COUNTRY,
+                           CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
+                           Extent5.STREET ||' '|| Extent5.POSTCODE ||' '|| Extent5.LOCALITY ||' '|| Extent5.REGION2 ||' '|| Extent5.REGION1 ||' '|| Extent5.COUNTRY AS FULL_ADDRESS,                            
                            CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM ELSE '' END REM  ,
                            CASE  WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  ,
                            CASE  WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END USER_NAME  ,
@@ -370,9 +369,7 @@
                         project1.CUST_ID,
                         project1.CRT_USER_ID,
                         project1.NAME,
-                        project1.ADD1,
-                        project1.ADD2,
-                        project1.ADD2,
+                        project1.ADDR_DTL,
                         project1.ADDR,
                         project1.REM,
                         project1.USER_NAME,
@@ -386,9 +383,8 @@
                                Extent1.CUST_ID   ,
                                Extent1.CRT_USER_ID   ,
                                Extent2.NAME   ,
-                               Extent1.ADD1,
-                               Extent1.ADD2,
-                               CASE  WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END ||' '|| CASE WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END ||' '||
+                               Extent1.ADDR_DTL,
+                               CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
                                Extent5.STREET ||' '|| Extent5.POSTCODE ||' '|| Extent5.LOCALITY ||' '|| Extent5.REGION2 ||' '|| Extent5.REGION1 ||' '|| Extent5.COUNTRY AS ADDR,                                                    
                                CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM  ELSE '' END REM  ,
                                CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  ,
@@ -408,8 +404,9 @@
                               Extent1.CUST_ID = #{custId}) project1
                 ]]>
                   <if test='searchWord != null and searchWord !=""'>
-                     WHERE (UPPER( project1.ADD1)     LIKE '%' || UPPER(#{searchWord}) || '%'
-                            OR UPPER(project1.ADD2)     LIKE '%' || UPPER(#{searchWord}) || '%'
+                     WHERE (UPPER(project1.ADDR_DTL)     LIKE '%' || UPPER(#{searchWord}) || '%'
+                            <!-- OR UPPER(project1.ADD1)     LIKE '%' || UPPER(#{searchWord}) || '%' -->
+                            <!-- OR UPPER(project1.ADD2)     LIKE '%' || UPPER(#{searchWord}) || '%' -->
                             OR UPPER(project1.ADDR)    LIKE '%' || UPPER(#{searchWord}) || '%'                        
                             OR UPPER(project1.NAME)     LIKE '%' || UPPER(#{searchWord}) || '%')
                   </if>
@@ -1064,9 +1061,9 @@
                       SELECT Extent1.CUST_ADD_ID   ,
                            Extent1.CUST_ID   ,
                            Extent1.CRT_USER_ID   ,
-                           Extent2.NAME   ,
-                           CASE WHEN ( Extent1.ADD1 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD1)) ELSE '' END ADD1  , 
-                           CASE WHEN ( Extent1.ADD2 IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADD2)) ELSE '' END ADD2  , 
+                           Extent2.NAME   ,   
+                           Extent1.ADDR_DTL,                       
+                           CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '||
                            Extent5.STREET ||' '|| Extent5.POSTCODE ||' '|| Extent5.LOCALITY ||' '|| Extent5.REGION2 ||' '|| Extent5.REGION1 ||' '|| Extent5.COUNTRY AS ADD3,
                            Extent5.COUNTRY,
                            Extent5.REGION1,
@@ -1369,8 +1366,7 @@
 					                      NRIC,
 					                      TEL,
 					                      FAX,
-					                      ADD1,
-					                      ADD2,
+					                      ADDR_DTL,
 					                      STUS_CODE_ID,
 					                      REM,
 					                      UPD_USER_ID,
@@ -1386,8 +1382,7 @@
 			            #{nric},
 			            #{tel},
 			            #{fax},
-			            #{addr1},
-			            #{addr2},
+			            #{addrDtl},
 			            #{stusCodeId},
 			            #{addrRem},
 			            #{updUserId},
@@ -1771,8 +1766,7 @@
 			UPDATE
 			    SAL0023D
 			SET
-			    ADD1 = #{mAddr1},
-			    ADD2 = #{mAddr2},
+			    ADDR_DTL = #{addrDtl},  
 			    STREET_ID = #{streetId},
 			    REM = #{addrRem}
 			WHERE
@@ -1801,8 +1795,7 @@
 		                                          NRIC,
 		                                          TEL,
 		                                          FAX,
-		                                          ADD1,
-		                                          ADD2,
+		                                          ADDR_DTL,
 		                                          STUS_CODE_ID,
 		                                          REM,
 		                                          UPD_USER_ID,
@@ -1819,8 +1812,7 @@
 		                        '',
 		                        '',
 		                        '',
-		                        #{mAddr1},
-		                        #{mAddr2},
+		                        #{addrDtl},
 		                        1 ,
 		                        #{addrRem},
 		                        52366 , <!-- SESSION -->

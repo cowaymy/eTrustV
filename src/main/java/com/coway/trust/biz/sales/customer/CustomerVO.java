@@ -36,8 +36,7 @@ public class CustomerVO implements Serializable {
 	private int cmbCorpTypeId;
 	private String gstRgistNo;
 	private int getCustAddrId;
-	private String addr1;
-	private String addr2;
+	private String addrDtl;
 	private String addr3;
 	private int cmbPostCd;
 	private int cmbArea;
@@ -217,17 +216,11 @@ public class CustomerVO implements Serializable {
 	public void setGetCustAddrId(int getCustAddrId) {
 		this.getCustAddrId = getCustAddrId;
 	}
-	public String getAddr1() {
-		return addr1;
+	public String getAddrDtl() {
+		return addrDtl;
 	}
-	public void setAddr1(String addr1) {
-		this.addr1 = addr1;
-	}
-	public String getAddr2() {
-		return addr2;
-	}
-	public void setAddr2(String addr2) {
-		this.addr2 = addr2;
+	public void setAddrDtl(String addrDtl) {
+		this.addrDtl = addrDtl;
 	}
 	public String getAddr3() {
 		return addr3;
