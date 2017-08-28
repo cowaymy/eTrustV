@@ -7,8 +7,8 @@
 	           USR.USER_NAME AS user_name/* ,
 	           USERROLE.ROLE_ID AS role_id ,
 	           ROLE.ROLE_code AS role_name*/
-	   FROM SYS0047M USR 
-	           INNER JOIN SYS0038M STATUS 
+	   FROM SYS0047M USR
+	           INNER JOIN SYS0038M STATUS
 	               ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
 	           /*INNER JOIN SYS0045M USERROLE
 	               ON USR.USER_ID = USERROLE.USER_ID
@@ -22,37 +22,37 @@
 	     AND 3 <> USR.USER_TYPE_ID
 	     AND 1161 <> USR.USER_TYPE_ID
 	     AND 1165 <> USR.USER_TYPE_ID
-	     AND USR.USER_VAL_ID_TO >= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	     AND  TO_CHAR(USR.USER_VAL_ID_TO, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
 	     ]]>
 	     <if test="userCode != null and userCode !=''">
-	     AND (UPPER(USR.USER_ID) LIKE  UPPER(#{userCode}) || '%' OR 
+	     AND (UPPER(USR.USER_ID) LIKE  UPPER(#{userCode}) || '%' OR
                 UPPER(USR.USER_NAME) LIKE '%' || UPPER(#{userCode}) || '%')
 	     </if>
 	  ORDER BY USER_ID
-	  
+
 </select>
 
 <select id="selectUserMenuMappingList" parameterType="Map" resultType="egovMap">
-	SELECT z.menu_lvl , 
-		       z.menu_code , 
+	SELECT z.menu_lvl ,
+		       z.menu_code ,
 		       z.menu_name ,
 		       z.pgm_code ,
-		       z.pgm_name,       
-		       z.pgm_trn_code,       
-		       z.pgm_trn_name,       		       
-		       #{userId}  AS user_id,		 
+		       z.pgm_name,
+		       z.pgm_trn_code,
+		       z.pgm_trn_name,
+		       #{userId}  AS user_id,
 		       case when y.exist_yn = 'Y' THEN NULL ELSE y.valid_dt_from END as valid_dt_from,
-               case when y.exist_yn = 'Y' THEN NULL ELSE y.valid_dt_to END as valid_dt_to,    
+               case when y.exist_yn = 'Y' THEN NULL ELSE y.valid_dt_to END as valid_dt_to,
 		       NVL(y.func_yn,'N') AS func_yn ,
                NVL(y.exist_yn,'N') AS exist_yn,
-		       z.menu_code||z.pgm_trn_code as row_id /* PK, AUIGrid key row setting */           
-		  FROM (SELECT a.menu_code ,                
+		       z.menu_code||z.pgm_trn_code as row_id /* PK, AUIGrid key row setting */
+		  FROM (SELECT a.menu_code ,
 			               a.menu_name ,
-			               a.menu_lvl ,               
+			               a.menu_lvl ,
 			               b.pgm_code ,
 			               b.pgm_name ,
-			               CASE WHEN b.pgm_code IS NULL 
-			                    THEN 2268 
+			               CASE WHEN b.pgm_code IS NULL
+			                    THEN 2268
 			                    ELSE b.pgm_trn_code END AS pgm_trn_code ,
 			               b.pgm_trn_name ,
 			               a.rn
@@ -64,7 +64,7 @@
 		                 FROM SYS0051M e
 		                START WITH e.upper_menu_code is null
 		              CONNECT BY PRIOR e.menu_code = e.upper_menu_code
-		                ORDER SIBLINGS BY e.menu_order) a , 
+		                ORDER SIBLINGS BY e.menu_order) a ,
 		              (SELECT d.pgm_code ,
 		                      d.pgm_name ,
 		                      d.pgm_trn_code ,
@@ -75,30 +75,30 @@
 		                              CASE WHEN c.pgm_trn_code = 2260 THEN 'VIEW'
 		                                   WHEN c.pgm_trn_code = 2261 THEN 'CHNG'
 		                                   WHEN c.pgm_trn_code = 2262 THEN 'PRT'
-		                                   WHEN c.pgm_trn_code = 2263 THEN b.desc_user_dfn1                    
+		                                   WHEN c.pgm_trn_code = 2263 THEN b.desc_user_dfn1
 		                                   WHEN c.pgm_trn_code = 2264 THEN b.desc_user_dfn2
 		                                   WHEN c.pgm_trn_code = 2265 THEN b.desc_user_dfn3
 		                                   WHEN c.pgm_trn_code = 2266 THEN b.desc_user_dfn4
-		                                   WHEN c.pgm_trn_code = 2267 THEN b.desc_user_dfn5 END as pgm_trn_name ,                            
+		                                   WHEN c.pgm_trn_code = 2267 THEN b.desc_user_dfn5 END as pgm_trn_name ,
 		                              CASE WHEN c.pgm_trn_code = 2260 THEN b.func_view
 		                                   WHEN c.pgm_trn_code = 2261 THEN b.func_chng
 		                                   WHEN c.pgm_trn_code = 2262 THEN b.func_prt
-		                                   WHEN c.pgm_trn_code = 2263 THEN b.func_user_dfn1                    
+		                                   WHEN c.pgm_trn_code = 2263 THEN b.func_user_dfn1
 		                                   WHEN c.pgm_trn_code = 2264 THEN b.func_user_dfn2
 		                                   WHEN c.pgm_trn_code = 2265 THEN b.func_user_dfn3
 		                                   WHEN c.pgm_trn_code = 2266 THEN b.func_user_dfn4
-		                                   WHEN c.pgm_trn_code = 2267 THEN b.func_user_dfn5 END as transaction_yn        
-		                         FROM SYS0050M b , 
+		                                   WHEN c.pgm_trn_code = 2267 THEN b.func_user_dfn5 END as transaction_yn
+		                         FROM SYS0050M b ,
 		                              (SELECT ROWNUM + 2259 as pgm_trn_code
 		                                 FROM SYS0050M
-		                                WHERE ROWNUM <![CDATA[<]]> 9) c ) d 
+		                                WHERE ROWNUM <![CDATA[<]]> 9) c ) d
 		                WHERE NVL(d.transaction_yn,'N') = 'Y') b
 		            WHERE a.pgm_code = b.pgm_code(+) ) z,
-		         (SELECT z.menu_code, 
-		                     z.pgm_trn_code , 
-		                     min(z.valid_dt_from) as valid_dt_from , 
-		                     max(z.valid_dt_to) as valid_dt_to, 
-		                     max(z.func_yn) as func_yn , 
+		         (SELECT z.menu_code,
+		                     z.pgm_trn_code ,
+		                     min(z.valid_dt_from) as valid_dt_from ,
+		                     max(z.valid_dt_to) as valid_dt_to,
+		                     max(z.func_yn) as func_yn ,
 		                     max(z.exist_yn) as exist_yn
             FROM (select a.menu_code ,
 			                   a.pgm_trn_code ,
@@ -145,7 +145,7 @@
 				                    ) b,
 				                     sys0054m c,
 				                     sys0013m d
-				                WHERE a.role_id = b.role_id 
+				                WHERE a.role_id = b.role_id
 				                    AND a.role_id = c.role_id (+)
 				                    AND d.code_master_id(+) = 313
 				                    AND c.auth_code = d.code(+)
@@ -153,24 +153,24 @@
 				        WHERE a.auth_code = b.auth_code
 				            AND a.func_yn = 'Y'
 				        UNION
-				        
+
 				        select c.menu_code ,
 				               c.pgm_trn_code ,
 				               c.valid_dt_from,
 				               c.valid_dt_to,
-				               c.func_yn ,                              
+				               c.func_yn ,
 				               'N' AS exist_yn
                       FROM SYS0057m c
                     WHERE c.user_id = #{userId}
           ) z
-          group by menu_code, pgm_trn_code) y		        
+          group by menu_code, pgm_trn_code) y
 		  WHERE z.menu_code = y.menu_code(+)
-		    AND z.pgm_trn_code = y.pgm_trn_code(+)		    		   
+		    AND z.pgm_trn_code = y.pgm_trn_code(+)
 		    <if test="menuCode != null and menuCode !=''">
-              AND (UPPER(z.menu_code) LIKE  UPPER(#{menuCode}) || '%' OR 
+              AND (UPPER(z.menu_code) LIKE  UPPER(#{menuCode}) || '%' OR
                      UPPER(z.menu_name) LIKE '%' || UPPER(#{menuCode}) || '%')
          </if>
-		  ORDER BY z.rn, z.pgm_trn_code	
+		  ORDER BY z.rn, z.pgm_trn_code
 </select>
 
 <update id="updateUserMenuMapping" parameterType="Map">
@@ -181,8 +181,8 @@ MERGE INTO SYS0057M a
 	               #{pgmTrnCode} AS pgm_trn_code ,
 	               #{funcYn} AS func_yn ,
 	               REPLACE(#{validDtFrom},'/','') as valid_dt_from ,
-	               REPLACE(#{validDtTo},'/','') as valid_dt_to ,	               
-	               #{updUserId} AS upd_user_id ,               
+	               REPLACE(#{validDtTo},'/','') as valid_dt_to ,
+	               #{updUserId} AS upd_user_id ,
 	               #{crtUserId} AS crt_user_id
           FROM dual
   ) b
@@ -190,13 +190,13 @@ MERGE INTO SYS0057M a
     AND a.menu_code = b.menu_code
     AND a.pgm_trn_code = b.pgm_trn_code )
    WHEN MATCHED THEN
-        UPDATE 
+        UPDATE
            SET a.func_yn = b.func_yn ,
                a.valid_dt_from = b.valid_dt_from ,
-               a.valid_dt_to = b.valid_dt_to ,               
+               a.valid_dt_to = b.valid_dt_to ,
                a.upd_user_id = b.user_id ,
-               a.upd_dt = SYSDATE      
-        DELETE WHERE b.func_yn = 'N'       
+               a.upd_dt = SYSDATE
+        DELETE WHERE b.func_yn = 'N'
    WHEN NOT MATCHED THEN
         INSERT
         (
@@ -210,8 +210,8 @@ MERGE INTO SYS0057M a
             a.crt_dt,
             a.upd_user_id,
             a.upd_dt
-        ) 
-        VALUES 
+        )
+        VALUES
         (
             b.user_id,
             b.menu_code,
@@ -223,7 +223,7 @@ MERGE INTO SYS0057M a
             SYSDATE,
             b.upd_user_id,
             SYSDATE
-        )        
+        )
 </update>
-   
+
 </mapper>
