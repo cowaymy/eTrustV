@@ -19,9 +19,9 @@
 var gAddRowCnt = 0;
 var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS"];
 
-var MainColumnLayout = 
-    [      
-        {    
+var MainColumnLayout =
+    [
+        {
             dataField : "pgmCode",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Id' htmlEscape='false'/>",
             editable : false,
@@ -55,13 +55,13 @@ var MainColumnLayout =
         }
     ];
 
-var TransColumnLayout = 
-    [      
-        {    
+var TransColumnLayout =
+    [
+        {
             dataField : "funcView",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='VIEW' htmlEscape='false'/>",
-            width : 70,
-            renderer : 
+            width : 60,
+            renderer :
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -69,9 +69,9 @@ var TransColumnLayout =
                 checkValue : "Y", // true, false 인 경우가 기본
                 unCheckValue : "N",
                 // 체크박스 Visible 함수
-                visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                  {
-                   if(item.funcView == "Y")  
+                   if(item.funcView == "Y")
                    {
                     return true; // checkbox visible
                    }
@@ -82,10 +82,10 @@ var TransColumnLayout =
 
         }, {
             dataField : "funcChng",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CHANGE' htmlEscape='false'/>",
-            width : 70,
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CHNG' htmlEscape='false'/>",
+            width : 60,
             editable : true,
-            renderer : 
+            renderer :
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -93,22 +93,22 @@ var TransColumnLayout =
                 checkValue : "Y", // true, false 인 경우가 기본
                 unCheckValue : "N",
                 // 체크박스 Visible 함수
-                visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                  {
-                   if(item.funcChng == "Y")  
+                   if(item.funcChng == "Y")
                    {
                     return true; // checkbox visible
                    }
 
                    return true;
                  }
-            }  //renderer            
+            }  //renderer
         }, {
             dataField : "funcPrt",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='PRINT' htmlEscape='false'/>",
-            width : 70,
+            width : 60,
             editable : true,
-            renderer : 
+            renderer :
             {
                 type : "CheckBoxEditRenderer",
                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -116,23 +116,23 @@ var TransColumnLayout =
                 checkValue : "Y", // true, false 인 경우가 기본
                 unCheckValue : "N",
                 // 체크박스 Visible 함수
-                visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                  {
-                   if(item.funcPrt == "Y")  
+                   if(item.funcPrt == "Y")
                    {
                     return true; // checkbox visible
                    }
 
                    return true;
                  }
-            }  //renderer            
+            }  //renderer
         }, {
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #1' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Dfn#1' htmlEscape='false'/>",
               children : [ {
                               dataField : "funcUserDfn1",
                               headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                               editable : true,
-                              renderer : 
+                              renderer :
                               {
                                   type : "CheckBoxEditRenderer",
                                   showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -140,9 +140,9 @@ var TransColumnLayout =
                                   checkValue : "Y", // true, false 인 경우가 기본
                                   unCheckValue : "N",
                                   // 체크박스 Visible 함수
-                                  visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                  visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                                    {
-                                     if(item.funcUserDfn1 == "Y")  
+                                     if(item.funcUserDfn1 == "Y")
                                      {
                                       return true; // checkbox visible
                                      }
@@ -152,16 +152,16 @@ var TransColumnLayout =
                             }, {
                               dataField : "descUserDfn1",
                               headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc1' htmlEscape='false'/>",
-                              cellMerge: true,                              
-                            } 
+                              cellMerge: true,
+                            }
                          ]
           } , {
-              headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #2' htmlEscape='false'/>",
+              headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Dfn#2' htmlEscape='false'/>",
                 children : [ {
                                 dataField : "funcUserDfn2",
                                 headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                 editable : true,
-                                renderer : 
+                                renderer :
                                 {
                                     type : "CheckBoxEditRenderer",
                                     showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -169,9 +169,9 @@ var TransColumnLayout =
                                     checkValue : "Y", // true, false 인 경우가 기본
                                     unCheckValue : "N",
                                     // 체크박스 Visible 함수
-                                    visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                    visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                                      {
-                                       if(item.funcUserDfn2 == "Y")  
+                                       if(item.funcUserDfn2 == "Y")
                                        {
                                         return true; // checkbox visible
                                        }
@@ -182,15 +182,16 @@ var TransColumnLayout =
                               }, {
                                 dataField : "descUserDfn2",
                                 headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc2' htmlEscape='false'/>",
-                              } 
-                           ]
+                              }
+                           ],
+          width : 150
             }, {
-                headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #3' htmlEscape='false'/>",
+                headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Dfn#3' htmlEscape='false'/>",
                   children : [ {
                                   dataField : "funcUserDfn3",
                                   headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                   editable : true,
-                                  renderer : 
+                                  renderer :
                                   {
                                       type : "CheckBoxEditRenderer",
                                       showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -198,9 +199,9 @@ var TransColumnLayout =
                                       checkValue : "Y", // true, false 인 경우가 기본
                                       unCheckValue : "N",
                                       // 체크박스 Visible 함수
-                                      visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                      visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                                        {
-                                         if(item.funcUserDfn3 == "Y")  
+                                         if(item.funcUserDfn3 == "Y")
                                          {
                                           return true; // checkbox visible
                                          }
@@ -211,15 +212,16 @@ var TransColumnLayout =
                                 }, {
                                   dataField : "descUserDfn3",
                                   headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc3' htmlEscape='false'/>",
-                                } 
-                             ]
+                                }
+                             ],
+                             width : 150
               }, {
-                  headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #4' htmlEscape='false'/>",
+                  headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Dfn#4' htmlEscape='false'/>",
                     children : [ {
                                     dataField : "funcUserDfn4",
                                     headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                     editable : true,
-                                    renderer : 
+                                    renderer :
                                     {
                                         type : "CheckBoxEditRenderer",
                                         showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -227,9 +229,9 @@ var TransColumnLayout =
                                         checkValue : "Y", // true, false 인 경우가 기본
                                         unCheckValue : "N",
                                         // 체크박스 Visible 함수
-                                        visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                        visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                                          {
-                                           if(item.funcUserDfn4 == "Y")  
+                                           if(item.funcUserDfn4 == "Y")
                                            {
                                             return true; // checkbox visible
                                            }
@@ -240,15 +242,16 @@ var TransColumnLayout =
                                   }, {
                                     dataField : "descUserDfn4",
                                     headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc4' htmlEscape='false'/>",
-                                  } 
-                               ]
+                                  }
+                               ],
+                               width : 150
                 }, {
-                    headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Defined #5' htmlEscape='false'/>",
+                    headerText : "<spring:message code='sys.grid.headerTxt' arguments='User Dfn#5' htmlEscape='false'/>",
                       children : [ {
                                       dataField : "funcUserDfn5",
                                       headerText : "<spring:message code='sys.grid.headerTxt' arguments='Checked' htmlEscape='false'/>",
                                       editable : true,
-                                      renderer : 
+                                      renderer :
                                       {
                                           type : "CheckBoxEditRenderer",
                                           showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -256,9 +259,9 @@ var TransColumnLayout =
                                           checkValue : "Y", // true, false 인 경우가 기본
                                           unCheckValue : "N",
                                           // 체크박스 Visible 함수
-                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                                            {
-                                             if(item.funcUserDfn5 == "Y")  
+                                             if(item.funcUserDfn5 == "Y")
                                              {
                                               return true; // checkbox visible
                                              }
@@ -270,32 +273,33 @@ var TransColumnLayout =
                                   , {
                                       dataField : "descUserDfn5",
                                       headerText : "<spring:message code='sys.grid.headerTxt' arguments='Desc5' htmlEscape='false'/>",
-                                    } 
-                                 ]
+                                    }
+                                 ],
+                                 width : 150
                   }
-                , {    
+                , {
                     dataField : "pgmCode",
                     headerText : "<spring:message code='sys.grid.headerTxt' arguments='Id' htmlEscape='false'/>",
                     editable : false,
                     visible : false,
                     width : 150
-                }  
+                }
     ];
 
 
 //AUIGrid 메소드
 
-function auiCellEditignHandler(event) 
+function auiCellEditignHandler(event)
 {
-  if(event.type == "cellEditBegin") 
+  if(event.type == "cellEditBegin")
   {
       console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-  } 
-  else if(event.type == "cellEditEnd") 
+  }
+  else if(event.type == "cellEditEnd")
   {
       console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-  } 
-  else if(event.type == "cellEditCancel") 
+  }
+  else if(event.type == "cellEditCancel")
   {
       console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
   }
@@ -303,31 +307,31 @@ function auiCellEditignHandler(event)
 }
 
 //행 추가 이벤트 핸들러
-function auiAddRowHandler(event) 
+function auiAddRowHandler(event)
 {
-    gAddRowCnt = gAddRowCnt + event.items.length ; 
+    gAddRowCnt = gAddRowCnt + event.items.length ;
 	  console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length );
 }
 
 //Main 행 추가, 삽입
-function fnAddRowPgmId() 
+function fnAddRowPgmId()
 {
   checkboxPgmIdChangeHandler("hide");
-  
-  var item = new Object(); 
+
+  var item = new Object();
   item.pgmCode ="";
   item.pgmName ="";
-  item.pgmPath ="";  
+  item.pgmPath ="";
   item.pgmDesc ="";
   // parameter
   // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
   // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-  
+
   AUIGrid.addRow(myGridID, item, "first");
 }
 
 //Sub
-function fnAddRowTrans() 
+function fnAddRowTrans()
 {
   if ($("#paramPgmId").val().length == 0)
 	{
@@ -336,13 +340,13 @@ function fnAddRowTrans()
 	}
 
   gAddRowCnt = gAddRowCnt +1;
-  
+
   if ( gAddRowCnt > 1)
   {
 	  Common.alert("<spring:message code='sys.msg.limitMore' arguments='Data Add ; 1' htmlEscape='false' argumentSeparator=';' />");
     return false;
   }
-	
+
 	var item = new Object();
 	item.funcView  = "N";
 	item.funcChng  = "N";
@@ -364,27 +368,27 @@ function fnAddRowTrans()
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandler(event) 
+function auiRemoveRowHandler(event)
 {
   console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandlerDetail(event) 
+function auiRemoveRowHandlerDetail(event)
 {
   console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 //행 삭제 메소드
-function removeRow() 
+function removeRow()
 {
   AUIGrid.removeRow(myGridID,"selectedIndex");
 }
 
 //Make Use_yn ComboList, tooltip
 function getOrgDropList()
-{     
-	var list =  ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS"];   
+{
+	var list =  ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS"];
 	return list;
 }
 
@@ -392,19 +396,19 @@ function fnSetPgmIdParamSet(myGridID, rowIndex)
 {
 	$("#paramPgmId").val(AUIGrid.getCellValue(myGridID, rowIndex, "pgmCode"));
 	$("#pgmId").val(AUIGrid.getCellValue(myGridID, rowIndex, "pgmCode"));
-	 
-	console.log("paramPgmId: "+ $("#paramPgmId").val() + "pgmId: "+ $("#pgmId").val() );     
+
+	console.log("paramPgmId: "+ $("#paramPgmId").val() + "pgmId: "+ $("#pgmId").val() );
 }
 
 
-function getItemsByCheckedField(selectedGrid) 
+function getItemsByCheckedField(selectedGrid)
 {
   // 체크된 item 반환
   var activeItems = AUIGrid.getItemsByValue(selectedGrid, "checkFlag", true);
   var checkedRowItem = [];
   var str = "";
-  
-  for(var i=0, len = activeItems.length; i<len; i++) 
+
+  for(var i=0, len = activeItems.length; i<len; i++)
   {
       checkedRowItem = activeItems[i];
       str += "chkRowIdx : " + checkedRowItem.rowIndex + ", chkId :" + checkedRowItem.stusCodeId + ", chkName : " + checkedRowItem.codeName  + "\n";
@@ -414,10 +418,10 @@ function getItemsByCheckedField(selectedGrid)
 
 function fnSelectPgmListAjax()
 {
-	 fnTransGridReset();	 
+	 fnTransGridReset();
 	 Common.ajax("GET", "/program/selectProgramList.do"
 		       , $("#MainForm").serialize()
-		       , function(result) 
+		       , function(result)
 		       {
 		          console.log("성공 data : " + result);
 		          checkboxPgmIdChangeHandler("show");
@@ -431,10 +435,10 @@ function fnSelectPgmListAjax()
 
 function fnSelectPgmTransListAjax()
 {
-	 fnTransGridReset();  
+	 fnTransGridReset();
 	 Common.ajax("GET", "/program/selectPgmTranList.do"
 		       , $("#MainForm").serialize()
-		       , function(result) 
+		       , function(result)
 		       {
 		          console.log("성공 data : " + result);
 		          //checkboxPgmIdChangeHandler("show");
@@ -447,68 +451,68 @@ function fnSelectPgmTransListAjax()
 		       });
 }
 
-function fnSavePgmId() 
+function fnSavePgmId()
 {
 	fnTransGridReset();
   Common.ajax("POST", "/program/saveProgramId.do"
         , GridCommon.getEditData(myGridID)
-        , function(result) 
+        , function(result)
          {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSelectPgmListAjax() ;
-            
+
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
-         } 
-       , function(jqXHR, textStatus, errorThrown) 
+         }
+       , function(jqXHR, textStatus, errorThrown)
         {
-          try 
+          try
           {
             console.log("Fail Status : " + jqXHR.status);
             console.log("code : "        + jqXHR.responseJSON.code);
             console.log("message : "     + jqXHR.responseJSON.message);
             console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-          } 
-          catch (e) 
+          }
+          catch (e)
           {
             console.log(e);
           }
           alert("Fail : " + jqXHR.responseJSON.message);
-        }); 
+        });
 }
 
-function fnUpdateTrans() 
+function fnUpdateTrans()
 {
 	 gAddRowCnt = 0;
 	 Common.ajax("POST", "/program/updateTrans.do"
         , GridCommon.getEditData(transGridID)
-        , function(result) 
+        , function(result)
          {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSelectPgmListAjax() ;
             fnSelectPgmTransListAjax();
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
-         } 
-       , function(jqXHR, textStatus, errorThrown) 
+         }
+       , function(jqXHR, textStatus, errorThrown)
         {
-          try 
+          try
           {
             console.log("Fail Status : " + jqXHR.status);
             console.log("code : "        + jqXHR.responseJSON.code);
             console.log("message : "     + jqXHR.responseJSON.message);
             console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-          } 
-          catch (e) 
+          }
+          catch (e)
           {
             console.log(e);
           }
           alert("Fail : " + jqXHR.responseJSON.message);
-        }); 
+        });
 }
 
 //셀스타일 함수 정의
-function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField) 
+function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField)
 {
 	if(value != null)
 	{
@@ -521,17 +525,17 @@ function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataF
 }
 
 //칼럼 숨김/해제 체크박스 핸들러
-function checkboxPgmIdChangeHandler(event) 
+function checkboxPgmIdChangeHandler(event)
 {
   if (event == "show")
   {
-	  AUIGrid.showColumnByDataField(myGridID, "pgmCode");  
+	  AUIGrid.showColumnByDataField(myGridID, "pgmCode");
 	  AUIGrid.hideColumnByDataField(myGridID, "orgCode");
   }
   else  // hide
   {
 	  AUIGrid.hideColumnByDataField(myGridID, "pgmCode");
-	  AUIGrid.showColumnByDataField(myGridID, "orgCode");  
+	  AUIGrid.showColumnByDataField(myGridID, "orgCode");
   }
 
 }
@@ -540,19 +544,20 @@ function fnTransGridReset()
 {
 	gAddRowCnt = 0;
   AUIGrid.clearGridData(transGridID);
+  $("#transGrid").find(".aui-grid-nodata-msg-layer").remove();
 }
 
 // 삭제해서 마크 된(줄이 그어진) 행을 복원 합니다.(삭제 취소)
-function removeAllCancel() 
+function removeAllCancel()
 {
 	$("#delCancel").hide();
-	
-	AUIGrid.restoreSoftRows(myGridID, "all"); 
+
+	AUIGrid.restoreSoftRows(myGridID, "all");
 }
 
 
 function fnClear()
-{ 
+{
 }
 
 function fnSelectTransGrid(tGrid, mGrid, evntRowIdx)
@@ -567,7 +572,7 @@ function fnSelectTransGrid(tGrid, mGrid, evntRowIdx)
           AUIGrid.setCellValue(tGrid, 0, icnt, AUIGrid.getCellValue(mGrid, evntRowIdx, 0))
       }
       jcnt++ ;
-    } 
+    }
 }
 
 var myGridID, transGridID;
@@ -576,37 +581,37 @@ $(document).ready(function()
 {
 
     $("#pgmCode").focus();
-    
-    $("#pgmCode").keydown(function(key) 
+
+    $("#pgmCode").keydown(function(key)
     {
-       if (key.keyCode == 13) 
+       if (key.keyCode == 13)
        {
     	   fnSelectPgmListAjax();
        }
 
     });
 
-    $("#pgmCode").bind("keyup", function() 
+    $("#pgmCode").bind("keyup", function()
     {
       $(this).val($(this).val().toUpperCase());
     });
-    
-    
-    $("#pgmNm").keydown(function(key) 
+
+
+    $("#pgmNm").keydown(function(key)
     {
-       if (key.keyCode == 13) 
+       if (key.keyCode == 13)
        {
     	   fnSelectPgmListAjax();
        }
     });
 
-    $("#pgmNm").bind("keyup", function() 
+    $("#pgmNm").bind("keyup", function()
     {
       $(this).val($(this).val().toUpperCase());
     });
-    
 
-/***************************************************[ Main GRID] ***************************************************/    
+
+/***************************************************[ Main GRID] ***************************************************/
 
     var options = {
                   usePaging : true,
@@ -620,100 +625,101 @@ $(document).ready(function()
                   softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
                   editable : true
                 };
-    
+
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("grid_wrap", MainColumnLayout,"", options);
     // AUIGrid 그리드를 생성합니다.
-    
+
     // 푸터 객체 세팅
     //AUIGrid.setFooter(myGridID, footerObject);
-    
+
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
     // cellClick event.
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(myGridID, "cellClick", function( event )
     {
         $("#paramPgmId").val("");
-        
+
         fnTransGridReset();
 
         fnSetPgmIdParamSet(myGridID, event.rowIndex);
-        fnSelectPgmTransListAjax(); 
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParamPgmId: " + $("#paramPgmId").val() +" / "+ $("#paramPgmName").val());        
+        fnSelectPgmTransListAjax();
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParamPgmId: " + $("#paramPgmId").val() +" / "+ $("#paramPgmName").val());
     });
 
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 /*         fnTransGridReset();
-        
+
         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
         || String(event.value).length < 1)
         {
                 //alert("Program ID Confirm!!");
                 $("#paramPgmId").val("");
                 return false;
-        } 
+        }
 
         fnSetPgmIdParamSet(myGridID, event.rowIndex);
         fnSelectPgmTransListAjax(); */
-         
-    });    
+
+    });
 
 
 /***************************************************[ Trans GRID] ***************************************************/
 
-    var transOptions = 
+    var transOptions =
         {
             usePaging : false,
-            editable : true, 
+            editable : true,
          // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
             enableRestore : true,
-
+            showRowNumColumn : false, // 순번 칼럼 숨김
             //툴팁 출력 지정
             showTooltip : true,
             //툴팁 마우스 대면 바로 나오도록 (0), 500mms 이후에 툴립출력(500)
             tooltipSensitivity : 0,
-            softRemovePolicy : "exceptNew"            
+            softRemovePolicy : "exceptNew",
+            noDataMessage : null, //"출력할 데이터가 없습니다.",
         };
- 
+
     // detailGrid 생성
     transGridID = GridCommon.createAUIGrid("transGrid", TransColumnLayout,"", transOptions);
 
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(transGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(transGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(transGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(transGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(transGridID, "removeRow", auiRemoveRowHandlerDetail);
-    
+
     // cellClick event.
-    AUIGrid.bind(transGridID, "cellClick", function( event ) 
+    AUIGrid.bind(transGridID, "cellClick", function( event )
     {
-        console.log("transGridID CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " event_value: " + event.value +" header: " + event.headerText  ); 
-        
+        console.log("transGridID CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " event_value: " + event.value +" header: " + event.headerText  );
+
         if (event.columnIndex == 3 &&  event.value == "Y")
         {
             AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn1"] );
@@ -722,7 +728,7 @@ $(document).ready(function()
         {
             AUIGrid.setCellValue(transGridID, 0, 4, "");
         }
-        
+
         if (event.columnIndex == 5 &&  event.value == "Y")
         {
             AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn2"] );
@@ -731,7 +737,7 @@ $(document).ready(function()
         {
             AUIGrid.setCellValue(transGridID, 0, 6, "");
         }
-        
+
         if (event.columnIndex == 7 &&  event.value == "Y")
         {
             AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn3"] );
@@ -740,7 +746,7 @@ $(document).ready(function()
         {
             AUIGrid.setCellValue(transGridID, 0, 8, "");
         }
-        
+
         if (event.columnIndex == 9 &&  event.value == "Y")
         {
             AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn4"] );
@@ -749,7 +755,7 @@ $(document).ready(function()
         {
             AUIGrid.setCellValue(transGridID, 0, 10, "");
         }
-        
+
         if (event.columnIndex == 11 &&  event.value == "Y")
         {
             AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn5"] );
@@ -757,11 +763,11 @@ $(document).ready(function()
         else if (event.columnIndex == 11 &&  event.value == "N")
         {
             AUIGrid.setCellValue(transGridID, 0, 12, "");
-        }          
+        }
     });
 
     $("#delCancel").hide();
-    
+
 
 });   //$(document).ready
 
@@ -860,7 +866,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap" style="height:500px;"></div>
+ <div id="grid_wrap" style="height:290px;"></div>
 </article><!-- grid_wrap end -->
 
 
@@ -874,10 +880,9 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역2 -->
- <div id="transGrid" style="height:200px;"></div>
+ <div id="transGrid" style="height:80px;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-    
