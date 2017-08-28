@@ -541,14 +541,14 @@ public class CustomerController {
 		
 		// insert Credit Card Info
 		if(addList != null){
-			int getCustCrcIdSeq = customerService.getCustCrcIdSeq();
+		//	int getCustCrcIdSeq = customerService.getCustCrcIdSeq();
 			addList.forEach(form -> {
 				CustomerCVO customerCVO = new CustomerCVO();
 				customerCVO.setCrcType(form.getCrcType());
 				customerCVO.setBank(form.getBank());
 				customerCVO.setCardType(form.getCardType());
 				customerCVO.setCardRem(null);					//임시
-				customerCVO.setGetCustCrcIdSeq(getCustCrcIdSeq);
+			//	customerCVO.setGetCustCrcIdSeq(getCustCrcIdSeq);
 				customerCVO.setGetCustId(getCustId);
 				customerCVO.setCrcNo(null);						//암호화 코드
 				customerCVO.setCreditCardNo(form.getCreditCardNo());
@@ -570,6 +570,8 @@ public class CustomerController {
 				customerCVO.setCrcIdcm(0);						//고정
 				
 				customerCardVOList.add(customerCVO);
+				
+				
 			});
 			
 			customerService.insertCreditCardInfo(customerCardVOList);
@@ -578,15 +580,16 @@ public class CustomerController {
 		
 		// insert Bank Account Info
 		if(addBankList != null){
-			int getCustAccIdSeq = customerService.getCustAccIdSeq();
+		//	int getCustAccIdSeq = customerService.getCustAccIdSeq();
 			addBankList.forEach(form -> {
 				CustomerBVO customerBVO = new CustomerBVO();
-				customerBVO.setGetCustAccIdSeq(getCustAccIdSeq);
+			//	customerBVO.setGetCustAccIdSeq(getCustAccIdSeq);
 				customerBVO.setAccNo(form.getAccNo());
+				customerBVO.setGetCustId(getCustId);
 				customerBVO.setEncAccNo(form.getEncAccNo());
 				customerBVO.setAccOwner(form.getAccOwner());
-				customerBVO.setAccTypeId(form.getAccTypeId());
-				customerBVO.setAccBankId(form.getAccBankId());
+				customerBVO.setAccTypeId(form.getAccTypeId()); //0
+				customerBVO.setAccBankId(form.getAccBankId()); //0
 				customerBVO.setAccBankBrnch(form.getAccBankBrnch());
 				customerBVO.setAccRem(form.getAccRem());
 				customerBVO.setAccStusId(1);
