@@ -63,11 +63,11 @@ var AuthColumnLayout =
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 list : gAuthList
             },
-            width : "15%"
+            width : "12%"
         }, {
             dataField : "authName", 
             headerText : "<spring:message code='sys.auth.grid1.authName'/>",
-            width : "40%",
+            width : "31%",
             editable : false,
             style : "aui-grid-left-column",
             renderer : 
@@ -100,12 +100,12 @@ var AuthColumnLayout =
             dataField : "roleId",   
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
-            width : 0,
+            width : "15%",
         }, {
         	  dataField : "roleLvl",   
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleLevel' />",
             editable : false,
-            width : "15%"
+            width : "12%"
         }, {
             dataField : "fromDt",
             headerText : "<spring:message code='sys.authRoleMapping.grid2.ValidDateFrom' />",
@@ -238,7 +238,7 @@ function fnSearchBtnClickAjax()
               {                  
                 if ($("#roleId").val().length > 0)
                 {
-                  fnCellClickSelectRoleAuthListAjax();
+                  //fnCellClickSelectRoleAuthListAjax();
                 }
               }
            });
@@ -754,7 +754,8 @@ $(document).ready(function()
 
         fnSetRoleIdLvl(myGridID, event.rowIndex);
 
-        fnCellClickSelectRoleAuthListAjax();
+        //fnCellClickSelectRoleAuthListAjax();
+        fnSearchBtnClickAjax();
     });
 
  // 셀 더블클릭 이벤트 바인딩

@@ -23,32 +23,32 @@ var mstColumnLayout =
     [ 
         {    
             dataField : "codeMasterId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MASTER ID' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.MASTER_ID' />",
             width : "8%",
         }, {
-            dataField : "codeMasterName",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MASTER NAME' htmlEscape='false'/>",
+            dataField : "codeMasterName", 
+            headerText : "<spring:message code='sys.generalCode.grid1.MASTER_NAME' />",
             style : "aui-grid-left-column",
             width : "25%",
         }, {
             dataField : "codeDesc",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE DESCRIPTION' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.CODE_DESCRIPTION' />",
             style : "aui-grid-left-column",
             width : "30%",
         }, {
             dataField : "createName",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATOR' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.CREATOR' />",
             style : "aui-grid-left-column",
             width : "13%",
         }, {
             dataField : "crtDt",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CREATE DATE' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.CREATE_DATE' />",
             dataType : "date",
             formatString : "dd-mmm-yyyy HH:MM:ss",
             width : "15%",
         }, {
             dataField : "disabled",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.DISABLED' />",
             width : "9%",
             editRenderer : {
                 type : "ComboBoxRenderer",
@@ -66,25 +66,25 @@ var detailColumnLayout =
     [ 
         {
             dataField : "detailcodeid",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.CODE_ID' />",
             width : "8%"
         }, {
             dataField : "detailcode",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE' htmlEscape='false'/>",
-            width : "10%"
+            headerText : "<spring:message code='sys.account.grid1.CODE' />",
+            width : "11%"
         }, {
             dataField : "detailcodename",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='NAME' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.NAME'/>",
             style : "aui-grid-left-column",
-            width : "25%"
+            width : "28%"
         }, {
             dataField : "detailcodedesc",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DESCRIPTION' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.account.grid1.DESCRIPTION'/>",
             style : "aui-grid-left-column",
-            width : "30%"
+            width : "28%"
         }, {
             dataField : "detaildisabled",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.DISABLED'/>",
             width : "10%",
             editRenderer : 
             {
@@ -98,8 +98,8 @@ var detailColumnLayout =
             }
         }, {
             dataField : "codeMasterId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE MASTER ID' htmlEscape='false'/>",
-            width : "10%",
+            headerText : "<spring:message code='sys.generalCode.grid1.CODE_MASTER_ID'/>",
+            width : "15%",
             editable : false
         }
 
@@ -121,7 +121,9 @@ function fn_getMstCommCdListAjax()
 	        
 	        if(result != null && result.length > 0)
 		      {
-	        	fn_getDetailCode(myGridID, 0);
+	        	//fn_getDetailCode(myGridID, 0);
+	        	//fn_setDetail(myGridID, 0);
+	        	fn_DetailGetInfo();
 	        }
 	     });
 }
@@ -138,9 +140,141 @@ function fn_DetailGetInfo()
 			   });
 }
 
+function fnValidationDetailCheck()
+{
+    var result = true;
+    var addList = AUIGrid.getAddedRowItems(detailGridID);
+    var udtList = AUIGrid.getEditedRowItems(detailGridID);
+    var delList = AUIGrid.getRemovedItems(detailGridID);
+        
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+    {
+      Common.alert("No Change");
+      return false;
+    }
+
+    for (var i = 0; i < addList.length; i++) 
+    {
+      var detailcode      = addList[i].detailcode;
+      var codeMasterId    = addList[i].codeMasterId;
+      var detailcodename  = addList[i].detailcodename;
+      
+      if (detailcode == "" || detailcode.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Detail Code' htmlEscape='false'/>");
+        break;
+      }
+      
+      if (codeMasterId == "" || codeMasterId.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Detail Code Master' htmlEscape='false'/>");
+        break;
+      }
+      
+      if (detailcodename == "" || detailcodename.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Detail CodeName' htmlEscape='false'/>");
+        break;
+      }
+    }
+
+    for (var i = 0; i < udtList.length; i++) 
+    {
+      var codeMasterId  = udtList[i].codeMasterId;
+      var detailcode    = udtList[i].detailcode;
+      
+      if (codeMasterId == "" || codeMasterId.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Id' htmlEscape='false'/>");
+        break;
+      }
+      
+      if (detailcode == "" || detailcode.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Detail Code' htmlEscape='false'/>");
+        break;
+      }
+
+    }
+
+    return result;
+}
+
+function fnValidationCheck() 
+{
+    var result = true;
+    var addList = AUIGrid.getAddedRowItems(myGridID);
+    var udtList = AUIGrid.getEditedRowItems(myGridID);
+    var delList = AUIGrid.getRemovedItems(myGridID);
+        
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+    {
+      Common.alert("No Change");
+      return false;
+    }
+
+    for (var i = 0; i < addList.length; i++) 
+    {
+      var codeMasterName  = addList[i].codeMasterName;
+      
+	    if (codeMasterName == "" || codeMasterName.length == 0) 
+	    {
+	      result = false;
+	      // {0} is required.
+	      Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
+	      break;
+	    }
+    }
+
+    for (var i = 0; i < udtList.length; i++) 
+    {
+      var codeMasterName  = udtList[i].codeMasterName;
+      
+	    if (codeMasterName == "" || codeMasterName.length == 0) 
+	    {
+	      result = false;
+	      // {0} is required.
+	      Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
+	      break;
+	    }
+    }
+
+    for (var i = 0; i < delList.length; i++) 
+    {
+      var codeMasterName  = delList[i].codeMasterName;
+      
+	    if (codeMasterName == "" || codeMasterName.length == 0) 
+	    {
+	      result = false;
+	      // {0} is required.
+	      Common.alert("<spring:message code='sys.msg.necessary' arguments='Code Master Name' htmlEscape='false'/>");
+	      break;
+	    }
+    }
+
+    return result;
+
+}
+
+
 // 마스터저장 서버 전송.
 function fnSaveGridMap() 
 {
+  if (fnValidationCheck() == false)
+  {
+    return false;
+  }
+	
   Common.ajax("POST", "/general/saveGeneralCode.do"
 		    , GridCommon.getEditData(myGridID)
 		    , function(result) 
@@ -171,10 +305,15 @@ function fnSaveGridMap()
 // 상세데이타 서버로 전송.
 function fnSaveDetailGridMap() 
 {
+  if (fnValidationDetailCheck() == false)
+  {
+    return false;
+  }
+	
   Common.ajax("POST", "/general/saveDetailCommCode.do"
 	     , GridCommon.getEditData(detailGridID), function(result) 
 	       {
-          Common.alert("<spring:message code='sys.msg.success'/>");  
+	        Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
           fn_getMstCommCdListAjax() ;     
           console.log("성공.");
           console.log("data : " + result);
@@ -304,6 +443,30 @@ $(document).ready(function()
 	$("#cdMstId").focus();
 	  
   $("#cdMstId").keydown(function(key) 
+  {
+    if (key.keyCode == 13) 
+    {
+    	fn_getMstCommCdListAjax();
+    }
+	});
+	  
+  $("#cdMstNm").keydown(function(key) 
+  {
+    if (key.keyCode == 13) 
+    {
+    	fn_getMstCommCdListAjax();
+    }
+	});
+	  
+  $("#cdMstDesc").keydown(function(key) 
+  {
+    if (key.keyCode == 13) 
+    {
+    	fn_getMstCommCdListAjax();
+    }
+	});
+	  
+  $("#createID").keydown(function(key) 
   {
     if (key.keyCode == 13) 
     {

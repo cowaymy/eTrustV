@@ -19,7 +19,7 @@
 var gSelMainRowIdx = 0;
 var StatusCdList = new Array();
 
-$(function()
+$(function() 
 {
 	getStatusComboListAjax();
 });
@@ -27,27 +27,28 @@ $(function()
 var MainColumnLayout =
     [
 
-        {
+        {    
             dataField : "div",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Div' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.menumanagement.grid1.Div' />",
             editable: false,
             width : "5%"
         }, {
-            dataField : "menuLvl",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Lvl' htmlEscape='false'/>",
+            dataField : "menuLvl", 
+            headerText : "<spring:message code='sys.menumanagement.grid1.Lvl' />",  
             width : "5%",
             editRenderer : {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                listFunction : function(rowIndex, columnIndex, item, dataField) 
+                {
                 	gSelMainRowIdx = rowIndex;
-                   return   getMenuLevel();
+                    return   getMenuLevel();
                 },
                 keyField : "id"
             }
         }, {
             dataField : "upperMenuCode",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='UpperMenu' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.menumanagement.grid1.UpperMenu' />", 
             width : "11%",
             editable : false,
             style : "aui-grid-left-column",
@@ -64,11 +65,11 @@ var MainColumnLayout =
                       case "1":
                        return  null; // null 반환하면 아이콘 표시 안함.
                       default:
-                       return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
+                       return "${pageContext.request.contextPath}/resources/images/common/normal_search.png"; 
                     }
-                } ,// end of iconFunction
+                } ,// end of iconFunction                
 
-                onclick : function(rowIndex, columnIndex, value, item)
+                onclick : function(rowIndex, columnIndex, value, item) 
                          {
 				                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
 				                    if (item.menuLvl == "1")
@@ -84,21 +85,21 @@ var MainColumnLayout =
             } // IconRenderer
         },{
             dataField : "menuCode",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuId' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.menumanagement.grid1.MenuId'/>", 
             editable : true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
             width : "11%"
         }, {
             dataField : "menuName",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuNm' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.menumanagement.grid1.MenuNm' />", 
             style : "aui-grid-left-column",
             width : "22%"
         }, {
-            dataField : "pgmCode",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramId' htmlEscape='false'/>",
+            dataField : "pgmCode", 
+            headerText : "<spring:message code='sys.menumanagement.grid1.ProgramId'/>",
             width : "10%",
             editable : false,
             style : "aui-grid-left-column",
-            renderer :
+            renderer : 
             {
                 type : "IconRenderer",
                 iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
@@ -112,37 +113,37 @@ var MainColumnLayout =
                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.pgmCode + " POPUP 클릭");
                     //setPopAcctSrchList(rowIndex);
                    gSelMainRowIdx = rowIndex;
-                	 fnSearchProgramPopUp();
+                   fnSearchProgramPopUp();
                 }
             }
-
+            
         }, {
             dataField : "pgmName",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramNm' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.menumanagement.grid1.ProgramNm'/>",
             editable : false,
             style : "aui-grid-left-column",
             width : "22%"
         }, {
             dataField : "menuOrder",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Order' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.menumanagement.grid1.Order'/>",
             width : "8%",
             editable : true,
         }, {
             dataField : "statusCode",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Status' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.menumanagement.grid1.Status'/>",
             //style : "my-column",
             width : "6%",
             editRenderer :
             {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                listFunction : function(rowIndex, columnIndex, item, dataField)
+                listFunction : function(rowIndex, columnIndex, item, dataField) 
                 {
                   return StatusCdList;
                 },
                 keyField : "id",
                 valueField : "value",
-            }
+            } 
         }, {
             dataField : "menuSeq",
             headerText : "",
@@ -173,7 +174,7 @@ function getStatusComboListAjax(callBack)
 							      if (callBack) {
 							        callBack(StatusCdList);
 							      }
-
+							      
 							    });
 	  return StatusCdList;
   }
@@ -192,7 +193,7 @@ function auiCellEditignHandler(event)
       console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
       //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
 
-      if(event.dataField == "menuCode")
+      if(event.dataField == "menuCode") 
       {
           // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
          if(AUIGrid.isAddedById(myGridID, event.item.rowId) == false && (event.item.rowId =="PkAddNew") )  //추가된 Row
@@ -206,7 +207,7 @@ function auiCellEditignHandler(event)
       }
       else
       {
-    	   return true; // 다른 필드들은 편집 허용
+    	   return true; // 다른 필드들은 편집 허용 
       }
 
   }
@@ -286,6 +287,7 @@ function fnSearchProgramPopUp()
        );
 
 }
+
 function fnSearchUpperMenuPopUp()
 {
    var popUpObj = Common.popupDiv("/menu/searchUpperMenuPop.do"
@@ -312,7 +314,7 @@ function fnSelectMenuListAjax()
            });
 }
 
-function fnSaveMenuCode()
+function fnSaveMenuCode() 
 {
   if (fnValidationCheck() == false)
 	{
@@ -378,7 +380,7 @@ function fnValidationCheck()
       var menuLvl   = addList[i].menuLvl;
       var menuOrder = addList[i].menuOrder;
       var statusCode = addList[i].statusCode;
-      var upperMenuCode = addList[i].upperMenuCode.fnTrim();
+      var upperMenuCode = addList[i].upperMenuCode;
 
       if (menuCode == "" || menuCode.length == 0)
       {
@@ -392,7 +394,7 @@ function fnValidationCheck()
       {
         result = false;
         //Common.alert("Menu Code length must be 9 digits. ");
-        Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");
+        Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");  
         break;
       }
 
@@ -468,9 +470,9 @@ function fnValidationCheck()
         var menuLvl   = udtList[i].menuLvl;
         var menuOrder = udtList[i].menuOrder;
         var statusCode = udtList[i].statusCode;
-        var upperMenuCode = udtList[i].upperMenuCode.fnTrim();
+        var upperMenuCode = udtList[i].upperMenuCode;
 
-        if (menuCode == "" || menuCode.length == 0)
+        if (menuCode == "" || menuCode.length == 0) 
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
@@ -725,4 +727,5 @@ $(document).ready(function()
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
+
 </section><!-- content end -->

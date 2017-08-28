@@ -54,17 +54,17 @@ var detailColumnLayout =
     [  
         {
             dataField : "stusCodeId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.CODE_ID'/>",
             width : "20%"
            ,editable : false
         }, {
             dataField : "codeName",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE NAME' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.statuscode.grid1.CODE_NAME'/>",
             width : "60%"
            ,editable : false
         }, {
             dataField : "codeDisab",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='DISABLED' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.DISABLED'/>",
             width : "20%",
             visible : true,
             editRenderer : 
@@ -108,16 +108,16 @@ var codeIDColumnLayout =
           }  //renderer
       },{
             dataField : "stusCodeId",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE ID' htmlEscape='false'/>",
+            headerText : "<spring:message code='sys.generalCode.grid1.CODE_ID'/>",
             width : "20%"
       },{
           dataField : "codeName",
-          headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE NAME' htmlEscape='false'/>",
+          headerText : "<spring:message code='sys.statuscode.grid1.CODE_NAME'/>",
           style : "aui-grid-left-column",
           width : "50%"
       },{
           dataField : "code",
-          headerText : "<spring:message code='sys.grid.headerTxt' arguments='CODE' htmlEscape='false'/>",
+          headerText : "<spring:message code='sys.account.grid1.CODE'/>",
           width : "20%"
       }
 
@@ -348,14 +348,13 @@ $(document).ready(function()
         $("#paramCategoryId").val(""); 
         gSelRowIdx = event.rowIndex;
 
-        if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
-                || String(event.value).length < 1)
-            {
-                    Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
-                    return false;
-            } 
+        console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
 
-            fnGetCategoryCd(myGridID, event.rowIndex);
+         if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == false)  // 추가된 행이 아니다.
+         {
+        	// Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
+           fnGetCategoryCd(myGridID, event.rowIndex);
+         }
         
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedCategoryId: " + $("#selCategoryId").val() +" / "+ $("#paramCategoryId").val());        
     });
@@ -507,12 +506,6 @@ function fnSelectStatusCdId()
 
 function saveStatusCode()
 {
-  if ($("#selCategoryId").val().length < 1 )
-	{
-	  Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
-	  return;
-	}
-	
   Common.ajax("POST", "/status/saveStatusCode.do"
 	         , GridCommon.getEditData(statusCodeGridID)
 	         , function(result) 
@@ -520,7 +513,7 @@ function saveStatusCode()
                 fnSelectCategoryListAjax() ; 
 		            console.log("saveCategory 성공.");
 		            console.log("dataSuccess : " + result.data);
-		            Common.alert("[ Success: " + result.data + " Count ]");    
+		            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	           } 
 
 	         , function(jqXHR, textStatus, errorThrown) 
@@ -542,8 +535,54 @@ function saveStatusCode()
   
 }
 
+function fnValidationCheck() 
+{
+    var result = true;
+    var addList = AUIGrid.getAddedRowItems(myGridID);
+    var udtList = AUIGrid.getEditedRowItems(myGridID);
+        
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+    {
+      Common.alert("No Change");
+      return false;
+    }
+
+    for (var i = 0; i < addList.length; i++) 
+    {
+      var stusCtgryName  = addList[i].stusCtgryName;
+      
+      if (stusCtgryName == "" || stusCtgryName.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Category Name' htmlEscape='false'/>");
+        break;
+      }
+    }
+
+    for (var i = 0; i < udtList.length; i++) 
+    {
+      var stusCtgryName  = udtList[i].stusCtgryName;
+      
+      if (stusCtgryName == "" || stusCtgryName.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Category Name' htmlEscape='false'/>");
+        break;
+      }
+    }
+
+    return result;
+}
+
 function saveCategory()
 {
+	if (fnValidationCheck() == false)
+  {
+		  return false;
+	}
+	
   Common.ajax("POST", "/status/saveStatusCategory.do"
 	       , GridCommon.getEditData(myGridID)
 	       , function(result) 
@@ -551,7 +590,7 @@ function saveCategory()
             fnSelectCategoryListAjax() ;
 	          console.log("saveCategory 성공.");
 	          console.log("dataSuccess : " + result.data);
-	          Common.alert("[ Success: " + result.data + " Count ]");    
+	          Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>"); 
 	         } 
 
 	       , function(jqXHR, textStatus, errorThrown) 
@@ -579,7 +618,7 @@ function insertStatusCatalogDetail()
   
   if ($("#selCategoryId").val().length < 1 )
   {
-    Common.alert(' Please Select the Category ID 1.');
+    Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
     return;
   }
   
@@ -646,7 +685,7 @@ function fnUpdDisabled()
 	         {
 	          fnSelectCategoryListAjax() ;     
 	          console.log("UpdSuccess : " + result.data);
-	          Common.alert("[ Success: " + result.data + " Count ]");     
+	          Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");     
 	         } 
 
 	       , function(jqXHR, textStatus, errorThrown) 
@@ -738,7 +777,7 @@ function fnUpdDisabled()
 
 <div class="divine_auto type2"><!-- divine_auto start -->
 
-<div style="width:40%"><!-- 50% start -->
+<div style="width:45%"><!-- 50% start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Status Code</h3>
@@ -765,7 +804,7 @@ function fnUpdDisabled()
 
 </div><!-- 50% end -->
 
-<div style="width:60%"><!-- 50% start -->
+<div style="width:55%"><!-- 50% start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Status Category Code Management</h3>
