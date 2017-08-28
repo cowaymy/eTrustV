@@ -94,30 +94,20 @@ function fn_goSelectedPage() {
         </table>
     </section>
 
- <!-- search_result start -->
-<section class="search_result">     
-
-    <!-- link_btns_wrap start -->
-        <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
-                    </ul>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#">Send E-Invoice</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside>
-        <!-- link_btns_wrap end -->
+	<!-- search_result start -->
+	<section class="search_result">     
+	    <!-- link_btns_wrap start -->
+	    <aside class="link_btns_wrap">
+	        <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+	        <dl class="link_list">
+	            <dt>Link</dt>
+	            <dd>                    
+	                <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+	            </dd>
+	        </dl>
+	    </aside>
+	    <!-- link_btns_wrap end -->
         
-    <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
-</section>
+    </section>
 </section>
 
