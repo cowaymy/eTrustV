@@ -259,5 +259,24 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 	public void updateSirimTranItemDetail(Map<String, Object> params) {
 		SirimMapper.updateSirimTranItemDetail(params);		
 	}
+	
+	@Override
+	public List<EgovMap> selectSirimModDetail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return SirimMapper.selectSirimModDetail(params);
+	}
+
+	@Override
+	public int selecthasItemReceiveByReceiverCnt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return SirimMapper.selecthasItemReceiveByReceiverCnt(params);
+	}
+
+	@Override
+	public void doUpdateSirimTransit(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		SirimMapper.updateSirimTransit35(params);
+		SirimMapper.updateSirimTransit36(params);
+	}
 
 }

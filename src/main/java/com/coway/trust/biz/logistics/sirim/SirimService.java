@@ -24,4 +24,11 @@ public interface SirimService {
 	String insertSirimToTransitItem(Map<String, Object> params , int lid);
 	
 	void updateSirimTranItemDetail(Map<String, Object> params);
+	
+	List<EgovMap> selectSirimModDetail(Map<String, Object> params);
+	
+	int selecthasItemReceiveByReceiverCnt(Map<String, Object> params);
+	
+	void doUpdateSirimTransit(Map<String, Object> params);
+	
 }

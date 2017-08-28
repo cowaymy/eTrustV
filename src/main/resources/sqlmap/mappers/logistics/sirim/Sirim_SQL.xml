@@ -283,4 +283,61 @@ SELECT Project1.SIRIM_TYPE_ID SIRIM_TYPE_ID  ,
        set SRM_TRANS_STUS_ID = 8,SRM_TRANS_UPD_DT = sysdate
       where SRM_TRANS_ITM_ID = #{stii}
 </update>
+
+<select id="selectSirimModDetail" parameterType="Map" resultType="EgovMap">
+    SELECT T1.STI , T1.TTI ,
+	       L35.SRM_TRANSF_REF_NO STN, 
+	       L35.SRM_TRANSF_DT STDF,
+	       TO_CHAR(L35.SRM_TRANSF_DT , 'DD/MM/YYYY') STD,
+	       TRIM(L35.SRM_TRANSF_FROM) STF , 
+	       TRIM(L35.SRM_TRANSF_TO) STT, 
+	       TRIM(L35.CURIER_CODE) STC ,
+	       L35.SRM_TRANSF_CRT_USER_ID STCU, 
+	       L35.SRM_TRANSF_STUS_ID STSI,
+	       NVL(S47.USER_NAME ,'') SUN , 
+	       S38.CODE TSC, 
+	       S38.NAME TSN,
+	       0 AS TITC
+	  FROM( 
+	        SELECT L35.SRM_TRANSF_ID STI , COUNT(1) TTI
+	          FROM LOG0035D L35
+	             , LOG0036D L36
+	         WHERE 1 = 1
+	           AND L36.SRM_TRANS_STUS_ID = 1
+	           AND L35.SRM_TRANSF_ID = L36.SRM_TRANSF_ID
+	        GROUP BY L35.SRM_TRANSF_ID
+	      ) T1
+	     , LOG0035D L35
+	     , SYS0038M S38
+	     , SYS0047M S47
+	  WHERE 1 = 1
+	    AND L35.SRM_TRANSF_CRT_USER_ID = S47.USER_ID(+)
+	    AND L35.SRM_TRANSF_STUS_ID = S38.STUS_CODE_ID
+	    AND T1.STI = L35.SRM_TRANSF_ID 
+	    AND T1.STI = #{trnsitid}
+</select>
+<select id="selecthasItemReceiveByReceiverCnt" parameterType="Map" resultType="Integer">
+    SELECT COUNT(1)
+	  FROM LOG0036D
+	 WHERE SRM_TRANS_STUS_ID = 1
+	   AND SRM_TRANSF_ID = #{trnsitid}
+	   AND SRM_RESULT_STUS_ID = '4' 
+</select>
+<update id="updateSirimTransit36" parameterType="Map">
+   update LOG0036D
+	   set SRM_RESULT_STUS_ID = 50
+	     , SRM_TRANS_UPD_DT = sysdate
+	     , SRM_TRANS_UPD_USER_ID = #{suserid}
+	 where SRM_TRANSF_ID = #{htranid}
+	   and SRM_TRANS_STUS_ID = 1
+	   and SRM_RESULT_STUS_ID = 1 or SRM_RESULT_STUS_ID = 44
+</update>
+<update id="updateSirimTransit35" parameterType="Map">
+    update LOG0035D
+	   set SRM_TRANSF_STUS_ID = #{utrnsitstus}
+	     , CURIER_CODE        = #{ucourier}
+	     , SRM_TRANSF_UPD_DT  = SYSDATE
+	     , SRM_TRANSF_UPD_USER_ID =#{suserid}
+	 where SRM_TRANSF_ID = #{htranid}
+</update>
 </mapper>

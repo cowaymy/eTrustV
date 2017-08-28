@@ -217,5 +217,51 @@ public class SirimController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	@RequestMapping(value = "/selectSirimModDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSirimModDetail(@RequestParam Map<String, Object> params, Model model) {
+		
+		
+		List<EgovMap> list = SirimService.selectSirimModDetail(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/selecthasItemReceiveByReceiverCnt.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selecthasItemReceiveByReceiverCnt(@RequestParam Map<String, Object> params, Model model) {
+		
+		
+		int list = SirimService.selecthasItemReceiveByReceiverCnt(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/doUpdateSirimTransit.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> doUpdateSirimTransit(@RequestBody Map<String, Object> params, Model model) {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		params.put("suserid", loginId);
+		SirimService.doUpdateSirimTransit(params);
+		
+		Map<String, Object> map = new HashMap();
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		map.put("message", message);
+
+		return ResponseEntity.ok(map);
+	}
 
 }

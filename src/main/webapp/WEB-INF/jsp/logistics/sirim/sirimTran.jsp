@@ -167,7 +167,7 @@
             
             param = "trnsitid="+event.item.trnsitid;
             
-            detailSearchAjax(param , deGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , deGrid);
             
             $("#detailView").show();
         });
@@ -200,57 +200,86 @@
         });
         $("#showall > a").click(function(){
         	var param = "trnsitid="+$("#trnsitno").text();
-            detailSearchAjax(param , deGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , deGrid);
         });
         $("#showpen > a").click(function(){
         	var param = "trnsitid="+$("#trnsitno").text()+"&statusid=44";
-            detailSearchAjax(param , deGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , deGrid);
         });
         $("#showcomp > a").click(function(){
         	var param = "trnsitid="+$("#trnsitno").text()+"&statusid=4";
-            detailSearchAjax(param , deGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , deGrid);
         });
         $("#showincom > a").click(function(){
         	var param = "trnsitid="+$("#trnsitno").text()+"&statusid=50";
-            detailSearchAjax(param , deGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , deGrid);
         });
         $("#updall > a").click(function(){
             var param = "trnsitid="+$("#utrnsitno").text();
-            detailSearchAjax(param , updGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , updGrid);
         });
         $("#updpen > a").click(function(){
             var param = "trnsitid="+$("#utrnsitno").text()+"&statusid=44";
-            detailSearchAjax(param , updGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , updGrid);
         });
         $("#updcomp > a").click(function(){
             var param = "trnsitid="+$("#utrnsitno").text()+"&statusid=4";
-            detailSearchAjax(param , updGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , updGrid);
         });
         $("#updincom > a").click(function(){
             var param = "trnsitid="+$("#utrnsitno").text()+"&statusid=50";
-            detailSearchAjax(param , updGrid);
+            detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , updGrid);
         });
         $("#newtran").click(function(){
         	$("#newView").show();
+        });
+        $("#updbtn").click(function(){
+            if(updValidatChk()){
+        	    Common.ajax("POST","/logistics/sirim/doUpdateSirimTransit.do",$("#updForm").serializeJSON(),function(result){
+                	Common.alert('Transit info successfully updated.');
+                	getListAjax();
+                },function (result){
+                	Common.alert('Failed to update sirim transit info. Please try again later.');
+                });
+                
+            }else{
+            	return false;
+            }
         });
         $("#updtran").click(function(){
         	var selectedItems = AUIGrid.getSelectedItems(listGrid);
         	console.log(selectedItems);
         	if (selectedItems.length > 0){
-        		$("#utrnsitno"  ).text(selectedItems[0].item.trnsitid    );
-                $("#utrnsitdt"  ).text(selectedItems[0].item.trnsitdt    );
-                $("#utrnsitstus").text(selectedItems[0].item.trnsitstusnm);
-                $("#utrnsitby"  ).text(selectedItems[0].item.crtusernm   );
-                $("#utottrnsit" ).text(selectedItems[0].item.totitm      );
-                $("#ulocation"  ).text(selectedItems[0].item.trnsitfr + ' TO ' + selectedItems[0].item.trnsitto  );
-                $("#ucourier"   ).text(selectedItems[0].item.trnsitcur   );
-
+        		param = "trnsitid="+selectedItems[0].item.trnsitid;
+        		
+        		Common.ajax("GET","/logistics/sirim/selectSirimModDetail.do",param,function(result){
+        			console.log(result);
+        			$("#utrnsitno"  ).text(result.data[0].stn    );
+                    $("#utrnsitdt"  ).text(result.data[0].std    );
+                    //$("#utrnsitstus").text(result.data[0].tsn    );
+                    $("#utrnsitby"  ).text(result.data[0].sun    );
+                    $("#utottrnsit" ).text(result.data[0].tti      );
+                    $("#ulocation"  ).text(result.data[0].stf + ' TO ' + result.data[0].stt  );
+                    
+                    $("#updall").find("a").attr("class", "on");
+                    if (result.data[0].stsi != '1'){
+                    	$("#updbutton").hide();
+                    }
+                    var cparam ={};
+                    doGetComboData('/logistics/courier/selectCourierComboList.do', cparam, result.data[0].stc,'ucourier', 'S' , '');
+                    
+                    var scomboData = [{"codeId": "1","codeName": "Active"},{"codeId": "8","codeName": "Deactivate"}];
+                    doDefCombo(scomboData, result.data[0].stsi ,'utrnsitstus', 'S', ''); // status selected
+                    
+                    $('#hupdstatus').val(result.data[0].stsi);
+                    $('#hupdcur'   ).val(result.data[0].stc);
+                    $('#hsrsi'     ).val(result.data[0].stsi);
+                    $('#htranid'   ).val(result.data[0].sti);
+                });
+        		
                 
-                $("#updall").find("a").attr("class", "on");
-                
-                param = "trnsitid="+selectedItems[0].item.trnsitid;
-                
-                detailSearchAjax(param , updGrid);
+        		
+                detailSearchAjax("/logistics/sirim/selectSirimToTransit.do" , param , updGrid);
                 
                 $("#updView").show();
         	}else{
@@ -282,8 +311,8 @@
         });
     }
     
-    function detailSearchAjax(param , grid) {
-        var url = "/logistics/sirim/selectSirimToTransit.do";
+    function detailSearchAjax(url ,param , grid) {
+        
         Common.ajax("GET",url,param,function(result){
             AUIGrid.setGridData(grid, result.data);
         });
@@ -339,7 +368,32 @@
     	
     	console.log(data);
     }
-    
+    function updValidatChk(){
+    	var bool = true; 
+    	if ($("#ucourier").val() == ''){
+    		   bool = false;
+    		   Common.alert('You must fill up all the required fields before update.');
+    	}
+    	if ($("#utrnsitstus").val() == ''){
+            bool = false;
+            Common.alert('You must fill up all the required fields before update.');
+        }
+    	if ($('#hupdstatus').val() == $("#utrnsitstus").val() && $('#hupdcur'   ).val() == $("#ucourier").val()){
+    		bool = false;
+    		Common.alert('No changes in this sirim transit.<br />Update is not required.');
+    	}
+    	if ($("#utrnsitstus").val() == "8")
+        {
+    		var pm = "trnsitid="+$('#htranid'   ).val();
+        	Common.ajaxSync("GET","/logistics/sirim/selecthasItemReceiveByReceiverCnt.do",pm,function(result){
+                if (result.data <= 0 ){
+                	bool = false;
+                	Common.alert('There are some items have been received.<br />Transit deactivation is disallowed.');
+                }
+            });
+        }
+    	return bool;
+    }
     function validSirim(){
     	var bool = true;
     	
@@ -394,8 +448,16 @@
         Common.ajax("GET",url,param,function(result){
             AUIGrid.removeRow(updGrid, "selectedIndex");
             AUIGrid.removeSoftRows(updGrid);
-            Common.alert(result.message);
+            Common.alert(result.message.message);
+            
         });
+    }
+    
+    
+    function updateValidation(){
+    	var bool = true;
+    	
+    	return bool;
     }
      
 </script>
@@ -600,11 +662,11 @@
     </tr>
     <tr>
         <th scope="row">Warehouse(To)</td>
-        <td ><select id="ntoloc" class="w100p" name="ntoloc"></td>
+        <td ><select id="ntoloc" class="w100p" name="ntoloc"></select></td>
     </tr>
     <tr>
         <th scope="row">Courier</td>
-        <td ><select id="ncourier" class="w100p" name="ncourier"></td>
+        <td ><select id="ncourier" class="w100p" name="ncourier"></select></td>
     </tr>
 </tbody>
 </table><!-- table end -->
@@ -626,7 +688,7 @@
 <tbody>
     <tr>
         <th scope="row">Warehouse(From)</td>
-        <td colspan='3'><select id="nfrloc" class="w100p" name="nfrloc"></td>
+        <td colspan='3'><select id="nfrloc" class="w100p" name="nfrloc"></select></td>
          <th scope="row">Quantity</td>
         <td ><input type="text" name="nqty" id="nqty" placeholder="" class="w100p numberAmt"/></td>
     </tr>
@@ -669,7 +731,11 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>Sirim Transit Details</h2>
 </aside><!-- title_line end -->
-
+<form id='updForm' name='updForm' method='POST'>
+<input type='hidden' name='hupdstatus' id='hupdstatus'/>
+<input type='hidden' name='hupdcur'    id='hupdcur'/>
+<input type='hidden' name='hsrsi'      id='hsrsi'/>
+<input type='hidden' name='htranid'    id='htranid'/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -687,15 +753,15 @@
     </tr>
     <tr>
         <th scope="row">Status</td>
-        <td ID="utrnsitstus"></td>
+        <td ><select id="utrnsitstus" class="w100p" name="utrnsitstus"></select></td>
         <th scope="row">Transit By</td>
         <td ID="utrnsitby"></td>            
     </tr>
     <tr>
         <th scope="row">Location</td>
         <td ID="ulocation"></td>
-       <th scope="row">Courier</td>
-        <td ID="ucourier"></td>
+        <th scope="row">Courier</td>
+        <td><select id="ucourier" class="w100p" name="ucourier"></select></td>
     </tr>
     <tr>
         <th scope="row">Total Sirim Transit</td>
@@ -703,11 +769,16 @@
     </tr>
 </tbody>
 </table><!-- table end -->
-
+<article class="grid_wrap" id="selItmgrid">
+   
+   <ul class="center_btns">
+      <li id="updbutton"><p class="btn_blue2 big"><a id="updbtn">Update</a></p></li> 
+    </ul>
+</article>
 <aside class="title_line"><!-- title_line start -->
 <h2>Sirim To Transit</h2>
 </aside><!-- title_line end -->
-
+</form>
 <section class="tap_wrap mt0"><!-- tap_wrap start -->
 <ul class="tap_type1">  
     <li id="updall"><a href="#"> Show All </a></li>

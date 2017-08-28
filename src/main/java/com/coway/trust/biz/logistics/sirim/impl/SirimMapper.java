@@ -39,4 +39,11 @@ public interface SirimMapper {
 	void insertSirimTransferStk(Map<String, Object> params);
 	
 	void updateSirimTranItemDetail(Map<String, Object> params);
+	
+	List<EgovMap> selectSirimModDetail(Map<String, Object> params);
+	
+	int selecthasItemReceiveByReceiverCnt(Map<String, Object> params);
+	
+	void updateSirimTransit36(Map<String, Object> params);
+	void updateSirimTransit35(Map<String, Object> params);
 }
