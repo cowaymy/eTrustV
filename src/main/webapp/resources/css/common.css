@@ -11,6 +11,10 @@
 #wrap.solo #container #content{padding:20px;}
 #wrap.solo .bottom_msg_box{margin:10px 20px;}
 
+/* 메인 */
+.main_title h2{float:left; font-size:28px!important; color:#255178!important;}
+.main_title .more a{position:relative; top:7px; float:right; line-height:26px; font-size:12px; color:#000;}
+
 /* 로그인 */
 #login_wrap{position:absolute; width:100%; min-width:1280px; height:100%; min-height:768px; padding:30px 0; background:#f6f6f6 url(../images/common/bg_login.jpg) no-repeat center 0; box-sizing:border-box; /*background-size:cover;*/}
 #login_wrap h1{width:1280px; margin:auto; padding:0 30px; box-sizing:border-box; }
