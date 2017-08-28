@@ -19,56 +19,56 @@
 var gSelMainRowIdx = 0;
 var StatusCdList = new Array();
 
-$(function() 
+$(function()
 {
 	getStatusComboListAjax();
 });
 
-var MainColumnLayout = 
-    [      
+var MainColumnLayout =
+    [
 
-        {    
+        {
             dataField : "div",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='Div' htmlEscape='false'/>",
             editable: false,
             width : "5%"
         }, {
-            dataField : "menuLvl", 
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Lvl' htmlEscape='false'/>",  
+            dataField : "menuLvl",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Lvl' htmlEscape='false'/>",
             width : "5%",
             editRenderer : {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 listFunction : function(rowIndex, columnIndex, item, dataField) {
                 	gSelMainRowIdx = rowIndex;
-                   return   getMenuLevel();                 
+                   return   getMenuLevel();
                 },
                 keyField : "id"
             }
         }, {
             dataField : "upperMenuCode",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='UpperMenu' htmlEscape='false'/>", 
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='UpperMenu' htmlEscape='false'/>",
             width : "11%",
             editable : false,
             style : "aui-grid-left-column",
-            renderer : 
+            renderer :
             {
                 type : "IconRenderer",
                 iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
                 iconHeight : 24,
                 iconPosition : "aisleRight",
-                iconFunction : function(rowIndex, columnIndex, value, item) 
+                iconFunction : function(rowIndex, columnIndex, value, item)
                 {
-                    switch(item.menuLvl ) 
+                    switch(item.menuLvl )
                     {
                       case "1":
                        return  null; // null 반환하면 아이콘 표시 안함.
                       default:
-                       return "${pageContext.request.contextPath}/resources/images/common/normal_search.png"; 
+                       return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
                     }
-                } ,// end of iconFunction                
-          
-                onclick : function(rowIndex, columnIndex, value, item) 
+                } ,// end of iconFunction
+
+                onclick : function(rowIndex, columnIndex, value, item)
                          {
 				                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.menuLvl + " POPUP 클릭");
 				                    if (item.menuLvl == "1")
@@ -77,45 +77,45 @@ var MainColumnLayout =
 				                    	Common.alert("<spring:message code='sys.msg.cannot' arguments='Select UpperMenu ; Lvl 1.' htmlEscape='false' argumentSeparator=';'/>");
 				                      return false;
 				                    }
-				                    
+
 				                    gSelMainRowIdx = rowIndex;
-				                    fnSearchUpperMenuPopUp(); 
+				                    fnSearchUpperMenuPopUp();
 				                  }
             } // IconRenderer
         },{
-            dataField : "menuCode", 
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuId' htmlEscape='false'/>", 
+            dataField : "menuCode",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuId' htmlEscape='false'/>",
             editable : true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
             width : "11%"
         }, {
             dataField : "menuName",
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuNm' htmlEscape='false'/>", 
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='MenuNm' htmlEscape='false'/>",
             style : "aui-grid-left-column",
             width : "22%"
         }, {
-            dataField : "pgmCode", 
+            dataField : "pgmCode",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramId' htmlEscape='false'/>",
             width : "10%",
             editable : false,
             style : "aui-grid-left-column",
-            renderer : 
+            renderer :
             {
                 type : "IconRenderer",
                 iconWidth : 24, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
                 iconHeight : 24,
                 iconPosition : "aisleRight",
                 iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png" // 
+                  "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png" //
                 },
-                onclick : function(rowIndex, columnIndex, value, item) 
+                onclick : function(rowIndex, columnIndex, value, item)
                 {
                    console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.pgmCode + " POPUP 클릭");
                     //setPopAcctSrchList(rowIndex);
                    gSelMainRowIdx = rowIndex;
-                	 fnSearchProgramPopUp(); 
+                	 fnSearchProgramPopUp();
                 }
             }
-            
+
         }, {
             dataField : "pgmName",
             headerText : "<spring:message code='sys.grid.headerTxt' arguments='ProgramNm' htmlEscape='false'/>",
@@ -123,26 +123,26 @@ var MainColumnLayout =
             style : "aui-grid-left-column",
             width : "22%"
         }, {
-            dataField : "menuOrder", 
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Order' htmlEscape='false'/>", 
+            dataField : "menuOrder",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Order' htmlEscape='false'/>",
             width : "8%",
             editable : true,
         }, {
-            dataField : "statusCode", 
-            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Status' htmlEscape='false'/>", 
+            dataField : "statusCode",
+            headerText : "<spring:message code='sys.grid.headerTxt' arguments='Status' htmlEscape='false'/>",
             //style : "my-column",
             width : "6%",
-            editRenderer : 
+            editRenderer :
             {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                listFunction : function(rowIndex, columnIndex, item, dataField) 
+                listFunction : function(rowIndex, columnIndex, item, dataField)
                 {
                   return StatusCdList;
                 },
                 keyField : "id",
                 valueField : "value",
-            }            
+            }
         }, {
             dataField : "menuSeq",
             headerText : "",
@@ -154,14 +154,14 @@ var MainColumnLayout =
        },
     ];
 
-function getStatusComboListAjax(callBack) 
+function getStatusComboListAjax(callBack)
 {
 	  //Common.ajaxSync("GET", "/menu/selectCodeList.do"
 	  Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
     	           , $("#MainForm").serialize()
-    	           , function(result) 
+    	           , function(result)
     	           {
-					          for (var i = 0; i < result.length; i++) 
+					          for (var i = 0; i < result.length; i++)
 						        {
 					        	  var list = new Object();
 							            list.id = result[i].stusCodeId;
@@ -173,48 +173,48 @@ function getStatusComboListAjax(callBack)
 							      if (callBack) {
 							        callBack(StatusCdList);
 							      }
-							      
+
 							    });
 	  return StatusCdList;
   }
 
 //AUIGrid 메소드
 //컬럼 선택시 상세정보 세팅.
-function fnSetCategoryCd(selGrdidID, rowIdx)  
-{     
+function fnSetCategoryCd(selGrdidID, rowIdx)
+{
  $("#selMenuId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "menuCode"));
 }
 
-function auiCellEditignHandler(event) 
+function auiCellEditignHandler(event)
 {
-  if(event.type == "cellEditBegin") 
+  if(event.type == "cellEditBegin")
   {
       console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
       //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
 
-      if(event.dataField == "menuCode") 
-      { 
+      if(event.dataField == "menuCode")
+      {
           // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
-         if(AUIGrid.isAddedById(myGridID, event.item.rowId) == false && (event.item.rowId =="PkAddNew") )  //추가된 Row 
-         { 
+         if(AUIGrid.isAddedById(myGridID, event.item.rowId) == false && (event.item.rowId =="PkAddNew") )  //추가된 Row
+         {
         	  return true; // 수정가능
-         } 
-         else 
-         { 
-            return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임) 
-         } 
+         }
+         else
+         {
+            return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
+         }
       }
       else
       {
-    	   return true; // 다른 필드들은 편집 허용 
+    	   return true; // 다른 필드들은 편집 허용
       }
-        
-  } 
-  else if(event.type == "cellEditEnd") 
+
+  }
+  else if(event.type == "cellEditEnd")
   {
       console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-  } 
-  else if(event.type == "cellEditCancel") 
+  }
+  else if(event.type == "cellEditCancel")
   {
       console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
   }
@@ -222,21 +222,21 @@ function auiCellEditignHandler(event)
 }
 
 //행 추가 이벤트 핸들러
-function auiAddRowHandler(event) 
+function auiAddRowHandler(event)
 {
 console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
 
 //MstGrid 행 추가, 삽입
-function addRowMenu() 
+function addRowMenu()
 {
   var item = new Object();
-  
+
   item.div        ="Lvl1";
   item.menuLvl    ="1";
   item.upperMenuCode ="";
   item.menuCode   ="";
-  item.menuName   ="";  
+  item.menuName   ="";
   item.pgmCode    ="";
   item.pgmName    ="";
   //item.menuOrder  ="";
@@ -251,57 +251,57 @@ function addRowMenu()
 
 //Make Use_yn ComboList, tooltip
 function getMenuLevel()
-{     
-  var list =  ["2", "3", "4"];   
+{
+  var list =  ["2", "3", "4"];
   return list;
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandler(event) 
+function auiRemoveRowHandler(event)
 {
   console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
   //$("#delCancel").show();
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandlerDetail(event) 
+function auiRemoveRowHandlerDetail(event)
 {
   console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 //행 삭제 메소드
-function removeRow() 
+function removeRow()
 {
-  console.log("removeRowMst: " + gSelMainRowIdx);    
+  console.log("removeRowMst: " + gSelMainRowIdx);
   AUIGrid.removeRow(myGridID,"selectedIndex");
 }
 
-function fnSearchProgramPopUp() 
+function fnSearchProgramPopUp()
 {
    var popUpObj = Common.popupDiv("/menu/searchProgramPop.do"
        , $("#MainForm").serializeJSON()
        , null
-       , true  // true면 더블클릭시 close 
+       , true  // true면 더블클릭시 close
        , "searchProgramPop"
        );
-        
+
 }
-function fnSearchUpperMenuPopUp() 
+function fnSearchUpperMenuPopUp()
 {
    var popUpObj = Common.popupDiv("/menu/searchUpperMenuPop.do"
        , $("#MainForm").serializeJSON()
        , null
-       , true  // true면 더블클릭시 close 
+       , true  // true면 더블클릭시 close
        , "searchUpperMenuPop"
        );
-        
+
 }
 
 function fnSelectMenuListAjax()
 {
    Common.ajax("GET", "/menu/selectMenuList.do"
            , $("#MainForm").serialize()
-           , function(result) 
+           , function(result)
            {
               console.log("성공 data : " + result);
               AUIGrid.setGridData(myGridID, result);
@@ -312,65 +312,65 @@ function fnSelectMenuListAjax()
            });
 }
 
-function fnSaveMenuCode() 
+function fnSaveMenuCode()
 {
   if (fnValidationCheck() == false)
 	{
 	  return false;
 	}
-	
+
   Common.ajax("POST", "/menu/saveMenuId.do"
         , GridCommon.getEditData(myGridID)
-        , function(result) 
+        , function(result)
           {
             //alert(result.data + " Count Save Success!");
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSelectMenuListAjax() ;
-            
+
             console.log("성공." + JSON.stringify(result));
             console.log("data : " + result.data);
-          } 
-        , function(jqXHR, textStatus, errorThrown) 
+          }
+        , function(jqXHR, textStatus, errorThrown)
           {
-	          try 
+	          try
 	          {
 	            console.log("Fail Status : " + jqXHR.status);
 	            console.log("code : "        + jqXHR.responseJSON.code);
 	            console.log("message : "     + jqXHR.responseJSON.message);
 	            console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	          } 
-	          catch (e) 
+	          }
+	          catch (e)
 	          {
 	            console.log(e);
 	          }
-	          
+
 	          Common.alert("Fail : " + jqXHR.responseJSON.message);
-            
-          }); 
+
+          });
   }
 
 //삭제해서 마크 된(줄이 그어진) 행을 복원 합니다.(삭제 취소)
-function removeAllCancel() 
+function removeAllCancel()
 {
   $("#delCancel").hide();
-  
-  AUIGrid.restoreSoftRows(myGridID, "all"); 
+
+  AUIGrid.restoreSoftRows(myGridID, "all");
 }
 
-function fnValidationCheck() 
+function fnValidationCheck()
 {
     var result = true;
     var addList = AUIGrid.getAddedRowItems(myGridID);
     var udtList = AUIGrid.getEditedRowItems(myGridID);
     var delList = AUIGrid.getRemovedItems(myGridID);
-        
-    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0)
     {
       Common.alert("No Change");
       return false;
     }
 
-    for (var i = 0; i < addList.length; i++) 
+    for (var i = 0; i < addList.length; i++)
     {
       var menuCode  = addList[i].menuCode;
       var menuName  = addList[i].menuName;
@@ -379,54 +379,54 @@ function fnValidationCheck()
       var menuOrder = addList[i].menuOrder;
       var statusCode = addList[i].statusCode;
       var upperMenuCode = addList[i].upperMenuCode.fnTrim();
-      
-      if (menuCode == "" || menuCode.length == 0) 
+
+      if (menuCode == "" || menuCode.length == 0)
       {
         result = false;
         // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
         break;
       }
-      
-      if (menuCode.length != 9) 
+
+      if (menuCode.length != 9)
       {
         result = false;
         //Common.alert("Menu Code length must be 9 digits. ");
-        Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");  
+        Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");
         break;
       }
-      
-      if (menuName == "" ) 
+
+      if (menuName == "" )
       {
         result = false;
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Name' htmlEscape='false'/>");
         break;
       }
-      
-      if (menuLvl == "") 
+
+      if (menuLvl == "")
       {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Level' htmlEscape='false'/>");
           break;
       }
 
-      if (parseInt(menuLvl) > 4) 
+      if (parseInt(menuLvl) > 4)
       {
           result = false;
-          //Common.alert("Menu Level is not more than 4. ");  
+          //Common.alert("Menu Level is not more than 4. ");
           Common.alert("<spring:message code='sys.msg.limitMore' arguments='Menu Level ; 4' htmlEscape='false' argumentSeparator=';' />");
           AUIGrid.restoreEditedCells(myGridID, [gSelMainRowIdx, "menuLvl"] );
           break;
       }
-      
-      if (menuLvl != "1" && menuOrder == "") 
+
+      if (menuLvl != "1" && menuOrder == "")
       {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Order' htmlEscape='false'/>");
           break;
       }
-      
-      if (statusCode == "") 
+
+      if (statusCode == "")
       {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Status Code' htmlEscape='false'/>");
@@ -436,15 +436,15 @@ function fnValidationCheck()
       if ( menuLvl != "1" && upperMenuCode.length != 0 && menuCode == upperMenuCode)
       {
           result = false;
-          //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");  
+          //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
           Common.alert("<spring:message code='sys.msg.different' arguments='UPPER MENU ; MENU CODE' htmlEscape='false' argumentSeparator=';' />");
           break;
       }
-      
+
       if ( menuLvl > 4)
       {
           result = false;
-          //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");  
+          //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
           Common.alert("<spring:message code='sys.msg.limitMore' arguments='MENU LVL; 5' htmlEscape='false' argumentSeparator=';' />");
           break;
       }
@@ -456,11 +456,11 @@ function fnValidationCheck()
           Common.alert("<spring:message code='sys.msg.limit' arguments='UPPER MENU ; at level 2' htmlEscape='false' argumentSeparator=';'/>");
           break;
       }
-      
+
     }  // addlist
 
-     
-    for (var i = 0; i < udtList.length; i++) 
+
+    for (var i = 0; i < udtList.length; i++)
     {
         var menuCode  = udtList[i].menuCode;
         var menuName  = udtList[i].menuName;
@@ -470,52 +470,52 @@ function fnValidationCheck()
         var statusCode = udtList[i].statusCode;
         var upperMenuCode = udtList[i].upperMenuCode.fnTrim();
 
-        if (menuCode == "" || menuCode.length == 0) 
+        if (menuCode == "" || menuCode.length == 0)
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
           break;
         }
-        
-        if (menuCode.length != 9) 
+
+        if (menuCode.length != 9)
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.length' arguments='Menu Code ; 9' htmlEscape='false' argumentSeparator=';' />");
           break;
-        }        
-        
-        if (menuName == "" ) 
+        }
+
+        if (menuName == "" )
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Name' htmlEscape='false'/>");
           break;
         }
-        
-        if (menuLvl == "") 
+
+        if (menuLvl == "")
         {
             result = false;
             Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Level' htmlEscape='false'/>");
             break;
         }
-        
+
         if ( menuLvl > 4)
         {
             result = false;
-            //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");  
+            //Common.alert(" 'UPPER MENU' and 'MENU CODE' should not be the same.");
             Common.alert("<spring:message code='sys.msg.limitMore' arguments='MENU LVL; 5' htmlEscape='false' argumentSeparator=';' />");
             AUIGrid.restoreEditedCells(myGridID, [gSelMainRowIdx, "menuLvl"] );
             break;
         }
 
-        if (menuLvl != "1" && menuOrder == "") 
+        if (menuLvl != "1" && menuOrder == "")
         {
             result = false;
             Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Order' htmlEscape='false'/>");
             break;
         }
 
-        
-        if (statusCode == "") 
+
+        if (statusCode == "")
         {
             result = false;
             Common.alert("<spring:message code='sys.msg.necessary' arguments='Status Code' htmlEscape='false'/>");
@@ -535,28 +535,28 @@ function fnValidationCheck()
             Common.alert("<spring:message code='sys.msg.limit' arguments='UPPER MENU ; at level 2' htmlEscape='false' argumentSeparator=';'/>");
             AUIGrid.restoreEditedCells(myGridID, [gSelMainRowIdx, "menuLvl"] );
             break;
-        }        
-        
+        }
+
     }// udtlist
 
-    for (var i = 0; i < delList.length; i++) 
+    for (var i = 0; i < delList.length; i++)
     {
         var menuCode  = delList[i].menuCode;
-        
-        if (menuCode == "" || menuCode.length == 0 || menuCode.length != 9) 
+
+        if (menuCode == "" || menuCode.length == 0 || menuCode.length != 9)
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
           break;
         }
-        
+
      } //delete
-    
+
     return result;
   }
 
 //trim
-String.prototype.fnTrim = function() 
+String.prototype.fnTrim = function()
 {
     return this.replace(/(^\s*)|(\s*$)/gi, "");
 }
@@ -569,35 +569,35 @@ var myGridID, transGridID;
 $(document).ready(function()
 {
     $("#menuCode").focus();
-    
-    $("#menuCode").keydown(function(key) 
+
+    $("#menuCode").keydown(function(key)
     {
-       if (key.keyCode == 13) 
+       if (key.keyCode == 13)
        {
          fnSelectMenuListAjax();
        }
 
     });
 
-    $("#menuCode").bind("keyup", function() 
+    $("#menuCode").bind("keyup", function()
 	  {
 	    $(this).val($(this).val().toUpperCase());
 	  });
-    
-    $("#pgmCode").keydown(function(key) 
+
+    $("#pgmCode").keydown(function(key)
     {
-       if (key.keyCode == 13) 
+       if (key.keyCode == 13)
        {
          fnSelectMenuListAjax();
        }
     });
 
-    $("#pgmCode").bind("keyup", function() 
+    $("#pgmCode").bind("keyup", function()
     {
       $(this).val($(this).val().toUpperCase());
     });
 
-/***************************************************[ Main GRID] ***************************************************/    
+/***************************************************[ Main GRID] ***************************************************/
 
     var options = {
     		          //rowIdField : "rowId", // PK행 지정
@@ -610,48 +610,48 @@ $(document).ready(function()
                   //editable : true,
                   // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
                   enableRestore : true,
-                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제                 
+                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
                 };
-    
+
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("grid_wrap", MainColumnLayout,"", options);
     // AUIGrid 그리드를 생성합니다.
-    
+
     // 푸터 객체 세팅
-    
+
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
 
     // cellClick event.
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(myGridID, "cellClick", function( event )
     {
         gSelMainRowIdx = event.rowIndex;
-        
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedMenuId: " + $("#selMenuId").val() );        
+
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedMenuId: " + $("#selMenuId").val() );
     });
 
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-    });    
+    });
 
 
     $("#delCancel").hide();
-    
+
 });   //$(document).ready
 
 
@@ -677,7 +677,7 @@ $(document).ready(function()
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
 	<input type ="hidden" id="selCategoryId" name="selCategoryId" value="1"/>
-	
+
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -699,35 +699,8 @@ $(document).ready(function()
 	</tr>
 	</tbody>
 	</table><!-- table end -->
-	
+
 	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	<p class="show_btn"><%-- <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%></p>
-	<dl class="link_list">
-		<dt>Link</dt>
-		<dd>
-		<ul class="btns">
-			<li><p class="link_btn"><a href="#">menu1</a></p></li>
-			<li><p class="link_btn"><a href="#">menu2</a></p></li>
-			<li><p class="link_btn"><a href="#">menu3</a></p></li>
-			<li><p class="link_btn"><a href="#">menu4</a></p></li>
-			<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-			<li><p class="link_btn"><a href="#">menu6</a></p></li>
-			<li><p class="link_btn"><a href="#">menu7</a></p></li>
-			<li><p class="link_btn"><a href="#">menu8</a></p></li>
-		</ul>
-		<ul class="btns">
-			<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-			<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-			<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-			<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-		</ul>
-		<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-		</dd>
-	</dl>
 	</aside><!-- link_btns_wrap end -->
 
 </form>
@@ -748,20 +721,8 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 1-->
- <div id="grid_wrap"></div>
+ <div id="grid_wrap" style="height:420px"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
-
 </section><!-- content end -->
-
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-		
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->
-</body>
-</html>
