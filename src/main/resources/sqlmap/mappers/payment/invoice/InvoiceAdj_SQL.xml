@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.invoice.service.impl.InvoiceAdjMapper">
+    <select id="selectInvoiceAdjList" parameterType="Map" resultType="egovMap">
+        SELECT UnionAll2.MEMO_ADJ_ID MEMO_ADJ_ID  ,
+			       UnionAll2.MEMOADJUSTID1 MEMOADJUSTID1  ,
+			       UnionAll2.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
+			       UnionAll2.MEMO_ADJ_INVC_NO MEMO_ADJ_INVC_NO  ,
+			       UnionAll2.MEMO_ADJ_RPT_NO MEMO_ADJ_RPT_NO  ,
+			       UnionAll2.RESN_DESC RESN_DESC  ,
+			       UnionAll2.CODE CODE  ,
+			       UnionAll2.MEMO_ADJ_STUS_ID MEMO_ADJ_STUS_ID  ,
+			       UnionAll2.CODE1 CODE1  ,
+			       UnionAll2.MEMO_ITM_CHRG MEMO_ITM_CHRG  ,
+			       UnionAll2.MEMO_ITM_TXS MEMO_ITM_TXS  ,
+			       UnionAll2.MEMO_ITM_AMT MEMO_ITM_AMT  ,
+			       UnionAll2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+			       UnionAll2.USER_NAME USER_NAME  ,
+			       TO_CHAR(UnionAll2.MEMO_ADJ_CRT_DT, 'DD-MM-YYYY') MEMO_ADJ_CRT_DT  ,
+			       UnionAll2.MEMO_ADJ_INVC_TYPE_ID MEMO_ADJ_INVC_TYPE_ID  ,
+			       UnionAll2.TAX_INVC_TYPE TAX_INVC_TYPE  
+			  FROM ( SELECT UnionAll1.MEMO_ADJ_ID MEMO_ADJ_ID  ,
+			                UnionAll1.MEMOADJUSTID1 MEMOADJUSTID1  ,
+			                UnionAll1.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
+			                UnionAll1.MEMO_ADJ_INVC_NO MEMO_ADJ_INVC_NO  ,
+			                UnionAll1.MEMO_ADJ_RPT_NO MEMO_ADJ_RPT_NO  ,
+			                UnionAll1.RESN_DESC RESN_DESC  ,
+			                UnionAll1.CODE CODE  ,
+			                UnionAll1.MEMO_ADJ_STUS_ID MEMO_ADJ_STUS_ID  ,
+			                UnionAll1.CODE1 CODE1  ,
+			                UnionAll1.MEMO_ITM_CHRG MEMO_ITM_CHRG  ,
+			                UnionAll1.MEMO_ITM_TXS MEMO_ITM_TXS  ,
+			                UnionAll1.MEMO_ITM_AMT MEMO_ITM_AMT  ,
+			                UnionAll1.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+			                UnionAll1.USER_NAME USER_NAME  ,
+			                UnionAll1.MEMO_ADJ_CRT_DT MEMO_ADJ_CRT_DT  ,
+			                UnionAll1.MEMO_ADJ_INVC_TYPE_ID MEMO_ADJ_INVC_TYPE_ID  ,
+			                UnionAll1.TAX_INVC_TYPE TAX_INVC_TYPE  
+			         FROM ( SELECT Extent1.MEMO_ADJ_ID MEMO_ADJ_ID  ,
+			                       Extent1.MEMO_ADJ_ID MEMOADJUSTID1  ,
+			                       Extent1.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
+			                       Extent1.MEMO_ADJ_INVC_NO MEMO_ADJ_INVC_NO  ,
+			                       Extent1.MEMO_ADJ_RPT_NO MEMO_ADJ_RPT_NO  ,
+			                       Extent3.RESN_DESC RESN_DESC  ,
+			                       Extent4.CODE CODE  ,
+			                       Extent1.MEMO_ADJ_STUS_ID MEMO_ADJ_STUS_ID  ,
+			                       Extent8.CODE CODE1  ,
+			                       Extent2.MEMO_ITM_CHRG MEMO_ITM_CHRG  ,
+			                       Extent2.MEMO_ITM_TXS MEMO_ITM_TXS  ,
+			                       Extent2.MEMO_ITM_AMT MEMO_ITM_AMT  ,
+			                       Extent6.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+			                       Extent7.USER_NAME USER_NAME  ,
+			                       Extent1.MEMO_ADJ_CRT_DT MEMO_ADJ_CRT_DT  ,
+			                       Extent1.MEMO_ADJ_INVC_TYPE_ID MEMO_ADJ_INVC_TYPE_ID  ,
+			                       0 TAX_INVC_TYPE  
+			                FROM PAY0011D Extent1
+			                       JOIN PAY0012D Extent2   ON Extent2.MEMO_ADJ_ID = Extent1.MEMO_ADJ_ID
+			                       LEFT JOIN SYS0032M Extent3   ON Extent3.RESN_ID = Extent1.MEMO_ADJ_RESN_ID
+			                       LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.MEMO_ADJ_TYPE_ID
+			                       JOIN PAY0029D Extent5   ON Extent5.TAX_INVC_REF_NO = Extent1.MEMO_ADJ_INVC_NO
+			                       JOIN PAY0030D Extent6   ON Extent6.INVC_ITM_ID = Extent2.MEMO_ITM_INVC_ITM_ID
+			                       LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.MEMO_ADJ_CRT_USER_ID
+			                       LEFT JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.MEMO_ADJ_STUS_ID
+			                WHERE 1=1
+			                        <if test="orderNo != '' ">
+								    AND (Extent6.INVC_ITM_ORD_NO = #{orderNo}) 
+								    </if>
+								    <if test="adjNo != '' ">
+								    AND (Extent1.MEMO_ADJ_REF_NO = #{adjNo}) 
+								    </if>
+								    <if test="status != null and status != '' ">
+								    AND ( Extent1.MEMO_ADJ_STUS_ID = #{status}) 
+								    </if>
+								    <if test="invoiceNo != '' ">
+								    AND (Extent1.MEMO_ADJ_INVC_NO = #{invoiceNo})
+								    </if> 
+								    <if test="reportNo != '' ">
+								    AND (Extent1.MEMO_ADJ_RPT_NO = #{reportNo}) 
+								    </if>
+								    <if test="creator != '' ">
+								    AND (Extent7.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~')
+								    </if>
+			                UNION ALL 
+			                SELECT Extent9.MEMO_ADJ_ID MEMO_ADJ_ID  ,
+			                       Extent9.MEMO_ADJ_ID MEMOADJUSTID1  ,
+			                       Extent9.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
+			                       Extent9.MEMO_ADJ_INVC_NO MEMO_ADJ_INVC_NO  ,
+			                       Extent9.MEMO_ADJ_RPT_NO MEMO_ADJ_RPT_NO  ,
+			                       Extent11.RESN_DESC RESN_DESC  ,
+			                       Extent12.CODE CODE  ,
+			                       Extent9.MEMO_ADJ_STUS_ID MEMO_ADJ_STUS_ID  ,
+			                       Extent16.CODE CODE1  ,
+			                       Extent10.MEMO_ITM_CHRG MEMO_ITM_CHRG  ,
+			                       Extent10.MEMO_ITM_TXS MEMO_ITM_TXS  ,
+			                       Extent10.MEMO_ITM_AMT MEMO_ITM_AMT  ,
+			                       Extent14.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+			                       Extent15.USER_NAME USER_NAME  ,
+			                       Extent9.MEMO_ADJ_CRT_DT MEMO_ADJ_CRT_DT  ,
+			                       Extent9.MEMO_ADJ_INVC_TYPE_ID MEMO_ADJ_INVC_TYPE_ID  ,
+			                       0 TAX_INVC_TYPE  
+			                FROM PAY0011D Extent9
+			                       JOIN PAY0012D Extent10   ON Extent10.MEMO_ADJ_ID = Extent9.MEMO_ADJ_ID
+			                       LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent9.MEMO_ADJ_RESN_ID
+			                       LEFT JOIN SYS0013M Extent12   ON Extent12.CODE_ID = Extent9.MEMO_ADJ_TYPE_ID
+			                       JOIN PAY0033D Extent13   ON Extent13.TAX_INVC_REF_NO = Extent9.MEMO_ADJ_INVC_NO
+			                       JOIN PAY0034D Extent14   ON Extent14.INVC_ITM_ID = Extent10.MEMO_ITM_INVC_ITM_ID
+			                       LEFT JOIN SYS0047M Extent15   ON Extent15.USER_ID = Extent9.MEMO_ADJ_CRT_USER_ID
+			                       LEFT JOIN SYS0038M Extent16   ON Extent16.STUS_CODE_ID = Extent9.MEMO_ADJ_STUS_ID 
+			                 WHERE 1=1
+                                    <if test="orderNo != '' ">
+                                    AND (Extent14.INVC_ITM_ORD_NO = #{orderNo}) 
+                                    </if>
+                                    <if test="adjNo != '' ">
+                                    AND (Extent9.MEMO_ADJ_REF_NO = #{adjNo}) 
+                                    </if>
+                                    <if test="status != null and status != '' ">
+                                    AND ( Extent9.MEMO_ADJ_STUS_ID = #{status}) 
+                                    </if>
+                                    <if test="invoiceNo != '' ">
+                                    AND (Extent9.MEMO_ADJ_INVC_NO = #{invoiceNo})
+                                    </if> 
+                                    <if test="reportNo != '' ">
+                                    AND (Extent9.MEMO_ADJ_RPT_NO = #{reportNo}) 
+                                    </if>
+                                    <if test="creator != '' ">
+                                    AND (Extent15.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~')
+                                    </if>      
+			                       ) UnionAll1
+			                 
+			         UNION ALL 
+			         SELECT Extent17.MEMO_ADJ_ID MEMO_ADJ_ID  ,
+			                Extent17.MEMO_ADJ_ID MEMOADJUSTID1  ,
+			                Extent17.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
+			                Extent17.MEMO_ADJ_INVC_NO MEMO_ADJ_INVC_NO  ,
+			                Extent17.MEMO_ADJ_RPT_NO MEMO_ADJ_RPT_NO  ,
+			                Extent19.RESN_DESC RESN_DESC  ,
+			                Extent20.CODE CODE  ,
+			                Extent17.MEMO_ADJ_STUS_ID MEMO_ADJ_STUS_ID  ,
+			                Extent24.CODE CODE1  ,
+			                Extent18.MEMO_ITM_CHRG MEMO_ITM_CHRG  ,
+			                Extent18.MEMO_ITM_TXS MEMO_ITM_TXS  ,
+			                Extent18.MEMO_ITM_AMT MEMO_ITM_AMT  ,
+			                Extent22.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+			                Extent23.USER_NAME USER_NAME  ,
+			                Extent17.MEMO_ADJ_CRT_DT MEMO_ADJ_CRT_DT  ,
+			                Extent17.MEMO_ADJ_INVC_TYPE_ID MEMO_ADJ_INVC_TYPE_ID  ,
+			                Extent21.TAX_INVC_TYPE TAX_INVC_TYPE  
+			         FROM PAY0011D Extent17
+			                JOIN PAY0012D Extent18   ON Extent18.MEMO_ADJ_ID = Extent17.MEMO_ADJ_ID
+			                LEFT JOIN SYS0032M Extent19   ON Extent19.RESN_ID = Extent17.MEMO_ADJ_RESN_ID
+			                LEFT JOIN SYS0013M Extent20   ON Extent20.CODE_ID = Extent17.MEMO_ADJ_TYPE_ID
+			                JOIN PAY0031D Extent21   ON Extent21.TAX_INVC_REF_NO = Extent17.MEMO_ADJ_INVC_NO
+			                JOIN PAY0032D Extent22   ON Extent22.INVC_ITM_ID = Extent18.MEMO_ITM_INVC_ITM_ID
+			                LEFT JOIN SYS0047M Extent23   ON Extent23.USER_ID = Extent17.MEMO_ADJ_CRT_USER_ID
+			                LEFT JOIN SYS0038M Extent24   ON Extent24.STUS_CODE_ID = Extent17.MEMO_ADJ_STUS_ID 
+			        WHERE 1=1
+                                    <if test="orderNo != '' ">
+                                    AND (Extent22.INVC_ITM_ORD_NO = #{orderNo}) 
+                                    </if>
+                                    <if test="adjNo != '' ">
+                                    AND (Extent17.MEMO_ADJ_REF_NO = #{adjNo}) 
+                                    </if>
+                                    <if test="status != null and status != '' ">
+                                    AND ( Extent17.MEMO_ADJ_STUS_ID = #{status}) 
+                                    </if>
+                                    <if test="invoiceNo != '' ">
+                                    AND (Extent17.MEMO_ADJ_INVC_NO = #{invoiceNo})
+                                    </if> 
+                                    <if test="reportNo != '' ">
+                                    AND (Extent17.MEMO_ADJ_RPT_NO = #{reportNo}) 
+                                    </if>
+                                    <if test="creator != '' ">
+                                    AND (Extent23.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~')
+                                    </if>       
+			                ) UnionAll2
+  ORDER BY UnionAll2.MEMOADJUSTID1 DESC
+    </select>
+</mapper>
