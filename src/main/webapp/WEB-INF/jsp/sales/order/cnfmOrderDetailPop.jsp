@@ -34,15 +34,15 @@
 	    $('#btnConfirm_RW').click(function() {
 console.log('!@# fn_doSaveOrder before call');
 
-//        Data.LoginInfo li = Session["login"] as Data.LoginInfo;
-//        if (li != null) {
-            fn_doSaveOrder()
-//        }
-//        else {
-//            Common.confirm("Session Expired" + DEFAULT_DELIMITER + "<b>Your login session was expired. Please relogin to system.</b>");
-//        }        
+//          Data.LoginInfo li = Session["login"] as Data.LoginInfo;
+//          if (li != null) {
+                fn_doSaveOrder()
+//          }
+//          else {
+//              Common.confirm("Session Expired" + DEFAULT_DELIMITER + "<b>Your login session was expired. Please relogin to system.</b>");
+//          }        
 
-          fn_createEvent("btnBack_RW", "click");
+            fn_createEvent("btnBack_RW", "click");
 	    });
 	});
 

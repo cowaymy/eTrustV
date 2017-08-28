@@ -130,15 +130,18 @@
 	    console.log('btnHidden_Valid_Click CALL START');
 	    console.log('isInValid :'+isInValid);
 	    
-	    if(isInValid == 'InValid') {
+	    
+	    //TODO InValid인경우 Approval Popup을 통하여 확인 과정 거침
+	    //일단 로직 제외
+//	    if(isInValid == 'InValid') {
 //          this.txtApprovalCode.Text = "";
 //          this.txtApprovalBy.Text = "";
 //          this.lblErrorMsg_Approval.Text = "";
 //          this.RadWindow_Approval.VisibleOnPageLoad = true;
-	    }
-	    else {
+//	    }
+//	    else {
             fn_popOrderDetail();
-	    }
+//	    }
 	}
 	
 	function fn_popOrderDetail() {	    

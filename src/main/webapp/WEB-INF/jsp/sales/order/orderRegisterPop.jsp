@@ -137,10 +137,10 @@
                 $("#nationNm").val(custInfo.name2); //Nationality
                 $("#raceId").val(custInfo.raceId); //Nationality
                 $("#race").val(custInfo.codeName2); //
-                $("#dob").val(custInfo.dob); //DOB
+                $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
                 $("#gender").val(custInfo.gender); //Gender
-                $("#pasSportExpr").val(custInfo.pasSportExpr); //Passport Expiry
-                $("#visaExpr").val(custInfo.visaExpr); //Visa Expiry
+                $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
+                $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#email").val(custInfo.email); //Email
                 $("#rem").val(custInfo.rem); //Remark
 
