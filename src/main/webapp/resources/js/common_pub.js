@@ -41,27 +41,24 @@ var pickerOpts={//일반년월일달력 세팅
 		}
 };
 
-//$(".j_date").datepicker(pickerOpts);//일반년월일달력 실행
-
-//$(document).find("input[name=lAcqDate]").removeClass("hasDatepicker").datepicker(pickerOpts);
-
-$(document).on(
+$(document).on(//일반년월일달력 실행
 	"focus", ".j_date", function(){
-	
 	$(this).datepicker(pickerOpts);
 });
 
-var monthOptions = {//생년월일 세팅
+var monthOptions = {//년월달력 세팅
 	pattern: 'mm/yyyy',
 	selectedYear: 2017,
 	startYear: 2007,
 	finalYear: 2027
 };
 
-$(".j_date2").monthpicker(monthOptions);//생년월일 실행
+$(document).on(//년월달력 실행
+	"focus", ".j_date2", function(){
+	$(this).monthpicker(monthOptions);
+});
 
-
-var pickerOpts2 = {//생년월일 세팅
+var pickerOpts2 = {//생년월일달력 세팅
 	changeMonth:true,
 	changeYear:true,
 	defaultDate: new Date(1960, 00, 01),
@@ -69,8 +66,10 @@ var pickerOpts2 = {//생년월일 세팅
 	yearRange:"1930:2000"
 };
 
-
-$(".j_date3").datepicker(pickerOpts2);//생년월일 달력
+$(document).on(//생년월일달력 실행
+	"focus", ".j_date3", function(){
+	$(this).datepicker(pickerOpts2);
+});
 /* 제이쿼리 ui달력 end*/
 
 /* on클래스 넣기 start */
