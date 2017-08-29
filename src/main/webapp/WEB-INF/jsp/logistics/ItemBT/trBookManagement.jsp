@@ -1,0 +1,387 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+
+<style type="text/css">
+
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+.aui-grid-user-custom-right {
+    text-align:right;
+}
+
+/* 커스컴 disable 스타일*/
+.mycustom-disable-color {
+    color : #cccccc;
+}
+
+/* 그리드 오버 시 행 선택자 만들기 */
+.aui-grid-body-panel table tr:hover {
+    background:#D9E5FF;
+    color:#000;
+}
+.aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
+    background:#D9E5FF;
+    color:#000;
+}
+
+</style>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
+<script type="text/javaScript" language="javascript">
+var myGridID;
+
+
+var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "36","codeName": "Close"},{"codeId": "67","codeName": "Lost"}];
+var columnLayout = [
+                    {dataField:"boxId",headerText:"boxId",width:100,visible:false,style :"aui-grid-user-custom-left" },
+                    {dataField:"boxNo",headerText:"boxNo",width:100,visible:false ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookNo",headerText:"Book No",width:195 ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookPrefix",headerText:"Prefix",width:195 ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookCrtDt",headerText:"trBookCrtDt",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookCrtUserId",headerText:"trBookCrtUserId",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookCrtUserName",headerText:"trBookCrtUserName",width:100,visible:false ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookId",headerText:"trBookId",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookNoStart",headerText:"From",width:195,style :"aui-grid-user-custom-left" },
+                    {dataField:"trBookNoEnd",headerText:"To",width:195,style :"aui-grid-user-custom-left" },
+                    {dataField:"trBookPge",headerText:"Total Sheet(s)",width:195 ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookStusId",headerText:"trBookStusId",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trBookStusCode",headerText:"Status",width:195 ,style :"aui-grid-user-custom-left" },
+                    {dataField:"trHolder",headerText:"Holder",width:195 ,style :"aui-grid-user-custom-left"},
+                    {dataField:"trHolderType",headerText:"Holder Type",width:195 ,style :"aui-grid-user-custom-left"}
+                    ];
+// 그리드 속성 설정
+var gridPros = {
+    // 페이지 설정
+    usePaging : true,               
+    pageRowCount : 10,              
+    //fixedColumnCount : 1,
+    // 편집 가능 여부 (기본값 : false)
+    editable : false,                
+    // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
+    enterKeyColumnBase : true,                
+    // 셀 선택모드 (기본값: singleCell)
+    //selectionMode : "multipleCells",                
+    // 컨텍스트 메뉴 사용 여부 (기본값 : false)
+    useContextMenu : true,                
+    // 필터 사용 여부 (기본값 : false)
+    enableFilter : true,            
+    // 그룹핑 패널 사용
+    //useGroupingPanel : true,                
+    // 상태 칼럼 사용
+    showStateColumn : true,                
+    // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
+    displayTreeOpen : true,                
+    noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",                
+    groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",                
+    //selectionMode : "multipleCells",
+    //rowIdField : "stkid",
+    enableSorting : true,
+    //showRowCheckColumn : true,
+
+};
+
+$(document).ready(function(){
+	doDefCombo(comboData, '' ,'ddlBookStatus', 'M', 'f_multiCombo');
+	$("#ddlBookStatus option:eq(0)").prop("selected", true);
+	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridPros);
+	
+	$(function(){
+		$("#search").click(function(){
+			searchAjax();
+		});
+		
+	});
+})
+   function searchAjax() {
+        //f_showModal();
+        var url = "/logistic/TRBook/searchTRBookManagement.do";
+        var param = $('#searchForm').serializeJSON();
+        Common.ajax("POST" , url , param , function(data){
+            console.log(data);
+           // console.log(data.data);
+            AUIGrid.setGridData(myGridID, data.dataList);
+           // hideModal();
+        });
+    }                    
+             
+
+//멀티 셀렉트 세팅 함수들    
+function f_multiCombo() {
+    
+    $(function() {
+        $('#ddlBookStatus').change(function() {
+
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        });       
+    });
+}
+
+
+</script>
+<div id="wrap"><!-- wrap start -->
+
+<header id="header"><!-- header start -->
+<ul class="left_opt">
+    <li>Neo(Mega Deal): <span>2394</span></li> 
+    <li>Sales(Key In): <span>9304</span></li> 
+    <li>Net Qty: <span>310</span></li>
+    <li>Outright : <span>138</span></li>
+    <li>Installment: <span>4254</span></li>
+    <li>Rental: <span>4702</span></li>
+    <li>Total: <span>45080</span></li>
+</ul>
+<ul class="right_opt">
+    <li>Login as <span>KRHQ9001-HQ</span></li>
+    <li><a href="#" class="logout">Logout</a></li>
+    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
+</ul>
+</header><!-- header end -->
+<hr />
+        
+<section id="container"><!-- container start -->
+
+<aside class="lnb_wrap"><!-- lnb_wrap start -->
+
+<header class="lnb_header"><!-- lnb_header start -->
+<form action="#" method="post">
+<h1><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a></h1>
+<p class="search">
+<input type="text" title="검색어 입력" />
+<input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
+</p>
+
+</form>
+</header><!-- lnb_header end -->
+
+<section class="lnb_con"><!-- lnb_con start -->
+<p class="click_add_on_solo on"><a href="#">All menu</a></p>
+<ul class="inb_menu">
+    <li class="active">
+    <a href="#" class="on">menu 1depth</a>
+
+    <ul>
+        <li class="active">
+        <a href="#" class="on">menu 2depth</a>
+
+        <ul>
+            <li class="active">
+            <a href="#" class="on">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+            <li>
+            <a href="#">menu 3depth</a>
+            </li>
+        </ul>
+
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+        <li>
+        <a href="#">menu 2depth</a>
+        </li>
+    </ul>
+
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">menu 1depth</a>
+    </li>
+</ul>
+<p class="click_add_on_solo"><a href="#"><span></span>My menu</a></p>
+<ul class="inb_menu">
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+    <li>
+    <a href="#">My menu 1depth</a>
+    </li>
+</ul>
+</section><!-- lnb_con end -->
+
+</aside><!-- lnb_wrap end -->
+
+<section id="content"><!-- content start -->
+<ul class="path">
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>MISC</li>
+    <li>TR Book</li>
+</ul>
+
+<aside class="title_line"><!-- title_line start -->
+<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<h2>TR Book Management</h2>
+<ul class="right_btns">
+    <li><p class="btn_blue"><a href="#"  id="search"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#"  id="clear"><span class="clear"></span>Clear</a></p></li>
+</ul>
+</aside><!-- title_line end -->
+
+
+<section class="search_table"><!-- search_table start -->
+<form id="searchForm" name="searchForm">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Book No</th>
+    <td>
+    <input type="text" title="" placeholder="Book No" class="w100p" id="txtTRBookNo" name="txtTRBookNo" />
+    </td>
+    <th scope="row">TR No</th>
+    <td>
+    <input type="text" title="" placeholder="TR No" class="w100p"  id="txtTRNo" name="txtTRNo" />
+    </td>
+    <th scope="row">Create Date</th>
+    <td>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   id="dpCreateDate" name="dpCreateDate" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Create By</th>
+    <td>
+    <input type="text" title="" placeholder="Create By" class="w100p"   id="txtCreateBy" name="txtCreateBy" />
+    </td>
+    <th scope="row">Book Holder</th>
+    <td>
+    <input type="text" title="" placeholder="Book Holder" class="w100p"   id="txtTRBookHolder" name="txtTRBookHolder" />
+    </td>
+    <th scope="row">Holder Type</th>
+    <td>
+    <select class="w100p"  id="ddlHolderType" name="ddlHolderType" >
+        <option value="Branch">Branch</option>
+        <option value="Member">Member</option>
+    </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Status</th>
+    <td colspan="5">
+    <select class="multy_select" multiple="multiple" id="ddlBookStatus" name="ddlBookStatus[]">
+<!--         <option value="1">Active</option>
+        <option value="36">Close</option>
+        <option value="67">Lost</option> -->
+    </select>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+        <li><p class="link_btn"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+    </ul>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+</form>
+</section><!-- search_table end -->
+
+<section class="search_result"><!-- search_result start -->
+
+<ul class="right_btns">
+    <%-- <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+    <li><p class="btn_grid"><a id="#"><spring:message code='sys.btn.del' /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
+    <li><p class="btn_grid"><a id="view"><spring:message code='sys.btn.view' /></a></p></li>
+    <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
+    <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_wrap"></div>
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
+
+</section><!-- content end -->
+
+<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
+<p>Information Message Area</p>
+</aside><!-- bottom_msg_box end -->
+        
+</section><!-- container end -->
+<hr />
+
+</div><!-- wrap end -->

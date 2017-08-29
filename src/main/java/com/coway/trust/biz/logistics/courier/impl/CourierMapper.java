@@ -20,7 +20,7 @@ public interface CourierMapper {
 	List<EgovMap> selectCourierId(String chkId);
 
 	void updateDocNo(Map upmap);
-	
+
 	List<EgovMap> selectCourierComboList(Map<String, Object> params);
 
 }
