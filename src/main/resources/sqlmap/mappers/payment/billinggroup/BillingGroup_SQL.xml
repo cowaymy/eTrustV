@@ -1854,75 +1854,71 @@
     
     <select id="selectAddOrdList" parameterType="Map" resultType="egovMap">
        SELECT 
-			C1, 
-			C2 IS_MAIN, 
-			C3 CUST_BILL_GRP_NO, 
-			C4 SALES_DT, 
+			IS_MAIN, 
+			CUST_BILL_GRP_NO, 
+			TO_CHAR(TO_DATE(SALES_DT, 'YYYY-MM-DD'), 'DD/MM/YY') SALES_DT,
+			SALES_DT, 
 			SALES_ORD_ID, 
 			SALES_ORD_NO, 
-			C5 PRODUCT, 
-			C6 STATUSCODEID1, 
+			PRODUCT, 
+			STATUSCODEID1, 
 			CODE, 
-			C7 MTH_RENT_AMT
-			  FROM ( SELECT Project2.C1 C1  ,
-			                Project2.C2 C2  ,
-			                Project2.C3 C3  ,
-			                Project2.C4 C4  ,
+			MTH_RENT_AMT
+			  FROM ( SELECT 
+			                Project2.IS_MAIN IS_MAIN  ,
+			                Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+			                Project2.SALES_DT SALES_DT  ,
 			                Project2.SALES_ORD_ID SALES_ORD_ID  ,
 			                Project2.SALES_ORD_NO SALES_ORD_NO  ,
-			                Project2.C5 C5  ,
-			                Project2.C6 C6  ,
+			                Project2.PRODUCT PRODUCT  ,
+			                Project2.STATUSCODEID1 STATUSCODEID1  ,
 			                Project2.CODE CODE  ,
-			                Project2.C7 C7  
-			  FROM ( SELECT Project2.SALES_ORD_ID SALES_ORD_ID  ,
+			                Project2.MTH_RENT_AMT MTH_RENT_AMT  
+			  FROM ( SELECT 
+			                Project2.SALES_ORD_ID SALES_ORD_ID  ,
 			                Project2.SALES_ORD_NO SALES_ORD_NO  ,
 			                Project2.CODE CODE  ,
-			                Project2.C1 C1  ,
-			                Project2.C2 C2  ,
-			                Project2.C3 C3  ,
-			                Project2.C4 C4  ,
-			                Project2.C5 C5  ,
-			                Project2.C6 C6  ,
-			                Project2.C7 C7  ,
+			                Project2.IS_MAIN IS_MAIN  ,
+			                Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+			                Project2.SALES_DT SALES_DT  ,
+			                Project2.PRODUCT PRODUCT  ,
+			                Project2.STATUSCODEID1 STATUSCODEID1  ,
+			                Project2.MTH_RENT_AMT MTH_RENT_AMT  ,
 			                ROW_NUMBER() OVER ( ORDER BY Project2.SALES_ORD_NO ASC  ) ROW_NUMBER  
-			         FROM ( SELECT Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+			         FROM ( SELECT 
+			                       Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
 			                       Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
 			                       Distinct1.CODE CODE  ,
-			                       Distinct1.C1 C1  ,
-			                       Distinct1.C2 C2  ,
-			                       Distinct1.C3 C3  ,
-			                       Distinct1.C4 C4  ,
-			                       Distinct1.C5 C5  ,
-			                       Distinct1.C6 C6  ,
-			                       Distinct1.C7 C7  
+			                       Distinct1.IS_MAIN IS_MAIN  ,
+			                       Distinct1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
+			                       Distinct1.SALES_DT SALES_DT  ,
+			                       Distinct1.PRODUCT PRODUCT  ,
+			                       Distinct1.STATUSCODEID1 STATUSCODEID1  ,
+			                       Distinct1.MTH_RENT_AMT MTH_RENT_AMT  
 			                FROM ( SELECT DISTINCT Filter1.SALESORDERID1 SALES_ORD_ID  ,
 			                                       Filter1.SALES_ORD_NO SALES_ORD_NO  ,
 			                                       Filter1.CODE CODE  ,
-			                                       1 C1  ,
 			                                       CASE 
 			                                            WHEN ( Filter1.CUSTBILLID1 IS NOT NULL ) THEN CASE 
 			                                                                                               WHEN ( Filter1.CUST_BILL_SO_ID = Filter1.SALESORDERID1 ) THEN 1
 			                                            ELSE 0
 			                                               END
 			                                       ELSE 0
-			                                          END C2  ,
+			                                          END IS_MAIN  ,
 			                                       CASE 
 			                                            WHEN ( Filter1.CUSTBILLID1 IS NOT NULL ) THEN Filter1.CUST_BILL_GRP_NO
 			                                       ELSE ' '
-			                                          END C3  ,
-			                                       CASE 
-			                                            WHEN ( Filter1.SALES_DT IS NOT NULL ) THEN TO_DATE(Filter1.SALES_DT)
-			                                       ELSE TO_DATE(#{defaultDate}, 'YYYY-MM-DD')
-			                                          END C4  ,
-			                                       Filter1.STK_CODE || ' - ' || Filter1.STK_DESC C5  ,
+			                                          END CUST_BILL_GRP_NO  ,
+			                                       Filter1.SALES_DT ,
+			                                       Filter1.STK_CODE || ' - ' || Filter1.STK_DESC PRODUCT  ,
 			                                       CASE 
 			                                            WHEN ( Filter1.STATUSCODEID1 IS NOT NULL ) THEN Filter1.STATUSCODEID1
 			                                       ELSE 0
-			                                          END C6  ,
+			                                          END STATUSCODEID1  ,
 			                                       CASE 
 			                                            WHEN ( Filter1.MTH_RENT_AMT IS NOT NULL ) THEN Filter1.MTH_RENT_AMT
 			                                       ELSE 0
-			                                          END C7  
+			                                          END MTH_RENT_AMT  
 			                       FROM ( SELECT Extent1.SALES_ORD_ID SALESORDERID1  ,
 			                                     Extent1.SALES_ORD_NO SALES_ORD_NO  ,
 			                                     Extent1.SALES_DT SALES_DT  ,
@@ -1950,7 +1946,7 @@
 			                                 AND ( Extent6.SRV_CNTRCT_ID IS NOT NULL ) )
 			                                 OR ( 66 = Filter1.APP_TYPE_ID ) ) ) Distinct1 ) Project2 ) Project2
 			 WHERE  Project2.ROW_NUMBER > 0
-			  ORDER BY Project2.SALES_ORD_NO ASC )
+			 ORDER BY Project2.SALES_ORD_NO ASC )
     </select>
     
     <select id="selectMainOrderHistory" parameterType="Map" resultType="egovMap">
