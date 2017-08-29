@@ -151,14 +151,12 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 			String billAddrFull = "";
 			String billType = "";
 
-			if(CommonUtils.isNotEmpty(eMap.get("add1")))     billAddrFull += eMap.get("add1") + " ";
-			if(CommonUtils.isNotEmpty(eMap.get("add2")))     billAddrFull += eMap.get("add2") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("addrDtl")))  billAddrFull += eMap.get("addrDtl") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("street")))   billAddrFull += eMap.get("street") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("postcode"))) billAddrFull += eMap.get("postcode") + " ";
-			if(CommonUtils.isNotEmpty(eMap.get("town")))     billAddrFull += eMap.get("town") + " ";
-			if(CommonUtils.isNotEmpty(eMap.get("city")))     billAddrFull += eMap.get("city") + " ";
-			if(CommonUtils.isNotEmpty(eMap.get("state")))    billAddrFull += eMap.get("state") + " ";
-			if(CommonUtils.isNotEmpty(eMap.get("county")))   billAddrFull += eMap.get("county") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("locality"))) billAddrFull += eMap.get("locality") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("region2")))  billAddrFull += eMap.get("region2") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("region1")))  billAddrFull += eMap.get("region1") + " ";
 			
 			if(((BigDecimal)eMap.get("custBillIsPost")).compareTo(BigDecimal.ONE) == 0) {
 				billType += "Post";
@@ -323,7 +321,6 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	
 	@Override
 	public void insertCareContactInfo(Map<String, Object> params) {
-		
 		customerMapper.insertCareContactInfo(params);
 	}
 	

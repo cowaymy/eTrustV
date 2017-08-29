@@ -30,6 +30,7 @@ import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.customer.CustomerVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -614,8 +615,7 @@ public class CustomerController {
 		
 		return ResponseEntity.ok(message);
 	}
-	
-	
+		
 	/**
 	 * 
 	 * NRIC / Company No 중복체크
@@ -1250,6 +1250,24 @@ public class CustomerController {
 		
 		
 		/**
+		 * Add new Contact(Edit)
+		 * @param model
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/updateCustomerNewAddContactPop.do")
+		public String updateCustomerNewAddContactPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+			
+			model.addAttribute("insCustId", params.get("custId"));
+			
+			//Page Param
+			model.addAttribute("callParam" , params.get("callParam"));
+			
+			return "sales/customer/customerNewAddContactPop";
+		}
+		
+		
+		/**
 		 * Add new Bank Account(Edit)
 		 * @param model
 		 * @param params
@@ -1318,6 +1336,42 @@ public class CustomerController {
 			return ResponseEntity.ok(message);
 		}
 		
+		/**
+		 * 
+		 * Basic Customer Info 등록
+		 * @param params
+		 * @param model.
+		 * @return
+		 * @author 
+		 * */
+		@RequestMapping(value = "/insertCareContactInfo.do")
+		public ResponseEntity<ReturnMessage> insertCareContactInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+			
+			int custCareCntId = customerService.getCustCareCntIdSeq();
+			
+			params.put("getCustCareCntId", custCareCntId);
+			params.put("getCustId", params.get("custId"));
+			params.put("custInitial", params.get("cntcInitial"));
+			params.put("asCustName", params.get("cntcName"));
+			params.put("asTelM", params.get("cntcTelm"));
+			params.put("asTelO", params.get("cntcTelo"));
+			params.put("asTelR", params.get("cntcTelr"));
+			params.put("asTelF", params.get("cntcTelf"));
+			params.put("asExt", params.get("cntcExtNo"));
+			params.put("asEmail", params.get("cntcEmail"));
+			params.put("stusCodeId", params.get("custId"));
+			params.put("crtUserId", sessionVO.getUserId());
+			params.put("updUserId", sessionVO.getUserId());
+			
+			customerService.insertCareContactInfo(params);
+			
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+//			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setMessage("New contact successfully saved.");
+			
+			return ResponseEntity.ok(message);
+		}
 		
 		/**
 		 * Add new Bank(Edit) After

@@ -44,7 +44,8 @@
     $(function(){
         $('#btnNew').click(function() {
             //Common.popupWin("listSearchForm", "/sales/order/orderRegisterPop.do", _option);
-            Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
+            //Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
+            Common.popupDiv("/sales/order/orderRegisterPop.do");
         });
         $('#btnEdit').click(function() {
             alert('Edit');
@@ -115,7 +116,7 @@
             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
             editable            : false,            
             fixedColumnCount    : 1,            
-            showStateColumn     : true,             
+            showStateColumn     : false,             
             displayTreeOpen     : false,            
             selectionMode       : "singleRow",  //"multipleCells",            
             headerHeight        : 30,       
@@ -194,7 +195,7 @@
 <tr>
 	<th scope="row">Order No</th>
 	<td>
-	<input id="listOrdNo" name="ordNo"  type="text" title="Order No" placeholder="Order Number" class="w100p" />
+	<input id="listOrdNo" name="ordNo" type="text" title="Order No" placeholder="Order Number" class="w100p" />
 	</td>
 	<th scope="row">Application Type</th>
 	<td>

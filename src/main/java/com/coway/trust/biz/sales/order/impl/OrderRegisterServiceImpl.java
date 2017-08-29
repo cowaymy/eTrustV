@@ -92,7 +92,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		
 		BigDecimal orderPrice, orderPV, orderRentalFees;
 		
-		if(SalesConstants.APP_TYPE_CODE_ID_RENTAL == (int)params.get("appTypeId")) {
+		if(SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(params.get("appTypeId")))) {
 //			orderPrice      = "₩" + ((BigDecimal)priceInfo.get("rentalDeposit")).toString();
 //			orderPV         = "₩" + ((BigDecimal)priceInfo.get("pv")).toString();
 //			orderRentalFees = "₩" + ((BigDecimal)priceInfo.get("monthlyRental")).toString();

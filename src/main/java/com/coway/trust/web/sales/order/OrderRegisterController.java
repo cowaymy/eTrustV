@@ -78,6 +78,13 @@ public class OrderRegisterController {
 		return "sales/order/cnfmOrderDetailPop";
 	}
 	
+	@RequestMapping(value = "/orderSearchPop.do")
+	public String orderSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("callPrgm", params.get("callPrgm"));
+		model.put("indicator", params.get("indicator"));
+		return "sales/order/orderSearchPop";
+	}
+	
     @RequestMapping(value = "/selectCustAddJsonInfo.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> selectCustAddInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
     

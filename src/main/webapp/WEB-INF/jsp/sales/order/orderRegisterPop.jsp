@@ -1,12 +1,9 @@
-<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<head>
 <script type="text/javaScript" language="javascript">
 
     var docGridID;
 
     $(document).ready(function(){
-        //AUIGrid 그리드를 생성합니다.
+
         createAUIGrid();
 
         fn_selectDocSubmissionList();
@@ -489,13 +486,24 @@
             Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "630x"});
             //Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
         });
+        $('#mstCntcNewAddBtn').click(function() {
+            //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
+            Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId":$('#hiddenCustId').val(), "callParam" : "ORD_REGISTER_CNTC_OWN"}, null , true ,'_editDiv3New');
+        });
         $('#mstCntcSelAddBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_CNTC_OWN"}, null, true);
         });
+        $('#mstCntcNewAddBtn2').click(function() {
+            Common.popupDiv('/sales/customer/updateCustomerNewAddContactPop.do', {"custId":$('#hiddenCustId').val(), "callParam" : ""}, null , true ,'_editDiv3New');
+        });
         $('#mstCntcSelAddBtn2').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_CNTC_ADD"}, null, true);
+        });
+        $('#billPreferAddAddrBtn').click(function() {
+            //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
+            Common.popupDiv('/sales/customer/updateCustomerNewAddContactPop.do', {"custId":$('#hiddenCustId').val(), "callParam" : ""}, null , true ,'_editDiv3New');
         });
         $('#billPreferSelAddrBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
@@ -517,7 +525,10 @@
             //Common.popupWin("searchForm", "/sales/customer/customerCreditCardSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
         });    
-
+        $('#trialNoBtn').click(function() {
+            //Common.popupWin("searchForm", "/sales/order/orderSearchPop.do", {width : "1200px", height : "630x"});
+            Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "ORD_REGISTER_SALE_ORD", indicator : "SearchTrialNo"});
+        });    
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
@@ -1763,9 +1774,8 @@
         
         return chkCnt;
     }
+
 </script>
-</head>
-<body>
 
 <div id="popup_wrap" class="popup_wrap">
 <!--div id="popup_wrap" class="popup_wrap pop_win"--><!-- popup_wrap start -->
@@ -1830,7 +1840,7 @@
     <th scope="row">Name</th>
     <td><input id="name" name="name" type="text" title="" placeholder="Customer Name" class="w100p" readonly/></td>
     <th scope="row">NRIC/Company No</th>
-    <td><input id="nric"" name="nric" type="text" title="" placeholder="NRIC/Company No" class="w100p" readonly/></td>
+    <td><input id="nric" name="nric" type="text" title="" placeholder="NRIC/Company No" class="w100p" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Nationality</th>
@@ -1885,7 +1895,7 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li id="liMstCntcNewAddr" class="blind"><p class="btn_grid"><a id="mstCntcSelNewBtn" href="#">Add New Contact</a></p></li>
+    <li id="liMstCntcNewAddr" class="blind"><p class="btn_grid"><a id="mstCntcNewAddBtn" href="#">Add New Contact</a></p></li>
     <li id="liMstCntcSelAddr" class="blind"><p class="btn_grid"><a id="mstCntcSelAddBtn" href="#">Select Another Contact</a></p></li>
 </ul>
 
@@ -1945,7 +1955,7 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li id="liMstCntcNewAddr2" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
+    <li id="liMstCntcNewAddr2" class="blind"><p class="btn_grid"><a id="mstCntcNewAddBtn2" href="#">Add New Contact</a></p></li>
     <li id="liMstCntcSelAddr2" class="blind"><p class="btn_grid"><a id="mstCntcSelAddBtn2" href="#">Select Another Contact</a></p></li>
 </ul>
 
@@ -2471,7 +2481,7 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li id="liBillPreferNewAddr" class="blind"><p class="btn_grid"><a href="#">Add New Contact</a></p></li>
+    <li id="liBillPreferNewAddr" class="blind"><p class="btn_grid"><a id="billPreferAddAddrBtn" href="#">Add New Contact</a></p></li>
     <li id="liBillPreferSelAddr" class="blind"><p class="btn_grid"><a id="billPreferSelAddrBtn" href="#">Select Another Contact</a></p></li>
 </ul>
 
@@ -2860,5 +2870,3 @@
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-</body>
-</html>

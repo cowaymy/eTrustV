@@ -548,13 +548,12 @@
 		     , T1.CUST_BILL_IS_ESTM
 		     , T1.CUST_BILL_IS_SMS
 		     , T1.CUST_BILL_IS_POST
-		     , NVL(T2.ADD1,     '') ADD1
-		     , NVL(T2.ADD2,     '') ADD2
+		     , NVL(T2.ADDR_DTL, '') ADDR_DTL
              , NVL(T3.STREET,   '') STREET
              , NVL(T3.POSTCODE, '') POSTCODE
-             , NVL(T3.LOCALITY, '') TOWN
-             , NVL(T3.REGION2,  '') CITY
-             , NVL(T3.REGION1,  '') STATE
+             , NVL(T3.LOCALITY, '') LOCALITY
+             , NVL(T3.REGION2,  '') REGION2
+             , NVL(T3.REGION1,  '') REGION1
 		     , NVL(T3.COUNTRY,  '') COUNTRY
 		     , NVL(T1.CUST_BILL_EMAIL, '') CUST_BILL_EMAIL
 		     , NVL(T1.CUST_BILL_CRT_DT, TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')) CUST_BILL_CRT_DT
@@ -1290,7 +1289,7 @@
     </select>
     
     <select id="getCustCareCntIdSeq" parameterType="Map" resultType="Integer">
-      SELECT NVL(MAX(CUST_CARE_CNT_ID),0) + 1 from SAL0026D
+      SELECT SAL0026D_CUST_CARE_CNT_ID_SEQ.NEXTVAL FROM DUAL
     </select>
     
     <select id="getCustCrcIdSeq" parameterType="Map" resultType="Integer">

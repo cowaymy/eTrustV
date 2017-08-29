@@ -88,72 +88,83 @@
                       , V1.RELATED_NO
                       , V1.RELATED_ID
                    FROM SAL1013V V1
-                  WHERE V1.ORD_DT BETWEEN TO_DATE(#{ordStartDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordEndDt}, 'DD/MM/YYYY')
-                <if test="ordNo != null and ordNo != ''">
+                  WHERE 1 = 1  
+                <if test='ordDt == null || ordDt == ""'>
+                    AND V1.ORD_DT BETWEEN TO_DATE(#{ordStartDt}||' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                    AND TO_CHAR(V1.ORD_DT, 'DD/MM/YYYY') = #{ordDt}
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
                     AND V1.ORD_NO = #{ordNo}
                 </if>
-                <if test="arrAppType != null and arrAppType != ''">
+                <if test='arrAppType != null and arrAppType != ""'>
                     AND V1.APP_TYPE_ID IN
                   <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-                <if test="arrOrdStusId != null and arrOrdStusId != ''">
+                <if test='arrOrdStusId != null and arrOrdStusId != ""'>
                     AND V1.ORD_STUS_ID IN
                   <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-                <if test="arrKeyinBrnchId != null and arrKeyinBrnchId != ''">
+                <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
                     AND V1.KEYIN_BRNCH_ID IN
                   <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-                <if test="arrDscBrnchId != null and arrDscBrnchId != ''">
+                <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
                     AND V1.DSC_BRNCH_ID IN
                   <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-                <if test="custId != null and custId != ''">
+                <if test='custId != null and custId != ""'>
                     AND V1.CUST_ID LIKE '%'||#{custId}||'%'
                 </if>
-                <if test="custName != null and custName != ''">
+                <if test='custName != null and custName != ""'>
                     AND V1.CUST_NAME LIKE '%'||#{custName}||'%'
                 </if>
-                <if test="custIc != null and custIc != ''">
+                <if test='custIc != null and custIc != ""'>
                     AND V1.CUST_IC LIKE '%'||#{custIc}||'%'
                 </if>
-                <if test="productId != null and productId != ''">
+                <if test='productId != null and productId != ""'>
                     AND V1.PRODUCT_ID = #{productId}
                 </if>
-                <if test="salesmanCode != null and salesmanCode != ''">
+                <if test='salesmanCode != null and salesmanCode != ""'>
                     AND V1.SALESMAN_CODE = #{salesmanCode}
                 </if>
-                <if test="arrRentStus != null and arrRentStus != ''">
+                <if test='arrRentStus != null and arrRentStus != ""'>
                     AND V1.RENT_STUS IN
                   <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
-                <if test="refNo != null and refNo != ''">
+                <if test='refNo != null and refNo != ""'>
                     AND V1.REF_NO = #{refNo}
                 </if>
-                <if test="poNo != null and poNo != ''">
+                <if test='poNo != null and poNo != ""'>
                     AND V1.PO_NO = #{poNo}
                 </if>
-                <if test="contactNo != null and contactNo != ''">
+                <if test='contactNo != null and contactNo != ""'>
                     AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
                 </if>
-                <if test="crtUserId != null and crtUserId != ''">
+                <if test='crtUserId != null and crtUserId != ""'>
                     AND V1.CRT_USER_ID = #{crtUserId}
                 </if>
-                <if test="promoCode != null and promoCode != ''">
+                <if test='promoCode != null and promoCode != ""'>
                     AND V1.PROMO_CODE = #{promoCode}
                 </if>
-                <if test="relatedNo != null and relatedNo != ''">
+                <if test='relatedNo != null and relatedNo != ""'>
                     AND V1.RELATED_NO = #{relatedNo}
+                </if>
+                <if test='invoicePoNo != null and invoicePoNo != ""'>
+                    AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID  
+                                        FROM PAY0015D
+                                       WHERE PO_REF_NO = #{invoicePoNo})
                 </if>
                ) T
            ORDER BY T.ORD_NO ASC
