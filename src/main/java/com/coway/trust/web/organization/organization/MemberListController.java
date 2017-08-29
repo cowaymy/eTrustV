@@ -23,6 +23,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -332,4 +333,96 @@ public class MemberListController {
 	}
 	
 	
+	/**
+	 * Call commission rule book management Page 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/requestTerminateResign.do")
+	public String selectTerminateResign(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
+		logger.debug("codeValue : {}", params.get("codeValue"));
+		
+		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
+		logger.debug("PAExpired : {}", PAExpired);
+		logger.debug("selectMemberListView : {}", selectMemberListView);
+		logger.debug("issuedBank : {}", selectIssuedBank);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		model.addAttribute("PAExpired", PAExpired);
+		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
+		model.addAttribute("memberView", selectMemberListView);
+		model.addAttribute("issuedBank", selectIssuedBank);
+		model.addAttribute("codeValue", params.get("codeValue"));
+		// 호출될 화면
+		return "organization/organization/memberListDetailPop";
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/terminateResignSave", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertTerminateResign(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params : {}", params);
+		logger.debug("sessionVO : {}", sessionVO.getUserId());
+		boolean success = false;
+		if(params.get("codeValue").toString().equals("1")){
+    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+    		params.put("MemberID", memberId);
+    		success = memberListService.insertTerminateResign(params,sessionVO);
+		}else{
+			int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+    		params.put("memberId", memberId);
+    		success = memberListService.insertTerminateResign(params,sessionVO);
+		}
+		return ResponseEntity.ok(message);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectSuperiorTeam", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSuperiorTeam(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		params.put("memberLvl", params.get("groupCode[memberLvl]"));
+		params.put("memberType", params.get("groupCode[memberType]"));
+		params.put("memberID", params.get("groupCode[memberID]"));
+		logger.debug("params : {}", params);
+		List<EgovMap> superiorTeam = memberListService.selectSuperiorTeam(params);
+		logger.debug("superiorTeam : {}", superiorTeam);
+		return ResponseEntity.ok(superiorTeam);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectDeptCode", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDeptCode(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		logger.debug("params : {}", params);
+		params.put("memberLvl", params.get("groupCode[memberLvl]"));
+		params.put("flag", params.get("groupCode[flag]"));
+		List<EgovMap> deptCode = memberListService.selectDeptCode(params);
+		return ResponseEntity.ok(deptCode);
+	}
 }
