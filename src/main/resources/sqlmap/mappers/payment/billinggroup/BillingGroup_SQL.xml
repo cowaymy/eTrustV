@@ -519,8 +519,7 @@
 				                       LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
 				                WHERE  Extent1.CUST_BILL_ID = #{custBillId} ) Project1 ) Project1
 				 WHERE  Project1.ROW_NUMBER > 0
-				  ORDER BY Project1.REQ_ID ASC )
-				  WHERE ROWNUM <![CDATA[<= ]]> 10
+				 ORDER BY Project1.REQ_ID ASC )
     </select>
     
     <select id="selectBillGrpHistory" parameterType="Map" resultType="egovMap">
