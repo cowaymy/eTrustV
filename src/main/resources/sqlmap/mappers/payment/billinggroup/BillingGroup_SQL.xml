@@ -1597,10 +1597,7 @@
 	       ELSE 0
 	          END IS_MAIN  ,
 	       Limit1.SALES_ORD_ID SALES_ORD_ID  ,
-	       CASE 
-	            WHEN ( Limit1.SALES_DT IS NOT NULL ) THEN TO_DATE(Limit1.SALES_DT)
-	       ELSE TO_DATE(#{defaultDate}, 'YYYY-MM-DD')
-	          END SALES_DT  ,
+	       NVL(TO_CHAR(Limit1.SALES_DT,'DD-MM-YYYY'),'01-01-1900')  SALES_DT,   
 	       Limit1.SALES_ORD_NO SALES_ORD_NO  ,
 	       Limit1.STK_CODE || ' - ' || Limit1.STK_DESC PRODUCT  ,
 	       CASE 
@@ -1608,7 +1605,7 @@
 	       ELSE 0
 	          END STUS_CODE_ID  ,
 	       Limit1.CODE CODE  ,
-	       Limit1.MTH_RENT_AMT MTH_RENT_AMT
+	       TO_CHAR(Limit1.MTH_RENT_AMT , 'FM9999999999990.00') MTH_RENT_AMT
 	  FROM ( SELECT Extent1.CUST_BILL_SO_ID CUST_BILL_SO_ID  ,
 	                Extent2.SALES_ORD_ID SALES_ORD_ID  ,
 	                Extent2.SALES_ORD_NO SALES_ORD_NO  ,
@@ -1863,7 +1860,7 @@
 			PRODUCT, 
 			STATUSCODEID1, 
 			CODE, 
-			MTH_RENT_AMT
+			TO_CHAR(MTH_RENT_AMT , 'FM9999999999990.00') MTH_RENT_AMT 
 			  FROM ( SELECT 
 			                Project2.IS_MAIN IS_MAIN  ,
 			                Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO  ,
