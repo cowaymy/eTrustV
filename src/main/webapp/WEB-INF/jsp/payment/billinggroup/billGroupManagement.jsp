@@ -381,7 +381,8 @@ var addOrderLayout = [
     	var now = new Date();
         var year= now.getFullYear();
         var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
-        var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
+        //var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
+        var currentDay = "02";
         var valid = true;
         var message = "";
         var orderNo = $("#orderNo").val();
@@ -1384,6 +1385,7 @@ var addOrderLayout = [
     	$("#addOrderPop").show();
     	var custBillId = $("#custBillId").val();
     	addOrdPopGridID = GridCommon.createAUIGrid("addOrdGrid", addOrderLayout,null,gridPros2);
+    	
     	Common.ajax("GET","/payment/selectAddOrder.do", {"custBillId":custBillId}, function(result){
             console.log(result);
             $("#addOrd_grpNo").text(result.data.basicInfo.custBillGrpNo);
@@ -1431,8 +1433,6 @@ var addOrderLayout = [
             }
         }
         
-        
-        
         if(valid){
         	
         	for(i=0; i<selectedItems.length; i++) {
@@ -1444,7 +1444,6 @@ var addOrderLayout = [
                 str2 += rowItem.salesOrdId +":";
             }
         	
-            //var salesOrdNo = $("#salesOrdNo").val();
             var salesOrdNoArr = str.substring(0, str.length -1);
             var salesOrdIdArr = str2.substring(0, str2.length -1);
             var message2 = "There are " + selectedItems.length + " order(s) selected.<br />" +
@@ -1454,6 +1453,7 @@ var addOrderLayout = [
                 
                 Common.ajax("GET", "/payment/saveAddOrder.do", {"salesOrdNo" : salesOrdNoArr, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdId" : salesOrdIdArr}, function(result) {
                     Common.alert(result.message);
+                    fn_addOrder();
                     
                 });
                 
@@ -1563,6 +1563,7 @@ var addOrderLayout = [
         
         $("#addOrderPop").hide();
         $("#addOrd_reasonUpd").val("");
+        searchList();
     }
     
     function fn_goAddNwGrp(){
