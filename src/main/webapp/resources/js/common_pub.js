@@ -42,12 +42,9 @@ var pickerOpts={//일반년월일달력 세팅
 };
 
 //$(".j_date").datepicker(pickerOpts);//일반년월일달력 실행
+$(".ui-datepicker-trigger").remove();
+$(".j_date").removeClass("hasDatepicker").datepicker(pickerOpts);
 
-$(document).on(
-	"click", ".j_date", function(){
-
-	$(".j_date").datepicker(pickerOpts);
-});
 
 
 var monthOptions = {//생년월일 세팅
@@ -57,8 +54,8 @@ var monthOptions = {//생년월일 세팅
 	finalYear: 2027
 };
 
-$(".j_date2").monthpicker(monthOptions);//생년월일 실행
-
+//$(".j_date2").monthpicker(monthOptions);//생년월일 실행
+$(".j_date2").removeClass("hasDatepicker").monthpicker(monthOptions);
 
 var pickerOpts2 = {//생년월일 세팅
 	changeMonth:true,
@@ -69,7 +66,8 @@ var pickerOpts2 = {//생년월일 세팅
 };
 
 
-$(".j_date3").datepicker(pickerOpts2);//생년월일 달력
+$(".j_date3").removeClass("hasDatepicker").datepicker(pickerOpts2);
+//$(".j_date3").datepicker(pickerOpts2);//생년월일 달력
 /* 제이쿼리 ui달력 end*/
 
 /* on클래스 넣기 start */
