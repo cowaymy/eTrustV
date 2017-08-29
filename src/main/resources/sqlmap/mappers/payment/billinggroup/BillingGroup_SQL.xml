@@ -1524,10 +1524,7 @@
 	            WHEN ( Limit1.CNFM_DT IS NOT NULL ) THEN TO_DATE(Limit1.CNFM_DT)
 	       ELSE TO_DATE(#{defaultDate}, 'YYYY-MM-DD')
 	          END CNFM_DT  ,
-	       CASE 
-	            WHEN ( Limit1.CRT_DT IS NOT NULL ) THEN TO_DATE(Limit1.CRT_DT)
-	       ELSE TO_DATE(#{defaultDate}, 'YYYY-MM-DD')
-	          END CRT_DT  ,
+	       NVL(TO_CHAR(Limit1.CRT_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')  CRT_DT,   
 	       Limit1.CRT_USER_ID CRT_USER_ID  ,
 	       CASE 
 	            WHEN ( Limit1.USER_ID IS NOT NULL ) THEN Limit1.USER_NAME
