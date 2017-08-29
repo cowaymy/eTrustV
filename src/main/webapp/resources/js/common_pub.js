@@ -26,7 +26,7 @@ var pickerOpts={//일반년월일달력 세팅
 		if(!result) {
 			switch (day.getDay()) {
 				case 0: // is sunday?
-					result = [false, "date-sunday"];
+					result = [true, "date-sunday"];
 					break;
 				case 6: // is saturday?
 					result = [true, "date-saturday"];
