@@ -162,7 +162,7 @@ select .optgroup_text option {color:#444; background:#fff;}
 .old_price{color:#ff0000; font-weight:bold; text-decoration:line-through;}
 .max-image{text-align:center;}
 .max-image img{max-width:100%; max-height:100%;}
-.big_title{height:32px; line-height:32px; margin-bottom:20px; font-size:24px; text-align:center; background:#25527c; color:#fff;}
+.big_title{height:32px; line-height:32px; margin-bottom:20px; font-size:24px !important; text-align:center; background:#25527c; color:#fff !important;}
 
 /* 각종 버튼 */
 .btn_blue a{display:inline-block; min-width:57px; height:24px; line-height:24px; padding:2px 10px; background:#25527c; color:#fff; font-size:11px; border-radius:3px; text-align:center; font-weight:bold;}
