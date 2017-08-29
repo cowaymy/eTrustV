@@ -224,13 +224,20 @@ $(document).on(
 //트리메뉴 끝
 
 /* 인풋 파일 start */
-function setInputFile(){
-	var theFile=$(":file");
+function setInputFile(){//인풋파일 세팅하기
 	$(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 }
 setInputFile();
 
-$(document).on(
+function setReInputFile(){//인풋파일 재세팅
+	$(":file+label").remove();
+	$(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
+	for(var i=0; i<=$(":file").length; i++){
+		$(".auto_file .input_text").eq(i).val($(":file").eq(i).val());
+	}
+}
+
+$(document).on(//인풋파일 실행
 	"click", ".label_text a", function(){
 	var thisFileInput=$(this).parent().parent().prev(":file");
 
@@ -248,7 +255,7 @@ $(document).on(
 /* 인풋 파일 end */
 
 /* 팝업 드래그 start */
-$("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
+$("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header"});
 /* 팝업 드래그 end */
 
 /* 팝업 닫기 start */
@@ -271,12 +278,12 @@ $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 
 /* 시간선택기 start */
  $(document).on(
-	"focus", ".time_date ", function(){
+	"focus", ".time_date", function(){
 	$(this).next("ul").fadeIn(500);
 });
 
  $(document).on(
-	"focusout", ".time_date ", function(){
+	"focusout", ".time_date", function(){
 	$(this).next("ul").fadeOut(500);
 });
 
