@@ -792,9 +792,6 @@
        <if test="conPerFlag == 'Y'.toString() ">
           , CUST_CNT_ID = #{custBillCntId}
        </if>
-       <if test="addOrdFlag == 'Y'.toString() ">
-          , STUS_CODE_ID = #{custBillCntId}
-       </if>
         WHERE  SALES_ORD_ID = #{salesOrdId} 
     </update>
     
