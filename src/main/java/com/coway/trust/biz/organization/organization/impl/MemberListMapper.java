@@ -84,4 +84,23 @@ public interface MemberListMapper {
 	
 	void insertSmsReply(Map<String, Object> params);
 	
+	EgovMap selectMember(Map<String, Object> params);
+	
+	EgovMap  selectOrganization(Map<String, Object> params);
+	
+	EgovMap  selectMemberOrgs(Map<String, Object> params);
+	
+	void updateOrganization(Map<String, Object> params);
+	
+	void insertPromoEntry(Map<String, Object> params);
+	
+	void updateMember(Map<String, Object> params);
+	
+	EgovMap selectUserName(Map<String, Object> params);
+	
+	void updateUser(Map<String, Object> params);
+	
+	List<EgovMap> selectSuperiorTeam(Map<String, Object> params);
+	
+	List<EgovMap> selectDeptCode(Map<String, Object> params); 
 }

@@ -1,6 +1,5 @@
 package com.coway.trust.biz.organization.organization.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.organization.organization.MemberListService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.organization.organization.MemberListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -181,13 +181,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			appId = memberListMapper.selectMemberId(codeMap1);
 		}
 		
-		/*SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		int loginId;
-		if (sessionVO == null) {
-			loginId = 99999999;
-		} else {
-			loginId = sessionVO.getUserId();
-		}*/
+		
 		int rank = 0;
 		if(params.get("memberType").equals("1") ){
 			rank=433;
@@ -844,7 +838,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				invWH.put("WHLocStkGrade", "");
 				invWH.put("WHLocStatusID", 1);
 				invWH.put("WHLocUpdateBy", params.get("creator"));
-				invWH.put("WHLocUpdateAt", new Date());
+				invWH.put("WHLocUpdateAt", new Date()); 
 				invWH.put("Code2", "");
 				invWH.put("Desc2", "");
 				invWH.put("WHLocIsSync", true);
@@ -856,4 +850,199 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		return success;
 	}	
+	
+	@Transactional
+	@Override
+	public Boolean insertTerminateResign(Map<String, Object> params,SessionVO sessionVO) {
+		boolean success = false;
+		Map<String, Object>  member = new HashMap<String, Object>();
+		Map<String, Object>  promoEntry = new HashMap<String, Object>();
+		int userId = sessionVO.getUserId();
+		logger.debug("userId : {}",userId);
+		
+		if(params.get("codeValue").toString().equals("2")){
+			
+			promoEntry.put("promoId", 0);
+			promoEntry.put("requestNo", "");
+			promoEntry.put("statusId", 60);
+			promoEntry.put("promoTypeId", Integer.parseInt(params.get("action1").toString()));
+			promoEntry.put("memTypeId",params.get("memtype"));
+			promoEntry.put("memberId", params.get("memberId"));
+			promoEntry.put("memberLvlFrom", params.get("memberLvl"));
+			promoEntry.put("memberLvlTo", params.get("lvlTo"));
+			promoEntry.put("created", new Date());
+			promoEntry.put("creator", userId);
+			promoEntry.put("updated", new Date());
+			promoEntry.put("updator", userId);
+			promoEntry.put("deptCodeFrom", "");
+			promoEntry.put("deptCodeTo", "");
+			promoEntry.put("parentIdFrom", 0);
+			promoEntry.put("parentIdTo", Integer.parseInt(params.get("cmbSuperior").toString()));
+			promoEntry.put("statusIdFrom", 1);
+			promoEntry.put("statusIdTo", 1);
+			promoEntry.put("remark", params.get("remark1").toString().trim());
+			promoEntry.put("parentDeptCodeFrom", "");
+			promoEntry.put("parentDeptCodeTo", "");
+			promoEntry.put("PRCode", "");
+			promoEntry.put("promoSync", false);
+			promoEntry.put("lastDeptCode","");
+			promoEntry.put("lastGrpCode","");
+			promoEntry.put("lastOrgCode", "");
+			promoEntry.put("PRmemId",0);
+			promoEntry.put("branchId",params.get("branchCode") != null && params.get("branchCode") != "" ? Integer.parseInt(params.get("branchCode").toString()) : 0);
+			logger.debug("promoEntry : {}",promoEntry);
+			EgovMap selectMemberOrgs = memberListMapper.selectMemberOrgs(params);
+			
+			if(selectMemberOrgs != null){
+				EgovMap eventCode = null;
+				eventCode = getDocNo("66");
+				int ID = 66;
+				String nextDocNo = getNextDocNo("PMR", eventCode.get("docNo").toString());
+				eventCode.put("nextDocNo", nextDocNo);
+				logger.debug("eventCode : {}",eventCode);
+				if(Integer.parseInt(eventCode.get("docNoId").toString()) == ID){
+					logger.debug("update 문 탈 예정");
+					memberListMapper.updateDocNo(eventCode);
+				}
+				EgovMap selectOrganization = memberListMapper.selectOrganization(params);
+				logger.debug("selectOrganization : {}",selectOrganization);
+				params.put("memberId", Integer.parseInt(promoEntry.get("parentIdTo").toString()));
+				EgovMap selectOrganization_new = memberListMapper.selectOrganization(params);
+				logger.debug("selectOrganization_new : {}",selectOrganization_new);
+				promoEntry.put("requestNo", eventCode.get("docNo").toString());
+				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
+				promoEntry.put("parentIdFrom", selectOrganization.get("memUpId") != null ? Integer.parseInt(selectOrganization.get("memUpId").toString()) : 0);
+				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("deptCode").toString() != null ? selectOrganization.get("deptCode").toString() : "");
+				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
+				promoEntry.put("PRCode", promoEntry.get("promoTypeId").toString().equals("747") ? selectOrganization.get("deptCode") != null? selectOrganization.get("deptCode").toString() : "" : "");
+				promoEntry.put("lastDeptCode", selectMemberOrgs.get("deptCode"));
+				promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
+				promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
+				promoEntry.put("PRmemId",promoEntry.get("promoTypeId").toString().equals("747") ? selectMemberOrgs.get("memUpId").toString() : 0);
+				logger.debug("promoEntry : {}",promoEntry);
+				
+				memberListMapper.insertPromoEntry(promoEntry);
+			}
+		}else{
+        		//Request Terminate/Resign
+        		EgovMap memberView = memberListMapper.selectMemberListView(params);
+        		logger.debug("memberView : {}",memberView);
+        		
+        		if(memberView.get("c32").toString().equals("1")){
+        			member.put("memberId", memberView.get("memId"));
+        			member.put("updated", new Date());
+        			member.put("updator", userId);
+        			member.put("status", Integer.parseInt(params.get("action").toString()) == 757 ? 3:51);
+        			member.put("termDate", Integer.parseInt(params.get("action").toString()) == 757 ? params.get("dtT/R").toString() : "1900-01-01" );
+        			member.put("resignDate", Integer.parseInt(params.get("action").toString()) == 758 ? params.get("dtT/R").toString() : "1900-01-01" );
+        			
+        			logger.debug("member : {}",member);
+        			
+        			
+        			promoEntry.put("promoId", 0);
+        			promoEntry.put("requestNo", "");
+        			promoEntry.put("statusId", 4);
+        			promoEntry.put("promoTypeId", Integer.parseInt(params.get("action").toString()));
+        			promoEntry.put("memTypeId",memberView.get("memType"));
+        			promoEntry.put("memberId", memberView.get("memId"));
+        			promoEntry.put("memberLvlFrom", memberView.get("c44"));
+        			promoEntry.put("memberLvlTo", memberView.get("c44"));
+        			promoEntry.put("created", new Date());
+        			promoEntry.put("creator", userId);
+        			promoEntry.put("updated", new Date());
+        			promoEntry.put("updator", userId);
+        			promoEntry.put("deptCodeFrom", "");
+        			promoEntry.put("deptCodeTo", "");
+        			promoEntry.put("parentIdFrom", 0);
+        			promoEntry.put("parentIdTo", 0);
+        			promoEntry.put("statusIdFrom", 1);
+        			promoEntry.put("statusIdTo", Integer.parseInt(params.get("action").toString()) == 757 ? 3 : 51);
+        			promoEntry.put("remark", params.get("remark").toString().trim());
+        			promoEntry.put("parentDeptCodeFrom", "");
+        			promoEntry.put("parentDeptCodeTo", "");
+        			promoEntry.put("PRCode", "");
+        			promoEntry.put("promoSync", false);
+        			promoEntry.put("lastDeptCode", memberView.get("c41"));
+        			promoEntry.put("lastGrpCode", memberView.get("c42"));
+        			promoEntry.put("lastOrgCode", memberView.get("c43"));
+        			promoEntry.put("PRmemId",0);
+        			promoEntry.put("branchId",null);
+        			logger.debug("promoEntry : {}",promoEntry);
+        			
+        			EgovMap selectMember = memberListMapper.selectMember(member);
+        			logger.debug("selectMember : {}",selectMember);
+        			if(selectMember != null){
+        				EgovMap selectOrganization = memberListMapper.selectOrganization(member);
+        				logger.debug("selectOrganization : {}",selectOrganization);
+        				if(selectOrganization != null){
+        					EgovMap selectMemberOrgs = memberListMapper.selectMemberOrgs(member);
+        					logger.debug("selectMemberOrgs : {}",selectMemberOrgs);
+        					promoEntry.put("deptCodeFrom", selectOrganization.get("deptCode"));
+        					promoEntry.put("deptCodeTo", selectOrganization.get("deptCode"));
+        					promoEntry.put("parentIDFrom", selectOrganization.get("memUpId") != null ? Integer.parseInt(selectOrganization.get("memUpId").toString()) : 0);
+        					promoEntry.put("parentIDTo", selectOrganization.get("memUpId") != null ? Integer.parseInt(selectOrganization.get("memUpId").toString()) : 0);
+        					promoEntry.put("parentDeptCodeFrom", selectOrganization.get("deptCode"));
+        					promoEntry.put("parentDeptCodeTo", selectOrganization.get("deptCode"));
+        					
+        					//update MemberOrganization
+        					selectOrganization.put("orgStatusCodeID", 8);
+        					selectOrganization.put("orgUpdateAt", new Date());
+        					selectOrganization.put("orgUpdateBy", member.get("updator"));
+        					selectOrganization.put("lastDeptCode", selectMemberOrgs.get("deptCode"));
+        					selectOrganization.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
+        					selectOrganization.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
+        					selectOrganization.put("lastTopOrgCode", selectMemberOrgs.get("topOrgCode"));
+        					
+        					memberListMapper.updateOrganization(selectOrganization);
+        				}
+        				EgovMap eventCode = null;
+        				eventCode = getDocNo("66");
+        				int ID = 66;
+        				String nextDocNo = getNextDocNo("PMR", eventCode.get("docNo").toString());
+        				eventCode.put("nextDocNo", nextDocNo);
+        				logger.debug("eventCode : {}",eventCode);
+        				if(Integer.parseInt(eventCode.get("docNoId").toString()) == ID){
+        					logger.debug("update 문 탈 예정");
+        					memberListMapper.updateDocNo(eventCode);
+        				}
+        				promoEntry.put("requestNo", eventCode.get("docNo").toString());
+        				
+        				//MemberPromoEntry
+        				memberListMapper.insertPromoEntry(promoEntry);
+        				
+        				//Member
+        				selectMember.put("status", member.get("status"));
+        				selectMember.put("resignDate", member.get("resignDate"));
+        				selectMember.put("termDate", member.get("termDate"));
+        				selectMember.put("updated", member.get("updated"));
+        				selectMember.put("updator", member.get("updator"));
+        				selectMember.put("syncCheck", member.get("syncCheck"));
+        				
+        				logger.debug("selectMember : {}",selectMember);
+        				memberListMapper.updateMember(selectMember);
+        				//User
+        				EgovMap selectUserName = memberListMapper.selectUserName(selectMember);
+        				if(selectUserName != null){
+        					selectUserName.put("userStatusID", 8);
+        					selectUserName.put("userUpdateAt", new Date());
+        					selectUserName.put("userUpdateBy", member.get("updator"));
+        					
+        					memberListMapper.updateUser(selectUserName);
+        				}
+        				success=true;
+        			}
+        		}
+		}
+		return success;
+	}
+	
+	@Override
+	public List<EgovMap>  selectSuperiorTeam(Map<String, Object> params) {
+		return memberListMapper.selectSuperiorTeam(params);
+	}
+	@Override
+	public List<EgovMap>  selectDeptCode(Map<String, Object> params) {
+		return memberListMapper.selectDeptCode(params);
+	}
+	
 }

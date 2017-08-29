@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface MemberListService {
@@ -42,6 +44,12 @@ public interface MemberListService {
 	List<EgovMap> selectCodyDocSubmission(Map<String, Object> params);
 	
 	List<EgovMap> selectHpDocSubmission(Map<String, Object> params);
+	
+	Boolean insertTerminateResign(Map<String, Object> params,SessionVO sessionVO);
+	
+	List<EgovMap> selectSuperiorTeam(Map<String, Object> params);
+	
+	List<EgovMap> selectDeptCode(Map<String, Object> params);
 
 	
 }
