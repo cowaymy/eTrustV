@@ -378,92 +378,107 @@ var addOrderLayout = [
     //ajax list 조회.
     function searchList(){
     	
-    	var valid = true;
-    	var message = "";
-    	$("#displayVisible").show();
-    	var orderNo = $("#orderNo").val();
-    	orderNo = $.trim(orderNo);
-    	
-    	if(orderNo == ""){
-    		valid = false;
-    		message = "Please key in the order number."
-    	}
-    	
-    	if(valid){
-    		
-    		Common.ajax("GET","/payment/selectBillGroup.do", {"orderNo":orderNo}, function(result){
-                console.log(result);
-                if(result.data.selectBasicInfo != null){
-                	
-                    $("#orderNo").addClass('readonly');
-                    $("#custBillId").val(result.data.custBillId);//히든값
-                    $("#custBillCustId").val(result.data.selectBasicInfo.custBillCustId);//히든값
-                    $("#custBillGrpNo").text(result.data.selectBasicInfo.custBillGrpNo);
-                    $("#creator").text(result.data.selectBasicInfo.userName);
-                    $("#mainOrder").text(result.data.selectBasicInfo.salesOrdNo);
-                    $("#createDate").text(result.data.selectBasicInfo.custBillCrtDt);
-                    $("#customerId").text(result.data.selectBasicInfo.custBillCustId+"("+result.data.selectBasicInfo.codeName+")");
-                    $("#nric").text(result.data.selectBasicInfo.nric);
-                    $("#customerName").text(result.data.selectBasicInfo.name);
-                    
-                    if(result.data.selectBasicInfo.custBillIsPost == "1"){
-                        $("#post").attr('checked', true);
-                    }else{
-                        $("#post").attr('checked', false);
-                    }
-                    
-                    if(result.data.selectBasicInfo.custBillIsSms == "1"){
-                        $("#sms").attr('checked', true);
-                    }else{
-                        $("#sms").attr('checked', false);
-                    }
-                    
-                    if(result.data.selectBasicInfo.custBillIsEstm == "1"){
-                        $("#estm").attr('checked', true);
-                    }else{
-                        $("#estm").attr('checked', false);
-                    }
-                    
-                    $("#remark").text(result.data.selectBasicInfo.custBillRem);
-                    $("#email").text(result.data.selectBasicInfo.custBillEmail);
-                    
-                    //Mailling Addres
-                    $("#maillingAddr").text(result.data.selectMaillingInfo.add1+" " + result.data.selectMaillingInfo.add2 + " "+ result.data.selectMaillingInfo.add3 +" " 
-                            + result.data.selectMaillingInfo.postCode + " " + result.data.selectMaillingInfo.areaName + " " + result.data.selectMaillingInfo.name2 + " "+ result.data.selectMaillingInfo.name3);
-                    
-                    //ContractInfo
-                    $("#contractPerson").text(result.data.selecContractInfo.name2);
-                    $("#mobileNumber").text(result.data.selecContractInfo.telM1);
-                    $("#officeNumber").text(result.data.selecContractInfo.telO);
-                    $("#residenceNumber").text(result.data.selecContractInfo.telR);
-                    $("#faxNumber").text(result.data.selecContractInfo.telf);
-                    
-                    AUIGrid.setGridData(groupListGridID, result.data.selectGroupList);
-                    AUIGrid.resize(groupListGridID);
-                    
-                    AUIGrid.setGridData(esmListGridID, result.data.selectEstmReqHistory);
-                    AUIGrid.resize(esmListGridID);
-                    
-                    $("#confirm").hide();
-                    $("#reSelect").show();
-                    
-                }else{
-                    $("#displayVisible").hide();
-                    $("#orderNo").removeClass('readonly');
-                    Common.alert("No billing group found for this order.");
-                    
-                }
+    	var now = new Date();
+        var year= now.getFullYear();
+        var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
+        var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
+        var valid = true;
+        var message = "";
+        var orderNo = $("#orderNo").val();
+        orderNo = $.trim(orderNo);
                 
-            },function(jqXHR, textStatus, errorThrown) {
-                Common.alert("Fail.");
+        
+        if(currentDay >= 26 || currentDay == 1){
+        	
+        	Common.alert("Unable to perform this between 26 and 1 next month");
+        	return;
+        	
+        }else{
+        	
+        	
+        	if(orderNo == ""){
+                valid = false;
+                message = "Please key in the order number."
+            }
+            
+            if(valid){
+                
+                Common.ajax("GET","/payment/selectBillGroup.do", {"orderNo":orderNo}, function(result){
+                    console.log(result);
+                    if(result.data.selectBasicInfo != null){
+                    	
+                    	$("#displayVisible").show();
+                        $("#orderNo").addClass('readonly');
+                        $("#custBillId").val(result.data.custBillId);//히든값
+                        $("#custBillCustId").val(result.data.selectBasicInfo.custBillCustId);//히든값
+                        $("#custBillGrpNo").text(result.data.selectBasicInfo.custBillGrpNo);
+                        $("#creator").text(result.data.selectBasicInfo.userName);
+                        $("#mainOrder").text(result.data.selectBasicInfo.salesOrdNo);
+                        $("#createDate").text(result.data.selectBasicInfo.custBillCrtDt);
+                        $("#customerId").text(result.data.selectBasicInfo.custBillCustId+"("+result.data.selectBasicInfo.codeName+")");
+                        $("#nric").text(result.data.selectBasicInfo.nric);
+                        $("#customerName").text(result.data.selectBasicInfo.name);
+                        
+                        if(result.data.selectBasicInfo.custBillIsPost == "1"){
+                            $("#post").attr('checked', true);
+                        }else{
+                            $("#post").attr('checked', false);
+                        }
+                        
+                        if(result.data.selectBasicInfo.custBillIsSms == "1"){
+                            $("#sms").attr('checked', true);
+                        }else{
+                            $("#sms").attr('checked', false);
+                        }
+                        
+                        if(result.data.selectBasicInfo.custBillIsEstm == "1"){
+                            $("#estm").attr('checked', true);
+                        }else{
+                            $("#estm").attr('checked', false);
+                        }
+                        
+                        $("#remark").text(result.data.selectBasicInfo.custBillRem);
+                        $("#email").text(result.data.selectBasicInfo.custBillEmail);
+                        
+                        //Mailling Addres
+                        $("#maillingAddr").text(result.data.selectMaillingInfo.add1+" " + result.data.selectMaillingInfo.add2 + " "+ result.data.selectMaillingInfo.add3 +" " 
+                                + result.data.selectMaillingInfo.postCode + " " + result.data.selectMaillingInfo.areaName + " " + result.data.selectMaillingInfo.name2 + " "+ result.data.selectMaillingInfo.name3);
+                        
+                        //ContractInfo
+                        $("#contractPerson").text(result.data.selecContractInfo.name2);
+                        $("#mobileNumber").text(result.data.selecContractInfo.telM1);
+                        $("#officeNumber").text(result.data.selecContractInfo.telO);
+                        $("#residenceNumber").text(result.data.selecContractInfo.telR);
+                        $("#faxNumber").text(result.data.selecContractInfo.telf);
+                        
+                        AUIGrid.setGridData(groupListGridID, result.data.selectGroupList);
+                        AUIGrid.resize(groupListGridID);
+                        
+                        AUIGrid.setGridData(esmListGridID, result.data.selectEstmReqHistory);
+                        AUIGrid.resize(esmListGridID);
+                        
+                        $("#confirm").hide();
+                        $("#reSelect").show();
+                        
+                    }else{
+                        $("#displayVisible").hide();
+                        $("#orderNo").removeClass('readonly');
+                        Common.alert("No billing group found for this order.");
+                        
+                    }
+                    
+                },function(jqXHR, textStatus, errorThrown) {
+                    Common.alert("Fail.");
+                    $("#displayVisible").hide();
 
-            });
-    		
-    	}else{
-    		Common.alert(message);
-    		$("#displayVisible").hide();
-    	}
-    	
+                });
+                
+            }else{
+                Common.alert(message);
+                $("#displayVisible").hide();
+            }
+        	
+        }
         
     }
     
