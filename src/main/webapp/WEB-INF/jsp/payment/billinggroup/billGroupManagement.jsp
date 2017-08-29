@@ -274,7 +274,7 @@ var emailAddrLayout = [
         editable : false,
         width : 80
     }, {
-        dataField : "fullAddr",
+        dataField : "addr",
         headerText : "Address",
         editable : false
     }, {
@@ -291,7 +291,7 @@ var contPersonLayout = [
         headerText : "Status",
         editable : false,
     }, {
-        dataField : "name2",
+        dataField : "name1",
         headerText : "Name",
         editable : false,
     }, {
@@ -441,8 +441,7 @@ var addOrderLayout = [
                         $("#email").text(result.data.selectBasicInfo.custBillEmail);
                         
                         //Mailling Addres
-                        $("#maillingAddr").text(result.data.selectMaillingInfo.add1+" " + result.data.selectMaillingInfo.add2 + " "+ result.data.selectMaillingInfo.add3 +" " 
-                                + result.data.selectMaillingInfo.postCode + " " + result.data.selectMaillingInfo.areaName + " " + result.data.selectMaillingInfo.name2 + " "+ result.data.selectMaillingInfo.name3);
+                        $("#maillingAddr").text(result.data.selectMaillingInfo.addr);
                         
                         //ContractInfo
                         $("#contractPerson").text(result.data.selecContractInfo.name2);
@@ -557,18 +556,17 @@ var addOrderLayout = [
         	
         	valid = false;
         	message += "* Please key in the reason to update.<br />";
-        	Common.alert(message);
         	
         }else{
         	
         	if($.trim(reasonUpd).length > 200){
         		valid = false;
         		message += "* Reason to update cannot more than 200 characters.<br />";
-        		Common.alert(message);
         	}
         }
 
         if(valid){
+        	
         	Common.ajax("GET","/payment/saveRemark.do", {"custBillId":custBillId , "remarkNew" : newRem, "reasonUpd" : reasonUpd}, function(result){
                 console.log(result);
                 Common.alert(result.message);
@@ -577,6 +575,9 @@ var addOrderLayout = [
                 fn_updRemark();
                 
             });
+        	
+        }else{
+        	Common.alert(message);
         }
         
     }
@@ -641,8 +642,7 @@ var addOrderLayout = [
             
             $('#changeMail_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#changeMail_ordGrp').text(result.data.grpOrder.orderGrp);$('#changeMail_ordGrp').css("color","red");
-            $('#changeMail_currAddr').text(result.data.mailInfo.add1+" " + result.data.mailInfo.add2 + " "+ result.data.mailInfo.add3 +" " 
-                    + result.data.mailInfo.postCode + " " + result.data.mailInfo.areaName + " " + result.data.mailInfo.name2 + " "+ result.data.mailInfo.name3);
+            $('#changeMail_currAddr').text(result.data.mailInfo.addr);
             
         });
     }
@@ -671,6 +671,7 @@ var addOrderLayout = [
     }
     
     function fn_chgContPerPopClose() {
+    	
         $('#chgContPerPop').hide();
         searchList();
         
@@ -693,12 +694,8 @@ var addOrderLayout = [
            if(typeId == "1042"){
         	   
         	   //Mailing Address
-        	   var descFrom = result.data.mailAddrOldHistorty.add1 + " " + result.data.mailAddrOldHistorty.add2 + " " + result.data.mailAddrOldHistorty.add3 + " "
-        	   + result.data.mailAddrOldHistorty.postCode + " " + result.data.mailAddrOldHistorty.areaName + " " + result.data.mailAddrOldHistorty.name + " " + result.data.mailAddrOldHistorty.name1;
-               
-        	   var descTo = result.data.mailAddrNewHistorty.add1 + " " + result.data.mailAddrNewHistorty.add2 + " " + result.data.mailAddrNewHistorty.add3 + " "
-               + result.data.mailAddrNewHistorty.postCode + " " + result.data.mailAddrNewHistorty.areaName + " " + result.data.mailAddrNewHistorty.name + " " + result.data.mailAddrNewHistorty.name1;;
-               
+        	   var descFrom = result.data.mailAddrOldHistorty.fullAddr;
+        	   var descTo = result.data.mailAddrNewHistorty.fullAddr;
                
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
@@ -896,11 +893,14 @@ var addOrderLayout = [
     }
     
     function fn_selectMailAddr(){
+    	
     	AUIGrid.destroy(emailAddrPopGridID); 
     	var custBillCustId = $("#custBillCustId").val();
+    	var custAddr = $("#custAddr").val();
     	$("#selectMaillAddrPop").show();
     	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
-    	Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custBillCustId}, function(result){
+    	
+    	Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
             console.log(result);
             AUIGrid.setGridData(emailAddrPopGridID, result);
             
@@ -908,12 +908,12 @@ var addOrderLayout = [
             AUIGrid.bind(emailAddrPopGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
                 
-                $("#changeMail_newAddr").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "fullAddr"));
+                $("#changeMail_newAddr").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "addr"));
                 $("#custAddId").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "custAddId"));
                 
                 $("#selectMaillAddrPop").hide();
                 AUIGrid.destroy(emailAddrPopGridID);
-                Common.alert("<b>New address selected.<br/>Click save to confirm change address.</b>");
+                Common.alert("New address selected.<br/>Click save to confirm change address.");
 
             });
             
@@ -921,33 +921,8 @@ var addOrderLayout = [
     	
 	}
     
-    function fn_searchAddrKeyword(){
-    	AUIGrid.destroy(emailAddrPopGridID); 
-        var custBillCustId = $("#custBillCustId").val();
-        var custAddr = $("#custAddr").val();
-        //$("#selectMaillAddrPop").show();
-        emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
-        Common.ajax("GET","/payment/selectAddrKeywordList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
-            console.log(result);
-            AUIGrid.setGridData(emailAddrPopGridID, result);
-            
-            //Grid 셀 클릭시 이벤트
-            AUIGrid.bind(emailAddrPopGridID, "cellClick", function( event ){
-                selectedGridValue = event.rowIndex;
-                
-                $("#changeMail_newAddr").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "fullAddr"));
-                $("#custAddId").val(AUIGrid.getCellValue(emailAddrPopGridID , event.rowIndex , "custAddId"));
-                
-                $("#selectMaillAddrPop").hide();
-                AUIGrid.destroy(emailAddrPopGridID); 
-                Common.alert("<b>New address selected.<br/>Click save to confirm change address.</b>");
-
-            });
-            
-        });
-    }
-    
     function fn_newAddrSave(){
+    	
     	var valid = true;
     	var message = "";
     	var newAddr = $("#changeMail_newAddr").val();
@@ -958,23 +933,21 @@ var addOrderLayout = [
     	if(newAddr == ""){
     		valid = false;
     		message += "* Please select the address.<br />";
-    		Common.alert(message);
     	}
     	
     	if($.trim(reasonUpd) == ""){
             valid = false;
             message += "* Please key in the reason to update.<br />";
-            Common.alert(message);
         }else{
         	if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "* Reason to update cannot more than 200 characters.<br />";
-                Common.alert(message);
             }
         }
     	
     	
     	if(valid){
+    		
     		Common.ajax("GET","/payment/saveNewAddr.do", {"custBillId":custBillId, "newAddr" : newAddr, "reasonUpd" : reasonUpd, "custAddId" : custAddId}, function(result){
                 console.log(result);
                 
@@ -985,6 +958,9 @@ var addOrderLayout = [
                 fn_changeMaillAddr();
                 
             });
+    		
+    	}else{
+    		Common.alert(message);
     	}
     }
     
@@ -992,9 +968,11 @@ var addOrderLayout = [
     	
         AUIGrid.destroy(contPersonPopGridID); 
         var custBillCustId = $("#custBillCustId").val();
+        var personKeyword = $("#personKeyword").val();
         $("#selectContPersonPop").show();
         contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
-        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custBillCustId}, function(result){
+        
+        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custBillCustId, "personKeyword" : personKeyword}, function(result){
             console.log(result);
             AUIGrid.setGridData(contPersonPopGridID, result);
             
@@ -1003,7 +981,7 @@ var addOrderLayout = [
                 selectedGridValue = event.rowIndex;
                 
                 $("#custCntcId").val(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "custCntcId"));//히든값
-                $("#newContactPerson").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "name2"));
+                $("#newContactPerson").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "name1"));
                 $("#newMobNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telM1"));
                 $("#newOffNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telO"));
                 $("#newResNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telR"));
@@ -1012,38 +990,7 @@ var addOrderLayout = [
                 
                 $("#selectContPersonPop").hide();
                 AUIGrid.destroy(contPersonPopGridID);
-                Common.alert("<b>New contact person selected.<br />Click save to confirm change contact person.</b>");
-
-            });
-            
-        });
-    }
-    
-    function fn_searchContactKeyword(){
-    	
-        AUIGrid.destroy(contPersonPopGridID); 
-        var custBillCustId = $("#custBillCustId").val();
-        var custAddr = $("#custAddr").val();
-        //$("#selectContPersonPop").show();
-        contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
-        Common.ajax("GET","/payment/selectContPerKeywordList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
-            console.log(result);
-            AUIGrid.setGridData(contPersonPopGridID, result.data.resultList);
-            
-            //Grid 셀 클릭시 이벤트
-            AUIGrid.bind(contPersonPopGridID, "cellClick", function( event ){
-                selectedGridValue = event.rowIndex;
-                
-                $("#custCntcId").val(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "custCntcId"));//히든값
-                $("#newContactPerson").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "name2"));
-                $("#newMobNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telM1"));
-                $("#newOffNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telO"));
-                $("#newResNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telR"));
-                $("#newFaxNo").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telf"));
-                
-                $("#selectContPersonPop").hide();
-                AUIGrid.destroy(contPersonPopGridID); 
-                Common.alert("<b>New contact person selected.<br />Click save to confirm change contact person.</b>");
+                Common.alert("New contact person selected.<br />Click save to confirm change contact person.");
 
             });
             
@@ -1081,9 +1028,6 @@ var addOrderLayout = [
                 
                 Common.alert(result.message);
                 
-                if(result.code =="00"){
-
-                    
                     $("#newContactPerson").text("");
                     $("#newMobNo").text("");
                     $("#newOffNo").text("");
@@ -1092,8 +1036,6 @@ var addOrderLayout = [
                     $("#newContPerReason").val("");
                     
                     fn_chgContPerson();
-                }
-                
                 
             });
         }else{
@@ -1118,10 +1060,11 @@ var addOrderLayout = [
         	message += "* Please key in the email address.<br />";
         	
         }else{
-        	//TODO 이메일 특수문자제한??????
-        	//valid = false;
-            //message += "* The email is invalid.<br />";		
-        			
+
+        	if(FormUtil.checkEmail($.trim(reqEmail)) == true){
+        		valid = false;
+                message += "* The email is invalid.<br />"; 
+             }
         }
         
         if($.trim(reasonUpd) ==""){
@@ -2338,10 +2281,10 @@ var addOrderLayout = [
 </tr>
 <tr>
     <th scope="row">Description (From)</th>
-    <td colspan="" id="det_descFrom" height="150px">11
+    <td colspan="" id="det_descFrom" height="150px">
     </td>
     <th scope="row">Description (To)</th>
-    <td colspan="" id="det_descTo">11
+    <td colspan="" id="det_descTo">
     </td>
 </tr>
 </tbody>
@@ -2360,7 +2303,7 @@ var addOrderLayout = [
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_searchAddrKeyword();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 
@@ -2374,7 +2317,7 @@ var addOrderLayout = [
 <tr>
     <th scope="row">Address Keyword</th>
     <td>
-    <input type="text" id="custAddr" title="" placeholder="Keyword" class="w100p" />
+    <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
     </td>
 </tr>
 </tbody>
@@ -2398,7 +2341,7 @@ var addOrderLayout = [
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_searchContactKeyword();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 
@@ -2412,7 +2355,7 @@ var addOrderLayout = [
 <tr>
     <th scope="row">Contact Keyword</th>
     <td>
-    <input type="text" id="contKeyword" title="" placeholder="Keyword" class="w100p" />
+    <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
     </td>
 </tr>
 </tbody>
