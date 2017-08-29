@@ -146,9 +146,9 @@
 				                     sys0054m c,
 				                     sys0013m d
 				                WHERE a.role_id = b.role_id
-				                    AND a.role_id = c.role_id (+)
-				                    AND d.code_master_id(+) = 313
-				                    AND c.auth_code = d.code(+)
+				                    AND a.role_id = c.role_id
+				                    AND d.code_master_id = 313
+				                    AND c.auth_code = d.code
 				            ) b
 				        WHERE a.auth_code = b.auth_code
 				            AND a.func_yn = 'Y'
