@@ -41,7 +41,14 @@ var pickerOpts={//일반년월일달력 세팅
 		}
 };
 
-$(".j_date").datepicker(pickerOpts);//일반년월일달력 실행
+//$(".j_date").datepicker(pickerOpts);//일반년월일달력 실행
+
+$(document).on(
+	"click", ".j_date", function(){
+
+	$(".j_date").datepicker(pickerOpts);
+});
+
 
 var monthOptions = {//생년월일 세팅
 	pattern: 'mm/yyyy',
