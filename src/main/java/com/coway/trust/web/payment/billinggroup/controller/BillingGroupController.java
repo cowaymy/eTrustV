@@ -1674,323 +1674,326 @@ public class BillingGroupController {
 		int failCnt =0;
 		String message1 = "";
 		String message2 = "";
-		for(int i=0 ; i < salesOrdNoArr.length; i++){
-		
-		params.put("salesOrdId", salesOrdIdArr[i].trim());
-		params.put("salesOrdNo", salesOrdNoArr[i].trim());
-		EgovMap selectSalesOrderMs = billGroupService.selectSalesOrderMs(params);
-		
-		if(selectSalesOrderMs != null && Integer.parseInt(String.valueOf(selectSalesOrderMs.get("salesOrdId"))) > 0){
-			String salesOrdId =  CommonUtils.nvl(String.valueOf(selectSalesOrderMs.get("salesOrdId")), "");
-			String custBillId =  CommonUtils.nvl(String.valueOf(selectSalesOrderMs.get("custBillId")), "");
-			
-			EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
-			
-			if(selectCustBillMaster != null && Integer.parseInt(String.valueOf(selectCustBillMaster.get("custBillId"))) > 0){
-				
-				if(!custBillId.equals(String.valueOf(params.get("custBillId")))){
-					
-					//인서트 셋팅 시작
-					String salesOrderIDOld = salesOrdId;
-					String salesOrderIDNew = "0";
-					String contactIDOld = "0";
-					String contactIDNew = "0";
-					String addressIDOld = "0";
-					String addressIDNew = "0";
-					String statusIDOld = "0";
-					String statusIDNew = "0";
-					String remarkOld = "";
-					String remarkNew = "";
-					String emailOld = "";
-					String emailNew = "";
-					String isEStatementOld = "0";
-					String isEStatementNew = "0";
-					String isSMSOld = "0";
-					String isSMSNew = "0";
-					String isPostOld = "0";
-					String isPostNew = "0";
-					String typeId = "1046";
-					String sysHisRemark = "[System] Group Order - Remove Order";
-					String emailAddtionalNew = "";
-					String emailAddtionalOld = "";
-					
-					Map<String, Object> hisRemoveOrdMap = new HashMap<String, Object>();
-					hisRemoveOrdMap.put("custBillId", custBillId);
-					hisRemoveOrdMap.put("userId", userId);
-					hisRemoveOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
-					hisRemoveOrdMap.put("salesOrderIDOld", salesOrderIDOld);
-					hisRemoveOrdMap.put("salesOrderIDNew", salesOrderIDNew);
-					hisRemoveOrdMap.put("contactIDOld", contactIDOld);
-					hisRemoveOrdMap.put("contactIDNew", contactIDNew);
-					hisRemoveOrdMap.put("addressIDOld", addressIDOld);
-					hisRemoveOrdMap.put("addressIDNew", addressIDNew);
-					hisRemoveOrdMap.put("statusIDOld", statusIDOld);
-					hisRemoveOrdMap.put("statusIDNew", statusIDNew);
-					hisRemoveOrdMap.put("remarkOld", remarkOld);
-					hisRemoveOrdMap.put("remarkNew", remarkNew);
-					hisRemoveOrdMap.put("emailOld", emailOld);
-					hisRemoveOrdMap.put("emailNew", emailNew);
-					hisRemoveOrdMap.put("isEStatementOld", isEStatementOld);
-					hisRemoveOrdMap.put("isEStatementNew", isEStatementNew);
-					hisRemoveOrdMap.put("isSMSOld", isSMSOld);
-					hisRemoveOrdMap.put("isSMSNew", isSMSNew);
-					hisRemoveOrdMap.put("isPostOld", isPostOld);
-					hisRemoveOrdMap.put("isPostNew", isPostNew);
-					hisRemoveOrdMap.put("typeId", typeId);
-					hisRemoveOrdMap.put("sysHisRemark", sysHisRemark);
-					hisRemoveOrdMap.put("emailAddtionalNew", emailAddtionalNew);
-					hisRemoveOrdMap.put("emailAddtionalOld", emailAddtionalOld);
-					billGroupService.insHistory(hisRemoveOrdMap);
-					//인서트 셋팅  끝
+		boolean valid = true;
+    	for(int i=0 ; i < salesOrdNoArr.length; i++){
+    		
+    		params.put("salesOrdId", salesOrdIdArr[i].trim());
+    		params.put("salesOrdNo", salesOrdNoArr[i].trim());
+    		EgovMap selectSalesOrderMs = billGroupService.selectSalesOrderMs(params);
+    		
+    		if(selectSalesOrderMs != null && Integer.parseInt(String.valueOf(selectSalesOrderMs.get("salesOrdId"))) > 0){
+    			String salesOrdId =  CommonUtils.nvl(String.valueOf(selectSalesOrderMs.get("salesOrdId")), "");
+    			String custBillId =  CommonUtils.nvl(String.valueOf(selectSalesOrderMs.get("custBillId")), "");
+    			
+    			EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
+    			
+    			if(selectCustBillMaster != null && Integer.parseInt(String.valueOf(selectCustBillMaster.get("custBillId"))) > 0){
+    				
+    				if(!custBillId.equals(String.valueOf(params.get("custBillId")))){
+    					
+    					//인서트 셋팅 시작
+    					String salesOrderIDOld = salesOrdId;
+    					String salesOrderIDNew = "0";
+    					String contactIDOld = "0";
+    					String contactIDNew = "0";
+    					String addressIDOld = "0";
+    					String addressIDNew = "0";
+    					String statusIDOld = "0";
+    					String statusIDNew = "0";
+    					String remarkOld = "";
+    					String remarkNew = "";
+    					String emailOld = "";
+    					String emailNew = "";
+    					String isEStatementOld = "0";
+    					String isEStatementNew = "0";
+    					String isSMSOld = "0";
+    					String isSMSNew = "0";
+    					String isPostOld = "0";
+    					String isPostNew = "0";
+    					String typeId = "1046";
+    					String sysHisRemark = "[System] Group Order - Remove Order";
+    					String emailAddtionalNew = "";
+    					String emailAddtionalOld = "";
+    					
+    					Map<String, Object> hisRemoveOrdMap = new HashMap<String, Object>();
+    					hisRemoveOrdMap.put("custBillId", custBillId);
+    					hisRemoveOrdMap.put("userId", userId);
+    					hisRemoveOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    					hisRemoveOrdMap.put("salesOrderIDOld", salesOrderIDOld);
+    					hisRemoveOrdMap.put("salesOrderIDNew", salesOrderIDNew);
+    					hisRemoveOrdMap.put("contactIDOld", contactIDOld);
+    					hisRemoveOrdMap.put("contactIDNew", contactIDNew);
+    					hisRemoveOrdMap.put("addressIDOld", addressIDOld);
+    					hisRemoveOrdMap.put("addressIDNew", addressIDNew);
+    					hisRemoveOrdMap.put("statusIDOld", statusIDOld);
+    					hisRemoveOrdMap.put("statusIDNew", statusIDNew);
+    					hisRemoveOrdMap.put("remarkOld", remarkOld);
+    					hisRemoveOrdMap.put("remarkNew", remarkNew);
+    					hisRemoveOrdMap.put("emailOld", emailOld);
+    					hisRemoveOrdMap.put("emailNew", emailNew);
+    					hisRemoveOrdMap.put("isEStatementOld", isEStatementOld);
+    					hisRemoveOrdMap.put("isEStatementNew", isEStatementNew);
+    					hisRemoveOrdMap.put("isSMSOld", isSMSOld);
+    					hisRemoveOrdMap.put("isSMSNew", isSMSNew);
+    					hisRemoveOrdMap.put("isPostOld", isPostOld);
+    					hisRemoveOrdMap.put("isPostNew", isPostNew);
+    					hisRemoveOrdMap.put("typeId", typeId);
+    					hisRemoveOrdMap.put("sysHisRemark", sysHisRemark);
+    					hisRemoveOrdMap.put("emailAddtionalNew", emailAddtionalNew);
+    					hisRemoveOrdMap.put("emailAddtionalOld", emailAddtionalOld);
+    					billGroupService.insHistory(hisRemoveOrdMap);
+    					//인서트 셋팅  끝
+    
+    					if(salesOrdId.equals(String.valueOf(selectCustBillMaster.get("custBillSoId")))){
+    						
+    						String changeOrderId = "0";
+    						Map<String, Object> replaceOrdMap = new HashMap<String, Object>();
+    		                replaceOrdMap.put("replaceOrd", "Y");
+    		                replaceOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
+    		                replaceOrdMap.put("salesOrdId", salesOrdId);
+    						EgovMap replcaceOrder_1 = billGroupService.selectReplaceOrder(replaceOrdMap);
+    						
+    						if (replcaceOrder_1 != null && Integer.parseInt(String.valueOf(replcaceOrder_1.get("salesOrdId"))) > 0){
+    							
+    							changeOrderId = String.valueOf(replcaceOrder_1.get("salesOrdId"));
+    							
+    						}else{
+    							Map<String, Object> replaceOrd2Map = new HashMap<String, Object>();
+    							replaceOrd2Map.put("replaceOrd2", "Y");
+    							replaceOrd2Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
+    							replaceOrd2Map.put("salesOrdId", salesOrdId);
+    							EgovMap replcaceOrder_2 = billGroupService.selectReplaceOrder(replaceOrd2Map);
+    							
+    							if (replcaceOrder_2 != null && Integer.parseInt(String.valueOf(replcaceOrder_2.get("salesOrdId"))) > 0){
+    								
+    								changeOrderId = String.valueOf(replcaceOrder_2.get("salesOrdId"));
+    								
+    							}else{
+    								
+    								Map<String, Object> replaceOrd3Map = new HashMap<String, Object>();
+    								replaceOrd3Map.put("replaceOrd3", "Y");
+    								replaceOrd3Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
+    								replaceOrd3Map.put("salesOrdId", salesOrdId);
+    								EgovMap replcaceOrder_3 = billGroupService.selectReplaceOrder(replaceOrd3Map);
+    								
+    								if (replcaceOrder_3 != null && Integer.parseInt(String.valueOf(replcaceOrder_3.get("salesOrdId"))) > 0){
+    									changeOrderId = String.valueOf(replcaceOrder_3.get("salesOrdId"));
+    								}
+    								
+    							}
+    							
+    						}
+    						
+    						if(Integer.parseInt(changeOrderId) > 0 ){
+    							
+    							// Got order to replace
+                                //Insert history (Change Main Order) - previous group
+    							String salesOrderIDOld2 = salesOrdId;
+    							String salesOrderIDNew2 = changeOrderId;
+    							String contactIDOld2 = "0";
+    							String contactIDNew2 = "0";
+    							String addressIDOld2 = "0";
+    							String addressIDNew2 = "0";
+    							String statusIDOld2 = "0";
+    							String statusIDNew2 = "0";
+    							String remarkOld2 = "";
+    							String remarkNew2 = "";
+    							String emailOld2 = "";
+    							String emailNew2 = "";
+    							String isEStatementOld2 = "0";
+    							String isEStatementNew2 = "0";
+    							String isSMSOld2 = "0";
+    							String isSMSNew2 = "0";
+    							String isPostOld2 = "0";
+    							String isPostNew2 = "0";
+    							String typeId2 = "1046";
+    							String sysHisRemark2 = "[System] Group Order - Auto Select Main Order";
+    							String emailAddtionalNew2 = "";
+    							String emailAddtionalOld2 = "";
+    							
+    							Map<String, Object> hisChgOrdMap = new HashMap<String, Object>();
+    							hisChgOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
+    							hisChgOrdMap.put("userId", userId);
+    							hisChgOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    							hisChgOrdMap.put("salesOrderIDOld", salesOrderIDOld2);
+    							hisChgOrdMap.put("salesOrderIDNew", salesOrderIDNew2);
+    							hisChgOrdMap.put("contactIDOld", contactIDOld2);
+    							hisChgOrdMap.put("contactIDNew", contactIDNew2);
+    							hisChgOrdMap.put("addressIDOld", addressIDOld2);
+    							hisChgOrdMap.put("addressIDNew", addressIDNew2);
+    							hisChgOrdMap.put("statusIDOld", statusIDOld2);
+    							hisChgOrdMap.put("statusIDNew", statusIDNew2);
+    							hisChgOrdMap.put("remarkOld", remarkOld2);
+    							hisChgOrdMap.put("remarkNew", remarkNew2);
+    							hisChgOrdMap.put("emailOld", emailOld2);
+    							hisChgOrdMap.put("emailNew", emailNew2);
+    							hisChgOrdMap.put("isEStatementOld", isEStatementOld2);
+    							hisChgOrdMap.put("isEStatementNew", isEStatementNew2);
+    							hisChgOrdMap.put("isSMSOld", isSMSOld2);
+    							hisChgOrdMap.put("isSMSNew", isSMSNew2);
+    							hisChgOrdMap.put("isPostOld", isPostOld2);
+    							hisChgOrdMap.put("isPostNew", isPostNew2);
+    							hisChgOrdMap.put("typeId", typeId2);
+    							hisChgOrdMap.put("sysHisRemark", sysHisRemark2);
+    							hisChgOrdMap.put("emailAddtionalNew", emailAddtionalNew2);
+    							hisChgOrdMap.put("emailAddtionalOld", emailAddtionalOld2);
+    							billGroupService.insHistory(hisChgOrdMap);
+    							//인서트 셋팅  끝
+    							
+    							Map<String, Object> updChangeMap = new HashMap<String, Object>();
+    		        			updChangeMap.put("addOrdFlag", "Y");
+    		        			updChangeMap.put("salesOrdId", changeOrderId);
+    		        			updChangeMap.put("custBillId", custBillId);
+    		        			billGroupService.updSalesOrderMaster(updChangeMap);
+    						}else{
+    							
+    							// No replace order found - Inactive billing group
+                                //Insert history (Change Main Order) - previous group
+    							String salesOrderIDOld2 = salesOrdId;
+    							String salesOrderIDNew2 = changeOrderId;
+    							String contactIDOld2 = "0";
+    							String contactIDNew2 = "0";
+    							String addressIDOld2 = "0";
+    							String addressIDNew2 = "0";
+    							String statusIDOld2 = String.valueOf(selectCustBillMaster.get("custBillStusId"));
+    							String statusIDNew2 = "8";
+    							String remarkOld2 = "";
+    							String remarkNew2 = "";
+    							String emailOld2 = "";
+    							String emailNew2 = "";
+    							String isEStatementOld2 = "0";
+    							String isEStatementNew2 = "0";
+    							String isSMSOld2 = "0";
+    							String isSMSNew2 = "0";
+    							String isPostOld2 = "0";
+    							String isPostNew2 = "0";
+    							String typeId2 = "1046";
+    							String sysHisRemark2 = "[System] Group Order - Auto Deactivate";
+    							String emailAddtionalNew2 = "";
+    							String emailAddtionalOld2 = "";
+    							
+    							Map<String, Object> hisChgOrdMap = new HashMap<String, Object>();
+    							hisChgOrdMap.put("custBillId", custBillId);
+    							hisChgOrdMap.put("userId", userId);
+    							hisChgOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    							hisChgOrdMap.put("salesOrderIDOld", salesOrderIDOld2);
+    							hisChgOrdMap.put("salesOrderIDNew", salesOrderIDNew2);
+    							hisChgOrdMap.put("contactIDOld", contactIDOld2);
+    							hisChgOrdMap.put("contactIDNew", contactIDNew2);
+    							hisChgOrdMap.put("addressIDOld", addressIDOld2);
+    							hisChgOrdMap.put("addressIDNew", addressIDNew2);
+    							hisChgOrdMap.put("statusIDOld", statusIDOld2);
+    							hisChgOrdMap.put("statusIDNew", statusIDNew2);
+    							hisChgOrdMap.put("remarkOld", remarkOld2);
+    							hisChgOrdMap.put("remarkNew", remarkNew2);
+    							hisChgOrdMap.put("emailOld", emailOld2);
+    							hisChgOrdMap.put("emailNew", emailNew2);
+    							hisChgOrdMap.put("isEStatementOld", isEStatementOld2);
+    							hisChgOrdMap.put("isEStatementNew", isEStatementNew2);
+    							hisChgOrdMap.put("isSMSOld", isSMSOld2);
+    							hisChgOrdMap.put("isSMSNew", isSMSNew2);
+    							hisChgOrdMap.put("isPostOld", isPostOld2);
+    							hisChgOrdMap.put("isPostNew", isPostNew2);
+    							hisChgOrdMap.put("typeId", typeId2);
+    							hisChgOrdMap.put("sysHisRemark", sysHisRemark2);
+    							hisChgOrdMap.put("emailAddtionalNew", emailAddtionalNew2);
+    							hisChgOrdMap.put("emailAddtionalOld", emailAddtionalOld2);
+    							billGroupService.insHistory(hisChgOrdMap);
+    							//인서트 셋팅  끝
+    							
+    							Map<String, Object> updChangeMap = new HashMap<String, Object>();
+    							updChangeMap.put("addOrdFlag", "Y");
+    		        			updChangeMap.put("salesOrdId", changeOrderId);
+    		        			updChangeMap.put("custBillId", custBillId);
+    		        			billGroupService.updSalesOrderMaster(updChangeMap);
+    							
+    						}
+    					}
+    				}
+    			}
+    			
+    			String salesOrderIDOld = "0";
+    			String salesOrderIDNew = salesOrdIdArr[i].trim();
+    			String contactIDOld = "0";
+    			String contactIDNew = "0";
+    			String addressIDOld = "0";
+    			String addressIDNew = "0";
+    			String statusIDOld = "0";
+    			String statusIDNew = "0";
+    			String remarkOld = "";
+    			String remarkNew = "";
+    			String emailOld = "";
+    			String emailNew = "";
+    			String isEStatementOld = "0";
+    			String isEStatementNew = "0";
+    			String isSMSOld = "0";
+    			String isSMSNew = "0";
+    			String isPostOld = "0";
+    			String isPostNew = "0";
+    			String typeId = "1046";
+    			String sysHisRemark = "[System] Group Order - Add Order";
+    			String emailAddtionalNew = "";
+    			String emailAddtionalOld = "";
+    			
+    			Map<String, Object> hisAddOrdMap = new HashMap<String, Object>();
+    			hisAddOrdMap.put("custBillId", String.valueOf(params.get("custBillId")));
+    			hisAddOrdMap.put("userId", userId);
+    			hisAddOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    			hisAddOrdMap.put("salesOrderIDOld", salesOrderIDOld);
+    			hisAddOrdMap.put("salesOrderIDNew", salesOrderIDNew);
+    			hisAddOrdMap.put("contactIDOld", contactIDOld);
+    			hisAddOrdMap.put("contactIDNew", contactIDNew);
+    			hisAddOrdMap.put("addressIDOld", addressIDOld);
+    			hisAddOrdMap.put("addressIDNew", addressIDNew);
+    			hisAddOrdMap.put("statusIDOld", statusIDOld);
+    			hisAddOrdMap.put("statusIDNew", statusIDNew);
+    			hisAddOrdMap.put("remarkOld", remarkOld);
+    			hisAddOrdMap.put("remarkNew", remarkNew);
+    			hisAddOrdMap.put("emailOld", emailOld);
+    			hisAddOrdMap.put("emailNew", emailNew);
+    			hisAddOrdMap.put("isEStatementOld", isEStatementOld);
+    			hisAddOrdMap.put("isEStatementNew", isEStatementNew);
+    			hisAddOrdMap.put("isSMSOld", isSMSOld);
+    			hisAddOrdMap.put("isSMSNew", isSMSNew);
+    			hisAddOrdMap.put("isPostOld", isPostOld);
+    			hisAddOrdMap.put("isPostNew", isPostNew);
+    			hisAddOrdMap.put("typeId", typeId);
+    			hisAddOrdMap.put("sysHisRemark", sysHisRemark);
+    			hisAddOrdMap.put("emailAddtionalNew", emailAddtionalNew);
+    			hisAddOrdMap.put("emailAddtionalOld", emailAddtionalOld);
+    			
+    			if(1 == billGroupService.insHistory(hisAddOrdMap)){
+    				successCnt += 1;
+    				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Success \n";
+    			}else{
+    				failCnt += 1;
+    				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Failed \n";
+    			}
 
-					if(salesOrdId.equals(String.valueOf(selectCustBillMaster.get("custBillSoId")))){
-						
-						String changeOrderId = "0";
-						Map<String, Object> replaceOrdMap = new HashMap<String, Object>();
-		                replaceOrdMap.put("replaceOrd", "Y");
-		                replaceOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
-		                replaceOrdMap.put("salesOrdId", salesOrdId);
-						EgovMap replcaceOrder_1 = billGroupService.selectReplaceOrder(replaceOrdMap);
-						
-						if (replcaceOrder_1 != null && Integer.parseInt(String.valueOf(replcaceOrder_1.get("salesOrdId"))) > 0){
-							
-							changeOrderId = String.valueOf(replcaceOrder_1.get("salesOrdId"));
-							
-						}else{
-							Map<String, Object> replaceOrd2Map = new HashMap<String, Object>();
-							replaceOrd2Map.put("replaceOrd2", "Y");
-							replaceOrd2Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
-							replaceOrd2Map.put("salesOrdId", salesOrdId);
-							EgovMap replcaceOrder_2 = billGroupService.selectReplaceOrder(replaceOrd2Map);
-							
-							if (replcaceOrder_2 != null && Integer.parseInt(String.valueOf(replcaceOrder_2.get("salesOrdId"))) > 0){
-								
-								changeOrderId = String.valueOf(replcaceOrder_2.get("salesOrdId"));
-								
-							}else{
-								
-								Map<String, Object> replaceOrd3Map = new HashMap<String, Object>();
-								replaceOrd3Map.put("replaceOrd3", "Y");
-								replaceOrd3Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
-								replaceOrd3Map.put("salesOrdId", salesOrdId);
-								EgovMap replcaceOrder_3 = billGroupService.selectReplaceOrder(replaceOrd3Map);
-								
-								if (replcaceOrder_3 != null && Integer.parseInt(String.valueOf(replcaceOrder_3.get("salesOrdId"))) > 0){
-									changeOrderId = String.valueOf(replcaceOrder_3.get("salesOrdId"));
-								}
-								
-							}
-							
-						}
-						
-						if(Integer.parseInt(changeOrderId) > 0 ){
-							
-							// Got order to replace
-                            //Insert history (Change Main Order) - previous group
-							String salesOrderIDOld2 = salesOrdId;
-							String salesOrderIDNew2 = changeOrderId;
-							String contactIDOld2 = "0";
-							String contactIDNew2 = "0";
-							String addressIDOld2 = "0";
-							String addressIDNew2 = "0";
-							String statusIDOld2 = "0";
-							String statusIDNew2 = "0";
-							String remarkOld2 = "";
-							String remarkNew2 = "";
-							String emailOld2 = "";
-							String emailNew2 = "";
-							String isEStatementOld2 = "0";
-							String isEStatementNew2 = "0";
-							String isSMSOld2 = "0";
-							String isSMSNew2 = "0";
-							String isPostOld2 = "0";
-							String isPostNew2 = "0";
-							String typeId2 = "1046";
-							String sysHisRemark2 = "[System] Group Order - Auto Select Main Order";
-							String emailAddtionalNew2 = "";
-							String emailAddtionalOld2 = "";
-							
-							Map<String, Object> hisChgOrdMap = new HashMap<String, Object>();
-							hisChgOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
-							hisChgOrdMap.put("userId", userId);
-							hisChgOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
-							hisChgOrdMap.put("salesOrderIDOld", salesOrderIDOld2);
-							hisChgOrdMap.put("salesOrderIDNew", salesOrderIDNew2);
-							hisChgOrdMap.put("contactIDOld", contactIDOld2);
-							hisChgOrdMap.put("contactIDNew", contactIDNew2);
-							hisChgOrdMap.put("addressIDOld", addressIDOld2);
-							hisChgOrdMap.put("addressIDNew", addressIDNew2);
-							hisChgOrdMap.put("statusIDOld", statusIDOld2);
-							hisChgOrdMap.put("statusIDNew", statusIDNew2);
-							hisChgOrdMap.put("remarkOld", remarkOld2);
-							hisChgOrdMap.put("remarkNew", remarkNew2);
-							hisChgOrdMap.put("emailOld", emailOld2);
-							hisChgOrdMap.put("emailNew", emailNew2);
-							hisChgOrdMap.put("isEStatementOld", isEStatementOld2);
-							hisChgOrdMap.put("isEStatementNew", isEStatementNew2);
-							hisChgOrdMap.put("isSMSOld", isSMSOld2);
-							hisChgOrdMap.put("isSMSNew", isSMSNew2);
-							hisChgOrdMap.put("isPostOld", isPostOld2);
-							hisChgOrdMap.put("isPostNew", isPostNew2);
-							hisChgOrdMap.put("typeId", typeId2);
-							hisChgOrdMap.put("sysHisRemark", sysHisRemark2);
-							hisChgOrdMap.put("emailAddtionalNew", emailAddtionalNew2);
-							hisChgOrdMap.put("emailAddtionalOld", emailAddtionalOld2);
-							billGroupService.insHistory(hisChgOrdMap);
-							//인서트 셋팅  끝
-							
-							Map<String, Object> updChangeMap = new HashMap<String, Object>();
-		        			updChangeMap.put("addOrdFlag", "Y");
-		        			updChangeMap.put("salesOrdId", changeOrderId);
-		        			updChangeMap.put("custBillId", custBillId);
-		        			billGroupService.updSalesOrderMaster(updChangeMap);
-						}else{
-							
-							// No replace order found - Inactive billing group
-                            //Insert history (Change Main Order) - previous group
-							String salesOrderIDOld2 = salesOrdId;
-							String salesOrderIDNew2 = changeOrderId;
-							String contactIDOld2 = "0";
-							String contactIDNew2 = "0";
-							String addressIDOld2 = "0";
-							String addressIDNew2 = "0";
-							String statusIDOld2 = String.valueOf(selectCustBillMaster.get("custBillStusId"));
-							String statusIDNew2 = "8";
-							String remarkOld2 = "";
-							String remarkNew2 = "";
-							String emailOld2 = "";
-							String emailNew2 = "";
-							String isEStatementOld2 = "0";
-							String isEStatementNew2 = "0";
-							String isSMSOld2 = "0";
-							String isSMSNew2 = "0";
-							String isPostOld2 = "0";
-							String isPostNew2 = "0";
-							String typeId2 = "1046";
-							String sysHisRemark2 = "[System] Group Order - Auto Deactivate";
-							String emailAddtionalNew2 = "";
-							String emailAddtionalOld2 = "";
-							
-							Map<String, Object> hisChgOrdMap = new HashMap<String, Object>();
-							hisChgOrdMap.put("custBillId", custBillId);
-							hisChgOrdMap.put("userId", userId);
-							hisChgOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
-							hisChgOrdMap.put("salesOrderIDOld", salesOrderIDOld2);
-							hisChgOrdMap.put("salesOrderIDNew", salesOrderIDNew2);
-							hisChgOrdMap.put("contactIDOld", contactIDOld2);
-							hisChgOrdMap.put("contactIDNew", contactIDNew2);
-							hisChgOrdMap.put("addressIDOld", addressIDOld2);
-							hisChgOrdMap.put("addressIDNew", addressIDNew2);
-							hisChgOrdMap.put("statusIDOld", statusIDOld2);
-							hisChgOrdMap.put("statusIDNew", statusIDNew2);
-							hisChgOrdMap.put("remarkOld", remarkOld2);
-							hisChgOrdMap.put("remarkNew", remarkNew2);
-							hisChgOrdMap.put("emailOld", emailOld2);
-							hisChgOrdMap.put("emailNew", emailNew2);
-							hisChgOrdMap.put("isEStatementOld", isEStatementOld2);
-							hisChgOrdMap.put("isEStatementNew", isEStatementNew2);
-							hisChgOrdMap.put("isSMSOld", isSMSOld2);
-							hisChgOrdMap.put("isSMSNew", isSMSNew2);
-							hisChgOrdMap.put("isPostOld", isPostOld2);
-							hisChgOrdMap.put("isPostNew", isPostNew2);
-							hisChgOrdMap.put("typeId", typeId2);
-							hisChgOrdMap.put("sysHisRemark", sysHisRemark2);
-							hisChgOrdMap.put("emailAddtionalNew", emailAddtionalNew2);
-							hisChgOrdMap.put("emailAddtionalOld", emailAddtionalOld2);
-							billGroupService.insHistory(hisChgOrdMap);
-							//인서트 셋팅  끝
-							
-							Map<String, Object> updChangeMap = new HashMap<String, Object>();
-							updChangeMap.put("addOrdFlag", "Y");
-		        			updChangeMap.put("salesOrdId", changeOrderId);
-		        			updChangeMap.put("custBillId", custBillId);
-		        			billGroupService.updSalesOrderMaster(updChangeMap);
-							
-						}
-						
-					}
-					
-				}
-				
-			}
-			
-			String salesOrderIDOld = "0";
-			String salesOrderIDNew = salesOrdIdArr[i].trim();
-			String contactIDOld = "0";
-			String contactIDNew = "0";
-			String addressIDOld = "0";
-			String addressIDNew = "0";
-			String statusIDOld = "0";
-			String statusIDNew = "0";
-			String remarkOld = "";
-			String remarkNew = "";
-			String emailOld = "";
-			String emailNew = "";
-			String isEStatementOld = "0";
-			String isEStatementNew = "0";
-			String isSMSOld = "0";
-			String isSMSNew = "0";
-			String isPostOld = "0";
-			String isPostNew = "0";
-			String typeId = "1046";
-			String sysHisRemark = "[System] Group Order - Add Order";
-			String emailAddtionalNew = "";
-			String emailAddtionalOld = "";
-			
-			Map<String, Object> hisAddOrdMap = new HashMap<String, Object>();
-			hisAddOrdMap.put("custBillId", String.valueOf(params.get("custBillId")));
-			hisAddOrdMap.put("userId", userId);
-			hisAddOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
-			hisAddOrdMap.put("salesOrderIDOld", salesOrderIDOld);
-			hisAddOrdMap.put("salesOrderIDNew", salesOrderIDNew);
-			hisAddOrdMap.put("contactIDOld", contactIDOld);
-			hisAddOrdMap.put("contactIDNew", contactIDNew);
-			hisAddOrdMap.put("addressIDOld", addressIDOld);
-			hisAddOrdMap.put("addressIDNew", addressIDNew);
-			hisAddOrdMap.put("statusIDOld", statusIDOld);
-			hisAddOrdMap.put("statusIDNew", statusIDNew);
-			hisAddOrdMap.put("remarkOld", remarkOld);
-			hisAddOrdMap.put("remarkNew", remarkNew);
-			hisAddOrdMap.put("emailOld", emailOld);
-			hisAddOrdMap.put("emailNew", emailNew);
-			hisAddOrdMap.put("isEStatementOld", isEStatementOld);
-			hisAddOrdMap.put("isEStatementNew", isEStatementNew);
-			hisAddOrdMap.put("isSMSOld", isSMSOld);
-			hisAddOrdMap.put("isSMSNew", isSMSNew);
-			hisAddOrdMap.put("isPostOld", isPostOld);
-			hisAddOrdMap.put("isPostNew", isPostNew);
-			hisAddOrdMap.put("typeId", typeId);
-			hisAddOrdMap.put("sysHisRemark", sysHisRemark);
-			hisAddOrdMap.put("emailAddtionalNew", emailAddtionalNew);
-			hisAddOrdMap.put("emailAddtionalOld", emailAddtionalOld);
-			
-			if(1 == billGroupService.insHistory(hisAddOrdMap)){
-				successCnt +=1;
-				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Success \n";
-			}else{
-				failCnt +=0;
-				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Failed \n";
-			}
-			
-			message1 += "Total order : " + total + " || " +
+    			Map<String, Object> updChangeMap = new HashMap<String, Object>();
+    			updChangeMap.put("addOrdFlag", "Y");
+    			updChangeMap.put("salesOrdId", salesOrdIdArr[i].trim());
+    			updChangeMap.put("custBillId", String.valueOf(params.get("custBillId")));
+    			billGroupService.updSalesOrderMaster(updChangeMap);
+    			
+    			
+    		}else{
+    			valid = false;
+    		}
+		}
+		
+    	if(valid){
+    		
+    		message1 += "Total order : " + total + " || " +
 	                "Total success : " + successCnt + " || " +
 	                "Total fail : " + failCnt + "\n";
-			
-			Map<String, Object> updChangeMap = new HashMap<String, Object>();
-			updChangeMap.put("addOrdFlag", "Y");
-			updChangeMap.put("salesOrdId", salesOrdIdArr[i].trim());
-			updChangeMap.put("custBillId", String.valueOf(params.get("custBillId")));
-			billGroupService.updSalesOrderMaster(updChangeMap);
-			
-			message.setMessage(message1 + message2);
-		}else{
-			message.setMessage("Failed to manage grouping. Please try again later.");
-		}
-		}
-		
-		
-		message.setCode(AppConstants.SUCCESS);
-		
+    		
+    		message.setMessage(message1 + message2);
+    		message.setCode(AppConstants.SUCCESS);
+    	}else{
+    		message.setMessage("Failed to manage grouping. Please try again later.");
+    		message.setCode(AppConstants.FAIL);
+    	}
 		
 		return ResponseEntity.ok(message);
 	}
