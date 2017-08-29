@@ -624,9 +624,7 @@
     
     <select id="selectOrderMailingInfoByOrderID" parameterType="Map" resultType="egovMap">
         SELECT V1.ORD_ID
-             , V1.MAIL_ADD1
-             , V1.MAIL_ADD2
-             , V1.MAIL_ADD3
+             , V1.ADDR_DTL
              , V1.MAIL_CNTY
              , V1.MAIL_STATE
              , V1.MAIL_AREA
