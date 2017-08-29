@@ -18,7 +18,7 @@
 <script type="text/javascript" src="../js/common_pub.js"></script>
 <script type="text/javaScript">
 
-var myGridID;/* promote */
+var myGridID4;/* promote */
 var myGridID1;/* doc */
 var myGridID2;
 var myGridID3;
@@ -29,7 +29,7 @@ var orgList = new Array(); // Organization List
 $(document).ready(function() {
 
     // AUIGrid 그리드를 생성합니다.
-    createAUIGrid();
+    createAUIGrid4();
     createAUIGrid1();
     createAUIGrid2();
     createAUIGrid3();
@@ -39,6 +39,7 @@ $(document).ready(function() {
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
     
+    //cody 를 제외하고 Pa Renewal History 와 Cody PA Expired 안보이기 숨긴다
     if($("#memtype").val() != 2){
     	$("#hideContent").hide();
     	$(".hideContent").hide();
@@ -49,11 +50,79 @@ $(document).ready(function() {
    
     if( $("#hsptlz").val() == 1){
         $('input:checkbox[id="hsptlzCheck"]').attr("checked", true);
-
     }
-});
-
-function createAUIGrid() {
+    //member list에서 Request Terminate/Resign, Request Promote/Demote를 detail화면에 붙여서 같이 사용
+    if($("#codeValue").val() == 1){//Request Terminate/Resign
+    	$("#requestTerminateResign").show();
+    }
+    if($("#codeValue").val() == 2){//Request Promote/Demote
+    	$("#requestPromoteDemote").show();
+    	
+    	 if($("#memberLvl").val() == 0){
+    		 $("#action1").append('<option value=748>Demote</option>');
+    	 }else if($("#memberLvl").val() == 1){
+    		 $("#action1").append('<option value=748>Demote</option>');
+    	 }else if($("#memberLvl").val() == 2){
+             $("#action1").append('<option value=747>Promote</option>');
+             $("#action1").append('<option value=748>Demote</option>');
+         }else if($("#memberLvl").val() == 3){
+             $("#action1").append('<option value=747>Promote</option>');
+             $("#action1").append('<option value=748>Demote</option>');
+         }else{
+        	 $("#action1").append('<option value=747>Promote</option>');
+         }
+    }
+    
+        $('#action1').change(function (){
+    	var memberId = $("#memberid").val() != null ? $("#memberid").val() : 0;
+    	$('#cmbSuperior').empty();
+    	$('#branchCode').empty();
+    	
+    	if($('#action1').val() > -1){
+    		   var positionTo = "";
+    		   var lvlTo = 0;
+    		   var superiorLvl = 0;
+    		   var currentLvl = $("#memberLvl").val();
+    		   var memberTypeId = $("#memtype").val();
+    		   
+    		   if($('#action1').val() == "747"){
+    			   console.log("promote");
+    			   //Promote
+    			  lvlTo = currentLvl - 1;
+                  superiorLvl = currentLvl - 2;
+                  //$("select[name=cmbSuperior]").removeAttr('disabled');
+    			   //desc = 
+    		   }else{
+    			   console.log("demote");
+    			   lvlTo = currentLvl + 1;
+                   superiorLvl = currentLvl;
+                   //desc = 
+    		   }
+    		   $("#lvlTo").val(lvlTo);
+    		   //글씨 붙이기
+    		   
+    		   if(superiorLvl >= 0 && superiorLvl < 4)
+    		   {
+    			   var jsonObj = {
+    		                memberID : $("#memberid").val(),
+    		                memberType : $("#memtype").val(),
+    		                memberLvl : superiorLvl
+    		        };
+    			   var jsonObj1 = {
+                           kind : 4,
+                           separator : ":"
+                   };
+    		         
+    		        doGetCombo("/organization/selectSuperiorTeam", jsonObj , ''   , 'cmbSuperior' , 'S', '');
+    		        doGetComboSepa("/common/selectBranchCodeList.do",4 , ':',''   , 'branchCode' , 'S', '');
+    		        
+                }
+    		  // if(lvlTo == 3 && memberTypeID == 2) $("select[name=branchCode]").removeAttr('disabled')
+    		   
+	   }
+	}); 
+}); 
+function createAUIGrid4() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "codeDesc",
@@ -132,7 +201,7 @@ function createAUIGrid() {
     };
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-    myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+    myGridID4 = AUIGrid.create("#grid_wrap4", columnLayout, gridPros);
 }
 
 var gridPros = {
@@ -510,14 +579,31 @@ function fn_selectPromote(){
     Common.ajax("GET", "/organization/selectPromote",jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
-        AUIGrid.setGridData(myGridID, result);
-        AUIGrid.resize(myGridID,1000,400); 
+        AUIGrid.setGridData(myGridID4, result);
+        AUIGrid.resize(myGridID4,1000,400); 
         
     });
 }
 
 function fn_tabSize(){
 	AUIGrid.resize(myGridID,1000,400); 
+}
+
+function fn_requestTermiReSave(val){
+	if(val == '1'){//Request Terminate/Resign
+	Common.ajax("POST", "/organization/terminateResignSave",  $("#requestTermiReForm").serializeJSON(), function(result) {
+		console.log("성공.");
+		console.log("data : " + result);
+	});
+	
+	}else{//Request Promote/Demote
+		Common.ajax("POST", "/organization/terminateResignSave",  $("#requestProDeForm").serializeJSON(), function(result) {
+	        console.log("성공.");
+	        console.log("data : " + result);
+	    });
+	}
+		//성공했으면.... 팝업 띄워주고.... 인설트한 내용들.... 비활성화....
+	
 }
 </script>
 </head>
@@ -537,7 +623,7 @@ function fn_tabSize(){
 <aside class="title_line"><!-- title_line start -->
 <h4>Member Information</h4>
 </aside><!-- title_line end -->
-
+ <input type="text" value="<c:out value="${codeValue}"/>" id="codeValue"/>
  <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/>
  <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
  <input type="hidden" value="<c:out value="${memberView.bank}"/> "  id="bank"/>
@@ -1007,7 +1093,7 @@ function fn_tabSize(){
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- promote 그리드 -->
-<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+<div id="grid_wrap4" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
@@ -1029,7 +1115,107 @@ function fn_tabSize(){
 </article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
+<div id="requestTerminateResign" style="display:none">
+<form  id="requestTermiReForm" method="post">
+<input type="hidden" value="<c:out value="${memberView.memId}"/>" id="requestMemberId" name="requestMemberId"/>
+<input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue" name="codeValue"/>
+<aside class="title_line"><!-- title_line start -->
+<h2>Terminate/Resign Information</h2>
+</aside><!-- title_line end -->
 
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:110px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Action</th>
+    <td>
+    <select class="w100p" id="action" name="action">
+        <option value="757">Terminate</option>
+        <option value="758">Resign</option>
+    </select>
+    </td>
+    <th scope="row">Terminate/Resign Date</th>
+    <td>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtT/R" name="dtT/R"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3">
+    <textarea cols="20" rows="5" id="remark" name="remark"></textarea>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="" onclick="javascript:fn_requestTermiReSave(1)">SAVE</a></p></li>
+</ul>
+</form>
+</div>
+<div id="requestPromoteDemote" style="display:none">
+<form  id="requestProDeForm" method="post">
+<input type="hidden" value="<c:out value="${memberView.memId}"/>" id="requestMemberId" name="requestMemberId"/>
+<input type="hidden" value="<c:out value="${memberView.c44}"/>" id="memberLvl" name="memberLvl"/>
+<input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype" name="memtype"/>
+<input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue" name="codeValue"/>
+<input type="hidden" value="" id="lvlTo" name="lvlTo"/>
+<aside class="title_line"><!-- title_line start -->
+<h2>Promote/Demote Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:110px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row" rowspan="2">Action</th>
+    <td rowspan="2">
+    <select class="w100p" id="action1" name="action1">
+    <option value="">Action</option>
+    </select>
+    </td>
+    <th scope="row">Superior Team</th>
+    <td>
+    <select class="w100p"  id="cmbSuperior" name="cmbSuperior">
+        <option value="">Superior Team</option>
+    </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Branch Code</th>
+    <td>
+    <select class="w100p" id="branchCode" name="branchCode">
+        <option value="">Branch Code</option>
+
+    </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="3">
+    <textarea cols="20" rows="5" id="remark1" name="remark1" ></textarea>
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="" onclick="javascript:fn_requestTermiReSave(2)">Save Request</a></p></li>
+</ul>
+</form>
+</div>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

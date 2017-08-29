@@ -7,7 +7,7 @@ var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
 function fn_memberListNew(){
-	 Common.popupWin("searchForm", "/organization/selectMemberListNewPop.do?isPop=true");
+	 Common.popupDiv("/organization/selectMemberListNewPop.do?isPop=true", "searchForm");
 }
 
 function fn_memberListSearch(){
@@ -24,7 +24,21 @@ function fn_excelDown(){
     GridCommon.exportTo("grid_wrap", type, "test");
 }
 
-//Make AUIGrid 
+function fn_TerminateResign(val){
+	if(val == '1'){
+		 var jsonObj = {
+				     MemberID :memberid,
+		            MemberType : memberType
+		    };
+		Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1",'');
+	}else{
+		 var jsonObj = {
+                 MemberID :memberid,
+                MemberType : memberType
+        };
+    Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2",'');
+	}
+}
 
 
 //Start AUIGrid
@@ -36,10 +50,18 @@ $(document).ready(function() {
     AUIGrid.setSelectionMode(myGridID, "singleRow");
     
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-        alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-        Common.popupWin("searchForm", "/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"))/* &MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"), option */;
-    });
+	  AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+	        //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+	        Common.popupDiv("/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+	    });
+ 
+     AUIGrid.bind(myGridID, "cellClick", function(event) {
+        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+    	memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
+        memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
+    	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+    }); 
+     
 });
 
 function createAUIGrid() {
@@ -298,8 +320,8 @@ var gridPros = {
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>

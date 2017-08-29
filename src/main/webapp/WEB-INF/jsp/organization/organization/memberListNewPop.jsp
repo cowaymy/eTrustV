@@ -33,9 +33,61 @@ function fn_docSubmission(){
         AUIGrid.resize(myGridID,1000,400); 
     });
 }
+
+function fn_departmentCode(value){
+	var action = value;
+	switch(action){
+	   case "1" :
+		   var jsonObj = {
+	            memberLvl : 3,
+	            flag :  "%CRS%"
+	    };
+		   doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+		   break;
+	   case "2" :
+           var jsonObj = {
+                memberLvl : 3,
+                flag :  "%CCS%"
+        };
+           doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+           doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+           break;
+	   case "3" :
+           var jsonObj = {
+                memberLvl : 3,
+                flag :  "%CTS%"
+        };
+           doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+           doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
+           break;
+           
+	   case "4" :
+           var jsonObj = {
+                memberLvl : 100,
+                flag :  "-"
+        };
+           doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
+           break;
+	}
+}
 $(document).ready(function() {
-	  createAUIGrid();
+	  createAUIGridDoc();
 	fn_docSubmission();
+	fn_departmentCode();
+	$("#state").change(function (){
+		var state = $("#state").val();
+		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'','area', 'S', '');  
+	});
+	$("#area").change(function (){
+        var area = $("#area").val();
+        doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');  
+    });
+	
+	$("#memberType").change(function (){
+        var memberType = $("#memberType").val();
+        fn_departmentCode(memberType);
+    });
+	
 	
 	/* $("#state").change(function() {
 		//doGetCombo('/common/selectAddrSelCode.do','area'  ,  '' , 'area' , 'S', '');
@@ -57,7 +109,7 @@ $(document).ready(function() {
 	});*/
 	
 });
-function createAUIGrid() {
+function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "codeName",
@@ -126,7 +178,7 @@ function createAUIGrid() {
     };
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-    myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+    myGridID = AUIGrid.create("#grid_wrap_doc", columnLayout, gridPros);
 }
 
 var gridPros = {
@@ -309,16 +361,14 @@ var gridPros = {
     <th scope="row">Area<span class="must">*</span></th>
     <td>
     <select class="w100p" id="area" name="area">
-        <c:forEach var="list" items="${orgGrList }">
-            <option value="${list.cdid}">${list.cd}</option>
-        </c:forEach>
+        
     </select>
     </td>
 </tr>
 <tr>
     <th scope="row">Postcode<span class="must">*</span></th>
     <td>
-    <select class="w100p" disabled="disabled" id="postCode" name="postCode">
+    <select class="w100p" id="postCode" name="postCode">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
@@ -373,7 +423,7 @@ var gridPros = {
     </td>
     <th scope="row">Branch<span class="must">*</span></th>
     <td>
-    <select class="w100p disabled" disabled="disabled" id="branch" name="branch">
+    <select class="w100p disabled" id="branch" name="branch">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
@@ -381,7 +431,7 @@ var gridPros = {
     </td>
     <th scope="row">Transport Code<span class="must">*</span></th>
     <td>
-    <select class="w100p disabled" disabled="disabled" id="transportCd" name="transportCd">
+    <select class="w100p disabled"  id="transportCd" name="transportCd">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
@@ -560,7 +610,7 @@ var gridPros = {
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
-<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+<div id="grid_wrap_doc" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
