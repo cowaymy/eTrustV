@@ -49,7 +49,7 @@ var MainColumnLayout =
         }, {
             dataField : "upperMenuCode",
             headerText : "<spring:message code='sys.menumanagement.grid1.UpperMenu' />",
-            width : "11%",
+            width : "10%",
             editable : false,
             style : "aui-grid-left-column",
             renderer :
