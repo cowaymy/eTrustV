@@ -35,7 +35,7 @@ var MainColumnLayout =
         }, {
             dataField : "menuLvl",
             headerText : "<spring:message code='sys.menumanagement.grid1.Lvl' />",
-            width : "5%",
+            width : "4%",
             editRenderer : {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -49,7 +49,7 @@ var MainColumnLayout =
         }, {
             dataField : "upperMenuCode",
             headerText : "<spring:message code='sys.menumanagement.grid1.UpperMenu' />",
-            width : "10%",
+            width : "13%",
             editable : false,
             style : "aui-grid-left-column",
             renderer :
@@ -87,7 +87,7 @@ var MainColumnLayout =
             dataField : "menuCode",
             headerText : "<spring:message code='sys.menumanagement.grid1.MenuId'/>",
             editable : true, // 추가된 행인 경우만 수정 할 수 있도록 editable : true 로 설정 (cellEditBegin 이벤트에서 제어함)
-            width : "11%"
+            width : "10%"
         }, {
             dataField : "menuName",
             headerText : "<spring:message code='sys.menumanagement.grid1.MenuNm' />",
