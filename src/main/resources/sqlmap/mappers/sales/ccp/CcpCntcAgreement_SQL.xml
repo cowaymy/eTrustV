@@ -178,12 +178,81 @@
      </select>
      
      <select id="getOrderId" parameterType="Map" resultType="egovMap" >
-				 SELECT 
-				    ORD_ID 
-				 FROM 
-				    SAL1006V
-				 WHERE 
-				    ORD_NO = #{salesOrderNo}
+     <![CDATA[ 
+     SELECT T1.ORD_ID   ,
+                T1.ORD_NO   ,
+                T1.RENTAL_STUS   ,
+                T1.ORD_STUS_ID   ,
+                T1.ORD_STUS_CODE   ,
+                T1.ORD_STUS_NAME   ,
+                T1.ORD_DT   ,
+                T1.INSTLMT_PRIOD   ,
+                T1.ORD_AMT   ,
+                T1.ORD_MTH_RENTAL   ,
+                T1.ORD_PV   ,
+                T1.ORD_PV_MONTH   ,
+                T1.ORD_PV_YEAR   ,
+                T1.ORD_REF_NO   ,
+                T1.ORD_PO_NO   ,
+                T1.ORD_DEPT_CODE   ,
+                T1.ORD_GRP_CODE   ,
+                T1.ORD_ORG_CODE   ,
+                T1.ORD_CRT_USER_ID   ,
+                T1.ORD_CRT_DT   ,
+                T1.APP_TYPE_ID   ,
+                T1.APP_TYPE_CODE   ,
+                T1.APP_TYPE_DESC ,
+                T1.STOCK_ID   ,
+                T1.STOCK_CODE   ,
+                T1.STOCK_DESC   ,
+                T1.CUST_ID   ,
+                T1.CUST_TYPE   ,
+                T1.CUST_NAME   ,
+                T1.CUST_NRIC   ,
+                T1.CUST_DOB   ,
+                T1.CUST_NATION   ,
+                T1.CUST_GENDER   ,
+                T1.CUST_RACE   ,
+                T1.CUST_EMAIL   ,
+                T1.CUST_VA_NO   ,
+                T1.CUST_PASSPORT_EXPR   ,
+                T1.CUST_VISA_EXPR   ,
+                T1.ORD_PROMO_ID   ,
+                T1.ORD_PROMO_CODE   ,
+                T1.ORD_PROMO_DESC   ,
+                T1.ORD_MEM_ID   ,
+                T1.ORD_MEM_CODE   ,
+                T1.ORD_MEM_NAME   ,
+                T1.ORD_MEM_NRIC   ,
+                T1.ORD_MEM_TYPE_ID   ,
+                T1.ORD_MEM_TYPE_CODE   ,
+                T1.ORD_MEM_TYPE_NAME   ,
+                T1.COOL_OFF_PRIOD   ,
+                T1.KEYIN_BRNCH_ID   ,
+                T1.KEYIN_BRNCH_CODE   ,
+                T1.KEYIN_BRNCH_NAME   ,
+                T1.ORD_REM   ,
+                T1.RENT_CHK_ID   ,
+                T1.ORD_HM_ID   ,
+                T1.ORD_SM_ID   ,
+                T1.ORD_GM_ID   ,
+                T1.ORD_ADDR_ID   ,
+                T1.ORD_CNTC_ID   ,
+                T1.ORD_PROMO_RELATED_NO   ,
+                T1.UPD_DT   ,
+                T1.UPD_USER_ID   ,
+                T1.JOM_PAY_REF   ,
+                T1.STK_CTGRY_ID   ,
+                T1.STK_CTGRY_NAME   ,
+                T1.CUST_TYPE_ID   ,
+                T1.CUST_BILL_ID   ,
+                T1.OBLIGT_YEAR   
+       FROM 
+                SAL1006V T1
+       WHERE
+                T1.ORD_NO = #{salesOrderNo}  AND ROWNUM <= 1
+       ]]>
+
      </select>
      
      <select id="selectAfterServiceJsonList" parameterType="Map" resultType="egovMap">
@@ -438,4 +507,292 @@
 				 WHERE  Extent1.MEM_CODE = #{inputMemCode} AND ROWNUM <= 1
 				 ]]>
      </select>
+     
+     <select id="selectCurierListJsonList"  resultType="egovMap">
+				SELECT Extent1.CURIER_ID CODE_ID  ,
+                       Extent1.CURIER_CODE   ,
+                       Extent1.CURIER_NAME  CODE_NAME ,
+                       Extent1.CURIER_REG_NO   ,
+                       Extent1.CURIER_STUS_ID   ,
+                       Extent1.STREET_ID   ,
+                       Extent1.ADDR_DTL   ,
+                       Extent1.CURIER_CNTC_NO1   ,
+                       Extent1.CURIER_CNTC_NO2   ,
+                       Extent1.CURIER_FAX_NO   ,
+                       Extent1.CURIER_EMAIL   ,
+                       Extent1.CURIER_CRT_DT   ,
+                       Extent1.CURIER_CRT_USER_ID   ,
+                       Extent1.CURIER_UPD_DT   ,
+                       Extent1.CURIER_UPD_USER_ID   
+                  FROM SYS0016M Extent1
+                 WHERE  1 = Extent1.CURIER_STUS_ID
+                  ORDER BY Extent1.CURIER_NAME ASC
+    </select>
+    
+    <select id="selectOrderJsonList"  parameterType="Map" resultType="egovMap">
+				SELECT Extent1.SALES_ORD_ID   ,
+				       Extent1.SALES_ORD_NO   ,
+				       TO_CHAR(Extent1.SALES_DT, 'DD-MM-YYYY')   SALES_DT,
+				       Extent3.CODE_NAME   ,
+				       Extent4.NAME   ,
+				       Extent5.NAME NAME1  ,
+				       Extent5.NRIC   ,
+				       Extent6.STK_DESC   
+				FROM SAL0001D Extent1
+				       JOIN SAL0002D Extent2   ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
+				       JOIN SYS0013M Extent3   ON Extent1.APP_TYPE_ID = Extent3.CODE_ID
+				       JOIN SYS0038M Extent4   ON Extent1.STUS_CODE_ID = Extent4.STUS_CODE_ID
+				       JOIN SAL0029D Extent5   ON Extent1.CUST_ID = Extent5.CUST_ID
+				       JOIN SYS0026M Extent6   ON Extent2.ITM_STK_ID = Extent6.STK_ID
+				 WHERE  Extent1.SALES_ORD_ID = #{salesOrderId}
+				 ORDER BY Extent1.SALES_ORD_ID DESC
+    </select>
+    
+    <insert id="insertGovAgreementInfo" parameterType="Map" >
+					INSERT INTO SAL0033D
+								  ( GOV_AG_ID,
+								    GOV_AG_SALES_ORD_ID,
+								    GOV_AG_BATCH_NO,
+								    GOV_AG_MEM_ID,
+								    GOV_AG_STUS_ID,
+								    GOV_AG_PRGRS_ID, 
+								    GOV_AG_TYPE_ID,
+								    GOV_AG_START_DT,
+								    GOV_AG_END_DT,
+								    GOV_AG_PRE_UPD_USER_ID,
+								    GOV_AG_REM, 
+								    GOV_AG_CRT_USER_ID,
+								    GOV_AG_CRT_DT,
+								    GOV_AG_UPD_USER_ID, 
+								    GOV_AG_UPD_DT, 
+								    GOV_AG_CRT_ROLE_ID,
+								    GOV_AG_QTY,  
+								    GOV_AG_HAS_NOTFY, 
+								    GOV_AG_EXP_MTH_NOTFY, 
+								    GOV_AG_IS_NW_MODULE,
+								    GOV_AG_LAST_SEND_DT,
+								    GOV_AG_LAST_RCIV_DT )
+					  VALUES ( 
+					           (SELECT NVL(MAX(GOV_AG_ID)+1, 1) FROM SAL0033D), 
+					           #{salesOrdId},
+					           FN_GET_DOCNO(#{docNoId}),
+					           #{govAgMemId},
+					           1, 
+					           #{inputProgress}, 
+					           #{inputAgreementType},
+					           TO_CHAR(TO_DATE(#{inputPeriodStart}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+					           TO_CHAR(TO_DATE(#{inputPeriodEnd}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+					           0,
+					           #{agreementAgmRemark}, 
+					           52366, 
+					           SYSDATE,
+					           52366, 
+					           SYSDATE, 
+					           #{rollId}, 
+					           #{inputDocQty}, 
+					           0, 
+					           0, 
+					           1, 
+					           #{sendDt}, 
+					           TO_CHAR(TO_DATE(#{rcivDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD') )
+    </insert>
+    
+    <select id="getUserInfo"  parameterType="Map" resultType="egovMap">
+				SELECT Extent1.GOV_AG_USER_ID   ,
+				       Extent1.GOV_AG_ROLE_ID   ,
+				       Extent1.GOV_AG_USER_DEPT_ID   ,
+				       Extent1.GOV_AG_USER_STUS_ID   ,
+				       Extent1.GOV_AG_USER_UPD_USER_ID   ,
+				       Extent1.GOV_AG_USER_UPD_DT   
+				FROM ( SELECT GovAgreementUserRole.GOV_AG_USER_ID   ,
+				            GovAgreementUserRole.GOV_AG_ROLE_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_DEPT_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_STUS_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_UPD_DT   
+				     FROM SAL0040D GovAgreementUserRole 
+				     ORDER BY  GovAgreementUserRole.GOV_AG_ROLE_ID DESC) Extent1
+				 <![CDATA[      
+				WHERE  Extent1.GOV_AG_USER_ID = #{userId} AND ROWNUM <= 1
+				  ]]>
+    </select>
+    
+    <insert id="insertGovAgreementMessLog"  parameterType="Map">
+				INSERT INTO SAL0036D
+							  ( GOV_AG_MSG_ID,
+							    GOV_AG_ID, 
+							    GOV_AG_MSG, 
+							    GOV_AG_MSG_PROG_STUS_ID,  
+							    GOV_AG_MSG_STUS_ID, 
+							    GOV_AG_MSG_CRT_USER_ID, 
+							    GOV_AG_MSG_CRT_DT, 
+							    GOV_AG_MSG_UPD_USER_ID, 
+							    GOV_AG_MSG_UPD_DT,
+							    GOV_AG_MSG_HAS_ATTACH, 
+							    GOV_AG_MSG_ATTACH_FILE_NAME
+							    )
+				  VALUES ( 
+							          (SELECT NVL(MAX(GOV_AG_MSG_ID)+1, 1) FROM SAL0036D),
+							          (SELECT MAX(GOV_AG_ID) FROM SAL0033D),
+							          #{agreementMsg}, 
+							          #{inputProgress}, 
+							           5, 
+							           52366, 
+							           SYSDATE, 
+							           52366, 
+							           SYSDATE, 
+							           0, 
+							           ''  
+							   )
+    </insert>
+    
+    <insert id="insertConsignment"  parameterType="Map">
+			 INSERT INTO SAL0035D
+							  ( AG_CNSGN_ID,
+							    GOV_AG_ID, 
+							    IS_CURR, 
+							    DISAB, 
+							    AG_COSIGN_NO, 
+							    AG_REQSTER_TYPE_ID,
+							    AG_CNSGN_RCIV_DT, 
+							    CURIER_ID, 
+							    CRT_DT, 
+							    CRT_USER_ID,
+							    UPD_DT,
+							    UPD_USER_ID,
+							    AG_CNSGN_SEND_DT, 
+							    CNSGN_USER_ID_HAND,
+							    CNSGN_MTH_ID )
+			  VALUES ( (SELECT NVL(MAX(AG_CNSGN_ID)+1, 1)  FROM SAL0035D ),
+				            (SELECT NVL(MAX(GOV_AG_ID)+1, 1) FROM SAL0033D), 
+				           1,
+				           0,
+				           NVL(#{inputConsignmentNo} , ' '),
+				           #{inputAgmReq},
+				           TO_CHAR(TO_DATE(#{consignmentReciveDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+				           NVL(#{inputCourierSelect}, 0),
+				           SYSDATE,
+				           52366,
+				           SYSDATE,
+				           52366,
+				           TO_CHAR(TO_DATE(#{agCnsgnSendDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+				           #{consignBtHand}, 
+				           1237 )
+    </insert>
+    
+    <!-- Grid List Loop 사용 insert  -->
+    <insert id="insertGovAgreementSub" parameterType="Map">
+				INSERT INTO SAL0034D
+				  ( GOV_AG_ITM_ID,
+				    GOV_AG_ID, 
+				    GOV_AG_ITM_BATCH_NO, 
+				    GOV_AG_ITM_SALES_ORD_ID, 
+				    GOV_AG_ITM_STUS_ID,
+				    GOV_AG_ITM_CRT_DT,
+				    GOV_AG_ITM_CRT_USER_ID, 
+				    GOV_AG_ITM_UPD_DT,
+				    GOV_AG_ITM_UPD_USER_ID,
+				    GOV_AG_ITM_START_DT, 
+				    GOV_AG_ITM_EXPR_DT, 
+				    GOV_AG_ITM_RENT_RESULT,
+				    GOV_AG_ITM_INST_RESULT )
+				  VALUES ( 
+				           (SELECT NVL(MAX(GOV_AG_ITM_ID) +1, 1)  FROM SAL0034D),
+				           (SELECT MAX(GOV_AG_ID) FROM SAL0033D), 
+				           FN_GET_DOCNO(#{docNoId}),
+				           #{salesOrdId},
+				           1,
+				           SYSDATE,
+				           52366,
+				           SYSDATE,
+				           52366,
+				           TO_CHAR(TO_DATE(#{inputPeriodStart}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+                           TO_CHAR(TO_DATE(#{inputPeriodEnd}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+				           '', 
+				           '' )
+    </insert>
+    
+    <insert id="insertCallEntry"  parameterType="Map">
+				 INSERT INTO CCR0006D
+								  ( CALL_ENTRY_ID,
+								    SALES_ORD_ID, 
+								    TYPE_ID, 
+								    STUS_CODE_ID, 
+								    RESULT_ID,
+								    DOC_ID,
+								    CRT_USER_ID, 
+								    CRT_DT, 
+								    CALL_DT,
+								    IS_WAIT_FOR_CANCL,
+								    HAPY_CALLER_ID,
+								    UPD_DT,
+								    UPD_USER_ID, 
+								    ORI_CALL_DT )
+				  VALUES ( (SELECT NVL(MAX(CALL_ENTRY_ID)+1, 1) FROM CCR0006D),
+				           #{salesOrdId}, 
+				           1233, 
+				           1, 
+				           0, 
+				           #{salesOrdId}, 
+				           52366, 
+				           SYSDATE, 
+				           SYSDATE, 
+				           0, 
+				           0,  
+				           SYSDATE, 
+				           52366, 
+				           SYSDATE )
+    </insert>
+    
+    <insert id="insertCallResult" parameterType="Map">
+				INSERT INTO CCR0007D
+								  ( CALL_RESULT_ID,
+								    CALL_ENTRY_ID,
+								    CALL_STUS_ID,
+								    CALL_DT, 
+								    CALL_ACTN_DT,  
+								    CALL_FDBCK_ID,
+								    CALL_CT_ID,
+								    CALL_REM, 
+								    CALL_CRT_USER_ID,
+								    CALL_CRT_DT, 
+								    CALL_CRT_USER_ID_DEPT,
+								    CALL_HC_ID,
+								    CALL_ROS_AMT, 
+								    CALL_SMS,
+								    CALL_SMS_REM )
+				  VALUES (    (SELECT NVL(MAX(CALL_RESULT_ID) +1, 1)  FROM CCR0007D ),
+						           (SELECT MAX(CALL_ENTRY_ID) FROM CCR0006D), 
+						           1, 
+						           SYSDATE,
+						           SYSDATE,
+						           0, 
+						           0, 
+						           #{agreementAgmRemark}, 
+						           52366,
+						           SYSDATE, 
+						           0, 
+						           0,
+						           0, 
+						           0, 
+						           '' )
+    </insert>
+    
+    <update id="updateResultId" >
+			UPDATE 
+			    CCR0006D
+			SET 
+			    RESULT_ID = (SELECT MAX(CALL_RESULT_ID) FROM CCR0007D )
+			WHERE  
+			     CALL_ENTRY_ID = (SELECT MAX(CALL_ENTRY_ID) FROM CCR0006D)
+    </update>
+    
+    <update id="updatePreUpdUserId">
+			UPDATE 
+			    SAL0033D
+			SET 
+			    GOV_AG_PRE_UPD_USER_ID = (SELECT MAX(GOV_AG_MSG_ID) FROM SAL0036D)
+			WHERE  
+			    GOV_AG_ID =  (SELECT MAX(GOV_AG_ID) FROM SAL0033D)
+    </update>
 </mapper>

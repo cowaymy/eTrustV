@@ -88,4 +88,8 @@ public class SalesConstants {
 	
 	//CCP
 	public static final String  AGREEMENT_CODEID = "51"; // Agreement
+	public static final String  AGREEMENT_TRUE = "true";
+	public static final String  AGREEMENT_FALSE = "false";
+	public static final String 	CONSIGNMENT_HAND = "H";
+	public static final String 	CONSIGNMENT_COURIER = "C";
 }

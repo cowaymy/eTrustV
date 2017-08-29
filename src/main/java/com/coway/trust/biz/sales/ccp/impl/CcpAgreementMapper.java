@@ -25,4 +25,29 @@ public interface CcpAgreementMapper {
 	
 	EgovMap getMemCodeConfirm (Map<String, Object> params) throws Exception;
 	
+	List<EgovMap> selectCurierListJsonList() throws Exception;
+	
+	List<EgovMap> selectOrderJsonList(Map<String, Object> params) throws Exception;
+	
+	/* #### Insert Start #####*/
+	void insertGovAgreementInfo(Map<String,  Object > params )throws Exception;
+	
+	EgovMap getUserInfo (Map<String, Object> params) throws Exception;
+	
+	void insertGovAgreementMessLog (Map<String, Object> params) throws Exception;
+	
+	void insertConsignment(Map<String, Object> params) throws Exception;
+	
+	void insertGovAgreementSub(Map<String, Object> params) throws Exception;
+	
+	void insertCallEntry (Map<String, Object> params) throws Exception;
+	
+	void insertCallResult(Map<String, Object> params) throws Exception;
+	
+	void updateResultId() throws Exception;
+	
+	void updatePreUpdUserId() throws Exception;
+	
+	/* #### Insert End #####*/
+	
 }

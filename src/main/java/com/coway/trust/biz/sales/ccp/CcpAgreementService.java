@@ -20,4 +20,12 @@ public interface CcpAgreementService {
 	List<EgovMap> selectSearchMemberCode (Map<String, Object> params) throws Exception;
 	
 	EgovMap getMemCodeConfirm (Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectCurierListJsonList() throws Exception;
+	
+	List<EgovMap> selectOrderJsonList(Map<String, Object> params) throws Exception;
+	
+	void insertAgreement(Map<String, Object> params) throws Exception;
+	
+	
 }

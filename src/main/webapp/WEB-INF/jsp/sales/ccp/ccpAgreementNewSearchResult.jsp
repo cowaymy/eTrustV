@@ -12,15 +12,22 @@
     var transGridID;
     var autoDebitGridID;
     var discountGridID;
-    
     var afterServceGridID;
     var beforeServceGridID;
+    var orderListGirdID;
     
     $(document).ready(function() {
         
-    	//Button Hide
-    	$("#_memReSelected").css("display" , "none");
-    	
+        //Button Hide
+        $("#_memReSelected").css("display" , "none");
+        
+        //Call Curier List
+        doGetCombo("/sales/ccp/selectCurierListJsonList", '', '', '_inputCourierSelect', 'S', '');
+        
+        //Consignment Init
+        fn_consignmentCheckFalse();
+        
+        //Draw Grid
         createAUIGrid();
         createAUIGrid2();
         createAUIGrid3();
@@ -29,12 +36,12 @@
         createAUIGrid6();
         createAUIGrid7();
         createAUIGrid8();
-        
         createAUIGrid9();
         createAUIGrid10();
+        createAUIGrid11();
         
-        
-        fn_selectOrderSameRentalGroupOrderList();
+        //Call Ajax (for Grid)
+/*         fn_selectOrderSameRentalGroupOrderList();
         fn_selectMembershipInfoList();
         fn_selectDocumentList();
         fn_selectCallLogList();
@@ -43,27 +50,30 @@
         fn_selectAutoDebitList();
         fn_selectDiscountList();
         fn_selectAfterServiceList();
-        fn_selectBeforeServiceList();
+        fn_selectBeforeServiceList(); */
+        fn_selectOrderJsonList();
         
         //resize
         fn_allGridResize();
         
+        //Reselect(Whole)
         $("#_reSelect").click(function() {
-			self.location.href = getContextPath()+"/sales/ccp/insertCcpAgreementSearch.do";
-		});
+            self.location.href = getContextPath()+"/sales/ccp/insertCcpAgreementSearch.do";
+        });
         
+        //Member Search Pop
         $("#_memSearch").click(function() {
-			Common.popupDiv('/sales/ccp/searchMemberPop.do' , $('#_searchForm').serializeJSON(), null , true, '_searchDiv');
-			
-		});
+            Common.popupDiv('/sales/ccp/searchMemberPop.do' , $('#_searchForm').serializeJSON(), null , true, '_searchDiv');
+            
+        });
         
-        //Reselect
+        //Reselect(Member)
         $("#_memReSelected").click(function() {
 
-        	fn_reSelected();
-		});
+            fn_reSelected();
+        });
         
-        //confirm click
+        //confirm click(Member Confirm)
         $("#_memConfirm").click(function() {
             
             
@@ -71,8 +81,69 @@
             fn_getMemCodeConfirm(inputVal);
             
         });
+        
+        
+        // New Order Add 
+        $("#_newOrderConfirm").click(function() {
+			
+			var tempInputval = $("#_inputConfirmNewOrder").val();
+			fn_getOrderIdResult(tempInputval);
+			
+		});
+        
+        // Consignment Change
+        $("#_consignment").change(function() {
+        	
+        	if($("#_consignment").is(":checked") == true){
+                
+        		fn_consignmentCheckTrue();
+        		
+            }else{
+                
+            	fn_consignmentCheckFalse();
+            }
+        	
+		});
+        
+        $("input[name='inputCourier']").change(function() {
+        	
+        	fn_consignmentCheckTrue();
+			
+		});
+        
+        //Save
+        $("#_saveBtn").click(function() {
+			
+        	//validation
+        	if(fn_saveValidation() == false){
+        		   
+        		return;
+        		
+        	}else{
+        		
+        		//Disable Value
+        		$("#_inputProgressR").val($("#_inputProgress").val());
+                $("#_inputAgreementStatusR").val($("#_inputAgreementStatus").val());
+                
+                // Consignment Check
+                if($("#_consignment").is(":checked") == true){
+                	$("#_consignment").val(true);
+                }else{
+                	$("#_consignment").val(false);
+                }
+        		
+        		var data ={};
+        		var param = AUIGrid.getGridData(orderListGirdID);
+        		data.add = param;
+        		data.form = $("#_insForm").serializeJSON();
+        	    
+        		Common.ajax("POST", "/sales/ccp/insertAgreement.do", data, function(result){
+        			Common.alert(result.message);
+        		});
+        	}
+		});
     });
-    
+   
     ////////////////////////////////////////////////////////////////////////////////////
     function createAUIGrid() {
         
@@ -383,21 +454,22 @@
             }];
 
         //그리드 속성 설정
-        var gridPros = {
-        		 usePaging           : false,         //페이징 사용
-                 pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-                 editable            : false,            
-                 fixedColumnCount    : 0,            
-                 showStateColumn     : false,             
-                 displayTreeOpen     : false,            
-                 selectionMode       : "singleRow",  //"multipleCells",            
-                 headerHeight        : 30,       
-                 useGroupingPanel    : false,        //그룹핑 패널 사용
-                 skipReadonlyColumns : false,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                 wrapSelectionMove   : false,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                 showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
-                 noDataMessage       : "No order found.",
-                 groupingMessage     : "Here groupping"
+       var gridPros = {
+            usePaging           : false,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            editable            : false,            
+            fixedColumnCount    : 0,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",
+            showHeader          : false,
+          //headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : false,        //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
         };
         
         transGridID = GridCommon.createAUIGrid("grid_trans_wrap", columnLayout, "", gridPros);
@@ -632,10 +704,77 @@
             
             beforeServceGridID = GridCommon.createAUIGrid("grid_beforeService_wrap", columnLayout, "", gridPros);
         }
+        
+function createAUIGrid11() {
+            
+            //AUIGrid 칼럼 설정
+            var columnLayout = [{
+                    dataField   : "salesOrdNo",      headerText  : "Order No",
+                    width       : 100,               editable    : false,
+                    style       : 'left_style'
+                }, {
+                    dataField   : "salesDt",        headerText  : "Order Date",
+                    width       : 180,               editable    : false,
+                    style       : 'left_style'
+                }, {
+                    dataField   : "codeName", headerText  : "App Type",
+                    width       : 120,               editable    : false,
+                    style       : 'left_style'
+                }, {
+                    dataField   : "stkDesc",  headerText  : "Product",
+                    width       : 120,               editable    : false,
+                    style       : 'left_style'
+                }, {
+                    dataField   : "name",    headerText  : "Status",
+                    width       : 120,               editable    : false,
+                    style       : 'left_style'
+                }, {
+                    dataField   : "name1",             headerText  : "Customer Name",
+                                                     editable    : false,
+                    style       : 'left_style'
+                },{
+                    dataField   : "salesOrdId",   visible : false
+                 },{
+                     dataField   : "nric",             headerText  : "NRIC/Company No",
+                     editable    : false,
+                     style       : 'left_style'
+                  },{
+                     dataField : "undefined", 
+                     headerText : " ", 
+                     width : '10%',
+                     renderer : {
+                              type : "ButtonRenderer", 
+                              labelText : "Remove", 
+                              onclick : function(rowIndex, columnIndex, value, item) {
+                                alert('click!');
+                            }
+                     }
+            }];
+
+            //그리드 속성 설정
+            var gridPros = {
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 0,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
+            };
+            
+            orderListGirdID = GridCommon.createAUIGrid("grid_orderList_wrap", columnLayout, "", gridPros);
+        }
     // 리스트 조회.
     function fn_selectOrderSameRentalGroupOrderList() {        
         Common.ajax("GET", "/sales/order/selectSameRentalGrpOrderJsonList.do", $("#_searchForm").serialize(), function(result) {
-        	AUIGrid.setGridData(custInfoGridID, result);
+            AUIGrid.setGridData(custInfoGridID, result);
         });
     }
     
@@ -697,8 +836,15 @@
     
     // 리스트 조회.
     function fn_selectBeforeServiceList(){
-    	Common.ajax("GET", "/sales/ccp/selectBeforeServiceJsonList", $("#_searchForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/ccp/selectBeforeServiceJsonList", $("#_searchForm").serialize(), function(result) {
             AUIGrid.setGridData(beforeServceGridID, result);
+        });
+    }
+    
+    //리스트 조회
+    function fn_selectOrderJsonList(){
+        Common.ajax("GET", "/sales/ccp/selectOrderJsonList", $("#_searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(orderListGirdID, result);
         });
     }
     
@@ -729,8 +875,8 @@
                 AUIGrid.resize(discountGridID, 1550, 380);
                 break;
             case 'afterList' :
-            	AUIGrid.resize(afterServceGridID, 1600, 380);
-            	break;
+                AUIGrid.resize(afterServceGridID, 1600, 380);
+                break;
             case 'beforeList' :
                 AUIGrid.resize(beforeServceGridID, 1600, 380);
                 break;
@@ -763,13 +909,12 @@
             dataType: "json",
             success : function (data) {
                 
-             
                 $("#_inputMemCode").val(data.memCode);
-            	fn_selected();
-                
+                $("#_hiddenInputMemCode").val(data.memCode);
+                $("#_govAgMemId").val(data.memId);
+                fn_selected();
             },
             error : function (data) {
-                Common.removeLoader();
                 if(data == null){               //error
                     Common.alert("fail to Load DB");
                 }else{                            // No data
@@ -783,22 +928,198 @@
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     function fn_selected(){
-    	
-    	  $("#_inputMemCode").attr({"readonly" : "readonly" , "class" : "w100 readonly"});
+        
+          $("#_inputMemCode").attr({"readonly" : "readonly" , "class" : "w100 readonly"});
           $("#_memReSelected").css("display" , "");
           $("#_memConfirm").css("display" , "none");
           $("#_memSearch").css("display" , "none");
           $("#_closeMemPop").click();
-    	
+        
     }
     
     function fn_reSelected(){
         $("#_inputMemCode").val('');
+        $("#_hiddenInputMemCode").val('');
         $("#_inputMemCode").attr({"readonly" : false , "class" : ""});
         $("#_memReSelected").css("display" , "none");
         $("#_memConfirm").css("display" , "");
         $("#_memSearch").css("display" , "");
+        
+    }
+    
+    
+    function fn_getOrderIdResult(ordNum){
+        
+        $.ajax({
+            
+            type : "GET",
+            url : getContextPath() + "/sales/ccp/getOrderId",
+            contentType: "application/json;charset=UTF-8",
+            crossDomain: true,
+            data: {salesOrderNo : ordNum},
+            dataType: "json",
+            success : function (data) {
+                
+                var ordId = data.ordId;
+                $("#_addOrdId").val(ordId);
+                Common.ajax("GET", "/sales/ccp/selectOrderAddJsonList", $("#_newOrderAddForm").serialize(), function(result){
+                	AUIGrid.addRow(orderListGirdID, result, "last");
+                });
+            },
+            error : function (data) {
+                if(data == null){               //error
+                    Common.alert("fail to Load DB");
+                }else{                            // No data
+                    Common.alert("No order found or this order.");
+                }
+                
+                
+            }
+        });
+    }
+    
+    
+    //Consignment Check true
+    function fn_consignmentCheckTrue(){
+        
+    	 //Filed Init
+        fn_clearConsignmentField();
     	
+    	if($("input[name='inputCourier']:checked").val() == 'C'){
+    		 
+    		$("input[name='inputCourier']").attr("disabled", false);
+    		$("#_inputAgmReq").attr({"disabled" : false , "class" : "w100p"});
+            $("#_consignmentReciveDt").attr("disabled", false);
+            $("#_inputConsignmentNo").attr("disabled", false);
+            $("#_inputCourierSelect").attr({"disabled" : false , "class" : "w100p"});  
+    	        
+    	}else{
+    		
+    		$("input[name='inputCourier']").attr("disabled", false);
+            $("#_inputAgmReq").attr({"disabled" : false , "class" : "w100p"});
+            $("#_consignmentReciveDt").attr("disabled", false);    		
+    		$("#_inputConsignmentNo").attr("disabled", "disabled");
+    		$("#_inputCourierSelect").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    	}
+       
+    }
+    
+  //Consignment Check false
+    function fn_consignmentCheckFalse(){
+        
+    	 //Filed Init
+        fn_clearConsignmentField();
+	  
+        $("input[name='inputCourier']").attr("disabled", "disabled");
+        $("input[name='inputCourier']").removeAttr("checked");
+        $("#_inputConsignmentNo").attr("disabled", "disabled");
+        $("#_inputCourierSelect").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_inputAgmReq").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_consignmentReciveDt").attr("disabled", "disabled");
+    }
+  
+    //Filed Init
+    function fn_clearConsignmentField(){
+    	
+    	$("#_inputConsignmentNo").val('');
+    	$("#_inputCourierSelect").val('');
+    	$("#_inputAgmReq").val('');
+    	$("#_consignmentReciveDt").val('');
+    }  
+  
+    //Save Validation
+    function fn_saveValidation(){
+    	
+    	//멤버코드 널체크
+    	if('' == $("#_inputMemCode").val() || null == $("#_inputMemCode").val()){
+    		Common.alert("* Please select the Member Code.");
+            return false;
+    	}
+    	
+    	if('' == $("#_hiddenInputMemCode").val() || null == $("#_hiddenInputMemCode").val()){
+    		Common.alert("* Please enter Confirm or Search.");
+            return false;
+    	}
+    	
+    	//문서 양 숫자 체크
+    	if($("#_inputDocQty").val() <= -1){
+    		Common.alert("* Please select the Document Quantity.");
+            return false;
+    	}
+    	
+    	//Agreement Type 널체크 (뉴/ 리뉴얼)
+    	if($("#_inputAgreementType").val() <= -1){
+    		Common.alert("* Please select the Agreement Type.");
+            return false;
+    	}
+    	
+    	//시작 날짜 널
+    	if('' == $("#_inputPeriodStart").val() || null == $("#_inputPeriodStart").val()){
+    		Common.alert("* Please select the Agreement Start Date.");
+            return false;
+    	}
+    	
+    	 //종료 날짜 null 체크
+        if('' == $("#_inputPeriodEnd").val() || null == $("#_inputPeriodEnd").val()){
+            Common.alert("* Please select the Agreement End Date.");
+            return false;
+        }
+    	
+    	//시작 날짜 종료날짜 비교
+        if($("#_inputPeriodStart").val() > $("#_inputPeriodEnd").val()){
+        	Common.alert("* Please Check Agreement Start Date cannot bigger than End Date.");
+            return false;
+        }
+        
+    	//메시지 널체크
+    	if('' == $("#_agreementMsg").val() || null == $("#_agreementMsg").val()){
+    		Common.alert("* Please Key-In the Message.");
+    		return false;
+    	}
+        
+    	//리마크 널체크
+    	if('' == $("#_agreementAgmRemark").val() || null == $("#_agreementAgmRemark").val()){
+    		Common.alert("* Please Key-In the Remark.");
+    		return false;
+    	}
+    	
+    	// 수령방법 널체크
+    	if($("#_consignment").is(":checked") == true){ // 수령방법 체크시  
+    		
+    		//Radio Check 
+    		if( '' == $("input[name='inputCourier']:checked").val() || null == $("input[name='inputCourier']:checked").val()){
+                Common.alert("* Please select the Courier Method.");
+                return false;
+            }
+    	    
+    		//택배 경우 
+            if($("input[name='inputCourier']:checked").val() == 'C'){
+                //운송장 번호 널체크 
+                if('' == $("#_inputConsignmentNo").val() || null == $("#_inputConsignmentNo").val()){
+                    Common.alert("* Please key in the Courier Consignment No.");
+                    return false;
+                }
+                 
+                //운송회사 널체크 // 
+                if('' == $("#_inputCourierSelect").val() || null == $("#_inputCourierSelect").val()){
+                    Common.alert("* Please select the Courier.");
+                    return false;   
+                }
+            }
+    		
+            //AGM Request 널체크  
+            if( '' == $("#_inputAgmReq ").val() || null == $("#_inputAgmReq").val()){ 
+                Common.alert("* Please select the AGM Requestor.");
+                return false;
+            }
+            
+            //Recive Date 널체크
+            if('' == $("#_consignmentReciveDt").val() || null == $("#_consignmentReciveDt").val()){
+                Common.alert("* Please key in the Consignment Receive Date.");
+                return false;
+            }
+    	}
+    	return true;
     }
 </script>
 <section id="content"> <!-- content start -->
@@ -814,8 +1135,12 @@
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
+<form id="_newOrderAddForm">
+    <input id="_addOrdId" name="addOrdId" type="hidden" >
+</form>
+
 <form action="#" method="get" id="_searchForm">
-<input id="salesOrderId" name="salesOrderId" type="hidden" value="${orderDetail.basicInfo.ordId}">
+<input id="salesOrderId" name="salesOrderId" type="hidden" value="11"> <!-- value="${orderDetail.basicInfo.ordId}"  추후 변경--> 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1676,16 +2001,18 @@
 
 <article class="tap_area"><!-- tap_area start -->
     <article class="grid_wrap"><!-- grid_wrap start -->
-	<div id="grid_beforeService_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
-	</article><!-- grid_wrap end -->
+    <div id="grid_beforeService_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+    </article><!-- grid_wrap end -->
 </article>
 
 </section><!-- tap_wrap end -->
 
+
 <aside class="title_line"><!-- title_line start -->
 <h3>Agreement Information</h3>
 </aside><!-- title_line end -->
-
+<form id="_insForm">
+<input type="hidden" name="salesOrdId" id="_salesOrdId" value="11"> <!-- 추후 변경  -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1701,42 +2028,53 @@
     <th scope="row">Member Code<span class="must">*</span></th>
     <td>
         <input type="text" title="" placeholder="" class="" style="width:100px" id="_inputMemCode" name="inputMemCode"/>
-	    <p class="btn_sky"><a href="#" id="_memConfirm">Confirm</a></p>
-	    <p class="btn_sky"><a href="#" id="_memSearch">Search</a></p>
-	    <p class="btn_sky"><a  id="_memReSelected">Reselect</a></p>
+        <input type="hidden" id="_hiddenInputMemCode" >
+        <input type="hidden" id="_govAgMemId" name="govAgMemId">
+        <p class="btn_sky"><a href="#" id="_memConfirm">Confirm</a></p>
+        <p class="btn_sky"><a href="#" id="_memSearch">Search</a></p>
+        <p class="btn_sky"><a  id="_memReSelected">Reselect</a></p>
     </td>
     <th scope="row">Document Quantity<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+    <select class="w100p" name="inputDocQty" id="_inputDocQty">
+        <option value="-1">Quantity</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
     </select>
     </td>
     <th scope="row">Agreement Type<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+    <select class="w100p" name="inputAgreementType" id="_inputAgreementType">
+        <option value="-1">Type</option>
+        <option value="949">New</option>
+        <option value="950">Renewal</option>
     </select>
     </td>
 </tr>
 <tr>
     <th scope="row">Progress<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+    <input type="hidden" name="inputProgress" id="_inputProgressR">
+    <select class="w100p disabled" disabled="disabled"  id="_inputProgress">
+        <option value="7" selected="selected">Agreement Submission</option>
+        <option value="8">Agreement Verifying</option>
+        <option value="9">Agreement Stamping & Confirmation</option>
+        <option value="10">Agreement Filling</option>
     </select>
     </td>
     <th scope="row">Agreement Status<span class="must">*</span></th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+    <input type="hidden" name="inputAgreementStatus" id="_inputAgreementStatusR">
+    <select class="w100p disabled" disabled="disabled"  id="_inputAgreementStatus">
+        <option value="1" selected="selected">Active</option>
+        <option value="4">Completed</option>
+        <option value="10">Cancelled</option>
+        <option value="6">Rejected</option>
     </select>
     </td>
     <th scope="row"></th>
@@ -1746,9 +2084,9 @@
     <th scope="row">Agreement Period</th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="inputPeriodStart" id="_inputPeriodStart" readonly="readonly"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="inputPeriodEnd" id="_inputPeriodEnd" readonly="readonly"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row"></th>
@@ -1758,18 +2096,18 @@
 </tr>
 <tr>
     <th scope="row">Message<span class="must">*</span></th>
-    <td colspan="5"><textarea cols="20" rows="5"></textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" name="agreementMsg" id="_agreementMsg" ></textarea></td>
 </tr>
 <tr>
     <th scope="row">AGM Remark<span class="must">*</span></th>
-    <td colspan="5"><textarea cols="20" rows="5"></textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" name="agreementAgmRemark" id="_agreementAgmRemark"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Consignment Information<label><input type="checkbox" /><span></span></label></h3>
-</aside><!-- title_line end -->
+<h3>Consignment Information<label><input type="checkbox"  id="_consignment"  name="consignment"/><span></span></label></h3>
+</aside><!-- title_line end --> 
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1785,31 +2123,28 @@
 <tr>
     <th scope="row">Courier Method</th>
     <td>
-    <label><input type="radio" name="courier" /><span>By Hand</span></label>
-    <label><input type="radio" name="courier" /><span>Courier</span></label>
+    <label><input type="radio" name="inputCourier" value="H"/><span>By Hand</span></label>
+    <label><input type="radio" name="inputCourier"  value="C"/><span>Courier</span></label>
     </td>
     <th scope="row">Courier Consignment No.</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  name="inputConsignmentNo" id="_inputConsignmentNo" maxlength="20"/></td>
     <th scope="row">Courier</th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
+    <select class="w100p" name="inputCourierSelect" id="_inputCourierSelect"></select> 
     </td>
 </tr>
 <tr>
-    <th scope="row">AGM Requestor</th>
+    <th scope="row">AGM Requester</th>
     <td>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
+    <select class="w100p" name="inputAgmReq" id="_inputAgmReq"> 
+        <option value="">AGM Requester</option>
+        <option value="1">HP</option>
+        <option value="2">CODY</option>
+        <option value="1234">Customer</option>
     </select>
     </td>
     <th scope="row">Consignment Receive Date</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="consignmentReciveDt" id="_consignmentReciveDt" readonly="readonly"/></td>
     <th scope="row"></th>
     <td></td>
 </tr>
@@ -1819,6 +2154,24 @@
 <aside class="title_line"><!-- title_line start -->
 <h3>New Order</h3>
 </aside><!-- title_line end -->
+
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:140px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">New Order No<span class="must">*</span></th>
+    <td>
+        <input type="text" title="" placeholder="" class="" style="width:100px" id="_inputConfirmNewOrder" name="inputConfirmNewOrder" maxlength="20"/>
+        <p class="btn_sky"><a  id="_newOrderConfirm">Confirm New Order</a></p> 
+    </td>
+</tr>
+</tbody>
+</table>
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
@@ -1830,14 +2183,15 @@
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
 
-<article class="grid_wrap"><!-- grid_wrap start -->
- 그리드 영역 
+<article class="grid_wrap"><!-- grid_wrap start --> 
+<div id="grid_orderList_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn">Save</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
 </ul>
+</form>
 </section><!-- search_result end -->
 
 </section><!-- content end -->

@@ -2,11 +2,12 @@ package com.coway.trust.web.sales.ccp;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.ccp.CcpAgreementService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
-
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -38,6 +41,12 @@ public class CcpAgreementController {
 		
 		return "sales/ccp/ccpAgreementList";
 	}
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 	
 	
 	@RequestMapping(value = "/selectCcpAgreementJsonList" , method = RequestMethod.GET)
@@ -86,11 +95,12 @@ public class CcpAgreementController {
 		int prgrsId = 0;
 		
 		params.put("prgrsId", prgrsId);
-
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		//TODO 추후 주석 해제
+     //   EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
 		
-		model.put("orderDetail", orderDetail);
-		model.put("salesOrderNo", params.get("salesOrderNo"));
+	//	model.put("orderDetail", orderDetail);
+	//	model.put("salesOrderNo", params.get("salesOrderNo"));
+		model.put("salesOrderNo", "11");
 		
 		return "sales/ccp/ccpAgreementNewSearchResult";
 	}
@@ -164,6 +174,66 @@ public class CcpAgreementController {
 		memMap = ccpAgreementService.getMemCodeConfirm(params);
 		
 		return ResponseEntity.ok(memMap);
+	}
+	
+	@RequestMapping(value = "/selectCurierListJsonList")
+	public ResponseEntity<List<EgovMap>> selectCurierListJsonList() throws Exception{
+		
+		LOGGER.info("################## Call CurierList(Combo Box) ##################");
+		
+		List<EgovMap> curierList = null;
+		
+		curierList = ccpAgreementService.selectCurierListJsonList();
+		
+		return ResponseEntity.ok(curierList);
+	}
+	
+	@RequestMapping(value ="/selectOrderJsonList")
+	public ResponseEntity<List<EgovMap>> selectOrderJsonList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		LOGGER.info("################## selectOrderJsonList Start ##################");
+		
+		List<EgovMap> orderList = null;
+		
+		orderList = ccpAgreementService.selectOrderJsonList(params);
+		
+		return ResponseEntity.ok(orderList);
+		
+	}
+	
+	
+	@RequestMapping(value ="/selectOrderAddJsonList")
+	public ResponseEntity<List<EgovMap>> selectOrderAddJsonList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		LOGGER.info("################## selectOrderJsonList Start ##################");
+		
+		List<EgovMap> orderList = null;
+		
+		//Set Params
+		params.put("salesOrderId", params.get("addOrdId"));
+		
+		orderList = ccpAgreementService.selectOrderJsonList(params);
+		
+		return ResponseEntity.ok(orderList);
+		
+	}
+
+	
+	@RequestMapping(value = "/insertAgreement.do" , method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertAgreement (@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.info("################## insertAgreement Start #######################");
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		ccpAgreementService.insertAgreement(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
 	}
 }
 

@@ -50,6 +50,7 @@ function createAUIGrid(){
                                   {dataField : "name", headerText : "Name", width : '30%'},
                                   {dataField : "nric", headerText : "NRIC", width : '20%'},
                                   {dataField : "joinDt", headerText : "Join Date", width : '10%'},
+                                  {dataField : "memId" , visible : false},
                                   {
                                       dataField : "undefined", 
                                       headerText : " ", 
@@ -61,6 +62,8 @@ function createAUIGrid(){
                                                    //pupupWin
                                                   
                                                    $("#_inputMemCode").val(item.memCode);
+                                                   $("#_hiddenInputMemCode").val(item.memCode);
+                                                   $("#_govAgMemId").val(item.memId);
                                                    fn_selected();
                                                    
                                              }
@@ -122,7 +125,7 @@ function createAUIGrid(){
     <th scope="row">Member Type</th>
     <td>
     <select class="w100p" name="searchMemType">
-        <option selected="selected">Choose One</option>
+        <option selected="selected" value="">Choose One</option>
         <option value="1">Health Planner (HP)</option>
         <option value="2">Coway Lady (CODY)</option>
         <option value="3">Coway Technician (CT)</option>
