@@ -82,7 +82,22 @@ $(document).on(
 	thisAddOn.toggleClass("on");
 	return false;
 });
-/* 아코디언메뉴 넣기 end*/
+/* 아코디언메뉴 end*/
+
+/* lnb탭 start*/
+$(document).on(
+	"click", ".click_add_on_solo", function(){
+
+	var thisNum=$(".click_add_on_solo").index(this);
+	var thisAddOnSolo=$(".click_add_on_solo").eq(thisNum);
+	var target=thisAddOnSolo.attr("class").replace("click_add_on_solo ","");
+	var targetAddOn=$("."+target+"");
+
+	targetAddOn.removeClass("on");
+	thisAddOnSolo.addClass("on");
+	return false;
+});
+/* lnb탭 end*/
 
 /* 탭동작 start */
 $(document).on(
