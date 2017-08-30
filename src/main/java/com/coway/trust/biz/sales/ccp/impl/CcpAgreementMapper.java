@@ -30,6 +30,9 @@ public interface CcpAgreementMapper {
 	List<EgovMap> selectOrderJsonList(Map<String, Object> params) throws Exception;
 	
 	/* #### Insert Start #####*/
+	
+	String getDocNo(Map<String, Object> params)throws Exception;
+	
 	void insertGovAgreementInfo(Map<String,  Object > params )throws Exception;
 	
 	EgovMap getUserInfo (Map<String, Object> params) throws Exception;
@@ -48,6 +51,7 @@ public interface CcpAgreementMapper {
 	
 	void updatePreUpdUserId() throws Exception;
 	
+	String getReturnMsgId() throws Exception;
 	/* #### Insert End #####*/
 	
 }

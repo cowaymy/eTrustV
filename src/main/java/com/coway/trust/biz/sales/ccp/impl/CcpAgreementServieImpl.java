@@ -1,15 +1,23 @@
 package com.coway.trust.biz.sales.ccp.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.ccp.CcpAgreementService;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -23,6 +31,9 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 	
 	@Resource(name = "ccpAgreementMapper")
 	private CcpAgreementMapper ccpAgreementMapper;
+	
+	@Autowired
+	private AdaptorService adaptorService;
 	
 	@Override
 	public List<EgovMap> selectContactAgreementList(Map<String, Object> params) throws Exception {
@@ -105,10 +116,10 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 
 	@Override
 	@Transactional
-	public void insertAgreement(Map<String, Object> params) throws Exception {
+	public Map<String, Object> insertAgreement(Map<String, Object> params) throws Exception {
 		
 		//Gird
-		List<Object> grid =  (List<Object>)params.get(AppConstants.AUIGRID_ADD);
+		List<Object> grid =  (List<Object>)params.get(AppConstants.AUIGRID_ADD); 
 		//Form
 	    Map<String, Object> formMap = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM);
 		
@@ -128,6 +139,10 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		/* ##################  Document Number Numbering Set Param #####################*/
 		//put Code Id = 51
     	formMap.put("docNoId", SalesConstants.AGREEMENT_CODEID	);
+    	String docNo = "";
+    	docNo = ccpAgreementMapper.getDocNo(formMap); //docNo
+    	
+    	formMap.put("docNo", docNo);
 		
 		/* ################## insert 1 ##########################*/
 		//Send Date
@@ -218,5 +233,54 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		ccpAgreementMapper.updatePreUpdUserId();
 		
 		
+		//Return
+		String msgId = "";
+		msgId = ccpAgreementMapper.getReturnMsgId();
+		//docNo
+		
+		Map<String, Object> returnMap = new HashMap<String, Object>(); 
+		
+		returnMap.put("msgId", msgId);
+		returnMap.put("docNo", docNo);
+		
+		return returnMap;
+	}
+
+
+	@Override
+	public boolean sendSuccessEmail(Map<String, Object> params) throws Exception {
+		
+		EmailVO email = new EmailVO();
+		List<String> toList = new ArrayList<String>();
+		toList.add("nurul@coway.com.my");
+		//toList.add("amira.crt@coway.com.my");
+		//TODO 테스트
+		toList.add("dandanhead1@naver.com");
+		
+		String subject = "Agreement No (" + params.get("docNo") + ") - Closed With Status Approved ";
+		String content = "Please to inform you that Agreement No (" + params.get("docNo") + ") has been closed with status active by [" + params.get("fullName") + "] on " + getCurTime()  + ".<br />" +
+                "Please check in web system for more details.<br /><br/>" +
+                "Please do not reply this email.<br />" +
+                "Thank you.";
+		
+		email.setTo(toList);
+		email.setHtml(false);
+		email.setSubject(subject);
+		email.setText(content);
+		
+		boolean isSuccess = adaptorService.sendEmail(email, false);
+		
+		return isSuccess;
+	}
+	
+	private String getCurTime(){
+		
+		long time = System.currentTimeMillis(); 
+
+		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+
+		String str = dayTime.format(new Date(time));
+
+		return str;
 	}
 }

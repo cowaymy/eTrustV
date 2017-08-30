@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.ccp;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -220,20 +221,45 @@ public class CcpAgreementController {
 
 	
 	@RequestMapping(value = "/insertAgreement.do" , method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertAgreement (@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
+	public ResponseEntity<Map<String, Object>> insertAgreement (@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
 		
 		LOGGER.info("################## insertAgreement Start #######################");
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 		
-		ccpAgreementService.insertAgreement(params);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
+		returnMap = ccpAgreementService.insertAgreement(params);
+		
+		return ResponseEntity.ok(returnMap);
+		
+	}
+	
+	@RequestMapping(value = "/sendSuccessEmail.do")
+	public ResponseEntity<ReturnMessage> sendSuccessEmail (@RequestParam Map<String, Object> params) throws Exception{
+		
+		LOGGER.info("################## sendSuccessEmail Start #######################");
+		
+		boolean isResult = false;
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		
+		params.put("fullName", sessionVO.getUserFullname());
+		
+		isResult = ccpAgreementService.sendSuccessEmail(params);
+		
+		//Return MSG
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
+		if(isResult == true){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+	    
+		LOGGER.info("################## sendSuccessEmail End #######################");
 		return ResponseEntity.ok(message);
-		
 	}
 }
 

@@ -138,12 +138,50 @@
         		data.form = $("#_insForm").serializeJSON();
         	    
         		Common.ajax("POST", "/sales/ccp/insertAgreement.do", data, function(result){
-        			Common.alert(result.message);
+        			
+        			Common.confirm("Contract agreement successfully saved. Are you sure want to upload attachment(s) for this agreement ?", "", ""); //callback missing, confirm missing
+        			if($("#_inputAgreementType").val() == '949'){
+        				Common.ajax("GET", "/sales/ccp/sendSuccessEmail.do", result, function(result){
+        					 console.log(result.message);
+        					/* Common.alert(result.message); */
+        				});
+        			}
+        			
+        		    //disable Proc
+        		    fn_disableAllField();
+        			
         		});
         	}
 		});
     });
    
+    function fn_disableAllField(){
+    	
+    	 $("#_saveBtn").css("display" , "none");
+         $("#_clearBtn").css("display" , "none");
+         $("#_inputMemCode").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_memConfirm").css("display" , "none");
+         $("#_memSearch").css("display" , "none");
+         $("#_memReSelected").css("display" , "none");
+         $("#_inputDocQty").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputAgreementType").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputPeriodStart").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputPeriodEnd").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_agreementMsg").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_agreementAgmRemark").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_consignment").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("input[name='inputCourier']").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputConsignmentNo").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputCourierSelect").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputAgmReq").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_consignmentReciveDt").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputConfirmNewOrder").attr({"disabled" : "disabled", "class" : "wp100 disabled"});
+         $("#_inputConfirmNewOrder").val("");
+         $("#_newOrderConfirm").css("display" , "none");
+         
+         AUIGrid.hideColumnByDataField(orderListGirdID, "undefined");
+         
+    }
     ////////////////////////////////////////////////////////////////////////////////////
     function createAUIGrid() {
         
@@ -746,7 +784,7 @@ function createAUIGrid11() {
                               type : "ButtonRenderer", 
                               labelText : "Remove", 
                               onclick : function(rowIndex, columnIndex, value, item) {
-                                alert('click!');
+                                fn_removeRow(item.salesOrdId);
                             }
                      }
             }];
@@ -1120,6 +1158,18 @@ function createAUIGrid11() {
             }
     	}
     	return true;
+    }
+    
+    function  fn_removeRow(ordId){
+    	var originalOrdId = $("#salesOrderId").val();
+    	if(originalOrdId == ordId){
+    		Common.alert("Item disallowed remove from list.");
+    	}else{
+    		 AUIGrid.removeRow(orderListGirdID, "selectedIndex");  
+    		 AUIGrid.removeSoftRows(orderListGirdID);
+    		 Common.alert("Item has been removed from list.");
+    	}
+    	
     }
 </script>
 <section id="content"> <!-- content start -->
@@ -2023,14 +2073,14 @@ function createAUIGrid11() {
     <col style="width:160px" />
     <col style="width:*" />
 </colgroup>
-<tbody>
+<tbody> 
 <tr>
     <th scope="row">Member Code<span class="must">*</span></th>
     <td>
-        <input type="text" title="" placeholder="" class="" style="width:100px" id="_inputMemCode" name="inputMemCode"/>
+        <input type="text" title="" placeholder="" class="" style="width:100px" id="_inputMemCode" name="inputMemCode"/> 
         <input type="hidden" id="_hiddenInputMemCode" >
         <input type="hidden" id="_govAgMemId" name="govAgMemId">
-        <p class="btn_sky"><a href="#" id="_memConfirm">Confirm</a></p>
+        <p class="btn_sky"><a href="#" id="_memConfirm">Confirm</a></p> 
         <p class="btn_sky"><a href="#" id="_memSearch">Search</a></p>
         <p class="btn_sky"><a  id="_memReSelected">Reselect</a></p>
     </td>
@@ -2081,7 +2131,7 @@ function createAUIGrid11() {
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Agreement Period</th>
+    <th scope="row">Agreement Period</th>  
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="inputPeriodStart" id="_inputPeriodStart" readonly="readonly"/></p>
@@ -2096,7 +2146,7 @@ function createAUIGrid11() {
 </tr>
 <tr>
     <th scope="row">Message<span class="must">*</span></th>
-    <td colspan="5"><textarea cols="20" rows="5" name="agreementMsg" id="_agreementMsg" ></textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" name="agreementMsg" id="_agreementMsg" ></textarea></td> 
 </tr>
 <tr>
     <th scope="row">AGM Remark<span class="must">*</span></th>
@@ -2120,7 +2170,7 @@ function createAUIGrid11() {
     <col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<tr> 
     <th scope="row">Courier Method</th>
     <td>
     <label><input type="radio" name="inputCourier" value="H"/><span>By Hand</span></label>
@@ -2154,7 +2204,7 @@ function createAUIGrid11() {
 <aside class="title_line"><!-- title_line start -->
 <h3>New Order</h3>
 </aside><!-- title_line end -->
-
+  
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -2189,7 +2239,7 @@ function createAUIGrid11() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" id="_saveBtn">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_clearBtn">Clear</a></p></li>
 </ul>
 </form>
 </section><!-- search_result end -->

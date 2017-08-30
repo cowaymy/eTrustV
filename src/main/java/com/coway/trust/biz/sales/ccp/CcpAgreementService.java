@@ -25,7 +25,8 @@ public interface CcpAgreementService {
 	
 	List<EgovMap> selectOrderJsonList(Map<String, Object> params) throws Exception;
 	
-	void insertAgreement(Map<String, Object> params) throws Exception;
+	Map<String, Object> insertAgreement(Map<String, Object> params) throws Exception;
 	
+	boolean sendSuccessEmail(Map<String, Object> params) throws Exception;
 	
 }

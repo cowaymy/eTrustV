@@ -548,6 +548,10 @@
 				 ORDER BY Extent1.SALES_ORD_ID DESC
     </select>
     
+    <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+        SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
+    </select>
+    
     <insert id="insertGovAgreementInfo" parameterType="Map" >
 					INSERT INTO SAL0033D
 								  ( GOV_AG_ID,
@@ -575,7 +579,7 @@
 					  VALUES ( 
 					           (SELECT NVL(MAX(GOV_AG_ID)+1, 1) FROM SAL0033D), 
 					           #{salesOrdId},
-					           FN_GET_DOCNO(#{docNoId}),
+					          #{docNo},
 					           #{govAgMemId},
 					           1, 
 					           #{inputProgress}, 
@@ -699,7 +703,7 @@
 				  VALUES ( 
 				           (SELECT NVL(MAX(GOV_AG_ITM_ID) +1, 1)  FROM SAL0034D),
 				           (SELECT MAX(GOV_AG_ID) FROM SAL0033D), 
-				           FN_GET_DOCNO(#{docNoId}),
+				          #{docNo},
 				           #{salesOrdId},
 				           1,
 				           SYSDATE,
@@ -795,4 +799,11 @@
 			WHERE  
 			    GOV_AG_ID =  (SELECT MAX(GOV_AG_ID) FROM SAL0033D)
     </update>
+    
+    <select id="getReturnMsgId"  resultType="java.lang.String">
+         SELECT 
+            MAX(GOV_AG_MSG_ID) 
+         FROM 
+            SAL0036D
+    </select>
 </mapper>
