@@ -188,4 +188,344 @@
 			                ) UnionAll2
   ORDER BY UnionAll2.MEMOADJUSTID1 DESC
     </select>
+    
+    <select id="selectNewAdjMaster" parameterType="Map" resultType="egovMap">
+        SELECT UnionAll2.TXINVOICEID TXINVOICEID  ,
+       UnionAll2.TXINVOICEID1 TXINVOICEID1  ,
+       UnionAll2.BR_NO BR_NO  ,
+       TO_CHAR(UnionAll2.TAX_INVC_DT, 'DD-MM-YYYY') TAX_INVC_DT  ,
+       UnionAll2.BILL_MONTH BILL_MONTH  ,
+       UnionAll2.BILLYEAR BILLYEAR  ,
+       UnionAll2.TXINVOICETYPEID TXINVOICETYPEID  ,
+       UnionAll2.INVOICETYPE INVOICETYPE  ,
+       UnionAll2.GROUPNO GROUPNO  ,
+       UnionAll2.ORD_ID ORD_ID  ,
+       UnionAll2.ORD_NO ORD_NO  ,
+       UnionAll2.SERVICENO SERVICENO  ,
+       UnionAll2.CUST_NAME CUST_NAME  ,
+       UnionAll2.CNTC_PERSON CNTC_PERSON  ,
+       UnionAll2.ADDRESS ADDRESS  ,
+       UnionAll2.REM REM  ,
+       UnionAll2.OVERDUE OVERDUE  ,
+       UnionAll2.TAXES TAXES  ,
+       UnionAll2.AMOUNTDUE AMOUNTDUE  ,
+       UnionAll2.ACCOUNTCONVERSION ACCOUNTCONVERSION  
+  FROM ( SELECT UnionAll1.TXINVOICEID TXINVOICEID  ,
+                UnionAll1.TXINVOICEID1 TXINVOICEID1  ,
+                UnionAll1.BR_NO BR_NO  ,
+                UnionAll1.TAX_INVC_DT TAX_INVC_DT  ,
+                UnionAll1.BILL_MONTH BILL_MONTH  ,
+                UnionAll1.BILLYEAR BILLYEAR  ,
+                UnionAll1.TXINVOICETYPEID TXINVOICETYPEID  ,
+                UnionAll1.INVOICETYPE INVOICETYPE  ,
+                UnionAll1.GROUPNO GROUPNO  ,
+                UnionAll1.ORD_ID ORD_ID  ,
+                UnionAll1.ORD_NO ORD_NO  ,
+                UnionAll1.SERVICENO SERVICENO  ,
+                UnionAll1.CUST_NAME CUST_NAME  ,
+                UnionAll1.CNTC_PERSON CNTC_PERSON  ,
+                UnionAll1.ADDRESS ADDRESS  ,
+                UnionAll1.REM REM  ,
+                UnionAll1.TAX_INVC_CHRG OVERDUE  ,
+                UnionAll1.TAXES TAXES  ,
+                UnionAll1.AMOUNTDUE AMOUNTDUE  ,
+                UnionAll1.ACCOUNTCONVERSION ACCOUNTCONVERSION  
+         FROM ( SELECT Extent1.TAX_INVC_ID TXINVOICEID  ,
+                       Extent1.TAX_INVC_ID TXINVOICEID1  ,
+                       Extent1.TAX_INVC_REF_NO BR_NO  ,
+                       Extent1.TAX_INVC_REF_DT TAX_INVC_DT  ,
+                       0 BILL_MONTH  ,
+                       0 BILLYEAR  ,
+                       128 TXINVOICETYPEID  ,
+                       Extent2.CODE_MASTER_NAME INVOICETYPE  ,
+                       '-' GROUPNO  ,
+                       0 ORD_ID  ,
+                       '-' ORD_NO  ,
+                       Extent1.TAX_INVC_SVC_NO SERVICENO  ,
+                       Extent1.TAX_INVC_CUST_NAME CUST_NAME  ,
+                       Extent1.TAX_INVC_CNTC_PERSON CNTC_PERSON  ,
+                       Extent1.TAX_INVC_ADDR1 || ' ' || Extent1.TAX_INVC_ADDR2 || ' ' || Extent1.TAX_INVC_ADDR3 || ' ' || Extent1.TAX_INVC_POST_CODE || ' ' || Extent1.TAX_INVC_STATE_NAME ADDRESS  ,
+                       Extent1.TAX_INVC_REM REM  ,
+                       Extent1.TAX_INVC_CHRG TAX_INVC_CHRG  ,
+                       Extent1.TAX_INVC_TXS TAXES  ,
+                       Extent1.TAX_INVC_AMT_DUE AMOUNTDUE  ,
+                       1 ACCOUNTCONVERSION  
+                FROM PAY0031D Extent1
+                       LEFT JOIN SYS0012M Extent2   ON Extent1.TAX_INVC_TYPE = Extent2.CODE_MASTER_ID
+                 <if test="refNo != '' ">
+                 WHERE  Extent1.TAX_INVC_REF_NO = #{refNo}
+                 </if>
+                UNION ALL 
+                SELECT Extent3.TAX_INVC_ID TXINVOICEID  ,
+                       Extent3.TAX_INVC_ID TXINVOICEID1  ,
+                       Extent3.TAX_INVC_REF_NO BR_NO  ,
+                       Extent3.TAX_INVC_REF_DT TAX_INVC_DT  ,
+                       utils.datepart('MONTH', Extent3.TAX_INVC_REF_DT) BILL_MONTH  ,
+                       utils.datepart('YEAR', Extent3.TAX_INVC_REF_DT) BILLYEAR  ,
+                       127 TXINVOICETYPEID  ,
+                       'Outright' INVOICETYPE  ,
+                       ' ' GROUPNO  ,
+                       Extent5.SALES_ORD_ID ORD_ID  ,
+                       Extent4.INVC_ITM_ORD_NO ORD_NO  ,
+                       ' ' SERVICENO  ,
+                       Extent3.TAX_INVC_CUST_NAME CUST_NAME  ,
+                       Extent3.TAX_INVC_CNTC_PERSON CNTC_PERSON  ,
+                       Extent3.TAX_INVC_ADDR1 || ' ' || Extent3.TAX_INVC_ADDR2 || ' ' || Extent3.TAX_INVC_ADDR3 || ' ' || Extent3.TAX_INVC_POST_CODE || ' ' || Extent3.TAX_INVC_STATE_NAME ADDRESS  ,
+                       Extent3.TAX_INVC_REM REM  ,
+                       Extent3.TAX_INVC_CHRG TAX_INVC_CHRG  ,
+                       Extent4.INVC_ITM_GST_TXS TAXES  ,
+                       Extent3.TAX_INVC_AMT_DUE AMOUNTDUE  ,
+                       CASE 
+                            WHEN ( 1 = Extent6.ACC_BILL_ACCT_CNVR ) THEN 1
+                       ELSE 0
+                          END ACCOUNTCONVERSION  
+                FROM PAY0033D Extent3
+                       LEFT JOIN PAY0034D Extent4   ON Extent3.TAX_INVC_ID = Extent4.TAX_INVC_ID
+                       LEFT JOIN SAL0001D Extent5   ON ( Extent4.INVC_ITM_ORD_NO = Extent5.SALES_ORD_NO )
+                       OR ( ( Extent4.INVC_ITM_ORD_NO IS NULL )
+                       AND ( Extent5.SALES_ORD_NO IS NULL ) )
+                       LEFT JOIN PAY0016D Extent6   ON Extent3.TAX_INVC_REF_NO = Extent6.ACC_BILL_REM
+                 <if test="refNo != '' ">
+                 WHERE  Extent3.TAX_INVC_REF_NO = #{refNo}
+                 </if>
+                 ) UnionAll1
+         UNION ALL 
+         SELECT Extent7.TAX_INVC_ID TXINVOICEID  ,
+                Extent7.TAX_INVC_ID TXINVOICEID1  ,
+                Extent7.TAX_INVC_REF_NO BR_NO  ,
+                Extent7.TAX_INVC_REF_DT TAX_INVC_DT  ,
+                UTILS.CONVERT_TO_NUMBER(Extent7.TAX_INVC_MONTH,10,0) BILL_MONTH  ,
+                UTILS.CONVERT_TO_NUMBER(Extent7.TAX_INVC_YEAR,10,0) BILLYEAR  ,
+                126 TXINVOICETYPEID  ,
+                'Rental' INVOICETYPE  ,
+                Extent7.TAX_INVC_GRP_NO GROUPNO  ,
+                0 ORD_ID  ,
+                Extent8.INVC_ITM_ORD_NO ORD_NO  ,
+                ' ' SERVICENO  ,
+                Extent7.TAX_INVC_CUST_NAME CUST_NAME  ,
+                Extent7.TAX_INVC_CNTC_PERSON CNTC_PERSON  ,
+                Extent7.TAX_INVC_ADDR1 || ' ' || Extent7.TAX_INVC_ADDR2 || ' ' || Extent7.TAX_INVC_ADDR3 || ' ' || Extent7.TAX_INVC_POST_CODE || ' ' || Extent7.TAX_INVC_STATE_NAME ADDRESS  ,
+                Extent7.TAX_INVC_REM REM  ,
+                Extent7.TAX_INVC_OVERDU TAX_INVC_OVERDU  ,
+                Extent8.INVC_ITM_GST_TXS TAXES  ,
+                Extent7.TAX_INVC_AMT_DUE AMOUNTDUE  ,
+                CASE 
+                     WHEN ( 1 = Extent9.ACC_BILL_ACCT_CNVR ) THEN 1
+                ELSE 0
+                   END ACCOUNTCONVERSION  
+         FROM PAY0029D Extent7
+                LEFT JOIN PAY0030D Extent8   ON Extent7.TAX_INVC_ID = Extent8.TAX_INVC_ID
+                LEFT JOIN PAY0016D Extent9   ON Extent7.TAX_INVC_REF_NO = Extent9.ACC_BILL_REM
+          <if test="refNo != '' ">
+          WHERE  Extent7.TAX_INVC_REF_NO = #{refNo}
+          </if>
+          ) UnionAll2
+ <if test="refNo != '' ">
+ WHERE  UnionAll2.BR_NO = #{refNo}
+ </if>
+  ORDER BY UnionAll2.BR_NO DESC
+    </select>
+    
+    <select id="selectNewAdjDetailList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT 
+    UnionAll3.C1 C1, 
+    UnionAll3.TXINVOICEID  TXINVOICEID, 
+    UnionAll3.BR_NO  BR_NO, 
+    UnionAll3.TXINVOICEITEMID TXINVOICEITEMID, 
+    UnionAll3.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID, 
+    UnionAll3.BILLITEMTYPE BILLITEMTYPE, 
+    UnionAll3.BILLITEMREFNO BILLITEMREFNO, 
+    UnionAll3.BILLITEMUNITPRICE BILLITEMUNITPRICE, 
+    UnionAll3.BILLITEMTAXCODEID BILLITEMTAXCODEID, 
+    UnionAll3.BILLITEMTAXCODE BILLITEMTAXCODE, 
+    UnionAll3.BILLITEMTAXRATE BILLITEMTAXRATE, 
+    UnionAll3.BILLITEMQTY BILLITEMQTY, 
+    UnionAll3.BILLITEMTAXES BILLITEMTAXES, 
+    UnionAll3.BILLITEMCHARGES BILLITEMCHARGES, 
+    UnionAll3.BILLITEMAMOUNT BILLITEMAMOUNT
+    FROM  (SELECT 
+        UnionAll2.C1 C1, 
+        UnionAll2.TXINVOICEID TXINVOICEID, 
+        UnionAll2.BR_NO BR_NO, 
+        UnionAll2.TXINVOICEITEMID TXINVOICEITEMID, 
+        UnionAll2.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID, 
+        UnionAll2.BILLITEMTYPE BILLITEMTYPE, 
+        UnionAll2.BILLITEMREFNO BILLITEMREFNO, 
+        UnionAll2.BILLITEMUNITPRICE BILLITEMUNITPRICE, 
+        UnionAll2.BILLITEMTAXCODEID BILLITEMTAXCODEID, 
+        UnionAll2.BILLITEMTAXCODE BILLITEMTAXCODE, 
+        UnionAll2.BILLITEMTAXRATE BILLITEMTAXRATE, 
+        UnionAll2.BILLITEMQTY BILLITEMQTY, 
+        UnionAll2.BILLITEMTAXES BILLITEMTAXES, 
+        UnionAll2.BILLITEMCHARGES BILLITEMCHARGES, 
+        UnionAll2.BILLITEMAMOUNT BILLITEMAMOUNT
+        FROM  (SELECT UnionAll1.C1 C1  ,
+       UnionAll1.TXINVOICEID TXINVOICEID  ,
+       UnionAll1.BR_NO BR_NO  ,
+       UnionAll1.TXINVOICEITEMID TXINVOICEITEMID  ,
+       UnionAll1.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID  ,
+       UnionAll1.BILLITEMTYPE BILLITEMTYPE  ,
+       UnionAll1.BILLITEMREFNO BILLITEMREFNO  ,
+       UnionAll1.BILLITEMUNITPRICE BILLITEMUNITPRICE  ,
+       UnionAll1.BILLITEMTAXCODEID BILLITEMTAXCODEID  ,
+       UnionAll1.BILLITEMTAXCODE BILLITEMTAXCODE  ,
+       UnionAll1.BILLITEMTAXRATE BILLITEMTAXRATE  ,
+       UnionAll1.BILLITEMQTY BILLITEMQTY  ,
+       UnionAll1.BILLITEMTAXES BILLITEMTAXES  ,
+       UnionAll1.BILLITEMCHARGES BILLITEMCHARGES  ,
+       UnionAll1.BILLITEMAMOUNT BILLITEMAMOUNT  
+  FROM ( SELECT 1 C1  ,
+                Filter1.TAXINVOICEID1 TXINVOICEID  ,
+                Filter1.BR_NO BR_NO  ,
+                Filter1.TXINVOICEITEMID TXINVOICEITEMID  ,
+                Filter1.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID  ,
+                CASE 
+                     WHEN ( 1265 = Filter1.TXINVOICEITEMTYPEID ) THEN Filter1.INVC_ITM_DESC1
+                ELSE Filter1.CODENAME1
+                   END BILLITEMTYPE  ,
+                CASE 
+                     WHEN ( ' ' = Filter1.INVC_ITM_ORD_NO ) THEN Filter1.INVC_ITM_CODE
+                ELSE Filter1.INVC_ITM_ORD_NO
+                   END BILLITEMREFNO  ,
+                Filter1.INVC_ITM_UNIT_PRC BILLITEMUNITPRICE  ,
+                Extent5.ACC_BILL_TAX_CODE_ID BILLITEMTAXCODEID  ,
+                '-' BILLITEMTAXCODE  ,
+                Filter1.INVC_ITM_GST_RATE BILLITEMTAXRATE  ,
+                Filter1.INVC_ITM_QTY BILLITEMQTY  ,
+                Filter1.INVC_ITM_GST_TXS BILLITEMTAXES  ,
+                Filter1.INVC_ITM_CHRG BILLITEMCHARGES  ,
+                Filter1.INVC_ITM_AMT_DUE BILLITEMAMOUNT  
+         FROM ( SELECT Extent1.TAX_INVC_ID TAXINVOICEID1  ,
+                       Extent1.TAX_INVC_REF_NO BR_NO  ,
+                       Extent2.INVC_ITM_ID TXINVOICEITEMID  ,
+                       Extent2.INVC_ITM_TYPE TXINVOICEITEMTYPEID  ,
+                       Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                       Extent2.INVC_ITM_CODE INVC_ITM_CODE  ,
+                       Extent2.INVC_ITM_DESC1 INVC_ITM_DESC1  ,
+                       Extent2.INVC_ITM_QTY INVC_ITM_QTY  ,
+                       Extent2.INVC_ITM_UNIT_PRC INVC_ITM_UNIT_PRC  ,
+                       Extent2.INVC_ITM_GST_RATE INVC_ITM_GST_RATE  ,
+                       Extent2.INVC_ITM_GST_TXS INVC_ITM_GST_TXS  ,
+                       Extent2.INVC_ITM_CHRG INVC_ITM_CHRG  ,
+                       Extent2.INVC_ITM_AMT_DUE INVC_ITM_AMT_DUE  ,
+                       Extent3.CODE_NAME CODENAME1  ,
+                       Extent4.CODE_ID CODEID1  ,
+                       Extent4.OLD_CODE_ID OLDCODEID1  
+                FROM PAY0031D Extent1
+                       LEFT JOIN PAY0032D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+                       LEFT JOIN SYS0013M Extent3   ON Extent2.INVC_ITM_TYPE = Extent3.CODE_ID
+                       LEFT JOIN SYS0013M Extent4   ON ( Extent3.CODE = Extent4.CODE )
+                       OR ( ( Extent3.CODE IS NULL )
+                       AND ( Extent4.CODE IS NULL ) )
+                 WHERE  Extent4.CODE_MASTER_ID IN ( 128,125 )
+               ) Filter1
+                JOIN PAY0016D Extent5   ON ( Filter1.BR_NO = Extent5.ACC_BILL_REM )
+                AND ( Extent5.ACC_BILL_MODE_ID = Filter1.OLDCODEID1 )
+           <if test="refNo != '' ">
+          WHERE  ( Filter1.BR_NO = #{refNo} ) AND ( Extent5.ACC_BILL_REM = #{refNo} )
+          </if>
+         UNION ALL 
+         SELECT 1 C1  ,
+                Extent6.TAX_INVC_ID TXINVOICEID  ,
+                Extent6.TAX_INVC_REF_NO BR_NO  ,
+                Extent7.INVC_ITM_ID TXINVOICEITEMID  ,
+                1282 TXINVOICEITEMTYPEID  ,
+                'Outright' BILLITEMTYPE  ,
+                Extent7.INVC_ITM_ORD_NO BILLITEMREFNO  ,
+                Extent7.INVC_ITM_RENTAL_FEE BILLITEMUNITPRICE  ,
+                Extent8.ACC_BILL_TAX_CODE_ID BILLITEMTAXCODEID  ,
+                '-' BILLITEMTAXCODE  ,
+                Extent7.INVC_ITM_GST_RATE BILLITEMTAXRATE  ,
+                1 BILLITEMQTY  ,
+                Extent7.INVC_ITM_GST_TXS BILLITEMTAXES  ,
+                Extent7.INVC_ITM_RENTAL_FEE BILLITEMCHARGES  ,
+                Extent7.INVC_ITM_AMT_DUE BILLITEMAMOUNT  
+         FROM PAY0033D Extent6
+                LEFT JOIN PAY0034D Extent7   ON Extent6.TAX_INVC_ID = Extent7.TAX_INVC_ID
+                JOIN PAY0016D Extent8   ON Extent6.TAX_INVC_REF_NO = Extent8.ACC_BILL_REM
+          <if test="refNo != '' ">
+          WHERE  ( Extent6.TAX_INVC_REF_NO = #{refNo} ) AND ( Extent8.ACC_BILL_REM = #{refNo} )
+          </if>
+           ) UnionAll1
+        UNION ALL
+            SELECT 1 C1  ,
+                    Extent9.TAX_INVC_ID TXINVOICEID  ,
+                    Extent9.TAX_INVC_REF_NO BR_NO  ,
+                    Extent10.INVC_ITM_ID TXINVOICEITEMID  ,
+                    CASE 
+                    WHEN ( 0 <![CDATA[<>]]> Extent11.ACC_BILL_CNTRCT_ID ) THEN CASE 
+                                                                        WHEN ( 0 = Extent10.INVC_ITM_INSTLMT_NO ) THEN 1327
+                    ELSE 1326
+                        END
+                    WHEN ( 0 = Extent10.INVC_ITM_INSTLMT_NO ) THEN 1280
+                    ELSE 1279
+                    END TXINVOICEITEMTYPEID  ,
+                    CASE 
+                    WHEN ( 0 = Extent10.INVC_ITM_INSTLMT_NO ) THEN 'RPF'
+                    ELSE 'Rental'
+                    END BILLITEMTYPE  ,
+                    Extent10.INVC_ITM_ORD_NO BILLITEMREFNO  ,
+                    Extent10.INVC_ITM_RENTAL_FEE BILLITEMUNITPRICE  ,
+                    CASE 
+                    WHEN ( Extent11.ACC_BILL_TAX_CODE_ID IS NULL ) THEN Extent12.ACC_BILL_TAX_CODE_ID
+                    ELSE Extent11.ACC_BILL_TAX_CODE_ID
+                    END BILLITEMTAXCODEID  ,
+                    '-' BILLITEMTAXCODE  ,
+                    Extent10.INVC_ITM_GST_RATE BILLITEMTAXRATE  ,
+                    1 BILLITEMQTY  ,
+                    Extent10.INVC_ITM_GST_TXS BILLITEMTAXES  ,
+                    Extent10.INVC_ITM_RENTAL_FEE - Extent10.INVC_ITM_GST_TXS BILLITEMCHARGES  ,
+                    Extent10.INVC_ITM_RENTAL_FEE BILLITEMAMOUNT  
+            FROM PAY0029D Extent9
+            LEFT JOIN PAY0030D Extent10   ON Extent9.TAX_INVC_ID = Extent10.TAX_INVC_ID
+            LEFT JOIN PAY0016D Extent11   ON ( Extent10.INVC_ITM_ORD_NO = Extent11.ACC_BILL_ORD_NO )
+            AND ( Extent9.TAX_INVC_TASK_ID = Extent11.ACC_BILL_TASK_ID )
+            AND ( Extent9.TAX_INVC_REF_NO = Extent11.ACC_BILL_REM )
+            AND ( Extent10.INVC_ITM_INSTLMT_NO = Extent11.ACC_BILL_SCHDUL_PRIOD )
+            LEFT JOIN PAY0016D Extent12   ON ( Extent10.INVC_ITM_ORD_NO = Extent12.ACC_BILL_ORD_NO )
+            AND ( 0 = Extent12.ACC_BILL_SCHDUL_PRIOD )
+            <if test="refNo != '' ">
+            WHERE  ( Extent9.TAX_INVC_REF_NO = #{refNo} ) AND ( Extent11.ACC_BILL_REM = #{refNo})
+            </if>
+            ) UnionAll2
+    UNION ALL
+        SELECT 1 C1  ,
+                Filter5.TAXINVOICEID2 TXINVOICEID  ,
+                Filter5.TAX_INVC_REF_NO BR_NO  ,
+                Filter5.INVC_ITM_ID TXINVOICEITEMID  ,
+                CASE 
+                    WHEN ( 1061 = Extent15.ACC_BILL_MODE_ID ) THEN 1281
+                ELSE 1328
+                    END TXINVOICEITEMTYPEID  ,
+                'Handling Fees' BILLITEMTYPE  ,
+                Filter5.INVC_ITM_ORD_NO BILLITEMREFNO  ,
+                Filter5.INVC_ITM_HNDL_FEE BILLITEMUNITPRICE  ,
+                Extent15.ACC_BILL_TAX_CODE_ID BILLITEMTAXCODEID  ,
+                '-' BILLITEMTAXCODE  ,
+                Filter5.INVC_ITM_GST_RATE BILLITEMTAXRATE  ,
+                1 BILLITEMQTY  ,
+                Filter5.INVC_ITM_HNDL_FEE_TXS BILLITEMTAXES  ,
+                Filter5.INVC_ITM_HNDL_FEE - Filter5.INVC_ITM_HNDL_FEE_TXS BILLITEMCHARGES  ,
+                Filter5.INVC_ITM_HNDL_FEE BILLITEMAMOUNT  
+        FROM ( SELECT Extent13.TAX_INVC_ID TAXINVOICEID2  ,
+                Extent13.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+                Extent13.TAX_INVC_TASK_ID TAX_INVC_TASK_ID  ,
+                Extent14.INVC_ITM_ID INVC_ITM_ID  ,
+                Extent14.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                Extent14.INVC_ITM_GST_RATE INVC_ITM_GST_RATE  ,
+                Extent14.INVC_ITM_HNDL_FEE INVC_ITM_HNDL_FEE  ,
+                Extent14.INVC_ITM_HNDL_FEE_TXS INVC_ITM_HNDL_FEE_TXS  
+            FROM PAY0029D Extent13
+                JOIN PAY0030D Extent14   ON Extent13.TAX_INVC_ID = Extent14.TAX_INVC_ID
+            WHERE  Extent14.INVC_ITM_HNDL_FEE > UTILS.CONVERT_TO_NUMBER(0,18) ) Filter5
+            JOIN PAY0016D Extent15   ON ( Filter5.INVC_ITM_ORD_NO = Extent15.ACC_BILL_ORD_NO )
+            AND ( Filter5.TAX_INVC_TASK_ID = Extent15.ACC_BILL_TASK_ID )
+        WHERE  ( Extent15.ACC_BILL_MODE_ID IN ( 1061,1325 ))
+            <if test="refNo != '' ">
+            AND ( Filter5.TAX_INVC_REF_NO = #{refNo}) AND ( Extent15.ACC_BILL_REM = #{refNo} )
+            </if>
+        ) UnionAll3
+
+        
+    </select>
 </mapper>

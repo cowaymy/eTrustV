@@ -23,6 +23,18 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectInvoiceAdjList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectNewAdjMaster(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.selectNewAdjMaster(params);
+	}
+
+	@Override
+	public List<EgovMap> selectNewAdjDetailList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.selectNewAdjDetailList(params);
+	}
 	
 
 }

@@ -23,9 +23,23 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("invoiceAdjMapper")
 public interface InvoiceAdjMapper {
 	/**
-	 * CompanyList 조회
+	 * InvoiceAdjustment(CN/DN) List 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectInvoiceAdjList(Map<String, Object> params);
+	
+	/**
+	 * New Invoice Master 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectNewAdjMaster(Map<String, Object> params);
+	
+	/**
+	 * New Invoice Detail 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectNewAdjDetailList(Map<String, Object> params);
 }

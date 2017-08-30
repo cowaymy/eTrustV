@@ -50,6 +50,8 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
     alert(AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcId"));
     alert(AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo"));
     
+    location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");
+    
     $('#_searchInvoice').hide();
     
 }
