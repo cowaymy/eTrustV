@@ -37,37 +37,39 @@ var columnLayout=[
 ];
 
 function fn_getCompanyInvoiceListtAjax() {        
-	var valid = ValidRequiredField();
-	if(!valid){
-		 Common.alert("* Please key in either Bill No or Order No.<br />");
-	}else{
-		Common.ajax("GET", "/payment/selectInvoiceList.do", $("#searchForm").serialize(), function(result) {
-	    	AUIGrid.setGridData(myGridID, result);
-	    });
-	}
+    var valid = ValidRequiredField();
+    if(!valid){
+         Common.alert("* Please key in either Bill No or Order No.<br />");
+    }else{
+        Common.ajax("GET", "/payment/selectInvoiceList.do", $("#searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(myGridID, result);
+        });
+    }
 }
 
 function ValidRequiredField(){
-	var valid = true;
-	
-	if($("#brNumber").val() == "" && $("#orderNo").val() == "")
-		valid = false;
-	
-	return valid;
+    var valid = true;
+    
+    if($("#brNumber").val() == "" && $("#orderNo").val() == "")
+        valid = false;
+    
+    return valid;
 }
 
 
 
 //크리스탈 레포트
 function fn_generateInvoice(){
-	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-	
-	if (selectedItem[0] > -1){
-		
-		var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear");
-		var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth");
-		
-		//report form에 parameter 세팅
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+        
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear");
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth");
+        var brNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo");
+        var paramMonth  = parseInt(month) < 10 ? "0" + month : month;
+        
+        //report form에 parameter 세팅
         if($('input:radio[name=printMethod]').eq(0).is(':checked')){
             if(parseInt(year) < 2014){
                 $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF.rpt');
@@ -89,20 +91,93 @@ function fn_generateInvoice(){
                 }
             }
         }
-		
-		$("#reportPDFForm #v_month").val(month);
-		$("#reportPDFForm #v_year").val(year);
-		$("#reportPDFForm #v_brNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo"));
-		$("#reportPDFForm #v_type").val(6);
-		$("#reportPDFForm #v_printLive").val(0);
-		$("#reportPDFForm #v_taskId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taskId")); 
-		
-		//report 호출
-		var option = {
-				isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-		};
-		
-		Common.report("reportPDFForm", option);
+        
+        //$("#reportPDFForm #reportDownFileName").val(brNo+paramMonth+year+".pdf");
+        $("#reportPDFForm #viewType").val("PDF");
+        $("#reportPDFForm #v_month").val(month);
+        $("#reportPDFForm #v_year").val(year);
+        $("#reportPDFForm #v_brNo").val(brNo);
+        $("#reportPDFForm #v_type").val(6);
+        $("#reportPDFForm #v_printLive").val(0);
+        $("#reportPDFForm #v_taskId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taskId")); 
+        
+        //report 호출
+        var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+        
+        Common.report("reportPDFForm", option);
+   
+  }else{
+      Common.alert('<b>No print type selected.</b>');
+  }
+}
+
+//Send E-Invoice 팝업
+function fn_sendEInvoicePop(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+        $('#einvoice_wrap').show();
+    }else{
+        Common.alert('No claim record selected.');
+    }
+}
+
+//크리스탈 레포트 - send E-Invoice
+function fn_sendEInvoice(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+        
+        if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
+            Common.alert('* Please key in the email.<br />');
+            return;
+        }
+        
+        //크리스탈 레포트 조회 parameter
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeYear");
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "renDateTimeMonth");
+        var brNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo");        
+        var paramMonth  = parseInt(month) < 10 ? "0" + month : month;
+        
+        //E-mail 내용
+        var message = "";
+        message += "Dear customer,\n\n" +
+            "Please refer to the attachment of the re-send invoice as per requested.\n" +
+            "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
+            "\n\n" +
+            "NOTE :Please do not reply this email as this is computer generated e-mail." +
+            "\n\n\n" +
+            "Thank you and have a wonderful day.\n\n" +
+            "Regards\n" +
+            "Management Team of Coway Malaysia Sdn. Bhd.";
+            
+        //E-mail 제목
+        var emailTitle = "Rental Invoice " + paramMonth + "/" + year;
+        
+        //report form에 parameter 세팅
+        $("#reportPDFForm #reportFileName").val('/statement/Official_Invoice_PDF.rpt');
+        $("#reportPDFForm #viewType").val("MAIL_PDF");
+        $("#reportPDFForm #reportDownFileName").val(brNo+paramMonth+year);
+        
+        $("#reportPDFForm #v_month").val(month);
+        $("#reportPDFForm #v_year").val(year);
+        $("#reportPDFForm #v_brNo").val(brNo);
+        $("#reportPDFForm #v_type").val(6);
+        $("#reportPDFForm #v_printLive").val(0);
+        $("#reportPDFForm #v_taskId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taskId"));
+        
+        $("#reportPDFForm #emailSubject").val(emailTitle);
+        $("#reportPDFForm #emailText").val(message);
+        $("#reportPDFForm #emailTo").val($("#eInvoiceForm #send_email").val());
+        
+        //report 호출
+        var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+        
+        Common.report("reportPDFForm", option);
    
   }else{
       Common.alert('<b>No print type selected.</b>');
@@ -193,7 +268,7 @@ function fn_generateInvoice(){
                         <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
                     </ul>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#">Send E-Invoice</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_sendEInvoicePop();">Send E-Invoice</a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
@@ -215,4 +290,60 @@ function fn_generateInvoice(){
     <input type="hidden" id="v_type" name="v_type" />
     <input type="hidden" id="v_printLive" name="v_printLive" />
     <input type="hidden" id="v_taskId" name="v_taskId" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
+    <!-- 이메일 전송인 경우 모두 필수-->
+    <input type="hidden" id="emailSubject" name="emailSubject" value="" />
+    <input type="hidden" id="emailText" name="emailText" value="" />
+    <input type="hidden" id="emailTo" name="emailTo" value="" />
 </form>
+
+
+
+    
+
+<!--------------------------------------------------------------- 
+    POP-UP (E-INVOICE)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="einvoice_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="einvoice_pop_header">
+        <h1>COMPANY INVOICE - E-INVOICE</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#einvoice_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="eInvoiceForm" id="eInvoiceForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>
+                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>
+        
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
