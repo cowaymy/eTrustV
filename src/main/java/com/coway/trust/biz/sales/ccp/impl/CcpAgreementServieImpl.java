@@ -117,16 +117,17 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 	@Override
 	@Transactional
 	public Map<String, Object> insertAgreement(Map<String, Object> params) throws Exception {
-		
+		//params.put("userId", sessionVO.getUserId());
 		//Gird
 		List<Object> grid =  (List<Object>)params.get(AppConstants.AUIGRID_ADD); 
 		//Form
 	    Map<String, Object> formMap = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM);
 		
+	    /* ###  Session ###*/
+	    formMap.put("userId", params.get("userId"));
+	    
 		/*#####################  User Roll Id Setting ########################*/
-		//TODO 추후 삭제
-		params.put("userId", "52366"); // 추후 삭제
-    	EgovMap userRollMap = ccpAgreementMapper.getUserInfo(params);
+    	EgovMap userRollMap = ccpAgreementMapper.getUserInfo(formMap);
     	
     	int rollId;
     	if(userRollMap == null ){
@@ -141,7 +142,9 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     	formMap.put("docNoId", SalesConstants.AGREEMENT_CODEID	);
     	String docNo = "";
     	docNo = ccpAgreementMapper.getDocNo(formMap); //docNo
-    	
+    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!           생성된 DOCNO : " , docNo);
+    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     	formMap.put("docNo", docNo);
 		
 		/* ################## insert 1 ##########################*/
@@ -189,9 +192,10 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			Map<String, Object> insMap = (Map<String, Object>)grid.get(idx);
 			
 			//Param Setting
+			insMap.put("userId", params.get("userId"));
 			insMap.put("inputPeriodStart", formMap.get("inputPeriodStart"));
 			insMap.put("inputPeriodEnd", formMap.get("inputPeriodEnd"));
-			insMap.put("docNoId",  SalesConstants.AGREEMENT_CODEID);
+			insMap.put("docNo",  docNo);
 			insMap.put("agreementAgmRemark", formMap.get("agreementAgmRemark"));
 			
 			//SUB

@@ -16,12 +16,12 @@
 			       Project2.GOV_AG_PRGRS_NAME   ,
 			       Project2.GOV_AG_TYPE_ID   ,
 			       Project2.CODE   ,
-			       TO_CHAR(TO_DATE(Project2.GOV_AG_CRT_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS GOV_AG_CRT_DT,
+			       TO_CHAR(Project2.GOV_AG_CRT_DT ,'DD-MM-YYYY') AS GOV_AG_CRT_DT,
 			       Project2.USER_NAME   ,
 			       Project2.GOV_AG_ROLE_DESC   ,
 			       Project2.MEM_CODE   ,
-			       TO_CHAR(TO_DATE( Project2.GOV_AG_START_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS GOV_AG_START_DT,
-			       TO_CHAR(TO_DATE( Project2.GOV_AG_END_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS GOV_AG_END_DT   
+			       TO_CHAR(Project2.GOV_AG_START_DT,'DD-MM-YYYY') AS GOV_AG_START_DT,
+			       TO_CHAR(Project2.GOV_AG_END_DT, 'DD-MM-YYYY') AS GOV_AG_END_DT   
 			      
 			  FROM ( SELECT Extent1.GOV_AG_ID GOV_AG_ID  ,
 			                Extent1.GOV_AG_SALES_ORD_ID GOV_AG_SALES_ORD_ID  ,
@@ -175,6 +175,7 @@
 				    SAL0001D Extent1
 				    JOIN SAL0034D Extent2   ON Extent2.GOV_AG_ITM_SALES_ORD_ID = Extent1.SALES_ORD_ID
 				 WHERE  Extent1.SALES_ORD_NO = #{salesOrdNo}
+				 AND  Extent2.GOV_AG_ITM_BATCH_NO IS NOT NULL
      </select>
      
      <select id="getOrderId" parameterType="Map" resultType="egovMap" >
@@ -588,9 +589,9 @@
 					           TO_CHAR(TO_DATE(#{inputPeriodEnd}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
 					           0,
 					           #{agreementAgmRemark}, 
-					           52366, 
+					           #{userId}, 
 					           SYSDATE,
-					           52366, 
+					           #{userId}, 
 					           SYSDATE, 
 					           #{rollId}, 
 					           #{inputDocQty}, 
@@ -641,9 +642,9 @@
 							          #{agreementMsg}, 
 							          #{inputProgress}, 
 							           5, 
-							           52366, 
+							           #{userId}, 
 							           SYSDATE, 
-							           52366, 
+							           #{userId}, 
 							           SYSDATE, 
 							           0, 
 							           ''  
@@ -676,9 +677,9 @@
 				           TO_CHAR(TO_DATE(#{consignmentReciveDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
 				           NVL(#{inputCourierSelect}, 0),
 				           SYSDATE,
-				           52366,
+				           #{userId},
 				           SYSDATE,
-				           52366,
+				           #{userId},
 				           TO_CHAR(TO_DATE(#{agCnsgnSendDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
 				           #{consignBtHand}, 
 				           1237 )
@@ -707,9 +708,9 @@
 				           #{salesOrdId},
 				           1,
 				           SYSDATE,
-				           52366,
+				           #{userId},
 				           SYSDATE,
-				           52366,
+				           #{userId},
 				           TO_CHAR(TO_DATE(#{inputPeriodStart}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
                            TO_CHAR(TO_DATE(#{inputPeriodEnd}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
 				           '', 
@@ -738,13 +739,13 @@
 				           1, 
 				           0, 
 				           #{salesOrdId}, 
-				           52366, 
+				           #{userId}, 
 				           SYSDATE, 
 				           SYSDATE, 
 				           0, 
 				           0,  
 				           SYSDATE, 
-				           52366, 
+				           #{userId}, 
 				           SYSDATE )
     </insert>
     
@@ -773,7 +774,7 @@
 						           0, 
 						           0, 
 						           #{agreementAgmRemark}, 
-						           52366,
+						           #{userId},
 						           SYSDATE, 
 						           0, 
 						           0,

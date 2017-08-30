@@ -41,7 +41,7 @@
         createAUIGrid11();
         
         //Call Ajax (for Grid)
-/*         fn_selectOrderSameRentalGroupOrderList();
+        fn_selectOrderSameRentalGroupOrderList();
         fn_selectMembershipInfoList();
         fn_selectDocumentList();
         fn_selectCallLogList();
@@ -50,7 +50,7 @@
         fn_selectAutoDebitList();
         fn_selectDiscountList();
         fn_selectAfterServiceList();
-        fn_selectBeforeServiceList(); */
+        fn_selectBeforeServiceList(); 
         fn_selectOrderJsonList();
         
         //resize
@@ -240,34 +240,34 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
                 dataField   : "mbrshNo",        headerText  : "Membership<br>No",
-                width       : 120,              editable    : false,
+                width       : '8%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "mbrshBillNo",    headerText  : "Bill No",
-                width       : 100,              editable        : false,
+                width       : '8%',              editable        : false,
                 style       : 'left_style'
             }, {
                 dataField   : "mbrshCrtDt",     headerText  : "Date",
-                width       : 70,               editable    : false,
+                width       : '8%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "mbrshStusCode",  headerText  : "Status",
-                width       : 70,               editable    : false,
+                width       : '8%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "pacName",        headerText  : "Package",
-                style       : 'left_style'
+                width       : '44%',     style       : 'left_style'
             }, {
                 dataField   : "mbrshStartDt",   headerText  : "Start",
-                width       : 70,               editable    : false,
+                width       : '8%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "mbrshExprDt",    headerText  : "End",
-                width       : 70,               editable    : false,
+                width       : '8%',               editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "mbrshDur",       headerText  : "Duration<br>(month)",
-                width       : 100,              editable    : false,
+                width       : '8%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "salesOrdId", visible     : false //salesOrderId
@@ -337,39 +337,39 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
                 dataField   : "rownum",             headerText  : "No",
-                width       : 60,                  editable    : false,
+                width       : '10%',                  editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "codeName",           headerText  : "Type",
-                width       : 120,                  editable    : false,
+                width       : '10%',                  editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "resnDesc",           headerText  : "Feedback",
-                width       : 120,                  editable    : false,
+                width       : '10%',                  editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "stusName",           headerText  : "Action",
-                width       : 120,                  editable    : false,
+                width       : '10%',                  editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "callRosAmt",         headerText  : "Amount",
-                width       : 70,                   editable    : false,
+                width       : '10%',                   editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "callRem",            headerText  : "Remark",
-                width       : 250,                  editable    : false,
+                width       : '20%',                  editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "rosCallerUserName",  headerText  : "Caller",
-                width       : 120,                  editable    : false,
+                width       : '10%',                  editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "callCrtUserName",    headerText  : "Creator",
-                width       : 80,                  editable    : false,
+                width       : '10%',                  editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "callCrtDt",          headerText  : "Create Date",
-                width       : 100,                  editable    : false,
+                width       : '10%',                  editable    : false,
                 style       : 'left_style'
             }];
 
@@ -401,39 +401,39 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
                 dataField   : "orNo",           headerText  : "Receipt No",
-                width       : 120,              editable    : false,
+                width       : '10%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "revReceiptNo",   headerText  : "Reverse For",
-                width       : 120,              editable    : false,
+                width       : '10%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "payData",        headerText  : "Payment Date",
-                width       : 120,              editable    : false,
+                width       : '10%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "codeDesc",       headerText  : "Payment Type",
-                width       : 150,              editable    : false,
+                width       : '10%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "accCode",        headerText  : "Debtor Acc",
-                width       : 100,              editable    : false,
+                width       : '10%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "code",           headerText  : "Key-In Branch<br>(Code)",
-                width       : 120,              editable    : false,
+                width       : '10%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "name1",          headerText  : "Key-In Branch<br>(Name)",
-                width       : 120,              editable    : false,
+                width       : '15%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "totAmt",         headerText  : "Total Amount",
-                width       : 100,              editable    : false,
+                width       : '15%',              editable    : false,
                 style       : 'left_style'
             }, {
                 dataField   : "userName",       headerText  : "Creator",
-                width       : 80,               editable    : false,
+                width       : '10%',               editable    : false,
                 style       : 'left_style'
             }];
 
@@ -1190,7 +1190,7 @@ function createAUIGrid11() {
 </form>
 
 <form action="#" method="get" id="_searchForm">
-<input id="salesOrderId" name="salesOrderId" type="hidden" value="11"> <!-- value="${orderDetail.basicInfo.ordId}"  추후 변경--> 
+<input id="salesOrderId" name="salesOrderId" type="hidden" value="${orderDetail.basicInfo.ordId}">  
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1275,6 +1275,11 @@ function createAUIGrid11() {
 
     <article class="tap_area"><!-- tap_area start -->
 
+    <ul class="right_btns mb10">
+        <li><p class="btn_blue2"><a href="#">View Ledger (1)</a></p></li>
+        <li><p class="btn_blue2"><a href="#">View Ledger (2)</a></p></li>
+    </ul>
+    
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -2062,7 +2067,7 @@ function createAUIGrid11() {
 <h3>Agreement Information</h3>
 </aside><!-- title_line end -->
 <form id="_insForm">
-<input type="hidden" name="salesOrdId" id="_salesOrdId" value="11"> <!-- 추후 변경  -->
+<input type="hidden" name="salesOrdId" id="_salesOrdId" value="${orderDetail.basicInfo.ordId}"> 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

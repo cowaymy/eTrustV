@@ -96,12 +96,11 @@ public class CcpAgreementController {
 		int prgrsId = 0;
 		
 		params.put("prgrsId", prgrsId);
-		//TODO 추후 주석 해제
-     //   EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+	
+        EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
 		
-	//	model.put("orderDetail", orderDetail);
-	//	model.put("salesOrderNo", params.get("salesOrderNo"));
-		model.put("salesOrderNo", "11");
+		model.put("orderDetail", orderDetail);
+		model.put("salesOrderNo", params.get("salesOrderNo"));
 		
 		return "sales/ccp/ccpAgreementNewSearchResult";
 	}
