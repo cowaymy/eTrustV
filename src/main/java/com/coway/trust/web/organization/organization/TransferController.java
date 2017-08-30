@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,6 +97,24 @@ public class TransferController {
 		params.put("memberType", params.get("groupCode[memberType]"));
 		params.put("memberUpId", params.get("groupCode[memberUpId]"));
 		List<EgovMap> selectTransferList  = transferService.selectTransferList(params);
+		logger.debug("selectTransferList : {}", selectTransferList);
+		// 호출될 화면
+		return ResponseEntity.ok(selectTransferList);
+	}
+	
+	/**
+	 * organization transfer From Transfer 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/insertTransfer.do" ,method = RequestMethod.POST)
+	public  ResponseEntity<List<EgovMap>> insertTransfer(@RequestBody Map<String, Object> params, ModelMap model) {
+		logger.debug(" insertTransfer params : {}", params);
+		
+		List<EgovMap> selectTransferList  = null;
 		logger.debug("selectTransferList : {}", selectTransferList);
 		// 호출될 화면
 		return ResponseEntity.ok(selectTransferList);
