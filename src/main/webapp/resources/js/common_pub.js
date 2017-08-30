@@ -72,7 +72,7 @@ $(document).on(//생년월일달력 실행
 });
 /* 제이쿼리 ui달력 end*/
 
-/* on클래스 넣기 start */
+/* 아코디언메뉴 start */
 $(document).on(
 	"click", "dl .click_add_on", function(){
 
@@ -82,22 +82,7 @@ $(document).on(
 	thisAddOn.toggleClass("on");
 	return false;
 });
-/* on클래스 넣기 end*/
-
-/* on클래스 넣기(type2) start*/
-$(document).on(
-	"click", ".click_add_on_solo", function(){
-
-	var thisNum=$(".click_add_on_solo").index(this);
-	var thisAddOnSolo=$(".click_add_on_solo").eq(thisNum);
-	var target=thisAddOnSolo.attr("class").replace("click_add_on_solo ","");
-	var targetAddOn=$("."+target+"");
-
-	targetAddOn.removeClass("on");
-	thisAddOnSolo.addClass("on");
-	return false;
-});
-/* on클래스 넣기(type2) end*/
+/* 아코디언메뉴 넣기 end*/
 
 /* 탭동작 start */
 $(document).on(
@@ -112,7 +97,7 @@ $(document).on(
 })
 /* 탭동작 end */
 
-/* 요소 보이기/숨기기 start*/
+/* 링크버튼 숨기기/보이기 start*/
 $(document).on(
 	"click", ".link_btns_wrap .show_btn", function(){
 
@@ -129,7 +114,7 @@ $(document).on(
 	$(".link_btns_wrap .link_list").css("display","none");
 	return false;
 });
-/* 요소 보이기/숨기기 end*/
+/* 링크버튼 숨기기/보이기 end*/
 
  /* 멀티셀렉트 플러그인 start */
  $('.multy_select').change(function() {
@@ -139,7 +124,7 @@ $(document).on(
 .multipleSelect({
 	width: '100%'
 });
- /* 멀티셀렉트 플러그인 start */
+ /* 멀티셀렉트 플러그인 end */
 
 /*LNB start */
 $(document).on(
