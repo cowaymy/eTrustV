@@ -160,7 +160,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
 		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
-
+		
 		if (checkList.size() > 0) {
 
 			Map<String, Object> insMap = null;
@@ -188,6 +188,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 					insSerial = (Map<String, Object>) serialList.get(j);
 
 					insSerial.put("delno", deliSeq);
+					insSerial.put("reqstno", formMap.get("reqstno"));
 					insSerial.put("userId", params.get("userId"));
 					stockMoveMapper.insertMovementSerial(insSerial);
 				}
@@ -208,7 +209,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public int selectStockMovementSerial(Map<String, Object> params) {
+	public List<EgovMap>  selectStockMovementSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return stockMoveMapper.selectStockMovementSerial(params);
 	}

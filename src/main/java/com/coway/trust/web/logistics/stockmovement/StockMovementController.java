@@ -357,12 +357,15 @@ public class StockMovementController {
 	}
 
 	@RequestMapping(value = "/StockMovementSerialCheck.do", method = RequestMethod.GET)
-	public ResponseEntity<Integer> stockMovementSerialCheck(@RequestParam Map<String, Object> params) {
+	public ResponseEntity<Map> stockMovementSerialCheck(@RequestParam Map<String, Object> params) {
 
 		logger.debug("serial : {}", params.get("serial"));
 
-		int cnt = stockMovementService.selectStockMovementSerial(params);
-		return ResponseEntity.ok(cnt);
+		List<EgovMap> list = stockMovementService.selectStockMovementSerial(params);
+		Map<String, Object> rmap = new HashMap();
+
+		rmap.put("data", list);
+		return ResponseEntity.ok(rmap);
 	}
 
 	@RequestMapping(value = "/StockMovementReceiptList.do")

@@ -27,7 +27,7 @@ public interface StockMovementService {
 
 	void stockMovementReqDelivery(Map<String, Object> param);
 
-	int selectStockMovementSerial(Map<String, Object> params);
+	List<EgovMap>  selectStockMovementSerial(Map<String, Object> params);
 
 	List<EgovMap> stockMovementDeliveryIssue(Map<String, Object> params);
 

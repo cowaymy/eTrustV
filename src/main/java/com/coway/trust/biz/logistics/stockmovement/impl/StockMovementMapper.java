@@ -41,7 +41,7 @@ public interface StockMovementMapper {
 
 	void insertDeliveryStockMovement(Map<String, Object> insMap);
 
-	int selectStockMovementSerial(Map<String, Object> params);
+	List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
 
 	void insertMovementSerial();
 

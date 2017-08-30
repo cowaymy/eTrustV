@@ -30,6 +30,7 @@
              , l48.itm_name      itmname
              , l48.reqst_qty     reqstqty
              , NVL (l55.DELVRY_QTY, 0) AS delyqty
+             , 0 AS indelyqty
              , nvl(l55.RCIPT_QTY , 0) as rciptqty
              , l48.uom
              , uomt.code_name uomnm
@@ -85,7 +86,7 @@
            <if test="sstatus !=null and sstatus !=''">
               and l47.reqst_stus = #{sstatus}
            </if>
-           
+           ORDER by l47.reqst_no desc
     </select> 
   
     <insert id="insStockMovement" parameterType="Map">
@@ -259,14 +260,14 @@
                ON (DELVRY_NO = #{delno} and ITM_CODE = #{itmcd} and REQST_NO = #{reqstno})
                WHEN MATCHED THEN
                      UPDATE SET
-                                A.DELVRY_QTY  = #{delyqty}
+                                A.DELVRY_QTY  = #{indelyqty}
                               , A.UPD_USER_ID = #{userId}
                               , A.UPD_DT      = SYSDATE
                WHEN NOT MATCHED THEN    
                      INSERT (  DELVRY_NO, DELVRY_NO_ITM
                              , ITM_CODE, ITM_NAME, DELVRY_QTY, REQST_NO, CRT_USER_ID, CRT_DT)
                      VALUES (  #{delno} , (select decode(count(DELVRY_NO_ITM) , 0 , 1 , max(DELVRY_NO_ITM +1)) from log0055d where DELVRY_NO = #{delno})
-                             , #{itmcd} , #{itmname}, #{delyqty} , #{reqstno} , ${userId} , SYSDATE)
+                             , #{itmcd} , #{itmname}, #{indelyqty} , #{reqstno} , ${userId} , SYSDATE)
     </insert>
     <delete id="deleteDeliveryStockMovementItm" parameterType="Map">
         delete from LOG0055D where DELVRY_NO = #{delyno} and ITM_CODE = #{itmcd}
@@ -370,10 +371,29 @@
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=MoveCANCLEDATA} )
              } 
      </select>
-     <select id="selectStockMovementSerial" parameterType="Map" resultType="Integer">
-     SELECT COUNT(1) 
-                FROM LOG0062M
-                 WHERE SERIAL_NO = #{serial}
+     <select id="selectStockMovementSerial" parameterType="Map" resultType="Map">
+	     select max(serial_no)  serial_no , max(matnr) stkcode , max(stkdesc) stkdesc , max(l62cnt) l62cnt , max(l61cnt) l61cnt , max(l63cnt) l63cnt
+		  from (  
+			SELECT serial_no , matnr , stk_desc stkdesc , count(1) l62cnt , 0 l61cnt , 0 l63cnt
+			  FROM LOG0062M l62 , 
+			       sys0026m s26 
+			 WHERE l62.matnr = s26.stk_code
+			    and l62.SERIAL_NO =  #{serial}
+			  group by serial_no , matnr , stk_desc
+			 union 
+			select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt     
+			  from log0061d l61 
+			  WHERE l61.SERIAL_NO =  #{serial}
+			  group by l61.serial_no
+			 union 
+			select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt  
+			  from log0063d l63 
+			  WHERE l63.SERIAL_NO =  #{serial}
+			  <if test='locid != null and locid !=""'>
+			   and l63.loc_id <![CDATA[<>]]> #{locid} 
+			  </if>
+			 group by l63.serial_no
+		 )
      </select>
      <insert id="insertMovementSerial" parameterType="Map">
      INSERT INTO LOG0061D (
