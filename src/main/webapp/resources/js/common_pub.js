@@ -133,7 +133,7 @@ $(document).on(
 
  /* 멀티셀렉트 플러그인 start */
  $('.multy_select').change(function() {
-	console.log($(this).val());
+	//console.log($(this).val());
 })
 
 .multipleSelect({
@@ -146,8 +146,6 @@ $(document).on(
 	"click", ".inb_menu li a", function(){
 	var thisLi=$(this).parent("li");
 	var thisHasChild=thisLi.children("ul").length;
-
-	
 
 	if(thisHasChild>0){
 		if(thisLi.children("ul").is(":visible")){
