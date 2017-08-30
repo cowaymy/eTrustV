@@ -58,13 +58,13 @@
 			       A.ATTACH ATTACH  ,
 			       CASE 
 			            WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN A.ACTUAL_CANCL_DT
-			       ELSE '1900-01-01 00:00:00' END ACTUAL_CANCL_DT  ,
+			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
 			       CASE 
 			            WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN A.APP_RETN_DT
-			       ELSE '1900-01-01 00:00:00' END APP_RETN_DT  ,
+			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END APP_RETN_DT  ,
 			       CASE 
 			            WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN A.CALL_RECALL_DT
-			       ELSE '1900-01-01 00:00:00' END CALL_RECALL_DT  ,
+			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CALL_RECALL_DT  ,
 			       CASE 
 			            WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
 			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CRT_DT  ,
@@ -73,7 +73,10 @@
 			       ELSE 0 END DSC_BRNCH_ID  ,
 			       CASE 
 			            WHEN ( A.UPD_DT IS NOT NULL ) THEN A.UPD_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END UPD_DT  
+			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END UPD_DT,
+                   A.TYPE_ID,
+                   A.DOC_ID,
+                   A.REF_ID  
 			    FROM ( SELECT V.REQ_ID  ,
 			              V.REQ_NO  ,
 			              V.ORD_ID  ,
@@ -126,7 +129,10 @@
 			              V.BANK_ACC ,
 			              V.ISS_BANK ,
 			              V.ACC_NAME ,
-			              V.ATTACH   
+			              V.ATTACH,
+			              V.TYPE_ID,
+			              V.DOC_ID,
+			              V.REF_ID   
 			       FROM SAL1007V V) A
 			 WHERE 1=1 
 			 <if test="typeIdList != null and typeIdList != ''">
@@ -171,13 +177,17 @@
              <if test="custIc != null and custIc != ''">
                  AND A.CUST_IC = #{custIc}
              </if>
-             <if test="startCrtDt != null and endCrtDt != null and startCrtDt != '' and endCrtDt != '' ">
-                AND CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{startCrtDt},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')                              
-                AND CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{endCrtDt},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+             <if test="startCrtDt != null and startCrtDt != '' ">
+                AND CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(#{startCrtDt}))
+             </if>
+             <if test="endCrtDt != null and endCrtDt != ''">                              
+                AND CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(#{endCrtDt}))
             </if>
-            <if test="startRecallDt != null and endRecallDt != null and startRecallDt != '' and endRecallDt != '' ">
-                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{startRecallDt},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')                              
-                AND CALL_RECALL_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{endRecallDt},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+            <if test="startRecallDt != null and startRecallDt != '' ">
+                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(#{startRecallDt}))
+            </if>
+            <if test="endRecallDt != null and endRecallDt != '' ">           
+                AND CALL_RECALL_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(#{endRecallDt}))
             </if>
     </select>
     
@@ -242,13 +252,13 @@
 			       A.ATTACH ,
 			       CASE 
 			             WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN A.ACTUAL_CANCL_DT
-			       ELSE '1900-01-01 00:00:00' END ACTUAL_CANCL_DT  ,
+			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
 			       CASE 
 			             WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN A.APP_RETN_DT
-			       ELSE '1900-01-01 00:00:00' END APP_RETN_DT  ,
+			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END APP_RETN_DT  ,
 			       CASE 
 			             WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN A.CALL_RECALL_DT
-			       ELSE '1900-01-01 00:00:00' END CALL_RECALL_DT  ,
+			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CALL_RECALL_DT  ,
 			       CASE 
 			             WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
 			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CRT_DT  ,
@@ -501,7 +511,7 @@
 				          ]]>
 				         LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Filter1.MOV_TO_LOC_ID
 				        WHERE  Filter1.TYPE_ID = #{typeId} 
-				          AND  Filter1.REF_ID = #{#refId}
+				          AND  Filter1.REF_ID = #{refId}
     </select>
 
     <select id="ctAssignmentInfo" parameterType="Map" resultType="egovMap">
@@ -633,6 +643,15 @@
 			 FROM ORG0001D
 		   WHERE STUS = 1
 			   AND MEM_TYPE = 3
+    </select>
+    
+    <select id="selectFeedback" parameterType="Map" resultType="egovMap">
+          SELECT RESN_ID ,
+		             CODE ,
+		             CODE || ' - ' || RESN_DESC CODE_RESN_DESC  
+		     FROM SYS0032M
+		   WHERE RESN_TYPE_ID = 537
+		       AND STUS_CODE_ID = 1
     </select>
     
 </mapper>
