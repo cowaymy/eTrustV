@@ -27,6 +27,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -353,14 +354,14 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveRemark", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveRemark(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveRemark(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
 		ReturnMessage message = new ReturnMessage();
 		EgovMap custBillMasters = billGroupService.selectCustBillMaster(params);
 		String custBillId = custBillMasters.get("custBillId") == null ? "0" : String.valueOf(custBillMasters.get("custBillId"));
 		
 		if(custBillMasters !=null && Integer.parseInt(custBillId) > 0){
-			String userId = "52386";
+			int userId = sessionVO.getUserId();
 			String salesOrderIDOld = "0";
 			String salesOrderIDNew = "0";
 			String contactIDOld = "0";
@@ -540,9 +541,9 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveNewAddr", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveNewAddr(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveNewAddr(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		params.put("userId", userId);
 		ReturnMessage message = new ReturnMessage();
@@ -695,9 +696,9 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveNewContPerson", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveNewContPerson(@RequestParam Map<String, Object> params, ModelMap model) {
-		String defaultDate = "1900-01-01";
-		String userId = "52386";
+	public ResponseEntity<ReturnMessage> saveNewContPerson(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		String defaultDate = "1901";
+		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		params.put("userId", userId);
 		ReturnMessage message = new ReturnMessage();
@@ -811,9 +812,9 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveNewReq", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveNewReq(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveNewReq(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		params.put("userId", userId);
 		 ReturnMessage message = new ReturnMessage();
@@ -947,9 +948,9 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveChangeBillType", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveChangeBillType(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveChangeBillType(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		params.put("userId", userId);
 		 ReturnMessage message = new ReturnMessage();
@@ -1072,9 +1073,9 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveApprRequest", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveApprRequest(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveApprRequest(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		params.put("userId", userId);
 		params.put("reqId", String.valueOf(params.get("reqId")));
@@ -1182,9 +1183,9 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveCancelRequest", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveCancelRequest(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveCancelRequest(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		params.put("userId", userId);
 		params.put("reqId", String.valueOf(params.get("reqId")));
@@ -1336,9 +1337,9 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveRemoveOrder", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveRemoveOrder(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveRemoveOrder(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
-		String userId = "52386";
+		int userId =sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		ReturnMessage message = new ReturnMessage();
 		
@@ -1569,10 +1570,10 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveChgMainOrd", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveChgMainOrd(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveChgMainOrd(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
 		params.put("defaultDate", defaultDate);
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		ReturnMessage message = new ReturnMessage();
 		
 		EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
@@ -1660,11 +1661,11 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveAddOrder", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveAddOrder(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveAddOrder(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		String defaultDate = "1900-01-01";
 		params.put("defaultDate", defaultDate);
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		String salesOrdNo = String.valueOf(params.get("salesOrdNo"));
 		String salesOrdId2 = String.valueOf(params.get("salesOrdId"));
 		String[]  salesOrdNoArr = salesOrdNo.split("\\:");
@@ -2006,10 +2007,10 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveAddNewGroup", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveAddNewGroup(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> saveAddNewGroup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
 		params.put("defaultDate", defaultDate);
-		String userId = "52386";
+		int userId = sessionVO.getUserId();
 		ReturnMessage message = new ReturnMessage();
 		
 		EgovMap selectSalesOrderMs = billGroupService.selectSalesOrderMs(params);
