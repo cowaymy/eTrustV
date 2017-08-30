@@ -5,6 +5,15 @@
 
 var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"}];
 
+function fn_transferSave(){
+	$.each($("#transferToBox option:selected"), function(key, value){
+		console.log($(this).val());
+		});
+	Common.ajax("POST", "/organization/insertTransfer.do",  $("#transferForm").serializeJSON(), function(result) {
+		
+	});
+}
+
 $(document).ready(function(){
     doDefCombo(memberTypeData, '' ,'memberType', 'S', '');   
     
@@ -92,8 +101,8 @@ $(document).ready(function(){
 </ul>
 </aside><!-- title_line end -->
 
+<form action="#" method="post" id="transferForm">
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -174,7 +183,7 @@ $(document).ready(function(){
 </dl>
 </aside><!-- link_btns_wrap end -->
 
-</form>
+
 </section><!-- search_table end -->
 
 <section class="transfer_wrap"><!-- transfer_wrap start -->
@@ -201,9 +210,9 @@ $(document).ready(function(){
 </section><!-- transfer_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_transferSave();">SAVE</a></p></li>
 </ul>
-
+</form>
 </section><!-- content end -->
 
 </html>
