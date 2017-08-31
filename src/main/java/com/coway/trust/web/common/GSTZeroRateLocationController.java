@@ -37,7 +37,26 @@ public class GSTZeroRateLocationController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	//GST Zero Rate Exportation
+	@RequestMapping(value = "/gstZeroRateExporation.do")
+	public String gstZeroRateExporationList(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
+		return "/common/gstZeroRateExportation";
+	}
+	
+	@RequestMapping(value = "/selectGSTExportationList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectGSTExportationList(@RequestParam Map<String, Object> params) 
+	{
+		LOGGER.debug("zreExptId : {}", params.get("zreExptId"));
 
+		List<EgovMap> selectGSTExportationList = gstZeroRateLocationService.selectGSTExportationList(params);
+		return ResponseEntity.ok(selectGSTExportationList);
+	}
+	
+	
+	
+	//GST Zero Rate Location
 	@RequestMapping(value = "/gstZeroRateLocation.do")
 	public String getStateCodeList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 		params.put("stusCodeId", 1);

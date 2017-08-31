@@ -18,7 +18,16 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 
 	@Autowired
 	private GSTZeroRateLocationMapper gstZeroRateLocationMapper;
-
+	
+	// GST Zero Rate Exportation
+	@Override
+	public List<EgovMap> selectGSTExportationList(Map<String, Object> params) {
+		return gstZeroRateLocationMapper.selectGSTExportationList(params);
+	}
+	
+	
+	
+   //GST Zero Rate Location
 	@Override
 	public List<EgovMap> getStateCodeList(Map<String, Object> params) {
 		return gstZeroRateLocationMapper.selectStateCodeList(params);

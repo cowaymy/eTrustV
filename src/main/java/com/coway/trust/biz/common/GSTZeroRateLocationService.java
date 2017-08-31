@@ -7,6 +7,10 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface GSTZeroRateLocationService {
+	//GST Zero Rate Exportation
+	List<EgovMap> selectGSTExportationList(Map<String, Object> params);
+	
+	//GST Zero Rate Location
 	List<EgovMap> getStateCodeList(Map<String, Object> params);
 
 	List<EgovMap> getSubAreaList(Map<String, Object> params);

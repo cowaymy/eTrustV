@@ -8,6 +8,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("gstZeroRateLocationMapper")
 public interface GSTZeroRateLocationMapper {
+	
+	//GST Zero Rate Exportation
+	List<EgovMap> selectGSTExportationList(Map<String, Object> params);
+	
+	
+	
+	//GST Zero Rate Location
 	List<EgovMap> selectStateCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectSubAreaList(Map<String, Object> params);
