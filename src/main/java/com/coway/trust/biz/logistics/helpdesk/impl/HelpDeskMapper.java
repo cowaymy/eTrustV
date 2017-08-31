@@ -8,19 +8,42 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("HelpDeskMapper")
 public interface HelpDeskMapper {
+	
+	List<EgovMap> selectReasonList(Map<String, Object> params);
 
 	List<EgovMap> selectDataChangeList(Map<String, Object> params);
 	
 	List<EgovMap> detailDataChangeList(Map<String, Object> params);
-/*	int selectSirimNo(Map<String, Object> params);
 	
-	int SirimMCreateSeq();
-	int SirimDCreateSeq();
-	int CrdPosCreateSeq();
-	String docNoCreateSeq();
+	List<EgovMap> CompulsoryList(Map<String, Object> params);
 	
-	void insertSirimM(Map<String, Object> params);
-	void insertSirimD(Map<String, Object> params);
-	void insertSirimCrd_Pos(Map<String, Object> params);*/
+	List<EgovMap> ChangeItemList(Map<String, Object> params);
+	
+	List<EgovMap> RespondList(Map<String, Object> params);
+	
+	void updateDcfRequestM(Map<String, Object> params);
+	
+	void insertDcfResponseLog(Map<String, Object> params);
+	
+	int respnsIdCreateSeq();
+	
+	List<EgovMap> selectDcfRequestM(Map<String, Object> params);
+	
+	List<EgovMap> selectDcfCompulsoryFieldList(Map<String, Object> params);
+	
+	List<EgovMap> getTrBookId(String CompulsoryField);
+	
+	List<EgovMap> getTrBookList(int TrBookId);
+	
+	List<EgovMap> getTrBookItem(int TrBookId);
+	
+	void updateTRBookM(Map<String, Object> params);
+	
+	void insertTrRecordCard(Map<String, Object> params);
+	
+	void updateTRBookD(Map<String, Object> params);
+	
+	int trRcordIdCreateSeq();
+	
 	
 }
