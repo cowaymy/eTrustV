@@ -113,13 +113,6 @@ var AuthColumnLayout =
                                 }
                             }
 
-                            if (item.menuLvl == "1")
-                            {
-                              //Common.alert("Can't Select UpperMenu In 'Lvl 1.' ");
-                              Common.alert("<spring:message code='sys.msg.cannot' arguments='Select UpperMenu ; Lvl 1.' htmlEscape='false' argumentSeparator=';'/>");
-                              return false;
-                            }
-
                             gSelMainRowIdx = rowIndex;
 
                             fnSearchAuthRoleMappingPopUp();
@@ -165,7 +158,7 @@ var AuthColumnLayout =
 	            dataField : "hidden",  //oldAuthCode
 	            headerText : "hidden",
 	            editable   : false,
-	            width : 0
+	            width : 70
         } , {     // PK , rowid 용 칼럼
 	            dataField : "rowId",
 	            dataType : "string",
@@ -660,7 +653,6 @@ function fnValidationCheck()
         var authCode  = udtList[i].authCode;
         var authName  = udtList[i].authName;
         var roleId    = udtList[i].roleId;
-        var hiddenCode  = udtList[i].hidden;
         var fromDt  = udtList[i].fromDt;
         var toDt    = udtList[i].toDt;  
 
@@ -671,19 +663,13 @@ function fnValidationCheck()
           break;
         }
 
-        if (hiddenCode == "" || hiddenCode.length == 0) 
+/*         if (hiddenCode == "" || hiddenCode.length == 0) 
         {
+        	 alert('hiddenCode');
           result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='hiddenCode' htmlEscape='false'/>");
           break;
-        }
-        
-        if (hiddenCode != authCode ) 
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
-          break;
-        }        
+        }   */
         
         if (fromDt == "" || fromDt.length == 0  ) 
         {
