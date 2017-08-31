@@ -206,7 +206,22 @@ function fnAddRow()
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) 
 {
-  console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
+  console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode );
+
+  var authCode =  AUIGrid.getCellValue(myGridID, gSelMainRowIdx, "authCode");
+
+  if (authCode != null)
+	{
+	  if (authCode == "INT" || authCode == "MGR" || authCode == "EXT")
+		{
+		//Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
+       Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; [INT ,MGR ,EXT] AuthCode' htmlEscape='false' argumentSeparator=';'/>");
+      // removeAllCancel();
+      AUIGrid.restoreSoftRows(myGridID, "all"); 
+       return false;
+		}
+	}
+  
   //$("#delCancel").show();
 }
 
