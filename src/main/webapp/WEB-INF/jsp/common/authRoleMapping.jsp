@@ -14,19 +14,13 @@
 }
 
 /* 커스텀 행 스타일 */
-.my-row-style {
-  font-weight:bold;
-  color:#1EAAAA !important;
-}
-
-/* 커스텀 셀 스타일 */
-.my-cell-style {
+.my-row-style { 
   font-weight:bold;
 }
 
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
-  color : #22741C;
+  background : #D2D2FF;
 }
 
 </style>
@@ -834,7 +828,6 @@ $(document).ready(function()
                   usePaging : true,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   useGroupingPanel : false,
-                  wordWrap :true,
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
@@ -845,10 +838,11 @@ $(document).ready(function()
                   softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
                    // row Styling 함수
                   rowStyleFunction : function(rowIndex, item) {
-                    if(item.roleLvl == gSelMstRolLvl) {
-                    	return "my-row-style";
+                    if(item.roleLvl != gSelMstRolLvl) {
+                    	//return "my-row-style";
+                    	return "mycustom-disable-color"; 
                     }
-                    return "";
+                    return "my-row-style";
                   } 
                   
                 };

@@ -605,8 +605,6 @@ $(document).ready(function()
                   usePaging : true,
                   // 한 화면에 출력되는 행 개수 20개로 지정
                   //pageRowCount : 20,
-                  // 워드랩 사용
-                  wordWrap : true,
                   useGroupingPanel : false,
                   selectionMode : "multipleRows",
                   showRowNumColumn : false, // 순번 칼럼 숨김

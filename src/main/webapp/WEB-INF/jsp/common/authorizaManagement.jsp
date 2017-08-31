@@ -447,7 +447,6 @@ $(document).ready(function()
 
     var options = {
                   usePaging : true,
-                  wordWrap :true,
                   useGroupingPanel : false,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   selectionMode : "multipleRows",
