@@ -158,7 +158,7 @@ var AuthColumnLayout =
 	            dataField : "hidden",  //oldAuthCode
 	            headerText : "hidden",
 	            editable   : false,
-	            width : 70
+	            width : 0
         } , {     // PK , rowid 용 칼럼
 	            dataField : "rowId",
 	            dataType : "string",
