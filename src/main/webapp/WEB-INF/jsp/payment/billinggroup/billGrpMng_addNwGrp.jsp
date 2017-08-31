@@ -95,51 +95,6 @@ var contPersonLayout = [
 		location.href = "initBillGroupManagement.do";
 	}
 	
-	function fn_addNewGroup(){
-		var custBillId = "157922";
-		var valid = true;
-        var message = "";
-        
-        if($("#post").is(":checked") == false && $("#sms").is(":checked") == false && $("#estm").is(":checked") == false ){
-            
-            valid = false;
-            message += "* Please select at least one billing type.<br />";
-        }else{
-        	if($("#sms").is(":checked") && custTypeId == "965"){
-                
-                valid = false;
-                message += "* SMS is not allow for company type customer.<br />";
-            }
-        }
-        
-        if($("#estm").is(":checked")){
-        	
-        	if($("#email").val() == ""){
-        		valid = false;
-        		message += "* Please key in the email address.<br />";
-        	}
-        }
-		
-        if($("#addrId").val() == ""){
-        	valid = false;
-        	message += "* Please select an address.<br />";
-        }
-        
-        if($("#contactId").val()  == ""){
-        	valid = false;
-        	message += "* Please select a contact person.<br />";
-        }
-        
-        if(valid){
-        	Common.ajax("GET","/payment/saveAddNewGroup.do", {"custBillId":custBillId}, function(result){
-                console.log(result);
-                
-            });
-        }else{
-        	Common.alert(message);
-        }
-	}
-	
 	function fn_estmEvent(){
 	    
 		if($("#estm").is(":checked")){
@@ -370,8 +325,6 @@ var contPersonLayout = [
                 
                 console.log(result);
                 Common.alert(result.message);
-                
-                
                 fn_disableControl();
                 
             });
