@@ -106,7 +106,7 @@ public class BillingGroupController {
         	selectBasicInfo = null;
         	getCustId = "";
         }else{
-        	getCustId = getCustId == null ? "" : getCustId;
+        	getCustId = getCustId != null ? getCustId : "";
         	Map<String, Object> custMap = new HashMap<String, Object>();
         	custMap.put("custBillId", getCustId);
         	custMap.put("defaultDate", defaultDate);
@@ -120,9 +120,9 @@ public class BillingGroupController {
             String custBillCntId = "";
             String custBillId = "";
             if(selectBasicInfo != null){
-            	custBillAddId = selectBasicInfo.get("custBillAddId") == null ? "" : String.valueOf(selectBasicInfo.get("custBillAddId"));
-                custBillCntId = selectBasicInfo.get("custBillCntId") == null ? "" : String.valueOf(selectBasicInfo.get("custBillCntId"));
-                custBillId = selectBasicInfo.get("custBillId") == null ? "" : String.valueOf(selectBasicInfo.get("custBillId"));
+            	custBillAddId = selectBasicInfo.get("custBillAddId") != null ? String.valueOf(selectBasicInfo.get("custBillAddId")) : ""  ;
+                custBillCntId = selectBasicInfo.get("custBillCntId") != null ? String.valueOf(selectBasicInfo.get("custBillCntId")) : "";
+                custBillId = selectBasicInfo.get("custBillId") != null ? String.valueOf(selectBasicInfo.get("custBillId")) : "";
             }
             
             mailMap.put("custBillAddId", custBillAddId);
@@ -286,7 +286,7 @@ public class BillingGroupController {
 		
 		EgovMap grpOrder = billGroupService.selectBillGrpOrder(params);
 		
-		String custBillAddId = selectBasicInfo.get("custBillAddId") == null ? "" : String.valueOf(selectBasicInfo.get("custBillAddId"));
+		String custBillAddId = selectBasicInfo.get("custBillAddId") != null ? String.valueOf(selectBasicInfo.get("custBillAddId")) : "" ;
 		params.put("custBillAddId", custBillAddId);
 		EgovMap selectMailInfo = billGroupService.selectMaillingInfo(params);
 		
@@ -324,7 +324,7 @@ public class BillingGroupController {
 		EgovMap grpOrder = billGroupService.selectBillGrpOrder(params);
 		
 		//계약정보 조회
-		String custBillCntId = selectBasicInfo.get("custBillCntId") == null ? "" : String.valueOf(selectBasicInfo.get("custBillCntId"));
+		String custBillCntId = selectBasicInfo.get("custBillCntId") != null ? String.valueOf(selectBasicInfo.get("custBillCntId")) : "";
 
 		params.put("custBillCntId", custBillCntId);
 		EgovMap selecContractInfo = billGroupService.selectContractInfo(params);
@@ -358,7 +358,7 @@ public class BillingGroupController {
 		
 		ReturnMessage message = new ReturnMessage();
 		EgovMap custBillMasters = billGroupService.selectCustBillMaster(params);
-		String custBillId = custBillMasters.get("custBillId") == null ? "0" : String.valueOf(custBillMasters.get("custBillId"));
+		String custBillId = custBillMasters.get("custBillId") != null ? String.valueOf(custBillMasters.get("custBillId")) : "0";
 		
 		if(custBillMasters !=null && Integer.parseInt(custBillId) > 0){
 			int userId = sessionVO.getUserId();
@@ -370,7 +370,7 @@ public class BillingGroupController {
 			String addressIDNew ="0"; 
 			String statusIDOld = "0";
 			String statusIDNew = "0";
-			String remarkOld = custBillMasters.get("custBillRem") == null ? "" : String.valueOf(custBillMasters.get("custBillRem"));
+			String remarkOld = custBillMasters.get("custBillRem") != null ? String.valueOf(custBillMasters.get("custBillRem")) : "";
 			String remarkNew = String.valueOf(params.get("remarkNew"));
 			String emailOld = "";
 			String emailNew = "";
@@ -550,8 +550,8 @@ public class BillingGroupController {
 		
 		//베이직인포 조회.
 		EgovMap selectBasicInfo = billGroupService.selectBasicInfo(params);
-		String custBillAddIdOld = selectBasicInfo.get("custBillAddId") == null ? "" : String.valueOf(selectBasicInfo.get("custBillAddId"));
-		String custBillId = selectBasicInfo.get("custBillId") == null ? "" : String.valueOf(selectBasicInfo.get("custBillId"));
+		String custBillAddIdOld = selectBasicInfo.get("custBillAddId") != null ? String.valueOf(selectBasicInfo.get("custBillAddId")) : "" ;
+		String custBillId = selectBasicInfo.get("custBillId") != null ?  String.valueOf(selectBasicInfo.get("custBillId")) : "";
 		
 		if(selectBasicInfo != null && Integer.parseInt(custBillId) > 0){
 			
@@ -705,8 +705,8 @@ public class BillingGroupController {
 		
 		//master 조회.
 		EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
-		String custBillCntId = selectCustBillMaster.get("custBillCntId") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillCntId"));
-		String custBillId = selectCustBillMaster.get("custBillId") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillId"));
+		String custBillCntId = selectCustBillMaster.get("custBillCntId") != null ?  String.valueOf(selectCustBillMaster.get("custBillCntId")) : "" ;
+		String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "" ;
 		
 		if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
 			
@@ -822,11 +822,11 @@ public class BillingGroupController {
 		//master 조회.
 		List<EgovMap> reqMaster = billGroupService.selectReqMaster(params);
 		EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
-		String custBillEmail = selectCustBillMaster.get("custBillEmail") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillEmail"));
-		String custBillIsEstm = selectCustBillMaster.get("custBillIsEstm") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillIsEstm"));
-		String custBillIsSms = selectCustBillMaster.get("custBillIsSms") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillIsSms"));
-		String custBillIsPost = selectCustBillMaster.get("custBillIsPost") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillIsPost"));
-		String custBillId = selectCustBillMaster.get("custBillId") == null ? "0" : String.valueOf(selectCustBillMaster.get("custBillId"));
+		String custBillEmail = selectCustBillMaster.get("custBillEmail") != null ? String.valueOf(selectCustBillMaster.get("custBillEmail")) : "";
+		String custBillIsEstm = selectCustBillMaster.get("custBillIsEstm") != null ? String.valueOf(selectCustBillMaster.get("custBillIsEstm")) : "";
+		String custBillIsSms = selectCustBillMaster.get("custBillIsSms") != null ? String.valueOf(selectCustBillMaster.get("custBillIsSms")) : "";
+		String custBillIsPost = selectCustBillMaster.get("custBillIsPost") != null ? String.valueOf(selectCustBillMaster.get("custBillIsPost")) : "";
+		String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "0";
 
 		//인서트 셋팅 시작
 		String salesOrderIDOld = "0";
@@ -893,19 +893,7 @@ public class BillingGroupController {
 			
 			//히스토리테이블 인서트
 			billGroupService.insHistory(insHisMap);
-			
-			
-			Map<String, Object> docMap = new HashMap<String, Object>();
-			params.put("docNo", "86");
-			EgovMap selectDocNo = billGroupService.selectDocNo(params);
-			String docNoId = selectDocNo.get("docNoId") == null ? "" : String.valueOf(selectDocNo.get("docNoId"));
-			String docNo = selectDocNo.get("docNo") == null ? "" : String.valueOf(selectDocNo.get("docNo"));
-			docMap.put("docNo", docNo);
-			docMap.put("docNoId", docNoId);
-			//DOC테이블 업데이트
-			billGroupService.updDocNo(docMap);
 
-			
 			Map<String, Object> estmMap = new HashMap<String, Object>();
 			estmMap.put("stusCodeId", "44");
 			estmMap.put("custBillId", String.valueOf(params.get("custBillId")));
@@ -957,10 +945,10 @@ public class BillingGroupController {
 		 
 		//master 조회.
 		EgovMap selectBasicInfo = billGroupService.selectBasicInfo(params);
-		String custBillIsEstm = selectBasicInfo.get("custBillIsEstm") == null ? "" : String.valueOf(selectBasicInfo.get("custBillIsEstm"));
-		String custBillIsSms = selectBasicInfo.get("custBillIsSms") == null ? "" : String.valueOf(selectBasicInfo.get("custBillIsSms"));
-		String custBillIsPost = selectBasicInfo.get("custBillIsPost") == null ? "" : String.valueOf(selectBasicInfo.get("custBillIsPost"));
-		String custBillId = selectBasicInfo.get("custBillId") == null ? "0" : String.valueOf(selectBasicInfo.get("custBillId"));
+		String custBillIsEstm = selectBasicInfo.get("custBillIsEstm") != null ? String.valueOf(selectBasicInfo.get("custBillIsEstm")) : "";
+		String custBillIsSms = selectBasicInfo.get("custBillIsSms") != null ?  String.valueOf(selectBasicInfo.get("custBillIsSms")) : "" ;
+		String custBillIsPost = selectBasicInfo.get("custBillIsPost") != null ? String.valueOf(selectBasicInfo.get("custBillIsPost")) : "";
+		String custBillId = selectBasicInfo.get("custBillId") != null ? String.valueOf(selectBasicInfo.get("custBillId")) : "0" ;
 		
 		if(selectBasicInfo != null && Integer.parseInt(custBillId) > 0){
 			
@@ -1083,14 +1071,14 @@ public class BillingGroupController {
 		
 		//master 조회.
 		EgovMap selectEStatementReqs = billGroupService.selectEStatementReqs(params);
-		String reqId = selectEStatementReqs.get("reqId") == null ? "0" : String.valueOf(selectEStatementReqs.get("reqId"));
-		String email = selectEStatementReqs.get("email") == null ? "" : String.valueOf(selectEStatementReqs.get("email"));
+		String reqId = selectEStatementReqs.get("reqId") != null ? String.valueOf(selectEStatementReqs.get("reqId")) : "0";
+		String email = selectEStatementReqs.get("email") != null ? String.valueOf(selectEStatementReqs.get("email")) : "";
 		
 		if(selectEStatementReqs != null && Integer.parseInt(reqId) > 0){
 			EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
-			String custBillId = selectCustBillMaster.get("custBillId") == null ? "0" : String.valueOf(selectCustBillMaster.get("custBillId"));
-			String custBillIsEstm = selectCustBillMaster.get("custBillIsEstm") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillIsEstm"));
-			String custBillEmail = selectCustBillMaster.get("custBillEmail") == null ? "" : String.valueOf(selectCustBillMaster.get("custBillEmail"));
+			String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "0";
+			String custBillIsEstm = selectCustBillMaster.get("custBillIsEstm") != null ? String.valueOf(selectCustBillMaster.get("custBillIsEstm")) : "";
+			String custBillEmail = selectCustBillMaster.get("custBillEmail") != null ? String.valueOf(selectCustBillMaster.get("custBillEmail")) : "";
 			
 			if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
 				
@@ -1168,7 +1156,7 @@ public class BillingGroupController {
 			
 		}else{
 			message.setCode(AppConstants.FAIL);
-	    	message.setMessage("<b>Failed to approve this E-Statement request. Please try again later.</b>");//TODO 실패메시지로 수정해야됨
+	    	message.setMessage("<b>Failed to approve this E-Statement request. Please try again later.</b>");
 		}
 
         
@@ -1193,8 +1181,8 @@ public class BillingGroupController {
 		
 		//master 조회.
 		EgovMap selectEStatementReqs = billGroupService.selectEStatementReqs(params);
-		String reqId = selectEStatementReqs.get("reqId") == null ? "0" : String.valueOf(selectEStatementReqs.get("reqId"));
-		String email = selectEStatementReqs.get("email") == null ? "" : String.valueOf(selectEStatementReqs.get("email"));
+		String reqId = selectEStatementReqs.get("reqId") != null ? String.valueOf(selectEStatementReqs.get("reqId")) : "0";
+		String email = selectEStatementReqs.get("email") != null ? String.valueOf(selectEStatementReqs.get("email")) : "";
 		
 		if(selectEStatementReqs != null && Integer.parseInt(reqId) > 0){
 			
@@ -1344,12 +1332,12 @@ public class BillingGroupController {
 		ReturnMessage message = new ReturnMessage();
 		
 		EgovMap selectSalesOrderMs = billGroupService.selectSalesOrderMs(params);
-		String salesOrdId = selectSalesOrderMs.get("salesOrdId") == null ? "0" : String.valueOf(selectSalesOrderMs.get("salesOrdId"));
+		String salesOrdId = selectSalesOrderMs.get("salesOrdId") != null ? String.valueOf(selectSalesOrderMs.get("salesOrdId")) : "0";
 		
 		if(selectSalesOrderMs != null && Integer.parseInt(salesOrdId) > 0){
 			
 			EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
-			String custBillId = selectSalesOrderMs.get("custBillId") == null ? "0" : String.valueOf(selectSalesOrderMs.get("custBillId"));
+			String custBillId = selectSalesOrderMs.get("custBillId") != null ? String.valueOf(selectSalesOrderMs.get("custBillId")) : "0";
 			
 			if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
 				
@@ -1362,7 +1350,7 @@ public class BillingGroupController {
                 replaceOrdMap.put("salesOrdId", String.valueOf(params.get("salesOrdId")));
                 EgovMap replcaceOrder_1 = billGroupService.selectReplaceOrder(replaceOrdMap);
                 if(replcaceOrder_1 != null && Integer.parseInt(String.valueOf(replcaceOrder_1.get("salesOrdId"))) > 0){
-                	String replaceSalesOrdId = replcaceOrder_1.get("salesOrdId") == null ? "0" : String.valueOf(replcaceOrder_1.get("salesOrdId"));
+                	String replaceSalesOrdId = replcaceOrder_1.get("salesOrdId") != null ? String.valueOf(replcaceOrder_1.get("salesOrdId")) : "0";
                 	changeOrderId = replaceSalesOrdId;
                 	
                 }else{
@@ -1373,7 +1361,7 @@ public class BillingGroupController {
                 	replaceOrd2Map.put("salesOrdId", String.valueOf(params.get("salesOrdId")));
                     EgovMap replcaceOrder_2 = billGroupService.selectReplaceOrder(replaceOrd2Map);
                     if(replcaceOrder_2 != null && Integer.parseInt(String.valueOf(replcaceOrder_2.get("salesOrdId"))) > 0){
-                    	String replaceSalesOrdId2 = replcaceOrder_2.get("salesOrdId") == null ? "0" : String.valueOf(replcaceOrder_2.get("salesOrdId"));
+                    	String replaceSalesOrdId2 = replcaceOrder_2.get("salesOrdId") != null ? String.valueOf(replcaceOrder_2.get("salesOrdId")) : "0";
                     	changeOrderId = replaceSalesOrdId2;
                     }else{
                     	
@@ -1384,7 +1372,7 @@ public class BillingGroupController {
                         EgovMap replcaceOrder_3 = billGroupService.selectReplaceOrder(replaceOrd3Map);
                         
                         if(replcaceOrder_3 != null && Integer.parseInt(String.valueOf(replaceOrd3Map.get("salesOrdId"))) > 0){
-                        	String replaceSalesOrdId3 = replaceOrd3Map.get("salesOrdId") == null ? "0" : String.valueOf(replaceOrd3Map.get("salesOrdId"));
+                        	String replaceSalesOrdId3 = replaceOrd3Map.get("salesOrdId") != null ? String.valueOf(replaceOrd3Map.get("salesOrdId")) : "0";
                         	changeOrderId = replaceSalesOrdId3;
                         }
                     }
@@ -1577,7 +1565,7 @@ public class BillingGroupController {
 		ReturnMessage message = new ReturnMessage();
 		
 		EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
-		String custBillId = selectCustBillMaster.get("custBillId") == null ? "0" : String.valueOf(selectCustBillMaster.get("custBillId"));
+		String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "0" ;
 		
 		if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
 			
@@ -2246,14 +2234,7 @@ public class BillingGroupController {
 					}
 					
 				}
-			
-			/*Map<String, Object> docMap = new HashMap<String, Object>();
-			docMap.put("docNo", "24");
-			EgovMap selectDocNo = billGroupService.selectDocNo(docMap);
-			String docNoId = selectDocNo.get("docNoId") == null ? "" : String.valueOf(selectDocNo.get("docNoId"));
-			docMap.put("docNoId", docNoId);
-			//DOC테이블 업데이트
-			billGroupService.updDocNo(docMap);*/
+
 
 			Map<String, Object> insBillGrpMap = new HashMap<String, Object>();
 			insBillGrpMap.put("custBillSoId", String.valueOf(params.get("salesOrdId")));
@@ -2286,14 +2267,6 @@ public class BillingGroupController {
 			
 			String chkEstm = params.get("estm") != null ? String.valueOf(params.get("estm")) : "0";
 			if(chkEstm.equals("1")  && !String.valueOf(params.get("email")).equals("") ){
-				
-				/*Map<String, Object> docMap2 = new HashMap<String, Object>();
-				docMap2.put("docNo", "86");
-				EgovMap selectDocNo2 = billGroupService.selectDocNo(docMap2);
-				String docNoId2 = selectDocNo2.get("docNoId") == null ? "" : String.valueOf(selectDocNo2.get("docNoId"));
-				docMap2.put("docNoId", docNoId2);
-				//DOC테이블 업데이트
-				billGroupService.updDocNo(docMap2);*/
 				
 				Map<String, Object> estmMap = new HashMap<String, Object>();
 				estmMap.put("stusCodeId", "44");
