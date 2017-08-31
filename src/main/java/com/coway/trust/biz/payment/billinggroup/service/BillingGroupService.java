@@ -2,6 +2,7 @@ package com.coway.trust.biz.payment.billinggroup.service;
 
 import java.util.List;
 import java.util.Map;
+import com.coway.trust.cmmn.model.SessionVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface BillingGroupService{
 
@@ -265,4 +266,11 @@ public interface BillingGroupService{
 	 * @return
 	 */
     String docNoCreateSeq();
+    
+    /**
+	 * saveAddNewGroup
+	 * @param params
+	 * @return
+	 */
+    String saveAddNewGroup(Map<String, Object> params, SessionVO sessionVO);
 }
