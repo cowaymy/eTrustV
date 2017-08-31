@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,6 @@ import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
-import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -697,7 +697,7 @@ public class BillingGroupController {
 	 */
 	@RequestMapping(value = "/saveNewContPerson", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveNewContPerson(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		String defaultDate = "1901";
+		String defaultDate = "1900-01-01";
 		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
 		params.put("userId", userId);
@@ -2006,8 +2006,8 @@ public class BillingGroupController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/saveAddNewGroup", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> saveAddNewGroup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	@RequestMapping(value = "/saveAddNewGroup", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAddNewGroup(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String defaultDate = "1900-01-01";
 		params.put("defaultDate", defaultDate);
 		int userId = sessionVO.getUserId();
@@ -2016,7 +2016,7 @@ public class BillingGroupController {
 		EgovMap selectSalesOrderMs = billGroupService.selectSalesOrderMs(params);
 		
 		if(selectSalesOrderMs != null && Integer.parseInt(String.valueOf(selectSalesOrderMs.get("salesOrdId"))) > 0){
-			
+			params.put("custBillId", String.valueOf(selectSalesOrderMs.get("custBillId")));
 			EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
 			
 			if(selectCustBillMaster != null && Integer.parseInt(String.valueOf(selectCustBillMaster.get("custBillId"))) > 0){
@@ -2081,7 +2081,7 @@ public class BillingGroupController {
 					//Get first complete order
 					Map<String, Object> replaceOrdMap = new HashMap<String, Object>();
 	                replaceOrdMap.put("replaceOrd", "Y");
-	                replaceOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
+	                replaceOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
 	                replaceOrdMap.put("salesOrdId", String.valueOf(selectSalesOrderMs.get("salesOrdId")));
 					EgovMap replcaceOrder_1 = billGroupService.selectReplaceOrder(replaceOrdMap);
 					
@@ -2093,7 +2093,7 @@ public class BillingGroupController {
 						
 						Map<String, Object> replaceOrd2Map = new HashMap<String, Object>();
 						replaceOrd2Map.put("replaceOrd2", "Y");
-						replaceOrd2Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
+						replaceOrd2Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
 						replaceOrd2Map.put("salesOrdId", String.valueOf(selectSalesOrderMs.get("salesOrdId")));
 						EgovMap replcaceOrder_2 = billGroupService.selectReplaceOrder(replaceOrd2Map);
 						
@@ -2105,7 +2105,7 @@ public class BillingGroupController {
 							
 							Map<String, Object> replaceOrd3Map = new HashMap<String, Object>();
 							replaceOrd3Map.put("replaceOrd3", "Y");
-							replaceOrd3Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
+							replaceOrd3Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
 							replaceOrd3Map.put("salesOrdId", String.valueOf(selectSalesOrderMs.get("salesOrdId")));
 							EgovMap replcaceOrder_3 = billGroupService.selectReplaceOrder(replaceOrd3Map);
 							
@@ -2235,8 +2235,9 @@ public class BillingGroupController {
 						//인서트 셋팅  끝
 						
 						Map<String, Object> updChangeMap = new HashMap<String, Object>();
-						updChangeMap.put("newGrpFlag", "Y");
+						updChangeMap.put("newGrpFlag2", "Y");
 	        			updChangeMap.put("custBillStusId", "8");
+	        			updChangeMap.put("userId", userId);
 	        			updChangeMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
 	        			billGroupService.updCustMaster(updChangeMap);
 						
@@ -2246,49 +2247,57 @@ public class BillingGroupController {
 					
 				}
 			
-			Map<String, Object> docMap = new HashMap<String, Object>();
+			/*Map<String, Object> docMap = new HashMap<String, Object>();
 			docMap.put("docNo", "24");
 			EgovMap selectDocNo = billGroupService.selectDocNo(docMap);
 			String docNoId = selectDocNo.get("docNoId") == null ? "" : String.valueOf(selectDocNo.get("docNoId"));
 			docMap.put("docNoId", docNoId);
 			//DOC테이블 업데이트
-			billGroupService.updDocNo(docMap);
+			billGroupService.updDocNo(docMap);*/
 
 			Map<String, Object> insBillGrpMap = new HashMap<String, Object>();
-			insBillGrpMap.put("custBillSoId", String.valueOf(params.get("custBillSoId")));
-			insBillGrpMap.put("custBillCustId", String.valueOf(params.get("custBillCustId")));
-			insBillGrpMap.put("custBillCntId", String.valueOf(params.get("custBillCntId")));
-			insBillGrpMap.put("custBillAddId", String.valueOf(params.get("custBillAddId")));
-			insBillGrpMap.put("custBillStusId", String.valueOf(params.get("custBillStusId")));
-			insBillGrpMap.put("custBillRem", String.valueOf(params.get("custBillRem")));
+			insBillGrpMap.put("custBillSoId", String.valueOf(params.get("salesOrdId")));
+			insBillGrpMap.put("custBillCustId", String.valueOf(params.get("custTypeId")));
+			insBillGrpMap.put("custBillCntId", String.valueOf(params.get("custCntcId")));
+			insBillGrpMap.put("custBillAddId", String.valueOf(params.get("custAddId")));
+			insBillGrpMap.put("custBillStusId", "1");
+			insBillGrpMap.put("custBillRem", String.valueOf(params.get("custBillRemark")));
 			insBillGrpMap.put("userId", userId);
 			insBillGrpMap.put("custBillPayTrm", "0");
 			insBillGrpMap.put("custBillInchgMemId", "0");
 			insBillGrpMap.put("custBillEmail", String.valueOf(params.get("email")));
-			insBillGrpMap.put("custBillIsEstm", String.valueOf(params.get("estm")));
-			insBillGrpMap.put("custBillIsPost", String.valueOf(params.get("post")));
+			insBillGrpMap.put("custBillIsEstm", "0");
+			insBillGrpMap.put("custBillIsSms", params.get("sms") != null ? String.valueOf(params.get("sms")) : "0");
+			insBillGrpMap.put("custBillIsPost", params.get("post") != null ? String.valueOf(params.get("post")) : "0");
+			
+			int custBillIdSeq = billGroupService.getSAL0024DSEQ();
+			String grpNo = billGroupService.docNoCreateSeq();
+			insBillGrpMap.put("custBillIdSeq", custBillIdSeq);
+			insBillGrpMap.put("grpNo", grpNo);
 			billGroupService.insBillGrpMaster(insBillGrpMap);
 			
 			Map<String, Object> updSalesMap = new HashMap<String, Object>();
+			updSalesMap.put("userId", userId);
 			updSalesMap.put("salesOrdId", String.valueOf(selectSalesOrderMs.get("salesOrdId")));
-			updSalesMap.put("custBillId", String.valueOf(params.get("custBillId")));
+			updSalesMap.put("custBillId", custBillIdSeq);
 			updSalesMap.put("newGrpFlag", "Y");
 			//SALES ORDER MASTER UPDATE
 			billGroupService.updSalesOrderMaster(updSalesMap);
 			
-			if(String.valueOf(params.get("estm")).equals("1")  && !String.valueOf(params.get("email")).equals("") ){
+			String chkEstm = params.get("estm") != null ? String.valueOf(params.get("estm")) : "0";
+			if(chkEstm.equals("1")  && !String.valueOf(params.get("email")).equals("") ){
 				
-				Map<String, Object> docMap2 = new HashMap<String, Object>();
+				/*Map<String, Object> docMap2 = new HashMap<String, Object>();
 				docMap2.put("docNo", "86");
 				EgovMap selectDocNo2 = billGroupService.selectDocNo(docMap2);
 				String docNoId2 = selectDocNo2.get("docNoId") == null ? "" : String.valueOf(selectDocNo2.get("docNoId"));
-				docMap.put("docNoId", docNoId2);
+				docMap2.put("docNoId", docNoId2);
 				//DOC테이블 업데이트
-				billGroupService.updDocNo(docMap);
+				billGroupService.updDocNo(docMap2);*/
 				
 				Map<String, Object> estmMap = new HashMap<String, Object>();
 				estmMap.put("stusCodeId", "44");
-				estmMap.put("custBillId", String.valueOf(params.get("custBillId")));
+				estmMap.put("custBillId", custBillIdSeq);
 				estmMap.put("email", String.valueOf(params.get("email")));
 				estmMap.put("cnfmCode", CommonUtils.getRandomNumber(10));
 				estmMap.put("userId", userId);
@@ -2302,13 +2311,57 @@ public class BillingGroupController {
 			
 			message.setCode(AppConstants.SUCCESS);
 	    	message.setMessage("New billing group created.<br /> " +
-                        "Billing Group Number : " +  "<br />");
+                        "Billing Group Number : " + grpNo + "<br />");
 			
 		}else{
 			message.setCode(AppConstants.FAIL);
 	    	message.setMessage("Failed to create new billing group. Please try again later.");
 		}
 
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
+	 * selectLoadOrderInfo 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectLoadOrderInfo", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectLoadOrderInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		String resultMessage = "";
+		String defaultDate = "1900-01-01";
+		params.put("defaultDate", defaultDate);
+		
+		EgovMap selectOrderInfo = billGroupService.selectGetOrder(params);
+		EgovMap selectMailInfo = new EgovMap();
+        EgovMap selecContractInfo = new EgovMap();
+		
+		if(selectOrderInfo != null){
+			
+			String custAddId = selectOrderInfo.get("custAddId")  != null ? String.valueOf(selectOrderInfo.get("custAddId")) : "" ;
+			String custCntcId = selectOrderInfo.get("custCntcId")  != null ? String.valueOf(selectOrderInfo.get("custCntcId")) : "" ;
+			
+			params.put("custBillAddId", custAddId);
+			params.put("custBillCntId", custCntcId);
+			selectMailInfo = billGroupService.selectMaillingInfo (params);
+			selecContractInfo = billGroupService.selectContractInfo(params);
+		}
+		
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("orderInfo", selectOrderInfo);
+        resultMap.put("maillingInfo", selectMailInfo);
+        resultMap.put("contactInfo", selecContractInfo);
+
+        
+        // 조회 결과 리턴.
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(resultMap);
+    	message.setMessage(resultMessage);
 		
 		return ResponseEntity.ok(message);
 	}
