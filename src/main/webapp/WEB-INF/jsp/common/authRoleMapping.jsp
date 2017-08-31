@@ -15,13 +15,13 @@
 
 /* 커스텀 행 스타일 */
 .my-row-style {
-font-weight:red;
+  font-weight:bold;
+  color:#1EAAAA;
 }
 
 /* 커스텀 셀 스타일 */
 .my-cell-style {
-  font-weight:bold;
-  color:#22741C;
+  font-weight:red;
 }
 
 /* 커스컴 disable 스타일*/
@@ -106,7 +106,7 @@ var AuthColumnLayout =
                             if(AUIGrid.isAddedById(AuthGridID, AUIGrid.getCellValue(AuthGridID, rowIndex, "rowId") ) == false 
                                     && (AUIGrid.getCellValue(AuthGridID, rowIndex, "rowId") != "PkAddNew")  )  //수정모드  
                             {
-                                if (gSelMstRolLvl != item.roleLvl)
+                                if ( gSelMstRolLvl != "1" && gSelMstRolLvl != item.roleLvl)
                                 {
                                   Common.alert("<spring:message code='sys.roleAuthMapping.grid1.chkLevel' />");
                                   return false;
@@ -309,7 +309,7 @@ function auiCellEditignHandler(event)
 
       if(AUIGrid.isAddedById(AuthGridID, event.item.rowId) == false 
               && (event.item.rowId != "PkAddNew")   //수정모드
-              && (  gSelMstRolLvl  != gSelAuthRolLvl ) ) // 같지 않으면 다 상위레벨.
+              && (gSelMstRolLvl  != gSelAuthRolLvl ) ) // 같지 않으면 다 상위레벨.
               {
     	            Common.alert("<spring:message code='sys.roleAuthMapping.grid1.chkLevel' />");
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "all"] );
@@ -857,7 +857,7 @@ $(document).ready(function()
                    // row Styling 함수
                   rowStyleFunction : function(rowIndex, item) {
                     if(item.roleLvl == gSelMstRolLvl) {
-                    	return "my-cell-style";
+                    	return "my-row-style";
                     }
                     return "";
                   } 
