@@ -124,9 +124,8 @@ public class ReportController {
 	}
 
 	@RequestMapping(value = "/view-submit.do", method = RequestMethod.POST)
-	@ResponseBody
 	public void viewPostSubmit(HttpServletRequest request, HttpServletResponse response,
-								   @RequestBody Map<String, Object> params) throws IOException {
+			@RequestParam Map<String, Object> params) throws IOException {
 		this.view(request, response, params);
 	}
 
