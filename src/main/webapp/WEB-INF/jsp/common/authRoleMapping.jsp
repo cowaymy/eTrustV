@@ -175,11 +175,10 @@ function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, data
 {
   if(item.roleLvl != gSelMstRolLvl)
     return "mycustom-disable-color";
-  else if(item.color == "Yellow") {
-    return "mycustom-disable-color";
+  else {
+    return "my-row-style";
   }
-  return null;
-};
+}
 
 // Ajax
 
