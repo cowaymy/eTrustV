@@ -9,7 +9,7 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(popOrderGridID, "cellDoubleClick", function(event) {
-            fn_setData(AUIGrid.getCellValue(popOrderGridID , event.rowIndex , "ordNo"))
+            fn_setData(AUIGrid.getCellValue(popOrderGridID , event.rowIndex , "ordNo"), AUIGrid.getCellValue(popOrderGridID , event.rowIndex , "ordId"))
             fn_createEvent('custPopCloseBtn', 'click');
         });
         
@@ -24,13 +24,13 @@
         
     });
     
-	function fn_setData(ordNo) {
+	function fn_setData(ordNo , ordId) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_SALE_ORD') {
 	        fn_loadTrialNo(ordNo);
 	    }
-//	    else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD') {
-//	        fn_loadInstallAddr(custAddId);
-//	    }
+	    else if($('#callPrgm').val() == 'BILLMNG_ADD_NEW_GROUP') {
+	        fn_orderInfo(ordNo, ordId);
+	    }
 	}
 	
     function createAUIGrid() {
