@@ -223,34 +223,82 @@ var contPersonLayout = [
     
     function loadOrderInfo(ordNo, ordId){
     	
-    	Common.ajax("GET","/payment/selectLoadOrderInfo.do", {"salesOrdNo" : ordNo , "salesOrdId" : ordId}, function(result){
+    	Common.ajax("GET","/payment/selectLoadOrderInfo.do", {"salesOrdId" : ordId}, function(result){
             console.log(result);
             
-            if(result.data.orderInfo.appTypeId == "66" ||  (result.data.orderInfo.appTypeId != "66" && result.data.orderInfo.srvCntrctId > 0)){
+            if(result.data.orderInfo != null){
             	
-            	$('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
-            	$('#custTypeId').val(result.data.orderInfo.custId);//히든값
-            	$('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
-                $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
+            	if(result.data.orderInfo.appTypeId == "66" ||  (result.data.orderInfo.appTypeId != "66" && result.data.orderInfo.srvCntrctId > 0)){
+                    
+                    $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
+                    $('#custTypeId').val(result.data.orderInfo.custId);//히든값
+                    $('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
+                    $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
 
-            	//BASIC INFO
-            	$('#orderNo').val(result.data.orderInfo.salesOrdNo);
-                $('#customerId').text(result.data.orderInfo.custId);
-                $('#nric').text(result.data.orderInfo.nric);
-                $('#customerName').text(result.data.orderInfo.name);
-                
-                //MAIL INFO
-                $('#maillingAddr').text(result.data.maillingInfo.addr);
-                
-                //CONTACT INFO
-                $('#contractPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
-                $('#mobileNumber').text(result.data.contactInfo.telM1);
-                $('#officeNumber').text();
-                $('#residenceNumber').text(result.data.contactInfo.telR);
-                $('#faxNumber').text(result.data.contactInfo.telf);
+                    //BASIC INFO
+                    $('#orderNo').val(result.data.orderInfo.salesOrdNo);
+                    $('#customerId').text(result.data.orderInfo.custId);
+                    $('#nric').text(result.data.orderInfo.nric);
+                    $('#customerName').text(result.data.orderInfo.name);
+                    
+                    //MAIL INFO
+                    $('#maillingAddr').text(result.data.maillingInfo.addr);
+                    
+                    //CONTACT INFO
+                    $('#contractPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
+                    $('#mobileNumber').text(result.data.contactInfo.telM1);
+                    $('#officeNumber').text();
+                    $('#residenceNumber').text(result.data.contactInfo.telR);
+                    $('#faxNumber').text(result.data.contactInfo.telf);
+                } 
+            	
+            }else{
+                Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
+            } 
+            
+            
+        });
+    }
+    
+    function onblurOrderInfo(){
+    	
+    	var inputOrdNo = $('#orderNo').val();
+    	
+    	if($.trim($('#orderNo').val()) == ""){
+    		return;
+    	}
+    	
+        Common.ajax("GET","/payment/selectLoadOrderInfo.do", {"salesOrdNo" : inputOrdNo}, function(result){
+            console.log(result);
+            
+            if(result.data.orderInfo != null){
+            	if(result.data.orderInfo.appTypeId == "66" ||  (result.data.orderInfo.appTypeId != "66" && result.data.orderInfo.srvCntrctId > 0)){
+                    
+                    $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
+                    $('#custTypeId').val(result.data.orderInfo.custId);//히든값
+                    $('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
+                    $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
+
+                    //BASIC INFO
+                    $('#orderNo').val(result.data.orderInfo.salesOrdNo);
+                    $('#customerId').text(result.data.orderInfo.custId);
+                    $('#nric').text(result.data.orderInfo.nric);
+                    $('#customerName').text(result.data.orderInfo.name);
+                    
+                    //MAIL INFO
+                    $('#maillingAddr').text(result.data.maillingInfo.addr);
+                    
+                    //CONTACT INFO
+                    $('#contractPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
+                    $('#mobileNumber').text(result.data.contactInfo.telM1);
+                    $('#officeNumber').text();
+                    $('#residenceNumber').text(result.data.contactInfo.telR);
+                    $('#faxNumber').text(result.data.contactInfo.telf);
+                }
             }else{
             	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
-            }	
+            }
+            
         });
     }
     
@@ -313,11 +361,9 @@ var contPersonLayout = [
         if(valid){
         	
         	Common.ajax("POST","/payment/saveAddNewGroup.do", $("#newGroupForm").serializeJSON(), function(result){
-                
                 console.log(result);
                 Common.alert(result.message);
                 fn_disableControl();
-                
             });
         	
         }else{
@@ -370,14 +416,14 @@ var contPersonLayout = [
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+<!-- 				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
 				        <li><p class="link_btn"><a href="#">menu2</a></p></li>
 				        <li><p class="link_btn"><a href="#">menu3</a></p></li>
 				        <li><p class="link_btn"><a href="#">menu4</a></p></li>
 				        <li><p class="link_btn"><a href="#">menu5</a></p></li>
 				        <li><p class="link_btn"><a href="#">menu6</a></p></li>
 				        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+				        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
 			         </ul>
                     <ul class="btns">
 				        <li><p class="link_btn type2"><a href="javascript:fn_goBillGrp();">Manage Existing Group</a></p></li>
@@ -412,7 +458,7 @@ var contPersonLayout = [
 <tr>
     <th scope="row">Main Order</th>
     <td id="" colspan="">
-        <input type="text" name="orderNo" id="orderNo" class="w100p">
+        <input type="text" name="orderNo" id="orderNo" class="w100p" onblur="onblurOrderInfo();">
     </td>
     <td colspan="2">
         <a id="trialNoBtn" name="trialNoBtn" href="javascript:fn_orderSearch();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
