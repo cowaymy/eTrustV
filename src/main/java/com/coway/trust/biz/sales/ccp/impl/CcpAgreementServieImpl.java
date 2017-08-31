@@ -143,7 +143,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     	String docNo = "";
     	docNo = ccpAgreementMapper.getDocNo(formMap); //docNo
     	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!           생성된 DOCNO : " , docNo);
+    	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!           생성된 DOCNO : " + docNo);
     	LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     	formMap.put("docNo", docNo);
 		
@@ -156,6 +156,17 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		}else{
 			formMap.put("rcivDt", SalesConstants.DEFAULT_DATE);
 		}
+		String govAgreeIdSeq = "";
+		String govMsgIdSeq = "";
+		String govConsignSeq = "";
+		
+		String govAgItmIdSeq = "";
+		String govCallEntryIdSeq = "";
+		String govCallResultIdSeq = "";
+		
+		govAgreeIdSeq = ccpAgreementMapper.crtSeqSAL0033D();
+		formMap.put("govAgreeIdSeq", govAgreeIdSeq);
+		
 		
 		ccpAgreementMapper.insertGovAgreementInfo(formMap);
 		LOGGER.info("######################################################");
@@ -163,6 +174,10 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		LOGGER.info("######################################################");
 		
 		/* ##################   insert 2 ######################*/
+		
+		govMsgIdSeq = ccpAgreementMapper.crtSeqSAL0036D();
+		formMap.put("govMsgIdSeq", govMsgIdSeq);
+		
 		ccpAgreementMapper.insertGovAgreementMessLog(formMap);
 		LOGGER.info("######################################################");
 		LOGGER.info("################### Insert 2 Complete ###################");
@@ -171,6 +186,9 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		if(SalesConstants.AGREEMENT_TRUE.equals(formMap.get("consignment"))){
 			
+			govConsignSeq = ccpAgreementMapper.crtSeqSAL0035D();
+			
+			formMap.put("govConsignSeq", govConsignSeq);
 			formMap.put("agCnsgnSendDt", SalesConstants.DEFAULT_DATE);
 			if(SalesConstants.CONSIGNMENT_HAND.equals(formMap.get("inputCourier"))){  
 				formMap.put("consignBtHand", '1'); 
@@ -198,7 +216,11 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			insMap.put("docNo",  docNo);
 			insMap.put("agreementAgmRemark", formMap.get("agreementAgmRemark"));
 			
+			govAgItmIdSeq = ccpAgreementMapper.crtSeqSAL0034D();
+			insMap.put("govAgItmIdSeq", govAgItmIdSeq);
+			insMap.put("govAgreeIdSeq", govAgreeIdSeq);
 			//SUB
+			
 			ccpAgreementMapper.insertGovAgreementSub(insMap);
 			
 			LOGGER.info("######################################################");
@@ -206,6 +228,9 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			LOGGER.info("######################################################");
 			
 			//CALL ENTRY
+			
+			govCallEntryIdSeq = ccpAgreementMapper.crtSeqCCR0006D();
+			insMap.put("govCallEntryIdSeq", govCallEntryIdSeq);
 			ccpAgreementMapper.insertCallEntry(insMap); //result ID
 			
 			LOGGER.info("######################################################");
@@ -214,6 +239,8 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			
 			//CALL RESULT
 			
+			govCallResultIdSeq = ccpAgreementMapper.crtSeqCCR0007D();
+			insMap.put("govCallResultIdSeq", govCallResultIdSeq);
 			ccpAgreementMapper.insertCallResult(insMap); //CallResultID;
 			
 			LOGGER.info("######################################################");
@@ -221,7 +248,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			LOGGER.info("######################################################");
 			
 			//Update Result Id
-			ccpAgreementMapper.updateResultId();
+			ccpAgreementMapper.updateResultId(insMap);
 			
 			LOGGER.info("######################################################");
 			LOGGER.info("################### NO.["+  idx +"]  Update Complete(Call Result) ###################");
@@ -234,17 +261,14 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		
 		/*################# UPDATE 2 #######################*/
-		ccpAgreementMapper.updatePreUpdUserId();
+		ccpAgreementMapper.updatePreUpdUserId(formMap);
 		
 		
 		//Return
-		String msgId = "";
-		msgId = ccpAgreementMapper.getReturnMsgId();
-		//docNo
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>(); 
 		
-		returnMap.put("msgId", msgId);
+		returnMap.put("msgId", govMsgIdSeq);
 		returnMap.put("docNo", docNo);
 		
 		return returnMap;
@@ -281,7 +305,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		long time = System.currentTimeMillis(); 
 
-		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 		String str = dayTime.format(new Date(time));
 

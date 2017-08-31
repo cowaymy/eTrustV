@@ -1790,13 +1790,13 @@
 		                        #{addrDtl},
 		                        1 ,
 		                        #{addrRem},
-		                        52366 , <!-- SESSION -->
+		                        #{userId} , <!-- SESSION -->
 		                        SYSDATE,
 		                        #{streetId},
 		                        '',
 		                        '',
 		                        '',
-		                        52366 , <!-- SESSION -->
+		                        #{userId} , <!-- SESSION -->
 		                        SYSDATE
 		                        )
     </insert>
@@ -1843,12 +1843,12 @@
                                            #{cntcEmail},
                                            1 ,
                                            SYSDATE ,
-                                           52366 , <!-- SESSION -->
+                                           #{userId} , <!-- SESSION -->
                                            0 ,
                                            #{cntcDept},
                                            0 ,
                                            SYSDATE ,
-                                           52366 , <!--SESSION  -->
+                                           #{userId} , <!--SESSION  -->
                                            #{cntcExpno} )
     </insert>
     
@@ -1883,14 +1883,14 @@
                                     #{bankCustAccBankBrnch},
                                     #{bankCustAccRem},
                                     1 ,
-                                    52366 , <!-- SESSION -->
+                                     #{userId} , <!-- SESSION -->
                                     SYSDATE,
                                     '' ,
                                     0 ,
                                     0 ,
                                     0,
                                     0,
-                                    52366 , <!-- SESSION -->
+                                    #{userId} , <!-- SESSION -->
                                     SYSDATE
                                     )
     </insert>
@@ -1926,13 +1926,13 @@
                                     #{custCrcBankId},
                                     1 ,
                                     #{custCrcRem},
-                                    52366 , <!-- SESSION -->
+                                     #{userId} , <!-- SESSION -->
                                     SYSDATE,
                                     #{custCrcExpr},
                                     0 ,
                                     0 ,
                                     0 ,
-                                    52366 , <!-- SESSION -->
+                                     #{userId} , <!-- SESSION -->
                                     SYSDATE,
                                     #{cardTypeId})
   </insert>

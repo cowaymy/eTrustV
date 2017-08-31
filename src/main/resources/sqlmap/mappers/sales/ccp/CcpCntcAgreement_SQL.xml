@@ -553,6 +553,32 @@
         SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
     </select>
     
+    <!--###### CREATE SEQUENCE  START######-->
+    <select id="crtSeqSAL0033D"  resultType="java.lang.String">
+        SELECT SAL0033D_GOV_AG_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="crtSeqSAL0036D" resultType="java.lang.String">
+        SELECT SAL0036D_GOV_AG_MSG_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="crtSeqSAL0035D" resultType="java.lang.String">
+        SELECT SAL0035D_AG_CNSGN_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="crtSeqSAL0034D" resultType="java.lang.String"> <!--LOOP  -->
+        SELECT SAL0034D_GOV_AG_ITM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="crtSeqCCR0006D" resultType="java.lang.String"> <!--LOOP  -->
+        SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="crtSeqCCR0007D" resultType="java.lang.String"> <!--LOOP  -->
+        SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    <!-- ###### CREATE SEQUENCE END ######-->
+    
     <insert id="insertGovAgreementInfo" parameterType="Map" >
 					INSERT INTO SAL0033D
 								  ( GOV_AG_ID,
@@ -578,7 +604,7 @@
 								    GOV_AG_LAST_SEND_DT,
 								    GOV_AG_LAST_RCIV_DT )
 					  VALUES ( 
-					           (SELECT NVL(MAX(GOV_AG_ID)+1, 1) FROM SAL0033D), 
+					           #{govAgreeIdSeq}, 
 					           #{salesOrdId},
 					          #{docNo},
 					           #{govAgMemId},
@@ -637,8 +663,8 @@
 							    GOV_AG_MSG_ATTACH_FILE_NAME
 							    )
 				  VALUES ( 
-							          (SELECT NVL(MAX(GOV_AG_MSG_ID)+1, 1) FROM SAL0036D),
-							          (SELECT MAX(GOV_AG_ID) FROM SAL0033D),
+							          #{govMsgIdSeq},
+							          #{govAgreeIdSeq}, 
 							          #{agreementMsg}, 
 							          #{inputProgress}, 
 							           5, 
@@ -668,8 +694,8 @@
 							    AG_CNSGN_SEND_DT, 
 							    CNSGN_USER_ID_HAND,
 							    CNSGN_MTH_ID )
-			  VALUES ( (SELECT NVL(MAX(AG_CNSGN_ID)+1, 1)  FROM SAL0035D ),
-				            (SELECT NVL(MAX(GOV_AG_ID)+1, 1) FROM SAL0033D), 
+			  VALUES ( #{govConsignSeq}  ,
+				            #{govAgreeIdSeq}, 
 				           1,
 				           0,
 				           NVL(#{inputConsignmentNo} , ' '),
@@ -702,8 +728,8 @@
 				    GOV_AG_ITM_RENT_RESULT,
 				    GOV_AG_ITM_INST_RESULT )
 				  VALUES ( 
-				           (SELECT NVL(MAX(GOV_AG_ITM_ID) +1, 1)  FROM SAL0034D),
-				           (SELECT MAX(GOV_AG_ID) FROM SAL0033D), 
+				           #{govAgItmIdSeq},
+				           #{govAgreeIdSeq}, 
 				          #{docNo},
 				           #{salesOrdId},
 				           1,
@@ -733,7 +759,7 @@
 								    UPD_DT,
 								    UPD_USER_ID, 
 								    ORI_CALL_DT )
-				  VALUES ( (SELECT NVL(MAX(CALL_ENTRY_ID)+1, 1) FROM CCR0006D),
+				  VALUES ( #{govCallEntryIdSeq},
 				           #{salesOrdId}, 
 				           1233, 
 				           1, 
@@ -766,8 +792,8 @@
 								    CALL_ROS_AMT, 
 								    CALL_SMS,
 								    CALL_SMS_REM )
-				  VALUES (    (SELECT NVL(MAX(CALL_RESULT_ID) +1, 1)  FROM CCR0007D ),
-						           (SELECT MAX(CALL_ENTRY_ID) FROM CCR0006D), 
+				  VALUES (    #{govCallResultIdSeq},
+						           #{govCallEntryIdSeq},
 						           1, 
 						           SYSDATE,
 						           SYSDATE,
@@ -783,28 +809,22 @@
 						           '' )
     </insert>
     
-    <update id="updateResultId" >
+    <update id="updateResultId" parameterType="Map">
 			UPDATE 
 			    CCR0006D
 			SET 
-			    RESULT_ID = (SELECT MAX(CALL_RESULT_ID) FROM CCR0007D )
+			    RESULT_ID = #{govCallResultIdSeq}
 			WHERE  
-			     CALL_ENTRY_ID = (SELECT MAX(CALL_ENTRY_ID) FROM CCR0006D)
+			     CALL_ENTRY_ID = #{govCallEntryIdSeq}
     </update>
     
-    <update id="updatePreUpdUserId">
+    <update id="updatePreUpdUserId" parameterType="Map">
 			UPDATE 
 			    SAL0033D
 			SET 
-			    GOV_AG_PRE_UPD_USER_ID = (SELECT MAX(GOV_AG_MSG_ID) FROM SAL0036D)
+			    GOV_AG_PRE_UPD_USER_ID = #{govMsgIdSeq}
 			WHERE  
-			    GOV_AG_ID =  (SELECT MAX(GOV_AG_ID) FROM SAL0033D)
+			    GOV_AG_ID =   #{govAgreeIdSeq}
     </update>
     
-    <select id="getReturnMsgId"  resultType="java.lang.String">
-         SELECT 
-            MAX(GOV_AG_MSG_ID) 
-         FROM 
-            SAL0036D
-    </select>
 </mapper>

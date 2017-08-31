@@ -29,6 +29,20 @@ public interface CcpAgreementMapper {
 	
 	List<EgovMap> selectOrderJsonList(Map<String, Object> params) throws Exception;
 	
+	/*###### SEQUENCE ######*/
+	
+	String crtSeqSAL0033D();//
+	
+	String crtSeqSAL0036D();
+	
+	String crtSeqSAL0035D();
+	
+	String crtSeqSAL0034D();
+	
+	String crtSeqCCR0006D();
+	
+	String crtSeqCCR0007D();
+	
 	/* #### Insert Start #####*/
 	
 	String getDocNo(Map<String, Object> params)throws Exception;
@@ -47,11 +61,10 @@ public interface CcpAgreementMapper {
 	
 	void insertCallResult(Map<String, Object> params) throws Exception;
 	
-	void updateResultId() throws Exception;
+	void updateResultId(Map<String, Object> params) throws Exception;
 	
-	void updatePreUpdUserId() throws Exception;
+	void updatePreUpdUserId(Map<String, Object> params) throws Exception;
 	
-	String getReturnMsgId() throws Exception;
 	/* #### Insert End #####*/
 	
 }

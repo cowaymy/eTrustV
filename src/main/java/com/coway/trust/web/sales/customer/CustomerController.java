@@ -31,6 +31,7 @@ import com.coway.trust.biz.sales.customer.CustomerVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -45,6 +46,9 @@ public class CustomerController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 
 	@RequestMapping(value = "/selectIssueBank.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectIssueBank(@RequestParam Map<String, Object> params, Model model) {
@@ -1292,7 +1296,8 @@ public class CustomerController {
 		@RequestMapping(value = "/insertCustomerAddressInfoAf.do")
 		public ResponseEntity<ReturnMessage> insertCustomerAddressInfoAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
-			
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
 			customerService.insertCustomerAddressInfoAf(params	);
 			
 			// 결과 만들기 예.
@@ -1312,7 +1317,8 @@ public class CustomerController {
 		@RequestMapping(value = "/insertCustomerContactAddAf.do")
 		public ResponseEntity<ReturnMessage> insertCustomerContactAddAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
-			
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
 			customerService.insertCustomerContactAddAf(params	);
 			
 			// 결과 만들기 예.
@@ -1368,6 +1374,9 @@ public class CustomerController {
 		@RequestMapping(value = "/insertCustomerBankAddAf.do")
 		public ResponseEntity<ReturnMessage> insertCustomerBankAddAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
+			
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
 			customerService.insertCustomerBankAddAf(params	);
 			
 			// 결과 만들기 예.
@@ -1388,6 +1397,8 @@ public class CustomerController {
 		@RequestMapping(value = "/insertCustomerCardAddAf.do")
 		public ResponseEntity<ReturnMessage> insertCustomerCardAddAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 			
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
 			customerService.insertCustomerCardAddAf(params	);
 			
 			// 결과 만들기 예.
