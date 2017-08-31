@@ -908,20 +908,17 @@ public class BillingGroupController {
 			billGroupService.insEstmReq(estmMap);
 			
 			message.setCode(AppConstants.SUCCESS);
-			message.setMessage("<b>E-Statement request has sent out.	</b>");
+			message.setMessage("E-Statement request has sent out.");
 		}else{
 			message.setCode(AppConstants.FAIL);
-			message.setMessage("<b>E-Statement request has sent out.	</b>"); //TODO 메세지 실패메시지로 수정해야됨
+			message.setMessage("Failed to request E-Statement. Please try again later.");
 		}
 		
 		
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        
         resultMap.put("masterInfo", selectCustBillMaster);
         
         // 조회 결과 리턴.
-       
-    	
     	message.setData(resultMap);
     	
 		
@@ -929,7 +926,7 @@ public class BillingGroupController {
 	}
 	
 	/**
-	 * saveNewReq 저장
+	 * saveChangeBillType 저장
 	 * @param 
 	 * @param params
 	 * @param model

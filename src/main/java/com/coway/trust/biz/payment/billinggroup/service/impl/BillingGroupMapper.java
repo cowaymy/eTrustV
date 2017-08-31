@@ -282,5 +282,5 @@ public interface BillingGroupMapper {
 	 * @param params
 	 * @return
 	 */
-	String docNoCreateSeq();
+	String selectDocNo24Seq();
 }

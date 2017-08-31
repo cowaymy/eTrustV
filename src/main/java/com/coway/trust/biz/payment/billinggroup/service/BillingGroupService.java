@@ -261,13 +261,6 @@ public interface BillingGroupService{
     int getSAL0024DSEQ();
     
     /**
-	 * docNoCreateSeq
-	 * @param params
-	 * @return
-	 */
-    String docNoCreateSeq();
-    
-    /**
 	 * saveAddNewGroup
 	 * @param params
 	 * @return

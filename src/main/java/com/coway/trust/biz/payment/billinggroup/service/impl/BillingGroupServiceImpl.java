@@ -407,16 +407,6 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 	public int getSAL0024DSEQ() {
 		return billingGroupMapper.getSAL0024DSEQ();
 	}
-	
-	/**
-	 * docNoCreateSeq
-	 * @param params
-	 * @return
-	 */
-	@Override
-	public String docNoCreateSeq() {
-		return billingGroupMapper.docNoCreateSeq();
-	}
 
 	@Override
 	public String saveAddNewGroup(Map<String, Object> params, SessionVO sessionVO) {
@@ -677,7 +667,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			insBillGrpMap.put("custBillIsPost", params.get("post") != null ? String.valueOf(params.get("post")) : "0");
 			
 			int custBillIdSeq = billingGroupMapper.getSAL0024DSEQ();
-			grpNo = billingGroupMapper.docNoCreateSeq();
+			grpNo = billingGroupMapper.selectDocNo24Seq();
 			insBillGrpMap.put("custBillIdSeq", custBillIdSeq);
 			insBillGrpMap.put("grpNo", grpNo);
 			billingGroupMapper.insBillGrpMaster(insBillGrpMap);
@@ -710,6 +700,5 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		return grpNo;
 	}
-	
-	
+
 }
