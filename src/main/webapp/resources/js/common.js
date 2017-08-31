@@ -426,23 +426,30 @@ var Common = {
 
         option = $.extend(option, _options);
 
-        var reportViewUrl = "/report/view.do"; // report를 보기 위한 uri
-
+        var submitReportViewUrl = "/report/view-submit.do";
         if (option.isProcedure) {
-            reportViewUrl = "/report/view-proc.do"; // procedure로 구성된 report를 보기 위한 uri
+            submitReportViewUrl = "/report/view-proc-submit.do";
         }
 
         var viewType = $("#viewType").val();
 
         if (viewType == "WINDOW") {
-            Common.popupWin(_formId, reportViewUrl, option);
+            Common.popupWin(_formId, submitReportViewUrl, option);
         }else if (viewType.match("^MAIL_")) {
+
+            var reportViewUrl = "/report/view.do"; // report를 보기 위한 uri
+
+            if (option.isProcedure) {
+                reportViewUrl = "/report/view-proc.do"; // procedure로 구성된 report를 보기 위한 uri
+            }
+
             Common.ajax("POST", reportViewUrl, $("#" + _formId).serializeJSON(), function (data) {
                 Common.setMsg("<spring:message code='sys.msg.success'/>");
             });
         } else {
+
             $("#" + _formId).attr({
-                action: getContextPath() + reportViewUrl,
+                action: getContextPath() + submitReportViewUrl,
                 method: "POST"
             }).submit();
         }

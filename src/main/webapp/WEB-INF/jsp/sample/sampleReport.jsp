@@ -84,7 +84,7 @@
 			CVS : CVS 다운로드
 			MAIL_PDF, MAIL_EXCEL, MAIL_CVS:  이메일 전송
 			-->
-			viewType(필수 : viewType) : <input type="text" id="viewType" name="viewType" value="MAIL_EXCEL" /><br /><br />
+			viewType(필수 : viewType) : <input type="text" id="viewType" name="viewType" value="WINDOW" /><br /><br />
 <!-- ### 필수 파라미터 end ### -->
 
 			<!-- 다운로드될 파일명 지정 -->

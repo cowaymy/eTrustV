@@ -74,6 +74,12 @@ public class ReportController {
 		this.viewProcedure(request, response, params);
 	}
 
+	@RequestMapping(value = "/view-proc-submit.do", method = RequestMethod.POST)
+	public void viewProcPostSubmit(HttpServletRequest request, HttpServletResponse response,
+							@RequestParam Map<String, Object> params) {
+		this.viewProcedure(request, response, params);
+	}
+
 	@RequestMapping(value = "/view-proc.do", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity viewProcPost(HttpServletRequest request, HttpServletResponse response,
@@ -114,6 +120,13 @@ public class ReportController {
 	@RequestMapping(value = "/view.do", method = RequestMethod.GET)
 	public void viewGet(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, Object> params) throws IOException {
+		this.view(request, response, params);
+	}
+
+	@RequestMapping(value = "/view-submit.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void viewPostSubmit(HttpServletRequest request, HttpServletResponse response,
+								   @RequestBody Map<String, Object> params) throws IOException {
 		this.view(request, response, params);
 	}
 
