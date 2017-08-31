@@ -1074,7 +1074,6 @@ public class BillingGroupController {
 		if(selectEStatementReqs != null && Integer.parseInt(reqId) > 0){
 			EgovMap selectCustBillMaster = billGroupService.selectCustBillMaster(params);
 			String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "0";
-			String custBillIsEstm = selectCustBillMaster.get("custBillIsEstm") != null ? String.valueOf(selectCustBillMaster.get("custBillIsEstm")) : "";
 			String custBillEmail = selectCustBillMaster.get("custBillEmail") != null ? String.valueOf(selectCustBillMaster.get("custBillEmail")) : "";
 			
 			if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
