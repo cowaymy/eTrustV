@@ -109,8 +109,10 @@ public class ReportController {
 			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 			Fields fields = clientDoc.getDataDefinition().getParameterFields();
 			this.setReportParameter(params, paramController, fields);
-			this.viewHandle(request, response, viewType, clientDoc,
-					this.getCrystalReportViewer(clientDoc.getReportSource()), params);
+			{
+				this.viewHandle(request, response, viewType, clientDoc,
+						this.getCrystalReportViewer(clientDoc.getReportSource()), params);
+			}
 		} catch (Exception ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);
