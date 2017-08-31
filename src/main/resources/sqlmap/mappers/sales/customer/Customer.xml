@@ -1761,6 +1761,7 @@
 				   FROM SYS0064M
 				 WHERE ISO = 'MY'
 				     AND UPPER(STREET) LIKE UPPER('%'|| #{searchStreet} || '%')
+				     AND USE_FLAG <> 'N'
            ]]>
     </select>
     
