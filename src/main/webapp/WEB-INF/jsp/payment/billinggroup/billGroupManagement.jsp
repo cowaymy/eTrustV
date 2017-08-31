@@ -483,6 +483,7 @@ var addOrderLayout = [
     }
     
     function fn_billGrpHistory(){
+    	
     	AUIGrid.destroy(billGrpHisGridID); 
     	$("#viewHistorytPopup").show();
     	
@@ -496,11 +497,13 @@ var addOrderLayout = [
     }
     
     function fn_hisClose() {
+    	
         $('#viewHistorytPopup').hide();
         searchList();
     }
     
     function fn_changeMainOrder(){
+    	
         AUIGrid.destroy(changeOrderGridID); 
         $("#changeMainOrderPop").show();
         
@@ -526,6 +529,7 @@ var addOrderLayout = [
     }
     
     function fn_changeOrderClose() {
+    	
         $('#changeMainOrderPop').hide();
         $('#change_reasonUpd').val("");
         $("#salesOrdNo").val("");
@@ -534,9 +538,10 @@ var addOrderLayout = [
     }
     
     function fn_updRemark(){
+    	
         $("#updRemPop").show();
-        
         var custBillId = $("#custBillId").val();
+        
         Common.ajax("GET","/payment/selectUpdRemark.do", {"custBillId":custBillId}, function(result){
             console.log(result);
             $('#updRem_grpNo').text(result.data.basicInfo.custBillGrpNo);
@@ -1202,6 +1207,7 @@ var addOrderLayout = [
                 $("#apprReq_creBy").text(result.data.estmReqHisView.crtUserId);
                 
             });
+            
     	}else{
     		
     		$("#reqId").val(val);
