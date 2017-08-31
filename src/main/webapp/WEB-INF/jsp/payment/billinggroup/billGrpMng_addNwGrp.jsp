@@ -131,8 +131,6 @@ var contPersonLayout = [
 	            });
 	        });
 	    }
-	    
-	    
 	}
 	
 	function fn_addNewAddr() {
@@ -143,7 +141,6 @@ var contPersonLayout = [
 	    }else{
 	    	Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', {"custId" : custTypeId,  "callParam" : "billGroup"}, null , true ,'_editDiv2New');
 	    }
-	    
 	}
 	
 	function fn_addNewConPerson(){
@@ -155,7 +152,6 @@ var contPersonLayout = [
 	    }else{
 	    	Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId":custTypeId, "callParam" : "billGroup"}, null , true ,'_editDiv3New');
 	    }
-	    
 	}
 	
 	function fn_selectContPerson(){
@@ -191,7 +187,6 @@ var contPersonLayout = [
 	            });
 	        });
 	    }
-	    
 	}
 	
 	function fn_custAddrClose(){
@@ -229,9 +224,7 @@ var contPersonLayout = [
     function loadOrderInfo(ordNo, ordId){
     	
     	Common.ajax("GET","/payment/selectLoadOrderInfo.do", {"salesOrdNo" : ordNo , "salesOrdId" : ordId}, function(result){
-    		
             console.log(result);
-            
             
             if(result.data.orderInfo.appTypeId == "66" ||  (result.data.orderInfo.appTypeId != "66" && result.data.orderInfo.srvCntrctId > 0)){
             	
@@ -258,9 +251,7 @@ var contPersonLayout = [
             }else{
             	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
             }	
-            
         });
-    	
     }
     
     function fn_createEvent(objId, eventType){
@@ -332,7 +323,6 @@ var contPersonLayout = [
         }else{
         	Common.alert(message);
         }
-    	
     }
     
     function fn_disableControl(){
