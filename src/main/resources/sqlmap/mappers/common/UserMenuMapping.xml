@@ -4,9 +4,12 @@
 
 <select id="selectUserList" parameterType="Map" resultType="egovMap">
 	SELECT USR.USER_ID AS user_id ,
-	           USR.USER_NAME AS user_name/* ,
+	           USR.USER_NAME AS user_name,
+	           USR.USER_ID as row_id /* PK, AUIGrid key row setting */
+	           /* ,
 	           USERROLE.ROLE_ID AS role_id ,
-	           ROLE.ROLE_code AS role_name*/
+	           ROLE.ROLE_code AS role_name
+	           */
 	   FROM SYS0047M USR
 	           INNER JOIN SYS0038M STATUS
 	               ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID

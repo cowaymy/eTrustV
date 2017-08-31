@@ -8,20 +8,20 @@
 	         , a.mymenu_name
 	         , a.mymenu_order
 	         , a.use_yn
-	         , a.user_id||a.mymenu_code as row_id /* PK, AUIGrid key row setting */  
+	         , a.user_id||a.mymenu_code as row_id /* PK, AUIGrid key row setting */
 	   FROM SYS0059M a
 	 WHERE a.user_id = #{userId}
 	     <if test="useYn != null and useYn !=''">
 	     AND a.use_yn = #{useYn}
 	     </if>
 	     <if test="mymenuCode != null and mymenuCode !=''">
-	     AND (UPPER(a.mymenu_code) LIKE  UPPER(#{mymenuCode}) || '%' OR 
+	     AND (UPPER(a.mymenu_code) LIKE  UPPER(#{mymenuCode}) || '%' OR
 	             UPPER(a.mymenu_name) LIKE '%' || UPPER(#{mymenuCode}) || '%')
-	     </if>        
+	     </if>
 </select>
 
 <insert id="insertMyMenu" parameterType="Map">
-	INSERT INTO sys0059m 
+	INSERT INTO sys0059m
 	(
 	    user_id,
 	    mymenu_code,
@@ -32,8 +32,8 @@
 	    crt_dt,
 	    upd_user_id,
 	    upd_dt
-	) 
-	VALUES 
+	)
+	VALUES
 	(
 	    #{userId},
 	    #{mymenuCode},
@@ -55,19 +55,19 @@
 	         , a.upd_user_id = #{userId}
 	         , a.upd_dt = SYSDATE
 	 WHERE a.user_id = #{userId}
-	     AND a.mymenu_code = #{mymenuCode}    
+	     AND a.mymenu_code = #{mymenuCode}
 </update>
 
 <delete id="deleteMyMenu" parameterType="Map">
-	DELETE 
+	DELETE
 	  FROM SYS0059M a
-	WHERE a.user_id
+	WHERE a.user_id = #{userId}
 	    AND a.mymenu_code = #{mymenuCode}
 </delete>
 
 <select id="selectMyMenuProgrmList" parameterType="Map" resultType="egovMap">
 	SELECT a.user_id
-	         , a.mymenu_code 
+	         , a.mymenu_code
 	         , d.mymenu_name
 	         , a.menu_code
 	         , b.menu_name
@@ -92,7 +92,7 @@
 </select>
 
 <insert id="insertMyMenuProgrm" parameterType="Map">
-	INSERT INTO SYS0060D 
+	INSERT INTO SYS0060D
 	(
 	   user_id
 	   ,mymenu_code
@@ -102,8 +102,8 @@
 	   ,crt_dt
 	   ,upd_user_id
 	   ,upd_dt
-	) 
-	VALUES 
+	)
+	VALUES
 	(
 	   #{userId}
 	   ,#{mymenuCode}
@@ -118,7 +118,7 @@
 
 <update id="updateMyMenuProgrm" parameterType="Map">
 	UPDATE SYS0060D a
-	     SET a.pgm_ord = #{pgmOrd} 
+	     SET a.pgm_ord = #{pgmOrd}
 	         , a.upd_user_id = #{userId}
 	         , a.upd_dt = SYSDATE
 	 WHERE a.user_id = #{userId}
@@ -127,7 +127,7 @@
 </update>
 
 <delete id="deleteMyMenuProgrm" parameterType="Map">
-	DELETE 
+	DELETE
 	  FROM SYS0060D a
 	 WHERE 1=1
 	     AND a.user_id = #{userId}
@@ -139,16 +139,16 @@
 
 <select id="selectMenuPop" parameterType="Map" resultType="egovMap">
 	SELECT a.menu_code
-	         , a.menu_name     
+	         , a.menu_name
 	         , b.pgm_code
 	         , b.pgm_name
 	  FROM SYS0051M a
 	         , SYS0050M b
-	 WHERE a.pgm_code = b.pgm_code	    	     
+	 WHERE a.pgm_code = b.pgm_code
 	     <if test="popMenuCode != null and popMenuCode !=''">
-	     AND (UPPER(a.menu_code) LIKE  UPPER(#{popMenuCode}) || '%'  OR 
+	     AND (UPPER(a.menu_code) LIKE  UPPER(#{popMenuCode}) || '%'  OR
                 UPPER(a.menu_name) LIKE '%' || UPPER(#{popMenuCode}) || '%')
 	     </if>
 </select>
-   
+
 </mapper>

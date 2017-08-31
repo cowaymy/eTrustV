@@ -4,7 +4,8 @@
 
 <select id="selectAuthList" parameterType="Map" resultType="egovMap">
 	SELECT z.auth_code ,
-	           z.auth_name
+	           z.auth_name ,
+	           z.auth_code as row_id /* PK, AUIGrid key row setting */
 	   FROM ( SELECT a.code as auth_code,
 	 		                a.code_name as auth_name
 	 		        FROM SYS0013M a
