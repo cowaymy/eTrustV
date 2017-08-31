@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.helpdesk.HelpDeskService;
 import com.coway.trust.biz.logistics.sirim.SirimReceiveService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -52,24 +54,38 @@ public class DataChangeFormController {
 	}
 	
 	
+	
+	//Reason 셀렉트박스  리스트 조회
+	@RequestMapping(value = "/selectReasonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectReasonList(@RequestParam Map<String, Object> params) {
+
+		logger.debug("selectBrandListCode : {}", params.get("groupCode"));
+
+		List<EgovMap>ReasonList = HelpDeskService.selectReasonList(params);
+//		for (int i = 0; i < ReasonList.size(); i++) {
+//			logger.debug("@@@@@@@@@@@ReasonList@@@@@@@@@@@@@: {}", ReasonList.get(i));
+//		}
+		
+		return ResponseEntity.ok(ReasonList);
+	}
+	
 	@RequestMapping(value = "/selectDataChangeList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectDataChangeList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-//		logger.debug("%%%%%%%%searchDcfNo%%%%%%%: {}",params.get("searchDcfNo") );
-//		logger.debug("%%%%%%%%searchRequestor%%%%%%%: {}",params.get("searchRequestor") );
-//		logger.debug("%%%%%%%%searchReqDate1%%%%%%%: {}",params.get("searchReqDate1") );
-//		logger.debug("%%%%%%%%searchReqDate2%%%%%%%: {}",params.get("searchReqDate2") );	
-//		logger.debug("%%%%%%%%searchApprovalStatus%%%%%%%: {}",params.get("searchApprovalStatus") );
-//		logger.debug("%%%%%%%%searchRequestBranch%%%%%%%: {}",params.get("searchRequestBranch") );
-//		logger.debug("%%%%%%%%searchRequestDepartment%%%%%%%: {}",params.get("searchRequestDepartment") );
-	
+			
 		String[] searchApprovalStatus = request.getParameterValues("searchApprovalStatus");
 		String[] searchRequestBranch = request.getParameterValues("searchRequestBranch");
 		String[] searchRequestDepartment = request.getParameterValues("searchRequestDepartment");
 		
-		logger.debug("%%%%%%%%searchRequestDepartment%%%%%%%: {}",searchApprovalStatus );
-		logger.debug("%%%%%%%%searchRequestDepartment%%%%%%%: {}",searchRequestBranch );
+		params.put("searchApprovalStatus", searchApprovalStatus);
+		params.put("searchRequestBranch", searchRequestBranch);
+		params.put("searchRequestDepartment", searchRequestDepartment);
+		
+		logger.debug("%%%%%%%%searchDcfNo%%%%%%%: {}",params.get("searchDcfNo"));
+		logger.debug("%%%%%%%%searchRequestor%%%%%%%: {}",params.get("searchRequestor"));
+		logger.debug("%%%%%%%%searchApprovalStatus%%%%%%%: {}",searchApprovalStatus );
 		logger.debug("%%%%%%%%searchRequestDepartment%%%%%%%: {}",searchRequestDepartment);
+		logger.debug("%%%%%%%%searchReqDate1%%%%%%%: {}",params.get("searchReqDate1") );
+		logger.debug("%%%%%%%%searchReqDate2%%%%%%%: {}",params.get("searchReqDate2") );	
 		
 		List<EgovMap> list = HelpDeskService.selectDataChangeList(params);
 		
@@ -80,40 +96,77 @@ public class DataChangeFormController {
 	}
 	
 	
-	@RequestMapping(value = "/detailDataChangeList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> detailDataChangeList(@RequestBody Map<String, Object> params, Model model) {
-		
-		logger.debug("dcfreqentryid   ?? ::::::: {}",params.get("dcfreqentryid") );
-		
-		List<EgovMap> list = HelpDeskService.detailDataChangeList(params);
-	for (int i = 0; i < list.size(); i++) {
-			logger.debug("detailDataChangeList *&(*&*(&*(*(&*(&&  ?? ::::::: {}",list.get(i) );
-	}
-		Map<String, Object> map = new HashMap();
-	//	map.put("data", list);
-
-		return ResponseEntity.ok(map);
-	}
-	
-	
 	@RequestMapping(value = "/DetailInfoList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> DetailInfoList(@RequestBody Map<String, Object> params, Model model) {
 		
 		logger.debug("DetailInfoListDcfreqentryid   ?? ::::::: {}",params.get("dcfreqentryid") );
 		
-//		List<EgovMap> list = HelpDeskService.DetailInfoList(params);
-//		List<EgovMap> list = HelpDeskService.ChangeItemList(params);
-//		List<EgovMap> list = HelpDeskService.RespondLogList(params);
+		List<EgovMap> Compulsorylist = HelpDeskService.CompulsoryList(params);
+		List<EgovMap> ChangeItemlist = HelpDeskService.ChangeItemList(params);
+		List<EgovMap> RespondLoglist = HelpDeskService.RespondList(params);
+		List<EgovMap> detailDatalist = HelpDeskService.detailDataChangeList(params);
 		
-//	for (int i = 0; i < list.size(); i++) {
-//			logger.debug("detailDataChangeList *&(*&*(&*(*(&*(&&  ?? ::::::: {}",list.get(i) );
+//	for (int i = 0; i < Compulsorylist.size(); i++) {
+//			logger.debug("Compulsorylist ::::::: {}",Compulsorylist.get(i) );
 //	}
+//	for (int i = 0; i < ChangeItemlist.size(); i++) {
+//		logger.debug("ChangeItemlist *&(*&*(&*(*(&*(&&  ?? ::::::: {}",ChangeItemlist.get(i) );
+//}
+//	for (int i = 0; i < RespondLoglist.size(); i++) {
+//		logger.debug("RespondLoglist  ::::::: {}",RespondLoglist.get(i) );
+//}
+	for (int i = 0; i < detailDatalist.size(); i++) {
+	logger.debug("detailDatalist  ^^: {}",detailDatalist.get(i) );
+	}		
 		Map<String, Object> map = new HashMap();
-	//	map.put("data", list);
+		map.put("data1", Compulsorylist);
+		map.put("data2", ChangeItemlist);
+		map.put("data3", RespondLoglist);
+		map.put("data4", detailDatalist);
 
 		return ResponseEntity.ok(map);
 	}
 	
+	@RequestMapping(value = "/insertDataChangeList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertDataChangeList(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+
+//		logger.debug("insApprovalStatus  : {}", params.get("insApprovalStatus"));
+//		logger.debug("insReason  : {}", params.get("insReason"));
+//		logger.debug("insApprovalRemark  : {}", params.get("insApprovalRemark"));
+//		logger.debug("reqId  : {}", params.get("reqId"));
+//		logger.debug("DcfReqStatusId : {}", params.get("DcfReqStatusId"));
+//		logger.debug("receiveInfoTransitBy  : {}", InsertReceiveMap.get("receiveInfoTransitBy"));
+//		logger.debug("receiveInfoTransitLocation  : {}", InsertReceiveMap.get("receiveInfoTransitLocation"));
+//		logger.debug("receiveInfoCourier  : {}", InsertReceiveMap.get("receiveInfoCourier"));
+//		logger.debug("receiveInfoTotalSirimTransit  : {}", InsertReceiveMap.get("receiveInfoTotalSirimTransit"));
+//		logger.debug("receiveRadio  : {}", InsertReceiveMap.get("receiveRadio"));
+//		logger.debug("SirimLocTo  : {}", InsertReceiveMap.get("SirimLocTo"));
+//		logger.debug("SirimLocFrom  : {}", InsertReceiveMap.get("SirimLocFrom"));
+		
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		Map<String, Object> map = new HashMap();
+
+		try {
+			HelpDeskService.insertDataChangeList(params,loginId);
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
 	
 	
 	
