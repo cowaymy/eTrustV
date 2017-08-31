@@ -1281,7 +1281,6 @@ public class BillingGroupController {
         ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
-    	//message.setMessage("");
 		
 		return ResponseEntity.ok(message);
 	}
