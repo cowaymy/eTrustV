@@ -2,6 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.common.impl.GSTZeroRateLocationMapper">
 
+    <select id="selectGSTExportationList" parameterType="Map" resultType="egovMap">
+         SELECT 
+				        ZRE_EXPT_ID 
+				      , SAL30D.DEALER_NAME 
+				      , SYS38M.NAME CODE_NAME
+				      , ZRE_EXPT_DEALER_ID
+				      , ZRE_EXPT_STUS_ID 
+				      , ZRE_EXPT_REM 
+				      , ZRE_EXPT_CRT_USER_ID  
+				      , ZRE_EXPT_CRT_DT 
+				  FROM  SYS0067M SYS67M
+				      , SAL0030D SAL30D
+				      , SYS0038M SYS38M
+				  WHERE SAL30D.DEALER_ID(+)    = SYS67M.ZRE_EXPT_DEALER_ID
+				    AND SYS38M.STUS_CODE_ID(+) = SYS67M.ZRE_EXPT_STUS_ID
+				    
+         <if test='zreExptId != null and zreExptId != "" '>
+            AND SYS67M.ZRE_EXPT_ID = #{zreExptId} 
+         </if>
+
+				 <if test='dealerName != null and dealerName != "" '>
+				    AND UPPER(DEALER_NAME) LIKE '%' || UPPER(#{dealerName}) || '%' 
+				 </if>
+ 
+         <if test='zreExptStusId != "0" and zreExptStusId != "" '>
+            AND SYS67M.ZRE_EXPT_STUS_ID = #{zreExptStusId} 
+         </if>
+				 
+				  ORDER BY ZRE_EXPT_ID ASC
+    </select>
+
     <select id="selectStateCodeList" parameterType="Map" resultType="egovMap">
         SELECT STATECODE.STATE_ID,
                STATECODE.CODE,
