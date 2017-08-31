@@ -160,93 +160,61 @@ WHERE  1 = 1
 </select>
 
 <select id="selectRoleAuthMappingAdjustList" parameterType="Map" resultType="egovMap">
- SELECT  F.AUTH_CODE ,
-         F.AUTH_NAME,
-         G.ROLE_ID ,
-         F.ROLE_LVL,
-         H.VALID_DT_FROM FROM_DT,
-         H.VALID_DT_TO TO_DT,
-         F.AUTH_CODE HIDDEN, /*old_auth_code*/
-         G.ROLE_ID  OLD_ROLE_ID,
-         H.VALID_DT_FROM OLD_FROM_DT
-    FROM SYS0053M F
-        ,SYS0054M H
-        ,(SELECT B.AUTH_CODE ,
-                 A.ROLE_ID ,
-                 A.ROLE_LEV                       
-            FROM SYS0044M A ,
-                 SYS0053M B
-           WHERE A.ROLE_ID = B.ROLE_ID(+)
-        <if test='roleId !=null and roleId != "" '>
-             AND B.ROLE_ID(+) = #{roleId}
-        </if>
-           START WITH A.ROLE_ID = B.ROLE_ID         
-         CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) G
-   WHERE F.ROLE_ID = G.ROLE_ID
-     AND G.ROLE_ID = H.ROLE_ID
-     AND F.AUTH_CODE = H.AUTH_CODE 
-     AND H.VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
-     AND H.VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') 
-                
-   UNION
-         
-   SELECT 
-          C.AUTH_CODE, 
-          A.AUTH_NAME,  
-          A.ROLE_ID  ,
-          C.ROLE_LVL ,
-          NVL(C.VALID_DT_FROM  ,TO_CHAR(SYSDATE, 'YYYYMMDD'))  FROM_DT,
-          NVL(C.VALID_DT_TO  ,TO_CHAR(SYSDATE+365, 'YYYYMMDD')) TO_DT, 
-          C.AUTH_CODE HIDDEN,  /*old_auth_code*/
-          A.ROLE_ID  OLD_ROLE_ID,
-          NVL(C.VALID_DT_FROM  ,TO_CHAR(SYSDATE, 'YYYYMMDD')) OLD_FROM_DT
-    FROM SYS0053M A ,          
-          (SELECT B.AUTH_CODE ,
-                  A.ROLE_ID ,
-                  A.ROLE_LEV                       
-             FROM SYS0044M A ,
-                  SYS0053M B
-            WHERE A.ROLE_ID = B.ROLE_ID(+)
-         <if test='roleId !=null and roleId != "" '>
-              AND B.ROLE_ID(+) = #{roleId}
-         </if>
-              AND A.ROLE_LEV = 1
-            START WITH A.ROLE_ID = B.ROLE_ID         
-          CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE
-          ) B ,
-          SYS0054M C
-   WHERE A.ROLE_ID = B.ROLE_ID(+)
-     AND A.ROLE_ID = C.ROLE_ID(+)
-     AND VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
-     AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
-   ORDER BY ROLE_LVL,AUTH_NAME   
+    SELECT      
+            SYS54M.ROLE_ID 
+          , SYS54M.AUTH_CODE 
+          , TRIM(CASE SYS54M.AUTH_CODE WHEN 'INT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 313 AND CODE = SYS54M.AUTH_CODE )
+                                       WHEN 'EXT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 313 AND CODE = SYS54M.AUTH_CODE )
+                                       WHEN 'MGR' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 313 AND CODE = SYS54M.AUTH_CODE )
+                                       ELSE ( SELECT  SYS0053M.AUTH_NAME FROM SYS0053M   WHERE  SYS0053M.AUTH_CODE = SYS54M.AUTH_CODE )   
+            END) AUTH_NAME
+
+          , SYS54M.VALID_DT_FROM FROM_DT
+          , SYS54M.VALID_DT_TO TO_DT
+          , SYS54M.AUTH_CODE HIDDEN
+          , SYS54M.ROLE_LVL 
+          , TO_CHAR(SYS54M.ROLE_ID) OLD_ROLE_ID
+          , SYS54M.VALID_DT_FROM OLD_FROM_DT
+      FROM SYS0054M SYS54M
+     WHERE SYS54M.ROLE_ID IN (SELECT   /* UPPER NODE */     
+                                     SYS44M.ROLE_ID                    
+                              FROM SYS0044M SYS44M
+                              START WITH  SYS44M.ROLE_ID = #{roleId}   
+                              CONNECT BY NOCYCLE 
+                              PRIOR  PARENT_ROLE = SYS44M.ROLE_ID 
+                             )
+      AND SYS54M.VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+      AND SYS54M.VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+      
+    ORDER BY SYS54M.ROLE_LVL
 </select>
 
 <select id="selectRoleAuthMappingBtn" parameterType="Map" resultType="egovMap">
-   SELECT SYS54M.AUTH_CODE
-		     ,CASE SYS54M.AUTH_CODE WHEN 'INT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
-		                            WHEN 'EXT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
-		                            WHEN 'MGR' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID= #{CodeMasterId}  AND CODE = SYS54M.AUTH_CODE )
-		                            ELSE (SELECT DISTINCT AUTH_NAME FROM SYS0053M SYS53M WHERE SYS53M.AUTH_CODE = SYS54M.AUTH_CODE  AND SYS53M.ROLE_ID = SYS54M.ROLE_ID  ) 
-		      END AUTH_NAME          
-		     ,TO_CHAR(ROLE_ID) ROLE_ID
-		     ,ROLE_LVL 
-		     ,VALID_DT_FROM FROM_DT
-		     ,VALID_DT_TO TO_DT
-		     ,AUTH_CODE HIDDEN
-         ,TO_CHAR(ROLE_ID) OLD_ROLE_ID
-         ,VALID_DT_FROM OLD_FROM_DT
-   FROM SYS0054M SYS54M         
+SELECT 
+       SYS54M.AUTH_CODE
+      ,TRIM(CASE SYS54M.AUTH_CODE WHEN 'INT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = #{CodeMasterId} AND CODE = SYS54M.AUTH_CODE )
+                             WHEN 'EXT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = #{CodeMasterId} AND CODE = SYS54M.AUTH_CODE )
+                             WHEN 'MGR' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = #{CodeMasterId} AND CODE = SYS54M.AUTH_CODE )
+                             ELSE SYS53M.AUTH_NAME  
+       END) AUTH_NAME
+      ,SYS54M.ROLE_ID 
+      ,SYS54M.ROLE_LVL 
+      ,VALID_DT_FROM FROM_DT
+      ,VALID_DT_TO TO_DT
+      ,SYS54M.AUTH_CODE HIDDEN
+      ,TO_CHAR(SYS54M.ROLE_ID) OLD_ROLE_ID
+      ,SYS54M.VALID_DT_FROM OLD_FROM_DT
+  FROM SYS0053M SYS53M 
+      ,SYS0054M SYS54M
   WHERE 1 = 1
- <if test='authCode !=null and authCode != "" '>  
-    AND AUTH_CODE = #{authCode} 
- </if> 
+    AND SYS53M.AUTH_CODE(+) = SYS54M.AUTH_CODE 
  <if test='roleId !=null and roleId != "" '>    
-    AND ROLE_ID = #{roleId}
+    AND SYS54M.ROLE_ID = #{roleId}
  </if>
-    AND VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
-    AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') 
-  ORDER BY ROLE_LVL,AUTH_NAME 
+    AND SYS54M.VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+    AND SYS54M.VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+     
+  ORDER BY SYS54M.ROLE_LVL,AUTH_NAME 
 </select>
 
 <select id="selectRoleAuthMappingList" parameterType="Map" resultType="egovMap">
