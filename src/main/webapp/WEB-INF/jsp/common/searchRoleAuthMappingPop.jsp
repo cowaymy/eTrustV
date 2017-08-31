@@ -119,7 +119,7 @@ $(document).ready(function()
 
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 0, SerchAuthCd);
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 1, SerchAuthName);
-	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 2, SerchAuthId);
+	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 2, $("#roleId").val() ); 
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 3, SerchAuthLev);
 	        AUIGrid.setCellValue(AuthGridID, gSelMainRowIdx, 4, fnGetToday());
 
