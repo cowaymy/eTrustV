@@ -1215,7 +1215,7 @@
         WHERE  REQ_ID = #{reqId}
     </update>
     
-    <select id="selectDocNo" parameterType="Map" resultType="egovMap">
+    <!-- <select id="selectDocNo" parameterType="Map" resultType="egovMap">
         SELECT 
 	        Extent1.DOC_NO_ID DOC_NO_ID  ,
 	        Extent1.DOC_NO_PREFIX DOC_NO_PREFIX  ,
@@ -1233,7 +1233,7 @@
         UPDATE SYS0022C
         SET DOC_NO = #{docNo}
         WHERE  DOC_NO_ID = #{docNoId}
-    </update>
+    </update> -->
     
     <insert id="insEstmReq" parameterType="Map">
         INSERT INTO PAY0060D
@@ -1720,7 +1720,7 @@
     </select>
     
     <select id="docNoCreateSeq" resultType="String">
-      select FN_GET_DOCNO('24') from dual
+        SELECT FN_GET_DOCNO('24') FROM DUAL
     </select>
     
     <insert id="insBillGrpMaster" parameterType="Map">
@@ -1832,7 +1832,12 @@
 	                AND ( ( 8 <![CDATA[<> ]]> Extent5.SRV_CNTRCT_STUS_ID )
 	                OR ( 10 <![CDATA[<> ]]> Extent5.SRV_CNTRCT_STUS_ID ) )
 	          WHERE  ( 8 <![CDATA[<> ]]>  Extent1.STUS_CODE_ID )
-	          AND ( Extent1.SALES_ORD_ID = #{salesOrdId} ) 
+	          <if test="salesOrdId != null and salesOrdId !=''">
+                AND ( Extent1.SALES_ORD_ID = #{salesOrdId} )
+              </if>
+              <if test="salesOrdNo != null and salesOrdNo !=''">
+                AND ( Extent1.SALES_ORD_NO = #{salesOrdNo} )
+                </if>
 	          AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
     </select>
     
