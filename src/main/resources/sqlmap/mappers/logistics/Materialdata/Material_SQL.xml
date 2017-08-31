@@ -7,7 +7,7 @@
     </resultMap> -->
     
    <select id="selectStockMstList" parameterType="Map" resultType="egovMap">
-	   SELECT itemid , itemname , itemcode ,cateid, catename
+	   SELECT itemid , itemname , itemcode ,cateid, catename, statusname
 	   <if test="gubun =='item'">
        , description
        </if>
@@ -25,7 +25,10 @@
 			   (SELECT code_name
 				  FROM SYS0013M
 				 WHERE code_master_id = 63
-				   and code_id = CTGRY_ID) catename
+				   and code_id = CTGRY_ID) catename,
+               (SELECT SYS0038M.NAME
+                  FROM SYS0038M
+                 WHERE SYS0038M.STUS_CODE_ID = MSC0039D.STUS_CODE_ID) statusname
 		  FROM MSC0039D 
 		 where 1 = 1 
 		 </if>
@@ -42,18 +45,27 @@
 		       (SELECT CODE_NAME
 		          FROM SYS0013M
 		         WHERE CODE_ID = SYS0026M.STK_TYPE_ID)
-		          typename
+		          typename,
+               (SELECT SYS0038M.NAME
+                  FROM SYS0038M
+                 WHERE SYS0038M.STUS_CODE_ID = SYS0026M.STUS_CODE_ID) statusname
 		 FROM SYS0026M 
 		WHERE 1 = 1
 		 </if>  
       )
       where 1 = 1
-      <if test="scode != null and scode !=''">
+       <if test="scode != null and scode !=''">
             and itemcode like  #{scode}||'%'
        </if>
        <if test="sname != null and sname !=''">
             and itemname like '%'|| #{sname} ||'%'
        </if>    			
+       <if test="cateid != null and cateid !=''">
+            and cateid =  #{cateid}
+       </if>
+       <if test="typeid != null and typeid !=''">
+            and typeid =  #{typeid}
+       </if>
 	</select>
 	
 	<select id="selectMaterialMstItemList" parameterType="Map"  resultType="egovMap">
