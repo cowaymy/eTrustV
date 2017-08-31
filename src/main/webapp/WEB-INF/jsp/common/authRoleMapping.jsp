@@ -13,6 +13,22 @@
     margin-top:-20px;
 }
 
+/* 커스텀 행 스타일 */
+.my-row-style {
+font-weight:red;
+}
+
+/* 커스텀 셀 스타일 */
+.my-cell-style {
+  font-weight:bold;
+  color:#22741C;
+}
+
+/* 커스컴 disable 스타일*/
+.mycustom-disable-color {
+  color : #22741C;
+}
+
 </style>
 
 <script type="text/javaScript">
@@ -59,6 +75,7 @@ var AuthColumnLayout =
             dataField : "authCode",
             headerText : "<spring:message code='sys.auth.grid1.Code'/>",
             editable : true,
+            //styleFunction : cellStyleFunction,
             editRenderer : {
                 type : "DropDownListRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -165,6 +182,17 @@ var AuthColumnLayout =
 	            width : 0,
         }
     ];
+
+//셀스타일 함수 정의
+function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, dataField) 
+{
+  if(item.roleLvl != gSelMstRolLvl)
+    return "mycustom-disable-color";
+  else if(item.color == "Yellow") {
+    return "mycustom-disable-color";
+  }
+  return null;
+};
 
 // Ajax
 
@@ -283,7 +311,7 @@ function auiCellEditignHandler(event)
               && (event.item.rowId != "PkAddNew")   //수정모드
               && (  gSelMstRolLvl  != gSelAuthRolLvl ) ) // 같지 않으면 다 상위레벨.
               {
-                  alert("같은 레벨에서 수정이 가능하다.");
+    	            Common.alert("<spring:message code='sys.roleAuthMapping.grid1.chkLevel' />");
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "all"] );
                   return false;
                 }
@@ -826,6 +854,14 @@ $(document).ready(function()
                   enableRestore : true,
                   //editBeginMode : "click", // 편집모드 클릭
                   softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+                   // row Styling 함수
+                  rowStyleFunction : function(rowIndex, item) {
+                    if(item.roleLvl == gSelMstRolLvl) {
+                    	return "my-cell-style";
+                    }
+                    return "";
+                  } 
+                  
                 };
     
     // masterGrid 그리드를 생성합니다.
