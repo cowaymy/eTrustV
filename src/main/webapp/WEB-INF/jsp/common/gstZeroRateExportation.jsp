@@ -17,11 +17,11 @@
 <script type="text/javaScript">
 
 var gSelMainRowIdx = 0;
-var StatusCdList = new Array();
+var dealerComboBoxList = new Array();
 
 $(function() 
 {
-  //getStatusComboListAjax();
+  getDealerComboListAjax();
 });
 
 //Make Use_yn ComboList, tooltip
@@ -40,42 +40,54 @@ var MainColumnLayout =
         }, {
             dataField : "dealerName", 
             headerText : "<spring:message code='sys.gstexportation.grid1.dealername'/>",
-            editable : false,
-            //style : "aui-grid-left-column",
-            width : "45%",
-        }, {
-            dataField : "codeName",
-            headerText : "<spring:message code='sys.gstexportation.grid1.status'/>",
-            width : "10%",
             editable : true,
+            style : "aui-grid-left-column",
+            width : "40%",
+            editRenderer :
+            {
+                type : "ComboBoxRenderer",
+                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                listFunction : function(rowIndex, columnIndex, item, dataField)
+                {
+                  return dealerComboBoxList;
+                },
+                keyField : "id",
+                valueField : "value",
+            }
+        }, {
+            dataField : "status",  //status
+            headerText : "<spring:message code='sys.gstexportation.grid1.status'/>",
+            width : "15%",
+            editable : true,
+            //style : "aui-grid-left-column",
             editRenderer : 
             {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                listFunction : function(rowIndex, columnIndex, item, dataField) {
+                listFunction : function(rowIndex, columnIndex, item, dataField) 
+                {
                 	return getDisibledComboList();
                 },
                 keyField : "id",
-                //valueField : "value",
+               // valueField : "value",
             }
             
         } ,{
             dataField : "zreExptDealerId", 
             headerText : "<spring:message code='sys.gstexportation.grid1.dealerid' />",
             editable : false,
-            width : "10%",
+            width : 0,
+           
         }, {
             dataField : "zreExptStusId",
             headerText : "<spring:message code='sys.gstexportation.grid1.stusid'/>",
-            editable : false,
             //style : "aui-grid-left-column",
             width : 0,
         }, {
             dataField : "zreExptRem",
             headerText : "<spring:message code='sys.gstexportation.grid1.remark'/>",
-            editable : false,
-            //style : "aui-grid-left-column",
-            width : "15%",
+            style : "aui-grid-left-column",
+            width : "35%",
         }, {
             dataField : "zreExptCrtUserId",
             headerText : "<spring:message code='sys.userexcept.grid1.userId'/>",
@@ -93,28 +105,29 @@ var MainColumnLayout =
         }
     ];
 
-function getStatusComboListAjax(callBack) 
+function getDealerComboListAjax(callBack) 
 {
-    //Common.ajaxSync("GET", "/common/selectCodeList.do"
-    Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
+    Common.ajaxSync("GET", "/common/selectGSTExportDealerList.do"
                  , $("#MainForm").serialize()
                  , function(result) 
                  {
                     for (var i = 0; i < result.length; i++) 
                     {
                       var list = new Object();
-                          list.id = result[i].stusCodeId;
-                          list.value = result[i].codeName ;
-                          StatusCdList.push(list);
+                          list.id = result[i].dealerId;
+                          list.value = result[i].dealerName ;
+
+                          dealerComboBoxList.push(list);
                     }
 
                     //if you need callBack Function , you can use that function
-                    if (callBack) {
-                      callBack(StatusCdList);
+                    if (callBack) 
+                    {
+                      callBack(dealerComboBoxList);
                     }
                     
                   });
-    return StatusCdList;
+    return dealerComboBoxList;
   }
 
 //AUIGrid 메소드
@@ -131,6 +144,7 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin") 
   {
       console.log("에디팅 시작(cellEditBegin) : (rowIdx: " + event.rowIndex + ",columnIdx: " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+
 /*       var authSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, "zreExptId");
       
       if (AUIGrid.isAddedById(myGridID,authSeq) == false && authSeq.indexOf("Input zreExptId") == -1 && event.columnIndex == 0 )// edit
@@ -140,7 +154,28 @@ function auiCellEditignHandler(event)
   } 
   else if(event.type == "cellEditEnd") 
   {
-      console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value );
+      console.log ("new_: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, "zreExptId")));
+
+      if (event.headerText == "DEALER_NAME")
+      {
+    	    AUIGrid.setCellValue(myGridID, event.rowIndex, 3,  event.value);  //zreExptDealerId
+      }
+
+      if (event.headerText == "STATUS")
+      {
+          var statusId =  event.value;
+
+          if (statusId == "Active")
+          {
+        	  AUIGrid.setCellValue(myGridID, event.rowIndex, 4,  "1");  // zreExptStusId
+          }
+          else
+          {
+        	  AUIGrid.setCellValue(myGridID, event.rowIndex, 4,  "8"); 
+          } 
+      }
+      
   } 
   else if(event.type == "cellEditCancel") 
   {
@@ -160,17 +195,19 @@ function fnAddRow()
 {
   var item = new Object();
 
-      item.zreExptId ="";
-      item.dealerName ="";
-      item.roleId   ="";
-      item.roleLvl  ="";
-      item.roleId1  ="";
-      item.roleId2  ="";
-      item.roleId3  ="";
+      item.zreExptId         ="";
+      item.dealerName        ="";
+      item.status            ="Active";
+      item.zreExptDealerId   ="";
+      item.zreExptStusId     ="1";
+      item.zreExptRem        ="";
+      item.zreExptCrtUserId  ="";
+      item.hidden            ="";
+      item.rowId             ="";
       // parameter
       // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
       // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-      AUIGrid.addRow(myGridID, item, 3);
+      AUIGrid.addRow(myGridID, item, "first");
 }
 
 //Make Use_yn ComboList, tooltip
@@ -230,14 +267,14 @@ function fnSearchBtnList()
            });
 }
 
-function fnSaveAuthCd() 
+function fnSaveRow() 
 {
   if (fnValidationCheck() == false)
   {
     return false;
   }
   
-  Common.ajax("POST", "/authorization/saveAuth.do"
+  Common.ajax("POST", "/common/saveGSTExportation.do"
         , GridCommon.getEditData(myGridID)
         , function(result) 
           {
@@ -286,40 +323,28 @@ function fnValidationCheck()
       Common.alert("No Change");
       return false;
     }
-
+// {add=[ dealerName=2, status=Active, zreExptDealerId=2, zreExptStusId=, zreExptRem=21412341311, zreExptCrtUserId=, hidden=, rowId=}], update=[], remove=[]}
     for (var i = 0; i < addList.length; i++) 
     {  
-      var zreExptId  = addList[i].zreExptId;
-      var dealerName  = addList[i].dealerName;
-      var roleId    = addList[i].roleId;
-      var roleLvl   = addList[i].lvl;
-      var roleId1   = addList[i].role1;
-      var roleId2   = addList[i].role2;
-      var roleId3   = addList[i].role3;
+      var dealerName      = addList[i].dealerName;  
+      var status          = addList[i].status;
+      var zreExptRem      = addList[i].zreExptRem;
       
-      if (roleId == "" || roleId.length == 0) 
+      if (dealerName == "" || dealerName.length == 0) 
       {
         result = false;
         // {0} is required.
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='Role Id' htmlEscape='false'/>");
-        break;
-      }
-      
-      if (roleLvl == "" || roleLvl.length == 0) 
-      {
-        result = false;
-        // {0} is required.
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='Role Lvl' htmlEscape='false'/>");
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='dealerName' htmlEscape='false'/>");
         break;
       }
 
-/*       if (dealerName.indexOf("delimiter") > 0 ) 
+      if (status == "" || status.length == 0) 
       {
         result = false;
         // {0} is required.
-        Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth dealerName' htmlEscape='false'/>");
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='status' htmlEscape='false'/>");
         break;
-      } */
+      }
       
     }  // addlist
 
@@ -327,17 +352,11 @@ function fnValidationCheck()
     for (var i = 0; i < udtList.length; i++) 
     {
         var zreExptId  = udtList[i].zreExptId;
-        var dealerName  = udtList[i].dealerName;
-        var roleId    = udtList[i].roleId;
-        var roleLvl   = udtList[i].roleLvl;
-        var roleId1   = udtList[i].roleId1;
-        var roleId2   = udtList[i].roleId2;
-        var roleId3   = udtList[i].roleId3;
 
         if (zreExptId == "" || zreExptId.length == 0) 
         {
           result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='zreExptId' htmlEscape='false'/>");
           break;
         }
         
@@ -350,7 +369,7 @@ function fnValidationCheck()
         if (zreExptId == "" || zreExptId.length == 0 ) 
         {
           result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='zreExptId' htmlEscape='false'/>");
           break;
         }
         
@@ -462,112 +481,6 @@ $(document).ready(function()
 
 
 </script>
-		
-<section id="container"><!-- container start -->
-
-<aside class="lnb_wrap"><!-- lnb_wrap start -->
-
-<header class="lnb_header"><!-- lnb_header start -->
-<form action="#" method="post">
-<h1><a href="javascript:;"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a></h1>
-<p class="search">
-<input type="text" title="검색어 입력" />
-<input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
-</p>
-
-</form>
-</header><!-- lnb_header end -->
-
-<section class="lnb_con"><!-- lnb_con start -->
-<p class="click_add_on_solo on"><a href="javascript:;">All menu</a></p>
-<ul class="inb_menu">
-	<li class="active">
-	<a href="javascript:;" class="on">menu 1depth</a>
-
-	<ul>
-		<li class="active">
-		<a href="javascript:;" class="on">menu 2depth</a>
-
-		<ul>
-			<li class="active">
-			<a href="javascript:;" class="on">menu 3depth</a>
-			</li>
-			<li>
-			<a href="javascript:;">menu 3depth</a>
-			</li>
-			<li>
-			<a href="javascript:;">menu 3depth</a>
-			</li>
-			<li>
-			<a href="javascript:;">menu 3depth</a>
-			</li>
-			<li>
-			<a href="javascript:;">menu 3depth</a>
-			</li>
-			<li>
-			<a href="javascript:;">menu 3depth</a>
-			</li>
-		</ul>
-
-		</li>
-		<li>
-		<a href="javascript:;">menu 2depth</a>
-		</li>
-		<li>
-		<a href="javascript:;">menu 2depth</a>
-		</li>
-		<li>
-		<a href="javascript:;">menu 2depth</a>
-		</li>
-		<li>
-		<a href="javascript:;">menu 2depth</a>
-		</li>
-		<li>
-		<a href="javascript:;">menu 2depth</a>
-		</li>
-	</ul>
-
-	</li>
-	<li>
-	<a href="javascript:;">menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">menu 1depth</a>
-	</li>
-</ul>
-<p class="click_add_on_solo"><a href="javascript:;"><span></span>My menu</a></p>
-<ul class="inb_menu">
-	<li>
-	<a href="javascript:;">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="javascript:;">My menu 1depth</a>
-	</li>
-</ul>
-</section><!-- lnb_con end -->
-
-</aside><!-- lnb_wrap end -->
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -581,7 +494,7 @@ $(document).ready(function()
 <h2>GST Zero Rate Exportation Search</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a onclick="fnSearchBtnList();"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="javascript:;"><span class="clear"></span>Clear</a></p></li>
+	<!-- <li><p class="btn_blue"><a href="javascript:;"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
@@ -670,4 +583,4 @@ $(document).ready(function()
 
 </section><!-- search_result end -->
 		
-</section><!-- container end -->
+</section><!-- content end -->
