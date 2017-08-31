@@ -92,4 +92,7 @@ public class SalesConstants {
 	public static final String  AGREEMENT_FALSE = "false";
 	public static final String 	CONSIGNMENT_HAND = "H";
 	public static final String 	CONSIGNMENT_COURIER = "C";
+	
+	//Order Investigation
+	public static final String  INVEST_CODEID = "73"; // Investigation (Get DocNo)
 }
