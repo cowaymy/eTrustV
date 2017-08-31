@@ -16,12 +16,12 @@
 /* 커스텀 행 스타일 */
 .my-row-style {
   font-weight:bold;
-  color:#1EAAAA;
+  color:#1EAAAA !important;
 }
 
 /* 커스텀 셀 스타일 */
 .my-cell-style {
-  font-weight:red;
+  font-weight:bold;
 }
 
 /* 커스컴 disable 스타일*/
@@ -770,6 +770,8 @@ $(document).ready(function()
 
     var options = {
     		          usePaging : true,
+    		          // 페이징을 간단한 유형으로 나오도록 설정
+    		          pagingMode : "simple",
                   useGroupingPanel : false,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   selectionMode : "multipleRows",
@@ -832,6 +834,7 @@ $(document).ready(function()
                   usePaging : true,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   useGroupingPanel : false,
+                  wordWrap :true,
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
