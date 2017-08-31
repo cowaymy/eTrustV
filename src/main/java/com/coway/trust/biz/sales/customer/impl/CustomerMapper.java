@@ -295,22 +295,6 @@ public interface CustomerMapper {
 	
 	
 	/**
-	 * Bank Account Issue Bank
-	 *
-	List<EgovMap> selectAccBank(Map<String, Object> params);
-	
-	
-	/**
-	 * get customer Credit Card ID 
-	 * 
-	 * @param Map
-	 * @return
-	 * @exception Exception
-	 */
-	int getCustCrcIdSeq();
-	
-	
-	/**
 	 * insert Credit Card Info Data
 	 * 
 	 * @param Map
@@ -328,16 +312,6 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 */
 	int getCustIdMaxSeq();
-	
-	
-	/**
-	 * get customer Bank Account ID 
-	 * 
-	 * @param Map
-	 * @return
-	 * @exception Exception
-	 */
-	int getCustAccIdSeq();
 	
 	
 	/**

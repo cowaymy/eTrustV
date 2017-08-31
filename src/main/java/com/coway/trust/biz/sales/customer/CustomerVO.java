@@ -24,6 +24,7 @@ public class CustomerVO implements Serializable {
 	private String codeName1;		// Customer Type Name (Type)
 	private int bankId;
 	private String code;
+	private String streetId;
 	
 	/** Customer Insert VO*/
 	private String custName;
@@ -63,7 +64,7 @@ public class CustomerVO implements Serializable {
 	private int accBankId;
 	private String accBankBrnch;
 	private String accRem;
-	private int streetId;
+	
 	
 	public int getCustId() {
 		return custId;
@@ -378,13 +379,11 @@ public class CustomerVO implements Serializable {
 	public void setAccRem(String accRem) {
 		this.accRem = accRem;
 	}
-	public int getStreetId() {
+	public String getStreetId() {
 		return streetId;
 	}
-	public void setStreetId(int streetId) {
+	public void setStreetId(String streetId) {
 		this.streetId = streetId;
 	}
-	
-	
 	
 }

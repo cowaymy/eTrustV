@@ -250,33 +250,6 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	
 	
 	@Override
-	public int getCustIdSeq() {
-		
-		int getCustId = customerMapper.getCustIdSeq();
-		
-		return getCustId;
-	}
-	
-	
-	@Override
-	public int getCustAddrIdSeq() {
-		
-		int getCustAddrId = customerMapper.getCustAddrIdSeq();
-		
-		return getCustAddrId;
-	}
-	
-	
-	@Override
-	public int getCustCntcIdSeq() {
-		
-		int getCustCntcId = customerMapper.getCustCntcIdSeq();
-		
-		return getCustCntcId;
-	}
-	
-	
-	@Override
 	public int getCustCareCntIdSeq() {
 		
 		int getCustCareCntId = customerMapper.getCustCareCntIdSeq();
@@ -559,15 +532,6 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	
 	
 	@Override
-	public int getCustCrcIdSeq() {
-		
-		int getCustCrcIdSeq = customerMapper.getCustCrcIdSeq();
-		
-		return getCustCrcIdSeq;
-	}
-	
-	
-	@Override
 	public void insertCreditCardInfo(List<CustomerCVO> customerCardVOList) {
 		
 		for(CustomerCVO customerCVO : customerCardVOList) {
@@ -576,26 +540,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		}
 		
 	}
-	
-	
-	@Override
-	public int getCustIdMaxSeq() {
-		
-		int getCustIdMaxSeq = customerMapper.getCustIdMaxSeq();
-		
-		return getCustIdMaxSeq;
-	}
-	
-	
-	
-	@Override
-	public int getCustAccIdSeq() {
-		
-		int getCustAccIdSeq = customerMapper.getCustAccIdSeq();
-		
-		return getCustAccIdSeq;
-	}
-	
+
 	
 	@Override
 	public void insertBankAccountInfo(List<CustomerBVO> customerBankVOList) {

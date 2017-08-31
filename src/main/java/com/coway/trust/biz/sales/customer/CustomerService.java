@@ -119,36 +119,6 @@ public interface CustomerService {
 	
 	
 	/**
-	 * get Customer Id Seq 
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	int getCustIdSeq();
-	
-	
-	/**
-	 * get Customer Address Seq 
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	int getCustAddrIdSeq();
-	
-	
-	/**
-	 * get Customer Contact Seq 
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	int getCustCntcIdSeq();
-	
-	
-	/**
 	 * get Customer Care Contact Id Seq 
 	 * @param 
 	 * @return 
@@ -384,15 +354,6 @@ public interface CustomerService {
 	List<EgovMap> selectIssueBank(Map<String, Object> params);
 	
 	
-	/**
-	 * get Customer Credit Card Id Seq 
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	int getCustCrcIdSeq();
-	
 	
 	/**
 	 * insert Customer Credit Card Info 
@@ -405,16 +366,6 @@ public interface CustomerService {
 	
 	
 	/**
-	 * get Customer Bank Account Id Seq 
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	int getCustAccIdSeq();
-	
-	
-	/**
 	 * insert Customer Bank Account Info 
 	 * @param params
 	 * @return 
@@ -422,16 +373,6 @@ public interface CustomerService {
 	 * @author 
 	 */
 	void insertBankAccountInfo(List<CustomerBVO> customerBankVOList);
-	
-	
-	/**
-	 * get Customer Id Max Seq 
-	 * @param 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	int getCustIdMaxSeq();
 	
 	
 	/**

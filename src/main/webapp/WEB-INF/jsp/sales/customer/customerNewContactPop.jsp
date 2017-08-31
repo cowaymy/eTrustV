@@ -225,7 +225,7 @@ $(document).ready(function() {
 <!-- getParams  -->
 <section class="pop_body"><!-- pop_body start -->
 <form id="addForm"> <!-- Form Start  -->
-<input type="hidden" value="${insCustId}" id="_insCustId" name="custId">
+<input type="hidden" value="${insCustId}" id="_insCustId" name="insCustId">
 <!-- Temp Contact Id -->
 <input type="hidden" id="_tempContactId" name="tempContactId">
 <!-- Page Param -->

@@ -433,8 +433,6 @@ public class CustomerController {
 	@RequestMapping(value = "/insCustBasicInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insCustBasicInfo(@RequestBody CustomerForm customerForm, Model model) {
 		
-		int getCustAddrId = 0;
-		int getCustCntcId = 0;
 		int getCustCareCntId = 0;
 		String defaultDate = "1900-01-01";
 		
@@ -449,21 +447,14 @@ public class CustomerController {
 		List<CustomerBankAccListGridForm> addBankList = dataSetBank.getAdd();
 		List<CustomerBVO> customerBankVOList = new ArrayList<>();
 		
-		int getCustId = customerService.getCustIdSeq();
-		getCustAddrId = customerService.getCustAddrIdSeq();
-		getCustCntcId = customerService.getCustCntcIdSeq();
 		getCustCareCntId = customerService.getCustCareCntIdSeq();
 		
 //		String getCustVano = "98 9920 " + String.Format("{0:0000 0000}", "50158");
 
-		LOGGER.info("##########getCustId ::::::::::::::::   " + getCustId);
-		LOGGER.info("##########getCustAddrId :::::::::::   " + getCustAddrId);
-		LOGGER.info("##########getCustCntcId :::::::::::   " + getCustCntcId);
 		LOGGER.info("##########getCustCareCntId :::::::   " + getCustCareCntId);
 		
 		Map<String, Object> insmap = new HashMap();	
 		// Basic Info
-		insmap.put("getCustId", getCustId);
 		insmap.put("custName", vo.getCustName());
 		insmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
 		if(vo.getDob() != null && !"".equals(vo.getDob())){
@@ -495,7 +486,6 @@ public class CustomerController {
 		insmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
 		
 		// Address
-		insmap.put("getCustAddrId", getCustAddrId);
 		insmap.put("addrDtl", vo.getAddrDtl());
 		insmap.put("streetId", vo.getStreetId());
 //		insmap.put("addr3", vo.getAddr3());
@@ -513,7 +503,6 @@ public class CustomerController {
 		insmap.put("idcm", 0);										//고정
 		
 		// additional service contact
-		insmap.put("getCustCntcId", getCustCntcId);
 		insmap.put("getCustCareCntId", getCustCareCntId);
 		insmap.put("custInitial", String.valueOf(vo.getCustInitial()) != null ? vo.getCustInitial() : 0);
 		insmap.put("pos", "");										//고정
@@ -549,7 +538,6 @@ public class CustomerController {
 				customerCVO.setCardType(form.getCardType());
 				customerCVO.setCardRem(null);					//임시
 			//	customerCVO.setGetCustCrcIdSeq(getCustCrcIdSeq);
-				customerCVO.setGetCustId(getCustId);
 				customerCVO.setCrcNo(null);						//암호화 코드
 				customerCVO.setCreditCardNo(form.getCreditCardNo());
 				customerCVO.setEncCrcNo(null);				//암호화 코드
@@ -585,7 +573,6 @@ public class CustomerController {
 				CustomerBVO customerBVO = new CustomerBVO();
 			//	customerBVO.setGetCustAccIdSeq(getCustAccIdSeq);
 				customerBVO.setAccNo(form.getAccNo());
-				customerBVO.setGetCustId(getCustId);
 				customerBVO.setEncAccNo(form.getEncAccNo());
 				customerBVO.setAccOwner(form.getAccOwner());
 				customerBVO.setAccTypeId(form.getAccTypeId()); //0
