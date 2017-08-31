@@ -488,6 +488,8 @@ $(document).ready(function(){
 
     });
 
+    AUIGrid.clearGridData(myGridID);
+    AUIGrid.clearGridData(myGridDetailID);
 });
 /****************************Program Init End********************************/
 </script>

@@ -206,7 +206,7 @@ var options =
 {
 		editable : false,
         usePaging : true, //페이징 사용
-//         pagingMode : "simple",
+        pagingMode : "simple",
         showPageButtonCount : 3 ,
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -509,6 +509,9 @@ $(document).ready(function(){
         }
      */
     });
+
+    AUIGrid.clearGridData(grdUser);
+    AUIGrid.clearGridData(grdMenuMapping);
 
 });
 /****************************Program Init End********************************/

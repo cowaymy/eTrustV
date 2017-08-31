@@ -205,6 +205,7 @@ var gridAuthColumnLayout =
 var options =
 {
 		editable : false,
+		pagingMode : "simple",
         usePaging : true, //페이징 사용
         useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
@@ -213,7 +214,7 @@ var options =
         selectionMode : "singleRow",
         editBeginMode : "click", // 편집모드 클릭
         softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
-            
+
 };
 
 var gridMenuMappingColumnLayout =
@@ -387,6 +388,9 @@ $(document).ready(function(){
         }
     });
 
+
+    AUIGrid.clearGridData(grdAuth);
+    AUIGrid.clearGridData(grdMenuMapping);
 });
 /****************************Program Init End********************************/
 </script>
