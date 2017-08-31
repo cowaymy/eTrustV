@@ -244,4 +244,25 @@ public interface BillingGroupService{
 	 * @return
 	 */
     void insBillGrpMaster(Map<String, Object> params);
+    
+    /**
+   	 * selectGetOrder 조회
+   	 * @param params
+   	 * @return
+   	 */
+    EgovMap selectGetOrder(Map<String, Object> params);
+    
+    /**
+	 * getSAL0024DSEQ
+	 * @param params
+	 * @return
+	 */
+    int getSAL0024DSEQ();
+    
+    /**
+	 * docNoCreateSeq
+	 * @param params
+	 * @return
+	 */
+    String docNoCreateSeq();
 }

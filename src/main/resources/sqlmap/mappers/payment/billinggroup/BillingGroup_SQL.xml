@@ -773,8 +773,8 @@
         <if test="changeMainFlag == 'Y'.toString() or newGrpFlag == 'Y'.toString() ">
         , CUST_BILL_SO_ID = #{custBillSoId}
         </if>
-        <if test="newGrpFlag == 'Y'.toString() ">
-        , CUST_BILL_STUS_ID  = #{custBillSoId}
+        <if test="newGrpFlag2 == 'Y'.toString() ">
+        , CUST_BILL_STUS_ID  = #{custBillStusId}
         </if>
         WHERE CUST_BILL_ID = #{custBillId}
     </update>
@@ -782,6 +782,7 @@
     <update id="updSalesOrderMaster" parameterType="Map">
         UPDATE SAL0001D SET
         UPD_DT = SYSDATE
+        , UPD_USER_ID = #{userId}
         <if test="addrFlag == 'Y'.toString() ">
           , CUST_ADD_ID = #{addressIDNew}
        </if>
@@ -1714,6 +1715,14 @@
             WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
     </select>
     
+    <select id="getSAL0024DSEQ" resultType="int">
+        SELECT SAL0024D_CUST_BILL_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="docNoCreateSeq" resultType="String">
+      select FN_GET_DOCNO('24') from dual
+    </select>
+    
     <insert id="insBillGrpMaster" parameterType="Map">
         INSERT INTO SAL0024D
 		(
@@ -1743,7 +1752,7 @@
 		CUST_BILL_IS_SMS2, 
 		CUST_BILL_CUST_CARE_CNT_ID )
 		VALUES (
-		'(SELECT MAX(CUST_BILL_ID)+1 FROM SAL0024D)', 
+		#{custBillIdSeq}, 
 		#{custBillSoId}, 
 		#{custBillCustId}, 
 		#{custBillCntId}, 
@@ -1752,15 +1761,15 @@
 		#{custBillRem}, 
 		#{userId}, 
 		SYSDATE, 
-		FN_GET_DOCNO('24'), 
+		#{grpNo}, 
 		#{userId}, 
 		SYSDATE, 
 		#{custBillPayTrm}, 
 		#{custBillInchgMemId}, 
 		#{custBillEmail}, 
 		#{custBillIsEstm}, 
+		#{custBillIsSms}, 
 		#{custBillIsPost}, 
-		'', 
 		'', 
 		'', 
 		'', 
@@ -1769,5 +1778,62 @@
 		'', 
 		'' )
     </insert>
+    
+    <select id="selectGetOrder" parameterType="Map" resultType="egovMap">
+       SELECT 
+	       Limit1.SALES_ORD_ID SALES_ORD_ID  ,
+	       Limit1.NRIC NRIC  ,
+	       Limit1.CUST_ID CUST_ID  ,
+	       Limit1.NAME NAME  ,
+	       Limit1.CUST_ADD_ID CUST_ADD_ID  ,
+	       Limit1.CUST_CNTC_ID CUST_CNTC_ID  ,
+	       Limit1.TYPE_ID TYPE_ID  ,
+	       Limit1.SALES_DT SALES_DT  ,
+	       Limit1.SALES_ORD_NO SALES_ORD_NO  ,
+	       Limit1.STUS_CODE_ID STUS_CODE_ID  ,
+	       Limit1.MTH_RENT_AMT MTH_RENT_AMT  ,
+	       Limit1.APP_TYPE_ID APP_TYPE_ID  ,
+	       Limit1.SRV_CNTRCT_ID SRV_CNTRCT_ID  
+	       FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+	                Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+	                Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+	                Extent2.CUST_ID CUST_ID  ,
+	                Extent2.NAME NAME  ,
+	                Extent2.NRIC NRIC  ,
+	                Extent2.TYPE_ID TYPE_ID  ,
+	                CASE 
+	                     WHEN ( Extent3.CUST_ADD_ID IS NOT NULL ) THEN Extent3.CUST_ADD_ID
+	                ELSE 0
+	                   END CUST_ADD_ID  ,
+	                CASE 
+	                     WHEN ( Extent4.CUST_CNTC_ID IS NOT NULL ) THEN Extent4.CUST_CNTC_ID
+	                ELSE 0
+	                   END CUST_CNTC_ID  ,
+	                Extent1.SALES_DT SALES_DT,
+	                CASE 
+	                     WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID
+	                ELSE 0
+	                   END STUS_CODE_ID  ,
+	                CASE 
+	                     WHEN ( Extent1.MTH_RENT_AMT IS NOT NULL ) THEN Extent1.MTH_RENT_AMT
+	                ELSE 0
+	                   END MTH_RENT_AMT  ,
+	                CASE 
+	                     WHEN ( Extent5.SRV_CNTRCT_ID IS NOT NULL ) THEN Extent5.SRV_CNTRCT_ID
+	                ELSE 0
+	                   END SRV_CNTRCT_ID  
+	         FROM SAL0001D Extent1
+	                JOIN SAL0029D Extent2   ON Extent2.CUST_ID = Extent1.CUST_ID
+	                LEFT JOIN SAL0023D Extent3   ON ( Extent3.CUST_ID = Extent2.CUST_ID )
+	                AND ( 9 = UTILS.CONVERT_TO_NUMBER(Extent3.STUS_CODE_ID,10,0) )
+	                LEFT JOIN SAL0027D Extent4   ON ( Extent4.CUST_ID = Extent2.CUST_ID )
+	                AND ( 9 = UTILS.CONVERT_TO_NUMBER(Extent4.STUS_CODE_ID,10,0) )
+	                LEFT JOIN SAL0077D Extent5   ON ( Extent5.SRV_CNTRCT_ORD_ID = Extent1.SALES_ORD_ID )
+	                AND ( ( 8 <![CDATA[<> ]]> Extent5.SRV_CNTRCT_STUS_ID )
+	                OR ( 10 <![CDATA[<> ]]> Extent5.SRV_CNTRCT_STUS_ID ) )
+	          WHERE  ( 8 <![CDATA[<> ]]>  Extent1.STUS_CODE_ID )
+	          AND ( Extent1.SALES_ORD_ID = #{salesOrdId} ) 
+	          AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
+    </select>
     
 </mapper>

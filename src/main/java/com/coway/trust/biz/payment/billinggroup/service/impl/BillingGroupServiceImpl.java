@@ -382,6 +382,38 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	public void insBillGrpMaster(Map<String, Object> params) {
-		billingGroupMapper.insBillGrpMaster(params);
+		 billingGroupMapper.insBillGrpMaster(params);
 	}
+	
+	/**
+	 * selectGetOrder
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectGetOrder(Map<String, Object> params) {
+		return billingGroupMapper.selectGetOrder(params);
+	}
+	
+	/**
+	 * getSAL0024DSEQ
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public int getSAL0024DSEQ() {
+		return billingGroupMapper.getSAL0024DSEQ();
+	}
+	
+	/**
+	 * docNoCreateSeq
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public String docNoCreateSeq() {
+		return billingGroupMapper.docNoCreateSeq();
+	}
+	
+	
 }

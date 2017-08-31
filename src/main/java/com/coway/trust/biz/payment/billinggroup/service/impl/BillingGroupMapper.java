@@ -262,4 +262,25 @@ public interface BillingGroupMapper {
 	 * @return
 	 */
 	void insBillGrpMaster(Map<String, Object> params);
+	
+	/**
+	 * "selectGetOrder" 조회
+	 * @param param
+	 * @return
+	 */
+	EgovMap selectGetOrder(Map<String, Object> param);
+	
+	/**
+	 * getSAL0024DSEQ 조회
+	 * @param params
+	 * @return
+	 */
+	int getSAL0024DSEQ();
+	
+	/**
+	 * docNoCreateSeq 조회
+	 * @param params
+	 * @return
+	 */
+	String docNoCreateSeq();
 }
