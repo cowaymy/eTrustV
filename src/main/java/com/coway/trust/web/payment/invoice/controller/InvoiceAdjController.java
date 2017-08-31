@@ -51,7 +51,23 @@ public class InvoiceAdjController {
 		
 		LOGGER.debug("params : {}", params);
 		
-		list = invoiceService.selectInvoiceAdj(params);
+		String orderNo = String.valueOf(params.get("orderNo")).trim();
+		String status = String.valueOf(params.get("status"));
+		String invoiceNo = String.valueOf(params.get("invoiceNo")).trim();
+		String adjNo = String.valueOf(params.get("adjNo")).trim();
+		String reportNo = String.valueOf(params.get("reportNo")).trim();
+		String creator = String.valueOf(params.get("creator"));
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("orderNo", orderNo);
+		map.put("status", status);
+		map.put("invoiceNo", invoiceNo);
+		map.put("adjNo", adjNo);
+		map.put("reportNo", reportNo);
+		map.put("creator", creator);
+		
+		list = invoiceService.selectInvoiceAdj(map);
 		
 		return ResponseEntity.ok(list);
 	}
@@ -69,27 +85,8 @@ public class InvoiceAdjController {
 	public String initInvoiceNewAdj(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		LOGGER.debug("params : {} " , params);
-		
-		model.addAttribute("master", invoiceService.selectNewAdjMaster(params).get(0));
-		LOGGER.debug("master : {} " , invoiceService.selectNewAdjMaster(params).get(0));
 
 		model.addAttribute("refNo", params.get("refNo"));
-		//		List<EgovMap> list = invoiceService.selectNewAdjDetailList(params);
-//		for(int i=0; i<list.size(); i++)
-//		LOGGER.debug("detail : {}", list.get(i));
-//		model.addAttribute("detail", list);
-//		
-//		JSONArray arr = new JSONArray();
-//		for(int i=0; i<list.size(); i++){
-//			JSONObject obj = new JSONObject();
-//			
-//			obj.put("billitemtype", list.get(i).get("billitemtype"));
-//			obj.put("memoItmTxs", "tmp");
-//			arr.add(obj);
-//		}
-//		
-//		model.addAttribute("sub", arr);
-//		LOGGER.debug("arr : {}", arr);
 		
 		return "payment/invoice/newAdj";
 	}
@@ -101,8 +98,13 @@ public class InvoiceAdjController {
 
 		LOGGER.debug("refNo : {}", params.get("refNo"));
 		
-		EgovMap master = invoiceService.selectNewAdjMaster(params).get(0);
-		detail = invoiceService.selectNewAdjDetailList(params);
+		String refNo = String.valueOf(params.get("refNo")).trim();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("refNo", refNo);
+		
+		EgovMap master = invoiceService.selectNewAdjMaster(map).get(0);
+		detail = invoiceService.selectNewAdjDetailList(map);
 		
 		for(int i=0; i<detail.size(); i++)
 			LOGGER.debug("detail : {}", detail.get(i));
