@@ -156,18 +156,18 @@ public class ReportController {
 				clientDoc = new ReportClientDocument();
 				clientDoc.setReportAppServer(ReportClientDocument.inprocConnectionString);
 				clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+				{
+					String connectString = reportUrl;
+					String driverName = reportDriverClass;
+					String jndiName = "";
+					String userName = reportUserName;
+					String password = reportPassword;
 
-				String connectString = reportUrl;
-				String driverName = reportDriverClass;
-				String jndiName = "";
-				String userName = reportUserName;
-				String password = reportPassword;
-
-				// Switch all tables on the main report and sub reports
-				CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
-				// logon to database
-				CRJavaHelper.logonDataSource(clientDoc, userName, password);
-
+					// Switch all tables on the main report and sub reports
+					CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+					// logon to database
+					CRJavaHelper.logonDataSource(clientDoc, userName, password);
+				}
 				// Store the report document in session
 				// session.setAttribute(reportName, clientDoc);
 			}
@@ -183,8 +183,9 @@ public class ReportController {
 			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 			Fields fields = clientDoc.getDataDefinition().getParameterFields();
 			this.setReportParameter(params, paramController, fields);
-			this.viewHandle(request, response, viewType, clientDoc, this.getCrystalReportViewer(reportSource), params);
-
+			{
+				this.viewHandle(request, response, viewType, clientDoc, this.getCrystalReportViewer(reportSource), params);
+			}
 		} catch (ReportSDKExceptionBase ex) {
 			LOGGER.error(CommonUtils.printStackTraceToString(ex));
 			throw new ApplicationException(ex);

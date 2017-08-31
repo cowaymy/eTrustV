@@ -29,12 +29,12 @@
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
 		};
 
-        Common.report("dataForm", option);
+        //Common.report("dataForm", option);
 
         ////////////////////////////////////////////////////////////////////////////////////////
 
         // 프로시져 아닌 경우 아래만 호출.
-        //Common.report("dataForm");
+        Common.report("dataForm");
 	}
 </script>
 
@@ -75,7 +75,10 @@
 <!-- ### 필수 파라미터 start ### -->
 			<!-- 리포트 파일명 -->
 			리포트 파일명(필수 : reportFileName) :
-			<input type="text" id="reportFileName" name="reportFileName" value="/sample/PaymentListing_Excel.rpt" /><br /><br />
+			<!-- <input type="text" id="reportFileName" name="reportFileName" value="/sample/PaymentListing_Excel.rpt" /><br /><br /> -->
+			<input type="hidden" id="reportFileName" name="reportFileName" value="/membership/MembershipInvoice.rpt" />
+			<!-- <input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br /> -->
+
 
 			<!-- view type
 			WINDOW : window popup
@@ -98,6 +101,7 @@
 			<!-- 리포트에서 사용할 파라미터 start-->
 			리포트 파일에 전달될 파라미터 설정 : <br/>
 			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="and pm.OR_NO = 'OR312430'" /><br />
+			<input type="text" id="V_REFNO" name="V_REFNO" value="1111111" /><br />
 			<input type="text" id="@WhereSQL" name="@WhereSQL" value="and pm.OR_NO = 'OR312430'" /><br /><!-- AS-IS 파라미터로 설정된 값 -->
 			<!-- 리포트에서 사용할 파라미터 end-->
 		</form>
