@@ -10,6 +10,14 @@ public interface GSTZeroRateLocationService {
 	//GST Zero Rate Exportation
 	List<EgovMap> selectGSTExportationList(Map<String, Object> params);
 	
+	List<EgovMap> selectGSTExportDealerList(Map<String, Object> params);
+	
+	int insertGSTExportation(List<Object> addList, Integer updUserId);
+	
+	int updateGSTExportation(List<Object> addList, Integer updUserId);
+	
+	int deleteGSTExportation(List<Object> addList, Integer updUserId);
+	
 	//GST Zero Rate Location
 	List<EgovMap> getStateCodeList(Map<String, Object> params);
 

@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("gstZeroRateLocationService")
 public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
 	@Autowired
 	private GSTZeroRateLocationMapper gstZeroRateLocationMapper;
@@ -23,6 +29,83 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 	@Override
 	public List<EgovMap> selectGSTExportationList(Map<String, Object> params) {
 		return gstZeroRateLocationMapper.selectGSTExportationList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectGSTExportDealerList(Map<String, Object> params) {
+		return gstZeroRateLocationMapper.selectGSTExportDealerList(params);
+	}
+	
+	@Override
+	public int deleteGSTExportation(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> deleteGSTExportation ");
+			logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			
+			saveCnt++;
+			
+			gstZeroRateLocationMapper.deleteGSTExportation((Map<String, Object>) obj);
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int updateGSTExportation(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> updateGSTExportation ");
+			logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			
+			saveCnt++;
+			
+			gstZeroRateLocationMapper.updateGSTExportation((Map<String, Object>) obj);
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int insertGSTExportation(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> insertGSTExportation ");
+			logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			
+			saveCnt++;
+
+			gstZeroRateLocationMapper.insertGSTExportation((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
 	}
 	
 	

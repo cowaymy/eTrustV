@@ -11,7 +11,10 @@ public interface GSTZeroRateLocationMapper {
 	
 	//GST Zero Rate Exportation
 	List<EgovMap> selectGSTExportationList(Map<String, Object> params);
-	
+	List<EgovMap> selectGSTExportDealerList(Map<String, Object> params); 
+	int insertGSTExportation(Map<String, Object> params); 
+	int updateGSTExportation(Map<String, Object> params); 
+	int deleteGSTExportation(Map<String, Object> params); 
 	
 	
 	//GST Zero Rate Location
