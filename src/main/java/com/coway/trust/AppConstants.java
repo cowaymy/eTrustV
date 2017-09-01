@@ -38,6 +38,8 @@ public class AppConstants {
 
 	public static final String FAIL = "99";
 
+	public static final String RETRY = "RETRY";
+
 	/**
 	 * file 관련
 	 */

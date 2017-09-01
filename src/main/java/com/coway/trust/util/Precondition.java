@@ -3,65 +3,64 @@ package com.coway.trust.util;
 import javax.annotation.Nullable;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.exception.PreconditionException;
 
 public class Precondition {
-	private Precondition() {
-	}
+	private Precondition() {}
 
 	public static void checkArgument(boolean expression) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, "IllegalArgumentException");
+			throw new PreconditionException(AppConstants.FAIL, "IllegalArgumentException");
 		}
 	}
 
 	public static void checkArgument(boolean expression, @Nullable Object errorMessage) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, String.valueOf(errorMessage));
+			throw new PreconditionException(AppConstants.FAIL, String.valueOf(errorMessage));
 		}
 	}
 
 	public static void checkArgument(boolean expression, @Nullable String propertyKey) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, propertyKey);
+			throw new PreconditionException(AppConstants.FAIL, propertyKey);
 		}
 	}
 
 	public static void checkArgument(boolean expression, @Nullable String errorMessageTemplate,
 			@Nullable Object... errorMessageArgs) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, format(errorMessageTemplate, errorMessageArgs));
+			throw new PreconditionException(AppConstants.FAIL, format(errorMessageTemplate, errorMessageArgs));
 		}
 	}
 
 	public static void checkState(boolean expression) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, "IllegalStateException");
+			throw new PreconditionException(AppConstants.FAIL, "IllegalStateException");
 		}
 	}
 
 	public static void checkState(boolean expression, @Nullable Object errorMessage) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, String.valueOf(errorMessage));
+			throw new PreconditionException(AppConstants.FAIL, String.valueOf(errorMessage));
 		}
 	}
 
 	public static void checkState(boolean expression, @Nullable String propertyKey) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, propertyKey);
+			throw new PreconditionException(AppConstants.FAIL, propertyKey);
 		}
 	}
 
 	public static void checkState(boolean expression, @Nullable String errorMessageTemplate,
 			@Nullable Object... errorMessageArgs) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, format(errorMessageTemplate, errorMessageArgs));
+			throw new PreconditionException(AppConstants.FAIL, format(errorMessageTemplate, errorMessageArgs));
 		}
 	}
 
 	public static <T> T checkNotNull(T reference) {
 		if (reference == null) {
-			throw new ApplicationException(AppConstants.FAIL, "NullPointerException");
+			throw new PreconditionException(AppConstants.FAIL, "NullPointerException");
 		} else {
 			return reference;
 		}
@@ -69,7 +68,7 @@ public class Precondition {
 
 	public static <T> T checkNotNull(T reference, @Nullable Object errorMessage) {
 		if (reference == null) {
-			throw new ApplicationException(AppConstants.FAIL, String.valueOf(errorMessage));
+			throw new PreconditionException(AppConstants.FAIL, String.valueOf(errorMessage));
 		} else {
 			return reference;
 		}
@@ -77,14 +76,14 @@ public class Precondition {
 
 	public static void checkNotNull(boolean expression, @Nullable String propertyKey) {
 		if (!expression) {
-			throw new ApplicationException(AppConstants.FAIL, propertyKey);
+			throw new PreconditionException(AppConstants.FAIL, propertyKey);
 		}
 	}
 
 	public static <T> T checkNotNull(T reference, @Nullable String errorMessageTemplate,
 			@Nullable Object... errorMessageArgs) {
 		if (reference == null) {
-			throw new ApplicationException(AppConstants.FAIL, format(errorMessageTemplate, errorMessageArgs));
+			throw new PreconditionException(AppConstants.FAIL, format(errorMessageTemplate, errorMessageArgs));
 		} else {
 			return reference;
 		}

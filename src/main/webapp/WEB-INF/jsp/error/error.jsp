@@ -28,8 +28,8 @@
             <table border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td><spring:message code='sys.msg.fail'/></td>
-                    <td class="<spring:message code='image.errorBg' />">
-                        <span style="font-family: Tahoma; font-weight: bold; color: #000000; line-height: 150%; width: 440px; height: 70px;"></span>
+                    <td
+                        <span style="font-family: Tahoma; font-weight: bold; color: #000000; line-height: 150%; width: 440px; height: 70px;">${exception}</span>
                     </td>
                 </tr>
             </table>
