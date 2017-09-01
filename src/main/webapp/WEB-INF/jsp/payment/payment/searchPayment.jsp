@@ -248,6 +248,12 @@ var viewHistoryLayout=[
 
 // 리스트 조회.
 function fn_getOrderListAjax() {
+	
+	if(FormUtil.checkReqValue($("#payDate1")) || FormUtil.checkReqValue($("#payDate2"))){
+        Common.alert('* Please select the Payment Date. <br />');
+        return;
+    }
+	
 	AUIGrid.destroy(subGridID);//subGrid 초기화
     Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
