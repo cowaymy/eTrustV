@@ -72,7 +72,7 @@ var columnLayout2 = [
         dataField : "accNo",
         headerText : "Account No",
         editable : false,
-        width : 150
+        width : 200
     }, {
         dataField : "accName",
         headerText : "Name",
@@ -83,7 +83,7 @@ var columnLayout2 = [
         dataField : "accNric",
         headerText : "NRIC",
         editable : false,
-        width : 150
+        width : 200
     }];
     
 // ajax list 조회.
@@ -114,19 +114,19 @@ var columnLayout2 = [
 
         	$('#enrlId').text(result.enrollInfo.enrlId);
             $('#crtDt').text(result.enrollInfo.crtDt);
-            $('#issueBank').text(result.enrollInfo.code+"-"+result.enrollInfo.name);
+            $('#issueBank').text(result.enrollInfo.code+" - "+result.enrollInfo.name);
             $('#c1').text(result.enrollInfo.c1);
             $('#debtDtFrom').text(result.enrollInfo.debtDtFrom);
             $('#debtDtTo').text(result.enrollInfo.debtDtTo);
             
-            values = result.resultList ; //java에서 정의한 ArrayList명을 적어준다.
+            values = result.resultList ;
 
         },function(jqXHR, textStatus, errorThrown) {
             Common.alert("실패하였습니다.");
 
         });
         
-        Common.ajax("GET","/payment/selectViewEnrollmentList.do?enrollId="+enrollId,$("#searchForm").serialize(), function(result){
+        Common.ajax("GET","/payment/selectViewEnrollmentList.do",{"enrollId":enrollId}, function(result){
             AUIGrid.setGridData(myGridID2, result);
         });
     }
