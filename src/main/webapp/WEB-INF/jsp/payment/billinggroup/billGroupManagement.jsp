@@ -388,7 +388,6 @@ var addOrderLayout = [
         var orderNo = $("#orderNo").val();
         orderNo = $.trim(orderNo);
                 
-        
         if(currentDay >= 26 || currentDay == 1){
         	
         	Common.alert("Unable to perform this between 26 and 1 next month");
