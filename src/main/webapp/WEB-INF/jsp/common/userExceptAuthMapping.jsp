@@ -288,7 +288,7 @@ function auiCellEditignHandler(event)
 
         if ( (validFrom != undefined && validTo != undefined ) || (validFrom != "" && validTo != "") )
         {
-            if (parseInt(validFrom) >= parseInt(validTo) )
+            if (parseInt(validFrom) > parseInt(validTo) )
             {
                Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
                //AUIGrid.setCellValue(AuthGridID, event.rowIndex, event.columnIndex, "");
@@ -567,14 +567,14 @@ var myGridID, AuthGridID;
 
 $(document).ready(function()
 {
-  $("#userId").focus();
+  $("#txtUserId").focus();
 
-  $("#userId").bind("keyup", function()
+  $("#txtUserId").bind("keyup", function()
   {
       $(this).val($(this).val().toUpperCase());
   });
 
-  $("#userId").keydown(function(key)
+  $("#txtUserId").keydown(function(key)
   {
     if (key.keyCode == 13)
     {
@@ -587,6 +587,8 @@ $(document).ready(function()
 
     var options = {
                   usePaging : true,
+               // 페이징을 간단한 유형으로 나오도록 설정
+                  pagingMode : "simple",
                   useGroupingPanel : false,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   selectionMode : "multipleRows",
@@ -718,6 +720,7 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="" onsubmit="return false;">
+<input type="hidden" id="userId" name="userId" value="" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -730,7 +733,7 @@ $(document).ready(function()
  <tr>
 	<th scope="row">USER ID</th>
 	 <td>
-	   <input type="text" id="userId" name="userId" title=""		placeholder="" class="" />
+	   <input type="text" id="txtUserId" name="txtUserId" title=""		placeholder="" class="" />
 	</td>
 <!-- 	<th scope="row">USER Name</th>
 	 <td><input type="text" id="userNm" name="userNm" title=""		placeholder="" class="" />
