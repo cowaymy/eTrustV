@@ -28,7 +28,7 @@
             <table border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td><spring:message code='sys.msg.fail'/></td>
-                    <td
+                    <td>
                         <span style="font-family: Tahoma; font-weight: bold; color: #000000; line-height: 150%; width: 440px; height: 70px;">${exception}</span>
                     </td>
                 </tr>
