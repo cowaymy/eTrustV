@@ -1205,7 +1205,7 @@
 		       Extent1.EMAIL_ADD EMAIL_ADD  
 		  FROM PAY0060D Extent1
 		 WHERE  ( Extent1.CUST_BILL_ID = #{custBillId} )
-		          AND ( 44 = Extent1.STUS_CODE_ID )
+		 AND ( 44 = Extent1.STUS_CODE_ID )
     </select>
     
     <update id="updReqEstm" parameterType="Map">
