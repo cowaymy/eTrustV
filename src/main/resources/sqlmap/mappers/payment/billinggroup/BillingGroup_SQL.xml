@@ -826,7 +826,7 @@
 		EMAIL_ADD_NW
 		)
 		VALUES(
-		(SELECT MAX(HIST_ID)+1 FROM SAL0025D),
+		(SELECT NVL(MAX(HIST_ID), 0)+1 FROM SAL0025D),
 		#{custBillId}, 
 		SYSDATE, 
 		#{userId}, 
