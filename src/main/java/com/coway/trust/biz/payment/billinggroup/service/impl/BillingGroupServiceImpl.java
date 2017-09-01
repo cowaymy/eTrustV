@@ -762,6 +762,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 				String salesOrdId = String.valueOf(map.get("salesOrdId"));
 						
 				Map<String, Object> updSalesMap = new HashMap<String, Object>();
+				updSalesMap.put("userId", userId);
 				updSalesMap.put("salesOrdId", salesOrdId);
 				updSalesMap.put("addressIDNew", String.valueOf(params.get("custAddId")));
 				updSalesMap.put("addrFlag", "Y");
@@ -861,6 +862,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 				
 				//SALES ORDER MASTER UPDATE
 				Map<String, Object> updSalesMap = new HashMap<String, Object>();
+				updSalesMap.put("userId", userId);
 				updSalesMap.put("salesOrdId", salesOrdId);
 				updSalesMap.put("conPerFlag", "Y");
 				updSalesMap.put("custBillCntId", String.valueOf(params.get("custCntcId")));
@@ -1434,6 +1436,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
         			billingGroupMapper.insHistory(insChangeHisMap);
         			
         			Map<String, Object> updChangeMap = new HashMap<String, Object>();
+        			updChangeMap.put("userId", userId);
         			updChangeMap.put("removeOrdFlag", "Y");
         			updChangeMap.put("salesOrdId", changeOrderId);
         			updChangeMap.put("custBillId", custBillId);
@@ -1497,6 +1500,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			//인서트 셋팅  끝
 			
 			Map<String, Object> updChangeMap = new HashMap<String, Object>();
+			updChangeMap.put("userId", userId);
 			updChangeMap.put("removeOrdFlag", "Y");
 			updChangeMap.put("salesOrdId", String.valueOf(params.get("salesOrdId")));
 			updChangeMap.put("custBillId", "0");
@@ -1774,6 +1778,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     		        			updChangeMap.put("addOrdFlag", "Y");
     		        			updChangeMap.put("salesOrdId", changeOrderId);
     		        			updChangeMap.put("custBillId", custBillId);
+    		        			updChangeMap.put("userId", userId);
     		        			billingGroupMapper.updSalesOrderMaster(updChangeMap);
     		        			
     						}else{
@@ -1833,6 +1838,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     							//인서트 셋팅  끝
     							
     							Map<String, Object> updChangeMap = new HashMap<String, Object>();
+    							updChangeMap.put("userId", userId);
     							updChangeMap.put("addOrdFlag", "Y");
     		        			updChangeMap.put("salesOrdId", changeOrderId);
     		        			updChangeMap.put("custBillId", custBillId);
@@ -1902,6 +1908,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     			}
 
     			Map<String, Object> updChangeMap = new HashMap<String, Object>();
+    			updChangeMap.put("userId", userId);
     			updChangeMap.put("addOrdFlag", "Y");
     			updChangeMap.put("salesOrdId", salesOrdIdArr[i].trim());
     			updChangeMap.put("custBillId", String.valueOf(params.get("custBillId")));
