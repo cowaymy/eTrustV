@@ -1236,6 +1236,9 @@
     </update> -->
     
     <insert id="insEstmReq" parameterType="Map">
+        <selectKey keyProperty="reqIdSeq" resultType="Integer" order="BEFORE">
+        SELECT PAY0060D_REQ_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
         INSERT INTO PAY0060D
 		(
 		REQ_ID, 
@@ -1254,7 +1257,7 @@
 		EMAIL_ADD )
 		VALUES 
 		( 
-		(SELECT MAX(REQ_ID)+1 FROM PAY0060D),
+		#{reqIdSeq},
 		#{stusCodeId}, 
 		#{custBillId}, 
 		#{email}, 
