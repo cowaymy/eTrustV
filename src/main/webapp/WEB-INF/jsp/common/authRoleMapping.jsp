@@ -252,20 +252,18 @@ function fnCellClickSelectRoleAuthListAjax()
 //SYS0054M - search Click
 function fnSearchBtnClickAjax()
 {
-    if ($("#txtRoleId").val().length == 0 )
+    if ($("#txtRoleId").val().length > 0)
     {
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='Role ID' htmlEscape='false'/>");
-      return false;           
+      $("#roleId").val($("#txtRoleId").val() );
     }
     else
     {
-    	if ($("#txtRoleId").val().length > 0)
-      {
-    	  $("#roleId").val($("#txtRoleId").val() );
-    	}
+    	 $("#roleId").val("");
     }
+
+    fnSelectJustRoleListAjax();
 	
-   Common.ajax("GET", "/authorization/selectSearchBtnList.do"
+/*    Common.ajax("GET", "/authorization/selectSearchBtnList.do"
            , $("#MainForm").serialize()
            , function(result)
            {
@@ -274,7 +272,7 @@ function fnSearchBtnClickAjax()
               if(result != null && result.length > 0)
               {
               }
-           });
+           }); */
 }
 
 //AUIGrid 메소드
@@ -548,7 +546,7 @@ function auiRemoveRowHandler(event)
 	    AUIGrid.restoreSoftRows(AuthGridID, "selectedIndex");
 	     
 	    return false;
-	   }
+	  }
 	}
 }
 
@@ -754,11 +752,14 @@ $(document).ready(function()
   {
 	  if (key.keyCode == 13) 
     {
-		   if ($("#txtRoleId").val().length == 0)
-			 {
-			   Common.alert("<spring:message code='sys.msg.necessary' arguments='Role ID' htmlEscape='false'/>");
-			   return false;			     
-			 }
+		  if ($("#txtRoleId").val().length > 0)
+		  {
+		    $("#roleId").val($("#txtRoleId").val() );
+		  }
+		  else
+			{
+			  $("#roleId").val("");
+		  }
 		    
 		  fnSearchBtnClickAjax();
     } 
