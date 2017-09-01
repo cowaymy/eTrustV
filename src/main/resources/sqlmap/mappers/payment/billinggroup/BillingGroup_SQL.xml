@@ -1215,26 +1215,6 @@
         WHERE  REQ_ID = #{reqId}
     </update>
     
-    <!-- <select id="selectDocNo" parameterType="Map" resultType="egovMap">
-        SELECT 
-	        Extent1.DOC_NO_ID DOC_NO_ID  ,
-	        Extent1.DOC_NO_PREFIX DOC_NO_PREFIX  ,
-	        Extent1.DOC_NO DOC_NO  ,
-	        Extent1.TYPE_CODE TYPE_CODE  ,
-	        Extent1.TYPE_DESC TYPE_DESC  ,
-	        Extent1.ISS_DT ISS_DT  ,
-	        Extent1.AUTO_REFRESH AUTO_REFRESH  ,
-	        Extent1.AUTO_REFRESH_PRIOD AUTO_REFRESH_PRIOD  
-        FROM SYS0022C Extent1
-        WHERE  Extent1.DOC_NO_ID = #{docNo} AND ROWNUM <![CDATA[<= ]]>  1
-    </select>
-    
-    <update id="updDocNo" parameterType="Map">
-        UPDATE SYS0022C
-        SET DOC_NO = #{docNo}
-        WHERE  DOC_NO_ID = #{docNoId}
-    </update> -->
-    
     <insert id="insEstmReq" parameterType="Map">
         <selectKey keyProperty="reqIdSeq" resultType="Integer" order="BEFORE">
         SELECT PAY0060D_REQ_ID_SEQ.NEXTVAL FROM DUAL
