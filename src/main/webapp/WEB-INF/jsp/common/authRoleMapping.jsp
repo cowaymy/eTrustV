@@ -538,16 +538,18 @@ function auiRemoveRowHandler(event)
   console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
   //$("#delCancel").show();
   
-  if (gSelMstRolLvl != gSelAuthRolLvl)
-  {
-	  //Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
-    Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; Wrong Level' htmlEscape='false' argumentSeparator=';'/>");
-    //AUIGrid.restoreSoftRows(AuthGridID, "all");
-    AUIGrid.restoreSoftRows(AuthGridID, "selectedIndex");
-     
-    return false;
-   }
-  
+  if (gSelMstRolLvl != "1")
+	{
+	  if (gSelMstRolLvl != gSelAuthRolLvl)
+	  {
+		  //Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
+	    Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; Wrong Level' htmlEscape='false' argumentSeparator=';'/>");
+	    //AUIGrid.restoreSoftRows(AuthGridID, "all");
+	    AUIGrid.restoreSoftRows(AuthGridID, "selectedIndex");
+	     
+	    return false;
+	   }
+	}
 }
 
 //행 삭제 이벤트 핸들러
