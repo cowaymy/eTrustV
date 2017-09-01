@@ -35,18 +35,18 @@ var SearchRoleColumnLayout =
             dataField : "authCode",
             headerText : "<spring:message code='sys.auth.grid1.AuthCode' />",
             editable : false,
-            width : "10%"
+            width : "20%"
         },{
             dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
-            width : 70
+            width : "15%"
         },{
             dataField : "authName",
             headerText : "<spring:message code='sys.auth.grid1.authName' />",           
             style : "aui-grid-left-column",
             editable : false,
-            width : 240
+            width : "65%"
         }
     ];
 

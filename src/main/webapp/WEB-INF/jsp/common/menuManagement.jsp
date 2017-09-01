@@ -197,11 +197,6 @@ function getStatusComboListAjax(callBack)
   }
 
 //AUIGrid 메소드
-//컬럼 선택시 상세정보 세팅.
-function fnSetCategoryCd(selGrdidID, rowIdx)
-{
- $("#selMenuId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "menuCode"));
-}
 
 function auiCellEditignHandler(event)
 {
@@ -257,7 +252,6 @@ function addRowMenu()
   item.menuName   ="";
   item.pgmCode    ="";
   item.pgmName    ="";
-  //item.menuOrder  ="";
   item.statusCode ="1";
   item.menuSeq    ="";
   item.rowId      ="PkAddNew";
@@ -270,8 +264,7 @@ function addRowMenu()
 //Make Use_yn ComboList, tooltip
 function getMenuLevel()
 {
-  var list =  ["2", "3", "4"];
-  return list;
+  return  ["2", "3", "4"];
 }
 
 //행 삭제 이벤트 핸들러
@@ -302,7 +295,6 @@ function fnSearchProgramPopUp()
        , true  // true면 더블클릭시 close
        , "searchProgramPop"
        );
-
 }
 
 function fnSearchUpperMenuPopUp()
@@ -313,11 +305,19 @@ function fnSearchUpperMenuPopUp()
        , true  // true면 더블클릭시 close
        , "searchUpperMenuPop"
        );
-
 }
 
 function fnSelectMenuListAjax()
 {
+	  if ($("#txtMenuCode").val().length > 0)
+		{
+		  $("#menuCode").val($("#txtMenuCode").val());  
+		}
+	  else
+    {
+    	$("#menuCode").val("");  
+    }
+    	
    Common.ajax("GET", "/menu/selectMenuList.do"
            , $("#MainForm").serialize()
            , function(result)
@@ -587,9 +587,9 @@ var myGridID, transGridID;
 
 $(document).ready(function()
 {
-    $("#menuCode").focus();
+    $("#txtMenuCode").focus();
 
-    $("#menuCode").keydown(function(key)
+    $("#txtMenuCode").keydown(function(key)
     {
        if (key.keyCode == 13)
        {
@@ -598,7 +598,7 @@ $(document).ready(function()
 
     });
 
-    $("#menuCode").bind("keyup", function()
+    $("#txtMenuCode").bind("keyup", function()
 	  {
 	    $(this).val($(this).val().toUpperCase());
 	  });
@@ -699,7 +699,7 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
-	<input type ="hidden" id="selCategoryId" name="selCategoryId" value="1"/>
+	<input type ="hidden" id="menuCode" name="menuCode" value=""/>
 
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
@@ -713,7 +713,7 @@ $(document).ready(function()
 	<tr>
 		<th scope="row">Menu Id</th>
 		<td>
-		 <input type="text" id="menuCode" name="menuCode" title="" placeholder="" class="w100p" style="text-transform: uppercase;"/>
+		 <input type="text" id="txtMenuCode" name="txtMenuCode" title="" placeholder="" class="w100p" style="text-transform: uppercase;"/>
 		</td>
 		<th scope="row">Program Id</th>
 		<td>
