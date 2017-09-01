@@ -30,6 +30,7 @@ import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.web.common.CommStatusGridData;
 import com.coway.trust.web.common.CommStatusVO;
+import com.crystaldecisions.reports.common.value.StringValue;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -179,6 +180,7 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			delCnt++;
 			
 			commonMapper.deleteUserExceptAuthMapping((Map<String, Object>) obj);
+
 		}
 		
 		return delCnt;
@@ -267,7 +269,41 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			
 			delCnt++;
 			
-			commonMapper.deleteRoleAuthMapping((Map<String, Object>) obj);
+			if ( ((Map<String, Object>) obj).get("authCode").equals("INT"))
+            {   
+				logger.debug(" deleteRoleAuthMapping_MGR_AuthCode : {}", ((Map<String, Object>) obj).get("authCode"));
+				
+				((Map<String, Object>) obj).put("oldRoleId",String.valueOf(((Map<String, Object>) obj).get("oldRoleId")));	
+				
+				commonMapper.deleteMGRRoleAuthMapping((Map<String, Object>) obj);
+            }
+			else
+			{
+				commonMapper.deleteRoleAuthMapping((Map<String, Object>) obj);
+			}
+			
+		}
+		
+		return delCnt;
+	}		
+	
+	@Override
+	public int deleteMGRRoleAuthMapping(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> deleteRoleAuthMapping_MGR");
+			logger.debug(" hidden : {}", ((Map<String, Object>) obj).get("hidden"));
+			
+			delCnt++;
+			
+			commonMapper.deleteMGRRoleAuthMapping((Map<String, Object>) obj);
+			
 		}
 		
 		return delCnt;

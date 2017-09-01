@@ -58,6 +58,7 @@ public interface CommonMapper {
 	int insertRoleAuthMapping(Map<String, Object> params);  
 	int updateRoleAuthMapping(Map<String, Object> params);  
 	int deleteRoleAuthMapping(Map<String, Object> params);  
+	int deleteMGRRoleAuthMapping(Map<String, Object> params);  
 	
 	/************************** Role Management ****************************/
 	List<EgovMap> selectRoleList(Map<String, Object> params);  

@@ -34,7 +34,7 @@ public interface CommonService {
 
 	List<EgovMap> selectI18NList();
 
-	/************************** Role Auth Mapping ****************************/
+	/************************** UserException ****************************/
 	List<EgovMap> selectUserExceptionInfoList(Map<String, Object> params);
 	
 	List<EgovMap> selectUserExceptAdjustList(Map<String, Object> params); 
@@ -60,6 +60,8 @@ public interface CommonService {
 	int updateRoleAuthMapping(List<Object> addList, Integer updUserId);
 	
 	int deleteRoleAuthMapping(List<Object> addList, Integer updUserId);
+	
+	int deleteMGRRoleAuthMapping(List<Object> addList, Integer updUserId);
 	
 	/************************** Role Management ****************************/
 	List<EgovMap> selectRoleList(Map<String, Object> params);
