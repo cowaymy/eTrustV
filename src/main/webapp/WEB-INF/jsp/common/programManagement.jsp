@@ -298,6 +298,11 @@ function auiCellEditignHandler(event)
   else if(event.type == "cellEditEnd")
   {
       console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+
+      if (event.dataField == "pgmName" && event.headerText == "NAME" ) 
+      {
+    	  AUIGrid.setCellValue(myGridID, event.rowIndex, 4, event.value);    
+      }
   }
   else if(event.type == "cellEditCancel")
   {
@@ -746,19 +751,6 @@ $(document).ready(function()
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-/*         fnTransGridReset();
-
-        if (AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) == true
-        || String(event.value).length < 1)
-        {
-                //alert("Program ID Confirm!!");
-                $("#paramPgmId").val("");
-                return false;
-        }
-
-        fnSetPgmIdParamSet(myGridID, event.rowIndex);
-        fnSelectPgmTransListAjax(); */
-
     });
 
 

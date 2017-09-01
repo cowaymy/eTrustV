@@ -299,14 +299,13 @@ function auiCellEditignHandler(event)
 
 
       if(AUIGrid.isAddedById(AuthGridID, event.item.rowId) == false 
-              && (event.item.rowId != "PkAddNew")   //수정모드
-              && (gSelMstRolLvl  != gSelAuthRolLvl ) ) // 같지 않으면 다 상위레벨.
-              {
-    	            Common.alert("<spring:message code='sys.roleAuthMapping.grid1.chkLevel' />");
-                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "all"] );
-                  return false;
-                }
-      
+         && (event.item.rowId != "PkAddNew")   //수정모드
+         && (gSelMstRolLvl  != gSelAuthRolLvl ) ) // 같지 않으면 다 상위레벨.
+      {
+    	  Common.alert("<spring:message code='sys.roleAuthMapping.grid1.chkLevel' />");
+        AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "all"] );
+        return false;
+      }
       
       if(event.dataField == "fromDt" || event.dataField == "toDt") 
       { 
