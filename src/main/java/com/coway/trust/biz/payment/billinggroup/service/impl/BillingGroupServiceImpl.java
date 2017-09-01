@@ -515,9 +515,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 							if (replcaceOrder_3 != null && Integer.parseInt(String.valueOf(replcaceOrder_3.get("salesOrdId"))) > 0){
 								changeOrderId = String.valueOf(replcaceOrder_3.get("salesOrdId"));
 							}
-							
 						}
-						
 					}
 					
 					if(Integer.parseInt(changeOrderId) > 0 ){
@@ -647,9 +645,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 					}
 						
 					}
-					
 				}
-
 
 			Map<String, Object> insBillGrpMap = new HashMap<String, Object>();
 			insBillGrpMap.put("custBillSoId", String.valueOf(params.get("salesOrdId")));
@@ -699,6 +695,306 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		
 		return grpNo;
+	}
+
+	@Override
+	public boolean saveNewAddr(Map<String, Object> params, SessionVO sessionVO) {
+		
+		String defaultDate = "1900-01-01";
+		int userId = sessionVO.getUserId();
+		params.put("defaultDate", defaultDate);
+		params.put("userId", userId);
+		
+		//베이직인포 조회.
+		EgovMap selectBasicInfo = billingGroupMapper.selectBasicInfo(params);
+		String custBillAddIdOld = selectBasicInfo.get("custBillAddId") != null ? String.valueOf(selectBasicInfo.get("custBillAddId")) : "" ;
+		String custBillId = selectBasicInfo.get("custBillId") != null ?  String.valueOf(selectBasicInfo.get("custBillId")) : "";
+				
+		if(selectBasicInfo != null && Integer.parseInt(custBillId) > 0){
+				
+			//인서트 셋팅 시작
+			String salesOrderIDOld = "0";
+			String salesOrderIDNew = "0";
+			String contactIDOld = "0";
+			String contactIDNew = "0";
+			String addressIDOld = custBillAddIdOld;
+			String addressIDNew = String.valueOf(params.get("custAddId"));
+			String statusIDOld = "0";
+			String statusIDNew = "0";
+			String remarkOld = "";
+			String remarkNew = "";
+			String emailOld = "";
+			String emailNew = "";
+			String isEStatementOld = "0";
+			String isEStatementNew = "0";
+			String isSMSOld = "0";
+			String isSMSNew = "0";
+			String isPostOld = "0";
+			String isPostNew = "0";
+			String typeId = "1042";
+			String sysHisRemark = "[System] Change Mailing Address";
+			String emailAddtionalNew = "";
+			String emailAddtionalOld = "";
+					
+			Map<String, Object> insHisMap = new HashMap<String, Object>();
+			insHisMap.put("custBillId", String.valueOf(params.get("custBillId")));
+			insHisMap.put("userId", userId);
+			insHisMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+			insHisMap.put("salesOrderIDOld", salesOrderIDOld);
+			insHisMap.put("salesOrderIDNew", salesOrderIDNew);
+			insHisMap.put("contactIDOld", contactIDOld);
+			insHisMap.put("contactIDNew", contactIDNew);
+			insHisMap.put("addressIDOld", addressIDOld);
+			insHisMap.put("addressIDNew", addressIDNew);
+			insHisMap.put("statusIDOld", statusIDOld);
+			insHisMap.put("statusIDNew", statusIDNew);
+			insHisMap.put("remarkOld", remarkOld);
+			insHisMap.put("remarkNew", remarkNew);
+			insHisMap.put("emailOld", emailOld);
+			insHisMap.put("emailNew", emailNew);
+			insHisMap.put("isEStatementOld", isEStatementOld);
+			insHisMap.put("isEStatementNew", isEStatementNew);
+			insHisMap.put("isSMSOld", isSMSOld);
+			insHisMap.put("isSMSNew", isSMSNew);
+			insHisMap.put("isPostOld", isPostOld);
+			insHisMap.put("isPostNew", isPostNew);
+			insHisMap.put("typeId", typeId);
+			insHisMap.put("sysHisRemark", sysHisRemark);
+			insHisMap.put("emailAddtionalNew", emailAddtionalNew);
+			insHisMap.put("emailAddtionalOld", emailAddtionalOld);
+			//히스토리테이블 인서트
+			billingGroupMapper.insHistory(insHisMap);
+					
+			//마스터테이블 업데이트
+			Map<String, Object> updCustMap = new HashMap<String, Object>();
+			updCustMap.put("userId", userId);
+			updCustMap.put("addrFlag", "Y");
+			updCustMap.put("addressIDNew", String.valueOf(params.get("custAddId")));
+			updCustMap.put("custBillId", custBillId);
+			billingGroupMapper.updCustMaster(updCustMap);
+					
+					
+			List<EgovMap> selectSalesOrderM = billingGroupMapper.selectSalesOrderM(params);
+			for(int i = 0 ; i < selectSalesOrderM.size() ; i++){
+				Map<String, Object> map = (Map<String, Object>)selectSalesOrderM.get(i);
+				String salesOrdId = String.valueOf(map.get("salesOrdId"));
+						
+				Map<String, Object> updSalesMap = new HashMap<String, Object>();
+				updSalesMap.put("salesOrdId", salesOrdId);
+				updSalesMap.put("addressIDNew", String.valueOf(params.get("custAddId")));
+				updSalesMap.put("addrFlag", "Y");
+				//SALES ORDER MASTER UPDATE
+				billingGroupMapper.updSalesOrderMaster(updSalesMap);
+			}
+			
+			return true;
+			
+		}else{
+			
+			return false;
+		}
+	}
+
+	@Override
+	public boolean saveNewContPerson(Map<String, Object> params, SessionVO sessionVO) {
+		
+		String defaultDate = "1900-01-01";
+		int userId = sessionVO.getUserId();
+		params.put("defaultDate", defaultDate);
+		params.put("userId", userId);
+		
+		EgovMap selectCustBillMaster = billingGroupMapper.selectCustBillMaster(params);
+		String custBillCntId = selectCustBillMaster.get("custBillCntId") != null ?  String.valueOf(selectCustBillMaster.get("custBillCntId")) : "" ;
+		String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "" ;
+		
+		if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
+			
+			//인서트 셋팅 시작
+			String salesOrderIDOld = "0";
+			String salesOrderIDNew = "0";
+			String contactIDOld = custBillCntId;
+			String contactIDNew = String.valueOf(params.get("custCntcId"));;
+			String addressIDOld = "0";
+			String addressIDNew = "0";
+			String statusIDOld = "0";
+			String statusIDNew = "0";
+			String remarkOld = "";
+			String remarkNew = "";
+			String emailOld = "";
+			String emailNew = "";
+			String isEStatementOld = "0";
+			String isEStatementNew = "0";
+			String isSMSOld = "0";
+			String isSMSNew = "0";
+			String isPostOld = "0";
+			String isPostNew = "0";
+			String typeId = "1043";
+			String sysHisRemark = "[System] Change Contact Person";
+			String emailAddtionalNew = "";
+			String emailAddtionalOld = "";
+			
+			Map<String, Object> insHisMap = new HashMap<String, Object>();
+			insHisMap.put("custBillId", String.valueOf(params.get("custBillId")));
+			insHisMap.put("userId", userId);
+			insHisMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+			insHisMap.put("salesOrderIDOld", salesOrderIDOld);
+			insHisMap.put("salesOrderIDNew", salesOrderIDNew);
+			insHisMap.put("contactIDOld", contactIDOld);
+			insHisMap.put("contactIDNew", contactIDNew);
+			insHisMap.put("addressIDOld", addressIDOld);
+			insHisMap.put("addressIDNew", addressIDNew);
+			insHisMap.put("statusIDOld", statusIDOld);
+			insHisMap.put("statusIDNew", statusIDNew);
+			insHisMap.put("remarkOld", remarkOld);
+			insHisMap.put("remarkNew", remarkNew);
+			insHisMap.put("emailOld", emailOld);
+			insHisMap.put("emailNew", emailNew);
+			insHisMap.put("isEStatementOld", isEStatementOld);
+			insHisMap.put("isEStatementNew", isEStatementNew);
+			insHisMap.put("isSMSOld", isSMSOld);
+			insHisMap.put("isSMSNew", isSMSNew);
+			insHisMap.put("isPostOld", isPostOld);
+			insHisMap.put("isPostNew", isPostNew);
+			insHisMap.put("typeId", typeId);
+			insHisMap.put("sysHisRemark", sysHisRemark);
+			insHisMap.put("emailAddtionalNew", emailAddtionalNew);
+			insHisMap.put("emailAddtionalOld", emailAddtionalOld);
+			
+					
+			//마스터테이블 업데이트
+			Map<String, Object> updCustMap = new HashMap<String, Object>();
+			updCustMap.put("contPerFlag", "Y");
+			updCustMap.put("custBillId", custBillId);
+			updCustMap.put("custBillCntId", String.valueOf(params.get("custCntcId")));
+			updCustMap.put("userId", userId);
+			billingGroupMapper.updCustMaster(updCustMap);
+			
+			//히스토리테이블 인서트
+			billingGroupMapper.insHistory(insHisMap);
+			
+			List<EgovMap> selectSalesOrderM = billingGroupMapper.selectSalesOrderM(params);
+			for(int i = 0 ; i < selectSalesOrderM.size() ; i++){
+				Map<String, Object> map = (Map<String, Object>)selectSalesOrderM.get(i);
+				String salesOrdId = String.valueOf(map.get("salesOrdId"));
+				
+				//SALES ORDER MASTER UPDATE
+				Map<String, Object> updSalesMap = new HashMap<String, Object>();
+				updSalesMap.put("salesOrdId", salesOrdId);
+				updSalesMap.put("conPerFlag", "Y");
+				updSalesMap.put("custBillCntId", String.valueOf(params.get("custCntcId")));
+				billingGroupMapper.updSalesOrderMaster(updSalesMap);
+			}
+			
+			return true;
+			
+		}else{
+			
+			return false;
+			
+		}
+	}
+
+	@Override
+	public boolean saveNewReq(Map<String, Object> params, SessionVO sessionVO) {
+		
+		String defaultDate = "1900-01-01";
+		int userId = sessionVO.getUserId();
+		params.put("defaultDate", defaultDate);
+		params.put("userId", userId);	
+		
+		//master 조회.
+		List<EgovMap> reqMaster = billingGroupMapper.selectReqMaster(params);
+		EgovMap selectCustBillMaster = billingGroupMapper.selectCustBillMaster(params);
+		String custBillEmail = selectCustBillMaster.get("custBillEmail") != null ? String.valueOf(selectCustBillMaster.get("custBillEmail")) : "";
+		String custBillIsEstm = selectCustBillMaster.get("custBillIsEstm") != null ? String.valueOf(selectCustBillMaster.get("custBillIsEstm")) : "";
+		String custBillIsSms = selectCustBillMaster.get("custBillIsSms") != null ? String.valueOf(selectCustBillMaster.get("custBillIsSms")) : "";
+		String custBillIsPost = selectCustBillMaster.get("custBillIsPost") != null ? String.valueOf(selectCustBillMaster.get("custBillIsPost")) : "";
+		String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "0";
+
+		//인서트 셋팅 시작
+		String salesOrderIDOld = "0";
+		String salesOrderIDNew = "0";
+		String contactIDOld = "0";
+		String contactIDNew = "0";
+		String addressIDOld = "0";
+		String addressIDNew = "0";
+		String statusIDOld = "0";
+		String statusIDNew = "0";
+		String remarkOld = "";
+		String remarkNew = "";
+		String emailOld = custBillEmail;
+		String emailNew = String.valueOf(params.get("reqEmail")).trim();;
+		String isEStatementOld = custBillIsEstm;
+		String isEStatementNew = custBillIsEstm;
+		String isSMSOld = custBillIsSms;
+		String isSMSNew = custBillIsSms;
+		String isPostOld = custBillIsPost;
+		String isPostNew = custBillIsPost;
+		String typeId = "1047";
+		String sysHisRemark = "[System] E-Statement Request";
+		String emailAddtionalNew = "";
+		String emailAddtionalOld = "";
+		
+		if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
+			
+			if(reqMaster.size() > 0){
+				for(int i = 0 ; i < reqMaster.size() ; i++){
+					Map<String, Object> map = (Map<String, Object>)reqMaster.get(i);
+					params.put("reqId", String.valueOf(map.get("reqId")));
+					params.put("stusCodeId", 10);
+					//REQ마스터테이블 업데이트
+					billingGroupMapper.updReqEstm(params);
+				}
+			}
+			
+			Map<String, Object> insHisMap = new HashMap<String, Object>();
+			insHisMap.put("custBillId", String.valueOf(params.get("custBillId")));
+			insHisMap.put("userId", userId);
+			insHisMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+			insHisMap.put("salesOrderIDOld", salesOrderIDOld);
+			insHisMap.put("salesOrderIDNew", salesOrderIDNew);
+			insHisMap.put("contactIDOld", contactIDOld);
+			insHisMap.put("contactIDNew", contactIDNew);
+			insHisMap.put("addressIDOld", addressIDOld);
+			insHisMap.put("addressIDNew", addressIDNew);
+			insHisMap.put("statusIDOld", statusIDOld);
+			insHisMap.put("statusIDNew", statusIDNew);
+			insHisMap.put("remarkOld", remarkOld);
+			insHisMap.put("remarkNew", remarkNew);
+			insHisMap.put("emailOld", emailOld);
+			insHisMap.put("emailNew", emailNew);
+			insHisMap.put("isEStatementOld", isEStatementOld);
+			insHisMap.put("isEStatementNew", isEStatementNew);
+			insHisMap.put("isSMSOld", isSMSOld);
+			insHisMap.put("isSMSNew", isSMSNew);
+			insHisMap.put("isPostOld", isPostOld);
+			insHisMap.put("isPostNew", isPostNew);
+			insHisMap.put("typeId", typeId);
+			insHisMap.put("sysHisRemark", sysHisRemark);
+			insHisMap.put("emailAddtionalNew", emailAddtionalNew);
+			insHisMap.put("emailAddtionalOld", emailAddtionalOld);
+			
+			//히스토리테이블 인서트
+			billingGroupMapper.insHistory(insHisMap);
+
+			Map<String, Object> estmMap = new HashMap<String, Object>();
+			estmMap.put("stusCodeId", "44");
+			estmMap.put("custBillId", String.valueOf(params.get("custBillId")));
+			estmMap.put("email", String.valueOf(params.get("reqEmail")));
+			estmMap.put("cnfmCode", CommonUtils.getRandomNumber(10));
+			estmMap.put("userId", userId);
+			estmMap.put("defaultDate", defaultDate);
+			estmMap.put("emailFailInd", "0");
+			estmMap.put("emailFailDesc", "");
+			estmMap.put("emailAdd", "");
+			//estmReq 인서트
+			billingGroupMapper.insEstmReq(estmMap);
+			
+			return true;
+			
+		}else{
+			return false;
+		}
 	}
 
 }
