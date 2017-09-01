@@ -102,4 +102,30 @@ public class CommonApiController {
 
 		return ResponseEntity.ok(list);
 	}
+
+	@ApiOperation(value = "Malfunction Reason 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/malfunction/reasons", method = RequestMethod.GET)
+	public ResponseEntity<List<MalfunctionReasonDto>> getMalfunctionReasons(
+			@ModelAttribute MalfunctionReasonForm malfunctionReasonForm) throws Exception {
+
+		Map<String, Object> params = MalfunctionReasonForm.createMap(malfunctionReasonForm);
+		List<EgovMap> masters = commonService.getMalfunctionReasons(params);
+		List<MalfunctionReasonDto> list = masters.stream().map(r -> MalfunctionReasonDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+
+	@ApiOperation(value = "Malfunction Code 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/malfunction/codes", method = RequestMethod.GET)
+	public ResponseEntity<List<MalfunctionCodeDto>> getMalfunctionReasons(
+			@ModelAttribute MalfunctionCodeForm malfunctionCodeForm) throws Exception {
+
+		Map<String, Object> params = MalfunctionCodeForm.createMap(malfunctionCodeForm);
+		List<EgovMap> masters = commonService.getMalfunctionCodes(params);
+		List<MalfunctionCodeDto> list = masters.stream().map(r -> MalfunctionCodeDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
 }

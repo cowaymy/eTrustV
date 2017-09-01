@@ -26,16 +26,16 @@ public interface CommonMapper {
 	List<EgovMap> selectCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectCommonCodes(Map<String, Object> params);
-
 	List<EgovMap> selectAllCommonCodes(Map<String, Object> params);
-
 	List<EgovMap> selectCommonCodesPage(Map<String, Object> params);
 
 	List<EgovMap> selectBanks(Map<String, Object> params);
 
 	List<EgovMap> selectDefectMasters(Map<String, Object> params);
-
 	List<EgovMap> selectDefectDetails(Map<String, Object> params);
+
+	List<EgovMap> selectMalfunctionReasons(Map<String, Object> params);
+	List<EgovMap> selectMalfunctionCodes(Map<String, Object> params);
 
 	int selectCommonCodeTotalCount(Map<String, Object> params);
 

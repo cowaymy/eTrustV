@@ -1118,6 +1118,14 @@
         SELECT * FROM SYS1019V
     </select>
 
+    <select id="selectMalfunctionReasons" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1022V
+    </select>
+
+    <select id="selectMalfunctionCodes" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1021V
+    </select>
+
     <select id="selectDefectCodes" parameterType="Map" resultType="egovMap">
         SELECT BANK.BANK_ID BANK_ID
             ,BANK.CODE BANK_CODE
