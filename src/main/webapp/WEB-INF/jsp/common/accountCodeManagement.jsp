@@ -475,7 +475,10 @@ $(document).ready(function()
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-  <p class="show_btn"><%-- <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+  <p class="show_btn">
+<%--     <a href="javascript:void(0);">
+      <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" />
+    </a>  --%>
   </p> 
 <dl class="link_list">
 	<dt>Link</dt>
