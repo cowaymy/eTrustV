@@ -380,8 +380,8 @@
            ,A.UPD_DT
      FROM SYS0036M A
     WHERE 1=1
-      <if test="paramCategoryId !=null and paramCategoryId != ''">
-        AND A.STUS_CTGRY_ID = #{paramCategoryId}
+      <if test="txtCategoryId !=null and txtCategoryId != ''">
+        AND A.STUS_CTGRY_ID = #{txtCategoryId}
       </if>     
       <if test="paramCategoryNM !=null and paramCategoryNM != ''">
         AND UPPER(A.STUS_CTGRY_NAME) LIKE '%' || UPPER(#{paramCategoryNM}) || '%'         
@@ -658,11 +658,6 @@
                         ,CD_DTL.OLD_CODE_ID
             FROM SYS0012M CD_MST, SYS0013M CD_DTL
             WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
-            AND 'T' = CASE WHEN #{codeMasterIds} IS NULL OR CD_MST.CODE_MASTER_ID  IN ( SELECT  REGEXP_SUBSTR( #{codeMasterIds}, '[^,]+', 1, LEVEL )
-                                        FROM    DUAL
-                                        CONNECT BY REGEXP_SUBSTR(#{codeMasterIds}, '[^,]+', 1, LEVEL ) IS NOT NULL) THEN 'T'
-                                      ELSE 'F'
-                            END
             ORDER BY CODE_MASTER_ID
         ]]>
     </select>
@@ -1108,37 +1103,6 @@
                                         ELSE  'F'
                               END
           ORDER BY BANK.CODE
-    </select>
-
-    <select id="selectDefectMasters" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1020V
-    </select>
-
-    <select id="selectDefectDetails" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1019V
-    </select>
-
-    <select id="selectMalfunctionReasons" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1022V
-    </select>
-
-    <select id="selectMalfunctionCodes" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1021V
-    </select>
-
-    <select id="selectReasonCodes" parameterType="Map" resultType="egovMap">
-        SELECT CODEDETAIL.CODE_ID RESN_MASTER_TYPE_ID
-              ,CODEDETAIL.CODE RESN_MASTER_CODE
-              ,CODEDETAIL.CODE_NAME RESN_MASTER_DESC
-              ,CODEDETAIL.DISAB
-              ,REASONCODE.RESN_TYPE_ID
-              ,REASONCODE.RESN_ID
-              ,REASONCODE.CODE RESN_CODE
-              , REASONCODE.CODE || ' - ' || REASONCODE.RESN_DESC RESN_DESC
-              ,REASONCODE.STUS_CODE_ID
-          FROM SYS0032M REASONCODE, SYS0013M CODEDETAIL
-         WHERE REASONCODE.RESN_TYPE_ID = CODEDETAIL.CODE_ID
-           AND REASONCODE.RESN_TYPE_ID IN (166, 167, 174, 336, 1332, 537, 894, 340)
     </select>
 
     <select id="selectDefectCodes" parameterType="Map" resultType="egovMap">
