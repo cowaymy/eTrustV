@@ -87,9 +87,9 @@ WHERE  1 = 1
        AND 1165 <> USR.USER_TYPE_ID
        AND USR.USER_VAL_ID_TO  >=  SYSDATE
     ]]>
-       <if test="userId != null and userId !=''">
-       AND (UPPER(USR.USER_ID) LIKE  UPPER(#{userId}) || '%' 
-        OR UPPER(USR.USER_NAME) LIKE '%' || UPPER(#{userId}) || '%')
+       <if test="txtUserId != null and txtUserId !=''">
+       AND (UPPER(USR.USER_ID) LIKE  UPPER(#{txtUserId}) || '%' 
+        OR UPPER(USR.USER_NAME) LIKE '%' || UPPER(#{txtUserId}) || '%')
        </if>
     ORDER BY USER_ID
 </select>
