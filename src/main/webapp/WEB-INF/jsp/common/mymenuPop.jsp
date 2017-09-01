@@ -3,38 +3,38 @@
 <script type="text/javaScript">
 /********************************Global Variable Start***********************************/
 /********************************Global Variable End************************************/
-/********************************Function  Start*************************************** 
- * 
+/********************************Function  Start***************************************
+ *
  */
 /****************************Function  End***********************************
- * 
+ *
  */
-/****************************Transaction Start********************************/ 
+/****************************Transaction Start********************************/
 
-function fn_searchMyMenuCombo(){	
+function fn_searchMyMenuCombo(){
     Common.ajax(
-            "GET", 
-            "/common/selectMyMenuList.do", 
-            "useYn=Y", 
+            "GET",
+            "/common/selectMyMenuList.do",
+            "useYn=Y",
             function(data, textStatus, jqXHR){ // Success
-                for(var idx=0; idx < data.length ; idx++){                	
-                	$("#select_myMenu").append("<option value='"+data[idx].mymenuCode+"'>"+data[idx].mymenuName+"</option>");	
+                for(var idx=0; idx < data.length ; idx++){
+                	$("#select_myMenu").append("<option value='"+data[idx].mymenuCode+"'>"+data[idx].mymenuName+"</option>");
                 }
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 alert("Fail : " + jqXHR.responseJSON.message);
-            }           
+            }
     )
 };
 
 function onClickSelectMyMenuPop(){
 	mymenuPopSelect($("#select_myMenu option:selected").val());
 }
-/****************************Transaction End********************************/ 
+/****************************Transaction End********************************/
 /**************************** Grid setting Start ******************************/
 /****************************Program Init Start********************************/
 $(document).ready(function(){
-    // AUIGrid 그리드를 생성        
+    // AUIGrid 그리드를 생성
 	fn_searchMyMenuCombo();
 });
 /****************************Program Init End********************************/
@@ -42,7 +42,7 @@ $(document).ready(function(){
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Search</h1>
+<h1>MyMenu</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
