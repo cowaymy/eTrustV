@@ -381,8 +381,8 @@ var addOrderLayout = [
     	var now = new Date();
         var year= now.getFullYear();
         var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
-        //var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
-        var currentDay = "02";
+        var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
+        //var currentDay = "02";
         var valid = true;
         var message = "";
         var orderNo = $("#orderNo").val();
@@ -420,6 +420,11 @@ var addOrderLayout = [
                         $("#nric").text(result.data.selectBasicInfo.nric);
                         $("#customerName").text(result.data.selectBasicInfo.name);
                         
+                        
+                        $("#post").attr('disabled', false);
+                        $("#sms").attr('disabled', false);
+                        $("#estm").attr('disabled', false);
+                        
                         if(result.data.selectBasicInfo.custBillIsPost == "1"){
                             $("#post").attr('checked', true);
                         }else{
@@ -437,6 +442,10 @@ var addOrderLayout = [
                         }else{
                             $("#estm").attr('checked', false);
                         }
+                        
+                        $("#post").attr('disabled', true);
+                        $("#sms").attr('disabled', true);
+                        $("#estm").attr('disabled', true);
                         
                         $("#remark").text(result.data.selectBasicInfo.custBillRem);
                         $("#email").text(result.data.selectBasicInfo.custBillEmail);
@@ -626,7 +635,7 @@ var addOrderLayout = [
             if(result.data.basicInfo.custBillIsEstm == "1"){
                 $("#changePop_estm").attr('checked', true);
                 $("#changePop_estm").attr('disabled', false);
-                 $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
+                $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
             }else{
                 $("#changePop_estm").attr('checked', false);
                 $("#changePop_estm").attr('disabled', true);
