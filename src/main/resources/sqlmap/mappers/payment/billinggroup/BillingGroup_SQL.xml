@@ -972,7 +972,6 @@
     
     <select id="selectContPersonHistorty" parameterType="java.lang.String" resultType="egovMap">
         SELECT 
-	        1 C1  ,
 	       CASE 
 	            WHEN ( Limit1.CODE_ID IS NOT NULL ) THEN Limit1.CODE
 	       ELSE ' '
@@ -1005,7 +1004,8 @@
 	            WHEN ( Limit1.CODEID1 IS NOT NULL ) THEN Limit1.CODE_NAME
 	       ELSE ''
 	          END CODE_NAME  
-	       FROM ( SELECT Extent1.NAME NAME  ,
+	       FROM ( SELECT 
+	                Extent1.NAME NAME  ,
 	                Extent1.NRIC NRIC  ,
 	                Extent1.TEL_M1 TEL_M1  ,
 	                Extent1.TEL_O TEL_O  ,
