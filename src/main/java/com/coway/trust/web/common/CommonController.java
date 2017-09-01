@@ -226,4 +226,16 @@ public class CommonController {
 			System.out.println(em);
 		return ResponseEntity.ok(codeList);
 	}
+	
+	/**
+	 * Payment - Adjustment CN/DN : Adjustment Reason 정보 조회
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/selectAdjReasontList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAdjReasonList(@RequestParam Map<String, Object> params){
+		List<EgovMap> codeList = commonService.selectAdjReasonList(params);
+		return ResponseEntity.ok(codeList);
+	}
 }

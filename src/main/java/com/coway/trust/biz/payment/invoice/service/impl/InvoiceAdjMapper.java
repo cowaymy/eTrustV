@@ -42,4 +42,32 @@ public interface InvoiceAdjMapper {
 	 * @return
 	 */
 	List<EgovMap> selectNewAdjDetailList(Map<String, Object> params);
+	
+	 /**
+	 * Adjustment CN/DN AccID  조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap getAdjustmentCnDnAccId(Map<String, Object> params);
+	
+	 /**
+	 * Adjustment ID 채번
+	 * @param params
+	 * @return
+	 */
+	int getAdjustmentId();
+
+	 /**
+	 * Adjustment request Master 등록
+	 * @param params
+	 * @return
+	 */
+	void saveNewAdjMaster(Map<String, Object> params);
+	
+	 /**
+	 * Adjustment request Detail  등록
+	 * @param params
+	 * @return
+	 */
+	void saveNewAdjDetail(Map<String, Object> params);
 }

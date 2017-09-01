@@ -26,4 +26,18 @@ public interface InvoiceAdjService {
     	 * @return
     	 */
         List<EgovMap> selectNewAdjDetailList(Map<String, Object> params);
+        
+        /**
+    	 * Adjustment CN/DN AccID  조회
+    	 * @param params
+    	 * @return
+    	 */
+        EgovMap getAdjustmentCnDnAccId(Map<String, Object> params);
+        
+        /**
+    	 * Adjustment CN/DN request 등록
+    	 * @param params
+    	 * @return
+    	 */
+        String saveNewAdjList(int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList);
 }

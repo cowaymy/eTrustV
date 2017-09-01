@@ -935,4 +935,22 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectUpperMenuList(params);
 		
 	}
+	
+	@Override
+	public String selectDocNo(String  docId) {	
+		return commonMapper.selectDocNo(docId);
+	}
+	
+	/**
+	 * Payment - Adjustment CN/DN : Adjustment Reason 정보 조회
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectAdjReasonList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return commonMapper.selectAdjReasonList(params);
+		
+	}
 }

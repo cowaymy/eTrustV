@@ -47,11 +47,7 @@ function fn_cmmSearchInvoicePop(){
 }
 
 function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value, item){
-    alert(AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcId"));
-    alert(AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo"));
-    
-    location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");
-    
+    location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");    
     $('#_searchInvoice').hide();
     
 }

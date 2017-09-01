@@ -182,4 +182,14 @@ public interface CommonMapper {
 
 	
 	List<EgovMap> selectProductList();
+	
+	String selectDocNo(String  docId);
+	
+	/**
+	 * Payment - Adjustment CN/DN : Adjustment Reason 정보 조회
+	 * 
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectAdjReasonList(Map<String, Object> params);
 }

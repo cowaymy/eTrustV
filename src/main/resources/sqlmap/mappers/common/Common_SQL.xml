@@ -1159,4 +1159,25 @@
 	    ORDER BY Project1.CODE_NAME ASC, Project1.STK_DESC ASC
 	    ]]>
     </select>
+    
+    <!-- DOC NO  채번 -->
+    <select id="selectDocNo" parameterType="String" resultType="String">
+        SELECT FN_GET_DOCNO(#{value}) from dual
+    </select> 
+    
+    
+    <!-- Payment - Adjustment CN/DN : Adjustment Reason 정보 조회 -->
+    <select id="selectAdjReasonList" parameterType="Map" resultType="egovMap">
+        SELECT 
+            A.RESN_ID AS CODE_ID , 
+            B.RESN_DESC  AS CODE_NAME 
+        FROM 
+            SYS0033M A
+            JOIN SYS0032M B ON A.RESN_ID = B.RESN_ID AND B.STUS_CODE_ID = 1
+        WHERE
+            A.RESN_TYPE_ID = 1278
+            AND A.RESN_PARENT_GRP_ID = #{groupCode}
+            AND A.RESN_STUS_ID = 1
+        ORDER BY B.RESN_DESC         
+    </select>
 </mapper>
