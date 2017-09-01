@@ -132,8 +132,8 @@ var MainColumnLayout =
             dataField : "statusCode",
             headerText : "<spring:message code='sys.menumanagement.grid1.Status'/>",
             //style : "my-column",
-            width : "6%",
-            editRenderer :
+            width : "6%"
+           ,editRenderer :
             {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -144,6 +144,23 @@ var MainColumnLayout =
                 keyField : "id",
                 valueField : "value",
             }
+                 
+           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) 
+            {
+              var retStr = value;
+              var iCnt = StatusCdList.length;
+              
+              for(var iLoop = 0; iLoop < iCnt; iLoop++) 
+              {
+            	  if(StatusCdList[iLoop]["id"] == value) 
+                {
+            		  retStr = StatusCdList[iLoop]["value"];
+                  break;
+                }
+              }
+              return retStr;
+            }
+
         }, {
             dataField : "menuSeq",
             headerText : "",
