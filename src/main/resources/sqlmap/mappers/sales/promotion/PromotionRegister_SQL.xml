@@ -2,6 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.promotion.impl.PromotionRegisterMapper">
 
+    <select id="selectMembershipPkg" parameterType="Map" resultType="egovMap">
+        SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+             , T1.SRV_MEM_CODE
+             , T1.SRV_MEM_DESC AS CODE_NAME
+             , T1.SRV_MEM_DUR
+             , T1.SRV_MEM_PART_CHRG_TYPE_ID
+             , T1.SRV_MEM_LAB_CHRG
+             , T1.SRV_MEM_STUS_ID
+             , T1.SRV_MEM_CRT_DT
+             , T1.SRV_MEM_CRT_USER_ID
+             , T1.SRV_MEM_OLD_CODE
+          FROM SAL0091M T1
+         WHERE 1 = T1.SRV_MEM_STUS_ID
+           AND 9 = T1.SRV_MEM_PAC_ID
+         ORDER
+            BY T1.SRV_MEM_CODE ASC
+    </select>
+    
+    <select id="selectPriceInfo" parameterType="Map" resultType="egovMap">
+		SELECT T1.PRC_ID
+		     , T1.MEM_PAC_ID
+		     , T1.STK_ID
+		     , T1.AMT
+		     , T1.UOM_ID
+		     , T1.UOM_CONV
+		     , T1.START_DT
+		     , T1.END_DT
+		     , T1.CNTY_ID
+		     , T1.APP_TYPE_ID
+		     , T1.PRIOD
+		     , T1.PRC_RPF
+		     , T1.PRC_PV
+		     , T1.TRADE_IN_PV
+		     , T1.CRT_USER_ID
+		     , T1.CRT_DT
+		     , T1.UPD_USER_ID
+		     , T1.UPD_DT
+		     , T1.PRC_CHRG
+		     , T1.PRC_COSTING
+		     , T1.STUS_CODE_ID
+		  FROM SAL0016M T1
+		 WHERE T1.STK_ID = #{stkId}
+		   AND T1.APP_TYPE_ID = #{appTypeId}
+    </select>
+    
     <insert id="insertSalesPromoM" parameterType="salesPromoMVO">
       <selectKey keyProperty="promoId" resultType="Integer" order="BEFORE">
         SELECT SAL0017D_PROMO_ID_SEQ.NEXTVAL FROM DUAL
@@ -69,23 +114,19 @@
              , PROMO_ID
              , PROMO_ITM_STK_ID
              , PROMO_ITM_CUR_ID
-             , PROMO_ITM_PRC
              , PROMO_ITM_PV
              , PROMO_ITM_STUS_ID
              , PROMO_ITM_UPD_USER_ID
-             , PROMO_ITM_UPD_DT
-             , PROMO_ITM_RENTAL) 
+             , PROMO_ITM_UPD_DT) 
         VALUES
              ( #{promoItmId}
              , #{promoId}
              , #{promoItmStkId}
              , #{promoItmCurId}
-             , #{promoItmPrc}
              , #{promoItmPv}
              , #{promoItmStusId}
              , #{promoItmUpdUserId}
-             , SYSDATE
-             , #{promoItmRental})
+             , SYSDATE)
 	</insert>
 	
     <insert id="insertSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">

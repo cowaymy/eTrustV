@@ -29,6 +29,7 @@ import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.promotion.PromotionListService;
 import com.coway.trust.biz.sales.promotion.PromotionRegisterService;
 import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
+import com.coway.trust.biz.sales.promotion.vo.SalesPromoDVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -74,5 +75,20 @@ public class PromotionRegisterController {
 		message.setMessage(messageAccessor.getMessage("New promotion successfully saved."));
 
 		return ResponseEntity.ok(message);
+	}
+	
+    @RequestMapping(value = "/selectMembershipPkg.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectMembershipPkg(@RequestParam Map<String, Object> params)
+    {
+    	List<EgovMap> resultList = promotionRegisterService.selectMembershipPkg(params);
+    	return ResponseEntity.ok(resultList);
+    }
+    
+	@RequestMapping(value = "/selectPriceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<List<SalesPromoDVO>> selectPriceInfo(@RequestBody PromotionVO promotionVO) {
+		
+		List<SalesPromoDVO> resultList = promotionRegisterService.selectPriceInfo(promotionVO);
+
+		return ResponseEntity.ok(resultList);
 	}
 }

@@ -1,13 +1,17 @@
 package com.coway.trust.biz.sales.promotion.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 /**
  * The persistent class for the SAL0018D database table.
  * 
  */
+@JsonIgnoreProperties
 public class SalesPromoDVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -16,7 +20,7 @@ public class SalesPromoDVO implements Serializable {
 	
 	private int promoId;
 	
-	private int promoItmStkId;
+	private int promoItmStkId;//
 	
 	private int promoItmCurId;
 	
@@ -35,6 +39,16 @@ public class SalesPromoDVO implements Serializable {
 	private int promoItmRentPriod;
 	
 	private int promoItmObligPriod;
+	
+	private String itmcd;//
+	
+	private String itmname;//
+	
+	private BigDecimal amt;
+	
+	private BigDecimal prcRpf;
+	
+	private BigDecimal prcPv;
 	
 	public int getPromoItmId() {
 		return promoItmId;
@@ -130,6 +144,46 @@ public class SalesPromoDVO implements Serializable {
 	
 	public void setPromoItmObligPriod(int promoItmObligPriod) {
 		this.promoItmObligPriod = promoItmObligPriod;
+	}
+
+	public String getItmcd() {
+		return itmcd;
+	}
+
+	public void setItmcd(String itmcd) {
+		this.itmcd = itmcd;
+	}
+
+	public String getItmname() {
+		return itmname;
+	}
+
+	public void setItmname(String itmname) {
+		this.itmname = itmname;
+	}
+
+	public BigDecimal getAmt() {
+		return amt;
+	}
+
+	public void setAmt(BigDecimal amt) {
+		this.amt = amt;
+	}
+
+	public BigDecimal getPrcRpf() {
+		return prcRpf;
+	}
+
+	public void setPrcRpf(BigDecimal prcRpf) {
+		this.prcRpf = prcRpf;
+	}
+
+	public BigDecimal getPrcPv() {
+		return prcPv;
+	}
+
+	public void setPrcPv(BigDecimal prcPv) {
+		this.prcPv = prcPv;
 	}
 	
 }

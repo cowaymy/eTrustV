@@ -16,22 +16,27 @@
         doGetCombo('/common/selectCodeList.do', '323', '',        'promoDiscType', 'S'); //Discount Type
         doGetCombo('/common/selectCodeList.do', '322', '',    'promoDiscPeriodTp', 'S'); //Discount period
         doGetCombo('/common/selectCodeList.do', '321', '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+        
+        doGetCombo('/sales/promotion/selectMembershipPkg.do', '', '9', 'promoSrvMemPacId', 'S'); //Common Code
     });
     
     function createAUIGridStk() {
         
     	//AUIGrid 칼럼 설정
         var columnLayout1 = [
-            { dataField : "itmcd",   headerText : "Product CD",   editable : false,  width : 100 }
-          , { dataField : "itmname", headerText : "Product Name", editable : false              }
-          , { dataField : "promoItmStkId",   headerText : "itmid",        visible  : true,   width : 120}
+            { dataField : "itmcd",         headerText : "Product CD",        editable : false,  width : 100 }
+          , { dataField : "itmname",       headerText : "Product Name",      editable : false               }
+          , { dataField : "amt",           headerText : "Monthly Fee/Price", editable : false,  width : 100 }
+          , { dataField : "prcRpf",        headerText : "RPF",               editable : false,  width : 100 }
+          , { dataField : "prcPv",         headerText : "PV",                editable : false,  width : 100 }
+          , { dataField : "promoItmStkId", headerText : "itmid",             visible  : true,   width : 120 }
           ];
 
     	//AUIGrid 칼럼 설정
         var columnLayout2 = [
-            { dataField : "itmcd",   headerText : "Product CD",   editable : false,  width : 100 }
-          , { dataField : "itmname", headerText : "Product Name", editable : false              }
-          , { dataField : "itmid",   headerText : "itmid",        visible  : true,   width : 120}
+            { dataField : "itmcd",              headerText : "Product CD",   editable : false,  width : 100 }
+          , { dataField : "itmname",            headerText : "Product Name", editable : false               }
+          , { dataField : "promoFreeGiftStkId", headerText : "itmid",        visible  : true,   width : 120 }
           ];
 
         //그리드 속성 설정
@@ -108,11 +113,28 @@
         });
     }
     
+    function fn_getPrdPriceInfo() {
+        
+        var promotionVO = {            
+            salesPromoMVO : {
+	            promoAppTypeId         : $('#promoAppTypeId').val()
+            },
+            salesPromoDGridDataSetList : GridCommon.getEditData(stckGridID)
+        };
+
+        Common.ajax("POST", "/sales/promotion/selectPriceInfo.do", promotionVO, function(result) {
+            AUIGrid.setGridData(stckGridID, result);
+        });
+    }
+    
     $(function(){
-        $('#btnProduct').click(function() {
+        $('#btnProductAdd').click(function() {
             Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "stocklist"});
         });
-        $('#btnFreeGift').click(function() {
+        $('#btnProductDel').click(function() {
+            fn_getPrdPriceInfo();
+        });
+        $('#btnFreeGiftAdd').click(function() {
         	Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "item"});
         });
         $('#promoAppTypeId').change(function() {
@@ -139,14 +161,27 @@
        	AUIGrid.removeSoftRows(vGrid);
        	
        	for (var i = 0 ; i < data.length ; i++){
-        	rowList[i] = {
-    	    	promoItmStkId : data[i].item.itemid,
-    	    	itmcd : data[i].item.itemcode,
-    	    	itmname : data[i].item.itemname
+        	if(gubun == "stocklist") {
+        	    rowList[i] = {
+    	    	    promoItmStkId      : data[i].item.itemid,
+        	    	itmcd              : data[i].item.itemcode,
+        	    	itmname            : data[i].item.itemname,
+        	    	amt                : 0,
+        	    	prcRpf             : 0,
+        	    	prcPv              : 0
+        	    }
+        	} else {
+        	    rowList[i] = {
+    	    	    promoFreeGiftStkId : data[i].item.itemid,
+        	    	itmcd              : data[i].item.itemcode,
+        	    	itmname            : data[i].item.itemname
+        	    }
         	}
     	}
         
-        AUIGrid.addRow(vGrid, rowList, rowPos);    
+        AUIGrid.addRow(vGrid, rowList, rowPos);
+        
+        //fn_getPrdPriceInfo();
     }
     
     function fn_chgPromoDetail() {
@@ -420,7 +455,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="btnProduct" href="#">RPDUCT</a></p></li>
+	<li><p class="btn_grid"><a id="btnProductDel" href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a id="btnProductAdd" href="#">ADD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -432,7 +468,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="btnFreeGift" href="#">FREE GIFT</a></p></li>
+	<li><p class="btn_grid"><a id="btnFreeGiftDel" href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a id="btnFreeGiftAdd" href="#">ADD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

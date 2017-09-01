@@ -14,6 +14,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("promotionRegisterMapper")
 public interface PromotionRegisterMapper {
 
+	List<EgovMap> selectMembershipPkg(Map<String, Object> params);
+	
+	EgovMap selectPriceInfo(Map<String, Object> params);
+	
 	void insertSalesPromoM(SalesPromoMVO salesPromoMVO);
 
 	void insertSalesPromoD(SalesPromoDVO salesPromoDVO);

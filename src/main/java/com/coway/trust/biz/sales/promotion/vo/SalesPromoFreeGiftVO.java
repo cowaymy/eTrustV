@@ -28,6 +28,10 @@ public class SalesPromoFreeGiftVO implements Serializable {
 	
 	private Date promoFreeGiftCrtDt;
 
+	private String itmcd;
+	
+	private String itmname;
+	
 	public int getPromoFreeGiftId() {
 		return promoFreeGiftId;
 	}
@@ -90,6 +94,22 @@ public class SalesPromoFreeGiftVO implements Serializable {
 
 	public void setPromoFreeGiftCrtDt(Date promoFreeGiftCrtDt) {
 		this.promoFreeGiftCrtDt = promoFreeGiftCrtDt;
+	}
+
+	public String getItmcd() {
+		return itmcd;
+	}
+
+	public void setItmcd(String itmcd) {
+		this.itmcd = itmcd;
+	}
+
+	public String getItmname() {
+		return itmname;
+	}
+
+	public void setItmname(String itmname) {
+		this.itmname = itmname;
 	}
 	
 }

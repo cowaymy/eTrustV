@@ -3,7 +3,9 @@
  */
 package com.coway.trust.biz.sales.promotion.impl;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,5 +111,38 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 				addVo.setPromoFreeGiftCrtUserId(sessionVO.getUserId());
 			}
 		}
+	}
+	
+	@Override
+	public List<EgovMap> selectMembershipPkg(Map<String, Object> params) {
+		return promotionRegisterMapper.selectMembershipPkg(params);
+	}
+	
+	@Override
+	public List<SalesPromoDVO> selectPriceInfo(PromotionVO promotionVO) {
+		
+		GridDataSet<SalesPromoDVO> salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
+		
+		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
+		
+		int appTypeId = promotionVO.getSalesPromoMVO().getPromoAppTypeId();
+		
+		Map<String, Object> params = null;
+		
+		for(SalesPromoDVO dvo: addSalesPromoDVOList) {
+			
+			params = new HashMap<String, Object>();
+			
+			params.put("sktId", dvo.getPromoItmStkId());
+			params.put("appTypeId", appTypeId);
+			
+			EgovMap priceMap = promotionRegisterMapper.selectPriceInfo(params);
+			
+			dvo.setAmt((BigDecimal)priceMap.get("amt"));
+			dvo.setPrcRpf((BigDecimal)priceMap.get("prcRpf"));
+			dvo.setPrcPv((BigDecimal)priceMap.get("prcPv"));
+		}
+		
+		return addSalesPromoDVOList;
 	}
 }
