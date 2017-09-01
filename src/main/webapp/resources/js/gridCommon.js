@@ -185,7 +185,7 @@ var GridCommon = {
 	    	
 	    	var data = {};
 	    	
-	    	if(addList.length > 0) data.all = allList;
+	    	if(allList.length > 0) data.all = allList;
 	    	else data.all = [];
 	    	
 	    	return data;
