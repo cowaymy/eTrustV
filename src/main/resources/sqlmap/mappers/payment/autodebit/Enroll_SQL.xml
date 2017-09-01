@@ -78,11 +78,11 @@
     <select id="selectViewEnrollment" parameterType="Map" resultType="egovMap">
     <![CDATA[
        SELECT Limit1.ENRL_ID ENRL_ID  ,
-       Limit1.CRT_DT CRT_DT  ,
+       NVL(TO_CHAR(Limit1.CRT_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')  CRT_DT,   
        Limit1.CRT_USER_ID CRT_USER_ID  ,
        Limit1.C1 C1  ,
-       Limit1.DEBT_DT_FROM DEBT_DT_FROM  ,
-       Limit1.DEBT_DT_TO DEBT_DT_TO  ,
+       NVL(TO_CHAR(Limit1.DEBT_DT_FROM ,'DD-MM-YYYY'),'01-01-1900')  DEBT_DT_FROM,   
+       NVL(TO_CHAR(Limit1.DEBT_DT_TO ,'DD-MM-YYYY'),'01-01-1900')  DEBT_DT_TO,   
        Limit1.BANK_ID BANK_ID  ,
        Limit1.CODE CODE  ,
        Limit1.NAME NAME  
