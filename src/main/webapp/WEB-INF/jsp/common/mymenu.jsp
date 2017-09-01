@@ -529,8 +529,10 @@ $(document).ready(function(){
 <colgroup>
     <col style="width:110px" />
     <col style="width:*" />
+    <!--
     <col style="width:110px" />
     <col style="width:*" />
+    -->
 </colgroup>
 <tbody>
 <tr>
@@ -538,10 +540,10 @@ $(document).ready(function(){
     <td>
     <input id="mymenuCode" name="mymenuCode" type="text" title="" placeholder="My Menu Code or Name" class="" />
     </td>
-    <th scope="row"></th>
+<!--     <th scope="row"></th>
     <td>
-    <!-- <input type="text" title="" placeholder="" class="" /> -->
-    </td>
+    <input type="text" title="" placeholder="" class="" />
+    </td> -->
 </tr>
 </tbody>
 </table><!-- table end -->
