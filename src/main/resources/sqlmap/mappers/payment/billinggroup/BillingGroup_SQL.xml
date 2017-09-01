@@ -174,7 +174,8 @@
 		                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
 		                LEFT JOIN SYS0064M Extent9   ON Extent9.STREET_ID = Extent1.STREET_ID
 		          WHERE  ( 8 <![CDATA[<> ]]> Extent1.STUS_CODE_ID )
-                   AND ( Extent1.CUST_ADD_ID = #{custBillAddId} ) AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
+		          AND Extent9.USE_FLAG IS NULL
+                  AND ( Extent1.CUST_ADD_ID = #{custBillAddId} ) AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
     </select>
     
     <select id="selectCustMailAddrList" parameterType="Map" resultType="egovMap">
@@ -216,7 +217,9 @@
                         WHERE   
                               8 <> Extent1.STUS_CODE_ID 
                         AND  
-                              Extent1.CUST_ID = #{custBillCustId}) project1
+                              Extent1.CUST_ID = #{custBillCustId}
+                        AND Extent5.USE_FLAG IS NULL) project1
+                         
                 ]]>
                   <if test='custAddr != null and custAddr !=""'>
                      WHERE (UPPER(project1.ADDR_DTL)     LIKE '%' || UPPER(#{custAddr}) || '%'
@@ -967,7 +970,9 @@
 	                LEFT JOIN SYS0035M Extent4   ON Extent4.STATE_ID = Extent1.STATE_ID
 	                LEFT JOIN SYS0015M Extent5   ON Extent5.CNTY_ID = Extent1.CNTY_ID
 	                LEFT JOIN SYS0064M Extent6   ON Extent6.STREET_ID = Extent1.STREET_ID
-	          WHERE  Extent1.CUST_ADD_ID = #{value} AND ROWNUM <![CDATA[<= ]]> 1 ) Limit1
+	          WHERE  Extent1.CUST_ADD_ID = #{value} 
+	          AND Extent6.USE_FLAG IS NULL
+	          AND ROWNUM <![CDATA[<= ]]> 1 ) Limit1
     </select>
     
     <select id="selectContPersonHistorty" parameterType="java.lang.String" resultType="egovMap">
