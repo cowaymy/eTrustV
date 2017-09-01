@@ -499,23 +499,6 @@ public class BillingGroupController {
 	}
 	
 	/**
-	 * selectAddrKeywordList 조회
-	 * @param 
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "/selectAddrKeywordList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAddrKeywordList(@RequestParam Map<String, Object> params, ModelMap model) {
-		String defaultDate = "1900-01-01";
-		params.put("defaultDate", defaultDate);
-		List<EgovMap> resultList = billGroupService.selectAddrKeywordList(params);
-		
-		// 조회 결과 리턴.
-        return ResponseEntity.ok(resultList);
-	}
-	
-	/**
 	 * saveNewAddr 저장
 	 * @param 
 	 * @param params
@@ -554,32 +537,6 @@ public class BillingGroupController {
 		
 		// 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
-	}
-	
-	/**
-	 * selectContPerKeywordList 조회
-	 * @param 
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "/selectContPerKeywordList", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> selectContPerKeywordList(@RequestParam Map<String, Object> params, ModelMap model) {
-		String defaultDate = "1900-01-01";
-		params.put("defaultDate", defaultDate);
-		
-		List<EgovMap> resultList = billGroupService.selectContPerKeywordList(params);
-		
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("resultList", resultList);
-		
-		// 조회 결과 리턴.
-        ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setData(resultMap);
-    	//message.setMessage("");
-    	
-    	return ResponseEntity.ok(message);
 	}
 	
 	/**

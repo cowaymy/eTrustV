@@ -137,13 +137,6 @@ public interface BillingGroupMapper {
 	List<EgovMap> selectCustMailAddrList(Map<String, Object> params);
 	
 	/**
-	 * selectAddrKeywordList 조회
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> selectAddrKeywordList(Map<String, Object> params);
-	
-	/**
 	 * selectSalesOrderM 조회
 	 * @param param
 	 * @return
@@ -156,14 +149,6 @@ public interface BillingGroupMapper {
 	 * @return
 	 */
 	List<EgovMap> selectContPersonList(Map<String, Object> params);
-	
-	
-	/**
-	 * selectContPerKeywordList 조회
-	 * @param params
-	 * @return
-	 */
-	List<EgovMap> selectContPerKeywordList(Map<String, Object> params);
 	
 	/**
 	 * selectCustBillMaster 조회

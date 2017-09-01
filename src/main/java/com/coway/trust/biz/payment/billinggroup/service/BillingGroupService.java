@@ -121,13 +121,6 @@ public interface BillingGroupService{
     List<EgovMap> selectCustMailAddrList(Map<String, Object> params);
     
     /**
-	 * selectAddrKeywordList 조회
-	 * @param params
-	 * @return
-	 */
-    List<EgovMap> selectAddrKeywordList(Map<String, Object> params);
-    
-    /**
 	 * selectSalesOrderM 조회
 	 * @param params
 	 * @return
@@ -140,13 +133,6 @@ public interface BillingGroupService{
 	 * @return
 	 */
     List<EgovMap> selectContPersonList(Map<String, Object> params);
-    
-    /**
-	 * selectContPerKeywordList 조회
-	 * @param params
-	 * @return
-	 */
-    List<EgovMap> selectContPerKeywordList(Map<String, Object> params);
     
     /**
 	 * selectMailAddrHistorty 조회
@@ -266,4 +252,28 @@ public interface BillingGroupService{
 	 * @return
 	 */
     String saveAddNewGroup(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveNewAddr
+	 * @param params
+	 * @return
+	 */
+    boolean saveNewAddr(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveNewContPerson
+	 * @param params
+	 * @return
+	 */
+    boolean saveNewContPerson(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveNewReq
+	 * @param params
+	 * @return
+	 */
+    boolean saveNewReq(Map<String, Object> params, SessionVO sessionVO);
 }

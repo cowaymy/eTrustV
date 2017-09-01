@@ -209,16 +209,6 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 	
 	/**
-	 * selectAddrKeywordList 조회
-	 * @param params
-	 * @return
-	 */
-	@Override
-	public List<EgovMap> selectAddrKeywordList(Map<String, Object> params) {
-		return billingGroupMapper.selectAddrKeywordList(params);
-	}
-	
-	/**
 	 * selectSalesOrderM 조회
 	 * @param params
 	 * @return
@@ -236,16 +226,6 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public List<EgovMap> selectContPersonList(Map<String, Object> params) {
 		return billingGroupMapper.selectContPersonList(params);
-	}
-	
-	/**
-	 * selectContPerKeywordList 조회
-	 * @param params
-	 * @return
-	 */
-	@Override
-	public List<EgovMap> selectContPerKeywordList(Map<String, Object> params) {
-		return billingGroupMapper.selectContPerKeywordList(params);
 	}
 	
 	/**
