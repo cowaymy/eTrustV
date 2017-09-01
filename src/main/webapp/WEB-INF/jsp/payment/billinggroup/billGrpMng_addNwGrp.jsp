@@ -106,15 +106,17 @@ var contPersonLayout = [
 	}
 	
 	function fn_selectMailAddr(){
+		
 	    AUIGrid.destroy(emailAddrPopGridID);
 	    var custTypeId = $("#custTypeId").val();
+	    var custAddr = $("#custAddr").val();
 	    
 	    if(custTypeId == ""){
 	    	Common.alert("Please select the order first.<br />");
 	    }else{
 	    	$("#selectMaillAddrPop").show();
 	        emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
-	        Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custTypeId}, function(result){
+	        Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custTypeId, "custAddr" : custAddr}, function(result){
 	            console.log(result);
 	            AUIGrid.setGridData(emailAddrPopGridID, result);
 	            
@@ -158,6 +160,7 @@ var contPersonLayout = [
 	    
 	    AUIGrid.destroy(contPersonPopGridID); 
 	    var custTypeId = $("#custTypeId").val();
+	    var personKeyword = $("#personKeyword").val();
 	    
 	    if(custTypeId == ""){
 	    	Common.alert("Please select the order first.<br />");
@@ -165,7 +168,7 @@ var contPersonLayout = [
 	    	
 	    	$("#selectContPersonPop").show();
 	        contPersonPopGridID = GridCommon.createAUIGrid("selContPersonGrid", contPersonLayout,null,gridPros);
-	        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custTypeId}, function(result){
+	        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custTypeId , "personKeyword" : personKeyword}, function(result){
 	            console.log(result);
 	            AUIGrid.setGridData(contPersonPopGridID, result);
 	            
@@ -203,12 +206,12 @@ var contPersonLayout = [
 	function fn_contPerPopClose(){
 	    
 	    $("#selectContPersonPop").hide();
-	    $("#contKeyword").val("");
+	    $("#personKeyword").val("");
 	}
 	
 	function fn_keywordClear2(){
 	    
-	    $("#contKeyword").val("");
+	    $("#personKeyword").val("");
 	}
 	
     function fn_orderSearch(){
@@ -585,7 +588,7 @@ var contPersonLayout = [
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_searchAddrKeyword();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 
@@ -599,7 +602,7 @@ var contPersonLayout = [
 <tr>
     <th scope="row">Address Keyword</th>
     <td>
-    <input type="text" id="custAddr" title="" placeholder="Keyword" class="w100p" />
+    <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
     </td>
 </tr>
 </tbody>
@@ -623,7 +626,7 @@ var contPersonLayout = [
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_searchContactKeyword();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 
@@ -637,7 +640,7 @@ var contPersonLayout = [
 <tr>
     <th scope="row">Contact Keyword</th>
     <td>
-    <input type="text" id="contKeyword" title="" placeholder="Keyword" class="w100p" />
+    <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
     </td>
 </tr>
 </tbody>
