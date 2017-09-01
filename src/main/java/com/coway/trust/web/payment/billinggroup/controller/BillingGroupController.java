@@ -95,15 +95,11 @@ public class BillingGroupController {
         EgovMap selecContractInfo = new EgovMap();
         List<EgovMap> selectGroupList = new ArrayList<EgovMap>();
         List<EgovMap> selectEstmReqHistory = new ArrayList<EgovMap>();
-        
         String resultMessage = "";
         String defaultDate = "1900-01-01";
         
-        if( getCustId == null){
-        	resultMessage = "No billing group found for this order.";
-        	selectBasicInfo = null;
-        	getCustId = "";
-        }else{
+        if( getCustId != null){
+        	
         	getCustId = getCustId != null ? getCustId : "";
         	Map<String, Object> custMap = new HashMap<String, Object>();
         	custMap.put("custBillId", getCustId);
@@ -117,6 +113,7 @@ public class BillingGroupController {
             String custBillAddId = "";
             String custBillCntId = "";
             String custBillId = "";
+            
             if(selectBasicInfo != null){
             	custBillAddId = selectBasicInfo.get("custBillAddId") != null ? String.valueOf(selectBasicInfo.get("custBillAddId")) : ""  ;
                 custBillCntId = selectBasicInfo.get("custBillCntId") != null ? String.valueOf(selectBasicInfo.get("custBillCntId")) : "";
@@ -136,7 +133,13 @@ public class BillingGroupController {
             selectGroupList = billGroupService.selectOrderGroupList(groupMap);
             
             selectEstmReqHistory = billGroupService.selectEstmReqHistory(groupMap);
-            
+        	
+        }else{
+        	
+        	resultMessage = "No billing group found for this order.";
+        	selectBasicInfo = null;
+        	getCustId = "";
+        	
         }
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -146,7 +149,6 @@ public class BillingGroupController {
         resultMap.put("selectGroupList", selectGroupList);
         resultMap.put("selectEstmReqHistory", selectEstmReqHistory);
         resultMap.put("custBillId", getCustId);
-        
         
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
