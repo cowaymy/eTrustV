@@ -54,7 +54,7 @@
 
         //버튼 활성화
         
-        alert("aaaaaaaaa:::");
+       
         
         //그리드 활성화
         //조회결과 리턴
@@ -68,10 +68,6 @@
 
 
      function fn_confirmMemberEventPromote(val){
-        
-//        alert("fn_confirmMemberEventPromote val::::::::"+ $("promoId"));
-//        alert("fn_confirmMemberEventPromote val::::::::"+ val);
-        alert("fn_confirmMemberEventPromote val::::::::"+ ${promoInfo.promoId});
         
         var jsonObj = {
         PromoID : $("#promoId").val()
@@ -99,10 +95,7 @@
         var vStatusId = ${promoInfo.stusId}; //statusId 
         var vPromoTypeId = ${promoInfo.promoTypeId};
          
-         alert("vStatusId::::" + vStatusId);
-         
         if (vStatusId == 10) {
-                 alert("vStatusId == 10::::" + vStatusId);
                 //Cancel */
 
                 //as-is logic
@@ -122,16 +115,10 @@
 			             return false;
         
         } else {
-             alert("vStatusId == else::::" + vStatusId);
-             
              //Complete
              if (vPromoTypeId == 747) {
-                 alert("vPromoTypeId::::" + vPromoTypeId);
-      
-
       
                    if (fn_confirmMemberEventPromote(vPromoId))  {
-                        alert("fn_confirmMemberEventPromote:::::");
 
                    }  else  {
 
@@ -264,7 +251,7 @@
             };
 
                 myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-                newGridID = AUIGrid.create("#grid_wrap_new", newColumn, gridPros);
+/*                 newGridID = AUIGrid.create("#grid_wrap_new", newColumn, gridPros); */
     }
     
     
@@ -399,7 +386,7 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
 그리드 영역
 <div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-<div id="grid_wrap_new"  style="width: 100%; height: 500px; margin: 0 auto;"></div>
+<!-- <div id="grid_wrap_new"  style="width: 100%; height: 500px; margin: 0 auto;"></div> -->
 </article><!-- grid_wrap end -->
     </form>
 </section><!-- search_table end -->
