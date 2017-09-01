@@ -733,9 +733,15 @@ var addOrderLayout = [
         	   
            }else if(typeId == "1044"){
         	   
-        	    //Remark
-        	   $('#det_descFrom').html(result.data.detailHistoryView.remOld);
-               $('#det_descTo').html(result.data.detailHistoryView.remNw);
+        	   //Remark
+               var descFrom = "";
+               var descTo = "";
+               
+               descFrom += result.data.detailHistoryView.remOld;
+               descTo += result.data.detailHistoryView.remNw;
+
+        	   $('#det_descFrom').html(descFrom);
+               $('#det_descTo').html(descTo);
                
            }else if(typeId == "1045"){
         	   
@@ -1715,9 +1721,9 @@ var addOrderLayout = [
 <tr>
     <th scope="row">Billing Type</th>
     <td colspan="3">
-    <label><input type="checkbox" disabled="disabled" id="post"/><span>Post</span></label>
-    <label><input type="checkbox" disabled="disabled" id="sms"/><span>SMS</span></label>
-    <label><input type="checkbox" disabled="disabled" id="estm"/><span>E-Statement</span></label>
+    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
+    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
+    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
     </td>
 </tr>
 <tr>
