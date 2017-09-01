@@ -15,6 +15,8 @@ public interface CommonService {
 	List<EgovMap> getAllCommonCodes(Map<String, Object> params);
 	List<EgovMap> getCommonCodesPage(Map<String, Object> params);
 	List<EgovMap> getBanks(Map<String, Object> params);
+	List<EgovMap> getDefectMasters(Map<String, Object> params);
+	List<EgovMap> getDefectDetails(Map<String, Object> params);
 	int getCommonCodeTotalCount(Map<String, Object> params);
 	List<EgovMap> selectI18NList();
 

@@ -68,6 +68,16 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 	}
 
 	@Override
+	public List<EgovMap> getDefectMasters(Map<String, Object> params) {
+		return commonMapper.selectDefectMasters(params);
+	}
+
+	@Override
+	public List<EgovMap> getDefectDetails(Map<String, Object> params) {
+		return commonMapper.selectDefectDetails(params);
+	}
+
+	@Override
 	public int getCommonCodeTotalCount(Map<String, Object> params) {
 		return commonMapper.selectCommonCodeTotalCount(params);
 	}

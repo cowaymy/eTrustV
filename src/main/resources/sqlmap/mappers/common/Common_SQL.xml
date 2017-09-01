@@ -658,6 +658,11 @@
                         ,CD_DTL.OLD_CODE_ID
             FROM SYS0012M CD_MST, SYS0013M CD_DTL
             WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
+            AND 'T' = CASE WHEN #{codeMasterIds} IS NULL OR CD_MST.CODE_MASTER_ID  IN ( SELECT  REGEXP_SUBSTR( #{codeMasterIds}, '[^,]+', 1, LEVEL )
+                                        FROM    DUAL
+                                        CONNECT BY REGEXP_SUBSTR(#{codeMasterIds}, '[^,]+', 1, LEVEL ) IS NOT NULL) THEN 'T'
+                                      ELSE 'F'
+                            END
             ORDER BY CODE_MASTER_ID
         ]]>
     </select>
@@ -1103,6 +1108,14 @@
                                         ELSE  'F'
                               END
           ORDER BY BANK.CODE
+    </select>
+
+    <select id="selectDefectMasters" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1020V
+    </select>
+
+    <select id="selectDefectDetails" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1019V
     </select>
 
     <select id="selectDefectCodes" parameterType="Map" resultType="egovMap">

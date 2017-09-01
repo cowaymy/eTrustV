@@ -79,4 +79,27 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
+	@ApiOperation(value = "Defect Code Master 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/defect/masters", method = RequestMethod.GET)
+	public ResponseEntity<List<DefectMasterDto>> getDefectMasters(@ModelAttribute DefectMasterForm defectMasterForm)
+			throws Exception {
+
+		Map<String, Object> params = DefectMasterForm.createMap(defectMasterForm);
+		List<EgovMap> masters = commonService.getDefectMasters(params);
+		List<DefectMasterDto> list = masters.stream().map(r -> DefectMasterDto.create(r)).collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+
+	@ApiOperation(value = "Defect Code Detail 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/defect/details", method = RequestMethod.GET)
+	public ResponseEntity<List<DefectDetailDto>> getDefectMasters(@ModelAttribute DefectDetailForm defectDetailForm)
+			throws Exception {
+
+		Map<String, Object> params = DefectDetailForm.createMap(defectDetailForm);
+		List<EgovMap> details = commonService.getDefectDetails(params);
+		List<DefectDetailDto> list = details.stream().map(r -> DefectDetailDto.create(r)).collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
 }
