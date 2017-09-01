@@ -42,8 +42,9 @@ var MainColumnLayout =
             headerText : "<spring:message code='sys.gstexportation.grid1.dealername'/>",
             editable : true,
             style : "aui-grid-left-column",
-            width : "40%",
-            editRenderer :
+            width : "40%"
+                
+           ,editRenderer :
             {
                 type : "ComboBoxRenderer",
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -54,6 +55,23 @@ var MainColumnLayout =
                 keyField : "id",
                 valueField : "value",
             }
+
+           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) 
+            {
+              var retStr = value;
+              var iCnt = dealerComboBoxList.length;
+              
+              for(var iLoop = 0; iLoop < iCnt; iLoop++) 
+              {
+                if(dealerComboBoxList[iLoop]["id"] == value) 
+                {
+                  retStr = dealerComboBoxList[iLoop]["value"];
+                  break;
+                }
+              }
+              return retStr;
+            }
+            
         }, {
             dataField : "status",  //status
             headerText : "<spring:message code='sys.gstexportation.grid1.status'/>",
