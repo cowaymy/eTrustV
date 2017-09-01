@@ -785,7 +785,7 @@ public class BillingGroupController {
 			message.setMessage(resultMessage);
 		 }else{
 			message.setCode(AppConstants.FAIL);
-			message.setMessage(resultMessage);
+			message.setMessage("Failed to manage grouping. Please try again later.");
 		 }
 		
 		return ResponseEntity.ok(message);
