@@ -36,7 +36,7 @@
      <if test='menuSelectBox == "02"  '>
          AND UPPER(MENU_NAME) LIKE UPPER(#{menuCdNm}) || '%'
      </if>
-       ORDER BY MENU_CODE,MENU_NAME
+       ORDER BY MENU_CODE
   </select>
 	
   <delete id="deleteMenuId" parameterType="Map">
