@@ -37,6 +37,8 @@ public interface CommonMapper {
 	List<EgovMap> selectMalfunctionReasons(Map<String, Object> params);
 	List<EgovMap> selectMalfunctionCodes(Map<String, Object> params);
 
+	List<EgovMap> selectReasonCodes(Map<String, Object> params);
+
 	int selectCommonCodeTotalCount(Map<String, Object> params);
 
 	List<EgovMap> selectI18NList();

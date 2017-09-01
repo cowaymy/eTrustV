@@ -28,6 +28,8 @@ public interface CommonService {
 
 	List<EgovMap> getMalfunctionCodes(Map<String, Object> params);
 
+	List<EgovMap> getReasonCodes(Map<String, Object> params);
+
 	int getCommonCodeTotalCount(Map<String, Object> params);
 
 	List<EgovMap> selectI18NList();
