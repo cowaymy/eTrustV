@@ -139,6 +139,20 @@ WHERE  1 = 1
       DELETE SYS0054M  WHERE AUTH_CODE  = #{hidden} AND ROLE_ID   = #{oldRoleId} AND VALID_DT_FROM = #{oldFromDt}
 </delete>
 
+<delete id="deleteMGRRoleAuthMapping" parameterType="Map">
+     DELETE FROM SYS0054M  WHERE ROLE_ID IN (SELECT   /* UPPER NODE */     
+									                                   SYS44M.ROLE_ID                    
+									                              FROM SYS0044M SYS44M
+									                              START WITH  SYS44M.ROLE_ID = #{oldRoleId}
+									                              CONNECT BY NOCYCLE 
+									                              PRIOR  PARENT_ROLE = SYS44M.ROLE_ID 
+                                             )
+      AND AUTH_CODE IN ('INT','MGR')
+      AND VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+      AND VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
+      
+</delete>
+
 <select id="selectRoleAuthMappingPopUpList" parameterType="Map" resultType="egovMap">
       SELECT AUTH_CODE
            , AUTH_NAME
@@ -219,7 +233,7 @@ SELECT
 
 <select id="selectRoleAuthMappingList" parameterType="Map" resultType="egovMap">
    SELECT 
-       TO_CHAR(ROLE_ID) ROLE_ID
+       ROLE_ID
       , SUBSTR(ROLE_PATH,3,LENGTH(ROLE_PATH)) ROLE_NAME
       , ROLE_LEV ROLE_LEV
       , PARENT_ROLE 
@@ -255,7 +269,7 @@ SELECT
 )
   WHERE 1 = 1 
     <if test='roleId !=null and roleId != "" '>  
-      AND UPPER(ROLE_ID) LIKE UPPER(#{roleId}) || '%'
+      AND ROLE_ID LIKE #{roleId} || '%'
     </if>  
 </select>
 
