@@ -130,7 +130,7 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_cmmSearchInvoicePop();">New CN/DN request</a></p></li>
                         <li><p class="link_btn"><a href="/payment/initRentalCollectionBySales.do">New Batch request</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initRentalCollectionByBS.do">Generate Summary List</a></p></li>
+                        <li><p class="link_btn"><a href="/payment/initInvAdjCnDn.do">Generate Summary List</a></p></li>
                         <li><p class="link_btn"><a href="/payment/initDailyCollection.do">Approval</a></p></li>                                                                      
                     </ul>
                     <ul class="btns">                                 

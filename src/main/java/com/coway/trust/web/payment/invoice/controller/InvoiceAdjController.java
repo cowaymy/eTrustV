@@ -62,7 +62,16 @@ public class InvoiceAdjController {
 		String adjNo = String.valueOf(params.get("adjNo")).trim();
 		String reportNo = String.valueOf(params.get("reportNo")).trim();
 		String creator = String.valueOf(params.get("creator"));
-		
+		String date1 = String.valueOf(params.get("date1"));
+		if(date1 != "null" && date1 != ""){
+			String tmp[] = date1.split("/");
+			date1 = tmp[2] + "/" + tmp[1] + "/" + tmp[0] + " 00:00:00";
+		}
+		String date2 = String.valueOf(params.get("date2"));
+		if(date2 != "null" && date2 != ""){
+			String tmp[] = date2.split("/");
+			date2 = tmp[2] + "/" + tmp[1] + "/" + tmp[0] + " 00:00:00";
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("orderNo", orderNo);
@@ -71,6 +80,10 @@ public class InvoiceAdjController {
 		map.put("adjNo", adjNo);
 		map.put("reportNo", reportNo);
 		map.put("creator", creator);
+		map.put("date1", date1);
+		map.put("date2", date2);
+		
+		LOGGER.debug("map : {} ", map);
 		
 		list = invoiceService.selectInvoiceAdj(map);
 		
@@ -340,7 +353,19 @@ public class InvoiceAdjController {
     	return ResponseEntity.ok(message);
 	}
 	
-	
+	/******************************************************
+	 *   AdjustmentCNDN
+	 *****************************************************/	
+	/**
+	 * AdjustmentCNDN초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initInvAdjCnDn.do")
+	public String initInvInvoiceAdj(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/invoice/invAdjCnDn";
+	}
 }
 
 	
