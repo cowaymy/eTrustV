@@ -1403,8 +1403,8 @@ var addOrderLayout = [
             AUIGrid.bind(addOrdPopGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
                 
-                $("#salesOrdNo").val(AUIGrid.getCellValue(changeOrderGridID , event.rowIndex , "salesOrdNo"));
-                $("#salesOrdId").val(AUIGrid.getCellValue(changeOrderGridID , event.rowIndex , "salesOrdId"));
+                $("#salesOrdNo").val(AUIGrid.getCellValue(addOrdPopGridID , event.rowIndex , "salesOrdNo"));
+                $("#salesOrdId").val(AUIGrid.getCellValue(addOrdPopGridID , event.rowIndex , "salesOrdId"));
                 
             });
             
