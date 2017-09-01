@@ -72,4 +72,8 @@ public class UserAddAuthServiceImpl implements UserAddAuthService {
 			}
 		}
 	}
+
+	public List<EgovMap> selectCommonCodeList(Map<String, Object> params) {
+		return userAddAuthMapper.selectCommonCodeList(params);
+	}
 }

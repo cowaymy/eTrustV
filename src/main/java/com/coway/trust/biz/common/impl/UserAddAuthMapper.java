@@ -8,10 +8,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("userAddAuthMapper")
 public interface UserAddAuthMapper {
 	List<EgovMap> selectUserAddAuthList(Map<String, Object> params);
-	
+
 	void insertUserAddAuthList(Map<String, Object> params);
-	
+
 	void updateUserAddAuthList(Map<String, Object> params);
-	
-	void deleteUserAddAuthList(Map<String, Object> params);		
+
+	void deleteUserAddAuthList(Map<String, Object> params);
+
+	List<EgovMap> selectCommonCodeList(Map<String, Object> params);
 }

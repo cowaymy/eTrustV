@@ -72,4 +72,11 @@
 	     AND auth_code = #{authCode}
 	     AND valid_dt_from = #{validDtFrom}
 </delete>
+
+<select id="selectCommonCodeList"  parameterType="Map" resultType="egovMap">
+	SELECT code
+	         , code_name as value
+	  FROM SYS0013M
+	 WHERE CODE_MASTER_ID = 316
+</select>
 </mapper>

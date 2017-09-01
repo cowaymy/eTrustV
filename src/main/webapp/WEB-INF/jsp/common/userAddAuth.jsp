@@ -13,6 +13,8 @@ var gridDetailDataLength=0;
 /*공통팝업 조회ID*/
 var _queryId = "";
 var _callbackFunc = "popupCallback";
+//var keyValueList = [{code:"0", value:"Department"}, {code:"1", value:"Branch"}];
+var keyValueList = null;
 /*
 function resizeHandler(aryHeight) {
     $(window).resize(function() {
@@ -221,6 +223,19 @@ function fn_detailSave(){
     }
 };
 
+function fn_commCodesearch(){
+    Common.ajax(
+            "GET",
+            "/common/selectCommonCodeList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+            	keyValueList = data;
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
+};
 /****************************Transaction End**********************************/
 /**************************** Grid setting Start ********************************/
 var gridUserColumnLayout =
@@ -259,9 +274,6 @@ var gridUserColumnLayout =
 ];
 
 //selectionMode (String) : 설정하고자 하는 selectionMode(유효값 : singleCell, singleRow, multipleCells, multipleRows, none)
-
-var keyValueList = [{code:"0", value:"Department"}, {code:"1", value:"Branch"}];
-
 var options =
 {
 		editable : false,
@@ -530,7 +542,6 @@ $(document).ready(function(){
     });
 
     grdAddAuth = GridCommon.createAUIGrid("grdAddAuth", gridAddAuthColumnLayout,"", detailOptions);
-
     AUIGrid.bind(grdAddAuth, ["cellDoubleClick"], function(event) {
 //     	if(event.dataField == "validDtFrom" || event.dataField == "validDtTo") {
 //     		AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, "");
@@ -620,6 +631,9 @@ $(document).ready(function(){
     });
     AUIGrid.clearGridData(grdUser);
     AUIGrid.clearGridData(grdAddAuth);
+
+    //공통코드 조회
+    fn_commCodesearch();
 });
 /****************************Program Init End********************************/
 </script>
