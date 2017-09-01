@@ -1930,7 +1930,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     		
     	}else{
     		
-    		return message ="Failed to manage grouping. Please try again later.";
+    		return message ="";
     	
     	}
 	}
