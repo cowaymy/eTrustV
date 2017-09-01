@@ -129,9 +129,9 @@ function fnSetCategoryCd(selGrdidID, rowIdx)
 {     
    $("#selCategoryId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryId"));
    
-   $("#paramCategoryId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryId"));
+  // $("#paramCategoryId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryId"));
    
-   console.log("selCategoryId: "+ $("#selCategoryId").val() + "paramCategoryId: "+ $("#paramCategoryId").val() + " stusCtgryName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryName") );                
+   console.log("selCategoryId: "+ $("#selCategoryId").val() + " stusCtgryName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryName") );                
 }
 
 function auiCellEditignHandler(event) 
@@ -283,9 +283,9 @@ var myGridID, detailGridID, statusCodeGridID;
 
 $(document).ready(function()
 {
-	  $("#paramCategoryId").focus();
-	  
-	  $("#paramCategoryId").keydown(function(key) 
+	  $("#txtCategoryId").focus();
+
+	  $("#txtCategoryId").keydown(function(key) 
 	  {
 			    if (key.keyCode == 13) 
 			    {
@@ -345,7 +345,6 @@ $(document).ready(function()
     AUIGrid.bind(myGridID, "cellClick", function( event ) 
     {
         $("#selCategoryId").val("");
-        $("#paramCategoryId").val(""); 
         gSelRowIdx = event.rowIndex;
 
         console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
@@ -356,7 +355,7 @@ $(document).ready(function()
            fnGetCategoryCd(myGridID, event.rowIndex);
          }
         
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedCategoryId: " + $("#selCategoryId").val() +" / "+ $("#paramCategoryId").val());        
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedCategoryId: " + $("#selCategoryId").val()  );        
     });
 
  // 셀 더블클릭 이벤트 바인딩
@@ -469,7 +468,7 @@ function fnSelectCategoryListAjax()
           
           if(result != null && result.length > 0)
           {
-            fnGetCategoryCd(myGridID, 0);
+            //fnGetCategoryCd(myGridID, 0);
             fnSelectStatusCdId();
           }
        });
@@ -742,7 +741,8 @@ function fnUpdDisabled()
 <tr>
   <th scope="row">Category ID</th>
   <td>
-  <input type="text" title="" id="paramCategoryId" name="paramCategoryId"  placeholder="Category ID" class="w100p" />
+  <!-- <input type="text" title="" id="paramCategoryId" name="paramCategoryId"  placeholder="Category ID" class="w100p" /> -->
+  <input type="text" title="" id="txtCategoryId" name="txtCategoryId"  placeholder="Category ID" class="w100p" />
   </td>
   <th scope="row">Category Name</th>
   <td>
