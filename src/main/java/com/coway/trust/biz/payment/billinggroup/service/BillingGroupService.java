@@ -276,4 +276,59 @@ public interface BillingGroupService{
 	 * @return
 	 */
     boolean saveNewReq(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveRemark
+	 * @param params
+	 * @return
+	 */
+    boolean saveRemark(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveChangeBillType
+	 * @param params
+	 * @return
+	 */
+    boolean saveChangeBillType(Map<String, Object> params, SessionVO sessionVO);
+    
+    /**
+	 * saveApprRequest
+	 * @param params
+	 * @return
+	 */
+    boolean saveApprRequest(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveCancelRequest
+	 * @param params
+	 * @return
+	 */
+    boolean saveCancelRequest(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveRemoveOrder
+	 * @param params
+	 * @return
+	 */
+    boolean saveRemoveOrder(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveChgMainOrd
+	 * @param params
+	 * @return
+	 */
+    boolean saveChgMainOrd(Map<String, Object> params, SessionVO sessionVO);
+    
+    
+    /**
+	 * saveAddOrder
+	 * @param params
+	 * @return
+	 */
+    String saveAddOrder(Map<String, Object> params, SessionVO sessionVO);
 }

@@ -1719,7 +1719,7 @@
         SELECT SAL0024D_CUST_BILL_ID_SEQ.NEXTVAL FROM DUAL
     </select>
     
-    <select id="docNoCreateSeq" resultType="String">
+    <select id="selectDocNo24Seq" resultType="String">
         SELECT FN_GET_DOCNO('24') FROM DUAL
     </select>
     
