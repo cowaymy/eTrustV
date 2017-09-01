@@ -90,8 +90,6 @@ public class BillingGroupController {
 		
         //고객아이디 조회
         String getCustId = billGroupService.selectCustBillId(params);
-        
-        
         EgovMap selectBasicInfo = new EgovMap();
         EgovMap selectMailInfo = new EgovMap();
         EgovMap selecContractInfo = new EgovMap();
@@ -142,7 +140,6 @@ public class BillingGroupController {
         }
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        
         resultMap.put("selectBasicInfo", selectBasicInfo);
         resultMap.put("selectMaillingInfo", selectMailInfo);
         resultMap.put("selecContractInfo", selecContractInfo);
@@ -188,11 +185,8 @@ public class BillingGroupController {
 		params.put("defaultDate", defaultDate);
 		// 조회.
 		EgovMap selectBasicInfo = billGroupService.selectBasicInfo(params);
-		
 		EgovMap grpOrder = billGroupService.selectBillGrpOrder(params);
-		
 		List<EgovMap> selectBillGroupOrderView = billGroupService.selectBillGroupOrderView(params);
-        
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("basicInfo", selectBasicInfo);
         resultMap.put("grpOrder", grpOrder);
@@ -220,9 +214,7 @@ public class BillingGroupController {
 		params.put("defaultDate", defaultDate);
 		// 조회.
 		EgovMap selectBasicInfo = billGroupService.selectBasicInfo(params);
-		
 		EgovMap grpOrder = billGroupService.selectBillGrpOrder(params);
-		
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("basicInfo", selectBasicInfo);
         resultMap.put("grpOrder", grpOrder);
@@ -249,12 +241,10 @@ public class BillingGroupController {
 		params.put("defaultDate", defaultDate);
 		// 조회.
 		EgovMap selectBasicInfo = billGroupService.selectBasicInfo(params);
-		
 		EgovMap grpOrder = billGroupService.selectBillGrpOrder(params);
 		
 		//ESTM REQ HISTORY 조회
 		List<EgovMap> selectEstmReqHistory = billGroupService.selectEstmReqHistory(params);
-		
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("basicInfo", selectBasicInfo);
@@ -283,13 +273,11 @@ public class BillingGroupController {
 		params.put("defaultDate", defaultDate);
 		// 조회.
 		EgovMap selectBasicInfo = billGroupService.selectBasicInfo(params);
-		
 		EgovMap grpOrder = billGroupService.selectBillGrpOrder(params);
 		
 		String custBillAddId = selectBasicInfo.get("custBillAddId") != null ? String.valueOf(selectBasicInfo.get("custBillAddId")) : "" ;
 		params.put("custBillAddId", custBillAddId);
 		EgovMap selectMailInfo = billGroupService.selectMaillingInfo(params);
-		
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("basicInfo", selectBasicInfo);
@@ -328,14 +316,11 @@ public class BillingGroupController {
 
 		params.put("custBillCntId", custBillCntId);
 		EgovMap selecContractInfo = billGroupService.selectContractInfo(params);
-		
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("basicInfo", selectBasicInfo);
         resultMap.put("grpOrder", grpOrder);
         resultMap.put("contractInfo", selecContractInfo);
-        
-        
         
         // 조회 결과 리턴.
         ReturnMessage message = new ReturnMessage();
@@ -478,10 +463,8 @@ public class BillingGroupController {
 			newMap.put("salesOrdId", salesOrdIdNw);
 			selectSalesOrderMsNw = billGroupService.selectMainOrderHistory(newMap);
 		}
-
 		
         Map<String, Object> resultMap = new HashMap<String, Object>();
-
         resultMap.put("detailHistoryView", detailHistoryView);
         resultMap.put("mailAddrOldHistorty", mailAddrOldHistorty);
         resultMap.put("mailAddrNewHistorty", mailAddrNewHistorty);
@@ -494,7 +477,6 @@ public class BillingGroupController {
         ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
-    	//message.setMessage(resultMessage);
 		
 		return ResponseEntity.ok(message);
 	}
@@ -542,6 +524,7 @@ public class BillingGroupController {
 	 */
 	@RequestMapping(value = "/saveNewAddr", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveNewAddr(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
 		String defaultDate = "1900-01-01";
 		int userId = sessionVO.getUserId();
 		params.put("defaultDate", defaultDate);
@@ -1239,7 +1222,6 @@ public class BillingGroupController {
 			insHisMap.put("emailAddtionalOld", emailAddtionalOld);
 			billGroupService.insHistory(insHisMap);
 			//인서트 셋팅  끝
-			
 				
 			message.setCode(AppConstants.SUCCESS);
 	    	message.setMessage("<b>E-Statement request has been cancelled.</b>");
@@ -1268,7 +1250,6 @@ public class BillingGroupController {
 		
 		// 조회.
 		EgovMap estmReqHisView = billGroupService.selectEstmReqHisView(params);
-
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("estmReqHisView", estmReqHisView);
@@ -1540,7 +1521,6 @@ public class BillingGroupController {
         ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
-    	//message.setMessage(resultMessage);
 		
 		return ResponseEntity.ok(message);
 	}
