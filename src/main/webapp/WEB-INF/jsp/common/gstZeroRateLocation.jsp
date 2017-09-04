@@ -294,8 +294,8 @@
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:void(0);" id="btnSearch"><span class="search"></span>Search</a>
             </p></li>
-            <li><p class="btn_blue"><a href="javascript:void(0);" id="btnClear"><span class="clear"></span>Clear</a></p>
-            </li>
+            <!-- <li><p class="btn_blue"><a href="javascript:void(0);" id="btnClear"><span class="clear"></span>Clear</a></p>
+            </li> -->
         </ul>
     </aside><!-- title_line end -->
 
