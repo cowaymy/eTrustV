@@ -91,5 +91,15 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
     	
     	return adjustmentNo + " / " + reportNo;
 	}
+	
+	/**
+	 * Adjustment Batch ID 채번
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public int getAdjBatchId(){
+		return invoiceMapper.getAdjBatchId();
+	}
 
 }

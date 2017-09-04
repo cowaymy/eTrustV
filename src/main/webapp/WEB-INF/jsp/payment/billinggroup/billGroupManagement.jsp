@@ -1643,26 +1643,12 @@ var addOrderLayout = [
                 <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
                 <dl class="link_list">
                     <dt>Link</dt>
-                    <dd>
+                    <dd>                    
                     <ul class="btns">
-				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu5</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-			         </ul>
+                        <li><p class="link_btn"><a href="/payment/initInvoiceIssue.do">Generate Invoice</a></p></li>
+                     </ul>
                     <ul class="btns">
-				        <li><p class="link_btn type2"><a href="javascript:fn_goAddNwGrp();">Add New Group</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">menu2</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">menu5</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-				        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_goAddNwGrp();">Add New Group</a></p></li>                    
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>

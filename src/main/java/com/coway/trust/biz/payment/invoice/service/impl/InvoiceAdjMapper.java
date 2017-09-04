@@ -70,4 +70,11 @@ public interface InvoiceAdjMapper {
 	 * @return
 	 */
 	void saveNewAdjDetail(Map<String, Object> params);
+	
+	/**
+	 * Adjustment Batch ID 채번
+	 * @param params
+	 * @return
+	 */
+	int getAdjBatchId();
 }

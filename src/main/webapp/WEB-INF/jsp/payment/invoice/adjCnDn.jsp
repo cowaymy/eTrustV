@@ -36,7 +36,14 @@ var columnLayout=[
 
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
-	AUIGrid.destroy(subGridID);//subGrid 초기화
+	
+	if(FormUtil.checkReqValue($("#orderNo")) &&
+			FormUtil.checkReqValue($("#invoiceNo")) &&
+			FormUtil.checkReqValue($("#adjNo"))){
+        Common.alert('* Please select the order number or invoice number or adjustment number. <br />');
+        return;
+    }
+	
     Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -129,7 +136,7 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
                     <dd>
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_cmmSearchInvoicePop();">New CN/DN request</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initRentalCollectionBySales.do">New Batch request</a></p></li>
+                        <li><p class="link_btn"><a href="/payment/initBatchAdjCnDnList.do">New Batch request</a></p></li>
                         <li><p class="link_btn"><a href="/payment/initInvAdjCnDn.do">Generate Summary List</a></p></li>
                         <li><p class="link_btn"><a href="/payment/initDailyCollection.do">Approval</a></p></li>                                                                      
                     </ul>

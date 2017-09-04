@@ -40,4 +40,11 @@ public interface InvoiceAdjService {
     	 * @return
     	 */
         String saveNewAdjList(int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList);
+        
+        /**
+    	 * Adjustment Batch ID 채번
+    	 * @param params
+    	 * @return
+    	 */
+        int getAdjBatchId();
 }
