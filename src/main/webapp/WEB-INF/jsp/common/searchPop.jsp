@@ -62,7 +62,7 @@ $(document).ready(function(){
     //fn_getSampleListAjax();
     
     // 셀 더블클릭 이벤트 바인딩
-    if(gb == "location"){
+    if(gb == "location" || gb == "stock" ){
     	AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
     	        {
     	       var selectedItems = AUIGrid.getSelectedItems(myGridID);
