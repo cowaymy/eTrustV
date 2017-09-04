@@ -10,12 +10,12 @@
         
         doGetCombo('/common/selectCodeList.do', '320', '',       'promoAppTypeId', 'S'); //Promo Application
         doGetCombo('/common/selectCodeList.do',  '76', '',          'promoTypeId', 'S'); //Promo Type
-        doGetCombo('/common/selectCodeList.do',   '8', '',        'promoCustType', 'S'); //Customer Type
-        doGetCombo('/common/selectCodeList.do', '325', '',              'exTrade', 'S'); //EX_Trade
-        doGetCombo('/common/selectCodeList.do', '324', '',               'empChk', 'S'); //EMP_CHK
-        doGetCombo('/common/selectCodeList.do', '323', '',        'promoDiscType', 'S'); //Discount Type
+        doGetCombo('/common/selectCodeList.do',  '8', '',        'promoCustType', 'S'); //Customer Type
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '',              'exTrade', 'S'); //EX_Trade
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',               'empChk', 'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '',        'promoDiscType', 'S'); //Discount Type
         doGetCombo('/common/selectCodeList.do', '322', '',    'promoDiscPeriodTp', 'S'); //Discount period
-        doGetCombo('/common/selectCodeList.do', '321', '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+        doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
         doGetCombo('/sales/promotion/selectMembershipPkg.do', '', '9', 'promoSrvMemPacId', 'S'); //Common Code
     });
@@ -24,26 +24,31 @@
         
     	//AUIGrid 칼럼 설정
         var columnLayout1 = [
-            { dataField : "itmcd",         headerText : "Product CD",        editable : false,  width : 100 }
-          , { dataField : "itmname",       headerText : "Product Name",      editable : false               }
-          , { dataField : "amt",           headerText : "Monthly Fee/Price", editable : false,  width : 100 }
-          , { dataField : "prcRpf",        headerText : "RPF",               editable : false,  width : 100 }
-          , { dataField : "prcPv",         headerText : "PV",                editable : false,  width : 100 }
-          , { dataField : "promoItmStkId", headerText : "itmid",             visible  : true,   width : 120 }
+            { headerText : "Product CD",    dataField  : "itmcd",   editable : false,   width : 100 }
+          , { headerText : "Product Name",  dataField  : "itmname", editable : false                  }
+          , { headerText : "Normal" 
+            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "amt",          editable : false, width : 100  }
+                          , { headerText : "RPF",                   dataField : "prcRpf",       editable : false, width : 100  }
+                          , { headerText : "PV",                    dataField : "prcPv",        editable : false, width : 100  }]}
+          , { headerText : "Promotion" 
+            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "promoAmt",     editable : false, width : 100  }
+                          , { headerText : "RPF",                   dataField : "promoPrcRpf",  editable : false, width : 100  }
+                          , { headerText : "PV",                    dataField : "promoItmPv",   editable : true,  width : 100  }]}
+          , { headerText : "itmid",         dataField   : "promoItmStkId",  visible  : false,     width : 80  }
           ];
 
     	//AUIGrid 칼럼 설정
         var columnLayout2 = [
-            { dataField : "itmcd",              headerText : "Product CD",   editable : false,  width : 100 }
-          , { dataField : "itmname",            headerText : "Product Name", editable : false               }
-          , { dataField : "promoFreeGiftStkId", headerText : "itmid",        visible  : true,   width : 120 }
+            { headerText : "Product CD",    dataField : "itmcd",    editable : false,   width : 100 }
+          , { headerText : "Product Name",  dataField : "itmname",  editable : false                }
+          , { headerText : "itmid",         dataField : "promoFreeGiftStkId", visible  : false,   width : 120 }
           ];
 
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
             pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
+            editable            : true,            
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
@@ -77,8 +82,9 @@
 	            promoDtEnd              : $('#promoDtEnd').val().trim(),
 	            promoPrcPrcnt           : $('#promoDiscValue').val().trim(),
 	            promoCustType           : $('#promoCustType').val().trim(),
-	            promoDiscType           : $('#promoDiscType').val().trim(),
-	            promoRpfDiscAmt         : $('#promoRpfDiscAmt').val(),
+	            promoDiscType           : $('#promoDiscType').val(),
+//	            promoRpfDiscAmt         : $('#promoRpfDiscAmt').val(),
+	            promoRpfDiscAmt         : fn_getDiscountRPF(),
 	            promoDiscPeriodTp       : $('#promoDiscPeriodTp').val(),
 	            promoDiscPeriod         : $('#promoDiscPeriod').val().trim(),
 	            promoFreesvcPeriodTp    : $('#promoFreesvcPeriodTp').val(),
@@ -113,8 +119,78 @@
         });
     }
     
-    function fn_getPrdPriceInfo() {
+    function fn_calcDiscountPrice() {
         
+        var discType     = $('#promoDiscType').val();
+        var discValue    = FormUtil.isEmpty($('#promoDiscValue').val()) ? 0 : $('#promoDiscValue').val().trim();
+        var addDiscValue = FormUtil.isEmpty($('#promoAddDiscPrc').val()) ? 0 : $('#promoAddDiscPrc').val().trim();
+        var normalDiscValue = 0, promoDiscValue = 0;
+        
+        for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
+            
+            normalDiscValue = AUIGrid.getCellValue(stckGridID, i, "amt");
+            
+            if(discType == '2296') {//%
+                promoDiscValue = Math.floor(normalDiscValue - normalDiscValue * (discValue / 100));
+            }
+            else if(discType == '2297') { //Amount
+                promoDiscValue = normalDiscValue - discValue;
+            }
+            else {
+                promoDiscValue = normalDiscValue;
+            }
+            
+            promoDiscValue -= addDiscValue;
+            
+            AUIGrid.setCellValue(stckGridID, i, "promoAmt", promoDiscValue);
+        }
+    }
+    
+    function fn_calcDiscountRPF() {
+        var discRpfValue = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
+        var normalDiscRpfValue = 0, promoDiscRpfValue = 0;
+        
+        for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
+            
+            normalDiscRpfValue = AUIGrid.getCellValue(stckGridID, i, "prcRpf");
+            
+            promoDiscRpfValue = normalDiscRpfValue - discRpfValue;
+            
+            AUIGrid.setCellValue(stckGridID, i, "promoPrcRpf", promoDiscRpfValue);
+        }
+    }
+    
+    function fn_calcDiscountPV() {
+        var discPvValue = FormUtil.isEmpty($('#promoAddDiscPv').val()) ? 0 : $('#promoAddDiscPv').val().trim();
+        var normalDiscPvValue = 0, promoDiscPvValue = 0;
+        
+        for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
+            
+            normalDiscPvValue = AUIGrid.getCellValue(stckGridID, i, "prcPv");
+            
+            promoDiscPvValue = normalDiscPvValue - discPvValue;
+            
+            AUIGrid.setCellValue(stckGridID, i, "promoPrcPv", promoDiscPvValue);
+        }
+    }
+    
+    function fn_getDiscountRPF() {
+        var exTradeValue = $('#exTrade').val();
+        var prdRFPVal = 0
+        
+        for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {            
+            prdRFPVal = prdRFPVal + FormUtil.isEmpty(AUIGrid.getCellValue(stckGridID, i, "prcRpf") ? 0 : AUIGrid.getCellValue(stckGridID, i, "prcRpf"));
+        }
+        
+        if(exTradeValue != '1') {
+            prdRFPVal = FormUtil.nvl($('#promoRpfDiscAmt'));
+        }
+        
+        return prdRFPVal;
+    }
+    
+    function fn_getPrdPriceInfo() {
+         
         var promotionVO = {            
             salesPromoMVO : {
 	            promoAppTypeId         : $('#promoAppTypeId').val()
@@ -123,7 +199,25 @@
         };
 
         Common.ajax("POST", "/sales/promotion/selectPriceInfo.do", promotionVO, function(result) {
-            AUIGrid.setGridData(stckGridID, result);
+
+            var arrGridData = AUIGrid.getGridData(stckGridID);
+            
+            for(var i = 0; i < result.length; i++) {
+                for(var j = 0; j < AUIGrid.getRowCount(stckGridID) ; j++) {
+                    var stkId = AUIGrid.getCellValue(stckGridID, j, "promoItmStkId");
+                    if(stkId == result[i].promoItmStkId) {
+                        AUIGrid.setCellValue(stckGridID, j, "amt",    result[i].amt);
+                        AUIGrid.setCellValue(stckGridID, j, "prcRpf", result[i].prcRpf);
+                        AUIGrid.setCellValue(stckGridID, j, "prcPv",  result[i].prcPv);
+                    }
+                }
+            }
+            
+            fn_calcDiscountPrice();
+            
+            fn_calcDiscountRPF();
+            
+            fn_calcDiscountPV();
         });
     }
     
@@ -146,6 +240,36 @@
         $('#promoCustType').change(function() {
         	fn_chgPromoDetail();
         });
+        $('#promoDiscType').change(function() {
+            if($('#promoDiscType').val() == '') {
+                $('#promoDiscValue').val('').prop("disabled", true);
+            }
+            else {
+                $('#promoDiscValue').val('').removeAttr("disabled");
+            }
+            
+            fn_calcDiscountPrice();
+        });
+        $('#promoDiscValue').change(function() {
+            fn_calcDiscountPrice();
+        });
+        $('#promoAddDiscPrc').change(function() {
+            fn_calcDiscountPrice();
+        });
+        $('#promoRpfDiscAmt').change(function() {
+            fn_calcDiscountRPF();
+        });
+        $('#promoAddDiscPv').change(function() {
+            fn_calcDiscountPV();
+        });
+        $('#exTrade').change(function() {
+            if($('#exTrade').val() == '1') {
+                $('#promoRpfDiscAmt').val('').prop("disabled", true);
+            }
+            else if($('#exTrade').val() == '0') {
+                $('#promoRpfDiscAmt').removeAttr("disabled");
+            }
+        });
         $('#btnPromoSave').click(function() {
         	fn_doSavePromtion();
         });
@@ -153,12 +277,10 @@
     
     function fn_addItems(data, gubun){
     	
-        var rowPos = "first";
         var rowList = [];
        	var vGrid = gubun == "stocklist" ? stckGridID : giftGridID;
        	
-        AUIGrid.removeRow(vGrid, "selectedIndex");
-       	AUIGrid.removeSoftRows(vGrid);
+       	var lastPos = AUIGrid.getRowCount(stckGridID);
        	
        	for (var i = 0 ; i < data.length ; i++){
         	if(gubun == "stocklist") {
@@ -179,18 +301,19 @@
         	}
     	}
         
-        AUIGrid.addRow(vGrid, rowList, rowPos);
+        AUIGrid.addRow(vGrid, rowList, lastPos);
         
-        //fn_getPrdPriceInfo();
+        fn_getPrdPriceInfo();
     }
     
+    //TODO Outlight Plus(2287) 선택시 빠져있음
     function fn_chgPromoDetail() {
         var promoAppVal = $('#promoAppTypeId').val();
         var promoTypVal = $('#promoTypeId').val();
         var promoCustVal = $('#promoCustType').val();
         
         //Promo Application = Rental / Outright / Outright Plus
-        if(promoAppVal == '2285'|| promoAppVal == '2287') {
+        if(promoAppVal == '2284'|| promoAppVal == '2285'|| promoAppVal == '2287') {
             $('#exTrade').removeAttr("disabled");
         }
         else {
@@ -210,7 +333,7 @@
             console.log('Promo Application = Rental & Promotion Type = Discount');
             
             $('#promoDiscType').removeAttr("disabled");
-            $('#promoDiscValue').removeAttr("disabled");
+          //$('#promoDiscValue').removeAttr("disabled");
             $('#promoRpfDiscAmt').removeAttr("disabled");
             $('#promoDiscPeriodTp').removeAttr("disabled");
             $('#promoDiscPeriod').removeAttr("disabled");
@@ -222,11 +345,11 @@
             $('#sctPromoDetail').removeClass("blind");
         }
         //Promo Application = Outright & Promotion Type = Discount
-        else if(promoAppVal == '2285' && promoTypVal == '2282') {
+        else if((promoAppVal == '2285' || promoAppVal == '2286') && promoTypVal == '2282') {
             console.log('Promo Application = Outright & Promotion Type = Discount');
             
             $('#promoDiscType').removeAttr("disabled");
-            $('#promoDiscValue').removeAttr("disabled");
+          //$('#promoDiscValue').removeAttr("disabled");
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
@@ -242,7 +365,7 @@
             console.log('Promo Application = Rental/Outright Membership & Promotion Type = Discount');
             
             $('#promoDiscType').removeAttr("disabled");
-            $('#promoDiscValue').removeAttr("disabled");
+          //$('#promoDiscValue').removeAttr("disabled");
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
@@ -258,7 +381,7 @@
             console.log('Promo Application = Expired Filter & Promotion Type = Discount');
             
             $('#promoDiscType').removeAttr("disabled");
-            $('#promoDiscValue').removeAttr("disabled");
+          //$('#promoDiscValue').removeAttr("disabled");
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
@@ -274,7 +397,7 @@
             console.log('Promo Application = ALL (Exclude Expired Filter) & Promotion Type = Only Free Gift');
             
             $('#promoDiscType').val('').prop("disabled", true);
-            $('#promoDiscValue').val('').prop("disabled", true);
+          //$('#promoDiscValue').val('').prop("disabled", true);
             $('#promoRpfDiscAmt').val('').prop("disabled", true);
             $('#promoDiscPeriodTp').val('').prop("disabled", true);
             $('#promoDiscPeriod').val('').prop("disabled", true);
@@ -289,7 +412,7 @@
             console.log('etc');
             
             $('#promoDiscType').removeAttr("disabled");
-            $('#promoDiscValue').removeAttr("disabled");
+          //$('#promoDiscValue').removeAttr("disabled");
             $('#promoRpfDiscAmt').removeAttr("disabled");
             $('#promoDiscPeriodTp').removeAttr("disabled");
             $('#promoDiscPeriod').removeAttr("disabled");
@@ -404,28 +527,41 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:210px" />
+	<col style="width:180px" />
 	<col style="width:*" />
-	<col style="width:210px" />
+	<col style="width:160px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
 	<th scope="row">Discount(Type/Value)<span class="must">*</span></th>
 	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p>
 	<select id="promoDiscType" name="promoDiscType" class="w100p"></select>
-	<input id="promoDiscValue" name="promoDiscValue" type="text" title="" placeholder="" class="w100p" />
+	</p>
+	<p>
+	<input id="promoDiscValue" name="promoDiscValue" type="text" title="" placeholder="" class="w100p" disabled />   
+	</p>
+	</div>    
 	</td>
-	<th scope="row">RPF<span class="must">*</span></th>
+	<th scope="row">RPF Discunt<span class="must">*</span></th>
 	<td>
-	<select id="promoRpfDiscAmt" name="promoRpfDiscAmt" class="w100p"></select>
+	<input id="promoRpfDiscAmt" name="promoRpfDiscAmt" type="text" title="" placeholder="" class="w100p" disabled />
 	</td>
 </tr>
 <tr>
 	<th scope="row">Discount period<span class="must">*</span></th>
 	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p>
 	<select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select>
-	<input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" class="w100p" />
+	</p>
+	<p>
+	<input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder=""  class="w100p" />   
+	</p>
+	</div> 
+	
 	</td>
 	<th scope="row">Free SVC Period<span class="must">*</span></th>
 	<td>

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * The persistent class for the SAL0018D database table.
  * 
  */
-@JsonIgnoreProperties
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesPromoDVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

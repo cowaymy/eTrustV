@@ -63,21 +63,20 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
 		
 		this.preprocSalesPromotionMaster(salesPromoMVO, sessionVO);
-/*
+
+		promotionRegisterMapper.insertSalesPromoM(salesPromoMVO);
+
 		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
 		
-		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
-*/
-		promotionRegisterMapper.insertSalesPromoM(salesPromoMVO);
-/*
 		for(SalesPromoDVO salesPromoDVO : addSalesPromoDVOList) {
 			promotionRegisterMapper.insertSalesPromoD(salesPromoDVO);
 		}
 		
+		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
+
 		for(SalesPromoFreeGiftVO salesPromoFreeGiftVO : addSalesPromoFreeGiftVOList) {
 			promotionRegisterMapper.insertSalesPromoFreeGift(salesPromoFreeGiftVO);
 		}
-*/
 	}
 	
 	private void preprocSalesPromotionMaster(SalesPromoMVO salesPromoMVO, SessionVO sessionVO) {
@@ -98,6 +97,8 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		if(addSalesPromoDVOList != null) {
 			for(SalesPromoDVO addVo : addSalesPromoDVOList) {
 				addVo.setPromoId(promoId);
+				addVo.setPromoItmCurId(0);
+				addVo.setPromoItmStusId(1);
 				addVo.setPromoItmUpdUserId(sessionVO.getUserId());
 			}
 		}
@@ -127,22 +128,51 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		
 		int appTypeId = promotionVO.getSalesPromoMVO().getPromoAppTypeId();
 		
+		appTypeId = this.getAppTypeId(appTypeId);
+		
 		Map<String, Object> params = null;
 		
 		for(SalesPromoDVO dvo: addSalesPromoDVOList) {
 			
 			params = new HashMap<String, Object>();
 			
-			params.put("sktId", dvo.getPromoItmStkId());
+			params.put("stkId", dvo.getPromoItmStkId());
 			params.put("appTypeId", appTypeId);
 			
 			EgovMap priceMap = promotionRegisterMapper.selectPriceInfo(params);
 			
-			dvo.setAmt((BigDecimal)priceMap.get("amt"));
-			dvo.setPrcRpf((BigDecimal)priceMap.get("prcRpf"));
-			dvo.setPrcPv((BigDecimal)priceMap.get("prcPv"));
+			if(priceMap != null) {
+    			dvo.setAmt((BigDecimal)priceMap.get("amt"));
+    			dvo.setPrcRpf((BigDecimal)priceMap.get("prcRpf"));
+    			dvo.setPrcPv((BigDecimal)priceMap.get("prcPv"));
+			}
 		}
 		
 		return addSalesPromoDVOList;
+	}
+	
+	private int getAppTypeId(int appTypeId) {
+		int promoAppTypId = 0;
+		
+		if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN) {
+			promoAppTypId = SalesConstants.APP_TYPE_CODE_ID_RENTAL;
+		}
+		else if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT || appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_INS) {
+			promoAppTypId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT;
+		}
+		else if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS) {
+			promoAppTypId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS;
+		}
+		else if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OSVM) {
+			promoAppTypId = 1036;
+		}
+		else if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM) {
+			promoAppTypId = 1330;
+		}
+		else if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL) {
+			promoAppTypId = 1035;
+		}
+		
+		return promoAppTypId;
 	}
 }

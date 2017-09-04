@@ -85,8 +85,8 @@
              , #{promoTypeId}
              , #{promoAppTypeId}
              , #{promoSrvMemPacId}
-             , #{promoDtFrom}
-             , #{promoDtEnd}
+             , TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
+             , TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
              , #{promoStusId}
              , SYSDATE
              , #{promoUpdUserId}

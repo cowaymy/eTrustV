@@ -122,6 +122,7 @@
 </tbody>
 </table><!-- table end -->
 </form>
+<!--
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#">EDIT</a></p></li>
 	<li><p class="btn_grid"><a href="#">NEW</a></p></li>
@@ -131,8 +132,8 @@
 	<li><p class="btn_grid"><a href="#">INS</a></p></li>
 	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
+-->
+<article class="grid_wrap mt10"><!-- grid_wrap start -->
 <div id="pop_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 

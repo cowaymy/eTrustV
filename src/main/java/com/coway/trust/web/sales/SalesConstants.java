@@ -67,6 +67,15 @@ public class SalesConstants {
     public static final int APP_TYPE_CODE_ID_ITEM_BANK      = 1255; //Item Bank     
     public static final int APP_TYPE_CODE_ID_OUTRIGHTPLUS   = 1412; //Outright Plus 
 	
+    //Promotion Application
+	public static final int PROMO_APP_TYPE_CODE_ID_REN    = 2284; //Rental
+    public static final int PROMO_APP_TYPE_CODE_ID_OUT    = 2285; //Outright
+    public static final int PROMO_APP_TYPE_CODE_ID_INS    = 2286; //Installment
+    public static final int PROMO_APP_TYPE_CODE_ID_OUTPLS = 2287; //Outright Plus
+    public static final int PROMO_APP_TYPE_CODE_ID_OSVM   = 2288; //Outright SVM
+    public static final int PROMO_APP_TYPE_CODE_ID_RSVM   = 2289; //Rental SVM
+    public static final int PROMO_APP_TYPE_CODE_ID_FIL    = 2290; //Expired Filter
+    
 	//STATUS CODE
 	public static final int STATUS_CODE_ID_ACT = 1; //ACT
 	public static final String STATUS_CODE_NAME_ACT = "ACT"; //ACT
