@@ -1,0 +1,52 @@
+package com.coway.trust.biz.logistics.materialdocument.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Mapper("MaterialDocumentMapper")
+public interface MaterialDocumentMapper {
+	
+	List<EgovMap> selectLocation(Map<String, Object> params);
+
+	List<EgovMap> MaterialDocSearchList(Map<String, Object> params);
+
+	/*List<EgovMap> selectStockMovementDeliveryList(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementToItem(Map<String, Object> params);
+
+	Map<String, Object> selectStockMovementItemDeliveryQty(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementItem(String param);
+
+	Map<String, Object> selectStockMovementHead(String param);
+
+	void deleteStockMovementItm(Map<String, Object> insMap);
+
+	void deleteDeliveryStockMovementItm(Map<String, Object> insMap);
+
+	String selectDeliveryStockMovementSeq();
+
+	void insertDeliveryStockMovementDetail(Map<String, Object> insMap);
+
+	void insertDeliveryStockMovement(Map<String, Object> insMap);
+
+	List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
+
+	void insertMovementSerial();
+
+	List<EgovMap> selectNewDeliveryNoITM(Map<String, Object> params);
+
+	void insertMovementSerial(Map<String, Object> insSerial);
+
+	void StockMovementCancelIssue(Map<String, Object> formMap);
+
+	void StockMovementIssue(Map<String, Object> formMap);
+
+	List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
+
+	List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);*/
+
+}
