@@ -36,7 +36,7 @@ var MainColumnLayout =
             dataField : "zreExptId",
             headerText : "<spring:message code='sys.gstexportation.grid1.zreexptid'/>",
             editable : false,
-            width : "10%",
+            width : "15%",
         }, {
             dataField : "dealerName", 
             headerText : "<spring:message code='sys.gstexportation.grid1.dealername'/>",
@@ -75,7 +75,7 @@ var MainColumnLayout =
         }, {
             dataField : "status",  //status
             headerText : "<spring:message code='sys.gstexportation.grid1.status'/>",
-            width : "15%",
+            width : "10%",
             editable : true,
             //style : "aui-grid-left-column",
             editRenderer : 
