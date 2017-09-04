@@ -58,22 +58,22 @@
 			       A.ATTACH ATTACH  ,
 			       CASE 
 			            WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN A.ACTUAL_CANCL_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
 			       CASE 
 			            WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN A.APP_RETN_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END APP_RETN_DT  ,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_RETN_DT  ,
 			       CASE 
-			            WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN A.CALL_RECALL_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CALL_RECALL_DT  ,
+			            WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN TO_CHAR(A.CALL_RECALL_DT,'dd-MM-YYYY')
+			       ELSE '1900-01-01' END CALL_RECALL_DT  ,
 			       CASE 
 			            WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CRT_DT  ,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT  ,
 			       CASE 
 			            WHEN ( A.DSC_BRNCH_ID IS NOT NULL ) THEN A.DSC_BRNCH_ID
 			       ELSE 0 END DSC_BRNCH_ID  ,
 			       CASE 
 			            WHEN ( A.UPD_DT IS NOT NULL ) THEN A.UPD_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END UPD_DT,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT,
                    A.TYPE_ID,
                    A.DOC_ID,
                    A.REF_ID  
@@ -252,22 +252,22 @@
 			       A.ATTACH ,
 			       CASE 
 			             WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN A.ACTUAL_CANCL_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
 			       CASE 
 			             WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN A.APP_RETN_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END APP_RETN_DT  ,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_RETN_DT  ,
 			       CASE 
 			             WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN A.CALL_RECALL_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CALL_RECALL_DT  ,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CALL_RECALL_DT  ,
 			       CASE 
 			             WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CRT_DT  ,
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT  ,
 			       CASE 
 			             WHEN ( A.DSC_BRNCH_ID IS NOT NULL ) THEN A.DSC_BRNCH_ID
 			       ELSE 0 END DSC_BRNCH_ID  ,
 			       CASE 
 			             WHEN ( A.UPD_DT IS NOT NULL ) THEN A.UPD_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END UPD_DT     
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT     
 			  FROM ( SELECT V.REQ_ID ,
 					                V.REQ_NO ,
 					                V.ORD_ID ,
@@ -343,7 +343,7 @@
 			        Filter1.CODE_NAME ,
 			        CASE 
 			             WHEN ( Filter1.CALL_DT IS NOT NULL ) THEN Filter1.CALL_DT
-			        ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd') END CALL_DT  ,
+			        ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CALL_DT  ,
 			        CASE 
 			             WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME
 			        ELSE '' END CALLENTRY_USER_NAME  ,
@@ -352,7 +352,7 @@
 			        ELSE 0 END HAPY_CALLER_ID  ,
 			        CASE 
 			             WHEN ( Filter1.ORI_CALL_DT IS NOT NULL ) THEN Filter1.ORI_CALL_DT
-			        ELSE '1900-01-01 00:00:00' END ORI_CALL_DT  ,
+			        ELSE '1900-01-01' END ORI_CALL_DT  ,
 			        CASE 
 			             WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
 			        ELSE '' END USER_NAME  
@@ -430,7 +430,7 @@
 				          END NRIC  ,
 				       CASE 
 				            WHEN ( Filter1.CREATED1 IS NOT NULL ) THEN Filter1.CREATED1
-				       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd')
+				       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 				          END CREATED1  ,
 				       CASE 
 				            WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
@@ -438,11 +438,11 @@
 				          END USERNAME1  ,
 				       CASE 
 				            WHEN ( Filter1.REQST_DT IS NOT NULL ) THEN Filter1.REQST_DT
-				       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd')
+				       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 				          END REQST_DT  ,
 				       CASE 
 				            WHEN ( Filter1.UPDATED1 IS NOT NULL ) THEN Filter1.UPDATED1
-				       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd')
+				       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 				          END UPDATED1  ,
 				       CASE 
 				            WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
@@ -552,7 +552,7 @@
 			            END NRIC  ,
 			       CASE 
 			            WHEN ( Filter1.CREATED1 IS NOT NULL ) THEN Filter1.CREATED1
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd')
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 			            END CREATED1  ,
 			       CASE 
 			            WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
@@ -560,11 +560,11 @@
 			            END USERNAME1  ,
 			       CASE 
 			            WHEN ( Filter1.REQST_DT IS NOT NULL ) THEN Filter1.REQST_DT
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd')
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 			            END REQST_DT  ,
 			       CASE 
 			            WHEN ( Filter1.UPDATED1 IS NOT NULL ) THEN Filter1.UPDATED1
-			       ELSE TO_DATE('1900-01-01 00:00:00', 'yyyy-MM-dd')
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 			            END UPDATED1  ,
 			       CASE 
 			            WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
