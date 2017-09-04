@@ -700,6 +700,8 @@ $(document).ready(function()
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
 	<input type ="hidden" id="menuCode" name="menuCode" value=""/>
+	<input type ="hidden" id="selCategoryId" name="selCategoryId" value="1"/>
+	<input type ="hidden" id="parmDisab" name="parmDisab" value="0"/>
 
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
