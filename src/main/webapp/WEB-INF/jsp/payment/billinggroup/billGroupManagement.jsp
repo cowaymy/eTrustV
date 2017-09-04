@@ -382,7 +382,6 @@ var addOrderLayout = [
         var year= now.getFullYear();
         var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
         var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
-        //var currentDay = "02";
         var valid = true;
         var message = "";
         var orderNo = $("#orderNo").val();
@@ -641,7 +640,7 @@ var addOrderLayout = [
             }
             
             AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
-            AUIGrid.resize(estmHisPopGridID,900,300); 
+            AUIGrid.resize(estmHisPopGridID,930,300); 
             
         });
     }
