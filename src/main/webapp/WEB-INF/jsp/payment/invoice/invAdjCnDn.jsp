@@ -32,12 +32,26 @@ var columnLayout=[
 
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
-	AUIGrid.destroy(subGridID);//subGrid 초기화
-    Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
-        AUIGrid.setGridData(myGridID, result);
-    });
+    var valid = ValidRequiredField();
+    if(!valid){
+    	Common.alert("* Please key in Create Date.");
+    }
+    else{
+		AUIGrid.destroy(subGridID);//subGrid 초기화
+	    Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
+	        AUIGrid.setGridData(myGridID, result);
+	    });
+    }
 }
 
+function ValidRequiredField(){
+	var valid = true;
+	
+	if($("#date1").val() == "" || $("#date2").val() == "")
+		valid = false;
+	
+	return valid;
+}
 function fn_cmmSearchInvoicePop(){
     Common.popupDiv('/payment/common/initCommonSearchInvoicePop.do', null, null , true ,'_searchInvoice');
 }
@@ -71,6 +85,7 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
+        <input type="hidden" id="status" name="status" value="4" />
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
 				<colgroup>
@@ -80,12 +95,12 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
 				</colgroup>
 				<tbody>
 				    <tr>
-				        <th scope="row">Date</th>
+				        <th scope="row">Create Date</th>
 					    <td>
 					       <div class="date_set w100p">
-					       <p><input name="date1" type="text" placeholder="dd/MM/yyyy" class="j_date" /></p> 
+					       <p><input name="date1" id="date1" type="text" placeholder="dd/MM/yyyy" class="j_date" /></p> 
 					       <span>~</span>
-					       <p><input name="date2" type="text"placeholder="dd/MM/yyyy" class="j_date" /></p>
+					       <p><input name="date2" id="date2" type="text"placeholder="dd/MM/yyyy" class="j_date" /></p>
 					       </div>
 					    </td>
 					    <td></td>
