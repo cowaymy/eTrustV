@@ -1380,9 +1380,12 @@ var addOrderLayout = [
         	Common.confirm('Are you sure want to set this address as main address ?',function (){
                 
         		Common.ajax("GET", "/payment/saveRemoveOrder.do", {"custBillId" : custBillId, "reasonUpd":reasonUpd, "salesOrdId":salesOrdId}, function(result) {
+        			
         			Common.alert(result.message);
+        			
+        			$("#remove_ordGroup").text(result.data.grpOrder.orderGrp);$('#remove_ordGroup').css("color","red");
         			$("#btnSave").hide();
-        			//showDetailOrdGrp(salesOrdId);
+        			
                 });
         		
             });
@@ -1471,6 +1474,8 @@ var addOrderLayout = [
             Common.confirm(message2,function (){
                 
                 Common.ajax("GET", "/payment/saveAddOrder.do", {"salesOrdNo" : salesOrdNoArr, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdId" : salesOrdIdArr}, function(result) {
+                	
+                	$("#addOrd_reasonUpd").val("");
                     Common.alert(result.message);
                     fn_addOrder();
                     
