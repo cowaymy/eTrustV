@@ -694,9 +694,12 @@ public class BillingGroupController {
 	@RequestMapping(value = "/saveRemoveOrder", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveRemoveOrder(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
+		String defaultDate = "1900-01-01";
+		params.put("defaultDate", defaultDate);
 		ReturnMessage message = new ReturnMessage();
 		
 		boolean saveResult = billGroupService.saveRemoveOrder(params, sessionVO);
+		EgovMap selectBillGrpOrder = billGroupService.selectBillGrpOrder(params);
 		
 		if(saveResult){
 			message.setCode(AppConstants.SUCCESS);
@@ -706,6 +709,9 @@ public class BillingGroupController {
 		    message.setMessage("<b>Failed to remove order from this billing group. Please try again later.</b>");
 		 }
 		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("grpOrder", selectBillGrpOrder);
+		message.setData(resultMap);
 		return ResponseEntity.ok(message);
 	}
 	
