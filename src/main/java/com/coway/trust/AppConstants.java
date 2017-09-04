@@ -15,6 +15,8 @@ public class AppConstants {
 
 	public static final int RECORD_COUNT_PER_PAGE = 10;
 
+	public static final int RECORD_MAX_SIZE = 300000;
+
 	// API BASE UR
 	public static final String API_BASE_URI = AppConstants.PATH_API + AppConstants.TAG;
 	public static final String CALL_CENTER_API_BASE_URI = AppConstants.SLASH + AppConstants.CALLCENTER

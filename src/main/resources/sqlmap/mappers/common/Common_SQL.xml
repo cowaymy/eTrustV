@@ -634,6 +634,7 @@
         <![CDATA[
             SELECT CD_DTL.CODE_ID
                         ,CD_DTL.CODE
+                        ,CD_DTL.CODE_DESC
                         ,CD_DTL.DISAB AS CODE_DISAB
             FROM SYS0013M CD_DTL
             WHERE 1=1
@@ -654,6 +655,7 @@
                         ,CD_MST.DISAB AS CODE_MASTER_DISAB
                         ,CD_DTL.CODE_ID
                         ,CD_DTL.CODE
+                        ,CD_DTL.CODE_DESC
                         ,CD_DTL.DISAB AS CODE_DISAB
                         ,CD_DTL.OLD_CODE_ID
             FROM SYS0012M CD_MST, SYS0013M CD_DTL
@@ -674,6 +676,7 @@
                                             ,CD_MST.DISAB AS CODE_MASTER_DISAB
                                             ,CD_DTL.CODE_ID
                                             ,CD_DTL.CODE
+                                            ,CD_DTL.CODE_DESC
                                             ,CD_DTL.DISAB AS CODE_DISAB
                                             ,CD_DTL.OLD_CODE_ID
                                 FROM SYS0012M CD_MST, SYS0013M CD_DTL

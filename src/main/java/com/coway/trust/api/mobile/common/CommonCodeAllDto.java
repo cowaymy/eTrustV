@@ -19,6 +19,8 @@ public class CommonCodeAllDto {
 	private int codeId;
 	@ApiModelProperty(value = "코드 명")
 	private String code;
+	@ApiModelProperty(value = "코드 DESC")
+	private String codeDesc;
 	@ApiModelProperty(value = "코드 Disable 여부 ( 0 : enable, 1 : disable)")
 	private int codeDisab;
 
@@ -64,6 +66,14 @@ public class CommonCodeAllDto {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getCodeDesc() {
+		return codeDesc;
+	}
+
+	public void setCodeDesc(String codeDesc) {
+		this.codeDesc = codeDesc;
 	}
 
 	public int getCodeDisab() {

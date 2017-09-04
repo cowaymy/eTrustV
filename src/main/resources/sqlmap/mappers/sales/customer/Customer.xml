@@ -8,7 +8,7 @@
           resultMap="clobMap" 을 사용해야 함.
     -->
     
-    <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
+    <select id="selectCustomerList" parameterType="Map" resultType="egovMap" resultSetType="SCROLL_INSENSITIVE">
         <![CDATA[
         SELECT  
                 P2.C1 AS C1, 
