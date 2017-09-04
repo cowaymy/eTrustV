@@ -14,14 +14,33 @@
         AUIGrid.setSelectionMode(myGridID, "singleRow");
         
         // 셀 더블클릭 이벤트 바인딩
-//        AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
-//            $("#_custId").val(event.item.custId);
-//            $("#_custAddId").val(event.item.custAddId);
-//            Common.popupWin("popForm", "/sales/customer/selectCustomerView.do", option);
+        AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
+            $("#reqId").val(event.item.reqId);
+            $("#callEntryId").val(event.item.callEntryId);
+            $("#salesOrdId").val(event.item.salesOrdId);
+            $("#typeId").val(event.item.typeId);
+            $("#docId").val(event.item.docId);
+            $("#refId").val(event.item.refId);
+
+            Common.popupDiv("/sales/order/cancelReqInfoPop.do", $("#detailForm").serializeJSON());
             
-            
-//        });
+        });
+        
         // 셀 클릭 이벤트 바인딩
+        AUIGrid.bind(myGridID, "cellClick", function(event) {
+        	$("#reqId").val(event.item.reqId);
+            $("#callEntryId").val(event.item.callEntryId);
+            $("#salesOrdId").val(event.item.salesOrdId);
+            $("#typeId").val(event.item.typeId);
+            $("#docId").val(event.item.docId);
+            $("#refId").val(event.item.refId);
+            $("#paramCallStusId").val(event.item.callStusId);
+            $("#paramCallStusCode").val(event.item.callStusCode);
+            $("#paramReqNo").val(event.item.reqNo);
+            $("#paramReqStusId").val(event.item.reqStusId);
+            $("#paramReqStusCode").val(event.item.reqStusCode);
+            gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
+        });
     
     });
     
@@ -38,16 +57,17 @@
             }, {
                 dataField : "reqStusCode",
                 headerText : "Status",
-                width : 160,
+                width : 100,
                 editable : false
             }, {
                 dataField : "ordId",
                 headerText : "Order No.",
-                width : 170,
+                width : 120,
                 editable : false
             }, {
                 dataField : "appTypeName",
                 headerText : "App Type",
+                width : 120,
                 editable : false
             }, {
                 dataField : "custName",
@@ -70,8 +90,29 @@
                 dataField : "callRecallDt",
                 headerText : "Recall Date",
                 editable : false
+            },{
+                dataField : "callEntryId",
+                visible : false
+            },{
+                dataField : "docId",
+                visible : false
+            },{
+                dataField : "typeId",
+                visible : false
+            },{
+                dataField : "refId",
+                visible : false
+            },{
+                dataField : "reqStusId",
+                visible : false
+            },{
+                dataField : "callStusId",
+                visible : false
+            },{
+                dataField : "callStusCode",
+                visible : false
             }];
-       
+        
      // 그리드 속성 설정
         var gridPros = {
             
@@ -124,7 +165,7 @@
                 selectAll: true, // 전체선택 
                 width: '80%'
             });
-           
+            $('#cmbAppTypeId').multipleSelect("checkAll");
         });
     }
     
@@ -132,8 +173,28 @@
     function fn_orderCancelListAjax() {     
         Common.ajax("GET", "/sales/order/orderCancelJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
-        }
-        );
+        });
+    }
+    
+    function fn_newLogResult() {
+    	if(detailForm.reqId.value == ""){
+    		Common.alert("No cancellation request selected.");
+    		return false;
+    	}else{
+    		if(detailForm.paramCallStusId.value != '1' && detailForm.paramCallStusId.value != '19'){
+    			Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status [" 
+    			                  +detailForm.paramCallStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
+    			return false;
+    		}else{
+    			if(detailForm.paramReqStusId.value != '1' && detailForm.paramReqStusId.value != '19'){
+                    Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status [" 
+                    		          +detailForm.paramReqStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
+                    return false;
+    			}
+    		}
+    		Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON());
+    	}
+    	
     }
     
 </script>
@@ -150,7 +211,7 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order Cancellation</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#">New Log Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()">New Log Result</a></p></li>
     <li><p class="btn_blue"><a href="#">CT Assignment</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
@@ -159,6 +220,19 @@
 
 
 <section class="search_table"><!-- search_table start -->
+<form id="detailForm" name="detailForm" method="post">
+    <input type="hidden" id="reqId" name="reqId">
+    <input type="hidden" id="callEntryId" name="callEntryId">
+    <input type="hidden" id="salesOrdId" name="salesOrdId">
+    <input type="hidden" id="typeId" name="typeId">
+    <input type="hidden" id="docId" name="docId">
+    <input type="hidden" id="refId" name="refId">
+    <input type="hidden" id="paramCallStusId" name="paramCallStusId">
+    <input type="hidden" id="paramCallStusCode" name="paramCallStusCode">
+    <input type="hidden" id="paramReqNo" name="paramReqNo">
+    <input type="hidden" id="paramReqStusId" name="paramReqStusId">
+    <input type="hidden" id="paramReqStusCode" name="paramReqStusCode">
+</form>
 <form id="searchForm" name="searchForm" method="post">
 
 <table class="type1"><!-- table start -->
@@ -201,8 +275,8 @@
     <th scope="row">Call Log Status</th>
     <td>
         <select id="callStusId" name="callStusId" class="multy_select w100p" multiple="multiple">
-            <option value="1">Active</option>
-            <option value="19">Recall</option>
+            <option value="1" selected>Active</option>
+            <option value="19" selected>Recall</option>
             <option value="32">Confirm To Cancel</option>
             <option value="31">Reversal Of Cancellation</option>
         </select>
@@ -222,8 +296,8 @@
     <th scope="row">Request Stage</th>
     <td>
     <select id="reqStageId" name="reqStageId" class="multy_select w100p" multiple="multiple">
-        <option value="24">Before Install</option>
-        <option value="25">After Install</option>
+        <option value="24" selected>Before Install</option>
+        <option value="25" selected>After Install</option>
     </select>
     </td>
     <th scope="row">DSC Branch</th>
