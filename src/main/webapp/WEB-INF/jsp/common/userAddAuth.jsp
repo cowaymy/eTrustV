@@ -13,8 +13,8 @@ var gridDetailDataLength=0;
 /*공통팝업 조회ID*/
 var _queryId = "";
 var _callbackFunc = "popupCallback";
-//var keyValueList = [{code:"0", value:"Department"}, {code:"1", value:"Branch"}];
-var keyValueList = null;
+//var keyValueListTemp = [{code:"0", value:"Department"}, {code:"1", value:"Branch"}];
+var keyValueList = [];
 /*
 function resizeHandler(aryHeight) {
     $(window).resize(function() {
@@ -233,7 +233,8 @@ function fn_commCodesearch(){
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 alert("Fail : " + jqXHR.responseJSON.message);
-            }
+            },
+            {async: false}
     )
 };
 /****************************Transaction End**********************************/
@@ -272,6 +273,9 @@ var gridUserColumnLayout =
         style : "aui-grid-user-custom-left"
     }
 ];
+
+//공통코드 조회
+fn_commCodesearch();
 
 //selectionMode (String) : 설정하고자 하는 selectionMode(유효값 : singleCell, singleRow, multipleCells, multipleRows, none)
 var options =
@@ -510,6 +514,8 @@ var gridAddAuthColumnLayout =
 
 ];
 
+
+
 var detailOptions =
 {
 		editable : true,
@@ -631,9 +637,6 @@ $(document).ready(function(){
     });
     AUIGrid.clearGridData(grdUser);
     AUIGrid.clearGridData(grdAddAuth);
-
-    //공통코드 조회
-    fn_commCodesearch();
 });
 /****************************Program Init End********************************/
 </script>
