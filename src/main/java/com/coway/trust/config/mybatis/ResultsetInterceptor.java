@@ -1,9 +1,7 @@
 package com.coway.trust.config.mybatis;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
@@ -19,11 +17,13 @@ public class ResultsetInterceptor implements Interceptor {
 	public Object intercept(Invocation invocation) throws Throwable {
 
 		Object[] args = invocation.getArgs();
-		Statement statement = (Statement) args[0];
-		ResultSet rs = statement.getResultSet();
-		ResultSetMetaData rsmd = rs.getMetaData();
 
-		if(rs.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE && rs.last()){
+		Statement statement = (Statement) args[0];
+
+		ResultSet rs = statement.getResultSet();
+		// ResultSetMetaData rsmd = rs.getMetaData();
+
+		if (rs.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE && rs.last()) {
 			int rowCount = rs.getRow();
 
 			if (rowCount > AppConstants.RECORD_MAX_SIZE) {
@@ -33,9 +33,7 @@ public class ResultsetInterceptor implements Interceptor {
 			rs.beforeFirst();
 		}
 
-		List list = (List) invocation.proceed();
-
-		return list;
+		return invocation.proceed();
 	}
 
 	@Override
