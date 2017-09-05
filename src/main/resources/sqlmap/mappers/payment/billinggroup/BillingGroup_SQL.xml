@@ -69,71 +69,35 @@
     <select id="selectMaillingInfo" parameterType="Map" resultType="egovMap">
        SELECT 
 		       Limit1.CUST_ADD_ID CUST_ADD_ID  ,
-               NVL(Limit1.STREET, '') STREET,
-               NVL(Limit1.POSTCODE, '') POSTCODE,
-               NVL(Limit1.LOCALITY, '') LOCALITY,
-               NVL(Limit1.REGION2, '') REGION2,
-               NVL(Limit1.REGION1, '') REGION1,
                NVL(Limit1.COUNTRY, '') COUNTRY,
-               Limit1.STREET ||' '|| Limit1.POSTCODE ||' '|| Limit1.LOCALITY ||' '|| Limit1.REGION2 ||' '|| Limit1.REGION1 ||' '|| Limit1.COUNTRY AS ADDR,
-               Limit1.STREET_ID STREET_ID,
-		       Limit1.POST_CODE_ID POST_CODE_ID  ,
-		       Limit1.AREA_ID AREA_ID  ,
-		       Limit1.AREA_NAME AREA_NAME  ,
-		       Limit1.STATE_ID STATE_ID  ,
-		       Limit1.NAME NAME  ,
-		       Limit1.CNTY_ID CNTY_ID  ,
-		       Limit1.NAME2 NAME2  ,
-		       Limit1.REM REM  ,
-		       Limit1.STUS_CODE_ID STUS_CODE_ID  ,
-		       Limit1.NAME3 NAME3  ,
-		       Limit1.CUST_ID CUST_ID  ,
-		       Limit1.CRT_USER_ID CRT_USER_ID  ,
-		       Limit1.USER_NAME USER_NAME  ,
-		       Limit1.CRT_DT CRT_DT  ,
-		       Limit1.UPD_DT UPD_DT  ,
-		       Limit1.UPD_USER_ID UPD_USER_ID  ,
-		       Limit1.USER_NAME2 USER_NAME2  
+               NVL(Limit1.REGION2, '') REGION2,
+               NVL(Limit1.REGION3, '') REGION3,
+               NVL(Limit1.REGION4, '') REGION4,
+               NVL(Limit1.POSTCODE, '') POSTCODE,
+               NVL(Limit1.CITY, '') CITY,
+               NVL(Limit1.AREA, '') AREA,
+               Limit1.REM REM  ,
+               Limit1.STUS_CODE_ID STUS_CODE_ID  ,
+               Limit1.CUST_ID CUST_ID  ,
+               Limit1.CRT_USER_ID CRT_USER_ID  ,
+               Limit1.USER_NAME USER_NAME  ,
+               Limit1.CRT_DT CRT_DT  ,
+               Limit1.UPD_DT UPD_DT  ,
+               Limit1.UPD_USER_ID UPD_USER_ID  ,
+               Limit1.USER_NAME2 USER_NAME2
 		  FROM ( SELECT 
-		                Extent1.CUST_ADD_ID CUST_ADD_ID  ,
-		                Extent1.CUST_ID CUST_ID  ,
-		                Extent1.CRT_USER_ID CRT_USER_ID  ,
-		                Extent2.NAME NAME  ,
+                        Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+                        Extent1.CUST_ID CUST_ID  ,
+                        Extent1.CRT_USER_ID CRT_USER_ID  ,
+                        Extent2.NAME NAME  ,
                         Extent9.COUNTRY COUNTRY,
-                        Extent9.REGION1 REGION1,
+                        Extent9.STATE STATE,
                         Extent9.REGION2 REGION2,
-                        Extent9.LOCALITY LOCALITY,
+                        Extent9.REGION3 REGION3,
+                        Extent9.REGION4 REGION4,
                         Extent9.POSTCODE POSTCODE,
-                        Extent9.STREET STREET,
-                        Extent9.STREET_ID STREET_ID,
-		                CASE 
-		                     WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
-		                ELSE 0
-		                   END POST_CODE_ID  ,
-		                CASE 
-		                     WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
-		                ELSE 0
-		                   END AREA_ID  ,
-		                CASE 
-		                     WHEN ( Extent4.AREA_ID IS NOT NULL ) THEN Extent4.AREA_NAME
-		                ELSE ''
-		                   END AREA_NAME  ,
-		                CASE 
-		                     WHEN ( Extent1.STATE_ID IS NOT NULL ) THEN Extent1.STATE_ID
-		                ELSE 0
-		                   END STATE_ID  ,
-		                CASE 
-		                     WHEN ( Extent5.STATE_ID IS NOT NULL ) THEN Extent5.NAME
-		                ELSE ''
-		                   END NAME2  ,
-		                CASE 
-		                     WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
-		                ELSE 0
-		                   END CNTY_ID  ,
-		                CASE 
-		                     WHEN ( Extent6.CNTY_ID IS NOT NULL ) THEN Extent6.NAME
-		                ELSE ''
-		                   END NAME3  ,
+                        Extent9.CITY CITY,
+                        Extent9.AREA AREA,
 		                CASE 
 		                     WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM
 		                ELSE ''
@@ -166,15 +130,10 @@
 		                   END USER_NAME2  
 		         FROM SAL0023D Extent1
 		                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
-		                LEFT JOIN SYS0030C Extent3   ON Extent3.POST_CODE_ID = Extent1.POST_CODE_ID
-		                LEFT JOIN SYS0039M Extent4   ON Extent4.AREA_ID = Extent1.AREA_ID
-		                LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_ID
-		                LEFT JOIN SYS0015M Extent6   ON Extent6.CNTY_ID = Extent1.CNTY_ID
 		                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
 		                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
-		                LEFT JOIN SYS0064M Extent9   ON Extent9.STREET_ID = Extent1.STREET_ID
+		                LEFT JOIN SYS0064M Extent9   ON Extent9.AREA_ID = Extent1.AREA_ID
 		          WHERE  ( 8 <![CDATA[<> ]]> Extent1.STUS_CODE_ID )
-		          AND Extent9.USE_FLAG IS NULL
                   AND ( Extent1.CUST_ADD_ID = #{custBillAddId} ) AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
     </select>
     
@@ -185,8 +144,14 @@
                         project1.CUST_ID,
                         project1.CRT_USER_ID,
                         project1.NAME,
-                        project1.ADDR_DTL,
-                        project1.ADDR,
+                        project1.COUNTRY COUNTRY,
+                        project1.STATE STATE,
+                        project1.REGION2 REGION2,
+                        project1.REGION3 REGION3,
+                        project1.REGION4 REGION4,
+                        project1.POSTCODE POSTCODE,
+                        project1.CITY CITY,
+                        project1.AREA AREA,
                         project1.REM,
                         project1.USER_NAME,
                         project1.CRT_DT,
@@ -195,13 +160,19 @@
                         project1.USER_NAME1,
                         project1.STUS_CODE_ID
                     FROM 
-                        (SELECT Extent1.CUST_ADD_ID   ,
+                        (SELECT 
+                               Extent1.CUST_ADD_ID   ,
                                Extent1.CUST_ID   ,
                                Extent1.CRT_USER_ID   ,
                                Extent2.NAME   ,
-                               Extent1.ADDR_DTL,
-                               CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
-                               Extent5.STREET ||' '|| Extent5.POSTCODE ||' '|| Extent5.LOCALITY ||' '|| Extent5.REGION2 ||' '|| Extent5.REGION1 ||' '|| Extent5.COUNTRY AS ADDR,                                                    
+                               Extent5.COUNTRY COUNTRY,
+                               Extent5.STATE STATE,
+                               Extent5.REGION2 REGION2,
+                               Extent5.REGION3 REGION3,
+                               Extent5.REGION4 REGION4,
+                               Extent5.POSTCODE POSTCODE,
+                               Extent5.CITY CITY,
+                               Extent5.AREA AREA,                                                    
                                CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM  ELSE '' END REM  ,
                                CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  ,
                                CASE  WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END USER_NAME  ,
@@ -213,12 +184,11 @@
                                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID                               
                                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
                                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
-                               LEFT JOIN SYS0064M Extent5   ON Extent5.STREET_ID = Extent1.STREET_ID
+                               LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID
                         WHERE   
                               8 <> Extent1.STUS_CODE_ID 
                         AND  
-                              Extent1.CUST_ID = #{custBillCustId}
-                        AND Extent5.USE_FLAG IS NULL) project1
+                              Extent1.CUST_ID = #{custBillCustId}) project1
                          
                 ]]>
                   <if test='custAddr != null and custAddr !=""'>
@@ -971,7 +941,6 @@
 	                LEFT JOIN SYS0015M Extent5   ON Extent5.CNTY_ID = Extent1.CNTY_ID
 	                LEFT JOIN SYS0064M Extent6   ON Extent6.STREET_ID = Extent1.STREET_ID
 	          WHERE  Extent1.CUST_ADD_ID = #{value} 
-	          AND Extent6.USE_FLAG IS NULL
 	          AND ROWNUM <![CDATA[<= ]]> 1 ) Limit1
     </select>
     
