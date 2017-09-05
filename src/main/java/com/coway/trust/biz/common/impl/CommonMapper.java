@@ -99,7 +99,10 @@ public interface CommonMapper {
 	// StatusCode Category
 	int insertStatusCategory(Map<String, Object> params);	
 	
-	int updateStatusCategory(Map<String, Object> params);	
+	int updateStatusCategory(Map<String, Object> params);
+	
+	int deleteStatusCategoryCode(Map<String, Object> params);	
+	int deleteStatusCategoryMst(Map<String, Object> params);	
 	
 	// StatusCode 
 	int insertStatusCode(Map<String, Object> params);	

@@ -73,6 +73,7 @@ public class StatusCodeController {
 			SessionVO sessionVO) {
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid delList
 
 		int tmpCnt = 0;
 		int totCnt = 0;
@@ -85,10 +86,16 @@ public class StatusCodeController {
 			tmpCnt = commonService.updateStatusCategory(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
+		
+		if (delList.size() > 0) {
+			tmpCnt = commonService.deleteStatusCategoryCode(delList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
 
 		// 콘솔로 찍어보기
 		LOGGER.info("StatusCategory_수정 : {}", udtList.toString());
 		LOGGER.info("StatusCategory_추가 : {}", addList.toString());
+		LOGGER.info("StatusCategory_삭제 : {}", delList.toString());
 		LOGGER.info("StatusCategory_카운트 : {}", totCnt);
 
 		// 결과 만들기 예.

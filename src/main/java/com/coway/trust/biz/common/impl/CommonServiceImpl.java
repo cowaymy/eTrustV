@@ -669,6 +669,53 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 
 		return saveCnt;
 	}
+	
+	@Override
+	public int deleteStatusCategoryCode(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> deleteStatusCategoryCode ");
+			logger.debug("stusCtgryId : {}", ((Map<String, Object>) obj).get("stusCtgryId"));
+			
+			delCnt++;
+			
+			// SYS0037M
+			commonMapper.deleteStatusCategoryCode((Map<String, Object>) obj);
+			
+			//SYS0036M
+			commonMapper.deleteStatusCategoryMst((Map<String, Object>) obj);
+		}
+		
+		return delCnt;
+	}		
+	
+	@Override
+	public int deleteStatusCategoryMst(List<Object> delList, Integer crtUserId) 
+	{
+		int delCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			logger.debug(" >>>>> deleteStatusCategoryMst ");
+			logger.debug("stusCtgryId : {}", ((Map<String, Object>) obj).get("stusCtgryId"));
+			
+			delCnt++;
+			
+			commonMapper.deleteStatusCategoryMst((Map<String, Object>) obj);
+			
+		}
+		
+		return delCnt;
+	}		
 
 	@Override
 	public int insertStatusCode(List<Object> addList, Integer crtUserId) 

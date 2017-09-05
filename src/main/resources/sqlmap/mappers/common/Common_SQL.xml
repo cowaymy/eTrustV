@@ -311,7 +311,10 @@
   
     <update id="updateCategoryCodeYN" parameterType="Map">
         UPDATE  SYS0037M
-          SET DISAB  = DECODE(#{codeDisab},'Y',1,0)  
+          SET DISAB  = DECODE(#{codeDisab},'Y',1,0)
+         <if test="seqNo !=null and seqNo != ''">
+             ,SEQ_NO = #{seqNo}
+         </if>    
         WHERE STUS_CTGRY_ID = #{stusCtgryId}
           AND STUS_CODE_ID = #{stusCodeId}
   </update>   
@@ -361,6 +364,14 @@
           )
   </insert>  
 
+  <delete id="deleteStatusCategoryMst" parameterType="Map">
+        DELETE FROM SYS0036M WHERE STUS_CTGRY_ID = #{stusCtgryId}
+  </delete>  
+
+  <delete id="deleteStatusCategoryCode" parameterType="Map">
+        DELETE FROM SYS0037M WHERE STUS_CTGRY_ID = #{stusCtgryId}
+  </delete>  
+
   <update id="updateStatusCategory" parameterType="Map">
         UPDATE  SYS0036M
           SET STUS_CTGRY_NAME  = NVL(#{stusCtgryName},STUS_CTGRY_NAME) 
@@ -405,6 +416,7 @@
   <select id="selectStatusCategoryCodeList" parameterType="Map" resultType="egovMap">
 					SELECT  B.STUS_CODE_ID
 					       ,C.NAME CODE_NAME
+					       ,B.SEQ_NO
 					       ,DECODE(B.DISAB, 0,'N',1,'Y','N') CODE_DISAB
 					  FROM SYS0036M A
 					      ,SYS0037M B
@@ -417,7 +429,7 @@
 			 <if test="parmDisab !=null and parmDisab != ''">
             AND B.DISAB = #{parmDisab}
        </if>
-       ORDER BY B.STUS_CODE_ID
+       ORDER BY B.SEQ_NO
   </select>
 
 	<select id="getAccCodeCount" parameterType="Map" resultType="int">
@@ -634,7 +646,6 @@
         <![CDATA[
             SELECT CD_DTL.CODE_ID
                         ,CD_DTL.CODE
-                        ,CD_DTL.CODE_DESC
                         ,CD_DTL.DISAB AS CODE_DISAB
             FROM SYS0013M CD_DTL
             WHERE 1=1
@@ -655,7 +666,6 @@
                         ,CD_MST.DISAB AS CODE_MASTER_DISAB
                         ,CD_DTL.CODE_ID
                         ,CD_DTL.CODE
-                        ,CD_DTL.CODE_DESC
                         ,CD_DTL.DISAB AS CODE_DISAB
                         ,CD_DTL.OLD_CODE_ID
             FROM SYS0012M CD_MST, SYS0013M CD_DTL
@@ -1183,43 +1193,4 @@
             AND A.RESN_STUS_ID = 1
         ORDER BY B.RESN_DESC         
     </select>
-
-
-
-
-
-
-
-
-    <select id="selectDefectMasters" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1020V
-    </select>
-
-    <select id="selectDefectDetails" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1019V
-    </select>
-
-    <select id="selectMalfunctionReasons" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1022V
-    </select>
-
-    <select id="selectMalfunctionCodes" parameterType="Map" resultType="egovMap">
-        SELECT * FROM SYS1021V
-    </select>
-
-    <select id="selectReasonCodes" parameterType="Map" resultType="egovMap">
-        SELECT CODEDETAIL.CODE_ID RESN_MASTER_TYPE_ID
-        ,CODEDETAIL.CODE RESN_MASTER_CODE
-        ,CODEDETAIL.CODE_NAME RESN_MASTER_DESC
-        ,CODEDETAIL.DISAB
-        ,REASONCODE.RESN_TYPE_ID
-        ,REASONCODE.RESN_ID
-        ,REASONCODE.CODE RESN_CODE
-        , REASONCODE.CODE || ' - ' || REASONCODE.RESN_DESC RESN_DESC
-        ,REASONCODE.STUS_CODE_ID
-        FROM SYS0032M REASONCODE, SYS0013M CODEDETAIL
-        WHERE REASONCODE.RESN_TYPE_ID = CODEDETAIL.CODE_ID
-        AND REASONCODE.RESN_TYPE_ID IN (166, 167, 174, 336, 1332, 537, 894, 340)
-    </select>
-
 </mapper>

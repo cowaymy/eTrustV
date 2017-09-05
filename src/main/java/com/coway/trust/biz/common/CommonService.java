@@ -112,6 +112,9 @@ public interface CommonService {
 	int  insertStatusCategory(List<Object> addList, Integer crtUserId);
 	// update StatusCategory
 	int  updateStatusCategory(List<Object> addList, Integer crtUserId);
+	
+	int  deleteStatusCategoryCode(List<Object> addList, Integer crtUserId);
+	int  deleteStatusCategoryMst(List<Object> addList, Integer crtUserId);
 
 	// insert StatusCode
 	int  insertStatusCode(List<Object> addList, Integer crtUserId);

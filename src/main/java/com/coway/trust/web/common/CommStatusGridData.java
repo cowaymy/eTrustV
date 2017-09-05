@@ -5,6 +5,7 @@ import com.coway.trust.cmmn.model.BasicData;
 public class CommStatusGridData extends BasicData {
 	private int checkFlag;
 	private int stusCodeId;
+	private int seqNo;
 	private String code;
 	private String codeName;	
 	private String codeDisab;  // category code management
@@ -48,5 +49,14 @@ public class CommStatusGridData extends BasicData {
 	public void setCodeDisab(String codeDisab) {
 		this.codeDisab = codeDisab;
 	}
+
+	public int getSeqNo() {
+		return seqNo;
+	}
+
+	public void setSeqNo(int seqNo) {
+		this.seqNo = seqNo;
+	}
+	
 	
 }
