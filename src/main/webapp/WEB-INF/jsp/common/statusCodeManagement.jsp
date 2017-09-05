@@ -55,17 +55,22 @@ var detailColumnLayout =
         {
             dataField : "stusCodeId",
             headerText : "<spring:message code='sys.generalCode.grid1.CODE_ID'/>",
-            width : "20%"
+            width : "15%"
            ,editable : false
         }, {
             dataField : "codeName",
             headerText : "<spring:message code='sys.statuscode.grid1.CODE_NAME'/>",
-            width : "60%"
+            width : "55%"
            ,editable : false
+        }, {
+            dataField : "seqNo",
+            headerText : "<spring:message code='sys.statusCdMngment.grid1.seqNo'/>",
+            width : "15%"
+           ,editable : true
         }, {
             dataField : "codeDisab",
             headerText : "<spring:message code='sys.generalCode.grid1.DISABLED'/>",
-            width : "20%",
+            width : "15%",
             visible : true,
             editRenderer : 
             {
@@ -143,6 +148,32 @@ function auiCellEditignHandler(event)
     else if(event.type == "cellEditEnd") 
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+
+        if (event.columnIndex == 2 && event.headerText == "SEQ NO") // SEQ NO
+        {
+        	if (parseInt(event.value) < 1)
+          {
+        		//Common.alert("Menu Level is not more than 4. ");
+                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
+                AUIGrid.restoreEditedCells(detailGridID, [event.rowIndex, "seqNo"] );
+                return false;
+          }  
+        }
+
+        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
+        {
+        	if (parseInt(event.value) < 1)
+          {
+             Common.alert("<spring:message code='sys.msg.necessary' arguments='CATEGORY NAME' htmlEscape='false'/>");
+             AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "stusCtgryName"] );
+             return false;
+          }
+        	else
+          {
+        		AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
+          }  
+        }
+        
     } 
     else if(event.type == "cellEditCancel") 
     {
@@ -315,7 +346,10 @@ $(document).ready(function()
 	  var options = {
                   usePaging : true,
                   useGroupingPanel : false,
-                  showRowNumColumn : false  // 그리드 넘버링
+                  showRowNumColumn : false,  // 그리드 넘버링
+                  enableRestore : true,
+                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+                  selectionMode : "multipleRows",
                 };
     
     // masterGrid 그리드를 생성합니다.
@@ -363,6 +397,10 @@ $(document).ready(function()
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
     });    
+
+
+
+    
 
 /***********************************************[ DETAIL GRID] ************************************************/
 
@@ -458,7 +496,7 @@ $(document).ready(function()
 //ajax list 조회.
 function fnSelectCategoryListAjax() 
 {        
-  Common.ajax("GET", "/status/selectStatusCategoryList.do"
+  Common.ajax("GET", "/status/selectStatusCategoryList.do"  // selectStatusCategoryList
        , $("#MainForm").serialize()
        , function(result) 
        {
@@ -469,6 +507,12 @@ function fnSelectCategoryListAjax()
           if(result != null && result.length > 0)
           {
             //fnGetCategoryCd(myGridID, 0);
+            console.log("UpdCategoryCdYN: " + $("#selCategoryId").val());
+            if ($("#selCategoryId").val().length > 0 )
+            {
+              fnSelectCategoryCdInfo();  
+            }
+            
             fnSelectStatusCdId();
           }
        });
@@ -476,7 +520,7 @@ function fnSelectCategoryListAjax()
 
 function fnSelectCategoryCdInfo()
 {
-   Common.ajax("GET", "/status/selectStatusCategoryCdList.do"
+   Common.ajax("GET", "/status/selectStatusCategoryCdList.do"   // selectStatusCategoryCodeList
         , $("#MainForm").serialize()
         , function(result) 
          {
@@ -494,7 +538,7 @@ function fnSelectCategoryCdInfo()
 
 function fnSelectStatusCdId() 
 {        
-  Common.ajax("GET", "/status/selectStatusCdIdList.do"
+  Common.ajax("GET", "/status/selectStatusCdIdList.do"   // selectStatusCodeList
        , $("#MainForm").serialize()
        , function(result) 
        {
@@ -502,9 +546,72 @@ function fnSelectStatusCdId()
           AUIGrid.setGridData(statusCodeGridID, result);
        });
 }
+// myGridID, detailGridID, statusCodeGridID;
+function fnValidationCheckStatusCode()  
+{
+    var result = true;
+    var addList = AUIGrid.getAddedRowItems(statusCodeGridID);
+    var udtList = AUIGrid.getEditedRowItems(statusCodeGridID);
+
+    if (addList.length == 0  && udtList.length == 0 )
+    {
+      Common.alert("No Change");
+      return false;
+    }
+
+    for (var i = 0; i < addList.length; i++) 
+    {
+      var codeName  = addList[i].codeName;
+      var code      = addList[i].code;
+      
+      if (codeName == "" || codeName.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='codeName' htmlEscape='false'/>");
+        break;
+      }
+      if (code == "" || code.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='code' htmlEscape='false'/>");
+        break;
+      }
+    }
+
+    for (var i = 0; i < udtList.length; i++) 
+    {
+        var codeName  = addList[i].codeName;
+        var code      = addList[i].code;
+        
+        if (codeName == "" || codeName.length == 0) 
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='codeName' htmlEscape='false'/>");
+          break;
+        }
+        if (code == "" || code.length == 0) 
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='code' htmlEscape='false'/>");
+          break;
+        }
+    }
+
+    return result;
+  }
+
 
 function saveStatusCode()
 {
+ if (fnValidationCheckStatusCode() == false)
+  {
+      return false;
+  }
+	
   Common.ajax("POST", "/status/saveStatusCode.do"
 	         , GridCommon.getEditData(statusCodeGridID)
 	         , function(result) 
@@ -534,11 +641,12 @@ function saveStatusCode()
   
 }
 
-function fnValidationCheck() 
+function fnValidationCheckCategory() 
 {
     var result = true;
     var addList = AUIGrid.getAddedRowItems(myGridID);
     var udtList = AUIGrid.getEditedRowItems(myGridID);
+    var delList = AUIGrid.getRemovedItems(myGridID);
         
     if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
     {
@@ -572,12 +680,25 @@ function fnValidationCheck()
       }
     }
 
+    for (var i = 0; i < delList.length; i++) 
+    {
+      var stusCtgryId  = delList[i].stusCtgryId;
+      
+      if (stusCtgryId == "" || stusCtgryId.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='Category ID' htmlEscape='false'/>");
+        break;
+      }
+    }
+
     return result;
 }
 
 function saveCategory()
 {
-	if (fnValidationCheck() == false)
+	if (fnValidationCheckCategory() == false)
   {
 		  return false;
 	}
@@ -587,6 +708,7 @@ function saveCategory()
 	       , function(result) 
 	         {
             fnSelectCategoryListAjax() ;
+	          fnSelectCategoryCdInfo();
 	          console.log("saveCategory 성공.");
 	          console.log("dataSuccess : " + result.data);
 	          Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>"); 
@@ -620,7 +742,16 @@ function insertStatusCatalogDetail()
     Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
     return;
   }
-  
+
+//그리드 데이터에서 checkFlag 필드의 값이 Active 인 행 아이템 모두 반환
+  var activeItems = AUIGrid.getItemsByValue(statusCodeGridID, "checkFlag", 1);
+
+  if (activeItems.length < 1)
+	{
+	  Common.alert("<spring:message code='sys.msg.first.Select' arguments='[Status Code ID]' htmlEscape='false'/>");
+	  return false;
+	}
+ 
   var formDataParameters = 
       {
         gridDataSet   : GridCommon.getEditData(statusCodeGridID),
@@ -634,7 +765,12 @@ function insertStatusCatalogDetail()
          , formDataParameters
          , function(result) 
            {
-            fnSelectCategoryListAjax() ;     
+            fnSelectCategoryListAjax() ;
+ /*            console.log("selectCateG_Id: " + $("#selCategoryId").val());
+            if ($("#selCategoryId").val().length > 0 )
+            {
+            	fnSelectCategoryCdInfo();  
+            } */
             console.log("saveCategoryDetail 성공.");
             console.log("dataSuccess : " + result.data);
 	          Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>"); 
@@ -682,9 +818,11 @@ function fnUpdDisabled()
 	       , formDataCategoryYN
 	       , function(result) 
 	         {
-	          fnSelectCategoryListAjax() ;     
+	          fnSelectCategoryListAjax() ; 
+    
 	          console.log("UpdSuccess : " + result.data);
-	          Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");     
+	          Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");   
+	            
 	         } 
 
 	       , function(jqXHR, textStatus, errorThrown) 
@@ -703,7 +841,7 @@ function fnUpdDisabled()
 	         
 	            Common.alert("Fail : " + jqXHR.responseJSON.message);
 	        }); 
-  
+
 }
 </script>
 
@@ -741,8 +879,7 @@ function fnUpdDisabled()
 <tr>
   <th scope="row">Category ID</th>
   <td>
-  <!-- <input type="text" title="" id="paramCategoryId" name="paramCategoryId"  placeholder="Category ID" class="w100p" /> -->
-  <input type="text" title="" id="txtCategoryId" name="txtCategoryId"  placeholder="Category ID" class="w100p" />
+   <input type="text" title="" id="txtCategoryId" name="txtCategoryId"  placeholder="Category ID" class="w100p" /> 
   </td>
   <th scope="row">Category Name</th>
   <td>
@@ -793,6 +930,7 @@ function fnUpdDisabled()
 <aside class="title_line"><!-- title_line start -->
 <h3>Status Category</h3>
 <ul class="right_btns">
+  <li><p class="btn_grid"><a onclick="removeRow();">DEL</a></p></li>
   <li><p class="btn_grid"><a onclick="addRowCategory();">ADD</a></p></li>
   <li><p class="btn_grid"><a onclick="saveCategory();">SAVE</a></p></li>
 </ul>
