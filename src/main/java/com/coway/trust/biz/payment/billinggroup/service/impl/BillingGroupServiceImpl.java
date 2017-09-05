@@ -1901,10 +1901,10 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     			
     			if(1 == billingGroupMapper.insHistory(hisAddOrdMap)){
     				successCnt += 1;
-    				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Success \n";
+    				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Success <br />";
     			}else{
     				failCnt += 1;
-    				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Failed \n";
+    				message2 += String.valueOf(params.get("salesOrdNo")) + ": " +"Failed <br />";
     			}
 
     			Map<String, Object> updChangeMap = new HashMap<String, Object>();
@@ -1924,7 +1924,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     		
     		message1 += "Total order : " + total + " || " +
 	                "Total success : " + successCnt + " || " +
-	                "Total fail : " + failCnt + "\n";
+	                "Total fail : " + failCnt + "<br /><br />";
     		
     		return message = message1 + message2;
     		
