@@ -5,8 +5,9 @@
 
 	//AUIGrid 생성 후 반환 ID
 	var listGridID;
+    
+    var keyValueList = [{"code":"1", "value":"Active"}, {"code":"8", "value":"Inactive"}];
 
-/*
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
@@ -16,100 +17,106 @@
             fn_setDetail(listGridID, event.rowIndex);
         });
         
-        doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
-        doGetProductCombo('/common/selectProductCodeList.do', '', '', 'listProductId', 'S'); //Product Code
-
-        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
-        doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        doGetCombo('/common/selectCodeList.do', '320', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Promo Application
+        doGetCombo('/common/selectCodeList.do',  '76', '', 'list_promoTypeId',    'M', 'fn_multiCombo'); //Promo Type
     });
 
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
         //Common.popupWin("listSearchForm", "/sales/order/orderDetail.do?salesOrderId="+AUIGrid.getCellValue(gridID, rowIdx, "ordId"), _option);
-        $('#listSalesOrderId').val(AUIGrid.getCellValue(gridID, rowIdx, "ordId"));
-        Common.popupDiv("/sales/order/orderDetailPop.do", $("#listSearchForm").serializeJSON());
+        //$('#listSalesOrderId').val(AUIGrid.getCellValue(gridID, rowIdx, "ordId"));
+        //Common.popupDiv("/sales/order/orderDetailPop.do", $("#listSearchForm").serializeJSON());
     }
     
     // 리스트 조회.
-    function fn_selectListAjax() {        
-        Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#listSearchForm").serialize(), function(result) {
+    function fn_selectListAjax() {
+        console.log('fn_selectListAjax START');
+        Common.ajax("GET", "/sales/promotion/selectPromotionList.do", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
         });
     }
-*/
+
+    function fn_doSaveStatus() {
+        console.log('!@# fn_doSaveStatus START');
+        
+        var promotionVO = {            
+            salesPromoMGridDataSetList : GridCommon.getEditData(listGridID)
+        };
+        
+        Common.ajax("POST", "/sales/promotion/updatePromoStatus.do", promotionVO, function(result) {
+
+            Common.alert("Promotion Status Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            
+            fn_selectListAjax();
+            
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+            }
+            catch (e) {
+                console.log(e);
+//              alert("Saving data prepration failed.");
+            }
+
+//          alert("Fail : " + jqXHR.responseJSON.message);
+        });
+    }
+    
     $(function(){
         $('#btnNew').click(function() {
-            //Common.popupWin("listForm", "/sales/promotion/promotionRegisterPop.do", {width : "1200px",height : "800px"});
             Common.popupDiv("/sales/promotion/promotionRegisterPop.do");
         });
-        $('#btnEdit').click(function() {
-            alert('Edit');
+        $('#btnSaveStatus').click(function() {
+            fn_doSaveStatus();
         });
         $('#btnSrch').click(function() {
         	fn_selectListAjax();
         });
+        $('#btnClear').click(function() {
+        	$('#listSearchForm').clearForm();
+        });
     });
-/*
+
     function createAUIGrid() {
         
     	//AUIGrid 칼럼 설정
-        var columnLayout = [{
-                dataField   : "ordNo",          headerText  : "Order No",
-                width       : 80,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "ordStusCode",    headerText  : "Status",
-                width       : 80,               editable    : false,
-                style           : 'left_style'
-            }, {
-                dataField   : "appTypeCode",    headerText  : "App Type",
-                width       : 80,               editable        : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "ordDt",          headerText  : "Order Date",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "refNo",          headerText  : "Ref No",
-                width       : 60,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "productName",    headerText  : "Product",
-                width       : 150,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "custId",         headerText  : "Cust ID",
-                width       : 70,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "custName",       headerText  : "Customer Name",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "custIc",         headerText  : "NRIC/Company No",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "crtUserId",      headerText  : "Creator",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "pvYear",         headerText  : "PV Year",
-                width       : 60,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "pvMonth",        headerText  : "PV Mth",
-                width       : 60,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "ordId",          visible     : false //salesOrderId
-            }];
+        var columnLayout = [
+            { headerText : "Application<br>Type",  dataField : "promoAppTypeName", editable : false,   width : 100 }
+          , { headerText : "Promotion<br>Type",    dataField : "promoTypeName",    editable : false,   width : 100 }
+          , { headerText : "Promotion Code",    dataField : "promoCode",        editable : false,   width : 140 }
+          , { headerText : "Promotion Name",    dataField : "promoDesc",        editable : false }
+          , { headerText : "Start",             dataField : "promoDtFrom",      editable : false,   width : 100 }
+          , { headerText : "End",               dataField : "promoDtEnd",       editable : false,   width : 100 }
+          , { headerText : "Status",            dataField : "promoStusId",      editable : true,    width : 80
+            , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                                  var retStr = "";
+                        		  for(var i=0,len=keyValueList.length; i<len; i++) {
+                        			  if(keyValueList[i]["code"] == value) {
+                        				  retStr = keyValueList[i]["value"];
+                        			      break;
+                        		      }
+                        		  }
+                        	      return retStr == "" ? value : retStr;
+                              }
+            , editRenderer : {
+    		      type       : "ComboBoxRenderer",
+    			  list       : keyValueList, //key-value Object 로 구성된 리스트
+    			  keyField   : "code", // key 에 해당되는 필드명
+    			  valueField : "value" // value 에 해당되는 필드명
+    		  }}
+          , { headerText : "promoId",           dataField : "promoId",          visible  : false,   width : 120 }
+          ];
 
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
+            editable            : true,            
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
@@ -123,36 +130,39 @@
             groupingMessage     : "Here groupping"
         };
         
-        listGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
+        listGridID = GridCommon.createAUIGrid("list_promo_grid_wrap", columnLayout, "", gridPros);
     }
     
     function fn_multiCombo(){
-//        $('#cmbCategory').change(function() {
-//            //console.log($(this).val());
-//        }).multipleSelect({
-//            selectAll: true, // 전체선택 
-//            width: '100%'
-//        });            
-        $('#listAppType').change(function() {
+        $('#list_promoAppTypeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택 
             width: '100%'
         });            
-        $('#listKeyinBrnchId').change(function() {
-            //console.log($(this).val());
-        }).multipleSelect({
-            selectAll: true, // 전체선택 
-            width: '100%'
-        });
-        $('#listDscBrnchId').change(function() {
+        $('#list_promoTypeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택 
             width: '100%'
         });
     }
-*/
+
+    $.fn.clearForm = function() {
+        return this.each(function() {
+            var type = this.type, tag = this.tagName.toLowerCase();
+            if (tag === 'form'){
+                return $(':input',this).clearForm();
+            }
+            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+                this.value = '';
+            }else if (type === 'checkbox' || type === 'radio'){
+                this.checked = false;
+            }else if (tag === 'select'){
+                this.selectedIndex = -1;
+            }
+        });
+    };
 </script>
 		
 <!--****************************************************************************
@@ -170,14 +180,15 @@
 <h2>Promotion Maintenance </h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a id="btnSaveStatus" href="#">Save</a></p></li>
+	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
-<form id="listForm" name="listForm" action="#" method="post">
+<form id="listSearchForm" name="listSearchForm" action="#" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -191,48 +202,32 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Promotion Code</th>
+	<th scope="row">Promotion Application</th>
 	<td>
-	<input type="text" title="" placeholder="Promotion Code" class="w100p" />
-	</td>
-	<th scope="row">Promotion Name</th>
-	<td>
-	<input type="text" title="" placeholder="Promotion Name" class="w100p" />
+	<select id="list_promoAppTypeId" name="promoAppTypeId" class="multy_select w100p" multiple="multiple"></select>
 	</td>
 	<th scope="row">Promotion Type</th>
 	<td>
-	<select class="multy_select w100p" multiple="multiple">
-		<option value="1">11</option>
-		<option value="2">22</option>
-		<option value="3">33</option>
-	</select>
+	<select id="list_promoTypeId" name="promoTypeId" class="multy_select w100p" multiple="multiple"></select>
+	</td>
+	<th scope="row">Effective Date</th>
+	<td>
+	<input id="list_promoDt" name="promoDt" type="text" title="Create Promotion Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Promotion Date</th>
-	<td>
-	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	</div><!-- date_set end -->
-	</td>
 	<th scope="row">Status</th>
 	<td>
-	<select class="multy_select w100p" multiple="multiple">
-		<option value="1">11</option>
-		<option value="2">22</option>
-		<option value="3">33</option>
+	<select id="list_promoStusId" name="promoStusId" class="w100p">
+		<option value="">Choose One</option>
+		<option value="1">Active</option>
+		<option value="8">Inactive</option>
 	</select>
 	</td>
-	<th scope="row">Application Type</th>
-	<td>
-	<select class="multy_select w100p" multiple="multiple">
-		<option value="1">11</option>
-		<option value="2">22</option>
-		<option value="3">33</option>
-	</select>
-	</td>
+	<th scope="row">Promotion Code</th>
+	<td><input id="list_promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
+	<th scope="row">Promotion Name</th>
+	<td><input id="list_promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -271,15 +266,15 @@
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-
+<!--
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#">CANCEL</a></p></li>
 	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
 	<li><p class="btn_grid"><a href="#">SAVE</a></p></li>
 </ul>
-
+-->
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="list_promo_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

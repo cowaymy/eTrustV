@@ -8,13 +8,13 @@
         //AUIGrid 그리드를 생성합니다.
         createAUIGridStk();
         
-        doGetCombo('/common/selectCodeList.do', '320', '',       'promoAppTypeId', 'S'); //Promo Application
-        doGetCombo('/common/selectCodeList.do',  '76', '',          'promoTypeId', 'S'); //Promo Type
-        doGetCombo('/common/selectCodeList.do',  '8', '',        'promoCustType', 'S'); //Customer Type
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '',              'exTrade', 'S'); //EX_Trade
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',               'empChk', 'S'); //EMP_CHK
-        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '',        'promoDiscType', 'S'); //Discount Type
-        doGetCombo('/common/selectCodeList.do', '322', '',    'promoDiscPeriodTp', 'S'); //Discount period
+        doGetCombo('/common/selectCodeList.do', '320', '', 'promoAppTypeId',    'S'); //Promo Application
+        doGetCombo('/common/selectCodeList.do', '76',  '', 'promoTypeId',       'S'); //Promo Type
+        doGetCombo('/common/selectCodeList.do', '8',   '', 'promoCustType',     'S'); //Customer Type
+        doGetCombo('/common/selectCodeList.do', '322', '', 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '', 'exTrade',              'S'); //EX_Trade
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '', 'empChk',               'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
         doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
         doGetCombo('/sales/promotion/selectMembershipPkg.do', '', '9', 'promoSrvMemPacId', 'S'); //Common Code
@@ -54,6 +54,7 @@
             displayTreeOpen     : false,            
             selectionMode       : "singleRow",  //"multipleCells", 
             showRowCheckColumn  : true,
+            softRemoveRowMode   : false,
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
@@ -69,6 +70,7 @@
     
     function fn_doSavePromtion() {
         console.log('!@# fn_doSavePromtion START');
+        console.log($('#promoCode').val().trim());
         
         var promotionVO = {
             
@@ -101,6 +103,8 @@
 
             Common.alert("New Promotion Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
+            fn_createEvent("btnClosePop", "click");
+            
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -119,58 +123,76 @@
         });
     }
     
+    function fn_createEvent(objId, eventType) {
+        var e = jQuery.Event(eventType);
+        $('#'+objId).trigger(e);
+    }
+    
     function fn_calcDiscountPrice() {
         
-        var discType     = $('#promoDiscType').val();
-        var discValue    = FormUtil.isEmpty($('#promoDiscValue').val()) ? 0 : $('#promoDiscValue').val().trim();
-        var addDiscValue = FormUtil.isEmpty($('#promoAddDiscPrc').val()) ? 0 : $('#promoAddDiscPrc').val().trim();
-        var normalDiscValue = 0, promoDiscValue = 0;
+        var orgPrcVal = 0;
+        var dscPrcVal = FormUtil.isEmpty($('#promoDiscValue').val())  ? 0 : $('#promoDiscValue').val().trim();
+        var addPrcVal = FormUtil.isEmpty($('#promoAddDiscPrc').val()) ? 0 : $('#promoAddDiscPrc').val().trim();
+        var newPrcVal = 0;
         
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
             
-            normalDiscValue = AUIGrid.getCellValue(stckGridID, i, "amt");
+            orgPrcVal = AUIGrid.getCellValue(stckGridID, i, "amt");
             
-            if(discType == '2296') {//%
-                promoDiscValue = Math.floor(normalDiscValue - normalDiscValue * (discValue / 100));
-            }
-            else if(discType == '2297') { //Amount
-                promoDiscValue = normalDiscValue - discValue;
-            }
-            else {
-                promoDiscValue = normalDiscValue;
+            if($('#promoDiscType').val() == '0') {//%
+                dscPrcVal = orgPrcVal * (dscPrcVal / 100);
             }
             
-            promoDiscValue -= addDiscValue;
+            newPrcVal = orgPrcVal - dscPrcVal - addPrcVal;
             
-            AUIGrid.setCellValue(stckGridID, i, "promoAmt", promoDiscValue);
+            newPrcVal = Math.floor(newPrcVal);
+            
+            AUIGrid.setCellValue(stckGridID, i, "promoAmt", newPrcVal);
         }
     }
     
     function fn_calcDiscountRPF() {
-        var discRpfValue = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
-        var normalDiscRpfValue = 0, promoDiscRpfValue = 0;
+        
+        var orgRpfVal = 0;
+        var dscRpfVal = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
+        var newRpfVal = 0;
         
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
             
-            normalDiscRpfValue = AUIGrid.getCellValue(stckGridID, i, "prcRpf");
+            orgRpfVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf");
             
-            promoDiscRpfValue = normalDiscRpfValue - discRpfValue;
+            newRpfVal = orgRpfVal - dscRpfVal;
             
-            AUIGrid.setCellValue(stckGridID, i, "promoPrcRpf", promoDiscRpfValue);
+            AUIGrid.setCellValue(stckGridID, i, "promoPrcRpf", newRpfVal);
         }
     }
     
     function fn_calcDiscountPV() {
-        var discPvValue = FormUtil.isEmpty($('#promoAddDiscPv').val()) ? 0 : $('#promoAddDiscPv').val().trim();
-        var normalDiscPvValue = 0, promoDiscPvValue = 0;
+        console.log('fn_calcDiscountPV() START');
+        var orgPvVal = 0;
+        var dscPvVal = 0;
+        var addPvVal = FormUtil.isEmpty($('#promoAddDiscPv').val()) ? 0 : $('#promoAddDiscPv').val().trim();
+        var newPvVal = 0;
         
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
+
+            orgPvVal = AUIGrid.getCellValue(stckGridID, i, "prcPv");
             
-            normalDiscPvValue = AUIGrid.getCellValue(stckGridID, i, "prcPv");
+            if($('#exTrade').val() == '1' && $('#promoAppTypeId').val() == '2284') {
+                orgPvVal = orgPvVal * (70/100);
+                dscPvVal = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
+            }
+            else if($('#exTrade').val() == '1' && ($('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
+                orgPvVal = orgPvVal * (70/100);
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+            }
+            else if($('#exTrade').val() == '0' && ($('#promoAppTypeId').val() == '2284' || $('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+            }
             
-            promoDiscPvValue = normalDiscPvValue - discPvValue;
+            newPvVal = Math.round(orgPvVal - dscPvVal - addPvVal);
             
-            AUIGrid.setCellValue(stckGridID, i, "promoPrcPv", promoDiscPvValue);
+            AUIGrid.setCellValue(stckGridID, i, "promoItmPv", newPvVal);
         }
     }
     
@@ -223,6 +245,10 @@
     
     $(function(){
         $('#btnProductAdd').click(function() {
+            if(FormUtil.checkReqValue($('#promoAppTypeId'))) {
+                Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>* Please select the promotion application.</b>");
+                return false;
+            }
             Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "stocklist"});
         });
         $('#btnProductDel').click(function() {
@@ -264,16 +290,90 @@
         });
         $('#exTrade').change(function() {
             if($('#exTrade').val() == '1') {
-                $('#promoRpfDiscAmt').val('').prop("disabled", true);
+                $('#promoRpfDiscAmt').val('200').prop("readonly", true).addClass("readonly");
             }
             else if($('#exTrade').val() == '0') {
-                $('#promoRpfDiscAmt').removeAttr("disabled");
+                $('#promoRpfDiscAmt').val('').removeAttr("readonly").removeClass("readonly");
             }
+            
+            fn_calcDiscountPrice();
+            
+            fn_calcDiscountRPF();
+            
+            fn_calcDiscountPV();
         });
         $('#btnPromoSave').click(function() {
+            
+            if(!fn_validPromotion()) {
+                return;
+            }
+            
         	fn_doSavePromtion();
         });
+         $('#btnProductDel').click(function() {
+            AUIGrid.removeCheckedRows(stckGridID);
+        });
+         $('#btnFreeGiftDel').click(function() {
+            AUIGrid.removeCheckedRows(giftGridID);
+        });
     });
+    
+    function fn_validPromotion() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.checkReqValue($('#promoAppTypeId'))) {
+            isValid = false;
+            msg += "* Please select the promotion application.<br />";
+        }
+        if(FormUtil.checkReqValue($('#promoTypeId'))) {
+            isValid = false;
+            msg += "* Please select the application type.<br />";
+        }
+        if(FormUtil.isEmpty($('#promoDtFrom').val()) || FormUtil.isEmpty($('#promoDtEnd').val())) {
+            isValid = false;
+            msg += "* Please key in the promotion period.<br />";
+        }        
+        if(FormUtil.checkReqValue($('#promoCode'))) {
+            isValid = false;
+            msg += "* Please key in the promotion code.<br />";
+        }
+        if(FormUtil.checkReqValue($('#promoCustType'))) {
+            isValid = false;
+            msg += "* Please select the customer type.<br />";
+        }
+        if(FormUtil.checkReqValue($('#exTrade'))) {
+            isValid = false;
+            msg += "* Please select the Ex-Trade.<br />";
+        }
+        if(FormUtil.checkReqValue($('#empChk'))) {
+            isValid = false;
+            msg += "* Please select the employee.<br />";
+        }
+        if(!$('#promoDiscValue').is(":disabled") && FormUtil.checkReqValue($('#promoDiscValue'))) {
+            isValid = false;
+            msg += "* Please key in the discount value.<br />";
+        }
+        if(!$('#promoRpfDiscAmt').is(":disabled") && FormUtil.checkReqValue($('#promoRpfDiscAmt'))) {
+            isValid = false;
+            msg += "* Please key in the RPF discount.<br />";
+        }
+        if(!$('#promoDiscPeriod').is(":disabled") && FormUtil.checkReqValue($('#promoDiscPeriod'))) {
+            isValid = false;
+            msg += "* Please key in the discount period.<br />";
+        }
+        if(!$('#promoFreesvcPeriodTp').is(":disabled") && FormUtil.checkReqValue($('#promoFreesvcPeriodTp'))) {
+            isValid = false;
+            msg += "* Please select the free svc period.<br />";
+        }
+        if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.checkReqValue($('#promoSrvMemPacId'))) {
+            isValid = false;
+            msg += "* Please select the membership package.<br />";
+        }
+        
+        Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        
+        return isValid;
+    }
     
     function fn_addItems(data, gubun){
     	
@@ -344,7 +444,7 @@
             
             $('#sctPromoDetail').removeClass("blind");
         }
-        //Promo Application = Outright & Promotion Type = Discount
+        //Promo Application = 2  & Promotion Type = Discount
         else if((promoAppVal == '2285' || promoAppVal == '2286') && promoTypVal == '2282') {
             console.log('Promo Application = Outright & Promotion Type = Discount');
             
@@ -431,7 +531,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Promotion Management – NEW promotion</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="btnClosePop" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -459,7 +559,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Promo Application<span class="must">*</span></th>
+	<th scope="row">Promotion Application<span class="must">*</span></th>
 	<td>
 	<select id="promoAppTypeId" name="promoAppTypeId" class="w100p"></select>
 	</td>

@@ -3,11 +3,14 @@ package com.coway.trust.biz.sales.promotion.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 /**
  * The persistent class for the SAL0017D database table.
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesPromoMVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

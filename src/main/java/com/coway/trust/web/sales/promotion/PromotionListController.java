@@ -11,15 +11,23 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.promotion.PromotionListService;
+import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -37,45 +45,50 @@ public class PromotionListController {
 	@Resource(name = "promotionListService")
 	private PromotionListService promotionListService;
 	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
 	@RequestMapping(value = "/promotionList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "sales/promotion/promotionList";
 	}
 	
-	@RequestMapping(value = "/selectPromotionList", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectPromotionList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPromotionList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
-		String[] arrAppType   = request.getParameterValues("appType"); //Application Type
-		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status 
-		String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId"); //Key-In Branch
-		String[] arrDscBrnchId = request.getParameterValues("dscBrnchId"); //DSC Branch 
-		String[] arrRentStus = request.getParameterValues("rentStus"); //Rent Status
-
-		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
-    	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
+		String[] arrPromoAppTypeId   = request.getParameterValues("promoAppTypeId"); //Promotion Application
+		String[] arrPromoTypeId   = request.getParameterValues("promoTypeId"); //Promotion Type
     	
-    	params.put("ordStartDt", CommonUtils.changeFormat(String.valueOf(params.get("ordStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
-    	params.put("ordEndDt", CommonUtils.changeFormat(String.valueOf(params.get("ordEndDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
-		
-		if(arrAppType      != null && !CommonUtils.containsEmpty(arrAppType))      params.put("arrAppType", arrAppType);
-		if(arrOrdStusId    != null && !CommonUtils.containsEmpty(arrOrdStusId))    params.put("arrOrdStusId", arrOrdStusId);
-		if(arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) params.put("arrKeyinBrnchId", arrKeyinBrnchId);
-		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
-		if(arrRentStus     != null && !CommonUtils.containsEmpty(arrRentStus))     params.put("arrRentStus", arrRentStus);
-		
-		if(params.get("custIc") == null) {logger.debug("!@###### custIc is null");}
-		if("".equals(params.get("custIc"))) {logger.debug("!@###### custIc ''");}
-		
+    	params.put("promoDt", CommonUtils.changeFormat(String.valueOf(params.get("promoDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+    	
+		if(arrPromoAppTypeId != null && !CommonUtils.containsEmpty(arrPromoAppTypeId)) params.put("arrPromoAppTypeId", arrPromoAppTypeId);
+		if(arrPromoTypeId != null && !CommonUtils.containsEmpty(arrPromoTypeId)) params.put("arrPromoTypeId", arrPromoTypeId);
+
 		logger.debug("!@##############################################################################");
-		logger.debug("!@###### ordNo : "+params.get("ordNo"));
-		logger.debug("!@###### ordStartDt : "+params.get("ordStartDt"));
-		logger.debug("!@###### ordEndDt : "+params.get("ordEndDt"));
-		logger.debug("!@###### ordDt : "+params.get("ordDt"));
-		logger.debug("!@###### custIc : "+params.get("custIc"));
+		logger.debug("!@###### promoAppTypeId : "+params.get("arrPromoAppTypeId"));
+		logger.debug("!@###### promoTypeId : "+params.get("arrPromoTypeId"));
+		logger.debug("!@###### promoDt : "+params.get("promoDt"));
+		logger.debug("!@###### promoStusId : "+params.get("promoStusId"));
+		logger.debug("!@###### promoCode : "+params.get("promoCode"));
+		logger.debug("!@###### promoDesc : "+params.get("promoDesc"));
 		logger.debug("!@##############################################################################");
 		
 		List<EgovMap> resultList = promotionListService.selectPromotionList(params);
 
 		return ResponseEntity.ok(resultList);
+	}
+	
+	@RequestMapping(value = "/updatePromoStatus.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> registerOrder(@RequestBody PromotionVO promotionVO, HttpServletRequest request, Model model, SessionVO sessionVO) {
+		
+		promotionListService.updatePromoStatus(promotionVO, sessionVO);;
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(messageAccessor.getMessage("Promotion status successfully saved."));
+
+		return ResponseEntity.ok(message);
 	}
 }
