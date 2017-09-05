@@ -707,8 +707,8 @@ var addOrderLayout = [
            if(typeId == "1042"){
         	   
         	   //Mailing Address
-        	   var descFrom = result.data.mailAddrOldHistorty.fullAddr;
-        	   var descTo = result.data.mailAddrNewHistorty.fullAddr;
+        	   var descFrom = result.data.mailAddrOldHistorty.addr;
+        	   var descTo = result.data.mailAddrNewHistorty.addr;
                
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
