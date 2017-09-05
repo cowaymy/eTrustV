@@ -35,459 +35,504 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Controller
 @RequestMapping(value = "/sales/membership")
-public class  MembershipController {
+public class MembershipController {
 
 	private static Logger logger = LoggerFactory.getLogger(MembershipController.class);
-	
+
 	@Resource(name = "membershipService")
 	private MembershipService membershipService;
-	
+
 	@RequestMapping(value = "/membership.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "sales/membership/membershipList";
 	}
-	
+
 	@RequestMapping(value = "/selectMembershipList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+	public ResponseEntity<List<EgovMap>> selectMembershipList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
 		logger.debug("in  selectMembershipList ");
-		
-		
-		String[] MBRSH_STUS_ID   = request.getParameterValues("MBRSH_STUS_ID"); 
+
+		String[] MBRSH_STUS_ID = request.getParameterValues("MBRSH_STUS_ID");
 
 		params.put("MBRSH_STUS_ID", MBRSH_STUS_ID);
-		
-		//MBRSH_ID        
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		
-		List<EgovMap>  list = membershipService.selectMembershipList(params);  
 
-		// 데이터 리턴.
+		// MBRSH_ID
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipList(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
-	
-	
-	
-	
+
 	@RequestMapping(value = "/selMembershipView.do")
-	public String selMembershipView(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
-		
+	public String selMembershipView(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
 		logger.debug("in  selMembershipView ");
-		
-		EgovMap membershipInfoTab  = null;
-		EgovMap orderInfoTab		    = null;
-		EgovMap contactInfoTab	    = null;
-		EgovMap filterChargeInfoTab	= null;
-		
+
+		EgovMap membershipInfoTab = null;
+		EgovMap orderInfoTab = null;
+		EgovMap contactInfoTab = null;
+		EgovMap filterChargeInfoTab = null;
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-				
-		
-		membershipInfoTab 		= membershipService.selectMembershipInfoTab(params);
-		orderInfoTab 				= membershipService.selectOderInfoTab(params);
-		contactInfoTab 			= membershipService.selectInstallAddr(params);
-		
-		
+
+		membershipInfoTab = membershipService.selectMembershipInfoTab(params);
+		orderInfoTab = membershipService.selectOderInfoTab(params);
+		contactInfoTab = membershipService.selectInstallAddr(params);
+
 		model.addAttribute("membershipInfoTab", membershipInfoTab);
 		model.addAttribute("orderInfoTab", orderInfoTab);
 		model.addAttribute("contactInfoTab", contactInfoTab);
-	
+
 		return "sales/membership/selMembershipViewPop";
+	}
+
+	@RequestMapping(value = "/inc_orderInfo.do")
+	public String inc_orderInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  inc_orderInfo ");
+		EgovMap orderInfoTab = null;
+		EgovMap contactInfoTab = null;
+		
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		  
+		orderInfoTab = membershipService.selectOderInfoTab(params);
+		contactInfoTab = membershipService.selectInstallAddr(params);
+		
+
+		model.addAttribute("orderInfoTab", orderInfoTab);
+		model.addAttribute("contactInfoTab", contactInfoTab);
+		
+		return "sales/membership/inc_membershipOderInfoPop";
+	}
+
+	@RequestMapping(value = "/inc_membershipInfo.do")
+	public String inc_membershipInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  inc_membershipInfo ");
+		EgovMap membershipInfoTab = null;
+	
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		membershipInfoTab = membershipService.selectMembershipInfoTab(params);
+		model.addAttribute("membershipInfoTab", membershipInfoTab);
+
+		return "sales/membership/inc_membershipInfoPop";
+	}
+
+	@RequestMapping(value = "/inc_contactPersonInfo.do")
+	public String inc_contactPersonInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  inc_contactPersonInfo ");
+
+		EgovMap membershipInfoTab = null;
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		membershipInfoTab = membershipService.selectMembershipInfoTab(params);
+		model.addAttribute("membershipInfoTab", membershipInfoTab);
+		
+
+		return "sales/membership/inc_membershipContactPersonPop";
 	}
 	
 	
+	@RequestMapping(value = "/inc_quotFilterInfo.do")
+	public String inc_quotFilterInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  inc_quotFilterInfo ");
+
+		EgovMap membershipInfoTab = null;
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		return "sales/membership/inc_membershipQuotFilterInfoPop";
+	}
+
 	
 
 	
-	@RequestMapping(value = "/selectMembershipQuotInfo", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipQuotInfo(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	@RequestMapping(value = "/inc_quotInfo")
+	public String inc_quotInfo(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		logger.debug("in  inc_quotInfo ");
+
+		EgovMap quotInfo = null;
 		
-		logger.debug("in  selectMembershipQuotInfo ");
-		
-	      
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		
 		
-		List<EgovMap>  list = membershipService.selectMembershipQuotInfo(params);  
+		quotInfo = membershipService.selectQuotInfo(params);
+		model.addAttribute("quotInfo", quotInfo);
+	
+		return "sales/membership/inc_membershipQuoInfoPop" ;
+	}
+	
+	
+	@RequestMapping(value = "/selectMembershipQuotInfo", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMembershipQuotInfo(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
 
-		// 데이터 리턴.
+		logger.debug("in  selectMembershipQuotInfo ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipQuotInfo(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
 	
-	
-	
-	
-	@RequestMapping(value = "/selectMembershipQuotFilter", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipQuotFilter(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		logger.debug("in  selectMembershipQuotFilter ");
-		
-	      
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		
-		List<EgovMap>  list = membershipService.selectMembershipQuotFilter(params);  
 
-		// 데이터 리턴.
+	@RequestMapping(value = "/selectMembershipQuotFilter", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMembershipQuotFilter(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		logger.debug("in  selectMembershipQuotFilter ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipQuotFilter(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
 
 	@RequestMapping(value = "/selMembershipViewLeader.do")
-	public String selMembershipViewLeader(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
-		
+	public String selMembershipViewLeader(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
 		logger.debug("in  selMembershipViewLeader ");
-		
-		
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-				
-		
-		
-		model.addAttribute("MBRSH_ID", params.get("MBRSH_ID"));  
-		
+
+		model.addAttribute("MBRSH_ID", params.get("MBRSH_ID"));
+
 		return "sales/membership/selMembershipViewLeaderPop";
 	}
-	
-	
-	
-	
-	
 
 	@RequestMapping(value = "/selectMembershipViewLeader", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipViewLeader(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		logger.debug("in  selectMembershipViewLeader ");
-		
-	      
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		
-		List<EgovMap>  list = membershipService.selectMembershipViewLeader(params);  
+	public ResponseEntity<List<EgovMap>> selectMembershipViewLeader(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
 
-		// 데이터 리턴.
+		logger.debug("in  selectMembershipViewLeader ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipViewLeader(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
-	
-	
+
 	@RequestMapping(value = "/membershipFreePop.do")
-	public String membershipFree(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
-		
+	public String membershipFree(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
 		logger.debug("in  membershipFree ");
-		
-		
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
+
 		return "sales/membership/membershipFreePop";
 	}
-	
-	
+
 	@RequestMapping(value = "/memberFreeContactPop.do")
-	public String memberFreePop_contactPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
-		
+	public String memberFreePop_contactPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
 		logger.debug("in  memberFreeContactPop ");
-		
-		
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
+
 		return "sales/membership/memberFreeContactPop";
 	}
-	
-	
 
 	@RequestMapping(value = "/memberFreeNewContactPop.do")
-	public String memberFreeNewContactPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
-		
+	public String memberFreeNewContactPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
 		logger.debug("in  memberFreeNewContactPop ");
-		
-		
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
+
 		return "sales/membership/memberFreeNewContactPop";
 	}
-	
-	
 
 	@RequestMapping(value = "/selectMembershipFreeConF", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipFreeConF(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		logger.debug("in  selectMembershipFreeConF ");
-		
-	      
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		
-		List<EgovMap>  list = membershipService.selectMembershipFreeConF(params);  
+	public ResponseEntity<List<EgovMap>> selectMembershipFreeConF(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
 
-		// 데이터 리턴.
+		logger.debug("in  selectMembershipFreeConF ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipFreeConF(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
-	
-	
-	
 
 	@RequestMapping(value = "/selectMembershipFreeDataInfo")
-	public ResponseEntity <Map> selectMembershipFreeDataInfo(@RequestParam Map<String, Object> params , Model model) throws Exception {
-		
-		logger.debug("in  selectMembershipFreeDataInfo ");
-		
-		EgovMap basic  			= null;
-		EgovMap installation		= null;
-		EgovMap srvconfig	    = null;
-		
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-				
-		
-		basic 				= membershipService.selectMembershipFree_Basic(params);
-		installation 		= membershipService.selectMembershipFree_installation(params);
-		srvconfig 		= membershipService.selectMembershipFree_srvconfig(params);
+	public ResponseEntity<Map> selectMembershipFreeDataInfo(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
 
-		
+		logger.debug("in  selectMembershipFreeDataInfo ");
+
+		EgovMap basic = null;
+		EgovMap installation = null;
+		EgovMap srvconfig = null;
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		basic = membershipService.selectMembershipFree_Basic(params);
+		installation = membershipService.selectMembershipFree_installation(params);
+		srvconfig = membershipService.selectMembershipFree_srvconfig(params);
+
 		Map<String, Object> map = new HashMap();
 		map.put("basic", basic);
 		map.put("installation", installation);
 		map.put("srvconfig", srvconfig);
-	
-		return  ResponseEntity.ok(map); 
-	}
-	
-	
-	
-
-	@RequestMapping(value = "/selectMembershipFree_oList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipFree_oList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
-		List<EgovMap>  oList     = null;	
-		
-		logger.debug("in  selectMembershipFree_oList ");
-		
-	      
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		List<EgovMap>  list = membershipService.selectMembershipFree_oList(params);  
-		
-		// 데이터 리턴.
-		return ResponseEntity.ok(list);
-	}
-	
-
-	@RequestMapping(value = "/selectMembershipFree_bs", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipFree_bs(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		List<EgovMap>  oList     = null;	
-		
-		logger.debug("in  selectMembershipFree_bs ");
-		
-	      
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		List<EgovMap>  list = membershipService.selectMembershipFree_bs(params);  
-		
-		// 데이터 리턴.
-		return ResponseEntity.ok(list);
-	}
-	
-	@RequestMapping(value = "/selectMembershipFree_cPerson", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipFree_cPerson(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		List<EgovMap>  oList     = null;	
-		
-		logger.debug("in  selectMembershipFree_cPerson ");
-		
-	      
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		List<EgovMap>  list = membershipService.selectMembershipFree_cPerson(params);  
-		
-		// 데이터 리턴.
-		return ResponseEntity.ok(list);
-	}
-	
-	
-	
-	
-	@RequestMapping(value = "/callOutOutsProcedure", method = RequestMethod.GET)
-	public ResponseEntity<Map> callOutOutsProcedure(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-	
-		EgovMap item = new EgovMap();
-	
-		item = (EgovMap) membershipService.callOutOutsProcedure(params);  
-		
-		logger.debug("v_result : {}", params.get("p1"));
-		
-
-		Map<String, Object> map = new HashMap();
-		map.put("outSuts", params.get("p1"));
-	 
+		logger.debug("srvconfig====>"+srvconfig.toString());
 		
 
 		return ResponseEntity.ok(map);
 	}
+
+	@RequestMapping(value = "/selectMembershipFree_oList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMembershipFree_oList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> oList = null;
+
+		logger.debug("in  selectMembershipFree_oList ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipFree_oList(params);
+
 	
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/selectMembershipFree_bs", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMembershipFree_bs(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> oList = null;
+
+		logger.debug("in  selectMembershipFree_bs ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipFree_bs(params);
+
 	
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/selectMembershipFree_cPerson", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMembershipFree_cPerson(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> oList = null;
+
+		logger.debug("in  selectMembershipFree_cPerson ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap> list = membershipService.selectMembershipFree_cPerson(params);
+
+	
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/callOutOutsProcedure", method = RequestMethod.GET)
+	public ResponseEntity<Map> callOutOutsProcedure(@RequestParam Map<String, Object> params, ModelMap model,
+			HttpServletRequest request) {
+
+		EgovMap item = new EgovMap();
+
+		item = (EgovMap) membershipService.callOutOutsProcedure(params);
+
+		logger.debug("v_result : {}", params.get("p1"));
+
+		Map<String, Object> map = new HashMap();
+		map.put("outSuts", params.get("p1"));
+
+		return ResponseEntity.ok(map);
+	}
 
 	@RequestMapping(value = "/selectMembershipFree_Packg", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipFree_Packg(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		List<EgovMap>  oList     = null;	
-		
+	public ResponseEntity<List<EgovMap>> selectMembershipFree_Packg(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> oList = null;
+
 		logger.debug("in  selectMembershipFree_Packg ");
-		
-	      
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
-		List<EgovMap>  list = membershipService.selectMembershipFree_Packg(params);  
-		
-		// 데이터 리턴.
+
+		List<EgovMap> list = membershipService.selectMembershipFree_Packg(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
 
-	
 	@RequestMapping(value = "/selectMembershipFree_PChange", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipFree_PChange(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		List<EgovMap>  oList     = null;	
-		
+	public ResponseEntity<List<EgovMap>> selectMembershipFree_PChange(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> oList = null;
+
 		logger.debug("in  selectMembershipFree_PChange ");
-		
-	      
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
-		List<EgovMap>  list = membershipService.selectMembershipFree_PChange(params);  
-		
-		// 데이터 리턴.
+
+		List<EgovMap> list = membershipService.selectMembershipFree_PChange(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
-	
-	
-	
 
 	@RequestMapping(value = "/selectMembershipFree_save", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> selectMembershipFree_save(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request ,SessionVO sessionVO) {
-	
+	public ResponseEntity<EgovMap> selectMembershipFree_save(@RequestParam Map<String, Object> params, ModelMap model,
+			HttpServletRequest request, SessionVO sessionVO) {
+
 		logger.debug("in  selectMembershipFree_save ");
-		
-		
-		
+
 		params.put("user_id", sessionVO.getUserId());
 		params.put("branch_id", sessionVO.getUserBranchId());
-		
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
+
+		EgovMap SEQ = null;
+		EgovMap rtnMap = new EgovMap();
 		
-		EgovMap SEQ  			= null;
-		EgovMap  rtnMap  = new EgovMap();
-		//채번 
-		SEQ  	 =membershipService.getSAL0095d_SEQ(params);  
-		
+		SEQ = membershipService.getSAL0095d_SEQ(params);
+
 		logger.debug(SEQ.toString());
-		
-		if(null != SEQ.get("seq")){
-			 params.put("SAVE_SR_MEM_ID", SEQ.get("seq"));
-			 int resultIntKey =membershipService.membershipFree_save(params);  
-			 
-			logger.debug("		resultIntKey["+resultIntKey+"] ");
-			
-			if(resultIntKey >0 ){
-				membershipService.srvConfigPeriod(params);    
-			}  
-			
+
+		if (null != SEQ.get("seq")) {
+			params.put("SAVE_SR_MEM_ID", SEQ.get("seq"));
+			int resultIntKey = membershipService.membershipFree_save(params);
+
+			logger.debug("		resultIntKey[" + resultIntKey + "] ");
+
+			if (resultIntKey > 0) {
+				membershipService.srvConfigPeriod(params);
+			}
+
 			rtnMap.put("result", "ok");
-			
-		}else{ 	rtnMap.put("result", "no");  }
-		
+
+		} else {
+			rtnMap.put("result", "no");
+		}
+
 		return ResponseEntity.ok(rtnMap);
 	}
-	
-	
 
 	@RequestMapping(value = "/selectMembershipContatList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMembershipContatList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		List<EgovMap>  oList     = null;	
-		
+	public ResponseEntity<List<EgovMap>> selectMembershipContatList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> oList = null;
+
 		logger.debug("in  selectMembershipContatList ");
-		
-	      
+
 		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
-		List<EgovMap>  list = membershipService.selectMembershipContatList(params);  
-		
-		// 데이터 리턴.
+
+		List<EgovMap> list = membershipService.selectMembershipContatList(params);
+
+	
 		return ResponseEntity.ok(list);
 	}
-	
-	
-	@RequestMapping(value = "/membershipNewContatSave", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> membershipNewContatSave(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
-		
-		logger.debug("in  membershipNewContatSave ");
-		
-		
-		params.put("user_id", sessionVO.getUserId());
-		
-		logger.debug("			pram set  log");
-		logger.debug("					"+params.toString());  
-		logger.debug("			pram set end  ");
-		
-		
 
-		int  resultUpc=0;
+	/**
+	 * @param params
+	 * @param request
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 */
+	@RequestMapping(value = "/membershipNewContatSave", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> membershipNewContatSave(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		logger.debug("in  membershipNewContatSave ");
+
+		params.put("user_id", sessionVO.getUserId());
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		int resultUpc = 0;
+
+		if ("on".equals(params.get("NEW_MAIN_SET"))) {
 		
-		//main contact 설정 
-		if("on".equals(params.get("NEW_MAIN_SET"))){
-			//update 
-			resultUpc = membershipService.membershipNewContatUpdate(params); 			
+			resultUpc = membershipService.membershipNewContatUpdate(params);
 		}
-		
-		int  resultInt = membershipService.membershipNewContatSave(params); 
-		
-		// 결과 만들기
+
+		int resultInt = membershipService.membershipNewContatSave(params);
+
+	
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-
-		// 데이터 리턴.
+	
+		//결과 
 		return ResponseEntity.ok(message);
 	}
-	
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
-	
+
 }

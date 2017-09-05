@@ -69,6 +69,17 @@ public interface MembershipMapper {
 	 */
 	 EgovMap selectInstallAddr(Map<String, Object> params);
 	
+	 /**
+	 * get address  in selectQuotInfo of tab 
+	 * @param params
+	 * @return EgovMap
+	 */
+	 EgovMap selectQuotInfo(Map<String, Object> params);
+	
+	 
+ 
+	 
+	 
 	/**
 	 * 
 	 * @param params

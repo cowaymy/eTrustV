@@ -40,6 +40,15 @@ public interface MembershipService {
 	EgovMap selectOderInfoTab(Map<String, Object> params);
 	
 	
+	
+	/**
+	 * Membership Management - View  => order info tab
+	 * @param params
+	 * @return EgovMap
+	 */
+	EgovMap selectQuotInfo(Map<String, Object> params);
+	
+	
 	/**
 	 * get address  in orderinfo of tab 
 	 * @param params

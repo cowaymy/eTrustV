@@ -58,6 +58,16 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 		return membershipMapper.selectOderInfoTab(params);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.coway.trust.biz.sales.mambership.MembershipService#selectQuotInfo(java.util.Map)
+	 */
+	@Override
+	public  EgovMap selectQuotInfo(Map<String, Object> params) {
+		return membershipMapper.selectQuotInfo(params);
+	}
+	
+	
 	
 	/*
 	 * (non-Javadoc)
