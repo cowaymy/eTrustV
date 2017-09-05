@@ -581,7 +581,7 @@
 <tr>
 	<th scope="row">Promotion Name</th>
 	<td><input id="promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Promotion Code</th>
+	<th scope="row">Promotion Code<span class="must">*</span></th>
 	<td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
