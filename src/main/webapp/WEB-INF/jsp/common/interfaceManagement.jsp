@@ -155,7 +155,7 @@ var gridIfColumnLayout =
              // 에디팅 유효성 검사
              validator : function(oldValue, newValue, item, dataField) {
                  var isValid = false;
-                 var matcher = /^[A-Za-z0-9+]{1,5}$/;
+                 var matcher = /^[A-Za-z0-9+]{0,5}$/;
 
                  if(matcher.test(newValue)) {
                      isValid = true;
@@ -169,28 +169,103 @@ var gridIfColumnLayout =
         dataField : "ifTypeNm",
         headerText : "IF TYPE NAME",
         width : "20%",
-        style : "aui-grid-user-custom-left"
+        style : "aui-grid-user-custom-left",
+        editRenderer : {
+            type : "InputEditRenderer",
+
+            // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item, dataField) {
+                var isValid = false;
+                var matcher = /^[A-Za-z0-9+]{0,200}$/;
+
+                if(matcher.test(newValue)) {
+                    isValid = true;
+                }
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
+            }
+        }
 	},
     {
         dataField : "chkCol",
         headerText : "Check Column",
-        width : "10%"
+        width : "10%",
+        editRenderer : {
+            type : "InputEditRenderer",
+
+            // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item, dataField) {
+                var isValid = false;
+                var matcher = /^[A-Za-z0-9+]{0,30}$/;
+
+                if(matcher.test(newValue)) {
+                    isValid = true;
+                }
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : "The maximum of characters is 30 "};
+            }
+        }
     },
     {
         dataField : "bizCol",
         headerText : "Business Column",
-        width : "10%"
+        width : "10%",
+        editRenderer : {
+            type : "InputEditRenderer",
+
+            // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item, dataField) {
+                var isValid = false;
+                var matcher = /^[A-Za-z0-9+]{0,30}$/;
+
+                if(matcher.test(newValue)) {
+                    isValid = true;
+                }
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : "The maximum of characters is 30 "};
+            }
+        }
     },
     {
         dataField : "tableNm",
         headerText : "Table Name",
         width : "15%",
-        style : "aui-grid-user-custom-left"
+        style : "aui-grid-user-custom-left",
+        editRenderer : {
+            type : "InputEditRenderer",
+
+            // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item, dataField) {
+                var isValid = false;
+                var matcher = /^[A-Za-z0-9+]{0,100}$/;
+
+                if(matcher.test(newValue)) {
+                    isValid = true;
+                }
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : "The maximum of characters is 100 "};
+            }
+        }
     },
     {
         dataField : "dscnNm",
         headerText : "Descrption",
-        style : "aui-grid-user-custom-left"
+        style : "aui-grid-user-custom-left",
+        editRenderer : {
+            type : "InputEditRenderer",
+
+            // 에디팅 유효성 검사
+            validator : function(oldValue, newValue, item, dataField) {
+                var isValid = false;
+                var matcher = /^[A-Za-z0-9+]{0,200}$/;
+
+                if(matcher.test(newValue)) {
+                    isValid = true;
+                }
+                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+                return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
+            }
+        }
     }
 ];
 
