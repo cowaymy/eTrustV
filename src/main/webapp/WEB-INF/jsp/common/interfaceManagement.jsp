@@ -155,11 +155,11 @@ var gridIfColumnLayout =
              // 에디팅 유효성 검사
              validator : function(oldValue, newValue, item, dataField) {
                  var isValid = false;
-                 var matcher = /^[A-Za-z0-9+]{0,5}$/;
 
-                 if(matcher.test(newValue)) {
+                 if(newValue.length <= 5) {
                      isValid = true;
                  }
+
                  // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
                  return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
              }
@@ -176,9 +176,8 @@ var gridIfColumnLayout =
             // 에디팅 유효성 검사
             validator : function(oldValue, newValue, item, dataField) {
                 var isValid = false;
-                var matcher = /^[A-Za-z0-9+]{0,200}$/;
 
-                if(matcher.test(newValue)) {
+                if(newValue.length <= 200) {
                     isValid = true;
                 }
                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
@@ -196,9 +195,8 @@ var gridIfColumnLayout =
             // 에디팅 유효성 검사
             validator : function(oldValue, newValue, item, dataField) {
                 var isValid = false;
-                var matcher = /^[A-Za-z0-9+]{0,30}$/;
 
-                if(matcher.test(newValue)) {
+                if(newValue.length <= 30) {
                     isValid = true;
                 }
                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
@@ -216,9 +214,8 @@ var gridIfColumnLayout =
             // 에디팅 유효성 검사
             validator : function(oldValue, newValue, item, dataField) {
                 var isValid = false;
-                var matcher = /^[A-Za-z0-9+]{0,30}$/;
 
-                if(matcher.test(newValue)) {
+                if(newValue.length <= 30) {
                     isValid = true;
                 }
                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
@@ -237,9 +234,8 @@ var gridIfColumnLayout =
             // 에디팅 유효성 검사
             validator : function(oldValue, newValue, item, dataField) {
                 var isValid = false;
-                var matcher = /^[A-Za-z0-9+]{0,100}$/;
 
-                if(matcher.test(newValue)) {
+                if(newValue.length <= 100) {
                     isValid = true;
                 }
                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
@@ -257,9 +253,8 @@ var gridIfColumnLayout =
             // 에디팅 유효성 검사
             validator : function(oldValue, newValue, item, dataField) {
                 var isValid = false;
-                var matcher = /^[A-Za-z0-9+]{0,200}$/;
 
-                if(matcher.test(newValue)) {
+                if(newValue.length <= 200) {
                     isValid = true;
                 }
                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
