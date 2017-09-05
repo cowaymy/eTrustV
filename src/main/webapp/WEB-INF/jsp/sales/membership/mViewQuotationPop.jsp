@@ -1,8 +1,8 @@
+
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<script type="text/javascript">
-
+<script type="text/javaScript" language="javascript">
 
 </script>
 
@@ -16,28 +16,27 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Management - View</h1>
+<h1>Membership Management - Quotation</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"  id="pcl_close">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
-
 <section class="pop_body"><!-- pop_body start -->
+
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Membership Info</a></li>
+    <li><a href="#" class="on">Quotation Info</a></li>
     <li><a href="#">Order Info</a></li>
     <li><a href="#">Contact Info</a></li>
-    <li><a href="#" > Filter Charge Info</a></li>
+    <li><a href="#">Filter Charge Info</a></li>
 </ul>
 
 
-
-<!-- inc_membershipInfo  tab  start...-->
-    <jsp:include page ='/sales/membership/inc_membershipInfo.do'/> 
-<!--  inc_membershipInfotab  end...-->
+<!-- oder info tab  start...-->
+    <jsp:include page ='/sales/membership/inc_quotInfo.do'/> 
+<!-- oder info tab  end...--> 
 
 
 <!-- oder info tab  start...-->
@@ -48,18 +47,23 @@
     <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> 
 <!-- oder info tab  end...-->
 
-
 <!-- person info tab  start...-->
     <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/> 
 <!-- oder info tab  end...-->
 
 
-
 </section><!-- tap_wrap end -->
+
+<ul class="center_btns mt20">
+    <li><p class="btn_blue2"><a href="#">Back</a></p></li>
+</ul>
 
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
+
+
+
 
 <script> 
     var quot = $("#QUOT_ID").val();
@@ -70,3 +74,26 @@
          fn_getMembershipQuotInfoFilterAjax();
     }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

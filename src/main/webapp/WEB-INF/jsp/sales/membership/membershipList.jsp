@@ -186,6 +186,55 @@
 		    var _option = {   width : "1200px",  height : "800px"   };
 		    Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do", _option);
 	  }
+	  
+	  
+	  function  fn_doMOutSPay(){
+		  
+          var selectedItems = AUIGrid.getSelectedItems(gridID);
+          
+          if(selectedItems ==""){
+        	  Common.alert("No membership selected..");
+        	  return ;
+          }
+          
+	      var v_mbrshOtstnd =selectedItems[0].item.mbrshOtstnd;
+	          
+	      if (parseInt(v_mbrshOtstnd,10) <= 0) {
+	    	  Common.alert("<b>[" + selectedItems[0].item.mbrshNo+ "] does not has any outstanding.<br />Payment is not necessary.</b>");
+	    	  return ;
+	      }
+          
+          var pram  ="?MBRSH_ID="+selectedItems[0].item.mbrshId+"&ORD_ID="+selectedItems[0].item.ordId;
+          Common.popupDiv("/sales/membership/membershipPayment.do"+pram);
+    }
+    
+	  
+	  
+	function fn_report(type) {
+		
+		  var selectedItems = AUIGrid.getSelectedItems(gridID);
+		  
+		  if(type=="Invoice"){
+			  if (parseInt(selectedItems[0].item.mbrshId ,10) < 490447){
+				  // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+		            var option = {
+		                isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+		            };
+				  
+				  
+				  $("#V_REFNO").val(selectedItems[0].item.mbrshId);
+		            Common.report("reportInvoiceForm", option);
+		            
+			  }else{
+				  Common.alert("<b>[" + selectedItems[0].item.mbrshId+ "]  does not  has event [490447]</b>");
+				  return ;
+			  }
+		  }
+
+	      
+	}
+    
+	  
 	
 
 </script>
@@ -196,6 +245,14 @@
     <input type="hidden" name="MBRSH_ID"   id="MBRSH_ID"/>
 </form>
 
+<form id="reportInvoiceForm" method="post">
+
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/membership/MembershipInvoice.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="V_REFNO" name="V_REFNO"  value=""/>
+  
+        
+</form>
 
 
 <section id="content"><!-- content start -->
@@ -209,7 +266,10 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Membership Management(Outright) </h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doOPayment();"><span class="search"></span>Outstanding Payment</a></p></li>
+      <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+               <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMOutSPay();"><span class="search"></span>Outstanding Payment</a></p></li>
+     </c:if>
+     
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();"><span class="search"></span>Free Membership</a></p></li>
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
@@ -307,13 +367,13 @@
 
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" onclick="javascript: fn_doViewLegder()"> LEDGER</a></p></li> 
-	<li><p class="btn_grid"><a href="#">Invoice</a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript: fn_report('Invoice')">Invoice</a></p></li>
 	<li><p class="btn_grid"><a href="#">Key-in List</a></p></li>
 	<li><p class="btn_grid"><a href="#">YS List</a></p></li>
 	<li><p class="btn_grid"><a href="#">Expire List</a></p></li>
 	<li><p class="btn_grid"><a href="#">Expire List (Only Rental)</a></p></li>
 	
-</ul>
+</ul> 
 
 <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

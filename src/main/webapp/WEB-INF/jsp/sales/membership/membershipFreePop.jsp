@@ -525,6 +525,20 @@ function fn_validStartDate(){
 
 
 
+<div id="popup_wrap" class="popup_wrap  pop_win"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Membership Management - Free Membership</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+
+
+
 <section id="content"><!-- content start -->
 
 
@@ -542,11 +556,6 @@ function fn_validStartDate(){
 
 
 
-
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Membership Management - Free Membership</h2>
-</aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Select Order</h3>
@@ -591,143 +600,156 @@ function fn_validStartDate(){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-	<li><a href="#" class="on" onclick=" javascript:AUIGrid.resize(bsHistoryGridID, 1120,300);" >Order Info</a></li>
+	<li><a href="#" class="on"  id='orderTab' onclick=" javascript:AUIGrid.resize(oListGridID, 1120,300);" >Order Info</a></li>
 	<li><a href="#">Contact Person</a></li>
 	<li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1120,400); " >BS History</a></li>
+	
 </ul>
 
-<article class="tap_area"><!-- tap_area start -->
 
+
+
+
+<article class="tap_area" style="display:block"><!-- tap_area start -->
+
+        
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:150px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Order No</th>
-	<td><span id="ordNo"></span></td>  
-	<th scope="row">Order Date</th>
-	<td><span id='ordDt'></span></td>
-	<th scope="row">Installment Period</th>
-	<td><span id='InstallmentPeriod'></span></td>
+    <th scope="row">Order No</th>
+    <td><span id="ordNo"></span></td>  
+    <th scope="row">Order Date</th>
+    <td><span id='ordDt'></span></td>
+    <th scope="row">Installment Period</th>
+    <td><span id='InstallmentPeriod'></span></td>
 </tr>
 <tr>
-	<th scope="row">Order Status</th>
-	<td><span id='ordStusName'></span></td>
-	<th scope="row">Rental Status</th>
-	<td><span id='rentalStus'></span></td>
-	<th scope="row">Install No</th>
-	<td><span id='firstInstallNo'></span></td>
+    <th scope="row">Order Status</th>
+    <td><span id='ordStusName'></span></td>
+    <th scope="row">Rental Status</th>
+    <td><span id='rentalStus'></span></td>
+    <th scope="row">Install No</th>
+    <td><span id='firstInstallNo'></span></td>
 </tr>
 <tr>
-	<th scope="row">Application Type</th>
-	<td><span id='appTypeDesc'></span></td>
-	<th scope="row">Reference No</th>
-	<td><span id='ordRefNo'></span></td>
-	<th scope="row">Install Date</th>
-	<td><span id='preferInstDt'></span></td>
+    <th scope="row">Application Type</th>
+    <td><span id='appTypeDesc'></span></td>
+    <th scope="row">Reference No</th>
+    <td><span id='ordRefNo'></span></td>
+    <th scope="row">Install Date</th>
+    <td><span id='preferInstDt'></span></td>
 </tr>
 <tr>
-	<th scope="row">Stock Code</th>
-	<td><span id='stockCode'></span></td>
-	<th scope="row">Stock Name</th>
-	<td colspan="3" id='stockDesc' ><span></span></td>
+    <th scope="row">Stock Code</th>
+    <td><span id='stockCode'></span></td>
+    <th scope="row">Stock Name</th>
+    <td colspan="3" id='stockDesc' ><span></span></td>
 </tr>
 <tr>
-	<th scope="row" rowspan="3">Instalation Address</th>
-	<td colspan="3" rowspan="3"><span id='instalationAddress'></span></td>
-	<th scope="row">Order Outstanding</th> 
-	<td><span id="ordOtstnd"></span></td>
+    <th scope="row" rowspan="3">Instalation Address</th>
+    <td colspan="3" rowspan="3"><span id='instalationAddress'></span></td>
+    <th scope="row">Order Outstanding</th> 
+    <td><span id="ordOtstnd"></span></td>
 </tr>
 <tr>
-	<th scope="row">AS Outstanding</th>
-	<td><span  id="asOtstnd"></span></td>
+    <th scope="row">AS Outstanding</th>
+    <td><span  id="asOtstnd"></span></td>
 </tr>
 <tr>
-	<th scope="row">Membership Expire</th>
-	<td><span id="expire"></span></td>
+    <th scope="row">Membership Expire</th>
+    <td><span id="expire"></span></td>
 </tr>
 <tr>
-	<th scope="row">Customer ID</th>
-	<td><span id='custId'></span></td>
-	<th scope="row">Customer Type</th>
-	<td colspan="3" id='custType'><span></span></td>
+    <th scope="row">Customer ID</th>
+    <td><span id='custId'></span></td>
+    <th scope="row">Customer Type</th>
+    <td colspan="3" id='custType'><span></span></td>
 </tr>
 <tr>
-	<th scope="row">Customer Name</th>
-	<td colspan="5" id='custName'><span></span></td>
+    <th scope="row">Customer Name</th>
+    <td colspan="5" id='custName'><span></span></td>
 </tr>
 <tr>
-	<th scope="row">NRIC/Company No</th>
-	<td colspan="5" id='custNric'><span></span></td>
+    <th scope="row">NRIC/Company No</th>
+    <td colspan="5" id='custNric'><span></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-     <div id="oList_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
-</article><!-- grid_wrap end -->
+ 
+ <article class="grid_wrap"><!-- grid_wrap start -->
+      <div id="oList_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+ </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
+
+
+
 
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="left_btns mb10">
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
-	<li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:150px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Name</th>
-	<td colspan="5" id="name"><span></span></td>
-	<th scope="row"></th>
-	<td><span id="gender"></span></td>
+    <th scope="row">Name</th>
+    <td colspan="5" id="name"><span></span></td>
+    <th scope="row"></th>
+    <td><span id="gender"></span></td>
 </tr>
 <tr>
-	<th scope="row">NRIC</th>
-	<td colspan="5" id="nric"><span></span></td>
-	<th scope="row">Race</th>
-	<td><span id="codename1"></span></td>
+    <th scope="row">NRIC</th>
+    <td colspan="5" id="nric"><span></span></td>
+    <th scope="row">Race</th>
+    <td><span id="codename1"></span></td>
 </tr>
 <tr>
-	<th scope="row">Mobile No</th>
-	<td><span id="telM1"></span></td>
-	<th scope="row">Office No</th>
-	<td><span id="telO"></span></td>
-	<th scope="row">Residence No</th>
-	<td><span id="telR" ></span></td>
-	<th scope="row">Fax No</th>
-	<td><span id="telf"></span></td>
+    <th scope="row">Mobile No</th>
+    <td><span id="telM1"></span></td>
+    <th scope="row">Office No</th>
+    <td><span id="telO"></span></td>
+    <th scope="row">Residence No</th>
+    <td><span id="telR" ></span></td>
+    <th scope="row">Fax No</th>
+    <td><span id="telf"></span></td>
 </tr>
 <tr>
-	<th scope="row">Email</th>
-	<td colspan="7" id="email"><span></span></td>
+    <th scope="row">Email</th>
+    <td colspan="7" id="email"><span></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 
 </article><!-- tap_area end -->
+
+
+
+
 
 <article class="tap_area"><!-- tap_area start -->
 
@@ -737,6 +759,9 @@ function fn_validStartDate(){
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
+
+
+
 
 </section><!-- tap_wrap end -->
 
@@ -799,3 +824,10 @@ function fn_validStartDate(){
 </section><!-- content end -->
 
 </section>
+
+</section>
+</div>
+
+<script>
+
+</script>
