@@ -29,7 +29,7 @@ public interface StockMovementService {
 
 	List<EgovMap>  selectStockMovementSerial(Map<String, Object> params);
 
-	List<EgovMap> stockMovementDeliveryIssue(Map<String, Object> params);
+	Map<String , Object> stockMovementDeliveryIssue(Map<String, Object> params);
 
 	List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
 

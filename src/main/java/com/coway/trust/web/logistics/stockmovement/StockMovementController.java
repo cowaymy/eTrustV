@@ -379,11 +379,7 @@ public class StockMovementController {
 	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model)
 			throws Exception {
 
-		List<EgovMap> list = stockMovementService.stockMovementDeliveryIssue(params);
-
-		Map<String, Object> rmap = new HashMap();
-
-		rmap.put("data", list);
+		Map<String, Object> rmap =  stockMovementService.stockMovementDeliveryIssue(params);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();

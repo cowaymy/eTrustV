@@ -260,9 +260,29 @@ function grFunc(){
 	data.checked = check;
 	
 	data.form    = $("#grForm").serializeJSON();
-	Common.ajax("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-        Common.alert(result.message.message);
-//         AUIGrid.setGridData(listGrid, result.data);
+	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
+		
+		if (result.rdata == '000'){
+			if ($('#grForm #gtype').val() == "RC"){
+				Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
+	                Common.alert(result.message.message);
+	            },  function(jqXHR, textStatus, errorThrown) {
+	                try {
+	                } catch (e) {
+	                }
+	                Common.alert("Fail : " + jqXHR.responseJSON.message);
+	            });
+			}else{
+				Common.alert(result.message.message);
+			}
+	        
+		}else{
+			if ($('#grForm #gtype').val() == "RC"){
+				Common.alert('GoodRecipt Cancel Fail.');
+			}else{
+				Common.alert('GoodRecipt Fail.');
+			}
+		}
         
        	$("#giptdate").val("");
         $("#gipfdate").val("");

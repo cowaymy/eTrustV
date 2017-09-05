@@ -277,7 +277,7 @@ function f_getTtype(g , v){
                     <td>
                         <select class="w100p" id="streq" name="streq"></select>
                     </td>
-                    <th scope="row">Movement Type</th>
+                    <th scope="row">Transaction Type</th>
                     <td>
                         <select class="w100p" id="sttype" name="sttype"></select>
                     </td>

@@ -215,7 +215,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public List<EgovMap> stockMovementDeliveryIssue(Map<String, Object> params) {
+	public Map<String , Object> stockMovementDeliveryIssue(Map<String, Object> params) {
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		int iCnt = 0;
@@ -249,8 +249,9 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 
 		if ("RC".equals(formMap.get("gtype"))) {
-			// System.out.println(" ::::: 254Line :::::: ");
-			stockMoveMapper.StockMovementCancelIssue(formMap);
+			
+			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
+			
 		} else {
 			// System.out.println(" ::::: 256Line :::::: ");
 			stockMoveMapper.StockMovementIssue(formMap);
@@ -258,9 +259,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 		System.out.println(formMap.get("rdata"));
 
-		List<EgovMap> list = null;
-
-		return list;
+		return formMap;
 	}
 
 	@Override
