@@ -345,7 +345,7 @@
             isValid = false;
             msg += "* Please select the Ex-Trade.<br />";
         }
-        if(FormUtil.checkReqValue($('#empChk'))) {
+        if(!$('#empChk').is(":disabled") && FormUtil.checkReqValue($('#empChk'))) {
             isValid = false;
             msg += "* Please select the employee.<br />";
         }
