@@ -29,8 +29,8 @@
     }
     
     // 리스트 조회.
-    function fn_selectListAjax() {
-        console.log('fn_selectListAjax START');
+    function fn_selectPromoListAjax() {
+        console.log('fn_selectPromoListAjax START');
         Common.ajax("GET", "/sales/promotion/selectPromotionList.do", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
         });
@@ -47,7 +47,7 @@
 
             Common.alert("Promotion Status Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
-            fn_selectListAjax();
+            fn_selectPromoListAjax();
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -75,7 +75,7 @@
             fn_doSaveStatus();
         });
         $('#btnSrch').click(function() {
-        	fn_selectListAjax();
+        	fn_selectPromoListAjax();
         });
         $('#btnClear').click(function() {
         	$('#listSearchForm').clearForm();

@@ -61,7 +61,7 @@
 
     $(function(){
         $('#btnProductSearch').click(function() {
-        	fn_selectListAjax();
+        	fn_selectPrdListAjax();
         });
         $('#btnApply').click(function() {
         	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -69,7 +69,7 @@
         });
     });
 	    // 리스트 조회.
-    function fn_selectListAjax() {        
+    function fn_selectPrdListAjax() {        
         Common.ajax("POST", "/logistics/material/materialcdsearch.do", $("#popSearchForm").serializeJSON(), function(result) {
             AUIGrid.setGridData(myGridID, result.data);
         });
