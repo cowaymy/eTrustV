@@ -10,6 +10,17 @@ $(document).ready(function() {
 	
 	createCcpAUIGrid();
 	
+	 // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(ccpGridID, "cellDoubleClick", function(event){
+        $("#_govAgId").val(event.item.govAgId);
+        Common.popupDiv("/sales/ccp/selectAgreementMtcViewEditPop.do", $("#popForm").serializeJSON(), null , true , '_viewEditDiv');
+    });
+	 
+	 //Move to Insert Page
+    $("#_goToAddWindow").click(function() {
+    	self.location.href= "/sales/ccp/insertCcpAgreementSearch.do";
+	});
+	
 });
 
 
@@ -32,7 +43,8 @@ function createCcpAUIGrid(){
 	      {dataField : "govAgPrgrsName", headerText : "Progress", width : "10%" , editable : false},
 	      {dataField : "govAgStartDt", headerText : "Agreement Start", width : "10%" , editable : false},
 	      {dataField : "govAgEndDt", headerText : "Agreement Expiry", width : "10%" , editable : false},
-	      {dataField : "govAgCrtDt", headerText : "Created", width : "10%" , editable : false}
+	      {dataField : "govAgCrtDt", headerText : "Created", width : "10%" , editable : false},
+	      {dataField : "govAgId", visible : false}
 	]
 	
 	//그리드 속성 설정
@@ -59,7 +71,9 @@ function createCcpAUIGrid(){
 }
 </script>
 <div id="wrap"><!-- wrap start -->
-
+<form id="popForm">
+    <input type="hidden" id="_govAgId" name="govAgId" >
+</form>
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -72,7 +86,7 @@ function createCcpAUIGrid(){
 <h2>Government Agreement List</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="add"></span>Add</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span>Add</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -96,25 +110,25 @@ function createCcpAUIGrid(){
     <th scope="row">Agreement No.</th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="govAgBatchNo"/></td>
     <th scope="row">Create Date (From)</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="govAgCrtDtFrom"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="govAgCrtDtFrom" readonly="readonly"/></td>
     <th scope="row">Create Date (To)</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgCrtDtTo"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgCrtDtTo" readonly="readonly"/></td>
 </tr>
 <tr>
     <th scope="row">Order No.</th>
     <td><input type="text" title="" placeholder="" class="w100p" name="salesOrdNo"/></td>
     <th scope="row">Agreement Start From</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgStartDtFrom"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgStartDtFrom" readonly="readonly"/></td>
     <th scope="row">Agreement Start To</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgStartDtTo"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgStartDtTo" readonly="readonly"/></td>
 </tr>
 <tr>
     <th scope="row">Customer Name</th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="name"/></td>
     <th scope="row">Agreement Expiry From</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgEndDtFrom"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgEndDtFrom" readonly="readonly"/></td>
     <th scope="row">Agreement Expiry To</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgEndDtTo"/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgEndDtTo" readonly="readonly"/></td>
 </tr>
 <tr>
     <th scope="row">Progress</th>

@@ -67,4 +67,54 @@ public interface CcpAgreementMapper {
 	
 	/* #### Insert End #####*/
 	
+	/*### View and Edit Start###*/
+	EgovMap selectAgreementInfo (Map<String, Object> params) throws Exception;
+	
+	/*### View and Edit End###*/
+	
+	List<EgovMap> getMessageStatusCode(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectConsignmentLogAjax (Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectMessageLogAjax (Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectContactOrdersAjax(Map<String, Object> params) throws Exception;
+	
+	/*####### Consign Save ######*/
+	
+	void updateReceiveDate (Map<String, Object> params ) throws Exception;
+	
+	EgovMap getConsignId(Map<String, Object> params) throws Exception;
+	
+	void updateCurrentStatus(Map<String, Object> params) throws Exception;
+	
+	void insertNewConsign(Map<String, Object> params) throws Exception;
+	
+	/* Consing Save End*/
+	
+	/*############  Agreement Maintenance Save #########*/
+	EgovMap selectProgressStatus (Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectAgmSoIdList (Map<String, Object> params) throws Exception; // 2
+	
+	EgovMap getRosCallLog (Map<String, Object> params)throws Exception;
+	
+	void updateRosCall (EgovMap params) throws Exception;
+	
+	EgovMap selectCallEntry (Map<String, Object> params) throws Exception;
+	
+	void insertEditCallResult(Map<String, Object> params) throws Exception;
+	
+	void insertEditCallEntry(Map<String, Object> params) throws Exception;
+	
+	void updateEditCallEntry(EgovMap params) throws Exception;
+	
+	void insertRosCall(Map<String, Object> params) throws Exception;
+	
+	void insertAgreementMessLog(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectEditAfAgreementList(Map<String, Object> params) throws Exception;
+	
+	void updateAgrPrgDate(Map<String, Object> params) throws Exception;
+	
 }

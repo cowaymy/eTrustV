@@ -29,4 +29,20 @@ public interface CcpAgreementService {
 	
 	boolean sendSuccessEmail(Map<String, Object> params) throws Exception;
 	
+	EgovMap selectAgreementInfo (Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getMessageStatusCode(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectConsignmentLogAjax (Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectMessageLogAjax (Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectContactOrdersAjax(Map<String, Object> params) throws Exception;
+	
+	Map<String, Object> updateAgreementMtcEdit(Map<String, Object> params) throws Exception;
+	
+	void updateNewConsignment(Map<String, Object> params) throws Exception;
+	
+	boolean sendUpdateEmail(Map<String, Object> params) throws Exception;
+	
 }

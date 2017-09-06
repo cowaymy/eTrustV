@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -225,6 +226,9 @@ public class CcpAgreementController {
 		LOGGER.info("################## insertAgreement Start #######################");
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
+		//TODO 추후 삭제 세션
+		params.put("userId", "52366");
+		
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
@@ -259,6 +263,155 @@ public class CcpAgreementController {
 	    
 		LOGGER.info("################## sendSuccessEmail End #######################");
 		return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/selectAgreementMtcViewEditPop.do")
+	public String  selectAgreementMtcViewEditPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.info("################### Params Confirm[/selectAgreementMtcViewEditPop]  : " + params.toString());
+		
+		EgovMap infoMap = null;
+		
+		infoMap = ccpAgreementService.selectAgreementInfo(params);
+		LOGGER.info("################### 가져온 infoMap  : " + infoMap.toString());
+		model.addAttribute("infoMap", infoMap);
+		
+		//TODO Agreement Type 에 대한 업무 설명 필요 추후 수정
+		
+		return "sales/ccp/ccpAgreementMtcViewEditPop";
+	}
+	
+	
+	@RequestMapping(value = "/getMessageStatusCode.do") 
+	public ResponseEntity<List<EgovMap>>  getMessageStatusCode (@RequestParam Map<String, Object> params) throws Exception {
+		
+		List<EgovMap> codeList = null;
+		codeList = ccpAgreementService.getMessageStatusCode(params);
+		
+		return ResponseEntity.ok(codeList);
+	}
+	
+	
+	@RequestMapping(value = "/selectConsignmentLogAjax") 
+	public ResponseEntity<List<EgovMap>> selectConsignmentLogAjax (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> consignList = null;
+		consignList = ccpAgreementService.selectConsignmentLogAjax(params);
+		
+		return ResponseEntity.ok(consignList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/selectMessageLogAjax")
+	public ResponseEntity<List<EgovMap>> selectMessageLogAjax (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> msgList = null;
+		msgList = ccpAgreementService.selectMessageLogAjax(params);
+		
+		return ResponseEntity.ok(msgList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/selectContactOrdersAjax")
+	public ResponseEntity<List<EgovMap>> selectContactOrdersAjax (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> orderList = null;
+		orderList = ccpAgreementService.selectContactOrdersAjax(params);
+		
+		return ResponseEntity.ok(orderList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/updateAgreementMtcEdit.do")
+	public ResponseEntity<Map<String, Object>> updateAgreementMtcEdit (@RequestParam Map<String, Object> params) throws Exception{
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		params.put("userId", sessionVO.getUserId());
+		//TODO 추후 삭제 세션
+		params.put("userId", "52366");
+		
+		returnMap = ccpAgreementService.updateAgreementMtcEdit(params);
+		
+		return ResponseEntity.ok(returnMap);
+	}
+	
+	
+	@RequestMapping(value = "/addNewConsign.do")
+	public String addNewConsign(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		model.addAttribute("updAgrId", params.get("updAgrId"));
+		
+		
+		return "sales/ccp/ccpAgreementMtcNewConsignPop";
+	}
+	
+	
+	@RequestMapping(value = "/updateNewConsignment.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage>  updateNewConsignment (@RequestParam Map<String, Object> params) throws Exception{
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		
+		params.put("userId", sessionVO.getUserId());
+		//TODO 추후 삭제 세션
+		params.put("userId", "52366");
+		
+		//params Set
+		params.put("updAgrId", params.get("conAgrId"));
+		
+		ccpAgreementService.updateNewConsignment(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("New agreement consignment successfully saved.");
+		
+		return ResponseEntity.ok(message);
+		
+	}
+	
+	
+	@RequestMapping(value = "/sendUpdateEmail.do")
+	public ResponseEntity<ReturnMessage> sendUpdateEmail (@RequestParam Map<String, Object> params) throws Exception{
+		
+		LOGGER.info("################## sendUpdateEmail Start #######################");
+		
+		LOGGER.info("#########################################################");
+		LOGGER.info("########### Params 확인 : " + params.toString());
+		//Session
+		boolean isResult = false;
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("fullName", sessionVO.getUserFullname());
+		//TODO 추후 삭제 세션
+		params.put("fullName", "Jang Gwang Ryul");
+		
+		isResult = ccpAgreementService.sendUpdateEmail(params);
+		
+		//Return MSG
+		ReturnMessage message = new ReturnMessage();
+		
+		if(isResult == true){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+	    
+		LOGGER.info("################## sendUpdateEmail End #######################");
+		return ResponseEntity.ok(message);
+		
+	}
+
+	//TODO 추후 Upload 구현
+	@RequestMapping(value = "/openFileUploadPop.do")
+	public String openFileUploadPop(@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/ccp/ccpAgreementMtxViewEditUploadPop";
+		
 	}
 }
 
