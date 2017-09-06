@@ -370,7 +370,7 @@
             msg += "* Please select the membership package.<br />";
         }
         
-        Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
         
         return isValid;
     }
