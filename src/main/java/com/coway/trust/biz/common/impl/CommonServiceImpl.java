@@ -685,7 +685,7 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			
 			delCnt++;
 			
-			// SYS0037M
+			//SYS0037M
 			commonMapper.deleteStatusCategoryCode((Map<String, Object>) obj);
 			
 			//SYS0036M
