@@ -227,7 +227,6 @@ var gridIfColumnLayout =
         dataField : "tableNm",
         headerText : "Table Name",
         width : "15%",
-        style : "aui-grid-user-custom-left",
         editRenderer : {
             type : "InputEditRenderer",
 
