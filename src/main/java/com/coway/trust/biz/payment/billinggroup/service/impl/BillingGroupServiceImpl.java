@@ -1603,38 +1603,40 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public String saveAddOrder(Map<String, Object> params, SessionVO sessionVO) {
 		
-		String defaultDate = "1900-01-01";
-		params.put("defaultDate", defaultDate);
 		int userId = sessionVO.getUserId();
 		String salesOrdNo = String.valueOf(params.get("salesOrdNo"));
-		String salesOrdId2 = String.valueOf(params.get("salesOrdId"));
+		String salesOrdId = String.valueOf(params.get("salesOrdId"));
+		String custBillId = String.valueOf(params.get("custBillId"));
+		String reasonUpd = String.valueOf(params.get("reasonUpd")).trim();
 		String[]  salesOrdNoArr = salesOrdNo.split("\\:");
-		String[]  salesOrdIdArr = salesOrdId2.split("\\:");
+		String[]  salesOrdIdArr = salesOrdId.split("\\:");
 		int total = salesOrdNoArr.length;
 		int successCnt =0;
 		int failCnt =0;
 		String message1 = "";
 		String message2 = "";
-		String message = "";
 		boolean valid = true;
     	for(int i=0 ; i < salesOrdNoArr.length; i++){
     		
-    		params.put("salesOrdId", salesOrdIdArr[i].trim());
-    		params.put("salesOrdNo", salesOrdNoArr[i].trim());
-    		EgovMap selectSalesOrderMs = billingGroupMapper.selectSalesOrderMs(params);
+    		Map<String, Object> msMap = new HashMap<String, Object>();
+    		msMap.put("salesOrdId", salesOrdIdArr[i].trim());
+    		msMap.put("salesOrdNo", salesOrdNoArr[i].trim());
+    		EgovMap selectSalesOrderMs = billingGroupMapper.selectSalesOrderMs(msMap);
     		
     		if(selectSalesOrderMs != null && Integer.parseInt(String.valueOf(selectSalesOrderMs.get("salesOrdId"))) > 0){
-    			String salesOrdId =  CommonUtils.nvl(String.valueOf(selectSalesOrderMs.get("salesOrdId")), "");
-    			String custBillId =  CommonUtils.nvl(String.valueOf(selectSalesOrderMs.get("custBillId")), "");
-    			
-    			EgovMap selectCustBillMaster = billingGroupMapper.selectCustBillMaster(params);
+    			String msSalesOrdId = selectSalesOrderMs.get("salesOrdId") != null ? String.valueOf(selectSalesOrderMs.get("salesOrdId")) : "" ;
+    			String msCustBillId = selectSalesOrderMs.get("custBillId") != null ? String.valueOf(selectSalesOrderMs.get("custBillId")) : "" ;
+
+    			Map<String, Object> masterMap = new HashMap<String, Object>();
+        		masterMap.put("custBillId", msCustBillId);
+    			EgovMap selectCustBillMaster = billingGroupMapper.selectCustBillMaster(masterMap);
     			
     			if(selectCustBillMaster != null && Integer.parseInt(String.valueOf(selectCustBillMaster.get("custBillId"))) > 0){
     				
-    				if(!custBillId.equals(String.valueOf(params.get("custBillId")))){
+    				if(!String.valueOf(selectCustBillMaster.get("custBillId")).equals(custBillId)){
     					
     					//인서트 셋팅 시작
-    					String salesOrderIDOld = salesOrdId;
+    					String salesOrderIDOld = msSalesOrdId;
     					String salesOrderIDNew = "0";
     					String contactIDOld = "0";
     					String contactIDNew = "0";
@@ -1658,9 +1660,9 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     					String emailAddtionalOld = "";
     					
     					Map<String, Object> hisRemoveOrdMap = new HashMap<String, Object>();
-    					hisRemoveOrdMap.put("custBillId", custBillId);
+    					hisRemoveOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
     					hisRemoveOrdMap.put("userId", userId);
-    					hisRemoveOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    					hisRemoveOrdMap.put("reasonUpd", reasonUpd);
     					hisRemoveOrdMap.put("salesOrderIDOld", salesOrderIDOld);
     					hisRemoveOrdMap.put("salesOrderIDNew", salesOrderIDNew);
     					hisRemoveOrdMap.put("contactIDOld", contactIDOld);
@@ -1685,14 +1687,14 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     					hisRemoveOrdMap.put("emailAddtionalOld", emailAddtionalOld);
     					billingGroupMapper.insHistory(hisRemoveOrdMap);
     					//인서트 셋팅  끝
-    
-    					if(salesOrdId.equals(String.valueOf(selectCustBillMaster.get("custBillSoId")))){
+    					
+    					if(msSalesOrdId.equals(String.valueOf(selectCustBillMaster.get("custBillSoId")))){
     						
     						String changeOrderId = "0";
     						Map<String, Object> replaceOrdMap = new HashMap<String, Object>();
     		                replaceOrdMap.put("replaceOrd", "Y");
-    		                replaceOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
-    		                replaceOrdMap.put("salesOrdId", salesOrdId);
+    		                replaceOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
+    		                replaceOrdMap.put("salesOrdId", msSalesOrdId);
     						EgovMap replcaceOrder_1 = billingGroupMapper.selectReplaceOrder(replaceOrdMap);
     						
     						if (replcaceOrder_1 != null && Integer.parseInt(String.valueOf(replcaceOrder_1.get("salesOrdId"))) > 0){
@@ -1702,8 +1704,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     						}else{
     							Map<String, Object> replaceOrd2Map = new HashMap<String, Object>();
     							replaceOrd2Map.put("replaceOrd2", "Y");
-    							replaceOrd2Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
-    							replaceOrd2Map.put("salesOrdId", salesOrdId);
+    							replaceOrd2Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
+    							replaceOrd2Map.put("salesOrdId", msSalesOrdId);
     							EgovMap replcaceOrder_2 = billingGroupMapper.selectReplaceOrder(replaceOrd2Map);
     							
     							if (replcaceOrder_2 != null && Integer.parseInt(String.valueOf(replcaceOrder_2.get("salesOrdId"))) > 0){
@@ -1714,8 +1716,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     								
     								Map<String, Object> replaceOrd3Map = new HashMap<String, Object>();
     								replaceOrd3Map.put("replaceOrd3", "Y");
-    								replaceOrd3Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillSoId")));
-    								replaceOrd3Map.put("salesOrdId", salesOrdId);
+    								replaceOrd3Map.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
+    								replaceOrd3Map.put("salesOrdId", msSalesOrdId);
     								EgovMap replcaceOrder_3 = billingGroupMapper.selectReplaceOrder(replaceOrd3Map);
     								
     								if (replcaceOrder_3 != null && Integer.parseInt(String.valueOf(replcaceOrder_3.get("salesOrdId"))) > 0){
@@ -1730,7 +1732,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     							
     							// Got order to replace
                                 //Insert history (Change Main Order) - previous group
-    							String salesOrderIDOld2 = salesOrdId;
+    							String salesOrderIDOld2 = msSalesOrdId;
     							String salesOrderIDNew2 = changeOrderId;
     							String contactIDOld2 = "0";
     							String contactIDNew2 = "0";
@@ -1756,7 +1758,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     							Map<String, Object> hisChgOrdMap = new HashMap<String, Object>();
     							hisChgOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
     							hisChgOrdMap.put("userId", userId);
-    							hisChgOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    							hisChgOrdMap.put("reasonUpd", reasonUpd);
     							hisChgOrdMap.put("salesOrderIDOld", salesOrderIDOld2);
     							hisChgOrdMap.put("salesOrderIDNew", salesOrderIDNew2);
     							hisChgOrdMap.put("contactIDOld", contactIDOld2);
@@ -1787,14 +1789,14 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     		        			updChangeMap.put("salesOrdId", changeOrderId);
     		        			updChangeMap.put("custBillId", custBillId);
     		        			updChangeMap.put("userId", userId);
-    		        			billingGroupMapper.updSalesOrderMaster(updChangeMap);
+    		        			billingGroupMapper.updCustMaster(updChangeMap);
     		        			
     						}else{
     							
     							// No replace order found - Inactive billing group
                                 //Insert history (Change Main Order) - previous group
-    							String salesOrderIDOld2 = salesOrdId;
-    							String salesOrderIDNew2 = changeOrderId;
+    							String salesOrderIDOld2 = "";
+    							String salesOrderIDNew2 = "";
     							String contactIDOld2 = "0";
     							String contactIDNew2 = "0";
     							String addressIDOld2 = "0";
@@ -1817,9 +1819,9 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     							String emailAddtionalOld2 = "";
     							
     							Map<String, Object> hisChgOrdMap = new HashMap<String, Object>();
-    							hisChgOrdMap.put("custBillId", custBillId);
+    							hisChgOrdMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
     							hisChgOrdMap.put("userId", userId);
-    							hisChgOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    							hisChgOrdMap.put("reasonUpd", reasonUpd);
     							hisChgOrdMap.put("salesOrderIDOld", salesOrderIDOld2);
     							hisChgOrdMap.put("salesOrderIDNew", salesOrderIDNew2);
     							hisChgOrdMap.put("contactIDOld", contactIDOld2);
@@ -1847,10 +1849,10 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     							
     							Map<String, Object> updChangeMap = new HashMap<String, Object>();
     							updChangeMap.put("userId", userId);
-    							updChangeMap.put("addOrdFlag", "Y");
-    		        			updChangeMap.put("salesOrdId", changeOrderId);
-    		        			updChangeMap.put("custBillId", custBillId);
-    		        			billingGroupMapper.updSalesOrderMaster(updChangeMap);
+    							updChangeMap.put("addOrdFlag2", "Y");
+    		        			updChangeMap.put("custBillStusId", "8");
+    		        			updChangeMap.put("custBillId", String.valueOf(selectCustBillMaster.get("custBillId")));
+    		        			billingGroupMapper.updCustMaster(updChangeMap);
     							
     						}
     					}
@@ -1858,7 +1860,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     			}
     			
     			String salesOrderIDOld = "0";
-    			String salesOrderIDNew = salesOrdIdArr[i].trim();
+    			String salesOrderIDNew = msSalesOrdId;
     			String contactIDOld = "0";
     			String contactIDNew = "0";
     			String addressIDOld = "0";
@@ -1883,7 +1885,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     			Map<String, Object> hisAddOrdMap = new HashMap<String, Object>();
     			hisAddOrdMap.put("custBillId", String.valueOf(params.get("custBillId")));
     			hisAddOrdMap.put("userId", userId);
-    			hisAddOrdMap.put("reasonUpd", String.valueOf(params.get("reasonUpd")).trim());
+    			hisAddOrdMap.put("reasonUpd", reasonUpd);
     			hisAddOrdMap.put("salesOrderIDOld", salesOrderIDOld);
     			hisAddOrdMap.put("salesOrderIDNew", salesOrderIDNew);
     			hisAddOrdMap.put("contactIDOld", contactIDOld);
@@ -1934,11 +1936,11 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 	                "Total success : " + successCnt + " || " +
 	                "Total fail : " + failCnt + "<br /><br />";
     		
-    		return message = message1 + message2;
+    		return message1 + message2;
     		
     	}else{
     		
-    		return message ="";
+    		return "";
     	
     	}
 	}
