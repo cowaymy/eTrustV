@@ -158,6 +158,7 @@ h3 .txt_box{font-size:16px; color:#25527c;}
 .color_box.purple{background:#9f20da;}
 .color_box.white{background:#fff; border:1px solid #ccc; box-sizing:border-box;}
 .fl_right{float:right!important;}
+.fl_none{float:none!important;}
 .al_right{text-align:right;}
 select .optgroup_text {background:#aaa; color:#fff;}
 select .optgroup_text option {color:#444; background:#fff;}
@@ -468,6 +469,10 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .transfer_wrap .btns{position:absolute; top:173px; left:50%; margin-left:-22px; padding-left:10px;}
 .transfer_wrap .btns li{margin-bottom:5px;}
 .transfer_wrap .btns li.sec{margin-bottom:20px;}
+
+/* history-info tran_list */
+.history-info .tran_list {float:none; padding-left:0;}
+.history-info .tran_list ul {height:auto; min-height:40px;}
 
 /* org_chart */
 .divine3:after{content:""; display:block; clear:both;}
