@@ -740,6 +740,7 @@
         , CUST_BILL_IS_ESTM = #{custBillIsEstm}
         , CUST_BILL_IS_SMS = #{custBillIsSMS}
         , CUST_BILL_IS_POST = #{custBillIsPost}
+        , CUST_BILL_EMAIL = #{custBillEmail}
         </if>
         <if test="apprReqFlag == 'Y'.toString() ">
         , CUST_BILL_EMAIL = #{emailNew}

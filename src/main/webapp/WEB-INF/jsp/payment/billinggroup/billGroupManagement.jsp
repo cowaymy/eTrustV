@@ -418,35 +418,32 @@ var addOrderLayout = [
                         $("#nric").text(result.data.selectBasicInfo.nric);
                         $("#customerName").text(result.data.selectBasicInfo.name);
                         
-                        
-                        $("#post").attr('disabled', false);
-                        $("#sms").attr('disabled', false);
-                        $("#estm").attr('disabled', false);
-                        
                         if(result.data.selectBasicInfo.custBillIsPost == "1"){
-                            $("#post").attr('checked', true);
+                            $("#post").prop('checked', true);
                         }else{
-                            $("#post").attr('checked', false);
+                            $("#post").prop('checked', false);
                         }
                         
                         if(result.data.selectBasicInfo.custBillIsSms == "1"){
-                            $("#sms").attr('checked', true);
+                            $("#sms").prop('checked', true);
                         }else{
-                            $("#sms").attr('checked', false);
+                            $("#sms").prop('checked', false);
                         }
                         
                         if(result.data.selectBasicInfo.custBillIsEstm == "1"){
-                            $("#estm").attr('checked', true);
+                            $("#estm").prop('checked', true);
                         }else{
-                            $("#estm").attr('checked', false);
+                            $("#estm").prop('checked', false);
                         }
                         
-                        $("#post").attr('disabled', true);
-                        $("#sms").attr('disabled', true);
-                        $("#estm").attr('disabled', true);
-                        
                         $("#remark").text(result.data.selectBasicInfo.custBillRem);
-                        $("#email").text(result.data.selectBasicInfo.custBillEmail);
+                        
+                        if(result.data.selectBasicInfo.custBillEmail != undefined){
+                        	$("#email").text(result.data.selectBasicInfo.custBillEmail);
+                        }else{
+                        	$("#email").text("");
+                        }
+                        
                         
                         //Mailling Addres
                         $("#maillingAddr").text(result.data.selectMaillingInfo.addr);
@@ -619,24 +616,25 @@ var addOrderLayout = [
             $('#changeBill_remark').text(result.data.basicInfo.custBillRem);
             
             if(result.data.basicInfo.custBillIsPost == "1"){
-            	$("#changePop_post").attr('checked', true);
+            	$("#changePop_post").prop('checked', true);
             }else{
-            	$("#changePop_post").attr('checked', false);
+            	$("#changePop_post").prop('checked', false);
             }
             
             if(result.data.basicInfo.custBillIsSms == "1"){
-                $("#changePop_sms").attr('checked', true);
+                $("#changePop_sms").prop('checked', true);
             }else{
-                $("#changePop_sms").attr('checked', false);
+                $("#changePop_sms").prop('checked', false);
             }
             
             if(result.data.basicInfo.custBillIsEstm == "1"){
-                $("#changePop_estm").attr('checked', true);
-                $("#changePop_estm").attr('disabled', false);
+                $("#changePop_estm").prop('checked', true);
+                $("#changePop_estm").prop('disabled', false);
                 $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
             }else{
-                $("#changePop_estm").attr('checked', false);
-                $("#changePop_estm").attr('disabled', true);
+                $("#changePop_estm").prop('checked', false);
+                $("#changePop_estm").prop('disabled', true);
+                $('#changePop_estmVal').val("");
             }
             
             AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
@@ -1125,25 +1123,26 @@ var addOrderLayout = [
     function fn_changeBillSave(){
     	
         var custTypeId = $('#custTypeId').val();
+        var custBillEmail = $('#changePop_estmVal').val();
         var reasonUpd = $("#changePop_Reason").val();
         var custBillId = $("#custBillId").val();
-        var isPost = $("#changePop_post").is(":checked");
-        var isSms = $("#changePop_sms").is(":checked");
-        var isEstm = $("#changePop_estm").is(":checked");
-        var post = "0";
-        var sms = "0";
-        var estm = "0";
         
-        if(isPost){
-        	post = "1";
+        if($("#changePop_post").is(":checked")){
+        	$("#changePop_post").val(1);
+        }else{
+        	$("#changePop_post").val(0);
         }
         
-        if(isSms){
-        	sms = "1";
+        if($("#changePop_sms").is(":checked")){
+        	$("#changePop_sms").val(1);
+        }else{
+        	$("#changePop_sms").val(0);
         }
         
-        if(isEstm){
-        	estm = "1";
+        if($("#changePop_estm").is(":checked")){
+        	$("#changePop_estm").val(1);
+        }else{
+        	$("#changePop_estm").val(0);
         }
         
         var valid = true;
@@ -1176,8 +1175,12 @@ var addOrderLayout = [
         }
         
         if(valid){
+        	
+            var post = $("#changePop_post").val();
+            var sms = $("#changePop_sms").val();
+            var estm = $("#changePop_estm").val();
             
-            Common.ajax("GET","/payment/saveChangeBillType.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "post" : post, "sms" : sms, "estm" : estm}, function(result){
+            Common.ajax("GET","/payment/saveChangeBillType.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "post" : post, "sms" : sms, "estm" : estm, "custBillEmail" :custBillEmail}, function(result){
                 console.log(result);
                 
                 Common.alert(result.message);
@@ -1283,14 +1286,15 @@ var addOrderLayout = [
                 
                 Common.ajax("GET","/payment/saveApprRequest.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqId" : reqId}, function(result){
                     console.log(result);
-                    if(result.code =="00"){
+
                         Common.alert(result.message);
                         $("#apprReq_reasonUpd").val("");
                         $("#btnApprReq").hide();
-                    }else{
-                        Common.alert(result.message);
-                    }
+
                     
+                },function(jqXHR, textStatus, errorThrown) {
+                    Common.alert("Failed to approve this E-Statement request. Please try again later.");
+
                 });
                 
             }else{
@@ -1303,14 +1307,15 @@ var addOrderLayout = [
                 
                 Common.ajax("GET","/payment/saveCancelRequest.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqId" : reqId}, function(result){
                     console.log(result);
-                    if(result.code =="00"){
+
                         Common.alert(result.message);
                         $("#apprReq_reasonUpd").val("");
                         $("#btnCancelReq").hide();
-                    }else{
-                        Common.alert(result.message);
-                    }
                     
+                    
+                },function(jqXHR, textStatus, errorThrown) {
+                    Common.alert("Failed to cancel this E-Statement request. Please try again later.");
+
                 });
                 
             }else{
@@ -2033,7 +2038,7 @@ var addOrderLayout = [
 <tr>
     <td colspan="3">
     <label><input type="checkbox" disabled="disabled"  id="changePop_estm" name="changePop_estm"/><span>E-Statement </span></label>
-    <input type="text" title="" placeholder="" class="" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();">Request New Email</a></p>
+    <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();">Request New Email</a></p>
     </td>
 </tr>
 <tr>

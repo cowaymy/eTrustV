@@ -1070,8 +1070,9 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		String custBillIsEstm = selectBasicInfo.get("custBillIsEstm") != null ? String.valueOf(selectBasicInfo.get("custBillIsEstm")) : "";
 		String custBillIsSms = selectBasicInfo.get("custBillIsSms") != null ?  String.valueOf(selectBasicInfo.get("custBillIsSms")) : "" ;
 		String custBillIsPost = selectBasicInfo.get("custBillIsPost") != null ? String.valueOf(selectBasicInfo.get("custBillIsPost")) : "";
+		String custBillEmail = selectBasicInfo.get("custBillEmail") != null ? String.valueOf(selectBasicInfo.get("custBillEmail")) : "";
 		String custBillId = selectBasicInfo.get("custBillId") != null ? String.valueOf(selectBasicInfo.get("custBillId")) : "0" ;
-		
+
 		if(selectBasicInfo != null && Integer.parseInt(custBillId) > 0){
 			
 			//인서트 셋팅 시작
@@ -1085,8 +1086,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			String statusIDNew = "0";
 			String remarkOld = "";
 			String remarkNew = "";
-			String emailOld = "";
-			String emailNew = "";
+			String emailOld = custBillEmail;
+			String emailNew = String.valueOf(params.get("estm")).equals("1")  ? String.valueOf(params.get("custBillEmail")) :"";
 			String typeId = "1045";
 			String isEStatementOld = custBillIsEstm;
 			String isEStatementNew = String.valueOf(params.get("estm"));
@@ -1132,6 +1133,13 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			custMap.put("custBillIsPost", String.valueOf(params.get("post")));
 			custMap.put("custBillIsSMS", String.valueOf(params.get("sms")));
 			custMap.put("custBillIsEstm", String.valueOf(params.get("estm")));
+			
+			if(String.valueOf(params.get("estm")).equals("1")){
+				custMap.put("custBillEmail", String.valueOf(params.get("custBillEmail")));
+			}else{
+				custMap.put("custBillEmail", "");
+			}
+			
 			custMap.put("chgBillFlag", "Y");
 			custMap.put("userId", userId);
 			custMap.put("custBillId", String.valueOf(params.get("custBillId")));
