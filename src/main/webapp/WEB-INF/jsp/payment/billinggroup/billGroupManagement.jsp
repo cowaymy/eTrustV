@@ -168,7 +168,7 @@ var estmColumnLayout = [
         headerText : "At",
         editable : false,
     },{
-        dataField : "crtUserId",
+        dataField : "userName",
         headerText : "By",
         editable : false,
     }];
@@ -261,7 +261,7 @@ var estmHisPopColumnLayout = [
         headerText : "At",
         editable : false,
     },{
-        dataField : "updUserId",
+        dataField : "userName",
         headerText : "By",
         editable : false,
     }];
