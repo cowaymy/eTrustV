@@ -87,10 +87,7 @@ $(document).ready(function(){
             };
         }
     
-        });
-    
-
-  
+        });  
 	
 });
 
@@ -334,15 +331,7 @@ function fn_batchAdjFileUp(){
                     <col style="width:165px" />
                     <col style="width:*" />
                 </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Request ID</th>
-                        <td>
-                        </td>
-                        <th scope="row">Department</th>
-                        <td>                            
-                        </td>
-                    </tr>
+                <tbody>              
                     <tr>
                        <th scope="row">Adjustment Type</th>
                         <td>

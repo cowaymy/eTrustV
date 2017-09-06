@@ -89,6 +89,9 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
     		}
     	}
     	
+    	//히스토리 정보 등록 
+    	invoiceMapper.saveNewAdjHist(masterParamMap);
+    	
     	return adjustmentNo + " / " + reportNo;
 	}
 	
@@ -101,5 +104,34 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 	public int getAdjBatchId(){
 		return invoiceMapper.getAdjBatchId();
 	}
+	
+	/**
+	 * Adjustment CN/DN Detail Pop-up Master 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectAdjDetailPopMaster(Map<String, Object> params){
+		return invoiceMapper.selectAdjDetailPopMaster(params);
+	}
+	
+	/**
+	 * Adjustment CN/DN Detail Pop-up Detail List 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectAdjDetailPopList(Map<String, Object> params) {
+		return invoiceMapper.selectAdjDetailPopList(params);
+	}
 
+	/**
+	 * Adjustment CN/DN Detail Pop-up History 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectAdjDetailPopHist(Map<String, Object> params) {
+		return invoiceMapper.selectAdjDetailPopHist(params);
+	}
 }

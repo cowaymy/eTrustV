@@ -100,6 +100,43 @@ public class InvoiceAdjController {
 		return ResponseEntity.ok(list);
 	}
 	
+	/**
+	 * Adjustment Detail Pop-up 초기화면
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initAdjustmentDetailPop.do")	
+	public String initAdjustmentDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("adjId", params.get("adjId"));
+		return "payment/invoice/adjCnDnDetailPop";
+	}
+	
+	/**
+	 * Adjustment Detail Pop-up 정보조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectAdjustmentDetailPop.do", method = RequestMethod.GET)
+	public ResponseEntity<HashMap<String,Object>> selectAdjustmentDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {	
+		
+		LOGGER.debug("adjId : {}", params.get("adjId"));
+		
+		EgovMap master = invoiceService.selectAdjDetailPopMaster(params);					//마스터 데이터 조회
+		List<EgovMap> detailList = invoiceService.selectAdjDetailPopList(params);		//상세 리스트 조회
+		List<EgovMap> histlList = invoiceService.selectAdjDetailPopHist(params);		//히스토리 조회
+		
+		HashMap <String, Object> returnValue = new HashMap<String, Object>();
+		returnValue.put("master", master);		
+		returnValue.put("detailList", detailList);
+		returnValue.put("histlList", histlList);
+		
+		return ResponseEntity.ok(returnValue);
+	}
+	
+	
+	
 	/******************************************************
 	 *   Company Statement
 	 *****************************************************/	
@@ -181,12 +218,16 @@ public class InvoiceAdjController {
 
 		double totalTaxes = 0.0D;
 		double totalAmount = 0.0D;		
-
+		
 		//Detail 데이터 세팅
 		if (gridList.size() > 0) {
 			for (int i = 0; i < gridList.size(); i++) {
 				Map<String, Object> gridMap = (Map<String, Object>) gridList.get(i);
 				double itemAdjsutment = Double.parseDouble(String.valueOf(gridMap.get("totamount")));
+				
+				if(itemAdjsutment <= 0){
+					continue;
+				}
 				
 				detailParamMap = createAdjustmentDetailData(conversion,
 																						itemAdjsutment,
@@ -336,7 +377,11 @@ public class InvoiceAdjController {
 						
 						double itemAdjsutment =memoAdjustAmount < Double.parseDouble(String.valueOf(detailMap.get("billitemamount"))) ? 
 																	memoAdjustAmount : Double.parseDouble(String.valueOf(detailMap.get("billitemamount"))) ;
-								
+						
+						if(itemAdjsutment <= 0){
+							continue;
+						}
+						
 						detailParamMap = createAdjustmentDetailData(Integer.parseInt(String.valueOf(master.get("accountconversion"))),
 																								itemAdjsutment,
 																								String.valueOf(detailMap.get("txinvoiceitemtypeid")),
@@ -402,7 +447,7 @@ public class InvoiceAdjController {
                                                 			String billItemQty) {
 		HashMap<String, Object> returnParam = new  HashMap<String, Object>();
 		
-        if (itemAdjsutment > 0){
+       
         
             int invoiceItemTypeId  = Integer.parseInt(txInvoiceItemTypeId);
             //LOGGER.debug("invoiceItemTypeId : {}", gridMap.get("txinvoiceitemtypeid"));
@@ -548,7 +593,7 @@ public class InvoiceAdjController {
             //totalAmount += itemAdjsutment;					
             returnParam.put("memoItemInvoiceItmQty", Integer.parseInt(billItemQty));
             
-            }
+            
         
         return returnParam;
     }

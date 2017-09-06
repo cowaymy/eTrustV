@@ -77,4 +77,32 @@ public interface InvoiceAdjMapper {
 	 * @return
 	 */
 	int getAdjBatchId();
+	
+	/**
+	 * Adjustment History 등록
+	 * @param params
+	 * @return
+	 */
+	void saveNewAdjHist(Map<String, Object> params);
+	
+	/**
+	 * Adjustment CN/DN Detail Pop-up Master 조회
+	 * @param params
+	 * @return
+	 */
+    EgovMap selectAdjDetailPopMaster(Map<String, Object> params);
+    
+    /**
+	 * Adjustment CN/DN Detail Pop-up Detail List 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectAdjDetailPopList(Map<String, Object> params);
+    
+    /**
+	 * Adjustment CN/DN Detail Pop-up History 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectAdjDetailPopHist(Map<String, Object> params);
 }

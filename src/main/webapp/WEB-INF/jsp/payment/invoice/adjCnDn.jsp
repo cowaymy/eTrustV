@@ -14,6 +14,13 @@ var gridPros = {
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+	
+	// 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+    	var adjId = AUIGrid.getCellValue(myGridID, event.rowIndex, 'memoAdjId');
+    	Common.popupDiv('/payment/initAdjustmentDetailPop.do', {adjId : adjId}, null , true ,'_adjustmentDetailPop'); 
+    });
+    
 });
 
 var columnLayout=[
@@ -21,6 +28,8 @@ var columnLayout=[
     { dataField:"memoItmTxs" ,headerText:"Adjustment Taxes" ,editable : false  , visible : false},
     { dataField:"memoItmChrg" ,headerText:"Adjustment Charges" ,editable : false  , visible : false},
     { dataField:"memoAdjRptNo" ,headerText:"Report No." ,editable : false  , visible : false},
+    { dataField:"memoAdjId" ,headerText:"Adjustment ID" ,editable : false  , visible : false},
+    
 
     { dataField:"memoAdjRefNo" ,headerText:"CN/DN No." ,editable : false },
     { dataField:"memoAdjInvcNo" ,headerText:"Invoice No." ,editable : false },
