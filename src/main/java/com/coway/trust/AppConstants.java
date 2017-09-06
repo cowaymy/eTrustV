@@ -2,6 +2,9 @@ package com.coway.trust;
 
 public class AppConstants {
 
+	private AppConstants() {
+	}
+
 	public static final String SLASH = "/";
 
 	// API 버전

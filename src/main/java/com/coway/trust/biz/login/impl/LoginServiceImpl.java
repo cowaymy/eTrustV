@@ -41,7 +41,22 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	public LoginVO getLoginInfo(Map<String, Object> params) {
 		LOGGER.debug("loginInfo");
 		LoginVO loginVO = loginMapper.selectLoginInfo(params);
+		// TODO : 로그인 이력 처리 필요...
 		return loginVO;
+	}
+
+	@Override
+	public LoginVO loginByMobile(Map<String, Object> params) {
+		LOGGER.debug("loginByMobile");
+		// TODO : deviceImei, deviceNumber 체크 필요.
+		LoginVO loginVO = getLoginInfo(params);
+		return loginVO;
+	}
+
+	@Override
+	public void logoutByMobile(Map<String, Object> params) {
+		// TODO mobile 로그 아웃시 처리사항....
+		logout(params);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ public class LoginVO {
 	private String userFullname;
 	private String userEmail;
 	private int userStatusId;
+	private int userTypeId;
 	private int userDeptId;
 	private Date userUpdateAt;
 	private Date userPasswdLastUpdateAt;
@@ -20,6 +21,9 @@ public class LoginVO {
 	private String code;
 	private int userBranchId;
 	private String branchName;
+	private String branchAddr;
+	private String branchTel1;
+	private String branchTel2;
 	private String deptName;
 
 	public int getUserId() {
@@ -60,6 +64,14 @@ public class LoginVO {
 
 	public void setUserStatusId(int userStatusId) {
 		this.userStatusId = userStatusId;
+	}
+
+	public int getUserTypeId() {
+		return userTypeId;
+	}
+
+	public void setUserTypeId(int userTypeId) {
+		this.userTypeId = userTypeId;
 	}
 
 	public int getUserDeptId() {
@@ -148,6 +160,30 @@ public class LoginVO {
 
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
+	}
+
+	public String getBranchAddr() {
+		return branchAddr;
+	}
+
+	public void setBranchAddr(String branchAddr) {
+		this.branchAddr = branchAddr;
+	}
+
+	public String getBranchTel1() {
+		return branchTel1;
+	}
+
+	public void setBranchTel1(String branchTel1) {
+		this.branchTel1 = branchTel1;
+	}
+
+	public String getBranchTel2() {
+		return branchTel2;
+	}
+
+	public void setBranchTel2(String branchTel2) {
+		this.branchTel2 = branchTel2;
 	}
 
 	public String getDeptName() {

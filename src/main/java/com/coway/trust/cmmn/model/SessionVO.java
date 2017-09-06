@@ -9,6 +9,7 @@ public class SessionVO {
 	private String userFullname;
 	private String userEmail;
 	private int userStatusId;
+	private int userTypeId;
 	private int userDeptId;
 	private Date userUpdateAt;
 	private Date userPasswdLastUpdateAt;
@@ -60,6 +61,14 @@ public class SessionVO {
 
 	public void setUserStatusId(int userStatusId) {
 		this.userStatusId = userStatusId;
+	}
+
+	public int getUserTypeId() {
+		return userTypeId;
+	}
+
+	public void setUserTypeId(int userTypeId) {
+		this.userTypeId = userTypeId;
 	}
 
 	public int getUserDeptId() {
@@ -167,6 +176,7 @@ public class SessionVO {
 			sessionVO.setUserFullname(loginVO.getUserFullname());
 			sessionVO.setUserEmail(loginVO.getUserEmail());
 			sessionVO.setUserStatusId(loginVO.getUserStatusId());
+			sessionVO.setUserTypeId(loginVO.getUserTypeId());
 			sessionVO.setUserDeptId(loginVO.getUserDeptId());
 			sessionVO.setUserUpdateAt(loginVO.getUserUpdateAt());
 			sessionVO.setUserPasswdLastUpdateAt(loginVO.getUserPasswdLastUpdateAt());

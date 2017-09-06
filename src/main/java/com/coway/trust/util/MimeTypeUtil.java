@@ -6,8 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MimeTypeUtil {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MimeTypeUtil.class);
+
 	private MimeTypeUtil() {
 	}
 
@@ -29,12 +34,15 @@ public class MimeTypeUtil {
 		ALLOW_MIME_TYPE.put("application/pdf", "application/pdf");
 		ALLOW_MIME_TYPE.put("application/xls", "application/xls");
 		ALLOW_MIME_TYPE.put("application/x-tika-ooxml", "application/x-tika-ooxml");
-//		ALLOW_MIME_TYPE.put("text/plain", "text/plain");
+		ALLOW_MIME_TYPE.put("text/plain", "text/plain");
 	}
 
 	public static boolean isAllowFile(InputStream inputStream) throws IOException {
 		Tika tika = new Tika();
 		String mimeType = tika.detect(inputStream);
+
+		LOGGER.debug("mimeType : {}", mimeType);
+
 		return ALLOW_MIME_TYPE.containsKey(mimeType);
 	}
 
