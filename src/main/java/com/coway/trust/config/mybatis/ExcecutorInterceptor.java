@@ -10,10 +10,14 @@ import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
 		RowBounds.class, ResultHandler.class }) })
 public class ExcecutorInterceptor implements Interceptor {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExcecutorInterceptor.class);
 
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
@@ -21,7 +25,11 @@ public class ExcecutorInterceptor implements Interceptor {
 		Object[] args = invocation.getArgs();
 		MappedStatement ms = (MappedStatement) args[0];
 
-		if (SqlCommandType.SELECT == ms.getSqlCommandType() && StatementType.CALLABLE != ms.getStatementType()) {
+		LOGGER.debug("id : {}", ms.getId());
+		LOGGER.debug("SqlCommandType : {}", ms.getSqlCommandType());
+		LOGGER.debug("StatementType : {}", ms.getStatementType());
+
+		if (ms != null && SqlCommandType.SELECT == ms.getSqlCommandType() && StatementType.CALLABLE != ms.getStatementType()) {
 			String[] keyPropertyies = ms.getKeyProperties();
 			String keyProperty = keyPropertyies == null ? "" : String.join(",", String.join(",", keyPropertyies));
 

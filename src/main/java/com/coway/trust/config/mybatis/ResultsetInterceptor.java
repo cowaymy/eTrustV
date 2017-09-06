@@ -23,7 +23,7 @@ public class ResultsetInterceptor implements Interceptor {
 		ResultSet rs = statement.getResultSet();
 		// ResultSetMetaData rsmd = rs.getMetaData();
 
-		if (rs.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE && rs.last()) {
+		if (rs != null && rs.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE && rs.last()) {
 			int rowCount = rs.getRow();
 
 			if (rowCount > AppConstants.RECORD_MAX_SIZE) {

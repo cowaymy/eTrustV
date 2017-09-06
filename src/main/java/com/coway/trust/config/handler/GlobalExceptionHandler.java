@@ -182,7 +182,7 @@ public class GlobalExceptionHandler {
 		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
-			message.setMessage("Exception : " + ex.getMessage());
+			message.setMessage(ex.getMessage());
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<Object>(message, headers, ex.getHttpStatus());
@@ -207,7 +207,7 @@ public class GlobalExceptionHandler {
 		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
-			message.setMessage("Exception : " + ex.getMessage());
+			message.setMessage(ex.getMessage());
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<Object>(message, headers, HttpStatus.INTERNAL_SERVER_ERROR);
