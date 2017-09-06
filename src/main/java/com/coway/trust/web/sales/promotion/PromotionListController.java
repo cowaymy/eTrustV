@@ -81,7 +81,7 @@ public class PromotionListController {
 	@RequestMapping(value = "/updatePromoStatus.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> registerOrder(@RequestBody PromotionVO promotionVO, HttpServletRequest request, Model model, SessionVO sessionVO) {
 		
-		promotionListService.updatePromoStatus(promotionVO, sessionVO);;
+		promotionListService.updatePromoStatus(promotionVO, sessionVO);
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
