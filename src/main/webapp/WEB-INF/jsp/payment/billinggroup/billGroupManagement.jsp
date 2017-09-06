@@ -1531,7 +1531,7 @@ var addOrderLayout = [
                 
                 Common.ajax("GET", "/payment/saveChgMainOrd.do", {"salesOrdId" : salesOrdId, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdNo" : salesOrdNo, "custBillSoId": custBillSoId}, function(result) {
                     Common.alert(result.message);
-                    
+                    $('#change_reasonUpd').val("");
                 });
                 
             });
