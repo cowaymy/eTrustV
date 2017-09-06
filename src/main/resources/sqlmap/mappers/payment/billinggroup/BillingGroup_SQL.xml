@@ -746,10 +746,10 @@
         , CUST_BILL_EMAIL = #{emailNew}
         , CUST_BILL_IS_ESTM = #{custBillIsEstm}
         </if>
-        <if test="changeMainFlag == 'Y'.toString() or newGrpFlag == 'Y'.toString() ">
+        <if test="changeMainFlag == 'Y'.toString() or newGrpFlag == 'Y'.toString() or addOrdFlag == 'Y'.toString() ">
         , CUST_BILL_SO_ID = #{custBillSoId}
         </if>
-        <if test="newGrpFlag2 == 'Y'.toString() ">
+        <if test="newGrpFlag2 == 'Y'.toString() or addOrdFlag2 == 'Y'.toString() ">
         , CUST_BILL_STUS_ID  = #{custBillStusId}
         </if>
         WHERE CUST_BILL_ID = #{custBillId}
