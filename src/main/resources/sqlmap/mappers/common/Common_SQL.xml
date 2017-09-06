@@ -646,6 +646,7 @@
         <![CDATA[
             SELECT CD_DTL.CODE_ID
                         ,CD_DTL.CODE
+                        ,CD_DTL.CODE_DESC
                         ,CD_DTL.DISAB AS CODE_DISAB
             FROM SYS0013M CD_DTL
             WHERE 1=1
@@ -666,6 +667,7 @@
                         ,CD_MST.DISAB AS CODE_MASTER_DISAB
                         ,CD_DTL.CODE_ID
                         ,CD_DTL.CODE
+                        ,CD_DTL.CODE_DESC
                         ,CD_DTL.DISAB AS CODE_DISAB
                         ,CD_DTL.OLD_CODE_ID
             FROM SYS0012M CD_MST, SYS0013M CD_DTL
@@ -702,6 +704,37 @@
         WHERE RNUM > (#{pageNo} * #{contentSize})
 
         ]]>
+    </select>
+
+    <select id="selectDefectMasters" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1020V
+    </select>
+
+    <select id="selectDefectDetails" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1019V
+    </select>
+
+    <select id="selectMalfunctionReasons" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1022V
+    </select>
+
+    <select id="selectMalfunctionCodes" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1021V
+    </select>
+
+    <select id="selectReasonCodes" parameterType="Map" resultType="egovMap">
+        SELECT CODEDETAIL.CODE_ID RESN_MASTER_TYPE_ID
+        ,CODEDETAIL.CODE RESN_MASTER_CODE
+        ,CODEDETAIL.CODE_NAME RESN_MASTER_DESC
+        ,CODEDETAIL.DISAB
+        ,REASONCODE.RESN_TYPE_ID
+        ,REASONCODE.RESN_ID
+        ,REASONCODE.CODE RESN_CODE
+        , REASONCODE.CODE || ' - ' || REASONCODE.RESN_DESC RESN_DESC
+        ,REASONCODE.STUS_CODE_ID
+        FROM SYS0032M REASONCODE, SYS0013M CODEDETAIL
+        WHERE REASONCODE.RESN_TYPE_ID = CODEDETAIL.CODE_ID
+        AND REASONCODE.RESN_TYPE_ID IN (166, 167, 174, 336, 1332, 537, 894, 340)
     </select>
 
     <select id="selectCommonCodeTotalCount" parameterType="Map" resultType="Integer">
