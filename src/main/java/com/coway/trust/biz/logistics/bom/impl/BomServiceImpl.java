@@ -12,10 +12,11 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.logistics.bom.BomService;
 import com.coway.trust.biz.logistics.courier.impl.CourierServiceImpl;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("bomService")
-public class BomServiceImpl implements BomService {
+public class BomServiceImpl extends EgovAbstractServiceImpl implements BomService {
 	private static final Logger logger = LoggerFactory.getLogger(CourierServiceImpl.class);
 
 	@Resource(name = "bomMapper")

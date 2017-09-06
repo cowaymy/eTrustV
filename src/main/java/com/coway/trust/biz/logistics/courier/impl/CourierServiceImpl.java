@@ -13,10 +13,11 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.logistics.courier.CourierService;
 import com.coway.trust.web.logistics.LogisticsConstants;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("courierService")
-public class CourierServiceImpl implements CourierService {
+public class CourierServiceImpl extends EgovAbstractServiceImpl implements CourierService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CourierServiceImpl.class);
 
@@ -70,7 +71,7 @@ public class CourierServiceImpl implements CourierService {
 		courierMapper.insertCourier(params);
 
 	}
-	
+
 	@Override
 	public List<EgovMap> selectCourierComboList(Map<String, Object> params) {
 		return courierMapper.selectCourierComboList(params);

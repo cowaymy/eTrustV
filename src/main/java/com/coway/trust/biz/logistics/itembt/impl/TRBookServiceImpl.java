@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.logistics.itembt.TRBookService;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("trBookService")
-public class TRBookServiceImpl implements TRBookService {
+public class TRBookServiceImpl extends EgovAbstractServiceImpl implements TRBookService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TRBookServiceImpl.class);
 
