@@ -6,6 +6,7 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -20,7 +21,7 @@ public class ExcecutorInterceptor implements Interceptor {
 		Object[] args = invocation.getArgs();
 		MappedStatement ms = (MappedStatement) args[0];
 
-		if (SqlCommandType.SELECT == ms.getSqlCommandType()) {
+		if (SqlCommandType.SELECT == ms.getSqlCommandType() && StatementType.CALLABLE != ms.getStatementType()) {
 			String[] keyPropertyies = ms.getKeyProperties();
 			String keyProperty = keyPropertyies == null ? "" : String.join(",", String.join(",", keyPropertyies));
 
