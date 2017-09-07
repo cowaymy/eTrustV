@@ -290,6 +290,7 @@
 		<if test="useYnCombo != null and useYnCombo != ''">
 			AND T1.USE_YN = #{useYnCombo}
 		</if>
+		ORDER BY T1.ITEM_NM
 	</select>
 
 	<!-- search coommission rule book Item checking data -->
