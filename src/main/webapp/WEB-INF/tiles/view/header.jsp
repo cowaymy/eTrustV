@@ -25,31 +25,29 @@
 	<hr />
 
 <script type="text/javascript">
-function selectDailyCount()
-{
-    Common.ajax("GET", "/common/selectDailyCount.do"
-            , $("#MainForm").serialize()
-            , function(result)
-            {
-               console.log("성공." + JSON.stringify(result) +" // " + result[0].neoSales);
-               $("#header_neo").text(result[0].neoSales);
-               //성공.[{"neoSales":2,"sales":2,"netQty":1,"outRight":2,"installment":4,"rental":7,"total":11}]
-               if(result != null && result.length > 0)
-               {
-                // $("#header_neo").text(result[0].neoSales);
-                 $("#header_sales").text(result[0].sales);
-                 $("#header_netQty").text(result[0].netQty);
-                 $("#header_outRight").text(result[0].outRight);
-                 $("#header_installment").text(result[0].installment);
-                 $("#header_rental").text(result[0].rental);
-                 $("#header_total").text(result[0].total);
-               }
+    function selectDailyCount() {
+        Common.ajax("GET", "/common/selectDailyCount.do"
+            , null
+            , function (result) {
+                if (result != null && result.length > 0) {
+                    $("#header_neo").text(result[0].neoSales);
+                    $("#header_sales").text(result[0].sales);
+                    $("#header_netQty").text(result[0].netQty);
+                    $("#header_outRight").text(result[0].outRight);
+                    $("#header_installment").text(result[0].installment);
+                    $("#header_rental").text(result[0].rental);
+                    $("#header_total").text(result[0].total);
+                }
+            }, null, {
+                isShowLoader : false
             });
-}
+
+
+    }
 
    $(function() {
-
 	   selectDailyCount();
+       fn_selectMyMenuProgrmList();
 	   
        // draw menu path.
 		var $menuPathObj = $("#content > ul:first-child");
@@ -127,25 +125,23 @@ function selectDailyCount()
        );                         
        
    };
-   
-   $(document).ready(function(){	   
-       Common.ajax(
-            "GET", 
-            "/common/selectMyMenuProgrmList.do",
-            "menuCode="+$("input[name=CURRENT_MENU_CODE]").attr("value"),
-            function(data, textStatus, jqXHR){ // Success                       
-            	$(".fav a").removeClass("click_add_on");
-            	if(data.length>0){            		
-            		$(".fav a").addClass("on");
-            	}          	
-            },
-            function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
-            }           
-    )
 
-    
-   });
+function fn_selectMyMenuProgrmList() {
+    Common.ajax(
+        "GET",
+        "/common/selectMyMenuProgrmList.do",
+        "menuCode=" + $("input[name=CURRENT_MENU_CODE]").attr("value"),
+        function (data, textStatus, jqXHR) { // Success
+            $(".fav a").removeClass("click_add_on");
+            if (data.length > 0) {
+                $(".fav a").addClass("on");
+            }
+        },
+        function (jqXHR, textStatus, errorThrown) { // Error
+            alert("Fail : " + jqXHR.responseJSON.message);
+        }
+    )
+}
 </script>
     
     

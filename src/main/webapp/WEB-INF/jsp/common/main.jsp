@@ -18,23 +18,7 @@ $(function()
 	
 });
 
-function selectDailyCount()
-{
-    //Common.ajaxSync("GET", "/menu/selectCodeList.do"
-    Common.ajax("GET", "/common/selectDailyCount.do"
-            , $("#MainForm").serialize()
-            , function(result)
-            {
-               console.log("성공." + JSON.stringify(result) +" // " + result[0].neoSales);
-               //성공.[{"neoSales":2,"sales":2,"netQty":1,"outRight":2,"installment":4,"rental":7,"total":11}]
-               if(result != null && result.length > 0)
-               {
-                 //fnSetPgmIdParamSet(myGridID, 0);
-               }
-            });
-}
-
-var statusCategoryLayout = 
+var statusCategoryLayout =
     [      
         {    
             dataField : "stusCtgryId",
@@ -910,7 +894,3 @@ function fnUpdDisabled()
 </form>
 
 </section><!-- container end -->
-
-세션 정보 객체 : ${SESSION_INFO} <br/><br/>
-id : ${SESSION_INFO.userId} <br/><br/>
-name : ${SESSION_INFO.userName} <br/><br/>

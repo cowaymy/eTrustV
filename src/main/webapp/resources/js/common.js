@@ -34,7 +34,8 @@ var Common = {
         }
 
         var option = {
-            async: true
+            async: true,
+            isShowLoader : true
         };
 
         option = $.extend(option, _options);
@@ -49,7 +50,9 @@ var Common = {
                 }
 
                 // loading start....
-                Common.showLoader();
+                if(option.isShowLoader){
+                    Common.showLoader();
+                }
             },
             crossDomain: true,
             dataType: "json",
@@ -62,7 +65,9 @@ var Common = {
             },
             complete: function (data) {
                 // loading end....
-                Common.removeLoader();
+                if(option.isShowLoader) {
+                    Common.removeLoader();
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
 
