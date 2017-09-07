@@ -292,7 +292,7 @@ table.type2.acodi .aco_tr{display:none;}
 .search_100p input[type=text]{width:59%; height:20px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px; vertical-align:top;}
 .search_100p select{width:39%; height:20px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:12px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif; vertical-align:top;}
 .auto_file,
-.auto_file2{position:relative; width:237px; padding-right:82px; height:20px;}
+.auto_file2{position:relative; width:237px; padding-right:62px; height:20px;}
 .auto_file2{float:none!important; width:490px; padding-right:0; margin-top:5px;}
 .auto_file2:first-child{margin-top:0;}
 .auto_file2:after{content:""; display:block; clear:both;}
