@@ -8,11 +8,11 @@
 	<ul class="left_opt">  
 	    <li>Neo(Mega Deal): <span id="header_neo"></span></li> 
 	    <li>Sales(Key In): <span id="header_sales"></span></li> 
-	    <li>Net Qty[ <span id="header_netQty"></span></li>
-	    <li>Outright : <span id="header_outRight"></span></li>
+	  <!--   <li>Net Qty[<span id="header_netQty"></span></li> -->
+	    <li>Net Qty [Outright : <span id="header_outRight"></span></li>
 	    <li>Installment: <span id="header_installment"></span></li>
-	    <li>Rental: <span id="header_rental"></span> ]</li>
-	    <li>Total: <span id="header_total"></span></li>
+	    <li>Rental: <span id="header_rental"></span></li>
+	    <li>Total: <span id="header_total"></span>]</li>
 	</ul>
 	<ul class="right_opt">
 	    <li>Login as <span>KRHQ9001-HQ</span></li>
