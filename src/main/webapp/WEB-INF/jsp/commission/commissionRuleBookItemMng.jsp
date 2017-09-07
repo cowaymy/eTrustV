@@ -777,13 +777,14 @@
                          $(this).focus();
                          retVal=false;
                          return false;
-                     }
-                     if((val.length-1)-val.indexOf(".") > 6){
-                         $("#"+id).val("");
-                         Common.alert("<spring:message code='sys.common.alert.validationNumber'/>");
-                         $(this).focus();
-                         retVal=false;
-                         return false;
+                     }else if(val.indexOf(".")>=0){
+	                     if((val.length-1)-val.indexOf(".") > 6){
+	                         $("#"+id).val("");
+	                         Common.alert("<spring:message code='sys.common.alert.validationNumber'/>");
+	                         $(this).focus();
+	                         retVal=false;
+	                         return false;
+	                     }
                      }
                  }
             }
