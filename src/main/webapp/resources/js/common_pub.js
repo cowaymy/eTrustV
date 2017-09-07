@@ -337,7 +337,7 @@ $("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header"});
 
 /* 코웨이아이템 start */
 $(document).on(
-	"mouseover", ".item_list > li", function(){
+	"mouseenter", ".item_list > li", function(){
 	var thinInner=$(this).children(".inner");
 	thinInner.stop().animate({top:-150},300);
 });
