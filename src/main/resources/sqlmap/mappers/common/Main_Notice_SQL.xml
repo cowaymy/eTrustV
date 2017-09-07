@@ -8,10 +8,9 @@
 						AS 
             (
             SELECT 
-                 /*, view [Vw_NeoSales] 
+                 /* view [Vw_NeoSales] */
                   (SELECT COUNT(1) FROM SAL1058V) NEO_SALES
-                 */
-                 /*(rental) (66)*/  
+                ,/*(rental) (66)*/  
                   (SELECT COUNT(SALES_ORD_ID)  from   SAL0001D where  PV_YEAR = (SELECT EXTRACT(YEAR from SYSDATE) FROM DUAL) and PV_MONTH = (SELECT EXTRACT(MONTH from SYSDATE) FROM DUAL) and APP_TYPE_ID=66) RENTAL    
                 ,/*OUTRIGHT (67)*/ 
                   (SELECT COUNT(SALES_ORD_ID)  from   SAL0001D where  PV_YEAR = (SELECT EXTRACT(YEAR from SYSDATE) FROM DUAL) and PV_MONTH = (SELECT EXTRACT(MONTH from SYSDATE) FROM DUAL) and APP_TYPE_ID=67) OUT_RIGHT
@@ -21,7 +20,7 @@
                   (SELECT COUNT(SALES_ORD_ID) FROM SAL0001D WHERE EXTRACT (YEAR from CRT_DT) = (SELECT EXTRACT(YEAR from SYSDATE) FROM DUAL)  AND EXTRACT (MONTH from CRT_DT) = (SELECT EXTRACT(MONTH from SYSDATE) FROM DUAL)  AND 8 <> STUS_CODE_ID  AND APP_TYPE_ID IN (66,67,68) ) SALES
              FROM DUAL
              )
-             SELECT 0 NEO_SALES
+             SELECT NEO_SALES
                   , SALES 
                   , RENTAL
                   , OUT_RIGHT
