@@ -30,10 +30,6 @@
             , null
             , function (result) {
                 if (result != null && result.length > 0) {
-
-
-                	console.log("vvv: " + result[0].neoSales);
-                    
                     $("#header_neo").text(result[0].neoSales);
                     $("#header_sales").text(result[0].sales);
 
