@@ -150,7 +150,7 @@
     display: list-item;
     background-image: none;
     position: static;
-	height:28px;
+	height:22px;
 	padding:0 10px;
 	border-top:1px solid #d2d2d2;
 }
@@ -185,7 +185,7 @@
     font-weight: normal;
     display: block;
     white-space: nowrap;
-	line-height:28px;
+	line-height:22px;
 }
 
 .ms-drop ul > li label.optgroup {
@@ -193,6 +193,8 @@
 }
 
 .ms-drop input[type="checkbox"] {
+	position:relative;
+	top:-2px;
     vertical-align: middle;
 	margin-right:5px;
 }
