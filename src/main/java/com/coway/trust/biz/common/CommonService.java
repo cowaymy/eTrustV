@@ -125,6 +125,8 @@ public interface CommonService {
 	int insertStatusCategoryCode(CommStatusVO formDataParameters, Integer crtUserId);
 	// update Status Category Code
 	int updateCategoryCodeYN(CommStatusVO formDataParameters, Integer crtUserId);
+	// delete Status Category Code
+	//int deleteCategoryCode(CommStatusVO formDataParameters, Integer crtUserId);
 
 	/************************** Account Code ****************************/
 	// Account Code

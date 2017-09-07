@@ -802,6 +802,8 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 
 		GridDataSet<CommStatusGridData> gridDataSet = formDataParameters.getGridDataSet();
 		List<CommStatusGridData> updateList = gridDataSet.getUpdate(); // grid에서 check 된 리스트
+		List<CommStatusGridData> deleteList = gridDataSet.getRemove(); // grid에서 check 된 리스트
+		
 		CommStatusFormVO commStatusVO = formDataParameters.getCommStatusVO();// form내의 input 객체
 		
 		Map<String, Object> param = null;
@@ -813,6 +815,20 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 			//param.put("updUserId", updUserId); 
 			
 			commonMapper.updateCategoryCodeYN(param);
+			
+			saveCnt++;
+		}
+		
+		logger.debug("updCnt: {} " , updateList.size() );
+		logger.debug("delCnt: {} " , deleteList.size() );
+		
+		for (CommStatusGridData gridData : deleteList) 
+		{
+			param = BeanConverter.toMap(gridData);  // grid의 필드명(key)과 데이타값을 map형식으로 자동변환
+			
+			param.put("stusCtgryId", commStatusVO.getCatalogId());  // form의 input객체를 map형식으로 변환
+			
+			commonMapper.deleteCategoryCode(param);
 			
 			saveCnt++;
 		}

@@ -115,6 +115,9 @@ public interface CommonMapper {
 	// Status Category Code Yn
 	int updateCategoryCodeYN(Map<String, Object> params);	
 	
+	// Status Category Code Yn
+	int deleteCategoryCode(Map<String, Object> params);	
+	
 	/************************ accountCodeList  *************************/	
     List<EgovMap> getAccountCodeList(Map<String, Object> params);
 	
