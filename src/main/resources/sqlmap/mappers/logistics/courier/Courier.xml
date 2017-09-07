@@ -2,89 +2,78 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.courier.impl.CourierMapper">
     <select id="selectCourierList" parameterType="Map" resultType="EgovMap">
-        SELECT  
-                 P1.CURIER_ID courierId
-                ,P1.CURIER_CODE courierCd
-                ,P1.CURIER_NAME courierNm
-                ,P1.CURIER_REG_NO regNo
-                ,P1.NAME country
-                ,P1.CURIER_CNTY_ID countryId
-                ,P1.NAME1 state
-                ,P1.CURIER_STATE_ID stateId
-                ,P1.AREA_NAME area
-                ,P1.CURIER_AREA_ID areaId
-                ,P1.CURIER_POST_CODE_ID postCd
-                ,P1.CURIER_CNTC_NO1 contactNo1
-                ,P1.CURIER_CNTC_NO2 contactNo2
-                ,P1.CURIER_FAX_NO faxNo
-                ,P1.C1 cnt
-            FROM (SELECT P1.C1 C1
-                        ,P1.CURIER_ID CURIER_ID
-                        ,P1.CURIER_CODE CURIER_CODE
-                        ,P1.CURIER_NAME CURIER_NAME
-                        ,P1.CURIER_REG_NO CURIER_REG_NO
-                        ,P1.CURIER_CNTY_ID CURIER_CNTY_ID
-                        ,P1.CURIER_STATE_ID CURIER_STATE_ID
-                        ,P1.CURIER_AREA_ID CURIER_AREA_ID
-                        ,P1.CURIER_POST_CODE_ID CURIER_POST_CODE_ID
-                        ,P1.CURIER_CNTC_NO1 CURIER_CNTC_NO1
-                        ,P1.CURIER_CNTC_NO2 CURIER_CNTC_NO2
-                        ,P1.CURIER_FAX_NO CURIER_FAX_NO
-                        ,P1.NAME NAME
-                        ,P1.NAME1 NAME1
-                        ,P1.AREA_NAME AREA_NAME
-                        ,ROW_NUMBER () OVER (ORDER BY P1.CURIER_CODE ASC) ROW_NUMBER
-                    FROM (SELECT G1.A1 C1
-                                ,F1.CURIER_ID CURIER_ID
-                                ,F1.CURIER_CODE CURIER_CODE
-                                ,F1.CURIER_NAME CURIER_NAME
-                                ,F1.CURIER_REG_NO CURIER_REG_NO
-                                ,F1.CURIER_CNTY_ID CURIER_CNTY_ID
-                                ,F1.CURIER_STATE_ID CURIER_STATE_ID
-                                ,F1.CURIER_AREA_ID CURIER_AREA_ID
-                                ,F1.CURIER_POST_CODE_ID CURIER_POST_CODE_ID
-                                ,F1.CURIER_CNTC_NO1 CURIER_CNTC_NO1
-                                ,F1.CURIER_CNTC_NO2 CURIER_CNTC_NO2
-                                ,F1.CURIER_FAX_NO CURIER_FAX_NO
-                                ,F1.NAME2 NAME
-                                ,F1.NAME3 NAME1
-                                ,F1.AREA_NAME AREA_NAME
-                            FROM (SELECT E1.CURIER_ID CURIER_ID
-                                        ,E1.CURIER_CODE CURIER_CODE
-                                        ,E1.CURIER_NAME CURIER_NAME
-                                        ,E1.CURIER_REG_NO CURIER_REG_NO
-                                        ,E1.CURIER_CNTY_ID CURIER_CNTY_ID
-                                        ,E1.CURIER_STATE_ID CURIER_STATE_ID
-                                        ,E1.CURIER_AREA_ID CURIER_AREA_ID
-                                        ,E1.CURIER_POST_CODE_ID CURIER_POST_CODE_ID
-                                        ,E1.CURIER_CNTC_NO1 CURIER_CNTC_NO1
-                                        ,E1.CURIER_CNTC_NO2 CURIER_CNTC_NO2
-                                        ,E1.CURIER_FAX_NO CURIER_FAX_NO
-                                        ,E2.NAME NAME2
-                                        ,E3.NAME NAME3
-                                        ,E4.AREA_NAME AREA_NAME
-                                    FROM SYS0016M E1 LEFT JOIN SYS0015M E2 ON E1.CURIER_CNTY_ID = E2.CNTY_ID
-                                         LEFT JOIN SYS0035M E3 ON E1.CURIER_STATE_ID = E3.STATE_ID
-                                         LEFT JOIN SYS0039M E4 ON E1.CURIER_AREA_ID = E4.AREA_ID
-                                   WHERE 1 = E1.CURIER_STUS_ID) F1
+        SELECT P1.CURIER_ID courierId,
+         P1.CURIER_CODE courierCd,
+         P1.CURIER_NAME courierNm,
+         P1.CURIER_REG_NO regNo,
+         P1.NAME country,
+         P1.NAME1 state,
+         P1.AREA_NAME area,
+         P1.CURIER_AREA_ID areaId,
+         P1.CURIER_POST_CODE_ID postCd,
+         P1.CURIER_CNTC_NO1 contactNo1,
+         P1.CURIER_CNTC_NO2 contactNo2,
+         P1.CURIER_FAX_NO faxNo,
+         P1.C1 cnt
+    FROM (SELECT P1.C1 C1,
+                 P1.CURIER_ID CURIER_ID,
+                 P1.CURIER_CODE CURIER_CODE,
+                 P1.CURIER_NAME CURIER_NAME,
+                 P1.CURIER_REG_NO CURIER_REG_NO,
+                 P1.CURIER_AREA_ID CURIER_AREA_ID,
+                 P1.CURIER_POST_CODE_ID CURIER_POST_CODE_ID,
+                 P1.CURIER_CNTC_NO1 CURIER_CNTC_NO1,
+                 P1.CURIER_CNTC_NO2 CURIER_CNTC_NO2,
+                 P1.CURIER_FAX_NO CURIER_FAX_NO,
+                 P1.NAME NAME,
+                 P1.NAME1 NAME1,
+                 P1.AREA_NAME AREA_NAME,
+                 ROW_NUMBER () OVER (ORDER BY P1.CURIER_CODE ASC) ROW_NUMBER
+            FROM (SELECT G1.A1 C1,
+                         F1.CURIER_ID CURIER_ID,
+                         F1.CURIER_CODE CURIER_CODE,
+                         F1.CURIER_NAME CURIER_NAME,
+                         F1.CURIER_REG_NO CURIER_REG_NO,
+                         F1.AREAID CURIER_AREA_ID,
+                         F1.POSTCODE CURIER_POST_CODE_ID,
+                         F1.CURIER_CNTC_NO1 CURIER_CNTC_NO1,
+                         F1.CURIER_CNTC_NO2 CURIER_CNTC_NO2,
+                         F1.CURIER_FAX_NO CURIER_FAX_NO,
+                         F1.COUNTRY NAME,
+                         F1.STATE NAME1,
+                         F1.AREA AREA_NAME
+                    FROM    (SELECT E1.CURIER_ID     CURIER_ID,
+                                    E1.CURIER_CODE   CURIER_CODE,
+                                    E1.CURIER_NAME   CURIER_NAME,
+                                    E1.CURIER_REG_NO CURIER_REG_NO,
+                                    E2.COUNTRY       COUNTRY,
+                                    E2.AREA_ID       AREAID,
+                                    E2.STATE         STATE,
+                                    E2.AREA          AREA,
+                                    E2.CITY          CITY,
+                                    E2.POSTCODE      POSTCODE,
+                                    E1.CURIER_CNTC_NO1 CURIER_CNTC_NO1,
+                                    E1.CURIER_CNTC_NO2 CURIER_CNTC_NO2,
+                                    E1.CURIER_FAX_NO CURIER_FAX_NO
+                               FROM SYS0016M E1, SYS0064M E2
+                              WHERE     E1.AREA_ID = E2.AREA_ID(+)
+                                    AND 1 = E1.CURIER_STUS_ID) F1
                                  CROSS JOIN
                                  (SELECT COUNT (1) A1
-                                    FROM (SELECT E5.CURIER_CODE CURIER_CODE
-                                                ,E5.CURIER_NAME CURIER_NAME
-                                                ,E5.CURIER_REG_NO CURIER_REG_NO
-                                                ,E5.CURIER_CNTY_ID CURIER_CNTY_ID
-                                                ,E5.CURIER_STATE_ID CURIER_STATE_ID
-                                                ,E5.CURIER_AREA_ID CURIER_AREA_ID
-                                                ,E5.CURIER_POST_CODE_ID CURIER_POST_CODE_ID
-                                                ,E5.CURIER_CNTC_NO1 CURIER_CNTC_NO1
-                                            FROM SYS0016M E5 LEFT JOIN SYS0015M E6
-                                                 ON E5.CURIER_CNTY_ID = E6.CNTY_ID
-                                                 LEFT JOIN SYS0035M E7 ON E5.CURIER_STATE_ID = E7.STATE_ID
-                                           WHERE E5.CURIER_STUS_ID = 1) F2
-                                         LEFT JOIN
-                                         SYS0039M T8 
-                                         ON F2.CURIER_AREA_ID = T8.AREA_ID
-                                          WHERE 1=1
+                                    FROM (SELECT E5.CURIER_CODE CURIER_CODE,
+	                                             E5.CURIER_NAME CURIER_NAME,
+	                                             E5.CURIER_REG_NO CURIER_REG_NO,
+	                                             E5.AREA_ID AREA_ID,
+	                                             E6.STATE STATE,
+	                                             E6.AREA AREA,
+	                                             E6.POSTCODE POSTCODE,
+	                                             E6.CITY CITY,
+	                                             E6.COUNTRY COUNTRY,
+	                                             E5.CURIER_CNTC_NO1 CURIER_CNTC_NO1
+	                                        FROM SYS0016M E5, SYS0064M E6
+	                                       WHERE     E5.CURIER_STUS_ID = 1
+	                                         AND E5.AREA_ID = E6.AREA_ID(+)) F2
+	                                         WHERE 1 = 1
                                              <if test="srchCourierCd !=null and srchCourierCd !=''">      
                                              AND F2.CURIER_CODE LIKE  '%'||#{srchCourierCd}||'%'
                                              </if>
@@ -95,16 +84,16 @@
                                              AND F2.CURIER_REG_NO LIKE  '%'||#{srchRegNo}||'%'
                                              </if>
                                              <if test="srchCntry !=null and srchCntry !=''">
-                                             AND F2.CURIER_CNTY_ID = #{srchCntry}
+                                             AND F2.COUNTRY = #{srchCntry}
                                              </if>
                                              <if test="srchState !=null and srchState !=''">
-                                             AND F2.CURIER_STATE_ID = #{srchState}
+                                             AND F2.STATE = #{srchState}
                                              </if>
                                              <if test="srchArea !=null and srchArea !=''">
-                                             AND F2.CURIER_AREA_ID = #{srchArea}
+                                             AND F2.AREA = #{srchArea}
                                              </if>
                                              <if test="srchPstCd !=null and srchPstCd !=''">
-                                             AND F2.CURIER_POST_CODE_ID = #{srchPstCd}
+                                             AND F2.POSTCODE = #{srchPstCd}
                                              </if>
                                              <if test="srchcontactNo !=null and srchcontactNo !=''">
                                              AND F2.CURIER_CNTC_NO1 LIKE  '%'||#{srchcontactNo}||'%'
@@ -121,16 +110,16 @@
                                      AND F1.CURIER_REG_NO LIKE  '%'||#{srchRegNo}||'%'
                                      </if>
                                      <if test="srchCntry !=null and srchCntry !=''">
-                                     AND F1.CURIER_CNTY_ID = #{srchCntry}
+                                     AND F1.COUNTRY = #{srchCntry}
                                      </if>
                                      <if test="srchState !=null and srchState !=''">
-                                     AND F1.CURIER_STATE_ID = #{srchState}
+                                     AND F1.STATE = #{srchState}
                                      </if>
                                      <if test="srchArea !=null and srchArea !=''">
-                                     AND F1.CURIER_AREA_ID = #{srchArea}
+                                     AND F1.AREAID = #{srchArea}
                                      </if>
                                      <if test="srchPstCd !=null and srchPstCd !=''">
-                                     AND F1.CURIER_POST_CODE_ID = #{srchPstCd}
+                                     AND F1.POSTCODE = #{srchPstCd}
                                      </if>
                                      <if test="srchcontactNo !=null and srchcontactNo !=''">
                                      AND F1.CURIER_CNTC_NO1 LIKE  '%'||#{srchcontactNo}||'%'
@@ -144,29 +133,29 @@
     </select>
     
     <select id="selectCourierDetail" parameterType="Map" resultType="EgovMap">
-        SELECT 
-                 CURIER_ID AS CURIER_ID, 
-                 CURIER_CODE AS CURIER_CODE, 
-                 CURIER_NAME AS CURIER_NAME, 
-                 CURIER_REG_NO AS CURIER_REG_NO, 
-                 CURIER_STUS_ID AS CURIER_STUS_ID, 
-                 CURIER_ADD1 AS CURIER_ADD1, 
-                 CURIER_ADD2 AS CURIER_ADD2, 
-                 CURIER_ADD3 AS CURIER_ADD3, 
-                 CURIER_CNTY_ID AS CURIER_CNTY_ID, 
-                 CURIER_STATE_ID AS CURIER_STATE_ID, 
-                 CURIER_AREA_ID AS CURIER_AREA_ID, 
-                 CURIER_POST_CODE_ID AS CURIER_POST_CODE_ID, 
-                 CURIER_CNTC_NO1 AS CURIER_CNTC_NO1, 
-                 CURIER_CNTC_NO2 AS CURIER_CNTC_NO2, 
-                 CURIER_FAX_NO AS CURIER_FAX_NO, 
-                 CURIER_EMAIL AS CURIER_EMAIL, 
-                 CURIER_CRT_DT AS CURIER_CRT_DT, 
-                 CURIER_CRT_USER_ID AS CURIER_CRT_USER_ID, 
-                 CURIER_UPD_DT AS CURIER_UPD_DT, 
-                 CURIER_UPD_USER_ID AS CURIER_UPD_USER_ID
-       FROM  SYS0016M 
-                 WHERE CURIER_ID = #{courierid}
+        SELECT S16.CURIER_ID AS CURIER_ID,
+		       S16.CURIER_CODE AS CURIER_CODE,
+		       S16.CURIER_NAME AS CURIER_NAME,
+		       S16.CURIER_REG_NO AS CURIER_REG_NO,
+		       S16.CURIER_STUS_ID AS CURIER_STUS_ID,
+		       S64.STATE AS CURIER_ADD1,
+		       S64.CITY AS CURIER_ADD2,
+		       S16.ADDR_DTL    AS CURIER_ADD3,
+		       S64.COUNTRY     AS CURIER_CNTY_ID,
+		       S64.STATE       AS CURIER_STATE_ID,
+		       S64.AREA        AS CURIER_AREA_ID,
+		       S64.POSTCODE    AS CURIER_POST_CODE_ID,
+		       S16.CURIER_CNTC_NO1 AS CURIER_CNTC_NO1,
+		       S16.CURIER_CNTC_NO2 AS CURIER_CNTC_NO2,
+		       S16.CURIER_FAX_NO AS CURIER_FAX_NO,
+		       S16.CURIER_EMAIL AS CURIER_EMAIL,
+		       S16.CURIER_CRT_DT AS CURIER_CRT_DT,
+		       S16.CURIER_CRT_USER_ID AS CURIER_CRT_USER_ID,
+		       S16.CURIER_UPD_DT AS CURIER_UPD_DT,
+		       S16.CURIER_UPD_USER_ID AS CURIER_UPD_USER_ID
+		  FROM SYS0016M s16 , SYS0064m s64
+		 WHERE S16.AREA_ID  = S64.AREA_ID(+)
+           AND CURIER_ID = #{courierid}
     </select>
     
     <update id="motifyCourier" parameterType="Map">

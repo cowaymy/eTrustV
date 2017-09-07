@@ -14,13 +14,7 @@
 		  SELECT WH_LOC_ID locid,
 		         WH_LOC_CODE loccd,
 		         WH_LOC_DESC locdesc,
-		         WH_LOC_ADD1 locaddr1,
-		         WH_LOC_ADD2 locaddr2,
-		         WH_LOC_ADD3 locaddr3,
-		         WH_LOC_AREA_ID locarea,
-		         WH_LOC_POST_CODE_ID locpost,
-		         WH_LOC_STATE_ID locstat,
-		         WH_LOC_CNTY_ID loccnty,
+		         ADDR_DTL    locdtl ,
 		         WH_LOC_TEL1 loctel1,
 		         WH_LOC_TEL2 loctel2,
 		         WH_LOC_BRNCH_ID loc_branch,
@@ -31,20 +25,11 @@
 		         WH_LOC_UPD_DT locupddt,
 		         CODE2 code2,
 		         DESC2 desc2,
-		         (SELECT AREA_NAME
-		            FROM SYS0039M
-		           WHERE AREA_ID = s28m.WH_LOC_AREA_ID)
-		            areanm,
-		         (SELECT POST_CODE
-		            FROM SYS0030C
-		           WHERE POST_CODE_ID = s28m.WH_LOC_POST_CODE_ID)
-		            postcd,
-		         s35m.code,
-		         s35m.name,
-		         (SELECT NAME
-		            FROM SYS0015M
-		           WHERE CNTY_ID = s28m.WH_LOC_CNTY_ID)
-		            countrynm,
+		         s64m.area areanm,
+		         s64m.city locdt2,
+		         s64m.postcode postcd,
+		         s64m.state,
+		         s64m.country countrynm,
 		         s05m.code branchcd,
 		         s05m.name branchnm,
 		         s05m.dcode,
@@ -56,7 +41,7 @@
 		         s38m.name statnm,
 		         s47m.user_name
 		    FROM SYS0028M s28m,
-		         SYS0035M s35m,
+		         SYS0064M s64m,
 		         (SELECT s05m.brnch_id,
 		                 s05m.code,
 		                 s05m.name,
@@ -68,7 +53,7 @@
 		         SYS0047M s47m
 		         ]]>
 		   WHERE     s28m.WH_LOC_TYPE_ID = 277
-		         AND s28m.WH_LOC_STATE_ID = s35m.STATE_ID(+)
+		         AND s28m.AREA_ID        = s64m.AREA_ID(+)
 		         AND s28m.WH_LOC_BRNCH_ID = s05m.BRNCH_ID(+)
 		         AND s28m.WH_LOC_STUS_ID = s38m.STUS_CODE_ID(+)
 		         AND s28m.WH_LOC_UPD_USER_ID = s47m.USER_ID(+)

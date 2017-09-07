@@ -53,6 +53,7 @@
            AND l48.reqst_no       = l55.reqst_no(+)
            AND l48.itm_code       = l55.itm_code(+)
            and l47.reqst_stus     = reqs.code(+)
+           and l47.trnsc_type     <![CDATA[<>]]> 'US'
            <if test="streq !=null and streq !=''">
               and l47.reqst_no = #{streq}
            </if>
@@ -145,7 +146,7 @@
     </update>
     
     <select id="selectStockMovementNoList" parameterType="Map" resultType="egovMap">
-        SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m where reqst_no in (select reqst_no from log0048d) AND SUBSTR(REQST_NO , 0,3) = 'SMO'  ORDER BY CRT_DT DESC
+        SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m where reqst_no in (select reqst_no from log0048d) AND SUBSTR(REQST_NO , 0,3) <![CDATA[<>]]> 'STO'  ORDER BY CRT_DT DESC
     </select>
     
     <select id="selectDeliveryNoList" parameterType="Map" resultType="egovMap">
@@ -207,7 +208,10 @@
            and l56.stk_code = s26.stk_code
            and l56.loc_id = #{toloc}
            <if test="ctype != null and ctype !=''">
-              and l56.stk_type_id = #{ctype}
+              and l56.stk_type_id in
+               <foreach item="item" collection="ctype" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
            </if>
     </select>
     

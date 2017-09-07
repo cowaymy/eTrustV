@@ -124,10 +124,11 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
-    doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
+    //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+    doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
     //doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');        

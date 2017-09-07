@@ -206,7 +206,10 @@
 		   and l56.stk_code = s26.stk_code
 		   and l56.loc_id = #{toloc}
 		   <if test="ctype != null and ctype !=''">
-		      and l56.stk_type_id = #{ctype}
+		      and l56.stk_type_id in
+		      <foreach item="item" collection="ctype" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
 		   </if>
     </select>
     

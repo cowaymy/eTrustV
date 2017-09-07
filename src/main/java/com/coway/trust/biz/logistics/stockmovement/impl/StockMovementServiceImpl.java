@@ -50,6 +50,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectStockMovementNoList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		List<EgovMap> list = null;
+		
+		System.out.println(":::::" + (String)params.get("groupCode"));
 		if ("stock".equals(params.get("groupCode"))) {
 			list = stockMoveMapper.selectStockMovementNoList();
 		} else {

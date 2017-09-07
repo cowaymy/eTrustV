@@ -333,12 +333,12 @@ function doDefComboCodeAndMandatory(data, selCode, obj , type, callbackFn){
     }
 };
 
-function doGetComboAddr(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
+function doGetComboAddr(url, pdata ,  selCode, obj , type, callbackFn){
 
     $.ajax({
         type : "GET",
         url : getContextPath() + url,
-        data : { groupCode : groupCd , codevalue : codevalue},
+        data : pdata,
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
         success : function(data) {

@@ -55,8 +55,10 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     ***********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
-    doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , '');
+    //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
+	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
+    //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , '');
+    doGetComboData('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , '');
     paramdata2 = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'UM'};
     doGetComboData('/common/selectCodeList.do', paramdata2, '','smtype', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
@@ -139,7 +141,6 @@ $(document).ready(function(){
 $(function(){
     $('#search').click(function() {
         //if (f_validatation('search')){
-            console.log($("#tlocation").val());
             $("#slocation").val($("#tlocation").val());
             SearchListAjax();
         //}
@@ -239,9 +240,31 @@ function SearchListAjax() {
     console.log($("#slocation").val());
     var url = "/logistics/stockMovement/StockMovementTolocationItemList.do";
     var param = $('#searchForm').serialize();
-    console.log(param);
-    Common.ajax("GET" , url , param , function(result){
-        AUIGrid.setGridData(resGrid, result.data);
+    
+//     Common.ajax("GET" , url , param , function(result){
+//         AUIGrid.setGridData(resGrid, result.data);
+//     });
+    $.ajax({
+        type : "GET",
+        url : url +"?"+ param,
+        //url : "/stock/StockList.do",
+        //data : param,
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        beforeSend: function (request) {
+            Common.showLoader();
+        },
+        success : function(data) {
+            var gridData = data;
+
+            AUIGrid.setGridData(resGrid, gridData.data);
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+        	Common.setMsg("Fail ........ ");
+        },
+        complete : function() {
+        	Common.removeLoader();
+        }
     });
 }
 

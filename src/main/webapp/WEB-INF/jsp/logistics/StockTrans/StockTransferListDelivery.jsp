@@ -71,6 +71,7 @@ var resop = {
 		editable : true,
 		groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
+        fixedColumnCount : 9,
         showRowCheckColumn : true ,
         enableCellMerge : true,
         showStateColumn : false,

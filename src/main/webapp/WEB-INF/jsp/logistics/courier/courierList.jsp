@@ -64,12 +64,16 @@
     
     var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false , fixedColumnCount:2};
     
+    var pdata;
 
     $(document).ready(function(){
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' ,'this.value','srchCntry', 'S', '');
+        pdata = { groupCode : 'country' };
+        
+        doGetComboAddr('/common/selectAddrSelCodeList.do', pdata ,'this.value','srchCntry', 'S', '');
+        
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {   
         });
@@ -188,13 +192,13 @@
     }
     /* function Start*/
    function searchAjax() {
-        f_showModal();
+        
         var url = "/logistics/courier/selectCourierList.do";
         var param = $('#searchForm').serializeJSON();
         Common.ajax("POST" , url , param , function(data){
-            console.log(data.data);
+        
             AUIGrid.setGridData(myGridID, data.data);
-            hideModal();
+        
         });
     }
     
@@ -223,6 +227,7 @@
     	Common.ajaxSync("GET", "/logistics/courier/selectCourierDetail",{"courierid":id} ,
                 function(data){
                 var setVal=data.result;
+                
 		    	if(div=="V"){
 		    		fn_setValuePop(setVal);
 		    		fn_setVisiable(div);
@@ -237,18 +242,20 @@
     	$("#curcode").val(setVal[0].curierCode);
         $("#curname").val(setVal[0].curierName);
         $("#curregno").val(setVal[0].curierRegNo);
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , setVal[0].curierCntyId,'curcntyid', 'S', ''); 
-        getAddrRelay( 'curstateid' , setVal[0].curierCntyId , 'state' , setVal[0].curierStateId);
-        getAddrRelay( 'curareaid' , setVal[0].curierStateId , 'area' , setVal[0].curierAreaId);
-        getAddrRelay( 'curpostcod' , setVal[0].curierAreaId , 'post' ,  setVal[0].curierPostCodeId);
+        pdata = { groupCode : 'country' };
         
+        doGetComboAddr('/common/selectAddrSelCodeList.do', pdata , setVal[0].curierCntyId,'curcntyid', 'S', '');
+        
+        getAddrRelay2( 'curstateid' ,'detail', 'state' , setVal[0].curierStateId , setVal);
+        getAddrRelay2( 'curareaid' ,'detail', 'area' , setVal[0].curierAreaId , setVal);
+        getAddrRelay2( 'curpostcod' ,'detail', 'post' , setVal[0].curierPostCodeId , setVal);
+        console.log(setVal);
         $("#curcntcno1").val(setVal[0].curierCntcNo1);
         $("#curcntcno2").val(setVal[0].curierCntcNo2);
         $("#curfaxno").val(setVal[0].curierFaxNo);
         $("#curemail").val(setVal[0].curierEmail);
         $("#curadd1").val(setVal[0].curierAdd1);
-        $("#curadd2").val(setVal[0].curierAdd2);
-        $("#curadd3").val(setVal[0].curierAdd3);  
+        $("#curadd2").val(setVal[0].curierAdd2);  
             
     }
     
@@ -267,7 +274,7 @@
   		      $("#curemail").prop('readonly', true);
   		      $("#curadd1").prop('readonly', true);
   		      $("#curadd2").prop('readonly', true);
-  		      $("#curadd3").prop('readonly', true);
+  		      
               $("#savePopbtn").hide();
               $("#updatePopbtn").hide();
         }else if(div=="U"){
@@ -284,7 +291,7 @@
             $("#curemail").prop('readonly', false);
             $("#curadd1").prop('readonly', false);
             $("#curadd2").prop('readonly', false);
-            $("#curadd3").prop('readonly', false);
+            
             
             $("#updatePopbtn").show();
             $("#savePopbtn").hide();
@@ -302,8 +309,7 @@
             $("#curemail").val("");
             $("#curadd1").val("");
             $("#curadd2").val("");
-            $("#curadd3").val(""); 
-            
+                        
             $("#curname").prop('readonly', false);
             $("#curregno").prop('readonly', false);
             $("#curcntyid").prop('disabled', false);
@@ -316,7 +322,6 @@
             $("#curemail").prop('readonly', false);
             $("#curadd1").prop('readonly', false);
             $("#curadd2").prop('readonly', false);
-            $("#curadd3").prop('readonly', false);
             
             $("#savePopbtn").show();
             $("#updatePopbtn").hide();
@@ -326,13 +331,34 @@
     }
     
   function combReset(){
-        	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' ,'', 'this.value','curcntyid', 'S', ''); 
-            doDefCombo('', '' ,'curstateid', 'S', ''); 
-            doDefCombo('', '' ,'curareaid', 'S', '');
-            doDefCombo('', '' ,'curpostcod', 'S', '');   
+	  pdata = { groupCode : 'country' }; 
+	  doGetComboAddr('/common/selectAddrSelCodeList.do', pdata , 'this.value','curcntyid', 'S', ''); 
+      doDefCombo('', '' ,'curstateid', 'S', ''); 
+      doDefCombo('', '' ,'curareaid', 'S', '');
+      doDefCombo('', '' ,'curpostcod', 'S', '');   
 	  
   }
   
+  function getAddrRelay2(v1 , v2 , v3 , v4 , v5){
+	  if (v2 == 'search'){
+		  pdata = { groupCode : v3 , country:$("#srchCntry").val() , state:$("#srchState").val() , area:$("#srchArea").val()};
+	  }else if(v2 == 'detail'){
+		  if(v5 == undefined){
+			  pdata = { groupCode : v3 , country:$("#curcntyid").val() , state:$("#curstateid").val() , area:$("#curareaid").val()};
+		  }else{
+			  if (v1 == 'state'){
+				  pdata = { groupCode : v3, country:v5[0].curierCntyId };
+			  }else if (v1 == 'area'){
+				  pdata = { groupCode : v3, country:v5[0].curierCntyId , state:v5[0].curierStateId };
+			  }else if (v1 == 'post'){
+				  pdata = { groupCode : v3, country:v5[0].curierCntyId , state:v5[0].curierStateId , area:v5[0].curierAreaId};
+			  }else{
+				  pdata = { groupCode : v3 };
+			  }
+		  }  
+	  }
+      doGetComboAddr('/common/selectAddrSelCodeList.do', pdata ,v4,v1, 'S', '');
+  }
  
 </script>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -381,12 +407,11 @@
 </tr>
 <tr>
     <th>Country</th>
-    <td><select id="srchCntry" name="srchCntry" onchange="getAddrRelay('srchState' , this.value , 'state', '')"></select>
-    </td>
+    <td><select id="srchCntry" name="srchCntry"  onchange="getAddrRelay2('srchState' ,'search', 'state','')"></select></td>
     <th>State</th>
-    <td><select  id="srchState" name="srchState" onchange="getAddrRelay('srchArea' , this.value , 'area', this.value)"></select></td>
+    <td><select  id="srchState" name="srchState" onchange="getAddrRelay2('srchArea'  ,'search', 'area' ,'')"></select></td>
     <th>Area</th>
-    <td><select  id="srchArea" name="srchArea" onchange="getAddrRelay('srchPstCd' , this.value , 'post', this.value)"></select></td>
+    <td><select  id="srchArea" name="srchArea"   onchange="getAddrRelay2('srchPstCd' ,'search', 'post' ,'')"></select></td>
     <th>PostCode</th>
     <td><select  id="srchPstCd" name="srchPstCd"></select></td>
 </tr>
@@ -488,7 +513,7 @@
 						    </td>
 						    <th scope="row">Country</th>
 						    <td id="tdcurcntyid">
-						    <select class="w100p" id="curcntyid" name="curcntyid" onchange="getAddrRelay('curstateid' , this.value , 'state', '')">
+						    <select class="w100p" id="curcntyid" name="curcntyid" onchange="getAddrRelay2('curstateid' , 'detail', 'state','')">
 						    </select>
 						    </td>
 						</tr>
@@ -503,7 +528,7 @@
 						    </td>
 						    <th scope="row">State</th>
 						    <td id="tdcurstateid">
-						    <select class="w100p" id="curstateid" name="curstateid" onchange="getAddrRelay('curareaid' , this.value , 'area', this.value)" >
+						    <select class="w100p" id="curstateid" name="curstateid" onchange="getAddrRelay2('curareaid' , 'detail' , 'area', this.value)" >
 						    </select>
 						    </td>
 						</tr>
@@ -514,7 +539,7 @@
 						    </td>
 						    <th scope="row">Area</th>
 						    <td  id="tdcurareaid" >
-						    <select class="w100p" id="curareaid" name="curareaid" onchange="getAddrRelay('curpostcod' , this.value , 'post', this.value)">
+						    <select class="w100p" id="curareaid" name="curareaid" onchange="getAddrRelay2('curpostcod' , 'detail' , 'post', this.value)">
 						    </select>
 						    </td>
 						</tr>
@@ -528,14 +553,7 @@
 						    </select>
 						    </td>
 						</tr>
-						<tr>
-						    <td colspan="3" id="tdcuradd3">
-						    <input type="text" title="" placeholder="" class="w100p" id="curadd3" name="curadd3"/>
-						    </td>
-						    <th scope="row"></th>
-						    <td>
-						    </td>
-						</tr>
+						
 						</tbody>
 						</table><!-- table end -->
 						<ul class="center_btns">

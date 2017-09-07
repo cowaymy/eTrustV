@@ -462,6 +462,9 @@
 		<if test="likeValue != null and likeValue !=''">
 		   AND CODE LIKE #{likeValue}||'%'
 		</if>
+		<if test="notlike != null and notlike !=''">
+           AND CODE NOT LIKE #{notlike}||'%'
+        </if>
 		<choose>
 		  <when test="orderValue !=null and orderValue !=''">
 		      ORDER BY ${orderValue} 
@@ -973,43 +976,40 @@
         SELECT 
               <choose>
                   <when test="groupCode !=null and groupCode == 'country'">
-                      CNTY_ID CODE_ID , CODE code , NAME CODE_NAME
+                      country CODE_ID , country CODE_NAME 
                   </when>
                   <when test="groupCode !=null and groupCode == 'state'">
-                      STATE_ID CODE_ID , CODE CODE , NAME CODE_NAME , CNTY_ID
+                      state CODE_ID , state CODE_NAME
                   </when>
                   <when test="groupCode !=null and groupCode == 'area'">
-                      AREA_ID CODE_ID , AREA_NAME CODE_NAME
+                      area CODE_ID , area CODE_NAME
                   </when>
                   <when test="groupCode !=null and groupCode == 'post'">
-                      POST_CODE_ID CODE_ID , POST_CODE CODE_NAME 
+                      POSTCODE CODE_ID , POSTCODE CODE_NAME 
                   </when>
               </choose>
-          FROM 
-              <choose>
-                  <when test="groupCode !=null and groupCode == 'country'">
-                      SYS0015M
-                      ORDER BY NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'state'">
-                      SYS0035M
-                      WHERE STUS_CODE_ID = '1'
-                        AND CNTY_ID = #{codevalue}
-                     ORDER BY NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'area'">
-                      SYS0039M
-                      WHERE AREA_STUS_ID = '1'
-                        AND AREA_STATE_ID = #{codevalue}
-                     ORDER BY AREA_NAME
-                  </when>
-                  <when test="groupCode !=null and groupCode == 'post'">
-                      SYS0030C
-                      WHERE STUS_CODE_ID = '1'
-                        AND AREA_ID = #{codevalue}
-                      ORDER BY POST_CODE
-                  </when>
-              </choose>
+          FROM sys0064m
+          WHERE STATUS_ID = '1'
+              <if  test="groupCode !=null and groupCode == 'country'">
+                group by country                      
+               </if>
+               <if  test="groupCode !=null and groupCode == 'state'">
+                AND COUNTRY = #{country}
+                group by state
+                      
+               </if>
+               <if  test="groupCode !=null and groupCode == 'area'">
+               AND COUNTRY = #{country}
+               AND STATE   = #{state}
+                group by area
+               </if>
+               <if  test="groupCode !=null and groupCode == 'post'">
+               AND COUNTRY = #{country}
+               AND STATE   = #{state}
+               AND AREA    = #{area}
+                group by POSTCODE
+               </if>
+                             
     </select>
 
     <!--Product 정보 조회 -->

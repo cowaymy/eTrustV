@@ -57,6 +57,7 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
 var resop = {
 		rowIdField : "rnum",			
 		editable : true,
+		fixedColumnCount : 6,
 		groupingFields : ["delyno"],
         displayTreeOpen : true,
         showRowCheckColumn : true ,

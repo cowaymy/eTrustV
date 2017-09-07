@@ -135,8 +135,7 @@ $(document).ready(function(){
 $(function(){
     $('#search').click(function() {
     	//if (f_validatation('search')){
-    		console.log($("#tlocation").val());
-    	    $("#slocation").val($("#tlocation").val());
+    		$("#slocation").val($("#tlocation").val());
     	    SearchListAjax();
     	//}
     });
@@ -236,8 +235,29 @@ function SearchListAjax() {
     var url = "/logistics/stocktransfer/stockTransferTolocationItemList.do";
     var param = $('#searchForm').serialize();
     console.log(param);
-    Common.ajax("GET" , url , param , function(result){
+    /*Common.ajax("GET" , url , param , function(result){
     	AUIGrid.setGridData(resGrid, result.data);
+    });*/
+    
+    $.ajax({
+        type : "GET",
+        url : url +"?"+ param,
+        //url : "/stock/StockList.do",
+        //data : param,
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+            var gridData = data;
+
+            AUIGrid.setGridData(resGrid, gridData.data);
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+        	Common.setMsg("Fail ........ ");
+        },
+        complete : function() {
+            hideModal();
+            //$.unblockUI();
+        }
     });
 }
 
