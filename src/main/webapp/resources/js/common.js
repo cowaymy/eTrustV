@@ -799,7 +799,7 @@ var CommonCombo = {
 
             $.each(data, function (index, value) {
                 // console.log("selectArray.length(" + index + ") : " + selectArray.length + "   >    " + dataObj[index][option.id]);
-                if (selectArray.length > 0 && $.inArray(dataObj[index][option.id], selectArray) > 0) {
+                if (selectArray.length > 0 && $.inArray(dataObj[index][option.id], selectArray) >= 0) {
                     $('<option />', {
                         value: dataObj[index][option.id],
                         text: dataObj[index][option.name]
