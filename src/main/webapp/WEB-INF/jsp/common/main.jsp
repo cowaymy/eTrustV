@@ -13,6 +13,27 @@
 
 var gSelRowIdx = 0;
 
+$(function()
+{
+	
+});
+
+function selectDailyCount()
+{
+    //Common.ajaxSync("GET", "/menu/selectCodeList.do"
+    Common.ajax("GET", "/common/selectDailyCount.do"
+            , $("#MainForm").serialize()
+            , function(result)
+            {
+               console.log("성공." + JSON.stringify(result) +" // " + result[0].neoSales);
+               //성공.[{"neoSales":2,"sales":2,"netQty":1,"outRight":2,"installment":4,"rental":7,"total":11}]
+               if(result != null && result.length > 0)
+               {
+                 //fnSetPgmIdParamSet(myGridID, 0);
+               }
+            });
+}
+
 var statusCategoryLayout = 
     [      
         {    

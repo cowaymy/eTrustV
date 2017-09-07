@@ -387,6 +387,7 @@ function auiRemoveRowHandlerDetail(event)
 //행 삭제 메소드
 function removeRow()
 {
+	console.log("removeRow method")
   AUIGrid.removeRow(myGridID,"selectedIndex");
 }
 

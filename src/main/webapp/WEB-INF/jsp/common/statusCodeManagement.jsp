@@ -60,6 +60,7 @@ var detailColumnLayout =
         }, {
             dataField : "codeName",
             headerText : "<spring:message code='sys.statuscode.grid1.CODE_NAME'/>",
+            style : "aui-grid-left-column",
             width : "55%"
            ,editable : false
         }, {
@@ -227,14 +228,20 @@ function auiRemoveRowHandler(event)
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandlerDetail(event) 
 {
-    console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
+    console.log (event.type + " 삭제이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 // 행 삭제 메소드
 function removeRow() 
 {
     console.log("removeRowMst: " + gSelRowIdx);    
-    AUIGrid.removeRow(myGridID,gSelRowIdx);
+    AUIGrid.removeRow(myGridID,"selectedIndex");
+}
+
+function removeRowDetail() 
+{
+    console.log("removeRowDetailt: " + gSelRowIdx);    
+    AUIGrid.removeRow(detailGridID,"selectedIndex");
 }
 
 //Make Use_yn ComboList, tooltip
@@ -410,8 +417,11 @@ $(document).ready(function()
             showRowNumColumn : false , // 그리드 넘버링
             useGroupingPanel : false,
             editable : true,
+            enableRestore : true,
+            softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+            selectionMode : "multipleRows",
         };
- 
+    
     // detailGrid 생성
     detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout,"stusCodeId", dtailOptions);
 
@@ -480,12 +490,14 @@ $(document).ready(function()
 
 
     // 체크박스 클린 이벤트 바인딩  
-    AUIGrid.bind(statusCodeGridID, "rowCheckClick", function( event ) {
+    AUIGrid.bind(statusCodeGridID, "rowCheckClick", function( event ) 
+    {
       console.log("rowCheckClick : " + event.rowIndex + ", id : " + event.item.stusCodeId + ", name : " + event.item.codeName + ", checked : " + event.checked);
     });
     
     // 전체 체크박스 클릭 이벤트 바인딩
-    AUIGrid.bind(statusCodeGridID, "rowAllChkClick", function( event ) {
+    AUIGrid.bind(statusCodeGridID, "rowAllChkClick", function( event ) 
+   {
       console.log("rowAllChkClick checked : " + event.checked);
     });
     
@@ -582,8 +594,8 @@ function fnValidationCheckStatusCode()
 
     for (var i = 0; i < udtList.length; i++) 
     {
-        var codeName  = addList[i].codeName;
-        var code      = addList[i].code;
+        var codeName  = udtList[i].codeName;
+        var code      = udtList[i].code;
         
         if (codeName == "" || codeName.length == 0) 
         {
@@ -602,15 +614,56 @@ function fnValidationCheckStatusCode()
     }
 
     return result;
-  }
+ }
+// myGridID, detailGridID, statusCodeGridID;
+function fnValidationStatusCtgoryCode()  
+{
+    var result = true;
+    var delList = AUIGrid.getRemovedItems(detailGridID);
+    var udtList = AUIGrid.getEditedRowItems(detailGridID);
+
+    if (delList.length == 0  && udtList.length == 0 )
+    {
+      Common.alert("No Change");
+      return false;
+    }
+
+    for (var i = 0; i < delList.length; i++) 
+    {
+      var stusCodeId  = delList[i].stusCodeId;
+
+      if (stusCodeId == "" || stusCodeId.length == 0) 
+      {
+        result = false;
+        // {0} is required.
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='code' htmlEscape='false'/>");
+        break;
+      }
+    }
+
+    for (var i = 0; i < udtList.length; i++) 
+    {
+        var stusCodeId  = udtList[i].stusCodeId;
+        
+        if (stusCodeId == "" || stusCodeId.length == 0) 
+        {
+          result = false;
+          // {0} is required.
+          Common.alert("<spring:message code='sys.msg.necessary' arguments='code' htmlEscape='false'/>");
+          break;
+        }
+    }
+
+    return result;
+ }
 
 
 function saveStatusCode()
 {
  if (fnValidationCheckStatusCode() == false)
-  {
+ {
       return false;
-  }
+ }
 	
   Common.ajax("POST", "/status/saveStatusCode.do"
 	         , GridCommon.getEditData(statusCodeGridID)
@@ -795,7 +848,7 @@ function insertStatusCatalogDetail()
   
 }
 
-function fnUpdDisabled()
+function fnSaveDetailData()
 {
   //getItemsByCheckedField();
   
@@ -803,6 +856,11 @@ function fnUpdDisabled()
   {
     Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
     return;
+  }
+
+  if (fnValidationStatusCtgoryCode() == false)
+  {
+       return false;
   }
   
   var formDataCategoryYN = 
@@ -985,8 +1043,8 @@ function fnUpdDisabled()
 <div class="border_box" style="height:330px;"><!-- border_box start -->
 
 <ul class="right_btns pt0">
-  <li><p class="btn_grid">&nbsp;</p></li>
-  <li><p class="btn_grid"><a onclick="fnUpdDisabled();">SAVE</a></p></li>
+  <li><p class="btn_grid"><a onclick="removeRowDetail();">DEL</a></p></li>
+  <li><p class="btn_grid"><a onclick="fnSaveDetailData();">SAVE</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
