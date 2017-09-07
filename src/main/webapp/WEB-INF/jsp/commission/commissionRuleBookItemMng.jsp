@@ -133,12 +133,26 @@
                 //category 동적 생성
                  $("#category").empty();        
                 if (result.length>0) {
+	                var categoryTmp = "";
                     for (var i = 0; i < result.length; i++) {
                         var obj = result[i];
                         if(i==0 || obj.ruleLevel != result[i-1].ruleLevel){
-                            $("#category").append("<ul id='ul"+obj.ruleLevel+"' /> ");
+                            //$("#category").append("<ul id='ul"+obj.ruleLevel+"' /> ");
+                            categoryTmp = categoryTmp+ "<table id='lev_"+obj.ruleLevel+"' class='type2 gray'>";
+                            categoryTmp = categoryTmp+ " <caption>table</caption>";
+                            categoryTmp = categoryTmp+ " <thead>";
+                            categoryTmp = categoryTmp+ "     <tr id='thead_"+obj.ruleLevel+"' />";
+                            categoryTmp = categoryTmp+ " </thead>";
+                            categoryTmp = categoryTmp+ " <tbody>";
+                            categoryTmp = categoryTmp+ "     <tr id='tbody_"+obj.ruleLevel+"' />";
+                            categoryTmp = categoryTmp+ " </tbody>";
+                            categoryTmp = categoryTmp+ "</table>";
+                            $("#category").append(categoryTmp);
                         }
-                        $("#ul"+obj.ruleLevel).append("<li><strong>"+obj.ruleCategory+"</strong><p>"+obj.resultValue+"</p></li>");
+                        //$("#ul"+obj.ruleLevel).append("<li><strong>"+obj.ruleCategory+"</strong><p>"+obj.resultValue+"</p></li>");
+                        $("#thead_"+obj.ruleLevel).append("<th scope='col'>"+obj.ruleCategory+"</th>");
+                        $("#tbody_"+obj.ruleLevel).append("<td><span>"+obj.resultValue+"</span></td>");
+                        
                     }
                     console.log("valueTypeNm : "+result[0].valueTypeNm);
                     console.log("valueType : "+result[0].valueType);
@@ -147,8 +161,8 @@
                      $("#searchFormRule [name=valueType]").val(result[0].valueType);
                      $("#searchFormRule [name=resultValueNm]").val(result[0].resultValueNm);
                 }
+                
             });
-            AUIGrid.setAllCheckedRows(myGridID2, false);
         });
       
      //rule 등록 및 수정 팝업
