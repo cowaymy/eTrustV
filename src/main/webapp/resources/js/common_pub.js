@@ -252,6 +252,33 @@ $(document).on(
 });
 /* 인풋 파일 end */
 
+/* 인풋 파일(멀티) start */
+function setInputFile2(){//인풋파일 세팅하기
+	$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+}
+setInputFile2();
+
+$(document).on(//인풋파일 추가
+	"click", ".auto_file2 a:contains('Add')", function(){
+	
+	$(".auto_file2:last-child").clone().insertAfter(".auto_file2:last-child");
+	$(".auto_file2:last-child :file, .auto_file2:last-child :text").val("");
+	return false;
+});
+
+$(document).on(//인풋파일 삭제
+	"click", ".auto_file2 a:contains('Delete')", function(){
+	var fileNum=$(".auto_file2").length;
+
+	if(fileNum <= 1){
+
+	}else{
+		$(this).parents(".auto_file2").remove();
+	}
+	return false;
+});
+/* 인풋 파일(멀티) end */
+
 /* 팝업 드래그 start */
 $("#popup_wrap, .popup_wrap").draggable({handle: ".pop_header"});
 /* 팝업 드래그 end */

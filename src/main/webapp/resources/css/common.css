@@ -158,6 +158,7 @@ h3 .txt_box{font-size:16px; color:#25527c;}
 .color_box.purple{background:#9f20da;}
 .color_box.white{background:#fff; border:1px solid #ccc; box-sizing:border-box;}
 .fl_right{float:right!important;}
+.fl_left{float:left!important;}
 .fl_none{float:none!important;}
 .al_right{text-align:right;}
 select .optgroup_text {background:#aaa; color:#fff;}
@@ -290,13 +291,26 @@ table.type2.acodi .aco_tr{display:none;}
 .search_100p .search_btn{position:absolute; top:0; right:0;}
 .search_100p input[type=text]{width:59%; height:30px; line-height:28px; border:1px solid #d2d2d2; box-sizing:border-box; border-radius:3px; text-indent:6px; vertical-align:top;}
 .search_100p select{width:39%; height:30px; line-height:26px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:13px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif; vertical-align:top;}
-.auto_file{position:relative; width:237px; padding-right:82px; height:30px;}
-.auto_file.w100p{width:100%!important; box-sizing:border-box;}
-.auto_file input[type=file]{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
-.auto_file label{display:block; margin:0!important;}
-.auto_file label input[type=text]{width:100%!important;}
+.auto_file,
+.auto_file2{position:relative; width:237px; padding-right:82px; height:30px;}
+.auto_file2{float:none!important; width:490px; padding-right:0; margin-top:5px;}
+.auto_file2:first-child{margin-top:0;}
+.auto_file2:after{content:""; display:block; clear:both;}
+.auto_file.w100p,
+.auto_file2.w100p{width:100%!important; box-sizing:border-box;}
+.auto_file input[type=file],
+.auto_file2 input[type=file]{display:block; overflow:hidden; position:absolute; top:-1000em; left:0;}
+.auto_file label,
+.auto_file2 label{display:block; margin:0!important;}
+.auto_file2 label:after{content:""; display:block; clear:both;}
+.auto_file2 label{float:left; width:320px;}
+.auto_file label input[type=text],
+.auto_file2 label input[type=text]{width:100%!important;}
+.auto_file2 label input[type=text]{width:237px!important; float:left}
 .auto_file label span.label_text{position:absolute; top:0; right:0;}
-.auto_file label span.label_text a{display:block; height:30px; line-height:30px; min-width:57px; text-align:center; padding:0 10px; background:#a1c4d7; color:#fff; font-size:12px; font-weight:bold; border-radius:3px;}
+.auto_file2 span.label_text{float:left;}
+.auto_file label span.label_text a,
+.auto_file2 span.label_text a{display:block; height:30px; line-height:30px; margin-left:5px; min-width:57px; text-align:center; padding:0 10px; background:#a1c4d7; color:#fff; font-size:12px; font-weight:bold; border-radius:3px;}
 
 /* 제이쿼리 달력 */
 .ui-datepicker-header{position:relative; width:178px; padding:10px; border:1px solid #ccc; text-align:center; background:#f3f3f3;}
