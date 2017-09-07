@@ -58,12 +58,23 @@
             <mvc:mapping path="/status/**"/>
             -->
             <mvc:mapping path="/**"/>
-            <!-- <mvc:mapping path="/api/**"/> -->
 
             <mvc:mapping path="/test/**"/>
             <mvc:exclude-mapping path="/login/*.do"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
+
+        <!-- mobile Interceptor -->
+        <mvc:interceptor>
+            <!-- <mvc:mapping path="/mobile/api/**"/> -->
+            <mvc:mapping path="/mobile/api/v1/common/*/codes"/>
+            <mvc:exclude-mapping path="/mobile/api/*/login/**"/>
+            <bean class="com.coway.trust.cmmn.interceptor.MobileAuthenticInterceptor" />
+        </mvc:interceptor>
+
+
+
         <!-- locale 설정 처리. -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>

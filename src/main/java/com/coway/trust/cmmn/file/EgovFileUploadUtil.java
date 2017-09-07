@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -40,8 +41,8 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, final String uploadPath,
-			final String subPath, final long maxFileSize) throws Exception {
+	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String uploadPath, String subPath,
+			final long maxFileSize) throws Exception {
 		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
 
 		MultipartHttpServletRequest mptRequest = (MultipartHttpServletRequest) request;
@@ -65,12 +66,16 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 				tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
 			}
 
+			uploadPath = EgovWebUtil.filePathBlackList(uploadPath);
+			subPath = EgovWebUtil.filePathBlackList(subPath);
+
 			vo.setFileName(tmp);
 			vo.setContentType(mFile.getContentType());
 			vo.setServerPath(uploadPath);
 			vo.setServerSubPath(subPath);
 			vo.setPhysicalName(getPhysicalFileName());
 			vo.setSize(mFile.getSize());
+			vo.setExtension(FilenameUtils.getExtension(tmp));
 
 			if (tmp.lastIndexOf(".") >= 0) {
 				vo.setPhysicalName(vo.getPhysicalName()); // 2012.11 KISA 보안조치
@@ -87,10 +92,8 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 								mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
 					}
 
-					saveFile(is,
-							new File(EgovWebUtil.filePathBlackList(EgovWebUtil.filePathBlackList(uploadPath) + SEPERATOR
-									+ EgovWebUtil.filePathBlackList(vo.getServerSubPath()) + SEPERATOR
-									+ vo.getPhysicalName())));
+					saveFile(is, new File(EgovWebUtil.filePathBlackList(vo.getServerPath() + SEPERATOR
+							+ vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName())));
 				} finally {
 					if (is != null) {
 						is.close();

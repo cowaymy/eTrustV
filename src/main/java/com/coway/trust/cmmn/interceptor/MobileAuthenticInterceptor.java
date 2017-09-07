@@ -1,8 +1,5 @@
 package com.coway.trust.cmmn.interceptor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,13 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.MenuService;
 import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
-public class AuthenticInterceptor extends WebContentInterceptor {
+public class MobileAuthenticInterceptor extends WebContentInterceptor {
 
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -35,8 +31,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		if (sessionVO != null && sessionVO.getUserId() > 0) {
 			checkAuthorized();
 		} else {
-			// TODO :  임시 처리됨. 아래 내용 적용 필요.
-			//throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
 
 		return true;
@@ -58,15 +53,8 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
 		if (sessionVO == null || sessionVO.getUserId() == 0) {
-			// TODO :  임시 처리됨. 아래 내용 적용 필요.
-			//throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-		}
-
-		if(modelAndView != null){
-			Map<String, Object> params = new HashMap<>();
-			modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
-			modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
-			modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
+			// TODO : 임시 처리됨. 아래 내용 적용 필요.
+			// throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
 	}
 

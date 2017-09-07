@@ -30,7 +30,8 @@ public class EgovFormBasedFileVo implements Serializable {
 	private String physicalName = "";
 	/** 파일 사이즈 */
 	private long size = 0L;
-
+	/** 파일 확장자 */
+	private String extension = "";
 	/**
 	 * fileName attribute를 리턴한다.
 	 * 
@@ -132,5 +133,13 @@ public class EgovFormBasedFileVo implements Serializable {
 	 */
 	public void setSize(long size) {
 		this.size = size;
+	}
+
+	public String getExtension() {
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
 	}
 }
