@@ -318,6 +318,12 @@
         WHERE STUS_CTGRY_ID = #{stusCtgryId}
           AND STUS_CODE_ID = #{stusCodeId}
   </update>   
+  
+    <update id="deleteCategoryCode" parameterType="Map">
+        DELETE FROM SYS0037M 
+         WHERE STUS_CTGRY_ID = #{stusCtgryId}
+           AND STUS_CODE_ID  = #{stusCodeId}
+  </update>   
 
   <insert id="insertStatusCode" parameterType="Map">
          INSERT INTO SYS0038M
