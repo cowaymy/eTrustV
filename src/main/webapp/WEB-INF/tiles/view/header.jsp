@@ -5,18 +5,18 @@
 	<div id="wrap" <c:if test="${param.isPop}"> class="solo" </c:if>><!-- wrap start -->
 
 	<header id="header"><!-- header start -->
-	<ul class="left_opt">
-	    <li>Neo(Mega Deal): <span>2394</span></li> 
-	    <li>Sales(Key In): <span>9304</span></li> 
-	    <li>Net Qty: <span>310</span></li>
-	    <li>Outright : <span>138</span></li>
-	    <li>Installment: <span>4254</span></li>
-	    <li>Rental: <span>4702</span></li>
-	    <li>Total: <span>45080</span></li>
+	<ul class="left_opt">  
+	    <li>Neo(Mega Deal): <span id="header_neo"></span></li> 
+	    <li>Sales(Key In): <span id="header_sales"></span></li> 
+	    <li>Net Qty: <span id="header_netQty"></span></li>
+	    <li>Outright : <span id="header_outRight"></span></li>
+	    <li>Installment: <span id="header_installment"></span></li>
+	    <li>Rental: <span id="header_rental"></span></li>
+	    <li>Total: <span id="header_total"></span></li>
 	</ul>
 	<ul class="right_opt">
 	    <li>Login as <span>KRHQ9001-HQ</span></li>
-	    <li><a href="#" class="logout">Logout</a></li>
+	    <li><a href="/login/logout.do" class="logout">Logout</a></li>
 	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
 	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
 	</ul>
@@ -25,8 +25,32 @@
 	<hr />
 
 <script type="text/javascript">
-   
+function selectDailyCount()
+{
+    Common.ajax("GET", "/common/selectDailyCount.do"
+            , $("#MainForm").serialize()
+            , function(result)
+            {
+               console.log("성공." + JSON.stringify(result) +" // " + result[0].neoSales);
+               $("#header_neo").text(result[0].neoSales);
+               //성공.[{"neoSales":2,"sales":2,"netQty":1,"outRight":2,"installment":4,"rental":7,"total":11}]
+               if(result != null && result.length > 0)
+               {
+                // $("#header_neo").text(result[0].neoSales);
+                 $("#header_sales").text(result[0].sales);
+                 $("#header_netQty").text(result[0].netQty);
+                 $("#header_outRight").text(result[0].outRight);
+                 $("#header_installment").text(result[0].installment);
+                 $("#header_rental").text(result[0].rental);
+                 $("#header_total").text(result[0].total);
+               }
+            });
+}
+
    $(function() {
+
+	   selectDailyCount();
+	   
        // draw menu path.
 		var $menuPathObj = $("#content > ul:first-child");
 		if($menuPathObj.hasClass("path")){
@@ -119,6 +143,8 @@
                 alert("Fail : " + jqXHR.responseJSON.message);
             }           
     )
+
+    
    });
 </script>
     
