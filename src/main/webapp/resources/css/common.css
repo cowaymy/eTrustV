@@ -310,7 +310,7 @@ table.type2.acodi .aco_tr{display:none;}
 .auto_file label span.label_text{position:absolute; top:0; right:0;}
 .auto_file2 span.label_text{float:left;}
 .auto_file label span.label_text a,
-.auto_file2 span.label_text a{display:block; height:20px; line-height:20px; margin-left:5px; min-width:57px; text-align:center; padding:0 10px; background:#a1c4d7; color:#fff; font-size:11px; font-weight:bold; border-radius:3px;}
+.auto_file2 span.label_text a{display:block; height:20px; line-height:20px; margin-left:5px; min-width:47px; text-align:center; padding:0 5px; background:#a1c4d7; color:#fff; font-size:11px; font-weight:bold; border-radius:3px;}
 
 /* 제이쿼리 달력 */
 .ui-datepicker-header{position:relative; width:178px; padding:5px 10px; border:1px solid #ccc; text-align:center; background:#f3f3f3;}
