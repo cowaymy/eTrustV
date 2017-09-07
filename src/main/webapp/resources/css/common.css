@@ -303,7 +303,7 @@ table.type2.acodi .aco_tr{display:none;}
 .auto_file label,
 .auto_file2 label{display:block; margin:0!important;}
 .auto_file2 label:after{content:""; display:block; clear:both;}
-.auto_file2 label{float:left; width:320px;}
+.auto_file2 label{float:left; width:300px;}
 .auto_file label input[type=text],
 .auto_file2 label input[type=text]{width:100%!important;}
 .auto_file2 label input[type=text]{width:237px!important; float:left}
