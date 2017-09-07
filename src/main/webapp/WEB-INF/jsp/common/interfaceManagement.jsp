@@ -148,7 +148,7 @@ var gridIfColumnLayout =
 	 {
          dataField : "ifType",
          headerText : "IF TYPE",
-         width:"15%",
+         width:"7%",
          editRenderer : {
              type : "InputEditRenderer",
 
@@ -186,8 +186,48 @@ var gridIfColumnLayout =
         }
 	},
     {
+       dataField : "ifSnd",
+       headerText : "Sender",
+       width : "10%",
+       style : "aui-grid-user-custom-left",
+       editRenderer : {
+           type : "InputEditRenderer",
+
+           // 에디팅 유효성 검사
+           validator : function(oldValue, newValue, item, dataField) {
+               var isValid = false;
+
+               if(newValue.length <= 30) {
+                   isValid = true;
+               }
+               // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+               return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
+           }
+       }
+   },
+   {
+      dataField : "ifRcv",
+      headerText : "Receiver",
+      width : "10%",
+      style : "aui-grid-user-custom-left",
+      editRenderer : {
+          type : "InputEditRenderer",
+
+          // 에디팅 유효성 검사
+          validator : function(oldValue, newValue, item, dataField) {
+              var isValid = false;
+
+              if(newValue.length <= 30) {
+                  isValid = true;
+              }
+              // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+              return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
+          }
+      }
+    },
+    {
         dataField : "chkCol",
-        headerText : "Check Column",
+        headerText : "CHK Column",
         width : "10%",
         editRenderer : {
             type : "InputEditRenderer",
@@ -206,7 +246,7 @@ var gridIfColumnLayout =
     },
     {
         dataField : "bizCol",
-        headerText : "Business Column",
+        headerText : "BIZ Column",
         width : "10%",
         editRenderer : {
             type : "InputEditRenderer",
@@ -226,7 +266,7 @@ var gridIfColumnLayout =
     {
         dataField : "tableNm",
         headerText : "Table Name",
-        width : "15%",
+        width : "10%",
         editRenderer : {
             type : "InputEditRenderer",
 

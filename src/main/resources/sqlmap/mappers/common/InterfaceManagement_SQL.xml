@@ -5,6 +5,8 @@
 <select id="selectInterfaceManagementList" parameterType="Map" resultType="egovMap">
 	SELECT if_type
 	         , if_type_nm
+	         , if_snd
+	         , if_rcv
 	         , chk_col
 	         , biz_col
 	         , table_nm
@@ -16,6 +18,7 @@
          AND (UPPER(if_type) LIKE  UPPER(#{ifType}) || '%' OR
                  UPPER(if_type_nm) LIKE '%' || UPPER(#{ifType}) || '%')
      </if>
+     ORDER BY if_type
 </select>
 
 <insert id="insertInterfaceManagementList" parameterType="Map">
@@ -23,6 +26,8 @@
 	(
 	     if_type
 	   , if_type_nm
+	   , if_snd
+       , if_rcv
 	   , chk_col
 	   , biz_col
 	   , table_nm
@@ -36,6 +41,8 @@
 	(
 	     #{ifType}
 	   , #{ifTypeNm}
+	   , #{ifSnd}
+       , #{ifRcv}
 	   , #{chkCol}
 	   , #{bizCol}
 	   , #{tableNm}
@@ -50,6 +57,8 @@
 <update id="updateInterfaceManagementList" parameterType="Map">
 	UPDATE ITF0001M
 	     SET if_type_nm = #{ifTypeNm}
+	         , if_snd = #{ifSnd}
+             , if_rcv = #{ifRcv}
 	         , chk_col = #{chkCol}
 	         , biz_col = #{bizCol}
 	         , table_nm = #{tableNm}
