@@ -54,6 +54,8 @@
            AND l48.itm_code       = l55.itm_code(+)
            and l47.reqst_stus     = reqs.code(+)
            and l47.trnsc_type     <![CDATA[<>]]> 'US'
+           AND NVL(l47.REQST_DEL , 'N') = 'N'
+           AND NVL(l48.REQST_DEL , 'N') = 'N'
            <if test="streq !=null and streq !=''">
               and l47.reqst_no = #{streq}
            </if>
@@ -146,7 +148,7 @@
     </update>
     
     <select id="selectStockMovementNoList" parameterType="Map" resultType="egovMap">
-        SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m where reqst_no in (select reqst_no from log0048d) AND SUBSTR(REQST_NO , 0,3) <![CDATA[<>]]> 'STO'  ORDER BY CRT_DT DESC
+        SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m where reqst_no in (select reqst_no from log0048d) AND SUBSTR(REQST_NO , 0,3) <![CDATA[<>]]> 'STO' AND NVL(REQST_DEL , 'N') = 'N'  ORDER BY CRT_DT DESC
     </select>
     
     <select id="selectDeliveryNoList" parameterType="Map" resultType="egovMap">
@@ -157,7 +159,7 @@
         SELECT REQST_NO REQNO , TRNSC_TYPE TRNTYPE , TRNSC_TYPE_DTL TRNDTL , PRIDIC_FRQNCY PRIFR , TO_CHAR(REQST_CRT_DT , 'DD/MM/YYYY') REQCRTDT
              , DOC_HDER_TXT DOCTXT , RCIV_CDC_RDC RCIVCR , REQST_CDC_RDC REQCR, REQST_STUS REQST
           FROM LOG0047M
-         WHERE REQST_NO = #{param} 
+         WHERE REQST_NO = #{param}
     </select>
     <select id="selectStockMovementItem" parameterType="String" resultType="egovMap">
         SELECT l48.REQST_NO_ITM resnoitm ,s26.STK_ID itmid, l48.ITM_CODE itmcd, l48.ITM_NAME itmname 
@@ -169,6 +171,7 @@
          WHERE l48.ITM_CODE = s26.STK_CODE
            AND l48.ITM_CODE = l55.ITM_CODE(+)
            AND l48.REQST_NO = l55.REQST_NO(+)
+           AND NVL(l48.REQST_DEL , 'N') = 'N'
            AND l48.REQST_NO = #{param}           
          ORDER BY l48.REQST_NO_ITM 
     </select>
