@@ -177,7 +177,7 @@ var contPersonLayout = [
 	                selectedGridValue = event.rowIndex;
 	                
 	                $("#custCntcId").val(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "custCntcId"));//히든값
-	                $("#contractPerson").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "name1"));
+	                $("#contactPerson").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "name1"));
 	                $("#mobileNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telM1"));
 	                $("#officeNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telO"));
 	                $("#residenceNumber").text(AUIGrid.getCellValue(contPersonPopGridID , event.rowIndex , "telR"));
@@ -248,17 +248,16 @@ var contPersonLayout = [
                     $('#maillingAddr').text(result.data.maillingInfo.addr);
                     
                     //CONTACT INFO
-                    $('#contractPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
+                    $('#contactPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
                     $('#mobileNumber').text(result.data.contactInfo.telM1);
                     $('#officeNumber').text();
                     $('#residenceNumber').text(result.data.contactInfo.telR);
                     $('#faxNumber').text(result.data.contactInfo.telf);
-                } 
+                }
             	
             }else{
-                Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
+            	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
             } 
-            
             
         });
     }
@@ -275,6 +274,7 @@ var contPersonLayout = [
             console.log(result);
             
             if(result.data.orderInfo != null){
+            	
             	if(result.data.orderInfo.appTypeId == "66" ||  (result.data.orderInfo.appTypeId != "66" && result.data.orderInfo.srvCntrctId > 0)){
                     
                     $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
@@ -292,17 +292,43 @@ var contPersonLayout = [
                     $('#maillingAddr').text(result.data.maillingInfo.addr);
                     
                     //CONTACT INFO
-                    $('#contractPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
+                    $('#contactPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
                     $('#mobileNumber').text(result.data.contactInfo.telM1);
                     $('#officeNumber').text();
                     $('#residenceNumber').text(result.data.contactInfo.telR);
                     $('#faxNumber').text(result.data.contactInfo.telf);
+                    
+                }else{
+                	$('#orderNo').val("");
+                	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
                 }
+            	
             }else{
-            	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
+            	
+            	displayReset();
+            	Common.alert("Order not found.");
             }
             
         });
+    }
+    
+    function displayReset(){
+    	$('#orderNo').val("");
+        $('#customerId').text("");
+        $('#nric').text("");
+        $('#customerName').text("");
+        $("#post").prop('checked', false);
+        $("#estm").prop('checked', false);
+        $("#sms").prop('checked', false);
+        $('#email').val("");
+        $("#email").prop('readonly', true);
+        $('#remark').val("");
+        $('#maillingAddr').text("");
+        $('#contactPerson').text("");
+        $('#mobileNumber').text("");
+        $('#officeNumber').text("");
+        $('#residenceNumber').text("");
+        $('#faxNumber').text("");
     }
     
     function fn_createEvent(objId, eventType){
@@ -483,9 +509,9 @@ var contPersonLayout = [
 <tr>
     <th scope="row">Billing Type</th>
     <td colspan="">
-    <label><input type="checkbox"  id="post"  name="post" value="1"/><span>Post</span></label>
-    <label><input type="checkbox"  id="sms"  name="sms" value="1"/><span>SMS</span></label>
-    <label><input type="checkbox"  id="estm" name="estm"  value="1" onclick="fn_estmEvent();"/><span>E-Statement</span></label>
+    <label><input type="checkbox"  id="post"  name="post" /><span>Post</span></label>
+    <label><input type="checkbox"  id="sms"  name="sms" /><span>SMS</span></label>
+    <label><input type="checkbox"  id="estm" name="estm" onclick="fn_estmEvent();"/><span>E-Statement</span></label>
     </td>
     <th scope="row">Email</th>
     <td>
@@ -543,7 +569,7 @@ var contPersonLayout = [
 <tbody>
 <tr>
     <th scope="row">Contact Person</th>
-    <td colspan="3" id="contractPerson">
+    <td colspan="3" id="contactPerson">
     </td>
 </tr>
 <tr>
