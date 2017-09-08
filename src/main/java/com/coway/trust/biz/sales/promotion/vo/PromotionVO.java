@@ -2,11 +2,13 @@ package com.coway.trust.biz.sales.promotion.vo;
 
 import java.io.Serializable;
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  *
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PromotionVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

@@ -16,6 +16,8 @@ public class GridDataSet<T> {
 
 	// 삭제 행 리스트
 	private ArrayList<T> remove;
+	
+	private ArrayList<T> all;
 
 	public ArrayList<T> getUpdate() {
 		return update;
@@ -40,4 +42,13 @@ public class GridDataSet<T> {
 	public void setRemove(ArrayList<T> remove) {
 		this.remove = remove;
 	}
+
+	public ArrayList<T> getAll() {
+		return all;
+	}
+
+	public void setAll(ArrayList<T> all) {
+		this.all = all;
+	}
+	
 }

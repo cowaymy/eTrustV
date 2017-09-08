@@ -4,7 +4,6 @@
 package com.coway.trust.biz.sales.promotion.impl;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,14 +17,11 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.order.OrderListService;
-import com.coway.trust.biz.sales.order.vo.OrderVO;
-import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
-import com.coway.trust.biz.sales.promotion.PromotionListService;
-import com.coway.trust.biz.sales.promotion.PromotionRegisterService;
+import com.coway.trust.biz.sales.promotion.PromotionService;
 import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
-import com.coway.trust.biz.sales.promotion.vo.SalesPromoMVO;
 import com.coway.trust.biz.sales.promotion.vo.SalesPromoDVO;
 import com.coway.trust.biz.sales.promotion.vo.SalesPromoFreeGiftVO;
+import com.coway.trust.biz.sales.promotion.vo.SalesPromoMVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -38,21 +34,57 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @author Yunseok_Jang
  *
  */
-@Service("promotionRegisterService")
-public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implements PromotionRegisterService {
+@Service("promotionService")
+public class PromotionServiceImpl extends EgovAbstractServiceImpl implements PromotionService {
 
-	private static Logger logger = LoggerFactory.getLogger(PromotionRegisterServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(PromotionServiceImpl.class);
 	
-	@Resource(name = "promotionRegisterMapper")
-	private PromotionRegisterMapper promotionRegisterMapper;
+	@Resource(name = "promotionMapper")
+	private PromotionMapper promotionMapper;
 	
-//	@Autowired
-//	private MessageSourceAccessor messageSourceAccessor;
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
+	
+	@Override
+	public List<EgovMap> selectPromotionList(Map<String, Object> params) {
+		return promotionMapper.selectPromotionList(params);
+	}
+	
+	@Override
+	public EgovMap selectPromotionDetail(Map<String, Object> params) {
+		return promotionMapper.selectPromotionDetail(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectPromotionPrdList(Map<String, Object> params) {
+		return promotionMapper.selectPromotionPrdList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectPromotionFreeGiftList(Map<String, Object> params) {
+		return promotionMapper.selectPromotionFreeGiftList(params);
+	}
+	
+	@Override
+	public void updatePromoStatus(PromotionVO promotionVO, SessionVO sessionVO) {
+
+		logger.info("!@###### PromotionServiceImpl.updatePromoStatus");
+
+		GridDataSet<SalesPromoMVO> salesPromoMDataSetList  = promotionVO.getSalesPromoMGridDataSetList();
+		
+		List<SalesPromoMVO> updateList = salesPromoMDataSetList.getUpdate();
+
+		for(SalesPromoMVO vo : updateList) {
+			vo.setPromoUpdUserId(sessionVO.getUserId());
+			promotionMapper.updatePromoStatus(vo);
+		}
+
+	}
 	
 	@Override
 	public void registerPromotion(PromotionVO promotionVO, SessionVO sessionVO) {
 
-		logger.info("!@###### PromotionRegisterServiceImpl.registerPromotion");
+		logger.info("!@###### PromotionServiceImpl.registerPromotion");
 		
 		SalesPromoMVO salesPromoMVO = promotionVO.getSalesPromoMVO();
 		
@@ -64,18 +96,64 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		
 		this.preprocSalesPromotionMaster(salesPromoMVO, sessionVO);
 
-		promotionRegisterMapper.insertSalesPromoM(salesPromoMVO);
+		promotionMapper.insertSalesPromoM(salesPromoMVO);
 
 		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
 		
 		for(SalesPromoDVO salesPromoDVO : addSalesPromoDVOList) {
-			promotionRegisterMapper.insertSalesPromoD(salesPromoDVO);
+			promotionMapper.insertSalesPromoD(salesPromoDVO);
 		}
 		
 		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 
 		for(SalesPromoFreeGiftVO salesPromoFreeGiftVO : addSalesPromoFreeGiftVOList) {
-			promotionRegisterMapper.insertSalesPromoFreeGift(salesPromoFreeGiftVO);
+			promotionMapper.insertSalesPromoFreeGift(salesPromoFreeGiftVO);
+		}
+	}
+	
+	@Override
+	public void updatePromotion(PromotionVO promotionVO, SessionVO sessionVO) {
+
+		logger.info("!@###### PromotionServiceImpl.registerPromotion");
+		
+		SalesPromoMVO salesPromoMVO = promotionVO.getSalesPromoMVO();
+		
+		GridDataSet<SalesPromoDVO>        salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
+		GridDataSet<SalesPromoFreeGiftVO> freeGiftGridDataSetList = promotionVO.getFreeGiftGridDataSetList();
+		
+		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
+		List<SalesPromoDVO> udtSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
+		List<SalesPromoDVO> delSalesPromoDVOList = salesPromoDDataSetList.getRemove();
+		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
+		List<SalesPromoFreeGiftVO> delSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getRemove();
+		
+		this.preprocSalesPromotionMaster(salesPromoMVO, sessionVO);
+
+		promotionMapper.updateSalesPromoM(salesPromoMVO);;
+
+		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
+		this.preprocSalesPromotionDetail(udtSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
+		
+		for(SalesPromoDVO addVO : addSalesPromoDVOList) {
+			promotionMapper.insertSalesPromoD(addVO);
+		}
+		
+		for(SalesPromoDVO udtVO : udtSalesPromoDVOList) {
+			promotionMapper.updateSalesPromoD(udtVO);
+		}
+		
+		for(SalesPromoDVO delVO : delSalesPromoDVOList) {
+			promotionMapper.deleteSalesPromoD(delVO);
+		}
+		
+		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
+		
+		for(SalesPromoFreeGiftVO addVO : addSalesPromoFreeGiftVOList) {
+			promotionMapper.insertSalesPromoFreeGift(addVO);
+		}
+
+		for(SalesPromoFreeGiftVO delVO : delSalesPromoFreeGiftVOList) {
+			promotionMapper.deleteSalesPromoFreeGift(delVO);
 		}
 	}
 	
@@ -92,10 +170,10 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		salesPromoMVO.setPromoIsTrialCnvr(0);
 	}
 	
-	private void preprocSalesPromotionDetail(List<SalesPromoDVO> addSalesPromoDVOList, int promoId, SessionVO sessionVO) {
+	private void preprocSalesPromotionDetail(List<SalesPromoDVO> salesPromoDVOList, int promoId, SessionVO sessionVO) {
 		
-		if(addSalesPromoDVOList != null) {
-			for(SalesPromoDVO addVo : addSalesPromoDVOList) {
+		if(salesPromoDVOList != null) {
+			for(SalesPromoDVO addVo : salesPromoDVOList) {
 				addVo.setPromoId(promoId);
 				addVo.setPromoItmCurId(0);
 				addVo.setPromoItmStusId(1);
@@ -104,10 +182,10 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		}
 	}
 	
-	private void preprocSalesPromoFreeGift(List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList, int promoId, SessionVO sessionVO) {
+	private void preprocSalesPromoFreeGift(List<SalesPromoFreeGiftVO> salesPromoFreeGiftVOList, int promoId, SessionVO sessionVO) {
 		
-		if(addSalesPromoFreeGiftVOList != null) {
-			for(SalesPromoFreeGiftVO addVo : addSalesPromoFreeGiftVOList) {
+		if(salesPromoFreeGiftVOList != null) {
+			for(SalesPromoFreeGiftVO addVo : salesPromoFreeGiftVOList) {
 				addVo.setPromoFreeGiftPromoId(promoId);;
 				addVo.setPromoFreeGiftCrtUserId(sessionVO.getUserId());
 			}
@@ -116,7 +194,7 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 	
 	@Override
 	public List<EgovMap> selectMembershipPkg(Map<String, Object> params) {
-		return promotionRegisterMapper.selectMembershipPkg(params);
+		return promotionMapper.selectMembershipPkg(params);
 	}
 	
 	@Override
@@ -124,7 +202,7 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		
 		GridDataSet<SalesPromoDVO> salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();
 		
-		List<SalesPromoDVO> addSalesPromoDVOList = salesPromoDDataSetList.getAdd();
+		List<SalesPromoDVO> salesPromoDVOList = salesPromoDDataSetList.getAll();
 		
 		int appTypeId = promotionVO.getSalesPromoMVO().getPromoAppTypeId();
 		
@@ -132,14 +210,14 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 		
 		Map<String, Object> params = null;
 		
-		for(SalesPromoDVO dvo: addSalesPromoDVOList) {
+		for(SalesPromoDVO dvo: salesPromoDVOList) {
 			
 			params = new HashMap<String, Object>();
 			
 			params.put("stkId", dvo.getPromoItmStkId());
 			params.put("appTypeId", appTypeId);
 			
-			EgovMap priceMap = promotionRegisterMapper.selectPriceInfo(params);
+			EgovMap priceMap = promotionMapper.selectPriceInfo(params);
 			
 			if(priceMap != null) {
     			dvo.setAmt((BigDecimal)priceMap.get("amt"));
@@ -148,7 +226,7 @@ public class PromotionRegisterServiceImpl extends EgovAbstractServiceImpl implem
 			}
 		}
 		
-		return addSalesPromoDVOList;
+		return salesPromoDVOList;
 	}
 	
 	private int getAppTypeId(int appTypeId) {
