@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.order;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderSuspensionService;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -31,6 +35,9 @@ public class OrderSuspensionController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 
 	/**
 	 * Order Exchange List 초기화 화면 
@@ -107,6 +114,55 @@ public class OrderSuspensionController {
 		
 		List<EgovMap> callResultLogList = orderSuspensionService.callResultLog(params);
 		return ResponseEntity.ok(callResultLogList);
+	}
+	
+	
+	@RequestMapping(value = "/orderSuspendNewResultPop.do")
+	public String orderSuspendNewResultPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+		
+		EgovMap suspensionInfo = orderSuspensionService.orderSuspendInfo(params);
+		
+		model.addAttribute("suspensionInfo", suspensionInfo);
+		model.addAttribute("susId", params.get("susId"));
+		model.addAttribute("salesOrdId", params.get("salesOrdId"));
+		
+		return "sales/order/orderSuspendNewResultPop";
+	}
+	
+	
+	@RequestMapping(value = "/newSuspendResult.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> newSuspendResult(@RequestParam Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		logger.info("##### sessionVO.getUserId() #####" +sessionVO.getUserId());
+		
+		//String retMsg = AppConstants.MSG_SUCCESS;
+		String retMsg = "SUCCESS";
+		
+		Map<String, Object> map = new HashMap();
+		
+		try{
+			orderSuspensionService.newSuspendResult(params);
+		}catch(Exception ex){
+			//retMsg = AppConstants.MSG_FAIL;
+			retMsg = "FAIL";
+		}finally{
+			map.put("msg", retMsg);
+		}
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	@RequestMapping(value = "/inchargePersonPop.do")
+	public String inchargePersonPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		model.addAttribute("susId", params.get("susId"));
+		model.addAttribute("salesOrdId", params.get("salesOrdId"));
+		
+		return "sales/order/orderAssignInchargePop";
 	}
 	
 }
