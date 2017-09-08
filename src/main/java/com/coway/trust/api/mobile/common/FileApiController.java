@@ -47,7 +47,7 @@ public class FileApiController {
 
 	// sampleUpload 는 공통 파일 테이블에서 관리하는 api 입니다.
 	// TODO : 파일 테이블을 업무테이블에서 관리한다면 그에 맞게 api 를 추가로 개발해야 합니다.
-	@ApiOperation(value = "파일업로드(임시)", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@ApiOperation(value = "파일업로드", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUpload(@ApiIgnore  MultipartHttpServletRequest request,
 																  @ApiIgnore  @RequestParam Map<String, Object> params, @ApiIgnore SessionVO sessionVO) throws Exception {
