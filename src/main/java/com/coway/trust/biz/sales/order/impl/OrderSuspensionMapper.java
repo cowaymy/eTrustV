@@ -19,4 +19,10 @@ public interface OrderSuspensionMapper {
 	
 	List<EgovMap> callResultLog(Map<String, Object> params);
 	
+	/************************** New Suspend Result ****************************/
+	EgovMap newSuspendSearch1(Map<String, Object> params);
+	int insertCCR0007DSuspend(Map<String, Object> params);
+	EgovMap newSuspendSearch2(Map<String, Object> params);
+	int updateCCR0006DSuspend(Map<String, Object> params);
+	int updateSAL0096DSuspend(Map<String, Object> params);
 }
