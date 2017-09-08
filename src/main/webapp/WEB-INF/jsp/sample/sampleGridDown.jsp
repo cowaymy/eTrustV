@@ -68,7 +68,8 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
         }, {
             dataField : "date",
             headerText : "Date",
-            width : 120
+            width : 120,
+            visible : false
         }];
 
     

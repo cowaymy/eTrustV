@@ -7,9 +7,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.coway.trust.api.mobile.common.CommonConstants;
-import com.coway.trust.biz.application.FileApplication;
-import com.coway.trust.biz.common.FileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.application.SampleApplication;
+import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
@@ -33,6 +33,7 @@ import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
 
@@ -96,6 +97,22 @@ public class SampleController {
 
 		// 호출될 화면
 		return "sample/publishSample";
+	}
+
+	@RequestMapping(value = "/sampleChart.do")
+	public String sampleChart(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		// 챠트 예제.
+		return "sample/sampleChart";
+	}
+
+	@RequestMapping(value = "/getChartData.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getChartData(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+
+		params.put("pYear", CommonUtils.nvl((String) params.get("pYear"), "2017"));
+
+		List<EgovMap> list = sampleService.getChartData(params);
+		return ResponseEntity.ok(list);
 	}
 
 	@RequestMapping(value = "/sampleAuth.do")
@@ -494,7 +511,7 @@ public class SampleController {
 	 */
 	@RequestMapping(value = "/sampleUploadCommon.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUploadCommon(MultipartHttpServletRequest request,
-																  @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
 				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
 

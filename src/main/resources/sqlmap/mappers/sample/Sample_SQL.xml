@@ -44,6 +44,13 @@
 		WHERE ROWNUM < 100
 	]]>
 	</select>
+
+    <resultMap id="chartMap" type="egovMap"></resultMap>
+    <select id="selectChartDataProcedure" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_GET_KEY_IN_ANLYS(#{pYear}, #{chartData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=chartMap})
+        }
+    </select>
 	
 	<insert id="insertClobData" parameterType="Map">
         INSERT INTO TST_SUPPLY_PLAN

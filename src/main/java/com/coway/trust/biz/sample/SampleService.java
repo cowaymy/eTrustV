@@ -45,6 +45,8 @@ public interface SampleService {
 
 	void insertClobData(Map<String, Object> params);
 
+	List<EgovMap> getChartData(Map<String, Object> params);
+
 	/**
 	 * 글을 수정한다.
 	 * 

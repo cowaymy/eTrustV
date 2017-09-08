@@ -20,8 +20,6 @@ import com.coway.trust.cmmn.exception.ApplicationException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Class Name : EgovSampleServiceImpl.java
@@ -38,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 @Service("sampleService")
-public class SampleServiceImpl extends EgovAbstractServiceImpl implements SampleService {
+public class SampleServiceImpl implements SampleService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServiceImpl.class);
 
@@ -120,6 +118,12 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 		sampleMapper.insertClobData(params);
 	}
 
+	@Override
+	public List<EgovMap> getChartData(Map<String, Object> params) {
+		sampleMapper.selectChartDataProcedure(params);
+		return (List<EgovMap>) params.get("chartData");
+	}
+
 	/**
 	 * 글을 등록한다.
 	 * 
@@ -140,7 +144,7 @@ public class SampleServiceImpl extends EgovAbstractServiceImpl implements Sample
 	}
 
 	@Override
-	//@Transactional(propagation = Propagation.REQUIRES_NEW)
+	// @Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String insertSample(Map<String, Object> params) {
 		sampleMapper.insertSampleByMap(params);
 		return "";

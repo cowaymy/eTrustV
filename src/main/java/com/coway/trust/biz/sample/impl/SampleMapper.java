@@ -60,6 +60,8 @@ public interface SampleMapper {
 
 	List<EgovMap> selectClobOtherData(Map<String, Object> params);
 
+	void selectChartDataProcedure(Map<String, Object> params);
+
 	void insertClobData(Map<String, Object> params);
 
 	/**
