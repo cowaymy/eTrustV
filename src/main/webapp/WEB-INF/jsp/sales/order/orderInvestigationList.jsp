@@ -14,20 +14,12 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
-            fn_detail(myGridID, event.rowIndex);
-//          $("#_custId").val(event.item.custId);
-//           $("#_custAddId").val(event.item.custAddId);
-//            $("#_custCntcId").val(event.item.custCntcId);
-//            Common.popupWin("popForm", "/sales/customer/selectCustomerView.do", option);
+        	$("#invReqId").val(event.item.invReqId);
+        	Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#popForm").serializeJSON(), null, true, 'dtPop');
         });
         // 셀 클릭 이벤트 바인딩
     
     });
-    
-     // 컬럼 선택시 상세정보 세팅.
-    function fn_detail(gridID, rowIdx){
-        Common.popupDiv();
-    }
     
     function createAUIGrid() {
         var columnLayout = [ {
@@ -54,10 +46,13 @@
             headerText : "Request By",
             editable : false
         }, {
-            dataField : "invReqCrtDt",
+            dataField : "invReqUpdDt",
             headerText : "Request At",
             width : 170,
             editable : false
+        }, {
+            dataField : "invReqId",
+            visible : false
         }];
    
         // 그리드 속성 설정
@@ -118,7 +113,14 @@
         $("#invReqPartyId").val('');
     }
     
+    function fn_goSingle(){
+    	$("#searchForm").attr({"target": "_self" , "action" : getContextPath()+"/sales/order/orderNewRequestSingleList.do" }).submit();
+    }
+    
 </script>
+<form id="popForm" method="post">
+    <input type="hidden" name="invReqId"  id="invReqId"/> 
+</form>
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -130,7 +132,7 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order Investigation Request Search - Officer</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#">New Request(Single)</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_goSingle()">New Request(Single)</a></p></li>
     <li><p class="btn_blue"><a href="#">New Request(Batch)</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_orderInvestigationListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_clear()"><span class="clear"></span>Clear</a></p></li>

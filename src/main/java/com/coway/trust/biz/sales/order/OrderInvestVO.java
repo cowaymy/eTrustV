@@ -16,6 +16,12 @@ public class OrderInvestVO implements Serializable {
 	private String invReqPartyName;
 	private Date invReqCrtDt;
 	
+	// Grid
+	private String name;
+	private String invReqItmRem;
+	private String userName;
+	private Date invReqItmCrtDt;
+	
 	public String getInvReqNo() {
 		return invReqNo;
 	}
@@ -63,6 +69,30 @@ public class OrderInvestVO implements Serializable {
 	}
 	public void setInvReqCrtDt(Date invReqCrtDt) {
 		this.invReqCrtDt = invReqCrtDt;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getInvReqItmRem() {
+		return invReqItmRem;
+	}
+	public void setInvReqItmRem(String invReqItmRem) {
+		this.invReqItmRem = invReqItmRem;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public Date getInvReqItmCrtDt() {
+		return invReqItmCrtDt;
+	}
+	public void setInvReqItmCrtDt(Date invReqItmCrtDt) {
+		this.invReqItmCrtDt = invReqItmCrtDt;
 	}
 	
 	
