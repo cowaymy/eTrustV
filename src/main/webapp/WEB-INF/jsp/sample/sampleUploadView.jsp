@@ -16,9 +16,16 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
 		  - Common.ajaxFile(....)                     : file upload ajax 공통
 		  - Common.getFormData(Form아이디)    : file upload를 위한 FormData 생성.
 		*/
-//		Common.ajaxFile("/sample/sampleUpload.do", Common.getFormData("fileUploadForm"), function(result) {				// 첨부파일 정보를 업무 테이블 이용 : 웹 호출 테스트
-        Common.ajaxFile("/sample/sampleUploadCommon.do", Common.getFormData("fileUploadForm"), function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
-//		Common.ajaxFile("/mobile/api/v1/file/upload", Common.getFormData("fileUploadForm"), function(result) {              //  첨부파일 정보를 공통 첨부파일 테이블 이용 : 모바일 api 호출 테스트
+
+
+		var formData = Common.getFormData("fileUploadForm");
+        formData.append("param01", $("#param01").val());
+        formData.append("param02", "test2");
+        formData.append("param03", "test3");
+
+//		Common.ajaxFile("/sample/sampleUpload.do", formData, function(result) {				// 첨부파일 정보를 업무 테이블 이용 : 웹 호출 테스트
+        Common.ajaxFile("/sample/sampleUploadCommon.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+//		Common.ajaxFile("/mobile/api/v1/file/upload", formData, function(result) {              //  첨부파일 정보를 공통 첨부파일 테이블 이용 : 모바일 api 호출 테스트
 
 			console.log("총 갯수 : " + result.length);
 			console.log(JSON.stringify(result));
@@ -71,7 +78,7 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
 	<form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
 		<input type="file" id="file01" name="fileTest1"/>
 		<input type="file" id="file02" name="fileTest2"/>
-		<input type="text" id="param01" name="param01"/>
+		<input type="text" id="param01" name="param01" value="paramter-test"/>
 		<a class="" href="javascript:fn_uploadFile();">[전송]</a>
 	</form>
 	

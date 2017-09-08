@@ -33,6 +33,7 @@ public class MimeTypeUtil {
 		ALLOW_MIME_TYPE.put("image/x-portable-pixmap", "image/x-portable-pixmap");
 		ALLOW_MIME_TYPE.put("application/pdf", "application/pdf");
 		ALLOW_MIME_TYPE.put("application/xls", "application/xls");
+		ALLOW_MIME_TYPE.put("application/vnd.ms-excel", "application/vnd.ms-excel");
 		ALLOW_MIME_TYPE.put("application/x-tika-ooxml", "application/x-tika-ooxml");
 		ALLOW_MIME_TYPE.put("text/plain", "text/plain");
 	}

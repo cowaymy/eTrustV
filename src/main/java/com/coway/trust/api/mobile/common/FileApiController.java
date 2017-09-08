@@ -4,10 +4,13 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +28,8 @@ import com.coway.trust.util.EgovFormBasedFileVo;
 import io.swagger.annotations.Api;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.ws.rs.Consumes;
+
 @Api(value = "파일관리", description = "file api")
 @RestController(value = "MobileFileApiController")
 @RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/file")
@@ -40,11 +45,12 @@ public class FileApiController {
 	// @Autowired
 	// private MessageSourceAccessor messageAccessor;
 
-	// TODO : 파일 테이블을 업무테이블에서 관리한다면 그에 맞게 api 를 추가로 개발해야 합니다.
 	// sampleUpload 는 공통 파일 테이블에서 관리하는 api 입니다.
+	// TODO : 파일 테이블을 업무테이블에서 관리한다면 그에 맞게 api 를 추가로 개발해야 합니다.
+	@ApiOperation(value = "파일업로드(임시)", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUpload(MultipartHttpServletRequest request,
-			@RequestParam Map<String, Object> params, @ApiIgnore SessionVO sessionVO) throws Exception {
+	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUpload(@ApiParam(value="File", required=true)  MultipartHttpServletRequest request,
+																  @ApiIgnore  @RequestParam Map<String, Object> params, @ApiIgnore SessionVO sessionVO) throws Exception {
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
 				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
 
