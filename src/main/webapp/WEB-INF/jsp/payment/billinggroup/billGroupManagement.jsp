@@ -158,6 +158,7 @@ var estmColumnLayout = [
     }, {
         dataField : "email",
         headerText : "Email",
+        style : "my-custom-up",
         editable : false,
     },{
         dataField : "",
@@ -255,6 +256,7 @@ var estmHisPopColumnLayout = [
     }, {
         dataField : "email",
         headerText : "Email",
+        style : "my-custom-up",
         editable : false,
     },{
         dataField : "crtDt",
