@@ -164,7 +164,7 @@
     <resultMap id="enrollMap" type="egovMap"></resultMap>
     <select id="saveEnroll" parameterType="Map"  statementType="CALLABLE">
         {
-        call  SP_INST_RSC_ENRL(#{cmbIssueBank2},TO_CHAR(TO_DATE(#{rdpCreateDateFr2},'DD/MM/YYYY'),'YYYYMMDD'), TO_CHAR(TO_DATE(#{rdpCreateDateTo2},'DD/MM/YYYY'),'YYYYMMDD'),'52386',#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=enrollMap})
+        call  SP_INST_RSC_ENRL(#{cmbIssueBank2},TO_CHAR(TO_DATE(#{rdpCreateDateFr2},'DD/MM/YYYY'),'YYYYMMDD'), TO_CHAR(TO_DATE(#{rdpCreateDateTo2},'DD/MM/YYYY'),'YYYYMMDD'),52386,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=enrollMap})
         }
     </select>
     

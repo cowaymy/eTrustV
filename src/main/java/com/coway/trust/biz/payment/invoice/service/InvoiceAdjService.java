@@ -68,4 +68,12 @@ public interface InvoiceAdjService {
     	 * @return
     	 */
         List<EgovMap> selectAdjDetailPopHist(Map<String, Object> params);
+        
+    	/**
+    	* Approval Adjustment  - Approva / Reject
+    	* @param params
+    	* @param model
+    	* @return
+    	*/       
+        void approvalAdjustment(Map<String, Object> params);
 }

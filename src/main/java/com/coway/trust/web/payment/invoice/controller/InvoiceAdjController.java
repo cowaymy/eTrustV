@@ -109,6 +109,7 @@ public class InvoiceAdjController {
 	@RequestMapping(value = "/initAdjustmentDetailPop.do")	
 	public String initAdjustmentDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("adjId", params.get("adjId"));
+		model.addAttribute("mode", params.get("mode"));
 		return "payment/invoice/adjCnDnDetailPop";
 	}
 	
@@ -421,6 +422,63 @@ public class InvoiceAdjController {
     	return ResponseEntity.ok(message);
 	}
 	
+	/******************************************************
+	 *   Approval Adjustment CN/DN
+	 *****************************************************/	
+	/**
+	 * Approval Adjustment CN/DN 리스트 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initApprovalAdjCnDnList.do")
+	public String initApprovalAdjCnDnList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/invoice/approvalAdjCnDnList";
+	}
+	
+	
+	/**
+	 * Approval Pop-up 초기화면
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initApprovalPop.do")	
+	public String initApprovalPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("adjId", params.get("adjId"));
+		return "payment/invoice/approvalAdjPop";
+	}
+	
+	
+	/**
+	* Approval Adjustment  - Approva / Reject
+	* @param params
+	* @param model
+	* @return
+	*/
+	@RequestMapping(value = "/approvalAdjustment.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approvalAdjustment(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
+		
+		LOGGER.debug("adjId : {}", params.get("adjId"));
+		LOGGER.debug("process : {}", params.get("process"));
+		LOGGER.debug("invoiceType : {}", params.get("invoiceType"));
+		LOGGER.debug("memoAdjTypeId : {}", params.get("memoAdjTypeId"));
+		LOGGER.debug("invoiceNo : {}", params.get("invoiceNo"));
+		
+		//세션 정보 
+		params.put("userId", sessionVO.getUserId());
+		
+		//승인 or 반려 처리
+		invoiceService.approvalAdjustment(params);
+
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData("");
+    	message.setMessage("Adjustment successfully requested.");
+		
+    	return ResponseEntity.ok(message);
+	}
 	
 	/**
 	 * 

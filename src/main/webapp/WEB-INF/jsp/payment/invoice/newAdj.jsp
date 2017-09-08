@@ -16,7 +16,7 @@
 
     var columnLayout=[
         { dataField:"txinvoiceitemid" ,headerText:"Tax Invoice Item Id" ,editable : false, visible:false },
-        { dataField:"txinvoiceitemtypeid" ,headerText:"Tax Invoice Type Id" ,editable : false, visible:true },
+        { dataField:"txinvoiceitemtypeid" ,headerText:"Tax Invoice Type Id" ,editable : false, visible:false },
         { dataField:"billitemtaxcodeid" ,headerText:"Bill Item Tax Code ID" ,editable : false, visible:false },
         { dataField:"billitemtype" ,headerText:"Bill Type" ,editable : false ,width : 120},
         { dataField:"billitemrefno" ,headerText:"Order No." ,editable : false ,width : 120 },

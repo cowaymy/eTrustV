@@ -105,4 +105,56 @@ public interface InvoiceAdjMapper {
 	 * @return
 	 */
     List<EgovMap> selectAdjDetailPopHist(Map<String, Object> params);
+    
+    /**
+	* Approval Adjustment  - Approva / Reject Master
+	* @param params
+	* @param model
+	* @return
+	*/
+	void approvalAdjustmentMaster(Map<String, Object> params);
+	
+	/**
+	* Approval Adjustment  - Approva / Reject Details
+	* @param params
+	* @param model
+	* @return
+	*/
+	void approvalAdjustmentDetails(Map<String, Object> params);
+	
+	/**
+	 * 승인 데이터 처리에 필요한 메서드들 : Rental
+	 * @param params
+	 * @return
+	 */
+	
+	int getNoteId();
+    EgovMap selectAdjMasterForApprovalRental(Map<String, Object> params);
+    void insertAccTaxDebitCreditNote(EgovMap params);
+    List<EgovMap> selectAdjDetailsForApprovalRental(Map<String, Object> params);
+    void insertAccTaxDebitCreditNoteSub(EgovMap params);
+    void insertAccServiceContractLedger(Map<String, Object> params);
+    void insertAccRentLedger(Map<String, Object> params);
+    
+    /**
+	 * 승인 데이터 처리에 필요한 메서드들 : Outright
+	 * @param params
+	 * @return
+	 */
+    EgovMap selectAdjMasterForApprovalOutright(Map<String, Object> params);
+    List<EgovMap> selectAdjDetailsForApprovalOutright(Map<String, Object> params);
+    void insertAccTradeLedger(Map<String, Object> params);
+    
+    /**
+	 * 승인 데이터 처리에 필요한 메서드들 : Misc
+	 * @param params
+	 * @return
+	 */
+    EgovMap selectAdjMasterForApprovalMisc(Map<String, Object> params);
+    List<EgovMap> selectAdjDetailsForApprovalMisc(Map<String, Object> params);
+    void insertASLedger(Map<String, Object> params);    
+    int selectQuotId(String quotNo);
+    int selectSrvMemId(int quotId);
+    void insertAccSrvMemLedger(Map<String, Object> params);    
+    
 }

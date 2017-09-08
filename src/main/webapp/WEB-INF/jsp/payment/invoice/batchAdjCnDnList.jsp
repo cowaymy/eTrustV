@@ -6,6 +6,9 @@
 var myGridID,newBatchAdjGridID;
 
 //Default Combo Data
+var adjStatusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
+
+//Default Combo Data
 var adjTypeData = [{"codeId": "1293","codeName": "Credit Note"},{"codeId": "1294","codeName": "Debit Note"}];
 
 //Grid Properties 설정 
@@ -39,7 +42,10 @@ var newBatchColLayout = [
 $(document).ready(function(){
 	
 	 //Adjustment Type 생성
-    doDefCombo(adjTypeData, '' ,'newAdjType', 'S', '');            
+    doDefCombo(adjTypeData, '' ,'newAdjType', 'S', '');        
+	 
+    //Adjustment Status 생성
+    doDefCombo(adjStatusData, '' ,'status', 'S', '');
 
     //Adjustment Type 변경시 Reason Combo 생성
     $('#newAdjType').change(function (){
@@ -252,11 +258,7 @@ function fn_batchAdjFileUp(){
 					    </td>
 					    <th scope="row">Adjustment Status</th>
                         <td>
-                            <select id="status" name="status" class="w100p">
-                                <option value="1">Active</option>
-                                <option value="4">Completed</option>
-                                <option value="21">Failed</option>
-                            </select>
+                            <select id="status" name="status" class="w100p"></select>
                         </td>
                     </tr>
 					<tr>
