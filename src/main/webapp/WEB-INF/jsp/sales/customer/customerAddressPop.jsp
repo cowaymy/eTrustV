@@ -34,14 +34,18 @@
         <td colspan="3"><span>${detailaddr.add3}</span></td>
     </tr>
     <tr>
-        <th scope="row">Postcode</th>
-        <td>${detailaddr.postCode}</td>
         <th scope="row">Area</th>
-        <td>${detailaddr.region2 }</td>
+        <td colspan="3"><span>${detailaddr.area}</span></td>
+    </tr>
+    <tr>
+        <th scope="row">City</th>
+        <td>${detailaddr.city }</td>
+        <th scope="row">Postcode</th>
+        <td>${detailaddr.postcode}</td>
     </tr>
     <tr>
         <th scope="row">State</th>
-        <td>${detailaddr.region1}</td>
+        <td>${detailaddr.state}</td>
         <th scope="row">Country</th>
         <td>${detailaddr.country}</td>
     </tr>

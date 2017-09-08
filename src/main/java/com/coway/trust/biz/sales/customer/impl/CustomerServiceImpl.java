@@ -650,5 +650,77 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.selectCustomerMainContact(params);
 	}
+
+	
+	/**
+	 * Get State List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public List<EgovMap> selectMagicStateList(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectMagicStateList(params);
+	}
+	
+	
+	/**
+	 * Get City List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public List<EgovMap> selectMagicCityList(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectMagicCityList(params);
+	}
+
+	
+	/**
+	 * Get PostCode List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public List<EgovMap> selectMagicPostCodeList(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectMagicPostCodeList(params);
+	}
+
+
+	/**
+	 * Get Area List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public List<EgovMap> selectMagicAreaList(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.selectMagicAreaList(params);
+	}
+
+
+	/**
+	 * Get Area Id (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public EgovMap getAreaId(Map<String, Object> params) throws Exception {
+		
+		return customerMapper.getAreaId(params);
+	}
+	
+	
 	
 }

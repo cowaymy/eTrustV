@@ -13,15 +13,22 @@
 	    
 	    // 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(mAddrGridID, "cellDoubleClick", function(event){
-	    	var mstate = event.item.state;
+	    	/* var mstate = event.item.state;
 	    	var mcity = event.item.city;
 	    	var mtown = event.item.town;
 	    	var mpostCd = event.item.postcd;
 	    	var mstreet = event.item.street;
 	    	var miso = event.item.iso;
-	    	var mstreetId = event.item.streetId;
+	    	var mstreetId = event.item.streetId; */
+	    	
+	    	var marea = event.item.area;
+	    	var mcity = event.item.city;
+	    	var mpostcode = event.item.postcode;
+	    	var mstate = event.item.state;
+	    	var areaid = event.item.areaId;
+	    	var miso = event.item.iso;
 
-	    	fn_addMaddr(mstate,mcity,mtown,mpostCd,mstreet,miso,mstreetId);
+	    	fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso);
 
 	    });
 	    // 셀 클릭 이벤트 바인딩
@@ -31,31 +38,26 @@
 	
 	function createAUIGrid() {
         var columnLayout = [ {
-            dataField : "street",
-            headerText : "STREET",
+            dataField : "area",
+            headerText : "AREA",
             editable : false
         }, {
-            dataField : "postcd",
+            dataField : "postcode",
             headerText : "POSTCODE",
             width : 90,
             editable : false
         }, {
-            dataField : "town",
-            headerText : "Town",
+            dataField : "city",
+            headerText : "CITY",
             width : 160,
             editable : false
         }, {
-            dataField : "city",
-            headerText : "City",
+            dataField : "state",
+            headerText : "STATE",
             width : 180,
             editable : false
-        }, {
-            dataField : "state",
-            headerText : "Region",
-            width : 130,
-            editable : false
-        }, {
-            dataField : "streetId",
+        },{
+            dataField : "areaId",
             visible : false
         }, {
             dataField : "iso",

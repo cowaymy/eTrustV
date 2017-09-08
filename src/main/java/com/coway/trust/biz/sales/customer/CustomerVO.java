@@ -24,7 +24,7 @@ public class CustomerVO implements Serializable {
 	private String codeName1;		// Customer Type Name (Type)
 	private int bankId;
 	private String code;
-	private String streetId;
+	private String areaId;
 	
 	/** Customer Insert VO*/
 	private String custName;
@@ -38,7 +38,7 @@ public class CustomerVO implements Serializable {
 	private String gstRgistNo;
 	private int getCustAddrId;
 	private String addrDtl;
-	private String addr3;
+	private String streetDtl;
 	private int cmbPostCd;
 	private int cmbArea;
 	private int mstate;
@@ -223,12 +223,6 @@ public class CustomerVO implements Serializable {
 	public void setAddrDtl(String addrDtl) {
 		this.addrDtl = addrDtl;
 	}
-	public String getAddr3() {
-		return addr3;
-	}
-	public void setAddr3(String addr3) {
-		this.addr3 = addr3;
-	}
 	public int getCmbPostCd() {
 		return cmbPostCd;
 	}
@@ -379,11 +373,17 @@ public class CustomerVO implements Serializable {
 	public void setAccRem(String accRem) {
 		this.accRem = accRem;
 	}
-	public String getStreetId() {
-		return streetId;
+	public String getAreaId() {
+		return areaId;
 	}
-	public void setStreetId(String streetId) {
-		this.streetId = streetId;
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
+	}
+	public String getStreetDtl() {
+		return streetDtl;
+	}
+	public void setStreetDtl(String streetDtl) {
+		this.streetDtl = streetDtl;
 	}
 	
 }

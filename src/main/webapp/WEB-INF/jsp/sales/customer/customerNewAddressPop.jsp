@@ -2,16 +2,25 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-    
+ 
+	//Combo Box Choose Message    
+	var optionState = {chooseMessage: " 1.States "};
+	var optionCity = {chooseMessage: "2. City"};
+	var optionPostCode = {chooseMessage: "3. Post Code"};
+	var optionArea = {chooseMessage: "4. Area"};
+
 	 $(document).ready(function() {
-		/* ### Get Cust AddrID ####*/
+		
+		 //Filed Init
+		 fn_initAddress();
+		 CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , '', optionState);
+		 /* ### Get Cust AddrID ####*/
 		 fn_getCustAddrId();
 		/* ###  Page Param #### */
          fn_selectPage();
 		/* #### Btn Action  #### */
 		 $("#_saveBtn").click(function() {
 			    
-			 
 			 /* addr1 addr2 null check */
 			 if( ( "" == $("#addrDtl").val() || null == $("#addrDtl").val())){
 				 Common.alert("* Please key in the address.");
@@ -47,7 +56,7 @@
 			
 			 //custAddrId
 			 var addid = $("#tempAddrId").val();
-			 $("#streetId").val($("#tempStreetId").val());			 
+			 $("#areaId").val($("#tempAreaId").val());			 
 			 
 			 $.ajax({
 				 type : "GET",
@@ -76,9 +85,99 @@
 			 });
 		});
 		
-	});
+	});//Document Ready Func End
 	
-	 function fn_selectPage(){
+	 
+	    /*####### Magic Address #########*/
+	    function fn_initAddress(){
+	        
+	           $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	           $("#mPostCd").val('');
+	           
+	           $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	           $("#mCity").val('');
+	           
+	           $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	           $("#mArea").val('');
+	    }
+	     
+	     
+	    function fn_selectState(selVal){
+	        
+	        var tempVal = selVal;
+	        
+	        if('' == selVal || null == selVal){
+	            //전체 초기화
+	            fn_initAddress();   
+	            
+	        }else{
+	            
+	            $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
+	            
+	            $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	            $("#mPostCd").val('');
+	            
+	            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	            $("#mArea").val('');
+	            
+	            //Call ajax
+	            var cityJson = {groupCode : tempVal}; //Condition
+	            CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", cityJson, '' , optionCity);
+	        }
+	        
+	    }
+	    
+	    function fn_selectCity(selVal){
+	        
+	        var tempVal = selVal;
+	        
+	        if('' == selVal || null == selVal){
+	           
+	            $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	            $("#mPostCd").val('');
+	            
+	            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	            $("#mArea").val('');
+	            
+	        }else{
+	            
+	            $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+	            
+	            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	            $("#mArea").val('');
+	            
+	            //Call ajax
+	            var postCodeJson = {groupCode : tempVal}; //Condition
+	            CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, '' , optionPostCode);
+	        }
+	        
+	    }
+	    
+	    
+	   function fn_selectPostCode(selVal){
+	        
+	        var tempVal = selVal;
+	        
+	        if('' == selVal || null == selVal){
+	           
+	            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+	            $("#mArea").val('');
+	            
+	        }else{
+	            
+	            $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
+	            
+	            //Call ajax
+	            var areaJson = {groupCode : tempVal}; //Condition
+	            CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", areaJson, '' , optionArea);
+	        }
+	        
+	    }
+	    
+	    
+	    /*####### Magic Address #########*/
+	    
+	function fn_selectPage(){
 		 
 		 if("" != $("#_callParam").val() && null != $("#_callParam").val()){
 			  $("#_copyBtn").css("display" , "");
@@ -98,11 +197,10 @@
 			contentType : "application/json;charset=UTF-8",
 			success : function(data) {
 		            $("#tempAddrId").val(data.custAddId);
-		            $("#tempStreetId").val(data.streetId);
-		            
+		            $("#tempAreaId").val(data.areaId);
 		    },
 		    error: function(){
-	            alert("Get Address Id was Failed!");
+	            Common.alert("Get Address Id was Failed!");
 	        },
 	        complete: function(){
 	        }
@@ -140,21 +238,61 @@
     }
     
     
-     function fn_addMaddr(mstate,mcity,mtown,mpostCd,mstreet,miso,mstreetId){
-         
-            if(mstate != "" && mcity != "" && mtown != "" && mpostCd != "" && mstreet != "" && mstreetId != ""){
-                $("#mState").val(mstate);
-                $("#mCity").val(mcity);
-                $("#mTown").val(mtown);
-                $("#mPostCd").val(mpostCd);
-                $("#mStreet").val(mstreet);
-                $("#mCountry").val(miso);
-                $("#streetId").val(mstreetId);
-                $("#_searchDiv").remove();
-            }else{
-                Common.alert("Please check your address.");
-            }
+    function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
+        
+        if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
+            
+            $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
+            $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
+            $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+            $("#mState").attr({"disabled" : false  , "class" : "w100p"});
+            
+            //Call Ajax
+           
+            CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , mstate, optionState);
+            
+            var cityJson = {groupCode : mstate};
+            CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", cityJson, mcity , optionCity);
+            
+            var postCodeJson = {groupCode : mcity};
+            CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, mpostcode , optionCity);
+            
+            var areaJson = {groupCode : mpostcode};
+            CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", areaJson, marea , optionArea);
+            
+            $("#areaId").val(areaid);
+            $("#_searchDiv").remove();
+        }else{
+            Common.alert("Please check your address.");
         }
+    }
+    
+    //Get Area Id
+    function fn_getAreaId(){
+        
+        var statValue = $("#mState").val();
+        var cityValue = $("#mCity").val();
+        var postCodeValue = $("#mPostCd").val();
+        var areaValue = $("#mArea").val();
+        
+        
+        
+        if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
+            
+            var jsonObj = { statValue : statValue ,
+                                  cityValue : cityValue,
+                                  postCodeValue : postCodeValue,
+                                  areaValue : areaValue
+                                };
+            Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
+                
+                 $("#areaId").val(result.areaId);
+                
+            });
+            
+        }
+        
+    }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -166,12 +304,12 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
-    <input type="hidden" id="streetId" name="streetId">
+    <input type="hidden" id="areaId" name="areaId">
     <input type="hidden" value="${insCustId}" id="_insCustId" name="insCustId"> 
     <input type="hidden" name="addrCustAddId" value="${detailaddr.custAddId}" id="addrCustAddId">
     <!-- Temp Address Id -->
     <input type="hidden" name="tempAddrId" id="tempAddrId">
-    <input type="hidden" name="tempStreetId" id="tempStreetId">
+    <input type="hidden" name="tempAreaId" id="tempAreaId">
     <!-- Page Param -->
     <input type="hidden" name="callParam" id="_callParam" value="${callParam}">
     <table class="type1"><!-- table start -->
@@ -182,7 +320,7 @@
         <col style="width:130px" />
         <col style="width:*" />
     </colgroup>
-        <tbody>
+         <tbody>
             <tr>
                 <th scope="row">Street search<span class="must">*</span></th>
                 <td colspan="3">
@@ -190,52 +328,47 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Address<span class="must">*</span></th>
+                <th scope="row" >Address Detail<span class="must">*</span></th>
                 <td colspan="3">
                 <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>
+                <th scope="row" >Street</th>
+                <td colspan="3">
+                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+               <th scope="row">Area(4)<span class="must">*</span></th>
+                <td colspan="3">
+                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+                </td>
+            </tr>
+            <tr>
+                 <th scope="row">City(2)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+                </td>
+                <th scope="row">PostCode(3)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">State(1)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                </td>
                 <th scope="row">Country<span class="must">*</span></th>
                 <td>
-                <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" />
-                </td>
-                <th scope="row">Region<span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="mState" name="mState" placeholder="" class="w100p readonly" readonly="readonly" />
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">City<span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="mCity" name="mCity" placeholder="" class="w100p readonly" readonly="readonly" />
-                </td>
-                <th scope="row">Town<span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="mTown" name="mTown" placeholder="" class="w100p readonly" readonly="readonly" />
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Street<span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="mStreet" name="mStreet" placeholder="" class="w100p readonly" readonly="readonly" />
-                </td>
-                <th scope="row">PostCode<span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="mPostCd" name="mPostCd" placeholder="" class="w100p readonly" readonly="readonly" />
+                <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
                 </td>
             </tr>
             <tr>
                 <th scope="row">Remarks</th>
                 <td colspan="3">
                 <textarea cols="20" rows="5" id="addrRem" name="addrRem" placeholder="Remark"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <ul class="center_btns">
-				    <li><p class="btn_blue big"><a href="#" id="_copyBtn" style="display: none;">Copy</a></p></li>
-				    </ul>
                 </td>
             </tr>
         </tbody>

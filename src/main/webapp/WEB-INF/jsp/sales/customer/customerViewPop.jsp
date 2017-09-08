@@ -45,7 +45,7 @@
                           labelText : "View", 
                           onclick : function(rowIndex, columnIndex, value, item) {
                               //pupupWin
-                              $("#getparam").val(item.custAddId);
+                             $("#getparam").val(item.custAddId);
                              Common.popupDiv("/sales/customer/selectCustomerAddrDetailViewPop.do", $("#detailForm").serializeJSON());
                         }
                  }

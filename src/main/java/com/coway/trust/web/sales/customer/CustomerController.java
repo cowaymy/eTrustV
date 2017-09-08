@@ -1,8 +1,6 @@
 package com.coway.trust.web.sales.customer;
 
-import java.sql.Clob;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.customer.CustomerBVO;
 import com.coway.trust.biz.sales.customer.CustomerCVO;
@@ -32,7 +28,6 @@ import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -325,6 +320,7 @@ public class CustomerController {
 		EgovMap detailaddr = null;
 		LOGGER.info("##### selectCustomerDetailAddr START #####");
 		detailaddr = customerService.selectCustomerAddrDetailViewPop(params);
+		LOGGER.info("##### detailaddr : " + detailaddr.toString());
 		model.addAttribute("detailaddr", detailaddr);
 		
 		return "sales/customer/customerAddressPop";
@@ -491,7 +487,10 @@ public class CustomerController {
 		
 		// Address
 		insmap.put("addrDtl", vo.getAddrDtl());
-		insmap.put("streetId", vo.getStreetId());
+		insmap.put("areaId", vo.getAreaId());
+		insmap.put("streetDtl", vo.getStreetDtl());
+
+
 //		insmap.put("addr3", vo.getAddr3());
 //		insmap.put("addr4", "");										//고정
 //		insmap.put("postCodeId", String.valueOf(vo.getCmbPostCd()) != null ? vo.getCmbPostCd() : 0);
@@ -892,8 +891,10 @@ public class CustomerController {
 			/*LOGGER.info("팝업창 파라미터 확인 :  custId = " + params.get("custId") + " , custAddId = " + params.get("custAddId"));*/
 			EgovMap detailaddr = null;
 			LOGGER.info("##### updateCustomerAddressInfoPop START #####");
+			LOGGER.info("### 가져온 파라미터 확인 : " + params.get("editCustAddId"));
 			params.put("getparam", params.get("editCustAddId"));
 			detailaddr = customerService.selectCustomerAddrDetailViewPop(params);
+			LOGGER.info("### DetailAddress 정보 확인  : " + detailaddr.toString());
 			model.addAttribute("detailaddr", detailaddr);
 			
 			return "sales/customer/customerAddressEditInfoPop"; 
@@ -1195,7 +1196,7 @@ public class CustomerController {
 		public ResponseEntity<List<EgovMap>> searchMagicAddressPopJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 			
 			List<EgovMap> searchMagicAddrList = null;
-			
+			//searchStreet
 			LOGGER.info("##### searchMagicAddrList START #####");
 			searchMagicAddrList = customerService.searchMagicAddressPop(params);
 			
@@ -1449,5 +1450,64 @@ public class CustomerController {
 			mainContactidMap = customerService.selectCustomerMainContact(params);
 			
 			return ResponseEntity.ok(mainContactidMap);
+		}
+		
+		
+		@RequestMapping(value = "/selectMagicStateList")
+		public ResponseEntity<List<EgovMap>>  selectMagicStateList (@RequestParam Map<String, Object> params) throws Exception{
+			
+			List<EgovMap> stateList = null;
+			
+			stateList = customerService.selectMagicStateList(params);
+			
+			return ResponseEntity.ok(stateList);
+			
+		}
+		
+		
+		@RequestMapping(value = "/selectMagicPostCodeList")
+		public ResponseEntity<List<EgovMap>>  selectMagicPostCodeList (@RequestParam Map<String, Object> params) throws Exception{
+			
+			List<EgovMap> postList = null;
+			
+			postList = customerService.selectMagicPostCodeList(params);
+			
+			return ResponseEntity.ok(postList);
+			
+		}
+		
+		
+		@RequestMapping(value = "/selectMagicCityList")
+		public ResponseEntity<List<EgovMap>>  selectMagicCityList (@RequestParam Map<String, Object> params) throws Exception{
+			
+			List<EgovMap> cityList = null;
+			
+			cityList = customerService.selectMagicCityList(params);
+			
+			return ResponseEntity.ok(cityList);
+			
+		}
+		
+		
+		@RequestMapping(value = "/selectMagicAreaList")
+		public ResponseEntity<List<EgovMap>>  selectMagicAreaList (@RequestParam Map<String, Object> params) throws Exception{
+			
+			List<EgovMap> areaList = null;
+			
+			areaList = customerService.selectMagicAreaList(params);
+			
+			return ResponseEntity.ok(areaList);
+			
+		}
+		
+		
+		@RequestMapping(value = "/getAreaId.do")
+		public ResponseEntity<EgovMap> getAreaId(@RequestParam Map<String, Object> params) throws Exception{
+			
+			EgovMap areaMap = null;
+			
+			areaMap = customerService.getAreaId(params);
+			
+			return ResponseEntity.ok(areaMap);
 		}
 }

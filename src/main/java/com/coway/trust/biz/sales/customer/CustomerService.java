@@ -473,4 +473,55 @@ public interface CustomerService {
 	 * @author 
 	 */
 	EgovMap selectCustomerMainContact(Map<String, Object> params) throws Exception;
+	
+	
+	
+	 /**
+	 * Get State List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	List<EgovMap> selectMagicStateList(Map<String, Object> params) throws Exception;
+	
+	
+	 /**
+	 * Get City List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	List<EgovMap> selectMagicCityList(Map<String, Object> params) throws Exception;
+	
+	
+	 /**
+	 * Get PostCode List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	List<EgovMap> selectMagicPostCodeList(Map<String, Object> params) throws Exception;
+	
+	
+	 /**
+	 * Get Area List (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	List<EgovMap> selectMagicAreaList(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Get Area Id (Magic Address) 
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	EgovMap getAreaId (Map<String, Object> params) throws Exception;
 }
