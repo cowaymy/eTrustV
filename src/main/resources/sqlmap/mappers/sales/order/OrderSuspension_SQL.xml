@@ -386,4 +386,74 @@
                                 AND ( Extent2.SALES_ORD_ID = #{salesOrdId} ) ) Project1
                       ORDER BY Project1.CALL_RESULT_ID DESC
     </select>
+    
+    <select id="newSuspendSearch1" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.SUS_ID SUS_ID  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.SUS_STUS_ID SUS_STUS_ID  ,
+			       Extent1.INV_ID INV_ID  ,
+			       Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+			       Extent1.RAF_AMT RAF_AMT  ,
+			       Extent1.SUS_CRT_DT SUS_CRT_DT  ,
+			       Extent1.SUS_CRT_USER_ID SUS_CRT_USER_ID  ,
+			       Extent1.SUS_UPD_DT SUS_UPD_DT  ,
+			       Extent1.SUS_UPD_USER_ID SUS_UPD_USER_ID  ,
+			       Extent1.SUS_NO SUS_NO  ,
+			       Extent1.SUS_LAST_BILL_MONTH SUS_LAST_BILL_MONTH  ,
+			       Extent1.SUS_LAST_BILL_YEAR SUS_LAST_BILL_YEAR  ,
+			       Extent1.SUS_LAST_BILL_INST_NO SUS_LAST_BILL_INST_NO  ,
+			       Extent1.SUS_CURR_BILL_INST_NO SUS_CURR_BILL_INST_NO  ,
+			       Extent1.SUS_FROM_FB SUS_FROM_FB  ,
+			       Extent1.FB_REF_NO FB_REF_NO  
+			  FROM SAL0096D Extent1
+			 WHERE  Extent1.SUS_ID = #{susId} AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <insert id="insertCCR0007DSuspend" parameterType="Map">
+        INSERT INTO CCR0007D
+                      ( CALL_RESULT_ID, CALL_ENTRY_ID, CALL_STUS_ID, CALL_DT, CALL_ACTN_DT
+                      , CALL_FDBCK_ID, CALL_CT_ID, CALL_REM, CALL_CRT_USER_ID, CALL_CRT_DT
+                      , CALL_CRT_USER_ID_DEPT, CALL_HC_ID, CALL_ROS_AMT, CALL_SMS, CALL_SMS_REM )
+        VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL, #{callEntryId}, #{callStusId}
+                      , TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:mi:SS'), TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:mi:SS')
+                      , #{callFdbckId}, #{callCtId}, #{callRem}, #{callCrtUserId}, SYSDATE
+                      , #{callCrtUserIdDept}, #{callHcId}, #{callRosAmt}, #{callSms}, #{callSmsRem} )
+    </insert>
+    
+    <select id="newSuspendSearch2" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.TYPE_ID TYPE_ID  ,
+			       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+			       Extent1.RESULT_ID RESULT_ID  ,
+			       Extent1.DOC_ID DOC_ID  ,
+			       Extent1.CRT_USER_ID CRT_USER_ID  ,
+			       Extent1.CRT_DT CRT_DT  ,
+			       Extent1.CALL_DT CALL_DT  ,
+			       Extent1.IS_WAIT_FOR_CANCL IS_WAIT_FOR_CANCL  ,
+			       Extent1.HAPY_CALLER_ID HAPY_CALLER_ID  ,
+			       Extent1.UPD_DT UPD_DT  ,
+			       Extent1.UPD_USER_ID UPD_USER_ID  ,
+			       Extent1.ORI_CALL_DT ORI_CALL_DT  
+			  FROM CCR0006D Extent1
+			 WHERE  Extent1.CALL_ENTRY_ID = #{callEntryId} AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <update id="updateCCR0006DSuspend" parameterType="Map">
+        UPDATE CCR0006D
+			 SET STUS_CODE_ID = #{stusCodeId},
+			       RESULT_ID = #{resultId},
+			       UPD_DT = SYSDATE,
+			       UPD_USER_ID = #{updUserId}
+         WHERE CALL_ENTRY_ID = #{callEntryId}
+    </update>
+    
+    <update id="updateSAL0096DSuspend" parameterType="Map">
+        UPDATE SAL0096D
+			 SET SUS_STUS_ID = #{stusCodeId},
+			       SUS_UPD_DT = SYSDATE,
+			       SUS_UPD_USER_ID = #{updUserId}
+		 WHERE SUS_ID =  #{susId}
+    </update>
+    
 </mapper>
