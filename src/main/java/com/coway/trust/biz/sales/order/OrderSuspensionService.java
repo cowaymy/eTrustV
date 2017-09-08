@@ -59,4 +59,7 @@ public interface OrderSuspensionService {
 	 * @exception Exception
 	 */
 	List<EgovMap> callResultLog(Map<String, Object> params);
+	
+	
+	void newSuspendResult(Map<String, Object> params);
 }
