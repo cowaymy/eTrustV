@@ -23,9 +23,8 @@
 
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
-        //Common.popupWin("listSearchForm", "/sales/order/orderDetail.do?salesOrderId="+AUIGrid.getCellValue(gridID, rowIdx, "ordId"), _option);
-        //$('#listSalesOrderId').val(AUIGrid.getCellValue(gridID, rowIdx, "ordId"));
-        //Common.popupDiv("/sales/order/orderDetailPop.do", $("#listSearchForm").serializeJSON());
+//        Common.popupWin("listSearchForm", "/sales/promotion/promotionModifyPop.do?promoId=31555");
+        Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(gridID, rowIdx, "promoId") });
     }
     
     // 리스트 조회.

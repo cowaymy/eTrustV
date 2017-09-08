@@ -8,16 +8,20 @@
         //AUIGrid 그리드를 생성합니다.
         createAUIGridStk();
         
-        doGetCombo('/common/selectCodeList.do', '320', '', 'promoAppTypeId',    'S'); //Promo Application
-        doGetCombo('/common/selectCodeList.do', '76',  '', 'promoTypeId',       'S'); //Promo Type
-        doGetCombo('/common/selectCodeList.do', '8',   '', 'promoCustType',     'S'); //Customer Type
-        doGetCombo('/common/selectCodeList.do', '322', '', 'promoDiscPeriodTp', 'S'); //Discount period
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '', 'exTrade',              'S'); //EX_Trade
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '', 'empChk',               'S'); //EMP_CHK
-        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
-        doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+        doGetCombo('/common/selectCodeList.do', '320', ${promoInfo.promoAppTypeId},    'promoAppTypeId',    'S'); //Promo Application
+        doGetCombo('/common/selectCodeList.do', '76',  ${promoInfo.promoTypeId},       'promoTypeId',       'S'); //Promo Type
+        doGetCombo('/common/selectCodeList.do', '8',   ${promoInfo.promoCustType},     'promoCustType',     'S'); //Customer Type
+        doGetCombo('/common/selectCodeList.do', '322', ${promoInfo.promoDiscPeriodTp}, 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, ${promoInfo.exTrade},              'exTrade',              'S'); //EX_Trade
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, ${promoInfo.empChk},               'empChk',               'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, ${promoInfo.promoDiscType},        'promoDiscType',        'S'); //Discount Type
+        doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         
-        doGetCombo('/sales/promotion/selectMembershipPkg.do', '', '9', 'promoSrvMemPacId', 'S'); //Common Code
+        doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
+
+        fn_chgPromoDetail(${promoInfo.promoAppTypeId}, ${promoInfo.promoTypeId}, ${promoInfo.promoCustType});
+        
+        fn_chgPageMode('VIEW');
     });
     
     function createAUIGridStk() {
@@ -27,28 +31,30 @@
             { headerText : "Product CD",    dataField  : "itmcd",   editable : false,   width : 100 }
           , { headerText : "Product Name",  dataField  : "itmname", editable : false                  }
           , { headerText : "Normal" 
-            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "amt",          editable : false, width : 100  }
-                          , { headerText : "RPF",                   dataField : "prcRpf",       editable : false, width : 100  }
-                          , { headerText : "PV",                    dataField : "prcPv",        editable : false, width : 100  }]}
+            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "amt",         editable : false, width : 100 }
+                          , { headerText : "RPF",                   dataField : "prcRpf",      editable : false, width : 100 }
+                          , { headerText : "PV",                    dataField : "prcPv",       editable : false, width : 100 }]}
           , { headerText : "Promotion" 
-            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "promoAmt",     editable : false, width : 100  }
-                          , { headerText : "RPF",                   dataField : "promoPrcRpf",  editable : false, width : 100  }
-                          , { headerText : "PV",                    dataField : "promoItmPv",   editable : true,  width : 100  }]}
-          , { headerText : "itmid",         dataField   : "promoItmStkId",  visible  : false,     width : 80  }
+            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "promoAmt",    editable : false, width : 100 }
+                          , { headerText : "RPF",                   dataField : "promoPrcRpf", editable : false, width : 100 }
+                          , { headerText : "PV",                    dataField : "promoItmPv",  editable : true,  width : 100 }]}
+          , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
+          , { headerText : "promoItmId",    dataField   : "promoItmId",       visible  : false, width : 80 }
           ];
 
     	//AUIGrid 칼럼 설정
         var columnLayout2 = [
-            { headerText : "Product CD",    dataField : "itmcd",    editable : false,   width : 100 }
-          , { headerText : "Product Name",  dataField : "itmname",  editable : false                }
-          , { headerText : "itmid",         dataField : "promoFreeGiftStkId", visible  : false,   width : 120 }
+            { headerText : "Product CD",    dataField : "itmcd",              editable : false, width : 100 }
+          , { headerText : "Product Name",  dataField : "itmname",            editable : false              }
+          , { headerText : "itmid",         dataField : "promoFreeGiftStkId", false    : true,  width : 120 }
+          , { headerText : "promoItmId",    dataField : "promoItmId",         false    : true,  width : 80  }
           ];
 
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
             pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : true,            
+            editable            : false,            
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
@@ -68,6 +74,22 @@
         giftGridID = GridCommon.createAUIGrid("pop_gift_grid_wrap", columnLayout2, "", gridPros);
     }
     
+    function fn_selectPromotionPrdListAjax(promoId) {
+        console.log('fn_selectPromotionPrdListAjax START');
+        Common.ajax("GET", "/sales/promotion/selectPromotionPrdList.do", { promoId : promoId }, function(result) {
+            AUIGrid.setGridData(stckGridID, result);
+            
+            fn_getPrdPriceInfo();
+        });
+    }
+    
+    function fn_selectPromotionFreeGiftListAjax(promoId) {
+        console.log('fn_selectPromotionFreeGiftListAjax START');
+        Common.ajax("GET", "/sales/promotion/selectPromotionFreeGiftList.do", { promoId : promoId }, function(result) {
+            AUIGrid.setGridData(giftGridID, result);
+        });
+    }
+    
     function fn_doSavePromtion() {
         console.log('!@# fn_doSavePromtion START');
         console.log($('#promoCode').val().trim());
@@ -75,6 +97,7 @@
         var promotionVO = {
             
             salesPromoMVO : {
+	            promoId                 : ${promoInfo.promoId},
 	            promoCode               : $('#promoCode').val().trim(),
 	            promoDesc               : $('#promoDesc').val().trim(),
 	            promoTypeId             : $('#promoTypeId').val(),
@@ -98,13 +121,11 @@
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
         };
 
-        Common.ajax("POST", "/sales/promotion/registerPromotion.do", promotionVO, function(result) {
+        Common.ajax("POST", "/sales/promotion/updatePromotion.do", promotionVO, function(result) {
 
-            Common.alert("New Promotion Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            Common.alert("Promotion Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
-            fn_selectPromoListAjax();
-            
-            fn_createEvent("btnClosePop", "click");
+            fn_chgPageMode('VIEW');
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -139,6 +160,7 @@
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
             
             orgPrcVal = AUIGrid.getCellValue(stckGridID, i, "amt");
+            dscPrcVal = FormUtil.isEmpty($('#promoDiscValue').val())  ? 0 : $('#promoDiscValue').val().trim()
             
             if($('#promoDiscType').val() == '0') {//%
                 dscPrcVal = orgPrcVal * (dscPrcVal / 100);
@@ -196,7 +218,7 @@
             AUIGrid.setCellValue(stckGridID, i, "promoItmPv", newPvVal);
         }
     }
-        
+    
     function fn_getPrdPriceInfo() {
          
         var promotionVO = {            
@@ -225,7 +247,7 @@
             
             fn_calcDiscountRPF();
             
-            fn_calcDiscountPV();
+//          fn_calcDiscountPV();
         });
     }
     
@@ -244,13 +266,13 @@
         	Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "item"});
         });
         $('#promoAppTypeId').change(function() {
-        	fn_chgPromoDetail();
+        	fn_chgPromoDetail(null, null, null);
         });
         $('#promoTypeId').change(function() {
-        	fn_chgPromoDetail();
+        	fn_chgPromoDetail(null, null, null);
         });
         $('#promoCustType').change(function() {
-        	fn_chgPromoDetail();
+        	fn_chgPromoDetail(null, null, null);
         });
         $('#promoDiscType').change(function() {
             if($('#promoDiscType').val() == '') {
@@ -296,13 +318,52 @@
             
         	fn_doSavePromtion();
         });
-         $('#btnProductDel').click(function() {
+        $('#btnProductDel').click(function() {
             AUIGrid.removeCheckedRows(stckGridID);
         });
-         $('#btnFreeGiftDel').click(function() {
+        $('#btnFreeGiftDel').click(function() {
             AUIGrid.removeCheckedRows(giftGridID);
         });
+        $('#btnPromoEdit').click(function() {
+            fn_chgPageMode('MODIFY');
+        });
     });
+    
+    function fn_chgPageMode(vMode) {
+        
+        if(vMode == 'MODIFY') {
+            $('#btnPromoEdit').addClass("blind");
+            $('#btnPromoSave').removeClass("blind");
+            
+            $('#liProductDel').removeClass("blind");
+            $('#liProductAdd').removeClass("blind");
+            $('#liFreeGiftDel').removeClass("blind");
+            $('#liFreeGiftAdd').removeClass("blind");
+
+            fn_chgPromoDetail(null, null, null);
+            
+            AUIGrid.setProp(stckGridID, "editable" , true);
+        }
+        else if(vMode == 'VIEW') {
+            $('#btnPromoEdit').removeClass("blind");
+            $('#btnPromoSave').addClass("blind");
+            
+            $('#liProductDel').addClass("blind");
+            $('#liProductAdd').addClass("blind");
+            $('#liFreeGiftDel').addClass("blind");
+            $('#liFreeGiftAdd').addClass("blind");
+            
+            //Product List Search
+            fn_selectPromotionPrdListAjax(${promoInfo.promoId});
+            
+            //Free Gift List Search
+            fn_selectPromotionFreeGiftListAjax(${promoInfo.promoId});
+        
+            $(':input').prop("disabled", true);
+            
+            AUIGrid.setProp(stckGridID, "editable" , false);
+        }
+    }
     
     function fn_validPromotion() {
         var isValid = true, msg = "";
@@ -393,10 +454,22 @@
     }
     
     //TODO Outlight Plus(2287) 선택시 빠져있음
-    function fn_chgPromoDetail() {
-        var promoAppVal = $('#promoAppTypeId').val();
-        var promoTypVal = $('#promoTypeId').val();
-        var promoCustVal = $('#promoCustType').val();
+    function fn_chgPromoDetail(promoAppVal, promoTypVal, promoCustVal) {
+        
+        console.log('fn_chgPromoDetail() START');
+        console.log('before promoAppVal  :'+promoAppVal);
+        console.log('before promoTypVal  :'+promoTypVal);
+        console.log('before promoCustVal :'+promoCustVal);
+        
+        $(':input').removeAttr("disabled");
+        
+        var promoAppVal  = FormUtil.isEmpty(promoAppVal)  ? $('#promoAppTypeId').val() : promoAppVal;
+        var promoTypVal  = FormUtil.isEmpty(promoTypVal)  ? $('#promoTypeId').val()    : promoTypVal;
+        var promoCustVal = FormUtil.isEmpty(promoCustVal) ? $('#promoCustType').val()  : promoCustVal;
+
+        console.log('after promoAppVal  :'+promoAppVal);
+        console.log('after promoTypVal  :'+promoTypVal);
+        console.log('after promoCustVal :'+promoCustVal);
         
         //Promo Application = Rental / Outright / Outright Plus
         if(promoAppVal == '2284'|| promoAppVal == '2285'|| promoAppVal == '2287') {
@@ -510,12 +583,13 @@
             $('#sctPromoDetail').removeClass("blind");
         }
     }
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Promotion Management – NEW promotion</h1>
+<h1>Promotion Management – VIEW promotion</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a id="btnClosePop" href="#">CLOSE</a></p></li>
 </ul>
@@ -528,13 +602,14 @@
 	<li><p class="btn_blue2"><a href="#">Product</a></p></li>
 	<li><p class="btn_blue2"><a href="#">From Gift</a></p></li>
 -->
-	<li><p class="btn_blue"><a id="btnPromoSave" href="#">Save</a></p></li>
+	<li><p class="btn_blue"><a id="btnPromoEdit" href="#">Edit</a></p></li>
+	<li><p class="btn_blue"><a id="btnPromoSave" href="#" class="blind">Save</a></p></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Promotion Information</h2>
 </aside><!-- title_line end -->
-
+<form id="modifyForm" name="modifyForm"></form>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -558,17 +633,17 @@
 	<th scope="row">Promotion Period<span class="must">*</span></th>
 	<td colspan="3">
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input id="promoDtFrom" name="promoDtFrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="promoDtFrom" name="promoDtFrom" value="${promoInfo.promoDtFrom}" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	<span>To</span>
-	<p><input id="promoDtEnd" name="promoDtEnd" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="promoDtEnd" name="promoDtEnd" value="${promoInfo.promoDtEnd}" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	</div><!-- date_set end -->
 	</td>
 </tr>
 <tr>
 	<th scope="row">Promotion Name</th>
-	<td><input id="promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="promoDesc" name="promoDesc" value="${promoInfo.promoDesc}" type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">Promotion Code<span class="must">*</span></th>
-	<td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="promoCode" name="promoCode" value="${promoInfo.promoCode}" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -627,13 +702,13 @@
 	<select id="promoDiscType" name="promoDiscType" class="w100p"></select>
 	</p>
 	<p>
-	<input id="promoDiscValue" name="promoDiscValue" type="text" title="" placeholder="" class="w100p" disabled />   
+	<input id="promoDiscValue" name="promoDiscValue" value="${promoInfo.promoPrcPrcnt}" type="text" title="" placeholder="" class="w100p" />   
 	</p>
 	</div>    
 	</td>
 	<th scope="row">RPF Discunt<span class="must">*</span></th>
 	<td>
-	<input id="promoRpfDiscAmt" name="promoRpfDiscAmt" type="text" title="" placeholder="" class="w100p" disabled />
+	<input id="promoRpfDiscAmt" name="promoRpfDiscAmt" value="${promoInfo.promoRpfDiscAmt}" type="text" title="" placeholder="" class="w100p" />
 	</td>
 </tr>
 <tr>
@@ -644,7 +719,7 @@
 	<select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select>
 	</p>
 	<p>
-	<input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder=""  class="w100p" />   
+	<input id="promoDiscPeriod" name="promoDiscPeriod" value="${promoInfo.promoDiscPeriod}" type="text" title="" placeholder=""  class="w100p" />   
 	</p>
 	</div> 
 	
@@ -656,9 +731,9 @@
 </tr>
 <tr>
 	<th scope="row">Additional Discount (RM)</th>
-	<td><input id="promoAddDiscPrc" name="promoAddDiscPrc" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="promoAddDiscPrc" name="promoAddDiscPrc" value="${promoInfo.promoAddDiscPrc}" type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">Additional Discount (PV)</th>
-	<td><input id="promoAddDiscPv" name="promoAddDiscPv" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="promoAddDiscPv" name="promoAddDiscPv" value="${promoInfo.promoAddDiscPv}" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
 	<th scope="row">Membership Package<span class="must">*</span></th>
@@ -670,6 +745,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
 </section>
 
 <aside class="title_line"><!-- title_line start -->
@@ -677,8 +753,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="btnProductDel" href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a id="btnProductAdd" href="#">ADD</a></p></li>
+	<li id="liProductDel" class="blind"><p class="btn_grid"><a id="btnProductDel" href="#">DEL</a></p></li>
+	<li id="liProductAdd" class="blind"><p class="btn_grid"><a id="btnProductAdd" href="#">ADD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -690,8 +766,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="btnFreeGiftDel" href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a id="btnFreeGiftAdd" href="#">ADD</a></p></li>
+	<li id="liFreeGiftDel" class="blind"><p class="btn_grid"><a id="btnFreeGiftDel" href="#">DEL</a></p></li>
+	<li id="liFreeGiftAdd" class="blind"><p class="btn_grid"><a id="btnFreeGiftAdd" href="#">ADD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
