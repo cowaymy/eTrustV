@@ -10,57 +10,16 @@
     
     $(document).ready(function(){
         
-        createInchargeGrid();
+ //       createInchargeGrid();
         createCallResultGrid();
         createcallLogGird();
         
         //Call Ajax
-        fn_getInchargeAjax(); 
+ //       fn_getInchargeAjax(); 
         fn_getCallResultAjax();
         fn_getCallLogAjax();
     });
     
-    function createInchargeGrid() {
-        // AUIGrid 칼럼 설정
-        
-        // 데이터 형태는 다음과 같은 형태임,
-        //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-        var inchargeColumnLayout = [{
-                dataField : "userName",
-                headerText : "Username",
-                width : 160,
-                editable : false
-            }, {
-                dataField : "userFullName",
-                headerText : "Name",
-                editable : false
-            }];
-       
-        // 그리드 속성 설정
-        var gridPros = {
-            // 페이징 사용       
-            usePaging : true,
-            // 한 화면에 출력되는 행 개수 20(기본값:20)
-            pageRowCount : 20,
-            editable : true,
-            fixedColumnCount : 1,
-            showStateColumn : true, 
-            displayTreeOpen : true,
-            selectionMode : "multipleCells",
-            headerHeight : 30,
-            // 그룹핑 패널 사용
-            useGroupingPanel : true,
-            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-            skipReadonlyColumns : true,
-            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            wrapSelectionMove : true,
-            // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
-            groupingMessage : "Here groupping"
-        };
-        
-        inchargeGridID = GridCommon.createAUIGrid("#incharge_grid_wrap", inchargeColumnLayout, gridPros);
-    }
     
     function createCallResultGrid() {
         // AUIGrid 칼럼 설정
@@ -201,11 +160,11 @@
     }
     
     // contact Ajax
-    function fn_getInchargeAjax(){
-        Common.ajax("GET", "/sales/order/inchargePersonList.do",$("#getParamForm").serialize(), function(result) {
-            AUIGrid.setGridData(inchargeGridID, result);
-        });
-    }
+//    function fn_getInchargeAjax(){
+//        Common.ajax("GET", "/sales/order/inchargePersonList.do",$("#getParamForm").serialize(), function(result) {
+//            AUIGrid.setGridData(inchargeGridID, result);
+//        });
+//    }
     
  // contact Ajax
     function fn_getCallResultAjax(){
@@ -222,17 +181,67 @@
     }
  
   //resize func (tab click)
-    function fn_resizefunc(gridName){ // 
-        AUIGrid.resize(gridName, 900, 300);
+    function fn_resizefunc(gridName){ //
+        if(gridName == '#callResult_grid_wrap'){
+        	AUIGrid.resize(gridName, 900, 200);
+        }else{
+        	AUIGrid.resize(gridName, 900, 300);
+        }
    }
+  
+  function fn_saveSuspendResult(){
+	  var time = new Date();
+	  var day = time.getDate();
+	  
+	  if( day >= 26 || day == 1){
+		  Common.alert("This action is not allowed within 26 to 1 next month.");
+		  return false;
+	  }
+	  
+	  if(document.statusForm.newSuspResultStus.value == ""){
+		  Common.alert("Please select the status");
+		  return false;
+	  }
+	  
+	  if(document.statusForm.newSuspResultRem.value == ""){
+          Common.alert("Please key in the remark");
+          return false;
+      }
+	  
+	    Common.ajax("GET", "/sales/order/newSuspendResult.do", $("#statusForm").serializeJSON(), function(result) {
+	    	Common.alert(result.msg, fn_reloadPage);
+	    }, function(jqXHR, textStatus, errorThrown) {
+	            try {
+	                console.log("status : " + jqXHR.status);
+	                console.log("code : " + jqXHR.responseJSON.code);
+	                console.log("message : " + jqXHR.responseJSON.message);
+	                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+	                Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+	                }
+	            catch (e) {
+	                console.log(e);
+	                alert("Saving data prepration failed.");
+	            }
+	            alert("Fail : " + jqXHR.responseJSON.message);
+	    }); 
+	}
+
+	function fn_reloadPage(){
+	    //Parent Window Method Call
+	    fn_searchListAjax();
+	    Common.popupDiv('/sales/order/orderSuspendNewResultPop.do', $('#detailForm').serializeJSON(), null , true, '_editDiv2');
+	    $("#_close").click();
+	}
+	
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Suspend View</h1>
+<h1>New Suspend Result</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close" >CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -246,7 +255,8 @@
 <h2>Suspend &amp; Call Log Information</h2>
 </aside><!-- title_line end -->
 
-<section class="tap_wrap"><!-- tap_wrap start -->
+
+<section class="tap_wrap mt0"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on">Suspend Info</a></li>
     <li><a href="#" onclick="javascript: fn_resizefunc(callResultGridID)">Suspend Call Result</a></li>
@@ -294,24 +304,6 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Suspend Incharge Person</h3>
-</aside><!-- title_line end
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
- -->
-<article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="incharge_grid_wrap" style="width:100%; height:180px; margin:0 auto;"></div>
-</article><!-- grid_wrap end -->
-
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start 
@@ -326,8 +318,8 @@
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
 -->
-<article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="callResult_grid_wrap" style="width:100%; height:280px; margin:0 auto;"></div>
+<article class="grid_wrap"  style="height:200px"><!-- grid_wrap start -->
+    <div id="callResult_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -1144,7 +1136,7 @@
 
 </article><!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start -->
+<article class="tap_area"><!-- tap_area start 
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
@@ -1155,62 +1147,51 @@
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
-
+-->
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="callLog_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
 
-</section><!-- tap_wrap end --
+</section><!-- tap_wrap end -->
 
-<aside class="link_btns_wrap">!-- link_btns_wrap start --
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-    <dt>Link</dt>
-    <dd>
-    <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
-    </dd>
-</dl>
-</aside><!-- link_btns_wrap end --
+<aside class="title_line mt20"><!-- title_line start -->
+<h2>Suspend Result</h2>
+</aside><!-- title_line end -->
 
-    <section class="search_result">!-- search_result start --
-    
-    <ul class="right_btns">
-        <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-        <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-        <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-        <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-        <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-        <li><p class="btn_grid"><a href="#">INS</a></p></li>
-        <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-    </ul>
-    
-    <article class="grid_wrap">-- grid_wrap start --
-    그리드 영역
-    </article>-- grid_wrap end --
-    
-    </section>-- search_result end -->
+<form id="statusForm" name="statusForm" method="GET">
+    <input type="hidden" id="susId" name="susId" value="${suspensionInfo.susId }">
+	<table class="type1"><!-- table start -->
+	<caption>table</caption>
+	<colgroup>
+	    <col style="width:150px" />
+	    <col style="width:*" />
+	</colgroup>
+		<tbody>
+			<tr>
+			    <th scope="row">Status</th>
+			    <td>
+			    <select id="newSuspResultStus" name="newSuspResultStus">
+			        <option value="">Status</option>
+			        <option value="2">Suspend</option>
+			        <option value="28">Regular</option>
+			    </select>
+			    </td>
+			</tr>
+			<tr>
+			    <th scope="row">Remark</th>
+			    <td>
+			    <textarea cols="20" rows="5" id="newSuspResultRem" name="newSuspResultRem" placeholder="Remark"></textarea>
+			    </td>
+			</tr>
+		</tbody>
+	</table><!-- table end -->
+</form>
+
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveSuspendResult()">Save</a></p></li>
+</ul>
 
 </section><!-- pop_body end -->
 

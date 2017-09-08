@@ -21,7 +21,12 @@
 	        Common.popupDiv("/sales/order/orderSuspensionDetailPop.do", $("#detailForm").serializeJSON());
 	    });
 	    // 셀 클릭 이벤트 바인딩
-	
+	    AUIGrid.bind(myGridID, "cellClick", function(event){
+            $("#salesOrdId").val(event.item.salesOrdId);
+            $("#susId").val(event.item.susId);
+//            Common.popupDiv("/sales/order/orderSuspendNewResultPop.do", $("#detailForm").serializeJSON());
+            gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
+        });
 	});
 	
 	function createAUIGrid() {
@@ -112,6 +117,29 @@
             AUIGrid.setGridData(myGridID, result);
         });
     }
+	
+	function fn_newSuspend(){
+		if(detailForm.susId.value == ""){
+            Common.alert("No suspend record selected.");
+            return false;
+        }else{
+            Common.popupDiv("/sales/order/orderSuspendNewResultPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
+        }
+	}
+	
+	function fn_assignIncharge(){
+		if(detailForm.susId.value == ""){
+            Common.alert("No suspend record selected.");
+            return false;
+        }else{
+        	if(searchForm.susStusId.value == "33" || searchForm.susStusId.value == "2"){
+        		Common.popupDiv("/sales/order/inchargePersonPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
+        	}else{
+        		Common.alert("Reassign incharge person is disallowed.");
+        		return false;
+        	}
+        }
+	}
 </script>
 
 <section id="content"><!-- content start -->
@@ -125,6 +153,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Suspend List</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onClick="fn_newSuspend()">New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_assignIncharge()">Re-AssignIncharge</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
