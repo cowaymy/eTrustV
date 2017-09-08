@@ -868,7 +868,7 @@ function fnUpdDisabled()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역1 -->
- <div id="grid_wrap"></div>
+ <div id="grid_wrap" style="height:200px;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line main_title mt40"><!-- title_line start -->
@@ -878,7 +878,7 @@ function fnUpdDisabled()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역2 -->
- <div id="codeIdGrid"></div>
+ <div id="codeIdGrid" style="height:200px;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line main_title mt40"><!-- title_line start -->
@@ -888,7 +888,7 @@ function fnUpdDisabled()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역3 -->
- <div id="detailGrid"></div>
+ <div id="detailGrid" style="height:200px;"></div>
 </article><!-- grid_wrap end -->
 
 </form>
