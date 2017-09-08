@@ -15,6 +15,8 @@
 		<typeAlias alias="sessionVO" type="com.coway.trust.cmmn.model.SessionVO"/>
 		<typeAlias alias="pageAuthVO" type="com.coway.trust.cmmn.model.PageAuthVO"/>
 		<typeAlias alias="searchVO" type="com.coway.trust.biz.sample.SampleDefaultVO"/>
+		<typeAlias alias="fileGroupVO" type="com.coway.trust.biz.common.FileGroupVO"/>
+		<typeAlias alias="fileVO" type="com.coway.trust.biz.common.FileVO"/>
 		<typeAlias alias="sampleVO" type="com.coway.trust.biz.sample.SampleVO"/>
 		<typeAlias alias="string" type="java.lang.String"/>
 		<typeAlias alias="int" type="java.lang.Integer"/>

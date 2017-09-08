@@ -7,6 +7,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.FileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +60,9 @@ public class SampleController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private FileApplication fileApplication;
 
 	/**
 	 * 트랜잭션 rollback 예제.
@@ -475,6 +481,31 @@ public class SampleController {
 		LOGGER.debug("list.size : {}", list.size());
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		// TODO : 에러 발생시 파일 삭제 처리 예정.
+		return ResponseEntity.ok(list);
+	}
+
+	/**
+	 * 공통 파일 테이블 사용 Upload를 처리한다.
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/sampleUploadCommon.do", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUploadCommon(MultipartHttpServletRequest request,
+																  @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
+
+		String param01 = (String) params.get("param01");
+		LOGGER.debug("param01 : {}", param01);
+		LOGGER.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
 		return ResponseEntity.ok(list);
 	}
 

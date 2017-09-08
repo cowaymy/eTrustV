@@ -30,6 +30,13 @@ public class AppConstants {
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
 	/**
+	 * 공통 첨부파일 Chenal(W:Web/M:Mobile/C:CallCenter)
+	 */
+	public static final String FILE_WEB = "W";
+	public static final String FILE_MOBILE = "M";
+	public static final String FILE_CALL_CENTER = "C";
+
+	/**
 	 * URL
 	 */
 	public static final String REDIRECT_LOGIN = "redirect:/login/login.do";
@@ -146,8 +153,7 @@ public class AppConstants {
 	public static final int CODE_PAY_MODE = 36;
 	public static final int CODE_PAY_TYPE = 48;
 	public static final int CODE_DISCOUNT_TYPE = 74;
-	
-	
+
 	public static final int SIRIM_TRANSFER = 72;
 
 }
