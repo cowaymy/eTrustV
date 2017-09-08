@@ -49,7 +49,7 @@ public class FileApiController {
 	// TODO : 파일 테이블을 업무테이블에서 관리한다면 그에 맞게 api 를 추가로 개발해야 합니다.
 	@ApiOperation(value = "파일업로드(임시)", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUpload(@ApiParam(value="File", required=true)  MultipartHttpServletRequest request,
+	public ResponseEntity<List<EgovFormBasedFileVo>> sampleUpload(@ApiIgnore  MultipartHttpServletRequest request,
 																  @ApiIgnore  @RequestParam Map<String, Object> params, @ApiIgnore SessionVO sessionVO) throws Exception {
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
 				"subPath1" + File.separator + "subPath2", AppConstants.UPLOAD_MAX_FILE_SIZE);
