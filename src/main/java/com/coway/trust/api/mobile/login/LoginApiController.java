@@ -44,13 +44,11 @@ public class LoginApiController {
 	private MessageSourceAccessor messageAccessor;
 
 	@ApiOperation(value = "Login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/login/{userName}", method = RequestMethod.POST)
-	public ResponseEntity<LoginDto> login(@ApiParam(value = "userName", required = true) @PathVariable String userName,
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<LoginDto> login(
 			@RequestBody LoginForm loginForm) throws Exception {
 
-		LOGGER.debug("login... : {}", userName);
-
-		Map<String, Object> params = loginForm.createMap(userName, loginForm);
+		Map<String, Object> params = loginForm.createMap(loginForm);
 
 		Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_ID)),
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
@@ -72,17 +70,13 @@ public class LoginApiController {
 	}
 
 	@ApiOperation(value = "Logout", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/logout/{userName}", method = RequestMethod.POST)
-	public void login(@ApiParam(value = "userName", required = true) @PathVariable String userName) throws Exception {
-		LOGGER.debug("login... : {}", userName);
-
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	public void logout() throws Exception {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		Precondition.checkState(sessionVO.getUserId() == 0 || userName.equals(sessionVO.getUserName()),
-				messageAccessor.getMessage(LoginConstants.MSG_DIFF_USER_NAME));
 
 		if (sessionVO.getUserId() > 0) {
 			Map<String, Object> params = new HashMap<>();
-			params.put(LoginConstants.P_USER_ID, userName);
+			params.put(LoginConstants.P_USER_ID, sessionVO.getUserName());
 			loginService.logoutByMobile(params);
 			sessionHandler.clearSessionInfo();
 		}

@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "LoginForm", description = "LoginForm")
 public class LoginForm {
 
+	@ApiModelProperty(value = "사용자 Name", required = true)
+	private String userName;
 	@ApiModelProperty(value = "사용자 pw", required = true)
 	private String userPw;
 	@ApiModelProperty(value = "휴대폰 번호", required = true)
@@ -18,14 +20,22 @@ public class LoginForm {
 	@ApiModelProperty(value = "앱 버전")
 	private String appVersion;
 
-	public static Map<String, Object> createMap(String userName, LoginForm loginForm) {
+	public static Map<String, Object> createMap(LoginForm loginForm) {
 		Map<String, Object> params = new HashMap<>();
-		params.put(LoginConstants.P_USER_ID, userName);
+		params.put(LoginConstants.P_USER_ID, loginForm.getUserName());
 		params.put(LoginConstants.P_USER_PW, loginForm.getUserPw());
 		params.put(LoginConstants.P_USER_MOBILE_NO, loginForm.getDeviceNumber());
 		params.put(LoginConstants.P_DEVICE_IMEI, loginForm.getDeviceImei());
 		params.put(LoginConstants.P_APP_VERSION, loginForm.getAppVersion());
 		return params;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getUserPw() {
