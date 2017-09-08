@@ -106,6 +106,7 @@
          if('' != tempCity && null != tempCity){
         	
         	 CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", cityJson, tempCity , optionCity);
+        	 
         	
              
          }else{

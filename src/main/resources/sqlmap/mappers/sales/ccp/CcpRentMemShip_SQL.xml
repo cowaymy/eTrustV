@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpRentMemShipMapper">
+
+    <select id="selectCcpRentListSearchList" parameterType="Map" resultType="egovMap">
+				SELECT Extent1.CNFM_CNTRCT_ID   ,
+                       Extent2.SRV_CNTRCT_ID   ,
+                       Extent2.SRV_CNTRCT_REF_NO   ,
+                       Extent2.SRV_CNTRCT_ORD_ID   ,
+                       Extent6.SALES_ORD_NO   ,
+                       Extent2.SRV_CNTRCT_BRNCH_ID   ,
+                       Extent3.NAME   ,
+                       Extent4.USER_NAME   ,
+                       Extent2.SRV_CNTRCT_CRT_DT   ,
+                       Extent5.USER_NAME USERNAME1  ,
+                       Extent1.CNFM_UPD_DT   ,
+                       Extent1.CNFM_FDBCK_ID   ,
+                       Extent9.RESN_DESC   ,
+                       Extent3.REGN_ID   ,
+                       Extent1.CNFM_REM   ,
+                       Extent1.CNFM_STUS_ID   ,
+                       Extent8.CODE   ,
+                       Extent7.NAME NAME1,
+                       TO_CHAR(Extent2.SRV_CNTRCT_CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') || '(' || Extent4.USER_NAME || ')' KEY_AT_BY,
+                       TO_CHAR(Extent1.CNFM_UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') || '(' || Extent5.USER_NAME || ')' UPDATE_AT_BY
+                FROM SAL0079D Extent1
+                         JOIN SAL0077D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.CNFM_CNTRCT_ID
+                         JOIN SYS0005M Extent3   ON Extent3.BRNCH_ID = Extent2.SRV_CNTRCT_BRNCH_ID
+                         JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent2.SRV_CNTRCT_CRT_USER_ID
+                         JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CNFM_UPD_USER_ID
+                         JOIN SAL0001D Extent6   ON Extent6.SALES_ORD_ID = Extent2.SRV_CNTRCT_ORD_ID
+                         JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent6.CUST_ID
+                         JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.CNFM_STUS_ID
+                         LEFT JOIN SYS0032M Extent9   ON Extent9.RESN_ID = Extent1.CNFM_FDBCK_ID
+                         
+                         WHERE  1 = 1
+                         
+                         <if test=" '' != refNo and null != refNo">
+                            AND Extent2.SRV_CNTRCT_REF_NO = #{refNo}   
+                         </if>
+                           
+                         <if test=" '' != sDate and null != sDate">
+                             AND Extent2.SRV_CNTRCT_CRT_DT >= TO_CHAR(TO_DATE(#{sDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                         </if>
+                         
+                         <if test=" '' != eDate and null != eDate">
+                              <![CDATA[
+                              AND Extent2.SRV_CNTRCT_CRT_DT <= TO_CHAR(TO_DATE(#{eDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                              ]]>
+                         </if>
+                         
+                         <if test="  '' != memShipStatus and null != memShipStatus">
+						    AND Extent1.CNFM_STUS_ID IN
+							<foreach collection="arryStatus" item="value" open="(" separator="," close=")">
+								#{value}
+							</foreach>
+                         </if>
+                         
+                         <if test=" '' != salesOrdNo and null != salesOrdNo">
+                             AND Extent6.SALES_ORD_NO = #{salesOrdNo}
+                         </if>
+                          
+                         <if test=" '' != keyInBranch and null != keyInBranch">
+                            AND Extent2.SRV_CNTRCT_BRNCH_ID IN
+                            <foreach collection="arryBranch" item="value" open="(" separator="," close=")">
+                                #{value}
+                            </foreach>
+                         </if>
+                        
+                        <if test=" '' != nric and null != nric">
+                             AND Extent7.NRIC = #{nric}
+                        </if>
+                        
+                        <if test=" '' != custName and null != custName">
+                            AND Extent7.NAME LIKE '%' || #{custName} || '%'
+                        </if>
+                         
+                         <if test=" '' != custType and null != custType">
+                            AND Extent7.TYPE_ID = #{custType}   
+                         </if>
+                         
+                         <if test=" '' != region and null != region">
+                            AND Extent3.REGN_ID = #{region}
+                         </if>
+                         <if test=" '' != reasonCode and null != reasonCode">
+                            AND Extent1.CNFM_FDBCK_ID IN
+                            <foreach collection="arryReason" item="value" open="(" separator="," close=")">
+                                #{value}
+                            </foreach>
+                         </if>
+                         
+                         <if test=" '' != updUser and null != updUser">
+                            AND Extent5.USER_NAME = #{updUser}
+                         </if>
+                            
+                         ORDER BY Extent2.SRV_CNTRCT_ID DESC
+    </select>
+    
+    <select id="getBranchCodeList" resultType="egovMap">
+				SELECT Project1.BRNCH_ID CODE_ID  ,
+				       Project1.CODE_NAME   
+				FROM ( SELECT Extent1.BRNCH_ID   ,
+				                Extent1.CODE || '-' || Extent1.NAME CODE_NAME  
+				          FROM SYS0005M Extent1
+				          WHERE  1 = Extent1.STUS_ID ) Project1
+				ORDER BY Project1.CODE_NAME ASC
+    </select>
+    
+    <select id="getReasonCodeList" resultType="egovMap">
+				SELECT Extent1.RESN_ID CODE_ID  ,
+				           Extent1.CODE CODE  ,
+				           Extent1.CODE || ' - ' || Extent1.RESN_DESC CODE_NAME  
+				FROM 
+				    SYS0032M Extent1
+				WHERE 
+				    Extent1.RESN_TYPE_ID = 1315 
+				AND  
+				    Extent1.STUS_CODE_ID = 1
+    </select>
+</mapper>

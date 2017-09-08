@@ -41,7 +41,7 @@
                                 {dataField : "posDt", headerText : "Sales Date", width : '10%'},
                                 {dataField : "codeName", headerText : "POS Type", width : '10%'},
                                 {dataField : "codeName1", headerText : "Sales Type", width : '10%'},
-                                {dataField : "texInvcRefNo", headerText : "Invoice No.", width : '10%'},
+                                {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '10%'}, 
                                 {dataField : "name", headerText : "Customer Name", width : '20%'},
                                 {dataField : "whLocCode", headerText : "Warehouse", width : '10%'},
                                 {dataField : "posTotAmt", headerText : "Total Amount", width : '10%'},
