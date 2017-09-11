@@ -62,14 +62,13 @@
         });
 
         $("#header_rental").on("click", function(){
-            Common.popupDiv("/chart/salesKeyInAnalysisPop.do", null, null, true, "salesKeyInAnalysisDivPop");
-		});
-
-        $("#header_total").on("click", function(){
             //Common.alert("구현중...");
             Common.popupDiv("/chart/netSalesChartPop.do", null, null, true, "netSalesChartDivPop");
         });
 
+        $("#header_total").on("click", function(){
+            Common.popupDiv("/chart/salesKeyInAnalysisPop.do", null, null, true, "salesKeyInAnalysisDivPop");
+        });
     }
 
    $(function() {
