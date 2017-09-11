@@ -43,6 +43,29 @@ function doGetComboData(url, pdata , selCode, obj , type, callbackFn){
     });
 } ;
 
+function doGetComboCodeId(url, pdata , selCode, obj , type, callbackFn){
+
+    $.ajax({
+        type : "GET",
+        url : getContextPath() + url,
+        data : pdata,
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+            var rData = data;
+            doDefCombo(rData, selCode, obj , type,  callbackFn);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    });
+} ;
+
+
+
+
 
 function doGetComboDataAndMandatory(url, pdata , selCode, obj , type, callbackFn){
     Common.ajax("GET", url, pdata, function(data) {
