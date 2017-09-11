@@ -293,6 +293,7 @@
              , tran.code_name     ttext
              , l47.trnsc_type_dtl mtype
              , trand.code_name    mtext
+             , l47.ref_doc_no docno
              , l54.delvry_dt delydt
              , l54.delvry_gi_dt gidt
              , l54.delvry_gr_dt grdt
@@ -323,8 +324,8 @@
          where 1 = 1
            and l47.trnsc_type     = tran.code
            and l47.trnsc_type_dtl = trand.code
-           and l47.rciv_cdc_rdc   = s28c.wh_loc_id
-           and l47.reqst_cdc_rdc  = s28q.wh_loc_id
+           and l47.rciv_cdc_rdc   = s28c.wh_loc_id(+)
+           and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
            and l48.uom            = uomt.code_id
            and l48.itm_code  = l55.itm_code
            and l54.delvry_no = l55.delvry_no

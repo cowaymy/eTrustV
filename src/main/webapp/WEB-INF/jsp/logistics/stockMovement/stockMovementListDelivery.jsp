@@ -163,9 +163,9 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
+	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     //doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
-    doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
