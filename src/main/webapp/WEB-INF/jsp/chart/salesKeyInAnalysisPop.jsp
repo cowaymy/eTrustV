@@ -190,7 +190,7 @@
     }
 
 </script>
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
         <h1>Sales Key In Chart</h1>
@@ -199,7 +199,7 @@
         </ul>
     </header><!-- pop_header end -->
 
-    <section class="pop_body"><!-- pop_body start -->
+    <section class="pop_body"  style="max-height: 680px"><!-- pop_body start -->
         <form id="searchForm">
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
