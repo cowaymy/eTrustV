@@ -188,6 +188,8 @@ public class PointOfSalesController {
 
 		String posSeq =PointOfSalesService.insertPosInfo(params);
 		
+		Map<String, Object> rmap = new HashMap();
+		rmap.put("data", posSeq);
 		
 		logger.debug("posSeq@@@@@: {}", posSeq);
 		
@@ -209,8 +211,8 @@ public class PointOfSalesController {
 		
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		Map<String, Object> serialMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		logger.debug("posReqSeq?????", serialMap.get("posReqSeq"));
-		logger.debug("뭐야?????",serialMap);
+		logger.debug("posSeq@@@@@: {}",  serialMap.get("posReqSeq"));
+		logger.debug("posSeq@@@@@: {}",serialMap);
 		
 		
 		
