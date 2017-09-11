@@ -1,0 +1,238 @@
+package com.coway.trust.web.logistics.pos;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.pointofsales.PointOfSalesService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Controller
+@RequestMapping(value = "/logistics/pos")
+public class PointOfSalesController {
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Value("${app.name}")
+	private String appName;
+
+	@Resource(name = "PointOfSalesService")
+	private PointOfSalesService PointOfSalesService;
+
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private SessionHandler sessionHandler;
+	
+	@RequestMapping(value = "/PointOfSalesList.do")
+	public String poslist(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/Pos/PointOfSalesList";
+	}
+	
+	
+	@RequestMapping(value = "/PosOfSalesIns.do")
+	public String posins(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/Pos/PointOfSalesIns";
+	}
+
+	@RequestMapping(value = "/SearchSessionInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> SearchSessionInfo(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String  UserName;
+		String  UserCode;
+		if (sessionVO == null) {
+			UserName = "ham";
+		} else {
+			//UserName = sessionVO.getUserName();
+			UserName = "ham";
+		}
+		if (sessionVO == null) {
+			UserCode = "DSC-01";
+		} else {
+			//UserCode = sessionVO.getCode();
+			UserCode = "DSC-01";
+		}
+		
+		logger.debug("UserName    값 : {}", UserName);
+		logger.debug("UserCode    값 : {}", UserCode);
+		
+		
+		Map<String, Object> map = new HashMap();
+		map.put("UserName", UserName);
+		map.put("UserCode", UserCode);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/PosSearchList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> PosSearchList(@RequestBody Map<String, Object> params, Model model)
+			throws Exception {
+	
+		logger.debug("searchOthersReq1    값 : {}",params.get("searchOthersReq1"));
+		logger.debug("searchOthersReq2    값 : {}",params.get("searchOthersReq2"));
+		logger.debug("searchReqType    값 : {}",params.get("searchReqType"));
+		logger.debug("searchLoc    값 : {}",params.get("searchLoc"));
+		logger.debug("searchStatus    값 : {}",params.get("searchStatus"));
+		logger.debug("crtsdt    값 : {}",params.get("crtsdt"));
+		logger.debug("crtedt    값 : {}",params.get("crtedt"));
+		logger.debug("reqsdt    값 : {}",params.get("reqsdt"));
+		logger.debug("reqedt    값 : {}",params.get("reqedt"));
+	
+		
+		List<EgovMap> list = PointOfSalesService.PosSearchList(params);
+		for (int i = 0; i < list.size(); i++) {
+			logger.debug("PointOfSalesList     :     {}", list.get(i));
+		}
+		
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	@RequestMapping(value = "/PosItemList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> PosItemList(Model model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("???????????????????????????????????????");
+		String[] PosItemType = request.getParameterValues("PosItemType");
+		
+		for (int i = 0; i < PosItemType.length; i++) {
+			logger.debug("PosItemType    값 : {}", PosItemType[i]);	
+		}
+		
+		
+		Map<String, Object> smap = new HashMap();
+		smap.put("ctype", PosItemType);
+
+
+		List<EgovMap> list = PointOfSalesService.PosItemList(smap);
+
+		smap.put("data", list);
+
+		return ResponseEntity.ok(smap);
+	}
+	
+	
+	@RequestMapping(value = "/PointOfSalesSerialCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> PointOfSalesSerialCheck(@RequestParam Map<String, Object> params) {
+
+		logger.debug("serial : {}", params.get("serial"));
+
+		List<EgovMap> list = PointOfSalesService.selectPointOfSalesSerial(params);
+		Map<String, Object> rmap = new HashMap();
+
+		rmap.put("data", list);
+		return ResponseEntity.ok(rmap);
+	}
+	
+	
+	@RequestMapping(value = "/insertPosInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertPosInfo(@RequestBody Map<String, Object> params,
+			Model model) {
+		
+		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
+		logger.debug("checkList사이즈  ! : {}", checkList.size());
+		
+		for (int i = 0; i < checkList.size(); i++) {
+			logger.debug("checkList! : {}", checkList.get(i));
+		}
+	
+		
+//		if(serialList.size() > 0){
+//			for (int i = 0; i < serialList.size(); i++) {
+//				logger.debug("serialList@: {}", serialList.get(i));
+//			}
+//		}
+		
+		logger.debug("insOthersReq@: {}", formMap.get("insOthersReq"));
+		logger.debug("insReqType@: {}", formMap.get("insReqType"));
+		logger.debug("insReqDate@: {}", formMap.get("insReqDate"));
+		logger.debug("insRequestor@: {}", formMap.get("insRequestor"));
+		logger.debug("insReqLoc@: {}", formMap.get("insReqLoc"));
+		logger.debug("insRemark@: {}", formMap.get("insRemark"));
+		
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("userId", loginId);
+
+		String posSeq =PointOfSalesService.insertPosInfo(params);
+		
+		
+		logger.debug("posSeq@@@@@: {}", posSeq);
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(posSeq);
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	@RequestMapping(value = "/insertSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertSerial(@RequestBody Map<String, Object> params,
+			Model model) {
+		
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		Map<String, Object> serialMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		logger.debug("posReqSeq?????", serialMap.get("posReqSeq"));
+		logger.debug("뭐야?????",serialMap);
+		
+		
+		
+		for (int i = 0; i < serialList.size(); i++) {
+			logger.debug("serialList! : {}", serialList.get(i));
+		}
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("userId", loginId);
+
+		PointOfSalesService.insertSerial(params);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	
+}
