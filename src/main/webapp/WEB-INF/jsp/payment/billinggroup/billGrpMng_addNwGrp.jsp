@@ -216,7 +216,7 @@ var contPersonLayout = [
 	
     function fn_orderSearch(){
         
-    	Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "BILLMNG_ADD_NEW_GROUP", indicator : "SearchTrialNo"});
+    	Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "BILLING_ADD_NEW_GROUP", indicator : "SearchTrialNo"});
 
     }
     
