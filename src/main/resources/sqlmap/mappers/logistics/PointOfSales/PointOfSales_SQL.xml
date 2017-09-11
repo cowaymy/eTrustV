@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.pointofsales.impl.PointOfSalesMapper">
+  
+<select id="selectPosSeq" resultType="String">
+    SELECT  LPAD(LOG0047M_REQST_NO.nextval, 10, '0') FROM  DUAL
+</select>
+  
+   
+<select id="PosSearchList" parameterType="Map" resultType="egovMap">
+   SELECT  SAL57.POS_ID AS POS_ID, 
+        SAL57.POS_NO AS POS_NO ,
+        SAL57.POS_BILL_ID  AS POS_BILL_ID,
+        SAL57.POS_CUST_NAME AS POS_CUST_NAME ,
+        <!-- SAL57.POS_DT1,  -->
+        TO_CHAR(SAL57.POS_DT , 'YYYY-MM-DD') POS_DT  , 
+        SAL57.POS_TYPE_ID  AS POS_TYPE_ID  ,
+        SAL57.POS_MODULE_TYPE_ID  AS  POS_MODULE_TYPE_ID ,
+        TO_CHAR(SAL57.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  , 
+        SAL57.POS_TOT_CHRG AS  POS_TOT_CHRG ,
+        SAL57.POS_TOT_TXS  AS POS_TOT_TXS,
+        SAL57.POS_TOT_DSCNT AS POS_TOT_DSCNT ,
+        SAL57.POS_WH_ID AS POS_WH_ID,
+        SAL57.POS_REM AS POS_REM ,
+        SAL57.POS_MTCH_ID  AS POS_MTCH_ID ,
+        SAL57.POS_CUST_ID AS POS_CUST_ID,
+       <!--  SAL57.POS_CRT_DT AS POS_CRT_DT, -->
+        TO_CHAR(SAL57.POS_CRT_DT , 'YYYY-MM-DD') POS_CRT_DT  , 
+        SAL57.POS_CRT_DEPT_ID AS POS_CRT_DEPT_ID,
+        SAL57.CR_ACC_ID AS CR_ACC_ID,
+        SAL57.DR_ACC_ID AS DR_ACC_ID,
+        SAL57.POS_RESN_ID AS POS_RESN_ID,
+        SAL57.POS_MEM_ID  AS POS_MEM_ID ,
+        SAL57.POS_CRT_USER_ID AS POS_CRT_USER_ID,  
+        MODT.CODE_NAME AS CODE_NAME ,
+        TYPT.CODE_NAME CODE_NAME1 ,
+        S47M.USER_NAME  AS USER_NAME,    
+        SAL58.POS_ITM_STOCK_ID  AS POS_ITM_STOCK_ID,
+        SAL58.POS_ITM_QTY AS POS_ITM_QTY ,
+        S26.STK_CODE AS STK_CODE,
+        S26.STK_DESC AS STK_DESC,
+        S26.SERIAL_CHK AS SERIAL_CHK,
+        CASE WHEN ( S28.WH_LOC_ID IS NOT NULL ) THEN S28.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+        CASE WHEN ( S28.WH_LOC_ID IS NOT NULL ) THEN S28.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
+        CASE WHEN  (O01.MEM_ID IS NOT NULL) THEN  O01.MEM_CODE || ' - ' || O01.NAME ELSE 'CASH' END NAME ,
+        CASE WHEN ( NOT ( ( P31.TAX_INVC_ID IS NULL ) AND ( P31.TAX_INVC_REF_NO IS NULL ) ) ) THEN P31.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO  
+  FROM SAL0057D SAL57 ,
+      ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '143') MODT,
+      ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '140') TYPT,
+      ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '309') Status,
+      SYS0047M S47M ,
+      SAL0058D SAL58,
+      PAY0031D  P31,
+      ORG0001D  O01,
+      SYS0026M S26, 
+      SYS0028M S28
+WHERE 1 = 1 
+  AND SAL57.POS_NO = P31.TAX_INVC_SVC_NO(+)
+  AND SAL57.POS_WH_ID = S28.WH_LOC_ID(+)
+  AND SAL57.POS_MEM_ID = O01.MEM_ID(+)
+  AND SAL58.POS_ITM_STOCK_ID = S26.STK_ID(+)
+  AND SAL57.POS_MODULE_TYPE_ID = MODT.CODE_ID
+  AND SAL57.POS_TYPE_ID = TYPT.CODE_ID
+  AND SAL57.POS_CRT_USER_ID = S47M.USER_ID  
+<!--  
+<if test="searchReqType != null and searchReqType !=''">
+ AND TYPT.CODE = #{searchReqType}
+</if>
+<if test="searchLoc != null and searchLoc !=''">
+ AND SAL57.POS_WH_ID = #{searchLoc}
+</if>
+<if test="searchStatus != null and searchStatus !=''">
+ AND Status.code = #{searchStatus}
+</if>
+<if test="crtsdt !=null and crtsdt !=''">
+      and to_char(SAL57.POS_TYPE_ID , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+ </if>
+ <if test="crtedt !=null and crtedt !=''">
+      and to_char(SAL57.POS_TYPE_ID , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
+ </if>
+  <if test="crtsdt !=null and crtsdt !=''">
+      and to_char(SAL57.POS_TYPE_ID , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{reqsdt},'dd/mm/yyyy'),'yyyymmdd')
+ </if>
+ <if test="crtedt !=null and crtedt !=''">
+      and to_char(SAL57.POS_TYPE_ID , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
+ </if> -->
+  AND SAL57.POS_NO ='PSN0001993'  <!-- 데이터가 많아서 임시로 하드코딩 함 반영할때는 삭제! -->
+  AND SAL57.POS_ID = SAL58.POS_ID       
+</select> 
+  
+
+<select id="PosItemList" parameterType="Map" resultType="egovMap">
+    SELECT S13.CODE_NAME AS CODE_NAME, 
+               L56.STK_CODE  AS STK_CODE , 
+               L56.STK_DESC AS STK_DESC, 
+               L56.QTY AS QTY, 
+               S26.SERIAL_CHK AS SERIAL_CHK
+    FROM  LOG0056M L56, 
+              SYS0026M S26, 
+             (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 15) S13
+    WHERE 1=1
+        AND S26.STK_TYPE_ID = S13.CODE_ID(+)
+        AND L56.STK_CODE = S26.STK_CODE
+  <if test="ctype != null and ctype != ''">
+        AND S26.STK_TYPE_ID  in
+  <foreach item="item" collection="ctype" index="index" open="(" separator="," close=")">
+       #{item}
+  </foreach>            
+  </if>      
+        AND L56.LOC_ID = 4
+</select>
+  
+  
+  <select id="selectPointOfSalesSerial" parameterType="Map" resultType="Map">
+         select max(serial_no)  serial_no , max(matnr) stkcode , max(stkdesc) stkdesc , max(l62cnt) l62cnt , max(l61cnt) l61cnt , max(l63cnt) l63cnt
+          from (  
+            SELECT serial_no , matnr , stk_desc stkdesc , count(1) l62cnt , 0 l61cnt , 0 l63cnt
+              FROM LOG0062M l62 , 
+                   sys0026m s26 
+             WHERE l62.matnr = s26.stk_code
+                and l62.SERIAL_NO =  #{serial}
+              group by serial_no , matnr , stk_desc
+             union 
+            select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt     
+              from log0061d l61 
+              WHERE l61.SERIAL_NO =  #{serial}
+              group by l61.serial_no
+             union 
+            select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt  
+              from log0063d l63 
+              WHERE l63.SERIAL_NO =  #{serial}
+              <if test='locid != null and locid !=""'>
+               and l63.loc_id <![CDATA[<>]]> #{locid} 
+              </if>
+             group by l63.serial_no
+         )
+     </select>
+  
+  <insert id="insOtherReceiptHead" parameterType="Map" >
+        INSERT INTO LOG0047M(
+	            REQST_NO,
+	            TRNSC_TYPE,
+	            TRNSC_TYPE_DTL,
+	            PRIDIC_FRQNCY,
+	            REQST_CRT_DT,
+	            REQST_REQUIRE_DT,
+	            DOC_HDER_TXT,
+	            REQST_CDC_RDC,
+	            REQST_STUS,
+	            CRT_USER_ID,
+	            CRT_DT)
+        VALUES (  
+                #{reqno}
+                , 'OI'
+                , #{insReqType}
+                , #{pridic}
+                , SYSDATE
+                , to_date(#{insReqDate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+                , #{insRemark}
+                , #{insReqLoc}
+                , 'O'
+                , #{userId}
+                , SYSDATE
+                )
+    </insert>
+  
+ 
+  
+    <insert id="insRequestItem" parameterType="Map">
+            INSERT INTO LOG0048D(
+                    REQST_NO, 
+                    REQST_NO_ITM,
+                    ITM_CODE, 
+                    ITM_NAME, 
+                    REQST_QTY, 
+                    UOM, 
+                    CRT_USER_ID, 
+                    CRT_DT)
+                VALUES ( 
+	                #{reqno} , 
+	                (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno}),
+	                #{itmcode} , 
+	                #{itmdesc}, 
+	                #{rqty} ,
+	                '' , 
+	                #{userId}       , 
+	                SYSDATE)
+    </insert> 
+    
+    
+   
+</mapper>
