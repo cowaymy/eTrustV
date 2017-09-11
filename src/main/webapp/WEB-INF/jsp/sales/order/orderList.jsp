@@ -48,7 +48,14 @@
             Common.popupDiv("/sales/order/orderRegisterPop.do");
         });
         $('#btnEdit').click(function() {
-            alert('Edit');
+            var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+
+            if(selIdx > -1) {
+                Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") });
+            }
+            else {
+                Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+            }
         });
         $('#btnSrch').click(function() {
         	fn_selectListAjax();
