@@ -14,7 +14,7 @@
 }
 
 /* 커스텀 행 스타일 */
-.my-row-style { 
+.my-row-style {
   font-weight:bold;
 }
 
@@ -33,14 +33,14 @@ var gAuthList =   ["EXT", "INT", "MGR"];
 var validFrom;
 var validTo;
 
-$(function() 
+$(function()
 {
 	fnSelectJustRoleListAjax();
 });
 
-var MainColumnLayout = 
-    [      
-        {    
+var MainColumnLayout =
+    [
+        {
         	  dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             editable : false,
@@ -82,7 +82,7 @@ var AuthColumnLayout =
             width : "31%",
             editable : false,
             style : "aui-grid-left-column",
-            renderer : 
+            renderer :
             {
                 type : "IconRenderer",
                 iconWidth : 23, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
@@ -95,10 +95,10 @@ var AuthColumnLayout =
 
                 onclick : function(rowIndex, columnIndex, value, item)
                          {
-                            console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.roleLvl + " POPUP 클릭");  
+                            console.log("onclick: ( " + rowIndex + ", " + columnIndex + " ) " + item.roleLvl + " POPUP 클릭");
 
-                            if(AUIGrid.isAddedById(AuthGridID, AUIGrid.getCellValue(AuthGridID, rowIndex, "rowId") ) == false 
-                                    && (AUIGrid.getCellValue(AuthGridID, rowIndex, "rowId") != "PkAddNew")  )  //수정모드  
+                            if(AUIGrid.isAddedById(AuthGridID, AUIGrid.getCellValue(AuthGridID, rowIndex, "rowId") ) == false
+                                    && (AUIGrid.getCellValue(AuthGridID, rowIndex, "rowId") != "PkAddNew")  )  //수정모드
                             {
                                 if ( gSelMstRolLvl != "1" && gSelMstRolLvl != item.roleLvl)
                                 {
@@ -171,7 +171,7 @@ var AuthColumnLayout =
     ];
 
 //셀스타일 함수 정의
-function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, dataField) 
+function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, dataField)
 {
   if(item.roleLvl != gSelMstRolLvl)
     return "mycustom-disable-color";
@@ -182,7 +182,7 @@ function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, data
 
 // Ajax
 
-function fnSaveRoleAuthCd() 
+function fnSaveRoleAuthCd()
 {
   if (fnValidationCheck() == false)
   {
@@ -195,7 +195,7 @@ function fnSaveRoleAuthCd()
           {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 
-            fnCellClickSelectRoleAuthListAjax();  
+            fnCellClickSelectRoleAuthListAjax();
             validFrom = "";
             validTo = "";
             console.log("성공." + JSON.stringify(result));
@@ -214,7 +214,7 @@ function fnSaveRoleAuthCd()
             {
               console.log(e);
             }
-            
+
             Common.alert("Fail : " + jqXHR.responseJSON.message);
 
           });
@@ -262,7 +262,7 @@ function fnSearchBtnClickAjax()
     }
 
     fnSelectJustRoleListAjax();
-	
+
 /*    Common.ajax("GET", "/authorization/selectSearchBtnList.do"
            , $("#MainForm").serialize()
            , function(result)
@@ -296,7 +296,7 @@ function auiCellEditignHandler(event)
               + ", MstRoleLvl: "+ gSelMstRolLvl + ", gSelAuthRolLvl: "+ gSelAuthRolLvl);
 
 
-      if(AUIGrid.isAddedById(AuthGridID, event.item.rowId) == false 
+      if(AUIGrid.isAddedById(AuthGridID, event.item.rowId) == false
          && (event.item.rowId != "PkAddNew")   //수정모드
          && (gSelMstRolLvl  != gSelAuthRolLvl ) ) // 같지 않으면 다 상위레벨.
       {
@@ -304,14 +304,14 @@ function auiCellEditignHandler(event)
         AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "all"] );
         return false;
       }
-      
-      if(event.dataField == "fromDt" || event.dataField == "toDt") 
-      { 
+
+      if(event.dataField == "fromDt" || event.dataField == "toDt")
+      {
           // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
          if(AUIGrid.isAddedById(AuthGridID, event.item.rowId) == false && (event.item.rowId =="PkAddNew")  )  // 추가된 행이기 때문에 수정 가능
-         { 
-            return true; 
-         } 
+         {
+            return true;
+         }
          else if(AUIGrid.isAddedById(AuthGridID, event.item.rowId) == false && (event.item.rowId != "PkAddNew") //수정모드
                  && (authCode == "INT" || authCode == "EXT"  || authCode == "MGR") )
          {
@@ -332,7 +332,7 @@ function auiCellEditignHandler(event)
 
       var authSelectList =   AUIGrid.getGridData(AuthGridID);
       var selAuthCode  =  event.value;
-      
+
       if (authSelectList.length > 0)
       {
           if (authSelectList.length = 1)
@@ -348,7 +348,7 @@ function auiCellEditignHandler(event)
                 AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                 return false;
             }
-                          
+
           }
           else if (authSelectList.length = 2)
           {
@@ -363,14 +363,14 @@ function auiCellEditignHandler(event)
                return false;
              }
           }
-          else 
+          else
           {
               var gridAuthCode1 =  AUIGrid.getCellValue(AuthGridID, 0, "hidden");
               var gridAuthCode2 =  AUIGrid.getCellValue(AuthGridID, 1, "hidden");
               var gridAuthCode3 =  AUIGrid.getCellValue(AuthGridID, 2, "hidden");
 
               console.log ("0: " + selAuthCode + " 1: "+ gridAuthCode1 + " 2: "+ gridAuthCode2 + " 3: "+ gridAuthCode3);
-          
+
               if (selAuthCode == gridAuthCode1 || selAuthCode == gridAuthCode2 )
               {
               	Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Auth Code' htmlEscape='false'/>");
@@ -383,11 +383,11 @@ function auiCellEditignHandler(event)
           if (selAuthCode == "MGR" || selAuthCode == "EXT" || selAuthCode == "INT")
           {
               if (gSelMstRolLvl != "1")
-              {   //Level 1 should do.   
+              {   //Level 1 should do.
                   Common.alert("<spring:message code='sys.msg.Enable' arguments='1' htmlEscape='false'/>");
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                   return false;
-              } 
+              }
           }
 
           //INT와 EXT는 같이 등록 안됨
@@ -411,9 +411,9 @@ function auiCellEditignHandler(event)
                return false;
             }
           }
-          
+
           // EXT가 존재하면 MGR은 등록되면 안된다
-          if (selAuthCode == "MGR")  
+          if (selAuthCode == "MGR")
           {
               // INT만이 MGR 등록이 가능하다.
               if (gridAuthCode1 != "INT" && gridAuthCode2 != "INT" )
@@ -423,21 +423,21 @@ function auiCellEditignHandler(event)
               	AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
               	AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
                 return false;
-              }                 
+              }
           }
-          
-          // 
-          if (selAuthCode == "EXT") 
+
+          //
+          if (selAuthCode == "EXT")
           {
             AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - External");
             AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
           }
-          else if (selAuthCode == "MGR") 
+          else if (selAuthCode == "MGR")
           {
           	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Manager");
           	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
           }
-          else if (selAuthCode == "INT") 
+          else if (selAuthCode == "INT")
           {
           	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Intenal");
           	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
@@ -535,7 +535,7 @@ function auiRemoveRowHandler(event)
 {
   console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
   //$("#delCancel").show();
-  
+
   if (gSelMstRolLvl != "1")
 	{
 	  if (gSelMstRolLvl != gSelAuthRolLvl)
@@ -544,7 +544,7 @@ function auiRemoveRowHandler(event)
 	    Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; Wrong Level' htmlEscape='false' argumentSeparator=';'/>");
 	    //AUIGrid.restoreSoftRows(AuthGridID, "all");
 	    AUIGrid.restoreSoftRows(AuthGridID, "selectedIndex");
-	     
+
 	    return false;
 	  }
 	}
@@ -639,81 +639,81 @@ function fnValidationCheck()
         result = false;
         Common.alert("<spring:message code='sys.msg.necessary' arguments='From Date' htmlEscape='false'/>");
         break;
-      }        
-      
-      if (toDt == "" || toDt ==  undefined ) 
+      }
+
+      if (toDt == "" || toDt ==  undefined )
       {
         result = false;
         Common.alert("<spring:message code='sys.msg.necessary' arguments='To Date' htmlEscape='false'/>");
         break;
-      } 
+      }
     }  // addlist
 
-     
-    for (var i = 0; i < udtList.length; i++) 
+
+    for (var i = 0; i < udtList.length; i++)
     {
         var authCode  = udtList[i].authCode;
         var authName  = udtList[i].authName;
         var roleId    = udtList[i].roleId;
         var fromDt  = udtList[i].fromDt;
-        var toDt    = udtList[i].toDt;  
+        var toDt    = udtList[i].toDt;
 
-        if (authCode == "" || authCode.length == 0) 
+        if (authCode == "" || authCode.length == 0)
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
           break;
         }
-        
-        if (fromDt == "" || fromDt.length == 0  ) 
+
+        if (fromDt == "" || fromDt.length == 0  )
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='From Date' htmlEscape='false'/>");
           break;
-        }        
-        
-        if (toDt == "" || toDt.length == 0  ) 
+        }
+
+        if (toDt == "" || toDt.length == 0  )
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='To Date' htmlEscape='false'/>");
           break;
-        }        
+        }
     }// udtlist
 
-    for (var i = 0; i < delList.length; i++) 
+    for (var i = 0; i < delList.length; i++)
     {
         var authCode  = delList[i].hidden;
         var roleId  = delList[i].oldRoleId;
         var fromDt  = delList[i].oldFromDt;
-        
-        if (authCode == "" || authCode.length == 0 ) 
+
+        if (authCode == "" || authCode.length == 0 )
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
           break;
         }
-        
-        if (roleId == "" || roleId.length == 0 ) 
+
+        if (roleId == "" || roleId.length == 0 )
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Role ID' htmlEscape='false'/>");
           break;
         }
-        
-        if (fromDt == "" || fromDt.length == 0 ) 
+
+        if (fromDt == "" || fromDt.length == 0 )
         {
           result = false;
           Common.alert("<spring:message code='sys.msg.necessary' arguments='Valid From' htmlEscape='false'/>");
           break;
         }
-        
+
      } //delete
-    
+
     return result;
   }
 
 //trim
-String.prototype.fnTrim = function() 
+String.prototype.fnTrim = function()
 {
     return this.replace(/(^\s*)|(\s*$)/gi, "");
 }
@@ -730,8 +730,8 @@ function fnSetRoleIdLvl(myGridID, rowIndex)
   $("#roleId").val(AUIGrid.getCellValue(myGridID, rowIndex, "roleId"));
 
   gSelMstRolLvl = AUIGrid.getCellValue(myGridID, rowIndex, "roleLev");
-  
-  console.log("search_cell_click_roleId: " +  $("#roleId").val() + ", CodeMstCd: "+ $("#CodeMasterId").val() +", gSelMstRolLvl: " +  gSelMstRolLvl );     
+
+  console.log("search_cell_click_roleId: " +  $("#roleId").val() + ", CodeMstCd: "+ $("#CodeMasterId").val() +", gSelMstRolLvl: " +  gSelMstRolLvl );
 }
 
 
@@ -740,17 +740,17 @@ function fnSetRoleIdLvl(myGridID, rowIndex)
 var myGridID, AuthGridID;
 
 $(document).ready(function()
-{ 
+{
 	$("#txtRoleId").focus();
-    
-  $("#txtRoleId").bind("keyup", function() 
+
+  $("#txtRoleId").bind("keyup", function()
   {
       $(this).val($(this).val().toUpperCase());
   });
- 
-  $("#txtRoleId").keydown(function(key) 
+
+  $("#txtRoleId").keydown(function(key)
   {
-	  if (key.keyCode == 13) 
+	  if (key.keyCode == 13)
     {
 		  if ($("#txtRoleId").val().length > 0)
 		  {
@@ -760,13 +760,13 @@ $(document).ready(function()
 			{
 			  $("#roleId").val("");
 		  }
-		    
+
 		  fnSearchBtnClickAjax();
-    } 
+    }
 
-  }); 
+  });
 
-/***************************************************[ Role Auth Mapping GRID] ***************************************************/    
+/***************************************************[ Role Auth Mapping GRID] ***************************************************/
 
     var options = {
     		          usePaging : true,
@@ -781,33 +781,33 @@ $(document).ready(function()
                   // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
                   enableRestore : true,
                   softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-                  
+
                 };
-    
+
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("grid_wrap", MainColumnLayout,"", options);
     // AUIGrid 그리드를 생성합니다.
-    
+
     // 푸터 객체 세팅
-    
+
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
 
     // cellClick event.
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(myGridID, "cellClick", function( event )
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedAuthId: " + $("#selAuthId").val() );
 
@@ -820,15 +820,15 @@ $(document).ready(function()
     });
 
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-    });    
+    });
 
 
     $("#delCancel").hide();
-    
-/***************************************************[ Auth GRID] ***************************************************/    
+
+/***************************************************[ Auth GRID] ***************************************************/
 
     var AuthGridOptions = {
     		          //rowIdField : "rowId", // PK행 지정
@@ -844,61 +844,61 @@ $(document).ready(function()
                   //editBeginMode : "click", // 편집모드 클릭
                   softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
                    // row Styling 함수
-                  rowStyleFunction : function(rowIndex, item) 
+                  rowStyleFunction : function(rowIndex, item)
                   {
-                    if(item.roleLvl != gSelMstRolLvl) 
+                    if(item.roleLvl != gSelMstRolLvl)
                     {
-                    	return "my-row-style"; 
+                    	return "my-row-style";
                     }
                     return "";
-                  } 
-                  
+                  }
+
                 };
-    
+
     // masterGrid 그리드를 생성합니다.
     AuthGridID = GridCommon.createAUIGrid("auth_grid_wrap", AuthColumnLayout,"", AuthGridOptions);
     // AUIGrid 그리드를 생성합니다.
-    
+
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(AuthGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(AuthGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(AuthGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(AuthGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(AuthGridID, "removeRow", auiRemoveRowHandler);
 
 
     // cellClick event.
-    AUIGrid.bind(AuthGridID, "cellClick", function( event ) 
+    AUIGrid.bind(AuthGridID, "cellClick", function( event )
     {
         gSelMainRowIdx = event.rowIndex;
 
-        gSelAuthRolLvl = AUIGrid.getCellValue(AuthGridID, event.rowIndex, "roleLvl");  
+        gSelAuthRolLvl = AUIGrid.getCellValue(AuthGridID, event.rowIndex, "roleLvl");
 
         console.log("CellClick AuthGrid : " + event.rowIndex + ", columnIndex : " + event.columnIndex  +", gSelAuthRolLvl: " +  gSelAuthRolLvl +", gSelMstRolLvl: "+ gSelMstRolLvl);
 
     });
 
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(AuthGridID, "cellDoubleClick", function(event) 
+    AUIGrid.bind(AuthGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-    });    
+    });
 
     $("#delCancel").hide();
-    
+
 });   //$(document).ready
 
 
 </script>
-		
+
 <section id="content"><!-- content start -->
 <ul class="path">
   <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -909,14 +909,14 @@ $(document).ready(function()
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Role Authorization Mapping</h2>
-<ul class="right_btns">  
+<ul class="right_btns">
   <li><p class="btn_blue"><a onclick="fnSearchBtnClickAjax();"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="get" action="" onsubmit="return false;">    
+<form id="MainForm" method="get" action="" onsubmit="return false;">
   <input type="hidden" id="CodeMasterId" name="CodeMasterId" value="313" />
   <input type="hidden" id="roleId" name="roleId" value="" />
 <table class="type1"><!-- table start -->
@@ -924,8 +924,8 @@ $(document).ready(function()
 <colgroup>
   <col style="width:110px" />
   <col style="width:*" />
-  <col style="width:110px" />
-  <col style="width:*" />
+  <!-- <col style="width:110px" />
+  <col style="width:*" /> -->
 </colgroup>
 <tbody>
 <tr>
@@ -1007,7 +1007,7 @@ $(document).ready(function()
 <h3 class="pt0">Auth Management</h3>
 <ul class="right_opt">
   <li><p class="btn_grid"><a onclick="fnAuthGridIDRemoveRow();">Del</a></p></li>
-  <li><p class="btn_grid"><a onclick="fnAddRow();">Add</a></p></li>  
+  <li><p class="btn_grid"><a onclick="fnAddRow();">Add</a></p></li>
   <li><p class="btn_grid"><a onclick="fnSaveRoleAuthCd();">SAVE</a></p></li>
 </ul>
 </aside><!-- title_line end -->
