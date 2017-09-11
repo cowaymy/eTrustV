@@ -1,3 +1,6 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <script type="text/javaScript" language="javascript">
 
   	//AUIGrid 생성 후 반환 ID
