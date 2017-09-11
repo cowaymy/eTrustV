@@ -6,18 +6,18 @@
 
 	<header id="header"><!-- header start -->
 	<ul class="left_opt">  
-	    <li>Neo(Mega Deal): <span id="header_neo"></span></li> 
-	    <li>Sales(Key In): <span id="header_sales"></span></li> 
-	  <!--   <li>Net Qty[<span id="header_netQty"></span></li> -->
-	    <li>Net Qty [Outright : <span id="header_outRight"></span></li>
-	    <li>Installment: <span id="header_installment"></span></li>
-	    <li>Rental: <span id="header_rental"></span></li>
-	    <li>Total: <span id="header_total"></span>]</li>
+	    <li>Neo(Mega Deal): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li>
+	    <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
+	  <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
+	    <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li>
+	    <li>Installment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li>
+	    <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
+	    <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
 	</ul>
 	<ul class="right_opt">
-	    <li>Login as <span>KRHQ9001-HQ</span></li>
+	    <li>Login as <span>${SESSION_INFO.userName}</span></li>
 	    <li><a href="/login/logout.do" class="logout">Logout</a></li>
-	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+	    <li><a href="/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
 	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
 	</ul>
 	</header><!-- header end -->
@@ -44,7 +44,31 @@
             }, null, {
                 isShowLoader : false
             });
-        
+
+        $("#header_neo").on("click", function(){
+            Common.alert("구현중...");
+        });
+
+        $("#header_sales").on("click", function(){
+            Common.alert("구현중...");
+        });
+
+        $("#header_outRight").on("click", function(){
+            Common.alert("구현중...");
+        });
+
+        $("#header_installment").on("click", function(){
+            Common.alert("구현중...");
+        });
+
+        $("#header_rental").on("click", function(){
+            Common.popupDiv("/chart/salesKeyInAnalysisPop.do", null, null, true, "salesKeyInAnalysisDivPop");
+		});
+
+        $("#header_total").on("click", function(){
+            //Common.alert("구현중...");
+            Common.popupDiv("/chart/netSalesChartPop.do", null, null, true, "netSalesChartDivPop");
+        });
 
     }
 

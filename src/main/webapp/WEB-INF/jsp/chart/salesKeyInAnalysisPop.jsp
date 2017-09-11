@@ -112,7 +112,7 @@
                     text: "Key-In / Net Sales (EXCLUDE PST)"
                 },
                 legend :  {
-                    position : "top" //"bottom"
+                   position : "top" //"bottom"
                 },
                 tooltips: {
                     mode: 'index',
