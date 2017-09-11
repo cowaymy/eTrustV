@@ -13,6 +13,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
 
 import com.coway.trust.AppConstants;
@@ -36,6 +38,8 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
  * crystal report helper
  */
 public class CRJavaHelper {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CRJavaHelper.class);
 
 	public static final String XLS = "xls";
 	public static final String CSV = "csv";
@@ -460,6 +464,8 @@ public class CRJavaHelper {
 			clientDoc.getDataDefController().getParameterFieldController().setCurrentValue(reportName, parameterName,
 					newRangeValue);
 		}
+
+		LOGGER.debug(">>>>>>>>>>  parameterName : {} ,  newRangeValue : {}", parameterName, newRangeValue);
 	}
 
 	/**
