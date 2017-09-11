@@ -51,6 +51,12 @@
         call  SP_GET_KEY_IN_ANLYS(#{pYear}, #{chartData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=chartMap})
         }
     </select>
+
+    <select id="selectLineChartDataProcedure" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_GET_APP_TYPE_ANLYS(#{pYear}, #{chartData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=chartMap})
+        }
+    </select>
 	
 	<insert id="insertClobData" parameterType="Map">
         INSERT INTO TST_SUPPLY_PLAN

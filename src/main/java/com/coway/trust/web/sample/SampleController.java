@@ -105,6 +105,12 @@ public class SampleController {
 		return "sample/sampleChart";
 	}
 
+	@RequestMapping(value = "/sampleLineChart.do")
+	public String sampleLineChart(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		// 챠트 예제.
+		return "sample/sampleLineChart";
+	}
+
 	@RequestMapping(value = "/getChartData.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getChartData(@RequestParam Map<String, Object> params, Model model)
 			throws Exception {
@@ -112,6 +118,16 @@ public class SampleController {
 		params.put("pYear", CommonUtils.nvl((String) params.get("pYear"), "2017"));
 
 		List<EgovMap> list = sampleService.getChartData(params);
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/getLineChartData.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getLineChartData(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+
+		params.put("pYear", CommonUtils.nvl((String) params.get("pYear"), "2017"));
+
+		List<EgovMap> list = sampleService.getLineChartData(params);
 		return ResponseEntity.ok(list);
 	}
 

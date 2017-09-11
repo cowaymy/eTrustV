@@ -124,6 +124,12 @@ public class SampleServiceImpl implements SampleService {
 		return (List<EgovMap>) params.get("chartData");
 	}
 
+	@Override
+	public List<EgovMap> getLineChartData(Map<String, Object> params) {
+		sampleMapper.selectLineChartDataProcedure(params);
+		return (List<EgovMap>) params.get("chartData");
+	}
+
 	/**
 	 * 글을 등록한다.
 	 * 

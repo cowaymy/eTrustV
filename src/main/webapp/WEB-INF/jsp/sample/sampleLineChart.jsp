@@ -10,14 +10,14 @@
 
 <script type="text/javaScript" language="javascript">
 
-    var barChart;
+    var lineChart;
 
     $(document).ready(function () {
         fn_getChartData();
     });
 
     function fn_getChartData() {
-        Common.ajax("GET", "/sample/getChartData.do", $('#searchForm').serialize(), function (result) {
+        Common.ajax("GET", "/sample/getLineChartData.do", $('#searchForm').serialize(), function (result) {
             console.log("성공.");
             console.log("data : " + result);
 
@@ -27,29 +27,25 @@
 
     function fn_drawChart(data) {
 
-        var Sales = "Sales(Key In)";
-        var NetSales = "NetSales";
-        var Membership = "Membership(Key In)";
-        var NewMember = "New Member(Key In)";
+        var Outright = "Total Outright";
+        var Rental = "Total Rental";
+        var Installment = "Total Installment";
 
-        var columns = [Sales, NetSales, Membership, NewMember];
+        var columns = [Outright, Rental, Installment];
         var labels = [];
         var dataSets = [];
-        var salesCnt = [];
-        var newSalesCnt = [];
-        var mbrshCnt = [];
-        var memCnt = [];
-        var back = ["#ff0000", "blue", "gray"];
+        var totOutrgt = [];
+        var totRental = [];
+        var totInstall = [];
 
         for (var i = 0; i < data.length; i++) {
-            labels.push(data[i].anlysMonth);
+            labels.push(data[i].pvMonth);
         }
 
         for (var i = 0; i < data.length; i++) {
-            salesCnt.push(data[i].salesCnt);
-            newSalesCnt.push(data[i].newSalesCnt);
-            mbrshCnt.push(data[i].mbrshCnt);
-            memCnt.push(data[i].memCnt);
+            totOutrgt.push(data[i].totOutrgt);
+            totRental.push(data[i].totRental);
+            totInstall.push(data[i].totInstall);
         }
 
         for (var i = 0; i < columns.length; i++) {
@@ -69,21 +65,17 @@
             var color;
 
             switch (columns[i]) {
-                case Sales:
-                    dataArray = salesCnt;
+                case Outright:
+                    dataArray = totOutrgt;
                     color = '#ff6384';
                     break;
-                case NetSales:
-                    dataArray = newSalesCnt;
+                case Rental:
+                    dataArray = totRental;
                     color = '#36a2eb';
                     break;
-                case Membership:
-                    dataArray = mbrshCnt;
+                case Installment:
+                    dataArray = totInstall;
                     color = '#cc65fe';
-                    break;
-                case NewMember:
-                    dataArray = memCnt;
-                    color = '#ffce56';
                     break;
                 default:
                     dataArray = [];
@@ -92,41 +84,37 @@
 
             console.log(columns[i] + " : " + dataArray[0] + ", " + dataArray[1] + ", " + dataArray[2] + ", " + dataArray[3] + ", " + dataArray[4]);
 
-            var barChartData = {
+            var lineChartData = {
                 label: columns[i],
-                backgroundColor: color, //back[Math.floor(Math.random() * back.length)],
+                backgroundColor: color,
+                fill: false,
                 data: dataArray
             };
 
-            dataSets.push(barChartData);
+            dataSets.push(lineChartData);
         }
 
-        var ctx = $("#barChart");
+        var ctx = $("#lineChart");
         var chartOption = {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: dataSets
             },
             options: {
                 responsive: true,
+                hoverMode: 'index',
+                stacked: false,
                 title: {
                     display: true,
-                    text: "Key-In / Net Sales (EXCLUDE PST)"
-                },
-                legend :  {
-                   position : "top" //"bottom"
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: true
+                    text: 'Key In Net Sales By Application Type'
                 },
                 scales: {
                     xAxes: [{
                         display: true,
                         scaleLabel: {
                             display: true,
-                            fontSize : 15,
+                            fontSize: 15,
                             labelString: 'Month'
                         }
                     }],
@@ -134,7 +122,7 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                            fontSize : 15,
+                            fontSize: 15,
                             labelString: 'Total'
                         }
                     }]
@@ -142,15 +130,15 @@
             }
         };
 
-        if (barChart) {
-            //console.log("barChart destroy......");
-            //barChart.destroy();
-            barChart.data.datasets = dataSets;
-            barChart.update();
-            console.log("barChart update......");
+        if (lineChart) {
+            //console.log("lineChart destroy......");
+            //lineChart.destroy();
+            lineChart.data.datasets = dataSets;
+            lineChart.update();
+            console.log("lineChart update......");
         } else {
-            barChart = new Chart(ctx, chartOption);
-            console.log("barChart create......");
+            lineChart = new Chart(ctx, chartOption);
+            console.log("lineChart create......");
         }
 
     }
@@ -192,7 +180,7 @@
                     <td>
                         <select class="w100p" id="pYear" name="pYear" onchange="fn_getChartData();">
                             <option value="2017" selected>2017</option>
-                            <option value="2016">2016</option>
+                            <option value="2016" >2016</option>
                             <option value="2015">2015</option>
                         </select>
                     </td>
@@ -204,7 +192,7 @@
 
         <article class="grid_wrap_big" style="height:380px"><!-- grid_wrap start -->
             <div class="chart-container">
-                <canvas id="barChart"></canvas>
+                <canvas id="lineChart"></canvas>
             </div>
         </article><!-- grid_wrap end -->
         <p class="mt20">/Public/SaleKeyInGraphChart.aspx</p>
