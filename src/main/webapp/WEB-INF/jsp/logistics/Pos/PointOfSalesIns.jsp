@@ -730,7 +730,6 @@ function saveSerialAjax(){
     data.add = serials;
     data.form = $("#giForm").serializeJSON();
     Common.alert($("#posReqSeq").val());
-    console.log(data);
     Common.ajaxSync("POST", "/logistics/pos/insertSerial.do", data, function(result) {
 
         //Common.alert(result.message, SearchListAjax);
