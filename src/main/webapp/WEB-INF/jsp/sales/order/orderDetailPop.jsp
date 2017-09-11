@@ -594,7 +594,9 @@
 	<li><a href="#">Relief Certificate</a></li>
 	<li><a href="#" onClick="javascript:chgTab('discountInfo');">Discount</a></li>
 </ul>
-
+<!------------------------------------------------------------------------------
+    Basic Info
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -690,7 +692,9 @@
 </table><!-- table end -->
 
 </article><!-- tap_area end -->
-
+<!------------------------------------------------------------------------------
+    HP / Cody
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <section class="divine2"><!-- divine3 start -->
@@ -797,7 +801,9 @@
 
 
 </article><!-- tap_area end -->
-
+<!------------------------------------------------------------------------------
+    Customer Info
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -867,7 +873,9 @@
 </section><!-- search_result end -->
 
 </article><!-- tap_area end -->
-
+<!------------------------------------------------------------------------------
+    Installation Info
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -973,7 +981,9 @@
 </table><!-- table end -->
 
 </article><!-- tap_area end -->
-
+<!------------------------------------------------------------------------------
+    Mailling Info
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -1097,6 +1107,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Payment Channel
+------------------------------------------------------------------------------->
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
 <article class="tap_area"><!-- tap_area start -->
 
@@ -1179,6 +1192,9 @@
 </article><!-- tap_area end -->
 </c:if>
 
+<!------------------------------------------------------------------------------
+    Membership Info
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns">
@@ -1195,6 +1211,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Document Submission
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns">
@@ -1211,6 +1230,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Call Log
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns">
@@ -1227,8 +1249,10 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Quarantee Info
+------------------------------------------------------------------------------->
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
-
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -1272,9 +1296,11 @@
 </table><!-- table end -->
 
 </article><!-- tap_area end -->
-
 </c:if>
 
+<!------------------------------------------------------------------------------
+    Payment Listing
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns">
@@ -1291,6 +1317,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Last 6 Months Transaction
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns">
@@ -1307,6 +1336,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Order Configuration
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -1386,6 +1418,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Auto Debit Result
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns">
@@ -1402,6 +1437,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Relief Certificate
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -1432,6 +1470,9 @@
 
 </article><!-- tap_area end -->
 
+<!------------------------------------------------------------------------------
+    Discount
+------------------------------------------------------------------------------->
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns">
