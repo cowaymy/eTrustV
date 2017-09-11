@@ -64,6 +64,13 @@ public interface InvoiceAdjMapper {
 	 */
 	void saveNewAdjMaster(Map<String, Object> params);
 	
+	/**
+	 * Adjustment request Batch Info 등록
+	 * @param params
+	 * @return
+	 */
+	void saveBatchInfo(Map<String, Object> params);
+	
 	 /**
 	 * Adjustment request Detail  등록
 	 * @param params
@@ -155,6 +162,28 @@ public interface InvoiceAdjMapper {
     void insertASLedger(Map<String, Object> params);    
     int selectQuotId(String quotNo);
     int selectSrvMemId(int quotId);
-    void insertAccSrvMemLedger(Map<String, Object> params);    
+    void insertAccSrvMemLedger(Map<String, Object> params);
+    
+    /**
+	 * Adjustment CN/DN Batch Approval Pop-up Master 조회
+	 * @param params
+	 * @return
+	 */
+    EgovMap selectAdjBatchApprovalPopMaster(Map<String, Object> params);
+    
+    /**
+	 * Adjustment CN/DN Batch Approval Pop-up Detail 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectAdjBatchApprovalPopDetail(Map<String, Object> params);
+    
+    /**
+	 *  Adjustment CN/DN Batch Approval Pop-up History 조회
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap> selectAdjBatchApprovalPopHist(Map<String, Object> params);
+    
     
 }

@@ -39,7 +39,7 @@ public interface InvoiceAdjService {
     	 * @param params
     	 * @return
     	 */
-        String saveNewAdjList(int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList);
+        String saveNewAdjList(boolean isBatch, int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList);
         
         /**
     	 * Adjustment Batch ID 채번
@@ -76,4 +76,25 @@ public interface InvoiceAdjService {
     	* @return
     	*/       
         void approvalAdjustment(Map<String, Object> params);
+        
+        /**
+    	 * Adjustment CN/DN Batch Approval Pop-up Master 조회
+    	 * @param params
+    	 * @return
+    	 */
+        EgovMap selectAdjBatchApprovalPopMaster(Map<String, Object> params);
+        
+        /**
+    	 * Adjustment CN/DN Batch Approval Pop-up Detail 조회
+    	 * @param params
+    	 * @return
+    	 */
+        List<EgovMap> selectAdjBatchApprovalPopDetail(Map<String, Object> params);
+        
+        /**
+    	 * Adjustment CN/DN Batch Approval Pop-up History 조회
+    	 * @param params
+    	 * @return
+    	 */
+        List<EgovMap> selectAdjBatchApprovalPopHist(Map<String, Object> params);
 }

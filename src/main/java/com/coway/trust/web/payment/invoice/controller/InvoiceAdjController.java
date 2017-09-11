@@ -114,6 +114,18 @@ public class InvoiceAdjController {
 	}
 	
 	/**
+	 * Adjustment Detail Pop-up (Batch Approval) 초기화면
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initApprovalBatchPop.do")	
+	public String initApprovalBatchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("batchId", params.get("batchId"));		
+		return "payment/invoice/adjCnDnBatchApprovalPop";
+	}
+	
+	/**
 	 * Adjustment Detail Pop-up 정보조회
 	 * @param params
 	 * @param model
@@ -127,6 +139,29 @@ public class InvoiceAdjController {
 		EgovMap master = invoiceService.selectAdjDetailPopMaster(params);					//마스터 데이터 조회
 		List<EgovMap> detailList = invoiceService.selectAdjDetailPopList(params);		//상세 리스트 조회
 		List<EgovMap> histlList = invoiceService.selectAdjDetailPopHist(params);		//히스토리 조회
+		
+		HashMap <String, Object> returnValue = new HashMap<String, Object>();
+		returnValue.put("master", master);		
+		returnValue.put("detailList", detailList);
+		returnValue.put("histlList", histlList);
+		
+		return ResponseEntity.ok(returnValue);
+	}
+	
+	/**
+	 * Adjustment Batch Approval Pop-up 정보조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectAdjustmentBatchApprovalPop.do", method = RequestMethod.GET)
+	public ResponseEntity<HashMap<String,Object>> selectAdjustmentBatchApprovalPop(@RequestParam Map<String, Object> params, ModelMap model) {	
+		
+		LOGGER.debug("batchId : {}", params.get("batchId"));
+		
+		EgovMap master = invoiceService.selectAdjBatchApprovalPopMaster(params);					//마스터 데이터 조회
+		List<EgovMap> detailList = invoiceService.selectAdjBatchApprovalPopDetail(params);		//상세 리스트 조회
+		List<EgovMap> histlList = invoiceService.selectAdjBatchApprovalPopHist(params);		//히스토리 조회
 		
 		HashMap <String, Object> returnValue = new HashMap<String, Object>();
 		returnValue.put("master", master);		
@@ -257,7 +292,7 @@ public class InvoiceAdjController {
 		masterParamMap.put("memoAdjustTotalAmount", totalAmount);
 		
 		//저장처리
-		String returnStr = invoiceService.saveNewAdjList(Integer.parseInt(memoTypeId), masterParamMap, detailParamList);		
+		String returnStr = invoiceService.saveNewAdjList(false,Integer.parseInt(memoTypeId), masterParamMap, detailParamList);		
 
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
@@ -409,7 +444,8 @@ public class InvoiceAdjController {
 				masterParamMap.put("memoAdjustTotalAmount", totalAmount);
 				
 				//저장처리
-				invoiceService.saveNewAdjList(Integer.parseInt(memoTypeId), masterParamMap, detailParamList);		
+				invoiceService.saveNewAdjList(true,Integer.parseInt(memoTypeId), masterParamMap, detailParamList);
+				
 			}
 		}
 
@@ -470,6 +506,50 @@ public class InvoiceAdjController {
 		
 		//승인 or 반려 처리
 		invoiceService.approvalAdjustment(params);
+
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData("");
+    	message.setMessage("Adjustment successfully requested.");
+		
+    	return ResponseEntity.ok(message);
+	}
+	
+	/**
+	* Approval Adjustment  - Approva / Reject
+	* @param params
+	* @param model
+	* @return
+	*/
+	@RequestMapping(value = "/approvalBatchAdjustment.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approvalBatchAdjustment(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
+		
+		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+		Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+		
+		Map<String, Object> approvaParam = null;
+		
+		LOGGER.debug("process : {}", formData.get("process"));
+		
+		//Detail 데이터 세팅
+		if (gridList.size() > 0) {
+			for (int i = 0; i < gridList.size(); i++) {
+				Map<String, Object> gridMap = (Map<String, Object>) gridList.get(i);
+			           
+				approvaParam = new HashMap<String, Object>();
+				
+				approvaParam.put("adjId", gridMap.get("memoAdjId"));
+				approvaParam.put("invoiceType", gridMap.get("memoAdjInvcTypeId"));
+				approvaParam.put("memoAdjTypeId", gridMap.get("memoAdjTypeId"));
+				approvaParam.put("invoiceNo", gridMap.get("memoAdjInvcNo"));
+				approvaParam.put("process", formData.get("process"));
+				approvaParam.put("userId", sessionVO.getUserId());
+				
+				//승인 or 반려 처리
+				invoiceService.approvalAdjustment(approvaParam);		
+			}
+		}
 
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();

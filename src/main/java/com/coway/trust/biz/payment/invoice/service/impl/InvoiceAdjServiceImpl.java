@@ -59,7 +59,7 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 	 * @return
 	 */
 	@Override
-	public String saveNewAdjList(int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList){
+	public String saveNewAdjList(boolean isBatch, int adjustmentType , Map<String, Object> masterParamMap, List<Object> detailParamList){
 		
 		int memoAdjustmentId = invoiceMapper.getAdjustmentId();
 		String reportNo = commonMapper.selectDocNo("18");
@@ -77,6 +77,11 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 		masterParamMap.put("memoAdjustReportNo", reportNo);
 		
 		invoiceMapper.saveNewAdjMaster(masterParamMap);
+		
+		//배치 등록일 경우 배치 정보를 입력한다.
+		if(isBatch){
+			invoiceMapper.saveBatchInfo(masterParamMap);	
+		}
 		
 		//Detail Data 등로
     	if (detailParamList.size() > 0) {    		
@@ -371,5 +376,35 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 				}
 			}
 		} // end of if(status == 4)	
+	}
+	
+	/**
+	 * Adjustment CN/DN Batch Approval Pop-up Master 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectAdjBatchApprovalPopMaster(Map<String, Object> params){
+		return invoiceMapper.selectAdjBatchApprovalPopMaster(params);
+	}
+	
+	/**
+	 * Adjustment CN/DN Batch Approval Pop-up Detail 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectAdjBatchApprovalPopDetail(Map<String, Object> params){
+		return invoiceMapper.selectAdjBatchApprovalPopDetail(params);
+	}
+	
+	/**
+	 * Adjustment CN/DN Batch Approval Pop-up History 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectAdjBatchApprovalPopHist(Map<String, Object> params) {
+		return invoiceMapper.selectAdjBatchApprovalPopHist(params);
 	}
 }
