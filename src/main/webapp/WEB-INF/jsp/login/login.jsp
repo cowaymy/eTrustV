@@ -120,35 +120,35 @@ $(function ()
 
         if (flag == "A1")   // EXPRIED PASSWORD
         {
-	        if ($("#newPasswordConfirmTxt").val().indexOf($("#userId").val() ) >= 0)
-	        {
-	          Common.alert("<spring:message code='sys.login.pswdContainLoginId'/>");
-	          return false;
-	        } 
-
-	        if ($("#password").val() == $("#newPasswordConfirmTxt").val())
-	        {
-	          Common.alert("<spring:message code='sys.login.pswdSameNotPrevious'/>");
-	          return false;
-	        } 
-	       
-	        gVarForm = "#resetPopUpForm";
+		        if ($("#newPasswordConfirmTxt").val().indexOf($("#userId").val() ) >= 0)
+		        {
+		          Common.alert("<spring:message code='sys.login.pswdContainLoginId'/>");
+		          return false;
+		        } 
+	
+		        if ($("#password").val() == $("#newPasswordConfirmTxt").val())
+		        {
+		          Common.alert("<spring:message code='sys.login.pswdSameNotPrevious'/>");
+		          return false;
+		        } 
+		       
+		        gVarForm = "#resetPopUpForm";
         }
         else   // FIND ID && PASSWORD CHANGE
         {
-        	if ($("#newPasswordConfirmTxt").val().indexOf($("#searchLoginName").val() ) >= 0)
-          {
-            Common.alert("<spring:message code='sys.login.pswdContainLoginId'/>");
-            return false;
-          }
-
-          if (returnSearchUserInfo.userPassWord == $("#newPasswordConfirmTxt").val())
-          {
-            Common.alert("<spring:message code='sys.login.pswdSameNotPrevious'/>");
-            return false;
-          } 
-
-          gVarForm = "#findIpPopUpForm";
+	        	if ($("#newPasswordConfirmTxt").val().indexOf($("#searchLoginName").val() ) >= 0)
+	          {
+	            Common.alert("<spring:message code='sys.login.pswdContainLoginId'/>");
+	            return false;
+	          }
+	
+	          if (returnSearchUserInfo.userPassWord == $("#newPasswordConfirmTxt").val())
+	          {
+	            Common.alert("<spring:message code='sys.login.pswdSameNotPrevious'/>");
+	            return false;
+	          } 
+	
+	          gVarForm = "#findIpPopUpForm";
         }
         
     	  return true;
