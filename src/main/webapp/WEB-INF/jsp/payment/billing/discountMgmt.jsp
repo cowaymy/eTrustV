@@ -34,11 +34,14 @@ var discountLayout = [
                        }, {
                            dataField : "name",
                            headerText : "Customer Name",
-                           editable : false
+                           editable : false,
+                           width: 300,
+                           style : "my-custom-up"
                        }, {
                            dataField : "codeDesc",
                            headerText : "Discount Type",
-                           editable : false
+                           editable : false,
+                           width: 200
                        }, {
                            dataField : "dcAmtPerInstlmt",
                            headerText : "Amount Per Installment",
