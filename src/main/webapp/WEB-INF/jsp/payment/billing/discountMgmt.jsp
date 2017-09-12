@@ -45,7 +45,8 @@ var discountLayout = [
                        }, {
                            dataField : "dcAmtPerInstlmt",
                            headerText : "Amount Per Installment",
-                           editable : false
+                           editable : false,
+                           width: 200
                        }, {
                            dataField : "discountPeriod",
                            headerText : "Discount Period",
@@ -201,12 +202,14 @@ var discountLayout = [
     	Common.ajax("GET","/payment/saveDiscount.do", $("#billingForm").serialize(), function(result){
             console.log(result);
             
+            /* 
+            AS-IS 초기화 안해서 TO-BE도 초기화안함
             $('#discountType').val('');
             $('#startPeriod').val('');
             $('#endPeriod').val('');
             $('#discountAmount').val('');
             $('#remarks').val('');
-            $('#addNewEntryPop').hide();
+            $('#addNewEntryPop').hide(); */
             
             AUIGrid.destroy(myGridID); 
             myGridID = GridCommon.createAUIGrid("grid_wrap", discountLayout,null,gridPros);
@@ -227,7 +230,7 @@ var discountLayout = [
     		Common.alert(dscntEntryId);
     	}else{
     		
-    		//Common.confirm('Are you sure you want to disable the selected discount entry? Once disabled, can not restore.',function (){
+    		Common.confirm('Are you sure you want to disable the selected discount entry? Once disabled, can not restore.',function (){
                 Common.ajax("GET","/payment/saveDisableDiscount.do", {"dscntEntryId" : dscntEntryId, "salesOrdId" : salesOrdId}, function(result){
                     console.log(result);
                     
@@ -237,7 +240,7 @@ var discountLayout = [
                     
                     Common.alert(result.data.resultMessage);
                 });
-            //});
+            });
     		
     	}
     }
