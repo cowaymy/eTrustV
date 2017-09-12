@@ -173,11 +173,11 @@ $(function ()
 	           	    }
 	           	    
 	           	    if (flag == "A1")
-	               	{ // EXPIRED PASSWORD
+	               	{ // EXPIRED PASSWORD ==> resetPassWordPop.jsp
 	           	    	pswdPopUpClose();
 	                 }
 	           	    else
-	               	{  // FIND ID && PASSWORD CHANGE
+	               	{  // FIND ID && PASSWORD CHANGE  ==> findIdPop.jsp
 	           	    	findIdPopUpClose();
 	               	}
 	               	
