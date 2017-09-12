@@ -209,7 +209,13 @@ var discountLayout = [
             $('#endPeriod').val('');
             $('#discountAmount').val('');
             $('#remarks').val('');
-            $('#addNewEntryPop').hide(); */
+             */
+             $('#addNewEntryPop').hide();
+            
+            //BASIC INFO
+            $('#salesOrdId').val(result.data.basicInfo.ordId);
+            $('#orderNo').val(result.data.basicInfo.ordNo);
+            $('#custName').val(result.data.basicInfo.custName);
             
             AUIGrid.destroy(myGridID); 
             myGridID = GridCommon.createAUIGrid("grid_wrap", discountLayout,null,gridPros);
@@ -233,6 +239,11 @@ var discountLayout = [
     		Common.confirm('Are you sure you want to disable the selected discount entry? Once disabled, can not restore.',function (){
                 Common.ajax("GET","/payment/saveDisableDiscount.do", {"dscntEntryId" : dscntEntryId, "salesOrdId" : salesOrdId}, function(result){
                     console.log(result);
+                    
+                    //BASIC INFO
+                    $('#salesOrdId').val(result.data.basicInfo.ordId);
+                    $('#orderNo').val(result.data.basicInfo.ordNo);
+                    $('#custName').val(result.data.basicInfo.custName);
                     
                     AUIGrid.destroy(myGridID); 
                     myGridID = GridCommon.createAUIGrid("grid_wrap", discountLayout,null,gridPros);
