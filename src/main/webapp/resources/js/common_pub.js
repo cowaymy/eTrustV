@@ -146,14 +146,19 @@ $(document).on(
 	"click", ".inb_menu li a", function(){
 	var thisLi=$(this).parent("li");
 	var thisHasChild=thisLi.children("ul").length;
+	var thisUl=$(this).parent().parent("ul").find("li ul");
 
 	if(thisHasChild>0){
 		if(thisLi.children("ul").is(":visible")){
+			$(this).removeClass("on")
 			thisLi.children("ul").slideUp("500");
 		}else{
+			thisUl.parent("li").children("a").removeClass("on")
+			thisUl.slideUp("500");
+			$(this).addClass("on")
 			thisLi.children("ul").slideDown("500");
 		}
-		$(this).toggleClass("on");
+		//$(this).removeClass("on");
 		return false;
 	}else{
 	}
