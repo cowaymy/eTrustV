@@ -19,6 +19,8 @@ public interface PointOfSalesMapper {
 	
 	void  insOtherReceiptHead(Map<String, Object> params);
 	void  insRequestItem(Map<String, Object> params);
-	
+	void  insertSerial(Map<String, Object> params);
+	void  updateReqstStus(Map<String, Object> params);
+
 
 }
