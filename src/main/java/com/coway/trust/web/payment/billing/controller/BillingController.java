@@ -150,13 +150,11 @@ public class BillingController {
 		ReturnMessage message = new ReturnMessage();
 		int userId = sessionVO.getUserId();
 		
-		logger.debug("params {}"+ params);
 		params.put("dcStatusId", 1);
 		params.put("userId", userId);
         int saveResult = billingService.saveAddDiscount(params);
         List<EgovMap> discountList = new ArrayList<EgovMap>();
         
-        logger.debug("saveReuslt "+ saveResult);
         if(saveResult == 1){
         	discountList = billingService.selectDiscountList(params);
         }
