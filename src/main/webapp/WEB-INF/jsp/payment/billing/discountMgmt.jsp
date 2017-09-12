@@ -165,12 +165,12 @@ var discountLayout = [
             return;
     	}
     	
-    	if(startPeriod == ""){
+    	if(startPeriod == "" || endPeriod == ""){
             Common.alert("Required Field(Discount Period) was not fulfilled");
             return;
         }
     	
-    	if(endPeriod == ""){
+    	if((endPeriod - startPeriod) > 60){
             Common.alert("Discount Period cannot more than 60 month");
             return;
         }
