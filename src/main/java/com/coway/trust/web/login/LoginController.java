@@ -68,24 +68,7 @@ public class LoginController {
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "ID" }));
 		} else {
 
-			String clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
-
-			// WebLogic 의 web server 연계 모듈인 weblogic connecto
-			// if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
-			// clientIp = request.getHeader("Proxy-Client-IP");
-			// }
-			//
-			// if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
-			// clientIp = request.getHeader("WL-Proxy-Client-IP");
-			// }
-
-			if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
-				clientIp = request.getHeader("REMOTE_ADDR");
-			}
-
-			if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
-				clientIp = request.getRemoteAddr();
-			}
+			String clientIp = getClientIp(request);
 
 			LoginHistory loginHistory = new LoginHistory();
 			loginHistory.setSystemId(AppConstants.LOGIN_WEB);
@@ -105,6 +88,33 @@ public class LoginController {
 		}
 
 		return ResponseEntity.ok(message);
+	}
+
+	private String getClientIp(HttpServletRequest request) {
+		String clientIp = request.getHeader("X-Forwarded-For");
+
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getHeader("Proxy-Client-IP");
+		}
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getHeader("X-Real-IP");
+		}
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getHeader("X-RealIP");
+		}
+		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
+			clientIp = request.getRemoteAddr();
+		}
+		return clientIp;
 	}
 
 	@RequestMapping(value = "/logout.do")
