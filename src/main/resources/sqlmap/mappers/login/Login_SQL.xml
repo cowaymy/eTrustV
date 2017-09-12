@@ -34,10 +34,12 @@
 	       ,BRANCH.TEL1 AS branchTel1
 	       ,BRANCH.TEL2 AS branchTel2
 	       ,SUPDEPT.DEPT_NAME AS deptName
+	       ,(TRUNC(SYSDATE,'dd') - TRUNC(USR.USER_PASSWD_LAST_UPD_DT,'dd')) diffDay
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
 	       LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = USR.USER_BRNCH_ID
 	       LEFT OUTER JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
-	 WHERE USR.USER_NAME = #{userId}
+	 WHERE 1 = 1
+	   AND USR.USER_NAME = #{userId}
 	   AND USR.USER_PASSWD = #{password}
 	   AND USR.USER_STUS_ID = 1
 	   AND 'T' = CASE WHEN #{userMobileNo} IS NULL OR USR.USER_MOBILE_NO = #{userMobileNo} THEN 'T'
@@ -56,5 +58,33 @@
     ]]>
     </select>
 
+  <update id="updatePassWord" parameterType="Map">
+   UPDATE SYS0047M
+     SET USER_PASSWD = #{newPasswordConfirmTxt}
+        ,USER_PASSWD_LAST_UPD_DT = SYSDATE
+       <choose>
+         <when test=' newUserIdTxt != null and newUserIdTxt != "" '>    
+           WHERE USER_ID = #{newUserIdTxt}  
+         </when>
+         <otherwise>
+           WHERE USER_ID = #{searchLoginId}  
+         </otherwise>
+       </choose>        
+  </update> 
+  
+  <select id="selectFindUserIdPop" parameterType="Map" resultType="loginVO">
+   SELECT 
+          SYS47M.USER_NAME    userName
+         ,SYS47M.USER_ID      userId
+         ,SYS47M.USER_PASSWD  userPassWord
+         ,SYS47M.USER_SEC_QUES_ID  userSecQuesId
+         ,SYS47M.USER_SEC_QUES_ANS userSecQuesAns
+         ,SYS32M.RESN_DESC         securityQuestion
+    FROM  SYS0047M SYS47M
+        , SYS0032M SYS32M
+    WHERE SYS47M.USER_NAME = #{userIdFindPopTxt}
+      AND (SYS32M.RESN_ID = SYS47M.USER_SEC_QUES_ID  OR SYS47M.USER_SEC_QUES_ID = 0  )
+      AND ROWNUM = 1
+  </select>
 
 </mapper>
