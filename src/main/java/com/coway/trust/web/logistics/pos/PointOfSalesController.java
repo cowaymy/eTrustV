@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,19 @@ public class PointOfSalesController {
 		logger.debug("crtedt    값 : {}",params.get("crtedt"));
 		logger.debug("reqsdt    값 : {}",params.get("reqsdt"));
 		logger.debug("reqedt    값 : {}",params.get("reqedt"));
-	
+		String crtsdt =(String) params.get("crtsdt");
+		crtsdt =crtsdt.replace("/", "");
+		String crtedt =(String) params.get("crtedt");
+		crtedt =crtedt.replace("/", "");
+		String reqsdt =(String) params.get("reqsdt");
+		reqsdt =reqsdt.replace("/", "");
+		String reqedt =(String) params.get("reqedt");
+		reqedt =reqedt.replace("/", "");
+		params.put("crtsdt", crtsdt);
+		params.put("crtedt", crtedt);
+		params.put("reqsdt", reqsdt);
+		params.put("reqedt", reqedt);
+		
 		
 		List<EgovMap> list = PointOfSalesService.PosSearchList(params);
 		for (int i = 0; i < list.size(); i++) {
