@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.adjustment.impl.AdjustmentMapper">
+    <select id="selectNewAdjNo" resultType="String">
+        SELECT  'AD'||LPAD(LOG0071M_INVNTRY_NO_SEQ.NEXTVAL, 10, '0') FROM  DUAL
+    </select>
+    
+    
+    <insert id="insertNewAdjustment" parameterType="Map">
+        INSERT INTO LOG0071M (
+										INVNTRY_NO,
+										BASE_DT,
+										CNFM1_DT,  
+										CNFM2_DT,  
+										<!-- CNFM1,
+										CNFM2,
+										FILE_LOC,
+										FILE_NAME,
+										ORG_FILE_NAME, -->
+										HEAD_TITLE,
+										EVENT_TYPE,
+										ITM_TYPE,
+										AUTO_FLAG,
+										<!-- DEL_FLAG, -->
+										CRT_USER,
+										CRT_DATE
+										) 
+										VALUES 
+										(
+										#{adjNo} ,
+										TO_CHAR(SYSDATE, 'YYYYMMDD'),
+										NULL,
+										NULL,
+										#{doctext},
+									    #{event},
+										#{item},  
+										#{auto_manual},
+									     #{loginId}, 
+									     SYSDATE             
+									   )                   
+    
+    </insert>
+    
+    <select id="selectAdjustmentList" parameterType="Map" resultType="EgovMap">
+        SELECT 
+                INVNTRY_NO,
+                BASE_DT,
+                CNFM1,
+                TO_CHAR(CNFM1_DT,'DD/MM/YYYY') CNFM1_DT,
+                CNFM2,
+                TO_CHAR(CNFM2_DT,'DD/MM/YYYY') CNFM2_DT,
+                FILE_LOC,
+                FILE_NAME,
+                ORG_FILE_NAME,
+                HEAD_TITLE,
+                EVENT_TYPE,
+                ITM_TYPE,
+                AUTO_FLAG,
+                DEL_FLAG,
+                CRT_USER,
+                TO_CHAR(CRT_DATE,'DD/MM/YYYY') CRT_DATE
+            FROM  LOG0071M
+            <if test="adjNo !=null and adjNo !=''">
+                WHERE INVNTRY_NO = #{adjNo}
+            </if>
+             ORDER BY INVNTRY_NO
+    </select>   
+     
+     <select id="selectAdjustmentLocationList" parameterType="Map" resultType="EgovMap">
+        SELECT
+                ROWNUM rnum,
+				WH_LOC_ID,
+				WH_LOC_CODE,
+				WH_LOC_DESC,
+				WH_LOC_TEL1,
+				WH_LOC_TEL2,
+				WH_LOC_BRNCH_ID,
+				WH_LOC_TYPE_ID,
+				WH_LOC_STK_GRAD,
+				WH_LOC_STUS_ID,
+				WH_LOC_UPD_USER_ID,
+				WH_LOC_UPD_DT,
+				CODE2,
+				DESC2,
+				WH_LOC_IS_SYNC,
+				WH_LOC_MOBILE,
+				AREA_ID,
+				ADDR_DTL,
+				STREET,
+				WH_LOC_BRNCH_ID2,
+				WH_LOC_BRNCH_ID3,
+				WH_LOC_GB,
+				SERIAL_PD_CHK,
+				SERIAL_FT_CHK,
+				SERIAL_PT_CHK,
+				COMMON_CR_CHK
+		FROM SYS0028M
+		          WHERE 1=1
+		         <if test="locList.size != 0">
+		          AND WH_LOC_TYPE_ID IN
+		          <foreach item="item" collection="locList" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+		          </if>
+		          AND WH_LOC_GB IS NOT NULL
+		          ORDER BY WH_LOC_ID, WH_LOC_CODE
+     </select>
+     <select id="selectAdjustmentLocationReqList" parameterType="Map" resultType="EgovMap">
+        SELECT 
+				lg72m.INVNTRY_LOC_ID,
+				lg72m.INVNTRY_NO,
+				lg72m.DOC_DT,
+				lg72m.LOC_ID,
+				lg72m.SERIAL_PD_CHK,
+				lg72m.SERIAL_FT_CHK,
+				lg72m.SERIAL_PT_CHK,
+				lg72m.SAVE_YN,
+				sy28m.WH_LOC_ID adjWH_LOC_ID,
+				sy28m.WH_LOC_CODE adjWH_LOC_CODE,
+				sy28m.WH_LOC_DESC adjWH_LOC_DESC,
+				sy28m.WH_LOC_TEL1 adjWH_LOC_TEL1,
+				sy28m.WH_LOC_TEL2 adjWH_LOC_TEL2,
+				sy28m.WH_LOC_BRNCH_ID adjWH_LOC_BRNCH_ID,
+				sy28m.WH_LOC_TYPE_ID adjWH_LOC_TYPE_ID,
+				sy28m.WH_LOC_STK_GRAD adjWH_LOC_STK_GRAD,
+				sy28m.WH_LOC_STUS_ID adjWH_LOC_STUS_ID,
+				sy28m.WH_LOC_UPD_USER_ID adjWH_LOC_UPD_USER_ID,
+				sy28m.WH_LOC_UPD_DT adjWH_LOC_UPD_DT,
+				sy28m.CODE2 adjCODE2,
+				sy28m.DESC2 adjDESC2,
+				sy28m.WH_LOC_IS_SYNC adjWH_LOC_IS_SYNC,
+				sy28m.WH_LOC_MOBILE adjWH_LOC_MOBILE,
+				sy28m.AREA_ID adjAREA_ID,
+				sy28m.ADDR_DTL adjADDR_DTL,
+				sy28m.STREET adjSTREET,
+				sy28m.WH_LOC_BRNCH_ID2 adjWH_LOC_BRNCH_ID2,
+				sy28m.WH_LOC_BRNCH_ID3 adjWH_LOC_BRNCH_ID3,
+				sy28m.WH_LOC_GB adjWH_LOC_GB,
+				sy28m.SERIAL_PD_CHK adjSERIAL_PD_CHK,
+				sy28m.SERIAL_FT_CHK adjSERIAL_FT_CHK,
+				sy28m.SERIAL_PT_CHK adjSERIAL_PT_CHK,
+				sy28m.COMMON_CR_CHK adjCOMMON_CR_CHK
+			FROM LOG0072M lg72m, SYS0028M sy28m
+			WHERE 1=1 
+					AND lg72m.INVNTRY_NO =#{adjno}
+					AND lg72m.LOC_ID = sy28m.WH_LOC_ID
+              ORDER BY  sy28m.WH_LOC_ID
+     </select>   
+     
+<!--      <select id="">
+     SELECT TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF6') FROM DUAL
+     </select> -->
+     <select id="selectAdjustmentNo" parameterType="Map" resultType="Integer">
+      SELECT COUNT(1) 
+                FROM LOG0072M
+				WHERE INVNTRY_NO = #{invntryNo}
+     </select>
+     
+        <select id="selectCodeList" parameterType="Map" resultType="EgovMap">
+        SELECT 
+              CODE_ID , 
+              CODE , 
+              CODE_NAME , 
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION 
+        FROM SYS0013M
+        WHERE DISAB = 0
+        <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode}
+           AND CODE_ID NOT IN(64,1370)
+        </if>
+        <if test="Codeval != null and Codeval !=''">
+           AND CODE = #{Codeval}
+        </if>
+        <if test="likeValue != null and likeValue !=''">
+           AND CODE LIKE #{likeValue}||'%'
+        </if>
+        <if test="notlike != null and notlike !=''">
+           AND CODE NOT LIKE #{notlike}||'%'
+        </if>
+        <choose>
+          <when test="orderValue !=null and orderValue !=''">
+              ORDER BY ${orderValue} 
+          </when>
+          <otherwise>
+              ORDER BY CODE_NAME
+          </otherwise>
+        </choose>
+    </select>
+      
+      <insert id="insertAdjustmentLoc" parameterType="Map">
+      INSERT INTO LOG0072M
+                (
+                INVNTRY_LOC_ID,
+                INVNTRY_NO,
+                DOC_DT,
+                LOC_ID,
+                SERIAL_PD_CHK,
+                SERIAL_FT_CHK,
+                SERIAL_PT_CHK
+                )
+                SELECT 
+					    TO_CHAR(SYSTIMESTAMP , 'yyyymmddhh24missff') +     ROWNUM,
+					    #{invntryNo},
+					    TO_CHAR(SYSDATE, 'YYYYMMDD'),
+					    WH_LOC_ID,
+					    SERIAL_PD_CHK,
+					    SERIAL_FT_CHK,
+					    SERIAL_PT_CHK
+					  FROM SYS0028M 
+					  WHERE 1=1
+							  <if test="autoFlag == M">
+							   AND WH_LOC_ID = #{adjwhLocId}
+							  </if>
+					           AND WH_LOC_GB IN
+		                      <foreach item="item" collection="eventList" index="index" open="(" separator="," close=")">
+		                       #{item}
+		                      </foreach>
+                  
+      </insert>  
+      
+      <insert id="insertAdjustmentLocItem" parameterType="Map">
+       INSERT INTO LOG0073D
+			      SELECT lg72m.INVNTRY_LOC_ID,
+				               ROW_NUMBER () OVER (PARTITION BY lg72m.LOC_ID ORDER BY lg56m.STK_CODE),
+						       sy26m.STK_ID,
+						       lg56m.STK_DESC,
+						       lg56m.STK_TYPE_ID,
+						       sy26m.SERIAL_CHK,
+						       lg56m.QTY,
+						       NULL
+			       FROM LOG0072M lg72m, LOG0056M lg56m, SYS0026M sy26m
+				   WHERE 1=1
+				       AND lg72m.INVNTRY_NO= #{invntryNo}
+				       AND lg56m.STK_CODE = sy26m.STK_CODE
+					   AND lg72m.LOC_ID = lg56m.LOC_ID
+<!-- 					   <if test="autoFlag == M">
+                        AND  lg72m.WH_LOC_ID = #{adjwhLocId}
+                       </if> -->
+					   AND lg56m.STK_TYPE_ID IN
+					   <foreach item="item" collection="itemList" index="index" open="(" separator="," close=")">
+                       #{item}
+                      </foreach>
+      </insert>
+      <insert id="insertAdjustmentLocSerial" parameterType="Map">
+      INSERT INTO LOG0074D
+			      SELECT
+							INVNTRY_LOC_ID,
+							SEQ,
+							#{serial},
+							#{loginId},
+							SYSDATE
+					FROM
+					       LOG0073D
+							WHERE 1=1
+							AND INVNTRY_LOC_ID = #{adjLocIdPop}
+							AND SEQ = #{adjItemPop}
+      </insert>
+     <select id="selectAdjustmentCountingDetail" parameterType="Map" resultType="EgovMap">
+        SELECT
+                ROWNUM rnum,
+                lg72m.INVNTRY_LOC_ID,
+                lg72m.INVNTRY_NO,
+                lg72m.DOC_DT,
+                lg72m.LOC_ID,
+                lg72m.SERIAL_PD_CHK,
+                lg72m.SERIAL_FT_CHK,
+                lg72m.SERIAL_PT_CHK,
+                lg72m.SAVE_YN,
+               /*  lg73d.INVNTRY_LOC_ID, */
+				lg73d.SEQ,
+				lg73d.ITM_ID,
+				lg73d.ITM_NM,
+				lg73d.ITM_TYPE,
+				lg73d.SERIAL_CHK,
+				lg73d.SYS_QTY,
+                lg73d.CNT_QTY,
+				/* lg56m.LOC_ID, */
+				lg56m.STK_CODE,
+				lg56m.STK_DESC,
+				lg56m.STK_TYPE_ID,
+				lg56m.STK_CTGRY_ID,
+				lg56m.QTY,
+				lg56m.MOV_QTY,
+                sy28m.WH_LOC_ID,
+                sy28m.WH_LOC_CODE,
+                sy28m.WH_LOC_DESC,
+                sy28m.WH_LOC_TEL1,
+                sy28m.WH_LOC_TEL2,
+                sy28m.WH_LOC_BRNCH_ID,
+                sy28m.WH_LOC_TYPE_ID,
+                sy28m.WH_LOC_STK_GRAD,
+                sy28m.WH_LOC_STUS_ID,
+                sy28m.WH_LOC_UPD_USER_ID,
+                sy28m.WH_LOC_UPD_DT,
+                sy28m.CODE2,
+                sy28m.DESC2,
+                sy28m.WH_LOC_IS_SYNC,
+                sy28m.WH_LOC_MOBILE,
+                sy28m.AREA_ID,
+                sy28m.ADDR_DTL,
+                sy28m.STREET,
+                sy28m.WH_LOC_BRNCH_ID2,
+                sy28m.WH_LOC_BRNCH_ID3,
+                sy28m.WH_LOC_GB,
+                sy28m.SERIAL_PD_CHK,
+                sy28m.SERIAL_FT_CHK,
+                sy28m.SERIAL_PT_CHK,
+                sy28m.COMMON_CR_CHK
+			FROM LOG0056M lg56m JOIN LOG0072M lg72m 
+			     ON lg56m.LOC_ID = lg72m.LOC_ID
+			JOIN LOG0073d lg73d
+			     ON lg73d.INVNTRY_LOC_ID = lg72m.INVNTRY_LOC_ID
+			JOIN SYS0026M sy26m
+			     ON lg56m.STK_CODE = sy26m.STK_CODE
+			JOIN SYS0028M sy28m
+                  ON  lg56m.LOC_ID = sy28m.WH_LOC_ID
+                        AND   lg72m.LOC_ID = sy28m.WH_LOC_ID  
+			WHERE 1=1
+						AND lg56m.STK_TYPE_ID = lg73d.ITM_TYPE
+						AND sy26m.STK_ID =lg73d.ITM_ID
+						AND lg72m.INVNTRY_NO = #{adjNo}
+			            AND lg72m.LOC_ID = #{adjLocation}
+			            
+			 ORDER BY lg72m.INVNTRY_LOC_ID ,lg72m.LOC_ID ,lg73d.SEQ           
+      </select> 
+      <select id="selectAdjustmentDetailLoc" parameterType="Map" resultType="EgovMap">
+     SELECT
+                lg72m.INVNTRY_LOC_ID,
+                lg72m.INVNTRY_NO,
+                lg72m.DOC_DT,
+                lg72m.LOC_ID,
+                lg72m.SERIAL_PD_CHK,
+                lg72m.SERIAL_FT_CHK,
+                lg72m.SERIAL_PT_CHK,
+                lg72m.SAVE_YN,
+               /* lg73d.INVNTRY_LOC_ID, */
+                lg73d.SEQ,
+                lg73d.ITM_ID,
+                lg73d.ITM_NM,
+                lg73d.ITM_TYPE,
+                lg73d.SERIAL_CHK,
+                lg73d.SYS_QTY,
+                lg73d.CNT_QTY,
+                sy28m.WH_LOC_ID,
+                sy28m.WH_LOC_CODE,
+                sy28m.WH_LOC_DESC,
+                sy28m.WH_LOC_TEL1,
+                sy28m.WH_LOC_TEL2,
+                sy28m.WH_LOC_BRNCH_ID,
+                sy28m.WH_LOC_TYPE_ID,
+                sy28m.WH_LOC_STK_GRAD,
+                sy28m.WH_LOC_STUS_ID,
+                sy28m.WH_LOC_UPD_USER_ID,
+                sy28m.WH_LOC_UPD_DT,
+                sy28m.CODE2,
+                sy28m.DESC2,
+                sy28m.WH_LOC_IS_SYNC,
+                sy28m.WH_LOC_MOBILE,
+                sy28m.AREA_ID,
+                sy28m.ADDR_DTL,
+                sy28m.STREET,
+                sy28m.WH_LOC_BRNCH_ID2,
+                sy28m.WH_LOC_BRNCH_ID3,
+                sy28m.WH_LOC_GB,
+                sy28m.SERIAL_PD_CHK,
+                sy28m.SERIAL_FT_CHK,
+                sy28m.SERIAL_PT_CHK,
+                sy28m.COMMON_CR_CHK
+            FROM 
+             LOG0072M lg72m JOIN LOG0073d lg73d 
+                 ON lg73d.INVNTRY_LOC_ID = lg72m.INVNTRY_LOC_ID
+             JOIN SYS0028M sy28m
+                  ON  lg72m.LOC_ID = sy28m.WH_LOC_ID
+            WHERE 1=1
+                 AND lg72m.INVNTRY_NO = #{invntryNo}
+                ORDER BY  lg72m.INVNTRY_LOC_ID,  lg72m.LOC_ID         
+      </select>
+      
+      <select id="selectCheckSerial" parameterType="Map" resultType="EgovMap">
+          SELECT MAX(SERIAL_NO)  SERIAL_NO , MAX(MATNR) STKCODE , MAX(STKDESC) STKDESC , MAX(L62CNT) L62CNT , MAX(L61CNT) L61CNT , MAX(L63CNT) L63CNT
+	          FROM (  
+	            SELECT SERIAL_NO , MATNR , STK_DESC STKDESC , COUNT(1) L62CNT , 0 L61CNT , 0 L63CNT
+	              FROM LOG0062M L62 , 
+	                   SYS0026M S26 
+	             WHERE L62.MATNR = S26.STK_CODE
+	                AND L62.SERIAL_NO =  #{serial}
+	                 AND L62.MATNR =  #{mtrCdPop}   
+	              GROUP BY SERIAL_NO , MATNR , STK_DESC
+	             UNION 
+	            SELECT L61.SERIAL_NO , '' MATNR , '' STKDESC , 0 L62CNT ,  COUNT(1) L61CNT ,0 L63CNT     
+	              FROM LOG0061D L61 
+	              WHERE L61.SERIAL_NO =  #{serial}
+	              GROUP BY L61.SERIAL_NO
+	             UNION 
+	            SELECT L63.SERIAL_NO , '' MATNR , '' STKDESC , 0 L62CNT ,  0 L61CNT ,  COUNT(1) L63CNT  
+	              FROM LOG0063D L63 
+	              WHERE L63.SERIAL_NO =  #{serial}
+	               AND L63.LOC_ID  =  #{locPop}
+	               AND L63.MATNR =  #{mtrCdPop}
+	             GROUP BY L63.SERIAL_NO
+         )
+      </select>
+      
+</mapper>
