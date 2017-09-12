@@ -30,7 +30,8 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("loginService")
-public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginService {
+public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginService 
+{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginServiceImpl.class);
 
@@ -38,10 +39,19 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	private LoginMapper loginMapper;
 
 	@Override
-	public LoginVO getLoginInfo(Map<String, Object> params) {
+	public LoginVO getLoginInfo(Map<String, Object> params) 
+	{
 		LOGGER.debug("loginInfo");
 		LoginVO loginVO = loginMapper.selectLoginInfo(params);
 		// TODO : 로그인 이력 처리 필요...
+		return loginVO;
+	}
+	
+	@Override
+	public LoginVO selectFindUserIdPop(Map<String, Object> params) 
+	{
+		LOGGER.debug("findLoginInfo");
+		LoginVO loginVO = loginMapper.selectFindUserIdPop(params);
 		return loginVO;
 	}
 
@@ -69,4 +79,30 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	public List<EgovMap> getLanguages() {
 		return loginMapper.selectLanguages();
 	}
+	
+	@Override
+	public int updatePassWord(Map<String, Object> params, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		//for (Object obj : addList) 
+		//{
+			((Map<String, Object>) params).put("crtUserId", crtUserId);
+			((Map<String, Object>) params).put("updUserId", crtUserId);
+			
+			LOGGER.debug(" >>>>> insertUserExceptAuthMapping ");
+			LOGGER.debug(" Login_UserId : {}", ((Map<String, Object>) params).get("newUserIdTxt"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			
+			saveCnt++;
+
+			loginMapper.updatePassWord((Map<String, Object>) params);
+		//}
+
+		return saveCnt;
+	}	
+	
+	
 }

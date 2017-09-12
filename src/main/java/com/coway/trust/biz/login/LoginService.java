@@ -10,6 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface LoginService {
 
 	LoginVO getLoginInfo(Map<String, Object> params);
+	LoginVO selectFindUserIdPop(Map<String, Object> params);
 
 	void logout(Map<String, Object> params);
 
@@ -18,4 +19,7 @@ public interface LoginService {
 	void logoutByMobile(Map<String, Object> params);
 
 	List<EgovMap> getLanguages();
+	
+	int updatePassWord(Map<String, Object> params, Integer crtUserId); 
+	
 }

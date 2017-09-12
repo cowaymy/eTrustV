@@ -11,6 +11,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("loginMapper")
 public interface LoginMapper {
 	LoginVO selectLoginInfo(Map<String, Object> params);
-
+	LoginVO selectFindUserIdPop(Map<String, Object> params);
+	
+	int updatePassWord(Map<String, Object> params); 
+	
 	List<EgovMap> selectLanguages();
 }

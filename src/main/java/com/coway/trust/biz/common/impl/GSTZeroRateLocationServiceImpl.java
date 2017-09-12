@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("gstZeroRateLocationService")
 public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
+	private static final Logger Logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
 	@Autowired
 	private GSTZeroRateLocationMapper gstZeroRateLocationMapper;
@@ -46,8 +44,8 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			logger.debug(" >>>>> deleteGSTExportation ");
-			logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			Logger.debug(" >>>>> deleteGSTExportation ");
+			Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
 			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
 			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
@@ -70,8 +68,8 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			logger.debug(" >>>>> updateGSTExportation ");
-			logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			Logger.debug(" >>>>> updateGSTExportation ");
+			Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
 			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
 			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
@@ -94,8 +92,8 @@ public class GSTZeroRateLocationServiceImpl implements GSTZeroRateLocationServic
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			logger.debug(" >>>>> insertGSTExportation ");
-			logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			Logger.debug(" >>>>> insertGSTExportation ");
+			Logger.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
 			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
 			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );

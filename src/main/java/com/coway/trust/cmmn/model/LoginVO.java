@@ -25,6 +25,19 @@ public class LoginVO {
 	private String branchTel1;
 	private String branchTel2;
 	private String deptName;
+	private String diffDay;
+	private String userSecQuesId;
+	private String securityQuestion;
+	private String userSecQuesAns;
+	private String userPassWord;
+	
+	public String getDiffDay() {
+		return diffDay;
+	}
+
+	public void setDiffDay(String diffDay) {
+		this.diffDay = diffDay;
+	}
 
 	public int getUserId() {
 		return userId;
@@ -194,4 +207,37 @@ public class LoginVO {
 		this.deptName = deptName;
 	}
 
+	public String getUserSecQuesId() {
+		return userSecQuesId;
+	}
+
+	public void setUserSecQuesId(String userSecQuesId) {
+		this.userSecQuesId = userSecQuesId;
+	}
+
+	public String getSecurityQuestion() {
+		return securityQuestion;
+	}
+
+	public void setSecurityQuestion(String securityQuestion) {
+		this.securityQuestion = securityQuestion;
+	}
+
+	public String getUserSecQuesAns() {
+		return userSecQuesAns;
+	}
+
+	public void setUserSecQuesAns(String userSecQuesAns) {
+		this.userSecQuesAns = userSecQuesAns;
+	}
+
+	public String getUserPassWord() {
+		return userPassWord;
+	}
+
+	public void setUserPassWord(String userPassWord) {
+		this.userPassWord = userPassWord;
+	}
+		
+	
 }
