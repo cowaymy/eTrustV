@@ -80,12 +80,9 @@ public class BillingController {
 		List<EgovMap> discountList = billingService.selectDiscountList(params);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        
         resultMap.put("basicInfo", basicInfo);
         resultMap.put("discountList", discountList);
 
-        
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
@@ -154,13 +151,16 @@ public class BillingController {
 		params.put("userId", userId);
         int saveResult = billingService.saveAddDiscount(params);
         List<EgovMap> discountList = new ArrayList<EgovMap>();
+        EgovMap basicInfo = new EgovMap();
         
         if(saveResult == 1){
+        	basicInfo = billingService.selectBasicInfo(params);
         	discountList = billingService.selectDiscountList(params);
         }
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("discountList", discountList);
+        resultMap.put("basicInfo", basicInfo);
 
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
@@ -182,9 +182,11 @@ public class BillingController {
 		
         String errorMessage = billingService.updDiscountEntry(params);
         String resultMessage = "";
+        EgovMap basicInfo = new EgovMap();
         List<EgovMap> discountList = new ArrayList<EgovMap>();
         
         if("".equals(errorMessage)){
+        	basicInfo = billingService.selectBasicInfo(params);
         	discountList = billingService.selectDiscountList(params);
         	resultMessage = "Disabled Successfully.";
         }else{
@@ -195,6 +197,7 @@ public class BillingController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("resultMessage", resultMessage);
         resultMap.put("discountList", discountList);
+        resultMap.put("basicInfo", basicInfo);
 
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
