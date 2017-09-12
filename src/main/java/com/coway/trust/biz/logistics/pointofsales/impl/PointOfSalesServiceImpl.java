@@ -43,9 +43,8 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Override
 	public String insertPosInfo(Map<String, Object> params) {
-		logger.debug("    에이작스 전!!!!!!!!! : {}");
+
 		String seq = PointOfSalesMapper.selectPosSeq();
-		
 		
 		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);	
@@ -54,8 +53,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		formMap.put("userId", params.get("userId"));
 		String posSeq=formMap.get("headtitle") + seq;
 		
-		logger.debug("시리얼 입력전!!!!!!     ::::: : {}", posSeq);
-		
+		logger.debug("trnscType    값 : {}",formMap.get("trnscType"));
 		
 		//PointOfSalesMapper.insOtherReceiptHead(formMap);
 
@@ -68,7 +66,6 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 		}
 		
-		logger.debug("    에이작스 후!!!!!!!!!!!!! : {}");
 		return posSeq;
 
 	}
@@ -76,30 +73,28 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Override
 	public void insertSerial(Map<String, Object> params) {
-		logger.debug("    에이작스 전!!!!!!!!! : {}");	
 		
-		Map<String, Object> form1Map = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);	
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);	
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 
 		if (serialList.size() > 0) {
 			for (int i = 0; i < serialList.size(); i++) {
 				Map<String, Object> serialMap = (Map<String, Object>) serialList.get(i);
-				//serialMap.put("reqno", posSeq);
+				serialMap.put("reqno", formMap.get("posReqSeq"));
+				serialMap.put("ttype", formMap.get("ttype"));
 				serialMap.put("userId", params.get("userId"));
+
+				logger.debug("ttype    값 : {}",formMap.get("ttype"));
 				
-				//logger.debug("posSeq 시리얼 입력후!!!     ::::: : {}", posSeq);
-			//	PointOfSalesMapper.insRequestItem(insMap);
+				//PointOfSalesMapper.insertSerial(serialMap);
 			}
 		}
-
+		//update
+		formMap.put("reqno", formMap.get("posReqSeq"));
+		formMap.put("userId", params.get("userId"));
+//		PointOfSalesMapper.updateReqstStus(formMap);
+	
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }
