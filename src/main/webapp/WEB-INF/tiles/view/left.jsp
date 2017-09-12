@@ -2,6 +2,77 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+
+<script type="text/javaScript">
+
+    $(function() {
+        if($("#_leftMenu").hasClass("on") && FormUtil.isNotEmpty($("#CURRENT_MENU_CODE").val())){
+            fn_addClassLeftMenu($("#CURRENT_MENU_CODE").val());
+        }else{
+            fn_addClassMyMenu($("#CURRENT_MENU_CODE").val(), $("#CURRENT_GROUP_MY_MENU_CODE").val());
+        }
+    });
+
+    // 현재 메뉴 표시.
+    function fn_addClassLeftMenu(currentMenuCode){
+        var $currentLitag = $("#li_" + currentMenuCode);
+        var $currentAtag = $("#a_" + currentMenuCode);
+        var menuLevel = $currentLitag.attr("menu_level");
+
+        $currentLitag.addClass("active");
+        $currentAtag.addClass("on");
+
+        var $parentLiTag = $("#li_" + $currentLitag.attr("upper_menu_code"));
+
+        $parentLiTag.addClass("active");
+        $("#a_" + $currentLitag.attr("upper_menu_code")).addClass("on");
+
+        if(FormUtil.isNotEmpty(menuLevel) && menuLevel>= 3){
+            fn_addClassLeftMenu($parentLiTag.attr("upper_menu_code"));
+        }
+    }
+
+    // 현재 마이메뉴 표시.
+    function fn_addClassMyMenu(currentMenuCode, groupMenuCode){
+        var $currentLitag = $("#li_" + currentMenuCode + groupMenuCode);
+        var $currentAtag = $("#a_" + currentMenuCode + groupMenuCode);
+
+        $currentLitag.addClass("active");
+        $currentAtag.addClass("on");
+
+        var $parentLiTag = $("#li_" + $currentLitag.attr("group_my_menu_code"));
+        var $parentATag = $("#a_" + $currentLitag.attr("group_my_menu_code"));
+
+        $parentLiTag.addClass("active");
+        $parentATag.addClass("on");
+    }
+
+    // 선택한 메뉴화면으로 이동.
+    function fn_menu(menuCode, menuPath, fullPath, myMenuGroupCode){
+
+        if(FormUtil.isEmpty(menuPath)){
+            return;
+        }
+
+        $("#CURRENT_MENU_CODE").val(menuCode);
+
+        if($("#_myMenu").hasClass("on")){
+            $("#CURRENT_MENU_TYPE").val("MY_MENU");
+            $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
+        }else{
+            $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
+        }
+
+        $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
+
+        $("#_menuForm").attr({
+            action : getContextPath() + menuPath,
+            method : "POST"
+        }).submit();
+    }
+</script>
+
+
 <section id="container"><!-- container start -->
 
 <aside class="lnb_wrap"><!-- lnb_wrap start -->
@@ -140,72 +211,3 @@
     <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
     <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
 </form>
-
-<script type="text/javaScript">
-
-$(function() {
-    if($("#_leftMenu").hasClass("on") && FormUtil.isNotEmpty($("#CURRENT_MENU_CODE").val())){
-        fn_addClassLeftMenu($("#CURRENT_MENU_CODE").val());
-    }else{
-        fn_addClassMyMenu($("#CURRENT_MENU_CODE").val(), $("#CURRENT_GROUP_MY_MENU_CODE").val());
-    }
-});
-
-// 현재 메뉴 표시.
-function fn_addClassLeftMenu(currentMenuCode){
-    var $currentLitag = $("#li_" + currentMenuCode);
-    var $currentAtag = $("#a_" + currentMenuCode);
-    var menuLevel = $currentLitag.attr("menu_level");
-
-    $currentLitag.addClass("active");
-    $currentAtag.addClass("on");
-
-    var $parentLiTag = $("#li_" + $currentLitag.attr("upper_menu_code"));
-
-    $parentLiTag.addClass("active");
-    $("#a_" + $currentLitag.attr("upper_menu_code")).addClass("on");
-
-    if(FormUtil.isNotEmpty(menuLevel) && menuLevel>= 3){
-        fn_addClassLeftMenu($parentLiTag.attr("upper_menu_code"));
-    }
-}
-
-// 현재 마이메뉴 표시.
-function fn_addClassMyMenu(currentMenuCode, groupMenuCode){
-    var $currentLitag = $("#li_" + currentMenuCode + groupMenuCode);
-    var $currentAtag = $("#a_" + currentMenuCode + groupMenuCode);
-
-    $currentLitag.addClass("active");
-    $currentAtag.addClass("on");
-
-    var $parentLiTag = $("#li_" + $currentLitag.attr("group_my_menu_code"));
-    var $parentATag = $("#a_" + $currentLitag.attr("group_my_menu_code"));
-
-    $parentLiTag.addClass("active");
-    $parentATag.addClass("on");
-}
-
-// 선택한 메뉴화면으로 이동.
-function fn_menu(menuCode, menuPath, fullPath, myMenuGroupCode){
-
-    if(FormUtil.isEmpty(menuPath)){
-        return;
-    }
-
-    $("#CURRENT_MENU_CODE").val(menuCode);
-
-    if($("#_myMenu").hasClass("on")){
-        $("#CURRENT_MENU_TYPE").val("MY_MENU");
-        $("#CURRENT_GROUP_MY_MENU_CODE").val(myMenuGroupCode);
-    }else{
-        $("#CURRENT_MENU_TYPE").val("LEFT_MENU");
-    }
-
-    $("#CURRENT_MENU_FULL_PATH_NAME").val(fullPath);
-
-    $("#_menuForm").attr({
-        action : getContextPath() + menuPath,
-        method : "POST"
-    }).submit();
-}
-</script>
