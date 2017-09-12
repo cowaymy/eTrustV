@@ -31,9 +31,12 @@
 	    if($('#callPrgm').val() == 'ORD_REGISTER_SALE_ORD') {
 	        fn_loadTrialNo(ordNo);
 	    }
-	    else if($('#callPrgm').val() == 'BILLMNG_ADD_NEW_GROUP') {
+	    else if($('#callPrgm').val() == 'BILLING_ADD_NEW_GROUP') {
 	        fn_orderInfo(ordNo, ordId);
 	    }
+	    else if($('#callPrgm').val() == 'BILLING_DISCOUNT_MGMT') {
+            fn_orderInfo(ordNo, ordId);
+        }
 	}
 	
     function createAUIGrid() {
