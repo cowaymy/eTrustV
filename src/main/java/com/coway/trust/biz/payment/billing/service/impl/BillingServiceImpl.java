@@ -92,9 +92,8 @@ public class BillingServiceImpl extends EgovAbstractServiceImpl implements Billi
 	@Override
 	public String updDiscountEntry(Map<String, Object> params) {
 		EgovMap discountEntries = billingMapper.selectDiscountEntries(params);
-		//int size = discountEntries.size();
-		logger.debug("discountEntries=========="+discountEntries);
 		String errorMessage = "";
+		
 		if(discountEntries.size() > 0){
 			billingMapper.updDiscountEntry(params);
 		}else{
