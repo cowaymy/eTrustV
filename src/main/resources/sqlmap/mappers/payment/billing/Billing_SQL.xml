@@ -240,10 +240,9 @@
             FROM ( SELECT COUNT(1)  A1  
 		         FROM SAL0077D Extent1
 		          WHERE  ( Extent1.SRV_CNTRCT_ORD_ID = #{salesOrdId} )
-		                   AND ( 4 = Extent1.SRV_CNTRCT_STUS_ID )
-		                   AND ( 0 <> Extent1.SRV_CNTRCT_NET_MONTH )
-		                   AND ( 0 <> Extent1.SRV_CNTRCT_NET_YEAR ) ) GroupBy1
-        
+		          AND ( 4 = Extent1.SRV_CNTRCT_STUS_ID )
+		          AND ( 0 <> Extent1.SRV_CNTRCT_NET_MONTH )
+		          AND ( 0 <> Extent1.SRV_CNTRCT_NET_YEAR ) ) GroupBy1
 		]]>                   
     </select>
     
