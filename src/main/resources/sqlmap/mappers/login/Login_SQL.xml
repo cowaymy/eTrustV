@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.login.impl.LoginMapper">
 
-	<select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
+    <select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
 	<![CDATA[
+
         SELECT
             USR.USER_ID AS userId
 	       ,USR.USER_NAME AS userName
@@ -47,32 +48,35 @@
 	   					END
        AND TO_CHAR(USR.USER_VAL_ID_TO,'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
 	   AND ROWNUM = 1
-	]]>
+
+        ]]>
 	</select>
 
-	<select id="selectLanguages" resultType="egovMap">
+    <select id="selectLanguages" resultType="egovMap">
     <![CDATA[
+
         SELECT   LANGUAGE
 		    FROM SYS0052M
 		GROUP BY LANGUAGE
-    ]]>
+
+        ]]>
     </select>
 
-  <update id="updatePassWord" parameterType="Map">
-   UPDATE SYS0047M
-     SET USER_PASSWD = #{newPasswordConfirmTxt}
+    <update id="updatePassWord" parameterType="Map">
+        UPDATE SYS0047M
+        SET USER_PASSWD = #{newPasswordConfirmTxt}
         ,USER_PASSWD_LAST_UPD_DT = SYSDATE
-       <choose>
-         <when test=' newUserIdTxt != null and newUserIdTxt != "" '>    
-           WHERE USER_ID = #{newUserIdTxt}  
-         </when>
-         <otherwise>
-           WHERE USER_ID = #{searchLoginId}  
-         </otherwise>
-       </choose>        
-  </update> 
-  
-  <select id="selectFindUserIdPop" parameterType="Map" resultType="loginVO">
+        <choose>
+            <when test=' newUserIdTxt != null and newUserIdTxt != "" '>
+                WHERE USER_ID = #{newUserIdTxt}
+            </when>
+            <otherwise>
+                WHERE USER_ID = #{searchLoginId}
+            </otherwise>
+        </choose>
+    </update>
+
+    <select id="selectFindUserIdPop" parameterType="Map" resultType="loginVO">
    SELECT 
           SYS47M.USER_NAME    userName
          ,SYS47M.USER_ID      userId
@@ -87,4 +91,28 @@
       AND ROWNUM = 1
   </select>
 
+    <insert id="insertLoginHistory" parameterType="loginHistory">
+        INSERT INTO SYS0077M
+        (
+            system_id
+           ,login_dtm
+           ,user_id
+           ,user_nm
+           ,login_type
+           ,ip_addr
+           ,os
+           ,browser
+        )
+        VALUES
+        (
+            #{systemId}
+            ,SYSDATE
+            ,#{userId}
+            ,#{userNm}
+            ,#{loginType}
+            ,#{ipAddr}
+            ,#{os}
+            ,#{browser}
+        )
+    </insert>
 </mapper>

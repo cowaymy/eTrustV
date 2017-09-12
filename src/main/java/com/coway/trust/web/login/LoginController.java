@@ -1,6 +1,5 @@
 package com.coway.trust.web.login;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,13 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
-import com.coway.trust.web.common.CommStatusVO;
 
 @Controller
 @RequestMapping(value = "/login")
@@ -46,12 +45,13 @@ public class LoginController {
 
 	@RequestMapping(value = "/login.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
-		model.addAttribute("languages", loginService.getLanguages());		
+		model.addAttribute("languages", loginService.getLanguages());
 		return "login/login";
 	}
 
 	@RequestMapping(value = "/getLoginInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> getLoginInfo(@RequestBody Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<ReturnMessage> getLoginInfo(HttpServletRequest request,
+			@RequestBody Map<String, Object> params, ModelMap model) {
 
 		Precondition.checkNotNull(params.get("userId"),
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
@@ -61,13 +61,44 @@ public class LoginController {
 		LOGGER.debug("userID : {}", params.get("userId"));
 
 		LoginVO loginVO = loginService.getLoginInfo(params);
-
 		ReturnMessage message = new ReturnMessage();
 
 		if (loginVO == null || loginVO.getUserId() == 0) {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "ID" }));
 		} else {
+
+			String clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
+
+			// WebLogic 의 web server 연계 모듈인 weblogic connecto
+			// if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
+			// clientIp = request.getHeader("Proxy-Client-IP");
+			// }
+			//
+			// if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
+			// clientIp = request.getHeader("WL-Proxy-Client-IP");
+			// }
+
+			if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
+				clientIp = request.getHeader("REMOTE_ADDR");
+			}
+
+			if (clientIp == null || clientIp.length() == 0 || clientIp.toLowerCase().equals("unknown")) {
+				clientIp = request.getRemoteAddr();
+			}
+
+			LoginHistory loginHistory = new LoginHistory();
+			loginHistory.setSystemId(AppConstants.LOGIN_WEB);
+			loginHistory.setUserId(loginVO.getUserId());
+			loginHistory.setUserNm(loginVO.getUserName());
+			loginHistory.setIpAddr(clientIp);
+			loginHistory.setOs((String) params.get("os"));
+			loginHistory.setBrowser((String) params.get("browser"));
+
+			loginHistory.setLoginType(AppConstants.LOGIN_TYPE_NORMAL);
+
+			loginService.saveLoginHistory(loginHistory);
+
 			HttpSession session = sessionHandler.getCurrentSession();
 			session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
 			message.setData(loginVO);
@@ -83,60 +114,52 @@ public class LoginController {
 		sessionHandler.clearSessionInfo();
 		return AppConstants.REDIRECT_LOGIN;
 	}
-	
+
 	// program search popup
 	@RequestMapping(value = "/resetPassWordPop.do")
-	public String resetPassWordPop(@RequestParam Map<String, Object> params, ModelMap model) 
-	{
+	public String resetPassWordPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// model.addAttribute("url", params);
 		LOGGER.debug("passwordReset!!!!");
 		return "/login/resetPassWordPop";
 	}
-	
-	// program search UserID popup 
+
+	// program search UserID popup
 	@RequestMapping(value = "/findIdPop.do")
-	public String findIdPop(@RequestParam Map<String, Object> params, ModelMap model) 
-	{
+	public String findIdPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("excuteFlag", "findID");
-		LOGGER.debug("findIdPop: {} " , params.toString() );
+		LOGGER.debug("findIdPop: {} ", params.toString());
 		return "/login/findIdPop";
 	}
-	
-	// program search UserID popup 
+
+	// program search UserID popup
 	@RequestMapping(value = "/findIdRestPassPop.do")
-	public String findIdRestPassPop(@RequestParam Map<String, Object> params, ModelMap model) 
-	{
+	public String findIdRestPassPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("excuteFlag", "resetPass");
-		LOGGER.debug("findIdRestPassPop: {} " , params.toString() );
+		LOGGER.debug("findIdRestPassPop: {} ", params.toString());
 		return "/login/findIdPop";
 	}
-	
+
 	@RequestMapping(value = "/selectFindUserIdPop.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> selectFindUserIdPop(@RequestBody Map<String, Object> params, ModelMap model) 
-	{
+	public ResponseEntity<ReturnMessage> selectFindUserIdPop(@RequestBody Map<String, Object> params, ModelMap model) {
 		LOGGER.debug("SearchUserID : {}", params.get("userIdFindPopTxt"));
 
 		LoginVO loginVO = loginService.selectFindUserIdPop(params);
 
 		ReturnMessage message = new ReturnMessage();
 
-		if (loginVO == null || loginVO.getUserId() == 0) 
-		{
+		if (loginVO == null || loginVO.getUserId() == 0) {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "ID" }));
-		} 
-		else 
-		{
+		} else {
 			message.setData(loginVO);
 		}
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
 	@RequestMapping(value = "/savePassWordReset.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveStatusCatalogCode(@RequestBody Map<String, Object> params, SessionVO sessionVO) 
-	{
+	public ResponseEntity<ReturnMessage> saveStatusCatalogCode(@RequestBody Map<String, Object> params,
+			SessionVO sessionVO) {
 		LOGGER.debug("savePassWordReset: " + params.toString());
 
 		int cnt = loginService.updatePassWord(params, sessionVO.getUserId());

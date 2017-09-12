@@ -37,6 +37,15 @@ public class AppConstants {
 	public static final String FILE_CALL_CENTER = "C";
 
 	/**
+	 * 로그인 히스토리
+	 */
+	public static final String LOGIN_WEB = "01";
+	public static final String LOGIN_MOBILE = "02";
+	public static final String LOGIN_CALL_CENTER = "3";
+	public static final String LOGIN_TYPE_NORMAL = "01";
+
+
+	/**
 	 * URL
 	 */
 	public static final String REDIRECT_LOGIN = "redirect:/login/login.do";
