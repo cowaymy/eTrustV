@@ -44,7 +44,7 @@
             }, null, {
                 isShowLoader : false
             });
-
+/*
         $("#header_neo").on("click", function(){
             Common.alert("구현중...");
         });
@@ -69,6 +69,7 @@
         $("#header_total").on("click", function(){
             Common.popupDiv("/chart/salesKeyInAnalysisPop.do", null, null, true, "salesKeyInAnalysisDivPop");
         });
+*/        
     }
 
    $(function() {
