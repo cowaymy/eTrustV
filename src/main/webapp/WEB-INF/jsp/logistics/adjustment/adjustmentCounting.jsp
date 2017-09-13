@@ -103,7 +103,8 @@ var resop = {rowIdField : "rnum"
 		//, showRowCheckColumn : true 
 		,usePaging : false
 		//,useGroupingPanel : false 
-		,editable:true
+		,editable:true,
+		exportURL : "/common/exportGrid.do"
 		};
 var serialop = {
         //rowIdField : "rnum",          
@@ -226,8 +227,8 @@ $(function(){
             exceptColumnFields : AUIGrid.getHiddenColumnDataFields(myGridID) 
         };
         
-        //AUIGrid.exportToXlsx(myGridID, excelProps);
-        GridCommon.exportTo("grid_wrap", "xlsx", "test");
+        AUIGrid.exportToXlsx(myGridID, excelProps);
+        //GridCommon.exportTo("grid_wrap", "xlsx", "test");
     });
     
     $('#save').click(function() {
