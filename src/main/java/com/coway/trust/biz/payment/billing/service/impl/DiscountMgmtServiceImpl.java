@@ -44,7 +44,7 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 	private String appName;
 
 	@Resource(name = "billingMapper")
-	private BillingMapper billingMapper;
+	private DiscountMgmtMapper billingMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
