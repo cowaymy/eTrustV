@@ -111,16 +111,17 @@
 						              , h.valid_dt_to
 						              , h.func_yn
 						              , h.exist_yn
-						              , RANK() OVER(PARTITION BY h.menu_code, h.pgm_trn_code ORDER BY h.func_yn desc, h.exist_yn ) AS rnk
+						              , RANK() OVER(PARTITION BY h.menu_code, h.pgm_trn_code
+						                                        ORDER BY h.func_yn desc, h.exist_yn, h.valid_dt_from, h.valid_dt_to desc  ) AS rnk
 					           FROM (
 					                /* 선택한 권한*/
 					                SELECT NULL AS auth_code
-					                     , g.menu_code
-					                     , g.pgm_trn_code
-					                     , g.valid_dt_from
-					                     , g.valid_dt_to
-					                     , g.func_yn
-					                     , 'N' AS exist_yn
+						                     , g.menu_code
+						                     , g.pgm_trn_code
+						                     , g.valid_dt_from
+						                     , g.valid_dt_to
+						                     , g.func_yn
+						                     , 'N' AS exist_yn
 					                  FROM SYS0057M g
 					                 WHERE g.user_id = #{userId}
 
@@ -128,12 +129,12 @@
 
 					                 /* 선택한 권한의 매핑된 Role의 상위 권한 */
 					                 SELECT e.auth_code
-					                      , e.menu_code
-					                      , e.pgm_trn_code
-					                      , null as valid_dt_from
-					                      , null as valid_dt_to
-					                      , e.func_yn
-					                      , CASE WHEN f.own_user_id IS NULL AND e.func_yn = 'Y'
+						                      , e.menu_code
+						                      , e.pgm_trn_code
+						                      , null as valid_dt_from
+						                      , null as valid_dt_to
+						                      , e.func_yn
+						                      , CASE WHEN f.own_user_id IS NULL AND e.func_yn = 'Y'
 					                             THEN 'Y'
 					                             ELSE 'N' END AS exist_yn
 					                  FROM SYS0056M e
@@ -153,6 +154,23 @@
 					                         WHERE c.role_id = d.role_id
 					                       ) f
 					                 WHERE e.auth_code = f.auth_code
+
+                                     UNION
+
+                                     /* 예외적으로 부여받은 개인권한 */
+                                     SELECT a.auth_code
+	                                          , a.menu_code
+	                                          , a.pgm_trn_code
+	                                          , b.valid_dt_from
+	                                          , b.valid_dt_to
+	                                          , a.func_yn
+                                              , CASE WHEN a.func_yn = 'Y'
+                                                        THEN 'Y'
+                                                        ELSE 'N' END AS exist_yn
+                                       FROM SYS0056M a
+                                             , SYS0055M b
+                                      WHERE a.auth_code = b.auth_code
+                                          AND b.user_id = #{userId}
 					                ) h
 						    ) i
 						 WHERE i.rnk = 1
