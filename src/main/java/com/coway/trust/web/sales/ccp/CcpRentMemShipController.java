@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.ccp;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.ccp.CcpRentMemShipService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -27,6 +34,12 @@ public class CcpRentMemShipController {
 	
 	@Resource(name = "ccpRentMemShipService")
 	private CcpRentMemShipService ccpRentMemShipService;
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 	
 	@RequestMapping(value = "/selectCcpRentList.do")
 	public String selectCcpRentList (@RequestParam Map<String, Object>  Params) throws Exception{
@@ -90,6 +103,186 @@ public class CcpRentMemShipController {
 		
 		return ResponseEntity.ok(resultList);
 		
+		
+	}
+	
+	
+	@RequestMapping(value = "/selectCcpRentDetailVeiwPop.do")
+	public String selectCcpRentDetailVeiw(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.info("#############################################");
+		LOGGER.info("#############selectCcpRentDetailVeiw Start");
+		LOGGER.info("#############################################");
+		
+		EgovMap contractMap = null;
+		Map<String, Object> unbillMap = null;
+		EgovMap orderInfoMap = null; 
+		EgovMap installMap = null;
+		EgovMap cofigMap = null;
+		EgovMap payMap = null;
+		EgovMap thirdMap = null;
+		EgovMap mailMap = null;
+		
+		//Basic Info
+		contractMap =  ccpRentMemShipService.selectServiceContract(params);
+		params.put("srvCntrctOrdId", contractMap.get("srvCntrctOrdId")); //Order Id
+		
+		//fee and Amount (Basic Info)
+		unbillMap = ccpRentMemShipService.selectServiceContactBillingInfo(params);
+		
+		//Order Info
+		orderInfoMap = ccpRentMemShipService.selectOrderInfo(params);
+		//TODO 마이그레이션 이후 주석 해제(Magic Addr 관련)
+		//installMap = ccpRentMemShipService.selectOrderInfoInstallation(params);
+		cofigMap = ccpRentMemShipService.selectSrvMemConfigInfo(params);
+		
+		//Payment Info
+		payMap = ccpRentMemShipService.selectPaySetInfo(params);
+		
+		BigDecimal thirdPartyDec = (BigDecimal)payMap.get("is3rdParty");
+		
+		if(thirdPartyDec.intValue() == 1){
+			
+			params.put("custId", payMap.get("custId"));
+			thirdMap = ccpRentMemShipService.selectCustThridPartyInfo(params);
+		}
+		
+		//Mailing Info
+		params.put("salesOrderId", params.get("srvCntrctOrdId"));
+		mailMap = ccpRentMemShipService.selectOrderMailingInfoByOrderID(params);
+		
+		model.addAttribute("cnfmCntrctId", params.get("cnfmCntrctId"));
+		model.addAttribute("contractInfo", contractMap);
+		model.addAttribute("unbillMap", unbillMap);
+		model.addAttribute("orderInfoMap", orderInfoMap);
+		model.addAttribute("orderInfoMap", orderInfoMap);
+		model.addAttribute("installMap", installMap);
+		model.addAttribute("cofigMap", cofigMap);
+		model.addAttribute("payMap", payMap);
+		model.addAttribute("thirdMap", thirdMap); //3rdParty
+		model.addAttribute("mailMap", mailMap);
+		
+		return "sales/ccp/ccpRentMemShipConfirmationViewPop";
+		
+	}
+	
+	
+	@RequestMapping(value = "/selectPaymentList")
+	public ResponseEntity<List<EgovMap>> selectPaymentList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> payList = null;
+		
+		payList = ccpRentMemShipService.selectPaymentList(params);
+		
+		return ResponseEntity.ok(payList);
+	}
+	
+	
+	@RequestMapping(value = "/selectCallLogList")
+	public ResponseEntity<List<EgovMap>> selectCallLogList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> callList = null;
+		
+		callList = ccpRentMemShipService.selectCallLogList(params);
+		
+		return ResponseEntity.ok(callList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/selectCcpConfirmResultPop.do")
+	public String	selectCcpConfirmResultPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		EgovMap confirmResultMap = null;
+		EgovMap orderInfoMap = null;
+		EgovMap cofigMap = null;
+		EgovMap custBasicMap = null;
+		EgovMap installMap = null;
+		EgovMap payMap = null;
+		EgovMap thirdMap = null;
+		EgovMap contactMap = null;
+		
+		//Confirmation Result Info <params : cnfmCntrctId  (Contract ID)> 
+		confirmResultMap = ccpRentMemShipService.confirmationInfoByContractID(params);
+		
+		//param Setting
+		params.put("custId", confirmResultMap.get("custId")); //custId
+		params.put("srvCntrctOrdId", confirmResultMap.get("srvCntrctOrdId")); //SalesOrdId
+		
+		//Order Info
+		orderInfoMap = ccpRentMemShipService.selectOrderInfo(params);
+		cofigMap = ccpRentMemShipService.selectSrvMemConfigInfo(params);
+		
+		//Customer Basic Info
+		custBasicMap = ccpRentMemShipService.selectCustBasicInfo(params);
+		
+		//Installation Address
+		//TODO 마이그레이션 이후 주석 해제(Magic Addr 관련)
+		//installMap = ccpRentMemShipService.selectOrderInfoInstallation(params);
+		
+		//PayMode
+		//Payment Info
+		payMap = ccpRentMemShipService.selectPaySetInfo(params);
+		
+		BigDecimal thirdPartyDec = (BigDecimal)payMap.get("is3rdParty");
+		
+		if(thirdPartyDec.intValue() == 1){
+			
+			params.put("custId", payMap.get("custId"));
+			thirdMap = ccpRentMemShipService.selectCustThridPartyInfo(params);
+		}
+		
+		//Contact Info
+		contactMap = ccpRentMemShipService.selectContactPerson(params);
+		
+		model.addAttribute("cnfmCntrctId", params.get("cnfmCntrctId"));
+		model.addAttribute("srvCntrctId", params.get("srvCntrctId"));
+		model.addAttribute("confirmResultMap", confirmResultMap);
+		model.addAttribute("orderInfoMap", orderInfoMap);
+		model.addAttribute("cofigMap", cofigMap);
+		model.addAttribute("custBasicMap", custBasicMap);
+		model.addAttribute("installMap", installMap);
+		model.addAttribute("payMap", payMap);
+		model.addAttribute("thirdMap", thirdMap); //3rdParty
+		model.addAttribute("contactMap", contactMap);
+		
+		
+		return "sales/ccp/ccpRentMemShipConfirmResultPop";
+		
+	}
+	
+	
+	@RequestMapping(value="/insUpdConfrimResult.do")
+	public ResponseEntity<ReturnMessage> insUpdConfrimResult(@RequestParam Map<String, Object> params) throws Exception{
+		
+		//TODO 하단참조
+		/*
+		 * ASIS 에 SalesOrder 관련 파라미터를 받는 부분이 없어 무조건 0 으로 처리됨 .
+		 * 화면단에 뿌려진 Sales Order Number(updSalesOrdNo) 를 TOBE 에서 추가하여 Cancel 의 Insert 에서 Parameter를 추가 하여 처리함
+		 * CcpRentMemShip_SQL.xml >  insertServiceContractTerminations
+		 * 
+		 * 확인 필요.
+		 *   
+		 * */
+		
+		LOGGER.info("#############################################");
+		LOGGER.info("#############insUpdConfrimResult Start");
+		LOGGER.info("#############################################");
+		LOGGER.info("############# insert Params Confrim : " + params.toString());
+		
+		//params Setting
+		SessionVO session = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+		//TODO 세션 임시 설정 (추후 삭제)
+		params.put("userId", "52366");
+		//Service Call
+		ccpRentMemShipService.insUpdConfrimResult(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 		
 	}
 }

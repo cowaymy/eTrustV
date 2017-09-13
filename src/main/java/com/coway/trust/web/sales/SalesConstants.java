@@ -97,10 +97,22 @@ public class SalesConstants {
 	
 	//CCP
 	public static final String  AGREEMENT_CODEID = "51"; // Agreement
+	public static final String  RENT_MEM_CODEID = "146"; // Rent Membership
 	public static final String  AGREEMENT_TRUE = "true";
 	public static final String  AGREEMENT_FALSE = "false";
 	public static final String 	CONSIGNMENT_HAND = "H";
 	public static final String 	CONSIGNMENT_COURIER = "C";
+	public static final String CONTRACT_RENTAL_STATUS_APPROVE = "REG";
+	public static final String CONTRACT_RENTAL_STATUS_CANCEL = "CAN";
+	public static final String SRV_PRD_REM = "Cooperate Customer - System Activated."; 
+	public static final int SRV_CNTRCT_STUSID = 4;
+	public static final int  SRV_PRD_STUS_IDENTIFY = 8;
+	public static final int TRMNAT_STUS_ID = 4;
+	public static final String  TRMNAT_REASON_ID = "2127";  //TerminationReasonID
+	public static final String TRMNAT_REM =  "CCP REJECTED - RENTAL MEMBERSHIP";// TerminationRemark  
+	public static final int TRMNAT_OBLIGATION_PERIOD = 12;   //TerminationObligationPeriod = 12;
+	public static final int TRMNAT_PENALTY = 0;	//terminate.TerminationPenalty = 0;
+	public static final int TRMNAT_CONTRACT_SUB_PERIOD = 3;	//terminate.TerminationContractSubPeriod = 3;
 	
 	//Order Investigation
 	public static final String  INVEST_CODEID = "73"; // Investigation (Get DocNo)
