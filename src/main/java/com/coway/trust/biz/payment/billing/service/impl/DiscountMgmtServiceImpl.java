@@ -35,7 +35,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 	 Copyright (C) by MOPAS All right reserved.
  */
 
-@Service("billingService")
+@Service("discountMgmtService")
 public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements DiscountMgmtService {
 
 	private static final Logger logger = LoggerFactory.getLogger(DiscountMgmtServiceImpl.class);
@@ -43,8 +43,8 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 	@Value("${app.name}")
 	private String appName;
 
-	@Resource(name = "billingMapper")
-	private DiscountMgmtMapper billingMapper;
+	@Resource(name = "discountMgmtMapper")
+	private DiscountMgmtMapper discountMgmtMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -57,7 +57,7 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	public EgovMap selectBasicInfo(Map<String, Object> params) {
-		return billingMapper.selectBasicInfo(params);
+		return discountMgmtMapper.selectBasicInfo(params);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	public EgovMap selectSalesOrderMById(Map<String, Object> params) {
-		return billingMapper.selectSalesOrderMById(params);
+		return discountMgmtMapper.selectSalesOrderMById(params);
 	}
 	
 	/**
@@ -77,12 +77,12 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 	 */
 	@Override
 	public List<EgovMap> selectDiscountList(Map<String, Object> params) {
-		return billingMapper.selectDiscountList(params);
+		return discountMgmtMapper.selectDiscountList(params);
 	}
 
 	@Override
 	public String selectContractServiceId(Map<String, Object> params) {
-		return billingMapper.selectContractServiceId(params);
+		return discountMgmtMapper.selectContractServiceId(params);
 	}
 
 	@Override
@@ -92,13 +92,13 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 		params.put("dcStatusId", 1);
 		params.put("userId", userId);
 		
-		int saveResult = billingMapper.saveAddDiscount(params);
+		int saveResult = discountMgmtMapper.saveAddDiscount(params);
         List<EgovMap> discountList = new ArrayList<EgovMap>();
         EgovMap basicInfo = new EgovMap();
         
         if(saveResult == 1){
-        	basicInfo = billingMapper.selectBasicInfo(params);
-        	discountList = billingMapper.selectDiscountList(params);
+        	basicInfo = discountMgmtMapper.selectBasicInfo(params);
+        	discountList = discountMgmtMapper.selectDiscountList(params);
         }
         
         EgovMap resultMap = new EgovMap();
@@ -110,11 +110,11 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Override
 	public String updDiscountEntry(Map<String, Object> params) {
-		EgovMap discountEntries = billingMapper.selectDiscountEntries(params);
+		EgovMap discountEntries = discountMgmtMapper.selectDiscountEntries(params);
 		String errorMessage = "";
 		
 		if(discountEntries.size() > 0){
-			billingMapper.updDiscountEntry(params);
+			discountMgmtMapper.updDiscountEntry(params);
 		}else{
 			errorMessage = "No records found";
 		}
