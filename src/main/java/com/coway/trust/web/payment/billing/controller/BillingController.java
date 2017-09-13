@@ -101,10 +101,8 @@ public class BillingController {
 	public ResponseEntity<ReturnMessage> selectSalesOrderMById(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
         EgovMap conversionSchemeId = billingService.selectSalesOrderMById(params);
-
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("conversionSchemeId", conversionSchemeId);
-
         
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
@@ -145,22 +143,8 @@ public class BillingController {
 	@RequestMapping(value = "/saveDiscount.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveDiscount(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
-		int userId = sessionVO.getUserId();
 		
-		params.put("dcStatusId", 1);
-		params.put("userId", userId);
-        int saveResult = billingService.saveAddDiscount(params);
-        List<EgovMap> discountList = new ArrayList<EgovMap>();
-        EgovMap basicInfo = new EgovMap();
-        
-        if(saveResult == 1){
-        	basicInfo = billingService.selectBasicInfo(params);
-        	discountList = billingService.selectDiscountList(params);
-        }
-
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("discountList", discountList);
-        resultMap.put("basicInfo", basicInfo);
+		EgovMap resultMap = billingService.saveAddDiscount(params, sessionVO);
 
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
@@ -189,10 +173,11 @@ public class BillingController {
         	basicInfo = billingService.selectBasicInfo(params);
         	discountList = billingService.selectDiscountList(params);
         	resultMessage = "Disabled Successfully.";
+        	message.setCode(AppConstants.SUCCESS);
         }else{
         	resultMessage = "ERROR: " + errorMessage;
+        	message.setCode(AppConstants.FAIL);
         }
-        
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("resultMessage", resultMessage);
@@ -200,7 +185,6 @@ public class BillingController {
         resultMap.put("basicInfo", basicInfo);
 
         // 조회 결과 리턴.
-    	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
 		
 		return ResponseEntity.ok(message);
