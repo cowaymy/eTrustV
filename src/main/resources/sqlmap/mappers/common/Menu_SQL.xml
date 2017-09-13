@@ -39,7 +39,7 @@
                                                                ,G.FUNC_YN
                                                                ,'N' AS EXIST_YN
                                                            FROM SYS0057M G
-                                                          WHERE G.USER_ID = DECODE(#{userId}, 0, G.USER_ID, #{userId})
+                                                          WHERE G.USER_ID = #{userId}
                                                           AND G.FUNC_YN = 'Y'
                                                          UNION
                                                          /* 선택한 권한의 매핑된 Role의 상위 권한 */
@@ -63,7 +63,7 @@
                                                                                     ,A.ROLE_ID
                                                                                 FROM SYS0044M A, SYS0045M B
                                                                                WHERE A.ROLE_ID = B.ROLE_ID(+)
-                                                                                 AND B.USER_ID(+) = DECODE(#{userId}, 0, NULL, #{userId})
+                                                                                 AND B.USER_ID(+) = #{userId}
                                                                           START WITH A.ROLE_ID = B.ROLE_ID
                                                                           CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
                                                                         ,SYS0054M D
@@ -85,7 +85,7 @@
                                                                 END AS EXIST_YN
                                                            FROM SYS0056M A, SYS0055M B
                                                           WHERE A.AUTH_CODE = B.AUTH_CODE
-                                                            AND B.USER_ID = DECODE(#{userId}, 0, B.USER_ID, #{userId})
+                                                            AND B.USER_ID = #{userId}
                                                             AND A.FUNC_YN = 'Y'
                                                             ) H) I
                                  WHERE I.RNK = 1
@@ -118,7 +118,7 @@
          AND MENU.PGM_CODE = PGM.PGM_CODE(+)
          AND FAVORITES.USE_YN = 'Y'
          AND PGM.FUNC_VIEW(+) = 'Y'
-         -- AND FAVORITES.CRT_USER_ID = :CRT_USER_ID
+         AND FAVORITES.CRT_USER_ID = :CRT_USER_ID
     ORDER BY FAVORITES.MYMENU_ORDER
     </select>
 
