@@ -75,7 +75,7 @@ function fn_getBillingList(){
 }
 
 function fn_view(){
-	if(selectedGridValue != "undefined"){
+	if(selectedGridValue != undefined){
 		var value = AUIGrid.getCellValue(myGridID , selectedGridValue , "taskId");
 		
 		location.href="/payment/initBillingResult.do?taskId="+value;
