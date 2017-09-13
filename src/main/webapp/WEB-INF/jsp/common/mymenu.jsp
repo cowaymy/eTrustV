@@ -123,9 +123,12 @@ function fn_search(){
 		    function(data, textStatus, jqXHR){ // Success
 		    	AUIGrid.clearGridData(myGridDetailID);
 		    	AUIGrid.setGridData(myGridID, data);
+
+		        Common.setMsg("Menu Group Search Success.");
 		    },
 		    function(jqXHR, textStatus, errorThrown){ // Error
 		    	alert("Fail : " + jqXHR.responseJSON.message);
+		    	Common.setMsg("Failed.");
 		    }
 	)
 };
@@ -156,6 +159,7 @@ function fn_save(){
 	            },
 	            function(jqXHR, textStatus, errorThrown){ // Error
 	                alert("Fail : " + jqXHR.responseJSON.message);
+	                Common.setMsg("Failed.");
 	            }
 	    )
 	}
@@ -168,9 +172,11 @@ function fn_detailSearch(mymenuCode){
             "mymenuCode="+mymenuCode,
             function(data, textStatus, jqXHR){ // Success
                 AUIGrid.setGridData(myGridDetailID, data);
+                Common.setMsg("Menu Search Success.");
             },
             function(jqXHR, textStatus, errorThrown){ // Error
                 alert("Fail : " + jqXHR.responseJSON.message);
+                Common.setMsg("Menu Search Failed.");
             }
     )
 };
@@ -507,9 +513,6 @@ $(document).ready(function(){
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
