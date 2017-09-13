@@ -27,8 +27,8 @@ public class DiscountMgmtController {
 
 	private static final Logger logger = LoggerFactory.getLogger(DiscountMgmtController.class);
 	
-	@Resource(name = "billingService")
-	private DiscountMgmtService billingService;
+	@Resource(name = "discountMgmtService")
+	private DiscountMgmtService discountMgmtService;
 	
 	
 	/**
@@ -53,8 +53,8 @@ public class DiscountMgmtController {
 	public ResponseEntity<ReturnMessage> selectBasicInfo(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
         
-		EgovMap basicInfo = billingService.selectBasicInfo(params);
-		List<EgovMap> discountList = billingService.selectDiscountList(params);
+		EgovMap basicInfo = discountMgmtService.selectBasicInfo(params);
+		List<EgovMap> discountList = discountMgmtService.selectDiscountList(params);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("basicInfo", basicInfo);
@@ -77,7 +77,7 @@ public class DiscountMgmtController {
 	@RequestMapping(value = "/selectSalesOrderMById.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectSalesOrderMById(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
-        EgovMap conversionSchemeId = billingService.selectSalesOrderMById(params);
+        EgovMap conversionSchemeId = discountMgmtService.selectSalesOrderMById(params);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("conversionSchemeId", conversionSchemeId);
         
@@ -98,7 +98,7 @@ public class DiscountMgmtController {
 	@RequestMapping(value = "/selectContractServiceId.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectContractServiceId(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
-        String cntractServiceId = billingService.selectContractServiceId(params);
+        String cntractServiceId = discountMgmtService.selectContractServiceId(params);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("cntractServiceId", cntractServiceId);
@@ -121,7 +121,7 @@ public class DiscountMgmtController {
 	public ResponseEntity<ReturnMessage> saveDiscount(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		
-		EgovMap resultMap = billingService.saveAddDiscount(params, sessionVO);
+		EgovMap resultMap = discountMgmtService.saveAddDiscount(params, sessionVO);
 
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
@@ -141,14 +141,14 @@ public class DiscountMgmtController {
 	public ResponseEntity<ReturnMessage> saveDisableDiscount(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		
-        String errorMessage = billingService.updDiscountEntry(params);
+        String errorMessage = discountMgmtService.updDiscountEntry(params);
         String resultMessage = "";
         EgovMap basicInfo = new EgovMap();
         List<EgovMap> discountList = new ArrayList<EgovMap>();
         
         if("".equals(errorMessage)){
-        	basicInfo = billingService.selectBasicInfo(params);
-        	discountList = billingService.selectDiscountList(params);
+        	basicInfo = discountMgmtService.selectBasicInfo(params);
+        	discountList = discountMgmtService.selectDiscountList(params);
         	resultMessage = "Disabled Successfully.";
         	message.setCode(AppConstants.SUCCESS);
         }else{
