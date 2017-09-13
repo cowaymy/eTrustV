@@ -163,9 +163,9 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		List<Object> addList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 
 		logger.debug("formMap : {} ", formMap.toString());
-		logger.debug("addList : {} ", addList.toString());
+		logger.debug("addList size : {} ", addList.size());
 		if (addList.size() > 0) {
-			for (int i = 0; i == addList.size(); i++) {
+			for (int i = 0; i < addList.size(); i++) {
 				Map<String, Object> getMap = (Map<String, Object>) addList.get(i);
 				logger.debug("addList : {} ", addList.get(i).toString());
 				Map<String, Object> setMap = new HashMap();
@@ -181,7 +181,7 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 
 	@Override
 	public void insertAdjustmentLocCount(Map<String, Object> params) {
-		List<Object> addList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		List<Object> addList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		logger.debug("adj addList : {} ", addList.toString());
 		if (addList.size() > 0) {
 			for (int i = 0; i < addList.size(); i++) {
