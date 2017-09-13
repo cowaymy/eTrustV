@@ -19,8 +19,8 @@ public class MobileAuthenticInterceptor extends WebContentInterceptor {
 	@Autowired
 	private SessionHandler sessionHandler;
 
-	@Autowired
-	private MenuService menuService;
+//	@Autowired
+//	private MenuService menuService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

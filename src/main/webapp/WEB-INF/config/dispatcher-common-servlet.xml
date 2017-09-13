@@ -67,14 +67,13 @@
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
 
-        <!-- mobile Interceptor -->
+        <!-- mobile Interceptor : mobile api 는 세션 및 권한 체크를 하지 않는다.
         <mvc:interceptor>
-            <!-- <mvc:mapping path="/mobile/api/**"/> -->
-            <mvc:mapping path="/mobile/api/v1/common/*/codes"/>
+            <mvc:mapping path="/mobile/api/**"/>
             <mvc:exclude-mapping path="/mobile/api/*/login/**"/>
             <bean class="com.coway.trust.cmmn.interceptor.MobileAuthenticInterceptor" />
         </mvc:interceptor>
-
+         -->
 
 
         <!-- locale 설정 처리. -->
