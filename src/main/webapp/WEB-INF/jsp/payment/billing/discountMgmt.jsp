@@ -81,6 +81,8 @@ var discountLayout = [
                                onclick : function(rowIndex, columnIndex, value, item) {
                                    if(item.dcStusId != "8"){
                                 	   fn_disableDiscount(item.dscntEntryId);
+                                   }else{
+                                	   Common.alert("Disabled Successfully.");
                                    }
                                }
                            }
