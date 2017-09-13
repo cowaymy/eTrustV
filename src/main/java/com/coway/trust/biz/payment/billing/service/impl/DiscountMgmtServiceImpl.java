@@ -1,7 +1,6 @@
 package com.coway.trust.biz.payment.billing.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -11,12 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
-
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billing.service.DiscountMgmtService;
-import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.util.CommonUtils;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
