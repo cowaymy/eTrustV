@@ -1,34 +1,23 @@
 package com.coway.trust.web.payment.billinggroup.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
-
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -37,22 +26,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class BillingGroupController {
 
 	private static final Logger logger = LoggerFactory.getLogger(BillingGroupController.class);
-
-	@Resource(name = "commonService")
-	private CommonService commonService;
 	
 	@Resource(name = "billingGroupService")
 	private BillingGroupService billGroupService;
-
-	@Value("${app.name}")
-	private String appName;
-
-	@Value("${com.file.upload.path}")
-	private String uploadDir;
-
-	// DataBase message accessor....
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
 	
 	
 	/**
