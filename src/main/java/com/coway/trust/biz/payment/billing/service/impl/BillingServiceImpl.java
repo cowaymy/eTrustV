@@ -1,5 +1,6 @@
 package com.coway.trust.biz.payment.billing.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,8 +86,26 @@ public class BillingServiceImpl extends EgovAbstractServiceImpl implements Billi
 	}
 
 	@Override
-	public int saveAddDiscount(Map<String, Object> params) {
-		return billingMapper.saveAddDiscount(params);
+	public EgovMap saveAddDiscount(Map<String, Object> params, SessionVO sessionVO) {
+		
+		int userId = sessionVO.getUserId();
+		params.put("dcStatusId", 1);
+		params.put("userId", userId);
+		
+		int saveResult = billingMapper.saveAddDiscount(params);
+        List<EgovMap> discountList = new ArrayList<EgovMap>();
+        EgovMap basicInfo = new EgovMap();
+        
+        if(saveResult == 1){
+        	basicInfo = billingMapper.selectBasicInfo(params);
+        	discountList = billingMapper.selectDiscountList(params);
+        }
+        
+        EgovMap resultMap = new EgovMap();
+        resultMap.put("discountList", discountList);
+        resultMap.put("basicInfo", basicInfo);
+		
+		return resultMap;
 	}
 
 	@Override
