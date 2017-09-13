@@ -51,7 +51,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 * 권한 체크.
 	 */
 	private void checkAuthorized() {
-		// TODO : 권한 체크 로직 구현 필요.
+		// 2017-09-13 : 권한 체크는 화면단에서 한다.
 		// 권한이 없다면, 아래의 exception을 throw 하면, GlobalExceptionHandler 의 authException 에서 처리함.
 		// throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
 	}
