@@ -62,6 +62,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 				stocktran.insStockTransfer(insMap);
 			}
 		}
+		stocktran.updateRequestTransfer(((String)fMap.get("headtitle") + seq));
 	}
 
 	@Override

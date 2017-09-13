@@ -420,4 +420,9 @@
 			ORDER BY lg59m.MATRL_DOC_NO, lg60d.MATRL_DOC_ITM
         
      </select>
+     <update id="updateRequestTransfer" parameterType="String">
+        UPDATE LOG0047M 
+           SET REQST_STUS = 'P'
+         WHERE REQST_NO = #{param}
+     </update>
 </mapper>

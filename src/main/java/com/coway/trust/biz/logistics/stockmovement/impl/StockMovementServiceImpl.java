@@ -197,6 +197,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			}
 
 			stockMoveMapper.insertDeliveryStockMovement(insMap);
+			stockMoveMapper.updateRequestMovement((String)formMap.get("reqstno"));
 		}
 		String[] delvcd = { deliSeq };
 

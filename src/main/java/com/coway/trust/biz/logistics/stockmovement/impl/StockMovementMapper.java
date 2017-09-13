@@ -56,5 +56,7 @@ public interface StockMovementMapper {
 	List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
 
 	List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
+	
+	void updateRequestMovement(String param);
 
 }

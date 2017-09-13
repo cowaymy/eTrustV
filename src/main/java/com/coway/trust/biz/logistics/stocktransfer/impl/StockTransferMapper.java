@@ -49,4 +49,6 @@ public interface StockTransferMapper {
 	void StockTransferCancelIssue(Map<String, Object> params);
 
 	List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params);
+	
+	void updateRequestTransfer(String param);
 }
