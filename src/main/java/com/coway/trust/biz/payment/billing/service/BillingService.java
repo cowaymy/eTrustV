@@ -40,7 +40,7 @@ public interface BillingService{
 	 * @param params
 	 * @return
 	 */
-    int saveAddDiscount(Map<String, Object> params);
+    EgovMap saveAddDiscount(Map<String, Object> params, SessionVO sessionVO);
     
     
     /**
