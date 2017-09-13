@@ -21,7 +21,7 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("billingRantalMapper")
-public interface BillingRantalMapper {
+public interface BillingMgmtMapper {
 	/**
 	 * Billing Mgnt 조회
 	 * @param params

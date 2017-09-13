@@ -73,4 +73,38 @@ public interface BillingMapper {
 	 */
 	void updDiscountEntry(Map<String, Object> params);
 	
+	/**
+	 * Billing Mgnt 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectBillingMgnt(Map<String, Object> params);
+	
+	/**
+	 * Billing Master 조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectBillingMaster(Map<String, Object> params);
+	
+	/**
+	 * Billing Detail 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectBillingDetail(Map<String, Object> params);
+	
+	/**
+	 * createEaryBill 수행
+	 * @param params
+	 * @return
+	 */
+	int callEaryBillProcedure(Map<String, Object> params);
+	
+	/**
+	 * createBill 수행
+	 * @param params
+	 * @return
+	 */
+	int callBillProcedure(Map<String, Object> params);
 }
