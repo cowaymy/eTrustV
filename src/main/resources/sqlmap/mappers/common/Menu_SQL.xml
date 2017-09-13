@@ -118,7 +118,7 @@
          AND MENU.PGM_CODE = PGM.PGM_CODE(+)
          AND FAVORITES.USE_YN = 'Y'
          AND PGM.FUNC_VIEW(+) = 'Y'
-         AND FAVORITES.CRT_USER_ID = :CRT_USER_ID
+         AND FAVORITES.CRT_USER_ID = #{userId}
     ORDER BY FAVORITES.MYMENU_ORDER
     </select>
 
