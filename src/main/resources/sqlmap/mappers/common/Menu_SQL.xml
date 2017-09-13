@@ -3,9 +3,6 @@
 <mapper namespace="com.coway.trust.biz.common.impl.MenuMapper">
 
     <select id="selectMenuList" parameterType="sessionVO" resultType="egovMap">
-/*
-TODO :  로그인한 유저가 가진 메뉴를 조회 하도록 구현 필요. 현재 임시.
- */
         SELECT     MENU.MENU_LVL
                   ,MENU.MENU_CODE
                   ,MENU.UPPER_MENU_CODE
@@ -22,14 +19,77 @@ TODO :  로그인한 유저가 가진 메뉴를 조회 하도록 구현 필요. 
                                    ,PGM.FUNC_VIEW
                                FROM SYS0051M MENU, SYS0050M PGM
                               WHERE MENU.PGM_CODE = PGM.PGM_CODE(+)
-                         START WITH MENU.MENU_CODE IN (SELECT MENU.MENU_CODE
-                                                         FROM SYS0051M MENU
-                                                        WHERE MENU.PGM_CODE IS NOT NULL)
-                                AND MENU.PGM_CODE IN (
-                                                      /* TODO : 권한이 있는 PGM_CODE 리스트로 교체..*/
-                                                      SELECT PGM_CODE
-                                                        FROM SYS0050M)
-                                AND PGM.FUNC_VIEW = 'Y'
+                         START WITH MENU.MENU_CODE IN (
+                                  SELECT DISTINCT I.MENU_CODE
+                                  FROM (SELECT DISTINCT H.MENU_CODE
+                                                       ,H.PGM_TRN_CODE
+                                                       ,H.VALID_DT_FROM
+                                                       ,H.VALID_DT_TO
+                                                       ,H.FUNC_YN
+                                                       ,H.EXIST_YN
+                                                       ,RANK () OVER (PARTITION BY H.MENU_CODE, H.PGM_TRN_CODE ORDER BY H.FUNC_YN DESC
+                                                        ,H.EXIST_YN, H.VALID_DT_FROM, H.VALID_DT_TO DESC) AS RNK
+                                                   FROM (
+                                                         /* 선택한 권한*/
+                                                         SELECT NULL AS AUTH_CODE
+                                                               ,G.MENU_CODE
+                                                               ,G.PGM_TRN_CODE
+                                                               ,G.VALID_DT_FROM
+                                                               ,G.VALID_DT_TO
+                                                               ,G.FUNC_YN
+                                                               ,'N' AS EXIST_YN
+                                                           FROM SYS0057M G
+                                                          WHERE G.USER_ID = DECODE(#{userId}, 0, G.USER_ID, #{userId})
+                                                          AND G.FUNC_YN = 'Y'
+                                                         UNION
+                                                         /* 선택한 권한의 매핑된 Role의 상위 권한 */
+                                                         SELECT E.AUTH_CODE
+                                                               ,E.MENU_CODE
+                                                               ,E.PGM_TRN_CODE
+                                                               ,NULL AS VALID_DT_FROM
+                                                               ,NULL AS VALID_DT_TO
+                                                               ,E.FUNC_YN
+                                                               ,CASE
+                                                                   WHEN F.OWN_USER_ID IS NULL
+                                                                   AND E.FUNC_YN = 'Y'
+                                                                      THEN 'Y'
+                                                                   ELSE 'N'
+                                                                END AS EXIST_YN
+                                                           FROM SYS0056M E
+                                                               , (SELECT D.ROLE_ID
+                                                                        ,D.AUTH_CODE
+                                                                        ,C.USER_ID AS OWN_USER_ID
+                                                                    FROM (SELECT     B.USER_ID
+                                                                                    ,A.ROLE_ID
+                                                                                FROM SYS0044M A, SYS0045M B
+                                                                               WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                                                                 AND B.USER_ID(+) = DECODE(#{userId}, 0, NULL, #{userId})
+                                                                          START WITH A.ROLE_ID = B.ROLE_ID
+                                                                          CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                                                        ,SYS0054M D
+                                                                   WHERE C.ROLE_ID = D.ROLE_ID) F
+                                                          WHERE E.AUTH_CODE = F.AUTH_CODE
+                                                          AND E.FUNC_YN = 'Y'
+                                                         UNION
+                                                         /* 예외적으로 부여받은 개인권한 */
+                                                         SELECT A.AUTH_CODE
+                                                               ,A.MENU_CODE
+                                                               ,A.PGM_TRN_CODE
+                                                               ,B.VALID_DT_FROM
+                                                               ,B.VALID_DT_TO
+                                                               ,A.FUNC_YN
+                                                               ,CASE
+                                                                   WHEN A.FUNC_YN = 'Y'
+                                                                      THEN 'Y'
+                                                                   ELSE 'N'
+                                                                END AS EXIST_YN
+                                                           FROM SYS0056M A, SYS0055M B
+                                                          WHERE A.AUTH_CODE = B.AUTH_CODE
+                                                            AND B.USER_ID = DECODE(#{userId}, 0, B.USER_ID, #{userId})
+                                                            AND A.FUNC_YN = 'Y'
+                                                            ) H) I
+                                 WHERE I.RNK = 1
+                         )
                          CONNECT BY PRIOR UPPER_MENU_CODE = MENU_CODE) MENU
         START WITH MENU.UPPER_MENU_CODE IS NULL
         CONNECT BY PRIOR MENU_CODE = UPPER_MENU_CODE

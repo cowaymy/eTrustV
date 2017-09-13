@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +21,8 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 public class AuthenticInterceptor extends WebContentInterceptor {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticInterceptor.class);
 
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -35,8 +39,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		if (sessionVO != null && sessionVO.getUserId() > 0) {
 			checkAuthorized();
 		} else {
-			// TODO :  임시 처리됨. 아래 내용 적용 필요.
-			//throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+			LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
+					request.getRequestURI());
+			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
 
 		return true;
@@ -58,11 +63,10 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
 		if (sessionVO == null || sessionVO.getUserId() == 0) {
-			// TODO :  임시 처리됨. 아래 내용 적용 필요.
-			//throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+			throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
 		}
 
-		if(modelAndView != null){
+		if (modelAndView != null) {
 			Map<String, Object> params = new HashMap<>();
 			modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
 			modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));

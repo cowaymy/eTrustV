@@ -56,11 +56,13 @@
             <mvc:mapping path="/menu/**"/>
             <mvc:mapping path="/program/**"/>
             <mvc:mapping path="/status/**"/>
+            <mvc:mapping path="/test/**"/>
             -->
             <mvc:mapping path="/**"/>
 
-            <mvc:mapping path="/test/**"/>
             <mvc:exclude-mapping path="/login/*.do"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <mvc:exclude-mapping path="/**/*Pop.do"/>
             <mvc:exclude-mapping path="/**/api/**"/>
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>

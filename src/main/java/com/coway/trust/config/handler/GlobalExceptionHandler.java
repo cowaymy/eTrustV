@@ -221,8 +221,8 @@ public class GlobalExceptionHandler {
 			return true;
 		}
 
-		if (contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)
-				|| contentType.startsWith(MediaType.MULTIPART_FORM_DATA_VALUE)) {
+		if (contentType != null && (contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)
+				|| contentType.startsWith(MediaType.MULTIPART_FORM_DATA_VALUE))) {
 			return true;
 		}
 		return false;
