@@ -55,14 +55,14 @@ var columnLayout=[
 function fn_setYearList(startYear, endYear){
 	//console.log("startYear : " + startYear +", endYear : " + endYear);
 	//$("#year option").remove();
-	$("#year").append("<option value=''>issueYear</option>");
+	$("#year").append("<option value='' disabled selected>issueYear</option>");
 	for(var i=startYear; i<=endYear+1; i++){
 		$("#year").append("<option value="+i +">"+i+"</option>");
 	}
 }
 
 function fn_setMonthList(){
-	$("#month").append("<option value=''>issueMonth</option>");
+	$("#month").append("<option value='' disabled selected>issueMonth</option>");
 	for(var i=1; i<13; i++){
 		$("#month").append("<option value="+i +">"+i+"</option>");
 	}
