@@ -58,6 +58,11 @@ public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements B
 	public List<EgovMap> selectBillingDetail(Map<String, Object> params) {
 		return billingRentalMapper.selectBillingDetail(params);
 	}
+	
+	@Override
+	public int selectBillingDetailCount(Map<String, Object> params) {
+		return billingRentalMapper.selectBillingDetailCount(params);
+	}
 
 	@Override
 	public void callEaryBillProcedure(Map<String, Object> params) {

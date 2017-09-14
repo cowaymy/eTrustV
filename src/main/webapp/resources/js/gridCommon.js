@@ -202,6 +202,60 @@ var GridCommon = {
 	    	}else{
 	    		return "#" + gridID;
 	    	}
-	    }
+	    },
 	    
+		// 페이징 네비게이터를 동적 생성합니다.
+	    createPagingNavigator : function(goPage,totalRowCount,_options){
+	    	// 페이징 속성 설정
+	        var pagingPros = {
+	        		// 1페이지에서 보여줄 행의 수
+	        		rowCount : 20,
+	                
+	                // 페이지 네비게이션에서 보여줄 페이지의 수
+	        		pageButtonCount : 10,
+	        		
+	        		// 페이지 번호 클릭시 호출될 function 명
+	        		funcName : 'moveToPage',
+	        			
+	        		//페이징이 처리될 elements ID 
+	        		targetId : 'grid_paging'
+	        };
+	        
+	        pagingPros = $.extend(pagingPros, _options);
+	        
+	    	var totalPage = Math.ceil(totalRowCount / pagingPros.rowCount);    // 전체 페이지 계산	    	
+	    	var retStr = "";
+	    	var prevPage = parseInt((goPage - 1)/pagingPros.pageButtonCount) * pagingPros.pageButtonCount;
+	    	var nextPage = ((parseInt((goPage - 1)/pagingPros.pageButtonCount)) * pagingPros.pageButtonCount) + pagingPros.pageButtonCount + 1;
+	    	
+	    	prevPage = Math.max(0, prevPage);
+	    	nextPage = Math.min(nextPage, totalPage);
+	    	
+	    	// 처음
+	    	retStr += "<a href='javascript:" + pagingPros.funcName + "(1)'><span class='aui-grid-paging-number aui-grid-paging-first'>first</span></a>";
+	    	// 이전
+	    	retStr += "<a href='javascript:" + pagingPros.funcName + "(" + Math.max(1, prevPage) + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
+	    	
+	    	for (var i=(prevPage+1), len=(pagingPros.pageButtonCount+prevPage); i<=len; i++) {
+	    		if (goPage == i) {
+	    			retStr += "<span class='aui-grid-paging-number aui-grid-paging-number-selected'>" + i + "</span>";
+	    		} else {
+	    			retStr += "<a href='javascript:" + pagingPros.funcName + "(" + i + ")'><span class='aui-grid-paging-number'>";
+	    			retStr += i;
+	    			retStr += "</span></a>";
+	    		}
+	    		
+	    		if (i >= totalPage) {
+	    			break;
+	    		}
+	    	}
+	    	
+	    	// 다음
+	    	retStr += "<a href='javascript:" + pagingPros.funcName + "(" + nextPage + ")'><span class='aui-grid-paging-number aui-grid-paging-next'>next</span></a>";
+	    	
+	    	// 마지막
+	    	retStr += "<a href='javascript:" + pagingPros.funcName + "(" + totalPage + ")'><span class='aui-grid-paging-number aui-grid-paging-last'>last</span></a>";
+	    	
+	    	document.getElementById(pagingPros.targetId).innerHTML = retStr;
+	    }	    
 };

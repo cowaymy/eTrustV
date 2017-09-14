@@ -73,15 +73,23 @@ public class BillingMgmtController {
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		LOGGER.debug("params_#### : {}", params);
-		
-		EgovMap master = billingRentalService.selectBillingMaster(params);
-		System.out.println("master : " + master);
+		EgovMap master = billingRentalService.selectBillingMaster(params);		
 		List<EgovMap> detail = billingRentalService.selectBillingDetail(params);
-		System.out.println("detail.size : " + detail.size());                                                     
+		int totalRowCount = billingRentalService.selectBillingDetailCount(params);
 		
 		result.put("master", master);
 		result.put("detail", detail);
+		result.put("totalRowCount", totalRowCount);
+
+		return ResponseEntity.ok(result);
+	}
+	
+	@RequestMapping(value = "/selectBillingResultListPaging.do")
+	public ResponseEntity<Map<String, Object>> selectBillingResultListPaging(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<EgovMap> detail = billingRentalService.selectBillingDetail(params);		
+		result.put("detail", detail);		
 
 		return ResponseEntity.ok(result);
 	}

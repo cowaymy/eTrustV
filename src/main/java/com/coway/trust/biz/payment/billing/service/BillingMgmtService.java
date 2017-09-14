@@ -28,6 +28,13 @@ public interface BillingMgmtService{
 	List<EgovMap> selectBillingDetail(Map<String, Object> params);
 	
 	/**
+	 * Billing Detail 전체 건수 조회
+	 * @param params
+	 * @return
+	 */
+	int selectBillingDetailCount(Map<String, Object> params);
+	
+	/**
 	 * createEaryBill 수행
 	 * @param params
 	 * @return

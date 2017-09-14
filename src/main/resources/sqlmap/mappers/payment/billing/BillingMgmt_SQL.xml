@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.billing.service.impl.BillingMgmtMapper">
 
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (  
+    </sql>
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+    
     <!-- Reconciliation 리스트 조회 -->
 	<select id="selectBillingMgnt" parameterType="Map" resultType="egovMap">
 	   SELECT Extent1.TASK_ID TASK_ID  ,
@@ -53,41 +65,68 @@
 	               AND ROWNUM = 1 
 	</select>
 	
-	<select id="selectBillingDetail" parameterType="Map" resultType="egovMap">
-	   SELECT Extent1.TASK_ID TASK_ID  ,
-	       Extent1.TASK_BILL_SO_ID TASK_BILL_SO_ID  ,
-	       Extent1.TASK_REF_NO TASK_REF_NO  ,
-	       Extent1.TASK_BILL_TYPE_ID TASK_BILL_TYPE_ID  ,
-	       Extent2.CODE_NAME CODE_NAME  ,
-	       Extent3.SALES_ORD_NO SALES_ORD_NO  ,
-	       Extent4.NAME NAME  ,
-	       0 C1  ,
-	       TO_NUMBER(Extent1.TASK_BILL_AMT) TASK_BILL_AMT  ,
-	       TO_DATE(Extent1.TASK_REF_DT_TM) TASK_REF_DT_TM  ,
-	       CASE 
-	            WHEN ( Extent1.TASK_BILL_GRP_ID IS NULL ) THEN 0
-	       ELSE Extent1.TASK_BILL_GRP_ID
-	          END TASK_BILL_GRP_ID  ,
-	       TO_NUMBER(Extent1.TASK_BILL_INST_NO) TASK_BILL_INST_NO  
-	  FROM PAY0048D Extent1
-	         JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TASK_BILL_TYPE_ID
-	         JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.TASK_BILL_SO_ID
-	         JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-	  WHERE  Extent1.TASK_ID = #{taskId}
-	  <if test="orderNo != 'null' and orderNo != '' ">
-	               AND Extent3.SALES_ORD_NO = #{orderNo}
-	  </if>  
-	  <if test="billNo != null and billNo != '' ">
-	               AND Extent1.TASK_REF_NO = #{billNo}
-	  </if> 
-	  <if test="custName != null and custName != '' ">
-	               AND Extent4.NAME = #{custName}
-	  </if>
-	   <if test="group != null and group != '' ">
-	               AND (CASE WHEN (Extent1.TASK_BILL_GRP_ID IS NULL) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END) = #{group}
-	   </if>
-	  ORDER BY Extent1.TASK_BILL_SO_ID ASC
+	
+    <select id="selectBillingDetail" parameterType="Map" resultType="egovMap">
+        <include refid="pagingStart" />
+        SELECT 
+            Extent1.TASK_ID TASK_ID  ,
+			Extent1.TASK_BILL_SO_ID TASK_BILL_SO_ID  ,
+			Extent1.TASK_REF_NO TASK_REF_NO  ,
+			Extent1.TASK_BILL_TYPE_ID TASK_BILL_TYPE_ID  ,
+			Extent2.CODE_NAME CODE_NAME  ,
+			Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+			Extent4.NAME NAME  ,
+			0 C1  ,
+			TO_NUMBER(Extent1.TASK_BILL_AMT) TASK_BILL_AMT  ,
+			TO_DATE(Extent1.TASK_REF_DT_TM) TASK_REF_DT_TM  ,
+			CASE WHEN ( Extent1.TASK_BILL_GRP_ID IS NULL ) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END TASK_BILL_GRP_ID  ,
+            TO_NUMBER(Extent1.TASK_BILL_INST_NO) TASK_BILL_INST_NO  
+        FROM 
+            PAY0048D Extent1
+			JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TASK_BILL_TYPE_ID
+			JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.TASK_BILL_SO_ID
+			JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+        WHERE  
+            Extent1.TASK_ID = #{taskId}
+            <if test="orderNo != 'null' and orderNo != '' ">
+                AND Extent3.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="billNo != null and billNo != '' ">
+                AND Extent1.TASK_REF_NO = #{billNo}
+            </if> 
+            <if test="custName != null and custName != '' ">
+                AND Extent4.NAME = #{custName}
+            </if>
+            <if test="group != null and group != '' ">
+                AND (CASE WHEN (Extent1.TASK_BILL_GRP_ID IS NULL) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END) = #{group}
+            </if>
+        ORDER BY Extent1.TASK_BILL_SO_ID ASC
+        <include refid="pagingEnd" />
 	</select>
+	
+	<select id="selectBillingDetailCount" parameterType="Map" resultType="int">
+        SELECT 
+            COUNT(1) AS CNT  
+        FROM 
+            PAY0048D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TASK_BILL_TYPE_ID
+            JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.TASK_BILL_SO_ID
+            JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+        WHERE  
+            Extent1.TASK_ID = #{taskId}
+            <if test="orderNo != 'null' and orderNo != '' ">
+                AND Extent3.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="billNo != null and billNo != '' ">
+                AND Extent1.TASK_REF_NO = #{billNo}
+            </if> 
+            <if test="custName != null and custName != '' ">
+                AND Extent4.NAME = #{custName}
+            </if>
+            <if test="group != null and group != '' ">
+                AND (CASE WHEN (Extent1.TASK_BILL_GRP_ID IS NULL) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END) = #{group}
+            </if>        
+    </select>
 	
 	<resultMap id="earyBillMap" type="egovMap"></resultMap>
 	<select id="callEaryBillProcedure" statementType="CALLABLE" parameterType="Map">

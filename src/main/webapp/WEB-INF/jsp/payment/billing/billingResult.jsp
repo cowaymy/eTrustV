@@ -7,9 +7,12 @@ var myGridID;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
+//페이징에 사용될 변수
+var _totalRowCount;
+
 $(document).ready(function(){
-	$("#taskId").val("${taskId}");
-	console.log("taskId2 : " + $("#taskId").val());
+    $("#taskId").val("${taskId}");
+    console.log("taskId2 : " + $("#taskId").val());
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     
    fn_initData();
@@ -17,26 +20,31 @@ $(document).ready(function(){
 });
 
 var gridPros = {
+        showRowNumColumn : false,
         editable: false,
         showStateColumn: false,
-        pageRowCount : 10
+        usePaging : false
 };
 
 var columnLayout=[
-    {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"taskBillGrpId", headerText:"Bill Group"},
-    {dataField:"name", headerText:"Customer Name"},
-    {dataField:"taskBillInstNo", headerText:"Installment"},
-    {dataField:"taskBillAmt", headerText:"Amount"},
-    {dataField:"taskRefDtTm", headerText:"Issued" , dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
+    {dataField:"rnum", headerText:"No.", width : 80},
+    {dataField:"salesOrdNo", headerText:"Order No", width : 120},
+    {dataField:"taskBillGrpId", headerText:"Bill Group", width : 120},
+    {dataField:"name", headerText:"Customer Name", width : 250},
+    {dataField:"taskBillInstNo", headerText:"Installment", width : 100},
+    {dataField:"taskBillAmt", headerText:"Amount", width : 100},
+    {dataField:"taskRefDtTm", headerText:"Issued" , width : 160, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
 ];
 
 function fn_initData(){
-	fn_getBillingList();
+    fn_getBillingList(1);
 }
 
-function fn_getBillingList(){
-	Common.ajax("GET", "/payment/selectBillingResultList.do", $("#searchForm").serialize(), function(result) {
+function fn_getBillingList(goPage){ 
+    //페이징 변수 세팅
+    $("#pageNo").val(goPage);   
+    
+    Common.ajax("GET", "/payment/selectBillingResultList.do", $("#searchForm").serialize(), function(result) {
         //AUIGrid.setGridData(myGridID, result);
         console.log(result);
         $("#t_taskId").text(result.master.taskId);
@@ -48,14 +56,47 @@ function fn_getBillingList(){
         var temp = tmpAmt.split(".");
         var amt = commaSeparateNumber(temp[0]);
         $("#t_amount").text("RM"+amt+"."+temp[1]);
-        
         AUIGrid.setGridData(myGridID, result.detail);
+        
+        //전체건수 세팅
+        _totalRowCount = result.totalRowCount;
+        
+        //페이징 처리를 위한 옵션 설정
+        var pagingPros = {
+                // 1페이지에서 보여줄 행의 수
+                rowCount : $("#rowCount").val()
+        };
+        
+        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+        
     });
 }
 
+
+//
+function moveToPage(goPage){
+    //페이징 변수 세팅
+    $("#pageNo").val(goPage);
+    
+    Common.ajax("GET", "/payment/selectBillingResultListPaging.do", $("#searchForm").serialize(), function(result) {
+        
+        AUIGrid.setGridData(myGridID, result.detail);
+        
+        //페이징 처리를 위한 옵션 설정
+        var pagingPros = {
+                // 1페이지에서 보여줄 행의 수
+                rowCount : $("#rowCount").val()
+        };
+        
+        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+        
+    });
+    
+}
+
 function fn_backPage(){
-	//location.replace("/payment/initBillingMgnt.do");
-	location.replace("/payment/initBillingMgnt.do");
+    //location.replace("/payment/initBillingMgnt.do");
+    location.replace("/payment/initBillingMgnt.do");
 }
 
 function commaSeparateNumber(val){
@@ -63,6 +104,17 @@ function commaSeparateNumber(val){
       val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
     }
     return val;
+}
+
+//크리스탈 레포트
+function fn_billList(){    
+    //report 호출
+    var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+    };
+
+    Common.report("reportPDFForm", option);
+    
 }
 
 </script>
@@ -79,13 +131,15 @@ function commaSeparateNumber(val){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Billing Result</h2>
         <ul class="right_opt">
-            <li><p class="btn_blue"><a href="javascript:fn_getBillingList();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
     <section class="search_table"><!-- search_table start -->
         <form name="searchForm" id="searchForm"  method="post">
-            <input type="hidden" name="taskId" id="taskId" value="${taskId }" />
+            <input type="hidden" name="taskId" id="taskId" value="${taskId }" />            
+            <input type="hidden" name="rowCount" id="rowCount" value="10" />
+            <input type="hidden" name="pageNo" id="pageNo" />
 
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
@@ -159,7 +213,14 @@ function commaSeparateNumber(val){
     
     <!-- grid_wrap start -->
     <article id="grid_wrap" class="grid_wrap"></article>
+    <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
     <!-- grid_wrap end -->
 
 
 </section><!-- content end -->
+
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/bill/RentledgerMaster.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL" />    
+    <input type="hidden" id="v_taskId" name="v_taskId" value="${taskId }" />
+</form>
