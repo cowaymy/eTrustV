@@ -1,15 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <style type="text/css">
 .my-custom-up{
     text-align: left;
 }
 </style>
 <script type="text/javaScript">
-var myGridID;
+var discountGridId;
 var selectedGridValue;
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
@@ -21,10 +19,9 @@ var gridPros = {
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	
-	myGridID = GridCommon.createAUIGrid("grid_wrap", discountLayout,null,gridPros);
+	discountGridId = GridCommon.createAUIGrid("discounGrid_wrap", discountLayout,"",gridPros);
 	doGetComboDescription('/common/selectCodeList.do', '74', '','discountType', 'S' , ''); //discount 리스트 조회
-    
+	
 });
 
 var discountLayout = [ 
@@ -108,9 +105,7 @@ var discountLayout = [
             $('#orderNo').val(result.data.basicInfo.ordNo);
             $('#custName').val(result.data.basicInfo.custName);
             
-            //AUIGrid.destroy(myGridID);
-            AUIGrid.setGridData(myGridID, result.data.discountList);
-          
+            AUIGrid.setGridData(discountGridId, result.data.discountList);
         });
     }
     
@@ -219,9 +214,7 @@ var discountLayout = [
             $('#orderNo').val(result.data.basicInfo.ordNo);
             $('#custName').val(result.data.basicInfo.custName);
             
-            AUIGrid.destroy(myGridID); 
-            myGridID = GridCommon.createAUIGrid("grid_wrap", discountLayout,null,gridPros);
-            AUIGrid.setGridData(myGridID, result.data.discountList);
+            AUIGrid.setGridData(discountGridId, result.data.discountList);
             
         });
     }
@@ -247,8 +240,6 @@ var discountLayout = [
                     $('#orderNo').val(result.data.basicInfo.ordNo);
                     $('#custName').val(result.data.basicInfo.custName);
                     
-                    AUIGrid.destroy(myGridID); 
-                    myGridID = GridCommon.createAUIGrid("grid_wrap", discountLayout,null,gridPros);
                     AUIGrid.setGridData(myGridID, result.data.discountList);
                     
                     Common.alert(result.data.resultMessage);
@@ -273,7 +264,7 @@ var discountLayout = [
 <div id="wrap"><!-- wrap start -->
 <section id="content"><!-- content start -->
 	<ul class="path">
-	        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+	        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	        <li>Payment</li>
 	        <li>Billing</li>
 	        <li>Adjustment(Discount)</li>
@@ -306,19 +297,21 @@ var discountLayout = [
 </table><!-- table end -->
         <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
                 <dl class="link_list">
                     <dt>Link</dt>
                     <dd>                    
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="javascript:fn_addNewEntry();">Add New Entry</a></p></li>
                     </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
             </aside>
             <!-- link_btns_wrap end -->
-            <article id="grid_wrap" class="grid_wrap"></article>
+            <article class="grid_wrap" >
+                <div id="discounGrid_wrap" style="width:100%"></div>
+            </article>
 </section><!-- container end -->
 <hr />
 </div><!-- wrap end -->
