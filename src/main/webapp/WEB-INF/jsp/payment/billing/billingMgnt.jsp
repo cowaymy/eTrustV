@@ -69,9 +69,11 @@ function fn_setMonthList(){
 }
 
 function fn_getBillingList(){
-	Common.ajax("GET", "/payment/selectBillingMgntList.do", $("#searchForm").serialize(), function(result) {
-        AUIGrid.setGridData(myGridID, result);
-    });
+	if($("#year").val() != null && $("#month").val() != null){
+		Common.ajax("GET", "/payment/selectBillingMgntList.do", $("#searchForm").serialize(), function(result) {
+	        AUIGrid.setGridData(myGridID, result);
+	    });
+	}
 }
 
 function fn_view(){

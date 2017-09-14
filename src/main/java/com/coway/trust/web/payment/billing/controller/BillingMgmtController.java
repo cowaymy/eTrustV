@@ -1,5 +1,4 @@
 package com.coway.trust.web.payment.billing.controller;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class BillingMgmtController {
 		
 		LOGGER.debug("params : {}", params);
 		
-		if( !("".equals(String.valueOf(params.get("year")))) && !("".equals(String.valueOf(params.get("month")))) ){
+		if( params.get("year") != null && !("".equals(String.valueOf(params.get("year")))) && params.get("month") != null && !("".equals(String.valueOf(params.get("month")))) ){
 			list = billingRentalService.selectBillingMgnt(params);
 		}
 		return ResponseEntity.ok(list);
