@@ -103,7 +103,23 @@ function fn_backPage(){
         </form>
     </section><!-- search_table end -->
 
-    <table class="type1"><!-- table start -->
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt>Link</dt>
+            <dd>
+                <ul class="btns">
+                    <li><p class="link_btn"><a href="javascript:fn_billList()">Bill List</a></p></li>
+                </ul>
+                <ul class="btns">
+                    <li><p class="link_btn type2"><a href="javascript:fn_backPage()">Back to List Page</a></p></li>
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+    </aside><!-- link_btns_wrap end -->
+
+    <table class="type1 mt30"><!-- table start -->
         <caption>table</caption>
         <colgroup>
             <col style="width:140px" />
@@ -128,23 +144,7 @@ function fn_backPage(){
             </tr>
         </tbody>
     </table><!-- table end -->
-
-    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-        <dl class="link_list">
-            <dt>Link</dt>
-            <dd>
-                <ul class="btns">
-                    <li><p class="link_btn"><a href="javascript:fn_billList()">Bill List</a></p></li>
-                </ul>
-                <ul class="btns">
-                    <li><p class="link_btn type2"><a href="javascript:fn_backPage()">Back to List Page</a></p></li>
-                </ul>
-                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-            </dd>
-        </dl>
-    </aside><!-- link_btns_wrap end -->
-
+    
     <!-- grid_wrap start -->
     <article id="grid_wrap" class="grid_wrap"></article>
     <!-- grid_wrap end -->
