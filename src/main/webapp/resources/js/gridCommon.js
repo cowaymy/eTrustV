@@ -55,9 +55,13 @@ var GridCommon = {
 	        // 실제로 #_sGridId 에 그리드 생성
 	        var _gridID = AUIGrid.create(GridCommon.makeGridId(_sGridId), _columnLayout, gridPros);
 	        
-	        $(window).resize(function(){ 
-	            if (_gridID){ 
-	              AUIGrid.resize(_gridID); 
+	        $(window).resize(function(){
+                if (typeof _gridID !== "undefined") {
+                	try{
+                        AUIGrid.resize(_gridID);
+					}catch (e){
+                		console.log("grid is not exist.....[gridID : " + _gridID + "]")
+					}
 	            } 
 	        }); 
 	        
