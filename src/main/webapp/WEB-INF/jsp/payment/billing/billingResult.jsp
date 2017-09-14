@@ -73,13 +73,12 @@ function fn_getBillingList(goPage){
 }
 
 
-//
+//페이지 이동
 function moveToPage(goPage){
     //페이징 변수 세팅
     $("#pageNo").val(goPage);
     
-    Common.ajax("GET", "/payment/selectBillingResultListPaging.do", $("#searchForm").serialize(), function(result) {
-        
+    Common.ajax("GET", "/payment/selectBillingResultListPaging.do", $("#searchForm").serialize(), function(result) {        
         AUIGrid.setGridData(myGridID, result.detail);
         
         //페이징 처리를 위한 옵션 설정
@@ -88,10 +87,8 @@ function moveToPage(goPage){
                 rowCount : $("#rowCount").val()
         };
         
-        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
-        
-    });
-    
+        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);        
+    });    
 }
 
 function fn_backPage(){
@@ -110,11 +107,10 @@ function commaSeparateNumber(val){
 function fn_billList(){    
     //report 호출
     var option = {
-                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+    	    isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
     };
 
-    Common.report("reportPDFForm", option);
-    
+    Common.report("reportPDFForm", option);    
 }
 
 </script>
