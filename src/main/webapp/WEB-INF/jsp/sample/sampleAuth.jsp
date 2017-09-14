@@ -254,6 +254,9 @@ function fn_changeCount(obj){
     PAGE_AUTH.funcUserDefine4   : 사용자정의 권한4
     PAGE_AUTH.funcUserDefine5   : 사용자정의 권한5
 -->
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <li><p class="btn_grid"><a href="#">view</a></p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li>
     </c:if>
