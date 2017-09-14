@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -79,6 +80,7 @@ public class MyMenuServiceImpl implements MyMenuService {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@CacheEvict(value = AppConstants.LEFT_MY_MENU_CACHE, allEntries = true)
 	public void saveMyMenuProgrm(Map<String, ArrayList<Object>> params,SessionVO sessionVO) {
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList		

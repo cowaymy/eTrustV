@@ -151,18 +151,89 @@
     </select>
 
     <select id="selectPageAuth" parameterType="Map" resultType="pageAuthVO">
-/*
-TODO : path 로 권한을 가져오는 쿼리 구현 필요. 현재 임시.
- */
-        SELECT
-            'Y' AS  funcView
-            ,'Y' AS  funcChange
-            ,'Y' AS  funcPrint
-            ,'Y' AS  funcUserDefine1
-            ,'Y' AS  funcUserDefine2
-            ,'Y' AS  funcUserDefine3
-            ,'Y' AS  funcUserDefine4
-            ,'Y' AS  funcUserDefine5
-        FROM dual
+        SELECT   DISTINCT
+                MIN (DECODE (PGM_TRN_CODE, 2260, FUNC_YN) ) AS funcView
+                ,MIN (DECODE (PGM_TRN_CODE, 2261, FUNC_YN) ) AS funcChange
+                ,MIN (DECODE (PGM_TRN_CODE, 2262, FUNC_YN) ) AS funcPrint
+                ,MIN (DECODE (PGM_TRN_CODE, 2263, FUNC_YN) ) AS funcUserDefine1
+                ,MIN (DECODE (PGM_TRN_CODE, 2264, FUNC_YN) ) AS funcUserDefine2
+                ,MIN (DECODE (PGM_TRN_CODE, 2265, FUNC_YN) ) AS funcUserDefine3
+                ,MIN (DECODE (PGM_TRN_CODE, 2266, FUNC_YN) ) AS funcUserDefine4
+                ,MIN (DECODE (PGM_TRN_CODE, 2267, FUNC_YN) ) AS funcUserDefine5
+            FROM (SELECT I.MENU_CODE
+                        ,I.PGM_TRN_CODE
+                        ,I.VALID_DT_FROM
+                        ,I.VALID_DT_TO
+                        ,I.FUNC_YN
+                        ,I.EXIST_YN
+                    FROM (SELECT DISTINCT H.MENU_CODE
+                                         ,H.PGM_TRN_CODE
+                                         ,H.VALID_DT_FROM
+                                         ,H.VALID_DT_TO
+                                         ,H.FUNC_YN
+                                         ,H.EXIST_YN
+                                         ,RANK () OVER (PARTITION BY H.MENU_CODE, H.PGM_TRN_CODE ORDER BY H.FUNC_YN DESC
+                                          ,H.EXIST_YN, H.VALID_DT_FROM, H.VALID_DT_TO DESC) AS RNK
+                                     FROM (
+                                           /* 선택한 권한*/
+                                           SELECT NULL AS AUTH_CODE
+                                                 ,G.MENU_CODE
+                                                 ,G.PGM_TRN_CODE
+                                                 ,G.VALID_DT_FROM
+                                                 ,G.VALID_DT_TO
+                                                 ,G.FUNC_YN
+                                                 ,'N' AS EXIST_YN
+                                             FROM SYS0057M G
+                                            WHERE G.USER_ID = #{userId}
+                                           UNION
+                                           /* 선택한 권한의 매핑된 Role의 상위 권한 */
+                                           SELECT E.AUTH_CODE
+                                                 ,E.MENU_CODE
+                                                 ,E.PGM_TRN_CODE
+                                                 ,NULL AS VALID_DT_FROM
+                                                 ,NULL AS VALID_DT_TO
+                                                 ,E.FUNC_YN
+                                                 ,CASE
+                                                     WHEN F.OWN_USER_ID IS NULL
+                                                     AND E.FUNC_YN = 'Y'
+                                                        THEN 'Y'
+                                                     ELSE 'N'
+                                                  END AS EXIST_YN
+                                             FROM SYS0056M E
+                                                 , (SELECT D.ROLE_ID
+                                                          ,D.AUTH_CODE
+                                                          ,C.USER_ID AS OWN_USER_ID
+                                                      FROM (SELECT     B.USER_ID
+                                                                      ,A.ROLE_ID
+                                                                  FROM SYS0044M A, SYS0045M B
+                                                                 WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                                                   AND B.USER_ID(+) = #{userId}
+                                                            START WITH A.ROLE_ID = B.ROLE_ID
+                                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                                          ,SYS0054M D
+                                                     WHERE C.ROLE_ID = D.ROLE_ID) F
+                                            WHERE E.AUTH_CODE = F.AUTH_CODE
+                                           UNION
+                                           /* 예외적으로 부여받은 개인권한 */
+                                           SELECT A.AUTH_CODE
+                                                 ,A.MENU_CODE
+                                                 ,A.PGM_TRN_CODE
+                                                 ,B.VALID_DT_FROM
+                                                 ,B.VALID_DT_TO
+                                                 ,A.FUNC_YN
+                                                 ,'N' AS EXIST_YN
+                                             FROM SYS0056M A, SYS0055M B
+                                            WHERE A.AUTH_CODE = B.AUTH_CODE
+                                              AND B.USER_ID = #{userId}) H) I
+                   WHERE I.RNK = 1
+                     AND EXISTS (
+                            SELECT 1
+                              FROM SYS0050M A, SYS0051M B
+                             WHERE A.PGM_CODE = B.PGM_CODE
+                               AND A.PGM_PATH = #{pgmPath}
+                               AND I.MENU_CODE = B.MENU_CODE)
+                     AND SYSDATE BETWEEN TO_DATE (NVL (I.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+                                     AND TO_DATE (NVL (I.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24') ) T
+        GROUP BY T.MENU_CODE
     </select>
 </mapper>

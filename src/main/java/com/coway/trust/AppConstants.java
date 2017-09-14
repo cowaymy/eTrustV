@@ -78,6 +78,12 @@ public class AppConstants {
 	public static final String XLSX = "xlsx";
 
 	/**
+	 * ehcache
+	 */
+	public static final String LEFT_MENU_CACHE = "menu_cache";
+	public static final String LEFT_MY_MENU_CACHE = "my_menu_cache";
+
+	/**
 	 * session info
 	 */
 	public static final String SESSION_INFO = "SESSION_INFO";

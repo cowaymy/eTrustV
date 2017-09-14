@@ -1,8 +1,9 @@
 package com.coway.trust.cmmn.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SessionVO {
+public class SessionVO implements Serializable{
 
 	private int userId;
 	private String userName; // AS-IS 에서 userName을 실제적인 로그인 ID로 사용함.

@@ -68,6 +68,8 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
 		if (modelAndView != null) {
 			Map<String, Object> params = new HashMap<>();
+			params.put("userId", sessionVO.getUserId());
+			params.put("pgmPath", request.getRequestURI());
 			modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
 			modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
 			modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));

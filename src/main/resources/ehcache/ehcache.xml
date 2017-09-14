@@ -1,6 +1,6 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true" monitoring="autodetect" dynamicConfig="true">
     <diskStore path="${ehcache.diskStore}" />
-    <cache name="menu-cache"
+    <cache name="menu_cache"
                 maxEntriesLocalHeap="100"
                 maxEntriesLocalDisk="100"
                 diskExpiryThreadIntervalSeconds="300"
@@ -8,5 +8,15 @@
                 timeToLiveSeconds="0"
                 overflowToDisk="true"
                 memoryStoreEvictionPolicy="LRU">
-    </cache> 
+    </cache>
+
+    <cache name="my_menu_cache"
+           maxEntriesLocalHeap="100"
+           maxEntriesLocalDisk="100"
+           diskExpiryThreadIntervalSeconds="300"
+           timeToIdleSeconds="180"
+           timeToLiveSeconds="0"
+           overflowToDisk="true"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
 </ehcache>
