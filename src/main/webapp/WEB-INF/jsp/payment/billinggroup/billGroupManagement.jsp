@@ -1609,7 +1609,7 @@ var addOrderLayout = [
 <div id="wrap"><!-- wrap start -->
 <section id="content"><!-- content start -->
 	<ul class="path">
-	        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+	        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	        <li>Payment</li>
             <li>Billing Group</li>
             <li>Management</li>
@@ -1647,7 +1647,7 @@ var addOrderLayout = [
 
 <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
                 <dl class="link_list">
                     <dt>Link</dt>
                     <dd>                    
@@ -1657,7 +1657,7 @@ var addOrderLayout = [
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="javascript:fn_goAddNwGrp();">Add New Group</a></p></li>                    
                     </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
             </aside>
