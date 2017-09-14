@@ -98,11 +98,14 @@ public class BillingMgmtController {
 		map.put("taskId", taskId);
 		
 		EgovMap master = billingRantalService.selectBillingMaster(map);
+		System.out.println("master : " + master);
 		List<EgovMap> detail = billingRantalService.selectBillingDetail(map);
-		                                                     
+		System.out.println("detail.size : " + detail.size());                                                     
 		
+		if(detail.size() > 0){
 		result.put("master", master);
 		result.put("detail", detail);
+		}
 		
 		return ResponseEntity.ok(result);
 	}
@@ -146,14 +149,19 @@ public class BillingMgmtController {
 		//System.out.println("today : " + curDate + ", curYear : " + curYear + ", curMonth : " + curMonth);
 		int result = 0;
 		if(curYear < year){
-			result = billingRantalService.callEaryBillProcedure(map);
+			billingRantalService.callEaryBillProcedure(map);
+			result = Integer.parseInt(String.valueOf(map.get("p1")));
 		}else if(curYear == year){
 			if(curMonth < month){
-				result = billingRantalService.callEaryBillProcedure(map);
+				billingRantalService.callEaryBillProcedure(map);
+				result = Integer.parseInt(String.valueOf(map.get("p1")));
 			}else{
-				result = billingRantalService.callBillProcedure(map);
+				billingRantalService.callBillProcedure(map);
+				result = Integer.parseInt(String.valueOf(map.get("p1")));
 			}
 		}
+		
+		System.out.println("result : " + result);
 		if(result < 1){
 			message="Stopped With Errors.";
 		}else{
