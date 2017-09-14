@@ -4,6 +4,7 @@
 package com.coway.trust.web.commission.calculation;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -169,6 +172,96 @@ public class CommissionCalculationController {
 		}
 
 		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
+	
+	/**
+	 * Call Weekly  management
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/weeklyCommissionMng.do")
+	public String weeklyCommissionMng(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		String dt = CommonUtils.getNowDate().substring(0, 6);	
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("year",  Integer.parseInt(dt.substring(3)));
+		model.addAttribute("month", Integer.parseInt(dt.substring(0,2)));
+		
+		// 호출될 화면
+		return "commission/commissionWeeklyMng";
+	}
+	
+	/**
+	 * Weekly Ajax Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectWeeklyList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectWeeklyList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		// 조회.
+		List<EgovMap> weeklyList = commissionCalculationService.selectWeeklyList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(weeklyList);
+	}
+	
+	/**
+	 * Weekly  management
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/saveCommissionWeeklyGrid.do", method = RequestMethod.POST)
+	public  ResponseEntity<ReturnMessage>  saveCommissionWeeklyGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+
+		String dt = CommonUtils.getNowDate().substring(0, 6);	
+		dt = dt.substring(4) + "/" + dt.substring(0, 4);
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";			
+		}else{
+			loginId=String.valueOf(sessionVO.getUserId());
+		}
+		
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		
+		int cnt = 0;
+		
+		if (addList.size() > 0) {			
+			cnt = commissionCalculationService.addWeeklyCommissionGrid(addList, loginId);
+		}
+		if (udtList.size() > 0) {
+			cnt = commissionCalculationService.udtWeeklyCommissionGrid(udtList,loginId);
+		}
+		
+		model.addAttribute("searchDt", dt);
+		model.addAttribute("year",  Integer.parseInt(dt.substring(3)));
+		model.addAttribute("month", Integer.parseInt(dt.substring(0,2)));
+		
+		logger.info("수정 : {}", udtList.toString());
+		logger.info("추가 : {}", addList.toString());
+		//logger.info("삭제 : {}", delList.toString());
+		logger.info("카운트 : {}", cnt);
+
+		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));

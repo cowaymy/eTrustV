@@ -70,4 +70,31 @@ public interface CommissionCalculationMapper {
 	
 	Map<String, Object> callCommProcedure(Map<String, Object> param);
 	
+	/**
+	 * search Organization Gruop List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectWeeklyList(Map<String, Object> params);
+	
+	/**
+	 * add coommission rule book management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int addWeeklyCommissionGrid(Map<String, Object> params);
+
+	/**
+	 * update coommission rule book management Data : use_yn
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int udtWeeklyCommissionGrid(Map<String, Object> params);
+	
 }
