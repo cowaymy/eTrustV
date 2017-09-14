@@ -22,22 +22,14 @@ public class UserMenuMappingServiceImpl implements UserMenuMappingService {
 
 	@Override
 	public List<EgovMap> selectUserList(Map<String, Object> params, SessionVO sessionVO) {
-		int loginId = 0;
-		if(sessionVO != null){
-			loginId = sessionVO.getUserId();
-		}
-		params.put("updUserId", loginId); // session Id Setting
+		params.put("updUserId", sessionVO.getUserId()); // session Id Setting
 
 		return userMenuMappingMapper.selectUserList(params);
 	}
 
 	@Override
 	public List<EgovMap> selectUserMenuMappingList(Map<String, Object> params,SessionVO sessionVO) {
-		int loginId = 0;
-		if(sessionVO != null){
-			loginId = sessionVO.getUserId();
-		}
-		params.put("updUserId", loginId); // session Id Setting
+		params.put("updUserId", sessionVO.getUserId()); // session Id Setting
 
 		return userMenuMappingMapper.selectUserMenuMappingList(params);
 	}
@@ -48,10 +40,7 @@ public class UserMenuMappingServiceImpl implements UserMenuMappingService {
 	public void saveUserMenuMappingList(Map<String, ArrayList<Object>> params,SessionVO sessionVO) {
 		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 
-		int loginId = 0;
-		if(sessionVO != null){
-			loginId = sessionVO.getUserId();
-		}
+		int loginId = sessionVO.getUserId();
 
 		for (Object list : updateList){
 			Map<String, Object> map = (Map<String, Object>) list;
