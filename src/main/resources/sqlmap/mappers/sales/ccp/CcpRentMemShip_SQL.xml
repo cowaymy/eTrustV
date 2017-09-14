@@ -1146,7 +1146,7 @@
 				    TRMNAT_STUS_ID, 
 				    TRMNAT_REQSTER, 
 				    TRMNAT_RESN_ID, 
-				    TRMNAT_REM,  -
+				    TRMNAT_REM,  
 				    TRMNAT_OBLIGT_PRIOD, 
 				    TRMNAT_CNTRCT_SUB_PRIOD,
 				    TRMNAT_CNTRCT_RENTAL, 
@@ -1155,7 +1155,7 @@
 				    TRMNAT_CRT_USER_ID, 
 				    TRMNAT_UPD_DT, 
 				    TRMNAT_UPD_USER_ID )
-				  VALUES ( '시퀀스',
+				  VALUES ( SAL0086D_TRMNAT_ID_SEQ.NEXTVAL,
 					           #{docNo}, 
 					           SYSDATE, 
 					           #{updCntrcId} , 

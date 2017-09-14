@@ -269,10 +269,11 @@ public class CcpRentMemShipServiceImpl implements CcpRentMemShipService {
 				
 				for (int idx = 0; idx < subList.size(); idx++) {
 					//params Set 
+					
 					params.put("subContractId", subList.get(idx).get("cntrctId")); 
 					params.put("rentalStus", SalesConstants.CONTRACT_RENTAL_STATUS_CANCEL);
 					LOGGER.info("############## 10 > 2-2 update Start" + idx);
-					ccpRentMemShipMapper.updateContractSubCancel(subList.get(idx));
+					ccpRentMemShipMapper.updateContractSubCancel(params);
 					LOGGER.info("############## 10 > 2-2 update End" + idx);
 				}
 				
@@ -283,6 +284,7 @@ public class CcpRentMemShipServiceImpl implements CcpRentMemShipService {
 			if(srvIdList != null && srvIdList.size() > 0){
 				
 				for (int idx = 0; idx < srvIdList.size(); idx++) {
+					
 					params.put("srvPrdId", srvIdList.get(idx).get("srvPrdId"));  // 1195933 을 가져옴
 					params.put("srvPrdStusIdentify", SalesConstants.SRV_PRD_STUS_IDENTIFY);
 					LOGGER.info("############## 10 > 2-3 update Start" + idx);

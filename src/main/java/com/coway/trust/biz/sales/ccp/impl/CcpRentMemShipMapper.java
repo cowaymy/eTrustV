@@ -67,7 +67,7 @@ public interface CcpRentMemShipMapper {
 	
 	List<EgovMap> selectContractSubList(Map<String, Object> params) throws Exception;
 	
-	void updateContractSubCancel(EgovMap params) throws Exception;
+	void updateContractSubCancel(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> getSrvContractIdList(Map<String, Object> params) throws Exception;
 	
