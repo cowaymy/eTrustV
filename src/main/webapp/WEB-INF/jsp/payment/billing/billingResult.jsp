@@ -42,7 +42,12 @@ function fn_getBillingList(){
         $("#t_taskId").text(result.master.taskId);
         $("#t_billingMNY").text(result.master.billingMonth + "/" + result.master.billingYear);
         $("#t_count").text(result.master.totCnt);
-        $("#t_amount").text(result.master.totAmt);
+        
+        //금액 천단위 콤마 + 소수 둘쨰자리 계산
+        var tmpAmt = ""+result.master.totAmt.toFixed(2);
+        var temp = tmpAmt.split(".");
+        var amt = commaSeparateNumber(temp[0]);
+        $("#t_amount").text("RM"+amt+"."+temp[1]);
         
         AUIGrid.setGridData(myGridID, result.detail);
     });
@@ -51,6 +56,13 @@ function fn_getBillingList(){
 function fn_backPage(){
 	//location.replace("/payment/initBillingMgnt.do");
 	location.replace("/payment/initBillingMgnt.do");
+}
+
+function commaSeparateNumber(val){
+    while (/(\d+)(\d{3})/.test(val.toString())){
+      val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
 }
 
 </script>
