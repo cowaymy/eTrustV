@@ -7,7 +7,7 @@ $(document).ready(function(){
    
 	$("#year").val(curDate.getFullYear());
 	
-	var tmp=((curDate.getMonth()+1) % 12);
+	var tmp = curDate.getMonth()+1;
 	if(tmp < 10)
 		tmp = "0" + tmp;
 	else
