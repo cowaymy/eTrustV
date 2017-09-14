@@ -104,6 +104,27 @@ function fn_createBills(){
 		   });
 	}
 }
+
+function fn_complete(){
+	if(selectedGridValue != undefined){
+		var taskConfirmed = AUIGrid.getCellValue(myGridID , selectedGridValue , "isCnfm");
+		console.log(taskConfirmed);
+		if(taskConfirmed == 0){
+			var taskStatus = AUIGrid.getCellValue(myGridID , selectedGridValue , "stus");
+			console.log(taskStatus);
+			if(taskStatus == 'SUCCESS'){
+				var success = 0;
+				
+			}else{
+				Common.alert("Failed to save request. Selected Task ID should be Success Status");
+			}
+		}else{
+			Common.alert("Failed to save request. Selected Task ID Was Generated.");
+		}
+	}else{
+		Common.alert("No Task ID Selected.");
+	}
+}
 </script>
 
 <!-- content start -->
@@ -171,7 +192,7 @@ function fn_createBills(){
                         <li><p class="link_btn type2"><a href="javascript:fn_createBills()">Create Bills</a></p></li>
                         <li><p class="link_btn type2"><a href="javascript:fn_createBills()">Create Early Bills</a></p></li>
                         <li><p class="link_btn type2"><a href="javascript:fn_view()">View Details</a></p></li>
-                        <li><p class="link_btn type2"><a href="#">Complete Selected Billing</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_complete()">Complete Selected Billing</a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
