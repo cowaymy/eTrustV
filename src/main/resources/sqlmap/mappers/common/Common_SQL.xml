@@ -1085,7 +1085,6 @@
           FROM SYS0028M S28M
          WHERE 1 = 1
            AND S28M.WH_LOC_STUS_ID = 1
-           AND S28M.WH_LOC_TYPE_ID = 277
            <if test="grade != null and grade != ''">
               <choose>
                   <when test='equv !=null and equv == "N"'>
