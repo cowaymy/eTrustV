@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderModifyMapper">
+    
+    <update id="updateSalesOrderM" parameterType="Map">
+        UPDATE SAL0001D
+           SET REF_NO           = #{ordRefNo}
+             , MEM_ID           = #{salesmanId}
+             , BRNCH_ID         = #{keyInBranch}
+             , APP_TYPE_ID      = #{appTypeId}
+             , REM              = #{ordRem}
+             , UPD_DT           = SYSDATE
+             , UPD_USER_ID      = #{updUserId}
+             , CUST_PO_NO       = #{ordPoNo}
+             , INST_PRIOD       = #{installDur}
+             , DEPT_CODE        = #{orderDeptCode}
+             , GRP_CODE         = #{orderGrpCode}
+             , ORG_CODE         = #{orderOrgCode}
+             , SALES_HM_ID      = #{deptMemId}
+             , SALES_SM_ID      = #{grpMemId}
+             , SALES_GM_ID      = #{orgMemId}
+         WHERE SALES_ORD_ID     = #{salesOrdId}
+    </update>
+    
+    <select id="selectBillGroupByBillGroupID" parameterType="Map" resultType="egovMap">
+        SELECT T1.CUST_BILL_ID
+             , T1.CUST_BILL_SO_ID
+             , T1.CUST_BILL_CUST_ID
+             , T1.CUST_BILL_CNT_ID
+             , T1.CUST_BILL_ADD_ID
+             , T1.CUST_BILL_REM
+             , T1.CUST_BILL_GRP_NO
+             , T1.CUST_BILL_CRT_USER_ID
+             , T1.CUST_BILL_EMAIL
+             , T1.CUST_BILL_IS_ESTM
+             , T1.CUST_BILL_IS_SMS
+             , T1.CUST_BILL_IS_POST
+             , T2.NAME
+             , T2.NRIC
+             , T2.TYPE_ID
+             , T3.SALES_ORD_NO
+             , T4.CODE_NAME
+             , T1.CUST_BILL_CRT_DT
+             , T5.USER_NAME
+             , T1.CUST_BILL_EMAIL_ADD
+          FROM SAL0024D T1
+          JOIN SAL0029D T2 ON T2.CUST_ID = T1.CUST_BILL_CUST_ID
+          JOIN SAL0001D T3 ON T3.SALES_ORD_ID = T1.CUST_BILL_SO_ID
+          JOIN SYS0013M T4 ON T4.CODE_ID = T2.TYPE_ID
+          LEFT
+          JOIN SYS0047M T5 ON T5.USER_ID = T1.CUST_BILL_CRT_USER_ID
+         WHERE T1.CUST_BILL_ID = #{custBillId}
+    </select>
+    
+    <select id="selectBillGroupOrder" parameterType="Map" resultType="egovMap">
+		SELECT TT.SALES_ORD_ID
+		     , TT.SALES_ORD_NO
+		     , TT.CODE CODE
+		     , TT.SALES_DT
+		     , TT.STK
+		     , TT.STUS_CODE_ID
+		     , TT.MTH_RENT_AMT
+		     , TT.CUST_ID
+		  FROM
+		     ( SELECT T.SALES_ORD_ID
+		            , T.SALES_ORD_NO
+		            , T.CODE CODE
+		            , T.SALES_DT
+		            , T.STK
+		            , T.STUS_CODE_ID
+		            , T.MTH_RENT_AMT
+		            , T.CUST_ID
+		         FROM
+		            ( SELECT DISTINCT T2.SALES_ORD_ID
+		                   , T2.SALES_ORD_NO
+		                   , T5.CODE
+		                   , T2.SALES_DT
+		                   , T4.STK_CODE || ' - ' || T4.STK_DESC stk
+		                   , T2.STUS_CODE_ID
+		                   , T2.MTH_RENT_AMT
+		                   , T2.CUST_ID
+		                FROM SAL0024D T1
+		                JOIN SAL0001D T2
+		                  ON T2.CUST_BILL_ID = T1.CUST_BILL_ID
+		                 AND 8 != T2.STUS_CODE_ID
+		                JOIN SAL0002D T3 ON T3.SALES_ORD_ID = T2.SALES_ORD_ID
+		                JOIN SYS0026M T4 ON T4.STK_ID = T3.ITM_STK_ID
+		                JOIN SYS0038M T5 ON T5.STUS_CODE_ID = T2.STUS_CODE_ID
+		               WHERE T1.CUST_BILL_ID = #{custBillId}
+		            ) T
+		     ) TT
+		 ORDER BY SALES_ORD_NO ASC
+    </select>
+
+    <insert id="insertCustBillMasterHistory" parameterType="custBillMasterHistoryVO">
+      <selectKey keyProperty="histId" resultType="Integer" order="BEFORE">
+        SELECT SAL0025D_HIST_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+		INSERT
+		  INTO SAL0025D
+		     ( HIST_ID
+		     , CUST_BILL_ID
+		     , HIST_CRT_DT
+		     , HIST_CRT_USER_ID
+		     , USER_HIST_REM
+		     , SALES_ORD_ID_OLD
+		     , SALES_ORD_ID_NW
+		     , CNTC_ID_OLD
+		     , CNTC_ID_NW
+		     , ADDR_ID_OLD
+		     , ADDR_ID_NW
+		     , STUS_ID_OLD
+		     , STUS_ID_NW
+		     , REM_OLD
+		     , REM_NW
+		     , EMAIL_OLD
+		     , EMAIL_NW
+		     , IS_E_STATE_OLD
+		     , IS_E_STATE_NW
+		     , IS_SMS_OLD
+		     , IS_SMS_NW
+		     , IS_POST_OLD
+		     , IS_POST_NW
+		     , TYPE_ID
+		     , SYS_HIST_REM
+		     , EMAIL_ADD_OLD
+		     , EMAIL_ADD_NW
+		     )
+		VALUES
+		     ( #{histId}
+		     , #{custBillId}
+		     , SYSDATE
+		     , #{histCrtUserId}
+		     , #{userHistRem}
+		     , #{salesOrdIdOld}
+		     , #{salesOrdIdNw}
+		     , #{cntcIdOld}
+		     , #{cntcIdNw}
+		     , #{addrIdOld}
+		     , #{addrIdNw}
+		     , #{stusIdOld}
+		     , #{stusIdNw}
+		     , #{remOld}
+		     , #{remNw}
+		     , #{emailOld}
+		     , #{emailNw}
+		     , #{isEStateOld}
+		     , #{isEStateNw}
+		     , #{isSmsOld}
+		     , #{isSmsNw}
+		     , #{isPostOld}
+		     , #{isPostNw}
+		     , #{typeId}
+		     , #{sysHistRem}
+		     , #{emailAddOld}
+		     , #{emailAddNw}
+		     )
+    </insert>
+    
+    <update id="updateCustBillMaster" parameterType="Map">
+        UPDATE SAL0024D
+           SET CUST_BILL_UPD_USER_ID = #{updUserId}
+             , CUST_BILL_UPD_DT      = SYSDATE
+           <if test='custBillAddId != null and custBillAddId !=0'>
+             , CUST_BILL_ADD_ID      = #{custBillAddId}
+           </if>
+           <if test='custBillCntId != null and custBillCntId !=0'>
+             , CUST_BILL_CNT_ID      = #{custBillCntId}
+           </if>
+         WHERE CUST_BILL_ID          = #{custBillId}
+    </update>
+    
+    <update id="updateCustAddId" parameterType="Map">
+        UPDATE SAL0001D
+           SET UPD_USER_ID  = #{updUserId}
+             , UPD_DT       = SYSDATE
+           <if test='custBillAddId != null and custBillAddId !=0'>
+             , CUST_ADD_ID  = #{custBillAddId}
+           </if>
+           <if test='custBillCntId != null and custBillCntId !=0'>
+             , CUST_CNT_ID  = #{custBillCntId}
+           </if>
+         WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+</mapper>

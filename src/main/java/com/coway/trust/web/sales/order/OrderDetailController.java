@@ -58,6 +58,19 @@ public class OrderDetailController {
 		return "sales/order/orderDetailPop";
 	}
 	
+	@RequestMapping(value = "/selectBasicInfoJson.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectBasicInfoJson(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		EgovMap basicInfo = orderDetailService.selectBasicInfo(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(basicInfo);
+	}
+	
 	@RequestMapping(value = "/selectSameRentalGrpOrderJsonList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSameRentalGrpOrderJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
 

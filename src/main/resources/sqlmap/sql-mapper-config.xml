@@ -68,6 +68,8 @@
         <typeAlias alias="salesPromoMVO" type="com.coway.trust.biz.sales.promotion.vo.SalesPromoMVO"/>
         <typeAlias alias="salesPromoDVO" type="com.coway.trust.biz.sales.promotion.vo.SalesPromoDVO"/>
         <typeAlias alias="salesPromoFreeGiftVO" type="com.coway.trust.biz.sales.promotion.vo.SalesPromoFreeGiftVO"/>
+        <!-- Sales Edit -->
+        <typeAlias alias="custBillMasterHistoryVO" type="com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO"/>
         
         <!-- Enrollment Result Update -->
         <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />

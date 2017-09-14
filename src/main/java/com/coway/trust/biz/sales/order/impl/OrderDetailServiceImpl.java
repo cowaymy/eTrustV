@@ -54,6 +54,15 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
+	public EgovMap selectBasicInfo(Map<String, Object> params) throws Exception {
+
+		//Basic Info
+		EgovMap basicInfo = orderDetailMapper.selectBasicInfo(params);
+		
+		return basicInfo;
+	}
+	
+	@Override
 	public EgovMap selectOrderBasicInfo(Map<String, Object> params) throws Exception {
 		
 		EgovMap orderDetail = new EgovMap();

@@ -3,25 +3,27 @@
  */
 package com.coway.trust.web.sales.order;
 
-import java.util.List;
+import java.text.ParseException;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
-import com.coway.trust.web.sales.SalesConstants;
-
+import com.coway.trust.biz.sales.order.OrderModifyService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
@@ -37,11 +39,18 @@ public class OrderModifyController {
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
 	
+	@Resource(name = "orderModifyService")
+	private OrderModifyService orderModifyService;
+	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
 	@RequestMapping(value = "/orderModifyPop.do")
 	public String orderModifyPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 		
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@###### ordEditType : "+params.get("ordEditType"));
 		logger.debug("!@##############################################################################");
 		
 		//[Tap]Basic Info
@@ -49,8 +58,76 @@ public class OrderModifyController {
 		
 		model.put("orderDetail", orderDetail);
 		model.put("salesOrderId", params.get("salesOrderId"));
+		model.put("ordEditType", params.get("ordEditType"));
 		
 		return "sales/order/orderModifyPop";
 	}
 
+	@RequestMapping(value = "/updateOrderBasinInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateOrderBasinInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		orderModifyService.updateOrderBasinInfo(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Order Number : " + params.get("salesOrdNo") + "</br>Information successfully updated.");
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/updateMailingAddress.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateMailingAddress(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+		
+		orderModifyService.updateOrderMailingAddress(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Mailing address has been updated.");
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateCntcPerson.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCntcPerson(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+		
+		orderModifyService.updateCntcPerson(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Mailing address has been updated.");
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectBillGrpMailingAddrJson.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectBillGrpMailingAddrJson(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		EgovMap resultMap = orderModifyService.selectBillGrpMailingAddr(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+	
+	@RequestMapping(value = "/selectBillGrpCntcPersonJson.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectBillGrpCntcPerson(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		EgovMap resultMap = orderModifyService.selectBillGrpCntcPerson(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
 }

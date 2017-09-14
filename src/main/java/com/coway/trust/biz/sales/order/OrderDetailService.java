@@ -31,4 +31,6 @@ public interface OrderDetailService {
 	List<EgovMap> selectDiscountList(Map<String, Object> params);
 
 	List<EgovMap> selectLast6MonthTransList(Map<String, Object> params);
+
+	EgovMap selectBasicInfo(Map<String, Object> params) throws Exception;
 }

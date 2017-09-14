@@ -184,7 +184,10 @@
              , T1.ADV_BILL
              , T1.CNVR_SCHEME_ID
              , T1.CUST_CARE_CNT_ID
-             , T1.EMP_TYPE
+             , T1.EMP_CHK
+             , T1.EX_TRADE
+             , T1.ECASH
+             , T1.STK_LOC
           FROM SAL0001D T1
          WHERE T1.SALES_ORD_ID = #{salesOrdId}
          <if test='appTypeId != null and appTypeId !=0'>

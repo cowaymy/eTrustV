@@ -377,13 +377,13 @@
 
     <select id="selectOrderInstallationInfoByOrderID" parameterType="Map" resultType="egovMap">
         SELECT V1.ORD_ID
-             , V1.INST_ADDR1
-             , V1.INST_ADDR2
-             , V1.INST_ADDR3
-             , V1.INST_CNTY
-             , V1.INST_STATE
+             , V1.INST_ADDR_DTL
+             , V1.INST_STREET
              , V1.INST_AREA
-             , V1.INST_POST_CODE
+             , V1.INST_POSTCODE
+             , V1.INST_CITY
+             , V1.INST_STATE
+             , V1.INST_COUNTRY
              , V1.INST_CNT_NAME
              , V1.INST_CNT_NRIC
              , V1.INST_CNT_EMAIL
@@ -625,10 +625,12 @@
     <select id="selectOrderMailingInfoByOrderID" parameterType="Map" resultType="egovMap">
         SELECT V1.ORD_ID
              , V1.ADDR_DTL
-             , V1.MAIL_CNTY
-             , V1.MAIL_STATE
+             , V1.STREET
              , V1.MAIL_AREA
              , V1.MAIL_POST_CODE
+             , V1.MAIL_CITY
+             , V1.MAIL_STATE
+             , V1.MAIL_CNTY
              , V1.MAIL_CNT_NAME
              , V1.MAIL_CNT_NRIC
              , V1.MAIL_CNT_EMAIL

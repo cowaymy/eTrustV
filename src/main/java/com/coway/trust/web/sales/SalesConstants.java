@@ -116,4 +116,16 @@ public class SalesConstants {
 	
 	//Order Investigation
 	public static final String  INVEST_CODEID = "73"; // Investigation (Get DocNo)
+	
+	//Order Edit Type
+	public static final String ORDER_EDIT_TYPE_CD_BSC = "BSC"; //Basic Info
+	public static final String ORDER_EDIT_TYPE_CD_MAL = "MAL"; //Mailing Address
+	public static final String ORDER_EDIT_TYPE_CD_CNT = "CNT"; //Contact Person
+	public static final String ORDER_EDIT_TYPE_CD_NRC = "NRC"; //Customer NRIC
+	public static final String ORDER_EDIT_TYPE_CD_INS = "INS"; //Install Info
+	public static final String ORDER_EDIT_TYPE_CD_PAY = "PAY"; //Payment Channel
+	public static final String ORDER_EDIT_TYPE_CD_PRM = "PRM"; //Promotion
+	public static final String ORDER_EDIT_TYPE_CD_DOC = "DOC"; //Documents Submission
+	public static final String ORDER_EDIT_TYPE_CD_GST = "GST"; //GST Certification
+	public static final String ORDER_EDIT_TYPE_CD_RFR = "RFR"; //Referrals Info
 }
