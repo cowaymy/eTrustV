@@ -240,7 +240,7 @@ var discountLayout = [
                     $('#orderNo').val(result.data.basicInfo.ordNo);
                     $('#custName').val(result.data.basicInfo.custName);
                     
-                    AUIGrid.setGridData(myGridID, result.data.discountList);
+                    AUIGrid.setGridData(discountGridId, result.data.discountList);
                     
                     Common.alert(result.data.resultMessage);
                 });
