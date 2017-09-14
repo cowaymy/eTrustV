@@ -26,8 +26,19 @@ function fn_generateClick(){
 		Common.alert("Sorry. Bill raw data before April 2015 cannot be generated.");
 	}else if(inputDate > curDate){
 		Common.alert("Sorry. Bill raw data beyond current date cannot be generated.");
+	}else{
+		
+		//report form에 parameter 세팅
+		$("#reportPDFForm #v_ScheduleYear").val($("#year").val());
+		$("#reportPDFForm #v_ScheduleMonth").val($("#month").val());			        
+	    
+		//report 호출
+        var option = {
+        	    isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+
+        Common.report("reportPDFForm", option);
 	}
-	
 }
 
 </script>
@@ -44,7 +55,7 @@ function fn_generateClick(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Monthly Bill Raw Data</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getBillingList();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_generateClick();"><span class="search"></span>Generate</a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->
@@ -85,23 +96,17 @@ function fn_generateClick(){
                                 <option value="12">DECEMBER</option>
                             </select>
                         </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <input type="button" id="btnGenerate" name="btnGenerate" value="Generate" onClick="javascript:fn_generateClick()"/>
-                        </td>
-                    </tr>
+                    </tr>                    
                  </tbody>
               </table>
         </form>
         </section>
-
- <!-- search_result start -->
-<section class="search_result">     
-    <!-- grid_wrap start -->
-    <article id="grid_wrap" class="grid_wrap"></article>
-    <!-- grid_wrap end -->
 </section>
-</section>
-
 <!-- popup_wrap end -->
+
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/MonthlyBillRawData.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+    <input type="hidden" id="v_ScheduleMonth" name="v_ScheduleMonth" />
+    <input type="hidden" id="v_ScheduleYear" name="v_ScheduleYear" />
+</form>
