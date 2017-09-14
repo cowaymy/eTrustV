@@ -48,12 +48,12 @@ public interface BillingMgmtMapper {
 	 * @param params
 	 * @return
 	 */
-	int callEaryBillProcedure(Map<String, Object> params);
+	void callEaryBillProcedure(Map<String, Object> params);
 	
 	/**
 	 * createBill 수행
 	 * @param params
 	 * @return
 	 */
-	int callBillProcedure(Map<String, Object> params);
+	void callBillProcedure(Map<String, Object> params);
 }

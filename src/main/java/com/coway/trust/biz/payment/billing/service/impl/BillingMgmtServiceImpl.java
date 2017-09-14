@@ -60,13 +60,13 @@ public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements B
 	}
 
 	@Override
-	public int callEaryBillProcedure(Map<String, Object> params) {
-		return billingRantalMapper.callEaryBillProcedure(params);
+	public void callEaryBillProcedure(Map<String, Object> params) {
+		billingRantalMapper.callEaryBillProcedure(params);
 	}
 
 	@Override
-	public int callBillProcedure(Map<String, Object> params) {
-		return billingRantalMapper.callBillProcedure(params);
+	public void callBillProcedure(Map<String, Object> params) {
+		billingRantalMapper.callBillProcedure(params);
 	}
 	
 	
