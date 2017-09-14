@@ -264,7 +264,7 @@
 		CNTRCT_ID )
 		VALUES 
 		(
-		(SELECT NVL(MAX(DSCNT_ENTRY_ID), 0)+1 FROM PAY0054D),
+		PAY0054D_SEQ.NEXTVAL,
 		#{salesOrdId}, 
 		#{discountType}, 
 		#{discountAmount}, 
