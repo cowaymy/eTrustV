@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -76,6 +77,7 @@ public class AuthRoleMngController
 	
 	// save UserExptAuth
 		@RequestMapping(value = "/saveUserExceptAuthMapping.do", method = RequestMethod.POST)
+		@CacheEvict(value = AppConstants.LEFT_MENU_CACHE, allEntries = true)
 		public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO) 
 		{
 			List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
