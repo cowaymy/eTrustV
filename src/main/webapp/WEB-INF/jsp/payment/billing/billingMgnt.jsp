@@ -56,7 +56,7 @@ function fn_setYearList(startYear, endYear){
 	//console.log("startYear : " + startYear +", endYear : " + endYear);
 	//$("#year option").remove();
 	$("#year").append("<option value=''>issueYear</option>");
-	for(var i=startYear; i<=endYear; i++){
+	for(var i=startYear; i<=endYear+1; i++){
 		$("#year").append("<option value="+i +">"+i+"</option>");
 	}
 }
