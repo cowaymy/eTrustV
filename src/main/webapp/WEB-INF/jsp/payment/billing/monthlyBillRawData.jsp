@@ -7,12 +7,12 @@ $(document).ready(function(){
    
 	$("#year").val(curDate.getFullYear());
 	
-	var tmp;
-	if(curDate.getMonth()+1 < 10)
-		tmp = "0" + ((curDate.getMonth()+1) % 12);
+	var tmp=((curDate.getMonth()+1) % 12);
+	if(tmp < 10)
+		tmp = "0" + tmp;
 	else
-		tmp = "" + ((curDate.getMonth()+1) % 12);
-	
+		tmp = "" +tmp;
+
 	$("#month").val(tmp);
 	
 });
@@ -46,7 +46,7 @@ function fn_generateClick(){
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Monthly Bill Raw Data</li>
     </ul>
     
