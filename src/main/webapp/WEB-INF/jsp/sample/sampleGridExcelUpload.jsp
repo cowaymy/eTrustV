@@ -51,7 +51,6 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
                  var data = e.target.result;
 
                  /* 엑셀 바이너리 읽기 */
-                 
                  var workbook;
 
                  if(rABS) { // 일반적인 바이너리 지원하는 경우
@@ -88,6 +87,7 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
  function process_wb(wb) {
      var output = "";
      output = JSON.stringify(to_json(wb));
+
      output = output.replace( /<!\[CDATA\[(.*?)\]\]>/g, '$1' );
      return JSON.parse(output);
  };
@@ -96,7 +96,11 @@ Grid Documentation  : http://www.auisoft.net/documentation/auigrid/index.html
  function to_json(workbook) {
      var result = {};
      workbook.SheetNames.forEach(function(sheetName) {
-         var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+         var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName], {defval:""});
+
+         console.log(roa);
+         alert(11);
+
          if(roa.length > 0){
              result[sheetName] = roa;
          }
