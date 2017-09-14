@@ -1452,11 +1452,6 @@
     Validation Check Logic [END]
 *******************************************************************************/
 
-    function fn_createEvent(objId, eventType) {
-        var e = jQuery.Event(eventType);
-        $('#'+objId).trigger(e);
-    }
-
     function fn_clearOrderSalesman() {
         $('#salesmanId').val('');
         $('#salesmanCd').val('');
@@ -1512,38 +1507,34 @@
 
         fn_clearOrderSalesman();
 
-        if(FormUtil.isNotEmpty(trialNo)) {
-            //$("#searchSalesOrdNo").val(trialNo);
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
-            Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+            if(memInfo == null || memInfo == 'undefined') {
+                Common.alert('<b>Member not found.</br>Your input member code : '+memCd+'</b>');
+            }
+            else {
+                $('#hiddenSalesmanId').val(memInfo.memId);
+                $('#salesmanCd').val(memInfo.memCode);
+                $('#salesmanType').val(memInfo.codeName);
+                $('#salesmanTypeId').val(memInfo.memType);
+                $('#salesmanNm').val(memInfo.name);
+                $('#salesmanNric').val(memInfo.nric);
+                $('#departCd').val(memInfo.deptCode);
+                $('#departMemId').val(memInfo.lvl3UpId);
+                $('#grpCd').val(memInfo.grpCode);
+                $('#grpMemId').val(memInfo.lvl2UpId);
+                $('#orgCd').val(memInfo.orgCode);
+                $('#orgMemId').val(memInfo.lvl1UpId);
 
-                if(memInfo == null || memInfo == 'undefined') {
-                    Common.alert('<b>Member not found.</br>Your input member code : '+memCd+'</b>');
-                }
-                else {
-                    $('#hiddenSalesmanId').val(memInfo.memId);
-                    $('#salesmanCd').val(memInfo.memCode);
-                    $('#salesmanType').val(memInfo.codeName);
-                    $('#salesmanTypeId').val(memInfo.memType);
-                    $('#salesmanNm').val(memInfo.name);
-                    $('#salesmanNric').val(memInfo.nric);
-                    $('#departCd').val(memInfo.deptCode);
-                    $('#departMemId').val(memInfo.lvl3UpId);
-                    $('#grpCd').val(memInfo.grpCode);
-                    $('#grpMemId').val(memInfo.lvl2UpId);
-                    $('#orgCd').val(memInfo.orgCode);
-                    $('#orgMemId').val(memInfo.lvl1UpId);
-
-                    $('#salesmanCd').removeClass("readonly");
-                    $('#salesmanType').removeClass("readonly");
-                    $('#salesmanNm').removeClass("readonly");
-                    $('#salesmanNric').removeClass("readonly");
-                    $('#departCd').removeClass("readonly");
-                    $('#grpCd').removeClass("readonly");
-                    $('#orgCd').removeClass("readonly");
-                }
-            });
-        }
+                $('#salesmanCd').removeClass("readonly");
+                $('#salesmanType').removeClass("readonly");
+                $('#salesmanNm').removeClass("readonly");
+                $('#salesmanNric').removeClass("readonly");
+                $('#departCd').removeClass("readonly");
+                $('#grpCd').removeClass("readonly");
+                $('#orgCd').removeClass("readonly");
+            }
+        });
     }
 
     function fn_loadTrialNo(trialNo) {

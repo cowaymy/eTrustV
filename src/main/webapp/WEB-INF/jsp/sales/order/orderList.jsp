@@ -46,18 +46,22 @@
             Common.popupDiv("/sales/order/orderRegisterPop.do");
         });
         $('#btnEdit').click(function() {
-            var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
-            if(selIdx > -1) {
-                Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") });
-            }
-            else {
-                Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
-            }
+            fn_orderModifyPop();
         });
         $('#btnSrch').click(function() {
         	fn_selectListAjax();
         });
     });
+    
+    function fn_orderModifyPop() {
+        var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        if(selIdx > -1) {
+            Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+        }
+        else {
+            Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+        }
+    }
     
     function createAUIGrid() {
         
@@ -161,6 +165,12 @@
             width: '100%'
         });
     }
+    
+    function fn_createEvent(objId, eventType) {
+        var e = jQuery.Event(eventType);
+        $('#'+objId).trigger(e);
+    }
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -185,6 +195,7 @@
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
+    
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

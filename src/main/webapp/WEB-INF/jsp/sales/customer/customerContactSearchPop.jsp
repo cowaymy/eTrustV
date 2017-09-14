@@ -8,7 +8,7 @@
 
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN') {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
 
@@ -33,7 +33,7 @@
 	});
 	
 	function fn_setData(cntcId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN') {
 	        fn_loadCntcPerson(cntcId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {

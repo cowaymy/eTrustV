@@ -15,8 +15,8 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), null);
-            fn_createEvent('memPopCloseBtn', 'click');
+            fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), AUIGrid.getCellValue(myGridID , event.rowIndex , "memcode"));
+            $("#memPopCloseBtn").click();
         });
     });
     

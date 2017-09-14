@@ -86,11 +86,11 @@
 	<li><a href="#">HP / Cody</a></li>
 	<li><a href="#" onClick="javascript:chgTab('custInfo');">Customer Info</a></li>
 	<li><a href="#">Installation Info</a></li>
-	<li><a href="#">Mailling Info</a></li>
+	<li><a id="aTabMA" href="#">Mailling Info</a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
 	<li><a href="#">Payment Channel</a></li>
 </c:if>
-	<li><a href="#" onClick="javascript:chgTab('memInfo');">Membership Info</a></li>
+	<li><a id="aTabMI" href="#" onClick="javascript:chgTab('memInfo');">Membership Info</a></li>
 	<li><a href="#" onClick="javascript:chgTab('docInfo');">Document Submission</a></li>
 	<li><a href="#" onClick="javascript:chgTab('callLogInfo');">Call Log</a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">

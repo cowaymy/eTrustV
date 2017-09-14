@@ -20,11 +20,14 @@
 	});
 	
 	function fn_setData(custAddId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_MTH') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_MTH' || $('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
 	        fn_loadMailAddr(custAddId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD') {
 	        fn_loadInstallAddr(custAddId);
+	    }
+	    else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
+	        fn_loadMailAddr(custAddId);
 	    }
 	}
 	
