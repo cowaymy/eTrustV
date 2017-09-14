@@ -28,8 +28,8 @@ public class BillingMgmtController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillingMgmtController.class);
 	
-	@Resource(name = "billingRantalService")
-	private BillingMgmtService billingRantalService;
+	@Resource(name = "billingRentalService")
+	private BillingMgmtService billingRentalService;
 	
 	/**
 	 * BillingMgnt 초기화 화면 
@@ -47,17 +47,9 @@ public class BillingMgmtController {
 		List<EgovMap> list = null;
 		
 		LOGGER.debug("params : {}", params);
-	
-		String year = String.valueOf(params.get("year"));
-		String month = String.valueOf(params.get("month"));
-
-		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("year", year);
-		map.put("month", month);
-		
-		if( year != "null" && year != "" && month != "null" && month != "" ){
-			list = billingRantalService.selectBillingMgnt(map);
+		if( !("".equals(String.valueOf(params.get("year")))) && !("".equals(String.valueOf(params.get("month")))) ){
+			list = billingRentalService.selectBillingMgnt(params);
 		}
 		return ResponseEntity.ok(list);
 	}
@@ -82,31 +74,15 @@ public class BillingMgmtController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		LOGGER.debug("params_#### : {}", params);
-	
-		String orderNo = String.valueOf(params.get("orderNo"));
-		String billNo = String.valueOf(params.get("billNo"));
-		String custName = String.valueOf(params.get("custName"));
-		String group = String.valueOf(params.get("group"));
-		String taskId = String.valueOf(params.get("taskId"));
-
-		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("orderNo", orderNo);
-		map.put("billNo", billNo);
-		map.put("custName", custName);
-		map.put("group", group);
-		map.put("taskId", taskId);
-		
-		EgovMap master = billingRantalService.selectBillingMaster(map);
+		EgovMap master = billingRentalService.selectBillingMaster(params);
 		System.out.println("master : " + master);
-		List<EgovMap> detail = billingRantalService.selectBillingDetail(map);
+		List<EgovMap> detail = billingRentalService.selectBillingDetail(params);
 		System.out.println("detail.size : " + detail.size());                                                     
 		
-		if(detail.size() > 0){
 		result.put("master", master);
 		result.put("detail", detail);
-		}
-		
+
 		return ResponseEntity.ok(result);
 	}
 	
@@ -149,14 +125,14 @@ public class BillingMgmtController {
 		//System.out.println("today : " + curDate + ", curYear : " + curYear + ", curMonth : " + curMonth);
 		int result = 0;
 		if(curYear < year){
-			billingRantalService.callEaryBillProcedure(map);
+			billingRentalService.callEaryBillProcedure(map);
 			result = Integer.parseInt(String.valueOf(map.get("p1")));
 		}else if(curYear == year){
 			if(curMonth < month){
-				billingRantalService.callEaryBillProcedure(map);
+				billingRentalService.callEaryBillProcedure(map);
 				result = Integer.parseInt(String.valueOf(map.get("p1")));
 			}else{
-				billingRantalService.callBillProcedure(map);
+				billingRentalService.callBillProcedure(map);
 				result = Integer.parseInt(String.valueOf(map.get("p1")));
 			}
 		}
@@ -169,5 +145,36 @@ public class BillingMgmtController {
 		}
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
+	}
+	
+	@RequestMapping(value = "/getExistBill.do")
+	public ResponseEntity<Integer> getExistBill(@RequestParam Map<String, Object> params, ModelMap model) {	
+		int value= 0;
+		
+		LOGGER.debug("params : {}", params);
+		
+		value = billingRentalService.getExistBill(params);
+		
+		return ResponseEntity.ok(value);
+	}
+	
+	@RequestMapping(value = "/confirmAlltBill.do")
+	public ResponseEntity<Integer> confirmAllBills(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+		int value= -1;
+		
+		params.put("userId", sessionVO.getUserId());
+		LOGGER.debug("params : {}", params);
+		
+		if(String.valueOf(params.get("type")).equals("EARLY BILL")){
+			billingRentalService.confirmEarlyBills(params);
+			value=Integer.parseInt(String.valueOf(params.get("p1")));
+		}else{
+			billingRentalService.confirmBills(params);
+			value=Integer.parseInt(String.valueOf(params.get("p1")));
+		}
+		
+		System.out.println("######value : " + value);
+		
+		return ResponseEntity.ok(value);
 	}
 }

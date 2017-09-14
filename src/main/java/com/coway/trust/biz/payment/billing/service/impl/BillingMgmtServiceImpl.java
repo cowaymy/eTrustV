@@ -29,7 +29,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 	 Copyright (C) by MOPAS All right reserved.
  */
 
-@Service("billingRantalService")
+@Service("billingRentalService")
 public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements BillingMgmtService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BillingMgmtServiceImpl.class);
@@ -37,8 +37,8 @@ public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements B
 	@Value("${app.name}")
 	private String appName;
 
-	@Resource(name = "billingRantalMapper")
-	private BillingMgmtMapper billingRantalMapper;
+	@Resource(name = "billingRentalMapper")
+	private BillingMgmtMapper billingRentalMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -46,27 +46,42 @@ public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements B
 	
 	@Override
 	public List<EgovMap> selectBillingMgnt(Map<String, Object> params) {
-		return billingRantalMapper.selectBillingMgnt(params);
+		return billingRentalMapper.selectBillingMgnt(params);
 	}
 
 	@Override
 	public EgovMap selectBillingMaster(Map<String, Object> params) {
-		return billingRantalMapper.selectBillingMaster(params);
+		return billingRentalMapper.selectBillingMaster(params);
 	}
 
 	@Override
 	public List<EgovMap> selectBillingDetail(Map<String, Object> params) {
-		return billingRantalMapper.selectBillingDetail(params);
+		return billingRentalMapper.selectBillingDetail(params);
 	}
 
 	@Override
 	public void callEaryBillProcedure(Map<String, Object> params) {
-		billingRantalMapper.callEaryBillProcedure(params);
+		billingRentalMapper.callEaryBillProcedure(params);
 	}
 
 	@Override
 	public void callBillProcedure(Map<String, Object> params) {
-		billingRantalMapper.callBillProcedure(params);
+		billingRentalMapper.callBillProcedure(params);
+	}
+
+	@Override
+	public int getExistBill(Map<String, Object> params) {
+		return billingRentalMapper.getExistBill(params);
+	}
+
+	@Override
+	public void confirmEarlyBills(Map<String, Object> params) {
+		billingRentalMapper.confirmEarlyBills(params);
+	}
+
+	@Override
+	public void confirmBills(Map<String, Object> params) {
+		billingRentalMapper.confirmBills(params);
 	}
 	
 	

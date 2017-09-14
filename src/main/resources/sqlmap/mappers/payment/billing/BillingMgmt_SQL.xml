@@ -22,10 +22,10 @@
        Extent1.TASK_REM TASK_REM  
   FROM PAY0047D Extent1
  WHERE  'ADV BILL'   <![CDATA[<>]]> Extent1.TASK_TYPE
- <if test="year != 'null' and year != '' ">
+ <if test="year != null and year != '' ">
     AND BILLING_YEAR = #{year}
  </if>
- <if test="month != 'null' and month != '' ">
+ <if test="month != null and month != '' ">
     AND BILLING_MONTH = #{month}
  </if>
   ORDER BY Extent1.TASK_ID DESC
@@ -77,13 +77,13 @@
 	  <if test="orderNo != 'null' and orderNo != '' ">
 	               AND Extent3.SALES_ORD_NO = #{orderNo}
 	  </if>  
-	  <if test="billNo != 'null' and billNo != '' ">
+	  <if test="billNo != null and billNo != '' ">
 	               AND Extent1.TASK_REF_NO = #{billNo}
 	  </if> 
-	  <if test="custName != 'null' and custName != '' ">
+	  <if test="custName != null and custName != '' ">
 	               AND Extent4.NAME = #{custName}
 	  </if>
-	   <if test="group != 'null' and group != '' ">
+	   <if test="group != null and group != '' ">
 	               AND (CASE WHEN (Extent1.TASK_BILL_GRP_ID IS NULL) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END) = #{group}
 	   </if>
 	  ORDER BY Extent1.TASK_BILL_SO_ID ASC
@@ -99,4 +99,27 @@
         {call SP_INITIIZE_BILL_GST_RENT(#{year}, #{month}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=billMap})}
     </select>
     
+    <select id="getExistBill" parameterType="Map" resultType ="java.lang.Integer">
+        SELECT count(*) cnt
+		FROM PAY0047D Extent1
+		WHERE  ( 1 = Extent1.IS_CNFM ) 
+                  AND ( Extent1.TASK_ID = #{taskId} )
+		<if test="month != '' and month != null">
+		          AND ( Extent1.BILLING_MONTH = #{month} )
+		</if>
+		<if test="year != '' and year != null">
+		          AND ( Extent1.BILLING_YEAR = #{year} )
+		</if>
+		          AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <resultMap id="cEarlyBills" type="egovMap"></resultMap>
+    <select id="confirmEarlyBills" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_BILL_GST_EARLY_RENTAL(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cEarlyBills})}
+    </select>
+    
+    <resultMap id="cBills" type="egovMap"></resultMap>
+    <select id="confirmBills" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_BILL_GST_RENTAL(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cBills})}
+    </select>
 </mapper>

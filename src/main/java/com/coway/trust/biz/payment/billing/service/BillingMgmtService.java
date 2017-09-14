@@ -41,4 +41,24 @@ public interface BillingMgmtService{
 	 */
 	void callBillProcedure(Map<String, Object> params);
     
+	/**
+	 * Bill이 존재하는지 확인
+	 * @param
+	 * @return
+	 */
+	int getExistBill(Map<String, Object> params);
+	
+	/**
+	 * Complete Early Bill
+	 * @param
+	 * @return
+	 */
+	void confirmEarlyBills(Map<String, Object> params);
+	
+	/**
+	 * Complete Bill
+	 * @param
+	 * @return
+	 */
+	void confirmBills(Map<String, Object> params);
 }

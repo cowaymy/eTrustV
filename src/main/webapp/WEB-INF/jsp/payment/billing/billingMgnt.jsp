@@ -108,15 +108,37 @@ function fn_createBills(){
 function fn_complete(){
 	if(selectedGridValue != undefined){
 		var taskConfirmed = AUIGrid.getCellValue(myGridID , selectedGridValue , "isCnfm");
+		var taskId = AUIGrid.getCellValue(myGridID , selectedGridValue , "taskId");
 		console.log(taskConfirmed);
 		if(taskConfirmed == 0){
 			var taskStatus = AUIGrid.getCellValue(myGridID , selectedGridValue , "stus");
 			console.log(taskStatus);
 			if(taskStatus == 'SUCCESS'){
-				var success = 0;
-				
+				var existBillMonthYear = 0;
+				Common.ajax("GET", "/payment/getExistBill.do", {"year" : $("#year").val(), "month" : $("#month").val(), "taskId" : taskId}, function(result) {
+		               existBillMonthYear = result;
+		               if(existBillMonthYear > 0){
+		                     Common.alert("Failed to save request. Selected Task Monthly Bill Was Generated.");
+		               }else{
+		                     var taskType = AUIGrid.getCellValue(myGridID , selectedGridValue , "taskType");
+		                     var success = -1;
+		                     console.log("taskType : " + taskType);
+		                     Common.ajax("GET", "/payment/confirmAlltBill.do", {"taskId" : taskId, "type" : taskType}, function(returnValue) {
+		                         success = returnValue;
+		                         
+		                         console.log("success : " + success);
+	                             if(success == 1){
+	                                 fn_getBillingList();
+	                                 Common.alert("Bill Task Confirmed.");
+	                             }else{
+	                                 Common.alert("Failed to save  request. Please try again later.");
+	                             }
+		                     });
+		                     
+		               }
+		        });
 			}else{
-				Common.alert("Failed to save request. Selected Task ID should be Success Status");
+				Common.alert("Failed to save request. Selected Task ID should be Success Status.");
 			}
 		}else{
 			Common.alert("Failed to save request. Selected Task ID Was Generated.");
