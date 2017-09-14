@@ -54,115 +54,100 @@ function fn_backPage(){
 }
 
 </script>
-
 <!-- content start -->
 <section id="content">
     <ul class="path">
-        <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Billing</li>
         <li>Billing Result</li>
     </ul>
-    
-    <!-- title_line start -->
-    <aside class="title_line">
-        <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Billing Result</h2>   
-        <ul class="right_btns">
+
+    <aside class="title_line"><!-- title_line start -->
+        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <h2>Billing Result</h2>
+        <ul class="right_opt">
             <li><p class="btn_blue"><a href="javascript:fn_getBillingList();"><span class="search"></span>Search</a></p></li>
-        </ul>    
-    </aside>
-    <!-- title_line end -->
+        </ul>
+    </aside><!-- title_line end -->
 
-
- <!-- search_table start -->
-    <section class="search_table">
+    <section class="search_table"><!-- search_table start -->
         <form name="searchForm" id="searchForm"  method="post">
-        <input type="hidden" name="taskId" id="taskId" value="${taskId }" />
-             <table class="type1"><!-- table start -->
+            <input type="hidden" name="taskId" id="taskId" value="${taskId }" />
+
+            <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:110px" />
-                    <col style="width:110px" />
-                    <col style="width:110px" />
-                    <col style="width:110px" />
                     <col style="width:140px" />
+                    <col style="width:*" />
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                    <col style="width:160px" />
                     <col style="width:*" />
                     <col style="width:140px" />
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Order No.</th>
-                        <td>
-                            <input type="text" id="orderNo" name="orderNo" class="w100p"/>
-                        </td>
+                        <th scope="row">Order No</th>
+                        <td><input type="text" id="orderNo" name="orderNo" class="w100p"/></td>
                         <th scope="row">Bill No.</th>
-                        <td>
-                           <input type="text" id="billNo" name="billNo" class="w100p"/>
-                        </td>
+                        <td><input type="text" id="billNo" name="billNo" class="w100p"/></td>
                         <th scope="row">Customer Name</th>
-                        <td>
-                           <input type="text" id="custName" name="custName" class="w100p"/>
-                        </td>
+                        <td><input type="text" id="custName" name="custName" class="w100p"/></td>
                         <th scope="row">Bill Group</th>
-                        <td>
-                           <input type="text" id="group" name="group"  class="w100p"/>
-                        </td>
+                        <td><input type="text" id="group" name="group"  class="w100p"/></td>
                     </tr>
-                 </tbody>
-              </table>
+                </tbody>
+            </table><!-- table end -->
         </form>
-        </section>
+    </section><!-- search_table end -->
 
- <!-- search_result start -->
-<section class="search_result">     
+    <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:140px" />
+            <col style="width:*" />
+            <col style="width:130px" />
+            <col style="width:*" />
+            <col style="width:160px" />
+            <col style="width:*" />
+            <col style="width:140px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+            <tr>
+                <th scope="row">Task ID</th>
+                <td id="t_taskId"></td>
+                <th scope="row">Billing Month/Year</th>
+                <td id="t_billingMNY"></td>
+                <th scope="row">Bill Count</th>
+                <td id="t_count"></td>
+                <th scope="row">Total Amount</th>
+                <td id="t_amount"></td>
+            </tr>
+        </tbody>
+    </table><!-- table end -->
 
-    <!-- link_btns_wrap start -->
-        <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_backPage()">Back to List Page</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside>
-        <!-- link_btns_wrap end -->
-        
-        <table class="type1"><!-- table start -->
-                <caption>table</caption>
-                <colgroup>
-                    <col style="width:110px" />
-                    <col style="width:110px" />
-                    <col style="width:150px" />
-                    <col style="width:150px" />
-                    <col style="width:150px" />
-                    <col style="width:50px" />
-                    <col style="width:*" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Task ID</th>
-                        <td id="t_taskId"></td>
-                        <th scope="row">Billing Month/Year</th>
-                        <td id="t_billingMNY"></td>
-                        <th scope="row">Bill Count</th>
-                        <td id="t_count"></td>
-                        <th scope="row">Total Amount</th>
-                        <td id="t_amount"></td>
-                    </tr>
-                 </tbody>
-              </table>
-              
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt>Link</dt>
+            <dd>
+                <ul class="btns">
+                    <li><p class="link_btn"><a href="javascript:fn_billList()">Bill List</a></p></li>
+                </ul>
+                <ul class="btns">
+                    <li><p class="link_btn type2"><a href="javascript:fn_backPage()">Back to List Page</a></p></li>
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+    </aside><!-- link_btns_wrap end -->
+
     <!-- grid_wrap start -->
     <article id="grid_wrap" class="grid_wrap"></article>
     <!-- grid_wrap end -->
-</section>
-</section>
 
-<!-- popup_wrap end -->
+
+</section><!-- content end -->
