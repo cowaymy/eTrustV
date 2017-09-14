@@ -89,12 +89,14 @@
 	  ORDER BY Extent1.TASK_BILL_SO_ID ASC
 	</select>
 	
-	<update id="callEaryBillProcedure" statementType="CALLABLE" parameterType="Map">
-        {call SP_INITIIZE_BILL_GST_EARY_RENT(#{year}, #{month}, #{userId})}
-    </update>
+	<resultMap id="earyBillMap" type="egovMap"></resultMap>
+	<select id="callEaryBillProcedure" statementType="CALLABLE" parameterType="Map">
+        {call SP_INITIIZE_BILL_GST_EARY_RENT(#{year}, #{month}, #{userId}), #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillillMap}}
+    </select>
     
-    <update id="callBillProcedure" statementType="CALLABLE" parameterType="Map">
-        {call SP_INITIIZE_BILL_GST_RENT(#{year}, #{month}, #{userId})}
-    </update>
+    <resultMap id="billMap" type="egovMap"></resultMap>
+    <select id="callBillProcedure" statementType="CALLABLE" parameterType="Map">
+        {call SP_INITIIZE_BILL_GST_RENT(#{year}, #{month}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=billMap})}
+    </select>
     
 </mapper>
