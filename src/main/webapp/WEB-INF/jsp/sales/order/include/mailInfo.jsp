@@ -12,20 +12,22 @@
 </colgroup>
 <tbody>
 <tr>
-    <th rowspan="3" scope="row">Mailing Address</th>
-    <td colspan="3"><span>${orderDetail.mailingInfo.mailAdd1}</span></td>
-    <th scope="row">Country</th>
-    <td><span>${orderDetail.mailingInfo.mailCnty}</span></td>
+    <th scope="row">Address Detail</th>
+    <td colspan="3"><span>${orderDetail.mailingInfo.addrDtl}</span></td>
+    <th scope="row">Postcode</th>
+    <td><span>${orderDetail.mailingInfo.mailPostCode}</span></td>
 </tr>
 <tr>
-    <td colspan="3"><span>${orderDetail.mailingInfo.mailAdd2}</span></td>
+    <th scope="row">Street</th>
+    <td colspan="3"><span>${orderDetail.mailingInfo.street}</span></td>
+    <th scope="row">City</th>
+    <td><span>${orderDetail.mailingInfo.mailCity}</span></td>
+</tr>
+<tr>
+    <th scope="row">Area</th>
+    <td colspan="3"><span>${orderDetail.mailingInfo.mailArea}</span></td>
     <th scope="row">State</th>
     <td><span>${orderDetail.mailingInfo.mailState}</span></td>
-</tr>
-<tr>
-    <td colspan="3"><span>${orderDetail.mailingInfo.mailAdd3}</span></td>
-    <th scope="row">Area</th>
-    <td><span>${orderDetail.mailingInfo.mailArea}</span></td>
 </tr>
 <tr>
     <th scope="row">Billing Group</th>
@@ -69,8 +71,8 @@
   </c:choose>
      </label>
     </td>
-    <th scope="row">Postcode</th>
-    <td><span>${orderDetail.mailingInfo.mailPostCode}</span></td>
+    <th scope="row">Country</th>
+    <td><span>${orderDetail.mailingInfo.mailCnty}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

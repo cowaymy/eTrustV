@@ -12,28 +12,30 @@
 </colgroup>
 <tbody>
 <tr>
-    <th rowspan="3" scope="row">Installation Address</th>
-    <td colspan="3"><span>${orderDetail.installationInfo.instAddr1}</span></td>
-    <th scope="row">Country</th>
-    <td><span>${orderDetail.installationInfo.instCnty}</span></td>
+    <th scope="row">Address Detail</th>
+    <td colspan="3"><span>${orderDetail.installationInfo.instAddrDtl}</span></td>
+    <th scope="row">Postcode</th>
+    <td><span>${orderDetail.installationInfo.instPostcode}</span></td>
 </tr>
 <tr>
-    <td colspan="3"><span>${orderDetail.installationInfo.instAddr2}</span></td>
+    <th scope="row">Street</th>
+    <td colspan="3"><span>${orderDetail.installationInfo.instStreet}</span></td>
+    <th scope="row">City</th>
+    <td><span>${orderDetail.installationInfo.instCity}</span></td>
+</tr>
+<tr>
+    <th scope="row">Area</th>
+    <td colspan="3"><span>${orderDetail.installationInfo.instArea}</span></td>
     <th scope="row">State</th>
     <td><span>${orderDetail.installationInfo.instState}</span></td>
-</tr>
-<tr>
-    <td colspan="3"><span>${orderDetail.installationInfo.instAddr3}</span></td>
-    <th scope="row">Area</th>
-    <td><span>${orderDetail.installationInfo.instArea}</span></td>
 </tr>
 <tr>
     <th scope="row">Prefer Install Date</th>
     <td><span>${orderDetail.installationInfo.preferInstDt}</span></td>
     <th scope="row">Prefer Install Time</th>
     <td><span>${orderDetail.installationInfo.preferInstTm}</span></td>
-    <th scope="row">Postcode</th>
-    <td><span>${orderDetail.installationInfo.instPostCode}</span></td>
+    <th scope="row">Country</th>
+    <td><span>${orderDetail.installationInfo.instCountry}</span></td>
 </tr>
 <tr>
     <th scope="row">Instruction</th>
