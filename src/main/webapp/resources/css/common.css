@@ -1,4 +1,4 @@
-@charset"utf-8";
+@charset "utf-8";
 
 /* 레이아웃 */
 #wrap{position:relative; width:100%; min-width:1200px; height:100%;}
@@ -530,7 +530,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .divine_auto.type2 .btns.right-type{left:inherit;right:-34px;}
 .divine_auto.type2 .btns li{margin-top:5px;}
 .divine_auto.type2 .btns li:first-child{margin-top:0;}
-.divine_auto > div h3{font-size:12px;}
+.divine_auto > div h3{font-size:12px;line-height:22px;}
 .divine_auto > div .border_box{position:relative; padding:10px; border:1px solid #ddd;}
 .divine_auto > div .border_box.mt27{margin-top:27px;}
 .divine_auto > div .border_box .tran_list{float:none; width:100%; padding:0!important;}
