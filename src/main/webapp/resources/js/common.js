@@ -74,7 +74,7 @@ var Common = {
                 //ResponseEntity.ok(null) 인 경우 처리.
                 if(jqXHR.status == "200"){
                     if (_callback) {
-                        _callback("", textStatus, jqXHR);
+                        _callback(null, textStatus, jqXHR);
                     }
                     return true;
                 }
