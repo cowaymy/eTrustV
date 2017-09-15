@@ -2,7 +2,7 @@
     <diskStore path="${ehcache.diskStore}" />
     <cache name="menu_cache"
                 maxEntriesLocalHeap="100"
-                maxEntriesLocalDisk="100"
+                maxEntriesLocalDisk="150"
                 diskExpiryThreadIntervalSeconds="300"
                 timeToIdleSeconds="180"
                 timeToLiveSeconds="0"
@@ -12,7 +12,7 @@
 
     <cache name="my_menu_cache"
            maxEntriesLocalHeap="100"
-           maxEntriesLocalDisk="100"
+           maxEntriesLocalDisk="150"
            diskExpiryThreadIntervalSeconds="300"
            timeToIdleSeconds="180"
            timeToLiveSeconds="0"

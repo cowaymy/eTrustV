@@ -141,4 +141,32 @@ public class CommonApiController {
 
 		return ResponseEntity.ok(list);
 	}
+
+	@ApiOperation(value = "Product Master 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/product/masters", method = RequestMethod.GET)
+	public ResponseEntity<List<ProductMasterDto>> getProductMasters(@ModelAttribute ProductMasterForm productMasterForm)
+			throws Exception {
+
+		Map<String, Object> params = ProductMasterForm.createMap(productMasterForm);
+
+		List<EgovMap> productMasters = commonService.getProductMasters(params);
+		List<ProductMasterDto> list = productMasters.stream().map(r -> ProductMasterDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+
+	@ApiOperation(value = "Product Detail 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/product/details", method = RequestMethod.GET)
+	public ResponseEntity<List<ProductDetailDto>> getProductDetails(@ModelAttribute ProductDetailForm productDetailForm)
+			throws Exception {
+
+		Map<String, Object> params = ProductDetailForm.createMap(productDetailForm);
+
+		List<EgovMap> productDetails = commonService.getProductDetails(params);
+		List<ProductDetailDto> list = productDetails.stream().map(r -> ProductDetailDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
 }

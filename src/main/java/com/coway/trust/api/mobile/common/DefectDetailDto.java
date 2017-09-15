@@ -20,8 +20,8 @@ public class DefectDetailDto {
 
 	public static DefectDetailDto create(EgovMap egvoMap) {
 		DefectDetailDto dto = new DefectDetailDto();
-		dto.setTypeId(CommonUtils.getInteger(egvoMap.get("resnTypeId")));
-		dto.setDefectId(CommonUtils.getInteger(egvoMap.get("resnId")));
+		dto.setTypeId(CommonUtils.getInt(egvoMap.get("resnTypeId")));
+		dto.setDefectId(CommonUtils.getInt(egvoMap.get("resnId")));
 		dto.setDefectCode((String) egvoMap.get("resnCode"));
 		dto.setDefectDesc((String) egvoMap.get("resnDesc"));
 		return dto;

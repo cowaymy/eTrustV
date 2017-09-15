@@ -20,10 +20,10 @@ public class DefectMasterDto {
 
 	public static DefectMasterDto create(EgovMap egvoMap) {
 		DefectMasterDto dto = new DefectMasterDto();
-		dto.setTypeId(CommonUtils.getInteger(egvoMap.get("defeCtMasterTypeId")));
+		dto.setTypeId(CommonUtils.getInt(egvoMap.get("defeCtMasterTypeId")));
 		dto.setTypeCode((String) egvoMap.get("defeCtMasterCode"));
 		dto.setTypeDesc((String) egvoMap.get("defeCtMasterDesc"));
-		dto.setCodeDisab(CommonUtils.getInteger(egvoMap.get("disab")));
+		dto.setCodeDisab(CommonUtils.getInt(egvoMap.get("disab")));
 		return dto;
 	}
 

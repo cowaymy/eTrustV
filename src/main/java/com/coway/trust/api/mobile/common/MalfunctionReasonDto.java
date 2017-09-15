@@ -22,11 +22,11 @@ public class MalfunctionReasonDto {
 
 	public static MalfunctionReasonDto create(EgovMap egvoMap) {
 		MalfunctionReasonDto dto = new MalfunctionReasonDto();
-		dto.setReasonId(CommonUtils.getInteger(egvoMap.get("errId")));
-		dto.setTypeId(CommonUtils.getInteger(egvoMap.get("errTypeId")));
+		dto.setReasonId(CommonUtils.getInt(egvoMap.get("errId")));
+		dto.setTypeId(CommonUtils.getInt(egvoMap.get("errTypeId")));
 		dto.setReasonCode((String) egvoMap.get("errCode"));
 		dto.setReasonDesc((String) egvoMap.get("errName"));
-		dto.setStusCodeId(CommonUtils.getInteger(egvoMap.get("stusCodeId")));
+		dto.setStusCodeId(CommonUtils.getInt(egvoMap.get("stusCodeId")));
 		return dto;
 	}
 

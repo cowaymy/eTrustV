@@ -29,15 +29,15 @@ public class ReasonCodeDto {
 
 	public static ReasonCodeDto create(EgovMap egvoMap) {
 		ReasonCodeDto dto = new ReasonCodeDto();
-		dto.setCodeMasterId(CommonUtils.getInteger(egvoMap.get("resnMasterTypeId")));
+		dto.setCodeMasterId(CommonUtils.getInt(egvoMap.get("resnMasterTypeId")));
 		dto.setCodeMaster((String) egvoMap.get("resnMasterCode"));
 		dto.setCodeMasterName((String) egvoMap.get("resnMasterDesc"));
-		dto.setCodeMasterDisab(CommonUtils.getInteger(egvoMap.get("disab")));
+		dto.setCodeMasterDisab(CommonUtils.getInt(egvoMap.get("disab")));
 
-		dto.setCodeId(CommonUtils.getInteger(egvoMap.get("resnId")));
+		dto.setCodeId(CommonUtils.getInt(egvoMap.get("resnId")));
 		dto.setCode((String) egvoMap.get("resnCode"));
 		dto.setCodeName((String) egvoMap.get("resnDesc"));
-		dto.setStusCodeId(CommonUtils.getInteger(egvoMap.get("stusCodeId")));
+		dto.setStusCodeId(CommonUtils.getInt(egvoMap.get("stusCodeId")));
 		return dto;
 	}
 

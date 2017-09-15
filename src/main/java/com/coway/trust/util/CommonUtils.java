@@ -551,6 +551,13 @@ public final class CommonUtils {
 		return (Integer) value;
 	}
 
+	public static int getInt(Object value) {
+		if (value == null) {
+			return 0;
+		}
+		return getInteger(value);
+	}
+
 	/**
 	 * value 파라미터 값을 Long 객체의 값으로 변환한 값을 리턴
 	 *

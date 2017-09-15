@@ -30,6 +30,10 @@ public interface CommonService {
 
 	List<EgovMap> getReasonCodes(Map<String, Object> params);
 
+	List<EgovMap> getProductMasters(Map<String, Object> params);
+
+	List<EgovMap> getProductDetails(Map<String, Object> params);
+
 	int getCommonCodeTotalCount(Map<String, Object> params);
 
 	List<EgovMap> selectI18NList();

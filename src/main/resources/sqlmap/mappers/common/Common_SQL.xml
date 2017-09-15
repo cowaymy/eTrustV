@@ -753,6 +753,29 @@
        ORDER BY CODEDETAIL.CODE_ID, REASONCODE.RESN_ID
     </select>
 
+    <select id="selectProductMasters" parameterType="Map" resultType="egovMap">
+        SELECT A.CODE_ID AS STOCK_CATEGORY_ID
+              ,A.CODE AS STOCK_CATEGORY_CODE
+              ,A.CODE_NAME AS STOCK_CATEGORY_DESC
+          FROM SYS0013M A
+         WHERE (CODE_ID IN (SELECT DISTINCT STK_CTGRY_ID
+                                       FROM SYS0026M B
+                                       WHERE B.STUS_CODE_ID = 1) )
+          AND A.DISAB = 0
+          ORDER BY A.CODE_ID
+    </select>
+
+    <select id="selectProductDetails" parameterType="Map" resultType="egovMap">
+        SELECT STK.STK_ID AS STOCK_ID
+          ,STK.STK_CODE AS STOCK_CODE
+          ,STK.STK_DESC AS STOCK_DESC
+          ,STK.STK_CTGRY_ID AS STOCK_CATEGORY_ID
+        FROM SYS0026M STK
+        WHERE STK.STK_TYPE_ID = 61
+        AND STK.STUS_CODE_ID = 1
+        ORDER BY STK.STK_CTGRY_ID, STK.STK_ID
+    </select>
+
     <select id="selectCommonCodeTotalCount" parameterType="Map" resultType="Integer">
         SELECT   COUNT(1) AS cnt
         FROM SYS0012M CD_MST, SYS0013M CD_DTL

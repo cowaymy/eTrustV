@@ -20,10 +20,10 @@ public class MalfunctionCodeDto {
 
 	public static MalfunctionCodeDto create(EgovMap egvoMap) {
 		MalfunctionCodeDto dto = new MalfunctionCodeDto();
-		dto.setTypeId(CommonUtils.getInteger(egvoMap.get("errTypeId")));
+		dto.setTypeId(CommonUtils.getInt(egvoMap.get("errTypeId")));
 		dto.setTypeCode((String) egvoMap.get("errTypeCode"));
 		dto.setDesc((String) egvoMap.get("errTypeName"));
-		dto.setStusCodeId(CommonUtils.getInteger(egvoMap.get("stusCodeId")));
+		dto.setStusCodeId(CommonUtils.getInt(egvoMap.get("stusCodeId")));
 		return dto;
 	}
 
