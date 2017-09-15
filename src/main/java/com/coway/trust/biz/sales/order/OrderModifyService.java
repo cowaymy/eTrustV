@@ -19,4 +19,12 @@ public interface OrderModifyService {
 
 	void updateCntcPerson(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
+	EgovMap checkNricEdit(Map<String, Object> params) throws Exception;
+
+	EgovMap selectCustomerInfo(Map<String, Object> params) throws Exception;
+
+	EgovMap checkNricExist(Map<String, Object> params) throws Exception;
+
+	void updateNric(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
 }
