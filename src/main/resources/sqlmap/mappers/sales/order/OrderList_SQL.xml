@@ -123,7 +123,7 @@
                   </foreach>
                 </if>
                 <if test='custId != null and custId != ""'>
-                    AND V1.CUST_ID LIKE '%'||#{custId}||'%'
+                    AND V1.CUST_ID = #{custId}
                 </if>
                 <if test='custName != null and custName != ""'>
                     AND V1.CUST_NAME LIKE '%'||#{custName}||'%'

@@ -120,6 +120,29 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		
 		return billGrpInfo;
 	}
+	
+	@Override
+	public EgovMap checkNricEdit(Map<String, Object> params) throws Exception {
+
+		int checkNricCnt  = orderModifyMapper.selectNricCheckCnt(params);
+		int checkNricCnt2 = orderModifyMapper.selectNricCheckCnt2(params);
+		
+		boolean isEditable = checkNricCnt == checkNricCnt2 ? true : false;
+		
+		EgovMap outMap = new EgovMap();
+		
+		outMap.put("isEditable", isEditable);
+
+		return outMap;
+	}
+
+	@Override
+	public EgovMap checkNricExist(Map<String, Object> params) throws Exception {
+
+		EgovMap outMap = orderModifyMapper.selectNricExist(params);
+
+		return outMap;
+	}
 
 	@Override
 	public EgovMap selectBillGrpCntcPerson(Map<String, Object> params) throws Exception {
@@ -198,6 +221,16 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		orderModifyMapper.updateCustAddId(inMap);
 	}
 	
+	@Override
+	public void updateNric(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+
+		logger.info("!@###### OrderModifyServiceImpl.updateNric");
+
+		params.put("updUserId", sessionVO.getUserId());
+
+		orderModifyMapper.updateNric(params);
+	}
+	
 	private void preprocBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO, Map<String, Object> params, SessionVO sessionVO, String ordEditType) throws ParseException {
 
 		logger.info("!@###### preprocBillMasterHistory START ");
@@ -239,4 +272,14 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 			custBillMasterHistoryVO.setTypeId(1043);
 		}
 	}
+	
+	@Override
+	public EgovMap selectCustomerInfo(Map<String, Object> params) throws Exception {
+
+		EgovMap outMap = orderModifyMapper.selectCustInfo(params);
+
+		return outMap;
+	}
+	
+
 }

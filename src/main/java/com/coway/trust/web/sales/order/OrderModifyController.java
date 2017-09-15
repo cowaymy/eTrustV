@@ -58,6 +58,7 @@ public class OrderModifyController {
 		
 		model.put("orderDetail", orderDetail);
 		model.put("salesOrderId", params.get("salesOrderId"));
+		model.put("custId", params.get("custId"));
 		model.put("ordEditType", params.get("ordEditType"));
 		
 		return "sales/order/orderModifyPop";
@@ -105,6 +106,20 @@ public class OrderModifyController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/updateNric.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateNric(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+		
+		orderModifyService.updateNric(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("NRIC has been successfully updated.");
+
+		return ResponseEntity.ok(message);
+	}
+	
 	@RequestMapping(value = "/selectBillGrpMailingAddrJson.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> selectBillGrpMailingAddrJson(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
@@ -127,6 +142,43 @@ public class OrderModifyController {
 		
 		EgovMap resultMap = orderModifyService.selectBillGrpCntcPerson(params);
 
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+	
+	@RequestMapping(value = "/checkNricEdit.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> checkNricEdit(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		EgovMap resultMap = orderModifyService.checkNricEdit(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+	
+	@RequestMapping(value = "/checkNricExist.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> checkNricExist(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		EgovMap resultMap = orderModifyService.checkNricExist(params);
+		
+		logger.info("resultMap:"+resultMap);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+	
+	@RequestMapping(value = "/selectCustomerInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectCustomerInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectCustomerInfo(params);
+		
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}

@@ -4,6 +4,7 @@
 <script type="text/javaScript" language="javascript">
     
     var ORD_ID = '${salesOrderId}';
+    var CUST_ID = '${custId}';
     var TAB_NM = '${ordEditType}';
     
     $(document).ready(function(){
@@ -29,8 +30,11 @@
             fn_doSaveMailingAddress();
         });
         $('#btnSaveCntcPerson').click(function() {            
-            if(!fn_validCntcPerson()) return false;            
+            if(!fn_validCntcPerson()) return false;
             fn_doSaveCntcPerson();
+        });
+        $('#btnSaveNric').click(function() {            
+            if(fn_validNric()) fn_doSaveNric();
         });
         $('#btnSalesmanPop').click(function() {
             Common.popupDiv("/common/memberPop.do", { callPrgm : "ORD_MODIFY_BSC_INF" }, null, true);
@@ -99,8 +103,31 @@
         });
     }
     
+    function isEditableNRIC() {
+        var isEditable;
+        
+        Common.ajax("GET", "/sales/order/checkNricEdit.do", {custId : CUST_ID}, function(result) {
+
+            if(result != null) {
+                console.log('result.isEditable:'+result.isEditable);
+
+                isEditable = result.isEditable;
+
+                if(isEditable == false) {
+                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>Customer NRIC/Company No. for Customer ID : " + CUST_ID + " is disallowed to edit.</b>");
+                }
+
+                return isEditable;
+            }
+        });
+    }
+    
     function changeTab(tabNm) {
         
+        if(tabNm == 'NRC' && isEditableNRIC() == false) {
+            return false;
+        }
+    
         var vTit = 'Order Edit';
         
         if($("#ordEditType option:selected").index() > 0) {
@@ -130,8 +157,31 @@
         } else {
             $('#scCP').addClass("blind");
         }
+        if(tabNm == 'NRC') {
+            $('#scIC').removeClass("blind");
+            $('#aTabCI').click();
+            fn_loadNric(CUST_ID);
+        } else {
+            $('#scIC').addClass("blind");
+        }
     }
 
+    function fn_loadNric(custId){
+        console.log("fn_loadNric START");
+
+        Common.ajax("GET", "/sales/order/selectCustomerInfo.do", {custId : custId}, function(resultInfo) {
+
+            if(resultInfo != null) {
+
+                $("#modCustNricOld").val(resultInfo.nric);
+                $("#modCustNric").val(resultInfo.nric);
+                $("#modCustGender").val(resultInfo.gender);
+                $("#modNationality").val(resultInfo.nation);
+                $("#modCustType").val(resultInfo.typeId);
+            }
+        });
+    }
+    
     function fn_loadCntcPerson(custCntcId){
         console.log("fn_loadCntcPerson START");
 
@@ -226,6 +276,74 @@
         });
     }
 
+    function fn_validNric() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.isEmpty($('#modCustNric').val().trim())) {
+            isValid = false;
+            msg += "Please key in Cutomer NRIC / Company No";
+        }
+        else {
+            
+            var existNric = fn_validNricExist();
+
+            console.log('existNric:'+existNric);
+            
+            if(existNric > 0) {
+                isValid = false;
+                msg += "This is existing customer. Customer ID : "+existNric;
+
+            }
+            else {
+                if($('#modCustType').val().trim() == '964') {            
+                    var ic = $('#modCustNric').val().trim();
+                    var lastDigit = parseInt(ic.charAt(ic.length - 1));
+                    
+                    if(lastDigit != null) {
+                        if($('#modCustGender').val() == "F") {
+                            if (lastDigit % 2 != 0) {
+                                isValid = false;
+                                msg += "Invalid NRIC.";
+                            }
+                        }
+                        else {
+                            if (lastDigit % 2 == 0) {
+                                isValid = false;
+                                msg += "Invalid NRIC.";
+                            }
+                        }
+                    }
+                }
+            }
+        }        
+        
+        if(!isValid) Common.alert("Save Validation" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        
+        console.log('msg:'+msg);
+        console.log('isValid:'+isValid);
+        
+        return isValid;
+    }
+    
+    function fn_validNricExist() {
+
+        var exCustId = 0;
+        
+        Common.ajax("GET", "/sales/order/checkNricExist.do", $('#frmNric').serializeJSON(), function(result) {
+            
+            console.log('result:'+result);
+            
+            if(result != null) {
+                console.log('result.custId:'+result.custId);
+
+                exCustId = result.custId;
+            }
+            
+       }, null, {async : false});
+
+       return exCustId;
+    }
+    
     function fn_validCntcPerson() {
         var isValid = true, msg = "";
 
@@ -374,8 +492,26 @@
         );
     }
 
+    function fn_doSaveNric() {
+        console.log('!@# fn_doSaveNric START');
+
+        Common.ajax("POST", "/sales/order/updateNric.do", $('#frmNric').serializeJSON(), function(result) {
+                
+                Common.alert("Success To Update" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    Common.alert("Failed To Saved" + DEFAULT_DELIMITER + "<b>Failed to save. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                }
+                catch(e) {
+                    console.log(e);
+                }
+            }
+        );
+    }
+
 	function fn_reloadPage(){
-	    Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
+	    Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val(), custId : CUST_ID }, null , true);
 	    $('#btnCloseModify').click();
 	}
 </script>
@@ -676,6 +812,1043 @@
 <!------------------------------------------------------------------------------
     Contact Person Edit END
 ------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    NRIC/Company No. Edit START
+------------------------------------------------------------------------------->
+<section id="scIC" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3>NRIC/Company No.</h3>
+</aside><!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+<form id="frmNric" method="post">
+<input name="custId" value="${custId}" type="hidden" />
+<input id="modCustNricOld" name="custNricOld" type="hidden" />
+<input id="modCustGender" name="custGender" type="hidden" />
+<input id="modNationality" name="nationality" type="hidden" />
+<input id="modCustType" name="custType" type="hidden" />
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:190px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">NRIC/Company No.</th>
+	<td><input id="modCustNric" name="custNric" type="text" title="" placeholder="NRIC/Company No." class="" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section><!-- search_table end -->
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a id="btnSaveNric" href="#">SAVE</a></p></li>
+</ul>
+</section>
+<!------------------------------------------------------------------------------
+    NRIC/Company No. Edit END
+------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    Installation Edit START
+------------------------------------------------------------------------------->
+<section id="scIC" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<h2>Order Edit - Installation</h2>
+<ul class="right_btns">
+	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+</ul>
+</aside><!-- title_line end -->
+
+<section class="tap_wrap"><!-- tap_wrap start -->
+<ul class="tap_type1 num4">
+	<li><a href="#" class="on">Basic Info</a></li>
+	<li><a href="#">HP / Cody</a></li>
+	<li><a href="#">Customer Info</a></li>
+	<li><a href="#">Installation Info</a></li>
+	<li><a href="#">Mailling Info</a></li>
+	<li><a href="#">Payment Channel</a></li>
+	<li><a href="#">Membership Info</a></li>
+	<li><a href="#">Document Submission</a></li>
+	<li><a href="#">Call Log</a></li>
+	<li><a href="#">Guarantee Info</a></li>
+	<li><a href="#">Payment Listing</a></li>
+	<li><a href="#">Last 6 Months Transaction</a></li>
+	<li><a href="#">Order Configuration</a></li>
+	<li><a href="#">Auto Debit Result</a></li>
+	<li><a href="#">Relief Certificate</a></li>
+	<li><a href="#">Discount</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:200px" />
+	<col style="width:*" />
+	<col style="width:110px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Progress Status</th>
+	<td><span>text</span></td>
+	<th scope="row">Agreement No</th>
+	<td><span>text</span></td>
+	<th scope="row">Agreement Expiry</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Order No</th>
+	<td></td>
+	<th scope="row">Order Date</th>
+	<td></td>
+	<th scope="row">Status</th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">Application Type</th>
+	<td></td>
+	<th scope="row">Reference No</th>
+	<td></td>
+	<th scope="row">Key At(By)</th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">Product</th>
+	<td></td>
+	<th scope="row">PO Number</th>
+	<td></td>
+	<th scope="row">Key-inBranch</th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">PV</th>
+	<td></td>
+	<th scope="row">Price/RPF</th>
+	<td></td>
+	<th scope="row">Rental Fees</th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">Installment Duration</th>
+	<td></td>
+	<th scope="row">PV Month(Month/Year)</th>
+	<td></td>
+	<th scope="row">Rental Status</th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">Promotion</th>
+	<td colspan="3"></td>
+	<th scope="row">Related No</th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">Serial Number</th>
+	<td></td>
+	<th scope="row">Sirim Number</th>
+	<td></td>
+	<th scope="row">Update At(By)</th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row">Obligation Period</th>
+	<td colspan="5"></td>
+</tr>
+<tr>
+	<th scope="row">Remark</th>
+	<td colspan="5"></td>
+</tr>
+<tr>
+	<th scope="row">CCP Feedback Code</th>
+	<td colspan="5"></td>
+</tr>
+<tr>
+	<th scope="row">CCP Remark</th>
+	<td colspan="5"></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<section class="divine2"><!-- divine3 start -->
+
+<article>
+<h3>Salesman Info</h3>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th rowspan="3" scope="row">Order Made By</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Salesman Code</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Salesman Name</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Salesman NRIC</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Mobile No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Office No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">House No</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</article>
+
+<article>
+<h3>Cody Info</h3>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th rowspan="3" scope="row">Service By</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Cody Code</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Cody Name</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Cody NRIC</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Mobile No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Office No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">House No</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</article>
+
+</section><!-- divine2 start -->
+
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:160px" />
+	<col style="width:*" />
+	<col style="width:140px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Customer ID</th>
+	<td><span>text</span></td>
+	<th scope="row">Customer Name</th>
+	<td colspan="3"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Customer Type</th>
+	<td><span>text</span></td>
+	<th scope="row">NRIC/Company No</th>
+	<td><span>text</span></td>
+	<th scope="row">JomPay Ref-1</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Nationality</th>
+	<td><span>text</span></td>
+	<th scope="row">Gender</th>
+	<td><span>text</span></td>
+	<th scope="row">Race</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">VA Number</th>
+	<td><span>text</span></td>
+	<th scope="row">Passport Exprire</th>
+	<td><span>text</span></td>
+	<th scope="row">Visa Exprire</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Same Rental Group Order(s)</h2>
+</aside><!-- title_line end -->
+
+<section class="search_result"><!-- search_result start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+	<li><p class="btn_grid"><a href="#">NEW</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:160px" />
+	<col style="width:*" />
+	<col style="width:140px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th rowspan="3" scope="row">Installation Address</th>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Country</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">State</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Area</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Prefer Install Date</th>
+	<td><span>text</span></td>
+	<th scope="row">Prefer Install Time</th>
+	<td><span>text</span></td>
+	<th scope="row">Postcode</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Instruction</th>
+	<td colspan="5"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">DSC Verification Remark</th>
+	<td colspan="5"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">DSC Branch</th>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Installed Date</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">CT Code</th>
+	<td><span>text</span></td>
+	<th scope="row">CT Name</th>
+	<td colspan="3"><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<table class="type1 mt40"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:160px" />
+	<col style="width:*" />
+	<col style="width:140px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Contact Name</th>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Gender</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Contact NRIC</th>
+	<td><span>text</span></td>
+	<th scope="row">Email</th>
+	<td><span>text</span></td>
+	<th scope="row">Fax No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Mobile No</th>
+	<td><span>text</span></td>
+	<th scope="row">Office No</th>
+	<td><span>text</span></td>
+	<th scope="row">House No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Post</th>
+	<td><span>text</span></td>
+	<th scope="row">Department</th>
+	<td><span>text</span></td>
+	<th scope="row"></th>
+	<td></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:100px" />
+	<col style="width:*" />
+	<col style="width:120px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th rowspan="3" scope="row">Mailing Address</th>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Country</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">State</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Area</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Billing Group</th>
+	<td><span>text</span></td>
+	<th scope="row">Billing Type</th>
+	<td>
+	<label><input type="checkbox" /><span>SMS</span></label>
+	<label><input type="checkbox" /><span>Post</span></label>
+	<label><input type="checkbox" /><span>E-statement</span></label>
+	</td>
+	<th scope="row">Postcode</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<table class="type1 mt40"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:110px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Contact Name</th>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Gender</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Contact NRIC</th>
+	<td><span>text</span></td>
+	<th scope="row">Email</th>
+	<td><span>text</span></td>
+	<th scope="row">Fax No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Mobile No</th>
+	<td><span>text</span></td>
+	<th scope="row">Office No</th>
+	<td><span>text</span></td>
+	<th scope="row">House No</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Post</th>
+	<td><span>text</span></td>
+	<th scope="row">Departiment</th>
+	<td><span>text</span></td>
+	<th scope="row"></th>
+	<td></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Rental Paymode</th>
+	<td><span>text</span></td>
+	<th scope="row">Direct Debit Mode</th>
+	<td><span>text</span></td>
+	<th scope="row">Auto Debit Limit</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Issue Bank</th>
+	<td><span>text</span></td>
+	<th scope="row">Card Type</th>
+	<td><span>text</span></td>
+	<th scope="row">Claim Bill Date</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Credit Card No</th>
+	<td><span>text</span></td>
+	<th scope="row">Name On Card</th>
+	<td><span>text</span></td>
+	<th scope="row">Expiry Date</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Bank Account No</th>
+	<td><span>text</span></td>
+	<th scope="row">Account Name</th>
+	<td><span>text</span></td>
+	<th scope="row">Issure NRIC</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Apply Date</th>
+	<td><span>text</span></td>
+	<th scope="row">Submit Date</th>
+	<td><span>text</span></td>
+	<th scope="row">Start Date</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Reject Date</th>
+	<td><span>text</span></td>
+	<th scope="row">Reject Code</th>
+	<td><span>text</span></td>
+	<th scope="row">Payment Team</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Pay By Third Party</th>
+	<td><span>text</span></td>
+	<th scope="row">Third Party ID</th>
+	<td><span>text</span></td>
+	<th scope="row">Third Party Type</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Third Party Name</th>
+	<td colspan="3"><span>text</span></td>
+	<th scope="row">Third Party NRIC</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:140px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Guarantee Status</th>
+	<td colspan="3"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">HP Code</th>
+	<td><span>text</span></td>
+	<th scope="row">HP Name(NRIC)</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">HM Code</th>
+	<td><span>text</span></td>
+	<th scope="row">HM Name(NRIC)</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">SM Code</th>
+	<td><span>text</span></td>
+	<th scope="row">SM Name(NRIC)</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">GM Code</th>
+	<td><span>text</span></td>
+	<th scope="row">GM Name(NRIC)</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:120px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">BS Availability</th>
+	<td><span>text</span></td>
+	<th scope="row">BS Frequency</th>
+	<td><span>text</span></td>
+	<th scope="row">Last BS Date</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">BS Cody Code</th>
+	<td colspan="5"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Config Remark</th>
+	<td colspan="5"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Happy Call Service</th>
+	<td colspan="5">
+	<label><input type="checkbox" /><span>Installation Type</span></label>
+	<label><input type="checkbox" /><span>BS Type</span></label>
+	<label><input type="checkbox" /><span>AS Type</span></label>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Prefer BS Week</th>
+	<td colspan="5">
+	<label><input type="radio" name="week" /><span>None</span></label>
+	<label><input type="radio" name="week" /><span>Week1</span></label>
+	<label><input type="radio" name="week" /><span>Week2</span></label>
+	<label><input type="radio" name="week" /><span>Week3</span></label>
+	<label><input type="radio" name="week" /><span>Week4</span></label>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Reference No</th>
+	<td><span>text</span></td>
+	<th scope="row">Certificate Date</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">GST Registration No</th>
+	<td colspan="3"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Remark</th>
+	<td colspan="3"><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+</section><!-- tap_wrap end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Installation Address</h3>
+<ul class="right_btns">
+	<li><p class="btn_blue2"><a href="#">Add New Address</a></p></li>
+	<li><p class="btn_blue2"><a href="#">Select Another Contact</a></p></li>
+</ul>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row" rowspan="3">Address<span class="must">*</span></th>
+	<td colspan="3"><span>text</span></td>
+</tr>
+<tr>
+	<td colspan="3"><span>text</span></td>
+</tr>
+<tr>
+	<td colspan="3"><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Postcode</th>
+	<td><span>text</span></td>
+	<th scope="row">Area</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">State</th>
+	<td><span>text</span></td>
+	<th scope="row">Country</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Installation Contact Person</h3>
+<ul class="right_btns">
+	<li><p class="btn_blue2"><a href="#">Add New Address</a></p></li>
+	<li><p class="btn_blue2"><a href="#">Select Another Contact</a></p></li>
+</ul>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Name<span class="must">*</span></th>
+	<td><span>text</span></td>
+	<th scope="row">Initial</th>
+	<td><span>text</span></td>
+	<th scope="row">Gender</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">NRIC</th>
+	<td><span>text</span></td>
+	<th scope="row">DOB</th>
+	<td><span>text</span></td>
+	<th scope="row">Race</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Email</th>
+	<td><span>text</span></td>
+	<th scope="row">Department</th>
+	<td><span>text</span></td>
+	<th scope="row">Post</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Tel (Mobile)</th>
+	<td><span>text</span></td>
+	<th scope="row">Tel (Residence)</th>
+	<td><span>text</span></td>
+	<th scope="row">Tel (Office)</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Tel (Fax)</th>
+	<td><span>text</span></td>
+	<th scope="row"></th>
+	<td><span></span></td>
+	<th scope="row"></th>
+	<td><span></span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Installation Information</h3>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:190px" />
+	<col style="width:*" />
+	<col style="width:190px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">DSC Branch<span class="must">*</span></th>
+	<td colspan="3">
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Prefer Install Date<span class="must">*</span></th>
+	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<th scope="row">Prefer Install Time<span class="must">*</span></th>
+	<td>
+	<div class="time_picker w100p"><!-- time_picker start -->
+	<input type="text" title="" placeholder="" class="time_date w100p" />
+	<ul>
+		<li>Time Picker</li>
+		<li><a href="#">12:00 AM</a></li>
+		<li><a href="#">01:00 AM</a></li>
+		<li><a href="#">02:00 AM</a></li>
+		<li><a href="#">03:00 AM</a></li>
+		<li><a href="#">04:00 AM</a></li>
+		<li><a href="#">05:00 AM</a></li>
+		<li><a href="#">06:00 AM</a></li>
+		<li><a href="#">07:00 AM</a></li>
+		<li><a href="#">08:00 AM</a></li>
+		<li><a href="#">09:00 AM</a></li>
+		<li><a href="#">10:00 AM</a></li>
+		<li><a href="#">11:00 AM</a></li>
+		<li><a href="#">12:00 PM</a></li>
+		<li><a href="#">01:00 PM</a></li>
+		<li><a href="#">02:00 PM</a></li>
+		<li><a href="#">03:00 PM</a></li>
+		<li><a href="#">04:00 PM</a></li>
+		<li><a href="#">05:00 PM</a></li>
+		<li><a href="#">06:00 PM</a></li>
+		<li><a href="#">07:00 PM</a></li>
+		<li><a href="#">08:00 PM</a></li>
+		<li><a href="#">09:00 PM</a></li>
+		<li><a href="#">10:00 PM</a></li>
+		<li><a href="#">11:00 PM</a></li>
+	</ul>
+	</div><!-- time_picker end -->
+	</td>
+</tr>
+<tr>
+	<th scope="row">Special Instruction<span class="must">*</span></th>
+	<td colspan="3"><textarea cols="20" rows="5"></textarea></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a href="#">SAVE</a></p></li>
+</ul>
+</section>
+<!------------------------------------------------------------------------------
+    Installation Edit END
+------------------------------------------------------------------------------->
+
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

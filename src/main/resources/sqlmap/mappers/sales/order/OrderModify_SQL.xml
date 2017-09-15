@@ -182,4 +182,98 @@
            </if>
          WHERE SALES_ORD_ID = #{salesOrdId}
     </update>
+    
+    <update id="updateNric" parameterType="Map">
+        UPDATE SAL0029D
+           SET NRIC = #{custNric}
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE CUST_ID = #{custId}
+    </update>
+    
+    <select id="selectNricCheckCnt" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT  
+          FROM SAL0001D T1
+         WHERE T1.CUST_ID = #{custId}
+           AND T1.APP_TYPE_ID = 66
+    </select>
+    
+    <select id="selectNricCheckCnt2" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT
+          FROM SAL0001D T1
+          JOIN SAL0102D T2
+            ON T2.CCP_STUS_ID != 5
+           AND T2.CCP_SALES_ORD_ID = T1.SALES_ORD_ID
+         WHERE T1.CUST_ID = #{custId}
+           AND T1.STUS_CODE_ID != 4
+           AND T1.APP_TYPE_ID = 66
+    </select>
+    
+    <select id="selectCustInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.CUST_ID
+             , T1.NAME
+             , T1.NRIC
+             , T1.NATION
+             , T1.DOB
+             , T1.GENDER
+             , T1.RACE_ID
+             , T1.EMAIL
+             , T1.REM
+             , T1.STUS_CODE_ID
+             , T1.UPD_USER_ID
+             , T1.UPD_DT
+             , T1.REN_GRP
+             , T1.PST_TERMS
+             , T1.ID_OLD
+             , T1.CRT_USER_ID
+             , T1.CRT_DT
+             , T1.TYPE_ID
+             , T1.PAS_SPORT_EXPR
+             , T1.VISA_EXPR
+             , T1.CUST_VA_NO
+             , T1.CORP_TYPE_ID
+             , T1.GST_RGIST_NO
+          FROM SAL0029D T1
+         WHERE T1.CUST_ID = #{custId}
+    </select>
+        
+    <select id="selectNricExist" parameterType="Map" resultType="egovMap">
+        SELECT T1.CUST_ID
+             , T1.NAME
+             , T1.NRIC
+             , T1.NATION
+             , T1.DOB
+             , T1.GENDER
+             , T1.RACE_ID
+             , T1.EMAIL
+             , T1.REM
+             , T1.STUS_CODE_ID
+             , T1.UPD_USER_ID
+             , T1.UPD_DT
+             , T1.REN_GRP
+             , T1.PST_TERMS
+             , T1.ID_OLD
+             , T1.CRT_USER_ID
+             , T1.CRT_DT
+             , T1.TYPE_ID
+             , T1.PAS_SPORT_EXPR
+             , T1.VISA_EXPR
+             , T1.CUST_VA_NO
+             , T1.CORP_TYPE_ID
+             , T1.GST_RGIST_NO
+          FROM SAL0029D T1
+         WHERE 1 = 1
+         <if test='custType != null and custType !=0 and custType !=""'>
+           AND T1.TYPE_ID = #{custType}
+         </if>
+         <if test='custNric != null and custNric !=0 and custNric !=""'>
+           AND T1.NRIC = #{custNric}
+         </if>
+         <if test='nationality != null and nationality !=0 and nationality !=""'>
+           AND T1.NATION = #{nationality}
+         </if>
+         <if test='custNricOld != null and custNricOld !=0 and custNricOld !=""'>
+           AND T1.NRIC != #{custNricOld}
+         </if>
+    </select>
 </mapper>

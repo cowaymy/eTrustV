@@ -26,7 +26,18 @@ public interface OrderModifyMapper {
 	
 	void updateCustAddId(Map<String, Object> params);
 	
+	void updateNric(Map<String, Object> params);
+	
 	EgovMap selectBillGroupByBillGroupID(Map<String, Object> params); //Bill Group Master
 	
 	List<EgovMap> selectBillGroupOrder(Map<String, Object> params); //Bill Group Master
+	
+	int selectNricCheckCnt(Map<String, Object> params);
+	
+	int selectNricCheckCnt2(Map<String, Object> params);
+	
+	EgovMap selectCustInfo(Map<String, Object> params); //
+	
+	EgovMap selectNricExist(Map<String, Object> params); //
+	
 }

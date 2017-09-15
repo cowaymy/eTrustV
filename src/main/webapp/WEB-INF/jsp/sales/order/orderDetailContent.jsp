@@ -84,7 +84,7 @@
 <ul class="tap_type1 num4">
 	<li><a href="#" class="on">Basic Info</a></li>
 	<li><a href="#">HP / Cody</a></li>
-	<li><a href="#" onClick="javascript:chgTab('custInfo');">Customer Info</a></li>
+	<li><a id="aTabCI" href="#" onClick="javascript:chgTab('custInfo');">Customer Info</a></li>
 	<li><a href="#">Installation Info</a></li>
 	<li><a id="aTabMA" href="#">Mailling Info</a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
