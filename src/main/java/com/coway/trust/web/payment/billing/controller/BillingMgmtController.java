@@ -36,9 +36,9 @@ public class BillingMgmtController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initBillingMgnt.do")
+	@RequestMapping(value = "/initBillingMgmt.do")
 	public String initBillingMgnt(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/billing/billingMgnt";
+		return "payment/billing/billingMgmt";
 	}
 	
 	@RequestMapping(value = "/selectBillingMgntList.do")

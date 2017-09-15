@@ -92,8 +92,8 @@ function moveToPage(goPage){
 }
 
 function fn_backPage(){
-    //location.replace("/payment/initBillingMgnt.do");
-    location.replace("/payment/initBillingMgnt.do");
+    //location.replace("/payment/initBillingMgmt.do");
+    location.replace("/payment/initBillingMgmt.do");
 }
 
 function commaSeparateNumber(val){
