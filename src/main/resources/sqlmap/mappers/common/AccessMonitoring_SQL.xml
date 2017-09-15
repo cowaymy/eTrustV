@@ -21,7 +21,7 @@
          AND a.pgm_code = b.pgm_code
          AND a.system_id = #{systemId}
          AND a.access_dtm BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
-         <if test="pgmCode != null and userId !=''">
+         <if test="pgmCode != null and pgmCode !=''">
          AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
                 UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
          </if>
@@ -52,7 +52,7 @@
          AND a.pgm_code = b.pgm_code
          AND a.system_id = #{systemId}
          AND a.access_dtm BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
-         <if test="pgmCode != null and userId !=''">
+         <if test="pgmCode != null and pgmCode !=''">
          AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
                 UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
          </if>
