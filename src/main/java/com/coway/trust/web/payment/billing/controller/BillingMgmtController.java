@@ -41,7 +41,7 @@ public class BillingMgmtController {
 		return "payment/billing/billingMgmt";
 	}
 	
-	@RequestMapping(value = "/selectBillingMgntList.do")
+	@RequestMapping(value = "/selectBillingMgmtList.do")
 	public ResponseEntity<List<EgovMap>> selectBillingMgnt(@RequestParam Map<String, Object> params, ModelMap model) {	
 		List<EgovMap> list = null;
 		

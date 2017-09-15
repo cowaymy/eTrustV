@@ -70,7 +70,7 @@ function fn_setMonthList(){
 
 function fn_getBillingList(){
 	if($("#year").val() != null && $("#month").val() != null){
-		Common.ajax("GET", "/payment/selectBillingMgntList.do", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/payment/selectBillingMgmtList.do", $("#searchForm").serialize(), function(result) {
 	        AUIGrid.setGridData(myGridID, result);
 	    });
 	}
