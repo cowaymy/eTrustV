@@ -91,18 +91,19 @@ function fn_createBills(){
 	var inputMonth = $("#month").val();
 	var curDate = new Date();
 	
-	if(inputYear == '' ){
+	if(inputYear == null ){
 		Common.alert("Selecte year for bill generations.");
 	}
-	else if(inputMonth == ''){
+	else if(inputMonth == null){
 		Common.alert("Selecte month for bill generations.");
 	}
 	
-	if(inputYear != '' && inputMonth != ''){
+	if(inputYear != null && inputMonth != null){
 		   console.log("year : " + inputYear + ", month : " + inputMonth);
 		   
 		   Common.ajax("GET", "/payment/createBills.do", {"year" : inputYear, "month" : inputMonth}, function(result) {
 			   Common.alert(result.message);
+			   fn_getBillingList();
 		   });
 	}
 }
