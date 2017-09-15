@@ -45,6 +45,7 @@ var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,wid
                      {dataField:"stkDesc"     ,headerText:"Text"         ,width:120    ,height:30,visible:true},
                      {dataField:"qty"    ,headerText:"Available Qty"           ,width:120    ,height:30,visible:true},
                      {dataField:"serialChk"    ,headerText:"Serial"         ,width:120    ,height:30,visible:true},
+                     {dataField:"uom"    ,headerText:"UOM"         ,width:120    ,height:30,visible:false},
                     ];
  
 
@@ -105,6 +106,11 @@ var reqcolumnLayout;
 //     ***********************************/
 SearchSessionAjax();
 
+
+// var paramdatas = { groupCode : '306' ,Codeval: 'OH' , orderValue : 'CODE' , likeValue:''};
+// doGetComboData('/common/selectCodeList.do', paramdatas, '','smtype', 'S' , '');
+
+
 var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
 var LocData = {sLoc : userCode};
      doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
@@ -128,7 +134,7 @@ var LocData = {sLoc : userCode};
                         }
                       },
                       {dataField:"itemserialChk"       ,headerText:"Serial"            ,width:120    ,height:30},
-                      {dataField:""       ,headerText:"UOM"            ,width:120    ,height:30
+                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               
@@ -198,7 +204,6 @@ var LocData = {sLoc : userCode};
     
     
     AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
-    	alert("시리얼 체크입니다!!!!");
         var tvalue = true;
        var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
        serial=serial.trim();
@@ -256,7 +261,6 @@ var LocData = {sLoc : userCode};
 $(function(){
     $('#search').click(function() {
     	if (f_validatation('search')){
-//     		console.log($("#tlocation").val());
 //     	    $("#slocation").val($("#tlocation").val());
     	    SearchListAjax();
     	}
@@ -270,28 +274,24 @@ $(function(){
 	 
 	 if (f_validatation('save')){
          insPosInfo();           
-         } 
-  
-     
-     
+         }     
     });
-    
-    
-    
+
     $('#reqdel').click(function(){
     	AUIGrid.removeRow(reqGrid, "selectedIndex");
         AUIGrid.removeSoftRows(reqGrid);
     });
     $('#list').click(function(){
-    	document.location.href = '/logistics/stocktransfer/StocktransferList.do';
+    	document.location.href = '/logistics/pos/PointOfSalesList.do';
     });
 
     
     $("#rightbtn").click(function(){
-    	alert("오른쪽 버튼");
-         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
+
+       checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
         var bool = true;
         if (checkedItems.length > 0){
+        	
 	        var rowPos = "first";
 	        var item = new Object();
 	        var rowList = [];
@@ -303,6 +303,7 @@ $(function(){
                             itmdesc : checkedItems[i].stkDesc,
                             itemqty : checkedItems[i].qty,
                             itemserialChk : checkedItems[i].serialChk,
+                            itemuom : checkedItems[i].uom,
                             rqty:0
                         }
 	        	
@@ -311,9 +312,11 @@ $(function(){
 	        }
 	        
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);
-	        
-        }
+   
+    }     
+        
     });
+    
 });
 
 
@@ -323,7 +326,7 @@ function fn_serialChck(rowindex , rowitem , str){
     var slocid = '';//session.locid;
     var data = { serial : str , locid : slocid};
     Common.ajaxSync("GET", "/logistics/pos/PointOfSalesSerialCheck.do", data, function(result) {
-    	 console.log(result.data[0]);
+
         if (result.data[0] == null){
             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
@@ -335,7 +338,7 @@ function fn_serialChck(rowindex , rowitem , str){
             ichk = false;
             
         }else{
-        	console.log("여기 통과!!!!");
+
              AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
              AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
@@ -349,20 +352,19 @@ function fn_serialChck(rowindex , rowitem , str){
              }
              
              var checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
-             console.log("checkedItems.length : "+checkedItems.length );
+
              for (var i = 0 ; i < checkedItems.length ; i++){
                  if (result.data[0].STKCODE == checkedItems[i].itmcode){
-                	 console.log("성공!!!!");
+
                      //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
                      ichk = true;
                      break;
                  }else{
-                	 console.log("실패!!!!");
+
                      ichk = false;
                  }
              }
              
-             console.log(ichk + " ::::: " + schk);
         }
         
          if (schk && ichk){
@@ -373,7 +375,7 @@ function fn_serialChck(rowindex , rowitem , str){
           
           
           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
-        	  console.log(item);
+
         	 $("#serialstus").val(item.statustype);
               if (item.statustype  == 'N'){
                   return "my-row-style";
@@ -401,7 +403,7 @@ function f_validatation(v){
 	        }
 	    }
 	
-    if(v == 'save' || v == 'saveSerial'){
+    if(v == 'save'){
         
         if ($("#insReqType").val() == "") {
             Common.alert("Please select the insReqType.");
@@ -418,6 +420,11 @@ function f_validatation(v){
             $("#insRequestor").focus();
             return false;
         }
+//         if ($("#insSmo").val() == "") {
+//             Common.alert("Please enter the Stock Movement No.");
+//             $("#insSmo").focus();
+//             return false;
+//         }
         if ($("#insReqLoc").val() == "") {
             Common.alert("Please select the insReqLoc.");
             $("#insReqLoc").focus();
@@ -483,10 +490,10 @@ function f_validatation(v){
 }
 
 function SearchListAjax() {
-    console.log($("#slocation").val());
+
     var url = "/logistics/pos/PosItemList.do";
     var param = $('#searchForm').serialize();
-    console.log(param);
+
     Common.ajax("GET" , url , param , function(result){
      AUIGrid.setGridData(resGrid, result.data);
     });
@@ -496,7 +503,7 @@ function SearchListAjax() {
 function SearchSessionAjax() {
     var url = "/logistics/pos/SearchSessionInfo.do";
     Common.ajaxSync("GET" , url , '' , function(result){
-    	console.log(result);
+
     	userCode=result.UserCode;
     	$("#insRequestor").val(result.UserName);
     });
@@ -597,11 +604,11 @@ function f_addrow(){
     return false;
 }
 
-function savePosInfo(){
-	if(f_validatation("saveSerial")){
-	insPosInfo();		
-	}	
-}
+// function savePosInfo(){
+// 	if(f_validatation("saveSerial")){
+// 	insPosInfo();		
+// 	}	
+// }
 
 
 function getSerialInfo(){
@@ -620,7 +627,7 @@ function getSerialInfo(){
            } 
            
        }
-       alert("chkfalg  :"+chkfalg);
+
        
   if(chkfalg =="Y") {   
 
@@ -657,40 +664,13 @@ function insPosInfo(){
         var data = {};
 		var checkdata = AUIGrid.getCheckedRowItemsAll(reqGrid);
 		
-// 		var chkcount = AUIGrid.getRowCount(serialGrid);
-// 		var serials = AUIGrid.getAddedRowItems(serialGrid);
-//         data.add = serials;
-          
-// 		if (chkcount > 0) {
-// 			var serials = AUIGrid.getAddedRowItems(serialGrid);
-// 			data.add = serials;
-// 		}
-
-// 	  for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-// 		 if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
-// 		 Common.alert("Please check the serial.")
-// 		 return false;
-// 		 }
-		
-// 		 if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
-// 		 Common.alert("Please check the serial.")
-// 		 return false;
-// 		 }
-// 	  }
-	  
-/* 		 if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
-		 Common.alert("Please check the serial.")
-		 return false;
-		 }     */
-
 		data.checked = checkdata;
 		data.form = $("#headForm").serializeJSON();
 
 		Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data, function(result) {
 
-			//Common.alert(result.message, SearchListAjax);
-			console.log(result);
-			Common.alert(result.data);
+			Common.alert(result.message);
+
 			$("#posReqSeq").val(result.data);
 			
 			getSerialInfo();
@@ -708,33 +688,26 @@ function insPosInfo(){
 			AUIGrid.addUncheckedRowsByIds(reqGrid, checkdata[i].rnum);
 		}
 			
-		
 			
 	}
 	
 function saveSerialInfo(){
-	alert("시리얼 저장!!!!!");
 	   if(f_validatation("saveSerial")){
 		   saveSerialAjax();       
 		}   
 	
 }
 	
-
-
-
 function saveSerialAjax(){
     
     var data = {};
     var serials = AUIGrid.getAddedRowItems(serialGrid);
     data.add = serials;
     data.form = $("#giForm").serializeJSON();
-    Common.alert($("#posReqSeq").val());
     Common.ajaxSync("POST", "/logistics/pos/insertSerial.do", data, function(result) {
 
-        //Common.alert(result.message, SearchListAjax);
-        
-        
+        Common.alert(result.message, SearchListAjax);
+    	$("#list").click();
     }, function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
@@ -744,9 +717,6 @@ function saveSerialAjax(){
       
 }
 
-
-	
-	
 </script>
 
 <section id="content"><!-- content start -->
@@ -769,6 +739,7 @@ function saveSerialAjax(){
 <form id="headForm" name="headForm" method="post">
 <input type='hidden' id='pridic' name='pridic' value='M'/>
 <input type='hidden' id='headtitle' name='headtitle' value='SOH'/>
+<input type='hidden' id='trnscType' name='trnscType' value='OH'/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -780,7 +751,7 @@ function saveSerialAjax(){
 <tbody>
 <tr>
     <th scope="row">Others Request</th>
-    <td><input id="insOthersReq" name="insOthersReq" type="text" title="" placeholder="Automatic billing" class="readonly w100p" /></td>
+    <td><input id="insOthersReq" name="insOthersReq" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Request Type</th>
     <td><select class="w100p" id="insReqType" name="insReqType"></select></td>
 </tr>
@@ -791,13 +762,13 @@ function saveSerialAjax(){
     </td>
     <th scope="row"></th>
     <td>
-    <select class="w100p" id="smtype" name="smtype"></select>
+    
     </td>
 </tr>
 <tr>
     <th scope="row">Requestor</th>
     <td>
-    <input id="insRequestor" name="insRequestor" type="text" title="" placeholder="" class="w100p" />
+    <input id="insRequestor" name="insRequestor" type="text" title="" placeholder=""  class="readonly w100p" readonly="readonly" />
     </td>
     <th scope="row">Stock Movement No</th>
      <td>
@@ -946,29 +917,8 @@ function saveSerialAjax(){
             <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="serialno" id="serialno"/>
             <input type="hidden" name="serialstus" id="serialstus"/>
-            <!-- <input type="text" id="posReqSeq" name="posReqSeq"> -->
+            <input type="hidden" name="ttype" id="ttype" value="OH"/>
             <input type="hidden" id="posReqSeq" name="posReqSeq">
-          <!--   <table class="type1">
-            <caption>search table</caption>
-            <colgroup>
-                <col style="width:150px" />
-                <col style="width:*" />
-                <col style="width:150px" />
-                <col style="width:*" />
-            </colgroup>
-            <tbody>
-                <tr>
-                    <th scope="row">GI Posting Date</th>
-                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
-                    <th scope="row">GI Proof Date</th>
-                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
-                </tr>
-                <tr>    
-                    <th scope="row">Header Text</th>
-                    <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
-                </tr>
-            </tbody>
-            </table> -->
             <table class="type1">
             <caption>search table</caption>
             <colgroup id="serialcolgroup">
