@@ -31,7 +31,7 @@ var listGrid;
 var subGrid;
 
 
-var rescolumnLayout=[
+/* var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"        ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"posNo"      ,headerText:"Others Request No"      ,width:120    ,height:30 ,visible:true},
                      {dataField:"posItmQty"      ,headerText:"Others Request Item"                      ,width:120    ,height:30,    visible:true            },
@@ -57,18 +57,77 @@ var rescolumnLayout=[
                      {dataField:""     ,headerText:""                ,width:120    ,height:30  ,visible:false },
                      {dataField:""          ,headerText:""             ,width:120    ,height:30 , visible:false},
                      {dataField:""        ,headerText:""             ,width:120    ,height:30   ,visible:false } ];
-                     
+                      */
+                      
+ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"reqstno"      ,headerText:"Others Request No"      ,width:120    ,height:30                },
+                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30 , visible:false              },
+                      {dataField:"mtext"        ,headerText:"Request Type"               ,width:120    ,height:30                },
+                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
+                      {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
+                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
+                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
+                      {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30,        visible:false},
+                      {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30                },
+                      {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
+                      {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
+                      {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
+                      {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30 ,visible:false               },
+                      {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
+                      {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
+                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30 ,visible:false               },
+                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:true},
+                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
+                      {dataField:"reqstqty"     ,headerText:"Others Request QTY"                 ,width:120    ,height:30                },
+                      {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
+                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
+                      {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30,  visible:false  },
+                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
+                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];                     
+                                    
+
+//var reqop = {editable : false,usePaging : false ,showStateColumn : false};
+var gridoptions = {
+		showStateColumn : false , 
+		editable : false, 
+		pageRowCount : 30, 
+		usePaging : true, 
+		useGroupingPanel : false,
+		};
+		
+var subgridpros = {
+        // 페이지 설정
+        usePaging : true,                
+        pageRowCount : 20,                
+        editable : false,                
+        noDataMessage : "출력할 데이터가 없습니다.",
+        enableSorting : true,
+        //selectionMode : "multipleRows",
+        //selectionMode : "multipleCells",
+        useGroupingPanel : true,
+        // 체크박스 표시 설정
+        showRowCheckColumn : true,
+        // 전체 체크박스 표시 설정
+        showRowAllCheckBox : true,
+        //softRemoveRowMode:false
+        };
 var resop = {
         rowIdField : "rnum",            
-        //editable : true,
-        groupingFields : ["reqstno", "staname"],
+        editable : true,
+        fixedColumnCount : 6,
+        groupingFields : ["reqstno"],
         displayTreeOpen : true,
+        showRowCheckColumn : true ,
         enableCellMerge : true,
-        //showStateColumn : false,
+        showStateColumn : false,
+        showRowAllCheckBox : true,
         showBranchOnGrouping : false
         };
-var reqop = {editable : false,usePaging : false ,showStateColumn : false};
-var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false };
+
+
+		
 var paramdata;
 
 $(document).ready(function(){
@@ -77,16 +136,20 @@ $(document).ready(function(){
     **********************************/
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','searchStatus', 'S' , '');
 	   doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , '');
-	   var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OI'};
-       doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');
-	   
+	   var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
+       doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');     
+       doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
+       doGetComboData('/logistics/pos/selectPosReqNo.do','', '','searchOthersReq2', 'S' , '');
+       
     
     /**********************************
      * Header Setting End
      ***********************************/
     
-    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);
-
+    //listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, subgridpros);
+    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);    
+    
+    
     $("#sub_grid_wrap").hide(); 
 
     
@@ -96,20 +159,43 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-
+        $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+        document.searchForm.action = '/logistics/pos/PosView.do';
+        document.searchForm.submit();
     });
     
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
     
+    
+    AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
+        
+        var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
+        
+        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
+            AUIGrid.addCheckedRowsByValue(listGrid, "reqstno" , reqno);
+        }else{
+            var rown = AUIGrid.getRowIndexesByValue(listGrid, "reqstno" , reqno);
+
+            for (var i = 0 ; i < rown.length ; i++){
+                AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+            }
+        }
+    });  
+    
+    
+    
 });
-function f_change(){
-    $("#sttype").change();
+function f_onchange(obj, value, tag, selvalue){
+	var reqNo= value;
+	var paramdata = { groupCode : reqNo};
+	doGetComboData('/logistics/pos/selectPosReqNo.do',paramdata, '','searchOthersReq2', 'S' , '');
 }
+
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	if(valiedcheck()){
+    	if(valiedcheck('search')){
         SearchListAjax();
     	}
     });
@@ -117,6 +203,87 @@ $(function(){
          document.searchForm.action = '/logistics/pos/PosOfSalesIns.do';
          document.searchForm.submit();
     });
+
+//     $('#goodIssue').click(function(){
+//     	var sflag ='false';
+//     	var cflag='false';
+//     	var oflag='false';
+    	
+//     $("#giForm")[0].reset();
+//     var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+
+//     	if (checkedItems.length > 0){
+//     	  for (var i = 0 ; i < checkedItems.length ; i++){
+    			 
+// 	       if (checkedItems[i].item.status == 'S'){
+// 	    	   sflag='true';
+//            }else if(checkedItems[i].item.status == 'C'){
+//         	    cflag='true';
+//            }else if(checkedItems[i].item.status == 'O'){
+//         	   oflag='true'; 
+//            }   
+
+// 	     }	
+    	  
+//     	  if(sflag=="true" && cflag=="false" && oflag=="false" ){
+//               $("#giopenwindow").show();      
+//     	  }else if(sflag=="false" && cflag=="true" && oflag=="false" ){
+//     		  Common.alert('Complete!');  
+//     	  }else if(sflag=="flase" || cflag=="false" || oflag=="true" ){
+//     		  Common.alert('Please enter the Serial Number.');   
+//     	  }
+// 	    	  }else{
+// 	    		  Common.alert('Choice Data please..');
+// 	    	  }
+   
+//    });
+
+    $("#goodIssue").click(function(){
+     $("#giForm")[0].reset();
+     var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                if(checkedItems[i].item.status == 'O'){
+                    Common.alert('Please enter the Serial Number.');
+                    return false;
+                    break;
+                }else if(checkedItems[i].item.status == 'C'){
+                	 Common.alert('Complete!');
+                     return false;
+                     break;
+                }             
+            }
+            document.giForm.gitype.value="GI";
+            $("#dataTitle").text("Good Issue Posting Data");
+            $("#giopenwindow").show();
+        }
+    });
+
+    
+    $("#issueCancel").click(function(){
+    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else{
+            for (var i = 0 ; i < checkedItems.length ; i++){
+                if(checkedItems[i].item.status == 'S' || checkedItems[i].item.status == 'O'){
+                    Common.alert('Already processed.');
+                    return false;
+                    break;
+                }
+            }
+            document.giForm.gitype.value="GC";
+            $("#dataTitle").text("Issue Cancel Posting Data");
+            $("#giopenwindow").show();
+        }
+    });
+    
+      
+    
 });
 
 function SearchListAjax() {
@@ -124,46 +291,94 @@ function SearchListAjax() {
     var url = "/logistics/pos/PosSearchList.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
-    	console.log(data.data);
         AUIGrid.setGridData(listGrid, data.data);
         
     });
 }
 
+function GiSaveAjax() {
+	   
+    var data = {};
+    var checkdata = AUIGrid.getCheckedRowItems(listGrid);
+    alert("체크길이  :" +checkdata.length);
+    data.checked = checkdata;
+    data.form = $("#giForm").serializeJSON();
 
- function valiedcheck() {
+    Common.ajaxSync("POST", "/logistics/pos/PosGiSave.do", data, function(result) {
+
+        Common.alert(result.message);
+
+        // AUIGrid.resetUpdatedItems(listGrid, "all");    
+        //$("#giopenwindow").hide();
+        // $('#search').click();
+
+    }, function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
+    
+}
+
+
+function giSave() {
+	if(valiedcheck('save')){
+	GiSaveAjax();
+	}
+}
+
+
+ function valiedcheck(v) {
 	var ReqType;
 	var Location;
 	var Status;
-	
+if(v=='search'){
     if ($("#searchReqType").val() == "") {
-        Common.alert("Please select the Request Type.");
-        $("#searchReqType").focus();
         ReqType = false;
     }else{
     	ReqType = true;
     }
     if ($("#searchLoc").val() == "") {
-        Common.alert("Please select the Location.");
-        $("#searchLoc").focus();
         Location = false;
     }else{
     	Location = true;
     } 
     if ($("#searchStatus").val() == "") {
-        Common.alert("Please key in the Status.");
-        $("#searchStatus").focus();
         Status = false;
     }else{
     	Status = true;
     }   
 
-    if(ReqType == true || Location == true || Status == true){	
-        return true;
-    }else{
-    	return false;
+    if(ReqType == false && Location == false && Status == false){  
+    	alert("Please select the Request Type. \nPlease select the Location.\nPlease key in the Status.");
+        return false;
     }
-
+    if(ReqType == true || Location == true || Status == true){	
+    	  return true;
+    }
+    
+}else if(v=='save'){
+	
+	  if ($("#giptdate").val() == "") {
+          Common.alert("Please select the GI Posting Date.");
+          $("#giptdate").focus();
+          return false;
+      }
+	  if ($("#gipfdate").val() == "") {
+          Common.alert("Please select the GI Proof Date.");
+          $("#gipfdate").focus();
+          return false;
+      }
+	  if ($("#doctext").val() == "") {
+          Common.alert("Please enter the Header Text.");
+          $("#doctext").focus();
+          return false;
+      }
+	  return true;
+}   
+    
+    
 } 
 
 
@@ -224,6 +439,8 @@ function f_getTtype(g , v){
 <h2>New-Point Of Sales List</h2>
 </aside><!-- title_line end -->
 
+
+
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
@@ -235,14 +452,12 @@ function f_getTtype(g , v){
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
         <input type="hidden" name="rStcode" id="rStcode" />    
-        <table summary="search table" class="type1"><!-- table start -->
+        <table class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
-                <col style="width:150px" />
+                <col style="width:140px" />
                 <col style="width:*" />
-                <col style="width:160px" />
-                <col style="width:*" />
-                <col style="width:160px" />
+                <col style="width:140px" />
                 <col style="width:*" />
             </colgroup>
             <tbody>
@@ -250,16 +465,15 @@ function f_getTtype(g , v){
                 <th scope="row">Others Request</th>
                    <td >
                         <div class="date_set"><!-- date_set start -->
-                        <p><select class="w100p" id="searchOthersReq1" name="searchOthersReq1"></select></p>   
+                        <p><select class="w100p" id="searchOthersReq1" name="searchOthersReq1"   onchange="f_onchange('' , this.value , '', '')"></select></p>   
                         <span> ~ </span>
                         <p><select class="w100p" id="searchOthersReq2" name="searchOthersReq2"></select></p>
-                        </div><!-- date_set end -->
+                         </div> <!-- date_set end -->
                     </td> 
                     <th scope="row">Request Type</th>
                     <td>
                         <select class="w100p" id="searchReqType" name="searchReqType"><option value=''>Choose One</option></select>
-                    </td>
-                    <td colspan="2">&nbsp;</td>   
+                    </td> 
                 </tr>
                 <tr>
                     <th scope="row">Location</th>
@@ -269,8 +483,7 @@ function f_getTtype(g , v){
                     <th scope="row">Status</th>
                     <td>
                         <select class="w100p" id="searchStatus" name="searchStatus"></select>
-                    </td>
-                    <td colspan="2">&nbsp;</td>                
+                    </td>         
                 </tr>
                 
                 <tr>
@@ -289,8 +502,7 @@ function f_getTtype(g , v){
                         <span> ~ </span>
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date" value="${searchVal.reqedt}" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
-                    </td> 
-                    <td colspan="2">&nbsp;</td>                
+                    </td>              
                 </tr>
                 
             </tbody>
@@ -301,30 +513,86 @@ function f_getTtype(g , v){
 
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
+    
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="insert"><span class="search"></span>INS</a></p></li>            
+         <li><p class="btn_grid"><a id="insert"><span class="search"></span>INS</a></p></li>            
+         <li><p class="btn_grid"><a id="goodIssue">Good Issue</a></p></li>
+         <li><p class="btn_grid"><a id="issueCancel">Issue Cancel</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
         
 
     </section><!-- search_result end -->
-    <section class="tap_wrap"><!-- tap_wrap start -->
-        <ul class="tap_type1">
-            <li><a href="#" class="on">Material Document Info</a></li>
-          <!--   <li><a href="#">Compliance Remark</a></li> -->
-        </ul>
+    
+    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
+        <header class="pop_header"><!-- pop_header start -->
+            <h1 id="dataTitle">Good Issue Posting Data</h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
         
-        <article class="tap_area"><!-- tap_area start -->
-        
+        <section class="pop_body"><!-- pop_body start -->
+        <form id="giForm" name="giForm" method="POST">
+            <input type="hidden" name="gitype" id="gitype" value="GI"/> 
+<!--             <input type="hidden" name="serialqty" id="serialqty"/> -->
+<!--             <input type="hidden" name="reqstno" id="reqstno"/> -->
+            <table class="type1">
+            <caption>search table</caption>
+            <colgroup>
+                <col style="width:150px" />
+                <col style="width:*" />
+                <col style="width:150px" />
+                <col style="width:*" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th scope="row">GI Posting Date</th>
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <th scope="row">GI Proof Date</th>
+                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                </tr>
+                <tr>    
+                    <th scope="row">Header Text</th>
+                    <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+                </tr>
+            </tbody>
+            </table>
+            <table class="type1">
+            <caption>search table</caption>
+            <colgroup id="serialcolgroup">
+            </colgroup>
+            <tbody id="dBody">
+            </tbody>
+            </table>
             <article class="grid_wrap"><!-- grid_wrap start -->
-                  <div id="sub_grid_wrap" class="mt10" style="height:150px"></div>
+            <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
             </article><!-- grid_wrap end -->
+            <ul class="center_btns">
+                <li><p class="btn_blue2 big"><a onclick="javascript:giSave();">SAVE</a></p></li>
+            </ul>
+            </form>
         
-        </article><!-- tap_area end -->
+        </section>
+    </div>
+
+<!--     <section class="tap_wrap">tap_wrap start -->
+<!--         <ul class="tap_type1"> -->
+<!--             <li><a href="#" class="on">Material Document Info</a></li> -->
+<!--             <li><a href="#">Compliance Remark</a></li> -->
+<!--         </ul> -->
+        
+<!--         <article class="tap_area">tap_area start -->
+        
+<!--             <article class="grid_wrap">grid_wrap start -->
+<!--                   <div id="sub_grid_wrap" class="mt10" style="height:150px"></div> -->
+<!--             </article>grid_wrap end -->
+        
+<!--         </article>tap_area end -->
             
         
-    </section><!-- tap_wrap end -->
+<!--     </section>tap_wrap end -->
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
