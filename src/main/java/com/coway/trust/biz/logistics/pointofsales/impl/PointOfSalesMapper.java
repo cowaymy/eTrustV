@@ -21,6 +21,23 @@ public interface PointOfSalesMapper {
 	void  insRequestItem(Map<String, Object> params);
 	void  insertSerial(Map<String, Object> params);
 	void  updateReqstStus(Map<String, Object> params);
+	
+	void GIRequestIssue(Map<String, Object> formMap);
+	
+	void GICancelIssue(Map<String, Object> formMap);
+	
+	List<EgovMap> selectPosReqNoList(Map<String, Object> params);
+	
+	
+	Map<String, Object> selectPosHead(String param);
 
+	List<EgovMap> selectPosItem(String param);
+	
+	List<EgovMap> selectPosToItem(Map<String, Object> params);
+	
+	List<EgovMap> selectSerial(String param);
+	
+	
+	
 
 }
