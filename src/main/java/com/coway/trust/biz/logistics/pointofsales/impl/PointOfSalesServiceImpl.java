@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,15 +29,15 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		// TODO Auto-generated method stub
 		return PointOfSalesMapper.PosSearchList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> PosItemList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return PointOfSalesMapper.PosItemList(params);
 	}
-	
+
 	@Override
-	public List<EgovMap>  selectPointOfSalesSerial(Map<String, Object> params) {
+	public List<EgovMap> selectPointOfSalesSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return PointOfSalesMapper.selectPointOfSalesSerial(params);
 	}
@@ -45,36 +46,36 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 	public String insertPosInfo(Map<String, Object> params) {
 
 		String seq = PointOfSalesMapper.selectPosSeq();
-		
+
 		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);	
-		
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
 		formMap.put("reqno", formMap.get("headtitle") + seq);
 		formMap.put("userId", params.get("userId"));
-		String posSeq=formMap.get("headtitle") + seq;
-		
-		logger.debug("trnscType    값 : {}",formMap.get("trnscType"));
-		
-		//PointOfSalesMapper.insOtherReceiptHead(formMap);
+		String posSeq = formMap.get("headtitle") + seq;
+
+		logger.debug("posSeq    값 : {}", posSeq);
+		logger.debug("trnscType    값 : {}", formMap.get("trnscType"));
+
+		PointOfSalesMapper.insOtherReceiptHead(formMap);
 
 		if (checkList.size() > 0) {
 			for (int i = 0; i < checkList.size(); i++) {
 				Map<String, Object> insMap = (Map<String, Object>) checkList.get(i);
 				insMap.put("reqno", formMap.get("headtitle") + seq);
 				insMap.put("userId", params.get("userId"));
-			//	PointOfSalesMapper.insRequestItem(insMap);
+				PointOfSalesMapper.insRequestItem(insMap);
 			}
 		}
-		
+
 		return posSeq;
 
 	}
-	
-	
+
 	@Override
 	public void insertSerial(Map<String, Object> params) {
-		
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);	
+
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 
 		if (serialList.size() > 0) {
@@ -84,17 +85,124 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 				serialMap.put("ttype", formMap.get("ttype"));
 				serialMap.put("userId", params.get("userId"));
 
-				logger.debug("ttype    값 : {}",formMap.get("ttype"));
-				
-				//PointOfSalesMapper.insertSerial(serialMap);
+				logger.debug("ttype    값 : {}", formMap.get("ttype"));
+
+				PointOfSalesMapper.insertSerial(serialMap);
 			}
 		}
-		//update
+		// update
 		formMap.put("reqno", formMap.get("posReqSeq"));
 		formMap.put("userId", params.get("userId"));
-//		PointOfSalesMapper.updateReqstStus(formMap);
-	
+		PointOfSalesMapper.updateReqstStus(formMap);
+
+	}
+
+	@Override
+	public void insertGiInfo(Map<String, Object> params) {
+
+		List<EgovMap> GIList = (List<EgovMap>) params.get(AppConstants.AUIGRID_CHECK);
+		Map<String, Object> GiMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
+//		logger.debug("GIList사이즈    값 : {}", GIList.size());
+//		for (int i = 0; i < GIList.size(); i++) {
+//		logger.debug("GIList! : {}", GIList.get(i));
+//	}
+		int iCnt = 0;
+		String ttype = "";
+		String docno = "";
+		String tmpdelCd = "";
+		String delyCd = "";
+		
+		
+		if (GIList.size() > 0) {
+
+			for (int i = 0; i < GIList.size(); i++) {
+
+				Map<String, Object> tmpMap = (Map<String, Object>) GIList.get(i);
+				Map<String, Object> imap = new HashMap();
+				imap = (Map<String, Object>) tmpMap.get("item");
+				ttype = (String) imap.get("ttype");
+				docno = (String) imap.get("docno");
+				
+				String delCd = (String) imap.get("reqstno");
+				System.out.println("delCd :   "+delCd );
+				if (delCd != null && !(tmpdelCd.equals(delCd))) {
+					tmpdelCd = delCd;
+					if (iCnt == 0) {
+						delyCd = delCd;
+					} else {
+						delyCd += "∈" + delCd;
+					}
+					iCnt++;
+				}
+
+			}
+		}
+		String[] delvcd = delyCd.split("∈");
+//		System.out.println("delvcd [0] ::"+delvcd[0]);
+//		System.out.println("delvcd [1] ::"+delvcd[1]);
+		GiMap.put("parray", delvcd);
+		GiMap.put("gtype", ttype);
+		GiMap.put("prgnm", "POS PROGRAM");
+		GiMap.put("refdocno", docno);
+		GiMap.put("salesorder", "");
+		GiMap.put("userId", params.get("userId"));
+		
+		System.out.println("gtype @@ ::"+GiMap.get("gtype"));
+		System.out.println("gitype ??? ::"+GiMap.get("gitype"));
+		
+		
+		if ("GC".equals(GiMap.get("gitype"))) {
+			// System.out.println(" ::::: 254Line :::::: ");
+			PointOfSalesMapper.GICancelIssue(GiMap);
+		} else {
+			// System.out.println(" ::::: 256Line :::::: ");
+			PointOfSalesMapper.GIRequestIssue(GiMap);
+		}
+		
+		System.out.println("ERRCODE :::"+GiMap.get("rdata"));
+		
+	}
+
+	@Override
+	public List<EgovMap> selectPosReqNoList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		List<EgovMap> list = null;
+
+		list = PointOfSalesMapper.selectPosReqNoList(params);
+
+		return list;
 	}
 	
 	
+	@Override
+	public Map<String, Object> PosDataDetail(String param) {
+
+		Map<String, Object> hdMap = PointOfSalesMapper.selectPosHead(param);
+		
+		List<EgovMap> list = PointOfSalesMapper.selectPosItem(param);
+
+		Map<String, Object> pMap = new HashMap();
+		pMap.put("reqloc", hdMap.get("reqcr"));
+
+		List<EgovMap> toList = PointOfSalesMapper.selectPosToItem(pMap);
+
+		Map<String, Object> reMap = new HashMap();
+		reMap.put("hValue", hdMap);
+		reMap.put("iValue", list);
+		reMap.put("itemto", toList);
+
+		return reMap;
+	}
+	
+	@Override
+	public List<EgovMap> selectSerial(String params) {
+		// TODO Auto-generated method stub
+		
+		List<EgovMap> list = PointOfSalesMapper.selectSerial(params);
+		
+		return list;
+	}
+	
+
 }
