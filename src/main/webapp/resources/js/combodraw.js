@@ -465,4 +465,22 @@ function doGetComboForStock(url, groupCd ,codevalue ,  selCode, obj , type, call
         complete: function(){
         }
     });
-} ;
+} 
+
+function doSysdate(v , obj){
+	$.ajax({
+        type : "GET",
+        url : getContextPath() + '/common/SysdateCall.do',
+        data : { value : v},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+        	$("#"+obj).val(data.date);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+        	
+        },
+        complete: function(){
+        }
+    });
+}

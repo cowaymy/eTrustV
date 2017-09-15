@@ -465,6 +465,12 @@
 		<if test="notlike != null and notlike !=''">
            AND CODE NOT LIKE #{notlike}||'%'
         </if>
+        <if test="notin != null and notin !=''">
+              AND CODE IN
+              <foreach item="item" collection="notin" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
 		<choose>
 		  <when test="orderValue !=null and orderValue !=''">
 		      ORDER BY ${orderValue} 
@@ -1231,5 +1237,9 @@
             AND A.RESN_PARENT_GRP_ID = #{groupCode}
             AND A.RESN_STUS_ID = 1
         ORDER BY B.RESN_DESC         
+    </select>
+    
+    <select id="SysdateCall" parameterType="String" resultType="String">
+        SELECT TO_CHAR(SYSDATE + (${value}) , 'dd/mm/yyyy') FROM DUAL
     </select>
 </mapper>

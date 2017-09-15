@@ -225,7 +225,7 @@ public interface CommonService {
 	 */
 	List<EgovMap> selectAdjReasonList(Map<String, Object> params);
 	
-	
+	String SysdateCall(Map<String, Object> params);
 
 
 }

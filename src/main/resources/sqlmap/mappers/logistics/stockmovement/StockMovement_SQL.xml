@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper">
    
     <select id="selectStockMovementSeq" resultType="String">
-        SELECT  LPAD(LOG0047M_REQST_NO.nextval, 10, '0') FROM  DUAL
+        SELECT  TO_CHAR(SYSTIMESTAMP , 'yyyymmddhh24missff') FROM  DUAL
     </select>
     <select id="selectStockMovementMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
@@ -226,7 +226,7 @@
            and l56.stk_code = #{itmcd}
     </select>
     <select id="selectDeliveryStockMovementSeq" resultType="String">
-        SELECT  'DVR'||LPAD(LOG0054M_REQST_NO.nextval, 10, '0') FROM  DUAL
+        SELECT  'DVR'||TO_CHAR(SYSTIMESTAMP , 'yyyymmddhh24missff') FROM  DUAL
     </select>
 <!--       
     <select id="selectDeliveryNobyReqsNo" parameterType="Map" resultType="String">

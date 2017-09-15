@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.logistics.stocktransfer.impl.StockTransferMapper">
    
     <select id="selectStockTransferSeq" resultType="String">
-        SELECT  LPAD(LOG0047M_REQST_NO.nextval, 10, '0') FROM  DUAL
+        SELECT  TO_CHAR(SYSTIMESTAMP , 'yyyymmddhh24missff') FROM  DUAL
     </select>
     <select id="selectStockTransferMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
@@ -85,7 +85,7 @@
            <if test="sstatus !=null and sstatus !=''">
               and l47.reqst_stus = #{sstatus}
            </if>
-           
+           ORDER BY l47.reqst_no DESC
     </select> 
   
     <insert id="insStockTransfer" parameterType="Map">
@@ -211,6 +211,12 @@
                #{item}
                </foreach>
 		   </if>
+		   <if test="catetype != null and catetype !=''">
+              and l56.stk_ctgry_id in
+              <foreach item="item" collection="catetype" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
     </select>
     
     <select id="stockTransferItemDeliveryQty" parameterType="Map" resultType="egovMap">
@@ -404,7 +410,6 @@
 				    ON (LG60D.STOCK_TRNSFR_REQST = lg47m.REQST_NO)
 				JOIN LOG0048D lg48d 
 				    ON (LG60D.STOCK_TRNSFR_REQST = lg48d.REQST_NO 
-				          AND LG60D.DELVRY_ITM_NO = lg48d.REQST_NO_ITM
 				          AND lg60d.MATRL_NO = lg48d.ITM_CODE)
 				JOIN (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 306) tran
 				    ON (lg47m.TRNSC_TYPE = tran.CODE)

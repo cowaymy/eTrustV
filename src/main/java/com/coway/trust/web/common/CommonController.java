@@ -3,6 +3,7 @@ package com.coway.trust.web.common;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +45,12 @@ public class CommonController {
 	private DatabaseDrivenMessageSource dbMessageSource;
 
 	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "notin", required = false) String[] notin) {
+		
+		params.put("notin", notin);
 
-		LOGGER.debug("groupCode : {}", params.get("groupCode"));
+		LOGGER.debug("groupCode : {}", params);
 
 		List<EgovMap> codeList = commonService.selectCodeList(params);
 		return ResponseEntity.ok(codeList);
@@ -240,5 +244,13 @@ public class CommonController {
 	public ResponseEntity<List<EgovMap>> selectAdjReasonList(@RequestParam Map<String, Object> params){
 		List<EgovMap> codeList = commonService.selectAdjReasonList(params);
 		return ResponseEntity.ok(codeList);
+	}
+	
+	@RequestMapping(value = "/SysdateCall.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> SysdateCall(@RequestParam Map<String, Object> params){
+		String rvalue = commonService.SysdateCall(params);
+		Map<String, Object> rmap = new HashMap();
+		rmap.put("date", rvalue);
+		return ResponseEntity.ok(rmap);
 	}
 }

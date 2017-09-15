@@ -51,6 +51,7 @@ var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
 
 var uomlist = f_getTtype('42' , '');
 var paramdata;
+
 $(document).ready(function(){
     /**********************************
     * Header Setting
@@ -58,12 +59,14 @@ $(document).ready(function(){
     //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
 	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , '');
-    doGetComboData('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , '');
-    paramdata2 = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'UM'};
-    doGetComboData('/common/selectCodeList.do', paramdata2, '','smtype', 'S' , '');
+    doGetComboData('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , 'transferTypeFunc');
     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
+    doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); //청구처 리스트 조회
+    doSysdate(0 , 'docdate');
+    doSysdate(0 , 'reqcrtdate');
+    
     //$("#cancelTr").hide();
     /**********************************
      * Header Setting End
@@ -206,6 +209,11 @@ $(function(){
     });
 });
 
+function transferTypeFunc(){
+    paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+    doGetComboData('/common/selectCodeList.do', paramdata, 'UM03','smtype', 'S' , '');
+}
+
 function locationList(){
     $('#list').click();
 }
@@ -332,7 +340,12 @@ function f_AddRow() {
 
 function f_multiCombo() {
     $(function() {
-        $('#cType').change(function() {
+    	$('#catetype').change(function() {
+
+        }).multipleSelect({
+            selectAll : true
+        });
+    	$('#cType').change(function() {
 
         }).multipleSelect({
             selectAll : true
@@ -364,7 +377,7 @@ function f_multiCombo() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:180px" />
     <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
@@ -453,35 +466,17 @@ function f_multiCombo() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:140px" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:180px" />
     <col style="width:*" />
     <col style="width:100px" />
-    <col style="width:*" />
-    <col style="width:90px" />
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Material Code</th>
+    <th scope="row">Category</th>
     <td>
-
-    <div class="date_set"><!-- date_set start -->
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div><!-- date_set end -->
-
+        <select class="w100p" id="catetype" name="catetype"></select>
     </td>
     <th scope="row">Type</th>
     <td >
@@ -523,14 +518,13 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Request Item</h3>
+<ul class="right_btns">
+<!--     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li> -->
+    <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li>
-    <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="req_grid_wrap" ></div>

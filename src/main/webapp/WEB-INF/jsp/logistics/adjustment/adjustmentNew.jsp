@@ -253,6 +253,7 @@ $(function(){
 function searchAjax() {
     var url = "/logistics/adjustment/adjustmentList.do";
     var param = $('#searchForm').serializeJSON();
+    console.log(param);
     Common.ajax("POST" , url , param , function(result){
         AUIGrid.setGridData(myGridID, result.dataList);
         $("#detail").show();

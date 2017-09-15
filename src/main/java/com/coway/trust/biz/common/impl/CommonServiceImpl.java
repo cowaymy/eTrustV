@@ -1076,4 +1076,9 @@ public class CommonServiceImpl extends EgovAbstractServiceImpl implements Common
 		return commonMapper.selectAdjReasonList(params);
 		
 	}
+	
+	@Override
+	public String SysdateCall(Map<String, Object> params) {	
+		return commonMapper.SysdateCall(params);
+	}
 }

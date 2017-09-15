@@ -87,8 +87,9 @@ $(document).ready(function(){
 	/**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:'US'};
+	
+	doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
@@ -185,7 +186,7 @@ $(function(){
     	SearchListAjax();
     });
     $("#sttype").change(function(){
-        paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+        paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $('#delivery').click(function(){

@@ -75,7 +75,7 @@ $(document).ready(function(){
 	/**********************************
     * Header Setting
     **********************************/
-    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
+    paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:'US'};
     doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');

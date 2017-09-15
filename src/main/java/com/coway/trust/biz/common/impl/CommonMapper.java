@@ -205,4 +205,6 @@ public interface CommonMapper {
 	 * @return
 	 */
 	List<EgovMap> selectAdjReasonList(Map<String, Object> params);
+	
+	String SysdateCall(Map<String, Object> params);
 }

@@ -123,7 +123,7 @@ public class AdjustmentController {
 	@RequestMapping(value = "/adjustmentList.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> adjustmentList(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
-
+		logger.debug("adjNo : {} ", params);
 		List<EgovMap> list = adjustmentService.selectAdjustmentList(params);
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

@@ -292,10 +292,12 @@ public class StocktransferController {
 	public ResponseEntity<Map> stockTransferTolocationItemList(Model model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
+		String[] catetype = request.getParameterValues("catetype");
 		String[] type = request.getParameterValues("cType");
 		String toloc = request.getParameter("slocation");
 
 		Map<String, Object> smap = new HashMap();
+		smap.put("catetype", catetype);
 		smap.put("ctype", type);
 		smap.put("toloc", toloc);
 

@@ -162,10 +162,11 @@ $(document).ready(function(){
 	/**********************************
     * Header Setting
     **********************************/
+    
     //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
 	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     //doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
-    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+    doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
@@ -355,6 +356,8 @@ $(function(){
 	            $("#giptdate").val("");
 	            $("#gipfdate").val("");
 	            $("#doctext").val("");
+	            doSysdate(0 , 'giptdate');
+	            doSysdate(0 , 'gipfdate');
 	            AUIGrid.clearGridData(serialGrid);
 	            AUIGrid.resize(serialGrid); 
 	            //fn_itempopList(checkedItems);
@@ -700,7 +703,7 @@ function fn_serialChck(rowindex , rowitem , str){
             <tbody>
                 <tr>
                     <th scope="row">GI Posting Date</th>
-                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>    
                     <th scope="row">GI Proof Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
                 </tr>
