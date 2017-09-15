@@ -276,7 +276,9 @@ var discountLayout = [
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:190px" />
+    <col style="width:110px" />
+    <col style="width:*" />
+    <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -287,7 +289,7 @@ var discountLayout = [
      </td>
      <th scope="row">Customer Name</th>
      <td colspan="2">
-        <input type="text" name="custName" id="custName" title="" placeholder="" style="width:80%"  class="readonly"/>
+        <input type="text" name="custName" id="custName" title="" placeholder="" style="width:60%"  class="readonly"/>
         <p class="btn_sky">
             <a href="javascript:fn_orderSearch();" id="search">Search</a>
         </p>
