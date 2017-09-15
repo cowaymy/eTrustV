@@ -41,7 +41,7 @@
         createAUIGrid11();
         
         //Call Ajax (for Grid)
-      /*   fn_selectOrderSameRentalGroupOrderList();
+        fn_selectOrderSameRentalGroupOrderList();
         fn_selectMembershipInfoList();
         fn_selectDocumentList();
         fn_selectCallLogList();
@@ -51,7 +51,7 @@
         fn_selectDiscountList();
         fn_selectAfterServiceList();
         fn_selectBeforeServiceList(); 
-        fn_selectOrderJsonList(); */ 
+        fn_selectOrderJsonList();
         
         //resize
         fn_allGridResize();

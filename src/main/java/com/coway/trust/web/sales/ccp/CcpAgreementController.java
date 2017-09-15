@@ -98,7 +98,7 @@ public class CcpAgreementController {
 		EgovMap orderDetail = null;
 		params.put("prgrsId", prgrsId);
 	
-        //orderDetail = orderDetailService.selectOrderBasicInfo(params);
+        orderDetail = orderDetailService.selectOrderBasicInfo(params);
 		
 		model.put("orderDetail", orderDetail);
 		model.put("salesOrderNo", params.get("salesOrderNo"));
