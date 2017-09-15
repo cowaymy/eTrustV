@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.coway.trust.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class LoginController {
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "ID" }));
 		} else {
 
-			String clientIp = getClientIp(request);
+			String clientIp = CommonUtils.getClientIp(request);
 
 			LoginHistory loginHistory = new LoginHistory();
 			loginHistory.setSystemId(AppConstants.LOGIN_WEB);
@@ -88,33 +89,6 @@ public class LoginController {
 		}
 
 		return ResponseEntity.ok(message);
-	}
-
-	private String getClientIp(HttpServletRequest request) {
-		String clientIp = request.getHeader("X-Forwarded-For");
-
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("Proxy-Client-IP");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("HTTP_CLIENT_IP");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("X-Real-IP");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getHeader("X-RealIP");
-		}
-		if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {
-			clientIp = request.getRemoteAddr();
-		}
-		return clientIp;
 	}
 
 	@RequestMapping(value = "/logout.do")

@@ -66,7 +66,7 @@ public class GSTZeroRateLocationController {
 	
 	// save UserExptAuth
 			@RequestMapping(value = "/saveGSTExportation.do", method = RequestMethod.POST)
-			public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO) 
+			public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
 			{
 				List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
 				List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
@@ -108,7 +108,7 @@ public class GSTZeroRateLocationController {
 	
 	//GST Zero Rate Location
 	@RequestMapping(value = "/gstZeroRateLocation.do")
-	public String getStateCodeList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	public String gstZeroRateLocation(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 		params.put("stusCodeId", 1);
 		List<EgovMap> stateCodeList = gstZeroRateLocationService.getStateCodeList(params);
 		model.addAttribute("stateCodeList", new Gson().toJson(stateCodeList));
@@ -116,7 +116,7 @@ public class GSTZeroRateLocationController {
 	}
 
 	@RequestMapping(value = "/getStateCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectJsonSampleList(@RequestParam Map<String, Object> params) {
+	public ResponseEntity<List<EgovMap>> getStateCodeList(@RequestParam Map<String, Object> params) {
 		Precondition.checkNotNull(params.get("stusCodeId"),
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "stusCodeId" }));
 

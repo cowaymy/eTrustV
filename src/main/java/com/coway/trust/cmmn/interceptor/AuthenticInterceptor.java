@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.coway.trust.biz.common.AccessMonitoringService;
+import com.coway.trust.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
 	@Autowired
 	private MenuService menuService;
+
+	@Autowired
+	private AccessMonitoringService accessMonitoringService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -68,8 +73,16 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
 		if (modelAndView != null) {
 			Map<String, Object> params = new HashMap<>();
+
 			params.put("userId", sessionVO.getUserId());
 			params.put("pgmPath", request.getRequestURI());
+			params.put("userName", sessionVO.getUserName());
+			params.put("systemId", AppConstants.LOGIN_WEB);
+			params.put("pgmCode", "-");
+			params.put("ipAddr", CommonUtils.getClientIp(request));
+
+			accessMonitoringService.insertAccessMonitoring(params);
+
 			modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
 			modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
 			modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));

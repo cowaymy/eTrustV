@@ -55,7 +55,7 @@ var Common = {
                 }
             },
             crossDomain: true,
-            dataType: "json",
+            dataType: "text json",
             data: _params,
             async: option.async,
             success: function (data, textStatus, jqXHR) {
@@ -70,6 +70,14 @@ var Common = {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+
+                //ResponseEntity.ok(null) 인 경우 처리.
+                if(jqXHR.status == "200"){
+                    if (_callback) {
+                        _callback(data, textStatus, jqXHR);
+                    }
+                    return true;
+                }
 
                 try {
                     console.log("status : " + jqXHR.status);
