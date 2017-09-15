@@ -13,8 +13,17 @@ public interface PointOfSalesService {
 	
 	List<EgovMap>  selectPointOfSalesSerial(Map<String, Object> params);
 	
+	List<EgovMap>  selectPosReqNoList(Map<String, Object> params);
+	
 	String insertPosInfo(Map<String, Object> params);
 	
 	void  insertSerial(Map<String, Object> params);
+	
+	void  insertGiInfo(Map<String, Object> params);
+	
+	Map<String, Object> PosDataDetail(String param);
+	
+	List<EgovMap> selectSerial(String params);
+	
 	
 }
