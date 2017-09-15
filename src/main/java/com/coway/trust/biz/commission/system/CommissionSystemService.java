@@ -5,6 +5,11 @@ import java.util.Map;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/**
+ *  Commission System Management
+ * @param params
+ * @return
+ */
 public interface CommissionSystemService
 {
 
