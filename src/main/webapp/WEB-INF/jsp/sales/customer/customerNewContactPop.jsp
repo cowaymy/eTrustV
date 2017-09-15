@@ -54,8 +54,8 @@ $(document).ready(function() {
             return;
         }
         //Nric
-        if("" != $("#cntcNric").val() || null != $("#cntcNric").val()){
-            if(FormUtil.checkNum($("#nric"))){
+        if("" != $("#cntcNric").val() && null != $("#cntcNric").val()){
+            if(FormUtil.checkNum($("#cntcNric"))){
                 Common.alert("* Invalid nric number.");
                 return;
             }
@@ -68,28 +68,28 @@ $(document).ready(function() {
             return;
         }else{
             // telm(Mobile)
-            if("" != $("#cntcTelm").val() || null != $("#cntcTelm").val()){
+            if("" != $("#cntcTelm").val() && null != $("#cntcTelm").val()){
                 if(FormUtil.checkNum($("#cntcTelm"))){
                     Common.alert("* Invalid telephone number (Mobile).");
                     return;
                 }
             }
             // telr(Residence)
-            if("" != $("#cntcTelr").val() || null != $("#cntcTelr").val()){
+            if("" != $("#cntcTelr").val() && null != $("#cntcTelr").val()){
                 if(FormUtil.checkNum($("#cntcTelr"))){
                     Common.alert("* Invalid telephone number (Residence).");
                     return;
                 }
             }
             // telo(Office)
-            if("" != $("#cntcTelo").val() || null != $("#cntcTelo").val()){
+            if("" != $("#cntcTelo").val() && null != $("#cntcTelo").val()){
                 if(FormUtil.checkNum($("#cntcTelo"))){
                     Common.alert("* Invalid telephone number (Office).");
                     return;
                 }
             }
             // telf(Fax)
-            if("" != $("#cntcTelf").val() || null != $("#cntcTelf").val()){
+            if("" != $("#cntcTelf").val() && null != $("#cntcTelf").val()){
                 if(FormUtil.checkNum($("#cntcTelf"))){
                     Common.alert("* Invalid telephone number (Fax).");
                     return;
