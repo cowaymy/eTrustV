@@ -100,7 +100,7 @@ public class BillingMgmtController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initMonthlyRawData.do")
-	public String initBillingRawData(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initMonthlyRawData(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billing/monthlyBillRawData";
 	}
 	

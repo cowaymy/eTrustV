@@ -282,5 +282,9 @@ var FormUtil = {
 		}
 		return rtnDate;
 	},
-
+	
+	lpad : function (param, length, str) {
+	    param = param + ""
+	    return param.length >= length ? param : new Array(length - param.length + 1).join(str) + param;
+	}
 };
