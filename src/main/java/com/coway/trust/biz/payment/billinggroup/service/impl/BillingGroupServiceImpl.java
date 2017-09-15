@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
-
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -38,16 +36,9 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	private static final Logger logger = LoggerFactory.getLogger(BillingGroupServiceImpl.class);
 
-	@Value("${app.name}")
-	private String appName;
-
 	@Resource(name = "billingGroupMapper")
 	private BillingGroupMapper billingGroupMapper;
 
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
-
-	
 	
 	/**
 	 * selectCustBillId 조회
@@ -639,10 +630,10 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			insBillGrpMap.put("userId", userId);
 			insBillGrpMap.put("custBillPayTrm", "0");
 			insBillGrpMap.put("custBillInchgMemId", "0");
-			insBillGrpMap.put("custBillEmail", String.valueOf(params.get("email")));
+			insBillGrpMap.put("custBillEmail", params.get("email") != null ? String.valueOf(params.get("email")) : "");
 			insBillGrpMap.put("custBillIsEstm", "0");
-			insBillGrpMap.put("custBillIsSms", params.get("sms") != null ? String.valueOf(params.get("sms")) : "0");
-			insBillGrpMap.put("custBillIsPost", params.get("post") != null ? String.valueOf(params.get("post")) : "0");
+			insBillGrpMap.put("custBillIsSms", params.get("sms") != null ? "1" : "0");
+			insBillGrpMap.put("custBillIsPost", params.get("post") != null ? "1" : "0");
 			
 			int custBillIdSeq = billingGroupMapper.getSAL0024DSEQ();
 			grpNo = billingGroupMapper.selectDocNo24Seq();
@@ -796,7 +787,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			String salesOrderIDOld = "0";
 			String salesOrderIDNew = "0";
 			String contactIDOld = custBillCntId;
-			String contactIDNew = String.valueOf(params.get("custCntcId"));;
+			String contactIDNew = String.valueOf(params.get("custCntcId"));
 			String addressIDOld = "0";
 			String addressIDNew = "0";
 			String statusIDOld = "0";
@@ -907,7 +898,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		String remarkOld = "";
 		String remarkNew = "";
 		String emailOld = custBillEmail;
-		String emailNew = String.valueOf(params.get("reqEmail")).trim();;
+		String emailNew = String.valueOf(params.get("reqEmail")).trim();
 		String isEStatementOld = custBillIsEstm;
 		String isEStatementNew = custBillIsEstm;
 		String isSMSOld = custBillIsSms;
