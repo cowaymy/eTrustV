@@ -4,11 +4,18 @@
 <script type="text/javascript">
 //AUIGrid 생성 후 반환 ID
 var ccpGridID;
+var ordGridID;
 
 
 $(document).ready(function() {
 	
 	createCcpAUIGrid();
+	createOrdAUIGrid();
+	
+	AUIGrid.resize(ordGridID, null, 300);
+	
+	//hidding OrdGrid
+	$("#ord_grid_wrap").css("display" , "none");
 	
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(ccpGridID, "cellDoubleClick", function(event){
@@ -21,6 +28,18 @@ $(document).ready(function() {
     	self.location.href= "/sales/ccp/insertCcpAgreementSearch.do";
 	});
 	
+    // 셀 클릭 이벤트 바인딩
+    AUIGrid.bind(ccpGridID, "cellClick", function(event) {
+    	
+    	//Grid 데이터 가져오기
+    	$("#_ordAgId").val(event.item.govAgId);
+    	Common.ajax("GET", "/sales/ccp/selectListOrdersAjax",  $("#ordGridForm").serialize(), function(result) {
+            AUIGrid.setGridData(ordGridID, result);
+         });
+    	//Gird 보여주기
+    	$("#ord_grid_wrap").css("display" , "");
+    });
+	 
 });
 
 
@@ -49,28 +68,63 @@ function createCcpAUIGrid(){
 	
 	//그리드 속성 설정
     var gridPros = {
-            usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+			usePaging           : true,         //페이징 사용
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
             editable            : false,            
-            fixedColumnCount    : 0,            
-            showStateColumn     : false,             
-            displayTreeOpen     : true,            
+            fixedColumnCount    : 1,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
             selectionMode       : "singleRow",  //"multipleCells",            
             headerHeight        : 30,       
-            rowHeight           : 150,   
-            wordWrap            : true, 
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
 	
-	ccpGridID = GridCommon.createAUIGrid("#ccp_grid_wrap", columnLayout, gridPros);
+	ccpGridID = GridCommon.createAUIGrid("#ccp_grid_wrap", columnLayout,'', gridPros);
+}
+
+function createOrdAUIGrid(){
+	
+	var orderColumnLayout = [
+                             
+                             {dataField : "salesOrdNo" , headerText : "Order No" , width : "20%"},  
+                             {dataField : "name" , headerText : "Customer" , width : "40%"},
+                             {dataField : "govAgItmInstResult" , headerText : "Install Result" , width : "20%"},    
+                             {dataField : "govAgItmRentResult" , headerText : "Rental Status" , width : "20%"}
+                            
+       ];
+      
+       //그리드 속성 설정
+      var gridPros = {
+              
+              usePaging           : true,         //페이징 사용
+              pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+              editable            : false,            
+              fixedColumnCount    : 1,            
+              showStateColumn     : true,             
+              displayTreeOpen     : false,            
+              selectionMode       : "singleRow",  //"multipleCells",            
+              headerHeight        : 30,       
+              useGroupingPanel    : false,        //그룹핑 패널 사용
+              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+              showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+              noDataMessage       : "No Order found.",
+              groupingMessage     : "Here groupping"
+          };
+      
+      ordGridID = GridCommon.createAUIGrid("ord_grid_wrap", orderColumnLayout,'', gridPros);
+	
 }
 </script>
 <div id="wrap"><!-- wrap start -->
+<form id="ordGridForm">
+    <input type="hidden" id="_ordAgId" name="ordAgId">    
+</form>
 <form id="popForm">
     <input type="hidden" id="_govAgId" name="govAgId" >
 </form>
@@ -86,7 +140,7 @@ function createCcpAUIGrid(){
 <h2>Government Agreement List</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span>Add</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span>New</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -216,6 +270,11 @@ function createCcpAUIGrid(){
 <div id="ccp_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
+<hr/>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="ord_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
 </section><!-- search_result end -->
 
 </section><!-- content end -->

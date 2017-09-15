@@ -128,7 +128,7 @@ $(document).ready(function() {
 <tr>
     <th scope="row">Order No</th>
     <td><input type="text" title="" placeholder="Order No" class="w100p" name="searchOrdNo" /></td>
-    <th scope="row">App Type</th>
+    <th scope="row">App Type</th><!-- ASIS Source Not Exist -->
     <td>
     <select class="w100p"></select>
     </td>
@@ -145,16 +145,6 @@ $(document).ready(function() {
 </table><!-- table end -->
 </form>
 <section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="order_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

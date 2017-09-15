@@ -41,7 +41,7 @@
         createAUIGrid11();
         
         //Call Ajax (for Grid)
-        fn_selectOrderSameRentalGroupOrderList();
+      /*   fn_selectOrderSameRentalGroupOrderList();
         fn_selectMembershipInfoList();
         fn_selectDocumentList();
         fn_selectCallLogList();
@@ -51,7 +51,7 @@
         fn_selectDiscountList();
         fn_selectAfterServiceList();
         fn_selectBeforeServiceList(); 
-        fn_selectOrderJsonList();
+        fn_selectOrderJsonList(); */ 
         
         //resize
         fn_allGridResize();
@@ -153,7 +153,13 @@
         		});
         	}
 		});
-    });
+        
+        //Order Search
+        $("#_newOrderSearch").click(function() {
+        	Common.popupDiv('/sales/ccp/searchOrderNoByEditPop.do' , $('#_searchForm').serializeJSON(), null , true, '_searchEditDiv');
+		});
+        
+    });//Doc Ready End
    
     function fn_disableAllField(){
     	
@@ -2222,21 +2228,12 @@ function createAUIGrid11() {
     <th scope="row">New Order No<span class="must">*</span></th>
     <td>
         <input type="text" title="" placeholder="" class="" style="width:100px" id="_inputConfirmNewOrder" name="inputConfirmNewOrder" maxlength="20"/>
-        <p class="btn_sky"><a  id="_newOrderConfirm">Confirm New Order</a></p> 
+        <p class="btn_sky"><a  id="_newOrderConfirm">Confirm New Order</a></p>
+        <p class="btn_sky"><a  id="_newOrderSearch">Search</a></p>  
     </td>
 </tr>
 </tbody>
 </table>
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start --> 
 <div id="grid_orderList_wrap" style="width:100%; height:380px; margin:0 auto;"></div>

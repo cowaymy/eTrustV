@@ -95,10 +95,10 @@ public class CcpAgreementController {
 	public String getOrderDetailInfo (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 
 		int prgrsId = 0;
-		
+		EgovMap orderDetail = null;
 		params.put("prgrsId", prgrsId);
 	
-        EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+        //orderDetail = orderDetailService.selectOrderBasicInfo(params);
 		
 		model.put("orderDetail", orderDetail);
 		model.put("salesOrderNo", params.get("salesOrderNo"));
@@ -326,6 +326,18 @@ public class CcpAgreementController {
 	}
 	
 	
+	@RequestMapping(value = "/selectListOrdersAjax")
+	public ResponseEntity<List<EgovMap>> selectListOrdersAjax (@RequestParam Map<String, Object> params) throws Exception{
+		
+		params.put("govAgId", params.get("ordAgId"));
+		List<EgovMap> orderList = null;
+		orderList = ccpAgreementService.selectContactOrdersAjax(params);
+		
+		return ResponseEntity.ok(orderList);
+		
+	}
+	
+	
 	@RequestMapping(value = "/updateAgreementMtcEdit.do")
 	public ResponseEntity<Map<String, Object>> updateAgreementMtcEdit (@RequestParam Map<String, Object> params) throws Exception{
 		
@@ -412,6 +424,13 @@ public class CcpAgreementController {
 		
 		return "sales/ccp/ccpAgreementMtxViewEditUploadPop";
 		
+	}
+	
+	
+	@RequestMapping(value = "/searchOrderNoByEditPop.do")
+	public String	searchOrderNoByEditPop (@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/ccp/ccpAgreementSearchOrderNoByEditPop";
 	}
 }
 
