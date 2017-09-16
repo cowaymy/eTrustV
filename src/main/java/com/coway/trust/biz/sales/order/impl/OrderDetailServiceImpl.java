@@ -144,14 +144,14 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	private void loadOrderGuaranteeInfo(EgovMap grntnfo, EgovMap installationInfo) throws ParseException {
 		
 		SimpleDateFormat format = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT3, Locale.getDefault());
-		SimpleDateFormat format2 = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT2,  Locale.getDefault());
+		SimpleDateFormat format2 = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT1,  Locale.getDefault());
 		String fiDt = (String)installationInfo.get("firstInstallDt");
 		
-		String[] arrFidt = fiDt.split("-");
+		String[] arrFidt = fiDt.split("/");
 		
 		Calendar c = Calendar.getInstance();
 
-		c.set(Integer.valueOf(arrFidt[0]), Integer.valueOf(arrFidt[1])-1, Integer.valueOf(arrFidt[2]),0,0,0);        
+		c.set(Integer.valueOf(arrFidt[2]), Integer.valueOf(arrFidt[1])-1, Integer.valueOf(arrFidt[0]),0,0,0);        
 		c.add(Calendar.MONTH, 25);
 
 		logger.debug("!@###### Calendar.MONTH  : "+Calendar.MONTH);

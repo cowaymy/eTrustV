@@ -27,4 +27,10 @@ public interface OrderModifyService {
 
 	void updateNric(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
+	EgovMap selectInstallInfo(Map<String, Object> params) throws Exception;
+
+	EgovMap selectInstallAddrInfo(Map<String, Object> params) throws Exception;
+
+	EgovMap selectInstallCntcInfo(Map<String, Object> params) throws Exception;
+
 }

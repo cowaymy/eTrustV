@@ -76,6 +76,9 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "orderModifyMapper")
 	private OrderModifyMapper orderModifyMapper;
 
+	@Resource(name = "orderDetailMapper")
+	private OrderDetailMapper orderDetailMapper;
+
 	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;
 
@@ -279,6 +282,30 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		EgovMap outMap = orderModifyMapper.selectCustInfo(params);
 
 		return outMap;
+	}
+	
+	@Override
+	public EgovMap selectInstallInfo(Map<String, Object> params) throws Exception {
+
+		EgovMap instMap = orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
+
+		return instMap;
+	}
+	
+	@Override
+	public EgovMap selectInstallAddrInfo(Map<String, Object> params) throws Exception {
+
+		EgovMap addrMap = customerMapper.selectCustomerViewMainAddress(params);
+
+		return addrMap;
+	}
+	
+	@Override
+	public EgovMap selectInstallCntcInfo(Map<String, Object> params) throws Exception {
+
+		EgovMap cnctMap = customerMapper.selectCustomerViewMainContact(params);
+		
+		return cnctMap;
 	}
 	
 

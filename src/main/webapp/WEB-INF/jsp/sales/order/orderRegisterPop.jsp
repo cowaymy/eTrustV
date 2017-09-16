@@ -588,53 +588,12 @@
             }
         });
         $('#custId').change(function(event) {
-
-            var strCustId = $('#custId').val();
-
-            //CLEAR CUSTOMER
-//          this.ClearControl_Customer();
-//          this.ClearControl_MailAddress();
-//          this.ClearControl_ContactPerson();
-            fn_clearCustomer();
-            fn_clearMailAddress();
-            fn_clearContactPerson();
-
-            //CLEAR SALES
-            fn_tabOnOffSet('PAY_CHA', 'HIDE');
-            fn_tabOnOffSet('BIL_DTL', 'HIDE');
-
-            $('#appType').val('');
-
-            //ClearControl_Sales();
-            fn_clearSales();
-
-            //CLEAR RENTAL PAY SETTING
-            $('#thrdParty').val('');
-
-            fn_clearRentPayMode();
-            fn_clearRentPay3thParty();
-            fn_clearRentPaySetCRC();
-            fn_clearRentPaySetDD();
-
-            //CLEAR BILLING GROUP
-            fn_clearBillGroup();
-
-            //CLEAR INSTALLATION
-            fn_clearInstallAddr();
-            fn_clearCntcPerson();
-
-            //CLEAR Search Form
-            fn_clearSearchForm();
-
-            if(FormUtil.isNotEmpty(strCustId) && strCustId > 0) {
-
-                fn_tabOnOffSet('BIL_DTL', 'SHOW');
-
-                fn_loadCustomer(strCustId);
-            }
-            else {
-                Common.alert('<b>Invalid customer ID.</b>');
-            }
+            fn_selectCustInfo();
+        });
+        $('#custId').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_selectCustInfo();
+            }  
         });
         $('#salesmanCd').change(function(event) {
 
@@ -908,6 +867,54 @@
         });
     });
 
+    function fn_selectCustInfo() {
+        var strCustId = $('#custId').val();
+
+        //CLEAR CUSTOMER
+//          this.ClearControl_Customer();
+//          this.ClearControl_MailAddress();
+//          this.ClearControl_ContactPerson();
+        fn_clearCustomer();
+        fn_clearMailAddress();
+        fn_clearContactPerson();
+
+        //CLEAR SALES
+        fn_tabOnOffSet('PAY_CHA', 'HIDE');
+        fn_tabOnOffSet('BIL_DTL', 'HIDE');
+
+        $('#appType').val('');
+
+        //ClearControl_Sales();
+        fn_clearSales();
+
+        //CLEAR RENTAL PAY SETTING
+        $('#thrdParty').val('');
+
+        fn_clearRentPayMode();
+        fn_clearRentPay3thParty();
+        fn_clearRentPaySetCRC();
+        fn_clearRentPaySetDD();
+
+        //CLEAR BILLING GROUP
+        fn_clearBillGroup();
+
+        //CLEAR INSTALLATION
+        fn_clearInstallAddr();
+        fn_clearCntcPerson();
+
+        //CLEAR Search Form
+        fn_clearSearchForm();
+
+        if(FormUtil.isNotEmpty(strCustId) && strCustId > 0) {
+
+            fn_tabOnOffSet('BIL_DTL', 'SHOW');
+
+            fn_loadCustomer(strCustId);
+        }
+        else {
+            Common.alert('<b>Invalid customer ID.</b>');
+        }
+    }
 /*******************************************************************************
     Save Logic [START]
 *******************************************************************************/

@@ -395,7 +395,7 @@
              , V1.FIRST_INSTALL_NO
              , V1.FIRST_INSTALL_CT_CODE
              , V1.FIRST_INSTALL_CT_NAME
-             , TO_CHAR(V1.FIRST_INSTALL_DT, 'YYYY-MM-DD') FIRST_INSTALL_DT
+             , V1.FIRST_INSTALL_DT
              , V1.FIRST_INSTALL_REM
              , V1.FIRST_INSTALL_SIRIM_NO
              , V1.FIRST_INSTALL_SERIAL_NO

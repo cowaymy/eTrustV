@@ -182,4 +182,32 @@ public class OrderModifyController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
+	
+	@RequestMapping(value = "/selectInstallInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectInstallInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectInstallInfo(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/selectInstallAddrInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectInstallAddrInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectInstallAddrInfo(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/selectInstallCntcInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectInstallCntcInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectInstallCntcInfo(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
 }
