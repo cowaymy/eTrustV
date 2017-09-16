@@ -35,4 +35,18 @@ public interface AdjustmentMapper {
 
 	void insertAdjustmentLocSerial(Map<String, Object> params);
 
+	void insertExcel(Map<String, Object> setMap);
+
+	int updateSaveYn(Map<String, Object> params);
+
+	List<EgovMap> selectAdjustmentApproval(Map<String, Object> params);
+
+	List<EgovMap> selectAdjustmentApprovalCnt(Map<String, Object> params);
+
+	List<EgovMap> selectAdjustmentApprovalLineCheck(Map<String, Object> params);
+
+	void updateApproval(Map<String, Object> params);
+
+	void updateDoc(Map<String, Object> setmap);
+
 }

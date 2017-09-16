@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.adjustment.AdjustmentService;
-import com.coway.trust.biz.logistics.asset.impl.AssetMngServiceImpl;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -21,7 +20,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("adjustmentService")
 public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements AdjustmentService {
 
-	private static final Logger logger = LoggerFactory.getLogger(AssetMngServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdjustmentServiceImpl.class);
 
 	@Resource(name = "adjustmentMapper")
 	private AdjustmentMapper adjustmentMapper;
@@ -195,5 +194,68 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 				// adjustmentMapper.insertAdjustmentLocSerial(setMap);
 			}
 		}
+	}
+
+	@Override
+	public void insertExcel(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		List<Object> addList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		logger.debug("addList size : {} ", addList.size());
+		logger.debug("adj addList : {} ", addList.toString());
+		if (addList.size() > 0) {
+			for (int i = 0; i < addList.size(); i++) {
+				Map<String, Object> getMap = (Map<String, Object>) addList.get(i);
+				// logger.debug("addList : {} ", addList.get(i).toString());
+				Map<String, Object> setMap = new HashMap();
+				logger.debug("invntryLocId : {} ", getMap.get("invntryLocId"));
+				logger.debug("serialChk : {} ", getMap.get("serialChk"));
+				setMap.put("invntryLocId", getMap.get("invntryLocId"));
+				setMap.put("stkAdNo", getMap.get("Stock Audit No"));
+				setMap.put("locId", getMap.get("locId"));
+				setMap.put("seq", getMap.get("seq"));
+				setMap.put("itmId", getMap.get("itmId"));
+				setMap.put("serialChk", getMap.get("serialChk"));
+				setMap.put("cntQty", getMap.get("cntQty"));
+				if ("".equals(getMap.get("serialChk")) || null == getMap.get("serialChk")) {
+					adjustmentMapper.insertExcel(setMap);
+				}
+			}
+		}
+	}
+
+	@Override
+	public int updateSaveYn(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return adjustmentMapper.updateSaveYn(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAdjustmentApproval(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return adjustmentMapper.selectAdjustmentApproval(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAdjustmentApprovalCnt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return adjustmentMapper.selectAdjustmentApprovalCnt(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAdjustmentApprovalLineCheck(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return adjustmentMapper.selectAdjustmentApprovalLineCheck(params);
+	}
+
+	@Override
+	public void updateApproval(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		adjustmentMapper.updateApproval(params);
+	}
+
+	@Override
+	public void updateDoc(Map<String, Object> setmap) {
+		// TODO Auto-generated method stub
+		adjustmentMapper.updateDoc(setmap);
 	}
 }

@@ -373,9 +373,11 @@
                   ON  lg72m.LOC_ID = sy28m.WH_LOC_ID
             WHERE 1=1
                  AND lg72m.INVNTRY_NO = #{invntryNo}
-                ORDER BY  lg72m.INVNTRY_LOC_ID,  lg72m.LOC_ID         
+                 <if test="invntryLocId !=null and invntryLocId !=''">
+                 AND lg72m.INVNTRY_LOC_ID = #{invntryLocId}
+                 </if>
+                ORDER BY  lg72m.INVNTRY_LOC_ID,  lg72m.LOC_ID    , lg73d.SEQ     
       </select>
-      
       <select id="selectCheckSerial" parameterType="Map" resultType="EgovMap">
           SELECT MAX(SERIAL_NO)  SERIAL_NO , MAX(MATNR) STKCODE , MAX(STKDESC) STKDESC , MAX(L62CNT) L62CNT , MAX(L61CNT) L61CNT , MAX(L63CNT) L63CNT
 	          FROM (  
@@ -400,5 +402,89 @@
 	             GROUP BY L63.SERIAL_NO
          )
       </select>
+      <update id="updateSaveYn" parameterType="Map">
+        UPDATE LOG0072M
+                    SET SAVE_YN='Y'
+			WHERE 1=1
+			            AND INVNTRY_NO=#{adjNo}
+			            AND LOC_ID=#{adjLocation}
+      </update>
+      <select id="selectAdjustmentApproval" parameterType="Map" resultType="EgovMap">
+      SELECT
+			INVNTRY_LOC_ID,
+			INVNTRY_NO,
+			DOC_DT,
+			LOC_ID,
+			SERIAL_PD_CHK,
+			SERIAL_FT_CHK,
+			SERIAL_PT_CHK,
+			SAVE_YN
+		FROM LOG0072M
+		WHERE INVNTRY_NO = #{invntryNo}
+        ORDER BY INVNTRY_LOC_ID, LOC_ID
+      </select>
+      <select id="selectAdjustmentApprovalCnt"  parameterType="Map" resultType="EgovMap">
+		SELECT 
+				COUNT(CASE WHEN INVNTRY_NO=#{invntryNo} THEN 1 END) TOTAL,
+				COUNT(CASE WHEN SAVE_YN='Y' THEN 1 END) Y
+		FROM LOG0072M
+		WHERE INVNTRY_NO =#{invntryNo}
+      </select>
+      <select id="selectAdjustmentApprovalLineCheck" parameterType="Map" resultType="EgovMap">
+      SELECT
+			INVNTRY_NO,
+			BASE_DT,
+			CNFM1,
+			CNFM1_DT,
+			CNFM2,
+			CNFM2_DT,
+			FILE_LOC,
+			FILE_NAME,
+			ORG_FILE_NAME,
+			HEAD_TITLE,
+			EVENT_TYPE,
+			ITM_TYPE,
+			AUTO_FLAG,
+			DEL_FLAG,
+			CRT_USER,
+			CRT_DATE
+      FROM LOG0071M
+      WHERE  1=1
+                AND INVNTRY_NO= #{invntryNo}
+      </select>
+      <update id="updateApproval" parameterType="Map">
+            UPDATE LOG0071M
+            <if test="status eq 'A'.toString() ">
+                      SET CNFM1='A',
+                            CNFM1_DT = SYSDATE
+
+            </if>
+            <if test="status eq 'A2'.toString() ">
+                      SET
+				            CNFM2='A',
+				            CNFM2_DT= SYSDATE
+            </if>
+            <if test="status eq 'R'.toString() ">
+                      SET CNFM1='R',
+                            CNFM1_DT = ''
+            </if>
+            <if test="status eq 'R2'.toString() ">
+                      SET 
+                            CNFM1_DT = '',
+                            CNFM2='R',
+                            CNFM2_DT= ''
+            </if>
+                WHERE  1=1
+                AND INVNTRY_NO= #{invntryNo}
       
+      </update>
+      
+      <update id="updateDoc" parameterType="Map">
+        UPDATE LOG0071M
+                   SET FILE_LOC=#{serverPath},
+                   FILE_NAME=#{physicalName},
+                   ORG_FILE_NAME=#{fileName}
+        WHERE  1=1
+                AND INVNTRY_NO= #{invntryNo}
+      </update>
 </mapper>

@@ -1,5 +1,6 @@
 package com.coway.trust.web.logistics.adjustment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,13 +23,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.logistics.adjustment.AdjustmentService;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -40,6 +47,9 @@ public class AdjustmentController {
 	@Value("${app.name}")
 	private String appName;
 
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
+
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
@@ -48,6 +58,9 @@ public class AdjustmentController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
+
+	@Autowired
+	private FileApplication fileApplication;
 
 	@Resource(name = "adjustmentService")
 	private AdjustmentService adjustmentService;
@@ -82,6 +95,30 @@ public class AdjustmentController {
 		return "logistics/adjustment/adjustmentCounting";
 	}
 
+	@RequestMapping(value = "/AdjustmentApproval.do", method = RequestMethod.POST)
+	public String AdjustmentConfirm(@RequestParam Map<String, Object> params, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		String rAdjcode = String.valueOf(params.get("rAdjcode"));
+		// String rAdjlocId = String.valueOf(params.get("rAdjlocId"));
+		// logger.debug("rAdjcode : {} ", rAdjcode);
+
+		model.addAttribute("rAdjcode", rAdjcode);
+		// model.addAttribute("rAdjlocId", rAdjlocId);
+		return "logistics/adjustment/adjustmentView";
+	}
+
+	@RequestMapping(value = "/AdjustmentApprovalSteps.do", method = RequestMethod.POST)
+	public String AdjustmentApprovalSteps(@RequestParam Map<String, Object> params, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		String rAdjcode = String.valueOf(params.get("rAdjcode"));
+		// String rAdjlocId = String.valueOf(params.get("rAdjlocId"));
+		// logger.debug("rAdjcode : {} ", rAdjcode);
+
+		model.addAttribute("rAdjcode", rAdjcode);
+		// model.addAttribute("rAdjlocId", rAdjlocId);
+		return "logistics/adjustment/adjustmentApproval";
+	}
+
 	@RequestMapping(value = "/NewAdjustmentRe.do", method = RequestMethod.POST)
 	public String NewAdjustmentRe(@RequestParam Map<String, Object> params, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -113,7 +150,7 @@ public class AdjustmentController {
 		logger.info("eventtype : {} ", params.get("eventtype"));
 		params.put("loginId", loginId);
 
-		adjustmentService.insertNewAdjustment(params);
+		// adjustmentService.insertNewAdjustment(params);
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
@@ -291,6 +328,18 @@ public class AdjustmentController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/adjustmentConfirm.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> adjustmentConfirm(@RequestParam Map<String, Object> params) {
+		logger.debug("adjNo : {}", params.get("adjNo"));
+		logger.debug("adjLocation : {}", params.get("adjLocation"));
+		int cnt = adjustmentService.updateSaveYn(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(cnt);
+		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/adjustmentLocManual.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> adjustmentLocSave(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
@@ -329,5 +378,95 @@ public class AdjustmentController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveExcelGrid.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveExcelGrid(@RequestBody Map<String, Object> params, Model model) {
+
+		// logger.info("params : {} ", params.toString());
+		// params.forEach(obj -> {
+		// LOGGER.debug("Product : {}", ((Map<String, Object>) obj).get("Product"));
+		// LOGGER.debug("Price : {}", ((Map<String, Object>) obj).get("Price"));
+		// });
+
+		// 결과 만들기 예.
+		adjustmentService.insertExcel(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/adjustmentApprovalList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> adjustmentApprovalList(@RequestParam Map<String, Object> params) {
+		logger.debug("adjNo : {}", params.get("adjNo"));
+		logger.debug("adjLocation : {}", params.get("adjLocation"));
+		List<EgovMap> dataList = adjustmentService.selectAdjustmentApproval(params);
+		List<EgovMap> cnt = adjustmentService.selectAdjustmentApprovalCnt(params);
+		// ReturnMessage message = new ReturnMessage();
+		// message.setCode(AppConstants.SUCCESS);
+		// message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setDataList(list);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("dataList", dataList);
+		map.put("cnt", cnt);
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/adjustmentApprovalLineCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> adjustmentApprovalLineCheck(@RequestParam Map<String, Object> params) {
+		logger.debug("adjNo : {}", params.get("adjNo"));
+		logger.debug("adjLocation : {}", params.get("adjLocation"));
+		List<EgovMap> dataList = adjustmentService.selectAdjustmentApprovalLineCheck(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(dataList);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/ApprovalUpdate.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> ApprovalUpadate(@RequestParam Map<String, Object> params) {
+		logger.debug("adjNo : {}", params.get("adjNo"));
+		logger.debug("status : {}", params.get("status"));
+		adjustmentService.updateApproval(params);
+		List<EgovMap> dataList = adjustmentService.selectAdjustmentApprovalLineCheck(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(dataList);
+		return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * 공통 파일 테이블 사용 Upload를 처리한다.
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/pdfUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovFormBasedFileVo>> pdfUpload(MultipartHttpServletRequest request,
+			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				"logitics" + File.separator + "stock_Audit", AppConstants.UPLOAD_MAX_FILE_SIZE);
+
+		String invntryNo = (String) params.get("adjNo");
+		logger.debug("param01 : {}", invntryNo);
+		logger.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
+		Map<String, Object> setmap = new HashMap();
+		setmap.put("fileName", list.get(0).getFileName());
+		setmap.put("physicalName", list.get(0).getPhysicalName());
+		setmap.put("serverPath", list.get(0).getServerPath());
+		setmap.put("invntryNo", invntryNo);
+		adjustmentService.updateDoc(setmap);
+		return ResponseEntity.ok(list);
 	}
 }
