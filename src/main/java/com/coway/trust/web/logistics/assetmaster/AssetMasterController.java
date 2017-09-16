@@ -170,17 +170,20 @@ public class AssetMasterController {
 		logger.debug("selectBrandListCode : {}", params.get("groupCode"));
 
 		List<EgovMap> BrandList = ams.selectBrandList(params);
-
+		for (int i = 0; i < BrandList.size(); i++) {
+			logger.debug("%%%%%%%%BrandList%%%%%%%: {}", BrandList.get(i));
+		}
+		
 		return ResponseEntity.ok(BrandList);
 	}
 
 	@RequestMapping(value = "/selectTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
-
+		
 		params.put("hrchytypeid", "1198");
 
 		List<EgovMap> TypeList = ams.selectTypeList(params);
-	/*	for (int i = 0; i < TypeList.size(); i++) {
+		/*for (int i = 0; i < TypeList.size(); i++) {
 			logger.debug("%%%%%%%%TypeList%%%%%%%: {}", TypeList.get(i));
 		}*/
 		return ResponseEntity.ok(TypeList);
@@ -190,10 +193,10 @@ public class AssetMasterController {
 	public ResponseEntity<List<EgovMap>> selectDepartmentList(@RequestParam Map<String, Object> params) {
 
 		List<EgovMap> DepartmentList = ams.selectDepartmentList(params);
-	/*	for (int i = 0; i < DepartmentList.size(); i++) {
-			logger.debug("%%%%%%%%DepartmentList%%%%%%%: {}", DepartmentList.get(i));
-		}
-*/
+//		for (int i = 0; i < DepartmentList.size(); i++) {
+//			logger.debug("%%%%%%%%DepartmentList%%%%%%%: {}", DepartmentList.get(i));
+//		}
+
 		return ResponseEntity.ok(DepartmentList);
 	}
 	
@@ -229,15 +232,13 @@ public class AssetMasterController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-		masterMap.put("crt_user_id", loginId);
-		masterMap.put("upd_user_id", loginId);
 
 		String retMsg = AppConstants.MSG_SUCCESS;
 
 		Map<String, Object> map = new HashMap();
 
 		try {
-			ams.insertAssetMng(masterMap, detailAddList);
+			ams.insertAssetMng(masterMap, detailAddList,loginId);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -300,18 +301,12 @@ public class AssetMasterController {
 	}
 
 
-	@RequestMapping(value = "/upItemAssetMng.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> UpItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
+	@RequestMapping(value = "/addItemAssetMng.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> addItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-		logger.debug("addassetid  : {}", params.get("addassetid"));
-		logger.debug("additemtype  : {}", params.get("additemtype"));
-		logger.debug("additemBrand  : {}", params.get("additemBrand"));
-		logger.debug("additemmodel  : {}", params.get("additemmodel"));
-		logger.debug("addremark  : {}", params.get("addremark"));
-		logger.debug("additemname  : {}", params.get("additemname"));
-		logger.debug("additemvalue  : {}", params.get("additemvalue"));
-		logger.debug("additemremark  : {}", params.get("additemremark"));
-
+		
+		logger.debug("아이템 추가 통과" );
+		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -319,18 +314,18 @@ public class AssetMasterController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-
-
+		
+		List<EgovMap> itemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		for (int i = 0; i < itemAddList.size(); i++) {
+			//itemAddList.get(i).put("loginId", loginId);
+			logger.debug("%%%%%@@@@@@@@@@@@@%%%itemAddList%%%%%%%: {}", itemAddList.get(i));
+		}
+		
 		String retMsg = AppConstants.MSG_SUCCESS;
-
-		// loginId
-		params.put("crt_user_id", loginId);
-		params.put("upd_user_id", loginId);
-
 		Map<String, Object> map = new HashMap();
 
 		try {			
-			ams.updateItemAssetMng(params);			
+			ams.addItemAssetMng(itemAddList,loginId);			
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -340,6 +335,88 @@ public class AssetMasterController {
 		return ResponseEntity.ok(map);
 	}
 
+	
+	@RequestMapping(value = "/updateItemAssetMng.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		logger.debug("업데이트 아이템 통과!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		
+		List<EgovMap> updateItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+		for (int i = 0; i < updateItemAddList.size(); i++) {
+			logger.debug("%%%%%%%%multyItemAddList%%%%%%%: {}", updateItemAddList.get(i));
+		}
+		
+		
+//		logger.debug("addassetid  : {}", params.get("addassetid"));
+//		logger.debug("additemtype  : {}", params.get("additemtype"));
+//		logger.debug("additemBrand  : {}", params.get("additemBrand"));
+//		logger.debug("additemmodel  : {}", params.get("additemmodel"));
+//		logger.debug("addremark  : {}", params.get("addremark"));
+//		logger.debug("additemname  : {}", params.get("additemname"));
+//		logger.debug("additemvalue  : {}", params.get("additemvalue"));
+//		logger.debug("additemremark  : {}", params.get("additemremark"));
+
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		// loginId
+		//params.put("crt_user_id", loginId);
+		//params.put("upd_user_id", loginId);
+
+		Map<String, Object> map = new HashMap();
+
+		try {			
+			ams.updateItemAssetMng(updateItemAddList,loginId);			
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	@RequestMapping(value = "/RemoveItemAssetMng.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> RemoveItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		params.put("upd_user_id", loginId);
+		
+		logger.debug("multyassetid  : {}", params.get("multyassetid"));
+		logger.debug("itemassetdid  : {}", params.get("itemassetdid"));
+		
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		Map<String, Object> map = new HashMap();
+
+		try {			
+			ams.RemoveItemAssetMng(params);			
+		} catch (Exception ex) {
+			retMsg = AppConstants.MSG_FAIL;
+		} finally {
+			map.put("msg", retMsg);
+		}
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
 
 	@RequestMapping(value = "/copyAsset.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertCopyAsset(ModelMap model, HttpServletRequest request,
