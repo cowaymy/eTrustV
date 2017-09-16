@@ -51,4 +51,6 @@ public interface StockTransferMapper {
 	List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params);
 	
 	void updateRequestTransfer(String param);
+	
+	void insertStockBooking(Map<String, Object> params);
 }

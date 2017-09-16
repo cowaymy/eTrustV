@@ -28,7 +28,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "stockTranMapper")
 	private StockTransferMapper stocktran;
-
+	
 	@Override
 	public List<EgovMap> selectStockTransferMainList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -63,6 +63,9 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 		stocktran.updateRequestTransfer(((String)fMap.get("headtitle") + seq));
+		
+		//
+		insertStockBooking(fMap);
 	}
 
 	@Override
@@ -264,5 +267,12 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return stocktran.selectStockTransferMtrDocInfoList(params);
+	}
+	
+	@Override
+	public void insertStockBooking(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		//return stocktran.selectStockTransferMtrDocInfoList(params);
+		stocktran.insertStockBooking(params);
 	}
 }

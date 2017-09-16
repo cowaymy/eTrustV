@@ -45,11 +45,8 @@ public class CommonController {
 	private DatabaseDrivenMessageSource dbMessageSource;
 
 	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "notin", required = false) String[] notin) {
-		
-		params.put("notin", notin);
-
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
+	
 		LOGGER.debug("groupCode : {}", params);
 
 		List<EgovMap> codeList = commonService.selectCodeList(params);

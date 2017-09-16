@@ -81,7 +81,6 @@ $(document).ready(function(){
     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '' ,'sam', 'S', '');
-    
     /**********************************
      * Header Setting End
      ***********************************/
@@ -213,6 +212,8 @@ $(function(){
             }
         	document.giForm.gtype.value="GI";
             $("#dataTitle").text("Good Issue Posting Data");
+            doSysdate(0 , 'giptdate');
+            doSysdate(0 , 'gipfdate');
         	$("#giopenwindow").show();
         }
     });
@@ -231,6 +232,8 @@ $(function(){
             }
         	document.giForm.gtype.value="RC";
             $("#dataTitle").text("Issue Cancel Posting Data");
+            doSysdate(0 , 'giptdate');
+            doSysdate(0 , 'gipfdate');
             $("#giopenwindow").show();
         }
     });

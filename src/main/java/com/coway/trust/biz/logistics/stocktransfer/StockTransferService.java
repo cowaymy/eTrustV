@@ -31,4 +31,6 @@ public interface StockTransferService {
 	List<EgovMap> StockTransferDeliveryIssue(Map<String, Object> params);
 
 	List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params);
+	
+	void insertStockBooking(Map<String, Object> params);
 }

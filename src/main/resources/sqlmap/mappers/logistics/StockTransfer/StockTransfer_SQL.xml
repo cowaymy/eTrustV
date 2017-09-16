@@ -173,37 +173,41 @@
     
     <select id="selectStockTransferToItem" parameterType="Map" resultType="egovMap">
         select rownum rnum
-             , l56.loc_id locid, l56.stk_code stkcd, DBMS_LOB.SUBSTR (l56.stk_desc, 4000) stknm
-		     , l56.stk_type_id typeid , s15.code_name typenm
-		     , l56.stk_ctgry_id cateid , s11.code_name catenm
-		     , l56.qty , s26.stk_id stkid
-		     , CASE
-		          WHEN l56.stk_TYPE_ID = 61
-		          THEN
-		             (SELECT max(ct.CODE_id)
-		                FROM SAL0016M sp, SYS0013M ct
-		               WHERE     sp.APP_TYPE_ID = 67
-		                     AND SP.MEM_PAC_ID = 0
-		                     AND sp.STUS_CODE_ID = 1
-		                     AND sp.UOM_ID = ct.CODE_ID
-		                     AND sp.STK_ID = s26.stk_id)
-		          ELSE
-		             (SELECT max(ct.CODE_id)
-		                FROM SAL0016M sp, SYS0013M ct
-		               WHERE     sp.APP_TYPE_ID <![CDATA[<>]]> 61
-		                     AND SP.MEM_PAC_ID = 0
-		                     AND sp.STUS_CODE_ID = 1
-		                     AND sp.UOM_ID = ct.CODE_ID
-		                     AND sp.STK_ID = s26.stk_id)
-		       END
-		          uom
-		  from log0056m l56 , sys0026m s26
-		     , (select * from sys0013m where code_master_id = 15) s15
-		     , (select * from sys0013m where code_master_id = 11) s11 
-		 where 1 = 1
-		   and l56.stk_type_id = s15.code_id
-		   and l56.stk_ctgry_id = s11.code_id
-		   and l56.stk_code = s26.stk_code
+             , l56.loc_id locid, l56.stk_code stkcd, dbms_lob.substr (l56.stk_desc, 4000) stknm
+             , l56.stk_type_id typeid , s15.code_name typenm
+             , l56.stk_ctgry_id cateid , s11.code_name catenm
+             , (l56.qty - nvl(l75.bookqty , 0)) as qty , s26.stk_id stkid
+             , case
+                  when l56.stk_type_id = 61
+                  then
+                     (select max(ct.code_id)
+                        from sal0016m sp, sys0013m ct
+                       where     sp.app_type_id = 67
+                             and sp.mem_pac_id = 0
+                             and sp.stus_code_id = 1
+                             and sp.uom_id = ct.code_id
+                             and sp.stk_id = s26.stk_id)
+                  else
+                     (select max(ct.code_id)
+                        from sal0016m sp, sys0013m ct
+                       where     sp.app_type_id <![CDATA[<>]]> 61
+                             and sp.mem_pac_id = 0
+                             and sp.stus_code_id = 1
+                             and sp.uom_id = ct.code_id
+                             and sp.stk_id = s26.stk_id)
+               end
+                  uom
+          from log0056m l56 , sys0026m s26
+             ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
+                group by loc_id , itm_code ) l75
+             , (select * from sys0013m where code_master_id = 15) s15
+             , (select * from sys0013m where code_master_id = 11) s11 
+         where 1 = 1
+           and l56.stk_code = l75.itm_code(+)
+           and l56.loc_id = l75.loc_id(+)
+           and l56.stk_type_id = s15.code_id
+           and l56.stk_ctgry_id = s11.code_id
+           and l56.stk_code = s26.stk_code
 		   and l56.loc_id = #{toloc}
 		   <if test="ctype != null and ctype !=''">
 		      and l56.stk_type_id in
@@ -430,4 +434,19 @@
            SET REQST_STUS = 'P'
          WHERE REQST_NO = #{param}
      </update>
+     <insert id="insertStockBooking" parameterType="Map">
+        INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRTDATE)
+					SELECT L47.REQST_NO
+					     , (SELECT DECODE(COUNT(1) , 0 , '0' , MAX(SEQ)) FROM LOG0075M WHERE REQST_NO = L47.REQST_NO AND LOC_ID = L47.REQST_CDC_RDC ) + ROWNUM
+					     , L47.REQST_CDC_RDC 
+					     , L47.TRNSC_TYPE_DTL 
+					     , L48.ITM_CODE 
+					     , L48.REQST_QTY 
+					     , REQST_CRT_DT 
+					     , SYSDATE
+					  FROM LOG0047M L47 , LOG0048D L48
+					 WHERE 1 = 1
+					   AND L47.REQST_NO = L48.REQST_NO
+					   AND L47.REQST_NO = #{reqno}
+     </insert>
 </mapper>

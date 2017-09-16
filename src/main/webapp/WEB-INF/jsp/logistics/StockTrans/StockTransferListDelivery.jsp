@@ -89,7 +89,7 @@ $(document).ready(function(){
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:'US'};
 	
-	doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
+	doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'=='')?'US':'${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');

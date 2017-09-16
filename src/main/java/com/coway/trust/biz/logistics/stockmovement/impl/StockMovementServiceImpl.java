@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
+import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -22,6 +23,9 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "stockMoveMapper")
 	private StockMovementMapper stockMoveMapper;
+	
+	@Resource(name = "stocktranService")
+	private StockTransferService stock;
 
 	@Override
 	public void insertStockMovementInfo(Map<String, Object> params) {
@@ -44,6 +48,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				stockMoveMapper.insStockMovement(insMap);
 			}
 		}
+		
+		stock.insertStockBooking(fMap);
 	}
 
 	@Override
