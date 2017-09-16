@@ -57,80 +57,6 @@ var columnLayout = [{dataField:"matrlNo"      ,headerText:"Material Code"       
                                                                   
                            ];
 
-/* var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30                },
-                     {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
-                     {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                     {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                     {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
-                     {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30                },
-                     {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
-                     {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30                },
-                     {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
-                     {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
-                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
-                     {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30                },
-                     {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                     {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30                },
-                     {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                     {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
-                     
-var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"                   ,width:120    ,height:30                },
-                       {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                       {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
-                       {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"mtext"        ,headerText:"Movement Text"               ,width:120    ,height:30                },
-                       {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30                },
-                       {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                       {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                       {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
-                       {dataField:"delydt"       ,headerText:"Delivery Date"               ,width:120    ,height:30 },
-                       {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
-                       {dataField:"grdt"         ,headerText:"GR Date"                     ,width:120    ,height:30 },
-                       {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
-                       {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                       {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                       {dataField:"rciptqty"        ,headerText:"Good ReceiptQty"             ,width:120    ,height:30                },
-                       {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30},
-                       {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                       {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
-
-var mtrcolumnLayout = [
-                        {dataField:"matrlDocNo", headerText:"" ,width:120    ,height:30},
-                        {dataField:"matrlDocItm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"trnscTypeCode", headerText:"" ,width:120    ,height:30},
-                        {dataField:"invntryMovType", headerText:"" ,width:120    ,height:30},
-                        {dataField:"matrlDocYear", headerText:"" ,width:120    ,height:30},
-                        {dataField:"autoCrtItm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"debtCrditIndict", headerText:"" ,width:120    ,height:30},
-                        {dataField:"matrlNo", headerText:"" ,width:120    ,height:30},
-                        {dataField:"itmName", headerText:"" ,width:120    ,height:30},
-                        {dataField:"qty", headerText:"" ,width:120    ,height:30},
-                        {dataField:"codeName", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rqloc", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rqlocid", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rqlocnm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"delvryNo", headerText:"" ,width:120    ,height:30},
-                        {dataField:"itmCode", headerText:"" ,width:120    ,height:30},
-                        {dataField:"stockTrnsfrReqst", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rcloc", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rclocid", headerText:"" ,width:120    ,height:30},
-                        {dataField:"rclocnm", headerText:"" ,width:120    ,height:30},
-                        {dataField:"uom", headerText:"" ,width:120    ,height:30},
-                        {dataField:"uomnm", headerText:"" ,width:120    ,height:30}
-           ]; */
-//var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
         rowIdField : "rnum",            
         //editable : true,
@@ -156,57 +82,21 @@ $(document).ready(function(){
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.searchTrcType}','searchTrcType', 'S' , 'f_change');
-    doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-//     doGetCombo('/logistics/materialDoc/selectLocation.do', '', '','searchFromLoc', 'S' , '');//From Location 조회
-//     doGetCombo('/logistics/materialDoc/selectLocation.do', '', '','searchToLoc', 'S' , '');//To Location 조회
-    
+    doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , ''); 
     doGetCombo('/common/selectStockLocationList.do', '', '','searchFromLoc', 'S' , '');//From Location 조회
     doGetCombo('/common/selectStockLocationList.do', '', '','searchToLoc', 'S' , '');//To Location 조회
-    //doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
+
     
+    AUIGrid.bind(myGridID, "cellClick", function( event ) {
+
+    });
     
+    AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
+
+    });
     
-    
-    
-//     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:'UM'};
-//     doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
-//     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-//     doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
-//     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
-//     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
-//     //doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');        
-//     //doDefCombo(amdata, '${searchVal.smvpath}' ,'smvpath', 'S', '');
-//     $("#crtsdt").val('${searchVal.crtsdt}');
-//     $("#crtedt").val('${searchVal.crtedt}');
-//     $("#reqsdt").val('${searchVal.reqsdt}');
-//     $("#reqedt").val('${searchVal.reqedt}');
-    
-//     /**********************************
-//      * Header Setting End
-//      ***********************************/
-    
-//     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
-//     subGrid  = GridCommon.createAUIGrid("#sub_grid_wrap", reqcolumnLayout ,"", reqop);
-//     mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", mtrcolumnLayout ,"", reqop);
-//     $("#sub_grid_wrap").hide(); 
-//     $("#mdc_grid").hide(); 
-    
-//     AUIGrid.bind(listGrid, "cellClick", function( event ) {
-// //         $("#sub_grid_wrap").hide(); 
-// //         $("#mdc_grid").hide(); 
-// //         if (event.dataField == "reqstno"){
-// //             SearchDeliveryListAjax(event.value)
-// //         }
-//     });
-    
-//     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-// //         $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
-// //         document.searchForm.action = '/logistics/stockMovement/StockMovementView.do';
-// //         document.searchForm.submit();
-//     });
-    
-//     AUIGrid.bind(listGrid, "ready", function(event) {
-//     });
+    AUIGrid.bind(listGrid, "ready", function(event) {
+    });
     
 });
 
@@ -228,10 +118,6 @@ function f_change(){
     $("#searchTrcType").change();
 }
 
-// function f_change(){
-//     $("#sttype").change();
-// }
-// //btn clickevent
 
 
 function SearchListAjax() {
@@ -244,48 +130,7 @@ function SearchListAjax() {
     });
 }
 
-// function SearchDeliveryListAjax( reqno ) {
-//     var url = "/logistics/stockMovement/StockMovementRequestDeliveryList.do";
-//     var param = "reqstno="+reqno;
-//     $("#sub_grid_wrap").show(); 
-//     $("#mdc_grid").show(); 
-    
-//     Common.ajax("GET" , url , param , function(data){
-//         AUIGrid.setGridData(subGrid, data.data);
-//         //mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
-//         AUIGrid.resize(mdcGrid,1620,150); 
-//         AUIGrid.setGridData(mdcGrid, data.data2);
-//         console.log(data.data2);
-//     });
-// }
 
-// function f_getTtype(g , v){
-//     var rData = new Array();
-//     $.ajax({
-//            type : "GET",
-//            url : "/common/selectCodeList.do",
-//            data : { groupCode : g , orderValue : 'CRT_DT' , likeValue:v},
-//            dataType : "json",
-//            contentType : "application/json;charset=UTF-8",
-//            async:false,
-//            success : function(data) {
-//               $.each(data, function(index,value) {
-//                   var list = new Object();
-//                   list.code = data[index].code;
-//                   list.codeId = data[index].codeId;
-//                   list.codeName = data[index].codeName;
-//                   rData.push(list);
-//                 });
-//            },
-//            error: function(jqXHR, textStatus, errorThrown){
-//                alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
-//            },
-//            complete: function(){
-//            }
-//        });
-    
-//     return rData;
-// }
 </script> 
 
 <section id="content"><!-- content start -->
@@ -413,35 +258,5 @@ function SearchListAjax() {
 
     </section><!-- search_result end -->
     
-    
-   <!--  <section class="tap_wrap">tap_wrap start
-        <ul class="tap_type1">
-            <li><a href="#" class="on">Register Order</a></li>
-            <li><a href="#">Compliance Remark</a></li>
-        </ul>
-        
-        <article class="tap_area">tap_area start
-        
-            <article class="grid_wrap">grid_wrap start
-                  <div id="sub_grid_wrap" class="mt10" style="height:150px"></div>
-            </article>grid_wrap end
-        
-        </article>tap_area end
-            
-        <article class="tap_area">tap_area start
-            <article class="grid_wrap">grid_wrap start
-                 <div id="mdc_grid"  class="mt10" ></div>
-            </article>grid_wrap end
-        </article>tap_area end
-        
-    </section>tap_wrap end
-<form id='popupForm'>
-    <input type="hidden" id="sUrl" name="sUrl">
-    <input type="hidden" id="svalue" name="svalue">
-</form>
- -->
-
-
-
 </section>
 
