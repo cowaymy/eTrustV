@@ -229,7 +229,7 @@ $(function(){
                     break;
                 }
             }
-        	document.giForm.gtype.value="GC";
+        	document.giForm.gtype.value="RC";
             $("#dataTitle").text("Issue Cancel Posting Data");
             $("#giopenwindow").show();
         }

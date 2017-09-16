@@ -188,6 +188,8 @@ $(function(){
         			break;
         		}
         	}
+        	doSysdate(0 , 'giptdate');
+            doSysdate(0 , 'gipfdate');
         	$('#grForm #gtype').val("GR");
         	$("#dataTitle").text("Good Receipt Posting Data");
         	$("#gropenwindow").show();

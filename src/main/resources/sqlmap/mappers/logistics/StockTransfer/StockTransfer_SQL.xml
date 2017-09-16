@@ -232,7 +232,7 @@
     </select>
     
     <select id="selectDeliveryStockTransferSeq" resultType="String">
-        SELECT  'DVR'||LPAD(LOG0054M_REQST_NO.nextval, 10, '0') FROM  DUAL
+        SELECT  'DVR'||TO_CHAR(SYSTIMESTAMP , 'YYYYMMDDHH24MISSFF') FROM  DUAL
     </select>
     <insert id="deliveryStockTransferIns" parameterType="Map">
         MERGE INTO LOG0054M A
@@ -363,7 +363,7 @@
            <if test="gtype !=null and gtype =='receiptList'">
               and L54.DELVRY_GR_CMPLT <![CDATA[=]]> 'Y'
            </if>
-           ORDER BY l54.delvry_no
+           ORDER BY l54.delvry_no DESC
            ) T
     </select>
     <resultMap id="STOPRCDATA" type="egovMap" />

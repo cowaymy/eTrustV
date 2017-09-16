@@ -249,7 +249,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("prgnm", "deliverylist");
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
-
+		logger.debug("formMap : {}" , formMap);
 		if ("RC".equals(formMap.get("gtype"))) {
 			
 			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
