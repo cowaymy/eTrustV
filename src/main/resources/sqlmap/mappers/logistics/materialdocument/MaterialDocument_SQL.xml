@@ -12,8 +12,7 @@
 
 
 
-	<select id="MaterialDocSearchList" parameterType="Map"
-		resultType="egovMap">
+	<select id="MaterialDocSearchList" parameterType="Map" resultType="egovMap">
 		select
 		rownum rnum
 		, l59.matrl_doc_no
