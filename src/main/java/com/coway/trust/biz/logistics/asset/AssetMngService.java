@@ -19,11 +19,15 @@ public interface AssetMngService {
 	
 	List<EgovMap> selectDepartmentList(Map<String, Object> params);
 
-	void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList);
+	void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList,int loginId );
 
-	void updateItemAssetMng(Map<String, Object> params);
-
+	void addItemAssetMng(List<EgovMap> itemAddList,int loginId );
+	
+	void updateItemAssetMng(List<EgovMap> updateItemAddList,int loginId);
+	
 	void motifyAssetMng(Map<String, Object> params);
+	
+	void RemoveItemAssetMng(Map<String, Object> params);
 
 	void deleteAssetMng(Map<String, Object> params);
 
