@@ -46,6 +46,7 @@ var columnLayout=[
                      {dataField:"headTitle" ,headerText:"headTitle",width:120 ,height:30},
                      {dataField:"eventType" ,headerText:"eventType",width:120 ,height:30},
                      {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30},
+                     {dataField:"ctgryType" ,headerText:"ctgryType",width:120 ,height:30},
                      {dataField:"autoFlag" ,headerText:"autoFlag",width:120 ,height:30},
                      {dataField:"delFlag" ,headerText:"delFlag",width:120 ,height:30},
                      {dataField:"crtUser" ,headerText:"crtUser",width:120 ,height:30},
@@ -64,6 +65,7 @@ var rescolumnLayout=[
                     {dataField:"itmId" ,headerText:"itmId",width:120 ,height:30},
                     {dataField:"itmNm" ,headerText:"itmNm",width:120 ,height:30},
                     {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30},
+                     {dataField:"ctgryType" ,headerText:"ctgryType",width:120 ,height:30},
                     {dataField:"serialChk" ,headerText:"serialChk",width:120 ,height:30},
                     {dataField:"sysQty" ,headerText:"sysQty",width:120 ,height:30},
                     {dataField:"cntQty" ,headerText:"cntQty",width:120 ,height:30},
@@ -138,6 +140,8 @@ $(document).ready(function(){
     doDefCombo(comboData, '' ,'srch_eventtype', 'M', 'f_multiCombo');
     doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','itemtype', 'M' , 'f_multiCombo');
     doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','srch_itemtype', 'M' , 'f_multiCombo');
+    doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','catagorytype', 'M' , 'f_multiCombo');
+    doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','srch_catagorytype', 'M' , 'f_multiCombo');
     //$("#cancelTr").hide();
     /**********************************
      * Header Setting End
@@ -298,21 +302,11 @@ function searchAjax() {
 
 function f_multiCombo() {
     $(function() {
-        $('#eventtype').change(function() {
+        $('#eventtype, #itemtype, #catagorytype').change(function() {
         }).multipleSelect({
             selectAll : true
         });       
-        $('#itemtype').change(function() {
-
-        }).multipleSelect({
-            selectAll : true
-        });       
-        $('#srch_eventtype').change(function() {
-        }).multipleSelect({
-            selectAll : true
-        });       
-        $('#srch_itemtype').change(function() {
-
+        $('#srch_eventtype, #srch_itemtype , #srch_catagorytype').change(function() {
         }).multipleSelect({
             selectAll : true
         });       
@@ -358,8 +352,10 @@ function fn_popSet(v){
         var autoFlag = AUIGrid.getCellValue(myGridID ,selectedItem[0],'autoFlag');
         var eventType = AUIGrid.getCellValue(myGridID ,selectedItem[0],'eventType');
         var itmType = AUIGrid.getCellValue(myGridID ,selectedItem[0],'itmType');
+        var ctgryType = AUIGrid.getCellValue(myGridID ,selectedItem[0],'ctgryType');
         var tmp = eventType.split(',');
         var tmp2 = itmType.split(',');
+        var tmp3 = ctgryType.split(',');
         
         $("#adjno2").val(invntryNo);
         
@@ -393,7 +389,8 @@ function fn_popSet(v){
                     $("input[name='ctcd']").prop('checked', true);
                 }
             }
-            fn_itemSet(tmp2);
+            fn_itemSet(tmp2,"item");
+            fn_itemSet(tmp3,"catagory");
     }else if(v=="N"){
         
         if(autoFlag == "A"){
@@ -427,23 +424,30 @@ function fn_popSet(v){
                 $("input[name='ctcd']").prop('checked', true);
             }
         }
-        fn_itemSet(tmp2);
+        fn_itemSet(tmp2,"item");
+        fn_itemSet(tmp3,"catagory");
     }
     $("#popup_wrap2").show();
 }
 
-function fn_itemSet(tmp2){
+function fn_itemSet(tmp,str){
+	var no;
+	if(str=="item"){
+		no=15;
+	}else if(str=="catagory"){
+		no=11;
+	}
     var url = "/logistics/adjustment/selectCodeList.do";
     $.ajax({
         type : "GET",
         url : url,
         data : {
-            groupCode : 15
+            groupCode : no
         },
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
-           fn_itemChck(data,tmp2);
+           fn_itemChck(data,tmp,str);
         },
         error : function(jqXHR, textStatus, errorThrown) {
         },
@@ -451,8 +455,13 @@ function fn_itemSet(tmp2){
         }
     });
 }
-function  fn_itemChck(data,tmp2){
-    var obj ="itemtypetd";
+function  fn_itemChck(data,tmp2,str){
+	    var obj;
+	    if(str=="item"){
+		    obj ="itemtypetd";
+	    }else if(str=="catagory"){
+		    obj ="catagorytypetd";
+	    }
     $.each(data, function(index,value) {
                $("#"+data[index].code).remove();
     });
@@ -478,7 +487,7 @@ function fn_auto(){
     var autoFlag = AUIGrid.getCellValue(myGridID ,selectedItem[0],'autoFlag');
     var eventType = AUIGrid.getCellValue(myGridID ,selectedItem[0],'eventType');
     var itmType = AUIGrid.getCellValue(myGridID ,selectedItem[0],'itmType');
-    
+    var ctgryType = AUIGrid.getCellValue(myGridID ,selectedItem[0],'ctgryType');
     var url = "/logistics/adjustment/adjustmentAuto.do";
     $.ajax({
         type : "GET",
@@ -487,6 +496,7 @@ function fn_auto(){
             invntryNo    : invntryNo,
             autoFlag     : autoFlag,
             eventType   : eventType,
+            ctgryType   : ctgryType,
             itmType      : itmType
         },
         dataType : "json",
@@ -580,7 +590,7 @@ function fn_subGrid(invntryNo){
     </td>
     <th scope="row">Category Type</th>
     <td>
-    <select class="multy_select" multiple="multiple" id="srch_catagorutype" name="srch_catagorutype[]" /></select>
+    <select class="multy_select" multiple="multiple" id="srch_catagorytype" name="srch_catagorytype[]" /></select>
     </td>
 </tr>
 <tr>
@@ -605,19 +615,12 @@ function fn_subGrid(invntryNo){
 <h3>Stock Audit Location Detail</h3>
 </aside><!-- title_line end -->
 <ul class="right_btns">
-   <!--  <li><p class="btn_blue"><a id="detail">Detail</a></p></li> -->
     <li><p class="btn_blue"><a id="count">Count</a></p></li>
 </ul>
 <section class="search_result"><!-- search_result start -->
 <article class="grid_wrap" id="grid_wrap_sub_art"><!-- grid_wrap start -->
         <div id="grid_wrap_sub"></div>
 </article>
-<%-- <ul class="btns">
-    <li><a id="rightbtn"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
-</ul> --%>
-<!-- <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
-</ul> -->
 
 </section><!-- search_result end -->
 <form id='popupForm'>
@@ -626,7 +629,7 @@ function fn_subGrid(invntryNo){
 </form>
 </section>
 
-<div id="popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
+<div id="popup_wrap" class="size_big popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1 id="popup_title">New Stock Audit Main</h1>
@@ -661,9 +664,9 @@ function fn_subGrid(invntryNo){
     </td>
     <!-- <th scope="row">Document Date</th>
     <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td> -->
-    <th scope="row">Stock Audit Date</th>
+    <th scope="row">Category Type</th>
     <td>
-    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    <select class="multy_select" multiple="multiple" id="catagorytype" name="catagorytype[]" /></select>
     </td>
 </tr>
 <tr>
@@ -671,7 +674,10 @@ function fn_subGrid(invntryNo){
     <td>
     <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select>
     </td>
-    <!-- <td colspan="2"/> -->
+    <th scope="row">Stock Audit Date</th>
+    <td>
+    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    </td>
     </tr>
     <tr>    
          <th scope="row">Remarks</th>
@@ -723,29 +729,18 @@ function fn_subGrid(invntryNo){
 <tr>
     <th scope="row">Event Type</th>
     <td>
-   <!-- <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select> -->
         <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
     </td>
-    <!-- <th scope="row">Document Date</th>
-    <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td> -->
-<!--     <th scope="row">Based Stock Audit Date</th>
-    <td>
-    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
-    </td>
-</tr>
-<tr> -->
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
-   <!--  <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select> -->
     </td>
-   <!-- <td colspan="2"/> -->
     </tr>
-<!--     <tr>    
-         <th scope="row">Remarks</th>
-         <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
-     </tr> -->
+     <tr>
+         <th scope="row">Category Type</th>
+    <td id="catagorytypetd" colspan="3">
+     </tr>
 </tbody>
 </table>
 </form>

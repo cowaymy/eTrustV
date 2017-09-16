@@ -150,7 +150,7 @@ public class AdjustmentController {
 		logger.info("eventtype : {} ", params.get("eventtype"));
 		params.put("loginId", loginId);
 
-		// adjustmentService.insertNewAdjustment(params);
+		adjustmentService.insertNewAdjustment(params);
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));

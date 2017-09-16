@@ -33,9 +33,11 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		params.put("adjNo", adjNo);
 		List<Object> eventtype = (List<Object>) params.get("eventtype");
 		List<Object> itemtype = (List<Object>) params.get("itemtype");
+		List<Object> catagorytype = (List<Object>) params.get("catagorytype");
 
 		String event = "";
 		String item = "";
+		String catagory = "";
 		for (int i = 0; i < eventtype.size(); i++) {
 			event += eventtype.get(i);
 			if (i == eventtype.size() - 1) {
@@ -58,6 +60,17 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		}
 		logger.debug("item : {} ", item);
 		params.put("item", item);
+		for (int j = 0; j < catagorytype.size(); j++) {
+			catagory += catagorytype.get(j);
+			if (j == catagorytype.size() - 1) {
+				catagory += "";
+			} else {
+				catagory += ",";
+
+			}
+		}
+		logger.debug("catagory : {} ", catagory);
+		params.put("catagory", catagory);
 
 		adjustmentMapper.insertNewAdjustment(params);
 	}
@@ -112,9 +125,12 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		List<Object> eventList = Arrays.asList(tmp.split(","));
 		String tmp2 = String.valueOf(formMap.get("itmType"));
 		List<Object> itemList = Arrays.asList(tmp2.split(","));
+		String tmp3 = String.valueOf(formMap.get("ctgryType"));
+		List<Object> catagoryList = Arrays.asList(tmp3.split(","));
 
 		params.put("invntryNo", formMap.get("invntryNo"));
 		params.put("itemList", itemList);
+		params.put("catagoryList", catagoryList);
 		if (addList.size() > 0) {
 			for (int i = 0; i < addList.size(); i++) {
 				Map<String, Object> getMap = (Map<String, Object>) addList.get(i);
@@ -126,6 +142,7 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 				setMap.put("adjwhLocId", getMap.get("adjwhLocId"));
 				setMap.put("eventList", eventList);
 				setMap.put("itemList", itemList);
+				setMap.put("catagoryList", catagoryList);
 				adjustmentMapper.insertAdjustmentLoc(setMap);
 			}
 			adjustmentMapper.insertAdjustmentLocItem(params);

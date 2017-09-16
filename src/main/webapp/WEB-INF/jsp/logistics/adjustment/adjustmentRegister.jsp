@@ -183,13 +183,29 @@ $(function(){
     });
     $("#rightbtn").click(function(){
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
+       //var addedItems = AUIGrid.getCheckedRowItems(resGrid);
+        var addedItems = AUIGrid.getColumnValues(reqGrid,"adjwhLocId");
+         
+        
         var bool = true;
         if (checkedItems.length > 0){
             var rowPos = "first";
             var item = new Object();
             var rowList = [];
-            
+            if (addedItems.length > 0){
+	            for (var i = 0 ; i < addedItems.length ; i++){
+	            	for (var j = 0 ; j < checkedItems.length ;j++){
+	            	if(addedItems[i] == checkedItems[j].whLocId){
+	            		Common.alert("Loaction Id :"+checkedItems[j].whLocId+" is already exist.");
+	            		return false;
+	            	}
+	            	}		
+	            }
+            }
             for (var i = 0 ; i < checkedItems.length ; i++){
+            	//var rows = AUIGrid.getRowsByValue(reqop, "adjwhLocId", checkedItems[i].whLocId);
+                console.log(addedItems);
+                console.log(addedItems.length);
                 
                 rowList[i] = {
 		                		adjwhLocId : checkedItems[i].whLocId,
@@ -276,6 +292,7 @@ function searchHead(){
 	    $("#autoFlag").val(data[0].autoFlag);
 	    $("#eventType").val(data[0].eventType);
 	    $("#itmType").val(data[0].itmType);
+	    $("#ctgryType").val(data[0].ctgryType);
 	    
     });
 }
@@ -284,6 +301,7 @@ function fn_setVal(data,status){
 	$("#adjno").val(data[0].invntryNo);
 	var tmp = data[0].eventType.split(',');
 	var tmp2 = data[0].itmType.split(',');
+	var tmp3 = data[0].ctgryType.split(',');
 	fn_eventSet(tmp);
 	if(data[0].autoFlag == "A"){
 		$("#auto").attr("checked", true);
@@ -307,7 +325,8 @@ function fn_setVal(data,status){
 			$("#search").show();
 		}
 	}
-	fn_itemSet(tmp2);
+    fn_itemSet(tmp2,"item");
+    fn_itemSet(tmp3,"catagory");
 	
 	
 	
@@ -331,18 +350,24 @@ function fn_eventSet(tmp){
 	
 }
 
-function fn_itemSet(tmp2){
+function fn_itemSet(tmp,str){
+	   var no;
+	    if(str=="item"){
+	        no=15;
+	    }else if(str=="catagory"){
+	        no=11;
+	    }
     var url = "/logistics/adjustment/selectCodeList.do";
 	$.ajax({
         type : "GET",
         url : url,
         data : {
-            groupCode : 15
+            groupCode : no
         },
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
-           fn_itemChck(data,tmp2);
+           fn_itemChck(data,tmp,str);
         },
         error : function(jqXHR, textStatus, errorThrown) {
         },
@@ -350,9 +375,14 @@ function fn_itemSet(tmp2){
         }
     });
 }
-function  fn_itemChck(data,tmp2){
-	var obj ="#itemtypetd";
-	
+function  fn_itemChck(data,tmp2,str){
+    var obj;
+    if(str=="item"){
+        obj ="itemtypetd";
+    }else if(str=="catagory"){
+        obj ="catagorytypetd";
+    }
+    obj= '#'+obj;
 	$.each(data, function(index,value) {
 	            $('<label />',{id:data[index].code}).appendTo(obj);
 	            $('<input />',  {type : 'checkbox',value : data[index].codeId, id : data[index].codeId}).appendTo("#"+data[index].code).attr("disabled","disabled");
@@ -433,7 +463,6 @@ function fn_ReqAdjLocList(){
 <tr>
     <th scope="row">Event Type</th>
     <td>
-    <!-- <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select> -->
      <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
@@ -444,14 +473,12 @@ function fn_ReqAdjLocList(){
 <tr> -->
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
-    <!-- <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select> -->
     </td>
-    <!-- <th scope="row">Based Stock Audit Date</th>
-    <td>
-    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
-    </td> -->
-    <!-- <td colspan="2"/> -->
     </tr>
+     <tr>
+         <th scope="row">Category Type</th>
+    <td id="catagorytypetd" colspan="3">
+     </tr>
 </tbody>
 </table><!-- table end -->
 
@@ -556,19 +583,9 @@ function fn_ReqAdjLocList(){
     <input type="hidden" id="autoFlag" name="autoFlag">
     <input type="hidden" id="eventType" name="eventType">
     <input type="hidden" id="itmType" name="itmType">
+    <input type="hidden" id="ctgryType" name="ctgryType">
 </form>
 <form id="listForm" name="listForm" method="POST">
 <input type="hidden" id="retnVal"    name="retnVal"    value="R"/>
-<%-- <input type="hidden" id="streq"     name="streq"     value="${searchVal.streq    }"/>
-<input type="hidden" id="sttype"    name="sttype"    value="${searchVal.sttype   }"/>
-<input type="hidden" id="smtype"    name="smtype"    value="${searchVal.smtype   }"/>
-<input type="hidden" id="tlocation" name="tlocation" value="${searchVal.tlocation}"/>
-<input type="hidden" id="flocation" name="flocation" value="${searchVal.flocation}"/>
-<input type="hidden" id="crtsdt"    name="crtsdt"    value="${searchVal.crtsdt   }"/>
-<input type="hidden" id="crtedt"    name="crtedt"    value="${searchVal.crtedt   }"/>
-<input type="hidden" id="reqsdt"    name="reqsdt"    value="${searchVal.reqsdt   }"/>
-<input type="hidden" id="reqedt"    name="reqedt"    value="${searchVal.reqedt   }"/>
-<input type="hidden" id="sam"       name="sam"       value="${searchVal.sam      }"/>
-<input type="hidden" id="sstatus"   name="sstatus"   value="${searchVal.sstatus  }"/> --%>
 </form>
 </section>
