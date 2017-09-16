@@ -290,6 +290,7 @@ $(function(){
 
        checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
         var bool = true;
+        
         if (checkedItems.length > 0){
         	
 	        var rowPos = "first";
@@ -297,6 +298,7 @@ $(function(){
 	        var rowList = [];
 	        
 	        for (var i = 0 ; i < checkedItems.length ; i++){
+
 	        	rowList[i] = {
                             itmtype : checkedItems[i].codeName,
                             itmcode : checkedItems[i].stkCode,
@@ -309,7 +311,7 @@ $(function(){
 	        	
 	            AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
 	        	
-	        }
+	        } 
 	        
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);
    
