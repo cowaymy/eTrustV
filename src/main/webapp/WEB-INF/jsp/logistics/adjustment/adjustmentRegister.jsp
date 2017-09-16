@@ -395,12 +395,12 @@ function fn_ReqAdjLocList(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>New Adjustment Detail</li>
+    <li>New Stock Audit Detail</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Adjustment Detail</h2>
+<h2>New-Stock Audit Detail</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -422,7 +422,7 @@ function fn_ReqAdjLocList(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Adjustment Number</th>
+    <th scope="row">Stock Audit Number</th>
     <td><input id="adjno" name="adjno" type="text" title=""  class="w100p" readonly="readonly" /></td>
     <th scope="row">Auto/Manual</th>
     <td> 
@@ -446,7 +446,7 @@ function fn_ReqAdjLocList(){
     <td id="itemtypetd">
     <!-- <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select> -->
     </td>
-    <!-- <th scope="row">Based Adjustment Date</th>
+    <!-- <th scope="row">Based Stock Audit Date</th>
     <td>
     <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td> -->
@@ -522,7 +522,7 @@ function fn_ReqAdjLocList(){
 
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Adjustment Location</h3>
+<h3>Stock Audit Location</h3>
 </aside><!-- title_line end -->
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->

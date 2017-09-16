@@ -34,7 +34,7 @@ var reqGrid;
 var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
 var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
 var columnLayout=[
-                     {dataField:"invntryNo" ,headerText:"Adjustment No",width:120 ,height:30},
+                     {dataField:"invntryNo" ,headerText:"Stock Audit No",width:120 ,height:30},
                      {dataField:"baseDt" ,headerText:"Base Date",width:120 ,height:30},
                      {dataField:"cnfm1" ,headerText:"cnfm1",width:120 ,height:30},
                      {dataField:"cnfm1Dt" ,headerText:"cnfm1Dt",width:120 ,height:30},
@@ -105,7 +105,7 @@ var gridPros = {
        // pageRowCount : 1,              
         //fixedColumnCount : 1,
         // 편집 가능 여부 (기본값 : false)
-        editable : true,                
+        editable : false,                
         // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
         //enterKeyColumnBase : true,                
         // 셀 선택모드 (기본값: singleCell)
@@ -210,7 +210,7 @@ $(function(){
         document.searchForm.submit(); 
     });
         
-    $('#view').click(function() {
+    $('#view, #viewbtn').click(function() {
         var selectedItem = AUIGrid.getSelectedIndex(myGridID);
         $("#rAdjcode").val(AUIGrid.getCellValue(myGridID,  selectedItem[0], "invntryNo"));
         $("#rStatus").val("V");
@@ -223,7 +223,7 @@ $(function(){
             var locId = AUIGrid.getCellValue(reqGrid,  selectedItem[0], "locId");
              AUIGrid.resize(reqGrid); 
         if(selectedItem[0] < 0 ){
-            Common.alert('Please select Adjustment Number.');
+            Common.alert('Please select Stock Audit Number.');
             return false;
         }else{
             //$("#rAdjcode").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryNo"));
@@ -233,13 +233,47 @@ $(function(){
             //$("#rStatus").val("V");
             document.searchForm.action = '/logistics/adjustment/AdjustmentCounting.do';
             document.searchForm.submit(); 
-        } d
+        } 
+    });
+     $('#confirm').click(function() {
+            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+            var invntryNo = AUIGrid.getCellValue(myGridID,  selectedItem[0], "invntryNo");
+            //var invntryLocId = AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryLocId");
+        if(selectedItem[0] < 0 ){
+            Common.alert('Please select Stock Audit Number.');
+            return false;
+        }else{
+            //$("#rAdjcode").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryNo"));
+            //$("#rAdjlocId").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "locId"));
+            $("#rAdjcode").val(invntryNo);
+            //$("#rAdjlocId").val(invntryLocId);
+            //$("#rStatus").val("V");
+            document.searchForm.action = '/logistics/adjustment/AdjustmentApproval.do';
+            document.searchForm.submit(); 
+        } 
+    });
+     $('#approval').click(function() {
+            var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+            var invntryNo = AUIGrid.getCellValue(myGridID,  selectedItem[0], "invntryNo");
+            //var invntryLocId = AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryLocId");
+        if(selectedItem[0] < 0 ){
+            Common.alert('Please select Stock Audit Number.');
+            return false;
+        }else{
+            //$("#rAdjcode").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryNo"));
+            //$("#rAdjlocId").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "locId"));
+            $("#rAdjcode").val(invntryNo);
+            //$("#rAdjlocId").val(invntryLocId);
+            //$("#rStatus").val("V");
+            document.searchForm.action = '/logistics/adjustment/AdjustmentApprovalSteps.do';
+            document.searchForm.submit(); 
+        } 
     });
       $('#detail').click(function() {
         var selectedItem = AUIGrid.getSelectedIndex(myGridID);
         var invntryNo = AUIGrid.getCellValue(myGridID,  selectedItem[0], "invntryNo");
            if(selectedItem[0] < 0 ){
-               Common.alert('Please select Adjustment Number.');
+               Common.alert('Please select Stock Audit Number.');
            }else{
                fn_setLoc(invntryNo);
                //fn_subGrid(invntryNo);
@@ -289,6 +323,8 @@ function f_multiCombo() {
 function fn_newAdjustment(){    
     var url = "/logistics/adjustment/createAdjustment.do";
     var param = $("#popform").serializeJSON();
+    $.extend(param,{'auto_manual':'M'});//강제세팅함 
+    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         $("#popup_wrap").hide();
         searchAjax();
@@ -491,12 +527,12 @@ function fn_subGrid(invntryNo){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>New Adjustment Main</li>
+    <li>New Stock Audit Main</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Adjustment Main</h2>
+<h2>New-Stock Audit Main</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -508,11 +544,14 @@ function fn_subGrid(invntryNo){
     <li><p class="btn_blue"><a id="create">Create</a></p></li>
     <li><p class="btn_blue"><a id="edit">Edit</a></p></li>
     <li><p class="btn_blue"><a id="detail">Detail</a></p></li> 
-    <!-- <li><p class="btn_blue"><a id="view">View</a></p></li> -->
+    <li><p class="btn_blue"><a id="approval">Approval</a></p></li> 
+    <li><p class="btn_blue"><a id="confirm">Confirm</a></p></li> 
+    <li><p class="btn_blue"><a id="view">View</a></p></li> 
     <li><p class="btn_blue"><a id="search">Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="searchForm" name="searchForm" method="post"  onsubmit="return false;">
+<input type="hidden" name="rAdjcode" id="rAdjcode" />  
 <input type="hidden" name="rAdjcode" id="rAdjcode" />  
 <input type="hidden" name="rStatus" id="rStatus" />  
 <input type="hidden" name="rAdjlocId" id="rAdjlocId" />  
@@ -526,28 +565,31 @@ function fn_subGrid(invntryNo){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Adjustment Number</th>
+    <th scope="row">Stock Audit Number</th>
     <td><input id="srch_adjno" name="adjno" type="text" title=""  class="w100p" /></td>
-<!--      
-    <th scope="row">Auto/Manual</th>
-     <td>    
-         <label><input type="radio" name="srch_auto_manual" id="srch_auto_manual" value="A" checked/><span>Auto</span></label>
-         <label><input type="radio" name="srch_auto_manual" id="srch_auto_manual" value="M" /><span>Manual</span></label>        
-    </td> -->
     <th scope="row">Event Type</th>
     <td>
     <select class="multy_select" multiple="multiple" id="srch_eventtype" name="srch_eventtype[]"  style="display: none;"/></select>
     </td>
 </tr>
 <tr>
+    
     <th scope="row">Items Type</th>
     <td>
     <select class="multy_select" multiple="multiple" id="srch_itemtype" name="srch_itemtype[]" /></select>
     </td>
-    <th scope="row">Based Adjustment Date</th>
+    <th scope="row">Category Type</th>
+    <td>
+    <select class="multy_select" multiple="multiple" id="srch_catagorutype" name="srch_catagorutype[]" /></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Stock Audit Date</th>
     <td>
     <input id="srch_bsadjdate" name="ssrch_bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
+    <td colspan="2">
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -560,7 +602,7 @@ function fn_subGrid(invntryNo){
         <div id="grid_wrap"></div>
 </article>
 <aside class="title_line" id="grid_wrap_sub_asi"><!-- title_line start -->
-<h3>Adjustment Location Detail</h3>
+<h3>Stock Audit Location Detail</h3>
 </aside><!-- title_line end -->
 <ul class="right_btns">
    <!--  <li><p class="btn_blue"><a id="detail">Detail</a></p></li> -->
@@ -587,7 +629,7 @@ function fn_subGrid(invntryNo){
 <div id="popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1 id="popup_title">New Adjustment Main</h1>
+<h1 id="popup_title">New Stock Audit Main</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -604,12 +646,12 @@ function fn_subGrid(invntryNo){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Adjustment Number</th>
+    <th scope="row">Stock Audit Number</th>
     <td><input id="adjno" name="adjno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
      <th scope="row">Auto/Manual</th>
     <td id="automantd"> 
-         <label><input type="radio" name="auto_manual" id="auto_manual" value="A" checked /><span>Auto</span></label>
-         <label><input type="radio" name="auto_manual" id="auto_manual" value="M" /><span>Manual</span></label>        
+         <label><input type="radio" name="auto_manual" id="auto_manual" value="A" disabled="disabled"/><span>Auto</span></label>
+         <label><input type="radio" name="auto_manual" id="auto_manual" value="M" disabled="disabled" checked /><span>Manual</span></label>        
     </td>
 </tr>
 <tr>
@@ -619,7 +661,7 @@ function fn_subGrid(invntryNo){
     </td>
     <!-- <th scope="row">Document Date</th>
     <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td> -->
-    <th scope="row">Based Adjustment Date</th>
+    <th scope="row">Stock Audit Date</th>
     <td>
     <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
@@ -653,7 +695,7 @@ function fn_subGrid(invntryNo){
 <div id="popup_wrap2" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1 id="popup_title2">New Adjustment</h1>
+<h1 id="popup_title2">New Stock Audit</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -670,7 +712,7 @@ function fn_subGrid(invntryNo){
 </colgroup>
 <tbody>
 <tr>
-<th scope="row">Adjustment Number</th>
+<th scope="row">Stock Audit Number</th>
     <td><input id="adjno2" name="adjno" type="text" title=""  class="w100p" readonly="readonly" /></td>
     <th scope="row">Auto/Manual</th>
     <td> 
@@ -688,7 +730,7 @@ function fn_subGrid(invntryNo){
     </td>
     <!-- <th scope="row">Document Date</th>
     <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td> -->
-<!--     <th scope="row">Based Adjustment Date</th>
+<!--     <th scope="row">Based Stock Audit Date</th>
     <td>
     <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
@@ -710,7 +752,7 @@ function fn_subGrid(invntryNo){
             <ul class="center_btns">
                 <li><p class="btn_blue2 big"><a id="autobtn">Auto</a></p></li>
                 <li><p class="btn_blue2 big"><a id="manualbtn">Manual</a></p></li>
-                <li><p class="btn_blue2 big"><a id="view">View</a></p></li> 
+                <li><p class="btn_blue2 big"><a id="viewbtn">View</a></p></li> 
                 <!-- <li><p class="btn_blue2 big"><a id="count">Count</a></p></li> --> 
             </ul> 
 </section><!-- pop_body end -->
