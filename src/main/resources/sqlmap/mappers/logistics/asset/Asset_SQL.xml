@@ -145,8 +145,6 @@
          <![CDATA[  AND E1.CRT_DT   >= TO_CHAR(TO_DATE(#{searchcreatedate1},'DD/MM/YYYY'),'YYYY-MM-DD') 
           AND E1.CRT_DT   <   TO_CHAR(TO_DATE(#{searchcreatedate2},'DD/MM/YYYY'),'YYYY-MM-DD') ]]>
         </if>  
-         
-         
           order by asset_id
     </select>
     
@@ -167,7 +165,8 @@
                  Project1.USER_NAME  USER_NAME,
                  Project1.NAME3  NAME3,
                  Project1.VALU  VALU,
-                 Project1.ASSET_D_ITM_REM  ASSET_D_ITM_REM
+                 Project1.ASSET_D_ITM_REM  ASSET_D_ITM_REM,
+                 Project1.ASSET_D_ITM_ID  ASSET_D_ITM_ID
                  FROM ( SELECT 
                      Extent1.ASSET_D_ID  ASSET_D_ID, 
                      Extent1.STUS_ID  STUS_ID, 
@@ -184,7 +183,8 @@
                      (select user_name from SYS0047M where USER_ID = Extent1.UPD_USER_ID) USER_NAME,
                      Extent6.NAME AS NAME3,
                      Extent6.VALU AS VALU,
-                     Extent6.ASSET_D_ITM_REM
+                     Extent6.ASSET_D_ITM_REM,
+                     Extent6.ASSET_D_ITM_ID
                      FROM  LOG0051D  Extent1
                      INNER JOIN SYS0013M  Extent2 ON Extent2.CODE_ID = Extent1.TYPE_ID
                      INNER JOIN LOG0049M  Extent3 ON Extent3.BRAND_ID = Extent1.BRAND_ID
@@ -353,9 +353,9 @@
         ,#{inassetid}
         ,#{typeid} 
         ,#{brandid}
-        ,#{add_crtuser_id}
+        ,#{crtuser_id}
         ,SYSDATE
-        ,#{add_upuser_id}
+        ,#{upuser_id}
         ,SYSDATE
         ,#{name1}    
         ,#{assetDRem} 
@@ -379,13 +379,13 @@
         VALUES (
         #{insAseetItemDid}
         ,0
-        ,#{insdetailAssetDid} 
+        ,#{detailassetid} 
         ,#{additemname}
         ,#{additemvalue}
         ,#{additemremark}
-        ,#{crt_user_id}
+        ,#{add_crtuser_id}
         ,SYSDATE
-        ,#{upd_user_id}
+        ,#{add_upuser_id}
         ,SYSDATE
         )
      </insert>    
@@ -411,6 +411,27 @@
                         UPD_DT                   = SYSDATE                            
                     WHERE  ASSET_ID        =#{masterassetid}
     </update>  
+    
+    
+   <update id="RemoveAssetDetail" parameterType="Map">
+           UPDATE LOG0051D
+                    SET      
+				            STUS_ID			     = 8    				       
+				          , UPD_USER_ID      =#{upd_user_id}
+				          , UPD_DT              = SYSDATE
+                    WHERE  ASSET_D_ID        =#{multyassetid}
+    </update>  
+    
+    <update id="RemoveAssetItem" parameterType="Map">
+           UPDATE LOG0052D
+                    SET      
+                            DISAB              = 1                           
+                          , UPD_USER_ID      =#{upd_user_id}
+                          , UPD_DT              = SYSDATE
+                    WHERE  ASSET_D_ITM_ID        =#{itemassetdid}
+    </update>   
+    
+    
   <!--   <delete id="deleteAssetMng" parameterType="Map">
         DELETE FROM LOG0050M 
         WHERE ASSET_ID = #{masterassetid} 
