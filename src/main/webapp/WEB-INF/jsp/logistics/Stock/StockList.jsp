@@ -379,8 +379,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         
          $("#stock_commisssion").click(function(){
             var type;
-           // if($("#stock_commisssion_div").css("display") == "none"){
             f_removeclass();
+            $("#stock_commisssion_div").show();
             var selectedItems = AUIGrid.getSelectedIndex(myGridID);
             var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
             var stusid = AUIGrid.getCellValue(myGridID, selectedItems[0], "statuscodeid")              
