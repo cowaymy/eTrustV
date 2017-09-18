@@ -36,6 +36,13 @@ public interface AssetMngMapper {
 	
 	void RemoveAssetItem(Map<String, Object> params);
 	
+	void updateItm(Map<String, Object> params);
+	
+	
+	void updateAssetDetail(Map<String, Object> params);
+	
+	
+	
 	int AssetCreateSeq();
 
 	int AssetdetailCreateSeq();
