@@ -94,7 +94,8 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		formMap.put("reqno", formMap.get("posReqSeq"));
 		formMap.put("userId", params.get("userId"));
 		PointOfSalesMapper.updateReqstStus(formMap);
-
+		
+		insertStockBooking(formMap);
 	}
 
 	@Override
@@ -202,6 +203,13 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		List<EgovMap> list = PointOfSalesMapper.selectSerial(params);
 		
 		return list;
+	}
+	
+	@Override
+	public void insertStockBooking(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		//return stocktran.selectStockTransferMtrDocInfoList(params);
+		PointOfSalesMapper.insertStockBooking(params);
 	}
 	
 
