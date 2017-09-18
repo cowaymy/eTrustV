@@ -49,4 +49,8 @@ public interface AdjustmentMapper {
 
 	void updateDoc(Map<String, Object> setmap);
 
+	void insertAdjustmentLocCount(Map<String, Object> setMap);
+
+	void updateApprovalStatus(Map<String, Object> params);
+
 }

@@ -23,7 +23,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "stockMoveMapper")
 	private StockMovementMapper stockMoveMapper;
-	
+
 	@Resource(name = "stocktranService")
 	private StockTransferService stock;
 
@@ -48,15 +48,15 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				stockMoveMapper.insStockMovement(insMap);
 			}
 		}
-		
-		stock.insertStockBooking(fMap);
+
+		insertStockBooking(fMap);
 	}
 
 	@Override
 	public List<EgovMap> selectStockMovementNoList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		List<EgovMap> list = null;
-		
+
 		if ("stock".equals(params.get("groupCode"))) {
 			list = stockMoveMapper.selectStockMovementNoList();
 		} else {
@@ -167,7 +167,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
 		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
-		
+
 		if (checkList.size() > 0) {
 
 			Map<String, Object> insMap = null;
@@ -202,7 +202,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			}
 
 			stockMoveMapper.insertDeliveryStockMovement(insMap);
-			stockMoveMapper.updateRequestMovement((String)formMap.get("reqstno"));
+			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
 		}
 		String[] delvcd = { deliSeq };
 
@@ -217,13 +217,13 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public List<EgovMap>  selectStockMovementSerial(Map<String, Object> params) {
+	public List<EgovMap> selectStockMovementSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return stockMoveMapper.selectStockMovementSerial(params);
 	}
 
 	@Override
-	public Map<String , Object> stockMovementDeliveryIssue(Map<String, Object> params) {
+	public Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params) {
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		int iCnt = 0;
@@ -255,11 +255,11 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("prgnm", "deliverylist");
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
-		logger.debug("formMap : {}" , formMap);
+		logger.debug("formMap : {}", formMap);
 		if ("RC".equals(formMap.get("gtype"))) {
-			
+
 			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
-			
+
 		} else {
 			// System.out.println(" ::::: 256Line :::::: ");
 			stockMoveMapper.StockMovementIssue(formMap);
@@ -280,5 +280,12 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return stockMoveMapper.selectStockMovementMtrDocInfoList(params);
+	}
+
+	@Override
+	public void insertStockBooking(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		// return stocktran.selectStockTransferMtrDocInfoList(params);
+		stockMoveMapper.insertStockBooking(params);
 	}
 }

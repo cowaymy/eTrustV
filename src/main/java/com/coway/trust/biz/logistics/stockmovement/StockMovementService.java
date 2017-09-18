@@ -27,12 +27,14 @@ public interface StockMovementService {
 
 	void stockMovementReqDelivery(Map<String, Object> param);
 
-	List<EgovMap>  selectStockMovementSerial(Map<String, Object> params);
+	List<EgovMap> selectStockMovementSerial(Map<String, Object> params);
 
-	Map<String , Object> stockMovementDeliveryIssue(Map<String, Object> params);
+	Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params);
 
 	List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params);
 
 	List<EgovMap> selectStockMovementMtrDocInfoList(Map<String, Object> params);
+
+	void insertStockBooking(Map<String, Object> params);
 
 }

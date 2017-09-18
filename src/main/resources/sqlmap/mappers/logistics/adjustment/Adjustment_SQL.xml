@@ -236,7 +236,6 @@
 				   WHERE 1=1
 				       AND lg72m.INVNTRY_NO= #{invntryNo}
 				       AND lg56m.STK_CODE = sy26m.STK_CODE
-				       AND lg56m.STK_CTGRY_ID = sy26m.STK_CODE
 					   AND lg72m.LOC_ID = lg56m.LOC_ID
 <!-- 					   <if test="autoFlag == M">
                         AND  lg72m.WH_LOC_ID = #{adjwhLocId}
@@ -245,10 +244,10 @@
 					   <foreach item="item" collection="itemList" index="index" open="(" separator="," close=")">
                        #{item}
                       </foreach>
-					   AND lg56m.STK_CTGRY_ID IN
+				        AND lg56m.STK_CTGRY_ID IN
 					   <foreach item="item" collection="catagoryList" index="index" open="(" separator="," close=")">
                        #{item}
-                      </foreach>
+                      </foreach> 
       </insert>
       <insert id="insertAdjustmentLocSerial" parameterType="Map">
       INSERT INTO LOG0074D
@@ -283,6 +282,7 @@
 				lg73d.SERIAL_CHK,
 				lg73d.SYS_QTY,
                 lg73d.CNT_QTY,
+                lg73d.CTGRY_TYPE,
 				/* lg56m.LOC_ID, */
 				lg56m.STK_CODE,
 				lg56m.STK_DESC,
@@ -350,6 +350,7 @@
                 lg73d.SERIAL_CHK,
                 lg73d.SYS_QTY,
                 lg73d.CNT_QTY,
+                lg73d.CTGRY_TYPE,
                 sy28m.WH_LOC_ID,
                 sy28m.WH_LOC_CODE,
                 sy28m.WH_LOC_DESC,
@@ -430,7 +431,7 @@
 			SAVE_YN
 		FROM LOG0072M
 		WHERE INVNTRY_NO = #{invntryNo}
-        ORDER BY INVNTRY_LOC_ID, LOC_ID
+        ORDER BY LOC_ID
       </select>
       <select id="selectAdjustmentApprovalCnt"  parameterType="Map" resultType="EgovMap">
 		SELECT 
@@ -441,26 +442,29 @@
       </select>
       <select id="selectAdjustmentApprovalLineCheck" parameterType="Map" resultType="EgovMap">
       SELECT
-			INVNTRY_NO,
-			BASE_DT,
-			CNFM1,
-			CNFM1_DT,
-			CNFM2,
-			CNFM2_DT,
-			FILE_LOC,
-			FILE_NAME,
-			ORG_FILE_NAME,
-			HEAD_TITLE,
-			EVENT_TYPE,
-			ITM_TYPE,
-			AUTO_FLAG,
-			DEL_FLAG,
-			CRT_USER,
-			CRT_DATE,
-			CTGRY_TYPE
-      FROM LOG0071M
+      
+            lg71m.INVNTRY_NO,
+            lg71m.BASE_DT,
+            lg71m.CNFM1,
+            lg71m.CNFM1_DT,
+            lg71m.CNFM2,
+            lg71m.CNFM2_DT,
+            lg71m.FILE_LOC,
+            lg71m.FILE_NAME,
+            lg71m.ORG_FILE_NAME,
+            lg71m.HEAD_TITLE,
+            lg71m.EVENT_TYPE,
+            lg71m.ITM_TYPE,
+            lg71m.AUTO_FLAG,
+            lg71m.DEL_FLAG,
+            lg71m.CRT_USER,
+            lg71m.CRT_DATE,
+            lg71m.CTGRY_TYPE,
+            lg72m.SAVE_YN
+      FROM LOG0071M lg71m, LOG0072M lg72m
       WHERE  1=1
-                AND INVNTRY_NO= #{invntryNo}
+                AND lg71m.INVNTRY_NO=lg72m.INVNTRY_NO
+                AND lg71m.INVNTRY_NO= #{invntryNo}
       </select>
       <update id="updateApproval" parameterType="Map">
             UPDATE LOG0071M
@@ -475,13 +479,14 @@
 				            CNFM2_DT= SYSDATE
             </if>
             <if test="status eq 'R'.toString() ">
-                      SET CNFM1='R',
+                      SET CNFM1='',
                             CNFM1_DT = ''
             </if>
             <if test="status eq 'R2'.toString() ">
                       SET 
+                            CNFM1='',
                             CNFM1_DT = '',
-                            CNFM2='R',
+                            CNFM2='',
                             CNFM2_DT= ''
             </if>
                 WHERE  1=1
@@ -489,12 +494,28 @@
       
       </update>
       
+      <update id="updateApprovalStatus" parameterType="Map">
+     UPDATE  LOG0072M
+                SET SAVE_YN=NULL
+      WHERE  1=1
+                AND INVNTRY_NO= #{invntryNo}
+      
+      </update>
       <update id="updateDoc" parameterType="Map">
         UPDATE LOG0071M
                    SET FILE_LOC=#{serverPath},
                    FILE_NAME=#{physicalName},
-                   ORG_FILE_NAME=#{fileName}
+                   ORG_FILE_NAME=#{fileName},
+                   DEL_FLAG='C'
         WHERE  1=1
                 AND INVNTRY_NO= #{invntryNo}
       </update>
+   <update id="insertAdjustmentLocCount" parameterType="Map">
+        UPDATE LOG0073D
+                   SET CNT_QTY=#{cntQty}
+        WHERE  1=1
+                AND INVNTRY_LOC_ID = #{invntryLocId}
+                AND SEQ             =#{seq}
+                AND ITM_ID         =#{itmId}
+      </update> 
 </mapper>

@@ -120,6 +120,7 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		formMap.get("invntryNo");
 
 		logger.debug("invntryNo : {} ", formMap.get("invntryNo"));
+		logger.debug("addList.size() : {} ", addList.size());
 
 		String tmp = String.valueOf(formMap.get("eventType"));
 		List<Object> eventList = Arrays.asList(tmp.split(","));
@@ -189,7 +190,7 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 				setMap.put("adjLocIdPop", formMap.get("adjLocIdPop"));
 				setMap.put("adjItemPop", formMap.get("adjItemPop"));
 				setMap.put("loginId", params.get("loginId"));
-				// adjustmentMapper.insertAdjustmentLocSerial(setMap);
+				adjustmentMapper.insertAdjustmentLocSerial(setMap);
 			}
 		}
 
@@ -197,18 +198,20 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 
 	@Override
 	public void insertAdjustmentLocCount(Map<String, Object> params) {
-		List<Object> addList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
-		logger.debug("adj addList : {} ", addList.toString());
-		if (addList.size() > 0) {
-			for (int i = 0; i < addList.size(); i++) {
-				Map<String, Object> getMap = (Map<String, Object>) addList.get(i);
-				logger.debug("addList : {} ", addList.get(i).toString());
-				/*
-				 * Map<String, Object> setMap = new HashMap(); setMap.put("serial", getMap.get("serial"));
-				 * setMap.put("adjLocIdPop", formMap.get("adjLocIdPop")); setMap.put("adjItemPop",
-				 * formMap.get("adjItemPop")); setMap.put("loginId", params.get("loginId"));
-				 */
-				// adjustmentMapper.insertAdjustmentLocSerial(setMap);
+		List<Object> upList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		logger.debug("upList : {} ", upList.toString());
+		if (upList.size() > 0) {
+			for (int i = 0; i < upList.size(); i++) {
+				Map<String, Object> getMap = (Map<String, Object>) upList.get(i);
+				logger.debug("update : {} ", upList.get(i).toString());
+
+				Map<String, Object> setMap = new HashMap();
+				setMap.put("invntryLocId", getMap.get("invntryLocId"));
+				setMap.put("seq", getMap.get("seq"));
+				setMap.put("itmId", getMap.get("itmId"));
+				setMap.put("cntQty", getMap.get("cntQty"));
+
+				adjustmentMapper.insertAdjustmentLocCount(setMap);
 			}
 		}
 	}
@@ -268,6 +271,11 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 	public void updateApproval(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		adjustmentMapper.updateApproval(params);
+		String status = String.valueOf(params.get("status"));
+		if (status.equals("R") || status.equals("R2")) {
+			adjustmentMapper.updateApprovalStatus(params);
+
+		}
 	}
 
 	@Override
