@@ -133,7 +133,7 @@
                                 }
                             } 
                         }]; */
-        var updateLayout = [ {dataField:"codeName"      ,headerText:"Type"          ,width:"12%" ,height:30 , style :"aui-grid-user-custom-left", 
+        var updateLayout = [ {dataField:"codeName"      ,headerText:"Type"          ,width:120 ,height:30 , style :"aui-grid-user-custom-left", 
 							             labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 							                var retStr = "";
 							                for (var i = 0, len = srvMembershipList.length; i < len; i++) {
@@ -154,7 +154,7 @@
 							              valueField : "codeName"
 							                          }
 							                },   
-                        {dataField:"name"      ,headerText:"Brand"           ,width:"15%" ,height:30 , style :"aui-grid-user-custom-left", 
+                        {dataField:"name"      ,headerText:"Brand"           ,width:120 ,height:30 , style :"aui-grid-user-custom-left", 
 		                                         labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 		                                             var retStr = "";
 		                                             for (var i = 0, len = upBramdList.length; i < len; i++) {
@@ -175,15 +175,15 @@
 		                                           valueField : "codeName"
 		                                                       }
 		                                         }, 
-                       {dataField:"name1"    ,headerText:"Model Name"    ,width:"40%" ,height:30 , visible:true},
-                       {dataField:"assetDRem"        ,headerText:"Remark1"        ,width:"15%" ,height:30 , visible:true},
-                       {dataField:"name3"   ,headerText:"Name"         ,width:"15%" ,height:30 , visible:true},
-                       {dataField:"valu"   ,headerText:"Value"       ,width:"15%" ,height:30 , visible:true},
+                       {dataField:"name1"    ,headerText:"Model Name"    ,width:120 ,height:30 , visible:true},
+                       {dataField:"assetDRem"        ,headerText:"Remark1"        ,width:120 ,height:30 , visible:true},
+                       {dataField:"name3"   ,headerText:"Name"         ,width:120 ,height:30 , visible:true},
+                       {dataField:"valu"   ,headerText:"Value"       ,width:120 ,height:30 , visible:true},
                        {dataField:"assetDItmRem"   ,headerText:"Remark2"       ,width:120 ,height:30 , visible:true},
-                       {dataField:"typeid"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:false}, 
-                       {dataField:"brandid"      ,headerText:"Type"          ,width:"12%" ,height:30 , visible:false},
-                       {dataField:"assetDId"      ,headerText:"AssetDid"          ,width:"12%" ,height:30 , visible:true},
-                       {dataField:"assetDItmId"      ,headerText:"ASSET_D_ITM_ID"          ,width:"12%" ,height:30 , visible:true},
+                       {dataField:"typeid"      ,headerText:"Type"          ,width:120 ,height:30 , visible:false}, 
+                       {dataField:"brandid"      ,headerText:"Type"          ,width:120 ,height:30 , visible:false},
+                       {dataField:"assetDId"      ,headerText:"AssetDid"          ,width:120 ,height:30 , visible:true},
+                       {dataField:"assetDItmId"      ,headerText:"ASSET_D_ITM_ID"          ,width:120 ,height:30 , visible:true},
                        {
                            dataField : "",
                            headerText : "",
@@ -192,7 +192,7 @@
                                labelText : "Remove",
                                onclick : function(rowIndex, columnIndex, value, item) {
                                   gridNm = upitemGrid;
-                                  removeItem(rowIndex, gridNm);
+                                  UpremoveRow(rowIndex, gridNm);
                                }
                            } 
                        }]; 
@@ -221,23 +221,7 @@
                             } 
                         }];
     
-    
-    var multyitemLayout = [{dataField:"name3"   ,headerText:"Item Name"         ,width:"15%" ,height:30 , visible:true},
-                         {dataField:"valu"   ,headerText:"Item Value"       ,width:"15%" ,height:30 , visible:true},
-                         {dataField:"assetDItmRem"   ,headerText:"Item Remark"       ,width:120 ,height:30 , visible:true},
-                         {dataField:"assetdid"      ,headerText:"AssetDID"           ,width:"5%"  ,height:30 , visible:false},
-                         {
-                             dataField : "",
-                             headerText : "",
-                             renderer : {
-                                 type : "ButtonRenderer",
-                                 labelText : "Remove",
-                                 onclick : function(rowIndex, columnIndex, value, item) {
-                                    gridNm = multyitemGrid;
-                                    removeRow(rowIndex, gridNm);
-                                 }
-                             } 
-                         }];
+   
     
  /* 그리드 속성 설정
   usePaging : true, pageRowCount : 30,  fixedColumnCount : 1,// 페이지 설정
@@ -361,9 +345,10 @@
          });
          
          $("#Insert_info").click(function(){
-            $("#add_info_div").show();              
+            $("#add_info_div").show(); 
             destory(AddDetailGrid);
             AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
+            AUIGrid.resize(AddDetailGrid);
            // AddDetailAUIGrid(insDetailLayout);           
      });
          
@@ -378,17 +363,17 @@
      });
          //Update_info tap
          $("#Update_info").click(function(){
+        	 //destory(upitemGrid);
              div="upitem"
-             //destory(upitemGrid);
-             $("#Updadte_div_tap").show();  
+             $("#Updadte_div_tap").show();
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              $("#addassetid").val(AUIGrid.getCellValue(myGridID ,selectedItem[0],'assetid'));
              var itemtype = AUIGrid.getCellValue(myGridID ,selectedItem[0],'typeid');
              //upitemGrid  = GridCommon.createAUIGrid("#UpDetail_div", updateLayout,"", gridoptions);
              upitemGrid  = GridCommon.createAUIGrid("#UpDetail_div", updateLayout,"", subgridpros);
              getDetailAssetListAjax(selectedItem[0],div);    
-             fn_srvMembershipList(itemtype);
-             fn_BrandList();             
+             //fn_srvMembershipList(itemtype);
+            // fn_BrandList();             
      });
          
            
@@ -401,23 +386,7 @@
              doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','additemBrand', 'S' , '');//brand 리스트 조회
              //addItemGrid  = GridCommon.createAUIGrid("#AddItem_div", additemLayout,"", gridoptions);    
      });
-          
-         
-         $("#multi_item_add").click(function(){
-             alert("멀티  업데이트 추가!!!!!!!!!!!!!!!!!!!!");
-             var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
-             if (selectedItem[0] > -1){
-            	   $("#multyItemWindow").show(); 
-            	   multyitemGrid  = GridCommon.createAUIGrid("#multyItem_div", multyitemLayout,"", gridoptions);
-            //var itemtype = AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId');        
-             }else{
-                 Common.alert('Choice Data please..');
-             }        
-     });
-         
-         
-         
-         
+               
          
       $("#detail_info_add").click(function(){
          $("#detailForm")[0].reset();
@@ -562,8 +531,8 @@
                     
                   AUIGrid.setGridData(detailGrid, gridData.data);
                  }else{
-                     
-                     AUIGrid.setGridData(upitemGrid, gridData.data);             
+                     AUIGrid.setGridData(upitemGrid, gridData.data);      
+                     AUIGrid.resize(upitemGrid);
                  }
                 hideModal(); 
             },
@@ -574,7 +543,6 @@
         }); 
     }
     function assetsaveAjax(div) {
-    	alert(div);
         var url;
         var key;
         var param;
@@ -593,7 +561,7 @@
         }else if(div=="MI"){
         	param = GridCommon.getEditData(upitemGrid);
         }else if(div=="EI"){
-        	param= GridCommon.getEditData(upitemGrid);
+        	param = GridCommon.getEditData(upitemGrid);
         }
 
        if(div=="N"){
@@ -992,7 +960,6 @@
 
 	function typeallchek() {
 		var typesize = $("#searchtype option").size();
-		alert(typesize);
 		for (var int = 0; int < array.length; int++) {
 
 		}
@@ -1000,7 +967,6 @@
 	}
 
 	function addRowFileter() {
-		alert(div);
 		var item = new Object();
 		item.codeName = $("#insdetailtype option:selected").text();
 		item.name = $("#insdetailBrand option:selected").text();
@@ -1017,8 +983,7 @@
 	
 	
 	   function addRowItem() {
-		   div="AI"
-	        alert("로우 아이템");
+		   div="AI";
 	        var item = new Object();
 	        //$("#addassetid").val(AUIGrid.getCellValue(myGridID ,selectedItem[0],'assetid'));
 	        item.codeName = $("#additemtype option:selected").text();
@@ -1037,22 +1002,6 @@
             }
 	     //$("#AddItemForm")[0].reset();  
 	    }
-	   
-	  /*  function multyRowItem() {
-		   div="MI";
-           alert("멀티 로우 아이템");
-           var item = new Object();
-           var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
-           $("#multyassetid").val(AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId')); 
-           item.name3 = $("#multyitemname").val();
-           item.valu = $("#multyitemvalue").val();
-           item.assetDItmRem = $("#multyitemremark").val();
-           item.assetdid = $("#multyassetid").val();
-           if (itemvaliedcheck(div)) {     
-           AUIGrid.addRow(multyitemGrid, item, "last");
-           }
-        $("#MultyItemForm")[0].reset();  
-       } */
 	   
 
 	function cancelRowFileter() {
@@ -1080,10 +1029,21 @@
 		}
 	}
 	function removeRow(rowIndex, gridNm) {
-
+	    
 		AUIGrid.removeRow(gridNm, rowIndex);
 		AUIGrid.removeSoftRows(gridNm);
 	}
+	 function UpremoveRow(rowIndex, gridNm) {
+	   var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
+	   var assetDId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId');
+	   var assetDItmId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDItmId');
+		   if(assetDId== undefined || assetDItmId== undefined){
+	        AUIGrid.removeRow(gridNm, rowIndex);
+	        AUIGrid.removeSoftRows(gridNm);	   
+		   }else{
+			   Common.alert("can not delete an existing registered item.");
+		   }
+	   }
     
    function removeItem(rowIndex, gridNm) {
 	   div="RI";
@@ -1094,19 +1054,24 @@
 	    
 	}
 	
-	
-	function updateItem(flag) {
-		alert(flag);
-		if(flag =="M"){
-			 div = "MI";				
-		}else if(flag=="E"){
-			div="EI";
+  function updateItem(flag) {
+	var addList = AUIGrid.getAddedRowItems(upitemGrid);
+	    // 수정된 행 아이템들(배열)
+	var updateList = AUIGrid.getEditedRowColumnItems(upitemGrid); 
+
+		if(addList.length ==0 && updateList.length ==0){
+			Common.alert("There Are No Update Items.");
+		}else{
+			 alert(flag);
+	         if(flag=="E"){
+	            div="EI";
+	        }
+	        assetsaveAjax(div);
 		}
-		assetsaveAjax(div);
+
 	}
 
 	   function fn_srvMembershipList(itemtype) {
-		alert(itemtype);
 	        Common.ajaxSync("GET", "/logistics/assetmng/selectTypeList.do", { groupCode : itemtype},			
 	                function(result) {
 	            //console.log(result);
@@ -1114,13 +1079,13 @@
 	                    for (var i = 0; i < result.length; i++) {
 	                        var list = new Object();
 	                        list.codeId = result[i].codeId;
-	                        console.log(list.codeId);
+	                        //console.log(list.codeId);
 	                        //list.memcd = result[i].memcd;
 	                        list.codeName = result[i].codeName;
-	                        console.log(list.codeName);
+	                       // console.log(list.codeName);
 	                        srvMembershipList.push(list);
 	                    } 
-	                        console.log(list);
+	                        //console.log(list);
 	                });
 	    }
 	   
@@ -1134,10 +1099,10 @@
 	                            console.log(list.codeId);
 	                            //list.memcd = result[i].memcd;
 	                            list.codeName = result[i].codeName;
-	                            console.log(list.codeName);
+	                            //console.log(list.codeName);
 	                            upBramdList.push(list);
 	                        } 
-	                            console.log(list);
+	                            //console.log(list);
 	                    });
 	        }
 	   
@@ -1527,13 +1492,13 @@
                     <ul class="left_opt">
                     <li><p class="btn_blue"><a id="item_info_add">ADD Item</a></p></li>
                     </ul>
-                    <li><p class="btn_blue"><a id="multi_item_add">ADD Item info</a></p></li>
+                    <!-- <li><p class="btn_blue"><a id="multi_item_add">ADD Item info</a></p></li> -->
                 </aside>
                 <div id="UpDetail_div" style="width:100%;">
                 </div>
                 <ul class="left_opt">
-                    <li><p class="btn_blue"><a onclick="javascript:updateItem('M')">SAVE</a></p></li>
-                    <li><p class="btn_blue"><a onclick="javascript:updateItem('E')">UPDATE</a></p></li>
+                    <!-- <li id="addItm"><p class="btn_blue"><a onclick="javascript:updateItem('M')">SAVE</a></p></li> -->
+                    <li id="upItm"><p class="btn_blue"><a onclick="javascript:updateItem('E')">UPDATE</a></p></li>
                 </ul>         
  </div>  
 </article>
