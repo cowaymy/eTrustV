@@ -305,7 +305,7 @@ public class AssetMasterController {
 	public ResponseEntity<Map<String, Object>> addItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 		
-		logger.debug("아이템 추가 통과" );
+		//logger.debug("아이템 추가 통과" );
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
@@ -318,8 +318,9 @@ public class AssetMasterController {
 		List<EgovMap> itemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
 		for (int i = 0; i < itemAddList.size(); i++) {
 			//itemAddList.get(i).put("loginId", loginId);
-			logger.debug("%%%%%@@@@@@@@@@@@@%%%itemAddList%%%%%%%: {}", itemAddList.get(i));
+			//logger.debug("%%%%%@@@@@@@@@@@@@%%%itemAddList%%%%%%%: {}", itemAddList.get(i));
 		}
+		
 		
 		String retMsg = AppConstants.MSG_SUCCESS;
 		Map<String, Object> map = new HashMap();
@@ -340,7 +341,7 @@ public class AssetMasterController {
 	public ResponseEntity<Map<String, Object>> updateItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 		
-		logger.debug("업데이트 아이템 통과!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+		//logger.debug("업데이트 아이템 통과!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
@@ -350,9 +351,13 @@ public class AssetMasterController {
 			loginId = sessionVO.getUserId();
 		}
 		
-		List<EgovMap> updateItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
-		for (int i = 0; i < updateItemAddList.size(); i++) {
-			logger.debug("%%%%%%%%multyItemAddList%%%%%%%: {}", updateItemAddList.get(i));
+		List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+		for (int i = 0; i < updateItemList.size(); i++) {
+			//logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
+		}
+		List<EgovMap> ItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		for (int i = 0; i < ItemAddList.size(); i++) {
+			//logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
 		}
 		
 		
@@ -367,14 +372,11 @@ public class AssetMasterController {
 
 		String retMsg = AppConstants.MSG_SUCCESS;
 
-		// loginId
-		//params.put("crt_user_id", loginId);
-		//params.put("upd_user_id", loginId);
 
 		Map<String, Object> map = new HashMap();
 
 		try {			
-			ams.updateItemAssetMng(updateItemAddList,loginId);			
+			ams.updateItemAssetMng(params,loginId);			
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
