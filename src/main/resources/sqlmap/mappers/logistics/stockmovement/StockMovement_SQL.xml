@@ -216,6 +216,12 @@
                #{item}
                </foreach>
            </if>
+           <if test="catetype != null and catetype !=''">
+              and l56.stk_ctgry_id in
+              <foreach item="item" collection="catetype" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
     </select>
     
   <select id="selectStockMovementItemDeliveryQty" parameterType="Map" resultType="egovMap">
