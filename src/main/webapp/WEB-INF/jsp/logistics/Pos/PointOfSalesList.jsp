@@ -300,7 +300,6 @@ function GiSaveAjax() {
 	   
     var data = {};
     var checkdata = AUIGrid.getCheckedRowItems(listGrid);
-    alert("체크길이  :" +checkdata.length);
     data.checked = checkdata;
     data.form = $("#giForm").serializeJSON();
 
@@ -309,7 +308,7 @@ function GiSaveAjax() {
         Common.alert(result.message);
 
         // AUIGrid.resetUpdatedItems(listGrid, "all");    
-        //$("#giopenwindow").hide();
+        $("#giopenwindow").hide();
         // $('#search').click();
 
     }, function(jqXHR, textStatus, errorThrown) {
