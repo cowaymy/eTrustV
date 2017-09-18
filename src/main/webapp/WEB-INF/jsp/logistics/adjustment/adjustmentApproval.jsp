@@ -122,24 +122,32 @@ $(function(){
     $('#complete').click(function() {
         var formData = new FormData();
         formData.append("excelFile", $("input[name=pdfUpload]")[0].files[0]);
-        //formData.append("param01", "param01");
-       // formData.append("param02", "param02");
         formData.append("adjNo", adjNo);
 
         Common.ajaxFile("/logistics/adjustment/pdfUpload.do", formData, function (result) {
             //Common.alert("완료~")
-            console.log(result);
+            //console.log(result);
+            //fn_approvalStatus(data)
+            //searchGrid();
+            $("#auto_file").hide();
+            $("#complete").hide();
         });
     });
-/*     $('#confirm').click(function() {
-    	fn_confirm();
-    }); */
      });
  });
 
- function searchHead(){
-	//var adjNo="${rAdjcode }";
-    //var adjLocation = "${rAdjlocId }";
+
+function searchHead(){
+    var param ="adjNo="+adjNo;
+    var url = "/logistics/adjustment/oneAdjustmentNo.do";
+    Common.ajax("GET" , url , param , function(result){
+        var data = result.dataList;
+        //console.log(data);
+        fn_setVal(data);
+        searchGrid();
+    });
+}
+ function searchGrid(){
     var param =
          {
     		invntryNo    : adjNo
@@ -149,7 +157,6 @@ $(function(){
     Common.ajax("GET" , url , param , function(result){
         var data = result.dataList;
         var data2 = result.cnt
-        console.log(result);
         AUIGrid.setGridData(myGridID, data);
         fn_chck_approval(data2);        	
     });
@@ -157,95 +164,194 @@ $(function(){
 
  function  fn_chck_approval(data2){
 	 
-	 var total = data2[0].total
-	 var y =data2[0].y
+	 var total = data2[0].total;
+	 var y =data2[0].y;
 	 $('#checkYn').text(y+"/"+total);
-	 
-	 if(total==y){
-		// $('#confirm').show();
-	 }else{
-		// $('#confirm').hide();
-		 
-	 }
-	 
 	 
 	 var param =
      {
         invntryNo    : adjNo
         //invntryLocId     : adjLocation
-    };
+    }
 var url = "/logistics/adjustment/adjustmentApprovalLineCheck.do";
 Common.ajax("GET" , url , param , function(result){
    var data = result.dataList;
-   // var data2 = result.cnt
-    console.log(data);
-    //AUIGrid.setGridData(myGridID, data);
-    //fn_chck_approval(data2);            
-    fn_approvalStatus(data);
+        console.log(data)
+        $("#approve").hide();
+        $("#reject").hide();
+        $("#approve2").hide();
+        $("#reject2").hide();
+        $("#auto_file").hide();
+        $("#complete").hide(); 
+    if(data.length>0){
+	    fn_approvalStatus(data);
+   }
 });
  }
 
-function fn_approvalStatus(data){
-	if(null==data[0].cnfm1 ||""==data[0].cnfm1){
-		$("#approve").show();
-		$("#reject").show();
-		$("#approve2").hide();
-		$("#reject2").hide();
-	}else if("A"==data[0].cnfm1){
-        $("#approve2").show();
-        $("#reject2").show();
-	}else if("A"==data[0].cnfm2){
-		$("#approve").hide();
-		$("#reject").hide();
-		$("#approve2").hide();
-		$("#reject2").hide();
-	}else if("R"==data[0].cnfm2){
-		$("#approve").show();
-		$("#reject").show();
-		$("#approve2").hide();
-		$("#reject2").hide();
-	}
-	
-	if("A"==data[0].cnfm1 & "A"==data[0].cnfm2){
-		$("#auto_file").show();
-	      $("#approve").hide();
-	        $("#reject").hide();
-	        $("#approve2").hide();
-	        $("#reject2").hide();
-	}else{
-		$("#auto_file").hide();
-	}
-		$("#lcdYn").text(data[0].cnfm1);
-		$("#finYn").text(data[0].cnfm2);
-	
+
+	function fn_approvalStatus(data) {
+
+		if ("Y" == data[0].saveYn) {
+			if (null == data[0].cnfm1 || "" == data[0].cnfm1) {
+				$("#approve").show();
+				$("#reject").show();
+				$("#approve2").hide();
+				$("#reject2").hide();
+			} else if ("R" == data[0].cnfm1 || "R" == data[0].cnfm2) {
+				$("#approve").hide();
+				$("#reject").hide();
+				$("#approve2").hide();
+				$("#reject2").hide();
+			} else if ("A" == data[0].cnfm1) {
+				$("#approve").hide();
+				$("#reject").hide();
+				$("#approve2").show();
+				$("#reject2").show();
+			}
+			/* }else if("A"==data[0].cnfm2){
+			$("#approve").hide();
+			$("#reject").hide();
+			$("#approve2").hide();
+			$("#reject2").hide();
+			} */
+
+			if ("A" == data[0].cnfm1 & "A" == data[0].cnfm2) {
+				$("#auto_file").show();
+				$("#complete").show();
+				$("#approve").hide();
+				$("#reject").hide();
+				$("#approve2").hide();
+				$("#reject2").hide();
+			} else {
+				$("#auto_file").hide();
+				$("#complete").hide();
+			}
+
+		} else {
+			$("#approve").hide();
+			$("#reject").hide();
+			$("#approve2").hide();
+			$("#reject2").hide();
+			$("#auto_file").hide();
+			$("#complete").hide();
+			
+		}
+		
+        $("#lcdYn").text(data[0].cnfm1);
+        $("#finYn").text(data[0].cnfm2);
 }
+	function fn_updateApproval(status) {
 
-function fn_updateApproval(status){
-	
-	var chckAuthority="";// 권한 업데이트 함수 또는 팀으로 세팅 할 예정
-	if(status == "A"){
+		var chckAuthority = "";// 권한 업데이트 함수 또는 팀으로 세팅 할 예정
+		if (status == "A") {
+		} else if (status == "R") {
+		}
+
+		var param = {
+			invntryNo : adjNo,
+			//invntryLocId     : adjLocation
+			status : status
+		};
+		var url = "/logistics/adjustment/ApprovalUpdate.do";
+		Common.ajax("GET", url, param, function(result) {
+			var data = result.dataList;
+			// var data2 = result.cnt
+			//AUIGrid.setGridData(myGridID, data);
+			//fn_chck_approval(data2);            
+			fn_approvalStatus(data);
+		});
+
 	}
-	else if(status == "R"){
-	}	
 
-	var param =
-    {
-       invntryNo    : adjNo,
-       //invntryLocId     : adjLocation
-       status     : status
-   };
-   console.log(param);
-var url = "/logistics/adjustment/ApprovalUpdate.do";
-Common.ajax("GET" , url , param , function(result){
-  var data = result.dataList;
-  // var data2 = result.cnt
-   console.log(data);
-   //AUIGrid.setGridData(myGridID, data);
-   //fn_chck_approval(data2);            
-   fn_approvalStatus(data);
-});
+	function fn_setVal(data) {
+		//var status = "${rStatus }";
+		$("#adjno").val(data[0].invntryNo);
+		$("#bsadjdate").text(data[0].baseDt);
+		$("#doctext").text(data[0].headTitle);
+		var tmp = data[0].eventType.split(',');
+		var tmp2 = data[0].itmType.split(',');
+		var tmp3 = data[0].ctgryType.split(',');
+		fn_eventSet(tmp);
+		if (data[0].autoFlag == "A") {
+			$("#auto").attr("checked", true);
+		} else if (data[0].autoFlag == "M") {
+			$("#manual").attr("checked", true);
+		}
+		fn_itemSet(tmp2);
+		fn_itemSet(tmp2, "item");
+		fn_itemSet(tmp3, "catagory");
 
-} 
+	}
+	function fn_eventSet(tmp) {
+		for (var i = 0; i < tmp.length; i++) {
+			if (tmp[i] == "1") {
+				$("#cdc").attr("checked", true);
+			} else if (tmp[i] == "2") {
+				$("#rdc").attr("checked", true);
+			} else if (tmp[i] == "30") {
+				$("#ctcd").attr("checked", true);
+			}
+		}
+
+	}
+
+	function fn_itemSet(tmp, str) {
+		var no;
+		if (str == "item") {
+			no = 15;
+		} else if (str == "catagory") {
+			no = 11;
+		}
+		var url = "/logistics/adjustment/selectCodeList.do";
+		$.ajax({
+			type : "GET",
+			url : url,
+			data : {
+				groupCode : no
+			},
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				fn_itemChck(data, tmp, str);
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			},
+			complete : function() {
+			}
+		});
+	}
+	function fn_itemChck(data, tmp2, str) {
+		var obj;
+		if (str == "item") {
+			obj = "itemtypetd";
+		} else if (str == "catagory") {
+			obj = "catagorytypetd";
+		}
+		obj = '#' + obj;
+
+		$.each(data, function(index, value) {
+			$('<label />', {
+				id : data[index].code
+			}).appendTo(obj);
+			$('<input />', {
+				type : 'checkbox',
+				value : data[index].codeId,
+				id : data[index].codeId
+			}).appendTo('#' + data[index].code).attr("disabled", "disabled");
+			$('<span />', {
+				text : data[index].codeName
+			}).appendTo('#' + data[index].code);
+		});
+
+		for (var i = 0; i < tmp2.length; i++) {
+			$.each(data, function(index, value) {
+				if (tmp2[i] == data[index].codeId) {
+					$('#' + data[index].codeId).attr("checked", "true");
+				}
+			});
+		}
+	}
 </script>
 
 <section id="content"><!-- content start -->
@@ -304,10 +410,11 @@ Common.ajax("GET" , url , param , function(result){
     <td id="itemtypetd">
     </tr>
     <tr>
+        <th scope="row">Category Type</th>
+        <td id="catagorytypetd">
     <th scope="row">Stock Audit Date</th>
     <td id="bsadjdate">
     </td>  
-    <td colspan="2"/> 
     </tr>
     <tr>
         <th scope="row">Remark</th>
@@ -330,7 +437,7 @@ Common.ajax("GET" , url , param , function(result){
 <ul class="left_btns">
     <li><p class="btn_blue"><a id="approve"><span class="approve"></span>Approve</a></p></li>
   <li><p class="btn_blue"><a id="reject"><span class="reject"> </span>Reject</a></p></li>
-    <li><p class="btn_blue"><a id="approve2"><span class="approve2"></span> Approve</a></p></li>
+    <li><p class="btn_blue"><a id="approve2"><span class="approve2"></span> Approve2</a></p></li>
   <li><p class="btn_blue"><a id="reject2"><span class="reject2"></span> Reject2</a></p></li>
   <li><p class="btn_blue"><div class="auto_file" id="auto_file"><!-- auto_file start -->
                                     <input type="file" id="fileSelector" name="pdfUpload" title="file add" accept=".pdf"/>
@@ -353,6 +460,7 @@ Common.ajax("GET" , url , param , function(result){
 </colgroup>
 <tbody>
 <tr> 
+    <th scope="row">LCD Team</th>
     <td id="lcdYn">
     </td>
     <th scope="row">Finance</th>

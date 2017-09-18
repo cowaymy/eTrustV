@@ -166,7 +166,8 @@ var serialcolumn  =[{dataField:"itmcd"        ,headerText:"Material Code"       
                          {dataField:"statustype"   ,headerText:"status"                     ,width:120     ,height:30 }
                         ];                              
 var resop = {rowIdField : "rnum"
-		//, showRowCheckColumn : true 
+		, showStateColumn : false 
+		, showRowCheckColumn : true 
 		,usePaging : false
 		//,useGroupingPanel : false 
 		,editable:true,
@@ -215,14 +216,9 @@ $(document).ready(function(){
         
     
     AUIGrid.bind(myGridID, "cellEditEnd", function (event){
-        var rowCnt = AUIGrid.getRowCount(myGridID);
-        for (var i = 0 ; i < rowCnt ; i++){
-            var qty = AUIGrid.getCellValue(myGridID , i , 'sysQty') - AUIGrid.getCellValue(myGridID , i , 'cntQty');
-            console.log(qty);
-           // if(AUIGrid.getCellValue(myGridID , i , 'cntQty'))
-            AUIGrid.setCellValue(myGridID, i, 'diffQty', qty);
-        }
-        AUIGrid.resetUpdatedItems(myGridID, "all");
+    	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+        var qty = AUIGrid.getCellValue(myGridID , selectedItem[0] , 'sysQty') - AUIGrid.getCellValue(myGridID ,selectedItem[0] , 'cntQty');
+        AUIGrid.setCellValue(myGridID, selectedItem[0], 'diffQty', qty);
     	
     });
     AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
@@ -461,6 +457,7 @@ function fn_setVal(data){
     $("#doctext").text(data[0].headTitle);
 	var tmp = data[0].eventType.split(',');
 	var tmp2 = data[0].itmType.split(',');
+	var tmp3 = data[0].ctgryType.split(',');
 	fn_eventSet(tmp);
 	if(data[0].autoFlag == "A"){
 		$("#auto").attr("checked", true);
@@ -468,6 +465,8 @@ function fn_setVal(data){
 			$("#manual").attr("checked", true);
 	}
 	fn_itemSet(tmp2);
+    fn_itemSet(tmp2,"item");
+    fn_itemSet(tmp3,"catagory");
 	
 	
 	
@@ -485,18 +484,24 @@ function fn_eventSet(tmp){
 	
 }
 
-function fn_itemSet(tmp2){
+function fn_itemSet(tmp,str){
+    var no;
+    if(str=="item"){
+        no=15;
+    }else if(str=="catagory"){
+        no=11;
+    }
     var url = "/logistics/adjustment/selectCodeList.do";
 	$.ajax({
         type : "GET",
         url : url,
         data : {
-            groupCode : 15
+            groupCode : no
         },
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
-           fn_itemChck(data,tmp2);
+        	 fn_itemChck(data,tmp,str);
         },
         error : function(jqXHR, textStatus, errorThrown) {
         },
@@ -504,19 +509,25 @@ function fn_itemSet(tmp2){
         }
     });
 }
-function  fn_itemChck(data,tmp2){
-	var obj ="#itemtypetd";
+function  fn_itemChck(data,tmp2,str){
+    var obj;
+    if(str=="item"){
+        obj ="itemtypetd";
+    }else if(str=="catagory"){
+        obj ="catagorytypetd";
+    }
+    obj= '#'+obj;
 	
 	$.each(data, function(index,value) {
 	            $('<label />',{id:data[index].code}).appendTo(obj);
-	            $('<input />',  {type : 'checkbox',value : data[index].codeId, id : data[index].codeId}).appendTo("#"+data[index].code).attr("disabled","disabled");
-	            $('<span />',  {text:data[index].codeName}).appendTo("#"+data[index].code);
+	            $('<input />',  {type : 'checkbox',value : data[index].codeId, id : data[index].codeId}).appendTo('#'+data[index].code).attr("disabled","disabled");
+	            $('<span />',  {text:data[index].codeName}).appendTo('#'+data[index].code);
 	    });
 			
 		for(var i=0; i<tmp2.length;i++){
 			$.each(data, function(index,value) {
 				if(tmp2[i]==data[index].codeId){
-					$("#"+data[index].codeId).attr("checked", "true");
+					$('#'+data[index].codeId).attr("checked", "true");
 				}
 			});
 		}
@@ -827,29 +838,21 @@ function fn_confirm(){
 <tr>
     <th scope="row">Event Type</th>
     <td>
-    <!-- <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select> -->
      <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
     </td>
-  <!--   <th scope="row">Document Date</th>
-    <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
-</tr>
-<tr> -->
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
-    <!-- <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select> -->
     </td>
-    <!-- <th scope="row">Based Adjustment Date</th>
-    <td>
-    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
-    </td> -->
-    <!-- <td colspan="2"/> -->
     </tr>
+         <tr>
+         <th scope="row">Category Type</th>
+    <td id="catagorytypetd" colspan="3">
+     </tr>
     <tr>
     <th scope="row">Stock Audit Date</th>
     <td id="bsadjdate">
-    <!-- <input id="bsadjdate" name="bsadjdate" type="text"  readonly="readonly" /> -->
     </td>  
     <td colspan="2"/> 
     </tr>
@@ -903,36 +906,12 @@ function fn_confirm(){
 			</p></li>
 		<li><p class="btn_grid">
 				<a id="excelDown"><spring:message code='sys.btn.excel.dw' /></a>
-		<%-- <li><p class="btn_grid">
-				<a href="#"><spring:message code='sys.btn.excel.up' /></a>
-			</p></li>
-		<li><p class="btn_grid">
-				<a href="#"><spring:message code='sys.btn.excel.dw' /></a>
-			</p></li>
-		<li><p class="btn_grid">
-				<a id="#"><spring:message code='sys.btn.del' /></a>
-			</p></li>
-		<li><p class="btn_grid">
-				<a href="#"><spring:message code='sys.btn.ins' /></a>
-			</p></li>
-		<li><p class="btn_grid">
-				<a id="view"><spring:message code='sys.btn.view' /></a>
-			</p></li>
-		<li><p class="btn_grid">
-				<a id="update"><spring:message code='sys.btn.update' /></a>
-			</p></li>
-		<li><p class="btn_grid">
-				<a id="insert"><spring:message code='sys.btn.add' /></a>
-			</p></li> --%>
 	</ul>
 	<section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="grid_wrap"></div>
 </article>
-<!-- <article class="grid_wrap">grid_wrap start
-        <div id="grid_wrap2" style="display: none;" ></div>
-</article> -->
 
  <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
@@ -944,6 +923,7 @@ function fn_confirm(){
     <input type="hidden" id="autoFlag" name="autoFlag">
     <input type="hidden" id="eventType" name="eventType">
     <input type="hidden" id="itmType" name="itmType">
+    <input type="hidden" id="ctgryType" name="ctgryType">
 </form>
 <form id="listForm" name="listForm" method="POST">
 <input type="hidden" id="retnVal"    name="retnVal"    value="R"/>
@@ -960,9 +940,6 @@ function fn_confirm(){
         <section class="pop_body"><!-- pop_body start -->
             <form id="giForm" name="giForm" method="POST">
             <input type="hidden" name="adjLocIdPop" id="adjLocIdPop"/>
-            <!-- <input type="hidden" name="gtype" id="gtype" value="GI"/>
-            <input type="hidden" name="serialqty" id="serialqty"/>
-            <input type="hidden" name="reqstno" id="reqstno"/> -->
             <table class="type1">
             <caption>search table</caption>
             <colgroup>

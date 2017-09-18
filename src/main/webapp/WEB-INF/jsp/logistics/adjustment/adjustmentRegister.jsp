@@ -385,15 +385,15 @@ function  fn_itemChck(data,tmp2,str){
     obj= '#'+obj;
 	$.each(data, function(index,value) {
 	            $('<label />',{id:data[index].code}).appendTo(obj);
-	            $('<input />',  {type : 'checkbox',value : data[index].codeId, id : data[index].codeId}).appendTo("#"+data[index].code).attr("disabled","disabled");
-	            $('<span />',  {text:data[index].codeName}).appendTo("#"+data[index].code);
+	            $('<input />',  {type : 'checkbox',value : data[index].codeId, id : data[index].codeId}).appendTo('#'+data[index].code).attr("disabled","disabled");
+	            $('<span />',  {text:data[index].codeName}).appendTo('#'+data[index].code);
 	    });
 			
 		for(var i=0; i<tmp2.length;i++){
 			$.each(data, function(index,value) {
 				if(tmp2[i]==data[index].codeId){
-					$("#"+data[index].codeId).attr("checked", "true");
-					//$("#"+data[index].codeName).val("Y");
+					$('#'+data[index].codeId).attr("checked", "true");
+					//$('#'+data[index].codeName).val("Y");
 				}
 			});
 		}

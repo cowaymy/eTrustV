@@ -51,8 +51,8 @@ var columnLayout=[
                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30},
                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30},
-                  {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30},
-                  {dataField:"seq" ,headerText:"seq",width:120 ,height:30},
+                  {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30}
+                  /* ,{dataField:"seq" ,headerText:"seq",width:120 ,height:30},
                   {dataField:"itmId" ,headerText:"itmId",width:120 ,height:30},
                   {dataField:"itmNm" ,headerText:"itmNm",width:120 ,height:30},
                   {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30},
@@ -83,7 +83,7 @@ var columnLayout=[
                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30 , visible:false},
                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30 , visible:false},
                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30 , visible:false},
-                  {dataField:"commonCrChk" ,headerText:"commonCrChk",width:120 ,height:30 , visible:false}
+                  {dataField:"commonCrChk" ,headerText:"commonCrChk",width:120 ,height:30 , visible:false} */
                ];          
 var resop = {//rowIdField : "rnum"
 		//, showRowCheckColumn : true 
@@ -109,7 +109,21 @@ $(function(){
      });
  });
 
- function searchHead(){
+
+function searchHead(){
+    //var adjNo="${rAdjcode }";
+    //var adjLocation = "${rAdjlocId }";
+    var param ="adjNo="+adjNo;
+    var url = "/logistics/adjustment/oneAdjustmentNo.do";
+    Common.ajax("GET" , url , param , function(result){
+        var data = result.dataList;
+        console.log(data);
+        fn_setVal(data);
+        searchGrid();
+    });
+}
+
+ function searchGrid(){
 	//var adjNo="${rAdjcode }";
     //var adjLocation = "${rAdjlocId }";
     var param =
@@ -141,6 +155,88 @@ $(function(){
 	 }
  }
 
+ function fn_setVal(data){
+	    //var status = "${rStatus }";
+	    $("#adjno").val(data[0].invntryNo);
+	    $("#bsadjdate").text(data[0].baseDt);
+	    $("#doctext").text(data[0].headTitle);
+	    var tmp = data[0].eventType.split(',');
+	    var tmp2 = data[0].itmType.split(',');
+	    var tmp3 = data[0].ctgryType.split(',');
+	    fn_eventSet(tmp);
+	    if(data[0].autoFlag == "A"){
+	        $("#auto").attr("checked", true);
+	    }else if(data[0].autoFlag == "M"){
+	            $("#manual").attr("checked", true);
+	    }
+	    fn_itemSet(tmp2);
+	    fn_itemSet(tmp2,"item");
+	    fn_itemSet(tmp3,"catagory");
+	    
+	    
+	    
+	}
+	function fn_eventSet(tmp){
+	    for(var i=0; i<tmp.length;i++){
+	        if(tmp[i]=="1"){
+	            $("#cdc").attr("checked", true);
+	        }else if (tmp[i]=="2") {
+	            $("#rdc").attr("checked", true);
+	        } else if(tmp[i]=="30"){
+	            $("#ctcd").attr("checked", true);  
+	        }
+	    } 
+	    
+	}
+
+	function fn_itemSet(tmp,str){
+	    var no;
+	    if(str=="item"){
+	        no=15;
+	    }else if(str=="catagory"){
+	        no=11;
+	    }
+	    var url = "/logistics/adjustment/selectCodeList.do";
+	    $.ajax({
+	        type : "GET",
+	        url : url,
+	        data : {
+	            groupCode : no
+	        },
+	        dataType : "json",
+	        contentType : "application/json;charset=UTF-8",
+	        success : function(data) {
+	             fn_itemChck(data,tmp,str);
+	        },
+	        error : function(jqXHR, textStatus, errorThrown) {
+	        },
+	        complete : function() {
+	        }
+	    });
+	}
+	function  fn_itemChck(data,tmp2,str){
+	    var obj;
+	    if(str=="item"){
+	        obj ="itemtypetd";
+	    }else if(str=="catagory"){
+	        obj ="catagorytypetd";
+	    }
+	    obj= '#'+obj;
+	    
+	    $.each(data, function(index,value) {
+	                $('<label />',{id:data[index].code}).appendTo(obj);
+	                $('<input />',  {type : 'checkbox',value : data[index].codeId, id : data[index].codeId}).appendTo("#"+data[index].code).attr("disabled","disabled");
+	                $('<span />',  {text:data[index].codeName}).appendTo("#"+data[index].code);
+	        });
+	            
+	        for(var i=0; i<tmp2.length;i++){
+	            $.each(data, function(index,value) {
+	                if(tmp2[i]==data[index].codeId){
+	                    $("#"+data[index].codeId).attr("checked", "true");
+	                }
+	            });
+	        }
+	}
 
 </script>
 
@@ -187,31 +283,20 @@ $(function(){
 <tr>
     <th scope="row">Event Type</th>
     <td>
-    <!-- <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select> -->
      <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
     </td>
-  <!--   <th scope="row">Document Date</th>
-    <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
-</tr>
-<tr> -->
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
-    <!-- <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select> -->
     </td>
-    <!-- <th scope="row">Based Adjustment Date</th>
-    <td>
-    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
-    </td> -->
-    <!-- <td colspan="2"/> -->
     </tr>
     <tr>
+    <th scope="row">Category Type</th>
+        <td id="catagorytypetd">
     <th scope="row">Stock Audit Date</th>
     <td id="bsadjdate">
-    <!-- <input id="bsadjdate" name="bsadjdate" type="text"  readonly="readonly" /> -->
     </td>  
-    <td colspan="2"/> 
     </tr>
     <tr>
         <th scope="row">Remark</th>
@@ -220,12 +305,7 @@ $(function(){
     <tr>
     <th scope="row">Check Approval</th>
     <td id="checkYn">
-    <!-- <select class="multy_select" multiple="multiple" id="itemtype" name="itemtype[]" /></select> -->
     </td>
-    <!-- <th scope="row">Based Adjustment Date</th>
-    <td>
-    <input id="bsadjdate" name="bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
-    </td> -->
     <td colspan="2"/>
     </tr>
 </tbody>
