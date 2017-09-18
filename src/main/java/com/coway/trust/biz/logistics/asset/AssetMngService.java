@@ -23,9 +23,9 @@ public interface AssetMngService {
 
 	void addItemAssetMng(List<EgovMap> itemAddList,int loginId );
 	
-	void updateItemAssetMng(List<EgovMap> updateItemAddList,int loginId);
-	
 	void motifyAssetMng(Map<String, Object> params);
+	
+	void updateItemAssetMng(Map<String, Object> params,int loginId);
 	
 	void RemoveItemAssetMng(Map<String, Object> params);
 
