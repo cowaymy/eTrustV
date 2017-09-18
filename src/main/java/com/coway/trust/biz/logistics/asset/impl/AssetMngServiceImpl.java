@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.asset.AssetMngService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -156,42 +157,68 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	}
 	
 @Override
-	public void updateItemAssetMng(List<EgovMap> updateItemAddList,int loginId) {		
+	public void updateItemAssetMng(Map<String, Object> params,int loginId) {		
 		
-	/*	for (int i = 0; i < updateItemAddList.size(); i++) {
-		int insAseetItemDid = AssetMngMapper.AssetItemCreateSeq();
+	
+    	List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+    	for (int i = 0; i < updateItemList.size(); i++) {
+    		//Logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
+    	}
+    	List<EgovMap> ItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+    	for (int i = 0; i < ItemAddList.size(); i++) {
+    		//Logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
+    	}
+	
+	
+    	if (updateItemList.size() > 0) {
+			for (int i = 0; i < updateItemList.size(); i++) {
+				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+				
+				updateMap.put("upuser_id", loginId);
+				
+				AssetMngMapper.updateItm(updateMap);
+				AssetMngMapper.updateAssetDetail(updateMap);
+			}
+		}
+    	
+    	
+    	if (ItemAddList.size() > 0) {
+			for (int i = 0; i < ItemAddList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) ItemAddList.get(i);
+					
+				int ItemCreateSeq = AssetMngMapper.AssetItemCreateSeq();
+				int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
 		
-		Logger.debug("itemAddList   : {}", updateItemAddList.get(i));
-		
-		Map<String, Object> map = updateItemAddList.get(i);
-		Map<String, Object> resultmap = new HashMap<String, Object>();
-		
-		setUserId(resultmap,loginId);
-		
-		Logger.info("assetItemList : {}", map.get("assetdid"));
-		
-		resultmap.put("detailassetid", map.get("assetdid"));
-		resultmap.put("insAseetItemDid", insAseetItemDid);
-		resultmap.put("add_crtuser_id", loginId);
-		resultmap.put("add_upuser_id", loginId);
-		resultmap.put("additemname", map.get("name3"));
-		resultmap.put("additemvalue", map.get("valu"));
-		resultmap.put("additemremark", map.get("department"));
-		
-		
-		AssetMngMapper.insertDetailAsset(resultmap);
-		AssetMngMapper.addAssetItm(resultmap);
-		
-		
-		}*/
+				insMap.put("insAseetItemDid", ItemCreateSeq);
+				insMap.put("detailassetid", insMap.get("assetdid"));
+				insMap.put("additemname", insMap.get("name3"));
+				insMap.put("additemvalue", insMap.get("valu"));
+				insMap.put("additemremark", insMap.get("assetDItmRem"));
+				insMap.put("add_crtuser_id", loginId);
+				insMap.put("add_upuser_id", loginId);
+				insMap.put("detailassetid", detailassetid);
+				insMap.put("detailstatus", 1);
+				insMap.put("inassetid", insMap.get("assetid"));
+				insMap.put("typeid", insMap.get("typeid"));
+				insMap.put("brandid", insMap.get("brandid"));
+				insMap.put("crtuser_id", loginId);
+				insMap.put("upuser_id", loginId);
+				insMap.put("name1", insMap.get("name1"));
+				insMap.put("assetDRem", insMap.get("assetDRem"));
+				
+				AssetMngMapper.insertDetailAsset(insMap);
+				AssetMngMapper.addAssetItm(insMap);
+				
+			}
+		}
 		
 	}
 	
 	@Override
 	public void RemoveItemAssetMng(Map<String, Object> params) {		
 			
-		Logger.info("multyassetid @@@@@@: {}", params.get("multyassetid"));
-		Logger.info("itemassetdid $$$$$$$$$$: {}", params.get("itemassetdid"));
+//		Logger.info("multyassetid @@@@@@: {}", params.get("multyassetid"));
+//		Logger.info("itemassetdid $$$$$$$$$$: {}", params.get("itemassetdid"));
 		
 		AssetMngMapper.RemoveAssetDetail(params);
 		AssetMngMapper.RemoveAssetItem(params);
