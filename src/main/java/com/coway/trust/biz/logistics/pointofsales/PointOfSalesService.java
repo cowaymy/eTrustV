@@ -25,5 +25,7 @@ public interface PointOfSalesService {
 	
 	List<EgovMap> selectSerial(String params);
 	
+	void insertStockBooking(Map<String, Object> params);
+	
 	
 }
