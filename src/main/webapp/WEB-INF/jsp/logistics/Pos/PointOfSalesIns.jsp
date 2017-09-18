@@ -64,15 +64,16 @@ var reqcolumnLayout;
 
  //var resop = {rowIdField : "rnum", showRowCheckColumn : true,showRowAllCheckBox : true,usePaging : true,useGroupingPanel : false , Editable:false};
  var subgridpros = {
+		 rowIdField : "rnum", 
          // 페이지 설정
          usePaging : true,                
          pageRowCount : 20,                
          editable : false,                
          noDataMessage : "출력할 데이터가 없습니다.",
-         enableSorting : true,
+         //enableSorting : true,
          selectionMode : "multipleRows",
          //selectionMode : "multipleCells",
-         useGroupingPanel : true,
+       //  useGroupingPanel : true,
          // 체크박스 표시 설정
          showRowCheckColumn : true,
          // 전체 체크박스 표시 설정
@@ -116,6 +117,7 @@ var LocData = {sLoc : userCode};
      doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
      doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , '');
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
+      doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombos'); 
       $("#giopenwindow").hide();
 //     /**********************************
 //      * Header Setting End
@@ -514,10 +516,17 @@ function SearchSessionAjax() {
 function f_multiCombo() {
     $(function() {
         $('#PosItemType').change(function() {
-
         }).multipleSelect({
             selectAll : true
         }).multipleSelect("checkAll");        
+    });
+}
+function f_multiCombos() {
+    $(function() {
+        $('#catetype').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }).multipleSelect("checkAll"); 
     });
 }
 
@@ -813,27 +822,9 @@ function saveSerialAjax(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Material Code</th>
-    <td>
-
-    <div class="date_set"><!-- date_set start -->
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div><!-- date_set end -->
-
+    <th scope="row">Category</th>
+    <td >
+    <select class="w100p" id="catetype" name="catetype"></select>
     </td>
     <th scope="row">Type</th>
     <td >
