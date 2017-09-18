@@ -389,8 +389,30 @@
         ,SYSDATE
         )
      </insert>    
-    
  
+     <update id="updateItm" parameterType="Map">
+           UPDATE LOG0052D
+                    SET      
+                        NAME                   =#{name3},
+                        VALU            =#{valu},                               
+                        ASSET_D_ITM_REM              =#{assetDItmRem},
+                        UPD_USER_ID     =#{upuser_id},
+                        UPD_DT                =SYSDATE                                           
+                    WHERE  ASSET_D_ITM_ID        =#{assetDItmId}
+    </update> 
+    
+    <update id="updateAssetDetail" parameterType="Map">
+           UPDATE LOG0051D
+                    SET      
+                        TYPE_ID                   =#{typeId},
+                        BRAND_ID            =#{brandId}, 
+                        NAME=               #{name1}, 
+                        ASSET_D_REM =    #{assetDRem},                           
+                        UPD_USER_ID              =#{upuser_id},
+                        UPD_DT                      =SYSDATE                                       
+                    WHERE  ASSET_D_ID        =#{assetDId}
+    </update> 
+     
     <update id="motifyAssetMng" parameterType="Map">
            UPDATE LOG0050M
                     SET      
