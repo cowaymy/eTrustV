@@ -116,14 +116,13 @@ public class PointOfSalesController {
 		if (sessionVO == null) {
 			UserName = "ham";
 		} else {
-			//UserName = sessionVO.getUserName();
-			UserName = "ham";
+			UserName = sessionVO.getUserName();
 		}
 		if (sessionVO == null) {
 			UserCode = "DSC-01";
 		} else {
-			//UserCode = sessionVO.getCode();
-			UserCode = "DSC-01";
+			UserCode = sessionVO.getCode();
+			//UserCode = "DSC-01";
 		}
 		
 //		logger.debug("UserName    값 : {}", UserName);
@@ -183,6 +182,7 @@ public class PointOfSalesController {
 			HttpServletResponse response) throws Exception {
 
 		String[] PosItemType = request.getParameterValues("PosItemType");
+		String[] catetype = request.getParameterValues("catetype");
 		
 //		for (int i = 0; i < PosItemType.length; i++) {
 //			logger.debug("PosItemType    값 : {}", PosItemType[i]);	
@@ -190,7 +190,7 @@ public class PointOfSalesController {
 		
 		Map<String, Object> smap = new HashMap();
 		smap.put("ctype", PosItemType);
-
+		smap.put("catetype", catetype);
 
 		List<EgovMap> list = PointOfSalesService.PosItemList(smap);
 
