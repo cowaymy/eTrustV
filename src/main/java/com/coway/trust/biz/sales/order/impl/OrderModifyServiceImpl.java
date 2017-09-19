@@ -308,5 +308,40 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		return cnctMap;
 	}
 	
+	@Override
+	public EgovMap selectInstRsltCount(Map<String, Object> params) throws Exception {
 
+		EgovMap cnctMap = orderModifyMapper.selectInstRsltCount(params);
+		
+		return cnctMap;
+	}
+	
+	@Override
+	public EgovMap selectGSTZRLocationCount(Map<String, Object> params) throws Exception {
+
+		EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationCount(params);
+		
+		return cnctMap;
+	}
+	
+	@Override
+	public EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params) throws Exception {
+
+		EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationByAddrIdCount(params);
+		
+		return cnctMap;
+	}
+	
+	@Override
+	public void updateInstallInfo(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+
+		logger.info("!@###### OrderModifyServiceImpl.updateInstallInfo");
+
+		params.put("updUserId", sessionVO.getUserId());
+
+		orderModifyMapper.updateInstallInfo(params);
+
+		orderModifyMapper.updateInstallUpdateInfo(params);
+	}
+	
 }

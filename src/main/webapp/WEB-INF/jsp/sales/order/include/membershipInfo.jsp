@@ -6,6 +6,8 @@
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid2();
+        
+        fn_selectMembershipInfoList();
     });
     
     function createAUIGrid2() {
@@ -27,7 +29,7 @@
     }
     
     // 리스트 조회.
-    function fn_selectMembershipInfoList() {        
+    function fn_selectMembershipInfoList() { console.log('fn_selectMembershipInfoList');       
         Common.ajax("GET", "/sales/order/selectMembershipInfoJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
             AUIGrid.setGridData(memInfoGridID, result);
         });

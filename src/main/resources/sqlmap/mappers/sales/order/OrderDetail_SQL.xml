@@ -376,7 +376,8 @@
     </select>
 
     <select id="selectOrderInstallationInfoByOrderID" parameterType="Map" resultType="egovMap">
-        SELECT V1.ORD_ID
+        SELECT V1.INSTALL_ID
+             , V1.ORD_ID
              , V1.INST_ADDR_DTL
              , V1.INST_STREET
              , V1.INST_AREA

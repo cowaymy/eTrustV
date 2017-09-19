@@ -6,6 +6,8 @@
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+        
+        fn_selectOrderSameRentalGroupOrderList();
     });
     
     function createAUIGrid() {
@@ -84,16 +86,6 @@
 </aside><!-- title_line end -->
 
 <section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-    <li><p class="btn_grid"><a href="#">NEW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_custInfo_wrap" style="width:100%; height:380px; margin:0 auto;"></div>

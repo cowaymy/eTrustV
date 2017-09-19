@@ -48,18 +48,24 @@ public class OrderModifyController {
 	@RequestMapping(value = "/orderModifyPop.do")
 	public String orderModifyPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 		
-		logger.debug("!@##############################################################################");
-		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
-		logger.debug("!@###### ordEditType : "+params.get("ordEditType"));
-		logger.debug("!@##############################################################################");
-		
 		//[Tap]Basic Info
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
-		
-		model.put("orderDetail", orderDetail);
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//APP_TYPE_ID CUST_ID
+		EgovMap basicInfo = (EgovMap) orderDetail.get("basicInfo");
+
+		model.put("orderDetail",  orderDetail);
 		model.put("salesOrderId", params.get("salesOrderId"));
-		model.put("custId", params.get("custId"));
-		model.put("ordEditType", params.get("ordEditType"));
+		model.put("ordEditType",  params.get("ordEditType"));
+		model.put("custId",       basicInfo.get("custId"));
+		model.put("appTypeId",    basicInfo.get("appTypeId"));
+		model.put("salesOrderNo", basicInfo.get("ordNo"));
+		
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
+		logger.debug("!@###### ordEditType  : "+model.get("ordEditType"));
+		logger.debug("!@###### custId       : "+model.get("custId"));
+		logger.debug("!@###### appTypeId    : "+model.get("appTypeId"));
+		logger.debug("!@###### ordNo        : "+model.get("salesOrderNo"));
+		logger.debug("!@##############################################################################");
 		
 		return "sales/order/orderModifyPop";
 	}
@@ -210,4 +216,44 @@ public class OrderModifyController {
 		return ResponseEntity.ok(resultMap);
 	}
 
+	@RequestMapping(value = "/selectInstRsltCount.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectInstRsltCount(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectInstRsltCount(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/selectGSTZRLocationCount.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectGSTZRLocationCount(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectGSTZRLocationCount(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/selectGSTZRLocationByAddrIdCount.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectGSTZRLocationByAddrIdCount(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectGSTZRLocationByAddrIdCount(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/updateInstallInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateInstallInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+		
+		orderModifyService.updateInstallInfo(params, sessionVO);;
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Order Number : " + params.get("salesOrdNo") + "<br />Information successfully updated.");
+
+		return ResponseEntity.ok(message);
+	}
 }

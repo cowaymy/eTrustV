@@ -33,4 +33,12 @@ public interface OrderModifyService {
 
 	EgovMap selectInstallCntcInfo(Map<String, Object> params) throws Exception;
 
+	EgovMap selectInstRsltCount(Map<String, Object> params) throws Exception;
+
+	EgovMap selectGSTZRLocationCount(Map<String, Object> params) throws Exception;
+
+	EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params) throws Exception;
+
+	void updateInstallInfo(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
 }

@@ -40,4 +40,14 @@ public interface OrderModifyMapper {
 	
 	EgovMap selectNricExist(Map<String, Object> params); //
 	
+	EgovMap selectInstRsltCount(Map<String, Object> params);
+
+	EgovMap selectGSTZRLocationCount(Map<String, Object> params);
+
+	EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params);
+
+	void updateInstallInfo(Map<String, Object> params);
+	
+	void updateInstallUpdateInfo(Map<String, Object> params);
+	
 }

@@ -3,14 +3,15 @@
 
 <script type="text/javaScript" language="javascript">
     
-    var ORD_ID = '${salesOrderId}';
-    var CUST_ID = '${custId}';
-    var TAB_NM = '${ordEditType}';
+    var ORD_ID      = '${salesOrderId}';
+    var CUST_ID     = '${custId}';
+    var APP_TYPE_ID = '${appTypeId}';
+    var TAB_NM      = '${ordEditType}';
     
     $(document).ready(function(){
         doGetComboData('/common/selectCodeList.do', {groupCode :'335'}, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
-        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
-        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'dscBrnchId',     'S'); //Branch Code
 
         if(FormUtil.isNotEmpty(TAB_NM)) {
             fn_changeTab(TAB_NM);
@@ -37,6 +38,10 @@
         $('#btnSaveNric').click(function() {            
             if(fn_validNric()) fn_doSaveNric();
         });
+        $('#btnSaveInstInfo').click(function() {            
+            if(!fn_validInstallInfo()) return false;
+            fn_doSaveInstallInfo();
+        });
         $('#btnSalesmanPop').click(function() {
             Common.popupDiv("/common/memberPop.do", { callPrgm : "ORD_MODIFY_BSC_INF" }, null, true);
         });
@@ -44,16 +49,28 @@
             fn_loadOrderSalesman(null, $('#modSalesmanCd').val())
         });
         $('#btnBillNewAddr').click(function() {
-            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#modCustId').val(), callParam : "ORD_MODIFY_MAIL_ADR"}, null , true);
+            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : CUST_ID, callParam : "ORD_MODIFY_MAIL_ADR"}, null , true);
         });
         $('#btnBillSelAddr').click(function() {
-            Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#modCustId').val(), callPrgm : "ORD_MODIFY_MAIL_ADR"}, null, true);
+            Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_MAIL_ADR"}, null, true);
         });
-        $('#mstCntcNewAddBtn').click(function() {
-            Common.popupDiv("/sales/customer/updateCustomerNewContactPop.do", {custId:$('#modCustId2').val(), callParam : "ORD_MODIFY_CNTC_OWN"}, null , true);
+        $('#btnInstNewAddr').click(function() {
+            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : CUST_ID, callParam : "ORD_MODIFY_INST_ADR"}, null , true);
         });
-        $('#mstCntcSelAddBtn').click(function() {
-            Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#modCustId2').val(), callPrgm : "ORD_MODIFY_CNTC_OWN"}, null, true);
+        $('#btnInstSelAddr').click(function() {
+            Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_INST_ADR"}, null, true);
+        });
+        $('#btnNewCntc').click(function() {
+            Common.popupDiv("/sales/customer/updateCustomerNewContactPop.do", {custId: CUST_ID, callParam : "ORD_MODIFY_CNTC_OWN"}, null , true);
+        });
+        $('#btnSelCntc').click(function() {
+            Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_CNTC_OWN"}, null, true);
+        });
+        $('#btnInstNewCntc').click(function() {
+            Common.popupDiv("/sales/customer/updateCustomerNewContactPop.do", {custId: CUST_ID, callParam : "ORD_MODIFY_INST_CNTC"}, null , true);
+        });
+        $('#btnInstSelCntc').click(function() {
+            Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_INST_CNTC"}, null, true);
         });
     });
     
@@ -180,23 +197,7 @@
         Common.ajax("GET", "/sales/order/selectInstallInfo.do", {salesOrderId : ordId}, function(instInfo) {
 
             if(instInfo != null) {
-
-//                $("#modInstAddrDtl").text(resultInfo.addrMap.addrDtl);
-//                $("#modInstStreet").text(resultInfo.addrMap.street);
-//                $("#modInstArea").text(resultInfo.addrMap.area);
-//                $("#modInstCity").text(resultInfo.addrMap.city);
-//                $("#modInstPostCd").text(resultInfo.addrMap.postcode);
-//                $("#modInstState").text(resultInfo.addrMap.city);
-//                $("#modInstCnty").text(resultInfo.addrMap.country);
-//
-//                $("#modInstAddrDtlOld").val(resultInfo.addrMap.addrDtl);
-//                $("#modInstStreetOld").val(resultInfo.addrMap.street);
-//                $("#modInstAreaOld").val(resultInfo.addrMap.area);
-//                $("#modInstCityOld").val(resultInfo.addrMap.city);
-//                $("#modInstPostCdOld").val(resultInfo.addrMap.postcode);
-//                $("#modInstStateOld").val(resultInfo.addrMap.city);
-//                $("#modInstCntyOld").val(resultInfo.addrMap.country);
-
+                $("#modInstallId").val(instInfo.installId);
                 $("#dscBrnchId").val(instInfo.dscId);
                 $("#modPreferInstDt").val(instInfo.preferInstDt);
                 $("#modPreferInstTm").val(instInfo.preferInstTm);
@@ -223,18 +224,98 @@
                 $("#modInstState").text(addrInfo.city);
                 $("#modInstCnty").text(addrInfo.country);
 
-                $("#modInstAddrDtlOld").val(addrInfo.addrDtl);
-                $("#modInstStreetOld").val(addrInfo.street);
-                $("#modInstAreaOld").val(addrInfo.area);
-                $("#modInstCityOld").val(addrInfo.city);
-                $("#modInstPostCdOld").val(addrInfo.postcode);
-                $("#modInstStateOld").val(addrInfo.city);
-                $("#modInstCntyOld").val(addrInfo.country);
-                
-                $("#modInstcustAddId").val(addrInfo.custAddId);
-                $("#modInstcustAddIdOld").val(addrInfo.custAddId);
+                $("#modInstAreaId").val(addrInfo.areaId);
+                $("#modInstCustAddId").val(addrInfo.custAddId);
+                $("#modInstCustAddIdOld").val(addrInfo.custAddId);
             }
         });
+    }
+    
+    function fn_loadInstallAddrInfo2(custAddId){
+        console.log("fn_loadInstallAddrInfo START");
+
+        Common.ajax("GET", "/sales/order/selectInstallAddrInfo.do", {custAddId : custAddId}, function(addrInfo) {
+
+            if(addrInfo != null) {
+
+                $("#modInstAddrDtl").text(addrInfo.addrDtl);
+                $("#modInstStreet").text(addrInfo.street);
+                $("#modInstArea").text(addrInfo.area);
+                $("#modInstCity").text(addrInfo.city);
+                $("#modInstPostCd").text(addrInfo.postcode);
+                $("#modInstState").text(addrInfo.city);
+                $("#modInstCnty").text(addrInfo.country);
+                
+                $("#modInstCustAddId").val(addrInfo.custAddId);
+            }
+        });
+    }
+    
+    function fn_checkInstallResult(ordId){
+        Common.ajax("GET", "/sales/order/selectInstRsltCount.do", {salesOrdId : ordId}, function(rsltInfo) {
+            if(addrInfo != null) {
+                return rsltInfo.cnt;
+            }
+        }, null, {async : false});
+    }
+    
+    function fn_checkGSTZRLocation(areaId){
+        Common.ajax("GET", "/sales/order/selectGSTZRLocationCount.do", {areaId : areaId}, function(rsltInfo) {
+            if(addrInfo != null) {
+                return rsltInfo.cnt;
+            }
+        }, null, {async : false});
+    }
+    
+    function fn_checkGSTZRLocationByAddrId(custAddId){
+        Common.ajax("GET", "/sales/order/selectGSTZRLocationByAddrIdCount.do", {custAddId : ordId}, function(rsltInfo) {
+            if(addrInfo != null) {
+                return rsltInfo.cnt;
+            }
+        }, null, {async : false});
+    }
+    
+    function fn_loadInstallAddrInfoNew(custAddId){
+        console.log("fn_loadInstallAddrInfoNew START");
+        
+        $("#modInstCustAddId").val(custAddId);
+        
+        var addrIdOld = $("#modInstCustAddIdOld").val();            
+        var addrIdNew = $("#modInstCustAddId").val();            
+            
+        if(APP_TYPE_ID == '67' || APP_TYPE_ID == '68') {
+                        
+            if(fn_checkInstallResult(ORD_ID) == 0) {
+                
+                if(fn_checkGSTZRLocation($("#modInstAreaId").val()) == 0) {
+                    
+                    if(fn_checkGSTZRLocationByAddrId(addrIdOld)) {                        
+                        $("#modInstCustAddIdOld").val(addrIdNew);
+                        fn_loadInstallAddrInfo2(addrIdNew);
+                    }
+                    else {
+                        Common.alert("Changed Failed" + DEFAULT_DELIMITER + "<b>Zero Rate Area cannot change to Non-Zero Rate Area.</b>");
+                    }
+                }
+                else {
+                    if(fn_checkGSTZRLocationByAddrId(addrIdOld)) {
+                        Common.alert("Changed Failed" + DEFAULT_DELIMITER + "<b>Non-Zero Rate Area cannot change to Zero Rate Area.</b>");
+                    }
+                    else {
+                        $("#modInstCustAddIdOld").val(addrIdNew);
+                        fn_loadInstallAddrInfo2(addrIdNew);
+                    }
+                }
+            }
+            else {
+                $("#modInstCustAddIdOld").val(addrIdNew);
+                fn_loadInstallAddrInfo2(addrIdNew);
+            }
+        }
+        else {
+            $("#modInstCustAddIdOld").val(addrIdNew);
+            fn_loadInstallAddrInfo2(addrIdNew);
+        }        
     }
     
     function fn_loadInstallCntcInfo(custCntcId){
@@ -243,7 +324,7 @@
         Common.ajax("GET", "/sales/order/selectInstallCntcInfo.do", {custCntcId : custCntcId}, function(cntcInfo) {
 
             if(cntcInfo != null) {
-                $("modInstCntcName").text(cntcInfo.name);
+                $("#modInstCntcName").text(cntcInfo.name1);
                 $("#modInstCntcInit").text(cntcInfo.code);
                 $("#modInstCntcGender").text(cntcInfo.gender);
                 $("#modInstCntcNric").text(cntcInfo.nric);
@@ -258,7 +339,7 @@
                 $("#modInstCntcTelF").text(cntcInfo.telf);
                 
                 $("#modInstCustCntcId").val(cntcInfo.custCntcId);
-                $("#modInstCustCntcIdOld").val(cntcInfo.custCntcId);
+              //$("#modInstCustCntcIdOld").val(cntcInfo.custCntcId);
             }
         });
     }
@@ -441,6 +522,44 @@
        return exCustId;
     }
     
+    function fn_validInstallInfo() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.isEmpty($('#modInstCustAddId').val())) {
+            isValid = false;
+            msg += "* Please select an installation address.<br/>";
+        }
+
+        if(FormUtil.isEmpty($('#modInstCustCntcId').val())) {
+            isValid = false;
+            msg += "* Please select an installation contact person.<br/>";
+        }
+
+        if($("#dscBrnchId option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select the DSC branch.<br/>";
+        }
+
+        if(FormUtil.isEmpty($('#modPreferInstDt').val().trim())) {
+            isValid = false;
+            msg += "* Please select prefer install date.<br/>";
+        }
+
+        if(FormUtil.isEmpty($('#modPreferInstTm').val().trim())) {
+            isValid = false;
+            msg += "* Please select prefer install time.<br/>";
+        }
+
+        if(FormUtil.isEmpty($('#modInstct').val().trim())) {
+            isValid = false;
+            msg += "* Please key-in the special instruction.<br/>";
+        }
+
+        if(!isValid) Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+    }
+    
     function fn_validCntcPerson() {
         var isValid = true, msg = "";
 
@@ -607,8 +726,26 @@
         );
     }
 
+    function fn_doSaveInstallInfo() {
+        console.log('!@# fn_doSaveInstallInfo START');
+
+        Common.ajax("POST", "/sales/order/updateInstallInfo.do", $('#frmInstInfo').serializeJSON(), function(result) {
+                
+                Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                }
+                catch(e) {
+                    console.log(e);
+                }
+            }
+        );
+    }
+
 	function fn_reloadPage(){
-	    Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val(), custId : CUST_ID }, null , true);
+	    Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
 	    $('#btnCloseModify').click();
 	}
 </script>
@@ -803,8 +940,8 @@
 <h3>Billing Group Maintenance - Contact Person</h3>
 </aside><!-- title_line end -->
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="mstCntcNewAddBtn" href="#">Add New Contact</a></p></li>
-    <li><p class="btn_grid"><a id="mstCntcSelAddBtn" href="#">Select Contact Person</a></p></li>
+    <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
+    <li><p class="btn_grid"><a id="btnSelCntc" href="#">Select Contact Person</a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -962,21 +1099,17 @@
 <section class="search_table"><!-- search_table start -->
 
 <form id="frmInstInfo" method="post">
+<input name="salesOrdId" type="hidden" value="${salesOrderId}"/>
+<input name="salesOrdNo" type="hidden" value="${salesOrderNo}"/>
 <!-- Install Address Info                                                    -->
-<input id="modInstcustAddId" name="custGender" type="hidden" />
-<input id="modInstcustAddIdOld" name="custGender" type="hidden" />
-
-<input id="modInstAddrDtlOld" name="custGender" type="hidden" />
-<input id="modInstStreetOld" name="custGender" type="hidden" />
-<input id="modInstAreaOld" name="custGender" type="hidden" />
-<input id="modInstCityOld" name="custGender" type="hidden" />
-<input id="modInstPostCdOld" name="custGender" type="hidden" />
-<input id="modInstStateOld" name="custGender" type="hidden" />
-<input id="modInstCntyOld" name="custGender" type="hidden" />
+<input id="modInstallId" name="installId" type="hidden" />
+<input id="modInstCustAddIdOld" name="custAddIdOld" type="hidden" />
+<input id="modInstCustAddId" name="custAddId" type="hidden" />
+<input id="modInstAreaId" name="areaId" type="hidden" />
 
 <!-- Install Contact Info                                                    -->
-<input id="modInstCustCntcId" name="custGender" type="hidden" />
-<input id="modInstCustCntcIdOld" name="custGender" type="hidden" />
+<input id="modInstCustCntcId" name="custCntcId" type="hidden" />
+<!--input id="modInstCustCntcIdOld" name="custGender" type="hidden" /-->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1018,8 +1151,8 @@
 <h3>Installation Contact Person</h3>
 </aside><!-- title_line end -->
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnInstNewCnct" href="#">Add New Contact</a></p></li>
-    <li><p class="btn_grid"><a id="btnInstSelCnct" href="#">Select Contact Person</a></p></li>
+    <li><p class="btn_grid"><a id="btnInstNewCntc" href="#">Add New Contact</a></p></li>
+    <li><p class="btn_grid"><a id="btnInstSelCntc" href="#">Select Contact Person</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -1097,11 +1230,11 @@
 </tr>
 <tr>
 	<th scope="row">Prefer Install Date<span class="must">*</span></th>
-	<td><input id="modPreferInstDt" name="preferInstDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<td><input id="modPreferInstDt" name="preDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 	<th scope="row">Prefer Install Time<span class="must">*</span></th>
 	<td>
 	<div class="time_picker w100p"><!-- time_picker start -->
-	<input id="modPreferInstTm" name="preferInstTm" type="text" title="" placeholder="" class="time_date w100p" />
+	<input id="modPreferInstTm" name="preTm" type="text" title="" placeholder="" class="time_date w100p" />
 	<ul>
 		<li>Time Picker</li>
 		<li><a href="#">12:00 AM</a></li>
@@ -1134,7 +1267,7 @@
 </tr>
 <tr>
 	<th scope="row">Special Instruction<span class="must">*</span></th>
-	<td colspan="3"><textarea id="modInstct" name="modInstct" cols="20" rows="5"></textarea></td>
+	<td colspan="3"><textarea id="modInstct" name="instct" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1142,7 +1275,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#">SAVE</a></p></li>
+	<li><p class="btn_blue2"><a id="btnSaveInstInfo" href="#">SAVE</a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------

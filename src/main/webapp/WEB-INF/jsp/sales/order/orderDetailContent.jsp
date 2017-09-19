@@ -29,15 +29,9 @@
     	switch(tabNm) {
 	        case 'custInfo' :
 	            AUIGrid.resize(custInfoGridID, 942, 380);
-	            if(AUIGrid.getRowCount(custInfoGridID) <= 0) {
-                    fn_selectOrderSameRentalGroupOrderList();
-                }
 	            break;
             case 'memInfo' :
                 AUIGrid.resize(memInfoGridID, 942, 380);
-	            if(AUIGrid.getRowCount(memInfoGridID) <= 0) {
-                    fn_selectMembershipInfoList();
-                }
                 break;
             case 'docInfo' :
                 AUIGrid.resize(docGridID, 942, 380);

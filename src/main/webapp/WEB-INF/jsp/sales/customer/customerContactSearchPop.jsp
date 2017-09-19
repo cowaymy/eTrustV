@@ -8,7 +8,9 @@
 
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' 
+	    || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
+	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
 
@@ -42,50 +44,26 @@
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
 	        fn_loadBillingPreference(cntcId);
 	    }
+	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
+	        fn_loadInstallCntcInfo(cntcId);
+	    }
 	}
 	
     function createAUIGrid() {
         
         //AUIGrid 칼럼 설정
-        var columnLayout = [{
-	            dataField : "name",
-	            headerText : "Status",
-	            width : 80
-	        }, {
-	            dataField : "name1",
-	            headerText : "Name",
-	        }, {
-	            dataField : "nric",
-	            headerText : "NRIC",
-	            width : 100
-	        }, {
-	            dataField : "codeName",
-	            headerText : "Race",
-	            width : 80
-	        }, {
-	            dataField : "gender",
-	            headerText : "Gender",
-	            width : 80
-	        },{
-	            dataField : "telM1",
-	            headerText : "Tel (Mobile)",
-	            width : 100
-	        },{
-	            dataField : "telO",
-	            headerText : "Tel (Office)",
-	            width : 100
-	        },{
-	            dataField : "telR",
-	            headerText : "Tel (Residence)",
-	            width : 100
-	        },{
-	            dataField : "telf",
-	            headerText : "Tel (Fax)",
-	            width : 100
-	        },{
-	            dataField : "custCntcId",
-	            visible : false
-            }];
+        var columnLayout = [
+            { headerText : "Status",          dataField : "name",       editable : false, width : 80  }
+          , { headerText : "Name",            dataField : "name1",      editable : false, width : 100 }
+          , { headerText : "NRIC",            dataField : "nric",       editable : false, width : 80  }
+          , { headerText : "Race",            dataField : "codeName",   editable : false, width : 80  }
+          , { headerText : "Gender",          dataField : "gender",     editable : false, width : 100 }
+          , { headerText : "Tel (Mobile)",    dataField : "telM1",      editable : false, width : 100 }
+          , { headerText : "Tel (Office)",    dataField : "telO",       editable : false, width : 100 }
+          , { headerText : "Tel (Residence)", dataField : "telR",       editable : false, width : 100 }
+          , { headerText : "Tel (Fax)",       dataField : "telf",       editable : false, width : 100 }
+          , { headerText : "custCntcId",      dataField : "custCntcId", visible  : false  }
+          ];
 
         //그리드 속성 설정
         var gridPros = {
@@ -111,37 +89,16 @@
     function createAUIGrid2() {
         
         //AUIGrid 칼럼 설정
-        var columnLayout = [{
-	            dataField : "name",
-	            headerText : "Status",
-	            width : 80
-	        }, {
-	            dataField : "name1",
-	            headerText : "Name",
-	        }, {
-	            dataField : "nric",
-	            headerText : "NRIC",
-	            width : 100
-	        }, {
-	            dataField : "telM1",
-	            headerText : "Tel (Mobile)",
-	            width : 100
-	        },{
-	            dataField : "telO",
-	            headerText : "Tel (Office)",
-	            width : 100
-	        },{
-	            dataField : "telR",
-	            headerText : "Tel (Residence)",
-	            width : 100
-	        },{
-	            dataField : "telf",
-	            headerText : "Tel (Fax)",
-	            width : 100
-	        },{
-	            dataField : "custCareCntId",
-	            visible : false
-            }];
+        var columnLayout = [
+            { headerText : "Status",          dataField : "name",          editable : false, width : 80  }
+          , { headerText : "Name",            dataField : "name1",         editable : false, width : 100 }
+          , { headerText : "NRIC",            dataField : "nric",          editable : false, width : 80  }
+          , { headerText : "Tel (Mobile)",    dataField : "telM1",         editable : false, width : 100 }
+          , { headerText : "Tel (Office)",    dataField : "telO",          editable : false, width : 100 }
+          , { headerText : "Tel (Residence)", dataField : "telR",          editable : false, width : 100 }
+          , { headerText : "Tel (Fax)",       dataField : "telf",          editable : false, width : 100 }
+          , { headerText : "custCareCntId",   dataField : "custCareCntId", visible  : false  }
+          ];
 
         //그리드 속성 설정
         var gridPros = {
