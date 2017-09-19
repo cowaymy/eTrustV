@@ -1,17 +1,17 @@
-
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:100px" />
     <col style="width:*" />
     <col style="width:100px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:100px" />
     <col style="width:*" />
+    <col style="width:100px" />
+    <col style="width:*" /> 
 </colgroup>
 <tbody>
 

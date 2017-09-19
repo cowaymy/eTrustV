@@ -1,15 +1,15 @@
-
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
+    <col style="width:100px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:100px" />
     <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:100px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -53,7 +53,7 @@
     <th scope="row">Filter Promotion</th>
     <td colspan="3"><span  id="inc_promeCode" >${quotInfo.promeCode}   ${quotInfo.promeDesc} </span></td>
     <th scope="row">BS Frequency</th>
-    <td><span <span  id="inc_bsFreq" > <c:if test="${not empty quotInfo.bsFreq}">  ${quotInfo.bsFreq} month(s)</c:if></span></td>
+    <td> <span  id="inc_bsFreq" > <c:if test="${not empty quotInfo.bsFreq}">  ${quotInfo.bsFreq} month(s)</c:if></span></td>
 </tr>
 <tr>
     <th scope="row">Sales Person Code</th>

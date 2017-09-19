@@ -75,54 +75,67 @@ function  fn_goAddNewTr(){
 
 //getPackageInfo 
 function fn_getPackageInfo (){ 
-Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", $("#getParamForm").serialize(), function(result) {
+	
+	var  v_QUOT_ID = $("#QUOT_ID").val();
+	
+	if  ('${QUOT_ID}'  !=""){
+		v_QUOT_ID = '${QUOT_ID}';
+	}	
+	
+Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT_ID  ,ORD_ID: $("#ORD_ID").val() }, function(result) {
      console.log( result);
      
-	     fn_doQuotInfoClear();
-	     
-	     $("#convt_quotNo").html(result[0].quotNo);
-	     $("#convt_cretDt").html(result[0].crtDt);
-	     $("#convt_create").html(result[0].crtUserId); 
-	     $("#convt_sales").html("");
-	     $("#convt_validDt").html(result[0].validDt);  
-	     $("#convt_dur").html(result[0].dur+" month(s) ");     
-	     
-	     $("#convt_package").html(result[0].pacDesc);     
-	     $("#convt_totAmt").html(result[0].totAmt);
-	     $("#convt_pakAmt").html(result[0].pacAmt);  
-	     $("#convt_filterAmt").html(result[0].filterAmt);  
-	     $("#convt_packPromo").html(result[0].pacPromoCode +" "+ result[0].pacPromoDesc);
-	     $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);  
-	     $("#convt_bsFreq").html(result[0].bsFreq +" month(s) ");  
-	     
-	     
-	     //Contact Person Tab
-	
-	        $("#inc_cntName").html(result[0].cntName);
-	        $("#inc_cntNric").html(result[0].cntNric);
-	        $("#inc_cntGender").html(result[0].cntGender);
-	        $("#inc_cntRace").html(result[0].cntRace);
-	        $("#inc_cntTelM").html(result[0].cntTelMob);
-	        $("#inc_cntTelR").html(result[0].cntTelR);
-	        $("#inc_cntTelO").html(result[0].cntTelO);
-	        $("#inc_cntTelF").html(result[0].cntTelF);
-	        $("#inc_cntEmail").html(result[0].cntEmail);
-	        
-	        
-	        if(result[0].ordId>0){
-	        	
-
-                $("#SALES_PERSON").val(result[0].memCode);
-                $("#SALES_PERSON_DESC").html( "<b>"+result[0].memName+"</b>");
-                
-                $("#sale_confirmbt").attr("style" ,"display:none");
-                $("#sale_searchbt").attr("style" ,"display:none");
-                $("#sale_resetbt").attr("style" ,"display:inline");
-                $("#SALES_PERSON").attr("class","readonly");
-                
-	        }
+     
+		     fn_doQuotInfoClear();
+		 
+		     if(result.length > 0){
+		    	 
+		    	   $("#convt_quotNo").html(result[0].quotNo);
+		           $("#convt_cretDt").html(result[0].crtDt);
+		           $("#convt_create").html(result[0].crtUserId); 
+		           $("#convt_sales").html("");
+		           $("#convt_validDt").html(result[0].validDt);  
+		           $("#convt_dur").html(result[0].dur+" month(s) ");     
+		           
+		           $("#convt_package").html(result[0].pacDesc);     
+		           $("#convt_totAmt").html(result[0].totAmt);
+		           $("#convt_pakAmt").html(result[0].pacAmt);  
+		           $("#convt_filterAmt").html(result[0].filterAmt);  
+		           $("#convt_packPromo").html(result[0].pacPromoCode +" "+ result[0].pacPromoDesc);
+		           $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);  
+		           $("#convt_bsFreq").html(result[0].bsFreq +" month(s) ");  
+		           
+		           
+		           //Contact Person Tab //MembershipQuotInfo
+		              $("#inc_cntName").html(result[0].cntName);
+		              $("#inc_cntNric").html(result[0].cntNric);
+		              $("#inc_cntGender").html(result[0].cntGender);
+		              $("#inc_cntRace").html(result[0].cntRace);
+		              $("#inc_cntTelM").html(result[0].cntTelMob);
+		              $("#inc_cntTelR").html(result[0].cntTelR);
+		              $("#inc_cntTelO").html(result[0].cntTelO);
+		              $("#inc_cntTelF").html(result[0].cntTelF);
+		              $("#inc_cntEmail").html(result[0].cntEmail);
+		              
+		              
+		              if(result[0].ordId>0){
+		                  
+		            	  
+		            	  $("#ORD_ID").val(result[0].ordId);
+		                  $("#SALES_PERSON").val(result[0].memCode);
+		                  $("#SALES_PERSON_DESC").html( "<b>"+result[0].memName+"</b>");
+		                  
+		                  $("#sale_confirmbt").attr("style" ,"display:none");
+		                  $("#sale_searchbt").attr("style" ,"display:none");
+		                  $("#sale_resetbt").attr("style" ,"display:inline");
+		                  $("#SALES_PERSON").attr("class","readonly");
+		                  
+		                  
+		              }
+		     }
      });
 }
+
 
 function fn_doQuotInfoClear(){
 	    $("#convt_quotNo").html("");
@@ -138,15 +151,15 @@ function fn_doQuotInfoClear(){
 	    $("#convt_filterPromo").html("");
 	    $("#convt_bsFreq").html("");
 	    
-	     $("#inc_cntName").html();
-         $("#inc_cntNric").html();
-         $("#inc_cntGender").html();
-         $("#inc_cntRace").html();
-         $("#inc_cntTelM").html();
-         $("#inc_cntTelR").html();
-         $("#inc_cntTelO").html();
-         $("#inc_cntTelF").html();
-         $("#inc_cntEmail").html();
+	     $("#inc_cntName").html("");
+         $("#inc_cntNric").html("");
+         $("#inc_cntGender").html("");
+         $("#inc_cntRace").html("");
+         $("#inc_cntTelM").html("");
+         $("#inc_cntTelR").html("");
+         $("#inc_cntTelO").html("");
+         $("#inc_cntTelF").html("");
+         $("#inc_cntEmail").html("");
 }
 
 
@@ -209,6 +222,9 @@ function fn_goColleConfirm() {
      });
         
 }
+
+
+
 
 
 
@@ -296,7 +312,8 @@ function fn_goCollecterReset(){
 
 //get Last Membership  &   Expire Date
 function fn_getConfigDataInfo (){ 
-  Common.ajax("GET", "/sales/membership/paymentConfig", $("#getParamForm").serialize(), function(result) {
+	
+  Common.ajax("GET", "/sales/membership/paymentConfig", {PAY_ORD_ID:$("#ORD_ID").val()  }, function(result) {
        console.log( result);
        
        $("#last_membership_text").html("");
@@ -307,7 +324,7 @@ function fn_getConfigDataInfo (){
            
            if(result[0].lastSrvMemId >0){
                
-               $("#PAY_LAST_MBRSH_ID").val(result[0].lastSrvMemId );
+               $("#LAST_MBRSH_ID").val(result[0].lastSrvMemId );
                
                fn_getMembershipDataInfo ();
                //fn_getMembershipChargesDataInfo();
@@ -324,11 +341,9 @@ function fn_getConfigDataInfo (){
 }
 
 
-
-
 //get Last Membership  &   Expire Date
 function fn_getMembershipDataInfo (){ 
-	Common.ajax("GET", "/sales/membership/paymentLastMembership", $("#getParamForm").serialize(), function(result) {
+	Common.ajax("GET", "/sales/membership/paymentLastMembership", {PAY_LAST_MBRSH_ID : $("#LAST_MBRSH_ID").val() },  function(result) {
 	     console.log( result);
 	     
 	     $("#last_membership_text").html( result[0].pacCode +" "+ result[0].pacName);
@@ -409,7 +424,7 @@ function fn_doSalesResult(item){
 
 
 
-
+ 
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -421,6 +436,19 @@ function fn_doSalesResult(item){
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
+
+
+
+<!-- get param Form  -->
+<form id="getParamForm" method="get">
+
+<div  style="display:inline">
+ ORD_ID:     <input type="text" name="ORD_ID"  id="ORD_ID"  value="${ORD_ID}"/>
+ PAY_LAST_MBRSH_ID:     <input type="text" name="LAST_MBRSH_ID"  id="LAST_MBRSH_ID"  />
+ 
+ </div>
+    
+</form>
 
 
 
@@ -437,11 +465,11 @@ function fn_doSalesResult(item){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:170px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:170px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:170px" />
+	<col style="width:130px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -489,7 +517,7 @@ function fn_doSalesResult(item){
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_orderInfo.do'/> 
+    <jsp:include page ='/sales/membership/inc_orderInfo.do?ORD_ID=${ORD_ID}'/> 
 <!-- oder info tab  end...-->
 
 
@@ -647,3 +675,20 @@ function fn_doSalesResult(item){
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
+
+
+
+<script> 
+    var quot = $("#QUOT_ID").val();
+    console.log(quot);
+    
+    if(quot >0){ 
+         fn_getMembershipQuotInfoAjax(); 
+         fn_getMembershipQuotInfoFilterAjax();
+         
+    }else{
+    	//auto로 넘어온 경우 
+    	fn_getMembershipQuotInfoFilterAjax('${QUOT_ID}');
+    }
+</script>
+

@@ -14,9 +14,7 @@
         
     	createAUIGrid();
 
-        AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
-        	   fn_doViewQuotation();
-        });
+        AUIGrid.bind(gridID, "cellDoubleClick", function(event) { });
         
     });
     
@@ -63,18 +61,15 @@
        
        $("#QUOT_ID").val(selectedItems[0].item.quotId);
        var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId+"&CNT_ID="+selectedItems[0].item.cntId ; 
-       Common.popupDiv("/sales/membership/mViewQuotation.do"+pram);
+       Common.popupDiv("/sales/membership/mViewQuotation.do"+pram ,null, null , true , '_ViewQuotDiv1');
  }
    
    
 
    
 
-   function  fn_goNewQuotation(){
-       
-	   var _option = {   width : "1200px",  height : "800px"   };
-       Common.popupWin("listSForm", "/sales/membership/mNewQuotation.do", _option);
-       
+ function  fn_goNewQuotation(){
+	    Common.popupDiv("/sales/membership/mNewQuotation.do" ,$("#listSForm").serialize(), null , true , '_NewQuotDiv1');
  }
    
    
@@ -121,6 +116,16 @@ function fn_getStatusActionByCode(code){
 }
 
 
+function fn_clear(){
+	
+	$("#CRT_USER_ID").val("");
+	$("#CRT_EDT").val("");
+	$("#CRT_SDT").val("");
+	$("#L_ORD_NO").val("");
+	$("#QUOT_NO").val("");
+}
+
+
 function fn_doPrint(){
 	
 	var selectedItems = AUIGrid.getSelectedItems(gridID);
@@ -153,20 +158,18 @@ function fn_doPrint(){
  
  
 <form id="reportInvoiceForm" method="post">
-
     <input type="hidden" id="reportFileName" name="reportFileName" value="/membership/MembershipQuotation_20150401.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="V_QUOTID" name="V_QUOTID"  value=""/>
-  
-        
 </form>
 
 
 <form id="getParamForm" method="post">
 
-<div style="display:inline">
+<div style="display:none">
     <input type="text" name="QUOT_ID"  id="QUOT_ID" />
-    <input type="text" name="ORD_ID"  id="ORD_ID" />
+    
+    <!-- <input type="text" name="ORD_ID"  id="ORD_ID" /> -->
     <input type="text" name="MBRSH_ID"  id="MBRSH_ID" />
     
     <!-- Last Membership data -->
@@ -196,7 +199,7 @@ function fn_doPrint(){
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goNewQuotation()">NEW Quotation</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goConvertSale()">Convert to Sale</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -222,7 +225,7 @@ function fn_doPrint(){
 	</td>
 	<th scope="row">Order No</th>
 	<td>
-	<input type="text" title="" placeholder="Order Number" class="w100p"   id="ORD_NO"  name="ORD_NO"/>
+	<input type="text" title="" placeholder="Order Number" class="w100p"   id="L_ORD_NO"  name="L_ORD_NO"/>
 	</td>
 	<th scope="row">Create Date</th>
 	<td>

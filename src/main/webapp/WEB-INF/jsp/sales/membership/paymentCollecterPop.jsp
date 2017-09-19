@@ -24,6 +24,27 @@ $(document).ready(function(){
         };
         
         $(".j_date").datepicker(pickerOpts);
+        
+
+        $("#MEM_CODE").keydown(function(key)  {
+                if (key.keyCode == 13) {
+                	fn_getPaymentCollecterList();
+                }
+         });
+        
+        $("#MEM_NAME").keydown(function(key)  {
+            if (key.keyCode == 13) {
+                fn_getPaymentCollecterList();
+            }
+     });
+        
+        $("#NRIC").keydown(function(key)  {
+            if (key.keyCode == 13) {
+                fn_getPaymentCollecterList();
+            }
+     });
+        
+        
 });
 
 

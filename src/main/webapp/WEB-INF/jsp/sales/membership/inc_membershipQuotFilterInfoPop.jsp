@@ -1,3 +1,5 @@
+
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <script type="text/javascript">
 
 var membershipQuotInfoFilterGridID; // membershipQuotInfoFilterGridID list
@@ -30,7 +32,7 @@ function createFilterGrid(){
 
 
 function fn_getMembershipQuotInfoAjax (){
-      Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo",$("#getParamForm").serialize(), function(result) {
+      Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo",{QUOT_ID:$("#QUOT_ID").val() }, function(result) {
          console.log(result);
       
          try{
@@ -44,8 +46,16 @@ function fn_getMembershipQuotInfoAjax (){
 
 
 
-function fn_getMembershipQuotInfoFilterAjax (){
-      Common.ajax("GET", "/sales/membership/selectMembershipQuotFilter",$("#getParamForm").serialize(), function(result) {
+function fn_getMembershipQuotInfoFilterAjax (_QUOT_ID){
+	
+	  var v_QUOT_ID = $("#QUOT_ID").val();
+	  
+	  if(_QUOT_ID !=""){
+		   v_QUOT_ID = _QUOT_ID;
+		   
+	  }
+	  
+      Common.ajax("GET", "/sales/membership/selectMembershipQuotFilter",{QUOT_ID:v_QUOT_ID }, function(result) {
          console.log(result);
          AUIGrid.setGridData(membershipQuotInfoFilterGridID, result);
       });

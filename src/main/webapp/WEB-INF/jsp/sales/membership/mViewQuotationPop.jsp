@@ -22,7 +22,7 @@
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body win_popup"  ><!-- pop_body start -->
 
 
 <section class="tap_wrap"><!-- tap_wrap start -->

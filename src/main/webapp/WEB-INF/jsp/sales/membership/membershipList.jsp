@@ -234,7 +234,15 @@
 	      
 	}
     
-	  
+
+function fn_clear(){
+	$("#MBRSH_NO").val("");
+	$("#ORD_NO").val("");
+	$("#MBRSH_CRT_DT").val("");
+	$("#MBRSH_CRT_USER_ID").val("");
+	$("#MBRSH_OTSTND").val("");
+}
+
 	
 
 </script>
@@ -272,7 +280,7 @@
      
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();"><span class="search"></span>Free Membership</a></p></li>
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
