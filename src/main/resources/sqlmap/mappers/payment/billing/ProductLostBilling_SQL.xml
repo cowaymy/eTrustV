@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.ProductLostBillingMapper">
+    <select id="selectRentalProductLostPenalty" parameterType="java.lang.String" resultType="egovMap">
+        SELECT Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       --Extent1.OTSTND OTSTND  ,
+			       Extent1.SALES_DT SALES_DT  ,
+			       Extent1.SALES_PRC SALES_PRC  ,
+			       --Extent1.BILL_MONTH BILL_MONTH  ,
+			       Extent1.PNALTY PNALTY  ,
+			       Extent1.CUST_NAME CUST_NAME  ,
+			       Extent1.CONTACTNAME CNTC_NAME  ,
+			       Extent1.ADD1 ADD1  ,
+			       Extent1.ADD2 ADD2  ,
+			       Extent1.ADD3 ADD3  ,
+			       Extent1.SAREA SAREA  ,
+			       Extent1.SPOST_CODE SPOST_CODE  ,
+			       Extent1.SSTATE SSTATE  ,
+			       Extent1.SCOUNTRY SCOUNTRY  ,
+			       Extent1.STK_CODE STK_CODE  ,
+			       Extent1.STK_DESC STK_DESC  ,
+			       Extent1.INSTALL_ADDR1 INSTALL_ADDR1  ,
+			       Extent1.INSTALL_ADDR2 INSTALL_ADDR2  ,
+			       Extent1.INSTALL_ADDR3 INSTALL_ADDR3  ,
+			       Extent1.INSTALL_AREA INSTALL_AREA  ,
+			       Extent1.INSTALL_POST_CODE INSTALL_POST_CODE  ,
+			       Extent1.INSTALL_STATE INSTALL_STATE  ,
+			       Extent1.INSTALL_CNTY INSTALL_CNTY  ,
+			       Extent1.SERIAL_NO SERIAL_NO  ,
+			       Extent1.INSTALL_DT INSTALL_DT  
+		  FROM SAL1018V Extent1
+		WHERE Extent1.SALES_ORD_ID = #{value}
+    </select>
+</mapper>
