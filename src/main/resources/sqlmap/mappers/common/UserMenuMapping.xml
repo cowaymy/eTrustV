@@ -19,13 +19,8 @@
 	               ON USERROLE.ROLE_ID = ROLE.ROLE_ID*/
 	 WHERE 1=1
 	     <![CDATA[
-	     AND 1 = USR.USER_STUS_ID
-	     AND 1 <> USR.USER_TYPE_ID
-	     AND 2 <> USR.USER_TYPE_ID
-	     AND 3 <> USR.USER_TYPE_ID
-	     AND 1161 <> USR.USER_TYPE_ID
-	     AND 1165 <> USR.USER_TYPE_ID
-	     AND  TO_CHAR(USR.USER_VAL_ID_TO, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	     AND USR.USER_STUS_ID = 1
+	     AND TO_CHAR(USR.USER_VAL_ID_TO, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
 	     ]]>
 	     <if test="userCode != null and userCode !=''">
 	     AND (UPPER(USR.USER_ID) LIKE  UPPER(#{userCode}) || '%' OR
