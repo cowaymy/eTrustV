@@ -29,13 +29,24 @@ function fn_orderSearch(){
 }
 
 function fn_callbackOrder(orderId){
-	//orderId = 118528;
+	orderId = 135042;
 	console.log("orderId : " + orderId);
+	if(orderId != null && orderId != ''){
+		   fn_loadBillingSchedule(orderId);
+	}
+}
+function fn_loadBillingSchedule(orderId){
+	Common.ajax("GET", "/payment/selectRentalProductLostPenalty.do", {"orderId" : orderId}, function(result) {
+		console.log(result);
+		
+		$("#orderId").val(result.salesOrdId);
+        $("#orderNo").val(result.salesOrdNo);
+        $("#rental").val(result.salesPrc);
+        $("#unbillMonth").val(result.unbillMonth);
+        $("#amount").val(result.soReqCanclPnaltyAmt);
+	});
 }
 
-function fn_validRequiredField(orderId){
-
-}
 
 
 function fn_createEvent(objId, eventType){
