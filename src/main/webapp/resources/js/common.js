@@ -34,7 +34,9 @@ var Common = {
         }
 
         // 메뉴코드 add....
-        _params = $.extend(_params, {"_menuCode" : $("#CURRENT_MENU_CODE").val()});
+        if(FormUtil.isNotEmpty($("#CURRENT_MENU_CODE").val())){
+            _params = $.extend(_params, {"_menuCode" : $("#CURRENT_MENU_CODE").val()});
+        }
 
         var option = {
             async: true,
