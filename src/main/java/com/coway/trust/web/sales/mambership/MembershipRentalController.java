@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.sales.mambership.MembershipRentalService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.util.CommonUtils;
+import com.rometools.rome.io.SyndFeedOutput;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -434,6 +435,51 @@ public class  MembershipRentalController {
 		map.put("orderMailingInfo", orderMailingInfo);
 		map.put("addressInfo", addressInfo);
 		map.put("salesInfo", salesInfo);
+		
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	
+
+	@RequestMapping(value = "/getMRLedgerProcessInfo", method = RequestMethod.GET)
+	public ResponseEntity<Map>  getMRLedgerProcessInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  getMRLedgerProcessInfo ");
+		  
+		EgovMap legderList = null;   
+		EgovMap outstandingData = null;
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		if( params.get("salesDate" ).equals("") ){
+			params.put("CutOffDate", "1900-01-01");
+		
+		}else{
+    			String v = (String) params.get("salesDate" );
+    			
+    			String temp[] = v.split("/");
+    			params.put("CutOffDate", temp[1]+"-"+temp[0]+"- 01");  
+    			
+		}
+		
+		membershipRentalService.usp_SELECT_ServiceContract_Ledger(params);
+		List<EgovMap> list =(List<EgovMap>) params.get("p1");
+		
+		
+		membershipRentalService.usp_SELECT_ServiceContract_LedgerOutstanding(params);
+		List<EgovMap> out =(List<EgovMap>) params.get("p1");
+		  
+		 
+		
+		Map<String, Object> map = new HashMap();
+		map.put("legderList", list);
+		map.put("outstandingData", out);
+		
+		
+		logger.debug(map.toString());
 		
 		return ResponseEntity.ok(map);
 		

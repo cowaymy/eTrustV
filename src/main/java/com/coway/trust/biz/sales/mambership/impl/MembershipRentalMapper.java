@@ -72,7 +72,7 @@ public interface MembershipRentalMapper {
 	
 	EgovMap usp_SELECT_ServiceContract_LedgerOutstanding(Map<String, Object> params);
 	
-	EgovMap usp_SELECT_ServiceContract_Ledger(Map<String, Object> params);
+	EgovMap  usp_SELECT_ServiceContract_Ledger(Map<String, Object> params);
 	
 	
 }

@@ -57,10 +57,11 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Override
 	public EgovMap usp_SELECT_ServiceContract_LedgerOutstanding(Map<String, Object> params) {
-		return membershipRentalMapper.usp_SELECT_ServiceContract_LedgerOutstanding(params);
+		return  membershipRentalMapper.usp_SELECT_ServiceContract_LedgerOutstanding(params);
 	}
 	@Override
-	public EgovMap usp_SELECT_ServiceContract_Ledger(Map<String, Object> params) {
+	public EgovMap  usp_SELECT_ServiceContract_Ledger(Map<String, Object> params) {
+		
 		return membershipRentalMapper.usp_SELECT_ServiceContract_Ledger(params);
 	}
 	
