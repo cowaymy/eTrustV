@@ -19,20 +19,43 @@ $(document).ready(function(){
     
 	fn_getmRLedgerGridAjax ();
 	
-	//createMRLedgerGrid();  
-   // AUIGrid.resize(mRLedgerGrid, 940,300);
+	createMRLedgerGrid();  
+    AUIGrid.resize(mRLedgerGrid, 940,200);
+    fn_getmRLedgerProcessGridAjax();
+    
    
 });
+
+
+
+function fn_goLedgerPopOut(){
+	alert('goPrint');
+}
+
+
+function vChange(obj){
+    $(obj).change(function(){
+        fn_getmRLedgerProcessGridAjax ();
+   }); 
+ }
 
 
 function createMRLedgerGrid(){
     
     var cLayout = [
-         {dataField : "code",headerText : "Status", width : 100 ,editable : false},
-         {dataField : "cnfmLogMsg", headerText : "Call Message", width : 300 ,editable : false},
-         {dataField : "cnfmLogSmsMsg", headerText : "SMS Message", width :300 ,editable : false},
-         {dataField : "userName", headerText : "Key By", width :100 ,editable : false},
-         {dataField : "cnfmLogCrtDt", headerText : "Key At", width :120 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false}
+         {dataField : "refDt",headerText : "Date", width : 100 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
+         {dataField : "instno", headerText : "Inst No", width : 100 ,editable : false},
+         {dataField : "doctypename", headerText : "Type", width :120 ,editable : false},
+         {dataField : "srvLdgrRefNo", headerText : "Doc No", width :100 ,editable : false},
+         {dataField : "resnDesc", headerText : "Adj Reason", width :100 ,editable : false},
+         {dataField : "payMode", headerText : "Paymode", width :100 ,editable : false},
+         {dataField : "payDt", headerText : "Ref Date", width :100 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
+         {dataField : "chqrefno", headerText : "Ref No", width :100 ,editable : false},
+         {dataField : "accCode", headerText : "Acc Code", width :100 ,editable : false},
+         {dataField : "debitamt", headerText : "Debit", width :100 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
+         {dataField : "creditamt", headerText : "Credit", width :100 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
+         {dataField : "balanceamt", headerText : "Balance", width :100 ,dataType : "number", formatString : "#,000.00"  ,editable : false}
+         
    ];
     
     var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
@@ -93,11 +116,33 @@ function fn_getmRLedgerGridAjax (){
 
 
 
+function fn_getmRLedgerProcessGridAjax (v){
+	
+    Common.ajax("GET", "/sales/membershipRental/getMRLedgerProcessInfo",{ContractID: '${srvCntrctId}' ,salesDate: $("#vsalesDate").val()}, function(result) {
+	       
+    	console.log(result);
+        AUIGrid.setGridData(mRLedgerGrid, result.legderList);
+       
+       $("#totOtstnd").html(result.outstandingData[0].totOtstnd );
+       $("#otstndMonth").html(result.outstandingData[0].otstndMonth);
+       $("#unbillAmt").html(result.outstandingData[0].unbillAmt);
+       $("#totPnaltyChrg").html(result.outstandingData[0].totPnaltyChrg);
+       $("#totPnaltyPaid").html(result.outstandingData[0].totPnaltyPaid);
+       $("#totPnaltyAdj").html(result.outstandingData[0].totPnaltyAdj);
+       $("#totPnaltyBal").html(result.outstandingData[0].totPnaltyBal);
+	       
+    });
+}
+
+
+
 </script>
 
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-
+ 
+ <fmt:setLocale value="en_US"/>
+       
 <header class="pop_header"><!-- pop_header start -->
 <h1>RENTAL MEMBERSHIP LEDGER</h1>
 <ul class="right_opt">
@@ -163,14 +208,19 @@ function fn_getmRLedgerGridAjax (){
 </table><!-- table end -->
 
 <ul class="left_btns ">
-     <li><input type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2 w100p mtz-monthpicker-widgetcontainer"   id="salesDate" name="salesDate" /></li>
+
+     <li>Transaction Date</li>
+     <li><input type="text" title="Create start Date" placeholder="MM/YYYY"  onchange="vChange(this)" class="j_date2 w100p mtz-monthpicker-widgetcontainer"  id="vsalesDate" name="vsalesDate" /></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goLedgerPopOut()"><span class="search"></span>DO Print</a></p></li>
 </ul> 
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-   <div id="ledger_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>  
+   <div id="ledger_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>  
 </article><!-- grid_wrap end -->
 
+
+ 
+ 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -186,23 +236,23 @@ function fn_getmRLedgerGridAjax (){
 <tbody>
 <tr>
 	<th scope="row">Total Outstanding</th>
-	<td><span>text</span></td>
+	<td><span  id='totOtstnd'></span></td>
 	<th scope="row">Outstanding Month</th>
-	<td><span>text</span></td>
+	<td><span id='otstndMonth'></span></td>
 	<th scope="row">Unbill Amount</th>
-	<td><span>text</span></td>
+	<td><span id='unbillAmt'></span></td>
 	<th scope="row"></th>
-	<td><span>text</span></td>
+	<td><span></span></td>
 </tr>
 <tr>
 	<th scope="row">Penalty Charges</th>
-	<td><span>text</span></td>
+	<td><span id='totPnaltyChrg'></span></td>
 	<th scope="row">Penalty Paid</th>
-	<td><span>text</span></td>
+	<td><span id='totPnaltyPaid'></span></td>
 	<th scope="row">Penalty Adjustment</th>
-	<td><span>text</span></td>
+	<td><span id='totPnaltyAdj'></span></td>
 	<th scope="row">Balance Penatly</th>
-	<td><span>text</span></td>
+	<td><span id='totPnaltyBal'></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

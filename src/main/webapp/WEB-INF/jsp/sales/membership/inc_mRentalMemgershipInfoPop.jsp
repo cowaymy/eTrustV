@@ -239,8 +239,7 @@ function fn_setMRentalMembershipInfoInit(){
 
 
 function fn_goLedgerPopOut(){
-	
-	 var pram  ="?srvCntrctId="+vmrMemResultObj.srvCntrctId; 
+	 var pram  ="?srvCntrctId="+vmrMemResultObj.srvCntrctId+ "&srvCntrctOrdId="+vmrMemResultObj.srvCntrctOrdId; 
      Common.popupDiv("/sales/membershipRental/mRLedgerPop.do"+pram ,null, null , true , '_LedgerDiv1');
 }
 

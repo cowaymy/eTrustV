@@ -922,10 +922,10 @@
             
    <resultMap id="mLedger_INFO" type="egovMap" ></resultMap>
    
-    <select id="Usp_SELECT_ServiceContract_Ledger"  statementType="CALLABLE"   parameterType="Map">
+    <select id="usp_SELECT_ServiceContract_Ledger"  statementType="CALLABLE"   parameterType="Map">
        <![CDATA[  
             {
-                  call SP_GET_ORD_OTSTND_INFO ( #{CutOffDate} , #{ContractID}  , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mLedger_INFO})
+                  call SP_SELT_SVC_CNTRCT_LDGR ( #{CutOffDate} , #{ContractID}  , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mLedger_INFO})
             }
          ]]>
       </select>   
@@ -933,10 +933,10 @@
             
    <resultMap id="mLedgerOMap" type="egovMap" ></resultMap>
    
-   <select id="Usp_SELECT_ServiceContract_LedgerOutstanding"  statementType="CALLABLE"   parameterType="Map">
+   <select id="usp_SELECT_ServiceContract_LedgerOutstanding"  statementType="CALLABLE"   parameterType="Map">
        <![CDATA[  
             {
-                  call SP_GET_ORD_OTSTND_INFO ( #{ContractID} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mLedgerOMap})
+                  call SP_SELT_SVC_CNTRCT_LDGR_OTSTND ( #{ContractID} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mLedgerOMap})
             }
          ]]>
       </select>   
