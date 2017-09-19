@@ -372,8 +372,8 @@
              //upitemGrid  = GridCommon.createAUIGrid("#UpDetail_div", updateLayout,"", gridoptions);
              upitemGrid  = GridCommon.createAUIGrid("#UpDetail_div", updateLayout,"", subgridpros);
              getDetailAssetListAjax(selectedItem[0],div);    
-             //fn_srvMembershipList(itemtype);
-            // fn_BrandList();             
+             fn_srvMembershipList(itemtype);
+             fn_BrandList();             
      });
          
            
