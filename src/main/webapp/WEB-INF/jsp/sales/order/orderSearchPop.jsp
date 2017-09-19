@@ -37,6 +37,9 @@
 	    else if($('#callPrgm').val() == 'BILLING_DISCOUNT_MGMT') {
             fn_orderInfo(ordNo, ordId);
         }
+	    else if($('#callPrgm').val() == 'BILLING_RENTAL_FEE') {
+            fn_orderInfo(ordNo, ordId);
+        }
 	}
 	
     function createAUIGrid() {
