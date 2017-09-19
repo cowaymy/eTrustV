@@ -37,32 +37,22 @@
 	var orgList = new Array(); //그룹 리스트
 	var orgGridCdList = new Array(); //그리드 등록 그룹 리스트
 	var orgItemList = new Array();   //그리드 등록 아이템 리스트
+	
+	var date = new Date();
+    var year  = date.getFullYear();
+    var month = date.getMonth() + 1; // 0부터 시작하므로 1더함 더함
+
 
 	//Start AUIGrid
 	$(document).ready(function() {
-		  
 		//change orgCombo List
-		$("#orgRgCombo").change(function() {
-			$("#orgCombo").find('option').each(function() {
-				$(this).remove();
-			});
-			if ($(this).val().trim() == "") {
-				return;
-			}		
-			fn_getOrgCdListAllAjax(); //call orgList
-			$("#ItemOrgCd").val("");
-		});		
-		$("#orgCombo").click(function(){
-			$("#ItemOrgCd").val($(this).find("option[value='" + $(this).val() + "']").text());
-		});
+        $("#orgRgCombo").change(function() {
+            $("#ItemGrCd").val($(this).find("option[value='" + $(this).val() + "']").text());
+        });
 		
 		// AUIGrid 그리드를 생성합니다.
-		var options = {
-            // 체크박스 표시 설정
-			showRowCheckColumn : true,
-            showRowAllCheckBox : false
-        };
-		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"itemSeq",options);
+		//myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
+		createAUIGrid();
 
 		// cellClick event.
 		AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -77,31 +67,53 @@
 		
 		//Rule Book Item search
 		$("#search").click(function(){	
-			Common.ajax("GET", "/commission/calculation/selectOrgProList", $("#searchForm").serialize(), function(result) {
-				console.log("성공.");
-				console.log("data : " + result);
-				AUIGrid.setGridData(myGridID, result);
-			});
+			if(Number(year) < Number($("#searchDt").val().substr(3,7))){
+				alert("검색 날짜 오류");
+			}else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
+				alert("검색 날짜 오류");
+			}else{
+				Common.ajax("GET", "/commission/calculation/selectCalculationList", $("#searchForm").serialize(), function(result) {
+					$("#batchYn").val("");
+					console.log("성공.");
+					console.log("data : " + result);
+					AUIGrid.setGridData(myGridID, result);
+				});
+			}
 	   });
+		
+		$("#runBatch").click(function(){
+			if(Number(year) < Number($("#searchDt").val().substr(3,7))){
+                alert("검색 날짜 오류");
+            }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
+                alert("검색 날짜 오류");
+            }else{
+				var  myGridIdLength = AUIGrid.getGridData(myGridID).length;
+				
+				for(var i=0;i<myGridIdLength ;i++){
+					if(AUIGrid.getCellValue(myGridID, i, 2) == "1"){
+						alert("실행 중 입니다.");
+                        return false;
+					}
+				}
+				$("#batchYn").val("Y");
+				//array에 담기        
+				var gridList = AUIGrid.getGridData(myGridID);       //그리드 데이터
+				var formList = $("#searchForm").serializeArray();       //폼 데이터
+				
+				//param data array
+				var data = {};
+				
+			    data.all = gridList;
+			    data.form = formList;
+			    
+				Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
+	                $("#search").trigger("click");
+	            }); 
+			}
+		});
+		
 	});//Ready
 	
-	//get Ajax data and set organization combo data
-    function fn_getOrgCdListAllAjax(callBack) {
-        Common.ajaxSync("GET", "/commission/calculation/selectOrgCdListAll", $("#searchForm").serialize(), function(result) {
-            orgList = new Array();
-            if (result) {
-            	$("#orgCombo").append("<option value='' ></option>");
-            	$("#orgCombo").append("<option value='' >BSD</option>");
-                for (var i = 0; i < result.length; i++) {
-                    $("#orgCombo").append("<option value='"+result[i].orgCd + "' > " + result[i].orgNm + "</option>");
-                }
-            }
-            //if you need callBack Function , you can use that function
-            if (callBack) {
-                callBack(orgList);
-            }
-        });
-    }
 
 	//event management
 	function auiCellEditingHandler(event) {
@@ -131,72 +143,140 @@
 	}
 
 	// 아이템 AUIGrid 칼럼 설정
-	var columnLayout = [ {
-		dataField : "orgNm",
-		headerText : "ORG NAME",
-		style : "my-column",
-		editable : false,
-		width : "20%"
-	}, {
-		dataField : "codeName",
-        headerText : "Procedure Name",
-        style : "my-column",
-        editable : false,
-        width : "20%"
-	}, {
-		dataField : "cdds",
-        headerText : "Description",
-        style : "my-column",
-        editable : false
-	}, {
-		dataField : "exBtn",
-        headerText : "Execute",
-        style : "my-column",
-        renderer : {
-            type : "ButtonRenderer",
-            labelText : "EXECUTE",
-            onclick : function(rowIndex, columnIndex, value, item) {
-            	$("#procedureNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 1));
-            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#callForm").serialize(), function(result) {
-                }); 
-            }
-        },
-        editable : false,
-        width : 150
-	}, {
-		dataField : "codeId",
-        headerText : "CODE ID",
-        visible : false
-	},  {
-        dataField : "code",
-        headerText : "CODE",
-        visible : false
-    }];
-
-    //Make useYn ComboList
-    function getUseYnComboList() {
-        var list = [ "Y", "N" ];
-        return list;
-    }
+	function createAUIGrid() {
+		var columnLayout = [ { 
+			dataField : "codeName",
+	        headerText : "Procedure Name",
+	        style : "my-column",
+	        editable : false,
+	        width : 160
+		}, {
+			dataField : "cdds",
+	        headerText : "Description",
+	        style : "my-column",
+	        editable : false
+		}, {
+            dataField : "calState",
+            headerText : "result",
+            style : "my-column",
+            editable : false,
+            visible : false
+        },{
+            dataField : "statenm",
+            headerText : "result",
+            style : "my-column",
+            editable : false,
+            width : 100
+        },{
+	        dataField : "calStartTime",
+	        headerText : "date",
+	        style : "my-column",
+	        editable : false,
+	        width : 160
+	    },{
+	        dataField : "DATA",
+	        headerText : "조회",
+	        style : "my-column",
+	        renderer : {
+	            type : "ButtonRenderer",
+	            labelText : "SEARCH",
+	            onclick : function(rowIndex, columnIndex, value, item) {
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 8));
+	            	$("#code").val(AUIGrid.getCellValue(myGridID, rowIndex, 9));
+	                Common.popupDiv("/commission/calculation/calCommDataPop.do", $("#searchForm").serializeJSON());
+	            }
+	        },
+	        editable : false,
+	        width : 105
+	    },{
+	        dataField : "LOGE",
+	        headerText : "로그 조회",
+	        style : "my-column",
+	        renderer : {
+	            type : "ButtonRenderer",
+	            labelText : "SEARCH",
+	            onclick : function(rowIndex, columnIndex, value, item) {
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 8));
+	            	Common.popupDiv("/commission/calculation/calCommLogPop.do", $("#searchForm").serializeJSON());
+	            }
+	        },
+	        editable : false,
+	        width : 105
+	    },{
+			dataField : "exBtn",
+	        headerText : "Execute",
+	        style : "my-column",
+	        renderer : {
+	            type : "ButtonRenderer",
+	            labelText : "EXECUTE",
+	            onclick : function(rowIndex, columnIndex, value, item) {
+	            	$("#procedureNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 8));
+	            	$("#batchYn").val("N");
+	            	var  myGridIdLength = AUIGrid.getGridData(myGridID).length;
+	            	var failCnt = "0";
+	            	var state;
+	            	for(var i=0;i<myGridIdLength;i++){
+	            		state= AUIGrid.getCellValue(myGridID, i, "calState");
+	            		if(state == "9"){
+	            			failCnt = i;
+	            		}
+	            	}
+	            	for(var i=0;i<rowIndex;i++){
+	            		state= AUIGrid.getCellValue(myGridID, i, "calState");
+	            		if(state != "0"){
+	            			alert("선행 프로시저를 먼저 실행해주세요."); 	
+	            			return false;
+	            		}
+	            	}
+	            	
+	            	if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="1"){
+	            		alert("실행 중 입니다.");
+	            		return false;
+	            	}else if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="8"){
+	            		if((AUIGrid.getCellValue(myGridID, failCnt, 2))=="9"){
+		            		alert("에러가 난 프로시저를 먼저 실행해주세요."); 
+		            		return false;
+	            		}
+	            	}else{
+		            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
+		            		$("#search").trigger("click");
+		                }); 
+	            	}
+	            }
+	        },
+	        editable : false,
+	        width : 105
+		}, {
+			dataField : "codeId",
+	        headerText : "CODE ID",
+	        visible : false
+		},  {
+	        dataField : "code",
+	        headerText : "CODE",
+	        visible : false
+	    }];
+		 // 그리드 속성 설정
+        var gridPros = {
+            
+            // 페이징 사용       
+            usePaging : true,
+            
+            // 한 화면에 출력되는 행 개수 20(기본값:20)
+            pageRowCount : 20,
+            
+            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            skipReadonlyColumns : true,
+            
+            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            wrapSelectionMove : true,
+            
+            // 줄번호 칼럼 렌더러 출력
+            showRowNumColumn : true,
     
-    // Rule Book Mgmt grid 체크된 아이템 얻기
-    function getCheckedRowItems() {
-        var checkedItems = AUIGrid.getCheckedRowItems(myGridID2);
-        var str = "";
-        var rowItem;
-        var len = checkedItems.length;
-
-        if (len <= 0) {
-            Common.alert("<spring:message code='commission.alert.noCheckbox'/>");
-            return;
-        }
-
-        for (var i = 0; i < len; i++) {
-            rowItem = checkedItems[i];
-            str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name + "\n";
-        }
-        //alert(str);
-    }
+        };
+        myGridID = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
+	}
     
 </script>
 
@@ -228,7 +308,8 @@
 	<section class="search_table">
 		<!-- search_table start -->
 		<form id="searchForm" action="" method="post">
-      <input type="hidden" id="ItemOrgCd" name="ItemOrgCd"/>
+      <input type="hidden" id="ItemGrCd" name="ItemGrCd"/>
+      <input type="hidden" id="dataDt" name="dataDt" value="${searchDt }"/>
 			<table class="type1">
 				<!-- table start -->
 				<caption>search table</caption>
@@ -244,40 +325,31 @@
 				</colgroup>
 				<tbody>
 					<tr>
+					    <th scope="row">Month/Year</th>
+                        <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
 						<th scope="row">ORG Group</th>
 						<td><select id="orgRgCombo" name="orgRgCombo" style="width: 100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgGrList }">
-									<option value="${list.orgGrCd}">${list.orgGrNm}</option>
+									<option value="${list.code}">${list.code}</option>
 								</c:forEach>
-						</select></td>
-						<th scope="row">ORG Code</th>
-						<td><select id="orgCombo" name="orgCombo" style="width: 100px;">
-								<option value=""></option>
-								<c:forEach var="list" items="${orgList }">
-									<option value="${list.orgCd}">${list.orgNm}</option>
-								</c:forEach>
-						</select></td>					
+						</select>
+						<label><input type="radio" name="use_yn" checked/><span>Actual</span></label>
+                        <label><input type="radio" name="use_yn" /><span>Simulation</span></label></td>
 						<input type="hidden" id="orgGrCd" name="orgGrCd" value="">
 					</tr>
 				</tbody>
 			</table>
 			<!-- table end -->
-		</form>
-	</section>
-	<!-- search_table end -->
-
-	<section class="search_result">
-	   <form id="callForm" action="" method="post">
 	       <input type="hidden" name="procedureNm" id="procedureNm"/>
-			<!-- search_result start -->
+	       <input type="hidden" name="codeId" id="codeId"/>
+	       <input type="hidden" name="code" id="code"/>
+	       <input type="hidden" name="batchYn" id="batchYn"/>
+	       
 			<ul class="right_btns">
-			     <li><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width:200px;" /></li>
-				<li><p class="btn_grid">
-	                    <a href="#" id="execute">execute</a>
-	                </p></li>
+				<li><p class="btn_grid"><a href="#" id="runBatch">RUN BATCH</a></p></li>
 			</ul>
-	
+			
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
 				<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
