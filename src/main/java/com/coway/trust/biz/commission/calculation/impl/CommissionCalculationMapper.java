@@ -42,13 +42,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface CommissionCalculationMapper {
 	
 	/**
-	 * search Organization Gruop Code List
+	 * search Commission Procedure Group List
 	 * 
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
-	List<EgovMap> selectOrgGrCdListAll(Map<String, Object> params);
+	List<EgovMap> selectCommPrdGroupListl(Map<String, Object> params);
 	
 	/**
 	 * search Organization Code List
@@ -66,9 +66,232 @@ public interface CommissionCalculationMapper {
 	 * @return
 	 * @exception Exception
 	 */
-	List<EgovMap> selectOrgItemList(Map<String, Object> params);
+	List<EgovMap> selectCalculationList(Map<String, Object> params);
 	
+	/**
+	 * search Basic Calculation List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectBasicList(Map<String, Object> params);
+	
+	/**
+	 * search Basic Calculation Sate Select
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	Map<String, Object> selectBasicStatus(Map<String, Object> params);
+	
+	
+	/**
+	 * Commssion Procedure Call 
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
 	Map<String, Object> callCommProcedure(Map<String, Object> param);
+	
+	/**
+	 * Commssion Procedure Call Running Log
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int callCommPrdLogIns(Map<String, Object> param);
+	
+	/**
+	 * Procedure Last Log Extraction Select
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectCommRunningPrdLog(Map<String, Object> param);
+	
+	/**
+	 * Commssion Procedure Log Update
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int callCommLogUpdate(Map<String, Object> param);
+	
+	/**
+	 * Commssion Procedure Log Insert(success/fail)
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int callCommPrdLog(Map<String, Object>  param);
+	
+	
+	/**
+	 * Commssion Procedure Log Select
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectLogList(Map<String, Object> params);
+	
+	/**
+	 * search Organization Gruop List
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectOrgGrList(Map<String, Object> params);
+	
+	/**
+	 * calculation Data select(CMM0028D CD, CT, HP)
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectCMM0028DCT(Map<String, Object> params);
+	List<EgovMap> selectCMM0028DCD(Map<String, Object> params);
+	List<EgovMap> selectCMM0028DHP(Map<String, Object> params);
+	/**
+	 * CMM0029D CD, CT, HP Data select
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectCMM0029DCT(Map<String, Object> params);
+	List<EgovMap> selectCMM0029DCD(Map<String, Object> params);
+	List<EgovMap> selectCMM0029DHP(Map<String, Object> params);
+	
+	/**
+	 * Basic Data select
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	List<EgovMap> selectCMM0006T(Map<String, Object> params);
+	List<EgovMap> selectCMM0007T(Map<String, Object> params);
+	List<EgovMap> selectCMM0008T(Map<String, Object> params);
+	List<EgovMap> selectCMM0009T(Map<String, Object> params);
+	List<EgovMap> selectCMM0010T(Map<String, Object> params);
+	List<EgovMap> selectCMM0011T(Map<String, Object> params);
+	List<EgovMap> selectCMM0012T(Map<String, Object> params);
+	List<EgovMap> selectCMM0013T(Map<String, Object> params);
+	List<EgovMap> selectCMM0014T(Map<String, Object> params);
+	List<EgovMap> selectCMM0015T(Map<String, Object> params);
+	List<EgovMap> selectCMM0016T(Map<String, Object> params);
+	List<EgovMap> selectCMM0017T(Map<String, Object> params);
+	List<EgovMap> selectCMM0018T(Map<String, Object> params);
+	List<EgovMap> selectCMM0019T(Map<String, Object> params);
+	List<EgovMap> selectCMM0020T(Map<String, Object> params);
+	List<EgovMap> selectCMM0021T(Map<String, Object> params);
+	List<EgovMap> selectCMM0022T(Map<String, Object> params);
+	List<EgovMap> selectCMM0023T(Map<String, Object> params);
+	List<EgovMap> selectCMM0024T(Map<String, Object> params);
+	List<EgovMap> selectCMM0025T(Map<String, Object> params);
+	List<EgovMap> selectCMM0026T(Map<String, Object> params);
+	
+	/**
+	 * search Basic Data Count
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	int cntCMM0028D(Map<String, Object>  param);
+	int cntCMM0029D(Map<String, Object>  param);
+	int cntCMM0006T(Map<String, Object>  param);
+	int cntCMM0007T(Map<String, Object>  param);
+	int cntCMM0008T(Map<String, Object>  param);
+	int cntCMM0009T(Map<String, Object>  param);
+	int cntCMM0010T(Map<String, Object>  param);
+	int cntCMM0011T(Map<String, Object>  param);
+	int cntCMM0012T(Map<String, Object>  param);
+	int cntCMM0013T(Map<String, Object>  param);
+	int cntCMM0014T(Map<String, Object>  param);
+	int cntCMM0015T(Map<String, Object>  param);
+	int cntCMM0016T(Map<String, Object>  param);
+	int cntCMM0017T(Map<String, Object>  param);
+	int cntCMM0018T(Map<String, Object>  param);
+	int cntCMM0019T(Map<String, Object>  param);
+	int cntCMM0020T(Map<String, Object>  param);
+	int cntCMM0021T(Map<String, Object>  param);
+	int cntCMM0022T(Map<String, Object>  param);
+	int cntCMM0023T(Map<String, Object>  param);
+	int cntCMM0024T(Map<String, Object>  param);
+	int cntCMM0025T(Map<String, Object>  param);
+	int cntCMM0026T(Map<String, Object>  param);
+	
+	/**
+	 * basic Data  Exclude Update
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	void udtExcludeDataCMM0006T(Map<String, Object>  param);
+	void udtDataCMM0006T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0007T(Map<String, Object>  param);
+	void udtDataCMM0007T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0008T(Map<String, Object>  param);
+	void udtDataCMM0008T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0009T(Map<String, Object>  param);
+	void udtDataCMM0009T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0010T(Map<String, Object>  param);
+	void udtDataCMM0010T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0011T(Map<String, Object>  param);
+	void udtDataCMM0011T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0012T(Map<String, Object>  param);
+	void udtDataCMM0012T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0013T(Map<String, Object>  param);
+	void udtDataCMM0013T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0014T(Map<String, Object>  param);
+	void udtDataCMM0014T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0015T(Map<String, Object>  param);
+	void udtDataCMM0015T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0017T(Map<String, Object>  param);
+	void udtDataCMM0017T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0018T(Map<String, Object>  param);
+	void udtDataCMM0018T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0019T(Map<String, Object>  param);
+	void udtDataCMM0019T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0020T(Map<String, Object>  param);
+	void udtDataCMM0020T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0021T(Map<String, Object>  param);
+	void udtDataCMM0021T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0022T(Map<String, Object>  param);
+	void udtDataCMM0022T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0023T(Map<String, Object>  param);
+	void udtDataCMM0023T(Map<String, Object>  param);
+	
+	void udtExcludeDataCMM0026T(Map<String, Object>  param);
+	void udtDataCMM0026T(Map<String, Object>  param);
 	
 	/**
 	 * search Organization Gruop List
