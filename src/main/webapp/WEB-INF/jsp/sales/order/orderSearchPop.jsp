@@ -36,6 +36,8 @@
 	    }
 	    else if($('#callPrgm').val() == 'BILLING_DISCOUNT_MGMT') {
             fn_orderInfo(ordNo, ordId);
+        }else if($('#callPrgm').val() == 'EARLY_TERMINATION_BILLING') {
+        	fn_callbackOrder(ordId);
         }
 	    else if($('#callPrgm').val() == 'BILLING_RENTAL_FEE') {
             fn_orderInfo(ordNo, ordId);
