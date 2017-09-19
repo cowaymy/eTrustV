@@ -36,4 +36,9 @@ public class MenuServiceImpl implements MenuService {
 	public PageAuthVO getPageAuth(Map<String, Object> params) {
 		return menuMapper.selectPageAuth(params);
 	}
+
+	@Override
+	public EgovMap getMenuAuthByPgmPath(Map<String, Object> params){
+		return menuMapper.selectMenuAuthByPgmPath(params);
+	}
 }

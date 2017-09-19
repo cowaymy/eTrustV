@@ -14,4 +14,6 @@ public interface MenuService {
 	List<EgovMap> getFavoritesList(SessionVO sessionVO);
 
 	PageAuthVO getPageAuth(Map<String, Object> params);
+
+	EgovMap getMenuAuthByPgmPath(Map<String, Object> params);
 }

@@ -7,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.coway.trust.biz.common.AccessMonitoringService;
-import com.coway.trust.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +15,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AccessMonitoringService;
 import com.coway.trust.biz.common.MenuService;
 import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public class AuthenticInterceptor extends WebContentInterceptor {
 
@@ -42,7 +44,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
 		if (sessionVO != null && sessionVO.getUserId() > 0) {
-			checkAuthorized();
+			checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
 		} else {
 			LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
 					request.getRequestURI());
@@ -53,12 +55,19 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	}
 
 	/**
-	 * 권한 체크.
+	 * 권한 체크. : 2017-09-13 : 각 기능(CRUD) 권한 체크는 화면단에서 한다. 메뉴에 등록 된것만 체크.
 	 */
-	private void checkAuthorized() {
-		// 2017-09-13 : 권한 체크는 화면단에서 한다. 메뉴에 등록 된것만 체크.
-		// 권한이 없다면, 아래의 exception을 throw 하면, GlobalExceptionHandler 의 authException 에서 처리함.
-		// throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
+	private void checkAuthorized(int userId, String pgmPath) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("pgmPath", pgmPath);
+		EgovMap pgmPahMenuAuth = menuService.getMenuAuthByPgmPath(params);
+
+		// 메뉴에 등록되어 있는 pgmPath 중 권한체크.
+		if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))
+				&& !"Y".equals(pgmPahMenuAuth.get("funcYn"))) {
+			throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
+		}
 	}
 
 	@Override
@@ -74,7 +83,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		if (modelAndView != null) {
 			Map<String, Object> params = new HashMap<>();
 
-			if(request.getRequestURI().endsWith(".do")){
+			if (request.getRequestURI().endsWith(".do")) {
 				params.put("userId", sessionVO.getUserId());
 				params.put("pgmPath", request.getRequestURI());
 				params.put("userName", sessionVO.getUserName());
