@@ -30,8 +30,30 @@ public interface MembershipQuotationService {
 	
 	List<EgovMap>   getPromotionCode(Map<String, Object> params);
 	
-	List<EgovMap>   getFilterCharge(Map<String, Object> params);
+	EgovMap	    	getFilterCharge(Map<String, Object> params);
 	
+	List<EgovMap>   getFilterPromotionCode(Map<String, Object> params); 
+	
+	List<EgovMap>   getPromoPricePercent(Map<String, Object> params); 
+	
+	List<EgovMap>   getOrderCurrentBillMonth(Map<String, Object> params); 
+	
+	EgovMap	    	getOderOutsInfo(Map<String, Object> params);
+	
+	void 	insertQuotationInfo(Map<String, Object> params) ;
+	
+	EgovMap	   getMembershipFilterChargeList(Map<String, Object> params);
+	
+	void 	insertSrvMembershipQuot_Filter(Map<String, Object> params) ;
+	
+	EgovMap   getSAL0093D_SEQ(Map<String, Object> params);
+	
+	
+	List<EgovMap>   mActiveQuoOrder(Map<String, Object> params); 
+	
+	
+	
+
 	
 }
    

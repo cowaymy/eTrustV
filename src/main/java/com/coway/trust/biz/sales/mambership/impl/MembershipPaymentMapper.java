@@ -47,7 +47,7 @@ public interface MembershipPaymentMapper {
 	
 	List<EgovMap>   paymentInsAddress(Map<String, Object> params);
 	
-	EgovMap paymentCharges(Map<String, Object> params);
+	EgovMap  paymentCharges(Map<String, Object> params);
 	
 	List<EgovMap>   paymentCollecterList(Map<String, Object> params);
 

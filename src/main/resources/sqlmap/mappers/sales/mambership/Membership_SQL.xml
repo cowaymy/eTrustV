@@ -207,7 +207,8 @@
 				       sList.CUST_NRIC CUST_NRIC  ,
 				       sList.CUST_NAME CUST_NAME  ,
 				       sList.ORD_STUS_NAME ORD_STUS_NAME  ,
-				       sList.APP_TYPE_CODE APP_TYPE_CODE  
+				       sList.APP_TYPE_CODE APP_TYPE_CODE  ,
+				       sList.STK_CTGRY_NAME
 				  FROM ( SELECT stb.ORD_ID ORD_ID  ,
 				                stb.ORD_NO ORD_NO  ,
 				                stb.ORD_STUS_NAME ORD_STUS_NAME  ,
@@ -218,7 +219,8 @@
 				                stb.CUST_ID CUST_ID  ,
 				                stb.CUST_NAME CUST_NAME  ,
 				                stb.CUST_NRIC CUST_NRIC  ,
-				                stb3.CODE_NAME CODE_NAME  
+				                stb3.CODE_NAME CODE_NAME  ,
+				                stb.STK_CTGRY_NAME
 				         FROM ( SELECT oinfo.ORD_ID ORD_ID  ,
 				                       oinfo.ORD_NO ORD_NO  ,
 				                       oinfo.RENTAL_STUS RENTAL_STUS  ,
@@ -683,9 +685,11 @@
 							       sList.SRV_MEM_SALESMAN_NAME   ,
 							       sList.LAST_SRV_MEM_ID   ,
 							       sList.LAST_SRV_MEM_START_DATE   ,
+							       to_char (sList.LAST_SRV_MEM_EXPR_DATE ,'yyyymmdd' )   CVT_LAST_SRV_MEM_EXPR_DATE,
 							       to_char (sList.LAST_SRV_MEM_EXPR_DATE ,'dd-mm-yyyy' )  LAST_SRV_MEM_EXPR_DATE,
 							       CASE  WHEN (  sList.LAST_SRV_MEM_EXPR_DATE   >= sysdate ) THEN   to_char(sList.LAST_SRV_MEM_EXPR_DATE,'dd-mm-yyyy')        ELSE  'Expired'  END EXPRTEXT,
 							       to_char(add_months(sysdate ,12),'yyyymm' )  add12Todate,
+							       to_char (sysdate ,'yyyymmdd' )   CVT_NOW_DATE,
 							       to_char(add_months(sList.LAST_SRV_MEM_EXPR_DATE ,12),'yyyymm' ) add12ExpireDate
 							  FROM ( SELECT cinfo.ORD_ID   ,
 							                cinfo.CONFIG_ID   ,
@@ -724,6 +728,7 @@
 							       sList.ORD_STUS_ID   ,
 							       sList.ORD_STUS_CODE   ,
 							       sList.ORD_STUS_NAME   ,
+							       to_char (sList.ORD_DT ,'yyyymmdd')  ORG_ORD_DT   ,
 							       to_char (sList.ORD_DT ,'dd-mm-yyyy')  ORD_DT   ,
 							       sList.INSTLMT_PRIOD   ,
 							       sList.ORD_AMT ORD_AMT  ,

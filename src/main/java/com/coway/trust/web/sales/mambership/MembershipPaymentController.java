@@ -111,7 +111,7 @@ public class  MembershipPaymentController {
 
 		EgovMap item = new EgovMap();
 
-		item = (EgovMap) membershipPaymentService.paymentCharges(params);
+		membershipPaymentService.paymentCharges(params);
 
 		logger.debug("v_result : {}", params.get("p1"));
 

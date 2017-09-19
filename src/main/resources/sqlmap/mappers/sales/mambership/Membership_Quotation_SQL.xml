@@ -165,8 +165,8 @@
 					                             AND ( sL.QUOT_NO = #{QUOT_NO})
 					                        </if>
 					                        
-			                                <if test="ORD_NO != null and ORD_NO != ''">
-                                                  AND ( sL.ORD_NO   = #{ORD_NO} )
+			                                <if test="L_ORD_NO != null and L_ORD_NO != ''">
+                                                  AND ( sL.ORD_NO   = #{L_ORD_NO} )
                                             </if>
 			                                 
 			                                 <if test="CRT_SDT != null and CRT_SDT != ''">
@@ -309,7 +309,7 @@
                    <![CDATA[
 									SELECT V.PROMO_ID   code_Id  ,
 										       V.PROMO_CODE   ,
-										       V.PROMO_DESC    code_Name
+										       V.PROMO_CODE||'-'||V.PROMO_DESC  code_Name
 									  FROM ( SELECT E.PROMO_ID   ,
 									                E.PROMO_CODE   ,
 									                E.PROMO_DESC   
@@ -321,9 +321,7 @@
 	                      ]]>
          </select>
          
-         
-         
-          <select id="getFilterCharge" parameterType="Map" resultType="egovMap">
+          <select id="getFilterPromotionCode" parameterType="Map" resultType="egovMap">
                    <![CDATA[
                                     SELECT V.PROMO_ID   code_Id  ,
                                                V.PROMO_CODE   ,
@@ -332,13 +330,216 @@
                                                     E.PROMO_CODE   ,
                                                     E.PROMO_DESC   
                                              FROM SAL0017D E
-                                              WHERE  ( 1036 = E.PROMO_TYPE_ID )
+                                              WHERE  ( 1035 = E.PROMO_TYPE_ID )
                                                        AND ( 1 = E.PROMO_STUS_ID )
                                                        AND ( E.PROMO_DT_FROM <= sysdate )
                                                        AND ( E.PROMO_DT_END >= sysdate ) ) V
                           ]]>
          </select>
          
+         
+         <select id="getPromoPricePercent" parameterType="Map" resultType="egovMap">
+					         SELECT S.PROMO_ID   ,
+								       S.PROMO_CODE   ,
+								       S.PROMO_DESC   ,
+								       S.PROMO_PRC_PRCNT   
+					  FROM SAL0017D S
+					 WHERE  S.PROMO_ID = #{PROMO_ID}
+                        AND ROWNUM   <![CDATA[<]]>= 1
+         </select>
+                  
+       <resultMap id="mFCMap" type="egovMap" ></resultMap>
     
+    <select id="getFilterCharge"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[ 
+            {
+                  call SP_GET_ORD_MBRSH_FILTER_CHRG ( #{ORD_ID} ,  #{PROMO_ID} ,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mFCMap})
+            }
+         ]]>
+      </select>   
+      
+      
+      
+        <select id="getOrderCurrentBillMonth" parameterType="Map" resultType="egovMap">
     
+			    SELECT * 
+			      FROM ( SELECT S.SALES_ORD_ID   ,
+			                            S.RENT_INST_NO   ,
+						                TO_CHAR(S.RENT_INST_DT,'yyyymmdd')   RENT_INST_DT,
+						                S.RENT_INST_TYPE_ID   ,
+						                S.RENT_INST_AMT   ,
+						                S.RENT_INST_INSERT_MONTH   ,
+						                S.RENT_INST_INSERT_YEAR   ,
+						                S.RENT_INST_ID,   
+						                TO_CHAR(SYSDATE,'yyyymm')||'01' NOW_DATE 
+			      FROM ( SELECT R.SALES_ORD_ID   ,
+			                    R.RENT_INST_NO   ,
+			                    R.RENT_INST_DT   ,
+			                    R.RENT_INST_TYPE_ID   ,
+			                    R.RENT_INST_AMT   ,
+			                    R.RENT_INST_INSERT_MONTH  ,
+			                    R.RENT_INST_INSERT_YEAR   ,
+			                    R.RENT_INST_ID   
+			             FROM SAL0070D R
+			              WHERE  R.SALES_ORD_ID = ${ORD_ID}
+			              <if test="RENT_INST_DT != null and RENT_INST_DT != ''">   
+                              AND   RENT_INST_DT =  SYSDATE
+                          </if>
+			              
+			              ) S
+			      ORDER BY S.RENT_INST_NO DESC )
+			      WHERE ROWNUM <![CDATA[<]]>= 1
+      </select>
+      
+         
+    <select id="getSAL0093D_SEQ" parameterType="Map" resultType="egovMap">
+                 <![CDATA[     
+                          SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL  SEQ  FROM DUAL 
+                 ]]>
+    </select>
+    
+        
+    <insert id="insertQuotationInfo" parameterType="Map"   >
+			    
+			    INSERT INTO SAL0093D (SRV_MEM_QUOT_ID ,
+			                                      SRV_SALES_ORD_ID,             
+							                      SRV_MEM_QUOT_NO,              
+							                      SRV_MEM_PAC_ID,               
+							                      SRV_MEM_PAC_NET_AMT,          
+							                      SRV_MEM_PAC_TXS,              
+							                      SRV_MEM_PAC_AMT,              
+							                      SRV_MEM_BS_NET_AMT,           
+							                      SRV_MEM_BS_TXS,               
+							                      SRV_MEM_BS_AMT,               
+							                      SRV_MEM_PV,                   
+							                      SRV_DUR,                      
+							                      SRV_REM,                      
+							                      SRV_QUOT_VAL_ID,                  
+							                      SRV_CRT_DT,                       
+							                      SRV_CRT_USER_ID,              
+							                      SRV_QUOT_STUS_ID,             
+							                      SRV_UPD_USER_ID,              
+							                      SRV_UPD_DT,                   
+							                      SRV_MEM_BS12_AMT,                 
+							                      SRV_QUOT_CUST_CNT_ID,         
+							                      SRV_MEM_QTY,                  
+							                      SRV_PROMO_ID,                 
+							                      SRV_SALES_MEM_ID,             
+							                      SRV_MEM_ID,                   
+							                      SRV_ORD_STK_ID,               
+							                      SRV_FREQ,                     
+							                      SRV_PAC_PROMO_ID,
+							                      EMP_CHK)             
+			  VALUES   (             #{SAL0093D_SEQ},
+			                               #{srvSalesOrderId},
+								            FN_GET_DOCNO(20) ,
+								            #{srvMemPacId},
+								            #{srvMemPacNetAmt},
+								            #{srvMemPacTaxes},
+								            #{srvMemPacAmt},
+								            #{srvMemBSNetAmt},
+								            #{srvMemBSTaxes},
+								            #{srvMemBSAmt},
+								            #{srvMemPv},
+								            #{srvDuration},
+								            #{srvRemark},
+								            LAST_DAY(sysdate),
+								            sysdate,
+								            #{srvCreateBy},
+								            #{srvQuotStatusId},
+								            #{srvCreateBy},
+								            sysdate,
+								            #{srvMemBS12Amt},
+								            #{srvQuotCustCntId},
+								            #{srvMemQty},
+								            #{srvPromoId},
+								            #{srvSalesMemId},
+								            #{srvMemId},
+								            #{srvOrderStkId},
+								            #{srvFreq},
+								            #{srvPacPromoId} ,
+								            #{empChk}
+			            )
+            
+         </insert>   
+         
+         
+     <insert id="insertSrvMembershipQuot_Filter" parameterType="Map"  >    
+         
+			INSERT INTO SAL0094D (SRV_MEM_QUOT_FILTER_ID,
+						                      SRV_MEM_QUOT_ID,
+						                      STK_ID,
+						                      STK_PRIOD,
+						                      STK_LAST_CHNG_DT,
+						                      STK_FILTER_PRC,
+						                      STK_NET_AMT,
+						                      STK_TXS,
+						                      STK_CHRG_PRC)
+			  VALUES   (SAL0094D_SRV_MEM_QUOT_FILTER.NEXTVAL,
+				            #{srvmemquotfilterid} ,
+                            #{stkid},
+                            #{stkperiod},
+                            #{stklastchangedate},
+                            #{stkfilterprice},
+                            #{stknetamt},
+                            #{stktaxes},
+                            #{stkchargeprice}
+			           )
+			            
+							            
+     </insert>   
+         
+   <resultMap id="mOTSTND_INFO" type="egovMap" ></resultMap>
+   
+    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[  
+            {
+                  call SP_GET_ORD_OTSTND_INFO ( #{ORD_ID} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mOTSTND_INFO})
+            }
+         ]]>
+      </select>   
+      
+      
+      
+       <select id="mActiveQuoOrder" parameterType="Map" resultType="egovMap">
+                 <![CDATA[     
+                       SELECT  S.SRV_MEM_QUOT_ID   ,
+							       S.SRV_SALES_ORD_ID   ,
+							       S.SRV_MEM_QUOT_NO   ,
+							       S.SRV_MEM_PAC_ID   ,
+							       S.SRV_MEM_PAC_NET_AMT   ,
+							       S.SRV_MEM_PAC_TXS   ,
+							       S.SRV_MEM_PAC_AMT   ,
+							       S.SRV_MEM_BS_NET_AMT   ,
+							       S.SRV_MEM_BS_TXS   ,
+							       S.SRV_MEM_BS_AMT   ,
+							       S.SRV_MEM_PV   ,
+							       S.SRV_DUR SRV_DUR  ,
+							       S.SRV_REM SRV_REM  ,
+							       S.SRV_QUOT_VAL_ID   ,
+							       S.SRV_CRT_DT   ,
+							       S.SRV_CRT_USER_ID   ,
+							       S.SRV_QUOT_STUS_ID   ,
+							       S.SRV_UPD_USER_ID   ,
+							       S.SRV_UPD_DT   ,
+							       S.SRV_MEM_BS12_AMT   ,
+							       S.SRV_QUOT_CUST_CNT_ID   ,
+							       S.SRV_MEM_QTY   ,
+							       S.SRV_PROMO_ID   ,
+							       S.SRV_SALES_MEM_ID   ,
+							       S.SRV_MEM_ID   ,
+							       S.SRV_ORD_STK_ID   ,
+							       S.SRV_FREQ   ,
+							       S.SRV_PAC_PROMO_ID   
+							  FROM SAL0093D S
+							         JOIN SAL0001D A   ON S.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+							 WHERE  ( 1 = S.SRV_QUOT_STUS_ID )
+							          AND ( A.SALES_ORD_NO = #{ORD_NO} )
+							          AND ( S.SRV_QUOT_VAL_ID >= SYSDATE ) AND ROWNUM <= 1
+                 ]]>
+      </select>
+      
+  
+  
+      
 </mapper>

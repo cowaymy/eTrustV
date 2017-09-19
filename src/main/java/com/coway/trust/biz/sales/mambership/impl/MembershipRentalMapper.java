@@ -36,34 +36,43 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *  ----------------    ------------    ---------------------------
  *   2014.01.24        표준프레임워크센터          최초 생성
  *
- *      </pre> 
+ *      </pre>
  */
-@Mapper("membershipQuotationMapper")
-public interface MembershipQuotationMapper {
+@Mapper("membershipRentalMapper")
+public interface MembershipRentalMapper {
 	
-	List<EgovMap>   quotationList(Map<String, Object> params);
-	List<EgovMap>   newOListuotationList(Map<String, Object> params);
-	EgovMap    newGetExpDate(Map<String, Object> params);
-	List<EgovMap>   getSrvMemCode(Map<String, Object> params);
-	EgovMap    mPackageInfo(Map<String, Object> params);
-	List<EgovMap>   getPromotionCode(Map<String, Object> params);
-	EgovMap 	  getFilterCharge(Map<String, Object> params);
 	
-	List<EgovMap>   getFilterPromotionCode(Map<String, Object> params);
-	List<EgovMap>   getPromoPricePercent(Map<String, Object> params);
+	List<EgovMap>   selectList(Map<String, Object> params);
 	
-	List<EgovMap>   getOrderCurrentBillMonth(Map<String, Object> params);
+	List<EgovMap> selectPaymentList(Map<String, Object> params);
 	
-	EgovMap  getOderOutsInfo(Map<String, Object> params);
+	List<EgovMap> selectCallLogList(Map<String, Object> params);
 	
-	void  insertQuotationInfo(Map<String, Object> params);
-	 
-	EgovMap  getMembershipFilterChargeList(Map<String, Object> params);
+	List<EgovMap> selectPaymentDetailList(Map<String, Object> params);
 	
-	void  insertSrvMembershipQuot_Filter(Map<String, Object> params);
+	
+	
+	EgovMap   selectCcontactSalesInfo(Map<String, Object> params);
+	
+	EgovMap   selectConfigInfo(Map<String, Object> params);
+	
+	EgovMap   selectPatsetInfo(Map<String, Object> params);
+	
+	EgovMap   selectPayThirdPartyInfo(Map<String, Object> params);
+	
+	EgovMap   selectPayBillingInfo(Map<String, Object> params);
+	
+	EgovMap   selectPayUnbillInfo(Map<String, Object> params);
 
-	EgovMap   getSAL0093D_SEQ(Map<String, Object> params);
+	EgovMap   accServiceContractLedgers(Map<String, Object> params);
+	
 
-	List<EgovMap>   mActiveQuoOrder(Map<String, Object> params);
+	
+	EgovMap selectOrderMailingInfo(Map<String, Object> params);
+	
+	EgovMap usp_SELECT_ServiceContract_LedgerOutstanding(Map<String, Object> params);
+	
+	EgovMap usp_SELECT_ServiceContract_Ledger(Map<String, Object> params);
+	
 	
 }

@@ -42,12 +42,12 @@ public class MembershipController {
 	@Resource(name = "membershipService")
 	private MembershipService membershipService;
 
-	@RequestMapping(value = "/membership.do")
+	@RequestMapping(value = "/membershipList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "sales/membership/membershipList";
-	}
+	} 
 
-	@RequestMapping(value = "/selectMembershipList", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectMembershipList", method = RequestMethod.GET) 
 	public ResponseEntity<List<EgovMap>> selectMembershipList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) {
 
@@ -114,6 +114,30 @@ public class MembershipController {
 		
 		return "sales/membership/inc_membershipOderInfoPop";
 	}
+	
+	
+	@RequestMapping(value = "/inc_orderInfoData", method = RequestMethod.GET)
+	public ResponseEntity<Map>  inc_orderInfoData(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  inc_orderInfoData ");
+		EgovMap orderInfoTab = null;
+		EgovMap contactInfoTab = null;
+		
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		  
+		orderInfoTab = membershipService.selectOderInfoTab(params);
+		contactInfoTab = membershipService.selectInstallAddr(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("orderInfoTab", orderInfoTab);
+		map.put("contactInfoTab", contactInfoTab);
+		
+		return ResponseEntity.ok(map);
+		
+	}
 
 	@RequestMapping(value = "/inc_membershipInfo.do")
 	public String inc_membershipInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
@@ -151,6 +175,26 @@ public class MembershipController {
 	}
 	
 	
+	@RequestMapping(value = "/inc_contactPersonInfoData", method = RequestMethod.GET)
+	public ResponseEntity<Map>  inc_contactPersonInfoData(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		EgovMap membershipInfoTab = null;
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		membershipInfoTab = membershipService.selectMembershipInfoTab(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("contactInfoTab", membershipInfoTab);
+		
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	
+	
 	@RequestMapping(value = "/inc_quotFilterInfo.do")
 	public String inc_quotFilterInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 
@@ -166,7 +210,9 @@ public class MembershipController {
 	}
 
 	
+	
 
+	
 	
 	@RequestMapping(value = "/inc_quotInfo")
 	public String inc_quotInfo(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {

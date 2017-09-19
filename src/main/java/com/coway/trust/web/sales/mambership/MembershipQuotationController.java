@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.mambership.MembershipQuotationService;
+import com.coway.trust.biz.sales.mambership.MembershipService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -42,7 +46,9 @@ public class  MembershipQuotationController {
 	@Resource(name = "membershipQuotationService")
 	private MembershipQuotationService membershipQuotationService;      
 	
-	@RequestMapping(value = "/membershipQuotation.do")
+
+	
+	@RequestMapping(value = "/membershipQuotationList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		logger.debug("in  membershipQuotation.do ");  
@@ -79,6 +85,20 @@ public class  MembershipQuotationController {
 		
 		return "sales/membership/mNewQuotationPop";
 	}
+	
+	@RequestMapping(value = "/mNewQuotationSavePop.do")
+	public String mNewQuotationSavePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  mNewQuotationSavePop.do ");  
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		return "sales/membership/mNewQuotationSavePop";
+	}
+	
+	
 	
 
 
@@ -146,7 +166,7 @@ public class  MembershipQuotationController {
 
 		
 		
-		logger.debug("in  PaymentConfig ");
+		logger.debug("in  getSrvMemCode ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
@@ -184,7 +204,7 @@ public class  MembershipQuotationController {
 
 		
 		
-		logger.debug("in  PaymentConfig ");
+		logger.debug("in  getPromotionCode ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
@@ -197,19 +217,25 @@ public class  MembershipQuotationController {
 	
 
 	@RequestMapping(value = "/getFilterCharge" ,method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>>  getFilterCharge(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+	public ResponseEntity<Map> getFilterCharge(@RequestParam Map<String, Object> params, ModelMap model,
+			HttpServletRequest request) {
 
-		
-		
 		logger.debug("in  getFilterCharge ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		
-		List<EgovMap>  list = membershipQuotationService.getFilterCharge(params);
 		
-		return ResponseEntity.ok(list);
+	 	membershipQuotationService.getFilterCharge(params);
+
+		logger.debug("v_result : {}", params.get("p1"));
+
+		Map<String, Object> map = new HashMap();
+		map.put("outSuts", params.get("p1"));
+
+		return ResponseEntity.ok(map);
 	}
+	
 	
 
 	@RequestMapping(value = "/mFilterChargePop.do")
@@ -224,8 +250,120 @@ public class  MembershipQuotationController {
 		return "sales/membership/mFilterChargePop";
 	}
 	
+	
 
+	@RequestMapping(value = "/getFilterPromotionCode" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  getFilterPromotionCode(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
 
+		
+		
+		logger.debug("in  PaymentConfig ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipQuotationService.getFilterPromotionCode(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+
+	@RequestMapping(value = "/getPromoPricePercent" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  getPromoPricePercent(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+		
+		logger.debug("in  getPromoPricePercent ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipQuotationService.getPromoPricePercent(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+
+	@RequestMapping(value = "/getOrderCurrentBillMonth" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  getOrderCurrentBillMonth(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+		
+		logger.debug("in  getOrderCurrentBillMonth ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipQuotationService.getOrderCurrentBillMonth(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+
+	@RequestMapping(value = "/mActiveQuoOrder" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  mActiveQuoOrder(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+		
+		logger.debug("in  mActiveQuoOrder ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipQuotationService.mActiveQuoOrder(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+
+	@RequestMapping(value = "/getOderOutsInfo" ,method = RequestMethod.GET)
+	public ResponseEntity<Map> getOderOutsInfo(@RequestParam Map<String, Object> params, ModelMap model,
+			HttpServletRequest request) {
+
+		logger.debug("in  getFilterCharge ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		
+	 	membershipQuotationService.getOderOutsInfo(params);
+
+		logger.debug("		====>			" + params.toString());
+		
+		//logger.debug("v_result : {}", params.get("p1"));
+
+		Map<String, Object> map = new HashMap();
+		//map.put("outsInfo", params.get("p1"));
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	
+	@RequestMapping(value = "/mNewQuotationSave" ,method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> mNewQuotationSave(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		logger.debug("in  mNewQuotationSave ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		
+		
+		params.put("srvCreateBy", sessionVO.getUserId());
+		params.put("srvUpdateAt", sessionVO.getUserId());
+		
+		membershipQuotationService.insertQuotationInfo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("New contact successfully saved.");
+		message.setData(params.get("SAL0093D_SEQ"));
+		
+		logger.debug("mNewQuotationSave SAL0093D_SEQ {}", params.get("SAL0093D_SEQ"));
+		
+		return ResponseEntity.ok(message);   
+	}
+	
+	
 
 	
 	
