@@ -44,6 +44,8 @@
         }
 	    else if($('#callPrgm').val() == 'BILLING_RENTAL_UNBILL') {
             fn_orderInfo(ordNo, ordId);
+        } else if($('#callPrgm').val() == 'PRODUCT_LOST') {
+        	fn_callbackOrder(ordId);
         }
 	}
 	
