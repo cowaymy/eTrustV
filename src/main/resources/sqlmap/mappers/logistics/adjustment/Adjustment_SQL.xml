@@ -63,8 +63,12 @@
                 TO_CHAR(CRT_DATE,'DD/MM/YYYY') CRT_DATE,
                 CTGRY_TYPE
             FROM  LOG0071M
-            <if test="adjNo !=null and adjNo !=''">
-                WHERE INVNTRY_NO = #{adjNo}
+                 WHERE  1=1
+            <if test="srch_adjno !=null and srch_adjno !=''">
+                AND INVNTRY_NO LIKE  '%'||#{srch_adjno}||'%'
+            </if>
+            <if test="srch_bsadjdate !=null and srch_bsadjdate !=''">
+                AND BASE_DT = TO_CHAR(TO_DATE(#{srch_bsadjdate},'DD/MM/YYYY'),'YYYYMMDD')
             </if>
              ORDER BY INVNTRY_NO
     </select>   
@@ -461,6 +465,14 @@
 			            AND INVNTRY_NO=#{adjNo}
 			            AND LOC_ID=#{adjLocation}
       </update>
+      <select id="selectAdjustmentConfirmCheck" parameterType="Map" resultType="EgovMap">
+        SELECT
+                 SAVE_YN
+        FROM LOG0072M
+        WHERE 1=1
+                        AND INVNTRY_NO=#{adjNo}
+                        AND LOC_ID=#{adjLocation}
+      </select>
       <select id="selectAdjustmentApproval" parameterType="Map" resultType="EgovMap">
       SELECT
 			INVNTRY_LOC_ID,
@@ -560,4 +572,16 @@
                 AND SEQ             =#{seq}
                <!--  AND ITM_ID         =#{itmId} -->
       </update> 
+      <resultMap type="EgovMap" id="RETURNCODE" />
+      <resultMap type="EgovMap" id="RETURNMSG" />
+      <select id="updateStock" statementType="CALLABLE" parameterType="Map">
+       { CALL SP_LOGISTIC_ADJUSTMENT_COMPLET
+                (#{invntryNo}
+                ,#{program}
+                ,#{loginId}
+                ,#{rmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=RETURNMSG}
+                ,#{rcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=RETURNCODE}
+                )
+       }
+      </select>
 </mapper>

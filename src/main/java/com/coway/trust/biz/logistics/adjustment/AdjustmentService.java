@@ -51,4 +51,8 @@ public interface AdjustmentService {
 
 	int selectInsertSerialCount(Map<String, Object> params);
 
+	void updateStock(Map<String, Object> setmap);
+
+	List<EgovMap> selectAdjustmentConfirmCheck(Map<String, Object> params);
+
 }

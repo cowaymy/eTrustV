@@ -234,13 +234,13 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 				Map<String, Object> setMap = new HashMap();
 				logger.debug("invntryLocId : {} ", getMap.get("invntryLocId"));
 				logger.debug("serialChk : {} ", getMap.get("serialChk"));
-				setMap.put("invntryLocId", getMap.get("invntryLocId"));
 				setMap.put("stkAdNo", getMap.get("Stock Audit No"));
-				setMap.put("locId", getMap.get("locId"));
-				setMap.put("seq", getMap.get("seq"));
-				setMap.put("itmId", getMap.get("itmId"));
-				setMap.put("serialChk", getMap.get("serialChk"));
-				setMap.put("cntQty", getMap.get("cntQty"));
+				setMap.put("invntryLocId", getMap.get("Detial No"));
+				setMap.put("locId", getMap.get("Location ID"));
+				setMap.put("seq", getMap.get("Seq."));
+				setMap.put("itmId", getMap.get("Item Id"));
+				setMap.put("serialChk", getMap.get("Serial Check"));
+				setMap.put("cntQty", getMap.get("Count Qty"));
 				if ("".equals(getMap.get("serialChk")) || null == getMap.get("serialChk")) {
 					adjustmentMapper.insertAdjustmentLocCount(setMap);
 				}
@@ -296,5 +296,18 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		params.put("cntQty", cnt);
 		adjustmentMapper.insertAdjustmentLocCount(params);
 		return cnt;
+	}
+
+	@Override
+	public void updateStock(Map<String, Object> setmap) {
+		// TODO Auto-generated method stub
+		adjustmentMapper.updateStock(setmap);
+
+	}
+
+	@Override
+	public List<EgovMap> selectAdjustmentConfirmCheck(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return adjustmentMapper.selectAdjustmentConfirmCheck(params);
 	}
 }

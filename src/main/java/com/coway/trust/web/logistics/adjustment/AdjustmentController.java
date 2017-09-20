@@ -96,7 +96,7 @@ public class AdjustmentController {
 	}
 
 	@RequestMapping(value = "/AdjustmentApproval.do", method = RequestMethod.POST)
-	public String AdjustmentConfirm(@RequestParam Map<String, Object> params, Model model, HttpServletRequest request,
+	public String AdjustmentApproval(@RequestParam Map<String, Object> params, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		String rAdjcode = String.valueOf(params.get("rAdjcode"));
 		// String rAdjlocId = String.valueOf(params.get("rAdjlocId"));
@@ -328,6 +328,18 @@ public class AdjustmentController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/adjustmentConfirmCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> adjustmentConfirmCheck(@RequestParam Map<String, Object> params) {
+		logger.debug("adjNo : {}", params.get("adjNo"));
+		logger.debug("adjLocation : {}", params.get("adjLocation"));
+		List<EgovMap> list = adjustmentService.selectAdjustmentConfirmCheck(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/adjustmentConfirm.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> adjustmentConfirm(@RequestParam Map<String, Object> params) {
 		logger.debug("adjNo : {}", params.get("adjNo"));
@@ -468,6 +480,9 @@ public class AdjustmentController {
 				"logitics" + File.separator + "stock_Audit", AppConstants.UPLOAD_MAX_FILE_SIZE);
 
 		String invntryNo = (String) params.get("adjNo");
+		int loginId = sessionVO.getUserId();
+		// TODO USER OPERATING SETTING
+		String program = "TEST";
 		logger.debug("param01 : {}", invntryNo);
 		logger.debug("list.size : {}", list.size());
 
@@ -480,7 +495,10 @@ public class AdjustmentController {
 		setmap.put("physicalName", list.get(0).getPhysicalName());
 		setmap.put("serverPath", list.get(0).getServerPath());
 		setmap.put("invntryNo", invntryNo);
+		setmap.put("loginId", loginId);
+		setmap.put("program", program);
 		adjustmentService.updateDoc(setmap);
+		adjustmentService.updateStock(setmap);
 		return ResponseEntity.ok(list);
 	}
 }
