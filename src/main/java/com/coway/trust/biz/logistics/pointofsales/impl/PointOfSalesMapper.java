@@ -39,5 +39,6 @@ public interface PointOfSalesMapper {
 	
 	void insertStockBooking(Map<String, Object> params);
 	
+	List<EgovMap> selectMaterialDocList(Map<String, Object> params);
 
 }
