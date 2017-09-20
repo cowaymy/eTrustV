@@ -33,11 +33,6 @@ var Common = {
             _params = _jsonObj ? JSON.stringify(_jsonObj) : '';
         }
 
-        // 메뉴코드 add....
-        if(FormUtil.isNotEmpty($("#CURRENT_MENU_CODE").val())){
-            _params = $.extend(_params, {"_menuCode" : $("#CURRENT_MENU_CODE").val()});
-        }
-
         var option = {
             async: true,
             isShowLoader : true
