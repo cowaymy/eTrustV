@@ -128,7 +128,7 @@ function fn_clickViewDetail(){
     var orderId = $("#orderId").val();
     console.log("viewDetail , orderID : " + orderId);
     if(orderId != '' && orderId != undefined){
-       Common.popupDiv("/sales/order/orderDetailPop.do?salesOrderId="+orderId, {callPrgm : "EARLY_TERMINATION_BILLING", indicator : "SearchTrialNo"});
+    	 Common.popupDiv("/sales/order/orderDetailPop.do", {salesOrderId : orderId});
     }else{
         Common.alert("SELECT ORDER FIRST");
     }

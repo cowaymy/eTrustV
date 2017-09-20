@@ -104,7 +104,7 @@ function fn_createBills(){
 function fn_clickViewDetail(){
 	var orderId = $("#orderId").val();
 	if(orderId != '' && orderId != undefined){
-	   Common.popupDiv("/sales/order/orderDetailPop.do?salesOrderId="+orderId, {callPrgm : "PRODUCT_LOST", indicator : "SearchTrialNo"});
+	   Common.popupDiv("/sales/order/orderDetailPop.do", {salesOrderId : orderId});
     }else{
     	Common.alert("SELECT ORDER FIRST");
     }
