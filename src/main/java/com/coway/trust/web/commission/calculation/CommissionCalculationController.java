@@ -851,7 +851,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0006T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0006T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -859,7 +858,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0007T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0007T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -867,7 +865,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0008T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0008T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -875,7 +872,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0009T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0009T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -883,7 +879,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0010T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0010T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -891,7 +886,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0011T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0011T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -899,7 +893,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0012T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0012T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -907,7 +900,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0013T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0013T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -915,7 +907,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0014T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0014T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -923,7 +914,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0015T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0015T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -939,7 +929,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0017T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0017T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -947,7 +936,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0018T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0018T(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -955,7 +943,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0019T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0019T(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -963,7 +950,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0020T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0020T(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -971,7 +957,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0021T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0021T(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -979,7 +964,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0022T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0022T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -987,7 +971,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0023T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0023T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -995,7 +978,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0024T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0024T(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -1003,7 +985,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0025T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0025T(params);
 		return ResponseEntity.ok(cnt);
 	}	
@@ -1011,7 +992,6 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> cntCMM0026T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
-		params.put("useYnCombo", null);
 		int cnt = commissionCalculationService.cntCMM0026T(params);
 		return ResponseEntity.ok(cnt);
 	}	

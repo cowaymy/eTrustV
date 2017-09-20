@@ -33,7 +33,7 @@
 	                console.log("성공.");
 	                console.log("data : " + result);
 	                AUIGrid.setGridData(myGridID_26T, result);
-	                AUIGrid.addCheckedRowsByValue(myGridID_26T, "isExclude", "1");
+	                AUIGrid.addCheckedRowsByValue(myGridID_26T, "isexclude", "1");
 	            });
             //}
         });
@@ -143,7 +143,7 @@
         visible : false,
         editable : false
     },{
-        dataField : "isExclude",
+        dataField : "isexclude",
         headerText : "IS EXCLUDE",
         style : "my-column",
         visible : false,
@@ -250,7 +250,7 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0026T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">EMPLYMENT ID<span class="must">*</span></th>
+                        <th scope="row">EMPLY ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="emplyId_26T" name="emplyId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>

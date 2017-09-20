@@ -408,7 +408,7 @@
             <if test="useYnCombo != null and useYnCombo != ''">
               AND  T1.IS_EXCLUDE = #{useYnCombo}
             </if>
-            <if test="useYnCombo != null and useYnCombo == 0">
+            <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
                 OR T1.IS_EXCLUDE IS NULL
             </if>
     </select>
@@ -418,7 +418,7 @@
           T1.EMPLY_LEV,T1.EMPLY_LEV_AGE,T1.WORKING_MONTH,T1.SPONS_CODE,T1.EMPLY_STUS_ID,
           T1.EMPLY_STUS_CODE,T1.EMPLY_LEV_RANK,nvl(T1.EMPLY_VEH,'0') emplyVeh,T1.EMPLY_BIZ_TYPE_ID, 
           nvl(T1.MANGR_CODE,'0') mangrCode, nvl(T1.EMPLY_CODE,'0') emplyCode, nvl(T1.PAY_STUS,'0') payStus, nvl(T1.IS_HSPTLZ,'0') isHsptlz,
-          T1.RUN_ID,T1.COMM_TASK_ID taskId,T1.IS_EXCLUDE
+          T1.RUN_ID,T1.COMM_TASK_ID taskId,nvl(T1.IS_EXCLUDE,'0') isExclude
         FROM CMM0006T T1 JOIN ORG0001D T2 
                 ON T1.EMPLY_ID = T2.MEM_ID
             JOIN SYS0013M T3
@@ -433,7 +433,7 @@
             <if test="useYnCombo != null and useYnCombo != ''">
               AND  T1.IS_EXCLUDE = #{useYnCombo}
             </if>
-            <if test="useYnCombo != null and useYnCombo == 0">
+            <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
                 OR T1.IS_EXCLUDE IS NULL
             </if>
          ORDER BY T1.RUN_ID
@@ -459,14 +459,14 @@
             <if test="useYnCombo != null and useYnCombo != ''">
               AND  T1.IS_EXCLUDE = #{useYnCombo} 
             </if>
-            <if test="useYnCombo != null and useYnCombo == 0">
+            <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
                 OR T1.IS_EXCLUDE IS NULL
             </if>
     </select>
     <select id="selectCMM0007T" parameterType="Map" resultType="EgovMap">
         SELECT 
             T1.ORD_ID, T2.MEM_ID,T3.CODE,  T1.ORD_TYPE_ID, T1.PRODUCT_ID, T1.UNIT_VALU,
-            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE
+            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, nvl(T1.IS_EXCLUDE,'0') isExclude
 		FROM CMM0007T T1 JOIN ORG0001D T2 
 		        ON T1.SALES_EMPLY_ID = T2.MEM_ID
 		    JOIN SYS0013M T3
@@ -484,7 +484,7 @@
 		    <if test="useYnCombo != null and useYnCombo != ''">
 		      AND  T1.IS_EXCLUDE = #{useYnCombo} 
 		    </if>
-		    <if test="useYnCombo != null and useYnCombo == 0">
+		    <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
                 OR T1.IS_EXCLUDE IS NULL
             </if>
          ORDER BY T1.RUN_ID
@@ -501,14 +501,14 @@
             <if test="useYnCombo != null and useYnCombo != ''">
               AND IS_EXCLUDE = #{useYnCombo}
             </if>
-            <if test="useYnCombo != null and useYnCombo == 0">
+            <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
                 OR IS_EXCLUDE IS NULL
             </if>
     </select>
     <select id="selectCMM0008T" parameterType="Map" resultType="EgovMap">
 		 SELECT 
 		    BS_SCHDUL_ID, SVC_PERSON_ID, BS_STUS_ID, CRDIT_POINT,
-		    RUN_ID,TASK_ID,IS_EXCLUDE
+		    RUN_ID,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
 		FROM CMM0008T
 		WHERE TASK_ID = #{taskId}  
 		    <if test="svcPersonId != null and svcPersonId != ''">
@@ -517,7 +517,7 @@
 			<if test="useYnCombo != null and useYnCombo != ''">
 	          AND IS_EXCLUDE = #{useYnCombo}
 	        </if>
-	        <if test="useYnCombo != null and useYnCombo == 0">
+	        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
                 OR IS_EXCLUDE IS NULL
             </if>
 		ORDER BY RUN_ID
@@ -540,14 +540,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
                 OR IS_EXCLUDE IS NULL
             </if>
     </select>
     <select id="selectCMM0009T" parameterType="Map" resultType="EgovMap">
 		SELECT 
 		    SVC_PERSON_ID, HAPY_CALL_ID, ORD_ID, CUST_RESPNS_ID, PNCTULT
-		   APPRAN, XPLNT, QLY, OVERAL,RUN_ID,TASK_ID,IS_EXCLUDE
+		   APPRAN, XPLNT, QLY, OVERAL,RUN_ID,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
 		FROM CMM0009T
 		WHERE TASK_ID = #{taskId} 
 		<if test="svcPersonId != null and svcPersonId != ''"> 
@@ -562,7 +562,7 @@
 		<if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
 		ORDER BY RUN_ID
@@ -582,14 +582,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0010T" parameterType="Map" resultType="EgovMap">
         SELECT 
             SALES_PERSON_ID, MBRSH_ID, ORD_ID, MBRSH_AMT,RUN_ID,
-            TASK_ID,IS_EXCLUDE
+            TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0010T
         WHERE TASK_ID =#{taskId} 
         <if test="salesPersonId != null and salesPersonId != ''">
@@ -601,7 +601,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
          ORDER BY RUN_ID
@@ -621,7 +621,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
@@ -629,7 +629,7 @@
         SELECT 
              RCORD_ID, ORD_ID , SALES_PERSON_ID, INSTLMT, PV, 
              PRC ,ORD_TYPE_ID,BILL_RUN_ID runId,TASK_ID,BILL_RUN_ID runId
-             ,IS_EXCLUDE
+             ,nvl(IS_EXCLUDE,'0') isExclude
          FROM CMM0011T
          WHERE TASK_ID = #{taskId} 
          <if test="salesPersonId != null and salesPersonId != ''">
@@ -641,7 +641,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
          ORDER BY BILL_RUN_ID
@@ -664,7 +664,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
@@ -672,7 +672,7 @@
         SELECT 
 	        CLCTR_ID, ORD_ID, TRGET_AMT, COLCT_AMT,
 	        CUST_RACE_ID , RENT_PAY_MODE_ID, CUST_ID,RUN_ID,TASK_ID
-	        ,IS_EXCLUDE
+	        ,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0012T
         WHERE TASK_ID = #{taskId}
         <if test="clctrId != null and clctrId != ''">
@@ -687,7 +687,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
          ORDER BY RUN_ID
@@ -704,14 +704,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0013T" parameterType="Map" resultType="EgovMap">
         SELECT 
             CLCTR_ID, ORD_ID, STRTG_OS, CLOS_OS, IS_DROP,
-            RUN_ID,TASK_ID,IS_EXCLUDE
+            RUN_ID,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0013T
         WHERE TASK_ID = #{taskId}
         <if test="ordId != null and ordId != ''">
@@ -720,7 +720,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
          ORDER BY RUN_ID
@@ -737,13 +737,13 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0014T" parameterType="Map" resultType="EgovMap">
 		SELECT 
-		    EMPLY_ID, SPONS_ID, INSTLMT,RUN_ID,TASK_ID,IS_EXCLUDE
+		    EMPLY_ID, SPONS_ID, INSTLMT,RUN_ID,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
 		FROM CMM0014T
 		WHERE TASK_ID = #{taskId}
 		<if test="emplyId != null and emplyId != ''">
@@ -752,7 +752,7 @@
 		<if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
 		ORDER BY RUN_ID
@@ -772,13 +772,13 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0015T" parameterType="Map" resultType="EgovMap">
 		SELECT 
-		    PAY_ID, ORD_ID, CLCTR_ID, AMT,RUN_ID,TASK_ID,IS_EXCLUDE
+		    PAY_ID, ORD_ID, CLCTR_ID, AMT,RUN_ID,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
 		FROM CMM0015T
 		WHERE TASK_ID = #{taskId}
 		<if test="payId != null and payId != ''"> 
@@ -790,7 +790,7 @@
 		<if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY RUN_ID
@@ -835,14 +835,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0017T" parameterType="Map" resultType="EgovMap">
         SELECT 
             ORD_ID, TRGET_AMT, COLCT_AMT, MEM_CODE, HM_CODE, 
-            SM_CODE, GM_CODE, RCM_YEAR, RCM_MONTH,RUN_ID,TASK_ID,IS_EXCLUDE
+            SM_CODE, GM_CODE, RCM_YEAR, RCM_MONTH,RUN_ID,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0017T
         WHERE TASK_ID = #{taskId}
         <if test="ordId != null and ordId != ''">
@@ -851,7 +851,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY RUN_ID
@@ -865,7 +865,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
          <if test="ordId != null and ordId != ''">
@@ -878,13 +878,13 @@
     <select id="selectCMM0018T" parameterType="Map" resultType="EgovMap">
         SELECT 
           TASK_ID ,ORD_ID, INST_ID ,STOCK_ID ,APP_TYPE_ID ,INST_PERSON_ID , 
-          PRC, RUN_ID, IS_EXCLUDE
+          PRC, RUN_ID, nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0018T
         WHERE TASK_ID= #{taskId}
         <if test="useYnCombo != null and useYnCombo != ''">
           AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
          <if test="ordId != null and ordId != ''">
@@ -913,14 +913,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0019T" parameterType="Map" resultType="EgovMap">
         SELECT 
             ORD_ID, BSR_ID, STOCK_ID, APP_TYPE_ID, BS_PERSON_ID, PRC,RUN_ID,
-            TASK_ID,IS_EXCLUDE
+            TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0019T
         WHERE TASK_ID = #{taskId}
         <if test="ordId != null and ordId != ''">
@@ -935,7 +935,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY RUN_ID
@@ -958,14 +958,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if> 
     </select>
     <select id="selectCMM0020T" parameterType="Map" resultType="EgovMap">
        SELECT 
             ORD_ID, AS_ENTRY_ID, ASR_ID, STOCK_ID, APP_TYPE_ID, 
-            AS_PERSON_ID, PRC,RUN_ID,TASK_ID,IS_EXCLUDE
+            AS_PERSON_ID, PRC,RUN_ID,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0020T
         WHERE TASK_ID = #{taskId}
         <if test="ordId != null and ordId != ''">
@@ -980,7 +980,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY RUN_ID
@@ -1000,14 +1000,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0021T" parameterType="Map" resultType="EgovMap">
         SELECT 
 			ORD_ID, RET_ID, STOCK_ID, APP_TYPE_ID, RET_PERSON_ID,
-            nvl(PRC,0) prc, TASK_ID,RUN_ID,IS_EXCLUDE
+            nvl(PRC,0) prc, TASK_ID,RUN_ID,nvl(IS_EXCLUDE,'0') isExclude
 		FROM CMM0021T
 		WHERE TASK_ID = #{taskId}
 		<if test="ordId != null and ordId != ''">
@@ -1019,7 +1019,7 @@
 		<if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY RUN_ID
@@ -1039,14 +1039,14 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
     <select id="selectCMM0022T" parameterType="Map" resultType="EgovMap">
         SELECT 
             ORD_ID, SRV_CNTRCT_ID, SRV_CNTRCT_NO, SALES_PERSON_ID, INSTLMT, 
-            PV, PRC, ORD_TYPE_ID,BILL_RUN_ID runId,TASK_ID,IS_EXCLUDE
+            PV, PRC, ORD_TYPE_ID,BILL_RUN_ID runId,TASK_ID,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0022T
         WHERE TASK_ID = #{taskId}
         <if test="ordId != null and ordId != ''">
@@ -1058,7 +1058,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY BILL_RUN_ID
@@ -1078,7 +1078,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
@@ -1086,7 +1086,7 @@
        SELECT 
             ORD_ID ,TRGET_AMT, COLCT_AMT, MEM_CODE, HM_CODE, 
             SM_CODE, GM_CODE ,RCM_YEAR ,RCM_MONTH, SRV_CNTRCT_ID,RUN_ID,TASK_ID
-            ,IS_EXCLUDE
+            ,nvl(IS_EXCLUDE,'0') isExclude
         FROM CMM0023T
         WHERE TASK_ID = #{taskId}
         <if test="ordId != null and ordId != ''">
@@ -1098,7 +1098,7 @@
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY RUN_ID
@@ -1116,7 +1116,7 @@
     <select id="selectCMM0024T" parameterType="Map" resultType="EgovMap">
         SELECT 
 			EMPLY_ID, EMPLY_CODE, PRFOM_PRCNT, PRFOMNC_RANK, TOT_EMPLY, 
-			CUMLT_DSTRIB, PAYOUT_PRCNT, PAYOUT_AMT,TASK_ID,IS_EXCLUDE
+			CUMLT_DSTRIB, PAYOUT_PRCNT, PAYOUT_AMT,TASK_ID
 		FROM CMM0024T
 		WHERE TASK_ID=#{taskId}
 		<if test="emplyId != null and emplyId != ''">
@@ -1160,7 +1160,7 @@
         <if test="emplyId != null and emplyId != ''">
           AND EMPLY_ID LIKE '%'|| #{emplyId} ||'%' 
         </if>
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0 ">
              OR IS_EXCLUDE IS NULL
          </if>
     </select>
@@ -1168,7 +1168,7 @@
        SELECT 
 		EMPLY_ID, WEEK_1, WEEK_2, WEEK_3, WEEK_4,
 		WEEK_5, TOT_LV, WEEKLY_LV, MONTH_LV, EMPLY_CODE,
-		nvl(WEEKLY_LV_R,'0') weeklyLvR, MONTH_LV_R, IS_EXCLUDE, RUN_ID, TASK_ID
+		nvl(WEEKLY_LV_R,'0') weeklyLvR, MONTH_LV_R, nvl(IS_EXCLUDE,'0') isExclude, RUN_ID, TASK_ID
 		FROM CMM0056M
 		WHERE TASK_ID=#{taskId}
 		<if test="emplyId != null and emplyId != ''">
@@ -1177,7 +1177,7 @@
 		<if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
-        <if test="useYnCombo != null and useYnCombo == 0">
+        <if test="useYnCombo != null and useYnCombo != '' and useYnCombo == 0">
              OR IS_EXCLUDE IS NULL
          </if>
         ORDER BY RUN_ID

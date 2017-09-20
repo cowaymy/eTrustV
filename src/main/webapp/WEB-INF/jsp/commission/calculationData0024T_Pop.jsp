@@ -27,7 +27,6 @@
                 console.log("성공.");
                 console.log("data : " + result);
                 AUIGrid.setGridData(myGridID_24T, result);
-                AUIGrid.addCheckedRowsByValue(myGridID_24T, "isExclude", "1");
             });
         });
         
@@ -78,12 +77,6 @@
 	        dataField : "taskId",
 	        headerText : "TASK ID",
 	        style : "my-column",
-	        editable : false
-	    },{
-	        dataField : "isExclude",
-	        headerText : "IS EXCLUDE",
-	        style : "my-column",
-	        visible : false,
 	        editable : false
 	    }];
 	    // 그리드 속성 설정
