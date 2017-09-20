@@ -29,36 +29,8 @@
 <script type="text/javaScript" language="javascript">
 var listGrid;
 var subGrid;
+var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}];
 
-
-/* var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"        ,width:120    ,height:30 , visible:false},
-                     {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"posNo"      ,headerText:"Others Request No"      ,width:120    ,height:30 ,visible:true},
-                     {dataField:"posItmQty"      ,headerText:"Others Request Item"                      ,width:120    ,height:30,    visible:true            },
-                     {dataField:""     ,headerText:"Request Type" ,width:120    ,height:30 , visible:true},
-                     {dataField:"codeName1"        ,headerText:"Request Type Text"            ,width:120    ,height:30 , visible:true},
-                     {dataField:"posDt"        ,headerText:"Request Required Date"       ,width:120    ,height:30 ,   visible:true      },
-                     {dataField:"posCrtDt"        ,headerText:"Request Create Date"               ,width:120    ,height:30 , visible:true},
-                     {dataField:"whLocCode"        ,headerText:"Location"               ,width:120    ,height:30,     visible:true           },
-                     {dataField:"name"       ,headerText:"Requstor"               ,width:120    ,height:30,   visible:true             },
-                     {dataField:"stkCode"        ,headerText:"Material code"         ,width:120    ,height:30 ,  visible:true              },
-                     {dataField:"stkDesc"      ,headerText:"Material code Name"       ,width:120    ,height:30 ,  visible:true             },
-                     {dataField:"serialChk"       ,headerText:"Serial"               ,width:120    ,height:30 , visible:true},
-                     {dataField:""     ,headerText:"Request Qty"               ,width:120    ,height:30 , visible:true},
-                     {dataField:""   ,headerText:"Unit of Measure"               ,width:120    ,height:30, visible:true},
-                     {dataField:""       ,headerText:""                 ,width:120    ,height:30 , visible:false},
-                     {dataField:""     ,headerText:""                 ,width:120    ,height:30 , visible:false},
-                     {dataField:""   ,headerText:""                 ,width:120    ,height:30, visible:false },
-                     {dataField:""        ,headerText:""               ,width:120    ,height:30 , visible:false},
-                     {dataField:""      ,headerText:""               ,width:120    ,height:30 ,visible:false},
-                     {dataField:""     ,headerText:""                 ,width:120    ,height:30 ,visible:false },
-                     {dataField:""       ,headerText:""                      ,width:120    ,height:30 , visible:false},
-                     {dataField:""      ,headerText:""                ,width:120    ,height:30 ,visible:false},
-                     {dataField:""     ,headerText:""                ,width:120    ,height:30  ,visible:false },
-                     {dataField:""          ,headerText:""             ,width:120    ,height:30 , visible:false},
-                     {dataField:""        ,headerText:""             ,width:120    ,height:30   ,visible:false } ];
-                      */
-                      
  var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"reqstno"      ,headerText:"Others Request No"      ,width:120    ,height:30                },
@@ -85,10 +57,48 @@ var subGrid;
                       {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30,  visible:false  },
                       {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];                     
+                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];     
+                      
+                      
+     var mtrcolumnLayout = [
+                            {dataField:"matrlDocNo", headerText:"Matrl_Doc_No" ,width:120    ,height:30},
+                            {dataField:"matrlDocItm", headerText:"MatrlDocItm" ,width:120    ,height:30},
+                            {dataField:"invntryMovType", headerText:"Move_type" ,width:120    ,height:30},                     
+                            {dataField:"movtype", headerText:"Move_text" ,width:120    ,height:30},                            
+                            {dataField:"reqStorgNm", headerText:"ReqLoc" ,width:150    ,height:30},
+                            {dataField:"matrlNo", headerText:"Matrl_Code" ,width:120    ,height:30},
+                            {dataField:"stkDesc", headerText:"MatrlName" ,width:120    ,height:30},
+                            {dataField:"debtCrditIndict", headerText:"Debit/Credit" ,width:120    ,height:30
+                              ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                                     
+                                    var retStr = "";
+  
+                                    for(var i=0,len=decedata.length; i<len; i++) {
 
-//var reqop = {editable : false,usePaging : false ,showStateColumn : false};
+                                        if(decedata[i]["code"] == value) {
+                                            retStr = decedata[i]["codeName"];
+                                            break;
+                                        }
+                                    }
+                                    return retStr == "" ? value : retStr;
+                                },editRenderer : 
+                                {
+                                   type : "ComboBoxRenderer",
+                                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                   list : decedata,
+                                   keyField : "code",
+                                   valueField : "code"
+                                }	
+                          
+                            },
+                            {dataField:"autoCrtItm", headerText:"" ,width:120    ,height:30},
+                            {dataField:"qty", headerText:"Qty" ,width:120    ,height:30},
+                            {dataField:"trantype", headerText:"tran_Type" ,width:120    ,height:30},
+                            {dataField:"postingdate", headerText:"PostingDate" ,width:120    ,height:30},                            
+                            {dataField:"codeName", headerText:"Uom" ,width:120    ,height:30},             
+               ];                   
+                                    
+var options = {usePaging : true,useGroupingPanel : false};
 var gridoptions = {
 		showStateColumn : false , 
 		editable : false, 
@@ -148,13 +158,17 @@ $(document).ready(function(){
     
     //listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, subgridpros);
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);    
-    
-    
-    $("#sub_grid_wrap").hide(); 
+    mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", mtrcolumnLayout ,"", options);
+    $("#mdc_grid").hide(); 
 
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
-        $("#sub_grid_wrap").hide(); 
+        $("#mdc_grid").hide(); 
+
+        if (event.dataField == "reqstno"){
+        	SearchMaterialDocListAjax(event.value)
+        }
+        
 
     });
     
@@ -182,10 +196,8 @@ $(document).ready(function(){
             }
         }
     });  
+ });
     
-    
-    
-});
 function f_onchange(obj, value, tag, selvalue){
 	var reqNo= value;
 	var paramdata = { groupCode : reqNo};
@@ -327,7 +339,6 @@ function giSave() {
 	}
 }
 
-
  function valiedcheck(v) {
 	var ReqType;
 	var Location;
@@ -381,19 +392,17 @@ if(v=='search'){
 } 
 
 
-// function SearchDeliveryListAjax( reqno ) {
-//     var url = "/logistics/stockMovement/StockMovementRequestDeliveryList.do";
-//     var param = "reqstno="+reqno;
-//     //$("#sub_grid_wrap").show(); 
-//     $("#mdc_grid").show(); 
+function SearchMaterialDocListAjax( reqno ) {
+    var url = "/logistics/pos/MaterialDocumentList.do";
+    var param = "reqstno="+reqno;
+    $("#mdc_grid").show(); 
     
-//     Common.ajax("GET" , url , param , function(data){
-//         AUIGrid.setGridData(subGrid, data.data);
-//         AUIGrid.resize(mdcGrid,1620,150); 
-//         AUIGrid.setGridData(mdcGrid, data.data2);
-//         console.log(data.data2);
-//     });
-// }
+    Common.ajax("GET" , url , param , function(data){
+        AUIGrid.resize(mdcGrid,1620,150); 
+        AUIGrid.setGridData(mdcGrid, data.data2);
+        console.log(data.data2);
+    });
+}
 
 function f_getTtype(g , v){
     var rData = new Array();
@@ -435,7 +444,7 @@ function f_getTtype(g , v){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Point Of Sales List</h2>
+<h2>New-Other GI/GR List</h2>
 </aside><!-- title_line end -->
 
 
@@ -576,22 +585,21 @@ function f_getTtype(g , v){
         </section>
     </div>
 
-<!--     <section class="tap_wrap">tap_wrap start -->
-<!--         <ul class="tap_type1"> -->
-<!--             <li><a href="#" class="on">Material Document Info</a></li> -->
-<!--             <li><a href="#">Compliance Remark</a></li> -->
-<!--         </ul> -->
+    <section class="tap_wrap"><!-- tap_wrap start -->
+        <ul class="tap_type1">
+            <li><a href="#" class="on">Compliance Remark</a></li>
+        </ul>
         
-<!--         <article class="tap_area">tap_area start -->
+        <article class="tap_area"><!-- tap_area start -->
         
-<!--             <article class="grid_wrap">grid_wrap start -->
-<!--                   <div id="sub_grid_wrap" class="mt10" style="height:150px"></div> -->
-<!--             </article>grid_wrap end -->
+            <article class="grid_wrap"><!-- grid_wrap start -->
+                  <div id="mdc_grid" class="mt10" style="height:150px"></div>
+            </article><!-- grid_wrap end -->
         
-<!--         </article>tap_area end -->
+        </article><!-- tap_area end -->
             
         
-<!--     </section>tap_wrap end -->
+    </section><!-- tap_wrap end -->
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
