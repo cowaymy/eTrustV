@@ -2,18 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<style type="text/css">
-
-/* 커스텀 칼럼 스타일 정의 */
-.my-column {
-	text-align: left;
-	margin-top: -20px;
-}
-</style>
-
 <script type="text/javaScript">
-	$(function() {	
-	});
 
 	//Defalut MultiCombo
 	function fn_multiCombo() {
@@ -30,8 +19,6 @@
 
 	//Start AUIGrid
 	$(document).ready(function() {
-		  
-		//change orgCombo List		
 		
 		// AUIGrid 그리드를 생성합니다.
 
@@ -56,7 +43,7 @@
 				 $("#year").val(searchDt.substring(3));
 				 $("#month").val(searchDt.substring(0,2));
 			}			
-			Common.ajax("GET", "/commission/calculation/selectWeeklyList", $("#searchForm").serialize(), function(result) {
+			Common.ajax("GET", "/commission/system/selectWeeklyList", $("#searchForm").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
 				AUIGrid.setGridData(myGridID, result);
@@ -78,7 +65,7 @@
 	      AUIGrid.addRow(myGridID, item, "first");
 	    });
 	    
-	  //Rule Book Item save
+	  //Weekly save
         $("#save").click(function() {
             if (validation()) {
                 Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData);
@@ -88,7 +75,7 @@
 	});//Ready
 	
 	 function fn_saveGridData(){
-	        Common.ajax("POST", "/commission/calculation/saveCommissionWeeklyGrid.do", GridCommon.getEditData(myGridID), function(result) {
+	        Common.ajax("POST", "/commission/system/saveCommissionWeeklyGrid.do", GridCommon.getEditData(myGridID), function(result) {
 	            // 공통 메세지 영역에 메세지 표시.
 	            Common.setMsg("<spring:message code='sys.msg.success'/>");
 	            $("#search").trigger("click");
@@ -263,9 +250,9 @@
 <section id="content">
 	<!-- content start -->
 	<ul class="path">
-		<li><img src="image/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order list</li>
+		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+		<li>Commission</li>
+		<li>Management</li>
 	</ul>
 
 	<aside class="title_line">

@@ -522,8 +522,90 @@
       <if test="searchDt != null and searchDt != ''">
       AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
     </if>
-		ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER
-    
+		ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER    
   </select>
+  
+  <!-- search Weekly List -->
+    <select id="selectWeeklyList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+        SELECT
+          SEQ ,
+          YEAR,
+          MONTH, 
+          WEEKS, 
+          TO_CHAR(START_DT,'YYYY/MM/DD') START_DT,         
+          TO_CHAR(END_DT,'YYYY/MM/DD') END_DT, 
+          CRT_USER_ID, 
+          CRT_DT,
+          UPD_USER_ID,
+          UPD_DT
+          FROM CMM0055M     
+       WHERE 1=1
+           ]]>
+         <if test="year != null and month != ''">
+             AND YEAR=#{year} AND MONTH=#{month}
+        </if>
+          <![CDATA[       
+       ORDER BY WEEKS
+    ]]>
+    </select>   
+    
+  <!-- add coommission weekly management -->
+  <insert id="addWeeklyCommissionGrid" parameterType="Map">
+    INSERT INTO CMM0055M (
+      SEQ,
+      YEAR,
+      MONTH, 
+      WEEKS, 
+      START_DT, 
+      END_DT, 
+      CRT_USER_ID, 
+      CRT_DT
+    )
+    VALUES (
+    CMM0055M_SEQ.NEXTVAL ,
+    #{year},
+    #{month},  
+    #{weeks},
+    #{startDt},
+    #{endDt},
+    #{crtUserId},
+    SYSDATE
+    )
+  </insert>
+  
+    <!-- update coommission weekly management :  -->
+  <update id="udtWeeklyCommissionGrid">  
+  MERGE INTO CMM0055M T0
+   USING (SELECT #{year} AS YEAR , #{month} AS MONTH , #{weeks} AS WEEKS FROM DUAL)T1
+   ON ( T0.YEAR = T1.YEAR AND T0.MONTH = T1.MONTH AND T0.WEEKS = T1.WEEKS)
+   WHEN MATCHED THEN 
+   UPDATE 
+        SET    START_DT= #{startDt}
+              , END_DT= #{endDt}
+              , UPD_USER_ID=#{updUserId}
+              , UPD_DT=SYSDATE
+   WHEN NOT MATCHED THEN
+    INSERT (
+      SEQ,
+      YEAR,
+      MONTH, 
+      WEEKS, 
+      START_DT, 
+      END_DT, 
+      CRT_USER_ID, 
+      CRT_DT
+    )
+    VALUES (
+    CMM0055M_SEQ.NEXTVAL ,
+    #{year},
+    #{month},  
+    #{weeks},
+    #{startDt},
+    #{endDt},
+    #{crtUserId},
+    SYSDATE
+    )
+  </update>
   
 </mapper>

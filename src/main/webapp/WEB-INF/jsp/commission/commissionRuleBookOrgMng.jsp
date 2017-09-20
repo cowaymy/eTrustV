@@ -12,13 +12,6 @@
 </style>
 
 <script type="text/javaScript">
-	$(function() {
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-		// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-		// doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo'); 
-	});
 
 	//Defalut MultiCombo
 	function fn_multiCombo() {
@@ -430,9 +423,9 @@
 <section id="content">
 	<!-- content start -->
 	<ul class="path">
-		<li><img src="image/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order list</li>
+		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+		<li>Commission</li>
+		<li>Management</li>
 	</ul>
 
 	<aside class="title_line">
