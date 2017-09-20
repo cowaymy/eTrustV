@@ -12,13 +12,6 @@
 </style>
 
 <script type="text/javaScript">
-	$(function() {
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-		// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-		// doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo'); 
-	});
 
 	//Defalut MultiCombo
 	function fn_multiCombo() {
@@ -29,9 +22,6 @@
 		});
 	}
 	
-	
-	
-	  
 	// Make AUIGrid 
 	var myGridID;
 	var orgList = new Array(); //그룹 리스트
@@ -118,6 +108,8 @@
             labelText : "SEARCH",
             onclick : function(rowIndex, columnIndex, value, item) {
             	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 5));
+            	$("#prdNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
+            	$("#prdDec").val(AUIGrid.getCellValue(myGridID, rowIndex, 1));
                 Common.popupDiv("/commission/calculation/calBasicDataPop.do", $("#basicForm").serializeJSON());
             }
         },
@@ -154,7 +146,7 @@
 <section id="content">
 	<!-- content start -->
 	<ul class="path">
-		<li><img src="image/path_home.gif" alt="Home" /></li>
+		<li><img src="${pageContext.request.contextPath}/resources/images/path_home.gif" alt="Home" /></li>
 		<li>Sales</li>
 		<li>Order list</li>
 	</ul>
@@ -181,6 +173,11 @@
 	<section class="search_table">
 		<!-- search_table start -->
 		<form id="basicForm" action="" method="post">
+			<input type="hidden" name="procedureNm" id="procedureNm"/>
+			<input type="hidden" name="codeId" id="codeId"/>
+			<input type="hidden" name="prdNm" id="prdNm"/>
+			<input type="hidden" name="prdDec" id="prdDec"/>
+			
 			<table class="type1">
 				<!-- table start -->
 				<caption>search table</caption>
@@ -196,30 +193,30 @@
 				</colgroup>
 				<tbody>
 					<tr>
-					    <th scope="row">Month/Year</th>
-                        <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
+						<th scope="row">Month/Year</th>
+						<td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
 						<th scope="row">ORG Group</th>
 						<td>
 							<label><input type="radio" name="use_yn" checked/><span>Actual</span></label>
-	                        <label><input type="radio" name="use_yn" /><span>Simulation</span></label></td>
-	                    <th scope="row">Status</th>
-                        <td><span id="status"></span></td>
-                        <th scope="row">Execute Date</th>
-                        <td><span id="exDate"></span></td>
+							<label><input type="radio" name="use_yn" /><span>Simulation</span></label>
+						</td>
+						<th scope="row">Status</th>
+						<td><span id="status"></span></td>
+						<th scope="row">Execute Date</th>
+						<td><span id="exDate"></span></td>
 					</tr>
 				</tbody>
 			</table>
 			<!-- table end -->
-	       <input type="hidden" name="procedureNm" id="procedureNm"/>
-	       <input type="hidden" name="codeId" id="codeId"/>
-	       
+		     
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
 				<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 			</article>
 			<!-- grid_wrap end -->
-        </form>
-	</section>
+		</form>
+    </section>
+	
 	<aside class="bottom_msg_box">
 		<!-- bottom_msg_box start -->
 		<p></p>

@@ -12,14 +12,6 @@
 </style>
 
 <script type="text/javaScript">
-	$(function() {
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-		// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-		// doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo'); 
-	});
-
 	//Defalut MultiCombo
 	function fn_multiCombo() {
 		$('#cmbCategory').change(function() {
@@ -28,9 +20,6 @@
 			width : '100%'
 		});
 	}
-	
-	
-	
 	  
 	// Make AUIGrid 
 	var myGridID;
@@ -45,10 +34,6 @@
 
 	//Start AUIGrid
 	$(document).ready(function() {
-		//change orgCombo List
-        $("#orgRgCombo").change(function() {
-            $("#ItemGrCd").val($(this).find("option[value='" + $(this).val() + "']").text());
-        });
 		
 		// AUIGrid 그리드를 생성합니다.
 		//myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
@@ -117,11 +102,6 @@
 
 	//event management
 	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditEnd") {
-			
-		} else if (event.type == "cellEditBegin") {
-			
-		}
 	}
 	// 행 추가 이벤트 핸들러
     function auiAddRowHandler(event) {
@@ -129,18 +109,6 @@
     // 행 삭제 이벤트 핸들러
     function auiRemoveRowHandler(event) {
     }
-
-	//그리드 그룹 리스트
-	function getOrgCdData(val) {
-		var retStr = "";
-		$.each(orgGridCdList, function(key, value) {
-			var id = value.id;
-			if (id == val) {
-				retStr = value.orgSeq + "," + value.orgGrCd + "," + value.id + "," + value.value + "," + value.cdDs;
-			}
-		});
-		return retStr;
-	}
 
 	// 아이템 AUIGrid 칼럼 설정
 	function createAUIGrid() {
@@ -183,6 +151,8 @@
 	            onclick : function(rowIndex, columnIndex, value, item) {
 	            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 8));
 	            	$("#code").val(AUIGrid.getCellValue(myGridID, rowIndex, 9));
+	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
+	                $("#prdDec").val(AUIGrid.getCellValue(myGridID, rowIndex, 1));
 	                Common.popupDiv("/commission/calculation/calCommDataPop.do", $("#searchForm").serializeJSON());
 	            }
 	        },
@@ -282,7 +252,7 @@
 <section id="content">
 	<!-- content start -->
 	<ul class="path">
-		<li><img src="image/path_home.gif" alt="Home" /></li>
+		<li><img src="${pageContext.request.contextPath}/resources/images/path_home.gif" alt="Home" /></li>
 		<li>Sales</li>
 		<li>Order list</li>
 	</ul>
@@ -306,8 +276,10 @@
 	<section class="search_table">
 		<!-- search_table start -->
 		<form id="searchForm" action="" method="post">
-      <input type="hidden" id="ItemGrCd" name="ItemGrCd"/>
-      <input type="hidden" id="dataDt" name="dataDt" value="${searchDt }"/>
+	      <input type="hidden" id="dataDt" name="dataDt" value="${searchDt }"/>
+	      <input type="hidden" name="prdNm" id="prdNm"/>
+          <input type="hidden" name="prdDec" id="prdDec"/>
+          
 			<table class="type1">
 				<!-- table start -->
 				<caption>search table</caption>
@@ -326,8 +298,7 @@
 					    <th scope="row">Month/Year</th>
                         <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
 						<th scope="row">ORG Group</th>
-						<td><select id="orgRgCombo" name="orgRgCombo" style="width: 100px;">
-								<option value=""></option>
+						<td><select id="orgRgCombo" name="ItemGrCd" style="width: 100px;">
 								<c:forEach var="list" items="${orgGrList }">
 									<option value="${list.code}">${list.code}</option>
 								</c:forEach>

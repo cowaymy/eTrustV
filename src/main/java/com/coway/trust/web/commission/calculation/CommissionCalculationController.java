@@ -449,16 +449,14 @@ public class CommissionCalculationController {
 		List<EgovMap> orgGrList = commissionCalculationService.selectOrgGrList(params);
 		model.addAttribute("orgGrList", orgGrList);
 				
-		model.addAttribute("searchDt_pop", params.get("searchDt"));
 		
 		model.addAttribute("codeId", params.get("codeId"));
-		
-		String code = (params.get("code").toString()).substring(0, 7);
-		params.put("code", code);
-		model.addAttribute("code", code);
+		model.addAttribute("prdNm", params.get("prdNm"));
+		model.addAttribute("prdDec", params.get("prdDec"));
+		model.addAttribute("code", params.get("code"));
+		model.addAttribute("searchDt_pop", params.get("searchDt"));
 		
 		String popName= "";
-		System.out.println(params.get("code"));
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01) || (params.get("code")).equals(CommissionConstants.COMIS_CTM_P01) 
 				|| (params.get("code")).equals(CommissionConstants.COMIS_CTW_P01)){
 			popName = "calculationData7001CT_Pop";
@@ -804,15 +802,12 @@ public class CommissionCalculationController {
 		List<EgovMap> orgGrList = commissionCalculationService.selectOrgGrList(params);
 		model.addAttribute("orgGrList", orgGrList);
 		
-		model.addAttribute("searchDt_pop", params.get("searchDt"));
-		
-		
 		String code = params.get("codeId").toString();
 		params.put("code", code);
 		model.addAttribute("code", params.get("code"));
-		
-		System.out.println(" ** code : "+params.get("code"));
-		
+		model.addAttribute("prdNm", params.get("prdNm"));
+		model.addAttribute("prdDec", params.get("prdDec"));
+		model.addAttribute("searchDt_pop", params.get("searchDt"));
 		
 		String popName= "";
 		if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P01)){

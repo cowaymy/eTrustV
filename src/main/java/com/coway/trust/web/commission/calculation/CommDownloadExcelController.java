@@ -107,19 +107,19 @@ public class CommDownloadExcelController {
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02) || (params.get("code")).equals(CommissionConstants.COMIS_CTM_P02) 
 				|| (params.get("code")).equals(CommissionConstants.COMIS_CTW_P02)){
 			params.put("codeGruop", CommissionConstants.COMIS_CT);
-			getHeadData = getDataHead7002(params);
+			getHeadData = getDataHead7002CT(params);
 			getBodyDataList = getDataList7002CT(params);
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P02) || (params.get("code")).equals(CommissionConstants.COMIS_CDG_P02) 
 				|| (params.get("code")).equals(CommissionConstants.COMIS_CDM_P02)|| (params.get("code")).equals(CommissionConstants.COMIS_CDN_P02)
 				|| (params.get("code")).equals(CommissionConstants.COMIS_CDS_P02)){
 			params.put("codeGruop", CommissionConstants.COMIS_CD);
-			getHeadData = getDataHead7002(params);
+			getHeadData = getDataHead7002CD(params);
 			getBodyDataList = getDataList7002CD(params);
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P02) || (params.get("code")).equals(CommissionConstants.COMIS_HPG_P02) 
 				|| (params.get("code")).equals(CommissionConstants.COMIS_HPM_P02)|| (params.get("code")).equals(CommissionConstants.COMIS_HPS_P02)
 				|| (params.get("code")).equals(CommissionConstants.COMIS_HPT_P02) || (params.get("code")).equals(CommissionConstants.COMIS_HPB_P02)){
 			params.put("codeGruop", CommissionConstants.COMIS_HP);
-			getHeadData = getDataHead7002(params);
+			getHeadData = getDataHead7002HP(params);
 			getBodyDataList = getDataList7002HP(params);
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P01)){
 			getHeadData = getDataHead06T(params);
@@ -166,6 +166,9 @@ public class CommDownloadExcelController {
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P014)){
 			getHeadData = getDataHead25T(params);
 			getBodyDataList = getDataList25T(params);
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P015)){
+			getHeadData = getDataHead26T(params);
+			getBodyDataList = getDataList26T(params);
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTB_P01)){
 			getHeadData = getDataHead18T(params);
 			getBodyDataList = getDataList18T(params);
@@ -195,20 +198,20 @@ public class CommDownloadExcelController {
 		head.add("runId");
 		head.add("emplyId");
 		head.add("memType");
-		head.add("v1"); 
-		head.add("v2"); 
-		head.add("v3"); 
-		head.add("v4");
-		head.add("v5");
-		head.add("v6"); 
-		head.add("v7"); 
-		head.add("v8"); 
-		head.add("v9"); 
-		head.add("v10"); 
-		head.add("v11"); 
-		head.add("v12");
-		head.add("v13"); 
-		head.add("v14");
+		head.add("AS Count"); 
+		head.add("AS Sum CP"); 
+		head.add("BS Count"); 
+		head.add("BS Sum CP");
+		head.add("Ins Count ");
+		head.add("Ins Sum CP"); 
+		head.add("PR Count"); 
+		head.add("PR Sum CP"); 
+		head.add("Total Point "); 
+		head.add("Pro Percent"); 
+		head.add("Per Percent "); 
+		head.add("Pro Factor (30%)");
+		head.add("Per Factor (70%) "); 
+		head.add("Sum Factor");
 		
 		return head;
 	}
@@ -419,49 +422,101 @@ public class CommDownloadExcelController {
 		return mGroupList;
 	}
 	
-	private ArrayList<String> getDataHead7002(Map<String, Object> params){
+	private ArrayList<String> getDataHead7002CT(Map<String, Object> params){
 		ArrayList<String> head = new ArrayList<String>();
 		head.add("taskId");
 		head.add("runId");
 		head.add("emplyId");
 		head.add("memType");
-		head.add("R1"); head.add("R2");
-		head.add("R3"); head.add("R4");
+		head.add("Gross Comm"); 
+		head.add("Rental Comm");
+		head.add("Srv Mem Comm"); 
+		head.add("Basic and Allowance");
+		head.add("Performance Incentive");
+		head.add("Adjustment"); 
+		head.add("CFF + Reward");
+		head.add("Seniority");
+
+		return head;
+	}
+	private ArrayList<String> getDataHead7002CD(Map<String, Object> params){
+		ArrayList<String> head = new ArrayList<String>();
+		head.add("taskId");
+		head.add("runId");
+		head.add("emplyId");
+		head.add("memType");
+		head.add("Per_Amt"); 
+		head.add("R2");
+		head.add("R3"); 
+		head.add("Bonus_Amt");
 		head.add("R5");
-		if(!(CommissionConstants.COMIS_HP).equals(params.get("codeGruop"))){
-			head.add("R6"); head.add("R7");
-		}
-		if((CommissionConstants.COMIS_HP).equals(params.get("codeGruop"))){
-			head.add("R13"); head.add("R18"); 
-			head.add("R19"); head.add("R20"); 
-			head.add("R21"); head.add("R22");
-			head.add("R25");
-			head.add("R24"); head.add("R28");
-			head.add("R29"); head.add("R30");
-			head.add("R31"); head.add("R32");
-			head.add("R33"); head.add("R34");
-			head.add("R35"); head.add("R36");
-			head.add("R39"); head.add("R40");
-			head.add("R41"); head.add("R42"); 
-			head.add("R99");
-		}
-		if((CommissionConstants.COMIS_CD).equals(params.get("codeGruop"))){
-			head.add("R8"); head.add("R10");
-			head.add("R11"); head.add("R13");
-			head.add("R18"); head.add("R19");
-			head.add("R20"); head.add("R21");
-			head.add("R22"); head.add("R23");
-			head.add("R24"); head.add("R26");
-			head.add("R27"); head.add("R28");
-			head.add("R29"); head.add("R30");
-			head.add("R31"); head.add("R32");
-			head.add("R33"); head.add("R34");
-			head.add("R35"); head.add("R36");
-			head.add("R38"); head.add("R39");
-			head.add("R40"); head.add("R41");
-			head.add("R42"); head.add("R99");
-			
-		}
+		head.add("Collect_Amt"); 
+		head.add("HP_Amt");
+		head.add("Transport_Amt"); 
+		head.add("NewCody_Amt");
+		head.add("Introduction_Fees"); 
+		head.add("Membership_Amt");
+		head.add("R18"); 
+		head.add("R19");
+		head.add("R20"); 
+		head.add("R21");
+		head.add("R22"); 
+		head.add("R23");
+		head.add("R24"); 
+		head.add("Telephone_Deduct");
+		head.add("Staff_Purchase"); 
+		head.add("R28");
+		head.add("SHI_Amt");
+		head.add("R30");
+		head.add("R31"); 
+		head.add("R32");
+		head.add("R33"); 
+		head.add("RentalMembership_Amt");
+		head.add("RentalMembership_SHI_Amt"); 
+		head.add("R36");
+		head.add("R38"); 
+		head.add("R39");
+		head.add("R40"); 
+		head.add("R41");
+		head.add("R42");
+		head.add("Adjustment");
+		
+		return head;
+	}
+	private ArrayList<String> getDataHead7002HP(Map<String, Object> params){
+		ArrayList<String> head = new ArrayList<String>();
+		head.add("taskId");
+		head.add("runId");
+		head.add("emplyId");
+		head.add("memType");
+		head.add("PI");
+		head.add("R2");
+		head.add("R3"); 
+		head.add("Bonus");
+		head.add("PA");
+		head.add("Membership_Amt"); 
+		head.add("R18"); 
+		head.add("R19"); 
+		head.add("R20"); 
+		head.add("R21"); 
+		head.add("R22");
+		head.add("TBB_Amt");
+		head.add("R24"); 
+		head.add("Incentive");
+		head.add("SHI_Amt"); 
+		head.add("R30");
+		head.add("R31"); 
+		head.add("R32");
+		head.add("R33");
+		head.add("RentalMembership_Amt");
+		head.add("RentalMembership_SHI_Amt"); 
+		head.add("R36");
+		head.add("R39"); 
+		head.add("R40");
+		head.add("R41"); 
+		head.add("R42"); 
+		head.add("Adjust_Amt");
+		
 		return head;
 	}
 	
@@ -489,6 +544,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("r5").toString());
 			lst.add(dataList.get(i).get("r6").toString());
 			lst.add(dataList.get(i).get("r7").toString());
+			lst.add(dataList.get(i).get("r8").toString());
 			mGroupList.add(lst);
 		}
 		return mGroupList;
@@ -1265,6 +1321,51 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("promtId").toString());
 			lst.add(dataList.get(i).get("paidMonth").toString());
 			lst.add(dataList.get(i).get("paidAmt").toString());
+			lst.add(dataList.get(i).get("runId").toString());
+			lst.add(params.get("taskId").toString());
+			mGroupList.add(lst);
+		}
+		return mGroupList;
+	}
+	private ArrayList<String> getDataHead26T(Map<String, Object> params){
+		ArrayList<String> head = new ArrayList<String>();
+		
+		head.add("EMPLY ID");
+		head.add("WEEK_1");
+		head.add("WEEK_2");
+		head.add("WEEK_3");
+		head.add("WEEK_4");
+		head.add("WEEK_5");
+		head.add("TOT_LV");
+		head.add("WEEKLY_LV");
+		head.add("MONTH_LV");
+		head.add("EMPLY_CODE");
+		head.add("WEEKLY_LV_R");
+		head.add("MONTH_LV_R");
+		head.add("IS_EXCLUDE");
+		head.add("RUN ID");
+		head.add("TASK ID");
+		
+		return head;
+	}
+	private ArrayList<ArrayList<String>> getDataList26T(Map<String, Object> params){
+		List<EgovMap> dataList = commissionCalculationService.selectCMM0026T(params);
+		ArrayList<ArrayList<String>> mGroupList = new ArrayList<ArrayList<String>>();
+		for(int i =0 ; i< dataList.size() ; i++){
+			ArrayList<String> lst = new ArrayList<String>();
+			lst.add(dataList.get(i).get("emplyId").toString());
+			lst.add(dataList.get(i).get("week1").toString());
+			lst.add(dataList.get(i).get("week2").toString());
+			lst.add(dataList.get(i).get("week3").toString());
+			lst.add(dataList.get(i).get("week4").toString());
+			lst.add(dataList.get(i).get("week5").toString());
+			lst.add(dataList.get(i).get("totLv").toString());
+			lst.add(dataList.get(i).get("weeklyLv").toString());
+			lst.add(dataList.get(i).get("monthLv").toString());
+			lst.add(dataList.get(i).get("emplyCode").toString());
+			lst.add(dataList.get(i).get("weeklylvr").toString());
+			lst.add(dataList.get(i).get("monthLvR").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);

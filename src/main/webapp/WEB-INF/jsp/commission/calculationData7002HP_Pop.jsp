@@ -12,16 +12,8 @@
 </style>
 
 <script type="text/javaScript">
-	$(function() {
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-		// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-		// doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo'); 
-	});
-	
-	
 	var myGridID_7002HP;
+	
 	$(document).ready(function() {
 		createAUIGrid();
 		// cellClick event.
@@ -236,7 +228,9 @@
 	
 	<section class="pop_body"><!-- pop_body start -->
 	   <aside class="title_line"><!-- title_line start -->
-          <h2>Commission calculation HP Data Collection</h2>
+          <h2>Commission calculation HP Data Collection
+          <br>
+          ${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
 		<form id="form7002HP">
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>

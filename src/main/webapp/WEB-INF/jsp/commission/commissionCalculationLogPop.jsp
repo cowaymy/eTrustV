@@ -12,16 +12,8 @@
 </style>
 
 <script type="text/javaScript">
-	$(function() {
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-		//doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-		// f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-		// doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo'); 
-	});
-	
-	
 	var myGridID2;
+	
 	$(document).ready(function() {
 		createAUIGrid();
 		// cellClick event.

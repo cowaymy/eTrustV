@@ -12,16 +12,8 @@
 </style>
 
 <script type="text/javaScript">
-    $(function() {
-        //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
-        //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
-        //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
-        // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-        // doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'fn_multiCombo'); 
-    });
-    
-    
     var myGridID_21T;
+    
     $(document).ready(function() {
         createAUIGrid();
         // cellClick event.
@@ -40,26 +32,29 @@
         });
         
         $("#save_21T").click(function(){  
-        	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_21T);
-            var check     = AUIGrid.getCheckedRowItems(myGridID_21T);
-            var formList = $("#form_21").serializeJSON();       //폼 데이터
-            
-            //param data array
-            var data = {};
-            
-            data.check   = check;
-            data.checked = check;
-            data.form = formList;
-            
-            Common.ajax("POST", "/commission/calculation/updatePrdData_21T.do", data , function(result) {
-                // 공통 메세지 영역에 메세지 표시.
-                Common.setMsg("<spring:message code='sys.msg.success'/>");
-                $("#search_21T").trigger("click");
-            });
+        	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
+        	
         });
         
     });
-    
+    function fn_saveExculde(){
+    	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_21T);
+        var check     = AUIGrid.getCheckedRowItems(myGridID_21T);
+        var formList = $("#form_21").serializeJSON();       //폼 데이터
+        
+        //param data array
+        var data = {};
+        
+        data.check   = check;
+        data.checked = check;
+        data.form = formList;
+        
+        Common.ajax("POST", "/commission/calculation/updatePrdData_21T.do", data , function(result) {
+            // 공통 메세지 영역에 메세지 표시.
+            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            $("#search_21T").trigger("click");
+        });
+    }
    function createAUIGrid() {
     var columnLayout3 = [ {
         dataField : "ordId",
@@ -147,9 +142,10 @@
 		       var code = $("#code_21T").val();
 		       var ordId = $("#ordId_21T").val();
 		       var retId = $("#retId_21T").val();
+		       var useYnCombo = $("#useYnCombo_21T").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&retId="+retId+"'/>");
+		       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&retId="+retId+"&useYnCombo="+useYnCombo+"'/>");
 	       }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
@@ -174,7 +170,9 @@
     
     <section class="pop_body"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission calculation Data Collection</h2>
+          <h2>Commission calculation Data Collection
+          <br>
+          ${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_21">
            <input type="hidden" name="code" id="code_21T" value="${code}"/>

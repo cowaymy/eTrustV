@@ -53,27 +53,30 @@
             	 Common.alert("<spring:message code='sys.msg.necessary' arguments='order Id' htmlEscape='false'/>");
                  return false;
              }else{ */
-	        	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_12T);
-	            var check     = AUIGrid.getCheckedRowItems(myGridID_12T);
-	            var formList = $("#form_12T").serializeJSON();       //폼 데이터
-	            
-	            //param data array
-	            var data = {};
-	            
-	            data.check   = check;
-	            data.checked = check;
-	            data.form = formList;
-	            
-	            Common.ajax("POST", "/commission/calculation/updatePrdData_12T.do", data , function(result) {
-	                // 공통 메세지 영역에 메세지 표시.
-	                Common.setMsg("<spring:message code='sys.msg.success'/>");
-	                $("#search_12T").trigger("click");
-	            });
+            	 Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExculde);
+	        	
              //}
         });
         
     });
-    
+    function fn_saveExculde(){
+    	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_12T);
+        var check     = AUIGrid.getCheckedRowItems(myGridID_12T);
+        var formList = $("#form_12T").serializeJSON();       //폼 데이터
+        
+        //param data array
+        var data = {};
+        
+        data.check   = check;
+        data.checked = check;
+        data.form = formList;
+        
+        Common.ajax("POST", "/commission/calculation/updatePrdData_12T.do", data , function(result) {
+            // 공통 메세지 영역에 메세지 표시.
+            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            $("#search_12T").trigger("click");
+        });
+    }
    function createAUIGrid() {
     var columnLayout3 = [ {
         dataField : "clctrId",
@@ -175,9 +178,10 @@
 			       var clctrId = $("#clctrId_12T").val();
 			       var custId = $("#custId_12T").val();
 			       var ordId = $("#ordId_12T").val();
+			       var useYnCombo = $("#useYnCombo_12T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&clctrId="+clctrId+"&custId="+custId+"&ordId="+ordId+"'/>");
+			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&clctrId="+clctrId+"&custId="+custId+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"'/>");
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
@@ -203,7 +207,9 @@
     
     <section class="pop_body"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission Basic Data Collection</h2>
+          <h2>Commission Basic Data Collection
+          <br>
+          ${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_12T">
            <input type="hidden" name="code" id="code_12T" value="${code}"/>
