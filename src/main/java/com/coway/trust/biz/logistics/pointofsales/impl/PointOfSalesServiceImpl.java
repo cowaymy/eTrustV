@@ -212,5 +212,12 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		PointOfSalesMapper.insertStockBooking(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectMaterialDocList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return PointOfSalesMapper.selectMaterialDocList(params);
+	}
+	
+	
 
 }
