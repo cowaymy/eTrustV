@@ -27,5 +27,7 @@ public interface PointOfSalesService {
 	
 	void insertStockBooking(Map<String, Object> params);
 	
+	List<EgovMap> selectMaterialDocList(Map<String, Object> params);
+	
 	
 }
