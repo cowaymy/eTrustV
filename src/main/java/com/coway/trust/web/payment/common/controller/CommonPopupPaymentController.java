@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,20 @@ public class CommonPopupPaymentController {
 		return "payment/common/searchInvoicePop";
 	}
 	
+	/******************************************************
+	 * Payment - Rental Membership Search
+	 *****************************************************/	
+	/**
+	 * Payment - Rental Membership Search Pop-up 초기화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initCommonServiceContractSearchPop.do")
+	public String initCommonServiceContractSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/common/serviceContractSearchPop";
+	}
+	
 	/**
 	 * Payment - Invoice Search Pop-up 리스트 조회
 	 * @param 
@@ -71,6 +87,28 @@ public class CommonPopupPaymentController {
 		
 		// 조회.
 		List<EgovMap> resultList = commonPopupPaymentService.selectCommonSearchInvoicePop(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Payment - Rental Membership Search Pop-up 리스트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectCommonContractSearchPop.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCommonContractSearchPop(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+			, @RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		String[] contractStatusType = request.getParameterValues("contractStatusType");
+		params.put("contractStatusType", contractStatusType);
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = commonPopupPaymentService.selectCommonContractSearchPop(params);
     
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);

@@ -1,5 +1,6 @@
 package com.coway.trust.biz.payment.billing.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.billing.service.AdvRentalBillingService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.crystaldecisions.reports.queryengine.Session;
+import com.ibm.icu.text.DecimalFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -64,9 +66,9 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
 	public int createTaxesBills(List<Object> formList, List<Object> taskBillList, SessionVO sessionVO) {
 		
 		int userId = sessionVO.getUserId();
-    	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
     	int taskCount = 0;
-    	double taskTotalAmount = 0;
+    	int taskTotalAmount = 0;
+    	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
     	Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
     	int newTaskId = advRentalBillingMapper.selectBillTaskLogMax();
 		
@@ -88,9 +90,12 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
                 }else if (String.valueOf(hm.get("billType")).equals("RPF")){
                 	taskOrderMap.put("taskBillTypeId", 161);
                 }
+
+                int billAmt;
+                billAmt      =  hm.get("billAmt") != null ? (int)hm.get("billAmt") : 0;
                 
                 taskOrderMap.put("taskBillUpdateBy", userId);
-                taskOrderMap.put("taskBillAmt", String.valueOf(hm.get("billAmt")));
+                taskOrderMap.put("taskBillAmt", new DecimalFormat("0.00").format(billAmt));
                 taskOrderMap.put("taskBillInstNo", String.valueOf(hm.get("installment")));
                 taskOrderMap.put("taskBillBatchNo", 0);
                 taskOrderMap.put("taskBillGroupId", 0);
@@ -112,7 +117,7 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
         	Calendar calendar = Calendar.getInstance();
         	taskLogMap.put("taskType", "ADV BILL");
         	taskLogMap.put("billingYear", calendar.get(Calendar.YEAR));
-        	taskLogMap.put("billingMonth", calendar.get(Calendar.MONTH));
+        	taskLogMap.put("billingMonth", calendar.get(Calendar.MONTH)+1);
         	taskLogMap.put("taskTotalAmount", taskTotalAmount);
         	taskLogMap.put("taskCount", taskCount);
         	taskLogMap.put("status", "SUCCESS");
@@ -129,7 +134,7 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
     	if(newTaskId > 0){
     		
     		Map<String, Object> confMap = new HashMap<String, Object>();
-			confMap.put("taskId", newTaskId);
+			confMap.put("taskId", newTaskId+1);
 			confMap.put("userId", userId);
 			advRentalBillingMapper.confirmTaxesAdvanceBill(confMap);
     		value=Integer.parseInt(String.valueOf(confMap.get("p1")));

@@ -36,5 +36,17 @@ public class CommonPopupPaymentServiceImpl extends EgovAbstractServiceImpl imple
 		return commonPopupPaymentMapper.selectCommonSearchInvoicePop(params);
 	}
 	
+	/**
+	 * Payment - Rental Membership Search Pop-up 리스트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectCommonContractSearchPop(Map<String, Object> params) {
+		return commonPopupPaymentMapper.selectCommonContractSearchPop(params);
+	}
+	
 	
 }

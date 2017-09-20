@@ -66,12 +66,12 @@ var gridPros3 = {
         showRowCheckColumn : true,
         // 전체 체크박스 표시 설정
         showRowAllCheckBox : true,
-        softRemoveRowMode:false,
-        independentAllCheckBox : true
+        softRemoveRowMode:false
+        //independentAllCheckBox : true
        
 };
 
-// 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
+
 $(document).ready(function(){
 	
 	
@@ -212,47 +212,45 @@ var billingTargetLayout = [
                              }]; 
 
 	function fn_orderSearch(){
-	    Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "BILLING_RENTAL_UNBILL", indicator : "SearchTrialNo"});
+		Common.popupDiv('/payment/common/initCommonServiceContractSearchPop.do', null, null , true ,'_serviceContractForm');
 	}
 	
-	function fn_orderInfo(ordNo, ordId){
-		orderList(ordNo, ordId);
-	}
-	
-	function orderList(ordNo, ordId){
-	
-	    Common.ajax("GET","/payment/selectCustBillOrderNoList.do", {"salesOrdId" : ordId}, function(result){
-	        console.log(result);
-	        
-	        $('#orderId').val(ordId);
-	        $('#orderNo').val(ordNo);
-	        AUIGrid.destroy(orderListGridId);
-	        orderListGridId = GridCommon.createAUIGrid("grid_wrap", orderListLayout,"",gridPros);
-	        AUIGrid.setGridData(orderListGridId, result.data.orderList);
-	        
-	    });
-	}
-	
-	function fn_createEvent(objId, eventType){
-	    var e = jQuery.Event(eventType);
-	    $('#'+objId).trigger(e);
-	}
-	
-	function fn_billingschedule(ordId){
-		Common.ajax("GET","/payment/selectUnbilledRentalBillingSchedule.do", {"salesOrdId" : ordId}, function(result){
+    function fn_createBillsPopClose(){
+        
+        $('#createBillsPop').hide();
+        $('#invoiceRemark').val("");
+        $('#remark').val("");
+    }
+    
+    function fn_callOrderData(srvCntrctId, salesOrdId){
+        
+    	Common.ajax("GET","/payment/selectCustBillOrderNoList_M.do", {"srvCntrctId" : srvCntrctId}, function(result){
+            console.log(result);
+            
+            $('#orderId').val(salesOrdId);
+            $('#srvCntrctId').val(srvCntrctId);
+            AUIGrid.destroy(orderListGridId);
+            orderListGridId = GridCommon.createAUIGrid("grid_wrap", orderListLayout,"",gridPros);
+            AUIGrid.setGridData(orderListGridId, result.data.orderList);
+            
+        });
+    }
+    
+    function fn_billingschedule(ordId){
+        Common.ajax("GET","/payment/selectRentalMembershipBillingSchedule.do", {"salesOrdId" : ordId}, function(result){
             console.log(result);
             
             AUIGrid.destroy(billingscheduleGridId);
             AUIGrid.destroy(billingTargetGridId);
             billingscheduleGridId = GridCommon.createAUIGrid("grid_wrap2", billingscheduleLayout,"",gridPros2);
             billingTargetGridId = GridCommon.createAUIGrid("grid_wrap3", billingTargetLayout,"",gridPros3);
-            AUIGrid.setGridData(billingscheduleGridId, result.data.unBillingScheduleList);
+            AUIGrid.setGridData(billingscheduleGridId, result.data.rentalMembershipScheduleList);
             
             AUIGrid.bind(billingscheduleGridId, "rowAllChkClick", function( event ) {
                 if(event.checked) {
                     // name 의 값들 얻기
                     var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "billingStus");
-                    // Anna 제거하기
+                    
                     uniqueValues.splice(uniqueValues.indexOf("Completed"),1);
                     AUIGrid.setCheckedRowsByValue(event.pid, "billingStus", uniqueValues);
                 } else {
@@ -262,31 +260,28 @@ var billingTargetLayout = [
             
         });
     }
-	
-	function fn_createBillsPopClose(){
-		
-		$('#createBillsPop').hide();
-		$('#invoiceRemark').val("");
-		$('#remark').val("");
+    
+    function fn_createEvent(objId, eventType){
+        var e = jQuery.Event(eventType);
+        $('#'+objId).trigger(e);
     }
-	
-	
+    
 	// //btn clickevent
 	$(function(){
 		
 		$("#btnAddToBillTarget").click(function(){
 			
 			var now = new Date();
-			var year= now.getFullYear();
-	        var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
-	        var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
-			
-	        if(currentDay >= 26 || currentDay == 1){
-	            
-	            Common.alert("Unable to perform this between 26 and 1 next month");
-	            return;
-	            
-	        }
+            var year= now.getFullYear();
+            var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
+            var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
+            
+            if(currentDay >= 26 || currentDay == 1){
+                
+                Common.alert("Unable to perform this between 26 and 1 next month");
+                return;
+                
+            }
 			
 	        var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
 	        var bool = true;
@@ -342,16 +337,18 @@ var billingTargetLayout = [
 		
 		$("#createBills").click(function(){
 			$('#createBillsPop').show();
-			$('#invoiceRemark').val("");
-			$('#remark').val("");
 			 
         });
 		
 		$("#btnSave").click(function(){
+			
+			
 			var orderId = $("#orderId").val();
 	        var orderNo = $("#orderNo").val();
 	        var remark = $("#remark").val();
 	        var invoiceRemark = $("#invoiceRemark").val();
+	        var srvCntrctId = $("#srvCntrctId").val();
+	        
 	        var data = {};
 	        var billList = AUIGrid.getGridData(billingTargetGridId);
 	        
@@ -361,34 +358,34 @@ var billingTargetLayout = [
 	            return;
 	        }
 	        
-	        data.form = [{"orderId":orderId,"orderNo":orderNo,"remark":remark, "invoiceRemark":invoiceRemark}];
+	        data.form = [{"orderId":orderId,"orderNo":orderNo,"remark":remark, "invoiceRemark":invoiceRemark, "srvCntrctId" : srvCntrctId}];
 	        
-	        Common.ajax("POST","/payment/saveCreateTaxesManualBills.do", data, function(result){
-	            
+	        Common.ajax("POST","/payment/saveCreateTaxesManualBillRentalMbrsh.do", data, function(result){
 	            console.log(result);
 	            fn_createBillsPopClose();
 	            AUIGrid.clearGridData(billingscheduleGridId);
-                AUIGrid.clearGridData(billingTargetGridId);
+	            AUIGrid.clearGridData(billingTargetGridId);
 	            Common.alert(result.message);
 	           
 	        });
 	        
-	    }); //btnSave end
-		
+	    });
 		
 	});
 
+	
 	
 </script>
 <body>
 <form action="" id="billingForm" name="billingForm">
     <input type="hidden" id="orderId" name="orderId">
+    <input type="hidden" id="srvCntrctId" name="srvCntrctId">
 	<div id="wrap"><!-- wrap start -->
 	<section id="content"><!-- content start -->
 		<ul class="path">
 		    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 		    <li>Manual Billing </li>
-		    <li>Rental Fee</li>
+            <li>Rental Membership</li>
 		</ul>
 		<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
@@ -458,7 +455,7 @@ var billingTargetLayout = [
 		<div class="border_box" style="height:350px;"><!-- border_box start -->
 		<article id="grid_wrap2" class="grid_wrap"></article>
 		<ul class="left_btns">
-		    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnAddToBillTarget">Add to Billing Target</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" id="btnAddToBillTarget">Add to Billing Target</a></p></li>
 		</ul>
 		
 		</div><!-- border_box end -->
@@ -474,8 +471,8 @@ var billingTargetLayout = [
 		<div class="border_box" style="height:350px;"><!-- border_box start -->
 		<article id="grid_wrap3" class="grid_wrap"></article>
 		<ul class="left_btns">
-		    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget">Remove From Billing Target</a></p></li>
-		    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills">Create Bills</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" id="btnRemoveBillTarget">Remove From Billing Target</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" id="createBills">Create Bills</a></p></li>
 		</ul>
 		
 		</div><!-- border_box end -->
@@ -524,7 +521,7 @@ var billingTargetLayout = [
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave" onclick="">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

@@ -79,4 +79,80 @@
                 </if>         
 	</select>
 	
+	<select id="selectCommonContractSearchPop" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
+		       Project1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+		       Project1.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+		       Project1.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+		       Project1.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+		       Project1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Project1.SRV_PRD_START_DT SRV_PRD_START_DT  ,
+		       Project1.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
+		       Project1.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+		       Project1.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+		       Project1.CODE CODE  ,
+		       Project1.USER_NAME USER_NAME  ,
+		       Project1.SRV_CNTRCT_CRT_DT SRV_CNTRCT_CRT_DT  ,
+		       Project1.CUST_ID CUST_ID  ,
+		       Project1.NAME NAME  ,
+		       Project1.NRIC NRIC  ,
+		       Project1.SALES_ORD_ID SALES_ORD_ID  
+		  FROM ( SELECT Extent1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
+		                Extent1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+		                Extent1.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+		                Extent1.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+		                Extent1.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+		                Extent1.SRV_CNTRCT_CRT_DT SRV_CNTRCT_CRT_DT  ,
+		                Extent2.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+		                Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+		                Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+		                Extent4.CUST_ID CUST_ID  ,
+		                Extent4.NAME NAME  ,
+		                Extent4.NRIC NRIC  ,
+		                Extent5.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+		                Extent6.USER_NAME USER_NAME  ,
+		                Extent7.SRV_PRD_START_DT SRV_PRD_START_DT  ,
+		                Extent7.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
+		                Extent8.CODE CODE  
+		         FROM SAL0077D Extent1
+		                JOIN SAL0078D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
+		                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SRV_CNTRCT_ORD_ID
+		                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+		                JOIN SAL0081D Extent5   ON Extent5.SRV_CNTRCT_PAC_ID = Extent1.SRV_CNTRCT_PCKG_ID
+		                JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.SRV_CNTRCT_CRT_USER_ID
+		                JOIN SAL0088D Extent7   ON Extent7.SRV_PRD_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
+		                JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
+		          WHERE  1=1
+				          <if test="contractStatusType != null and contractStatusType != '' ">
+		                        AND Extent2.CNTRCT_RENTAL_STUS IN 
+			                    <foreach item="item" collection="contractStatusType" index="index" open="(" separator="," close=")">
+			                     #{item}
+			                    </foreach>
+		                   </if>    
+				          <if test="contractRefNo != null and contractRefNo != '' ">
+				          AND  Extent1.SRV_CNTRCT_REF_NO = #{contractRefNo} 
+				          </if>
+				          <!-- <if test="invoiceNo != null and invoiceNo != '' ">
+		                  AND  Extent1.SRV_CNTRCT_REF_NO = #{invoiceNo} 
+		                  </if> -->
+		                  <if test="salesDate != null and salesDate != '' ">
+		                  AND TO_CHAR(Extent1.SRV_CNTRCT_CRT_DT, 'DD/MM/YYYY') = #{salesDate}
+		                  </if>
+		                  <if test="orderNo != null and orderNo != '' ">
+		                  AND   Extent3.SALES_ORD_NO = #{orderNo} 
+		                  </if>
+		                  <if test="custId != null and custId != '' ">
+		                  AND  Extent4.CUST_ID = #{custId} 
+		                  </if>
+		                  <if test="custName != null and custName != '' ">
+		                  AND  Extent6.USER_NAME =  '%' || UPPER(#{custName}) ||'%'
+		                  </if>
+		                  <if test="custNric != null and custNric != '' ">
+		                  AND  Extent4.NRIC = #{custNric} 
+		                  </if>
+				          ) Project1
+				  ORDER BY Project1.SRV_CNTRCT_ID ASC
+    </select>
+	
 </mapper>

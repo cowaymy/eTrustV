@@ -17,5 +17,13 @@ public interface CommonPopupPaymentMapper {
 	 */
 	List<EgovMap> selectCommonSearchInvoicePop(Map<String, Object> params);
 	
+	/**
+	 * Payment - Rental Membership Search Pop-up 리스트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	List<EgovMap> selectCommonContractSearchPop(Map<String, Object> params);
 	
 }

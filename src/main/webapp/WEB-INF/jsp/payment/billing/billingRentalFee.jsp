@@ -225,7 +225,8 @@ var billingTargetLayout = [
 	        console.log(result);
 	        
 	        $('#orderId').val(ordId);
-	        $('#orderNo').val(ordNo);
+	        //$('#orderNo').val(ordNo);
+	        AUIGrid.destroy(orderListGridId);
 	        orderListGridId = GridCommon.createAUIGrid("grid_wrap", orderListLayout,"",gridPros);
 	        AUIGrid.setGridData(orderListGridId, result.data.orderList);
 	        
@@ -264,33 +265,12 @@ var billingTargetLayout = [
 	
 	function fn_createBillsPopClose(){
 		
-		$('#remark').val("");
+		$('#createBillsPop').hide();
+        $('#invoiceRemark').val("");
+        $('#remark').val("");
     }
 	
-	function fn_saveCreateBill(){
-		var orderId = $("#orderId").val();
-        var orderNo = $("#orderNo").val();
-        var remark = $("#remark").val();
-        var invoiceRemark = $("#invoiceRemark").val();
-        var data = {};
-        var billList = AUIGrid.getGridData(billingTargetGridId);
-        
-        if(billList.length > 0) {
-            data.all = billList;
-        }else {
-            return;
-        }
-        
-        data.form = [{"orderId":orderId,"orderNo":orderNo,"remark":remark, "invoiceRemark":invoiceRemark}];
-        
-        Common.ajax("POST","/payment/saveCreateBills.do", data, function(result){
-            console.log(result);
-            Common.alert(result.message);
-           
-        });
-	}
-	
-	// //btn clickevent
+	//btn clickevent
 	$(function(){
 		
 		$("#btnAddToBillTarget").click(function(){
@@ -352,9 +332,8 @@ var billingTargetLayout = [
 			 
         });
 		
-		/* $("#btnSave").click(function(){
-	        var orderId = $("#orderId").val();
-	        var orderNo = $("#orderNo").val();
+		$("#btnSave").click(function(){
+			var orderId = $("#orderId").val();
 	        var remark = $("#remark").val();
 	        var invoiceRemark = $("#invoiceRemark").val();
 	        var data = {};
@@ -366,15 +345,18 @@ var billingTargetLayout = [
 	            return;
 	        }
 	        
-	        data.form = [{"orderId":orderId,"orderNo":orderNo,"remark":remark, "invoiceRemark":invoiceRemark}];
+	        data.form = [{"orderId":orderId ,"remark":remark, "invoiceRemark":invoiceRemark}];
 	        
 	        Common.ajax("POST","/payment/saveCreateBills.do", data, function(result){
 	            console.log(result);
+	            AUIGrid.clearGridData(billingscheduleGridId);
+                AUIGrid.clearGridData(billingTargetGridId);
+                fn_createBillsPopClose();
 	            Common.alert(result.message);
 	           
 	        });
 	        
-	    });  */ //btnSave end
+	    }); //btnSave end
 		
 		
 	});
@@ -475,8 +457,8 @@ var billingTargetLayout = [
 		<div class="border_box" style="height:350px;"><!-- border_box start -->
 		<article id="grid_wrap3" class="grid_wrap"></article>
 		<ul class="left_btns">
-		    <li><p class="btn_blue2"><a href="#" id="btnRemoveBillTarget">Remove From Billing Target</a></p></li>
-		    <li><p class="btn_blue2"><a href="#" id="createBills">Create Bills</a></p></li>
+		    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget">Remove From Billing Target</a></p></li>
+		    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills">Create Bills</a></p></li>
 		</ul>
 		
 		</div><!-- border_box end -->
@@ -525,7 +507,7 @@ var billingTargetLayout = [
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="" id="btnSave" onclick="fn_saveCreateBill();">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave" onclick="">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

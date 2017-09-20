@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.billing.service.AdvRentalBillingService;
+import com.coway.trust.biz.payment.billing.service.RentalMemberShipBillingService;
 import com.coway.trust.biz.payment.billing.service.RentalUnbillBillingService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.crystaldecisions.reports.queryengine.Session;
@@ -33,43 +34,48 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 	 Copyright (C) by MOPAS All right reserved.
  */
 
-@Service("rentalUnbillBillingService")
-public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl implements RentalUnbillBillingService {
+@Service("rentalMemberShipBillingService")
+public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl implements RentalMemberShipBillingService {
 
-	private static final Logger logger = LoggerFactory.getLogger(RentalUnbillBillingServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(RentalMemberShipBillingServiceImpl.class);
 
-	@Resource(name = "rentalUnbillBillingMapper")
-	private RentalUnbillBillingMapper rentalUnbillBillingMapper ;
+	@Resource(name = "rentalMemberShipBillingMapper")
+	private RentalMemberShipBillingMapper rentalMemberShipBillingMapper ;
 
 	/**
-	 * selectCustBillOrderNoList 조회
+	 * selectCustBillOrderNoList_M 조회
 	 * @param params
 	 * @return
 	 */
 	@Override
-	public List<EgovMap> selectCustBillOrderNoList(Map<String, Object> params) {
-		return rentalUnbillBillingMapper.selectCustBillOrderNoList(params);
+	public List<EgovMap> selectCustBillOrderNoList_M(Map<String, Object> params) {
+		return rentalMemberShipBillingMapper.selectCustBillOrderNoList_M(params);
 	}
 	
 	/**
-	 * selectRentalBillingSchedule 조회
+	 * selectUnbilledRentalBillingSchedule_M 조회
 	 * @param params
 	 * @return
 	 */
 	@Override
-	public List<EgovMap> selectUnbilledRentalBillingSchedule(Map<String, Object> params) {
-		return rentalUnbillBillingMapper.selectUnbilledRentalBillingSchedule(params);
+	public List<EgovMap> selectRentalMembershipBillingSchedule(Map<String, Object> params) {
+		return rentalMemberShipBillingMapper.selectRentalMembershipBillingSchedule(params);
 	}
-
+	
+	/**
+	 * confirmTaxesManualBillRentalMbrsh 저장
+	 * @param params
+	 * @return
+	 */
 	@Override
-	public int createTaxesManualBills(List<Object> formList, List<Object> taskBillList, SessionVO sessionVO) {
+	public int confirmTaxesManualBillRentalMbrsh(List<Object> formList, List<Object> taskBillList, SessionVO sessionVO) {
 		
 		int userId = sessionVO.getUserId();
     	int taskCount = 0;
     	int taskTotalAmount = 0;
     	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
     	Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
-    	int newTaskId = rentalUnbillBillingMapper.selectBillTaskLogMax_U();
+    	int newTaskId = rentalMemberShipBillingMapper.selectBillTaskLogMax_M();
 		
     	if(taskBillList.size() > 0){
     		
@@ -84,10 +90,8 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
     			taskOrderMap.put("salesOrdId", String.valueOf(hm.get("salesOrdId")));
     			taskOrderMap.put("taskReferenceNo", "");
     			
-                if (String.valueOf(hm.get("billType")).equals("RentalFee")){
-                    taskOrderMap.put("taskBillTypeId", "159");
-                }else if (String.valueOf(hm.get("billType")).equals("RPF")){
-                	taskOrderMap.put("taskBillTypeId", "161");
+                if (String.valueOf(hm.get("billType")).equals("ServiceContractRentalBill")){
+                    taskOrderMap.put("taskBillTypeId", 1305);
                 }
                 
                 int billAmt;
@@ -103,18 +107,18 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
                 taskOrderMap.put("taskBillZRLocationId", 0);
                 taskOrderMap.put("taskBillReliefCertificateId", 0);
                 taskOrderMap.put("taskBillRentalReliefId", 0);
-                taskOrderMap.put("taskBillCnrctId", 0);
+                taskOrderMap.put("taskBillCnrctId", String.valueOf(formMap.get("srvCntrctId")));
                 
-                EgovMap  selectSalesOrderMs_U = rentalUnbillBillingMapper.selectSalesOrderMs_U(hm);
-				String custBillId = selectSalesOrderMs_U.get("custBillId") != null ? String.valueOf(selectSalesOrderMs_U.get("custBillId")) : "0";
+                EgovMap  selectSalesOrderMs_M = rentalMemberShipBillingMapper.selectSalesOrderMs_M(hm);
+				String custBillId = selectSalesOrderMs_M.get("custBillId") != null ? String.valueOf(selectSalesOrderMs_M.get("custBillId")) : "0";
 				taskOrderMap.put("newTaskId", newTaskId + 1);
 				taskOrderMap.put("taskBillGroupId", custBillId);
-				rentalUnbillBillingMapper.insTaskLogOrder_U(taskOrderMap);
+				rentalMemberShipBillingMapper.insTaskLogOrder_M(taskOrderMap);
     		}
     		
     		Map<String, Object> taskLogMap = new HashMap<String, Object>();
         	Calendar calendar = Calendar.getInstance();
-        	taskLogMap.put("taskType", "MANUAL BILL");
+        	taskLogMap.put("taskType", "MANUAL REN-MEM BILL");
         	taskLogMap.put("billingYear", calendar.get(Calendar.YEAR));
         	taskLogMap.put("billingMonth", calendar.get(Calendar.MONTH)+1);
         	taskLogMap.put("taskTotalAmount", taskTotalAmount);
@@ -126,7 +130,7 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
         	taskLogMap.put("updatedBy", userId);
         	taskLogMap.put("taskBillRemark", String.valueOf(formMap.get("invoiceRemark")).replace("'","''"));
         	taskLogMap.put("newTaskId", newTaskId + 1);
-        	rentalUnbillBillingMapper.insBillTaskLog_U(taskLogMap);
+        	rentalMemberShipBillingMapper.insBillTaskLog_M(taskLogMap);
     	}
     	
     	int value= -1;
@@ -135,7 +139,7 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
     		Map<String, Object> confMap = new HashMap<String, Object>();
     		confMap.put("taskId", newTaskId+1);
 			confMap.put("userId", userId);
-			rentalUnbillBillingMapper.confirmTaxesManualBill(confMap);
+			rentalMemberShipBillingMapper.confirmTaxesManualBillRentalMbrsh(confMap);
     		value=Integer.parseInt(String.valueOf(confMap.get("p1")));
     	}
 
