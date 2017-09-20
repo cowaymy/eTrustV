@@ -44,46 +44,14 @@ var adjNo="${rAdjcode }";
 //var adjLocation = "${rAdjlocId }";
 
 var columnLayout=[
-                  {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30},
-                  {dataField:"invntryNo" ,headerText:"invntryNo",width:120 ,height:30},
-                  {dataField:"docDt" ,headerText:"docDt",width:120 ,height:30},
-                  {dataField:"locId" ,headerText:"locId",width:120 ,height:30},
-                  {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
+                  {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false},
+                  {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"25%" ,height:30},
+                  {dataField:"docDt" ,headerText:"Doc. Date",width:"25%" ,height:30},
+                  {dataField:"locId" ,headerText:"Location Id",width:"25%" ,height:30},
+/*                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30},
-                  {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30},
-                  {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30}
-                  /* ,{dataField:"seq" ,headerText:"seq",width:120 ,height:30},
-                  {dataField:"itmId" ,headerText:"itmId",width:120 ,height:30},
-                  {dataField:"itmNm" ,headerText:"itmNm",width:120 ,height:30},
-                  {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30},
-                  {dataField:"serialChk" ,headerText:"serialChk",width:120 ,height:30},
-                  {dataField:"sysQty" ,headerText:"sysQty",width:120 ,height:30},
-                  {dataField:"cntQty" ,headerText:"cntQty",width:120 ,height:30},
-                  {dataField:"whLocId" ,headerText:"Location ID",width:"20%" ,height:30 },
-                  {dataField:"whLocCode" ,headerText:"Location Code",width:"30%" ,height:30},
-                  {dataField:"whLocDesc" ,headerText:"Location Desc",width:"50%" ,height:30},
-                  {dataField:"whLocTel1" ,headerText:"whLocTel1",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocTel2" ,headerText:"whLocTel2",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocBrnchId" ,headerText:"whLocBrnchId",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocTypeId" ,headerText:"whLocTypeId",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocStkGrad" ,headerText:"whLocStkGrad",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocStusId" ,headerText:"whLocStusId",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocUpdUserId" ,headerText:"whLocUpdUserId",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocUpdDt" ,headerText:"whLocUpdDt",width:120 ,height:30 , visible:false},
-                  {dataField:"code2" ,headerText:"code2",width:120 ,height:30 , visible:false},
-                  {dataField:"desc2" ,headerText:"desc2",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocIsSync" ,headerText:"whLocIsSync",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocMobile" ,headerText:"whLocMobile",width:120 ,height:30 , visible:false},
-                  {dataField:"areaId" ,headerText:"areaId",width:120 ,height:30 , visible:false},
-                  {dataField:"addrDtl" ,headerText:"addrDtl",width:120 ,height:30 , visible:false},
-                  {dataField:"street" ,headerText:"street",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocBrnchId2" ,headerText:"whLocBrnchId2",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocBrnchId3" ,headerText:"whLocBrnchId3",width:120 ,height:30 , visible:false},
-                  {dataField:"whLocGb" ,headerText:"whLocGb",width:120 ,height:30 , visible:false},
-                  {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30 , visible:false},
-                  {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30 , visible:false},
-                  {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30 , visible:false},
-                  {dataField:"commonCrChk" ,headerText:"commonCrChk",width:120 ,height:30 , visible:false} */
+                  {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30}, */
+                  {dataField:"saveYn" ,headerText:"Count Status",width:"25%" ,height:30}
                ];          
 var resop = {//rowIdField : "rnum"
 		//, showRowCheckColumn : true 
@@ -104,7 +72,7 @@ $(function(){
         document.listForm.submit();
     });
     $('#confirm').click(function() {
-    	fn_confirm();
+    	//fn_confirm();
     });
      });
  });
@@ -147,12 +115,12 @@ function searchHead(){
 	 var y =data2[0].y
 	 $('#checkYn').text(y+"/"+total);
 	 
-	 if(total==y){
+/* 	 if(total==y){
 		 $('#confirm').show();
 	 }else{
 		 $('#confirm').hide();
 		 
-	 }
+	 } */
  }
 
  function fn_setVal(data){
@@ -256,7 +224,7 @@ function searchHead(){
 <h3>Header Info</h3>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="list"><span class="list"></span>List</a></p></li>
-  <li><p class="btn_blue"><a id="confirm"><span class="confirm"></span>Confirm</a></p></li>
+ <!--  <li><p class="btn_blue"><a id="confirm"><span class="confirm"></span>Confirm</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 

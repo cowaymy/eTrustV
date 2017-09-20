@@ -34,44 +34,44 @@ var reqGrid;
 var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
 var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
 var columnLayout=[
-                     {dataField:"invntryNo" ,headerText:"Stock Audit No",width:120 ,height:30},
-                     {dataField:"baseDt" ,headerText:"Base Date",width:120 ,height:30},
-                     {dataField:"cnfm1" ,headerText:"cnfm1",width:120 ,height:30},
-                     {dataField:"cnfm1Dt" ,headerText:"cnfm1Dt",width:120 ,height:30},
-                     {dataField:"cnfm2" ,headerText:"cnfm2",width:120 ,height:30},
-                     {dataField:"cnfm2Dt" ,headerText:"cnfm2Dt",width:120 ,height:30},
-                     {dataField:"fileLoc" ,headerText:"fileLoc",width:120 ,height:30},
-                     {dataField:"fileName" ,headerText:"fileName",width:120 ,height:30},
-                     {dataField:"orgFileName" ,headerText:"orgFileName",width:120 ,height:30},
-                     {dataField:"headTitle" ,headerText:"headTitle",width:120 ,height:30},
-                     {dataField:"eventType" ,headerText:"eventType",width:120 ,height:30},
-                     {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30},
-                     {dataField:"ctgryType" ,headerText:"ctgryType",width:120 ,height:30},
-                     {dataField:"autoFlag" ,headerText:"autoFlag",width:120 ,height:30},
-                     {dataField:"delFlag" ,headerText:"delFlag",width:120 ,height:30},
-                     {dataField:"crtUser" ,headerText:"crtUser",width:120 ,height:30},
-                     {dataField:"crtDate" ,headerText:"crtDate",width:120 ,height:30}
+                     {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"25%" ,height:30},
+                     {dataField:"baseDt" ,headerText:"Base Date",width:"25%" ,height:30},
+                     {dataField:"cnfm1" ,headerText:"cnfm1",width:120 ,height:30, visible:false},
+                     {dataField:"cnfm1Dt" ,headerText:"cnfm1Dt",width:120 ,height:30, visible:false},
+                     {dataField:"cnfm2" ,headerText:"cnfm2",width:120 ,height:30, visible:false},
+                     {dataField:"cnfm2Dt" ,headerText:"cnfm2Dt",width:120 ,height:30, visible:false},
+                     {dataField:"fileLoc" ,headerText:"fileLoc",width:120 ,height:30, visible:false},
+                     {dataField:"fileName" ,headerText:"fileName",width:120 ,height:30, visible:false},
+                     {dataField:"orgFileName" ,headerText:"orgFileName",width:120 ,height:30, visible:false},
+                     {dataField:"headTitle" ,headerText:"headTitle",width:120 ,height:30, visible:false},
+                     {dataField:"eventType" ,headerText:"eventType",width:120 ,height:30, visible:false},
+                     {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30, visible:false},
+                     {dataField:"ctgryType" ,headerText:"ctgryType",width:120 ,height:30, visible:false},
+                     {dataField:"autoFlag" ,headerText:"autoFlag",width:120 ,height:30, visible:false},
+                     {dataField:"delFlag" ,headerText:"delFlag",width:120 ,height:30, visible:false},
+                     {dataField:"crtUser" ,headerText:"Create User",width:"25%" ,height:30},
+                     {dataField:"crtDate" ,headerText:"Create Date",width:"25%" ,height:30}
                     ];
 var rescolumnLayout=[
-                    {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30},
-                    {dataField:"invntryNo" ,headerText:"invntryNo",width:120 ,height:30},
-                    {dataField:"docDt" ,headerText:"docDt",width:120 ,height:30},
-                    {dataField:"locId" ,headerText:"locId",width:120 ,height:30},
-                    {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
+                    {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false},
+                    {dataField:"invntryNo" ,headerText:"Stock Audit No",width:120 ,height:30},
+                    {dataField:"docDt" ,headerText:"Doc. Date",width:120 ,height:30},
+                    {dataField:"whLocId" ,headerText:" ID",width:120 ,height:30 },
+                    {dataField:"whLocCode" ,headerText:"Location Code",width:120 ,height:30},
+                    {dataField:"whLocDesc" ,headerText:"Location Desc",width:200 ,height:30},
+                    /*                   {dataField:"locId" ,headerText:"Loc. ID",width:120 ,height:30},
+                     {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
                     {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30},
-                    {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30},
-                    {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30},
-                    {dataField:"seq" ,headerText:"seq",width:120 ,height:30},
-                    {dataField:"itmId" ,headerText:"itmId",width:120 ,height:30},
-                    {dataField:"itmNm" ,headerText:"itmNm",width:120 ,height:30},
-                    {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30},
-                     {dataField:"ctgryType" ,headerText:"ctgryType",width:120 ,height:30},
-                    {dataField:"serialChk" ,headerText:"serialChk",width:120 ,height:30},
-                    {dataField:"sysQty" ,headerText:"sysQty",width:120 ,height:30},
-                    {dataField:"cntQty" ,headerText:"cntQty",width:120 ,height:30},
-                    {dataField:"whLocId" ,headerText:"Location ID",width:"20%" ,height:30 },
-                    {dataField:"whLocCode" ,headerText:"Location Code",width:"30%" ,height:30},
-                    {dataField:"whLocDesc" ,headerText:"Location Desc",width:"50%" ,height:30},
+                    {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30}, */
+                    {dataField:"saveYn" ,headerText:"Count Status",width:120 ,height:30},
+                    {dataField:"seq" ,headerText:"Seq.",width:120 ,height:30},
+                    {dataField:"itmId" ,headerText:"Item Id",width:120 ,height:30},
+                    {dataField:"itmNm" ,headerText:"Item Name",width:120 ,height:30},
+                    {dataField:"itmType" ,headerText:"Item Type",width:120 ,height:30},
+                     {dataField:"ctgryType" ,headerText:"Catagory Type",width:120 ,height:30},
+                    {dataField:"serialChk" ,headerText:"Serial Check",width:120 ,height:30},
+                    {dataField:"sysQty" ,headerText:"System Qty",width:120 ,height:30},
+                    {dataField:"cntQty" ,headerText:"Count Qty",width:120 ,height:30},
                     {dataField:"whLocTel1" ,headerText:"whLocTel1",width:120 ,height:30 , visible:false},
                     {dataField:"whLocTel2" ,headerText:"whLocTel2",width:120 ,height:30 , visible:false},
                     {dataField:"whLocBrnchId" ,headerText:"whLocBrnchId",width:120 ,height:30 , visible:false},
@@ -137,11 +137,11 @@ $(document).ready(function(){
     * Header Setting
     ***********************************/
     doDefCombo(comboData, '' ,'eventtype', 'M', 'f_multiCombo');
-    doDefCombo(comboData, '' ,'srch_eventtype', 'M', 'f_multiCombo');
+   // doDefCombo(comboData, '' ,'srch_eventtype', 'M', 'f_multiCombo');
     doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','itemtype', 'M' , 'f_multiCombo');
-    doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','srch_itemtype', 'M' , 'f_multiCombo');
+    //doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','srch_itemtype', 'M' , 'f_multiCombo');
     doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','catagorytype', 'M' , 'f_multiCombo');
-    doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','srch_catagorytype', 'M' , 'f_multiCombo');
+    //doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','srch_catagorytype', 'M' , 'f_multiCombo');
     /**********************************
      * Header Setting End
      ***********************************/
@@ -341,7 +341,7 @@ function fn_popSet(v){
         $("#popup_title2").text("View");
             $("#autobtn").hide();
             $("#manualbtn").hide();
-            $("#view").show();
+            $("#viewbtn").show();
             $("#count").show();
             
             if(autoFlag == "A"){
@@ -377,7 +377,7 @@ function fn_popSet(v){
             $("input[name='manual']").prop('checked', false);
             $("#autobtn").show();
             $("#manualbtn").hide();
-            $("#view").hide();
+            $("#viewbtn").hide();
             //$("#count").hide();
         }else if(autoFlag == "M"){
             $("#popup_title2").text("Manual");
@@ -385,7 +385,7 @@ function fn_popSet(v){
             $("input[name='manual']").prop('checked', true);
             $("#autobtn").hide();
             $("#manualbtn").show();
-            $("#view").hide();
+            $("#viewbtn").hide();
             //$("#count").hide();
         }
         
@@ -535,7 +535,7 @@ function fn_subGrid(invntryNo){
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="create">Create</a></p></li>
-    <li><p class="btn_blue"><a id="edit">Edit</a></p></li>
+   <!--  <li><p class="btn_blue"><a id="edit">Edit</a></p></li> -->
     <li><p class="btn_blue"><a id="detail">Detail</a></p></li> 
     <li><p class="btn_blue"><a id="approval">Approval</a></p></li> 
     <li><p class="btn_blue"><a id="confirm">Confirm</a></p></li> 
@@ -558,8 +558,12 @@ function fn_subGrid(invntryNo){
 <tbody>
 <tr>
     <th scope="row">Stock Audit Number</th>
-    <td><input id="srch_adjno" name="adjno" type="text" title=""  class="w100p" /></td>
-    <th scope="row">Event Type</th>
+    <td><input id="srch_adjno" name="srch_adjno" type="text" title=""  class="w100p" /></td>
+    <th scope="row">Stock Audit Date</th>
+    <td>
+    <input id="srch_bsadjdate" name="srch_bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+    </td>
+    <!-- <th scope="row">Event Type</th>
     <td>
     <select class="multy_select" multiple="multiple" id="srch_eventtype" name="srch_eventtype[]"  style="display: none;"/></select>
     </td>
@@ -580,7 +584,7 @@ function fn_subGrid(invntryNo){
     <td>
     <input id="srch_bsadjdate" name="ssrch_bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
-    <td colspan="2">
+    <td colspan="2"> -->
 </tr>
 </tbody>
 </table><!-- table end -->

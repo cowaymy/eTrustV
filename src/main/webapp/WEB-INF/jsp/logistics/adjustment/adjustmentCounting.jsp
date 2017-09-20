@@ -45,21 +45,21 @@ var adjLocation = "${rAdjlocId }";
 
 var columnLayout=[
                   {dataField:"rnum" ,headerText:"rnum",width:120 ,height:30 , visible:false ,editable:false },
-                  {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30 ,editable:false},
                   {dataField:"invntryNo" ,headerText:"Stock Audit No",width:120 ,height:30 ,editable:false},
-                  {dataField:"docDt" ,headerText:"docDt",width:120 ,height:30 ,editable:false},
-                  {dataField:"locId" ,headerText:"locId",width:120 ,height:30 ,editable:false},
+                  {dataField:"invntryLocId" ,headerText:"Detial No",width:120 ,height:30  ,editable:false},
+                  {dataField:"docDt" ,headerText:"Doc. Date",width:120 ,height:30 ,editable:false},
+                  {dataField:"locId" ,headerText:"Location ID",width:120 ,height:30 ,editable:false},
                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30, visible:false ,editable:false},
                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30, visible:false ,editable:false},
                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30, visible:false ,editable:false},
-                  {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30, visible:true ,editable:false},
-                  {dataField:"seq" ,headerText:"seq",width:120 ,height:30 ,editable:false},
-                  {dataField:"itmId" ,headerText:"itmId",width:120 ,height:30 ,editable:false},
-                  {dataField:"itmNm" ,headerText:"itmNm",width:120 ,height:30 ,editable:false},
+                  {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30, visible:false ,editable:false},
+                  {dataField:"seq" ,headerText:"Seq.",width:120 ,height:30 ,editable:false},
+                  {dataField:"itmId" ,headerText:"Item Id",width:120 ,height:30 ,editable:false},
+                  {dataField:"itmNm" ,headerText:"Item Name",width:250 ,height:30 ,editable:false},
                   {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30 , visible:false ,editable:false},
-                  {dataField:"serialChk" ,headerText:"serialChk",width:120 ,height:30 ,editable:false},
-                  {dataField:"sysQty" ,headerText:"sysQty",width:120 ,height:30,editable:false},
-                  {dataField:"cntQty" ,headerText:"cntQty",width:120 ,height:30,editable : true 
+                  {dataField:"serialChk" ,headerText:"Serial Check",width:120 ,height:30 ,editable:false},
+                  {dataField:"sysQty" ,headerText:"System Qty",width:120 ,height:30,editable:false},
+                  {dataField:"cntQty" ,headerText:"Count Qty",width:120 ,height:30,editable : true 
                 	  ,dataType : "numeric" ,editRenderer : {
                           type : "InputEditRenderer",
                           onlyNumeric : true, // 0~9 까지만 허용
@@ -67,7 +67,7 @@ var columnLayout=[
                     }  
                   },
                   {dataField:"diffQty" ,headerText:"Diff Qty",width:120 ,height:30  ,editable:false},
-                  {dataField:"stkCode" ,headerText:"stkCode",width:120 ,height:30,editable:false},
+                  {dataField:"stkCode" ,headerText:"stkCode",width:120 ,height:30, visible:false ,editable:false},
                   {dataField:"stkDesc" ,headerText:"stkDesc",width:120 ,height:30  , visible:false ,editable:false},
                   {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30 , visible:false,editable:false},
                   {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30 , visible:false,editable:false},
@@ -101,61 +101,61 @@ var columnLayout=[
                   {dataField:"commonCrChk" ,headerText:"commonCrChk",width:120 ,height:30 , visible:false,editable:false}
                     ];
 var columnLayout2=[
-                  {dataField:"rnum" ,headerText:"rnum",width:120 ,height:30 , visible:false ,editable:false },
-                  {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30 ,editable:false},
-                  {dataField:"invntryNo" ,headerText:"Stock Audit No",width:120 ,height:30 ,editable:false},
-                  {dataField:"docDt" ,headerText:"docDt",width:120 ,height:30 ,editable:false},
-                  {dataField:"locId" ,headerText:"locId",width:120 ,height:30 ,editable:false},
-                  {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30, visible:false ,editable:false},
-                  {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30, visible:false ,editable:false},
-                  {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30, visible:false ,editable:false},
-                  {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30, visible:false ,editable:false},
-                  {dataField:"seq" ,headerText:"seq",width:120 ,height:30 ,editable:false},
-                  {dataField:"itmId" ,headerText:"itmId",width:120 ,height:30 ,editable:false},
-                  {dataField:"itmNm" ,headerText:"itmNm",width:120 ,height:30 ,editable:false},
-                  {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30 , visible:false ,editable:false},
-                  {dataField:"serialChk" ,headerText:"serialChk",width:120 ,height:30 ,editable:false},
-                  {dataField:"sysQty" ,headerText:"sysQty",width:120 ,height:30,editable:false},
-                  {dataField:"cntQty" ,headerText:"cntQty",width:120 ,height:30,editable : true , visible:false
-                	  ,dataType : "numeric" ,editRenderer : {
-                          type : "InputEditRenderer",
-                          onlyNumeric : true, // 0~9 까지만 허용
-                          allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
-                    }  
-                  },
-                  {dataField:"inVal" ,headerText:"Serial/CntQty",width:120 ,height:30  ,editable:false},
-                  {dataField:"stkCode" ,headerText:"stkCode",width:120 ,height:30 , visible:false ,editable:false},
-                  {dataField:"stkDesc" ,headerText:"stkDesc",width:120 ,height:30  , visible:false ,editable:false},
-                  {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"qty" ,headerText:"qty",width:120 ,height:30, visible:false ,editable:false},
-                  {dataField:"movQty" ,headerText:"movQty",width:120 ,height:30, visible:false,editable:false},
-                  
-                  {dataField:"whLocId" ,headerText:"Location ID",width:"20%" ,height:30, visible:false,editable:false },
-                  {dataField:"whLocCode" ,headerText:"Location Code",width:"30%" ,height:30, visible:false,editable:false},
-                  {dataField:"whLocDesc" ,headerText:"Location Desc",width:"50%" ,height:30, visible:false,editable:false},
-                  {dataField:"whLocTel1" ,headerText:"whLocTel1",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocTel2" ,headerText:"whLocTel2",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocBrnchId" ,headerText:"whLocBrnchId",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocTypeId" ,headerText:"whLocTypeId",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocStkGrad" ,headerText:"whLocStkGrad",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocStusId" ,headerText:"whLocStusId",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocUpdUserId" ,headerText:"whLocUpdUserId",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocUpdDt" ,headerText:"whLocUpdDt",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"code2" ,headerText:"code2",width:120 ,height:30 , visible:false ,editable:false},
-                  {dataField:"desc2" ,headerText:"desc2",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocIsSync" ,headerText:"whLocIsSync",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocMobile" ,headerText:"whLocMobile",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"areaId" ,headerText:"areaId",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"addrDtl" ,headerText:"addrDtl",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"street" ,headerText:"street",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocBrnchId2" ,headerText:"whLocBrnchId2",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocBrnchId3" ,headerText:"whLocBrnchId3",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"whLocGb" ,headerText:"whLocGb",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30 , visible:false,editable:false},
-                  {dataField:"commonCrChk" ,headerText:"commonCrChk",width:120 ,height:30 , visible:false,editable:false}
+                   {dataField:"rnum" ,headerText:"rnum",width:120 ,height:30 , visible:false ,editable:false },
+                   {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false  ,editable:false},
+                   {dataField:"invntryNo" ,headerText:"Stock Audit No",width:120 ,height:30 ,editable:false},
+                   {dataField:"docDt" ,headerText:"Doc. Date",width:120 ,height:30 ,editable:false},
+                   {dataField:"locId" ,headerText:"Location ID",width:120 ,height:30 ,editable:false},
+                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30, visible:false ,editable:false},
+                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30, visible:false ,editable:false},
+                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30, visible:false ,editable:false},
+                   {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30, visible:false ,editable:false},
+                   {dataField:"seq" ,headerText:"Seq.",width:120 ,height:30 ,editable:false},
+                   {dataField:"itmId" ,headerText:"Item Id",width:120 ,height:30 ,editable:false},
+                   {dataField:"itmNm" ,headerText:"Item Name",width:250 ,height:30 ,editable:false},
+                   {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30 , visible:false ,editable:false},
+                   {dataField:"serialChk" ,headerText:"serialChk",width:120 ,height:30 ,editable:false},
+                   {dataField:"sysQty" ,headerText:"System Qty",width:120 ,height:30,editable:false},
+                   {dataField:"cntQty" ,headerText:"Count Qty",width:120 ,height:30,editable : true , visible:false
+                       ,dataType : "numeric" ,editRenderer : {
+                           type : "InputEditRenderer",
+                           onlyNumeric : true, // 0~9 까지만 허용
+                           allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
+                     }  
+                   },
+                   {dataField:"diffQty" ,headerText:"Diff Qty",width:120 ,height:30  ,editable:false},
+                   {dataField:"stkCode" ,headerText:"stkCode",width:120 ,height:30, visible:false ,editable:false},
+                   {dataField:"stkDesc" ,headerText:"stkDesc",width:120 ,height:30  , visible:false ,editable:false},
+                   {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"qty" ,headerText:"qty",width:120 ,height:30, visible:false ,editable:false},
+                   {dataField:"movQty" ,headerText:"movQty",width:120 ,height:30, visible:false,editable:false},
+                   
+                   {dataField:"whLocId" ,headerText:"Location ID",width:"20%" ,height:30, visible:false,editable:false },
+                   {dataField:"whLocCode" ,headerText:"Location Code",width:"30%" ,height:30, visible:false,editable:false},
+                   {dataField:"whLocDesc" ,headerText:"Location Desc",width:"50%" ,height:30, visible:false,editable:false},
+                   {dataField:"whLocTel1" ,headerText:"whLocTel1",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocTel2" ,headerText:"whLocTel2",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocBrnchId" ,headerText:"whLocBrnchId",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocTypeId" ,headerText:"whLocTypeId",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocStkGrad" ,headerText:"whLocStkGrad",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocStusId" ,headerText:"whLocStusId",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocUpdUserId" ,headerText:"whLocUpdUserId",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocUpdDt" ,headerText:"whLocUpdDt",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"code2" ,headerText:"code2",width:120 ,height:30 , visible:false ,editable:false},
+                   {dataField:"desc2" ,headerText:"desc2",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocIsSync" ,headerText:"whLocIsSync",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocMobile" ,headerText:"whLocMobile",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"areaId" ,headerText:"areaId",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"addrDtl" ,headerText:"addrDtl",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"street" ,headerText:"street",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocBrnchId2" ,headerText:"whLocBrnchId2",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocBrnchId3" ,headerText:"whLocBrnchId3",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"whLocGb" ,headerText:"whLocGb",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30 , visible:false,editable:false},
+                   {dataField:"commonCrChk" ,headerText:"commonCrChk",width:120 ,height:30 , visible:false,editable:false}
                     ];
 var serialcolumn  =[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30,visible:false },
                          {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30,visible:false },
@@ -167,8 +167,8 @@ var serialcolumn  =[{dataField:"itmcd"        ,headerText:"Material Code"       
                          {dataField:"statustype"   ,headerText:"status"                     ,width:120     ,height:30 ,visible:false}
                         ];                              
 var resop = {rowIdField : "rnum"
-		, showStateColumn : true 
-		, showRowCheckColumn : true 
+		, showStateColumn : false 
+		, showRowCheckColumn : false 
 		,usePaging : false
 		//,useGroupingPanel : false 
 		,editable:true,
@@ -371,7 +371,7 @@ $(function(){
         	fileName     : $("#adjno").val()+"_"+$("#txtlocCode").text(),
             sheetName : $("#txtlocCode").text(),
             
-            //exceptColumnFields : ["docDt","locId","seq", "cntQty"], // 이름, 제품, 컬러는 아예 엑셀로 내보내기 안하기.
+            //exceptColumnFields : ["cntQty"], // 이름, 제품, 컬러는 아예 엑셀로 내보내기 안하기.
             
              //현재 그리드의 히든 처리된 칼럼의 dataField 들 얻어 똑같이 동기화 시키기
            exceptColumnFields : AUIGrid.getHiddenColumnDataFields(myGridID) 
@@ -411,15 +411,37 @@ function searchHead(){
     var url = "/logistics/adjustment/oneAdjustmentNo.do";
     Common.ajax("GET" , url , param , function(result){
         var data = result.dataList;
-        //fn_setVal(data,status);
         fn_setVal(data);
-/*         $("#invntryNo").val(data[0].invntryNo);
-        $("#autoFlag").val(data[0].autoFlag);
-        $("#eventType").val(data[0].eventType);
-        $("#itmType").val(data[0].itmType);
-        $("#bsadjdate").text(data[0].baseDt);
-        $("#doctext").text(data[0].headTitle); */
         set_subGrid(adjNo,adjLocation);
+        fn_confirmCheck();
+        
+    });
+}
+
+function fn_confirmCheck(){
+	var url = "/logistics/adjustment/adjustmentConfirmCheck.do";
+    $.ajax({
+        type : "GET",
+        url : url,
+        data : {
+            adjNo    : adjNo,
+            adjLocation     : adjLocation
+        },
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+        var data = data.dataList;
+		      if("Y"==data[0].saveYn){
+		          $("#excelUp").hide();
+		          $("#excelDown").hide();
+		          $("#save").hide();
+		          $("#confirm").hide();
+		      }
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+        },
+        complete : function() {
+        }
     });
 }
 
@@ -439,7 +461,7 @@ function set_subGrid(adjNo,adjLocation){
 	        $("#txtlocCode").text(data[0].whLocId+"-"+data[0].whLocCode);
 	        $("#txtlocName").text(data[0].whLocDesc);
 	        AUIGrid.setGridData(myGridID, data);
-	        AUIGrid.setGridData(myGridIDHide, data);
+	        //AUIGrid.setGridData(myGridIDHide, data);
 	        },
 	        error : function(jqXHR, textStatus, errorThrown) {
 	        },
@@ -553,7 +575,6 @@ function fn_serialChck(rowindex , rowitem , str){
     });
     Common.ajaxSync("POST", url, data, function(result) {
     	var data=result.dataList;
-    	   console.log(data);
     	if (data[0] == null){
             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
@@ -679,6 +700,7 @@ function fn_serialCountSet(){
 function fn_excelSave(){
 	var param  =  {};
 	param.add = AUIGrid.exportToObject("#popup_wrap_excel");
+	console.log(param);
     Common.ajax("POST", "/logistics/adjustment/saveExcelGrid.do",param , function(result) {
         set_subGrid(adjNo,adjLocation);
     },  function(jqXHR, textStatus, errorThrown) {
@@ -778,7 +800,7 @@ function createInitGrid() {
     
     // 그리드 속성 설정
     var gridPros = {
-        noDataMessage : "로컬 PC의 엑셀 파일을 선택하십시오."
+        //noDataMessage : "로컬 PC의 엑셀 파일을 선택하십시오."
     };
 
     // 실제로 #grid_wrap 에 그리드 생성
@@ -799,7 +821,9 @@ function fn_confirm(){
 		Common.ajax("GET", "/logistics/adjustment/adjustmentConfirm.do", param, function(result) {
 		       
 	        AUIGrid.resetUpdatedItems(myGridID, "all");    
-	    $("#giopenwindow").hide();
+	    $("#excelUp").hide();
+	    $("#excelDown").hide();
+	    $("#save").hide();
 	   set_subGrid(adjNo,adjLocation);
 	
 	},  function(jqXHR, textStatus, errorThrown) {
