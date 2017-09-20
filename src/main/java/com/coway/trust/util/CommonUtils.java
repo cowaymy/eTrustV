@@ -34,7 +34,7 @@ import com.coway.trust.web.common.CommonController;
  */
 public final class CommonUtils {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommonController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
 
 	private CommonUtils() {
 	}
