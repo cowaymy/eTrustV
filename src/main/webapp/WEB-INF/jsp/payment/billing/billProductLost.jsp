@@ -3,6 +3,7 @@
 
 <script type="text/javaScript">
 var myGridID;
+//var tmp = 665425;
 
 $(document).ready(function(){
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
@@ -29,7 +30,7 @@ function fn_orderSearch(){
 }
 
 function fn_callbackOrder(orderId){
-	orderId = 135042;
+	//orderId = tmp;
 	console.log("orderId : " + orderId);
 	if(orderId != null && orderId != ''){
 		   fn_loadBillingSchedule(orderId);
@@ -38,22 +39,76 @@ function fn_callbackOrder(orderId){
 function fn_loadBillingSchedule(orderId){
 	Common.ajax("GET", "/payment/selectRentalProductLostPenalty.do", {"orderId" : orderId}, function(result) {
 		console.log(result);
-		
-		$("#orderId").val(result.salesOrdId);
-        $("#orderNo").val(result.salesOrdNo);
-        $("#rental").val(result.salesPrc);
-        $("#unbillMonth").val(result.unbillMonth);
-        $("#amount").val(result.soReqCanclPnaltyAmt);
+		if(result != null){
+			$("#orderId").val(result.salesOrdId);
+	        $("#orderNo").val(result.salesOrdNo);
+	        $("#price").val(result.salesPrc);
+	        $("#outstanding").val(result.outstanding);
+	        $("#month").val(result.billMonth);
+	        $("#lossFee").val(result.pnalty);
+		}
 	});
 }
 
-
+var errorMsg = function(){
+    var errorMessage = "";
+    if($("#orderId").val() == null || $("#orderId").val() == '' ){
+        errorMessage = "Select Order First";
+    }else{
+        if($("#lossFee").val() == null || $("#lossFee").val() == ''){
+            errorMessage = "Input Penalty Amount";
+        }else{
+            if($("#remark").val() == null || $("#remark").val() == ''){
+                errorMessage = "Input Remark";
+            }
+        }
+    }
+    
+    return errorMessage;
+}
 
 function fn_createEvent(objId, eventType){
     var e = jQuery.Event(eventType);
     $('#'+objId).trigger(e);
 }
 
+function fn_createBills(){
+	//$("#orderId").val(tmp);
+	var error = errorMsg();
+    if(error != ''){
+        Common.alert(error);
+        return;
+    }
+    
+    
+    Common.ajax("GET", "/payment/createBillForProductLost.do", $("#billingForm").serialize(), function(result) {
+    	if(result.message != 'Failed To Save'){
+    		console.log(result);
+    		
+    		$("#orderId").val('');
+            $("#orderNo").val('');
+            $("#price").val('');
+            $("#outstanding").val('');
+            $("#month").val('');
+            $("#lossFee").val('');
+            $("#remark").val('');
+    		
+    		$("#grid_wrap").show();
+            AUIGrid.setGridData(myGridID, result.data);
+            
+            Common.alert(result.message);
+    	}
+    });
+}
+
+function fn_clickViewDetail(){
+	var orderId = $("#orderId").val();
+	if(orderId != '' && orderId != undefined){
+	   Common.popupDiv("/sales/order/orderDetailPop.do?salesOrderId="+orderId, {callPrgm : "PRODUCT_LOST", indicator : "SearchTrialNo"});
+    }else{
+    	Common.alert("SELECT ORDER FIRST");
+    }
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -85,7 +140,7 @@ function fn_createEvent(objId, eventType){
     <input type="hidden" id="orderNo" name="orderNo" />
     <input type="text" id="orderId" name="orderId" title="" placeholder="" class="" />
     <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
-    <p class="btn_sky"><a href="#">View Details</a></p>
+    <p class="btn_sky"><a href="javascript:fn_clickViewDetail();">View Details</a></p>
     </td>
 </tr>
 </tbody>
@@ -106,26 +161,32 @@ function fn_createEvent(objId, eventType){
     <th scope="row">Penalty Type</th>
     <td>
     <select>
-        <option value="">Early Termination Fees</option>
+        <option value="">Product Lost</option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Mothly Rental</th>
+    <th scope="row">Product Price</th>
     <td>
-    <input type="text" id="rental" name="rental" title="" placeholder="" class="" readonly/>
+    <input type="text" id="price" name="price" title="" placeholder="" class="" readonly/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Unbill Month</th>
+    <th scope="row">Total Outstanding</th>
     <td>
-    <input type="text" id="unbillMonth" name="unbillMonth" title="" placeholder="" class="" readonly/>
+    <input type="text" id="outstanding" name="outstanding" title="" placeholder="" class="" readonly/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Termination Fee</th>
+    <th scope="row">Bill Month</th>
     <td>
-    <input type="text" id="amount" name="amount" title="" placeholder="" class="" readonly/>
+    <input type="text" id="month" name="month" title="" placeholder="" class="" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Loss Fee</th>
+    <td>
+    <input type="text" id="lossFee" name="lossFee" title="" placeholder="" class="" readonly/>
     </td>
 </tr>
 <tr>

@@ -75,11 +75,13 @@ public class EarlyTerminationBillingController {
 	@RequestMapping(value = "/selectRentalProductEarlyTerminationPenalty.do")
 	public ResponseEntity<EgovMap> selectRentalProductEarlyTerminationPenalty(@RequestParam Map<String, Object> params, ModelMap model) {	
 		
-		EgovMap result;
+		EgovMap result = null;
 		
 		LOGGER.debug("params : {}", params);
-		
-		result = earlyTerminationService.selectRentalProductEarlyTerminationPenalty(String.valueOf(params.get("orderId"))).get(0);
+		List<EgovMap> list = earlyTerminationService.selectRentalProductEarlyTerminationPenalty(String.valueOf(params.get("orderId")));
+		if(list.size()>0){
+			result = list.get(0);
+		}
 	
 		return ResponseEntity.ok(result);
 	}

@@ -28,4 +28,53 @@ public interface ProductLostBillingMapper {
 	 * @return
 	 */
 	List<EgovMap> selectRentalProductLostPenalty(String param);
+	
+	/**
+	 * ZRLocationId 가져오기
+	 * @param
+	 * @return
+	 */
+	String getZRLocationId(String param);
+	
+	/**
+	 * RSCertificationId 가져오기
+	 * @param
+	 * @return
+	 */
+	String getRSCertificateId(String param);
+	
+	/**
+	 * DocNumber얻어옴
+	 * @param
+	 * @return
+	 */
+	String getDocNumberForProductLost(String param);
+	
+	/**
+	 * ledger저장
+	 * @param
+	 * @return
+	 */
+	void insertLedger(Map<String, Object> ledger); 
+	
+	/**
+	 * orderBill저장
+	 * @param
+	 * @return
+	 */
+	void insertOrderBill(Map<String, Object> orderbill); 
+	
+	/**
+	 * invoice Master저장
+	 * @param
+	 * @return
+	 */
+	void insertInvoiceM(Map<String, Object> invoiceM); 
+	
+	/**
+	 * invoice Detail 저장
+	 * @param
+	 * @return
+	 */
+	void insertInvoiceD(Map<String, Object> invoiceD); 
 }

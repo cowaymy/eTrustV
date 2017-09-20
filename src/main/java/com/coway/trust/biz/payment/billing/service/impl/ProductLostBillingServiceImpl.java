@@ -29,8 +29,72 @@ public class ProductLostBillingServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public List<EgovMap> selectRentalProductLostPenalty(String param) {
-		// TODO Auto-generated method stub
 		return productLostMapper.selectRentalProductLostPenalty(param);
 	}
+
+	@Override
+	public String getZRLocationId(String param) {
+		return productLostMapper.getZRLocationId(param);
+	}
+
+	@Override
+	public String getRSCertificateId(String param) {
+		return productLostMapper.getRSCertificateId(param);
+	}
+
+	@Override
+	@Transactional
+	public String doSaveProductLostPenalty(Map<String, Object> ledger, Map<String, Object> orderbill,
+			Map<String, Object> invoiceM, Map<String, Object> invoiceD) {
+		String invoiceNo = "";
+		boolean success = false;
+		
+		invoiceNo = this.getDocNumberForProductLost("126");
+		System.out.println("#### invoiceNo : " + invoiceNo);
+		
+		ledger.put("rentDocNo", invoiceNo);
+		this.insertLedger(ledger);
+		
+		orderbill.put("accBillRemark", invoiceNo);
+		this.insertOrderBill(orderbill);
+		
+		invoiceM.put("taxInvoiceRefNo", invoiceNo);
+		this.insertInvoiceM(invoiceM);
+		
+		invoiceD.put("taxInvoiceId", invoiceM.get("taxInvoiceId"));
+		this.insertInvoiceD(invoiceD);
+		
+		success = true;
+		
+		if(!success) invoiceNo = "";
+		
+		return invoiceNo;
+	}
+
+	@Override
+	public String getDocNumberForProductLost(String param) {
+		// TODO Auto-generated method stub
+		return productLostMapper.getDocNumberForProductLost(param);
+	}
+
+	@Override
+	public void insertLedger(Map<String, Object> ledger) {
+		productLostMapper.insertLedger(ledger);
+	}
+
+	@Override
+	public void insertOrderBill(Map<String, Object> orderbill) {
+		productLostMapper.insertOrderBill(orderbill);
+	}
+
+	@Override
+	public void insertInvoiceM(Map<String, Object> invoiceM) {
+		productLostMapper.insertInvoiceM(invoiceM);
+	}
+
+	@Override
+	public void insertInvoiceD(Map<String, Object> invoiceD) {
+		productLostMapper.insertInvoiceD(invoiceD);
+	}                                  
 
 }

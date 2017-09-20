@@ -3,6 +3,7 @@
 
 <script type="text/javaScript">
 var myGridID;
+//var tmp = 165801;
 
 $(document).ready(function(){
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
@@ -29,7 +30,7 @@ function fn_orderSearch(){
 }
 
 function fn_callbackOrder(orderId){
-	//orderId = 118528;
+	//orderId = tmp;
 	console.log("orderId : " + orderId);
 	fn_validRequiredField(orderId);
 }
@@ -61,11 +62,13 @@ function fn_validRequiredField(orderId){
 function fn_loadBillingSchedule(orderId){
 	Common.ajax("GET", "/payment/selectRentalProductEarlyTerminationPenalty.do", {"orderId" : orderId}, function(result) {
 		   console.log(result);
-		   $("#orderId").val(result.soReqId);
-		   $("#orderNo").val(result.salesOrdNo);
-		   $("#rental").val(result.soReqCurrAmt);
-		   $("#unbillMonth").val(result.unbillMonth);
-		   $("#amount").val(result.soReqCanclPnaltyAmt);
+		   if(result != null){
+			   $("#orderId").val(result.soReqId);
+			   $("#orderNo").val(result.salesOrdNo);
+			   $("#rental").val(result.soReqCurrAmt);
+			   $("#unbillMonth").val(result.unbillMonth);
+			   $("#amount").val(result.soReqCanclPnaltyAmt);
+		   }
 	});
 }
 
@@ -81,7 +84,7 @@ function fn_createBills(){
 		return;
 	}
 	
-	//$("#orderId").val(118528);
+    //$("#orderId").val(tmp);
 	
 	Common.ajax("GET", "/payment/createBillsForEarlyTermination.do", $("#billingForm").serialize(), function(result) {
 		console.log(result);
@@ -118,6 +121,18 @@ var errorMsg = function(){
     
     return errorMessage;
 }
+
+function fn_clickViewDetail(){
+	//$("#orderId").val(tmp);
+	alert("!!!");
+    var orderId = $("#orderId").val();
+    console.log("viewDetail , orderID : " + orderId);
+    if(orderId != '' && orderId != undefined){
+       Common.popupDiv("/sales/order/orderDetailPop.do?salesOrderId="+orderId, {callPrgm : "EARLY_TERMINATION_BILLING", indicator : "SearchTrialNo"});
+    }else{
+        Common.alert("SELECT ORDER FIRST");
+    }
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -149,7 +164,7 @@ var errorMsg = function(){
     <input type="hidden" id="orderNo" name="orderNo" />
     <input type="text" id="orderId" name="orderId" title="" placeholder="" class="" />
     <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
-    <p class="btn_sky"><a href="#">View Details</a></p>
+    <p class="btn_sky"><a href="javascript:fn_clickViewDetail()">View Details</a></p>
     </td>
 </tr>
 </tbody>
