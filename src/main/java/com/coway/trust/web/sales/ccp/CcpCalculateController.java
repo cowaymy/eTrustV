@@ -1,0 +1,155 @@
+package com.coway.trust.web.sales.ccp;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import com.coway.trust.biz.sales.ccp.CcpCalculateService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Controller
+@RequestMapping(value = "/sales/ccp")
+public class CcpCalculateController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CcpCalculateController.class);
+	
+	@Resource(name = "ccpCalculateService") 
+	private CcpCalculateService ccpCalculateService;
+	
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
+	
+	@RequestMapping(value = "/selectCalCcpList.do")
+	public String selectCalCcpList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		return "sales/ccp/ccpCalCcpList";
+	}
+	
+	
+	@RequestMapping(value = "/selectDscCodeList")
+	public ResponseEntity<List<EgovMap>> selectDscCodeList()throws Exception{
+		
+		List<EgovMap> dscCodeList = null;
+		
+		dscCodeList = ccpCalculateService.selectDscCodeList();
+		
+		return ResponseEntity.ok(dscCodeList);
+		
+	}
+	
+	
+	@RequestMapping(value = "selectReasonCodeFbList")
+	public ResponseEntity<List<EgovMap>> selectReasonCodeFbList() throws Exception{
+		
+		List<EgovMap> fbList = null;
+		
+		fbList = ccpCalculateService.selectReasonCodeFbList();
+		
+		return ResponseEntity.ok(fbList);
+	}
+	
+	@RequestMapping(value = "/selectCalCcpListAjax")
+	public ResponseEntity<List<EgovMap>> selectCalCcpListAjax(@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception{
+		
+		LOGGER.info("#############################################");
+		LOGGER.info("#############selectCalCcpListAjax Start");
+		LOGGER.info("#############################################");
+		//Params Setting
+		
+		String arryCalCcpStatus[] = request.getParameterValues("calCcpStatus");
+		String arryCalBranch[] = request.getParameterValues("calBranch");
+		String arryCalReason[] = request.getParameterValues("calReason");
+		
+		params.put("arryCalCcpStatus", arryCalCcpStatus);
+		params.put("arryCalBranch", arryCalBranch);
+		params.put("arryCalReason", arryCalReason);
+		
+		//Call Service
+		List<EgovMap> calList = null;
+		
+		calList = ccpCalculateService.selectCalCcpListAjax(params);
+		
+		return ResponseEntity.ok(calList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/selectCalCcpViewEditPop.do")
+	public String selectCalCcpViewEditPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.info("############################################################");
+		LOGGER.info("############ CalCcpViewEditPop Params Confirm : " + params.toString());
+		LOGGER.info("############################################################");
+		
+		//Log Service
+		EgovMap prgMap = null;
+		BigDecimal prgDecimal = null;
+		int resultVal = 0;
+		prgMap = ccpCalculateService.getLatestOrderLogByOrderID(params);
+		prgDecimal = (BigDecimal)prgMap.get("prgrsId");
+		resultVal = prgDecimal.intValue();
+		
+    	//params Set
+    	params.put("prgrsId", resultVal); 
+    	params.put("salesOrderId", params.get("salesOrdId"));
+    	//service1
+    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+    	
+    	EgovMap tempMap = null;
+    	tempMap = (EgovMap)orderDetail.get("basicInfo");
+    	
+    	BigDecimal tempIntval = (BigDecimal)tempMap.get("custTypeId");
+    	
+    	//Set Param
+    	if(tempIntval.intValue() == 965){
+    		model.addAttribute("ccpMasterId", "1"); //Company
+    		params.put("ccpMasterId", "1"); //order unit MasterId
+    	}else{
+    		model.addAttribute("ccpMasterId", "0"); //Individual
+    		params.put("ccpMasterId", "2"); //oder unit MasterId
+    	}
+    	
+    	EgovMap fieldMap = null;
+    	//params Set
+    	params.put("custId", tempMap.get("custId"));
+    	
+    	fieldMap = ccpCalculateService.getCalViewEditField(params);
+    	
+    	//Model
+    	model.put("ccpId", params.get("ccpId"));
+    	model.put("orderDetail", orderDetail);
+    	model.put("fieldMap", fieldMap);
+			
+		//return 
+		if(resultVal > 1){
+			return "sales/ccp/ccpCalCCpViewPop";
+		}else{
+			return "sales/ccp/ccpCalCcpViewEditPop";
+		}
+	}
+	
+	
+	@RequestMapping(value = "/getOrderUnitList")
+	public ResponseEntity<List<EgovMap>> getOrderUnitList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> unitList = null;
+		
+		unitList = ccpCalculateService.getOrderUnitList(params);
+		
+		return ResponseEntity.ok(unitList);
+		
+	}
+}
+

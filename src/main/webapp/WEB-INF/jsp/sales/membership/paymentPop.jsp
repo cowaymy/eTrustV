@@ -516,7 +516,7 @@ function  fn_Charges_init(){
 
 
 
-<!-- inc_membershipInfo  tab  start...-->
+<%-- <!-- inc_membershipInfo  tab  start...-->
     <jsp:include page ='/sales/membership/inc_membershipInfo.do'/> 
 <!--  inc_membershipInfotab  end...-->
 
@@ -528,7 +528,7 @@ function  fn_Charges_init(){
 
 <!-- person info tab  start...-->
     <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> 
-<!-- oder info tab  end...-->
+<!-- oder info tab  end...--> --%>
 
 <article class="tap_area"><!-- tap_area start -->
 
@@ -630,9 +630,9 @@ function  fn_Charges_init(){
 
 
 
-<!-- person info tab  start...-->
+<%-- <!-- person info tab  start...-->
     <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/>  
-<!-- oder info tab  end...-->
+<!-- oder info tab  end...--> --%>
 
 
 

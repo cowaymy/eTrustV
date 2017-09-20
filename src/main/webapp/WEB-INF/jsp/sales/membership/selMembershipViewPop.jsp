@@ -34,24 +34,24 @@
 </ul>
 
 
-
+ 
 <!-- inc_membershipInfo  tab  start...-->
-    <jsp:include page ='/sales/membership/inc_membershipInfo.do'/> 
+    <%-- <jsp:include page ='/sales/membership/inc_membershipInfo.do'/>  --%>
 <!--  inc_membershipInfotab  end...-->
 
 
 <!-- oder info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_orderInfo.do'/> 
+    <%-- <jsp:include page ='/sales/membership/inc_orderInfo.do'/>  --%>
 <!-- oder info tab  end...-->
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/> 
+    <%-- <jsp:include page ='/sales/membership/inc_contactPersonInfo.do'/>  --%>
 <!-- oder info tab  end...-->
 
 
 <!-- person info tab  start...-->
-    <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/> 
-<!-- oder info tab  end...-->
+    <%-- <jsp:include page ='/sales/membership/inc_quotFilterInfo.do'/>  --%>
+<!-- oder info tab  end...--> 
 
 
 

@@ -278,9 +278,5 @@ function createOrdAUIGrid(){
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
 <hr />
 </div><!-- wrap end -->

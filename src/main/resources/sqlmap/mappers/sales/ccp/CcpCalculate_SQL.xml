@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpCalculateMapper">
+
+<select id="selectDscCodeList"  resultType="egovMap">
+SELECT Project1.BRNCH_ID ,
+       Project1.CODE_NAME 
+FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                Extent1.CODE || ' - ' || Extent1.NAME CODE_NAME  
+         FROM SYS0005M Extent1
+          WHERE  ( 1 = Extent1.STUS_ID )
+                   AND ( Extent1.TYPE_ID IN ( 40,43 )
+                  ) ) Project1
+ORDER BY Project1.CODE_NAME ASC
+</select>
+
+<select id="selectReasonCodeFbList" resultType="egovMap">
+    SELECT Extent1.RESN_ID CODE_ID  ,
+       Extent1.CODE CODE  ,
+       Extent1.CODE || ' - ' || Extent1.RESN_DESC CODE_NAME  
+  FROM SYS0032M Extent1
+ WHERE  ( Extent1.RESN_TYPE_ID = 207 )
+          AND ( Extent1.STUS_CODE_ID = 1 )
+</select>
+
+<resultMap type="egovMap" id="calCcpListClobMap">
+    <result property="CCP_REM" column="CCP_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+    <result property="CCP_PNC_REM" column="CCP_PNC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+
+<select id="selectCalCcpListAjax" parameterType="Map" resultMap="calCcpListClobMap">
+			SELECT Filter1.CCP_ID   ,
+			       Filter1.CCP_SCHEME_TYPE_ID   ,
+			       Filter1.CCP_TYPE_ID   ,
+			       TO_CHAR(Filter1.CCP_TOT_SCRE_POINT , 'FM9999999999990.0') CCP_TOT_SCRE_POINT  ,
+			       Filter1.CCP_STUS_ID   , 
+			       Filter1.CCP_RESN_ID   ,
+			       Filter1.CCP_REM   ,
+			       Filter1.CCP_RJ_STUS_ID   ,
+			       Filter1.CCP_UPD_DT   ,
+			       TO_CHAR(Filter1.CCP_UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||Filter1.USERNAME3 ||')' UPD_AT,
+			       Filter1.SALESORDERID1 SALES_ORD_ID  ,
+			       Filter1.SALES_ORD_NO   ,
+			       Filter1.REF_NO   ,
+			       Filter1.SALES_DT   ,
+			       Filter1.CREATED1 CRT_DT  ,
+			       TO_CHAR(Filter1.CREATED1 , 'DD-MM-YYYY AM HH:MI:SS ') ||'('||Filter1.USERNAME2 || ')' KEY_AT,
+			       Filter1.STUS_CODE_ID,  
+			       Filter1.CUSTOMERID1 CUST_ID  ,
+			       Filter1.NAME3 NAME  ,
+			       Filter1.NRIC1 NRIC  ,
+			       Filter1.STK_ID   ,
+			       Filter1.STK_CODE   ,
+			       Filter1.STK_DESC   ,
+			       Extent13.BRNCH_ID   ,
+			       Extent13.NAME NAME1  ,
+			       Extent13.REGN_ID   ,
+			       CASE WHEN  972 = Filter1.CCP_TYPE_ID  THEN 'New Sales Order CCP' ELSE 'Reversal CCP' END CCP_TYPE  ,
+			       CASE WHEN  1 = Filter1.STATUSCODEID1  THEN 'Active' WHEN ( 4 = Filter1.STATUSCODEID1 ) THEN 'Completed' ELSE 'Cancelled' END STATUS  ,
+			       CASE WHEN  1 = Filter1.CCP_STUS_ID  THEN 'Active' WHEN ( 5 = Filter1.CCP_STUS_ID ) THEN 'Approved' ELSE 'Rejected' END CCP_STATUS  ,
+			       CASE WHEN  969 = Filter1.CCP_SCHEME_TYPE_ID  THEN 'Individual CCP Scheme' ELSE 'Company CCP scheme' END CCP_SCHEME_TYPE  ,
+			       CASE WHEN  Filter1.CCP_IS_HOLD IS NOT NULL THEN Filter1.CCP_IS_HOLD ELSE UTILS.CONVERT_TO_NUMBER(0,1,0) END CCP_IS_HOLD  ,
+			       Filter1.BRANCHID2 BRANCHID1  ,
+			       Filter1.USERNAME2 USER_NAME  ,
+			       Filter1.USERNAME3 USERNAME1  ,
+			       Filter1.MEM_CODE   ,
+			       Filter1.RESN_DESC   ,
+			       Filter1.NAME4 NAME2  
+			FROM ( SELECT Extent1.CCP_ID   ,
+			          Extent1.CCP_SCHEME_TYPE_ID   ,
+			          Extent1.CCP_TYPE_ID   ,
+			          Extent1.CCP_TOT_SCRE_POINT   ,
+			          Extent1.CCP_STUS_ID   ,
+			          Extent1.CCP_RESN_ID   ,
+			          Extent1.CCP_REM   ,
+			          Extent1.CCP_RJ_STUS_ID   ,
+			          Extent1.CCP_UPD_DT   ,
+			          Extent1.CCP_IS_HOLD   ,
+			          Extent3.SALES_ORD_ID SALESORDERID1  ,
+			          Extent3.SALES_ORD_NO   ,
+			          Extent3.REF_NO   ,
+			          Extent3.SALES_DT   ,
+			          Extent3.BRNCH_ID BRANCHID3  ,
+			          Extent3.STUS_CODE_ID STATUSCODEID1  ,
+			          Extent3.CRT_DT CREATED1  ,
+			          Extent3.STUS_CODE_ID,
+			          Extent4.BRNCH_ID BRANCHID2  ,
+			          Extent5.USER_NAME USERNAME2  ,
+			          Extent6.USER_NAME USERNAME3  ,
+			          Extent7.MEM_CODE   ,
+			          Extent8.RESN_DESC   ,
+			          Extent9.CUST_ID CUSTOMERID1  ,
+			          Extent9.NAME NAME3  ,
+			          Extent9.NRIC NRIC1  ,
+			          Extent11.STK_ID   ,
+			          Extent11.STK_CODE   ,
+			          Extent11.STK_DESC   ,
+			          Extent12.NAME NAME4  
+			       FROM SAL0102D Extent1
+			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
+			                        MAX(Extent2.CCP_ID)  A1  
+			                  FROM SAL0102D Extent2
+			                  GROUP BY Extent2.CCP_SALES_ORD_ID ) GroupBy1   ON Extent1.CCP_ID = GroupBy1.A1
+			          JOIN SAL0001D Extent3   ON Extent1.CCP_SALES_ORD_ID = Extent3.SALES_ORD_ID
+			          LEFT JOIN SAL0045D Extent4   ON Extent3.SALES_ORD_ID = Extent4.SALES_ORD_ID
+			          LEFT JOIN SYS0047M Extent5   ON Extent3.CRT_USER_ID = Extent5.USER_ID
+			          LEFT JOIN SYS0047M Extent6   ON Extent1.CCP_UPD_USER_ID = Extent6.USER_ID
+			          LEFT JOIN ORG0001D Extent7   ON Extent3.MEM_ID = Extent7.MEM_ID
+			          LEFT JOIN SYS0032M Extent8   ON Extent1.CCP_RESN_ID = Extent8.RESN_ID
+			          JOIN SAL0029D Extent9   ON Extent3.CUST_ID = Extent9.CUST_ID
+			          JOIN SAL0002D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
+			          JOIN SYS0026M Extent11   ON Extent10.ITM_STK_ID = Extent11.STK_ID
+			          LEFT JOIN SYS0038M Extent12   ON Extent1.CCP_RJ_STUS_ID = Extent12.STUS_CODE_ID
+			          
+			          <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
+			          
+			          <!-- ## RENTAL  ONLY ## -->
+			          WHERE Extent3.APP_TYPE_ID = 66
+			          
+			          <if test=" '' != calCcpStatus and null != calCcpStatus "> 
+                             AND  Extent1.CCP_STUS_ID IN
+                             <foreach collection="arryCalCcpStatus" item="value" open="(" separator="," close=")">
+                                 <choose>
+                                     <when test="value ==  4 ">
+                                         #{value} , 6 , 10
+                                     </when>
+                                     <otherwise>
+                                         #{value}
+                                     </otherwise>
+                                 </choose>
+                             </foreach>
+                          </if> 
+			           
+			          <if test=" '' != calActPoint and null != calActPoint">
+			             AND UTILS.CONVERT_TO_NUMBER(0,18) = Extent1.CCP_TOT_SCRE_POINT
+			          </if> 
+			          
+			          <if test=" '' != calReason and null != calReason">
+			             AND Extent1.CCP_RESN_ID IN
+			             <foreach collection="arryCalReason" item="value" open="(" separator="," close=")">
+			               #{value}  
+			             </foreach>   
+			          </if>
+			           
+			          ) Filter1
+			     JOIN SYS0005M Extent13   ON Filter1.BRANCHID3 = Extent13.BRNCH_ID
+			     WHERE  1 = 1
+			               <!--Start Condition  -->
+			                 
+			               <!-- Filter1.CCP_STUS_ID = 1 -->
+			              
+			              <if test=" '' != calOrdNo and null != calOrdNo"> 
+			                 AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'   
+			              </if>   
+			               
+			              <if test=" '' != calStartDate and null != calStartDate"> 
+			                 AND  Filter1.SALES_DT >= TO_CHAR(TO_DATE(#{calStartDate}, 'DD-MM-YYYY') , 'YYYY-MM-DD')     
+			              </if>
+			               
+			              <if test=" '' != calEndDate and null != calEndDate"> 
+			                 <![CDATA[
+                             AND  Filter1.SALES_DT <= TO_CHAR(TO_DATE(#{calEndDate}, 'DD-MM-YYYY') , 'YYYY-MM-DD')     
+                             ]]>
+			              </if>
+			               
+			               <if test=" '' != calBranch and null != calBranch"> 
+        			          AND Extent13.BRNCH_ID IN
+        			          <foreach collection="arryCalBranch" item="value" open="(" separator="," close=")">
+        			             #{value}
+        			          </foreach>       
+			               </if>
+			               
+			               <if test=" '' != calDscBranch and null != calDscBranch"> 
+			                 AND  Filter1.BRANCHID2 = #{calDscBranch}
+			               </if>
+			               
+			               <if test=" '' != calCustName and null != calCustName"> 
+			                 AND  Filter1.NAME3 LIKE '%'||#{calCustName}||'%' 
+			               </if>
+			               
+			               <if test=" '' != calNric and null != calNric"> 
+			                 AND  Filter1.NRIC1 LIKE '%'||#{calNric}||'%'  
+			               </if>
+			               
+			               <if test=" '' != calProductId and null != calProductId"> 
+                             AND  Filter1.STK_ID = #{calProductId}
+                           </if>
+			               
+			               <if test=" '' != calCcpType and null != calCcpType  "> 
+			                 AND  Filter1.CCP_TYPE_ID = #{calCcpType}
+			               </if>
+			               
+			               <if test=" '' != calScheme and null != calScheme"> 
+			                 AND  Filter1.CCP_SCHEME_TYPE_ID = #{calScheme}
+			               </if>
+			               
+			               <if test=" '' != calOrdRefNo and null != calOrdRefNo"> 
+			                 AND  Filter1.REF_NO LIKE '%'||#{calOrdRefNo}||'%'  
+			               </if>
+			              
+			              <if test=" '' != calRegion and null != calRegion"> 
+			                 AND  Extent13.REGN_ID = #{calRegion}
+			              </if>
+			               
+			               <if test=" '' != calUpdator and null != calUpdator">
+			                  AND  Filter1.USERNAME3 =  #{calUpdator}
+			               </if>
+			              <!--End Condition  -->                      
+			  ORDER BY Filter1.CCP_ID ASC
+
+</select>
+
+<select id="getPrgId"  parameterType="Map" resultType="egovMap">
+			SELECT 
+			    LOG_ID ,
+			    LOG_CRT_DT ,
+			    LOG_CRT_USER_ID ,
+			    C1 ,
+			    IS_LOK ,
+			    LOG_DT ,
+			    SALES_ORD_ID ,
+			    PRGRS_ID ,
+			    PRGRS ,
+			    REF_ID  
+			  FROM ( SELECT Project1.LOG_ID   ,
+			                Project1.LOG_CRT_DT   ,
+			                Project1.LOG_CRT_USER_ID   ,
+			                Project1.C1   ,
+			                Project1.IS_LOK   ,
+			                Project1.LOG_DT   ,
+			                Project1.SALES_ORD_ID   ,
+			                Project1.PRGRS_ID   ,
+			                Project1.PRGRS   ,
+			                Project1.REF_ID   
+						  FROM ( SELECT Extent1.LOG_ID   ,
+						                Extent1.SALES_ORD_ID   ,
+						                Extent1.PRGRS_ID   ,
+						                Extent1.LOG_DT   ,
+						                Extent1.REF_ID   ,
+						                Extent1.IS_LOK   ,
+						                Extent1.LOG_CRT_USER_ID   ,
+						                Extent1.LOG_CRT_DT   ,
+						                Extent2.PRGRS   ,
+						                CASE WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END C1  
+							         FROM SAL0009D Extent1
+							                JOIN SAL0010M Extent2   ON Extent2.PRGRS_ID = Extent1.PRGRS_ID
+							                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.LOG_CRT_USER_ID
+							          WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} ) Project1
+			  ORDER BY Project1.LOG_ID DESC )
+			  <![CDATA[
+			  WHERE ROWNUM <= 1
+			  ]]>
+</select>
+
+
+<select id="getOrderUnitList" parameterType="Map" resultType="egovMap">
+    SELECT Extent4.SCRE_EVENT_ID CODE_ID  ,
+       Extent4.SCRE_EVENT_CODE   ,
+       Extent4.SCRE_EVENT_DESC CODE_NAME  ,
+       Extent4.SCRE_EVENT_POINT_START   ,
+       Extent4.SCRE_EVENT_POINT_END   ,
+       Extent4.SCRE_EVENT_POINT   ,
+       Extent4.SCRE_EVENT_TOT_POINT   ,
+       Extent4.SCRE_EVENT_STUS_ID   ,
+       Extent4.SCRE_EVENT_UPD_USER_ID   ,
+       Extent4.SCRE_EVENT_UPD_DT   ,
+       Extent4.SCRE_EVENT_PREV_SETT_ID   
+  FROM SYS0009M Extent1
+         JOIN SYS0008M Extent2   ON Extent1.CCP_MASTER_ID = Extent2.SCRE_CTGRY_MASTER_ID
+         JOIN SYS0011M Extent3   ON Extent2.SCRE_CTGRY_ID = Extent3.SCRE_CTGRY_ID
+         JOIN SYS0010M Extent4   ON Extent3.SCRE_CTGRY_EVENT_ID = Extent4.SCRE_EVENT_ID
+ WHERE   Extent1.CCP_MASTER_ID = #{ccpMasterId} 
+     AND  Extent2.SCRE_CTGRY_TYPE_ID = #{screCtgryTypeId} 
+</select>
+
+<select id="countOrderUnit" parameterType="Map" resultType="egovMap">
+ SELECT Extent1.SALES_ORD_ID   , 
+       Extent1.SALES_ORD_NO   ,
+       Extent1.REF_NO   ,
+       Extent1.SALES_DT   ,
+       Extent1.CUST_ID   ,
+       Extent1.CUST_CNT_ID   ,
+       Extent1.CUST_ADD_ID   ,
+       Extent1.MEM_ID   ,
+       Extent1.BRNCH_ID   ,
+       Extent1.APP_TYPE_ID   ,       
+       Extent1.TOT_AMT   ,
+       Extent1.PROMO_ID   ,
+       Extent1.BINDING_NO   ,
+       Extent1.CC_PROMO_ID   ,
+       Extent1.TOT_PV   ,
+       Extent1.REM   ,
+       Extent1.PV_MONTH   ,
+       Extent1.PV_YEAR   ,
+       Extent1.STUS_CODE_ID   ,
+       Extent1.UPD_DT   ,
+       Extent1.UPD_USER_ID   ,
+       Extent1.SYNC_CHK   ,
+       Extent1.CUST_PO_NO   ,
+       Extent1.REN_CHK_ID   ,
+       Extent1.INST_PRIOD   ,
+       Extent1.DO_NO   ,
+       Extent1.DEPT_CODE   ,
+       Extent1.GRP_CODE   ,
+       Extent1.ORG_CODE   ,
+       Extent1.SALES_ORD_ID_OLD   ,
+       Extent1.EDIT_TYPE_ID   ,
+       Extent1.CUST_BILL_ID   ,
+       Extent1.MTH_RENT_AMT   ,
+       Extent1.LOK   ,
+       Extent1.AEON_STUS_ID   ,
+       Extent1.COMM_DT   ,
+       Extent1.CRT_USER_ID   ,
+       Extent1.CRT_DT   ,
+       Extent1.PAY_COM_DT   ,
+       Extent1.DEF_RENT_AMT   ,
+       Extent1.REF_DOC_ID   ,       
+       Extent1.SALES_HM_ID   ,
+       Extent1.SALES_SM_ID   ,
+       Extent1.SALES_GM_ID   ,
+       Extent1.ADV_BILL   ,
+       Extent1.CNVR_SCHEME_ID   ,
+       Extent1.CUST_CARE_CNT_ID   
+  FROM SAL0001D Extent1
+ WHERE  ( Extent1.CUST_ID = #{custId} )
+          AND ( 66 = Extent1.APP_TYPE_ID )
+          AND ( 4 = Extent1.STUS_CODE_ID )
+</select>
+
+<select id="orderUnitSelectValue" parameterType="Map" resultType="egovMap">
+SELECT Extent3.SCRE_EVENT_ID   ,
+       Extent3.SCRE_EVENT_CODE   ,
+       Extent3.SCRE_EVENT_DESC   ,
+       Extent3.SCRE_EVENT_POINT_START   ,
+       Extent3.SCRE_EVENT_POINT_END   ,
+       Extent3.SCRE_EVENT_POINT   ,
+       Extent3.SCRE_EVENT_TOT_POINT   ,
+       Extent3.SCRE_EVENT_STUS_ID   ,
+       Extent3.SCRE_EVENT_UPD_USER_ID   ,
+       Extent3.SCRE_EVENT_UPD_DT   ,
+       Extent3.SCRE_EVENT_PREV_SETT_ID   
+  FROM SYS0008M Extent1
+         LEFT JOIN SYS0011M Extent2   ON Extent1.SCRE_CTGRY_ID = Extent2.SCRE_CTGRY_ID
+         JOIN SYS0010M Extent3   ON Extent2.SCRE_CTGRY_EVENT_ID = Extent3.SCRE_EVENT_ID
+ WHERE  ( Extent1.SCRE_CTGRY_TYPE_ID = #{ctgyTyId} )
+          AND ( Extent1.SCRE_CTGRY_MASTER_ID = #{ctgyMstId} )
+          <![CDATA[
+          AND ( Extent3.SCRE_EVENT_POINT_START <= #{ordUnitCount} )
+          ]]>
+          AND ( Extent3.SCRE_EVENT_POINT_END >= #{ordUnitCount} )
+          <![CDATA[
+          AND ROWNUM <= 1
+          ]]>
+</select>
+</mapper>

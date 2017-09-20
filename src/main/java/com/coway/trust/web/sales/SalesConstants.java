@@ -113,6 +113,8 @@ public class SalesConstants {
 	public static final int TRMNAT_OBLIGATION_PERIOD = 12;   //TerminationObligationPeriod = 12;
 	public static final int TRMNAT_PENALTY = 0;	//terminate.TerminationPenalty = 0;
 	public static final int TRMNAT_CONTRACT_SUB_PERIOD = 3;	//terminate.TerminationContractSubPeriod = 3;
+	public static final String CATEGORY_TYPE_ID = "212";
+	public static final String CATEGORY_MASTER_ID = "2";
 	
 	//Order Investigation
 	public static final String  INVEST_CODEID = "73"; // Investigation (Get DocNo)
