@@ -356,6 +356,31 @@ public class PointOfSalesController {
 		
 		return ResponseEntity.ok(map);
 	}
+	
+	
+	@RequestMapping(value = "/MaterialDocumentList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectStockMovementRequestDeliveryList(@RequestParam Map<String, Object> params,
+			Model model) throws Exception {
+		
+		logger.debug("reqstno@@@@@: {}",  params.get("reqstno"));
+		
+			List<EgovMap> mtrList = PointOfSalesService.selectMaterialDocList(params);			
+	    
+			for (int i = 0; i < mtrList.size(); i++) {
+	    	logger.debug("MaterialDocumentList@@@@@: {}",  mtrList.get(i));
+		}
+		
+		
+		Map<String, Object> map = new HashMap();
+
+		map.put("data2", mtrList);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	
+	
 
 	
 }
