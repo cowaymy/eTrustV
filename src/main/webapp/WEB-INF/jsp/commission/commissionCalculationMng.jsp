@@ -233,11 +233,9 @@
 	            	if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="1"){
 	            		alert("실행 중 입니다.");
 	            		return false;
-	            	}else if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="8"){
-	            		if((AUIGrid.getCellValue(myGridID, failCnt, 2))=="9"){
-		            		alert("에러가 난 프로시저를 먼저 실행해주세요."); 
-		            		return false;
-	            		}
+	            	}else if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="8" && (AUIGrid.getCellValue(myGridID, failCnt, 2))=="9" ){
+	            		alert("에러가 난 프로시저를 먼저 실행해주세요."); 
+	            		return false;
 	            	}else{
 		            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
 		            		$("#search").trigger("click");
