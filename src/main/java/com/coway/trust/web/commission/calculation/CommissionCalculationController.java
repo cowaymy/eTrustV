@@ -1466,7 +1466,7 @@ public class CommissionCalculationController {
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
 		//task id
-		int sTaskID = taskIdCalculation(formMap.get("CMM0018T_Dt").toString());
+		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
 		formMap.put("taskId", sTaskID);
 		
 		commissionCalculationService.udtExcludeDataCMM0018T(formMap);
@@ -1495,7 +1495,7 @@ public class CommissionCalculationController {
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		
 		//task id
-		int sTaskID = taskIdCalculation(formMap.get("CMM0019T_Dt").toString());
+		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
 		formMap.put("taskId", sTaskID);
 		
 		commissionCalculationService.udtExcludeDataCMM0019T(formMap);
@@ -1524,7 +1524,7 @@ public class CommissionCalculationController {
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		
 		//task id
-		int sTaskID = taskIdCalculation(formMap.get("CMM0020T_Dt").toString());
+		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
 		formMap.put("taskId", sTaskID);
 		
 		commissionCalculationService.udtExcludeDataCMM0020T(formMap);
@@ -1552,7 +1552,7 @@ public class CommissionCalculationController {
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		
 		//task id
-		int sTaskID = taskIdCalculation(formMap.get("CMM0021T_Dt").toString());
+		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
 		formMap.put("taskId", sTaskID);
 		
 		commissionCalculationService.udtExcludeDataCMM0021T(formMap);
