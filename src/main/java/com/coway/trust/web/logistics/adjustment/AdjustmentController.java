@@ -439,6 +439,20 @@ public class AdjustmentController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/selectInsertSerialCount.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectInsertSerialCount(@RequestParam Map<String, Object> params) {
+		logger.debug("adjNo : {}", params.get("adjNo"));
+		logger.debug("status : {}", params.get("status"));
+		int data = adjustmentService.selectInsertSerialCount(params);
+		// params.put("cntQty", data);
+		// adjustmentService.insertAdjustmentLocCount(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(data);
+		return ResponseEntity.ok(message);
+	}
+
 	/**
 	 * 공통 파일 테이블 사용 Upload를 처리한다.
 	 *

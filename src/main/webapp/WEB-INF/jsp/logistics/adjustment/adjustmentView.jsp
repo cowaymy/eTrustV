@@ -319,3 +319,6 @@ function searchHead(){
 <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="grid_wrap"></div>
 </article>
+<form id="listForm" name="listForm" method="POST">
+<input type="hidden" id="retnVal"    name="retnVal"    value="R"/>
+</form>

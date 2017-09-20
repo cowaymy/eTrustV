@@ -35,7 +35,7 @@ public interface AdjustmentMapper {
 
 	void insertAdjustmentLocSerial(Map<String, Object> params);
 
-	void insertExcel(Map<String, Object> setMap);
+	// void insertExcel(Map<String, Object> setMap);
 
 	int updateSaveYn(Map<String, Object> params);
 
@@ -52,5 +52,7 @@ public interface AdjustmentMapper {
 	void insertAdjustmentLocCount(Map<String, Object> setMap);
 
 	void updateApprovalStatus(Map<String, Object> params);
+
+	int selectInsertSerialCount(Map<String, Object> params);
 
 }

@@ -142,7 +142,6 @@ $(document).ready(function(){
     doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','srch_itemtype', 'M' , 'f_multiCombo');
     doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','catagorytype', 'M' , 'f_multiCombo');
     doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','srch_catagorytype', 'M' , 'f_multiCombo');
-    //$("#cancelTr").hide();
     /**********************************
      * Header Setting End
      ***********************************/
@@ -160,22 +159,20 @@ $(document).ready(function(){
     AUIGrid.bind(myGridID, "cellClick", function( event ) {
         var invntryNo=AUIGrid.getCellValue(myGridID, event.rowIndex, "invntryNo");
         fn_subGrid(invntryNo);
+       // fn_checkDetailAuthority(invntryNo);
     });
     
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
            var invntryNo=AUIGrid.getCellValue(myGridID, event.rowIndex, "invntryNo");
-          // var autoFlag=AUIGrid.getCellValue(myGridID, event.rowIndex, "autoFlag");
 
     
-        fn_setLoc(invntryNo);
+       // fn_checkDetailAuthority(invntryNo);
     });
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event){
            var invntryNo=AUIGrid.getCellValue(reqGrid, event.rowIndex, "invntryNo");
            var locId=AUIGrid.getCellValue(reqGrid, event.rowIndex, "locId");
-          // var autoFlag=AUIGrid.getCellValue(myGridID, event.rowIndex, "autoFlag");
            $("#rAdjcode").val(invntryNo);
            $("#rAdjlocId").val(locId);
-           //$("#rStatus").val("V");
            document.searchForm.action = '/logistics/adjustment/AdjustmentCounting.do';
            document.searchForm.submit(); 
     
@@ -190,7 +187,6 @@ $(document).ready(function(){
 $(function(){
     $("#create").click(function(){
         $("#popup_wrap").show();
-        //$("#eventtype").hide()
     });
     
     $('#search').click(function() {
@@ -230,11 +226,8 @@ $(function(){
             Common.alert('Please select Stock Audit Number.');
             return false;
         }else{
-            //$("#rAdjcode").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryNo"));
-            //$("#rAdjlocId").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "locId"));
             $("#rAdjcode").val(invntryNo);
             $("#rAdjlocId").val(locId);
-            //$("#rStatus").val("V");
             document.searchForm.action = '/logistics/adjustment/AdjustmentCounting.do';
             document.searchForm.submit(); 
         } 
@@ -242,16 +235,11 @@ $(function(){
      $('#confirm').click(function() {
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             var invntryNo = AUIGrid.getCellValue(myGridID,  selectedItem[0], "invntryNo");
-            //var invntryLocId = AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryLocId");
         if(selectedItem[0] < 0 ){
             Common.alert('Please select Stock Audit Number.');
             return false;
         }else{
-            //$("#rAdjcode").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryNo"));
-            //$("#rAdjlocId").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "locId"));
             $("#rAdjcode").val(invntryNo);
-            //$("#rAdjlocId").val(invntryLocId);
-            //$("#rStatus").val("V");
             document.searchForm.action = '/logistics/adjustment/AdjustmentApproval.do';
             document.searchForm.submit(); 
         } 
@@ -259,16 +247,11 @@ $(function(){
      $('#approval').click(function() {
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             var invntryNo = AUIGrid.getCellValue(myGridID,  selectedItem[0], "invntryNo");
-            //var invntryLocId = AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryLocId");
         if(selectedItem[0] < 0 ){
             Common.alert('Please select Stock Audit Number.');
             return false;
         }else{
-            //$("#rAdjcode").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "invntryNo"));
-            //$("#rAdjlocId").val(AUIGrid.getCellValue(reqGrid,  selectedItem[0], "locId"));
             $("#rAdjcode").val(invntryNo);
-            //$("#rAdjlocId").val(invntryLocId);
-            //$("#rStatus").val("V");
             document.searchForm.action = '/logistics/adjustment/AdjustmentApprovalSteps.do';
             document.searchForm.submit(); 
         } 
@@ -279,10 +262,7 @@ $(function(){
            if(selectedItem[0] < 0 ){
                Common.alert('Please select Stock Audit Number.');
            }else{
-               fn_setLoc(invntryNo);
-               //fn_subGrid(invntryNo);
-                   //$("#grid_wrap_sub_asi").show();
-                   $("#count").show(); 
+               fn_checkDetailAuthority(invntryNo);
            } 
     });  
 });
@@ -291,7 +271,6 @@ $(function(){
 function searchAjax() {
     var url = "/logistics/adjustment/adjustmentList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
     Common.ajax("POST" , url , param , function(result){
         AUIGrid.setGridData(myGridID, result.dataList);
         $("#detail").show();
@@ -318,31 +297,30 @@ function fn_newAdjustment(){
     var url = "/logistics/adjustment/createAdjustment.do";
     var param = $("#popform").serializeJSON();
     $.extend(param,{'auto_manual':'M'});//강제세팅함 
-    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         $("#popup_wrap").hide();
         searchAjax();
     });
     }
     
- function fn_setLoc(invntryNo){
+ function fn_checkDetailAuthority(invntryNo){
     var url = "/logistics/adjustment/checkAdjustmentNo.do";
     var param = "invntryNo="+invntryNo;
-    console.log("param");
-    console.log(param);
     Common.ajax("GET" , url , param , function(data){
-        console.log(data);
         var  data = data.data;
         var v="";
         if(data == "0"){
             v="N";
             fn_popSet(v);
+            //$("#count").hide();
+            
         }else{
             v="Y";
+            //$("#count").show();
             fn_popSet(v);
+            
         }
         
-        $("#popup_wrap2").show();
     });
     } 
 
@@ -364,7 +342,7 @@ function fn_popSet(v){
             $("#autobtn").hide();
             $("#manualbtn").hide();
             $("#view").show();
-            //$("#count").show();
+            $("#count").show();
             
             if(autoFlag == "A"){
                 $("#popup_title2").text("Auto");
@@ -502,7 +480,6 @@ function fn_auto(){
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
-            console.log(data);
            //fn_itemChck(data,tmp2);
              $("#popup_wrap2").hide();
              searchAjax();
@@ -522,12 +499,18 @@ function fromView(){
 function fn_subGrid(invntryNo){
      var url = "/logistics/adjustment/adjustmentDetailLoc.do";
         var param = "invntryNo="+invntryNo;
-        console.log("param");
-        console.log(param);
         Common.ajax("GET" , url , param , function(data){
-            console.log(data);
-            AUIGrid.setGridData(reqGrid, data.dataList);
+        	var list= data.dataList
+        	console.log(list.length);
+            AUIGrid.setGridData(reqGrid, list);
           $("#grid_wrap_sub_art").show();
+          if(list.length>0){
+        	  $('#count').show();
+          }else{
+        	  $('#count').hide();
+          }
+          
+          
         });
 }
 
@@ -561,7 +544,6 @@ function fn_subGrid(invntryNo){
 </ul>
 </aside><!-- title_line end -->
 <form id="searchForm" name="searchForm" method="post"  onsubmit="return false;">
-<input type="hidden" name="rAdjcode" id="rAdjcode" />  
 <input type="hidden" name="rAdjcode" id="rAdjcode" />  
 <input type="hidden" name="rStatus" id="rStatus" />  
 <input type="hidden" name="rAdjlocId" id="rAdjlocId" />  

@@ -49,4 +49,6 @@ public interface AdjustmentService {
 
 	void updateDoc(Map<String, Object> setmap);
 
+	int selectInsertSerialCount(Map<String, Object> params);
+
 }

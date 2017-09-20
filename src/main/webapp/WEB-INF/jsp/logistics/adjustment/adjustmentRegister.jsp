@@ -173,6 +173,7 @@ $(function(){
             Common.ajax("POST", "/logistics/adjustment/adjustmentLocManual.do", param, function(result) {
                 //Common.alert(result.message);
                 AUIGrid.resetUpdatedItems(reqGrid, "all");
+                $('#list').click();
             },  function(jqXHR, textStatus, errorThrown) {
                 try {
                 } catch (e) {
@@ -491,6 +492,9 @@ function fn_ReqAdjLocList(){
 
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" >
+<input type="hidden" name="rAdjcode" id="rAdjcode" />  
+<input type="hidden" name="rStatus" id="rStatus" />  
+<input type="hidden" name="rAdjlocId" id="rAdjlocId" />  
 <input type="hidden" name="srchcdc" id="srchcdc" />  
 <input type="hidden" name="srchrdc" id="srchrdc" />  
 <input type="hidden" name="srchctcd" id="srchctcd" />  

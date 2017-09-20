@@ -263,6 +263,13 @@
 							AND INVNTRY_LOC_ID = #{adjLocIdPop}
 							AND SEQ = #{adjItemPop}
       </insert>
+      <select id="selectInsertSerialCount" parameterType="Map" resultType="int">
+	  SELECT COUNT(1) 
+	        FROM LOG0074D
+			  WHERE 1=1
+			  AND INVNTRY_LOC_ID=#{invntryLocId}
+			  AND SEQ=#{seq}
+      </select>
      <select id="selectAdjustmentCountingDetail" parameterType="Map" resultType="EgovMap">
         SELECT
                 ROWNUM rnum,
@@ -389,28 +396,63 @@
                 ORDER BY  lg72m.INVNTRY_LOC_ID,  lg72m.LOC_ID    , lg73d.SEQ     
       </select>
       <select id="selectCheckSerial" parameterType="Map" resultType="EgovMap">
-          SELECT MAX(SERIAL_NO)  SERIAL_NO , MAX(MATNR) STKCODE , MAX(STKDESC) STKDESC , MAX(L62CNT) L62CNT , MAX(L61CNT) L61CNT , MAX(L63CNT) L63CNT
-	          FROM (  
-	            SELECT SERIAL_NO , MATNR , STK_DESC STKDESC , COUNT(1) L62CNT , 0 L61CNT , 0 L63CNT
-	              FROM LOG0062M L62 , 
-	                   SYS0026M S26 
-	             WHERE L62.MATNR = S26.STK_CODE
-	                AND L62.SERIAL_NO =  #{serial}
-	                 AND L62.MATNR =  #{mtrCdPop}   
-	              GROUP BY SERIAL_NO , MATNR , STK_DESC
-	             UNION 
-	            SELECT L61.SERIAL_NO , '' MATNR , '' STKDESC , 0 L62CNT ,  COUNT(1) L61CNT ,0 L63CNT     
-	              FROM LOG0061D L61 
-	              WHERE L61.SERIAL_NO =  #{serial}
-	              GROUP BY L61.SERIAL_NO
-	             UNION 
-	            SELECT L63.SERIAL_NO , '' MATNR , '' STKDESC , 0 L62CNT ,  0 L61CNT ,  COUNT(1) L63CNT  
-	              FROM LOG0063D L63 
-	              WHERE L63.SERIAL_NO =  #{serial}
-	               AND L63.LOC_ID  =  #{locPop}
-	               AND L63.MATNR =  #{mtrCdPop}
-	             GROUP BY L63.SERIAL_NO
-         )
+			SELECT MAX (SERIAL_NO) SERIAL_NO
+			      ,MAX (MATNR) STKCODE
+			      ,MAX (STKDESC) STKDESC
+			      ,MAX (L62CNT) L62CNT
+			      ,MAX (L61CNT) L61CNT
+			      ,MAX (L63CNT) L63CNT
+			      ,MAX (L74CNT) L74CNT
+			  FROM (SELECT   SERIAL_NO
+			                ,MATNR
+			                ,STK_DESC STKDESC
+			                ,COUNT (1) L62CNT
+			                ,0 L61CNT
+			                ,0 L63CNT
+			                ,0 L74CNT
+			            FROM LOG0062M L62, SYS0026M S26
+			           WHERE L62.MATNR = S26.STK_CODE
+			             AND L62.SERIAL_NO = #{serial}
+			             AND L62.MATNR = #{mtrCdPop} 
+			        GROUP BY SERIAL_NO, MATNR, STK_DESC
+			        UNION
+			        SELECT   L61.SERIAL_NO
+			                ,'' MATNR
+			                ,'' STKDESC
+			                ,0 L62CNT
+			                ,COUNT (1) L61CNT
+			                ,0 L63CNT
+			                ,0 L74CNT
+			            FROM LOG0061D L61
+			           WHERE L61.SERIAL_NO = #{serial}
+			        GROUP BY L61.SERIAL_NO
+			        UNION
+			        SELECT   L63.SERIAL_NO
+			                ,'' MATNR
+			                ,'' STKDESC
+			                ,0 L62CNT
+			                ,0 L61CNT
+			                ,COUNT (1) L63CNT
+			                ,0 L74CNT
+			            FROM LOG0063D L63
+			           WHERE L63.SERIAL_NO = #{serial}
+			             AND L63.LOC_ID = #{locPop}
+			             AND L63.MATNR = #{mtrCdPop} 
+			        GROUP BY L63.SERIAL_NO
+			        UNION
+			        SELECT  L74.SERIAL
+			                ,'' MATNR
+			                ,'' STKDESC
+			                ,0 L62CNT
+			                ,0 L61CNT
+			                ,0 L63CNT
+			                ,COUNT (1) L74CNT 
+			            FROM LOG0074D L74
+			           WHERE L74.SERIAL = #{serial}
+			             AND L74.INVNTRY_LOC_ID = #{adjLocIdPop}
+			        GROUP BY L74.SERIAL           
+			                
+			        )
       </select>
       <update id="updateSaveYn" parameterType="Map">
         UPDATE LOG0072M
@@ -516,6 +558,6 @@
         WHERE  1=1
                 AND INVNTRY_LOC_ID = #{invntryLocId}
                 AND SEQ             =#{seq}
-                AND ITM_ID         =#{itmId}
+               <!--  AND ITM_ID         =#{itmId} -->
       </update> 
 </mapper>

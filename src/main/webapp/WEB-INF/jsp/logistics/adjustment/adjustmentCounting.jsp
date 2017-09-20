@@ -67,7 +67,7 @@ var columnLayout=[
                     }  
                   },
                   {dataField:"diffQty" ,headerText:"Diff Qty",width:120 ,height:30  ,editable:false},
-                  {dataField:"stkCode" ,headerText:"stkCode",width:120 ,height:30 , visible:false ,editable:false},
+                  {dataField:"stkCode" ,headerText:"stkCode",width:120 ,height:30,editable:false},
                   {dataField:"stkDesc" ,headerText:"stkDesc",width:120 ,height:30  , visible:false ,editable:false},
                   {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30 , visible:false,editable:false},
                   {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30 , visible:false,editable:false},
@@ -161,12 +161,13 @@ var serialcolumn  =[{dataField:"itmcd"        ,headerText:"Material Code"       
                          {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30,visible:false },
                          {dataField:"serial"       ,headerText:"Serial"                      ,width:"100%"    ,height:30,editable:true },
                          {dataField:"cnt61"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false },
-                         {dataField:"cnt62"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false },
+                         {dataField:"cnt62"        ,headerText:"Serial"                      ,width:120     ,height:30 ,visible:false},
                          {dataField:"cnt63"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false },
-                         {dataField:"statustype"   ,headerText:"status"                     ,width:120     ,height:30 }
+                         {dataField:"cnt73"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false},
+                         {dataField:"statustype"   ,headerText:"status"                     ,width:120     ,height:30 ,visible:false}
                         ];                              
 var resop = {rowIdField : "rnum"
-		, showStateColumn : false 
+		, showStateColumn : true 
 		, showRowCheckColumn : true 
 		,usePaging : false
 		//,useGroupingPanel : false 
@@ -179,7 +180,7 @@ var serialop = {
         //displayTreeOpen : true,
         //showRowCheckColumn : true ,
         //enableCellMerge : true,
-        //showStateColumn : false,
+        ,showStateColumn : true
         //showBranchOnGrouping : false
         };
 $(document).ready(function(){
@@ -252,9 +253,6 @@ $(document).ready(function(){
                 AUIGrid.update(serialGrid);
             }
             f_addrow(); 
-           /* if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
-              f_addrow();      
-           } */
            
         } 
     });
@@ -292,8 +290,6 @@ $(document).ready(function(){
     	var rowCnt = AUIGrid.getRowCount(myGridID);
         for (var i = 0 ; i < rowCnt ; i++){
             var qty = AUIGrid.getCellValue(myGridID , i , 'sysQty') - AUIGrid.getCellValue(myGridID , i , 'cntQty');
-            console.log(qty);
-           // if(AUIGrid.getCellValue(myGridID , i , 'cntQty'))
             AUIGrid.setCellValue(myGridID, i, 'diffQty', qty);
         }
         AUIGrid.resetUpdatedItems(myGridID, "all");
@@ -388,7 +384,6 @@ $(function(){
     
     $('#save').click(function() {
            	var param = GridCommon.getEditData(myGridID);
-           	console.log(param);
             Common.ajax("POST", "/logistics/adjustment/adjustmentLocCount.do", param, function(result) {
                 //Common.alert(result.message);
                 //AUIGrid.resetUpdatedItems(reqGrid, "all");
@@ -399,6 +394,10 @@ $(function(){
     
                 Common.alert("Fail : " + jqXHR.responseJSON.message);
                 });
+    });
+    $('#reqdel').click(function(){
+        AUIGrid.removeRow(serialGrid, "selectedIndex");
+        AUIGrid.removeSoftRows(serialGrid);
     });
     
 });
@@ -412,7 +411,6 @@ function searchHead(){
     var url = "/logistics/adjustment/oneAdjustmentNo.do";
     Common.ajax("GET" , url , param , function(result){
         var data = result.dataList;
-        console.log(data);
         //fn_setVal(data,status);
         fn_setVal(data);
 /*         $("#invntryNo").val(data[0].invntryNo);
@@ -543,7 +541,7 @@ function f_addrow(){
 
 function fn_serialChck(rowindex , rowitem , str){
     var schk = true;
-    //var ichk = true;
+    var ichk = true;
     var slocid = '';//session.locid;
     //var data = { serial : str , locid : slocid};
     var data ;
@@ -555,29 +553,34 @@ function fn_serialChck(rowindex , rowitem , str){
     });
     Common.ajaxSync("POST", url, data, function(result) {
     	var data=result.dataList;
-         if (data[0] == null){
+    	   console.log(data);
+    	if (data[0] == null){
             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt73" , 0 );
             
             schk = false;
-            //ichk = false;
+            ichk = false;
             
         }else{
-             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" ,data[0].STKCODE );
-             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" ,data[0].STKDESC );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" ,data[0].L61CNT );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" ,data[0].L62CNT );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].L63CNT );
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" ,data[0].stkcode );
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" ,data[0].stkdesc );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" ,data[0].l61cnt );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" ,data[0].l62cnt );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].l63cnt );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt73" ,data[0].l74cnt );
              
-    /*          if (data[0].L61CNT > 0 ||data[0].L62CNT == 0 ||data[0].L63CNT > 0){
+             //if (data[0].L61CNT > 0 ||data[0].L62CNT == 0 ||data[0].L63CNT > 0){
+             if (data[0].l74cnt > 0){
                  schk = false;
              }else{
                  schk = true;
-             } */
-                 schk = true;
+             } 
+                 //schk = true;
                  //ichk = true;
              
              //var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
@@ -621,10 +624,12 @@ function fn_serialChck(rowindex , rowitem , str){
 function giFunc(){
     var data ={};
     var serials     = AUIGrid.getAddedRowItems(serialGrid);
-    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-    AUIGrid.setCellValue(myGridID , selectedItem[0] , "cntQty" , AUIGrid.getRowCount(serialGrid)-1 );
-   /*  for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+    var selectedItem = AUIGrid.getSelectedIndex(serialGrid);
+    var rowIndex= selectedItem[0];
+    //AUIGrid.setCellValue(myGridID , selectedItem[0] , "cntQty" , AUIGrid.getRowCount(serialGrid)-1 );
+  for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
         if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+    
             Common.alert("Please check the serial.")
             return false;
         }
@@ -633,20 +638,16 @@ function giFunc(){
             Common.alert("Please check the serial.")
             return false;
         }
-    } */
+    } 
     
     data.add = serials;
     data.form    = $("#giForm").serializeJSON();
     
-    console.log(data);
     Common.ajax("POST", "/logistics/adjustment/adjustmentSerialSave.do", data, function(result) {
        
-            //Common.alert(result.message , SearchListAjax);
             AUIGrid.resetUpdatedItems(myGridID, "all");    
         $("#giopenwindow").hide();
-       // $('#search').click();
-       set_subGrid(adjNo,adjLocation);
-
+        fn_serialCountSet();
     },  function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
@@ -655,22 +656,40 @@ function giFunc(){
     });
 }
 
+function fn_serialCountSet(){
+	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+	var param =
+    {
+			invntryLocId    : AUIGrid.getCellValue(myGridID, selectedItem[0] ,"invntryLocId"),
+			seq     : AUIGrid.getCellValue(myGridID, selectedItem[0] ,"seq")
+   };
+        Common.ajax("GET", "/logistics/adjustment/selectInsertSerialCount.do", param, function(result) {
+               
+             AUIGrid.setCellValue(myGridID ,  selectedItem[0], "cntQty" , result.data);
+             var qty = AUIGrid.getCellValue(myGridID , selectedItem[0] , 'sysQty') - AUIGrid.getCellValue(myGridID ,selectedItem[0] , 'cntQty');
+             AUIGrid.setCellValue(myGridID, selectedItem[0], 'diffQty', qty);
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
+}
 
 function fn_excelSave(){
 	var param  =  {};
 	param.add = AUIGrid.exportToObject("#popup_wrap_excel");
     Common.ajax("POST", "/logistics/adjustment/saveExcelGrid.do",param , function(result) {
-        console.log("data : " + result);
         set_subGrid(adjNo,adjLocation);
     },  function(jqXHR, textStatus, errorThrown) {
         try {
-            console.log("status : " + jqXHR.status);
+            /* console.log("status : " + jqXHR.status);
             console.log("code : " + jqXHR.responseJSON.code);
             console.log("message : " + jqXHR.responseJSON.message);
             console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage);
+                    + jqXHR.responseJSON.detailMessage); */
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
 
         alert("Fail : " + jqXHR.responseJSON.message);
@@ -779,10 +798,8 @@ function fn_confirm(){
    };
 		Common.ajax("GET", "/logistics/adjustment/adjustmentConfirm.do", param, function(result) {
 		       
-	        //Common.alert(result.message , SearchListAjax);
 	        AUIGrid.resetUpdatedItems(myGridID, "all");    
 	    $("#giopenwindow").hide();
-	   // $('#search').click();
 	   set_subGrid(adjNo,adjLocation);
 	
 	},  function(jqXHR, textStatus, errorThrown) {
@@ -970,6 +987,10 @@ function fn_confirm(){
             <tbody id="dBody">
             </tbody>
             </table>
+			<ul class="right_btns">
+			<!--     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li> -->
+			    <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
+			</ul>
             <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
             </article><!-- grid_wrap end -->

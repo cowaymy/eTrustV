@@ -480,3 +480,6 @@ Common.ajax("GET" , url , param , function(result){
         <div id="grid_wrap"></div>
 </article>
 </section>
+<form id="listForm" name="listForm" method="POST">
+<input type="hidden" id="retnVal"    name="retnVal"    value="R"/>
+</form>

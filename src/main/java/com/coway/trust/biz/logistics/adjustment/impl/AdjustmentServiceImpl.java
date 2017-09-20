@@ -185,12 +185,17 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 			for (int i = 0; i < addList.size(); i++) {
 				Map<String, Object> getMap = (Map<String, Object>) addList.get(i);
 				logger.debug("addList : {} ", addList.get(i).toString());
+				logger.debug("serial : {} ", getMap.get("serial"));
 				Map<String, Object> setMap = new HashMap();
 				setMap.put("serial", getMap.get("serial"));
 				setMap.put("adjLocIdPop", formMap.get("adjLocIdPop"));
 				setMap.put("adjItemPop", formMap.get("adjItemPop"));
 				setMap.put("loginId", params.get("loginId"));
-				adjustmentMapper.insertAdjustmentLocSerial(setMap);
+				String tmp = String.valueOf(getMap.get("serial"));
+				logger.debug("tmp : {} ", tmp);
+				if (!tmp.equals("") || !tmp.equals(null)) {
+					adjustmentMapper.insertAdjustmentLocSerial(setMap);
+				}
 			}
 		}
 
@@ -237,7 +242,7 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 				setMap.put("serialChk", getMap.get("serialChk"));
 				setMap.put("cntQty", getMap.get("cntQty"));
 				if ("".equals(getMap.get("serialChk")) || null == getMap.get("serialChk")) {
-					adjustmentMapper.insertExcel(setMap);
+					adjustmentMapper.insertAdjustmentLocCount(setMap);
 				}
 			}
 		}
@@ -282,5 +287,14 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 	public void updateDoc(Map<String, Object> setmap) {
 		// TODO Auto-generated method stub
 		adjustmentMapper.updateDoc(setmap);
+	}
+
+	@Override
+	public int selectInsertSerialCount(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int cnt = adjustmentMapper.selectInsertSerialCount(params);
+		params.put("cntQty", cnt);
+		adjustmentMapper.insertAdjustmentLocCount(params);
+		return cnt;
 	}
 }
