@@ -14,13 +14,13 @@
                a.user_id,
                a.user_name,
                a.ip_addr,
-               TO_CHAR(a.access_dtm,'HH24:MI:SS MM-DD-YYYY') as access_dtm
+               a.access_dtm
        FROM SYS0078M a ,
                 SYS0050M b
      WHERE 1=1
          AND a.pgm_code = b.pgm_code
          AND a.system_id = #{systemId}
-         AND a.access_dtm BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
+         AND TO_DATE(a.access_dtm,'YYYYMMDDHH24MISSSSS') BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
          <if test="pgmCode != null and pgmCode !=''">
          AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
                 UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
@@ -43,15 +43,15 @@
                      AND a.code = a.system_id) AS system_nm ,
                a.pgm_code ,
                b.pgm_name ,
-               TO_CHAR(a.access_dtm,'MM/DD/YYYY') as access_day ,
-               TO_CHAR(a.access_dtm,'HH24') as access_time ,
-               COUNT(a.access_dtm) OVER(PARTITION BY TO_CHAR(a.access_dtm,'YYYYMMDDHH24'), a.pgm_code, a.system_id) as access_dtm_cnt
+               SUBSTR(a.access_dtm,1,8) as access_day ,
+               SUBSTR(a.access_dtm,9,2) as access_time ,
+               COUNT(a.access_dtm) OVER(PARTITION BY SUBSTR(a.access_dtm,1,10), a.pgm_code, a.system_id) as access_dtm_cnt
        FROM SYS0078M a ,
                SYS0050M b
      WHERE 1=1
          AND a.pgm_code = b.pgm_code
          AND a.system_id = #{systemId}
-         AND a.access_dtm BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
+         AND TO_DATE(a.access_dtm,'YYYYMMDDHH24MISSSSS') BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
          <if test="pgmCode != null and pgmCode !=''">
          AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
                 UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
@@ -62,14 +62,14 @@
 <select id="selectAccessMonitoringUserList" parameterType="Map" resultType="egovMap">
     SELECT a.user_id ,
                a.user_name ,
-               TO_CHAR(a.access_dtm,'HH24:MI:SS MM-DD-YYYY') as access_dtm
+               a.access_dtm
       FROM SYS0078M a ,
                SYS0050M b
      WHERE 1=1
          AND a.pgm_code = b.pgm_code
          AND a.system_id = #{systemId}
          AND a.pgm_code = #{pgmCode}
-         AND TO_CHAR(a.access_dtm,'HH24MMDDYYYY') = #{searchDt}
+         AND SUBSTR(a.access_dtm,1,10) = #{searchDt}
       ORDER BY a.access_dtm
 </select>
 
@@ -87,17 +87,16 @@
 	   ,pgm_path
 	   ,acces_day
 	)
-	VALUES
-	(
-	    #{systemId}
-	   ,SYSDATE
-	   ,#{userId}
-	   ,#{userName}
-	   ,#{ipAddr}
-	   ,#{pgmCode}
-	   ,#{pgmPath}
-	   ,TO_CHAR(SYSDATE,'YYYYMMDD')
-	)
+	SELECT #{systemId}
+	         , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISSSSS')
+	         , #{userId}
+	         , #{userName}
+	         , #{ipAddr}
+	         , a.pgm_code
+	         , a.pgm_path
+	         , TO_CHAR(SYSDATE,'YYYYMMDD')
+      FROM SYS0050M a
+     WHERE a.pgm_path = #{pgmPath}
 </insert>
 
 
