@@ -88,7 +88,7 @@
 	   ,acces_day
 	)
     SELECT #{systemId}
-             , TO_CHAR(SYSDATE,'YYYYMMDDHH24MISSSSS')
+             , SYSDATE
              , #{userId}
              , #{userName}
              , #{ipAddr}
