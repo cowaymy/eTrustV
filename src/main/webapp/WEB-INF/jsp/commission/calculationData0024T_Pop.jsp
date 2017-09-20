@@ -158,7 +158,7 @@
           <h2>Commission calculation Data Collection</h2>
         </aside><!-- title_line end -->
         <form id="form_24">
-           <input type="text" name="code" id="code_24T" value="${code}"/>
+           <input type="hidden" name="code" id="code_24T" value="${code}"/>
            <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="search_24T"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
