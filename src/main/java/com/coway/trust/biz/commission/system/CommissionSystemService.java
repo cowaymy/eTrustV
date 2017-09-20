@@ -142,4 +142,26 @@ public interface CommissionSystemService
      * @return
      */
     int udtCommissionRuleData(Map<String, Object> params, String loginId);
+    
+    /**
+     *  search Weekly List
+     * @param params
+     * @return
+     */
+    List<EgovMap> selectWeeklyList(Map<String, Object> params);
+    
+    /**
+     * add coommission rule book management Data
+     * @param updateList
+     * @return
+     */
+    int addWeeklyCommissionGrid(List<Object> updateList , String loginId);
+    
+    /**
+     * update coommission rule book management Data
+     * @param addList
+     * @return
+     */
+    int udtWeeklyCommissionGrid(List<Object> addList, String loginId);
+	
 }

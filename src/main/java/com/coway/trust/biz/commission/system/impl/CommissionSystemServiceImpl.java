@@ -426,5 +426,65 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectRuleBookMngList(Map<java.lang.String, Object> params) {		
 		return commissionSystemMapper.selectRuleBookMngList(params);
 	}
+	
+	/**
+	 * search coommission weekly management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> selectWeeklyList(Map<java.lang.String, Object> params) {	
+		return commissionSystemMapper.selectWeeklyList(params);
+	}
+	
+	/**
+	 * add coommission weekly management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int addWeeklyCommissionGrid(List<Object> addList,String loginId) {	
+		
+		int cnt=0;
+		
+		for (Object obj : addList) {
+
+			logger.debug("update year : {}", ((Map<String, Object>) obj).get("year"));
+			logger.debug("update month : {}", ((Map<String, Object>) obj).get("month"));
+			logger.debug("update weeks : {}", ((Map<String, Object>) obj).get("weeks"));
+			logger.debug("update startDt : {}", ((Map<String, Object>) obj).get("startDt"));
+			logger.debug("update endDt : {}", ((Map<String, Object>) obj).get("endDt"));
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+			
+			cnt=cnt+commissionSystemMapper.addWeeklyCommissionGrid((Map<String, Object>) obj);
+		}
+		return cnt;
+	}
+
+	/**
+	 * update coommission weekly management Data
+	 * 
+	 * @param Map
+	 * @return
+	 * @exception Exception
+	 */
+	@Override
+	public int udtWeeklyCommissionGrid(List<Object> udtList,String loginId) {
+		
+		int cnt=0;
+		for (Object obj : udtList) {		
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+
+			cnt=cnt+commissionSystemMapper.udtWeeklyCommissionGrid((Map<String, Object>) obj);
+		}
+		return cnt;
+	}
 
 }
