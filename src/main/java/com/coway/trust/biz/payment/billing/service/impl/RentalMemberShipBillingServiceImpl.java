@@ -58,7 +58,7 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
 	}
 	
 	/**
-	 * confirmTaxesManualBillRentalMbrsh 저장
+	 * confirmTaxesManualBillRentalMbrsh (INSERT + CALL PROCEDURE)
 	 * @param params
 	 * @return
 	 */

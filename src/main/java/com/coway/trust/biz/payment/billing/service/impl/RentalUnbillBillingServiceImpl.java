@@ -56,7 +56,12 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
 	public List<EgovMap> selectUnbilledRentalBillingSchedule(Map<String, Object> params) {
 		return rentalUnbillBillingMapper.selectUnbilledRentalBillingSchedule(params);
 	}
-
+	
+	/**
+	 * createTaxesManualBills (INSERT + CALL PROCEDURE)
+	 * @param params
+	 * @return
+	 */
 	@Override
 	public int createTaxesManualBills(List<Object> formList, List<Object> taskBillList, SessionVO sessionVO) {
 		

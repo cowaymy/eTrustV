@@ -57,7 +57,12 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectRentalBillingSchedule(Map<String, Object> params) {
 		return advRentalBillingMapper.selectRentalBillingSchedule(params);
 	}
-
+	
+	/**
+	 * createTaxesBills (INSERT + CALL PROCEDURE)
+	 * @param params
+	 * @return
+	 */
 	@Override
 	public int createTaxesBills(List<Object> formList, List<Object> taskBillList, SessionVO sessionVO) {
 		
