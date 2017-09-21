@@ -28,7 +28,7 @@ public interface RentalUnbillBillingMapper {
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectCustBillOrderNoList(Map<String, Object> params);
+	List<EgovMap> selectCustBillOrderList_U(Map<String, Object> params);
 	
 	/**
 	 * selectUnbilledRentalBillingSchedule 조회

@@ -55,7 +55,7 @@ public class RentalMemberShipBillingController {
 	public ResponseEntity<ReturnMessage> selectCustBillOrderNoList_M(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
         
-		List<EgovMap> orderList = rentalMemberShipBillingService.selectCustBillOrderNoList_M(params);
+		List<EgovMap> orderList = rentalMemberShipBillingService.selectCustBillOrderList_M(params);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("orderList", orderList);

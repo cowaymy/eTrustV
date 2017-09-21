@@ -48,8 +48,8 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
 	 * @return
 	 */
 	@Override
-	public List<EgovMap> selectCustBillOrderNoList_M(Map<String, Object> params) {
-		return rentalMemberShipBillingMapper.selectCustBillOrderNoList_M(params);
+	public List<EgovMap> selectCustBillOrderList_M(Map<String, Object> params) {
+		return rentalMemberShipBillingMapper.selectCustBillOrderList_M(params);
 	}
 	
 	/**

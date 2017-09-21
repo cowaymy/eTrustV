@@ -54,7 +54,7 @@ public class RentalUnbillBillingController {
 	public ResponseEntity<ReturnMessage> selectCustBillOrderNoList(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
         
-		List<EgovMap> orderList = rentalUnbillBillingService.selectCustBillOrderNoList(params);
+		List<EgovMap> orderList = rentalUnbillBillingService.selectCustBillOrderList_U(params);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("orderList", orderList);

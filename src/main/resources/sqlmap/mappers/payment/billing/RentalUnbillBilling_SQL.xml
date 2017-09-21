@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.billing.service.impl.RentalUnbillBillingMapper">
     
-    <select id="selectCustBillOrderNoList" parameterType="Map" resultType="egovMap">
+    <select id="selectCustBillOrderList_U" parameterType="Map" resultType="egovMap">
     <![CDATA[
        SELECT 
 	       Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -96,9 +96,7 @@
     </select>
     
     <select id="selectBillTaskLogMax_U" parameterType="Map" resultType="int">
-        SELECT GroupBy1.A1 C1  
-            FROM ( SELECT MAX(Extent1.TASK_ID)  A1  
-                FROM PAY0047D Extent1 ) GroupBy1
+        SELECT PAY0047D_SEQ.NEXTVAL FROM DUAL
     </select>
     
     <select id="selectSalesOrderMs_U" parameterType="Map" resultType="egovMap">

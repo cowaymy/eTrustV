@@ -95,9 +95,7 @@
     </select>
     
     <select id="selectBillTaskLogMax" parameterType="Map" resultType="int">
-        SELECT GroupBy1.A1 C1  
-            FROM ( SELECT MAX(Extent1.TASK_ID)  A1  
-                FROM PAY0047D Extent1 ) GroupBy1
+        SELECT PAY0047D_SEQ.NEXTVAL FROM DUAL
     </select>
     
     <select id="selectSalesOrderMs" parameterType="Map" resultType="egovMap">

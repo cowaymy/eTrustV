@@ -11,7 +11,7 @@ public interface RentalMemberShipBillingService{
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectCustBillOrderNoList_M(Map<String, Object> params);
+	List<EgovMap> selectCustBillOrderList_M(Map<String, Object> params);
     
     /**
 	 * selectRentalMembershipBillingSchedule 조회

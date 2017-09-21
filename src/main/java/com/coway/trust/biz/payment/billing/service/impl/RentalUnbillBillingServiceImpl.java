@@ -47,8 +47,8 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
 	 * @return
 	 */
 	@Override
-	public List<EgovMap> selectCustBillOrderNoList(Map<String, Object> params) {
-		return rentalUnbillBillingMapper.selectCustBillOrderNoList(params);
+	public List<EgovMap> selectCustBillOrderList_U(Map<String, Object> params) {
+		return rentalUnbillBillingMapper.selectCustBillOrderList_U(params);
 	}
 	
 	/**
