@@ -111,7 +111,6 @@ public class RentalUnbillBillingController {
     		message.setCode(AppConstants.FAIL);
     		message.setMessage("Failed.");
     	}
-    	logger.debug("result===="+result);
     	
 		return ResponseEntity.ok(message);
 	}

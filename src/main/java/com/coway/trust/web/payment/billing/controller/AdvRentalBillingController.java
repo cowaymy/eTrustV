@@ -112,7 +112,6 @@ public class AdvRentalBillingController {
     		message.setCode(AppConstants.FAIL);
     		message.setMessage("Failed.");
     	}
-    	logger.debug("result===="+result);
     	
 		return ResponseEntity.ok(message);
 	}
