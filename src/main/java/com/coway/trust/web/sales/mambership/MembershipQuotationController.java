@@ -18,11 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.biz.sales.mambership.MembershipQuotationService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -369,6 +372,38 @@ public class  MembershipQuotationController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	
+	/******************************************************
+	 * SEARCH MEMBERSHIP QUOTATION Pop-up
+	 *****************************************************/	
+	/**
+	 * Search Membership Quotation Pop-up 초기화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initSrchMembershipQuotationPop.do")
+	public String initSrchMembershipQuotationPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "sales/membership/srchMembershipQuotationPop";
+	}
+	
+	/**
+	 * Search Membership Quotation Pop-up 리스트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectSrchMembershipQuotationPop.do", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>> selectSrchMembershipQuotationPop(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+			, @RequestBody Map<String, Object> params, ModelMap model) {
+		// 조회.
+		List<EgovMap> resultList = membershipQuotationService.selectSrchMembershipQuotationPop(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
 	
 	
 }

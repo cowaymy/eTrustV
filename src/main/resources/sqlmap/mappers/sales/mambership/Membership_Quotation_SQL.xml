@@ -539,7 +539,62 @@
                  ]]>
       </select>
       
-  
-  
+    <select id="selectSrchMembershipQuotationPop" parameterType="Map" resultType="egovMap">
+        SELECT
+            a.SRV_MEM_QUOT_ID,
+            TO_CHAR(SRV_MEM_QUOT_ID) AS SRV_MEM_QUOT_ID_TXT, /* 중복방지용 CHAR 형 */
+            a.SRV_MEM_QUOT_NO,
+            a.SRV_MEM_PAC_AMT,
+            a.SRV_MEM_BS_AMT,
+            NVL(a.SRV_MEM_PAC_AMT,0) + NVL(a.SRV_MEM_BS_AMT,0) AS TOTAL_AMT,
+            a.SRV_DUR,
+            a.SRV_QUOT_VAL_ID,
+            a.SRV_FREQ,
+            c.SALES_ORD_ID,
+            c.SALES_ORD_NO,
+            c.CUST_ID,
+            g.NAME AS CUST_NAME,
+            c.APP_TYPE_ID,
+            e.STK_DESC,
+            f.SRV_MEM_PAC_ID,
+            f.SRV_MEM_DESC 
+        FROM
+            SAL0093D a 
+            LEFT JOIN PAY0024D b ON a.SRV_MEM_QUOT_ID = b.SRV_MEM_QOTAT_ID 
+            LEFT JOIN SAL0001D c ON a.SRV_SALES_ORD_ID = c.SALES_ORD_ID 
+            LEFT JOIN SAL0002D d ON c.SALES_ORD_ID = d.SALES_ORD_ID 
+            LEFT JOIN SYS0026M e ON d.ITM_STK_ID = e.STK_ID 
+            LEFT JOIN SAL0091M f ON a.SRV_MEM_PAC_ID = f.SRV_MEM_PAC_ID
+            JOIN SAL0029D g ON c.CUST_ID = g.CUST_ID 
+        WHERE 
+            a.SRV_QUOT_STUS_ID = 1 
+            AND b.SRV_MEM_LG_ID IS NULL 
+            AND a.SRV_QUOT_VAL_ID <![CDATA[<=]]> TRUNC(SYSDATE)
+            <if test="orderNo != null and orderNo != ''">
+            AND c.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="membershipType != null and membershipType != ''">
+            AND f.SRV_MEM_PAC_ID = #{membershipType}
+            </if>
+            <if test="quotationNo != null and quotationNo != ''">
+            AND a.SRV_MEM_QUOT_NO = #{quotationNo}
+            </if>
+            <if test="quotationDur != null and quotationDur != ''">
+            AND a.SRV_DUR = #{quotationDur}
+            </if>
+            <if test="customerId != null and customerId != ''">
+            AND c.CUST_ID = #{customerId}
+            </if>
+            <if test="customerNm != null and customerNm != ''">
+            AND g.NAME = #{customerNm}
+            </if>
+            <if test="nric != null and nric != ''">
+            AND g.NRIC = #{nric}
+            </if>
+            <if test="appType != null and appType != ''">
+            AND c.APP_TYPE_ID = #{appType}
+            </if>            
+        ORDER BY c.SALES_ORD_NO ASC
+    </select>
       
 </mapper>

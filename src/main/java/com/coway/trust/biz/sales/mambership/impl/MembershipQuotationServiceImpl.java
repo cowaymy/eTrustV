@@ -254,6 +254,11 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		return membershipQuotationMapper.mActiveQuoOrder(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectSrchMembershipQuotationPop(Map<String, Object> params) {
+		return membershipQuotationMapper.selectSrchMembershipQuotationPop(params);
+	}
+	
 	
 }
 
