@@ -70,7 +70,7 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
     	int taskTotalAmount = 0;
     	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
     	Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
-    	int newTaskId = rentalMemberShipBillingMapper.selectBillTaskLogMax_M();
+    	int newTaskId = rentalMemberShipBillingMapper.getTaskIdSeq_M();
 		
     	if(taskBillList.size() > 0){
     		

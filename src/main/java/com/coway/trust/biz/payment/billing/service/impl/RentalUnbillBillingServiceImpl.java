@@ -70,7 +70,7 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
     	int taskTotalAmount = 0;
     	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
     	Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
-    	int newTaskId = rentalUnbillBillingMapper.selectBillTaskLogMax_U();
+    	int newTaskId = rentalUnbillBillingMapper.getTaskIdSeq_U();
 		
     	if(taskBillList.size() > 0){
     		

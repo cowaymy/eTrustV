@@ -41,11 +41,11 @@ public interface AdvRentalBillingMapper {
 	
 	
 	/**
-	 * selectBillTaskLogMax 조회
+	 * getTaskIdSeq 조회
 	 * @param params
 	 * @return
 	 */
-	int selectBillTaskLogMax();
+	int getTaskIdSeq();
 	
 	/**
 	 * insBillTaskLog

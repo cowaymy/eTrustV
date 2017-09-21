@@ -39,11 +39,11 @@ public interface RentalUnbillBillingMapper {
 	
 	
 	/**
-	 * selectBillTaskLogMax 조회
+	 * getTaskIdSeq_U 조회
 	 * @param params
 	 * @return
 	 */
-	int selectBillTaskLogMax_U();
+	int getTaskIdSeq_U();
 	
 	/**
 	 * insBillTaskLog

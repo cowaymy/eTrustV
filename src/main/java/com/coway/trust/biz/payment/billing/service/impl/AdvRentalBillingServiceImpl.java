@@ -71,7 +71,7 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
     	int taskTotalAmount = 0;
     	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
     	Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
-    	int newTaskId = advRentalBillingMapper.selectBillTaskLogMax();
+    	int newTaskId = advRentalBillingMapper.getTaskIdSeq();
 		
     	if(taskBillList.size() > 0){
     		

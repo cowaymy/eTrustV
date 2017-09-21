@@ -39,11 +39,11 @@ public interface RentalMemberShipBillingMapper {
 	
 	
 	/**
-	 * selectBillTaskLogMax 조회
+	 * getTaskIdSeq_M 조회
 	 * @param params
 	 * @return
 	 */
-	int selectBillTaskLogMax_M();
+	int getTaskIdSeq_M();
 	
 	/**
 	 * insBillTaskLog
