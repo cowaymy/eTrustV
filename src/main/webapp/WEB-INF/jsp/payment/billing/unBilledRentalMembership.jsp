@@ -286,7 +286,6 @@ var billingTargetLayout = [
 	        var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
 	        var bool = true;
 	        if (checkedItems.length > 0){
-	            var rowPos = "first";
 	            var item = new Object();
 	            var rowList = [];
 	            for (var i = 0 ; i < checkedItems.length ; i++){
@@ -312,7 +311,6 @@ var billingTargetLayout = [
             var checkedItems = AUIGrid.getCheckedRowItemsAll(billingTargetGridId);
             var bool = true;
             if (checkedItems.length > 0){
-                var rowPos = "first";
                 var item = new Object();
                 var rowList = [];
                 for (var i = 0 ; i < checkedItems.length ; i++){
@@ -513,8 +511,7 @@ var billingTargetLayout = [
 <tr>
     <th scope="row">Invoice Remark</th>
     <td colspan="3">
-        <textarea cols="20" rows="5" placeholder="" id="invoiceRemark">
-        </textarea>
+        <textarea cols="20" rows="5" placeholder="" id="invoiceRemark"></textarea>
     </td>
 </tr>
 </tbody>

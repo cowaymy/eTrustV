@@ -277,7 +277,6 @@ var billingTargetLayout = [
 	        var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
 	        var bool = true;
 	        if (checkedItems.length > 0){
-	            var rowPos = "first";
 	            var item = new Object();
 	            var rowList = [];
 	            for (var i = 0 ; i < checkedItems.length ; i++){
@@ -303,7 +302,6 @@ var billingTargetLayout = [
             var checkedItems = AUIGrid.getCheckedRowItemsAll(billingTargetGridId);
             var bool = true;
             if (checkedItems.length > 0){
-                var rowPos = "first";
                 var item = new Object();
                 var rowList = [];
                 for (var i = 0 ; i < checkedItems.length ; i++){
