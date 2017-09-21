@@ -20,8 +20,8 @@ var columnLayout=[
                   {dataField:"rentDocNo", headerText:"Bill No"},
                   {dataField:"rentSoId", headerText:"Order ID"},
                   {dataField:"rentDocTypeId", headerText:"Bill Type"},
-                  {dataField:"rentDateTime", headerText:"Bill Date"},
-                  {dataField:"rentAmount", headerText:"Bill Amount"},
+                  {dataField:"rentDateTime", headerText:"Bill Date", dataType : "date", formatString : "dd-mm-yyyy"},
+                  {dataField:"rentAmount", headerText:"Bill Amount", dataType : "numeric", formatString : "#,##0"},
                   {dataField:"rentInstNo", headerText:"Installment"}
 ];
 
