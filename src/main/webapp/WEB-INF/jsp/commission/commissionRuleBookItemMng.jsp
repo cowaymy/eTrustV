@@ -909,7 +909,7 @@
 <!-- wrap end -->
 
 <!-- ================ Search rule book Start ================ -->
-<div id="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_big"  style="display:none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Commission Rule Book Mgmt</h1>
@@ -918,7 +918,7 @@
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body"  style="max-height:50%;"><!-- pop_body start -->
 <form id="searchFormRule" action="" method="post">
 <input type="hidden" name="itemCd" id="itemCd"/>
 <input type="hidden" name="itemSeq" id="itemSeq"/>
