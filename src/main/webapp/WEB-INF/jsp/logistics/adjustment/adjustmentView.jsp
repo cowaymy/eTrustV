@@ -249,7 +249,7 @@ function searchHead(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Event Type</th>
+    <th scope="row">Location Type</th>
     <td>
      <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>

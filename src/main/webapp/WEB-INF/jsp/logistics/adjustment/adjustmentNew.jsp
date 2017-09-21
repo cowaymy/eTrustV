@@ -34,8 +34,8 @@ var reqGrid;
 var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
 var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
 var columnLayout=[
-                     {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"25%" ,height:30},
-                     {dataField:"baseDt" ,headerText:"Base Date",width:"25%" ,height:30},
+                     {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"20%" ,height:30},
+                     {dataField:"baseDt" ,headerText:"Base Date",width:"20%" ,height:30},
                      {dataField:"cnfm1" ,headerText:"cnfm1",width:120 ,height:30, visible:false},
                      {dataField:"cnfm1Dt" ,headerText:"cnfm1Dt",width:120 ,height:30, visible:false},
                      {dataField:"cnfm2" ,headerText:"cnfm2",width:120 ,height:30, visible:false},
@@ -48,9 +48,9 @@ var columnLayout=[
                      {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30, visible:false},
                      {dataField:"ctgryType" ,headerText:"ctgryType",width:120 ,height:30, visible:false},
                      {dataField:"autoFlag" ,headerText:"autoFlag",width:120 ,height:30, visible:false},
-                     {dataField:"delFlag" ,headerText:"delFlag",width:120 ,height:30, visible:false},
-                     {dataField:"crtUser" ,headerText:"Create User",width:"25%" ,height:30},
-                     {dataField:"crtDate" ,headerText:"Create Date",width:"25%" ,height:30}
+                     {dataField:"delFlag" ,headerText:"Status",width:"20%" ,height:30},
+                     {dataField:"crtUser" ,headerText:"Create User",width:"20%" ,height:30},
+                     {dataField:"crtDate" ,headerText:"Create Date",width:"20%" ,height:30}
                     ];
 var rescolumnLayout=[
                     {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false},
@@ -152,12 +152,24 @@ $(document).ready(function(){
    $("#grid_wrap_sub_asi").hide();
    $("#detail").hide(); 
    $("#count").hide(); 
+   $("#approval").hide(); 
+   $("#confirm").hide(); 
+   $("#view").hide(); 
+   $("#close").hide(); 
     
     AUIGrid.bind(myGridID, "addRow", function(event){});
     AUIGrid.bind(myGridID, "cellEditBegin", function (event){});
     AUIGrid.bind(myGridID, "cellEditEnd", function (event){});
     AUIGrid.bind(myGridID, "cellClick", function( event ) {
         var invntryNo=AUIGrid.getCellValue(myGridID, event.rowIndex, "invntryNo");
+        var delFlag=AUIGrid.getCellValue(myGridID, event.rowIndex, "delFlag");
+        if("C"==delFlag){
+        	$("#count").hide();
+        }else{
+        	$("#count").show();
+        	
+        }
+        
         fn_subGrid(invntryNo);
        // fn_checkDetailAuthority(invntryNo);
     });
@@ -169,12 +181,12 @@ $(document).ready(function(){
        // fn_checkDetailAuthority(invntryNo);
     });
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event){
-           var invntryNo=AUIGrid.getCellValue(reqGrid, event.rowIndex, "invntryNo");
+    /*        var invntryNo=AUIGrid.getCellValue(reqGrid, event.rowIndex, "invntryNo");
            var locId=AUIGrid.getCellValue(reqGrid, event.rowIndex, "locId");
            $("#rAdjcode").val(invntryNo);
            $("#rAdjlocId").val(locId);
            document.searchForm.action = '/logistics/adjustment/AdjustmentCounting.do';
-           document.searchForm.submit(); 
+           document.searchForm.submit();  */
     
     });
     
@@ -187,6 +199,10 @@ $(document).ready(function(){
 $(function(){
     $("#create").click(function(){
         $("#popup_wrap").show();
+        doSysdate(0 , 'bsadjdate');
+    });
+    $("#close").click(function(){
+    	   fn_close();
     });
     
     $('#search').click(function() {
@@ -194,6 +210,26 @@ $(function(){
    
     });
     $('#save').click(function() {
+    	if(""==$('#eventtype').val() || null==$('#eventtype').val()){
+    	      Common.alert("Please select the Location Type.");
+              $("#eventtype").focus();
+              return false;
+    	}
+    	if(""==$('#catagorytype').val() || null==$('#catagorytype').val()){
+    	      Common.alert("Please select the Catagory Type.");
+              $("#catagorytype").focus();
+              return false;
+    	}
+    	if(""==$('#itemtype').val() || null==$('#itemtype').val()){
+    	      Common.alert("Please select the Item Type.");
+              $("#itemtype").focus();
+              return false;
+    	}
+    	if(""==$('#doctext').val()  || null== $('#doctext').val()){
+    	      Common.alert("Please input Remarks.");
+              $("#doctext").focus();
+              return false;
+    	}
         fn_newAdjustment();
     });
     $('#autobtn').click(function() {
@@ -268,16 +304,37 @@ $(function(){
 });
 
 
+function fn_close() {
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    var invntryNo = AUIGrid.getCellValue(myGridID ,selectedItem[0],'invntryNo');
+    var delFlag = AUIGrid.getCellValue(myGridID ,selectedItem[0],'delFlag');
+    if("C"==delFlag){
+    	Common.alert("Can't Close selected Stock Audit No.");
+    	return false
+    }
+    
+    var url = "/logistics/adjustment/closeAudit.do";
+    var param = {
+    		adjNo: invntryNo
+    };
+    Common.ajax("GET" , url , param , function(result){
+    	searchAjax();
+    });
+}
 function searchAjax() {
     var url = "/logistics/adjustment/adjustmentList.do";
     var param = $('#searchForm').serializeJSON();
+    $.extend(param,{'oderby':'desc'});
     Common.ajax("POST" , url , param , function(result){
         AUIGrid.setGridData(myGridID, result.dataList);
         $("#detail").show();
         $("#grid_wrap_sub_asi").show();
+        $("#approval").show(); 
+        $("#confirm").show(); 
+        $("#view").show(); 
+        $("#close").show(); 
     });
 }
-
 
 function f_multiCombo() {
     $(function() {
@@ -297,6 +354,7 @@ function fn_newAdjustment(){
     var url = "/logistics/adjustment/createAdjustment.do";
     var param = $("#popform").serializeJSON();
     $.extend(param,{'auto_manual':'M'});//강제세팅함 
+    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         $("#popup_wrap").hide();
         searchAjax();
@@ -504,11 +562,11 @@ function fn_subGrid(invntryNo){
         	console.log(list.length);
             AUIGrid.setGridData(reqGrid, list);
           $("#grid_wrap_sub_art").show();
-          if(list.length>0){
+ /*          if(list.length>0){
         	  $('#count').show();
           }else{
         	  $('#count').hide();
-          }
+          } */
           
           
         });
@@ -520,12 +578,12 @@ function fn_subGrid(invntryNo){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>New Stock Audit Main</li>
+    <li>Main - Stock Audit</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Audit Main</h2>
+<h2>Main - Stock Audit</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -535,10 +593,10 @@ function fn_subGrid(invntryNo){
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="create">Create</a></p></li>
-   <!--  <li><p class="btn_blue"><a id="edit">Edit</a></p></li> -->
+    <li><p class="btn_blue"><a id="close">Close</a></p></li>
     <li><p class="btn_blue"><a id="detail">Detail</a></p></li> 
     <li><p class="btn_blue"><a id="approval">Approval</a></p></li> 
-    <li><p class="btn_blue"><a id="confirm">Confirm</a></p></li> 
+    <li><p class="btn_blue"><a id="confirm">List</a></p></li> 
     <li><p class="btn_blue"><a id="view">View</a></p></li> 
     <li><p class="btn_blue"><a id="search">Search</a></p></li>
 </ul>
@@ -563,7 +621,7 @@ function fn_subGrid(invntryNo){
     <td>
     <input id="srch_bsadjdate" name="srch_bsadjdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
-    <!-- <th scope="row">Event Type</th>
+    <!-- <th scope="row">Location Type</th>
     <td>
     <select class="multy_select" multiple="multiple" id="srch_eventtype" name="srch_eventtype[]"  style="display: none;"/></select>
     </td>
@@ -636,7 +694,7 @@ function fn_subGrid(invntryNo){
 <tbody>
 <tr>
     <th scope="row">Stock Audit Number</th>
-    <td><input id="adjno" name="adjno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
+    <td><input id="adjno" name="adjno" type="text" title="" placeholder="Automatic" class="readonly w100p" readonly="readonly" /></td>
      <th scope="row">Auto/Manual</th>
     <td id="automantd"> 
          <label><input type="radio" name="auto_manual" id="auto_manual" value="A" disabled="disabled"/><span>Auto</span></label>
@@ -644,7 +702,7 @@ function fn_subGrid(invntryNo){
     </td>
 </tr>
 <tr>
-    <th scope="row">Event Type</th>
+    <th scope="row">Location Type</th>
     <td>
    <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select>
     </td>
@@ -673,8 +731,8 @@ function fn_subGrid(invntryNo){
 </table>
 </form>
             <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li>
-                <li><p class="btn_blue2 big"><a id="cancel">CANCEL</a></p></li>
+               <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li> 
+               <!--  <li><p class="btn_blue2 big"><a id="cancel">CANCEL</a></p></li> -->
             </ul>
 </section><!-- pop_body end -->
 <form id='popupForm'>
@@ -713,7 +771,7 @@ function fn_subGrid(invntryNo){
     </td>
 </tr>
 <tr>
-    <th scope="row">Event Type</th>
+    <th scope="row">Location Type</th>
     <td>
         <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>

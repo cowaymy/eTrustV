@@ -33,8 +33,11 @@ var reqGrid;
 var status;
 var rescolumnLayout=[
 						{dataField:"rnum" ,headerText:"rnum",width:120 ,height:30 , visible:false },
-						{dataField:"whLocId" ,headerText:"Location ID",width:"20%" ,height:30 },
-						{dataField:"whLocCode" ,headerText:"Location Code",width:"30%" ,height:30},
+						{dataField:"whLocId" ,headerText:"Location ID",width:"15%" ,height:30 },
+						{dataField:"whLocGb" ,headerText:"whLocGb",width:120 ,height:30 , visible:false},
+						{dataField:"code" ,headerText:"code",width:120 ,height:30 , visible:false},
+						{dataField:"codeName" ,headerText:"Location Type",width:"15%",height:30 },
+						{dataField:"whLocCode" ,headerText:"Location Code",width:"20%" ,height:30},
 						{dataField:"whLocDesc" ,headerText:"Location Desc",width:"50%" ,height:30},
 						{dataField:"whLocTel1" ,headerText:"whLocTel1",width:120 ,height:30 , visible:false},
 						{dataField:"whLocTel2" ,headerText:"whLocTel2",width:120 ,height:30 , visible:false},
@@ -53,7 +56,6 @@ var rescolumnLayout=[
 						{dataField:"street" ,headerText:"street",width:120 ,height:30 , visible:false},
 						{dataField:"whLocBrnchId2" ,headerText:"whLocBrnchId2",width:120 ,height:30 , visible:false},
 						{dataField:"whLocBrnchId3" ,headerText:"whLocBrnchId3",width:120 ,height:30 , visible:false},
-						{dataField:"whLocGb" ,headerText:"whLocGb",width:120 ,height:30 , visible:false},
 						{dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30 , visible:false},
 						{dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30 , visible:false},
 						{dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30 , visible:false},
@@ -83,8 +85,11 @@ $(document).ready(function(){
     
      reqcolumnLayout=[              
                              {dataField:"adjrnum" ,headerText:"rnum",width:120 ,height:30 , visible:false },
-                             {dataField:"adjwhLocId" ,headerText:"Location ID",width:"20%" ,height:30 },
-                             {dataField:"adjwhLocCode" ,headerText:"Location Code",width:"30%" ,height:30},
+                             {dataField:"adjwhLocId" ,headerText:"Location ID",width:"15%" ,height:30 },
+                             {dataField:"adjwhLocGb" ,headerText:"whLocGb",width:120 ,height:30 , visible:false},
+                             {dataField:"adjcode" ,headerText:"code",width:120 ,height:30 , visible:false},
+                             {dataField:"adjcodeName" ,headerText:"Location Type",width:"15%" ,height:30 },
+                             {dataField:"adjwhLocCode" ,headerText:"Location Code",width:"20%" ,height:30},
                              {dataField:"adjwhLocDesc" ,headerText:"Location Desc",width:"50%" ,height:30},
                              {dataField:"adjwhLocTel1" ,headerText:"whLocTel1",width:120 ,height:30 , visible:false},
                              {dataField:"adjwhLocTel2" ,headerText:"whLocTel2",width:120 ,height:30 , visible:false},
@@ -103,7 +108,6 @@ $(document).ready(function(){
                              {dataField:"adjstreet" ,headerText:"street",width:120 ,height:30 , visible:false},
                              {dataField:"adjwhLocBrnchId2" ,headerText:"whLocBrnchId2",width:120 ,height:30 , visible:false},
                              {dataField:"adjwhLocBrnchId3" ,headerText:"whLocBrnchId3",width:120 ,height:30 , visible:false},
-                             {dataField:"adjwhLocGb" ,headerText:"whLocGb",width:120 ,height:30 , visible:false},
                              {dataField:"adjserialPdChk" ,headerText:"serialPdChk",width:120 ,height:30 , visible:false},
                              {dataField:"adjserialFtChk" ,headerText:"serialFtChk",width:120 ,height:30 , visible:false},
                              {dataField:"adjserialPtChk" ,headerText:"serialPtChk",width:120 ,height:30 , visible:false},
@@ -153,7 +157,7 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-            searchEventAjax();
+            searchAjax();
     });
     
     $('#list').click(function() {
@@ -183,6 +187,9 @@ $(function(){
             });
     });
     $("#rightbtn").click(function(){
+    	var sortingInfo = [];
+        // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
+        sortingInfo[0] = { dataField : "adjwhLocId", sortType : 1 };
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
        //var addedItems = AUIGrid.getCheckedRowItems(resGrid);
         var addedItems = AUIGrid.getColumnValues(reqGrid,"adjwhLocId");
@@ -230,6 +237,8 @@ $(function(){
 		                		adjwhLocBrnchId2 : checkedItems[i].whLocBrnchId2,
 		                		adjwhLocBrnchId3 : checkedItems[i].whLocBrnchId3,
 		                		adjwhLocGb : checkedItems[i].whLocGb,
+		                		adjcode : checkedItems[i].code,
+		                		adjcodeName: checkedItems[i].codeName,
 		                		adjserialPdChk : checkedItems[i].serialPdChk,
 		                		adjserialFtChk : checkedItems[i].serialFtChk,
 		                		adjserialPtChk : checkedItems[i].serialPtChk,
@@ -240,31 +249,13 @@ $(function(){
             }
             
             AUIGrid.addRow(reqGrid, rowList, rowPos);
+            AUIGrid.setSorting(reqGrid, sortingInfo);
         }
     });
 });
 
 
 
-
-function fn_itempopList(data){
-    
-    var rowPos = "first";
-    var rowList = [];
-    
-    AUIGrid.removeRow(reqGrid, "selectedIndex");
-    AUIGrid.removeSoftRows(reqGrid);
-    for (var i = 0 ; i < data.length ; i++){
-        rowList[i] = {
-            itmid : data[i].item.itemid,
-            itmcd : data[i].item.itemcode,
-            itmname : data[i].item.itemname
-        }
-    }
-    
-    AUIGrid.addRow(reqGrid, rowList, rowPos);
-    
-}
 
 function f_multiCombo() {
     $(function() {
@@ -400,7 +391,7 @@ function  fn_itemChck(data,tmp2,str){
 		}
 }
 
-function searchEventAjax(){
+function searchAjax(){
     var url = "/logistics/adjustment/adjustmentLocationList.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(result){
@@ -462,7 +453,7 @@ function fn_ReqAdjLocList(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Event Type</th>
+    <th scope="row">Location Type</th>
     <td>
      <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
      <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
@@ -510,7 +501,7 @@ function fn_ReqAdjLocList(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Event Type</th>
+    <th scope="row">Location Type</th>
     <td>
     <!-- <select class="w100p" id="srcheventype" name="srcheventype"></select> -->
      <label><input type="checkbox" disabled="disabled" id="chcdc" name="chcdc" value="cdc"/><span>CDC</span></label>

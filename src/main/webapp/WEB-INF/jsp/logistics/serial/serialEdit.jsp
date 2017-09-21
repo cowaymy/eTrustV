@@ -25,7 +25,18 @@
     background:#D9E5FF;
     color:#000;
 }
-
+/* 커스텀 행 스타일 */
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
+/* 커스텀 셀 스타일 */
+.my-cell-style {
+    background:#FF007F;
+    font-weight:bold;
+    color:#fff;
+}
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
@@ -33,24 +44,39 @@
 var myGridID;
 var detailGridID;
 var popGridId;
+var myGridIDExcel;
+var myGridIDExcelHide;
+
 var selectedItem; 
 var columnLayout = [
-							{dataField:"serialNo" ,headerText:"serialNo",width:120 ,height:30},
-							{dataField:"matnr" ,headerText:"matnr",width:120 ,height:30},
-							{dataField:"latransit" ,headerText:"latransit",width:120 ,height:30},
-							{dataField:"gltri" ,headerText:"gltri",width:120 ,height:30},
-							{dataField:"lvorm" ,headerText:"lvorm",width:120 ,height:30},
-							{dataField:"crtDt" ,headerText:"crtDt",width:120 ,height:30},
-							{dataField:"crtUserId" ,headerText:"crtUserId",width:120 ,height:30},
-							{dataField:"usedSerialNo" ,headerText:"usedSerialNo",width:120 ,height:30},
-							{dataField:"usedMatnr" ,headerText:"usedMatnr",width:120 ,height:30},
-							{dataField:"usedLocId" ,headerText:"usedLocId",width:120 ,height:30},
-							{dataField:"usedGltri" ,headerText:"usedGltri",width:120 ,height:30},
-							{dataField:"usedLwedt" ,headerText:"usedLwedt",width:120 ,height:30},
-							{dataField:"usedSwaok" ,headerText:"usedSwaok",width:120 ,height:30},
-							{dataField:"usedCrtDt" ,headerText:"usedCrtDt",width:120 ,height:30},
-							{dataField:"usedCrtUserId" ,headerText:"usedCrtUserId",width:120 ,height:30}
+							{dataField:"serialNo" ,headerText:"Serial Number",width:500 ,height:30},
+							{dataField:"matnr" ,headerText:"Material Code ",width:120 ,height:30},
+							{dataField:"latransit" ,headerText:"latransit",width:120 ,height:30, visible:false},
+							{dataField:"gltri" ,headerText:"gltri",width:120 ,height:30, visible:false},
+							{dataField:"lvorm" ,headerText:"lvorm",width:120 ,height:30, visible:false},
+							{dataField:"crtDt" ,headerText:"Create Date",width:120 ,height:30},
+							{dataField:"crtUserId" ,headerText:"Create User",width:120 ,height:30},
+							{dataField:"usedSerialNo" ,headerText:"usedSerialNo",width:120 ,height:30, visible:false},
+							{dataField:"usedMatnr" ,headerText:"usedMatnr",width:120 ,height:30, visible:false},
+							{dataField:"usedLocId" ,headerText:"usedLocId",width:120 ,height:30, visible:false},
+							{dataField:"usedGltri" ,headerText:"usedGltri",width:120 ,height:30, visible:false},
+							{dataField:"usedLwedt" ,headerText:"usedLwedt",width:120 ,height:30, visible:false},
+							{dataField:"usedSwaok" ,headerText:"usedSwaok",width:120 ,height:30, visible:false},
+							{dataField:"usedCrtDt" ,headerText:"usedCrtDt",width:120 ,height:30, visible:false},
+							{dataField:"usedCrtUserId" ,headerText:"usedCrtUserId",width:120 ,height:30, visible:false}
                             ];
+                            
+var excelLayout2 = [
+		                   {dataField:"serialNo" ,headerText:"Serial Number",width:500 ,height:30},
+		                   {dataField:"matnr" ,headerText:"Material Code ",width:120 ,height:30},
+		                   {dataField:"exist" ,headerText:"Exist Y/N ",width:120 ,height:30}
+		                   ];
+
+var excelLayout = [
+							{dataField:"serialNo" ,headerText:"Serial_Number",width:500 ,height:30},
+							{dataField:"matnr" ,headerText:"Material_Code ",width:120 ,height:30},
+                            ];
+                            
 var detailLayout = [
 							{dataField:"rdcSerialNo" ,headerText:"rdcSerialNo",width:120 ,height:30},
 							{dataField:"rdcMatnr" ,headerText:"rdcMatnr",width:120 ,height:30},
@@ -201,7 +227,7 @@ var gridPros = {
     //rowIdField : "stkid",
     enableSorting : true,
     //showRowCheckColumn : true,
-
+    exportURL : "/common/exportGrid.do"
 };
 
 var subgridPros = {
@@ -235,7 +261,22 @@ var subgridPros = {
 	};
 
 $(document).ready(function(){
+	createInitGrid();
+    
+    // IE10, 11은 readAsBinaryString 지원을 안함. 따라서 체크함.
+    var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
+
+    // HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
+    function checkHTML5Brower() {
+        var isCompatible = false;
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            isCompatible = true;
+        }
+        return isCompatible;
+    };
+	
 	   myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridPros);
+	   myGridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout ,"", gridPros);
 	   detailGridID = GridCommon.createAUIGrid("grid_wrap_2nd", detailLayout,"", gridPros);
 	   popGridId  = GridCommon.createAUIGrid("popup_wrap_div", popLayout,"", subgridPros);
 	   $("#popup_wrap").hide();
@@ -302,6 +343,78 @@ $(document).ready(function(){
 		$("#add").click(function(){
 			  fn_newSerial();
 		});
+	    $('#excelUp').click(function() {
+	        $('input[type=file]').val('');
+	        AUIGrid.clearGridData(myGridIDExcel);
+	        $("#popup_wrap_excel_up").show();
+	    });
+	    $('#excelDown').click(function() {
+	        // 그리드의 숨겨진 칼럼이 있는 경우, 내보내기 하면 엑셀에 아예 포함시키지 않습니다.
+	        // 다음처럼 excelProps 에서 exceptColumnFields 을 지정하십시오.
+	        
+	        var excelProps = {
+	                
+	            fileName     : "Sereial Excel Upload(Mass)",
+	            //sheetName : $("#txtlocCode").text(),
+	            
+	            //exceptColumnFields : ["cntQty"], // 이름, 제품, 컬러는 아예 엑셀로 내보내기 안하기.
+	            
+	             //현재 그리드의 히든 처리된 칼럼의 dataField 들 얻어 똑같이 동기화 시키기
+	           exceptColumnFields : AUIGrid.getHiddenColumnDataFields(myGridIDExcelHide) 
+	        };
+	        
+	        //AUIGrid.exportToXlsx(myGridIDHide, excelProps);
+	        AUIGrid.exportToXlsx(myGridIDExcelHide, excelProps);
+	        //GridCommon.exportTo("grid_wrap", "xlsx", "test");
+	    });
+	    $('#saveExcel').click(function() {
+	        //giFunc();
+	        fn_excelSave();
+	        
+	    });
+	    $('#cancelExcel').click(function() {
+	        AUIGrid.clearGridData(myGridIDExcel);
+	        $("#popup_wrap_excel_up").hide();
+	    });
+	    $('#fileSelector').on('change', function(evt) {
+	        if (!checkHTML5Brower()) {
+	            alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+	            return;
+	        } else {
+	            var data = null;
+	            var file = evt.target.files[0];
+	            if (typeof file == "undefined") {
+	                alert("파일 선택 시 오류 발생!!");
+	                return;
+	            }
+	            var reader = new FileReader();
+
+	            reader.onload = function(e) {
+	                var data = e.target.result;
+
+	                /* 엑셀 바이너리 읽기 */
+	                
+	                var workbook;
+
+	                if(rABS) { // 일반적인 바이너리 지원하는 경우
+	                    workbook = XLSX.read(data, {type: 'binary'});
+	                } else { // IE 10, 11인 경우
+	                    var arr = fixdata(data);
+	                    workbook = XLSX.read(btoa(arr), {type: 'base64'});
+	                }
+
+	                var jsonObj = process_wb(workbook);
+	                //console.log(jsonObj);
+	                //console.log(JSON.stringify(jsonObj.Sheet1, 2, 2));
+	                
+	                createAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
+	            };
+
+	            if(rABS) reader.readAsBinaryString(file);
+	            else reader.readAsArrayBuffer(file);
+	            
+	        }
+	    });
 		
 		
 	});
@@ -379,6 +492,146 @@ function fn_itempopList(data){
     var columnIndex=selectedItem[1];
     AUIGrid.setCellValue(popGridId, rowIndex ,columnIndex-1, rtnVal);
    } 
+   
+   
+   
+   
+   
+function fn_excelSave(){
+    var param  =  {};
+    for (var i = 0 ; i < AUIGrid.getRowCount(myGridIDExcel) ; i++){
+        if (AUIGrid.getCellValue(myGridIDExcel , i , "exist") == 'Y'){
+            Common.alert("Please check the serial.")
+            return false;
+        }
+    }
+    param.add = AUIGrid.exportToObject("#popup_wrap_excel");
+    console.log(param);
+    Common.ajax("POST", "/logistics/serial/saveExcelGrid.do",param , function(result) {
+    	 Common.alert(result.message);
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+             console.log("status : " + jqXHR.status);
+            console.log("code : " + jqXHR.responseJSON.code);
+            console.log("message : " + jqXHR.responseJSON.message);
+            console.log("detailMessage : "
+                    + jqXHR.responseJSON.detailMessage); 
+        } catch (e) {
+            //console.log(e);
+        }
+
+        alert("Fail : " + jqXHR.responseJSON.message);
+    });
+    $("#popup_wrap_excel_up").hide();
+    
+}
+
+//IE10, 11는 바이너리스트링 못읽기 때문에 ArrayBuffer 처리 하기 위함.
+function fixdata(data) {
+    var o = "", l = 0, w = 10240;
+    for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
+    o+=String.fromCharCode.apply(null, new Uint8Array(data.slice(l*w)));
+    return o;
+};
+
+// 파싱된 시트의 CDATA 제거 후 반환.
+function process_wb(wb) {
+    var output = "";
+    output = JSON.stringify(to_json(wb));
+    output = output.replace( /<!\[CDATA\[(.*?)\]\]>/g, '$1' );
+    return JSON.parse(output);
+};
+
+// 엑셀 시트를 파싱하여 반환
+function to_json(workbook) {
+    var result = {};
+    workbook.SheetNames.forEach(function(sheetName) {
+        var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName],{defval:""});
+        if(roa.length >= 0){
+            result[sheetName] = roa;
+        }
+    });
+    return result;
+}
+
+// 엑셀 파일 시트에서 파싱한 JSON 데이터 기반으로 그리드 동적 생성
+function createAUIGrid(jsonData) {
+    if(AUIGrid.isCreated(myGridIDExcel)) {
+        AUIGrid.destroy(myGridIDExcel);
+        myGridIDExcel = null;
+    }
+    // 그리드 생성
+    myGridIDExcel = AUIGrid.create("#popup_wrap_excel", excelLayout2 );
+     console.log(jsonData);
+     for(var i = 0; i<jsonData.length; i++){
+    	var serialChck = jsonData[i].Serial_Number;
+    	var matrChck = jsonData[i].Material_Code;
+    	fn_serialExist(serialChck,matrChck);
+    	console.log(serialChck+":"+matrChck)
+    	
+    }
+
+};
+function fn_serialExist(serialChck,matrChck){
+	var sortingInfo = [];
+    // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
+    sortingInfo[0] = { dataField : "serialNo", sortType : 1 }; // 오름차순 1
+    sortingInfo[1] = { dataField : "matnr", sortType : 1 }; // 오름차순 1
+	var rowPos = "last";
+	var rowList = [];
+	   var param =
+	    {
+			   serialChck    : serialChck,
+			   matrChck     : matrChck
+	   };
+ 
+	        Common.ajaxSync("GET", "/logistics/serial/selectSerialExist.do", param, function(result) {
+	               console.log(result);
+	               var data = result.dataList;
+	               rowList ={
+	            		   serialNo    : serialChck,
+	            		   matnr     : matrChck
+	              
+	               }
+				            if(data.length==0){
+        			               $.extend(rowList,{'exist':'N'});
+				            }else{
+           	  		               $.extend(rowList,{'exist':'Y'});
+				            }
+	               AUIGrid.addRow(myGridIDExcel, rowList, rowPos);  
+	    });
+	               AUIGrid.setSorting(myGridIDExcel, sortingInfo);
+	               
+	               changeRowStyleFunction();
+}
+function changeRowStyleFunction() {
+    // row Styling 함수를 다른 함수로 변경
+    AUIGrid.setProp(myGridIDExcel, "rowStyleFunction", function(rowIndex, item) {
+        if(item.exist == "Y") {
+            return "my-row-style";
+        }
+        return "";
+    });
+    
+    // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+    AUIGrid.update(myGridIDExcel);
+};
+
+//최초 그리드 생성..
+function createInitGrid() {
+    // 그리드 속성 설정
+    var gridPros = {
+        //noDataMessage : "로컬 PC의 엑셀 파일을 선택하십시오."
+    };
+
+    // 실제로 #grid_wrap 에 그리드 생성
+    myGridIDExcel = AUIGrid.create("#popup_wrap_excel", excelLayout, gridPros);
+    
+    // 그리드 최초에 빈 데이터 넣음.
+    AUIGrid.setGridData(myGridIDExcel, []);
+    AUIGrid.resize(myGridIDExcel,1203);
+}
+
 </script>
         
 <section id="content"><!-- content start -->
@@ -419,46 +672,11 @@ function fn_itempopList(data){
     <th scope="row">Material Master</th>
     <td>
     <input type="text" id="srchmaterial" name="srchmaterial"  class="w100p" />
-    <!-- date_set start -->
-<!--     <div class="date_set">
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div> --><!-- date_set end -->
 
     </td>
     <th scope="row">Serial Number</th>
     <td>
     <input type="text" id="srchserial" name="srchserial"  class="w100p" />
-<!--     <div class="date_set"> 
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div> --><!-- date_set end -->
 
     </td>
 </tr>
@@ -466,41 +684,8 @@ function fn_itempopList(data){
     <th scope="row">Location</th>
     <td>
     <input type="text" id="srchloc" name="srchloc"  class="w100p" />
-    <!-- <div class="date_set"> 
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div> --><!-- date_set end -->
 
     </td>
-    <th scope="row">GR Date</th>
-    <td>
-
-    <div class="date_set"><!-- date_set start -->
-    <p>
-    <input id="srchgrdtfrom" name="srchgrdtfrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
-    </p>
-    <span>~</span>
-    <p>
-    <input id="srchgrdtto" name="srchgrdtto" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
-    </p>
-    </div><!-- date_set end -->
-
-    </td>
-</tr>
-<tr>
     <th scope="row">Create Date</th>
     <td>
 
@@ -511,20 +696,6 @@ function fn_itempopList(data){
     <span>~</span>
     <p>
     <input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
-    </p>
-    </div><!-- date_set end -->
-
-    </td>
-    <th scope="row">GI Date</th>
-    <td>
-
-    <div class="date_set"><!-- date_set start -->
-    <p>
-    <input id="srchcitdtfrom" name="srchcitdtfrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
-    </p>
-    <span>~</span>
-    <p>
-   <input id="srchcitdtto" name="srchcitdtto" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
     </p>
     </div><!-- date_set end -->
 
@@ -569,15 +740,16 @@ function fn_itempopList(data){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
+    <li><p class="btn_grid"><a id="excelUp"><spring:message code='sys.btn.excel.up' /></a></p></li>
+ <li><p class="btn_grid"><a id="excelDown"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+<!--     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li>  -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="grid_wrap"></div>
+        <div id="grid_wrap_hide" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 
@@ -620,4 +792,30 @@ function fn_itempopList(data){
 </form>
 </div><!-- popup_wrap end -->
 
+<div id="popup_wrap_excel_up" class="size_big popup_wrap" style="display:none"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1 id="popup_title">Serial Number Excel Upload</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+<section class="pop_body"><!-- pop_body start -->
+<ul class="right_btns">
+    <!-- <li><p class="btn_blue"><a id="add">Add</a></p></li> -->
+    
+    <li><p class="btn_blue"><div class="auto_file"><!-- auto_file start -->
+                                    <input type="file" id="fileSelector" title="file add" accept=".xlsx"/>
+                                </div>
+    </p></li>
+</ul>
+<article class="grid_wrap"><!-- grid_wrap start -->
+       <div id="popup_wrap_excel"></div>
+</article><!-- grid_wrap end -->
+            <ul class="center_btns">
+                <li><p class="btn_blue2 big"><a id="saveExcel">SAVE</a></p></li>
+                <li><p class="btn_blue2 big"><a id="cancelExcel">CANCEL</a></p></li>
+            </ul>
+</section><!-- pop_body end -->
+</div>
  

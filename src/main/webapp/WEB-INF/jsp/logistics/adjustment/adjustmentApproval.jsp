@@ -144,7 +144,6 @@ function searchHead(){
 var url = "/logistics/adjustment/adjustmentApprovalLineCheck.do";
 Common.ajax("GET" , url , param , function(result){
    var data = result.dataList;
-        console.log(data)
         $("#approve").hide();
         $("#reject").hide();
         $("#approve2").hide();
@@ -159,7 +158,7 @@ Common.ajax("GET" , url , param , function(result){
 
 
 	function fn_approvalStatus(data) {
-
+	    console.log(data);
 		if ("Y" == data[0].saveYn) {
 			if (null == data[0].cnfm1 || "" == data[0].cnfm1) {
 				$("#approve").show();
@@ -194,6 +193,7 @@ Common.ajax("GET" , url , param , function(result){
 			} else {
 				$("#auto_file").hide();
 				$("#complete").hide();
+				
 			}
 
 		} else {
@@ -206,6 +206,10 @@ Common.ajax("GET" , url , param , function(result){
 			
 		}
 		
+		if("C"==data[0].delFlag){
+            $("#auto_file").hide();
+            $("#complete").hide();
+		}
         $("#lcdYn").text(data[0].cnfm1);
         $("#finYn").text(data[0].cnfm2);
 }
@@ -363,7 +367,7 @@ Common.ajax("GET" , url , param , function(result){
     </td>
 </tr>
 <tr>
-    <th scope="row">Event Type</th>
+    <th scope="row">Location Type</th>
     <td>
     <!-- <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select> -->
      <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
