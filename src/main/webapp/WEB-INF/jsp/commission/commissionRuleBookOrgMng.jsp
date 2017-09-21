@@ -433,7 +433,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Rule Book Management</h2>
+		<h2>Commission Organization Management</h2>
 		<ul class="right_opt">
 			<li><p class="btn_gray">
                      <a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a>
