@@ -15,19 +15,23 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            fn_setData(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId"))
+            fn_setData(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId") , event.item );    //edit by hgham 2017-09-21    event.item 추가 
             fn_createEvent('custPopCloseBtn', 'click');
         });
 	});
 	
-	function fn_setData(custId) {
+	function fn_setData(custId , item) {                                                                        //edit by hgham 2017-09-21    event.item 추가 
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CUST_CUST') {
 	        fn_loadCustomer(custId);
 	    }
 	    else if ($('#callPrgm').val() == 'ORD_REGISTER_PAY_3RD_PARTY') {
 	        fn_loadThirdParty(custId, 1)
 	    }
+	    else{   //edit by hgham 2017-09-21    callback function (item) 추가  
+	    	eval(${callPrgm}(item));
+	    }
 	}
+	
 	
     function createAUIGrid() {
         
