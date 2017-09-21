@@ -140,7 +140,6 @@ var errorMsg = function(){
 }
 
 function fn_clickViewDetail(){
-	alert("!!!");
     var orderId = $("#orderId").val();
     console.log("viewDetail , orderID : " + orderId);
     if(orderId != '' && orderId != undefined){
