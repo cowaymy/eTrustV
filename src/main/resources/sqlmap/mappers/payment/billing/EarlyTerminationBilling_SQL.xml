@@ -83,7 +83,10 @@
         select FN_GET_DOCNO(#{value}) from dual
     </select>
     
-    <insert id="insertAccRentLedger" parameterType="Map">
+    <update id="insertAccRentLedger" parameterType="Map">
+        <selectKey keyProperty="rentRunId" resultType="int" order="BEFORE">
+            SELECT PAY0022D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
         INSERT INTO PAY0022D
         ( 
               RENT_RUN_ID,
@@ -103,7 +106,7 @@
               R02 
          )
         VALUES ( 
-              PAY0022D_SEQ.NextVal,
+              #{rentRunId},
               #{rentId}, 
               #{rentSoId}, 
               #{rentDocNo}, 
@@ -119,7 +122,7 @@
               NULL, 
               NULL
          )
-    </insert>
+    </update>
     
     <insert id="insertAccOrderBill" parameterType="Map">
         INSERT INTO PAY0016D
