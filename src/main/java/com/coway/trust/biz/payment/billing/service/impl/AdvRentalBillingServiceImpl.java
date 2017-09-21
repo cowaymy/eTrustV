@@ -1,7 +1,5 @@
 package com.coway.trust.biz.payment.billing.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.billing.service.AdvRentalBillingService;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.crystaldecisions.reports.queryengine.Session;
 import com.ibm.icu.text.DecimalFormat;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
