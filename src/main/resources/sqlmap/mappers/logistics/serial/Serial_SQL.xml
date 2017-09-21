@@ -187,8 +187,34 @@
                 TO_CHAR(TO_DATE(#{gltri},'YYYY/MM/DD'), 'YYYYMMDD'),
                 #{lvorm},
                 TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
-                #{loginId} 
+                #{crtUserId} 
                 )    
     </update>
     
+    <select id="selectSerialExist" parameterType="Map"  resultType="EgovMap">
+        SELECT 
+                SERIAL_NO,MATNR, COUNT(SERIAL_NO) CNT
+        FROM LOG0062M
+				GROUP BY SERIAL_NO, MATNR
+				HAVING 
+				    SERIAL_NO = #{serialChck}
+				<!-- AND 
+				    MATNR       = #{matrChck} -->
+    </select>
+    <insert id="insertExcelSerial" parameterType="Map">
+          INSERT INTO LOG0062M
+                (
+                SERIAL_NO,
+                MATNR,
+                CRT_DT,
+                CRT_USER_ID               
+                )        
+                VALUES
+                (
+                #{serialNo},
+                #{matnr},
+                TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
+                #{crtUserId} 
+                )    
+    </insert>
 </mapper>

@@ -310,4 +310,10 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		// TODO Auto-generated method stub
 		return adjustmentMapper.selectAdjustmentConfirmCheck(params);
 	}
+
+	@Override
+	public void updateAuditToClose(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		adjustmentMapper.updateAuditToClose(params);
+	}
 }

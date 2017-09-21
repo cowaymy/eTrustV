@@ -77,4 +77,23 @@ public class SerialServiceImpl implements SerialService {
 		return cnt;
 	}
 
+	@Override
+	public List<EgovMap> selectSerialExist(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return serialMapper.selectSerialExist(params);
+	}
+
+	@Override
+	public void insertExcelSerial(List<Object> addList, String loginId) {
+		// TODO Auto-generated method stub
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("loginId", loginId);
+		for (Object obj : addList) {
+			param.put("serialNo", ((Map<String, Object>) obj).get("serialNo"));
+			param.put("matnr", ((Map<String, Object>) obj).get("matnr"));
+			param.put("crtUserId", loginId);
+			serialMapper.insertExcelSerial(param);
+		}
+	}
+
 }

@@ -17,4 +17,8 @@ public interface SerialService {
 
 	List<EgovMap> searchSeialListPop(Map<String, Object> params);
 
+	List<EgovMap> selectSerialExist(Map<String, Object> params);
+
+	void insertExcelSerial(List<Object> addList, String loginId);
+
 }

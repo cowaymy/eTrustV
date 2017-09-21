@@ -64,44 +64,59 @@
                 CTGRY_TYPE
             FROM  LOG0071M
                  WHERE  1=1
+            <if test="adjNo !=null and adjNo !=''">
+                AND INVNTRY_NO =  #{adjNo}
+            </if>
             <if test="srch_adjno !=null and srch_adjno !=''">
                 AND INVNTRY_NO LIKE  '%'||#{srch_adjno}||'%'
             </if>
             <if test="srch_bsadjdate !=null and srch_bsadjdate !=''">
                 AND BASE_DT = TO_CHAR(TO_DATE(#{srch_bsadjdate},'DD/MM/YYYY'),'YYYYMMDD')
             </if>
+             AND (DEL_FLAG <![CDATA[<> ]]>'D' OR DEL_FLAG IS NULL)
              ORDER BY INVNTRY_NO
+            <if test="oderby !=null and oderby !=''">
+                DESC
+            </if>
+             
     </select>   
+    <update id="updateAuditToClose" parameterType="Map">
+       UPDATE LOG0071M
+                SET  DEL_FLAG = 'D'
+                WHERE INVNTRY_NO =  #{adjNo}
+    </update>
      
      <select id="selectAdjustmentLocationList" parameterType="Map" resultType="EgovMap">
         SELECT
                 ROWNUM rnum,
-				WH_LOC_ID,
-				WH_LOC_CODE,
-				WH_LOC_DESC,
-				WH_LOC_TEL1,
-				WH_LOC_TEL2,
-				WH_LOC_BRNCH_ID,
-				WH_LOC_TYPE_ID,
-				WH_LOC_STK_GRAD,
-				WH_LOC_STUS_ID,
-				WH_LOC_UPD_USER_ID,
-				WH_LOC_UPD_DT,
-				CODE2,
-				DESC2,
-				WH_LOC_IS_SYNC,
-				WH_LOC_MOBILE,
-				AREA_ID,
-				ADDR_DTL,
-				STREET,
-				WH_LOC_BRNCH_ID2,
-				WH_LOC_BRNCH_ID3,
-				WH_LOC_GB,
-				SERIAL_PD_CHK,
-				SERIAL_FT_CHK,
-				SERIAL_PT_CHK,
-				COMMON_CR_CHK
-		FROM SYS0028M
+              sy28m.WH_LOC_ID,
+              sy28m.WH_LOC_CODE,
+              sy28m.WH_LOC_DESC,
+              sy28m.WH_LOC_TEL1,
+              sy28m.WH_LOC_TEL2,
+              sy28m.WH_LOC_BRNCH_ID,
+              sy28m.WH_LOC_TYPE_ID,
+              sy28m.WH_LOC_STK_GRAD,
+              sy28m.WH_LOC_STUS_ID,
+              sy28m.WH_LOC_UPD_USER_ID,
+              sy28m.WH_LOC_UPD_DT,
+              sy28m.CODE2,
+              sy28m.DESC2,
+              sy28m.WH_LOC_IS_SYNC,
+              sy28m.WH_LOC_MOBILE,
+              sy28m.AREA_ID,
+              sy28m.ADDR_DTL,
+              sy28m.STREET,
+              sy28m.WH_LOC_BRNCH_ID2,
+              sy28m.WH_LOC_BRNCH_ID3,
+              sy28m.WH_LOC_GB,
+              (SELECT CODE FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) CODE,
+              (SELECT CODE_NAME FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) CODE_NAME,
+              sy28m.SERIAL_PD_CHK,
+              sy28m.SERIAL_FT_CHK,
+              sy28m.SERIAL_PT_CHK,
+              sy28m.COMMON_CR_CHK
+        FROM SYS0028M sy28m
 		          WHERE 1=1
 		         <if test="locList.size != 0">
 		          AND WH_LOC_TYPE_ID IN
@@ -143,6 +158,8 @@
 				sy28m.WH_LOC_BRNCH_ID2 adjWH_LOC_BRNCH_ID2,
 				sy28m.WH_LOC_BRNCH_ID3 adjWH_LOC_BRNCH_ID3,
 				sy28m.WH_LOC_GB adjWH_LOC_GB,
+			    (SELECT CODE FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) adjCODE,
+                (SELECT CODE_NAME FROM  SYS0013M WHERE 1=1 AND CODE_MASTER_ID = 339 AND CODE=sy28m.WH_LOC_GB) adjCODE_NAME,
 				sy28m.SERIAL_PD_CHK adjSERIAL_PD_CHK,
 				sy28m.SERIAL_FT_CHK adjSERIAL_FT_CHK,
 				sy28m.SERIAL_PT_CHK adjSERIAL_PT_CHK,
@@ -218,10 +235,10 @@
 							  <if test="autoFlag == M">
 							   AND WH_LOC_ID = #{adjwhLocId}
 							  </if>
-					           AND WH_LOC_GB IN
+	<!-- 				           AND WH_LOC_GB IN
 		                      <foreach item="item" collection="eventList" index="index" open="(" separator="," close=")">
 		                       #{item}
-		                      </foreach>
+		                      </foreach> -->
                   
       </insert>  
       

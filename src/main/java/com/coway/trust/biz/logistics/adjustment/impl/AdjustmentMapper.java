@@ -59,4 +59,6 @@ public interface AdjustmentMapper {
 
 	List<EgovMap> selectAdjustmentConfirmCheck(Map<String, Object> params);
 
+	void updateAuditToClose(Map<String, Object> params);
+
 }

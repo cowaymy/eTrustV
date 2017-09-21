@@ -114,11 +114,41 @@ public class SerialController {
 
 	}
 
+	@RequestMapping(value = "/saveExcelGrid.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveExcelGrid(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) throws Exception {
+		String loginId = String.valueOf(sessionVO.getUserId());
+		// int cnt = 0;
+		List<Object> addList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		if (addList.size() > 0) {
+			logger.info("addList : {}", addList.toString());
+			serialService.insertExcelSerial(addList, loginId);
+		}
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setDataList(list);
+		return ResponseEntity.ok(message);
+
+	}
+
 	@RequestMapping(value = "/newSerialCheck.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> newSerialCheck(@RequestParam Map<String, Object> params) {
 
 		logger.debug("serialNo : {}", params.get("serialNo"));
 		List<EgovMap> list = serialService.searchSeialListPop(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/selectSerialExist.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectSerialExist(@RequestParam Map<String, Object> params) {
+
+		logger.debug("serialNo : {}", params.get("serialNo"));
+		List<EgovMap> list = serialService.selectSerialExist(params);
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));

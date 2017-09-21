@@ -451,6 +451,15 @@ public class AdjustmentController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/closeAudit.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> closeAudit(@RequestParam Map<String, Object> params) {
+		logger.debug("adjNo : {}", params.get("adjNo"));
+		adjustmentService.updateAuditToClose(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/selectInsertSerialCount.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectInsertSerialCount(@RequestParam Map<String, Object> params) {
 		logger.debug("adjNo : {}", params.get("adjNo"));
