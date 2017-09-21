@@ -106,7 +106,7 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
                 
                 EgovMap  selectSalesOrderMs_M = rentalMemberShipBillingMapper.selectSalesOrderMs_M(hm);
 				String custBillId = selectSalesOrderMs_M.get("custBillId") != null ? String.valueOf(selectSalesOrderMs_M.get("custBillId")) : "0";
-				taskOrderMap.put("newTaskId", newTaskId + 1);
+				taskOrderMap.put("newTaskId", newTaskId);
 				taskOrderMap.put("taskBillGroupId", custBillId);
 				rentalMemberShipBillingMapper.insTaskLogOrder_M(taskOrderMap);
     		}
@@ -124,7 +124,7 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
         	taskLogMap.put("createdBy", userId);
         	taskLogMap.put("updatedBy", userId);
         	taskLogMap.put("taskBillRemark", String.valueOf(formMap.get("invoiceRemark")).replace("'","''"));
-        	taskLogMap.put("newTaskId", newTaskId + 1);
+        	taskLogMap.put("newTaskId", newTaskId);
         	rentalMemberShipBillingMapper.insBillTaskLog_M(taskLogMap);
     	}
     	
@@ -132,7 +132,7 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
     	if(newTaskId > 0){
     		
     		Map<String, Object> confMap = new HashMap<String, Object>();
-    		confMap.put("taskId", newTaskId+1);
+    		confMap.put("taskId", newTaskId);
 			confMap.put("userId", userId);
 			rentalMemberShipBillingMapper.confirmTaxesManualBillRentalMbrsh(confMap);
     		value=Integer.parseInt(String.valueOf(confMap.get("p1")));

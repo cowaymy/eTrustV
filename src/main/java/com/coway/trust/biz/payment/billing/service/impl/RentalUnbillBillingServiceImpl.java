@@ -103,7 +103,7 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
                 
                 EgovMap  selectSalesOrderMs_U = rentalUnbillBillingMapper.selectSalesOrderMs_U(hm);
 				String custBillId = selectSalesOrderMs_U.get("custBillId") != null ? String.valueOf(selectSalesOrderMs_U.get("custBillId")) : "0";
-				taskOrderMap.put("newTaskId", newTaskId + 1);
+				taskOrderMap.put("newTaskId", newTaskId);
 				taskOrderMap.put("taskBillGroupId", custBillId);
 				rentalUnbillBillingMapper.insTaskLogOrder_U(taskOrderMap);
     		}
@@ -121,7 +121,7 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
         	taskLogMap.put("createdBy", userId);
         	taskLogMap.put("updatedBy", userId);
         	taskLogMap.put("taskBillRemark", String.valueOf(formMap.get("invoiceRemark")).replace("'","''"));
-        	taskLogMap.put("newTaskId", newTaskId + 1);
+        	taskLogMap.put("newTaskId", newTaskId);
         	rentalUnbillBillingMapper.insBillTaskLog_U(taskLogMap);
     	}
     	
@@ -129,7 +129,7 @@ public class RentalUnbillBillingServiceImpl extends EgovAbstractServiceImpl impl
     	if(newTaskId > 0){
     		
     		Map<String, Object> confMap = new HashMap<String, Object>();
-    		confMap.put("taskId", newTaskId+1);
+    		confMap.put("taskId", newTaskId);
 			confMap.put("userId", userId);
 			rentalUnbillBillingMapper.confirmTaxesManualBill(confMap);
     		value=Integer.parseInt(String.valueOf(confMap.get("p1")));

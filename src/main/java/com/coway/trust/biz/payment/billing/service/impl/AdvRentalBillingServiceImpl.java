@@ -104,7 +104,7 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
                 
                 EgovMap  selectSalesOrderMs = advRentalBillingMapper.selectSalesOrderMs(hm);
 				String custBillId = selectSalesOrderMs.get("custBillId") != null ? String.valueOf(selectSalesOrderMs.get("custBillId")) : "0";
-				taskOrderMap.put("newTaskId", newTaskId + 1);
+				taskOrderMap.put("newTaskId", newTaskId);
 				taskOrderMap.put("taskBillGroupId", custBillId);
 				advRentalBillingMapper.insTaskLogOrder(taskOrderMap);
     		}
@@ -122,7 +122,7 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
         	taskLogMap.put("createdBy", userId);
         	taskLogMap.put("updatedBy", userId);
         	taskLogMap.put("taskBillRemark", String.valueOf(formMap.get("invoiceRemark")).replace("'","''"));
-        	taskLogMap.put("newTaskId", newTaskId + 1);
+        	taskLogMap.put("newTaskId", newTaskId);
     		advRentalBillingMapper.insBillTaskLog(taskLogMap);
     	}
     	
@@ -130,7 +130,7 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
     	if(newTaskId > 0){
     		
     		Map<String, Object> confMap = new HashMap<String, Object>();
-			confMap.put("taskId", newTaskId+1);
+			confMap.put("taskId", newTaskId);
 			confMap.put("userId", userId);
 			advRentalBillingMapper.confirmTaxesAdvanceBill(confMap);
     		value=Integer.parseInt(String.valueOf(confMap.get("p1")));
