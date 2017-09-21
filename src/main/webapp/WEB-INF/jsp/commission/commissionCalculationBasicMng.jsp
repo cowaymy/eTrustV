@@ -156,7 +156,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>RUN Commission</h2>
+		<h2>Commission Basic Data Collection</h2>
 
 		<ul class="right_btns">
 		<li><p class="btn_gray">          

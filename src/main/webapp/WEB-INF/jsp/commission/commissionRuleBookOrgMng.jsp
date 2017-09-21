@@ -134,7 +134,7 @@
 		$.each(orgList, function(key, value) {
 			var id = value.id;
 			if (id == val) {
-				retStr = value.value + "," + value.cdnm;
+				retStr = value.value + "," + value.cdds;
 			}
 			console.debug("id:" + value.id + ",cd:" + value.value + ",cdnm:" + value.cdnm);
 		});
@@ -221,9 +221,9 @@
 		//width : 120,
 		editable : false,
         width : "10%"
-	}, {
+    }, {
 		dataField : "cdds",
-		headerText : "Description",
+		headerText : "DESCRIPTION",
 		editable : false,
 		//width : 180,
 		style : "my-column"
@@ -291,14 +291,15 @@
 				for (var i = 0; i < result.length; i++) {
 					var list = new Object();
 					list.id = result[i].cdid;
-					list.value = result[i].cd;
-					list.cdnm = result[i].cdnm;
+					list.value = result[i].cdnm;
+					list.cdnm = result[i].cd;
+					list.cdds = result[i].cdds;
 					orgList.push(list);
 				}
 			} else { //get 
 				$("#orgCombo").append("<option value='' ></option>");
 				for (var i = 0; i < result.length; i++) {
-					$("#orgCombo").append("<option value='"+result[i].cdid + "' > " + result[i].cd + "</option>");
+					$("#orgCombo").append("<option value='"+result[i].cdid + "' > " + result[i].cdnm + "</option>");
 				}
 			}
 			//if you need callBack Function , you can use that function
@@ -433,7 +434,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Organization Management</h2>
+		<h2>Commission Organization Group Mgmt</h2>
 		<ul class="right_opt">
 			<li><p class="btn_gray">
                      <a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a>

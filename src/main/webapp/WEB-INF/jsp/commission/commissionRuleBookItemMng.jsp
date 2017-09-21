@@ -344,17 +344,15 @@
 	}, {
 		dataField : "orgGrCd",
 		headerText : "ORG GR CD",
-		width : 120,
 		visible : false
 	}, {
 		dataField : "itemSeq",
 		headerText : "ITEM SEQ",
-		width : 120,
 		visible : false
 	}, {
 		dataField : "orgCd",
 		headerText : "ORG CD",
-		width : 120,
+		width : 100,
 		editRenderer : {
 			type : "ComboBoxRenderer",
 			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -368,13 +366,13 @@
 	}, {
 		dataField : "orgds",
 		headerText : "ORG NAME",
-		width : 200,
+		width : 120,
 		style : "my-column",
 		editable : false
 	}, {
 		dataField : "itemCd",
 		headerText : "ITEM CODE",
-		width : 120,
+		width : 100,
 		editRenderer : {
 			type : "ComboBoxRenderer",
 			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -390,8 +388,8 @@
 		dataField : "codeName",
 		headerText : "Description",
 		editable : false,
-		style : "my-column",
-		width : 617
+		style : "my-column"
+		//width : 617
 	}, {
 		dataField : "editBtn",
 		headerText : "Management<br>RULE",
@@ -812,7 +810,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Rule Book Item Management</h2>
+		<h2>Commission Rule Book Mgmt</h2>
 
 		<ul class="right_btns">
 			<li><p class="btn_gray">			

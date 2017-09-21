@@ -37,7 +37,7 @@
 	                console.log("성공.");
 	                console.log("data : " + result);
 	                AUIGrid.setGridData(myGridID_23T, result);
-	                AUIGrid.addCheckedRowsByValue(myGridID_23T, "isexclude", "1");
+	                AUIGrid.addCheckedRowsByValue(myGridID_23T, "isExclude", "1");
 	            });
             //}
         });
@@ -138,7 +138,7 @@
         visible : false,
         editable : false
     },{
-        dataField : "isexclude",
+        dataField : "isExclude",
         headerText : "IS EXCLUDE",
         style : "my-column",
         visible : false,

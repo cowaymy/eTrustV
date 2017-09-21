@@ -739,7 +739,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("emplycode").toString());
 			lst.add(dataList.get(i).get("paystus").toString());
 			lst.add(dataList.get(i).get("ishsptlz").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -776,7 +776,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("unitValu").toString());
 			lst.add(dataList.get(i).get("prc").toString());
 			lst.add(dataList.get(i).get("pvValu").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -806,7 +806,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("svcPersonId").toString());
 			lst.add(dataList.get(i).get("bsStusId").toString());
 			lst.add(dataList.get(i).get("crditPoint").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -844,7 +844,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("xplnt").toString());
 			lst.add(dataList.get(i).get("qly").toString());
 			lst.add(dataList.get(i).get("overal").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -874,7 +874,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("mbrshId").toString());
 			lst.add(dataList.get(i).get("ordId").toString());
 			lst.add(dataList.get(i).get("mbrshAmt").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -910,7 +910,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("pv").toString());
 			lst.add(dataList.get(i).get("prc").toString());
 			lst.add(dataList.get(i).get("ordTypeId").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runid").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -946,7 +946,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("custRaceId").toString());
 			lst.add(dataList.get(i).get("rentPayModeId").toString());
 			lst.add(dataList.get(i).get("custId").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -978,7 +978,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("strtgOs").toString());
 			lst.add(dataList.get(i).get("closOs").toString());
 			lst.add(dataList.get(i).get("isDrop").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1006,7 +1006,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("emplyId").toString());
 			lst.add(dataList.get(i).get("sponsId").toString());
 			lst.add(dataList.get(i).get("instlmt").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1036,7 +1036,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("ordId").toString());
 			lst.add(dataList.get(i).get("clctrId").toString());
 			lst.add(dataList.get(i).get("amt").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1113,7 +1113,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("gmCode").toString());
 			lst.add(dataList.get(i).get("rcmYear").toString());
 			lst.add(dataList.get(i).get("rcmMonth").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1146,7 +1146,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("appTypeId").toString());
 			lst.add(dataList.get(i).get("instPersonId").toString());
 			lst.add(dataList.get(i).get("prc").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1179,7 +1179,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("appTypeId").toString());
 			lst.add(dataList.get(i).get("bsPersonId").toString());
 			lst.add(dataList.get(i).get("prc").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1213,7 +1213,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("stockId").toString());
 			lst.add(dataList.get(i).get("appTypeId").toString());
 			lst.add(dataList.get(i).get("asPersonId").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("prc").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1250,7 +1250,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("pv").toString());
 			lst.add(dataList.get(i).get("prc").toString());
 			lst.add(dataList.get(i).get("ordTypeId").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runid").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1291,7 +1291,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("rcmYear").toString());
 			lst.add(dataList.get(i).get("rcmMonth").toString());
 			lst.add(dataList.get(i).get("srvCntrctId").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
@@ -1365,7 +1365,7 @@ public class CommDownloadExcelController {
 			lst.add(dataList.get(i).get("emplyCode").toString());
 			lst.add(dataList.get(i).get("weeklylvr").toString());
 			lst.add(dataList.get(i).get("monthLvR").toString());
-			lst.add(dataList.get(i).get("isexclude").toString());
+			lst.add(dataList.get(i).get("isExclude").toString());
 			lst.add(dataList.get(i).get("runId").toString());
 			lst.add(params.get("taskId").toString());
 			mGroupList.add(lst);
