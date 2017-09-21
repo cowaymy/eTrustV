@@ -97,7 +97,6 @@ public class EarlyTerminationBillingController {
 		
 		if(userId > 0){
 			List<EgovMap> list = earlyTerminationService.selectRentalProductEarlyTerminationPenalty(String.valueOf(params.get("orderId")));
-			
 			Date curdate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			

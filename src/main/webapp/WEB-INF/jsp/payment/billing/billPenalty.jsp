@@ -63,13 +63,31 @@ function fn_loadBillingSchedule(orderId){
 	Common.ajax("GET", "/payment/selectRentalProductEarlyTerminationPenalty.do", {"orderId" : orderId}, function(result) {
 		   console.log(result);
 		   if(result != null){
-			   $("#orderId").val(result.soReqId);
+			   var tmp1;
+			   var tmp2;
+			   $("#orderId").val(result.salesOrdId);
 			   $("#orderNo").val(result.salesOrdNo);
+			   tmp1=result.soReqCurrAmt.toFixed(2).split(".");
+			   tmp2=commaSeparateNumber(tmp1[0]);
+			   $("#rental1").val(tmp2+"."+tmp1[1]);
 			   $("#rental").val(result.soReqCurrAmt);
+			   tmp1=result.unbillMonth.toFixed(2).split(".");
+			   tmp2=commaSeparateNumber(tmp1[0]);
+			   $("#unbillMonth1").val(tmp2+"."+tmp1[1]);
 			   $("#unbillMonth").val(result.unbillMonth);
+			   tmp1=result.soReqCanclPnaltyAmt.toFixed(2).split(".");
+			   tmp2=commaSeparateNumber(tmp1[0]);
+			   $("#amount1").val(tmp2+"."+tmp1[1]);
 			   $("#amount").val(result.soReqCanclPnaltyAmt);
 		   }
 	});
+}
+
+function commaSeparateNumber(val){
+    while (/(\d+)(\d{3})/.test(val.toString())){
+      val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
 }
 
 function fn_createEvent(objId, eventType){
@@ -83,17 +101,16 @@ function fn_createBills(){
 		Common.alert(error);
 		return;
 	}
-	
-    //$("#orderId").val(tmp);
+
 	
 	Common.ajax("GET", "/payment/createBillsForEarlyTermination.do", $("#billingForm").serialize(), function(result) {
 		console.log(result);
 		if(result.message != ''){
 			$("#orderNo").val('');
 			$("#orderId").val('');
-			$("#rental").val('');
-			$("#unbillMonth").val('');
-			$("#amount").val('');
+			$("#rental").val('');$("#rental1").val('');
+			$("#unbillMonth").val('');$("#unbillMonth1").val('');
+			$("#amount").val('');$("#amount1").val('');
 			$("#remark").val('');
 			
 			if(result.data != null){
@@ -123,7 +140,6 @@ var errorMsg = function(){
 }
 
 function fn_clickViewDetail(){
-	//$("#orderId").val(tmp);
 	alert("!!!");
     var orderId = $("#orderId").val();
     console.log("viewDetail , orderID : " + orderId);
@@ -161,8 +177,8 @@ function fn_clickViewDetail(){
 <tr>
     <th scope="row">Selected Order No.</th>
     <td>
-    <input type="hidden" id="orderNo" name="orderNo" />
-    <input type="text" id="orderId" name="orderId" title="" placeholder="" class="" />
+    <input type="hidden" id="orderId" name="orderId" />
+    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
     <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
     <p class="btn_sky"><a href="javascript:fn_clickViewDetail()">View Details</a></p>
     </td>
@@ -184,7 +200,7 @@ function fn_clickViewDetail(){
 <tr>
     <th scope="row">Penalty Type</th>
     <td>
-    <select>
+    <select class="readonly">
         <option value="">Early Termination Fees</option>
     </select>
     </td>
@@ -192,19 +208,22 @@ function fn_clickViewDetail(){
 <tr>
     <th scope="row">Mothly Rental</th>
     <td>
-    <input type="text" id="rental" name="rental" title="" placeholder="" class="" readonly/>
+    <input type="hidden" id="rental" name="rental" title="" placeholder="" class="readonly" readonly/>
+    <input type="text" id="rental1" title="" placeholder="" class="readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Unbill Month</th>
     <td>
-    <input type="text" id="unbillMonth" name="unbillMonth" title="" placeholder="" class="" readonly/>
+    <input type="hidden" id="unbillMonth" name="unbillMonth" title="" placeholder="" class="readonly" readonly/>
+    <input type="text" id="unbillMonth1" title="" placeholder="" class="readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Termination Fee</th>
     <td>
-    <input type="text" id="amount" name="amount" title="" placeholder="" class="" readonly/>
+    <input type="hidden" id="amount" name="amount" title="" placeholder="" class="readonly" readonly/>
+    <input type="text" id="amount1" title="" placeholder="" class="readonly" readonly/>
     </td>
 </tr>
 <tr>

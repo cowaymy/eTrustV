@@ -42,12 +42,33 @@ function fn_loadBillingSchedule(orderId){
 		if(result != null){
 			$("#orderId").val(result.salesOrdId);
 	        $("#orderNo").val(result.salesOrdNo);
+	        var tmp1;
+            var tmp2;
+            tmp1=result.salesPrc.toFixed(2).split(".");
+            tmp2=commaSeparateNumber(tmp1[0]);
+	        $("#price1").val(tmp2+"."+tmp1[1]);
 	        $("#price").val(result.salesPrc);
+	        tmp1=result.outstanding.toFixed(2).split(".");
+            tmp2=commaSeparateNumber(tmp1[0]);
+	        $("#outstanding1").val(tmp2+"."+tmp1[1]);
 	        $("#outstanding").val(result.outstanding);
+	        tmp1=result.billMonth.toFixed(2).split(".");
+            tmp2=commaSeparateNumber(tmp1[0]);
+	        $("#month1").val(tmp2+"."+tmp1[1]);
 	        $("#month").val(result.billMonth);
+	        tmp1=result.pnalty.toFixed(2).split(".");
+            tmp2=commaSeparateNumber(tmp1[0]);
+	        $("#lossFee1").val(tmp2+"."+tmp1[1]);
 	        $("#lossFee").val(result.pnalty);
 		}
 	});
+}
+
+function commaSeparateNumber(val){
+    while (/(\d+)(\d{3})/.test(val.toString())){
+      val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
 }
 
 var errorMsg = function(){
@@ -87,10 +108,10 @@ function fn_createBills(){
     		
     		$("#orderId").val('');
             $("#orderNo").val('');
-            $("#price").val('');
-            $("#outstanding").val('');
-            $("#month").val('');
-            $("#lossFee").val('');
+            $("#price").val('');$("#price1").val('');
+            $("#outstanding").val('');$("#outstanding1").val('');
+            $("#month").val('');$("#month1").val('');
+            $("#lossFee").val('');$("#lossFee1").val('');
             $("#remark").val('');
     		
     		$("#grid_wrap").show();
@@ -137,8 +158,8 @@ function fn_clickViewDetail(){
 <tr>
     <th scope="row">Selected Order No.</th>
     <td>
-    <input type="hidden" id="orderNo" name="orderNo" />
-    <input type="text" id="orderId" name="orderId" title="" placeholder="" class="" />
+    <input type="hidden" id="orderId" name="orderId" />
+    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
     <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
     <p class="btn_sky"><a href="javascript:fn_clickViewDetail();">View Details</a></p>
     </td>
@@ -168,25 +189,29 @@ function fn_clickViewDetail(){
 <tr>
     <th scope="row">Product Price</th>
     <td>
-    <input type="text" id="price" name="price" title="" placeholder="" class="" readonly/>
+    <input type="hidden" id="price" name="price" title="" placeholder="" class="readonly" readonly/>
+    <input type="text" id="price1" title="" placeholder="" class="readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Total Outstanding</th>
     <td>
-    <input type="text" id="outstanding" name="outstanding" title="" placeholder="" class="" readonly/>
+    <input type="hidden" id="outstanding" name="outstanding" title="" placeholder="" class="readonly" readonly/>
+    <input type="text" id="outstanding1" title="" placeholder="" class="readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Bill Month</th>
     <td>
-    <input type="text" id="month" name="month" title="" placeholder="" class="" readonly/>
+    <input type="hidden" id="month" name="month" title="" placeholder="" class="readonly" readonly/>
+    <input type="text" id="month1" title="" placeholder="" class="readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">Loss Fee</th>
     <td>
-    <input type="text" id="lossFee" name="lossFee" title="" placeholder="" class="" readonly/>
+    <input type="hidden" id="lossFee" name="lossFee" title="" placeholder="" class="readonly" readonly/>
+    <input type="text" id="lossFee1" title="" placeholder="" class="readonly" readonly/>
     </td>
 </tr>
 <tr>
