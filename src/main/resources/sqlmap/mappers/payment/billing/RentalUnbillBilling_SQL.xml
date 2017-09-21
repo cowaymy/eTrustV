@@ -95,7 +95,7 @@
          ORDER BY Extent1.INSTALLMENT
     </select>
     
-    <select id="selectBillTaskLogMax_U" parameterType="Map" resultType="int">
+    <select id="getTaskIdSeq_U"  resultType="int">
         SELECT PAY0047D_SEQ.NEXTVAL FROM DUAL
     </select>
     
