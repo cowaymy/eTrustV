@@ -14,7 +14,8 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
        SCATE.CODE_NAME CTGRY_NAME,
        L56.QTY QTY,
        NVL(L56.MOV_QTY , 0) MOV_QTY ,
-       NVL(L75.BOOKING_QTY , 0) BOOKING_QTY 
+       NVL(L75.BOOKING_QTY , 0) BOOKING_QTY,
+       QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY  
   FROM LOG0056M L56                                                      <!-- 재고 -->
      , SYS0028M S28                                                      <!--  창고 -->
      , SYS0026M S26                                                    <!-- ITEM -->
@@ -58,8 +59,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
          #{item}
          </foreach>
      </if>
-
-       AND L56.LOC_ID = '4'
+    <!-- AND L56.LOC_ID = #{LocCode} -->
 </select> 
 
      
