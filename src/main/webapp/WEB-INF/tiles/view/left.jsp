@@ -183,7 +183,7 @@
                                         <ul>
                                     </c:if>
                                         <li  id="li_${menuList.menuCode}${groupList.mymenuCode}" group_my_menu_code="${groupList.mymenuCode}">
-                                            <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu('${menuList.menuCode}', '${menuList.pgmPath}', '${list.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
+                                            <a id="a_${menuList.menuCode}${groupList.mymenuCode}" href="javascript:fn_menu('${menuList.menuCode}', '${menuList.pgmPath}', '${menuList.pathName}', '${groupList.mymenuCode}');">${menuList.menuName}</a>
                                         </li>
                                     <c:set var="groupPerMenuCnt" value="${groupPerMenuCnt + 1}" />
                                 </c:when>
