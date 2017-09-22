@@ -65,9 +65,10 @@ public class TotalStockController {
 			UserName = sessionVO.getUserName();
 		}
 		if (sessionVO == null) {
-			UserCode = "DSC-01";
+			UserCode = "T010";
 		} else {
-			UserCode = sessionVO.getCode();
+			UserCode = "T010";
+			//UserCode = sessionVO.getCode();
 		}
 		
 //		logger.debug("UserName    값 : {}", UserName);
@@ -95,11 +96,13 @@ public class TotalStockController {
 		String searchLoc = request.getParameter("searchLoc");
 		String[] searchType = request.getParameterValues("searchType");
 		String[] searchCtgry = request.getParameterValues("searchCtgry");
+		String LocCode = request.getParameter("LocCode");
 		
 //		logger.debug("searchMatCode    값 : {}",searchMatCode);
-//		logger.debug("searchLoc    값 : {}",searchLoc);
+		logger.debug("searchLoc    값 : {}",searchLoc);
 //		logger.debug("searchCtgry    값 : {}", searchCtgry);
 //		logger.debug("searchType    값 : {}",searchType);
+		logger.debug("LocCode    값 : {}",LocCode);
 
 		Map<String, Object> smap = new HashMap();
 		
