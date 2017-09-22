@@ -30,6 +30,7 @@ function doGetComboData(url, pdata , selCode, obj , type, callbackFn){
         url : getContextPath() + url,
         data : pdata,
         dataType : "json",
+        async : false,
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
             var rData = data;

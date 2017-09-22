@@ -402,12 +402,16 @@ var Common = {
         _input.style.display = 'none';
 
         frm.appendChild(_input);
+        
+        var olddiv = document.getElementById("isgubun");
+        if(olddiv != null) frm.removeChild(olddiv);
 
         var _input = document.createElement("textarea");
+        _input.id   = "isgubun";
         _input.name = "isgubun";
         _input.value = gubun;
-        _input.style.display = 'none';
-
+        _input.style.display = 'block';
+        
         frm.appendChild(_input);
 
         frm.action = getContextPath() + _url;
