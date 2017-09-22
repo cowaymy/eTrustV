@@ -227,7 +227,7 @@ WHERE 1 = 1
          #{item}
          </foreach>
      </if>
-        AND L56.LOC_ID = 4
+        AND L56.LOC_ID = #{reqLoc}
 </select>
   
   
