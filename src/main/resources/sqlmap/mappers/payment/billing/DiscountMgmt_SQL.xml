@@ -157,8 +157,8 @@
 		       Extent1.MEM_ID MEM_ID  ,
 		       Extent1.BRNCH_ID BRNCH_ID  ,
 		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
-		       Extent1.DSCNT_AMT DSCNT_AMT  ,
-		       Extent1.TAX_AMT TAX_AMT  ,
+		       <!-- Extent1.DSCNT_AMT DSCNT_AMT  , -->
+		       <!-- Extent1.TAX_AMT TAX_AMT  , -->
 		       Extent1.TOT_AMT TOT_AMT  ,
 		       Extent1.PROMO_ID PROMO_ID  ,
 		       Extent1.BINDING_NO BINDING_NO  ,
@@ -190,7 +190,7 @@
 		       Extent1.PAY_COM_DT PAY_COM_DT  ,
 		       Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
 		       Extent1.REF_DOC_ID REF_DOC_ID  ,
-		       Extent1.RENT_PROMO_ID RENT_PROMO_ID  ,
+		       <!-- Extent1.RENT_PROMO_ID RENT_PROMO_ID  , -->
 		       Extent2.MEM_CODE MEM_CODE  ,
 		       CASE 
 		            WHEN ( Extent1.CNVR_SCHEME_ID IS NULL ) THEN 0
