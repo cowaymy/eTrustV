@@ -348,7 +348,7 @@
             $("#add_info_div").show(); 
             destory(AddDetailGrid);
             AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
-            AUIGrid.resize(AddDetailGrid);
+            AUIGrid.resize(AddDetailGrid,942, 280);
            // AddDetailAUIGrid(insDetailLayout);           
      });
          
@@ -530,6 +530,7 @@
                  if(div == "viewitem"){
                     
                   AUIGrid.setGridData(detailGrid, gridData.data);
+                  AUIGrid.resize(detailGrid);
                  }else{
                      AUIGrid.setGridData(upitemGrid, gridData.data);      
                      AUIGrid.resize(upitemGrid);
@@ -889,8 +890,7 @@
 	
 	   function getComboRelayss(obj, value, tag, selvalue) {
 	        var robj = '#' + obj;
-	        $(robj).attr("disabled", false);
-	        alert("2222");	        
+	        $(robj).attr("disabled", false);    
 	        doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //detail type 리스트 조회      	        
 	    }
 
