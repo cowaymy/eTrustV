@@ -45,20 +45,18 @@ var adjNo="${rAdjcode }";
 
 var columnLayout=[
                   {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false},
-                  {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"25%" ,height:30},
-                  {dataField:"docDt" ,headerText:"Doc. Date",width:"25%" ,height:30},
-                  {dataField:"locId" ,headerText:"Location Id",width:"25%" ,height:30},
+                  {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"20%" ,height:30},
+                  {dataField:"docDt" ,headerText:"Doc. Date",width:"20%" ,height:30},
+                  {dataField:"locId" ,headerText:"Location Id",width:"20%" ,height:30},
+                  {dataField:"locName" ,headerText:"Location Name",width:"20%" ,height:30},
 /*                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30},
                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30}, */
-                  {dataField:"saveYn" ,headerText:"Count Status",width:"25%" ,height:30}
+                  {dataField:"saveYn" ,headerText:"Count Status",width:"20%" ,height:30}
                ];          
-var resop = {//rowIdField : "rnum"
-		//, showRowCheckColumn : true 
+var resop = {
 		usePaging : false
-		//,useGroupingPanel : false 
-		,editable:false,
-		//exportURL : "/common/exportGrid.do"
+		,editable:false
 		};
 $(document).ready(function(){
 	searchHead();
@@ -79,8 +77,6 @@ $(function(){
 
 
 function searchHead(){
-    //var adjNo="${rAdjcode }";
-    //var adjLocation = "${rAdjlocId }";
     var param ="adjNo="+adjNo;
     var url = "/logistics/adjustment/oneAdjustmentNo.do";
     Common.ajax("GET" , url , param , function(result){
@@ -92,12 +88,9 @@ function searchHead(){
 }
 
  function searchGrid(){
-	//var adjNo="${rAdjcode }";
-    //var adjLocation = "${rAdjlocId }";
     var param =
          {
     		invntryNo    : adjNo
-    		//invntryLocId     : adjLocation
         };
     var url = "/logistics/adjustment/adjustmentApprovalList.do";
     Common.ajax("GET" , url , param , function(result){
@@ -115,55 +108,36 @@ function searchHead(){
 	 var y =data2[0].y
 	 $('#checkYn').text(y+"/"+total);
 	 
-/* 	 if(total==y){
-		 $('#confirm').show();
-	 }else{
-		 $('#confirm').hide();
-		 
-	 } */
  }
 
  function fn_setVal(data){
-	    //var status = "${rStatus }";
 	    $("#adjno").val(data[0].invntryNo);
 	    $("#bsadjdate").text(data[0].baseDt);
 	    $("#doctext").text(data[0].headTitle);
 	    var tmp = data[0].eventType.split(',');
 	    var tmp2 = data[0].itmType.split(',');
 	    var tmp3 = data[0].ctgryType.split(',');
-	    fn_eventSet(tmp);
 	    if(data[0].autoFlag == "A"){
 	        $("#auto").attr("checked", true);
 	    }else if(data[0].autoFlag == "M"){
 	            $("#manual").attr("checked", true);
 	    }
-	    fn_itemSet(tmp2);
+	    fn_itemSet(tmp,"event");
 	    fn_itemSet(tmp2,"item");
 	    fn_itemSet(tmp3,"catagory");
 	    
-	    
-	    
-	}
-	function fn_eventSet(tmp){
-	    for(var i=0; i<tmp.length;i++){
-	        if(tmp[i]=="1"){
-	            $("#cdc").attr("checked", true);
-	        }else if (tmp[i]=="2") {
-	            $("#rdc").attr("checked", true);
-	        } else if(tmp[i]=="30"){
-	            $("#ctcd").attr("checked", true);  
-	        }
-	    } 
 	    
 	}
 
 	function fn_itemSet(tmp,str){
 	    var no;
-	    if(str=="item"){
-	        no=15;
-	    }else if(str=="catagory"){
-	        no=11;
-	    }
+        if(str=="event"){
+            no=339;
+        }else if(str=="item"){
+            no=15;
+        }else if(str=="catagory"){
+            no=11;
+        }   
 	    var url = "/logistics/adjustment/selectCodeList.do";
 	    $.ajax({
 	        type : "GET",
@@ -184,7 +158,9 @@ function searchHead(){
 	}
 	function  fn_itemChck(data,tmp2,str){
 	    var obj;
-	    if(str=="item"){
+	    if(str=="event" ){
+	        obj ="eventtypetd";
+	    }else if(str=="item"){
 	        obj ="itemtypetd";
 	    }else if(str=="catagory"){
 	        obj ="catagorytypetd";
@@ -250,11 +226,8 @@ function searchHead(){
 </tr>
 <tr>
     <th scope="row">Location Type</th>
-    <td>
-     <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
-    </td>
+   <td id="eventtypetd">
+   </td>
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
     </td>

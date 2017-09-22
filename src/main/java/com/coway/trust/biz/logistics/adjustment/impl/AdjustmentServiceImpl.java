@@ -111,6 +111,11 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		adjustmentMapper.insertAdjustmentLocItem(params);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.coway.trust.biz.logistics.adjustment.AdjustmentService#insertAdjustmentLocManual(java.util.Map)
+	 */
 	@Override
 	public void insertAdjustmentLocManual(Map<String, Object> params) {
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
@@ -122,8 +127,30 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 		logger.debug("invntryNo : {} ", formMap.get("invntryNo"));
 		logger.debug("addList.size() : {} ", addList.size());
 
-		String tmp = String.valueOf(formMap.get("eventType"));
-		List<Object> eventList = Arrays.asList(tmp.split(","));
+		// String tmp = String.valueOf(formMap.get("eventType"));
+		// List<Object> eventList = Arrays.asList(tmp.split(","));
+		// List<Object> eventList = new ArrayList<Object>();
+		// logger.debug("adsrchcdcjNo : {} ", params.get("srchcdc"));
+		// logger.debug("srchrdc : {} ", params.get("srchrdc"));
+		// logger.debug("srchctcd : {} ", params.get("srchctcd"));
+		// logger.debug("srchcdcrdc : {} ", params.get("srchcdcrdc"));
+		// logger.debug("srchcody : {} ", params.get("srchcody"));
+		// logger.debug("srchct : {} ", params.get("srchct"));
+		// if ("" != params.get("srchcdc") & null != params.get("srchcdc")) {
+		// eventList.add((params.get("srchcdc")));
+		// }
+		// if ("" != params.get("srchcdcrdc") & null != params.get("srchcdcrdc")) {
+		// eventList.add((params.get("srchcdcrdc")));
+		// }
+		// if ("" != params.get("srchcody") & null != params.get("srchcody")) {
+		// eventList.add((params.get("srchcody")));
+		// }
+		// if ("" != params.get("srchct") & null != params.get("srchct")) {
+		// eventList.add((params.get("srchct")));
+		// }
+		// if ("" != params.get("srchrdc") & null != params.get("srchrdc")) {
+		// eventList.add((params.get("srchrdc")));
+		// }
 		String tmp2 = String.valueOf(formMap.get("itmType"));
 		List<Object> itemList = Arrays.asList(tmp2.split(","));
 		String tmp3 = String.valueOf(formMap.get("ctgryType"));
@@ -141,7 +168,7 @@ public class AdjustmentServiceImpl extends EgovAbstractServiceImpl implements Ad
 				setMap.put("invntryNo", formMap.get("invntryNo"));
 				// setMap.put("autoFlag", formMap.get("autoFlag"));
 				setMap.put("adjwhLocId", getMap.get("adjwhLocId"));
-				setMap.put("eventList", eventList);
+				// setMap.put("eventList", eventList);
 				setMap.put("itemList", itemList);
 				setMap.put("catagoryList", catagoryList);
 				adjustmentMapper.insertAdjustmentLoc(setMap);

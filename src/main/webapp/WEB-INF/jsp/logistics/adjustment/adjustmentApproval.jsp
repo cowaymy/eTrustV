@@ -45,20 +45,18 @@ var adjNo="${rAdjcode }";
 
 var columnLayout=[
                   {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false},
-                  {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"25%" ,height:30},
-                  {dataField:"docDt" ,headerText:"Doc. Date",width:"25%" ,height:30},
-                  {dataField:"locId" ,headerText:"Location Id",width:"25%" ,height:30},
+                  {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"20%" ,height:30},
+                  {dataField:"docDt" ,headerText:"Doc. Date",width:"20%" ,height:30},
+                  {dataField:"locId" ,headerText:"Location Id",width:"20%" ,height:30},
+                  {dataField:"locName" ,headerText:"Location Name",width:"20%" ,height:30},
 /*                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
                   {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30},
                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30}, */
-                  {dataField:"saveYn" ,headerText:"Count Status",width:"25%" ,height:30}
+                  {dataField:"saveYn" ,headerText:"Count Status",width:"20%" ,height:30}
                ];          
-var resop = {//rowIdField : "rnum"
-		//, showRowCheckColumn : true 
+var resop = {
 		usePaging : false
-		//,useGroupingPanel : false 
 		,editable:false
-		//exportURL : "/common/exportGrid.do"
 		};
 $(document).ready(function(){
 	searchHead();
@@ -93,10 +91,6 @@ $(function(){
         formData.append("adjNo", adjNo);
 
         Common.ajaxFile("/logistics/adjustment/pdfUpload.do", formData, function (result) {
-            //Common.alert("완료~")
-            //console.log(result);
-            //fn_approvalStatus(data)
-            //searchGrid();
             $("#auto_file").hide();
             $("#complete").hide();
         });
@@ -110,7 +104,6 @@ function searchHead(){
     var url = "/logistics/adjustment/oneAdjustmentNo.do";
     Common.ajax("GET" , url , param , function(result){
         var data = result.dataList;
-        //console.log(data);
         fn_setVal(data);
         searchGrid();
     });
@@ -119,7 +112,6 @@ function searchHead(){
     var param =
          {
     		invntryNo    : adjNo
-    		//invntryLocId     : adjLocation
         };
     var url = "/logistics/adjustment/adjustmentApprovalList.do";
     Common.ajax("GET" , url , param , function(result){
@@ -139,7 +131,6 @@ function searchHead(){
 	 var param =
      {
         invntryNo    : adjNo
-        //invntryLocId     : adjLocation
     }
 var url = "/logistics/adjustment/adjustmentApprovalLineCheck.do";
 Common.ajax("GET" , url , param , function(result){
@@ -176,12 +167,6 @@ Common.ajax("GET" , url , param , function(result){
 				$("#approve2").show();
 				$("#reject2").show();
 			}
-			/* }else if("A"==data[0].cnfm2){
-			$("#approve").hide();
-			$("#reject").hide();
-			$("#approve2").hide();
-			$("#reject2").hide();
-			} */
 
 			if ("A" == data[0].cnfm1 & "A" == data[0].cnfm2) {
 				$("#auto_file").show();
@@ -222,15 +207,11 @@ Common.ajax("GET" , url , param , function(result){
 
 		var param = {
 			invntryNo : adjNo,
-			//invntryLocId     : adjLocation
 			status : status
 		};
 		var url = "/logistics/adjustment/ApprovalUpdate.do";
 		Common.ajax("GET", url, param, function(result) {
 			var data = result.dataList;
-			// var data2 = result.cnt
-			//AUIGrid.setGridData(myGridID, data);
-			//fn_chck_approval(data2);            
 			fn_approvalStatus(data);
 		});
 
@@ -244,37 +225,26 @@ Common.ajax("GET" , url , param , function(result){
 		var tmp = data[0].eventType.split(',');
 		var tmp2 = data[0].itmType.split(',');
 		var tmp3 = data[0].ctgryType.split(',');
-		fn_eventSet(tmp);
 		if (data[0].autoFlag == "A") {
 			$("#auto").attr("checked", true);
 		} else if (data[0].autoFlag == "M") {
 			$("#manual").attr("checked", true);
 		}
-		fn_itemSet(tmp2);
-		fn_itemSet(tmp2, "item");
-		fn_itemSet(tmp3, "catagory");
-
-	}
-	function fn_eventSet(tmp) {
-		for (var i = 0; i < tmp.length; i++) {
-			if (tmp[i] == "1") {
-				$("#cdc").attr("checked", true);
-			} else if (tmp[i] == "2") {
-				$("#rdc").attr("checked", true);
-			} else if (tmp[i] == "30") {
-				$("#ctcd").attr("checked", true);
-			}
-		}
+        fn_itemSet(tmp,"event");
+        fn_itemSet(tmp2,"item");
+        fn_itemSet(tmp3,"catagory");
 
 	}
 
 	function fn_itemSet(tmp, str) {
 		var no;
-		if (str == "item") {
-			no = 15;
-		} else if (str == "catagory") {
-			no = 11;
-		}
+        if(str=="event"){
+            no=339;
+        }else if(str=="item"){
+            no=15;
+        }else if(str=="catagory"){
+            no=11;
+        } 
 		var url = "/logistics/adjustment/selectCodeList.do";
 		$.ajax({
 			type : "GET",
@@ -295,11 +265,13 @@ Common.ajax("GET" , url , param , function(result){
 	}
 	function fn_itemChck(data, tmp2, str) {
 		var obj;
-		if (str == "item") {
-			obj = "itemtypetd";
-		} else if (str == "catagory") {
-			obj = "catagorytypetd";
-		}
+        if(str=="event" ){
+            obj ="eventtypetd";
+        }else if(str=="item"){
+            obj ="itemtypetd";
+        }else if(str=="catagory"){
+            obj ="catagorytypetd";
+        }
 		obj = '#' + obj;
 
 		$.each(data, function(index, value) {
@@ -368,20 +340,12 @@ Common.ajax("GET" , url , param , function(result){
 </tr>
 <tr>
     <th scope="row">Location Type</th>
-    <td>
-    <!-- <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select> -->
-     <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
-    </td>
-  <!--   <th scope="row">Document Date</th>
-    <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
-</tr>
-<tr> -->
+     <td id="eventtypetd">
+     </td>
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
-    </tr>
-    <tr>
+</tr>
+<tr>
         <th scope="row">Category Type</th>
         <td id="catagorytypetd">
     <th scope="row">Stock Audit Date</th>

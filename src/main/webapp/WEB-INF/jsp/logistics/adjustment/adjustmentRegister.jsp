@@ -66,19 +66,14 @@ var reqcolumnLayout;
 
 var resop = {rowIdField : "rnum", showRowCheckColumn : true 
 		,usePaging : false
-		//,useGroupingPanel : false 
 		,Editable:false};
 var reqop = {usePaging : false,useGroupingPanel : false , Editable:false};
 
-//var uomlist = f_getTtype('42' , '');
-//var paramdata;
 $(document).ready(function(){
 	searchHead();
     /**********************************
     * Header Setting
     ***********************************/
-   // doGetCombo('/common/selectCodeList.do', '15', '','itemtype', 'M' , 'f_multiCombo');
-    //$("#cancelTr").hide();
     /**********************************
      * Header Setting End
      ***********************************/
@@ -172,8 +167,7 @@ $(function(){
     
     $('#save').click(function() {
     	var param = GridCommon.getEditData(reqGrid);
-            param.form = $("#popupForm").serializeJSON();
-            //console.log(param);
+            param.form = $("#searchForm").serializeJSON();
             Common.ajax("POST", "/logistics/adjustment/adjustmentLocManual.do", param, function(result) {
                 //Common.alert(result.message);
                 AUIGrid.resetUpdatedItems(reqGrid, "all");
@@ -191,7 +185,6 @@ $(function(){
         // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
         sortingInfo[0] = { dataField : "adjwhLocId", sortType : 1 };
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
-       //var addedItems = AUIGrid.getCheckedRowItems(resGrid);
         var addedItems = AUIGrid.getColumnValues(reqGrid,"adjwhLocId");
          
         
@@ -211,9 +204,6 @@ $(function(){
 	            }
             }
             for (var i = 0 ; i < checkedItems.length ; i++){
-            	//var rows = AUIGrid.getRowsByValue(reqop, "adjwhLocId", checkedItems[i].whLocId);
-                console.log(addedItems);
-                console.log(addedItems.length);
                 
                 rowList[i] = {
 		                		adjwhLocId : checkedItems[i].whLocId,
@@ -275,7 +265,6 @@ function f_multiCombo() {
 function searchHead(){
 	var param = "adjNo=${rAdjcode }";
     status = "${rStatus }";
-    //alert(status);
     var url = "/logistics/adjustment/oneAdjustmentNo.do";
     Common.ajax("GET" , url , param , function(result){
     	var data = result.dataList;
@@ -289,12 +278,18 @@ function searchHead(){
     });
 }
 function fn_setVal(data,status){
-	//var status = "${rStatus }";
 	$("#adjno").val(data[0].invntryNo);
 	var tmp = data[0].eventType.split(',');
 	var tmp2 = data[0].itmType.split(',');
 	var tmp3 = data[0].ctgryType.split(',');
-	fn_eventSet(tmp);
+	if(status=="V"){
+		$("#search_table").hide();
+	}
+	fn_itemSet(tmp,"event");
+	fn_eventSet(tmp,status);
+    fn_itemSet(tmp2,"item");
+    fn_itemSet(tmp3,"catagory");
+    
 	if(data[0].autoFlag == "A"){
 		$("#auto").attr("checked", true);
 		$("#save").hide();
@@ -317,38 +312,51 @@ function fn_setVal(data,status){
 			$("#search").show();
 		}
 	}
-    fn_itemSet(tmp2,"item");
-    fn_itemSet(tmp3,"catagory");
 	
 	
 	
 }
-function fn_eventSet(tmp){
+ function fn_eventSet(tmp,status){
+	        	$("input[name='chcdc']").prop('disabled', true);
+	        	$("input[name='chrdc']").prop('disabled', true);
+	        	$("input[name='chct']").prop('disabled', true);
+	        	$("input[name='chcody']").prop('disabled', true);
+	        	$("input[name='chcdcrdc']").prop('disabled', true);
 	for(var i=0; i<tmp.length;i++){
-        if(tmp[i]=="1"){
-            $("#cdc").attr("checked", true);
-            $("#chcdc").attr("checked", true);
-            $("#srchcdc").val("713");
-        }else if (tmp[i]=="2") {
-            $("#rdc").attr("checked", true);
-            $("#chrdc").attr("checked", true);
-            $("#srchrdc").val("277");
-        } else if(tmp[i]=="30"){
-            $("#ctcd").attr("checked", true);  
-            $("#chctcd").attr("checked", true);  
-            $("#srchctcd").val("278");  
-        }
+	        if(tmp[i]=="2456"){
+	        	$("input[name='chcdc']").prop('disabled', false);
+	            $("#chcdc").attr("checked", true);
+	            $("#srchcdc").val("01");
+	        }else if (tmp[i]=="2457") {
+	        	$("input[name='chrdc']").prop('disabled', false);
+	            $("#chrdc").attr("checked", true);
+	            $("#srchrdc").val("02");
+	        }else if (tmp[i]=="2458") {
+	        	$("input[name='chct']").prop('disabled', false);
+	            $("#chct").attr("checked", true);
+	            $("#srchct").val("03");
+	        }else if (tmp[i]=="2459") {
+	        	$("input[name='chcody']").prop('disabled', false);
+	            $("#chcody").attr("checked", true);
+	            $("#srchcody").val("04");
+	        } else if(tmp[i]=="2460"){
+	        	$("input[name='chcdcrdc']").prop('disabled', false);
+	            $("#chcdcrdc").attr("checked", true);  
+	            $("#srchcdcrdc").val("05");  
+	        }
     } 
 	
-}
+} 
 
 function fn_itemSet(tmp,str){
 	   var no;
-	    if(str=="item"){
-	        no=15;
-	    }else if(str=="catagory"){
-	        no=11;
-	    }
+	     if(str=="event"){
+	         no=339;
+	     }else if(str=="item"){
+	         no=15;
+	     }else if(str=="catagory"){
+	         no=11;
+	     }   
     var url = "/logistics/adjustment/selectCodeList.do";
 	$.ajax({
         type : "GET",
@@ -369,7 +377,9 @@ function fn_itemSet(tmp,str){
 }
 function  fn_itemChck(data,tmp2,str){
     var obj;
-    if(str=="item"){
+    if(str=="event" ){
+        obj ="eventtypetd";
+    }else if(str=="item"){
         obj ="itemtypetd";
     }else if(str=="catagory"){
         obj ="catagorytypetd";
@@ -385,7 +395,6 @@ function  fn_itemChck(data,tmp2,str){
 			$.each(data, function(index,value) {
 				if(tmp2[i]==data[index].codeId){
 					$('#'+data[index].codeId).attr("checked", "true");
-					//$('#'+data[index].codeName).val("Y");
 				}
 			});
 		}
@@ -394,6 +403,7 @@ function  fn_itemChck(data,tmp2,str){
 function searchAjax(){
     var url = "/logistics/adjustment/adjustmentLocationList.do";
     var param = $('#searchForm').serializeJSON();
+    console.log(param);
     Common.ajax("POST" , url , param , function(result){
         AUIGrid.setGridData(resGrid, result.dataList);
     });
@@ -403,9 +413,7 @@ function fn_ReqAdjLocList(){
     var url = "/logistics/adjustment/adjustmentLocationListView.do";
     var param = $('#headForm').serializeJSON();
     param.form = $('#searchForm').serializeJSON();
-	    console.log(param);
     Common.ajax("POST" , url , param , function(result){
-	    console.log(result);
     	
         AUIGrid.setGridData(resGrid, result.reslist);
         AUIGrid.setGridData(reqGrid, result.reqlist);
@@ -417,12 +425,12 @@ function fn_ReqAdjLocList(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>New Stock Audit Detail</li>
+    <li>Stock Audit Detail</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Audit Detail</h2>
+<h2>Stock Audit Detail</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -454,15 +462,8 @@ function fn_ReqAdjLocList(){
 </tr>
 <tr>
     <th scope="row">Location Type</th>
-    <td>
-     <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
+    <td id="eventtypetd">
     </td>
-  <!--   <th scope="row">Document Date</th>
-    <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
-</tr>
-<tr> -->
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
     </td>
@@ -477,20 +478,26 @@ function fn_ReqAdjLocList(){
 </form>
 </section><!-- search_table end -->
 
+
+<section class="search_table" id="search_table"><!-- search_table start -->
 <aside class="title_line"><!-- title_line start -->
 <h3>Location Info</h3>
 </aside><!-- title_line end -->
-
-<section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" >
 <input type="hidden" name="rAdjcode" id="rAdjcode" />  
 <input type="hidden" name="rStatus" id="rStatus" />  
 <input type="hidden" name="rAdjlocId" id="rAdjlocId" />  
 <input type="hidden" name="srchcdc" id="srchcdc" />  
 <input type="hidden" name="srchrdc" id="srchrdc" />  
-<input type="hidden" name="srchctcd" id="srchctcd" />  
-
-<table class="type1"><!-- table start -->
+<input type="hidden" name="srchcdcrdc" id="srchcdcrdc" />  
+<input type="hidden" name="srchct" id="srchct" />  
+<input type="hidden" name="srchcody" id="srchcody" />  
+<input type="hidden" id="invntryNo" name="invntryNo">
+<input type="hidden" id="autoFlag" name="autoFlag">
+<input type="hidden" id="eventType" name="eventType">
+<input type="hidden" id="itmType" name="itmType">
+<input type="hidden" id="ctgryType" name="ctgryType">
+<table class="type1" ><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:140px" />
@@ -502,11 +509,12 @@ function fn_ReqAdjLocList(){
 <tbody>
 <tr>
     <th scope="row">Location Type</th>
-    <td>
-    <!-- <select class="w100p" id="srcheventype" name="srcheventype"></select> -->
-     <label><input type="checkbox" disabled="disabled" id="chcdc" name="chcdc" value="cdc"/><span>CDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="chrdc" name="chrdc" value="rdc"/><span>RDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="chctcd" name="chctcd" value="ctcd"/><span>CT/CODY</span></label>
+<td>
+     <label><input type="checkbox"  id="chcdc" name="chcdc" value="01"/><span>CDC</span></label>
+     <label><input type="checkbox"  id="chctcd" name="chcdcrdc" value="05"/><span>CDC&RDC</span></label>
+     <label><input type="checkbox"  id="chcody" name="chcody" value="04"/><span>CODY</span></label>
+     <label><input type="checkbox"  id="chct" name="chct" value="03"/><span>CT</span></label>
+     <label><input type="checkbox"  id="chrdc" name="chrdc" value="02"/><span>RDC</span></label>
     </td>
     <td>
     <ul class="left_btns">
@@ -573,13 +581,6 @@ function fn_ReqAdjLocList(){
 </ul> 
 
 </section><!-- search_result end -->
-<form id='popupForm'>
-    <input type="hidden" id="invntryNo" name="invntryNo">
-    <input type="hidden" id="autoFlag" name="autoFlag">
-    <input type="hidden" id="eventType" name="eventType">
-    <input type="hidden" id="itmType" name="itmType">
-    <input type="hidden" id="ctgryType" name="ctgryType">
-</form>
 <form id="listForm" name="listForm" method="POST">
 <input type="hidden" id="retnVal"    name="retnVal"    value="R"/>
 </form>

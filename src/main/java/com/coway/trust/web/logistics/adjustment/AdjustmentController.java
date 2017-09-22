@@ -95,9 +95,9 @@ public class AdjustmentController {
 		return "logistics/adjustment/adjustmentCounting";
 	}
 
-	@RequestMapping(value = "/AdjustmentApproval.do", method = RequestMethod.POST)
-	public String AdjustmentApproval(@RequestParam Map<String, Object> params, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
+	@RequestMapping(value = "/AdjustmentApprovalList.do", method = RequestMethod.POST)
+	public String AdjustmentApprovalList(@RequestParam Map<String, Object> params, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
 		String rAdjcode = String.valueOf(params.get("rAdjcode"));
 		// String rAdjlocId = String.valueOf(params.get("rAdjlocId"));
 		// logger.debug("rAdjcode : {} ", rAdjcode);
@@ -185,19 +185,28 @@ public class AdjustmentController {
 	@RequestMapping(value = "/adjustmentLocationList.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> adjustmentLocationList(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
-		logger.debug("adsrchcdcjNo : {} ", params.get("srchcdc"));
-		logger.debug("srchrdc : {} ", params.get("srchrdc"));
-		logger.debug("srchctcd : {} ", params.get("srchctcd"));
+		logger.debug("chcdc : {} ", params.get("chcdc"));
+		logger.debug("chrdc : {} ", params.get("chrdc"));
+		logger.debug("chcdcrdc : {} ", params.get("chcdcrdc"));
+		logger.debug("chcody : {} ", params.get("chcody"));
+		logger.debug("chct : {} ", params.get("chct"));
 		List<Object> locList = new ArrayList<Object>();
-		if ("" != params.get("srchcdc") & null != params.get("srchcdc")) {
-			locList.add((params.get("srchcdc")));
+		if ("" != params.get("chcdc") & null != params.get("chcdc")) {
+			locList.add((params.get("chcdc")));
 		}
-		if ("" != params.get("srchrdc") & null != params.get("srchrdc")) {
-			locList.add((params.get("srchrdc")));
+		if ("" != params.get("chcdcrdc") & null != params.get("chcdcrdc")) {
+			locList.add((params.get("chcdcrdc")));
 		}
-		if ("" != params.get("srchctcd") & null != params.get("srchctcd")) {
-			locList.add((params.get("srchctcd")));
+		if ("" != params.get("chcody") & null != params.get("chcody")) {
+			locList.add((params.get("chcody")));
 		}
+		if ("" != params.get("chct") & null != params.get("chct")) {
+			locList.add((params.get("chct")));
+		}
+		if ("" != params.get("chrdc") & null != params.get("chrdc")) {
+			locList.add((params.get("chrdc")));
+		}
+
 		params.put("locList", locList);
 
 		logger.info("locList : {} ", locList.toString());
@@ -216,26 +225,29 @@ public class AdjustmentController {
 		List<Object> locList = new ArrayList<Object>();
 		logger.debug("adsrchcdcjNo : {} ", formMap.get("srchcdc"));
 		logger.debug("srchrdc : {} ", formMap.get("srchrdc"));
-		logger.debug("srchctcd : {} ", formMap.get("srchctcd"));
+		logger.debug("srchcdcrdc : {} ", formMap.get("srchcdcrdc"));
+		logger.debug("srchcody : {} ", formMap.get("srchcody"));
+		logger.debug("srchct : {} ", formMap.get("srchct"));
 		if ("" != formMap.get("srchcdc") & null != formMap.get("srchcdc")) {
 			locList.add((formMap.get("srchcdc")));
 		}
+		if ("" != formMap.get("srchcdcrdc") & null != formMap.get("srchcdcrdc")) {
+			locList.add((formMap.get("srchcdcrdc")));
+		}
+		if ("" != formMap.get("srchcody") & null != formMap.get("srchcody")) {
+			locList.add((formMap.get("srchcody")));
+		}
+		if ("" != formMap.get("srchct") & null != formMap.get("srchct")) {
+			locList.add((formMap.get("srchct")));
+		}
 		if ("" != formMap.get("srchrdc") & null != formMap.get("srchrdc")) {
 			locList.add((formMap.get("srchrdc")));
-		}
-		if ("" != formMap.get("srchctcd") & null != formMap.get("srchctcd")) {
-			locList.add((formMap.get("srchctcd")));
 		}
 		params.put("locList", locList);
 
 		logger.info("locList : {} ", locList.toString());
 		List<EgovMap> reslist = adjustmentService.selectAdjustmentLocationList(params);
 		List<EgovMap> reqlist = adjustmentService.selectAdjustmentLocationReqList(params);
-		// ReturnMessage message = new ReturnMessage();
-		// message.setCode(AppConstants.SUCCESS);
-		// message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		// message.setDataList(list);
-		// return ResponseEntity.ok(message);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("reslist", reslist);
 		map.put("reqlist", reqlist);

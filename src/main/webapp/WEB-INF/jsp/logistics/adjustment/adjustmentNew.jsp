@@ -31,8 +31,6 @@ var myGridID;
 var reqGrid;
 
 
-var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
-var comboData = [{"codeId": "1","codeName": "CDC"},{"codeId": "2","codeName": "RDC"},{"codeId": "30","codeName": "CT/CODY"}];
 var columnLayout=[
                      {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"20%" ,height:30},
                      {dataField:"baseDt" ,headerText:"Base Date",width:"20%" ,height:30},
@@ -55,21 +53,23 @@ var columnLayout=[
 var rescolumnLayout=[
                     {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false},
                     {dataField:"invntryNo" ,headerText:"Stock Audit No",width:120 ,height:30},
-                    {dataField:"docDt" ,headerText:"Doc. Date",width:120 ,height:30},
-                    {dataField:"whLocId" ,headerText:" ID",width:120 ,height:30 },
-                    {dataField:"whLocCode" ,headerText:"Location Code",width:120 ,height:30},
-                    {dataField:"whLocDesc" ,headerText:"Location Desc",width:200 ,height:30},
+                    {dataField:"docDt" ,headerText:"Doc. Date",width:90 ,height:30},
+                    {dataField:"whLocId" ,headerText:"Location ID",width:90 ,height:30, visible:false },
+                    {dataField:"whLocCode" ,headerText:"Location Code",width:100 ,height:30, visible:false},
+                    {dataField:"whLocDesc" ,headerText:"Location Desc",width:340 ,height:30},
                     /*                   {dataField:"locId" ,headerText:"Loc. ID",width:120 ,height:30},
                      {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
                     {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30},
                     {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30}, */
-                    {dataField:"saveYn" ,headerText:"Count Status",width:120 ,height:30},
-                    {dataField:"seq" ,headerText:"Seq.",width:120 ,height:30},
-                    {dataField:"itmId" ,headerText:"Item Id",width:120 ,height:30},
-                    {dataField:"itmNm" ,headerText:"Item Name",width:120 ,height:30},
-                    {dataField:"itmType" ,headerText:"Item Type",width:120 ,height:30},
-                     {dataField:"ctgryType" ,headerText:"Catagory Type",width:120 ,height:30},
-                    {dataField:"serialChk" ,headerText:"Serial Check",width:120 ,height:30},
+                    {dataField:"saveYn" ,headerText:"Count Status",width:100 ,height:30},
+                    {dataField:"seq" ,headerText:"Seq.",width:60 ,height:30},
+                    {dataField:"itmId" ,headerText:"Item ID",width:100 ,height:30 , visible:false},
+                    {dataField:"itmNm" ,headerText:"Item Name",width:340 ,height:30},
+                    {dataField:"itmType" ,headerText:"Item Type",width:100 ,height:30 , visible:false},
+                    {dataField:"itmTypeName" ,headerText:"Item Type",width:100 ,height:30},
+                     {dataField:"ctgryType" ,headerText:"Catagory Type",width:100 ,height:30 , visible:false},
+                     {dataField:"ctgryTypeName" ,headerText:"Catagory Type",width:100 ,height:30},
+                    {dataField:"serialChk" ,headerText:"Serial Check",width:100 ,height:30},
                     {dataField:"sysQty" ,headerText:"System Qty",width:120 ,height:30},
                     {dataField:"cntQty" ,headerText:"Count Qty",width:120 ,height:30},
                     {dataField:"whLocTel1" ,headerText:"whLocTel1",width:120 ,height:30 , visible:false},
@@ -95,39 +95,14 @@ var rescolumnLayout=[
                     {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30 , visible:false},
                     {dataField:"commonCrChk" ,headerText:"commonCrChk",width:120 ,height:30 , visible:false}
                  ];                    
-//var reqcolumnLayout;
 
-//var resop = {rowIdField : "rnum", showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
-//var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
 
 
 var gridPros = {
-        // 페이지 설정
         usePaging : false,               
-       // pageRowCount : 1,              
-        //fixedColumnCount : 1,
-        // 편집 가능 여부 (기본값 : false)
         editable : false,                
-        // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-        //enterKeyColumnBase : true,                
-        // 셀 선택모드 (기본값: singleCell)
-        // 컨텍스트 메뉴 사용 여부 (기본값 : false)
-        //useContextMenu : true,                
-        // 필터 사용 여부 (기본값 : false)
-       // enableFilter : true,            
-        // 그룹핑 패널 사용
-        //useGroupingPanel : true,                
-        // 상태 칼럼 사용
-       // showStateColumn : true,                
-        // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
-       // displayTreeOpen : true,                
         noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",                
         groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />"           
-        //selectionMode : "multipleCells",
-        //rowIdField : "stkid",
-        //enableSorting : true,
-        //showRowCheckColumn : true,'
-          //  softRemoveRowMode:false
 
     };
 
@@ -136,11 +111,8 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     ***********************************/
-    doDefCombo(comboData, '' ,'eventtype', 'M', 'f_multiCombo');
-   // doDefCombo(comboData, '' ,'srch_eventtype', 'M', 'f_multiCombo');
-    doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','itemtype', 'M' , 'f_multiCombo');
+    //doGetCombo('/logistics/adjustment/selectCodeList.do', '339', '','srch_eventtype', 'M' , 'f_multiCombo');
     //doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','srch_itemtype', 'M' , 'f_multiCombo');
-    doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','catagorytype', 'M' , 'f_multiCombo');
     //doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','srch_catagorytype', 'M' , 'f_multiCombo');
     /**********************************
      * Header Setting End
@@ -153,7 +125,7 @@ $(document).ready(function(){
    $("#detail").hide(); 
    $("#count").hide(); 
    $("#approval").hide(); 
-   $("#confirm").hide(); 
+   $("#list").hide(); 
    $("#view").hide(); 
    $("#close").hide(); 
     
@@ -171,15 +143,9 @@ $(document).ready(function(){
         }
         
         fn_subGrid(invntryNo);
-       // fn_checkDetailAuthority(invntryNo);
     });
     
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
-           var invntryNo=AUIGrid.getCellValue(myGridID, event.rowIndex, "invntryNo");
-
-    
-       // fn_checkDetailAuthority(invntryNo);
-    });
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event){});
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event){
     /*        var invntryNo=AUIGrid.getCellValue(reqGrid, event.rowIndex, "invntryNo");
            var locId=AUIGrid.getCellValue(reqGrid, event.rowIndex, "locId");
@@ -198,6 +164,10 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $("#create").click(function(){
+        doGetCombo('/logistics/adjustment/selectCodeList.do', '339', '','eventtype', 'M' , 'f_multiCombo');
+        doGetCombo('/logistics/adjustment/selectCodeList.do', '15', '','itemtype', 'M' , 'f_multiCombo');
+        doGetCombo('/logistics/adjustment/selectCodeList.do', '11', '','catagorytype', 'M' , 'f_multiCombo');
+        $("#doctext").val("");
         $("#popup_wrap").show();
         doSysdate(0 , 'bsadjdate');
     });
@@ -268,7 +238,7 @@ $(function(){
             document.searchForm.submit(); 
         } 
     });
-     $('#confirm').click(function() {
+     $('#list').click(function() {
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             var invntryNo = AUIGrid.getCellValue(myGridID,  selectedItem[0], "invntryNo");
         if(selectedItem[0] < 0 ){
@@ -276,7 +246,7 @@ $(function(){
             return false;
         }else{
             $("#rAdjcode").val(invntryNo);
-            document.searchForm.action = '/logistics/adjustment/AdjustmentApproval.do';
+            document.searchForm.action = '/logistics/adjustment/AdjustmentApprovalList.do';
             document.searchForm.submit(); 
         } 
     });
@@ -330,7 +300,7 @@ function searchAjax() {
         $("#detail").show();
         $("#grid_wrap_sub_asi").show();
         $("#approval").show(); 
-        $("#confirm").show(); 
+        $("#list").show(); 
         $("#view").show(); 
         $("#close").show(); 
     });
@@ -370,13 +340,9 @@ function fn_newAdjustment(){
         if(data == "0"){
             v="N";
             fn_popSet(v);
-            //$("#count").hide();
-            
         }else{
             v="Y";
-            //$("#count").show();
             fn_popSet(v);
-            
         }
         
     });
@@ -412,19 +378,7 @@ function fn_popSet(v){
                 $("input[name='manual']").prop('checked', true);
             }
             
-            $("input[name='cdc']").prop('checked', false);
-            $("input[name='rdc']").prop('checked', false);
-            $("input[name='ctcd']").prop('checked', false);
-            
-            for(var i=0; i<tmp.length;i++){
-                if(tmp[i]=="1"){
-                     $("input[name='cdc']").prop('checked', true);
-                }else if (tmp[i]=="2") {
-                    $("input[name='rdc']").prop('checked', true);
-                } else if(tmp[i]=="30"){
-                    $("input[name='ctcd']").prop('checked', true);
-                }
-            }
+            fn_itemSet(tmp,"event");
             fn_itemSet(tmp2,"item");
             fn_itemSet(tmp3,"catagory");
     }else if(v=="N"){
@@ -436,7 +390,6 @@ function fn_popSet(v){
             $("#autobtn").show();
             $("#manualbtn").hide();
             $("#viewbtn").hide();
-            //$("#count").hide();
         }else if(autoFlag == "M"){
             $("#popup_title2").text("Manual");
             $("input[name='auto']").prop('checked', false);
@@ -444,22 +397,9 @@ function fn_popSet(v){
             $("#autobtn").hide();
             $("#manualbtn").show();
             $("#viewbtn").hide();
-            //$("#count").hide();
         }
         
-        $("input[name='cdc']").prop('checked', false);
-        $("input[name='rdc']").prop('checked', false);
-        $("input[name='ctcd']").prop('checked', false);
-        
-        for(var i=0; i<tmp.length;i++){
-            if(tmp[i]=="1"){
-                 $("input[name='cdc']").prop('checked', true);
-            }else if (tmp[i]=="2") {
-                $("input[name='rdc']").prop('checked', true);
-            } else if(tmp[i]=="30"){
-                $("input[name='ctcd']").prop('checked', true);
-            }
-        }
+        fn_itemSet(tmp,"event");
         fn_itemSet(tmp2,"item");
         fn_itemSet(tmp3,"catagory");
     }
@@ -468,7 +408,9 @@ function fn_popSet(v){
 
 function fn_itemSet(tmp,str){
 	var no;
-	if(str=="item"){
+     if(str=="event"){
+		no=339;
+    }else if(str=="item"){
 		no=15;
 	}else if(str=="catagory"){
 		no=11;
@@ -493,7 +435,9 @@ function fn_itemSet(tmp,str){
 }
 function  fn_itemChck(data,tmp2,str){
 	    var obj;
-	    if(str=="item"){
+	    if(str=="event"){
+		    obj ="eventtypetd";
+	    }else if(str=="item"){
 		    obj ="itemtypetd";
 	    }else if(str=="catagory"){
 		    obj ="catagorytypetd";
@@ -538,7 +482,6 @@ function fn_auto(){
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
-           //fn_itemChck(data,tmp2);
              $("#popup_wrap2").hide();
              searchAjax();
         },
@@ -562,12 +505,6 @@ function fn_subGrid(invntryNo){
         	console.log(list.length);
             AUIGrid.setGridData(reqGrid, list);
           $("#grid_wrap_sub_art").show();
- /*          if(list.length>0){
-        	  $('#count').show();
-          }else{
-        	  $('#count').hide();
-          } */
-          
           
         });
 }
@@ -596,8 +533,8 @@ function fn_subGrid(invntryNo){
     <li><p class="btn_blue"><a id="close">Close</a></p></li>
     <li><p class="btn_blue"><a id="detail">Detail</a></p></li> 
     <li><p class="btn_blue"><a id="approval">Approval</a></p></li> 
-    <li><p class="btn_blue"><a id="confirm">List</a></p></li> 
-    <li><p class="btn_blue"><a id="view">View</a></p></li> 
+    <li><p class="btn_blue"><a id="list">List</a></p></li> 
+    <!-- <li><p class="btn_blue"><a id="view">View</a></p></li>  -->
     <li><p class="btn_blue"><a id="search">Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -667,10 +604,6 @@ function fn_subGrid(invntryNo){
 </article>
 
 </section><!-- search_result end -->
-<form id='popupForm'>
-    <input type="hidden" id="sUrl" name="sUrl">
-    <input type="hidden" id="svalue" name="svalue">
-</form>
 </section>
 
 <div id="popup_wrap" class="size_big popup_wrap" style="display:none"><!-- popup_wrap start -->
@@ -704,7 +637,7 @@ function fn_subGrid(invntryNo){
 <tr>
     <th scope="row">Location Type</th>
     <td>
-   <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select>
+    <select class="multy_select" multiple="multiple" id="eventtype" name="eventtype[]" /></select>
     </td>
     <!-- <th scope="row">Document Date</th>
     <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td> -->
@@ -772,11 +705,7 @@ function fn_subGrid(invntryNo){
 </tr>
 <tr>
     <th scope="row">Location Type</th>
-    <td>
-        <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
-    </td>
+    <td id="eventtypetd">
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
     </td>

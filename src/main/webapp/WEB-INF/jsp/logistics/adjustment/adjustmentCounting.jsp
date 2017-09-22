@@ -170,18 +170,12 @@ var resop = {rowIdField : "rnum"
 		, showStateColumn : false 
 		, showRowCheckColumn : false 
 		,usePaging : false
-		//,useGroupingPanel : false 
 		,editable:true,
 		exportURL : "/common/exportGrid.do"
 		};
 var serialop = {
-        //rowIdField : "rnum",          
         editable : true
-        //displayTreeOpen : true,
-        //showRowCheckColumn : true ,
-        //enableCellMerge : true,
         ,showStateColumn : true
-        //showBranchOnGrouping : false
         };
 $(document).ready(function(){
 	searchHead();
@@ -227,8 +221,6 @@ $(document).ready(function(){
         var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
         serial=serial.trim();
         if(""==serial || null ==serial){
-           //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
-           //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
             Common.alert('Please input Serial Number.');
             return false;
         }else{
@@ -405,8 +397,6 @@ $(function(){
 
 
 function searchHead(){
-	//var adjNo="${rAdjcode }";
-    //var adjLocation = "${rAdjlocId }";
     var param ="adjNo="+adjNo;
     var url = "/logistics/adjustment/oneAdjustmentNo.do";
     Common.ajax("GET" , url , param , function(result){
@@ -478,39 +468,27 @@ function fn_setVal(data){
 	var tmp = data[0].eventType.split(',');
 	var tmp2 = data[0].itmType.split(',');
 	var tmp3 = data[0].ctgryType.split(',');
-	fn_eventSet(tmp);
 	if(data[0].autoFlag == "A"){
 		$("#auto").attr("checked", true);
 	}else if(data[0].autoFlag == "M"){
 			$("#manual").attr("checked", true);
 	}
-	fn_itemSet(tmp2);
+    fn_itemSet(tmp,"event");
     fn_itemSet(tmp2,"item");
     fn_itemSet(tmp3,"catagory");
 	
-	
-	
-}
-function fn_eventSet(tmp){
-	for(var i=0; i<tmp.length;i++){
-        if(tmp[i]=="1"){
-            $("#cdc").attr("checked", true);
-        }else if (tmp[i]=="2") {
-            $("#rdc").attr("checked", true);
-        } else if(tmp[i]=="30"){
-            $("#ctcd").attr("checked", true);  
-        }
-    } 
 	
 }
 
 function fn_itemSet(tmp,str){
     var no;
-    if(str=="item"){
+    if(str=="event"){
+        no=339;
+    }else if(str=="item"){
         no=15;
     }else if(str=="catagory"){
         no=11;
-    }
+    }   
     var url = "/logistics/adjustment/selectCodeList.do";
 	$.ajax({
         type : "GET",
@@ -531,7 +509,9 @@ function fn_itemSet(tmp,str){
 }
 function  fn_itemChck(data,tmp2,str){
     var obj;
-    if(str=="item"){
+    if(str=="event" ){
+        obj ="eventtypetd";
+    }else if(str=="item"){
         obj ="itemtypetd";
     }else if(str=="catagory"){
         obj ="catagorytypetd";
@@ -565,10 +545,8 @@ function fn_serialChck(rowindex , rowitem , str){
     var schk = true;
     var ichk = true;
     var slocid = '';//session.locid;
-    //var data = { serial : str , locid : slocid};
     var data ;
     var url="/logistics/adjustment/checkSerial.do";
-   // data = GridCommon.getEditData(serialGrid);
     data = $("#giForm").serializeJSON();
     $.extend(data, {
         'serial' : str
@@ -595,36 +573,19 @@ function fn_serialChck(rowindex , rowitem , str){
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].l63cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt73" ,data[0].l74cnt );
              
-             //if (data[0].L61CNT > 0 ||data[0].L62CNT == 0 ||data[0].L63CNT > 0){
              if (data[0].l74cnt > 0){
                  schk = false;
              }else{
                  schk = true;
              } 
-                 //schk = true;
-                 //ichk = true;
-             
-             //var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-             
-            /*  for (var i = 0 ; i < checkedItems.length ; i++){
-                 if (data[0].STKCODE == checkedItems[i].itmcd){
-                     AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
-                     ichk = true;
-                     break;
-                 }else{
-                     ichk = false;
-                 }
-             } */
         } 
          
-         //if (schk && ichk){
          if (schk){
              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
          }else{
              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
          }
           
-          //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
               
               if (item.statustype  == 'N'){
@@ -647,7 +608,6 @@ function giFunc(){
     var serials     = AUIGrid.getAddedRowItems(serialGrid);
     var selectedItem = AUIGrid.getSelectedIndex(serialGrid);
     var rowIndex= selectedItem[0];
-    //AUIGrid.setCellValue(myGridID , selectedItem[0] , "cntQty" , AUIGrid.getRowCount(serialGrid)-1 );
   for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
         if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
     
@@ -878,11 +838,8 @@ function fn_confirm(){
 </tr>
 <tr>
     <th scope="row">Location Type</th>
-    <td>
-     <label><input type="checkbox" disabled="disabled" id="cdc" name="cdc"/><span>CDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="rdc" name="rdc"/><span>RDC</span></label>
-     <label><input type="checkbox" disabled="disabled" id="ctcd" name="ctcd"/><span>CT/CODY</span></label>
-    </td>
+   <td id="eventtypetd">
+   </td>
     <th scope="row">Items Type</th>
     <td id="itemtypetd">
     </td>
@@ -913,10 +870,6 @@ function fn_confirm(){
 
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" >
-<input type="hidden" name="srchcdc" id="srchcdc" />  
-<input type="hidden" name="srchrdc" id="srchrdc" />  
-<input type="hidden" name="srchctcd" id="srchctcd" />  
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

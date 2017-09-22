@@ -119,7 +119,7 @@
         FROM SYS0028M sy28m
 		          WHERE 1=1
 		         <if test="locList.size != 0">
-		          AND WH_LOC_TYPE_ID IN
+		          AND WH_LOC_GB IN
 		          <foreach item="item" collection="locList" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
@@ -232,13 +232,7 @@
 					    SERIAL_PT_CHK
 					  FROM SYS0028M 
 					  WHERE 1=1
-							  <if test="autoFlag == M">
 							   AND WH_LOC_ID = #{adjwhLocId}
-							  </if>
-	<!-- 				           AND WH_LOC_GB IN
-		                      <foreach item="item" collection="eventList" index="index" open="(" separator="," close=")">
-		                       #{item}
-		                      </foreach> -->
                   
       </insert>  
       
@@ -258,9 +252,6 @@
 				       AND lg72m.INVNTRY_NO= #{invntryNo}
 				       AND lg56m.STK_CODE = sy26m.STK_CODE
 					   AND lg72m.LOC_ID = lg56m.LOC_ID
-<!-- 					   <if test="autoFlag == M">
-                        AND  lg72m.WH_LOC_ID = #{adjwhLocId}
-                       </if> -->
 					   AND lg56m.STK_TYPE_ID IN
 					   <foreach item="item" collection="itemList" index="index" open="(" separator="," close=")">
                        #{item}
@@ -375,10 +366,12 @@
                 lg73d.ITM_ID,
                 lg73d.ITM_NM,
                 lg73d.ITM_TYPE,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=lg73d.ITM_TYPE) ITM_TYPE_NAME,
                 lg73d.SERIAL_CHK,
                 lg73d.SYS_QTY,
                 lg73d.CNT_QTY,
                 lg73d.CTGRY_TYPE,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=lg73d.CTGRY_TYPE) CTGRY_TYPE_NAME,
                 sy28m.WH_LOC_ID,
                 sy28m.WH_LOC_CODE,
                 sy28m.WH_LOC_DESC,
@@ -492,15 +485,16 @@
       </select>
       <select id="selectAdjustmentApproval" parameterType="Map" resultType="EgovMap">
       SELECT
-			INVNTRY_LOC_ID,
-			INVNTRY_NO,
-			DOC_DT,
-			LOC_ID,
-			SERIAL_PD_CHK,
-			SERIAL_FT_CHK,
-			SERIAL_PT_CHK,
-			SAVE_YN
-		FROM LOG0072M
+            INVNTRY_LOC_ID,
+            INVNTRY_NO,
+            DOC_DT,
+            LOC_ID,
+            (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID=LG72M.LOC_ID)LOC_NAME,
+            SERIAL_PD_CHK,
+            SERIAL_FT_CHK,
+            SERIAL_PT_CHK,
+            SAVE_YN
+        FROM LOG0072M LG72M
 		WHERE INVNTRY_NO = #{invntryNo}
         ORDER BY LOC_ID
       </select>
