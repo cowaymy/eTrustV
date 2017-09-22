@@ -81,8 +81,8 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.searchTrcType}','searchTrcType', 'S' , 'f_change');
-    doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , ''); 
+    doGetComboData('/common/selectCodeList.do', paramdata, '','searchTrcType', 'S' , 'f_change');
+    doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','sstatus', 'S' , ''); 
     doGetCombo('/common/selectStockLocationList.do', '', '','searchFromLoc', 'S' , '');//From Location 조회
     doGetCombo('/common/selectStockLocationList.do', '', '','searchToLoc', 'S' , '');//To Location 조회
 
