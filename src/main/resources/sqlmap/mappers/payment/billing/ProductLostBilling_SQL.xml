@@ -63,7 +63,7 @@
 		    AND ROWNUM = 1
     </select>
     
-    <update id="insertLedger" parameterType="Map">
+    <insert id="insertLedger" parameterType="Map">
         <selectKey keyProperty="rentRunId" resultType="int" order="BEFORE">
             SELECT PAY0022D_SEQ.NEXTVAL FROM DUAL
         </selectKey>
@@ -103,7 +103,7 @@
 		    NULL, 
 		    NULL 
 		)
-    </update>
+    </insert>
     
     <insert id="insertOrderBill" parameterType="Map">
         INSERT INTO PAY0016D
