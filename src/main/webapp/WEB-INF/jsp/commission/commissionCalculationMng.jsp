@@ -262,7 +262,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Calculation - Actual</h2>
+		<h2>Commission Calculation</h2>
 
 		<ul class="right_btns">
 			<li><p class="btn_gray">			

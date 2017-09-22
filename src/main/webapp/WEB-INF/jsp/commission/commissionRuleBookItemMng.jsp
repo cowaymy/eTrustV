@@ -882,7 +882,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Rule Book Mgmt</h2>
+		<h2>Commission Group Rule Book Mgmt</h2>
 
 		<ul class="right_btns">
 			<li><p class="btn_gray">			
