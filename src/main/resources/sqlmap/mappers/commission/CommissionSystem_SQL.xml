@@ -195,7 +195,7 @@
 		</if>    
     <![CDATA[
     GROUP BY ORG_CD, ORG_NM
-    ORDER BY ORG_CD
+    ORDER BY ORG_NM 
      ]]>
 	</select>
 
