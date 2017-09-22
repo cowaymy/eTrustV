@@ -33,26 +33,7 @@ var gridPros2 = {
         showRowCheckColumn : true,
         // 전체 체크박스 표시 설정
         showRowAllCheckBox : true,
-        softRemoveRowMode:false,
-        independentAllCheckBox : true,
-
-        rowCheckableFunction : function(rowIndex, isChecked, item) {
-            if(item.billingStus == "Completed") { 
-            	Common.alert("This billing schedule had been finished. Can not create bill twice.");
-                return false;
-            }
-            return true;
-        },
-        
-
-        rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-            if(item.name == "Completed") {
-                return false; 
-            }
-            return true;
-        }
-
-       
+        softRemoveRowMode:false
 };
 
 var gridPros3 = {
@@ -66,9 +47,7 @@ var gridPros3 = {
         showRowCheckColumn : true,
         // 전체 체크박스 표시 설정
         showRowAllCheckBox : true,
-        softRemoveRowMode:false,
-        //independentAllCheckBox : true
-       
+        softRemoveRowMode:false
 };
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
@@ -159,7 +138,7 @@ var billingscheduleLayout = [
                        }, {
                            dataField : "billingStus",
                            headerText : "Billing Status",
-                           editable : false
+                           editable : false,
                        }, {
                            dataField : "rentInstId",
                            headerText : "rentInstId",
@@ -211,6 +190,7 @@ var billingTargetLayout = [
                                  visible : false
                              }]; 
 
+
 	function fn_orderSearch(){
 	    Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "BILLING_RENTAL_UNBILL", indicator : "SearchTrialNo"});
 	}
@@ -251,17 +231,6 @@ var billingTargetLayout = [
             billingTargetGridId = GridCommon.createAUIGrid("grid_wrap3", billingTargetLayout,"",gridPros3);
             AUIGrid.setGridData(billingscheduleGridId, result.data.unBillingScheduleList);
             
-            AUIGrid.bind(billingscheduleGridId, "rowAllChkClick", function( event ) {
-                if(event.checked) {
-                    // name 의 값들 얻기
-                    var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "billingStus");
-                    uniqueValues.splice(uniqueValues.indexOf("Completed"),1);
-                    AUIGrid.setCheckedRowsByValue(event.pid, "billingStus", uniqueValues);
-                } else {
-                    AUIGrid.setCheckedRowsByValue(event.pid, "billingStus", []);
-                }
-            });
-            
         });
     }
 	
@@ -299,6 +268,7 @@ var billingTargetLayout = [
 	            var j=0;
 	            
 	            for (var i = 0 ; i < checkedItems.length ; i++){
+	            	alert("액티브 민값 : "+Number(allItems[0].installment + j) +", 체크민값 : "+Number(checkedItems[i].installment) );
 	            	if(Number(allItems[0].installment + j) <  Number(checkedItems[i].installment)){
                         valid = false;
                     }else{
@@ -336,7 +306,7 @@ var billingTargetLayout = [
                 var rowList = [];
                 var j = 0;
                 for (var i = checkedItems.length-1 ; i >= 0; i--){
-                	
+                	alert("액티브 민값 : "+Number(allItems[allItems.length-1].installment - j) +", 체크민값 : "+Number(checkedItems[i].installment) );
                 	if(Number(allItems[allItems.length-1].installment - j) >  Number(checkedItems[i].installment)){
                         valid = false;
                     }else{

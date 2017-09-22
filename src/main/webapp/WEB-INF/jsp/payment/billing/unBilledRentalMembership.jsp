@@ -33,25 +33,7 @@ var gridPros2 = {
         showRowCheckColumn : true,
         // 전체 체크박스 표시 설정
         showRowAllCheckBox : true,
-        softRemoveRowMode:false,
-        independentAllCheckBox : true,
-
-        rowCheckableFunction : function(rowIndex, isChecked, item) {
-            if(item.billingStus == "Completed") { 
-            	Common.alert("This billing schedule had been finished. Can not create bill twice.");
-                return false;
-            }
-            return true;
-        },
-        
-
-        rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-            if(item.name == "Completed") {
-                return false; 
-            }
-            return true;
-        }
-
+        softRemoveRowMode:false
        
 };
 
@@ -248,18 +230,6 @@ var billingTargetLayout = [
             billingscheduleGridId = GridCommon.createAUIGrid("grid_wrap2", billingscheduleLayout,"",gridPros2);
             billingTargetGridId = GridCommon.createAUIGrid("grid_wrap3", billingTargetLayout,"",gridPros3);
             AUIGrid.setGridData(billingscheduleGridId, result.data.rentalMembershipScheduleList);
-            
-            AUIGrid.bind(billingscheduleGridId, "rowAllChkClick", function( event ) {
-                if(event.checked) {
-                    // name 의 값들 얻기
-                    var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "billingStus");
-                    
-                    uniqueValues.splice(uniqueValues.indexOf("Completed"),1);
-                    AUIGrid.setCheckedRowsByValue(event.pid, "billingStus", uniqueValues);
-                } else {
-                    AUIGrid.setCheckedRowsByValue(event.pid, "billingStus", []);
-                }
-            });
             
         });
     }

@@ -67,8 +67,6 @@ var gridPros3 = {
         // 전체 체크박스 표시 설정
         showRowAllCheckBox : true,
         softRemoveRowMode:false
-        //independentAllCheckBox : true
-       
 };
 
 
