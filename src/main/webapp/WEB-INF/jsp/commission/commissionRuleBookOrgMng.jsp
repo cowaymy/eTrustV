@@ -475,7 +475,7 @@
 						<td><select id="orgCombo" name="orgCombo" style="width:100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgList }">
-									<option value="${list.cdid}">${list.cd}</option>
+									<option value="${list.cdid}">${list.cdnm}</option>
 								</c:forEach>
 						</select></td>
 						<input type="hidden" id="orgGubun" name="orgGubun" value="">

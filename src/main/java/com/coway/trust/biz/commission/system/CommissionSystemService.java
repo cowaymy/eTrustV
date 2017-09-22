@@ -143,6 +143,10 @@ public interface CommissionSystemService
      */
     int udtCommissionRuleData(Map<String, Object> params, String loginId);
     
+    int cntUpdateDate(Map<String, Object> params);
+    
+    void udtCommissionRuleData(Map<String, Object> params);
+    
     /**
      *  search Weekly List
      * @param params

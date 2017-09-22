@@ -388,9 +388,15 @@ public class CommissionSystemController {
 		
 		
 		int cnt = 0;
-		
-		if (saveType.equals("U")) {			
-			cnt = commissionSystemService.udtCommissionRuleData(params,loginId);
+		int uCnt=0;
+		if (saveType.equals("U")) {
+			uCnt=commissionSystemService.cntUpdateDate(params);
+			
+			if(uCnt > 0){
+				commissionSystemService.udtCommissionRuleData(params);
+			}else{
+				cnt = commissionSystemService.udtCommissionRuleData(params,loginId);
+			}
 		}else{
 			cnt = commissionSystemService.addCommissionRuleData(params,loginId);
 		}
@@ -425,7 +431,7 @@ public class CommissionSystemController {
 		}
 		
 		List<EgovMap> ruleBookMngList = commissionSystemService.selectRuleBookMngList(params);
-
+		System.out.println(ruleBookMngList);
 		// return data
 		return ResponseEntity.ok(ruleBookMngList);
 	}

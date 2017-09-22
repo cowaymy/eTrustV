@@ -123,14 +123,86 @@
                 console.log("data : " + result);            
                 console.log("result.length : " + result.length);            
                 AUIGrid.setGridData(myGridID2, result);
+                
                 //category 동적 생성
                  $("#category").empty();        
+                
                 if (result.length>0) {
-	                var categoryTmp = "";
-                    for (var i = 0; i < result.length; i++) {
+                	
+	                var levCnt=0;
+                	var categoryTmp = "";
+                	
+	                for (var i = 0; i < result.length; i++) {
+	                	var obj = result[i];
+	                	if(i==0 || obj.ruleLevel == 1){
+	                		categoryTmp = categoryTmp+ "<table id='lev_"+obj.ruleLevel+"' class='type2 gray'>";
+                            categoryTmp = categoryTmp+ " <caption>table</caption>";
+                            categoryTmp = categoryTmp+ " <thead>";
+                            categoryTmp = categoryTmp+ "     <tr id='thead_"+obj.ruleLevel+"' />";
+                            categoryTmp = categoryTmp+ " </thead>";
+                            categoryTmp = categoryTmp+ " <tbody>";
+                            categoryTmp = categoryTmp+ "     <tr id='tbody_"+obj.ruleLevel+"' />";
+                            categoryTmp = categoryTmp+ " </tbody>";
+                            categoryTmp = categoryTmp+ "</table>";
+                            $("#category").append(categoryTmp);
+	                	}
+	                	$("#thead_"+obj.ruleLevel).append("<th scope='col'>"+obj.ruleCategory+"</th>");
+                        $("#tbody_"+obj.ruleLevel).append("<td><span>"+obj.resultValue+"</span></td>");
+                        if(obj.ruleLevel > 1){
+                        	levCnt = Number(levCnt)+1;
+                        }
+	                }
+	                
+	                if(Number(levCnt) > 0){
+	                	for(var i = 0; i < result.length; i++){
+	                		if(result[i].ruleLevel == 1){
+	                			categoryTmp = categoryTmp+ "<br>";
+	                			categoryTmp = categoryTmp+ "<table id='lev_2_"+result[i].ruleSeq+"' class='type2 gray'>";
+	                			categoryTmp = categoryTmp+ "   <thead>";
+	                			categoryTmp = categoryTmp+ "     <tr id='thead_2_"+result[i].ruleSeq+"'>";
+	                			categoryTmp = categoryTmp+ "        <td scope='col' rowspan=2 align='center' valign='bottom'  style='font-weight: bold; background: #eee;'>"+result[i].ruleCategory+"</td>";
+	                			categoryTmp = categoryTmp+ "     </tr>";
+	                			categoryTmp = categoryTmp+ "   </thead>";
+	                			categoryTmp = categoryTmp+ "        <tr id='tbody_2_"+result[i].ruleSeq+"'>";
+	                			categoryTmp = categoryTmp+ "            <td style='background: #eee'> </td>";
+	                			categoryTmp = categoryTmp+ "        </tr>";
+	                            categoryTmp = categoryTmp+ "   <tbody>";
+	                            categoryTmp = categoryTmp+ "   </tbody>";
+	                			categoryTmp = categoryTmp+ "</table>";
+	                		}
+	                	}
+	                	$("#category").append(categoryTmp);
+	                	
+	                	for(var i = 0; i < result.length; i++){
+	                		//if(result[i].ruleLevel == 1){
+	                			
+		                		for(var j=0 ; j<result.length; j++){
+		                			//console.log(result[i].ruleSeq);
+		                			
+			                		 if(result[i].ruleSeq == result[j].rulePid){
+			                			 if(result[j].ruleLevel == 2){
+					                		$("#thead_2_"+result[i].ruleSeq).append("<th scope='col' id='th_"+result[j].ruleSeq+"'>"+result[j].ruleCategory+"</th>");
+					                		$("#tbody_2_"+result[i].ruleSeq).append("<td id='td_"+result[j].ruleSeq+"'><span>"+result[j].resultValue+"</span></td>");
+			                			 }else if(result[j].ruleLevel > 2){
+			                				 var thParent = $("#th_"+result[i].ruleSeq+"").parent().attr("id");
+			                				 var tdParent = $("#td_"+result[i].ruleSeq+"").parent().attr("id");
+			                				 console.log("parent : " + $("#th_"+result[i].ruleSeq+"").parent().attr("id"));
+			                				 $("#"+thParent).append("<th scope='col' id='th_"+result[j].ruleSeq+"'>"+result[j].ruleCategory+"</th>");
+	                                         $("#"+tdParent).append("<td id='td_"+result[j].ruleSeq+"'><span>"+result[j].resultValue+"</span></td>");
+			                			 }
+			                		}//if
+			                		
+		                		}//j
+		                		
+	                		//}//if
+	                	}//i
+	                }
+	                
+	                
+	                
+                    /* for (var i = 0; i < result.length; i++) {
                         var obj = result[i];
                         if(i==0 || obj.ruleLevel != result[i-1].ruleLevel){
-                            //$("#category").append("<ul id='ul"+obj.ruleLevel+"' /> ");
                             categoryTmp = categoryTmp+ "<table id='lev_"+obj.ruleLevel+"' class='type2 gray'>";
                             categoryTmp = categoryTmp+ " <caption>table</caption>";
                             categoryTmp = categoryTmp+ " <thead>";
@@ -142,11 +214,11 @@
                             categoryTmp = categoryTmp+ "</table>";
                             $("#category").append(categoryTmp);
                         }
-                        //$("#ul"+obj.ruleLevel).append("<li><strong>"+obj.ruleCategory+"</strong><p>"+obj.resultValue+"</p></li>");
                         $("#thead_"+obj.ruleLevel).append("<th scope='col'>"+obj.ruleCategory+"</th>");
                         $("#tbody_"+obj.ruleLevel).append("<td><span>"+obj.resultValue+"</span></td>");
-                        
-                    }
+                    } */
+                    
+                    
                     console.log("valueTypeNm : "+result[0].valueTypeNm);
                     console.log("valueType : "+result[0].valueType);
                     console.log("resultValueNm : "+result[0].resultValueNm);
@@ -910,7 +982,7 @@
 <div id="popup_wrap" class="popup_wrap size_big"  style="display:none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Commission Rule Book Mgmt</h1>
+<h1>Commission Rule Book Item Mgmt</h1>
 <ul class="right_opt">
   <li><p class="btn_blue2"><a href="#" id="close01"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>

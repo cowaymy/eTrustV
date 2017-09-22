@@ -440,6 +440,23 @@
 		)
 	</insert>
 	
+	<select id="cntUpdateDate" parameterType="Map" resultType="int">
+	   SELECT COUNT(*) 
+	   FROM CMM0043M  
+	   WHERE RULE_SEQ=#{ruleSeq} AND RULE_OPT1=#{ruleOpt1} AND RULE_OPT2=#{ruleOpt2} AND RESULT_VALUE=#{resultValue}
+	</select>
+	<update id="udtRuleDescData"  parameterType="Map">
+	   UPDATE CMM0043M 
+	   SET 
+	       RULE_NM= #{ruleNm},
+	       RULE_CATEGORY = #{ruleCategory},
+	       VALUE_TYPE = #{valueType},
+	       VALUE_TYPE_NM = #{valueTypeNm},
+	       RESULT_VALUE_NM = #{resultValueNm},
+	       PRT_ORDER = #{printOrder},
+	       RULE_DESC = #{ruleDesc}
+	   WHERE RULE_SEQ=#{ruleSeq} AND RULE_OPT1=#{ruleOpt1} AND RULE_OPT2=#{ruleOpt2} AND RESULT_VALUE=#{resultValue}
+	</update>
 	
   <!-- update coommission rule book management : end_dt -->
   <update id="udtCommissionRuleEndDt">

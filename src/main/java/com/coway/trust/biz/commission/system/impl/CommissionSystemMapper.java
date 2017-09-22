@@ -214,6 +214,10 @@ public interface CommissionSystemMapper {
 	 */
 	List<EgovMap> selectRuleBookMngList(Map<String, Object> params);
 	
+	int cntUpdateDate(Map<String, Object> params);
+	
+	void udtRuleDescData(Map<String, Object> params);
+	
 	/**
 	 * search Organization Gruop List
 	 * 

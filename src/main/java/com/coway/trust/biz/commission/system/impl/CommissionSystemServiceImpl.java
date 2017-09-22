@@ -427,6 +427,17 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 		return commissionSystemMapper.selectRuleBookMngList(params);
 	}
 	
+	@Override
+	public int cntUpdateDate(Map<String, Object> params) {
+		int cnt=0;
+		cnt=commissionSystemMapper.cntUpdateDate(params);
+		return cnt;
+	}
+	@Override
+	public void udtCommissionRuleData(Map<String, Object> params) {
+		commissionSystemMapper.udtRuleDescData(params);
+	}
+	
 	/**
 	 * search coommission weekly management Data
 	 * 
