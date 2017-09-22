@@ -59,9 +59,8 @@ $(document).ready(function(){
     doSysdate(0 , 'reqcrtdate');
     paramdata = { groupCode : '306' ,Codeval: 'US' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, 'US','sttype', 'S' , 'transferTypeFunc');
-    paramdata = { brnch : '${SESSION_INFO.userBranchId}'}; // session 정보 등록 
-    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
-    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
+    paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록 
+    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); 
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
     
@@ -136,6 +135,10 @@ $(document).ready(function(){
     AUIGrid.bind(reqGrid, "ready", function(event) {});
     
 });
+function tlocationFunc(){
+	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#tlocation").val()}, '','flocation', 'S' , '');
+}
+
 function transferTypeFunc(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
     doGetComboData('/common/selectCodeList.do', paramdata, 'US03','smtype', 'S' , '');
@@ -207,6 +210,10 @@ $(function(){
 	        
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);
         }
+    });
+    $("#tlocation").change(function(){
+    	console.log('1');
+    	tlocationFunc();
     });
 });
 
