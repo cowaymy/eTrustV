@@ -113,20 +113,25 @@ public class PointOfSalesController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		String  UserName;
 		String  UserCode;
+		int UserBranchId;
 		if (sessionVO == null) {
 			UserName = "ham";
 		} else {
 			UserName = sessionVO.getUserName();
 		}
 		if (sessionVO == null) {
-			UserCode = "DSC-01";
+			UserBranchId = 4;
+			UserCode="T010";
 		} else {
-			UserCode = sessionVO.getCode();
-			//UserCode = "DSC-01";
+			UserBranchId = sessionVO.getUserBranchId();
+			UserCode = "T010";
 		}
 		
-//		logger.debug("UserName    값 : {}", UserName);
-//		logger.debug("UserCode    값 : {}", UserCode);
+	
+		logger.debug("UserName    값 : {}", UserName);
+		logger.debug("UserCode    값 : {}", UserCode);
+		logger.debug("UserBranchId    값 : {}", UserBranchId);
+
 		
 		
 		Map<String, Object> map = new HashMap();
@@ -183,6 +188,9 @@ public class PointOfSalesController {
 
 		String[] PosItemType = request.getParameterValues("PosItemType");
 		String[] catetype = request.getParameterValues("catetype");
+		String reqLoc = request.getParameter("reqLoc");
+		
+		logger.debug("reqLoc    값 : {}",reqLoc);
 		
 //		for (int i = 0; i < PosItemType.length; i++) {
 //			logger.debug("PosItemType    값 : {}", PosItemType[i]);	
@@ -191,6 +199,7 @@ public class PointOfSalesController {
 		Map<String, Object> smap = new HashMap();
 		smap.put("ctype", PosItemType);
 		smap.put("catetype", catetype);
+		smap.put("reqLoc", reqLoc);
 
 		List<EgovMap> list = PointOfSalesService.PosItemList(smap);
 
@@ -278,6 +287,8 @@ public class PointOfSalesController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);
+		
+		params.put("insReqLoc", 4);
 
 		PointOfSalesService.insertSerial(params);
 
