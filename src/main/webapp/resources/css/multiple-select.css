@@ -44,7 +44,8 @@
     text-overflow: ellipsis;
     display: block;
     padding-left: 8px;
-	line-height:28px;
+	/*line-height:28px; 2017-09-22수정 */
+	line-height:20px;
 }
 
 .ms-choice > span.placeholder {
