@@ -133,7 +133,7 @@
 		                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
 		                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
 		                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
-		                LEFT JOIN SYS0064M Extent9   ON Extent9.AREA_ID = Extent1.AREA_ID
+		                LEFT JOIN SYS0064M Extent9   ON Extent9.AREA_ID = Extent1.AREA_ID AND Extent9.STATUS_ID = 1
 		          WHERE  ( 8 <![CDATA[<> ]]> Extent1.STUS_CODE_ID )
                   AND ( Extent1.CUST_ADD_ID = #{custBillAddId} ) AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
     </select>
@@ -186,7 +186,7 @@
                                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID                               
                                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
                                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
-                               LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID
+                               LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID AND Extent5.STATUS_ID = 1
                         WHERE   
                               8 <> Extent1.STUS_CODE_ID 
                         AND  
@@ -923,7 +923,7 @@
 	                LEFT JOIN SYS0039M Extent3   ON Extent3.AREA_ID = Extent1.AREA_ID
 	                LEFT JOIN SYS0035M Extent4   ON Extent4.STATE_ID = Extent1.STATE_ID
 	                LEFT JOIN SYS0015M Extent5   ON Extent5.CNTY_ID = Extent1.CNTY_ID -->
-	                LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID
+	                LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID AND Extent2.STATUS_ID =1
 	          WHERE  Extent1.CUST_ADD_ID = #{value} 
 	          AND ROWNUM <![CDATA[<= ]]> 1 ) Limit1
     </select>

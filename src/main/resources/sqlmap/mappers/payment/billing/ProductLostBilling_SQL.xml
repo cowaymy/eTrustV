@@ -45,7 +45,7 @@
 				                nads.STATE STATE_ID  
 		                FROM SAL0045D Extent1
 		                JOIN SAL0023D Extent2   ON Extent1.ADD_ID = Extent2.CUST_ADD_ID
-		         LEFT JOIN SYS0064M nads ON Extent2.AREA_ID = nads.AREA_ID
+		         LEFT JOIN SYS0064M nads ON Extent2.AREA_ID = nads.AREA_ID AND nads.STATUS_ID = 1
 		             WHERE  8 <![CDATA[<>]]> Extent1.STUS_CODE_ID ) Filter1
 		  JOIN SAL0044D Extent3   ON ( Filter1.POST_CODE_ID = Extent3.ZR_LOC_POST_CODE_ID )
 		   AND ( Filter1.STATE_ID = Extent3.ZR_LOC_STATE_ID )

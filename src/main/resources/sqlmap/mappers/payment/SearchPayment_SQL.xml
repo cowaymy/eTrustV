@@ -755,14 +755,14 @@
 		       Extent1.RACE RACE  ,
 		       Extent1.MARTL MARTL  ,
 		       Extent1.NATION NATION  ,
-		       Extent1.ADDR1 ADDR1  ,
-		       Extent1.ADDR2 ADDR2  ,
-		       Extent1.ADDR3 ADDR3  ,
-		       Extent1.ADDR4 ADDR4  ,
-		       Extent1.AREAL AREAL  ,
-		       Extent1.POST_CODE POST_CODE  ,
-		       Extent1.STATE STATE  ,
-		       Extent1.CNTY CNTY  ,
+		       Extent1.ADDR_DTL ADDR1  ,
+		       Extent1.STREET ADDR2  ,
+		       '' ADDR3  ,
+		       '' ADDR4  ,
+		       nads.AREA AREAL  ,
+		       nads.POSTCODE POST_CODE  ,
+		       nads.STATE STATE  ,
+		       nads.COUNTRY CNTY  ,
 		       Extent1.TEL_OFFICE TEL_OFFICE  ,
 		       Extent1.TEL_HUSE TEL_HUSE  ,
 		       Extent1.TEL_MOBILE TEL_MOBILE  ,
@@ -799,6 +799,7 @@
 		       Extent1.BIZ_TYPE BIZ_TYPE  ,
 		       Extent1.HSPTLZ HSPTLZ  
 		  FROM ORG0001D Extent1
+				LEFT JOIN SYS0064M nads ON Extent1.AREA_ID = nads.AREA_ID AND nads.STATUS_ID = 1			
 		 WHERE  Extent1.MEM_ID = #{edit_txtCollectorCode} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
      
