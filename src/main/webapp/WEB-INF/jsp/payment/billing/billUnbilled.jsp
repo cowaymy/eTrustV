@@ -230,6 +230,9 @@ var billingTargetLayout = [
 	        orderListGridId = GridCommon.createAUIGrid("grid_wrap", orderListLayout,"",gridPros);
 	        AUIGrid.setGridData(orderListGridId, result.data.orderList);
 	        
+	        AUIGrid.destroy(billingscheduleGridId);
+            AUIGrid.destroy(billingTargetGridId);
+	        
 	    });
 	}
 	

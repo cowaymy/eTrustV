@@ -233,6 +233,9 @@ var billingTargetLayout = [
             orderListGridId = GridCommon.createAUIGrid("grid_wrap", orderListLayout,"",gridPros);
             AUIGrid.setGridData(orderListGridId, result.data.orderList);
             
+            AUIGrid.destroy(billingscheduleGridId);
+            AUIGrid.destroy(billingTargetGridId);
+            
         });
     }
     
@@ -292,7 +295,7 @@ var billingTargetLayout = [
                 var j=0;
                 
                 for (var i = 0 ; i < checkedItems.length ; i++){
-                	alert(Number(allItems[0].installment + j) +"   ,"+Number(checkedItems[i].installment));
+                	
                     if(Number(allItems[0].installment + j) <  Number(checkedItems[i].installment)){
                         valid = false;
                     }else{
