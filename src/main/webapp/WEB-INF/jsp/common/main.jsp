@@ -15,12 +15,12 @@ var gSelRowIdx = 0;
 
 $(function()
 {
-	
+
 });
 
 var statusCategoryLayout =
-    [      
-        {    
+    [
+        {
             dataField : "stusCtgryId",
             headerText : "<spring:message code='sys.status.grid1.CATEGORY_ID' />",
             width : "12%"
@@ -43,7 +43,7 @@ var statusCategoryLayout =
             dataField : "updUserId",
             headerText : "<spring:message code='sys.status.grid1.LAST_UPDATE_USER_ID'/>",
             width : "16%"
-           ,editable : false            
+           ,editable : false
         }, {
             dataField : "updDt",
             headerText : "<spring:message code='sys.status.grid1.LAST_UPDATE'/>",
@@ -55,8 +55,8 @@ var statusCategoryLayout =
     ];
 
 
-var detailColumnLayout = 
-    [  
+var detailColumnLayout =
+    [
         {
             dataField : "stusCodeId",
             headerText : "<spring:message code='sys.generalCode.grid1.CODE_ID'/>",
@@ -77,28 +77,28 @@ var detailColumnLayout =
             headerText : "<spring:message code='sys.generalCode.grid1.DISABLED'/>",
             width : "15%",
             visible : true,
-            editRenderer : 
+            editRenderer :
             {
                type : "ComboBoxRenderer",
                showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                listFunction : function(rowIndex, columnIndex, item, dataField) {
                   var list = getDisibledComboList();
-                  return list;                 
+                  return list;
                },
                keyField : "id"
             }
         }
 
     ];
-    
-var codeIDColumnLayout = 
-    [ 
+
+var codeIDColumnLayout =
+    [
       {
           dataField : "checkFlag",
           headerText : '<input type="checkbox" id="allCheckbox" name="allCheckbox" style="width:15px;height:15px;">',
           width : "10%",
           editable : false,
-          renderer : 
+          renderer :
           {
               type : "CheckBoxEditRenderer",
               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -106,7 +106,7 @@ var codeIDColumnLayout =
               checkValue : 1, // true, false 인 경우가 기본
               unCheckValue : 0,
               // 체크박스 Visible 함수
-              visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+              visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
                {
                  if(item.checkFlag == 1)  // 1 이면
                  {
@@ -135,22 +135,22 @@ var codeIDColumnLayout =
 
 // AUIGrid 메소드
 //컬럼 선택시 상세정보 세팅.
-function fnSetCategoryCd(selGrdidID, rowIdx)  
-{     
+function fnSetCategoryCd(selGrdidID, rowIdx)
+{
    $("#selCategoryId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryId"));
-   
+
   // $("#paramCategoryId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryId"));
-   
-   console.log("selCategoryId: "+ $("#selCategoryId").val() + " stusCtgryName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryName") );                
+
+   console.log("selCategoryId: "+ $("#selCategoryId").val() + " stusCtgryName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "stusCtgryName") );
 }
 
-function auiCellEditignHandler(event) 
+function auiCellEditignHandler(event)
 {
-    if(event.type == "cellEditBegin") 
+    if(event.type == "cellEditBegin")
     {
         console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-    } 
-    else if(event.type == "cellEditEnd") 
+    }
+    else if(event.type == "cellEditEnd")
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
 
@@ -162,7 +162,7 @@ function auiCellEditignHandler(event)
                 Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
                 AUIGrid.restoreEditedCells(detailGridID, [event.rowIndex, "seqNo"] );
                 return false;
-          }  
+          }
         }
 
         if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
@@ -176,32 +176,32 @@ function auiCellEditignHandler(event)
           else
           {
             AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
-          }  
+          }
         }
-        
-    } 
-    else if(event.type == "cellEditCancel") 
+
+    }
+    else if(event.type == "cellEditCancel")
     {
         console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     }
-  
+
 }
 
 //행 추가 이벤트 핸들러
-function auiAddRowHandler(event) 
+function auiAddRowHandler(event)
 {
   console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
 
 // MstGrid 행 추가, 삽입
-function addRowCategory() 
+function addRowCategory()
 {
   var item = new Object();
 
     item.stusCtgryId   ="";
     item.stusCtgryName ="";
     item.stusCtgryDesc ="";
-    item.crtUserId     ="";  
+    item.crtUserId     ="";
     item.updUserId     ="";
     item.updDt         ="";
     // parameter
@@ -210,7 +210,7 @@ function addRowCategory()
     AUIGrid.addRow(myGridID, item, "first");
 }
 
-function addRowStatusCode() 
+function addRowStatusCode()
 {
   var item = new Object();
   item.checkFlag   = 0;
@@ -224,28 +224,28 @@ function addRowStatusCode()
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandler(event) 
+function auiRemoveRowHandler(event)
 {
     console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandlerDetail(event) 
+function auiRemoveRowHandlerDetail(event)
 {
     console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 // 행 삭제 메소드
-function removeRow() 
+function removeRow()
 {
-    console.log("removeRowMst: " + gSelRowIdx);    
+    console.log("removeRowMst: " + gSelRowIdx);
     AUIGrid.removeRow(myGridID,gSelRowIdx);
 }
 
 //Make Use_yn ComboList, tooltip
 function getDisibledComboList()
-{     
-  var list =  ["N", "Y"];   
+{
+  var list =  ["N", "Y"];
   return list;
 }
 
@@ -256,12 +256,12 @@ function fnGetCategoryCd(myGridID, rowIndex)
 }
 
 //그리드 헤더 클릭 핸들러
-function headerClickHandler(event) 
+function headerClickHandler(event)
 {
   // checkFlag 칼럼 클릭 한 경우
-  if(event.dataField == "checkFlag") 
+  if(event.dataField == "checkFlag")
   {
-    if(event.orgEvent.target.id == "allCheckbox") 
+    if(event.orgEvent.target.id == "allCheckbox")
     { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
       var  isChecked = document.getElementById("allCheckbox").checked;
       checkAll(isChecked);
@@ -271,47 +271,47 @@ function headerClickHandler(event)
 }
 
 //전체 체크 설정, 전체 체크 해제 하기
-function checkAll(isChecked) 
+function checkAll(isChecked)
 {
   var rowCount = AUIGrid.getRowCount(statusCodeGridID);
 
   if(isChecked)   // checked == true == 1
   {
-    for(var i=0; i<rowCount; i++) 
+    for(var i=0; i<rowCount; i++)
     {
        AUIGrid.updateRow(statusCodeGridID, { "checkFlag" : 1 }, i);
     }
-  } 
+  }
   else   // unchecked == false == 0
   {
-    for(var i=0; i<rowCount; i++) 
+    for(var i=0; i<rowCount; i++)
     {
        AUIGrid.updateRow(statusCodeGridID, { "checkFlag" : 0 }, i);
     }
   }
-  
+
   // 헤더 체크 박스 일치시킴.
   document.getElementById("allCheckbox").checked = isChecked;
-  
+
   getItemsByCheckedField(statusCodeGridID);
-  
+
 }
 
-function getItemsByCheckedField(selectedGrid) 
+function getItemsByCheckedField(selectedGrid)
 {
   // 체크된 item 반환
   var activeItems = AUIGrid.getItemsByValue(selectedGrid, "checkFlag", true);
   var checkedRowItem = [];
   var str = "";
-  
-  for(var i=0, len = activeItems.length; i<len; i++) 
+
+  for(var i=0, len = activeItems.length; i<len; i++)
   {
       checkedRowItem = activeItems[i];
       str += "chkRowIdx : " + checkedRowItem.rowIndex + ", chkId :" + checkedRowItem.stusCodeId + ", chkName : " + checkedRowItem.codeName  + "\n";
   }
 
   //alert("checked items: " + str);
-  
+
 }
 
 //AUIGrid 생성 후 반환 ID
@@ -321,27 +321,27 @@ $(document).ready(function()
 {
     $("#txtCategoryId").focus();
 
-    $("#txtCategoryId").keydown(function(key) 
+    $("#txtCategoryId").keydown(function(key)
     {
-          if (key.keyCode == 13) 
+          if (key.keyCode == 13)
           {
             fnSelectCategoryListAjax();
           }
 
     });
-    
-    $("#paramCategoryNM").keydown(function(key) 
+
+    $("#paramCategoryNM").keydown(function(key)
     {
-          if (key.keyCode == 13) 
+          if (key.keyCode == 13)
           {
             fnSelectCategoryListAjax();
           }
 
     });
-    
-    $("#paramCreateID").keydown(function(key) 
+
+    $("#paramCreateID").keydown(function(key)
     {
-          if (key.keyCode == 13) 
+          if (key.keyCode == 13)
           {
             fnSelectCategoryListAjax();
           }
@@ -356,32 +356,32 @@ $(document).ready(function()
                   softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
                   selectionMode : "multipleRows",
                 };
-    
+
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("grid_wrap", statusCategoryLayout,"stusCtgryId", options);
     // AUIGrid 그리드를 생성합니다.
-    
+
     // 푸터 객체 세팅
     //AUIGrid.setFooter(myGridID, footerObject);
-    
+
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
 
     // cellClick event.
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(myGridID, "cellClick", function( event )
     {
         $("#selCategoryId").val("");
         gSelRowIdx = event.rowIndex;
@@ -393,131 +393,131 @@ $(document).ready(function()
           // Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
            fnGetCategoryCd(myGridID, event.rowIndex);
          }
-        
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedCategoryId: " + $("#selCategoryId").val()  );        
+
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedCategoryId: " + $("#selCategoryId").val()  );
     });
 
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+    AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-    });    
+    });
 
 
 
-    
+
 
 /***********************************************[ DETAIL GRID] ************************************************/
 
-    var dtailOptions = 
+    var dtailOptions =
         {
             usePaging : false,
             showRowNumColumn : false , // 그리드 넘버링
             useGroupingPanel : false,
             editable : true,
         };
- 
+
     // detailGrid 생성
     detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout,"stusCodeId", dtailOptions);
 
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(detailGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(detailGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(detailGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(detailGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(detailGridID, "removeRow", auiRemoveRowHandlerDetail);
-    
+
     // cellClick event.
-    AUIGrid.bind(detailGridID, "cellClick", function( event ) 
+    AUIGrid.bind(detailGridID, "cellClick", function( event )
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
     });
 
 
-    
-    
+
+
 /***********************************************[ CODE_ID GRID] ************************************************/
 
-    var statusCodeOptions = 
+    var statusCodeOptions =
         {
             usePaging : false,
             useGroupingPanel : false,
             editable : true,
             showRowNumColumn : false  // 그리드 넘버링
         };
- 
+
     // detailGrid 생성
     statusCodeGridID = GridCommon.createAUIGrid("codeIdGrid", codeIDColumnLayout,"stusCodeId", statusCodeOptions);
 
     // 헤더 클릭 핸들러 바인딩
-    AUIGrid.bind(statusCodeGridID, "headerClick", headerClickHandler);    
+    AUIGrid.bind(statusCodeGridID, "headerClick", headerClickHandler);
 
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(statusCodeGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(statusCodeGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(statusCodeGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(statusCodeGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(statusCodeGridID, "removeRow", auiRemoveRowHandlerDetail);
-    
+
     // cellClick event.
-    AUIGrid.bind(statusCodeGridID, "cellClick", function( event ) 
+    AUIGrid.bind(statusCodeGridID, "cellClick", function( event )
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
     });
 
 
-    // 체크박스 클린 이벤트 바인딩  
+    // 체크박스 클린 이벤트 바인딩
     AUIGrid.bind(statusCodeGridID, "rowCheckClick", function( event ) {
       console.log("rowCheckClick : " + event.rowIndex + ", id : " + event.item.stusCodeId + ", name : " + event.item.codeName + ", checked : " + event.checked);
     });
-    
+
     // 전체 체크박스 클릭 이벤트 바인딩
     AUIGrid.bind(statusCodeGridID, "rowAllChkClick", function( event ) {
       console.log("rowAllChkClick checked : " + event.checked);
     });
-    
+
 
 });   //$(document).ready
 
 
 //ajax list 조회.
-function fnSelectCategoryListAjax() 
-{        
+function fnSelectCategoryListAjax()
+{
   Common.ajax("GET", "/status/selectStatusCategoryList.do"  // selectStatusCategoryList
        , $("#MainForm").serialize()
-       , function(result) 
+       , function(result)
        {
           console.log("성공 data : " + result);
           AUIGrid.setGridData(myGridID, result);
           AUIGrid.clearGridData(detailGridID);
-          
+
           if(result != null && result.length > 0)
           {
             //fnGetCategoryCd(myGridID, 0);
             console.log("UpdCategoryCdYN: " + $("#selCategoryId").val());
             if ($("#selCategoryId").val().length > 0 )
             {
-              fnSelectCategoryCdInfo();  
+              fnSelectCategoryCdInfo();
             }
-            
+
             fnSelectStatusCdId();
           }
        });
@@ -527,32 +527,32 @@ function fnSelectCategoryCdInfo()
 {
    Common.ajax("GET", "/status/selectStatusCategoryCdList.do"   // selectStatusCategoryCodeList
         , $("#MainForm").serialize()
-        , function(result) 
+        , function(result)
          {
              console.log("성공.");
              console.log("dataDetail : " + result);
              AUIGrid.setGridData(detailGridID, result);
 
-             if(result == null || result.length == 0) 
+             if(result == null || result.length == 0)
              {
                  console.log("detail No data count");
              }
-             
+
          });
 }
 
-function fnSelectStatusCdId() 
-{        
+function fnSelectStatusCdId()
+{
   Common.ajax("GET", "/status/selectStatusCdIdList.do"   // selectStatusCodeList
        , $("#MainForm").serialize()
-       , function(result) 
+       , function(result)
        {
           console.log("성공 data : " + result);
           AUIGrid.setGridData(statusCodeGridID, result);
        });
 }
 // myGridID, detailGridID, statusCodeGridID;
-function fnValidationCheckStatusCode()  
+function fnValidationCheckStatusCode()
 {
     var result = true;
     var addList = AUIGrid.getAddedRowItems(statusCodeGridID);
@@ -564,19 +564,19 @@ function fnValidationCheckStatusCode()
       return false;
     }
 
-    for (var i = 0; i < addList.length; i++) 
+    for (var i = 0; i < addList.length; i++)
     {
       var codeName  = addList[i].codeName;
       var code      = addList[i].code;
-      
-      if (codeName == "" || codeName.length == 0) 
+
+      if (codeName == "" || codeName.length == 0)
       {
         result = false;
         // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='codeName' htmlEscape='false'/>");
         break;
       }
-      if (code == "" || code.length == 0) 
+      if (code == "" || code.length == 0)
       {
         result = false;
         // {0} is required.
@@ -585,19 +585,19 @@ function fnValidationCheckStatusCode()
       }
     }
 
-    for (var i = 0; i < udtList.length; i++) 
+    for (var i = 0; i < udtList.length; i++)
     {
         var codeName  = addList[i].codeName;
         var code      = addList[i].code;
-        
-        if (codeName == "" || codeName.length == 0) 
+
+        if (codeName == "" || codeName.length == 0)
         {
           result = false;
           // {0} is required.
           Common.alert("<spring:message code='sys.msg.necessary' arguments='codeName' htmlEscape='false'/>");
           break;
         }
-        if (code == "" || code.length == 0) 
+        if (code == "" || code.length == 0)
         {
           result = false;
           // {0} is required.
@@ -616,54 +616,54 @@ function saveStatusCode()
   {
       return false;
   }
-  
+
   Common.ajax("POST", "/status/saveStatusCode.do"
            , GridCommon.getEditData(statusCodeGridID)
-           , function(result) 
+           , function(result)
              {
-                fnSelectCategoryListAjax() ; 
+                fnSelectCategoryListAjax() ;
                 console.log("saveCategory 성공.");
                 console.log("dataSuccess : " + result.data);
                 Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-             } 
+             }
 
-           , function(jqXHR, textStatus, errorThrown) 
+           , function(jqXHR, textStatus, errorThrown)
              {
-                try 
+                try
                 {
                   console.log("Fail Status : " + jqXHR.status);
                   console.log("code : "        + jqXHR.responseJSON.code);
                   console.log("message : "     + jqXHR.responseJSON.message);
                   console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-                } 
-                catch (e) 
+                }
+                catch (e)
                 {
                   console.log(e);
                 }
-             
+
                 Common.alert("Fail : " + jqXHR.responseJSON.message);
-            }); 
-  
+            });
+
 }
 
-function fnValidationCheckCategory() 
+function fnValidationCheckCategory()
 {
     var result = true;
     var addList = AUIGrid.getAddedRowItems(myGridID);
     var udtList = AUIGrid.getEditedRowItems(myGridID);
     var delList = AUIGrid.getRemovedItems(myGridID);
-        
-    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) 
+
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0)
     {
       Common.alert("No Change");
       return false;
     }
 
-    for (var i = 0; i < addList.length; i++) 
+    for (var i = 0; i < addList.length; i++)
     {
       var stusCtgryName  = addList[i].stusCtgryName;
-      
-      if (stusCtgryName == "" || stusCtgryName.length == 0) 
+
+      if (stusCtgryName == "" || stusCtgryName.length == 0)
       {
         result = false;
         // {0} is required.
@@ -672,11 +672,11 @@ function fnValidationCheckCategory()
       }
     }
 
-    for (var i = 0; i < udtList.length; i++) 
+    for (var i = 0; i < udtList.length; i++)
     {
       var stusCtgryName  = udtList[i].stusCtgryName;
-      
-      if (stusCtgryName == "" || stusCtgryName.length == 0) 
+
+      if (stusCtgryName == "" || stusCtgryName.length == 0)
       {
         result = false;
         // {0} is required.
@@ -685,11 +685,11 @@ function fnValidationCheckCategory()
       }
     }
 
-    for (var i = 0; i < delList.length; i++) 
+    for (var i = 0; i < delList.length; i++)
     {
       var stusCtgryId  = delList[i].stusCtgryId;
-      
-      if (stusCtgryId == "" || stusCtgryId.length == 0) 
+
+      if (stusCtgryId == "" || stusCtgryId.length == 0)
       {
         result = false;
         // {0} is required.
@@ -707,41 +707,41 @@ function saveCategory()
   {
       return false;
   }
-  
+
   Common.ajax("POST", "/status/saveStatusCategory.do"
          , GridCommon.getEditData(myGridID)
-         , function(result) 
+         , function(result)
            {
             fnSelectCategoryListAjax() ;
             fnSelectCategoryCdInfo();
             console.log("saveCategory 성공.");
             console.log("dataSuccess : " + result.data);
-            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>"); 
-           } 
+            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+           }
 
-         , function(jqXHR, textStatus, errorThrown) 
+         , function(jqXHR, textStatus, errorThrown)
            {
-              try 
+              try
               {
                 console.log("Fail Status : " + jqXHR.status);
                 console.log("code : "        + jqXHR.responseJSON.code);
                 console.log("message : "     + jqXHR.responseJSON.message);
                 console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-              } 
-              catch (e) 
+              }
+              catch (e)
               {
                 console.log(e);
               }
-           
+
               Common.alert("Fail : " + jqXHR.responseJSON.message);
-          }); 
-  
+          });
+
 }
 
 function insertStatusCatalogDetail()
 {
   //getItemsByCheckedField();
-  
+
   if ($("#selCategoryId").val().length < 1 )
   {
     Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
@@ -756,8 +756,8 @@ function insertStatusCatalogDetail()
     Common.alert("<spring:message code='sys.msg.first.Select' arguments='[Status Code ID]' htmlEscape='false'/>");
     return false;
   }
- 
-  var formDataParameters = 
+
+  var formDataParameters =
       {
         gridDataSet   : GridCommon.getEditData(statusCodeGridID),
         commStatusVO  : {
@@ -765,52 +765,52 @@ function insertStatusCatalogDetail()
                          catalogNm : MainForm.selStusCtgryName.value
                         }
       };
-  
+
   Common.ajax("POST", "/status/insertStatusCatalogDetail.do"
          , formDataParameters
-         , function(result) 
+         , function(result)
            {
             fnSelectCategoryListAjax() ;
  /*            console.log("selectCateG_Id: " + $("#selCategoryId").val());
             if ($("#selCategoryId").val().length > 0 )
             {
-              fnSelectCategoryCdInfo();  
+              fnSelectCategoryCdInfo();
             } */
             console.log("saveCategoryDetail 성공.");
             console.log("dataSuccess : " + result.data);
-            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>"); 
-           } 
+            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+           }
 
-         , function(jqXHR, textStatus, errorThrown) 
+         , function(jqXHR, textStatus, errorThrown)
            {
-              try 
+              try
               {
                 console.log("Fail Status : " + jqXHR.status);
                 console.log("code : "        + jqXHR.responseJSON.code);
                 console.log("message : "     + jqXHR.responseJSON.message);
                 console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-              } 
-              catch (e) 
+              }
+              catch (e)
               {
                 console.log(e);
               }
-           
+
               Common.alert("Fail : " + jqXHR.responseJSON.message);
-          }); 
-  
+          });
+
 }
 
 function fnUpdDisabled()
 {
   //getItemsByCheckedField();
-  
+
   if ($("#selCategoryId").val().length < 1 )
   {
     Common.alert("<spring:message code='sys.msg.first.Select' arguments='Category ID' htmlEscape='false'/>");
     return;
   }
-  
-  var formDataCategoryYN = 
+
+  var formDataCategoryYN =
       {
         gridDataSet   : GridCommon.getEditData(detailGridID),   // VO에 쓰일 변수명, 일치시킨다.
         commStatusVO  : {
@@ -818,44 +818,44 @@ function fnUpdDisabled()
                          catalogNm : MainForm.selStusCtgryName.value
                         }
       };
-  
+
   Common.ajax("POST", "/status/UpdCategoryCdYN.do"
          , formDataCategoryYN
-         , function(result) 
+         , function(result)
            {
-            fnSelectCategoryListAjax() ; 
-    
-            console.log("UpdSuccess : " + result.data);
-            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");   
-              
-           } 
+            fnSelectCategoryListAjax() ;
 
-         , function(jqXHR, textStatus, errorThrown) 
+            console.log("UpdSuccess : " + result.data);
+            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+
+           }
+
+         , function(jqXHR, textStatus, errorThrown)
            {
-              try 
+              try
               {
                 console.log("Fail Status : " + jqXHR.status);
                 console.log("code : "        + jqXHR.responseJSON.code);
                 console.log("message : "     + jqXHR.responseJSON.message);
                 console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-              } 
-              catch (e) 
+              }
+              catch (e)
               {
                 console.log(e);
               }
-           
+
               Common.alert("Fail : " + jqXHR.responseJSON.message);
-          }); 
+          });
 
 }
 </script>
 
 <section id="content"><!-- content start -->
-<ul class="path">
+<!-- <ul class="path">
   <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
   <li>Sales</li>
   <li>Order list</li>
-</ul>
+</ul> -->
 
 <aside class="title_line main_title"><!-- title_line start -->
 <h2>Notice</h2>
