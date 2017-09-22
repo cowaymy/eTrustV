@@ -3,6 +3,7 @@
 
 <script type="text/javaScript">
 var myGridID;
+var myViewDetailGridID;
 
 //Grid Properties 설정 
 var gridPros = {            
@@ -12,6 +13,13 @@ var gridPros = {
         // 즉, 바로 삭제함.
         //softRemovePolicy : "exceptNew"
         softRemoveRowMode : false
+};
+
+var detailGridPros = {            
+        editable : false,                 // 편집 가능 여부 (기본값 : false)
+        showStateColumn : false,     // 상태 칼럼 사용
+        usePaging : false,        
+        height : 200
 };
 
 //AUIGrid 칼럼 설정
@@ -50,10 +58,18 @@ var columnLayout = [
       }
     
     ];
+    
+var viewDetailcolumnLayout = [
+    { dataField:"salesOrdNo" ,headerText:"Order No", editable : false },
+    { dataField:"srvMemQuotNo" ,headerText:"SMQ No",editable : false },
+    { dataField:"totalAmt" ,headerText:"Amount",editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"}
+                    
+];
 
 $(document).ready(function(){
 	// 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    myViewDetailGridID = GridCommon.createAUIGrid("viewDetail_grid_wrap", viewDetailcolumnLayout,null,detailGridPros);
 });
 
 function fn_search(){
@@ -82,6 +98,72 @@ function _callBackQuotationPop(obj){
         $('#orderNo').val(obj.salesOrdNo);
         $('#quoNo').val(obj.srvMemQuotNo);
     }
+}
+
+
+//Layer close
+hideViewPopup=function(val){   
+  $(val).hide();
+}
+
+
+function fn_createBills(){
+	var rowCount = AUIGrid.getRowCount(myGridID);
+	
+	if(rowCount < 1){
+		Common.alert("<b>No record(s) found at Gridview.</b>");
+		return;
+	}else if (rowCount == 1){
+		fn_showRemark();
+	}else{
+		$("#viewDetail_wrap").show();
+		AUIGrid.resize(myViewDetailGridID);		
+		
+		//그리드 복사
+		AUIGrid.setGridData(myViewDetailGridID, AUIGrid.getGridData(myGridID));
+		
+		//Summary 값		
+		var amtArray = AUIGrid.getColumnValues(myGridID,"totalAmt");
+		var sum = 0;
+		for(i=0; i<amtArray.length; i++) {                
+            sum += amtArray[i];
+        }   		
+		$('#view_count').text(AUIGrid.getRowCount(myGridID));
+		$('#view_total').text('RM ' + sum);
+		
+	}
+}
+
+function fn_showRemark(){
+	hideViewPopup('#viewDetail_wrap');
+	$("#remark_wrap").show();
+	
+}
+
+function fn_save(){
+	//param data array
+    var data = GridCommon.getGridData(myGridID);
+    data.form = $("#remarkForm").serializeJSON();
+    
+    //Ajax 호출
+    Common.ajax("POST", "/payment/saveSrvMembershipBilling.do", data, function(result) {       
+    	var msg = '';    	
+    	if(result.message == 1){
+    		msg = '<b>Quotation successfully converted to membership sales.</b>';
+    	}else if (result.message == 99){
+    		msg = '<b>Failed to generate invoice. Please try again later.</b>';
+        }else if (result.message == 98){
+        	msg = '<b>Failed to convert to sales. Please try again later.</b>';                      
+        }else if (result.message == 97){
+    	    msg = '<b>Failed to save. Please try again later.</b>';    	   
+        }else {
+    	    msg = '<b>Failed to save. Please try again later.</b>';
+        }
+    	
+    	Common.alert(msg, function(){
+    		location.href = "/payment/initSrvMembershipBilling.do";
+        }); 
+    });
 }
 
 </script>
@@ -155,3 +237,101 @@ function _callBackQuotationPop(obj){
 	 
 	</section><!-- search_table end -->
 </section><!-- content end -->
+
+
+<!--------------------------------------------------------------- 
+    POP-UP (VIEW DETAIL)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="viewDetail_wrap" style="display:none;">
+    <header class="pop_header" id="viewDetail_pop_header">
+        <h1>VIEW DETAILS</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#viewDetail_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    
+    <section class="pop_body">
+        <section class="search_result"><!-- search_result start -->
+            <article class="grid_wrap"  id="viewDetail_grid_wrap" ></article>             
+        </section>
+        
+        <section class="search_table">
+	        <!-- table start -->
+	        <table class="type1">
+	            <caption>table</caption>
+	            <colgroup>
+	                <col style="width:165px" />
+	                <col style="width:*" />
+	                <col style="width:165px" />
+	                <col style="width:*" />
+	            </colgroup>
+	            <tbody>
+	                <tr>
+	                    <th scope="row">Count</th>
+	                    <td id="view_count"></td>
+	                    <th scope="row">Total</th>
+	                    <td id="view_total"></td>
+	                </tr>
+	            </tbody>  
+	        </table>
+	    </section>   
+        
+        <ul class="center_btns mt20" >
+            <b><h2>Do you want continue to proceed?</h2></b>
+        </ul>
+        <ul class="center_btns mt10" >
+            <li><p class="btn_blue2"><a href="javascript:fn_showRemark();">Yes</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:hideViewPopup('#viewDetail_wrap');">No</a></p></li>
+        </ul>        
+    </section>
+</div>
+<!-- popup_wrap end -->
+
+
+<!--------------------------------------------------------------- 
+    POP-UP (REMARK)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="remark_wrap" style="display:none;">
+    <header class="pop_header" id="remark_pop_header">
+        <h1>ADVANCE BILL REMARK</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#remark_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    
+    <form name="remarkForm" id="remarkForm"  method="post">
+    <section class="pop_body">
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">PO/LO No.</th>
+                        <td><input type="text" id="poNo" name="poNo" title="Purchase Order Number" placeholder="Purchase Order Number" class="w100p" /></td>                        
+                    </tr>
+                    <tr>
+                        <th scope="row">Remark</th>
+                        <td><textarea cols="20" rows="5" id="remark" name="remark" title="Remark" placeholder="Remark"></textarea></td>                                                
+                    </tr>
+                    <tr>
+                        <th scope="row">Invoice Remark</th>
+                        <td><textarea cols="20" rows="5" id="invcRemark" name="invcRemark" title="Invoice Remark" placeholder="Invoice Remark"></textarea></td>                        
+                    </tr>
+                </tbody>  
+            </table>
+        </section>   
+        
+        <ul class="center_btns mt10" >
+            <li><p class="btn_blue2"><a href="javascript:fn_save();">Save</a></p></li>           
+        </ul>        
+    </section>
+    </form>
+</div>
+<!-- popup_wrap end -->

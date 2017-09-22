@@ -178,6 +178,7 @@
         $("#invoiceNo").val(AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo"));
         confirmList();
         $('#_searchInvoice').hide();
+        $('#_searchInvoice').remove();
     }
     
     //Save
