@@ -18,4 +18,12 @@ public interface CcpCalculateService {
 	List<EgovMap> getOrderUnitList (Map<String, Object> params) throws Exception;
 	
 	EgovMap getCalViewEditField(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getCcpStusCodeList() throws Exception;
+	
+	List<EgovMap> getLoadIncomeRange(Map<String, Object> params) throws Exception;
+	
+	Map<String, Object> selectLoadIncomeRange(Map<String, Object> params) throws Exception;
+	
+	EgovMap selectCcpInfoByCcpId(Map<String, Object> params) throws Exception;
 }

@@ -1,6 +1,7 @@
 package com.coway.trust.web.sales.ccp;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,7 @@ public class CcpCalculateController {
 		
 		LOGGER.info("#############################################");
 		LOGGER.info("#############selectCalCcpListAjax Start");
+		LOGGER.info("############# params : " + params.get("calOrdNo"));
 		LOGGER.info("#############################################");
 		//Params Setting
 		
@@ -127,10 +129,22 @@ public class CcpCalculateController {
     	
     	fieldMap = ccpCalculateService.getCalViewEditField(params);
     	
+    	
+    	//loadIncomRange
+    	Map<String, Object> incomMap = new HashMap<String, Object>();
+    	incomMap = ccpCalculateService.selectLoadIncomeRange(params);
+    	
+    	
+    	//ccpId
+    	EgovMap ccpInfoMap = null;
+    	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
+    	
     	//Model
     	model.put("ccpId", params.get("ccpId"));
     	model.put("orderDetail", orderDetail);
     	model.put("fieldMap", fieldMap);
+    	model.put("incomMap", incomMap);
+    	model.put("ccpInfoMap", ccpInfoMap);
 			
 		//return 
 		if(resultVal > 1){
@@ -150,6 +164,28 @@ public class CcpCalculateController {
 		
 		return ResponseEntity.ok(unitList);
 		
+	}
+	
+	
+	@RequestMapping(value = "/getCcpStusCodeList")
+	public ResponseEntity<List<EgovMap>> getCcpStusCodeList() throws Exception{
+		
+		List<EgovMap> cList = null;
+		cList = ccpCalculateService.getCcpStusCodeList();
+		
+		return ResponseEntity.ok(cList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/getLoadIncomeRange")
+	public ResponseEntity<List<EgovMap>> getLoadIncomeRange(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> incomList = null;
+		
+		incomList = ccpCalculateService.getLoadIncomeRange(params);
+		
+		return ResponseEntity.ok(incomList);
 	}
 }
 

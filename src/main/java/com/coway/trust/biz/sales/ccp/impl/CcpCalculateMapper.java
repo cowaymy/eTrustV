@@ -21,5 +21,27 @@ public interface CcpCalculateMapper {
 	
 	List<EgovMap> countOrderUnit(Map<String, Object> params) throws Exception;
 	
-	EgovMap orderUnitSelectValue(Map<String, Object> params) throws Exception;
+	EgovMap comboUnitSelectValue(Map<String, Object> params) throws Exception;
+	
+	EgovMap getScorePointByEventID(Map<String, Object> params) throws Exception;
+	
+	double getScoreEventTotalRental(Map<String, Object> params) throws Exception;
+	
+	double getScoreEventTotalRos(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getScoreEventSuspension(Map<String, Object> params) throws Exception;
+	
+	EgovMap rentalSchemeStatusByOrdId(Map<String, Object> params) throws Exception;
+	
+	EgovMap rentalInstNoByOrdId (Map<String, Object> params )throws Exception;
+	
+	EgovMap getScoreEventExistCust(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getCcpStusCodeList() throws Exception;
+	
+	EgovMap getCcpByCcpId(Map<String, Object> params) throws Exception; // 1
+	
+	List<EgovMap> getIncomeRangeList(Map<String, Object> params) throws Exception;
+	
+	EgovMap selectCcpInfoByCcpId(Map<String, Object> params) throws Exception;
 }

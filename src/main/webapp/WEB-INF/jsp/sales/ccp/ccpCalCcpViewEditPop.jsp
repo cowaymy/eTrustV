@@ -2,29 +2,114 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 
+var optionUnit = { isShowChoose: false};
+
 $(document).ready(function() {
-	var mst = getMstId();
+    var mst = getMstId();
+    
+    var ordUnitSelVal = $("#_ordUnitSelVal").val();
+    var rosUnitSelVal = $("#_rosUnitSelVal").val();
+    var susUnitSelVal = $("#_susUnitSelVal").val();
+    var custUnitSelVal = $("#_custUnitSelVal").val();
+    
+    getUnitCombo(mst, 212  , ordUnitSelVal , '_ordUnit');
+    getUnitCombo(mst, 213  , rosUnitSelVal , '_ordMth');
+    getUnitCombo(mst, 216  , susUnitSelVal , '_ordSuspen');
+    getUnitCombo(mst, 210  , custUnitSelVal , '_ordExistingCust');  
+    
+   
+    CommonCombo.make("_statusEdit", "/sales/ccp/getCcpStusCodeList", '', '' , optionUnit); //Status
+    
+    doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCodeEdit', 'S'); //Reason
+    loadIncomeRange(); //Income Range ComboBox
+    
+    bind_RetrieveData();
+    
+    
+});//Doc Ready Func End
+
+function  bind_RetrieveData(){
+
+	//Ccp Status
+	var ccpStus = $("#_ccpStusId").val();
+	$("#_statusEdit").val(ccpStus);
 	
-	var unitSelVal = $("#_unitSelVal").val();
+	//pre Value
+	$("#_isPreVal").val("1");
 	
-	getUnitCombo(mst, 212  , unitSelVal , '_ordUnit');
-	getUnitCombo(mst, 213  , '' , '_ordMth');
-	getUnitCombo(mst, 216  , '' , '_ordSuspen');
-	getUnitCombo(mst, 210  , '' , '_ordExistingCust');  
-	
-	// $("#_ccpMasterId").val() == AISI hiddenISCompany
-	if($("#_ccpMasterId").val() == 1){ //Company 
+	//bind and Setting by CcpStatus
+	if(ccpStus == "1"){
 		
-		//Customer Id
-		//
+		$("#_incomeRangeEdit").attr("disabled" , false);
+		
+		$("#_rejectStatusEdit").val('');
+		$("#_rejectStatusEdit").attr("disabled" , "disabled");
+		
+		$("#_reasonCodeEdit").attr("disabled" , false);
+		$("#_spcialRem").attr("disabled" , false);
+		$("#_pncRem").attr("disabled" , false);
+		$("#_onHoldCcp").attr("disabled" , false);
+		$("#_summon").attr("disabled" , false);
+		$("#_letterOfUdt").attr("disabled" , false);
+		
+		if(isAllowSendSMS() == true){
+			
+		}
+		
+		
+		/* 
+       ;
+       
+
+        this.chkIsHold.Enabled = true;
+        this.chkIsSummons.Enabled = true;
+        this.chkIsLOU.Enabled = true;
+
+        if (this.IsAllowSendSMS())
+        {
+            PanelSMS.Visible = true;
+            btnSendSMS.Checked = true;
+            txtSMSMessage.Enabled = true;
+            this.SetSMSMessage();
+        }
+		 */
 		
 	}
+}
+
+function isAllowSendSMS(){
 	
-});
+	var isAllow = true;
+	var salesmanMemTypeID = 
+	
+	
+}
+
+function loadIncomeRange(){
+	
+	var ccpId = $("#_editCcpId").val();
+	var paramObj ={editCcpId : ccpId};
+	//param : editCcpId
+	 CommonCombo.make("_incomeRangeEdit", "/sales/ccp/getLoadIncomeRange", paramObj , '' , optionUnit); //Status
+	 
+	var rentPayModeId = $("#_rentPayModeId").val();
+	var applicantTypeId = $("#_applicantTypeId").val();
+	
+	if(rentPayModeId == 131){
+		
+		if(applicantTypeId == 964){
+			$("#_incomeRangeEdit").val("29");
+		}else{
+			$("#_incomeRangeEdit").val("22");
+		}
+		
+	}
+}
+
 
 function getMstId(){
-	
-	var mstId = $("#_ccpMasterId").val();
+    
+    var mstId = $("#_ccpMasterId").val();
     if(mstId == 0){
         mstId = 1;
     }else{
@@ -35,12 +120,35 @@ function getMstId(){
 }
 
 function getUnitCombo(mst , ctgryVal, selVal ,comId){
-	//_ccpMasterId
     
-    var unitJson = {ccpMasterId : mst ,  screCtgryTypeId : ctgryVal};
+    /* var unitJson = {ccpMasterId : mst ,  screCtgryTypeId : ctgryVal};
     var optionUnit = { isShowChoose: false};
-    CommonCombo.make(comId, "/sales/ccp/getOrderUnitList", unitJson, selVal , optionUnit);
+    var selectVal = ''; 
+    selectVal = selVal.trim();
+    CommonCombo.make(comId, "/sales/ccp/getOrderUnitList", unitJson, selectVal , optionUnit);  */
+    unitCombo("/sales/ccp/getOrderUnitList", mst, ctgryVal , selVal, comId, 'S');
+    
 }
+
+function unitCombo(url, mst , ctgryVal , selCode, obj , type, callbackFn){
+
+    $.ajax({
+        type : "GET",
+        url : getContextPath() + url,
+        data : {ccpMasterId : mst ,  screCtgryTypeId : ctgryVal},
+        dataType : "json",
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+            var rData = data;
+            doDefCombo(rData, selCode, obj , type,  callbackFn);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    });
+} ;
 
 //그리드 속성 설정
 var gridPros = {
@@ -124,6 +232,8 @@ function chgTab(tabNm) {
 
 <section class="pop_body"><!-- pop_body start -->
 <form id="_editForm">
+    <input type="text" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
+    
     <!--  from Basic -->
     <input type="hidden"  name="editOrdId" value="${orderDetail.basicInfo.ordId}">
     <input type="hidden" name="editAppTypeCode" value="${orderDetail.basicInfo.appTypeCode }">
@@ -139,8 +249,20 @@ function chgTab(tabNm) {
     <input type="hidden" name="ccpMasterId" value="${ccpMasterId}" id="_ccpMasterId">
     
     <!-- from FieldMap -->
-    <input type="hidden" id="_unitSelVal" value="${fieldMap.unitSelVal}">
+    <input type="hidden" id="_ordUnitSelVal" value="${fieldMap.ordUnitSelVal}">
+    <input type="hidden" id="_rosUnitSelVal" value="${fieldMap.rosUnitSelVal}">
+    <input type="hidden" id="_susUnitSelVal" value="${fieldMap.susUnitSelVal}">
+    <input type="hidden" id="_custUnitSelVal" value="${fieldMap.custUnitSelVal}">
     
+     <!-- from IncomMap -->
+     <input type="hidden" id="_rentPayModeId" name="rentPayModeId" value="${incomMap.rentPayModeId}">
+     <input type="hidden" id="_applicantTypeId" name="applicantTypeId" value="${incomMap.applicantTypeId}">
+     
+     <!-- from ccpInfoMap  -->
+     <input type="hidden" id="_ccpStusId" name="ccpStusId" value="${ccpInfoMap.ccpStusId}">
+    
+    <!-- previous -->
+    <input type="hidden" id="_isPreVal" >
 </form>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num5">
@@ -227,43 +349,35 @@ function chgTab(tabNm) {
     <th scope="row">Count</th>
     <td><span><b>${fieldMap.ordUnitCount }</b></span></td>
     <th scope="row">Point</th>
-    <td><span>text</span></td>
+    <td><span><b>${fieldMap.orderUnitPoint}</b></span></td>
 </tr>
 <tr>
     <th scope="row">Avg ROS Mth</th>
     <td> <select class="w100p" name="ordMth" id="_ordMth"></select></td>
     <th scope="row">Count</th>
-    <td><span>text</span></td>
+    <td><span><b>${fieldMap.rosCount}</b></span></td>
     <th scope="row">Point</th>
-    <td><span>text</span></td>
+    <td><span><b>${fieldMap.rosUnitPoint}</b></span></td> 
 </tr>
 <tr>
     <th scope="row">Suspension/Termination</th> 
     <td> <select class="w100p" name="ordSuspen" id="_ordSuspen"></select></td>
     <th scope="row">Count</th>
-    <td><span>text</span></td>
+    <td><span><b>${fieldMap.susUnitCount}</b></span></td>
     <th scope="row">Point</th>
-    <td><span>text</span></td>
+    <td><span><b>${fieldMap.susUnitPoint}</b></span></td>
 </tr>
 <tr>
     <th scope="row">Existing Customer</th>
     <td><select class="w100p" name="ordExistingCust" id="_ordExistingCust"></select></td>
     <th scope="row">Count</th>
-    <td><span>text</span></td>
+    <td><span><b>${fieldMap.custUnitCount}</b></span></td>
     <th scope="row">Point</th>
-    <td><span>text</span></td>
+    <td><span><b>${fieldMap.custUnitPoint}</b></span></td>
 </tr>
 <tr>
     <th scope="row">Total Point</th>
-    <td colspan="5"></td>
-</tr>
-<tr>
-    <th scope="row">GST Registration No</th>
-    <td colspan="3"><span>text</span></td>
-</tr>
-<tr>
-    <th scope="row">Remark</th>
-    <td colspan="3"><span>text</span></td>
+    <td colspan="5"><b>${fieldMap.totUnitPoint}</b></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -288,11 +402,11 @@ function chgTab(tabNm) {
 <tbody>
 <tr>
     <th scope="row">CCP Status</th>
-    <td><span>text</span></td>
+    <td><span><select class="w100p" name="statusEdit" id="_statusEdit"></select></span></td>
     <th scope="row">Income Range</th>
-    <td><span>text</span></td>
+    <td><span><select class="w100p" name="incomeRangeEdit" id="_incomeRangeEdit"></select></span></td>
     <th scope="row">Reject Status</th>
-    <td><span>text</span></td>
+    <td><span><select class="w100p" name="rejectStatusEdit" id="_rejectStatusEdit"></select></span></td>
 </tr>
 <tr>
     <th scope="row">FICO Score</th>
@@ -300,23 +414,23 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">CCP Feedback Code</th>
-    <td colspan="5"><span>text</span></td>
+    <td colspan="5"><span><select class="w100p" name="reasonCodeEdit" id="_reasonCodeEdit"></select></span></td>  
 </tr>
 <tr>
-    <th scope="row">pecial Remark</th>
-    <td colspan="5"><span>text</span></td>
+    <th scope="row">Special Remark</th>
+    <td colspan="5"><textarea cols="20" rows="5" id="_spcialRem" name="spcialRem"></textarea></td>
 </tr>
 <tr>
     <th scope="row">P &amp; C Remark</th>
-    <td colspan="5"><textarea cols="20" rows="5"></textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem"></textarea></td>
 </tr>
 <tr>
     <th scope="row">Letter Of Undertaking</th>
-    <td><span>text</span></td>
+    <td><span><input type="checkbox"  id="_letterOfUdt"  name="letterOfUdt"/></span></td>
     <th scope="row">Summon</th>
-    <td><span>text</span></td>
+    <td><span><input type="checkbox"  id="_summon"  name="summon"/></span></td>
     <th scope="row">On Hold CCP</th>
-    <td><span>text</span></td>
+    <td><span><input type="checkbox"  id="_onHoldCcp"  name="onHoldCcp"/></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
