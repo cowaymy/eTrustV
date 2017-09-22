@@ -71,8 +71,8 @@
 								{dataField:"category",headerText:"Category",width:"7%",visible:true,style :"aui-grid-user-custom-left"},
 								{dataField:"compntQty",headerText:"Qty",width:"5%",visible:true,style :"aui-grid-user-custom-right"},
 								{dataField:"compntUnitOfMeasure",headerText:"",width:100,visible:false},
-								{dataField:"validFromDt",headerText:"Valid from",width:"8%",visible:true},
-								{dataField:"validToDt",headerText:"Valid to",width:"8%",visible:true},
+								{dataField:"validFromDt",headerText:"Valid From",width:"8%",visible:true},
+								{dataField:"validToDt",headerText:"Valid To",width:"8%",visible:true},
 								{dataField:"chngNo",headerText:"",width:100,visible:false},
 								{dataField:"delIndict",headerText:"",width:100,visible:false},
 								{dataField:"dtRcordCrtOn",headerText:"",width:100,visible:false},
@@ -99,15 +99,15 @@
         // masterGrid 그리드를 생성합니다.
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions); // 셀병합으로  안씀
         myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridoptions);
-        doGetComboCDC('/logistics/bom/selectCdcList', '' , '' , '','srchCdc', 'S', '');
+        doGetComboCDC('/logistics/bom/selectCdcList', '' , '' , '','srchcdc', 'S', '');
         
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {   
         	 f_removeclass();
         	 $("#subDiv").show();
         	 $("#material_info").click();
-        		 $("#filter_info").show();
-                 $("#spare_info").show();
+       		 $("#filter_info").show();
+             $("#spare_info").show();
         	 
         });
 
@@ -360,37 +360,18 @@
 						<tr>
 							<th scope="row">Material Code</th>
 							<td>
-								<div class="date_set w100p">
-									<!-- date_set start -->
-									<p>
-										<select class="w100p" id="srchMaterialStart" name="srchMaterialStart">
-											<option value=""></option>
-											<option value="1">1</option>
-											<option value="1000">1000</option>
-											<option value="10000">10000</option>
-										</select>
-									</p>
-									<span>~</span>
-									<p>
-										<select class="w100p" id="srchMaterialEnd" name="srchMaterialEnd">
-											<option value=""></option>
-											<option value="1000">1000</option>
-											<option value="10000">10000</option>
-											<option value="100000">100000</option>
-										</select>
-									</p>
-								</div>
+								<input id="srchmtrcd" name="srchmtrcd" type="text" title=""  class="w100p" />
 								<!-- date_set end -->
 							</td>
 							<th scope="row">CDC</th>
-							<td><select class="w100p" id="srchCdc" name="srchCdc">
+							<td><select class="w100p" id="srchcdc" name="srchcdc">
 							</td>
 							<th scope="row">Valid From Date</th>
 							<td><div class="date_set">
 									<!-- date_set start -->
 									<p>
 										<input type="text" title="Create start Date"
-											placeholder=" " class="j_date" id="srchValid" name="srchValid"/>
+											class="j_date" id="srchValid" name="srchValid" placeholder="DD/MM/YYYY"/>
 									</p>
 								</div></td>
 						</tr>

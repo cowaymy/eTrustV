@@ -2,12 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.bom.impl.BomMapper">
     <select id="selectCdcList" parameterType="Map" resultType="EgovMap">
-	SELECT   
-	    WH_LOC_ID code_id,
-	    DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) code_name
-	    FROM SYS0028M
-	  WHERE WH_LOC_TYPE_ID = 277
-	       ORDER BY WH_LOC_CODE
+		SELECT   
+		         WH_LOC_ID CODE_ID
+		        ,WH_LOC_CODE CODE_CODE
+		        ,DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) CODE_NAME
+		    FROM SYS0028M
+		      WHERE WH_LOC_GB = 01
+		      ORDER BY CODE_NAME
     </select>
     
     <select id="selectBomList" parameterType="Map" resultType="egovMap">
@@ -41,29 +42,21 @@
             d.CHNG_ON  chng_on ,
             d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj
         FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
-         /* ,LOG0056M l  */
+                ,LOG0056M l  
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
               AND sm.CODE_ID = m2.STK_TYPE_ID
-             /* AND d.BOM_COMPNT = l.STK_CODE */
-             <choose>
-                <when test="bom != null and categoryid != null">
-	              AND m.BOM=#{bom}
-	              AND sm.CODE_ID=#{categoryid}
-                </when>
-                <otherwise>
-	              <if test="srchMaterialStart != null and srchMaterialEnd != null and srchMaterialStart != '' and srchMaterialEnd != ''">
-	              AND m.BOM BETWEEN #{srchMaterialStart} AND #{srchMaterialEnd} 
-	              </if>  
-	             <if test="srchCdc != null and srchCdc != ''">
-	               AND LOC_ID=#{srchCdc}
-	              </if>  
-	             <if test="srchValid != null and srchValid != ''">
+              AND d.BOM_COMPNT = l.STK_CODE (+)
+	           <if test="srchmtrcd != null and srchmtrcd!= ''">
+	              AND m.MATRL_NO LIKE  #{srchmtrcd}||'%'
+	          </if>  
+	          <if test="srchcdc != null and srchcdc != ''">
+	               AND m.PLANT=#{srchcdc}
+	          </if>  
+	           <if test="srchValid != null and srchValid != ''">
 	              AND TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY') = TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'DD/MM/YYYY')
-	              </if>  
-                </otherwise>
-             </choose>
-              ORDER BY m.BOM, d.BOM_ITM_NODE_NO 
+	           </if>  
+                ORDER BY m.BOM, d.BOM_ITM_NODE_NO 
     </select>
      <select id="materialInfo" parameterType="Map" resultType="egovMap">
         SELECT 
