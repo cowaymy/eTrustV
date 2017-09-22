@@ -130,7 +130,6 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
             // 셀 더블클릭 이벤트 바인딩
             AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
             {
-                alert("dasdasdas");
                  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                    if (selectedItem[0] > -1){
                      dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
@@ -189,14 +188,12 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
              
             $("#Approval_info").click(function(){
                  div="Approval_info";
-                 alert("Approval_info 클릭");
                  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
                  dcfreqentryid = AUIGrid.getCellValue(myGridID ,selectedItem[0],'dcfreqentryid');
                  getDetailInfoListAjax(dcfreqentryid,div);
             }); 
             $("#Compulsory_info").click(function(){
                 div="Compulsory";
-                alert("Compulsory_info 클릭");
                 destory(CompulsoryFieldGridID);
                 
                 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -207,7 +204,6 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
             });
             $("#ChangeItem_info").click(function(){
                 div="ChangeItem";
-                alert("ChangeItem_info 클릭");
                 destory(ChangeItemGridID);
                 
                 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -218,7 +214,6 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
             });
             $("#RespondLog_info").click(function(){
                 div="RespondLog";
-                alert("RespondLog_info 클릭");
                 destory(RespondLogGridID);
                 
                 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -247,10 +242,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 } 
     
     function getDetailInfoListAjax(dcfreqentryid,div) {
-        alert(div);
-        alert("에이작스 통과!!!!");
         var param;      
-        
         param={"dcfreqentryid" :dcfreqentryid };
         
         Common.ajax("POST", "/logistics/helpdesk/DetailInfoList.do", param, function(result) {
