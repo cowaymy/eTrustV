@@ -258,7 +258,7 @@ var billingTargetLayout = [
 	            return;
 	            
 	        }
-			
+	        
 	        var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
 	        var allItems = AUIGrid.getGridData(billingscheduleGridId);
 	        var valid = true;
