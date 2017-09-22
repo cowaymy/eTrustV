@@ -397,23 +397,23 @@
 <tbody>
 <tr>
     <th scope="row">Courier Code</th>
-    <td><input type="text" name="srchCourierCd" id="srchCourierCd"  /></td>
+    <td><input type="text" name="srchCourierCd" id="srchCourierCd" class="w100p" /></td>
     <th scope="row">Courier Name</th>
-    <td><input type="text" name="srchCourierNm" id="srchCourierNm"  /></td>
+    <td><input type="text" name="srchCourierNm" id="srchCourierNm"  class="w100p"/></td>
     <th scope="row">Courier Registration No</th>
-    <td><input type="text" name="srchRegNo" id="srchRegNo"  /></td>
+    <td><input type="text" name="srchRegNo" id="srchRegNo"  class="w100p"/></td>
     <th>Contact No</th>
-    <td><input type="text" name="srchcontactNo" id="srchcontactNo"  /></td>
+    <td><input type="text" name="srchcontactNo" id="srchcontactNo"  class="w100p"/></td>
 </tr>
 <tr>
     <th>Country</th>
-    <td><select id="srchCntry" name="srchCntry"  onchange="getAddrRelay2('srchState' ,'search', 'state','')"></select></td>
+    <td><select id="srchCntry" name="srchCntry" class="w100p" onchange="getAddrRelay2('srchState' ,'search', 'state','')"></select></td>
     <th>State</th>
-    <td><select  id="srchState" name="srchState" onchange="getAddrRelay2('srchArea'  ,'search', 'area' ,'')"></select></td>
+    <td><select  id="srchState" name="srchState" class="w100p" onchange="getAddrRelay2('srchArea'  ,'search', 'area' ,'')"></select></td>
     <th>Area</th>
-    <td><select  id="srchArea" name="srchArea"   onchange="getAddrRelay2('srchPstCd' ,'search', 'post' ,'')"></select></td>
+    <td><select  id="srchArea" name="srchArea"  class="w100p" onchange="getAddrRelay2('srchPstCd' ,'search', 'post' ,'')"></select></td>
     <th>PostCode</th>
-    <td><select  id="srchPstCd" name="srchPstCd"></select></td>
+    <td><select  id="srchPstCd" name="srchPstCd" class="w100p"></select></td>
 </tr>
 </tbody>
 </table><!-- table end -->
