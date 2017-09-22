@@ -64,7 +64,7 @@ var reqcolumnLayout;
 
  //var resop = {rowIdField : "rnum", showRowCheckColumn : true,showRowAllCheckBox : true,usePaging : true,useGroupingPanel : false , Editable:false};
  var subgridpros = {
-		 rowIdField : "rnum", 
+		// rowIdField : "rnum", 
          // 페이지 설정
          usePaging : true,                
          pageRowCount : 20,                
@@ -108,14 +108,18 @@ var reqcolumnLayout;
 SearchSessionAjax();
 
 
+
+
+
+
 // var paramdatas = { groupCode : '306' ,Codeval: 'OH' , orderValue : 'CODE' , likeValue:''};
 // doGetComboData('/common/selectCodeList.do', paramdatas, '','smtype', 'S' , '');
 
 
 var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
-var LocData = {sLoc : userCode};
+var LocData = {sLoc : UserCode};
      doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
-     doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , '');
+     doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , 'f_LocMultiCombo');
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
       doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombos'); 
       $("#giopenwindow").hide();
@@ -405,7 +409,16 @@ function f_validatation(v){
 	            Common.alert("Please Select PosItemType.");
 	            return false;
 	        }
+	        
+	        if ($("#insReqLoc").val() == null || $("#insReqLoc").val() == undefined || $("#insReqLoc").val() == ""){
+                Common.alert("Please Select Request Location.");
+                return false;
+            }
+	        
 	    }
+	
+	
+	
 	
     if(v == 'save'){
         
@@ -508,7 +521,7 @@ function SearchSessionAjax() {
     var url = "/logistics/pos/SearchSessionInfo.do";
     Common.ajaxSync("GET" , url , '' , function(result){
 
-    	userCode=result.UserCode;
+    	UserCode=result.UserCode;
     	$("#insRequestor").val(result.UserName);
     });
 }
@@ -527,6 +540,14 @@ function f_multiCombos() {
         }).multipleSelect({
             selectAll : true
         }).multipleSelect("checkAll"); 
+    });
+}
+
+function f_LocMultiCombo() {
+    $(function() {
+        $('#insReqLoc').change(function() {
+        	$("#reqLoc").val($("#insReqLoc").val());
+        });
     });
 }
 
@@ -810,6 +831,7 @@ function saveSerialAjax(){
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" >
 <input type="hidden" id="slocation" name="slocation">
+<input type="hidden" id="reqLoc" name="reqLoc">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
