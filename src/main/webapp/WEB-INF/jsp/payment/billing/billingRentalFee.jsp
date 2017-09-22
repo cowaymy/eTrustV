@@ -46,7 +46,7 @@ var gridPros2 = {
         
 
         rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-            if(item.name == "Completed") {
+            if(item.billingStus == "Completed") {
                 return false; 
             }
             return true;
