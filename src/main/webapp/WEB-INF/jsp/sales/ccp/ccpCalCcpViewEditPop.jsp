@@ -80,7 +80,7 @@ function  bind_RetrieveData(){
 function isAllowSendSMS(){
 	
 	var isAllow = true;
-	var salesmanMemTypeID = 
+	//var salesmanMemTypeID  = 0;
 	
 	
 }
