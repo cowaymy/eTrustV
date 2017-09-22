@@ -217,7 +217,8 @@
             $("#detailView").hide();
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
-            	fn_deleteWare(selectedItem[0]);
+        
+            //	fn_deleteWare(selectedItem[0]);
             }else{
             Common.alert('Choice Data please..');
             }
