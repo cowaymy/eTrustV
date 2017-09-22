@@ -516,7 +516,7 @@ var Common = {
     alert: function (message, callback) {
 
         if(FormUtil.isEmpty(message)){
-            alert("message parameter  is empty !!!!!!");
+            console.log("message parameter  is empty !!!!!!");
             return;
         }
 
