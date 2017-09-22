@@ -42,7 +42,9 @@ var userCode;
                       {dataField:"locDesc"        ,headerText:"Location"               ,width:120    ,height:30 },
                       {dataField:"qty"       ,headerText:"QTY"               ,width:120    ,height:30},
                       {dataField:"movQty"      ,headerText:"Move QTY"       ,width:120    ,height:30                },
-                      {dataField:"bookingQty"        ,headerText:"Booking QTY"         ,width:120    ,height:30                }];                     
+                      {dataField:"bookingQty"        ,headerText:"Booking QTY"         ,width:120    ,height:30                },
+                      {dataField:"availableQty"        ,headerText:"Available Qty"         ,width:120    ,height:30                }
+                      ];                     
                                     
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
 var gridoptions = {
@@ -127,9 +129,9 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-
+    	if (f_validatation()){
         SearchListAjax();
-
+    	}
     });
 
 });
@@ -138,7 +140,7 @@ function SearchSessionAjax() {
     var url = "/logistics/totalstock/SearchSessionInfo.do";
     Common.ajaxSync("GET" , url , '' , function(result){
         userCode=result.UserCode;
-
+        $("#LocCode").val(userCode);
     });
 }
 
@@ -151,6 +153,25 @@ function SearchListAjax() {
         
     });
 }
+
+function f_validatation(v){
+             
+            if ($("#searchLoc").val() == null || $("#searchLoc").val() == undefined || $("#searchLoc").val() == ""){
+                Common.alert("Please Select Location.");
+                return false;
+            }
+            return true;
+}
+
+function f_LocMultiCombo() {
+    $(function() {
+        $('#searchLoc').change(function() {
+         	
+            $("#searchLoc").val(userCode);
+        });
+    });
+}
+
 
 function f_multiCombo() {
     $(function() {
@@ -169,13 +190,15 @@ function f_multiCombos() {
     });
 }
 
+
+
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Point Of Sales List</li>
+    <li>Total Stock List</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -195,7 +218,7 @@ function f_multiCombos() {
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
-        <input type="hidden" name="rStcode" id="rStcode" />    
+        <input type="hidden" name="LocCode" id="LocCode" />    
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
