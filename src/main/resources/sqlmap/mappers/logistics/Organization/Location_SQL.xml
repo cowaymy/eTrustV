@@ -190,13 +190,6 @@
           SELECT WH_LOC_ID locid,
                  WH_LOC_CODE loccd,
                  WH_LOC_DESC locdesc,
-                 WH_LOC_ADD1 locaddr1,
-                 WH_LOC_ADD2 locaddr2,
-                 WH_LOC_ADD3 locaddr3,
-                 WH_LOC_AREA_ID locarea,
-                 WH_LOC_POST_CODE_ID locpost,
-                 WH_LOC_STATE_ID locstat,
-                 WH_LOC_CNTY_ID loccnty,
                  WH_LOC_TEL1 loctel1,
                  WH_LOC_TEL2 loctel2,
                  WH_LOC_BRNCH_ID loc_branch,
@@ -207,20 +200,7 @@
                  WH_LOC_UPD_DT locupddt,
                  CODE2 code2,
                  DESC2 desc2,
-                 (SELECT AREA_NAME
-                    FROM SYS0039M
-                   WHERE AREA_ID = s28m.WH_LOC_AREA_ID)
-                    areanm,
-                 (SELECT POST_CODE
-                    FROM SYS0030C
-                   WHERE POST_CODE_ID = s28m.WH_LOC_POST_CODE_ID)
-                    postcd,
-                 s35m.code,
-                 s35m.name,
-                 (SELECT NAME
-                    FROM SYS0015M
-                   WHERE CNTY_ID = s28m.WH_LOC_CNTY_ID)
-                    countrynm,
+                 WH_LOC_GB locgb,
                  s05m.code branchcd,
                  s05m.name branchnm,
                  s05m.dcode,
@@ -229,10 +209,8 @@
                     FROM SYS0013M
                    WHERE code_id = s28m.WH_LOC_TYPE_ID)
                     codenm,
-                 s38m.name statnm,
-                 s47m.user_name
+                 s38m.name statnm
             FROM SYS0028M s28m,
-                 SYS0035M s35m,
                  (SELECT s05m.brnch_id,
                          s05m.code,
                          s05m.name,
@@ -240,19 +218,15 @@
                          s13m.CODE_DESC descr
                     FROM SYS0005M s05m, SYS0013M s13m
                    WHERE s05m.type_id = s13m.code_id(+)) s05m,
-                 SYS0038M s38m,
-                 SYS0047M s47m
-                 ]]>
-           WHERE     s28m.WH_LOC_TYPE_ID = 277
-                 AND s28m.WH_LOC_STATE_ID = s35m.STATE_ID(+)
-                 AND s28m.WH_LOC_BRNCH_ID = s05m.BRNCH_ID(+)
-                 AND s28m.WH_LOC_STUS_ID = s38m.STUS_CODE_ID(+)
-                 AND s28m.WH_LOC_UPD_USER_ID = s47m.USER_ID(+)
+                 SYS0038M s38m
+           WHERE     s28m.WH_LOC_BRNCH_ID    = s05m.BRNCH_ID(+)
+             AND     s28m.WH_LOC_STUS_ID     = s38m.STUS_CODE_ID(+)
+             ]]>
                  <if test="scode != null and scode !=''">
-                      AND s28m.WH_LOC_CODE  like '%'||#{scode}||'%'
+                      AND UPPER(s28m.WH_LOC_CODE)  like '%'||UPPER(#{scode})||'%'
                  </if>
                  <if test="sname != null and sname !=''">
-                      AND s28m.WH_LOC_DESC like '%'||#{sname}||'%'
+                      AND UPPER(s28m.WH_LOC_DESC) like '%'||UPPER(#{sname})||'%'
                  </if>
         ORDER BY WH_LOC_CODE        
     </select>

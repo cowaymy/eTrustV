@@ -112,10 +112,10 @@ var stockLayout = [ { dataField : "itemid",     headerText : "itemid",      widt
                    { dataField : "typeid",headerText : "Type", width : 120, visible:false  }];     
 
 var locLayout = [
-	                     {dataField:"locid"      ,headerText:"WH_Id"           ,width:120  ,height:30 , visible:false},
-		                 {dataField:"loccd"      ,headerText:"WH_Code"           ,width:"15%" ,height:30 , visible:true},
-		                 {dataField:"locdesc"    ,headerText:"WH_Description"    ,width:"45%" ,height:30 , visible:true,style :"aui-grid-user-custom-left"},
-		                 {dataField:"locaddr1"   ,headerText:"locaddr1"       ,width:120 ,height:30 , visible:false},
+	                     {dataField:"locid"      ,headerText:"WH_Id"          ,width:120  ,height:30 , visible:false},
+		                 {dataField:"loccd"      ,headerText:"WH_Code"        ,width:"15%" ,height:30 , visible:true},
+		                 {dataField:"locdesc"    ,headerText:"WH_Description" ,width:"45%" ,height:30 , visible:true,style :"aui-grid-user-custom-left"},
+		                 {dataField:"locgb"      ,headerText:"locgb"          ,width:120 ,height:30 , visible:false},
 		                 {dataField:"locaddr2"   ,headerText:"locaddr2"       ,width:140 ,height:30 , visible:false},
 		                 {dataField:"locaddr3"   ,headerText:"locaddr3"       ,width:120 ,height:30 , visible:false},
 		                 {dataField:"locarea"    ,headerText:"locarea"        ,width:120 ,height:30 , visible:false},

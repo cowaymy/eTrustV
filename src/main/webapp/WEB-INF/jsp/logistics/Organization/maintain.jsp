@@ -306,7 +306,7 @@ $(document).ready(function(){
                      }
                     ,{dataField:"ptype"     ,headerText:"ptype"  ,  editable : false , visible:false}
                    ];
-    var options = {usePaging : true,useGroupingPanel : false};
+    var options = {usePaging : true,useGroupingPanel : false , showStateColumn : true};
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"ptype", options);
     
     AUIGrid.bind(myGridID, "addRow", function(event){});

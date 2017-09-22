@@ -72,6 +72,13 @@ public class StocktransferController {
 
 		return "logistics/StockTrans/StockTransferReceiptList";
 	}
+	
+	@RequestMapping(value = "/test.do")
+	public String StockTransfertest(Model model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return "logistics/StockTrans/test";
+	}
 
 	@RequestMapping(value = "/StocktransferList.do")
 	public String stocklist(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
