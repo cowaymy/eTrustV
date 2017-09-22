@@ -11,6 +11,11 @@
     var pgwBrowser;
 
     $(function () {
+
+        if("${exception}" == "401"){
+            Common.alert("<spring:message code='sys.msg.session.expired'/>");
+        }
+
         pgwBrowser = $.pgwBrowser();
         $("#loginOs").val(pgwBrowser.os.name);
         $("#loginBrowser").val(pgwBrowser.browser.name + " " + pgwBrowser.browser.fullVersion);
