@@ -1,6 +1,8 @@
 package com.coway.trust.cmmn.model;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class LoginVO {
 
@@ -30,7 +32,9 @@ public class LoginVO {
 	private String securityQuestion;
 	private String userSecQuesAns;
 	private String userPassWord;
-	
+
+	private List<LoginSubAuthVO> loginSubAuthVOList;
+
 	public String getDiffDay() {
 		return diffDay;
 	}
@@ -238,6 +242,15 @@ public class LoginVO {
 	public void setUserPassWord(String userPassWord) {
 		this.userPassWord = userPassWord;
 	}
-		
-	
+
+	public List<LoginSubAuthVO> getLoginSubAuthVOList() {
+		if (loginSubAuthVOList == null) {
+			loginSubAuthVOList = Collections.emptyList();
+		}
+		return loginSubAuthVOList;
+	}
+
+	public void setLoginSubAuthVOList(List<LoginSubAuthVO> loginSubAuthVOList) {
+		this.loginSubAuthVOList = loginSubAuthVOList;
+	}
 }

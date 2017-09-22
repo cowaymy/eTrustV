@@ -52,6 +52,21 @@
         ]]>
 	</select>
 
+    <select id="selectSubAuthInfo" parameterType="Map" resultType="loginSubAuthVO">
+        <![CDATA[
+        SELECT a.user_id
+                , a.auth_div_code
+                , (SELECT a.code_name
+                     FROM SYS0013M a
+                    WHERE a.code_master_id = 316
+                      AND a.code = a.auth_div_code) AS auth_div_name
+                , auth_code
+             FROM SYS0058M a
+            WHERE a.user_id = #{userId}
+              AND TO_CHAR(SYSDATE,'YYYYMMDDHH24') BETWEEN a.valid_dt_from|| '00' AND a.valid_dt_to || '23'
+        ]]>
+    </select>
+
     <select id="selectLanguages" resultType="egovMap">
     <![CDATA[
 

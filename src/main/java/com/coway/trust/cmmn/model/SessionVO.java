@@ -1,9 +1,11 @@
 package com.coway.trust.cmmn.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
-public class SessionVO implements Serializable{
+public class SessionVO implements Serializable {
 
 	private int userId;
 	private String userName; // AS-IS 에서 userName을 실제적인 로그인 ID로 사용함.
@@ -23,6 +25,8 @@ public class SessionVO implements Serializable{
 	private int userBranchId;
 	private String branchName;
 	private String deptName;
+
+	private List<LoginSubAuthVO> loginSubAuthVOList;
 
 	public int getUserId() {
 		return userId;
@@ -168,6 +172,17 @@ public class SessionVO implements Serializable{
 		this.deptName = deptName;
 	}
 
+	public List<LoginSubAuthVO> getLoginSubAuthVOList() {
+		if (loginSubAuthVOList == null) {
+			loginSubAuthVOList = Collections.emptyList();
+		}
+		return loginSubAuthVOList;
+	}
+
+	public void setLoginSubAuthVOList(List<LoginSubAuthVO> loginSubAuthVOList) {
+		this.loginSubAuthVOList = loginSubAuthVOList;
+	}
+
 	public static SessionVO create(LoginVO loginVO) {
 		SessionVO sessionVO = new SessionVO();
 
@@ -190,6 +205,8 @@ public class SessionVO implements Serializable{
 			sessionVO.setBranchName(loginVO.getBranchName());
 			sessionVO.setUserBranchId(loginVO.getUserBranchId());
 			sessionVO.setDeptName(loginVO.getDeptName());
+
+			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
 		}
 
 		return sessionVO;

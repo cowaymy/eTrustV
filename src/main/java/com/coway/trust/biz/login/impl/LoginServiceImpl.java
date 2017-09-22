@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
+import com.coway.trust.cmmn.model.LoginSubAuthVO;
 import com.coway.trust.cmmn.model.LoginVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -41,6 +42,10 @@ public class LoginServiceImpl implements LoginService {
 	public LoginVO getLoginInfo(Map<String, Object> params) {
 		LOGGER.debug("loginInfo");
 		LoginVO loginVO = loginMapper.selectLoginInfo(params);
+
+		params.put("userId", loginVO.getUserId());
+		List<LoginSubAuthVO> loginSubAuthVOList = loginMapper.selectSubAuthInfo(params);
+		loginVO.setLoginSubAuthVOList(loginSubAuthVOList);
 		return loginVO;
 	}
 

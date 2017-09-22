@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.login.LoginHistory;
+import com.coway.trust.cmmn.model.LoginSubAuthVO;
 import com.coway.trust.cmmn.model.LoginVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -12,6 +13,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("loginMapper")
 public interface LoginMapper {
 	LoginVO selectLoginInfo(Map<String, Object> params);
+
+	List<LoginSubAuthVO> selectSubAuthInfo(Map<String, Object> params);
 
 	LoginVO selectFindUserIdPop(Map<String, Object> params);
 
