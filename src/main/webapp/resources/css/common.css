@@ -97,6 +97,7 @@
 .title_line .fav a{display:block; width:19px; height:18px; background:url(../images/common/icon_star.gif) no-repeat; text-indent:-1000em; overflow:hidden;}
 .title_line .fav a.on{background-position:100% 0;}
 .title_line h2{float:left; font-size:20px; color:#25527c; font-weight:normal;}
+.title_line h2.total_text{font-size:12px; color:#25527c; font-weight:bold;}
 .title_line h3{float:left; padding:10px 0 0 0; font-size:13px; color:#25527c;}
 .title_line h4{position:relative; float:left;padding:10px 0 0 0; font-size:12px; color:#333;}
 .title_line .right_opt{float:right;}
@@ -312,6 +313,8 @@ table.type2.acodi .aco_tr{display:none;}
 .auto_file label input[type=text],
 .auto_file2 label input[type=text]{width:100%!important;}
 .auto_file2 label input[type=text]{width:237px!important; float:left}
+.auto_file2.attachment_file label{float:left; width:407px;}
+.auto_file2.attachment_file label input[type=text]{width:345px!important; float:left}
 .auto_file label span.label_text{position:absolute; top:0; right:0;}
 .auto_file2 span.label_text{float:left;}
 .auto_file label span.label_text a,
