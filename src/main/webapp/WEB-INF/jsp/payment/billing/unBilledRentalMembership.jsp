@@ -20,7 +20,7 @@ var gridPros = {
         editable : false,
         
         // 상태 칼럼 사용
-        showStateColumn : false,
+        showStateColumn : false
 };
 var gridPros2 = {
         // 편집 가능 여부 (기본값 : false)
@@ -49,7 +49,6 @@ var gridPros3 = {
         // 전체 체크박스 표시 설정
         showRowAllCheckBox : true,
         softRemoveRowMode:false
-        //independentAllCheckBox : true
        
 };
 
