@@ -284,52 +284,76 @@ var billingTargetLayout = [
             }
 			
 	        var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
-	        var bool = true;
+	        var allItems = AUIGrid.getGridData(billingscheduleGridId);
+	        var valid = true;
 	        if (checkedItems.length > 0){
-	            var item = new Object();
-	            var rowList = [];
-	            for (var i = 0 ; i < checkedItems.length ; i++){
-	                rowList[i] = {
-	                		salesOrdNo : checkedItems[i].salesOrdNo,
-	                		installment : checkedItems[i].installment,
-	                		schdulDt : checkedItems[i].schdulDt,
-	                		billType : checkedItems[i].billType,
-	                		billAmt : checkedItems[i].billAmt,
-	                		billingStus : checkedItems[i].billingStus,
-	                		salesOrdId : checkedItems[i].salesOrdId
-	                        }
-	                
-	                AUIGrid.removeCheckedRows(billingscheduleGridId);
-	                AUIGrid.addRow(billingTargetGridId, rowList[i], "first");
-
-	            }
-	            AUIGrid.setSorting(billingTargetGridId, sortingInfo);
-	        }
+                var item = new Object();
+                var rowList = [];
+                var j=0;
+                
+                for (var i = 0 ; i < checkedItems.length ; i++){
+                	alert(Number(allItems[0].installment + j) +"   ,"+Number(checkedItems[i].installment));
+                    if(Number(allItems[0].installment + j) <  Number(checkedItems[i].installment)){
+                        valid = false;
+                    }else{
+                        rowList[i] = {
+                                salesOrdNo : checkedItems[i].salesOrdNo,
+                                installment : checkedItems[i].installment,
+                                schdulDt : checkedItems[i].schdulDt,
+                                billType : checkedItems[i].billType,
+                                billAmt : checkedItems[i].billAmt,
+                                billingStus : checkedItems[i].billingStus,
+                                salesOrdId : checkedItems[i].salesOrdId
+                                }
+                    }
+                    j= j + 1;
+                }
+                
+                if(valid){
+                    AUIGrid.addRow(billingTargetGridId, rowList, "first");
+                    AUIGrid.removeCheckedRows(billingscheduleGridId);
+                    AUIGrid.setSorting(billingTargetGridId, sortingInfo);   
+                }else{
+                    Common.alert("Can not skip the previous unbilled schedules.");
+                }
+            }
 	    });
 		
 		$("#btnRemoveBillTarget").click(function(){
-            var checkedItems = AUIGrid.getCheckedRowItemsAll(billingTargetGridId);
-            var bool = true;
+			var checkedItems = AUIGrid.getCheckedRowItemsAll(billingTargetGridId);
+            var allItems = AUIGrid.getGridData(billingTargetGridId);
+            var valid = true;
+            
             if (checkedItems.length > 0){
+                
                 var item = new Object();
                 var rowList = [];
-                for (var i = 0 ; i < checkedItems.length ; i++){
-                    rowList[i] = {
-                            salesOrdNo : checkedItems[i].salesOrdNo,
-                            installment : checkedItems[i].installment,
-                            schdulDt : checkedItems[i].schdulDt,
-                            billType : checkedItems[i].billType,
-                            billAmt : checkedItems[i].billAmt,
-                            billingStus : checkedItems[i].billingStus,
-                            salesOrdId : checkedItems[i].salesOrdId
-                            }
+                var j = 0;
+                for (var i = checkedItems.length-1 ; i >= 0; i--){
                     
-                    AUIGrid.removeCheckedRows(billingTargetGridId);
-                    AUIGrid.addRow(billingscheduleGridId, rowList[i], "first");
-                    
+                    if(Number(allItems[allItems.length-1].installment - j) >  Number(checkedItems[i].installment)){
+                        valid = false;
+                    }else{
+                        rowList[i] = {
+                                salesOrdNo : checkedItems[i].salesOrdNo,
+                                installment : checkedItems[i].installment,
+                                schdulDt : checkedItems[i].schdulDt,
+                                billType : checkedItems[i].billType,
+                                billAmt : checkedItems[i].billAmt,
+                                billingStus : checkedItems[i].billingStus,
+                                salesOrdId : checkedItems[i].salesOrdId
+                                }
+                    }
+                    j = j + 1;
                 }
-                AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
                 
+                if(valid){
+                    AUIGrid.addRow(billingscheduleGridId, rowList, "first");
+                    AUIGrid.removeCheckedRows(billingTargetGridId);
+                    AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
+                }else{
+                    Common.alert("Remove latest one.");
+                }
             }
         });
 		
