@@ -454,7 +454,19 @@ public class CcpCalculateServiceImpl implements CcpCalculateService {
 		
 		return ccpCalculateMapper.selectCcpInfoByCcpId(params);
 	}
-	
-	
+
+
+	@Override
+	public EgovMap selectSalesManViewByOrdId(Map<String, Object> params) throws Exception {
+		
+		return ccpCalculateMapper.selectSalesManViewByOrdId(params);
+	}
+
+
+	@Override
+	public List<EgovMap> getCcpRejectCodeList() throws Exception {
+		
+		return ccpCalculateMapper.getCcpRejectCodeList();
+	}
 	
 }

@@ -108,6 +108,8 @@ public class CcpCalculateController {
     	params.put("salesOrderId", params.get("salesOrdId"));
     	//service1
     	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+    	EgovMap salesMan = ccpCalculateService.selectSalesManViewByOrdId(params);
+    	
     	
     	EgovMap tempMap = null;
     	tempMap = (EgovMap)orderDetail.get("basicInfo");
@@ -145,6 +147,7 @@ public class CcpCalculateController {
     	model.put("fieldMap", fieldMap);
     	model.put("incomMap", incomMap);
     	model.put("ccpInfoMap", ccpInfoMap);
+    	model.put("salesMan", salesMan);
 			
 		//return 
 		if(resultVal > 1){
@@ -178,6 +181,18 @@ public class CcpCalculateController {
 	}
 	
 	
+	@RequestMapping(value = "/getCcpRejectCodeList")
+	public ResponseEntity<List<EgovMap>> getCcpRejectCodeList() throws Exception{
+		
+		List<EgovMap> rList = null;
+		
+		rList = ccpCalculateService.getCcpRejectCodeList();
+		
+		return ResponseEntity.ok(rList);
+		
+	}
+	
+	
 	@RequestMapping(value = "/getLoadIncomeRange")
 	public ResponseEntity<List<EgovMap>> getLoadIncomeRange(@RequestParam Map<String, Object> params) throws Exception{
 		
@@ -186,6 +201,18 @@ public class CcpCalculateController {
 		incomList = ccpCalculateService.getLoadIncomeRange(params);
 		
 		return ResponseEntity.ok(incomList);
+	}
+	
+	
+	@RequestMapping(value = "/getFicoScoreByAjax")
+	public ResponseEntity<EgovMap> getFicoScoreByAjax(@RequestParam Map<String, Object> params) throws Exception{
+		//ccpId
+		LOGGER.info("###########  CCPINFO AJAX Params : " + params.toString());
+    	EgovMap ccpInfoMap = null;
+    	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
+    	
+    	return ResponseEntity.ok(ccpInfoMap);
+		
 	}
 }
 

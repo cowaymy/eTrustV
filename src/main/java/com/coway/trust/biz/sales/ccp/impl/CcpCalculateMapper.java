@@ -39,9 +39,13 @@ public interface CcpCalculateMapper {
 	
 	List<EgovMap> getCcpStusCodeList() throws Exception;
 	
+	List<EgovMap> getCcpRejectCodeList() throws Exception;
+	
 	EgovMap getCcpByCcpId(Map<String, Object> params) throws Exception; // 1
 	
 	List<EgovMap> getIncomeRangeList(Map<String, Object> params) throws Exception;
 	
 	EgovMap selectCcpInfoByCcpId(Map<String, Object> params) throws Exception;
+	
+	EgovMap selectSalesManViewByOrdId(Map<String, Object> params) throws Exception;
 }

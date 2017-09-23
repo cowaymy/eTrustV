@@ -582,6 +582,15 @@ SELECT
 		WHERE  STUS_CODE_ID IN (1, 5 , 6)
 </select>
 
+<select id="getCcpRejectCodeList"  resultType="egovMap">
+        SELECT STUS_CODE_ID CODE_ID,
+                   CODE ,
+                   NAME CODE_NAME
+        FROM  
+                   SYS0038M 
+        WHERE  STUS_CODE_ID IN (1, 12 , 13, 17 , 18 ,10)
+</select>
+
 <select id="getCcpByCcpId" parameterType="Map" resultType="egovMap">
 SELECT Extent1.CCP_ID   ,
        Extent3.SALES_ORD_NO   ,
@@ -642,7 +651,7 @@ SELECT Extent1.CCP_ID   ,
          LEFT JOIN SYS0032M Extent18   ON Extent1.CCP_RESN_ID = Extent18.RESN_ID
         LEFT JOIN SYS0064M Extent19   ON Extent6.AREA_ID = Extent19.AREA_ID
         <![CDATA[
- WHERE  Extent1.CCP_ID = #{editCcpId} AND ROWNUM <= 1
+ WHERE  Extent1.CCP_ID = #{groupCode} AND ROWNUM <= 1
  ]]>
 </select>
 
@@ -662,7 +671,12 @@ SELECT Extent1.CCP_ID   ,
           AND ( Extent1.CCP_MASTER_APLICNT_TYPE_ID = #{applicantTypeId} )
 </select>
 
-<select id="selectCcpInfoByCcpId"  parameterType="Map" resultType="egovMap"> 
+<resultMap type="egovMap" id="ccpInfoCLOBMap">
+    <result property="CCP_REM" column="CCP_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+    <result property="CCP_PNC_REM" column="CCP_PNC_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+
+<select id="selectCcpInfoByCcpId"  parameterType="Map" resultMap="ccpInfoCLOBMap" > 
     SELECT Extent1.CCP_ID   ,
        Extent1.CCP_STUS_ID   ,
        Extent1.CCP_TOT_SCRE_POINT   ,
@@ -687,6 +701,61 @@ SELECT Extent1.CCP_ID   ,
  WHERE  Extent1.CCP_ID = #{ccpId} 
  AND ROWNUM <= 1
  ]]> 
+</select>
+
+<select id="selectSalesManViewByOrdId" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.SALES_ORD_ID   ,
+       CASE WHEN ( Limit1.ORG_CODE IS NOT NULL ) THEN Limit1.ORG_CODE ELSE '' END ORG_CODE  ,
+       CASE WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.MEMBERCODE1 ELSE '' END MEMBERCODE1  ,
+       CASE WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.NAME1 ELSE '' END NAME1  ,
+       CASE WHEN ( Limit1.TELMOBILE1 IS NOT NULL ) THEN Limit1.TELMOBILE1 ELSE '' END TELMOBILE1  ,
+       CASE WHEN ( Limit1.GRP_CODE IS NOT NULL ) THEN Limit1.GRP_CODE ELSE '' END GRP_CODE  ,
+       CASE WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.MEMBERCODE2 ELSE '' END MEMBERCODE2  ,
+       CASE WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.NAME2 ELSE '' END NAME2  ,
+       CASE WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.TELMOBILE2 ELSE '' END TELMOBILE2  ,
+       CASE WHEN ( Limit1.DEPT_CODE IS NOT NULL ) THEN Limit1.DEPT_CODE ELSE '' END DEPT_CODE  ,
+       CASE WHEN ( Limit1.MEMBERID3 IS NOT NULL ) THEN Limit1.MEMBERCODE3 ELSE '' END MEMBERCODE3  ,
+       CASE WHEN ( Limit1.MEMBERID3 IS NOT NULL ) THEN Limit1.NAME3 ELSE '' END NAME3  ,
+       CASE WHEN ( Limit1.TELMOBILE3 IS NOT NULL ) THEN Limit1.TELMOBILE3 ELSE '' END TELMOBILE3  ,
+       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE ELSE '' END MEM_CODE  ,
+       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME ELSE '' END NAME  ,
+       CASE WHEN ( Limit1.TEL_MOBILE IS NOT NULL ) THEN Limit1.TEL_MOBILE ELSE '' END TEL_MOBILE  ,
+       CASE WHEN ( Limit1.TEL_HUSE IS NOT NULL ) THEN Limit1.TEL_HUSE ELSE '' END TEL_HUSE  ,
+       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NRIC ELSE '' END NRIC  ,
+       CASE WHEN ( Limit1.TEL_OFFICE IS NOT NULL ) THEN Limit1.TEL_OFFICE ELSE '' END TEL_OFFICE  ,
+       CASE WHEN ( Limit1.MEM_TYPE IS NOT NULL ) THEN Limit1.MEM_TYPE ELSE 0 END MEM_TYPE  
+  FROM ( SELECT Extent1.SALES_ORD_ID   ,
+                Extent1.DEPT_CODE   ,
+                Extent1.GRP_CODE   ,
+                Extent1.ORG_CODE   ,
+                Extent2.MEM_ID   ,
+                Extent2.MEM_CODE   ,
+                Extent2.MEM_TYPE   ,
+                Extent2.NAME   ,
+                Extent2.NRIC   ,
+                Extent2.TEL_OFFICE   ,
+                Extent2.TEL_HUSE   ,
+                Extent2.TEL_MOBILE   ,
+                Extent3.MEM_ID MEMBERID1  ,
+                Extent3.MEM_CODE MEMBERCODE1  ,
+                Extent3.NAME NAME1  ,
+                Extent3.TEL_MOBILE TELMOBILE1  ,
+                Extent4.MEM_ID MEMBERID2  ,
+                Extent4.MEM_CODE MEMBERCODE2  ,
+                Extent4.NAME NAME2  ,
+                Extent4.TEL_MOBILE TELMOBILE2  ,
+                Extent5.MEM_ID MEMBERID3  ,
+                Extent5.MEM_CODE MEMBERCODE3  ,
+                Extent5.NAME NAME3  ,
+                Extent5.TEL_MOBILE TELMOBILE3  
+         FROM SAL0001D Extent1
+                LEFT JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.MEM_ID
+                LEFT JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.SALES_GM_ID
+                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.SALES_SM_ID
+                LEFT JOIN ORG0001D Extent5   ON Extent5.MEM_ID = Extent1.SALES_HM_ID
+                <![CDATA[
+          WHERE  Extent1.SALES_ORD_ID = #{salesOrderId} AND ROWNUM <= 1 ) Limit1
+          ]]>
 </select>
 <!-- <select id="이건 언젠간 쓰겠지?">
     SELECT Extent1.CCP_ID   ,

@@ -26,4 +26,8 @@ public interface CcpCalculateService {
 	Map<String, Object> selectLoadIncomeRange(Map<String, Object> params) throws Exception;
 	
 	EgovMap selectCcpInfoByCcpId(Map<String, Object> params) throws Exception;
+	
+	EgovMap selectSalesManViewByOrdId(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getCcpRejectCodeList() throws Exception;
 }

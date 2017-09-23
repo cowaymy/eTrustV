@@ -5,8 +5,9 @@
 var optionUnit = { isShowChoose: false};
 
 $(document).ready(function() {
-    var mst = getMstId();
     
+	//Init
+	var mst = getMstId();
     var ordUnitSelVal = $("#_ordUnitSelVal").val();
     var rosUnitSelVal = $("#_rosUnitSelVal").val();
     var susUnitSelVal = $("#_susUnitSelVal").val();
@@ -16,95 +17,312 @@ $(document).ready(function() {
     getUnitCombo(mst, 213  , rosUnitSelVal , '_ordMth');
     getUnitCombo(mst, 216  , susUnitSelVal , '_ordSuspen');
     getUnitCombo(mst, 210  , custUnitSelVal , '_ordExistingCust');  
-    
    
-    CommonCombo.make("_statusEdit", "/sales/ccp/getCcpStusCodeList", '', '' , optionUnit); //Status
+    //Income Range ComboBox
+    var ccpId = $("#_editCcpId").val();
+    var selIncRange = $("#_ccpIncRngId").val();
+    doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selIncRange ,'_incomeRangeEdit', 'S');
+    var rentPayModeId = $("#_rentPayModeId").val();
+    var applicantTypeId = $("#_applicantTypeId").val();
+    if(rentPayModeId == 131){
+        if(applicantTypeId == 964){
+            $("#_incomeRangeEdit").val("29");
+        }else{
+            $("#_incomeRangeEdit").val("22");
+        }
+    }
+    //Ccp Status
+    var ccpStus = $("#_ccpStusId").val();
+    doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S'); 
+    //Reject
+    doGetCombo('/sales/ccp/getCcpRejectCodeList', '', '','_rejectStatusEdit', 'S'); //Status
+    //Feedback
+    var selReasonCode = $("#_ccpResnId").val();
+    doGetCombo('/sales/ccp/selectReasonCodeFbList', '', selReasonCode,'_reasonCodeEdit', 'S'); //Reason
     
-    doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCodeEdit', 'S'); //Reason
-    loadIncomeRange(); //Income Range ComboBox
-    
+    //Bind Filed
     bind_RetrieveData();
+    
+    //Disabled ComboBox
+    $("#_ordUnit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_ordMth").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+     
+    //SMS Checked
+    // Consignment Change
+    $("#_updSmsChk").change(function() {
+        
+    	//Init
+    	$("#_updSmsMsg").val('');
+    	$("#_updSmsMsg").attr("disabled" , "disabled");
+        if($("#_updSmsChk").is(":checked") == true){
+            
+            if(isAllowSendSMS() == true){
+                
+                $("#_updSmsMsg").attr("disabled" , false);
+                setSMSMessage();
+            }
+        }
+        
+    });
     
     
 });//Doc Ready Func End
 
+function fn_ccpStatusChangeFunc(getVal){
+	
+	//Init
+	$("#_smsDiv").css("display" , "none");
+	$("#_updSmsChk").attr("checked" , false);
+	$("#_updSmsMsg").val('');
+	$("#_updSmsMsg").attr("disabled" , "disabled");
+	
+	if(getVal != null && getVal != ''){
+		
+		if(getVal == '1'){
+			
+			//field 
+	        $("#_incomeRangeEdit").attr("disabled" , false);
+	        $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+	        $("#_reasonCodeEdit").attr("disabled" , false);
+	        $("#_spcialRem").attr("disabled" , false);
+	        $("#_pncRem").attr("disabled" , false);
+			
+	       if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
+	    	   $("#_ficoScore").attr("disabled" , false);
+	       }else{
+	    	   $("#_ficoScore").val("0");
+	    	   $("#_ficoScore").attr("disabled" , "disabled");
+	       }
+	       
+	         //chkbox
+	        $("#_onHoldCcp").attr("disabled" , false);
+	        $("#_summon").attr("disabled" , false);
+	        $("#_letterOfUdt").attr("disabled" , false);
+	        
+	        if(isAllowSendSMS() == true){
+	            
+	            $("#_smsDiv").css("display" , "");
+	            $("#_updSmsChk").attr("checked" , true);
+	            $("#_updSmsMsg").attr("disabled" , false);
+	            setSMSMessage();
+	        }
+	        
+		}else if(getVal == '5'){
+			
+			 //field //FICO it doesn`t work
+			 $("#_incomeRangeEdit").attr("disabled" , false);
+	         $("#_rejectStatusEdit").val('');
+	         $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+	         $("#_reasonCodeEdit").attr("disabled" , false);
+	         $("#_spcialRem").attr("disabled" , false);
+	         $("#_pncRem").attr("disabled" , false);
+	         
+	          //chkbox
+	         $("#_onHoldCcp").attr("checked" , false);
+	         $("#_onHoldCcp").attr("disabled" , "disabled");
+	         $("#_summon").attr("disabled" , false);
+	         $("#_letterOfUdt").attr("disabled" , false);
+			
+	         //Fico Ajax Call
+	         var ccpid = $("#_editCcpId").val();
+	         var data = {ccpId : ccpid};
+	         Common.ajax("GET", "/sales/ccp/getFicoScoreByAjax", data , function(result) {
+	        	 $("#_ficoScore").val(result.ccpFico);
+	        	 $("#_ficoScore").attr("disabled" , false);
+	         });
+	         
+	         if(isAllowSendSMS() == true){
+	                
+	                $("#_smsDiv").css("display" , "");
+	                $("#_updSmsChk").attr("checked" , true);
+	                $("#_updSmsMsg").attr("disabled" , false);
+	                setSMSMessage();
+	         }
+		}else if(getVal == '6'){
+			
+			//field
+	        $("#_incomeRangeEdit").attr("disabled" , false);
+	        $("#_rejectStatusEdit").attr("disabled" , false);
+	        $("#_reasonCodeEdit").attr("disabled" , false);
+	        $("#_spcialRem").attr("disabled" , false);
+	        $("#_pncRem").attr("disabled" , false);
+	        //chkbox
+	        $("#_onHoldCcp").attr("checked" , false);
+	        $("#_onHoldCcp").attr("disabled" , "disabled");
+	        $("#_summon").attr("disabled" , false);
+	        $("#_letterOfUdt").attr("disabled" , false);
+	        
+	        $("#_ficoScore").val("0");
+            $("#_ficoScore").attr("disabled" , "disabled");
+			
+		}
+		
+	}
+	
+}
+
 function  bind_RetrieveData(){
 
-	//Ccp Status
 	var ccpStus = $("#_ccpStusId").val();
-	$("#_statusEdit").val(ccpStus);
-	
 	//pre Value
 	$("#_isPreVal").val("1");
-	
+	//Fico
+	 if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
+         $("#_ficoScore").attr("disabled" , false);
+     }else{
+         $("#_ficoScore").val("0");
+         $("#_ficoScore").attr("disabled" , "disabled");
+     }
 	//bind and Setting by CcpStatus
 	if(ccpStus == "1"){
 		
+		//field
 		$("#_incomeRangeEdit").attr("disabled" , false);
-		
 		$("#_rejectStatusEdit").val('');
-		$("#_rejectStatusEdit").attr("disabled" , "disabled");
-		
+		$("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 		$("#_reasonCodeEdit").attr("disabled" , false);
 		$("#_spcialRem").attr("disabled" , false);
 		$("#_pncRem").attr("disabled" , false);
+		//chkbox
 		$("#_onHoldCcp").attr("disabled" , false);
 		$("#_summon").attr("disabled" , false);
 		$("#_letterOfUdt").attr("disabled" , false);
 		
 		if(isAllowSendSMS() == true){
 			
+			$("#_smsDiv").css("display" , "");
+			$("#_updSmsChk").attr("checked" , true);
+			$("#_updSmsMsg").attr("disabled" , false);
+			setSMSMessage();
 		}
+	}else if(ccpStus == "5"){
 		
+		//field
+        $("#_incomeRangeEdit").attr("disabled" , false);
+        $("#_rejectStatusEdit").val('');
+        $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_reasonCodeEdit").attr("disabled" , false);
+        $("#_spcialRem").attr("disabled" , false);
+        $("#_pncRem").attr("disabled" , false);
+        //chkbox
+        $("#_onHoldCcp").attr("checked" , false);
+        $("#_onHoldCcp").attr("disabled" , "disabled");
+        $("#_summon").attr("disabled" , false);
+        $("#_letterOfUdt").attr("disabled" , false);
 		
-		/* 
-       ;
-       
-
-        this.chkIsHold.Enabled = true;
-        this.chkIsSummons.Enabled = true;
-        this.chkIsLOU.Enabled = true;
-
-        if (this.IsAllowSendSMS())
-        {
-            PanelSMS.Visible = true;
-            btnSendSMS.Checked = true;
-            txtSMSMessage.Enabled = true;
-            this.SetSMSMessage();
+        if(isAllowSendSMS() == true){
+            
+            $("#_smsDiv").css("display" , "");
+            $("#_updSmsChk").attr("checked" , true);
+            $("#_updSmsMsg").attr("disabled" , false);
+            setSMSMessage();
         }
-		 */
+	}else if(ccpStus == "6"){
+		
+		//field
+        $("#_incomeRangeEdit").attr("disabled" , false);
+        $("#_rejectStatusEdit").attr("disabled" , false);
+        $("#_reasonCodeEdit").attr("disabled" , false);
+        $("#_spcialRem").attr("disabled" , false);
+        $("#_pncRem").attr("disabled" , false);
+        //chkbox
+        $("#_onHoldCcp").attr("checked" , false);
+        $("#_onHoldCcp").attr("disabled" , "disabled");
+        $("#_summon").attr("disabled" , false);
+        $("#_letterOfUdt").attr("disabled" , false);
 		
 	}
+	
+	//Set Check Box
+    var ccpIsHold = $("#_ccpIsHold").val() == '1' ? true : false;
+    var ccpIsSaman = $("#_ccpIsSaman").val() == '1' ? true : false;
+    var ccpIsLou = $("#_ccpIsLou").val() == '1' ? true : false;
+    
+    
+    if(ccpIsHold == true){
+    	$("#_onHoldCcp").attr("checked" , true);
+    }
+    
+    if(ccpIsSaman == true){
+    	$("#_summon").attr("checked" , true);
+    }
+    
+    if(ccpIsLou == true){
+    	$("#_letterOfUdt").attr("checked" , true);
+    }
+	
+}// bindData
+
+
+function setSMSMessage(){
+	
+	var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
+	
+	var custName = $("#_editCustName").val().substr(0 , 15).trim();
+	var ordNo = $("#_editOrdNo").val();
+	var ccpStatus = $("#_statusEdit").val() == '1' ? "Pending" : "Approved";
+	var webSite = salesmanMemTypeID == '1'?  "hp.coway.com.my" : "cody.coway.com.my";
+	
+	var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + ccpStatus + "\n" + "Remark :" + "\n" + webSite;
+	
+	$("#_updSmsMsg").val(message);
+	
+	
 }
+
+
+function  isValidMobileNo(inputContact){
+	if(isNaN(inputContact) == true){
+		return false;
+	}
+    
+    if(inputContact.length != 10 && inputContact.length != 11){
+    	return false;
+    }
+    if( inputContact.substr(0 , 3) != '010' &&
+   		inputContact.substr(0 , 3) != '011' &&
+   		inputContact.substr(0 , 3) != '012' &&
+   		inputContact.substr(0 , 3) != '013' &&
+   		inputContact.substr(0 , 3) != '014' &&
+   		inputContact.substr(0 , 3) != '015' &&
+   		inputContact.substr(0 , 3) != '016' &&
+   		inputContact.substr(0 , 3) != '017' &&
+   		inputContact.substr(0 , 3) != '018' &&
+   		inputContact.substr(0 , 3) != '019' 
+	  ){
+    	return false;
+    }
+    
+    return true;
+
+}
+
 
 function isAllowSendSMS(){
 	
-	var isAllow = true;
-	//var salesmanMemTypeID  = 0;
+	var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
+	var editSalesManTelMobile = $("#_editSalesManTelMobile").val();
 	
+	if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2){
+		
+		Common.alert("This order salesman is not HP/Cody.<br />SMS is disallowed.");
+		return false;
+	}else{
+		
+		if(isValidMobileNo(editSalesManTelMobile) == false){
+			
+			Common.alert("Salesman mobile number is invalid.<br />SMS is disallowed.");
+			return false;
+		}
+	}
+	
+	return true;
 	
 }
 
-function loadIncomeRange(){
-	
-	var ccpId = $("#_editCcpId").val();
-	var paramObj ={editCcpId : ccpId};
-	//param : editCcpId
-	 CommonCombo.make("_incomeRangeEdit", "/sales/ccp/getLoadIncomeRange", paramObj , '' , optionUnit); //Status
-	 
-	var rentPayModeId = $("#_rentPayModeId").val();
-	var applicantTypeId = $("#_applicantTypeId").val();
-	
-	if(rentPayModeId == 131){
-		
-		if(applicantTypeId == 964){
-			$("#_incomeRangeEdit").val("29");
-		}else{
-			$("#_incomeRangeEdit").val("22");
-		}
-		
-	}
-}
+
 
 
 function getMstId(){
@@ -232,15 +450,19 @@ function chgTab(tabNm) {
 
 <section class="pop_body"><!-- pop_body start -->
 <form id="_editForm">
-    <input type="text" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
+    <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
     
     <!--  from Basic -->
     <input type="hidden"  name="editOrdId" value="${orderDetail.basicInfo.ordId}">
     <input type="hidden" name="editAppTypeCode" value="${orderDetail.basicInfo.appTypeCode }">
     <input type="hidden" name="editOrdStusId" value="${orderDetail.basicInfo.ordStusId}">
-    
+    <input type="hidden"  id="_editCustName" value="${orderDetail.basicInfo.custName}"> 
+    <input type="hidden" id="_editOrdNo" value="${orderDetail.basicInfo.ordNo}">  
+    <input type="hidden" id="_editCustTypeId" value="${orderDetail.basicInfo.custTypeId}">
+    <input type="hidden" id="_editCustNation" value="${orderDetail.basicInfo.custNation}">
     <!-- from SalesMan (HP/CODY) -->
-    <input type="hidden" name="editSalesMemTypeId" > <!-- 추후 검색 -->
+    <input type="hidden" name="editSalesMemTypeId" id="_editSalesMemTypeId" value="${salesMan.memType}">
+    <input type="hidden" id="_editSalesManTelMobile" value="${salesMan.telMobile}"> 
     
     <!-- from GSTCertInfo -->
     <input type="hidden" name="editEurcFilePathName" value="${orderDetail.gstCertInfo.eurcFilePathName}">
@@ -260,6 +482,12 @@ function chgTab(tabNm) {
      
      <!-- from ccpInfoMap  -->
      <input type="hidden" id="_ccpStusId" name="ccpStusId" value="${ccpInfoMap.ccpStusId}">
+     <input type="hidden" id="_ccpIncRngId" value="${ccpInfoMap.ccpIncomeRangeId}">
+     <input type="hidden" id="_ccpResnId" value="${ccpInfoMap.resnId}"> 
+     
+     <input type="hidden" id="_ccpIsHold" value="${ccpInfoMap.ccpIsHold}">
+     <input type="hidden" id="_ccpIsSaman" value="${ccpInfoMap.ccpIsSaman}">
+     <input type="hidden" id="_ccpIsLou" value="${ccpInfoMap.ccpIsLou}">
     
     <!-- previous -->
     <input type="hidden" id="_isPreVal" >
@@ -285,7 +513,7 @@ function chgTab(tabNm) {
 <!------------------------------------------------------------------------------
     Sales Person
 ------------------------------------------------------------------------------->
-<%@ include file="/WEB-INF/jsp/sales/order/include/hpCody.jsp" %>
+<%@ include file="/WEB-INF/jsp/sales/order/include/hpCodySalesOnly.jsp" %>
 <!------------------------------------------------------------------------------
     Customer Info
 ------------------------------------------------------------------------------->
@@ -361,7 +589,7 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">Suspension/Termination</th> 
-    <td> <select class="w100p" name="ordSuspen" id="_ordSuspen"></select></td>
+    <td> <select class="w100p" name="ordSuspen" id="_ordSuspen"></select></td> 
     <th scope="row">Count</th>
     <td><span><b>${fieldMap.susUnitCount}</b></span></td>
     <th scope="row">Point</th>
@@ -402,7 +630,7 @@ function chgTab(tabNm) {
 <tbody>
 <tr>
     <th scope="row">CCP Status</th>
-    <td><span><select class="w100p" name="statusEdit" id="_statusEdit"></select></span></td>
+    <td><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
     <th scope="row">Income Range</th>
     <td><span><select class="w100p" name="incomeRangeEdit" id="_incomeRangeEdit"></select></span></td>
     <th scope="row">Reject Status</th>
@@ -410,7 +638,7 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">FICO Score</th>
-    <td colspan="5"><span>text</span></td>
+    <td colspan="5"><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" disabled="disabled"></span></td>
 </tr>
 <tr>
     <th scope="row">CCP Feedback Code</th>
@@ -418,11 +646,11 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">Special Remark</th>
-    <td colspan="5"><textarea cols="20" rows="5" id="_spcialRem" name="spcialRem"></textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" id="_spcialRem" name="spcialRem">${ccpInfoMap.ccpRem}</textarea></td>
 </tr>
 <tr>
     <th scope="row">P &amp; C Remark</th>
-    <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem"></textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem">${ccpInfoMap.ccpPncRem}</textarea></td> 
 </tr>
 <tr>
     <th scope="row">Letter Of Undertaking</th>
@@ -435,6 +663,33 @@ function chgTab(tabNm) {
 </tbody>
 </table><!-- table end -->
 
+<div id="_smsDiv" style="display: none;">
+<aside class="title_line"><!-- title_line start -->
+<h2>SMS Info</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <td colspan="2">
+    <label><input type="checkbox"  id="_updSmsChk"  /><span>Send SMS ?</span></label>
+    </td>
+</tr>
+<tr>
+    <th scope="row">SMS Message</th>
+    <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg"></textarea></td>
+</tr>
+<tr>
+    <td colspan="2"><span>Total Character(s) : 75</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</div>
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#">List</a></p></li>
 </ul>
