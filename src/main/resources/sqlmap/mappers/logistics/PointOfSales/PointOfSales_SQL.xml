@@ -355,10 +355,23 @@ WHERE 1 = 1
      
      
       <select id="selectPosHead" parameterType="String" resultType="egovMap">
-        SELECT REQST_NO REQNO , TRNSC_TYPE TRNTYPE , TRNSC_TYPE_DTL TRNDTL , PRIDIC_FRQNCY PRIFR , TO_CHAR(REQST_CRT_DT , 'DD/MM/YYYY') REQCRTDT
-             , DOC_HDER_TXT DOCTXT , RCIV_CDC_RDC RCIVCR , REQST_CDC_RDC REQCR, REQST_STUS REQST, REF_DOC_NO REFDOCNO
-          FROM LOG0047M
-         WHERE REQST_NO = #{param} 
+        SELECT 
+	       l47.REQST_NO REQNO,
+	       l47.TRNSC_TYPE TRNTYPE,
+	       l47.TRNSC_TYPE_DTL TRNDTL,
+	       l47.PRIDIC_FRQNCY PRIFR,
+	       TO_CHAR (l47.REQST_CRT_DT, 'DD/MM/YYYY') REQCRTDT,
+	       l47.DOC_HDER_TXT DOCTXT,
+	       l47.RCIV_CDC_RDC RCIVCR,
+	       l47.REQST_CDC_RDC REQCR,
+	       l47.REQST_STUS REQST,
+	       l47.REF_DOC_NO REFDOCNO,
+	       l47.CRT_USER_ID CRT_USER_ID,
+	       s47.USER_NAME USER_NAME
+        FROM LOG0047M l47,SYS0047M s47
+         WHERE 1=1
+         AND l47.CRT_USER_ID = s47.USER_ID
+         AND REQST_NO = #{param} 
        </select>
      
        <select id="selectPosItem" parameterType="String" resultType="egovMap">
@@ -391,9 +404,10 @@ WHERE 1 = 1
          L61.SERIAL_NO
           FROM LOG0048D L48, SYS0026M S26 , LOG0061D L61 
          WHERE L48.ITM_CODE = S26.STK_CODE
-           AND L48.REQST_NO_ITM=L61.PDELVRY_NO_ITM
+           <!-- AND L48.REQST_NO_ITM=L61.PDELVRY_NO_ITM -->
            AND L48.REQST_NO = L61.DELVRY_NO(+)
-           AND L48.REQST_NO = #{param}        
+           AND L48.REQST_NO = #{reqno} 
+           AND L48.ITM_CODE =#{itmcd}       
          ORDER BY L48.REQST_NO_ITM 
         </select>
      
