@@ -56,6 +56,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		logger.debug("posSeq    값 : {}", posSeq);
 		logger.debug("trnscType    값 : {}", formMap.get("trnscType"));
+		logger.debug("insReqLoc    값 : {}", formMap.get("insReqLoc"));
 
 		PointOfSalesMapper.insOtherReceiptHead(formMap);
 
@@ -197,7 +198,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 	
 	@Override
-	public List<EgovMap> selectSerial(String params) {
+	public List<EgovMap> selectSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		
 		List<EgovMap> list = PointOfSalesMapper.selectSerial(params);
