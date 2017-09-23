@@ -360,7 +360,15 @@ public class PointOfSalesController {
 	public ResponseEntity<Map> ViewSerial(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String reqno = request.getParameter("reqno");
-		List<EgovMap> list = PointOfSalesService.selectSerial(reqno);
+		String itmcd = request.getParameter("itmcd");
+		logger.debug("reqno@@@@@: {}",  reqno);
+		logger.debug("itmcd@@@@@: {}",  itmcd);
+		
+		Map<String, Object> serialmap = new HashMap();
+		serialmap.put("reqno", reqno);
+		serialmap.put("itmcd", itmcd);
+		
+		List<EgovMap> list = PointOfSalesService.selectSerial(serialmap);
 		
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
