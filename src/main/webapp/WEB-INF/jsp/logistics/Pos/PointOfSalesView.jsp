@@ -109,10 +109,11 @@ $(document).ready(function(){
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event){
     	
    var reqno = AUIGrid.getCellValue(reqGrid, event.rowIndex, "reqno");
+   var itmcd = AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd");
         destory(serialGrid);
     	$("#openwindow").show();
     	serialGrid = GridCommon.createAUIGrid("serial_grid_wrap", serialLayout,"", gridoptions);
-    	ItemSerialAjax(reqno);
+    	ItemSerialAjax(reqno,itmcd);
     });
     
     AUIGrid.bind(resGrid, "ready", function(event) {});
@@ -179,6 +180,7 @@ function headFunc(data){
 	$("#Smo").val(data.refdocno);
 	$("#reqtype").val(data.refdocno);
 	$("#reqloc").val(data.reqcr);
+	$("#Requestor").val(data.userName);
 	
 // 	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
 //     doGetComboData('/common/selectCodeList.do', paramdata, data.trntype ,'sttype', 'S' , '');
@@ -303,8 +305,13 @@ function f_multiCombo() {
 }
 
 
-function ItemSerialAjax(reqno) {
-	var param = "reqno="+reqno;
+function ItemSerialAjax(reqno,itmcd) {
+	var param =
+    {
+			reqno    : reqno,
+			itmcd     : itmcd
+   };
+//	var param = "reqno="+reqno;
     var url = "/logistics/pos/ViewSerial.do";
 
     Common.ajax("GET" , url , param , function(result){
@@ -411,62 +418,58 @@ function destory(gridNm) {
 </form>
 </section><!-- search_table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h3>Item Info</h3>
-</aside><!-- title_line end -->
+<!-- <section class="search_table">search_table start -->
+<!-- <form id="searchFrom" method="post"> -->
+<!-- <input type="hidden" id="slocation"> -->
 
-<section class="search_table"><!-- search_table start -->
-<form id="searchFrom" method="post">
-<input type="hidden" id="slocation">
+<!-- <table class="type1">table start -->
+<!-- <caption>table</caption> -->
+<!-- <colgroup> -->
+<!--     <col style="width:140px" /> -->
+<!--     <col style="width:*" /> -->
+<!--     <col style="width:100px" /> -->
+<!--     <col style="width:*" /> -->
+<!--     <col style="width:90px" /> -->
+<!-- </colgroup> -->
+<!-- <tbody> -->
+<!-- <tr> -->
+<!--     <th scope="row">Material Code</th> -->
+<!--     <td> -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:140px" />
-    <col style="width:*" />
-    <col style="width:100px" />
-    <col style="width:*" />
-    <col style="width:90px" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Material Code</th>
-    <td>
+<!--     <div class="date_set">date_set start -->
+<!--     <p> -->
+<!--     <select class="w100p"> -->
+<!--         <option value="">11</option> -->
+<!--         <option value="">22</option> -->
+<!--         <option value="">33</option> -->
+<!--     </select> -->
+<!--     </p> -->
+<!--     <span>~</span> -->
+<!--     <p> -->
+<!--     <select class="w100p"> -->
+<!--         <option value="">11</option> -->
+<!--         <option value="">22</option> -->
+<!--         <option value="">33</option> -->
+<!--     </select> -->
+<!--     </p> -->
+<!--     </div>date_set end -->
 
-    <div class="date_set"><!-- date_set start -->
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div><!-- date_set end -->
+<!--     </td> -->
+<!--     <th scope="row">Type</th> -->
+<!--     <td > -->
+<!--     <select class="w100p" id="cType" name="cType"></select> -->
+<!--     </td> -->
+<!--     <td> -->
+<!--     <ul class="left_btns"> -->
+<!--         <li><p class="btn_blue2"><a id="search">Search</a></p></li> -->
+<!--     </ul> -->
+<!--     </td> -->
+<!-- </tr> -->
+<!-- </tbody> -->
+<!-- </table>table end -->
 
-    </td>
-    <th scope="row">Type</th>
-    <td >
-    <select class="w100p" id="cType" name="cType"></select>
-    </td>
-    <td>
-    <ul class="left_btns">
-        <li><p class="btn_blue2"><a id="search">Search</a></p></li>
-    </ul>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</form>
-</section><!-- search_table end -->
+<!-- </form> -->
+<!-- </section>search_table end -->
 
 <section class="search_result"><!-- search_result start -->
 
