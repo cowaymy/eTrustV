@@ -1510,4 +1510,17 @@ public class CustomerController {
 			
 			return ResponseEntity.ok(areaMap);
 		}
+		
+		
+		
+		@RequestMapping(value = "/getNationList")
+		public ResponseEntity<List<EgovMap>> getNationList () throws Exception{
+			
+			List<EgovMap> nationList = null;
+			
+			nationList = customerService.getNationList();
+			
+			return ResponseEntity.ok(nationList);
+			
+		}
 }

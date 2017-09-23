@@ -524,4 +524,14 @@ public interface CustomerService {
 	 * @author 
 	 */
 	EgovMap getAreaId (Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Nation List
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	List<EgovMap> getNationList () throws Exception;
 }

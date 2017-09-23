@@ -593,4 +593,13 @@ public interface CustomerMapper {
 	 */
 	EgovMap getAreaId(Map<String, Object> params) throws Exception;
 	/* #### Magic Address End #####*/
+	
+	
+	/**
+	 * Nation List
+	 * @param params
+	 * @exception Exception
+	 * @author
+	 */
+	List<EgovMap> getNationList () throws Exception;
 }

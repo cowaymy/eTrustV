@@ -720,6 +720,20 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.getAreaId(params);
 	}
+
+
+	/**
+	 * Nation List
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 
+	 */
+	@Override
+	public List<EgovMap> getNationList() throws Exception {
+		
+		return customerMapper.getNationList();
+	}
 	
 	
 	

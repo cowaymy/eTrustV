@@ -2037,4 +2037,12 @@
 			    AREA = #{areaValue}
   
   </select>
+  
+  <select id="getNationList"  resultType="egovMap">
+			SELECT 
+				CNTY_ID CODE_ID,
+				NAME CODE_NAME
+			FROM 
+			    SYS0015M
+  </select>
 </mapper>
