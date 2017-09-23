@@ -35,7 +35,7 @@ public interface PointOfSalesMapper {
 	
 	List<EgovMap> selectPosToItem(Map<String, Object> params);
 	
-	List<EgovMap> selectSerial(String param);
+	List<EgovMap> selectSerial(Map<String, Object> params);
 	
 	void insertStockBooking(Map<String, Object> params);
 	
