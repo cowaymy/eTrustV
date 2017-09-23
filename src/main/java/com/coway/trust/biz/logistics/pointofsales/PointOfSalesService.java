@@ -23,7 +23,7 @@ public interface PointOfSalesService {
 	
 	Map<String, Object> PosDataDetail(String param);
 	
-	List<EgovMap> selectSerial(String params);
+	List<EgovMap> selectSerial(Map<String, Object> params);
 	
 	void insertStockBooking(Map<String, Object> params);
 	
