@@ -221,7 +221,7 @@
         });
     }
  
-  //resize func (tab click)
+    //resize func (tab click)
     function fn_resizefunc(gridName){ // 
         AUIGrid.resize(gridName, 900, 300);
    }

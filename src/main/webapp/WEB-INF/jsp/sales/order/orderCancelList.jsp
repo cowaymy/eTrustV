@@ -89,6 +89,8 @@
             }, {
                 dataField : "callRecallDt",
                 headerText : "Recall Date",
+                dataType : "date",
+                formatString : "dd-mm-yyyy" ,
                 editable : false
             },{
                 dataField : "callEntryId",

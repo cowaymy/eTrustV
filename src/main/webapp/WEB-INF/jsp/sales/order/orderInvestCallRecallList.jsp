@@ -15,7 +15,7 @@
 	    // 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
 	        $("#invId").val(event.item.invId);
-	        Common.popupDiv("/sales/order/orderInvestCallResultDtPop.do", $("#detailForm").serializeJSON());
+	        Common.popupDiv("/sales/order/orderInvestCallResultDtPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
 	    });
 
 	});
