@@ -99,7 +99,7 @@ $(document).ready(function()
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Find ID / Reset PassWord</h1>
 		<ul class="right_opt">
-			<li><p class="btn_blue2"><a href="./login.do">Login</a></p></li>
+			<!-- <li><p class="btn_blue2"><a href="./login.do">Login</a></p></li> -->
 			<li><p class="btn_blue2"><a onclick="findIdPopUpClose();">CLOSE</a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
