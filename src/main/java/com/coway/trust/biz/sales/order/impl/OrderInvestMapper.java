@@ -175,4 +175,90 @@ public interface OrderInvestMapper {
 	 */
 	List<EgovMap> investCallResultLog(Map<String, Object> params);
 	
+	
+	/**
+	 * Single Investigation Request mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap saveCallResultSearchFirst(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Single Investigation Request mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap saveCallResultSearchSecond(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Single Investigation Request mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap saveCallResultSearchThird(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Single Investigation Request mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap getBSMonth(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Single Investigation Request mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap getBSScheduleStusCodeId(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Single Investigation Request mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap saveCallResultSearchFourth(Map<String, Object> params) throws Exception;
+	
+	
+	int updateSAL0071D(Map<String, Object> params);
+	
+	
+	/**
+	 * Single Investigation Request mapper
+	 * 
+	 * @param params
+	 * @return EgovMap
+	 * @exception Exception
+	 * @author 이석희
+	 */
+	EgovMap saveCallResultSearchFifth(Map<String, Object> params) throws Exception;
+	
+	int updateSAL0049D(Map<String, Object> params);
+	
+	EgovMap monthYearChk(Map<String, Object> params) throws Exception;
+	
+	int monthBetween(Map<String, Object> params);
+	
 }
