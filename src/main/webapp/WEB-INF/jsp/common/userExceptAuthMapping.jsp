@@ -22,7 +22,7 @@ var validTo;
 
 $(function()
 {
-  //fnSelectUserInfoListAjax();
+	fnSearchBtnClickAjax();
 });
 
 var MainColumnLayout =
@@ -731,7 +731,7 @@ $(document).ready(function()
 </colgroup>
 <tbody>
  <tr>
-	<th scope="row">USER ID</th>
+	<th scope="row">USER ID / NAME</th>
 	 <td>
 	   <input type="text" id="txtUserId" name="txtUserId" title=""		placeholder="" class="" />
 	</td>

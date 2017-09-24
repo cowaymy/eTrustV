@@ -931,7 +931,7 @@ $(document).ready(function()
 <tr>
   <th scope="row">Role</th>
     <td>
-      <input type="text" id="txtRoleId" name="txtRoleId" width="250" title="" placeholder="Role Id" class="" />
+      <input type="text" id="txtRoleId" name="txtRoleId" width="250" title="" placeholder="Role Name" class="" />
     </td>
 <!--   <th scope="row"></th>
   <td>

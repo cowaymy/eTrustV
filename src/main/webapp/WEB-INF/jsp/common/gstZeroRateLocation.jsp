@@ -108,6 +108,7 @@
 
         var calback = function () {
             $('#sStateCode').on("change", function () {
+
                 var $this = $(this);
 
                 CommonCombo.initById("sSubAreaCode");
