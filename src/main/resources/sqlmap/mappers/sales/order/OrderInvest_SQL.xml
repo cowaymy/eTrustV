@@ -158,7 +158,7 @@
 			          END CUSTCNT_TEL_M1  ,
 			       CASE 
 			            WHEN ( Extent11.CUST_ADD_ID IS NOT NULL ) 
-			            THEN Extent11.ADDR_DTL ||' '|| CUSTMADDR.STREET ||' '|| CUSTMADDR.POSTCODE ||' '|| CUSTMADDR.LOCALITY ||' '|| CUSTMADDR.REGION2 ||' '|| CUSTMADDR.REGION1 
+			            THEN Extent11.ADDR_DTL ||' '|| Extent11.STREET ||' '|| CUSTMADDR.AREA ||' '|| CUSTMADDR.POSTCODE ||' '|| CUSTMADDR.CITY ||' '|| CUSTMADDR.STATE ||' '|| CUSTMADDR.COUNTRY
 			       ELSE ''
 			          END CUSTADD_ADDR  ,
 			       CASE 
@@ -183,7 +183,7 @@
 			          END CNT_TEL_M1  ,
 			       CASE 
 			            WHEN ( Extent14.CUST_ADD_ID IS NOT NULL ) 
-			            THEN Extent14.ADDR_DTL ||' '|| MADDR.STREET ||' '|| MADDR.POSTCODE ||' '|| MADDR.LOCALITY ||' '|| MADDR.REGION2 ||' '|| MADDR.REGION1
+			            THEN Extent14.ADDR_DTL ||' '|| Extent14.STREET ||' '|| MADDR.AREA ||' '|| MADDR.POSTCODE ||' '|| MADDR.CITY ||' '|| MADDR.STATE ||' '|| MADDR.COUNTRY
 			       ELSE ''
 			          END ADD_ADDR  
 			  FROM SAL0050D Extent1
@@ -203,8 +203,8 @@
 			         LEFT JOIN SAL0027D Extent13   ON Extent12.CNT_ID = Extent13.CUST_CNTC_ID
 			         LEFT JOIN SAL0023D Extent14   ON Extent12.ADD_ID = Extent14.CUST_ADD_ID
 			         LEFT JOIN SYS0047M Extent15  ON Extent1.INV_REQ_CRT_USER_ID = Extent15.USER_ID
-			         LEFT JOIN SYS0064M MADDR     ON Extent14.STREET_ID = MADDR.STREET_ID
-			         LEFT JOIN SYS0064M CUSTMADDR  ON Extent11.STREET_ID = CUSTMADDR.STREET_ID
+			         LEFT JOIN SYS0064M MADDR     ON Extent14.AREA_ID = MADDR.AREA_ID
+			         LEFT JOIN SYS0064M CUSTMADDR  ON Extent11.AREA_ID = CUSTMADDR.AREA_ID
 			 WHERE  Extent1.INV_REQ_ID = #{invReqId}
     </select>
     
@@ -254,7 +254,7 @@
 			                JOIN SYS0047M Extent2   ON ( Extent2.USER_ID = Extent1.USER_ID )
 			                AND ( 1 = Extent1.STUS_ID )
 			                AND ( 1 = Extent2.USER_STUS_ID )
-			          WHERE  60 = Extent1.ROLE_ID ) Distinct1
+			          WHERE  Extent1.ROLE_ID = #{roleId} ) Distinct1
 		  ORDER BY Distinct1.USER_FULL_NM ASC
     </select>
     
@@ -459,7 +459,7 @@
     <insert id="insertSalesOrdLog" parameterType="Map">
         INSERT INTO SAL0009D
 			  ( LOG_ID, SALES_ORD_ID, PRGRS_ID, LOG_DT, REF_ID, IS_LOK, LOG_CRT_USER_ID, LOG_CRT_DT )
-	    VALUES ( SAL0009D_LOG_ID_SEQ.NEXTVAL, #{salesOrdNo}, #{prgrsId}, SYSDATE, #{refId}
+	    VALUES ( SAL0009D_LOG_ID_SEQ.NEXTVAL, #{salesOrdId}, #{prgrsId}, SYSDATE, #{refId}
 	                , #{isLok}, #{userId}, SYSDATE )
     </insert>
     
@@ -644,6 +644,235 @@
 				                LEFT JOIN SYS0038M Extent7   ON Extent2.STUS_CODE_ID = Extent7.STUS_CODE_ID
 				      WHERE Extent1.INV_ID = #{callLogInvId} ) Project1
 		  ORDER BY Project1.CALL_CRT_DT DESC
+    </select>
+    
+    <select id="saveCallResultSearchFirst" parameterType="Map" resultType="egovMap">
+        SELECT INV_ID   ,
+			       INV_NO   ,
+			       INV_STUS_ID   ,
+			       SALES_ORD_ID   ,
+			       INV_TO_CANCL_ACT_BS   ,
+			       INV_CANCL_BS_SCHDUL_ID   ,
+			       INV_CRT_DT   ,
+			       INV_CRT_USER_ID   ,
+			       INV_UPD_DT   ,
+			       INV_UPD_USER_ID   ,
+			       INV_TO_ACTVT_BS   ,
+			       INV_REQ_TICKET_ID   ,
+			       INV_CALL_ENTRY_ID   ,
+			       INV_REQ_ID   ,
+			       INV_DT_AUTO   
+		   FROM SAL0049D 
+		 WHERE INV_ID = #{callResultInvId} 
+			 AND INV_STUS_ID IN ( '1', '29' )
+    </select>
+    
+    <select id="saveCallResultSearchSecond" parameterType="Map" resultType="egovMap">
+        SELECT CALL_ENTRY_ID   ,
+			       SALES_ORD_ID   ,
+			       TYPE_ID   ,
+			       STUS_CODE_ID   ,
+			       RESULT_ID   ,
+			       DOC_ID   ,
+			       CRT_USER_ID   ,
+			       CRT_DT   ,
+			       CALL_DT   ,
+			       IS_WAIT_FOR_CANCL   ,
+			       HAPY_CALLER_ID   ,
+			       UPD_DT   ,
+			       UPD_USER_ID   ,
+			       ORI_CALL_DT   
+		   FROM CCR0006D 
+         WHERE CALL_ENTRY_ID = #{callEntryId} 
+            <![CDATA[
+             AND ROWNUM <= 1
+            ]]>
+    </select>
+    
+    <select id="saveCallResultSearchThird" parameterType="Map" resultType="egovMap">
+        SELECT * 
+			  FROM ( SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
+					                Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+					                Project1.CALL_STUS_ID CALL_STUS_ID  ,
+					                Project1.CALL_DT CALL_DT  ,
+					                Project1.CALL_ACTN_DT CALL_ACTN_DT  ,
+					                Project1.CALL_FDBCK_ID CALL_FDBCK_ID  ,
+					                Project1.CALL_CT_ID CALL_CT_ID  ,
+					                Project1.CALL_REM CALL_REM  ,
+					                Project1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
+					                Project1.CALL_CRT_DT CALL_CRT_DT  ,
+					                Project1.CALL_CRT_USER_ID_DEPT CALL_CRT_USER_ID_DEPT  ,
+					                Project1.CALL_HC_ID CALL_HC_ID  ,
+					                Project1.CALL_ROS_AMT CALL_ROS_AMT  ,
+					                Project1.CALL_SMS CALL_SMS  ,
+					                Project1.CALL_SMS_REM CALL_SMS_REM  
+						   FROM (SELECT Extent1.CALL_RESULT_ID CALL_RESULT_ID  ,
+								                Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+								                Extent1.CALL_STUS_ID CALL_STUS_ID  ,
+								                Extent1.CALL_DT CALL_DT  ,
+								                Extent1.CALL_ACTN_DT CALL_ACTN_DT  ,
+								                Extent1.CALL_FDBCK_ID CALL_FDBCK_ID  ,
+								                Extent1.CALL_CT_ID CALL_CT_ID  ,
+								                Extent1.CALL_REM CALL_REM  ,
+								                Extent1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
+								                Extent1.CALL_CRT_DT CALL_CRT_DT  ,
+								                Extent1.CALL_CRT_USER_ID_DEPT CALL_CRT_USER_ID_DEPT  ,
+								                Extent1.CALL_HC_ID CALL_HC_ID  ,
+								                Extent1.CALL_ROS_AMT CALL_ROS_AMT  ,
+								                Extent1.CALL_SMS CALL_SMS  ,
+								                Extent1.CALL_SMS_REM CALL_SMS_REM  
+								       FROM CCR0007D Extent1
+								     WHERE Extent1.CALL_ENTRY_ID = #{callEntryId} ) Project1
+			ORDER BY Project1.CALL_RESULT_ID DESC ) 
+            <![CDATA[
+            WHERE ROWNUM <= 1
+            ]]>
+    </select>
+    
+    <select id="getBSMonth" parameterType="Map" resultType="egovMap">
+        SELECT * 
+			  FROM ( SELECT Project1.SCHDUL_ID   ,
+					                Project1.STUS_CODE_ID   ,
+					                Project1.RESULT_ID   ,
+					                Project1.NO   ,
+					                Project1.RESULT_STUS_CODE_ID   ,
+					                Project1.FAIL_RESN_ID   
+					       FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
+								                Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+								                Extent2.RESULT_ID RESULT_ID  ,
+								                Extent2.NO NO  ,
+								                Extent2.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID  ,
+								                Extent2.FAIL_RESN_ID FAIL_RESN_ID  
+								       FROM SVC0008D Extent1
+								      LEFT JOIN SVC0006D Extent2   ON Extent1.SCHDUL_ID = Extent2.SCHDUL_ID
+								     WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+						                 <![CDATA[
+						                 AND 8 <> Extent1.STUS_CODE_ID
+						                 AND ( Extent1.MONTH = (SELECT TO_CHAR(SYSDATE, 'mm') FROM DUAL) )
+						                 AND ( Extent1.YEAR = (SELECT TO_CHAR(SYSDATE, 'YYYY') FROM DUAL) ) 
+						            ) Project1
+			  ORDER BY Project1.RESULT_ID DESC )
+			  WHERE ROWNUM <=]]> 1
+    </select>
+    
+    <select id="getBSScheduleStusCodeId" parameterType="Map" resultType="egovMap">
+        SELECT * 
+           FROM (
+			        SELECT SCHDUL_ID   ,
+						       NO   ,
+						       SALES_ORD_ID   ,
+						       MONTH   ,
+						       YEAR   ,
+						       TYPE_ID   ,
+						       CODY_ID   ,
+						       REM   ,
+						       STUS_CODE_ID   ,
+						       LAST_SVC   ,
+						       CRT_DT   ,
+						       CRT_USER_ID   ,
+						       UPD_DT   ,
+						       UPD_USER_ID   ,
+						       SMS   ,
+						       SYNC_CHK   ,
+						       LOCK_   ,
+						       ACTN_MEM_ID   ,
+						       PREV_CODY_ID   
+					  FROM SVC0008D Extent1
+				    WHERE SALES_ORD_ID = #{salesOrdId}
+						AND 8 <![CDATA[ <> ]]> STUS_CODE_ID
+					 ORDER BY SCHDUL_ID DESC
+				    )
+		  WHERE ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+    
+    <select id="saveCallResultSearchFourth" parameterType="Map" resultType="egovMap">
+        SELECT REN_SCH_ID   ,
+			       SALES_ORD_ID   ,
+			       STUS_CODE_ID   ,
+			       REN_SCH_DT   ,
+			       REN_SCH_TERMS   ,
+			       IS_SYNC   
+		  FROM SAL0071D 
+		WHERE SALES_ORD_ID = #{salesOrdId}
+            <![CDATA[
+             AND ROWNUM <= 1
+            ]]>
+    </select>
+    
+    <update id="updateSAL0071D" parameterType="Map">
+        UPDATE SAL0071D
+			 SET STUS_CODE_ID = #{rentalSchemeStusId},
+			       REN_SCH_DT = SYSDATE
+		 WHERE REN_SCH_ID = #{renSchId}
+    </update>
+    
+    <select id="saveCallResultSearchFifth" parameterType="Map" resultType="egovMap">
+        SELECT INV_ID   ,
+                   INV_NO   ,
+                   INV_STUS_ID   ,
+                   SALES_ORD_ID   ,
+                   INV_TO_CANCL_ACT_BS   ,
+                   INV_CANCL_BS_SCHDUL_ID   ,
+                   INV_CRT_DT   ,
+                   INV_CRT_USER_ID   ,
+                   INV_UPD_DT   ,
+                   INV_UPD_USER_ID   ,
+                   INV_TO_ACTVT_BS   ,
+                   INV_REQ_TICKET_ID   ,
+                   INV_CALL_ENTRY_ID   ,
+                   INV_REQ_ID   ,
+                   INV_DT_AUTO   
+           FROM SAL0049D 
+         WHERE INV_ID = #{callResultInvId}
+    </select>
+    
+    <update id="updateSAL0049D" parameterType="Map">
+        UPDATE SAL0049D
+             SET INV_STUS_ID = #{callResultStus},
+                   INV_UPD_DT = SYSDATE,
+                   INV_UPD_USER_ID = #{userId}
+         WHERE INV_ID = #{callResultInvId}
+    </update>
+    
+    <select id="monthYearChk" parameterType="Map" resultType="egovMap">
+        SELECT Filter1.SRV_SALES_ORD_ID SRV_SALES_ORD_ID  ,
+			       Filter1.SRV_START_DT  ,
+			       Filter1.SRV_EXPR_DT ,
+			       Filter1.SRV_FREQ SRV_FREQ  ,
+			       Filter1.MONTH MONTH  ,
+			       Filter1.YEAR YEAR  
+			  FROM ( SELECT Extent1.SRV_SALES_ORD_ID SRV_SALES_ORD_ID  ,
+			                Extent1.SRV_FREQ SRV_FREQ  ,
+			                Extent1.SRV_START_DT SRV_START_DT  ,
+			                Extent1.SRV_EXPR_DT SRV_EXPR_DT  ,
+			                Extent3.SCHDUL_ID SCHDUL_ID  ,
+			                Extent3.MONTH MONTH  ,
+			                Extent3.YEAR YEAR  
+			         FROM SAL0095D Extent1
+			                JOIN SAL0090D Extent2   ON Extent1.SRV_SALES_ORD_ID = Extent2.SRV_SO_ID
+			                JOIN SVC0008D Extent3   ON Extent1.SRV_SALES_ORD_ID = Extent3.SALES_ORD_ID
+			          WHERE  ( 1 = Extent2.SRV_BS_GEN )
+			                   AND ( 1 = Extent2.SRV_STUS_ID )
+			                   AND ( 4 = Extent1.SRV_STUS_CODE_ID )
+			                   AND ( 0 <![CDATA[<>]]> Extent1.SRV_FREQ ) ) Filter1
+			         JOIN ( SELECT ( SELECT MAX(Extent5.SCHDUL_ID)  A1  
+			                         FROM SVC0008D Extent5
+			                          WHERE  ( Extent5.SALES_ORD_ID = #{salesOrdId} )
+			                                   AND ( Project2.SALES_ORD_ID = Extent5.SALES_ORD_ID )
+			                                   AND ( 8 <![CDATA[<>]]> Extent5.STUS_CODE_ID ) ) C1  
+			                FROM ( SELECT #{salesOrdId} P_LINQ_0  ,
+			                              Distinct1.SALES_ORD_ID SALES_ORD_ID  
+			                       FROM ( SELECT DISTINCT Extent4.SALES_ORD_ID SALES_ORD_ID  
+			                              FROM SVC0008D Extent4
+			                               WHERE  Extent4.SALES_ORD_ID = #{salesOrdId} ) Distinct1 ) Project2 ) Project3   ON Filter1.SCHDUL_ID = Project3.C1
+			 WHERE  Filter1.SRV_SALES_ORD_ID = #{salesOrdId} 
+              AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <select id="monthBetween" parameterType="Map" resultType="Integer">
+        SELECT 
+            MONTHS_BETWEEN( to_date( to_char(SYSDATE, 'YYYYmm') ||'01','yyyymmdd') ,to_date(#{EX_YYYY}||#{EX_MM}  ||'01','yyyymmdd')) expInt
+        FROM DUAL
     </select>
     
 </mapper>

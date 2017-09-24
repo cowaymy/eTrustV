@@ -29,6 +29,10 @@ public class OrderCancelVO implements Serializable {
 	private String custIc;				//nric / Comp No
 	private int brnchId;
 	private String brnchName;
+	private int memId;
+	private String memCodeName;
+	private int resnId;
+	private String codeResnDesc;
 	
 	public int getReqId() {
 		return reqId;
@@ -167,6 +171,30 @@ public class OrderCancelVO implements Serializable {
 	}
 	public void setBrnchName(String brnchName) {
 		this.brnchName = brnchName;
+	}
+	public int getMemId() {
+		return memId;
+	}
+	public void setMemId(int memId) {
+		this.memId = memId;
+	}
+	public String getMemCodeName() {
+		return memCodeName;
+	}
+	public void setMemCodeName(String memCodeName) {
+		this.memCodeName = memCodeName;
+	}
+	public int getResnId() {
+		return resnId;
+	}
+	public void setResnId(int resnId) {
+		this.resnId = resnId;
+	}
+	public String getCodeResnDesc() {
+		return codeResnDesc;
+	}
+	public void setCodeResnDesc(String codeResnDesc) {
+		this.codeResnDesc = codeResnDesc;
 	}
 	
 	

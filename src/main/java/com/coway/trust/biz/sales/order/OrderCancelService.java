@@ -78,4 +78,15 @@ public interface OrderCancelService {
 	 * @exception Exception
 	 */
 	List<EgovMap> selectAssignCT(Map<String, Object> params);
+	
+	
+	/**
+	 * Assign CT  - New Cancellation Log Result
+	 * 
+	 * @param 
+	 *            - 
+	 * @return combo box
+	 * @exception Exception
+	 */
+	List<EgovMap> selectFeedback(Map<String, Object> params);
 }

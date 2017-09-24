@@ -1,5 +1,7 @@
 package com.coway.trust.biz.sales.order.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,12 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	
 	@Resource(name = "orderInvestMapper")
 	private OrderInvestMapper orderInvestMapper;
+	
+	@Resource(name = "orderSuspensionMapper")
+	private OrderSuspensionMapper orderSuspensionMapper;
+	
+	@Resource(name = "orderExchangeMapper")
+	private OrderExchangeMapper orderExchangeMapper;
 	
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -256,5 +264,109 @@ public class OrderInvestServiceImpl extends EgovAbstractServiceImpl implements O
 	@Override
 	public List<EgovMap> investCallResultLog(Map<String, Object> params) {
 		return orderInvestMapper.investCallResultLog(params);
+	}
+	
+	
+	@Override
+	public void saveCallResultOk(Map<String, Object> params) throws Exception{
+		
+		EgovMap getInvId = orderInvestMapper.saveCallResultSearchFirst(params);
+		params.put("salesOrdId", getInvId.get("salesOrdId"));
+		
+		// parameter setting (investigationM)
+		params.put("callEntryId", getInvId.get("invCallEntryId"));
+		params.put("callStusId", 1);
+		params.put("callFdbckId", 0);
+		params.put("callCtId", 0);
+		params.put("callRem", params.get("callResultSusRem"));
+		//params.put("callCrtUserId", params.get("userId"));
+		params.put("callCrtUserId", 999999);
+		params.put("callCrtUserIdDept", 0);
+		params.put("callHcId", 0);
+		params.put("callRosAmt", 0);
+		params.put("callSms", 0);
+		params.put("callSmsRem", " ");
+		//params.put("updUserId", params.get("userId"));
+		params.put("updUserId", 999999);
+		
+		orderSuspensionMapper.insertCCR0007DSuspend(params);
+		
+		EgovMap callEntry = orderInvestMapper.saveCallResultSearchSecond(params);
+		
+		EgovMap callResult = orderInvestMapper.saveCallResultSearchThird(params);
+		params.put("resultId", callResult.get("callResultId"));
+		
+		orderExchangeMapper.updateCCR0006D(params);
+		
+		if(params.get("callResultStus") == "28"){
+			EgovMap rentalSchemeInfo = orderInvestMapper.saveCallResultSearchFourth(params);
+			params.put("renSchId", rentalSchemeInfo.get("renSchId"));
+			params.put("rentalSchemeStusId", "REG");
+			orderInvestMapper.updateSAL0071D(params);
+			
+			EgovMap investigateInfo = orderInvestMapper.saveCallResultSearchFifth(params);
+			orderInvestMapper.updateSAL0049D(params);
+			
+			
+			params.put("prgrsId", 5);
+			params.put("refId", 0);
+			params.put("isLok", 0);
+			orderInvestMapper.insertSalesOrdLog(params);
+		}
+	}
+	
+	@Override
+	public String bsMonthCheck(Map<String, Object> params) throws Exception{
+		int BSStatusID = 0;
+        int BSFailReasonID = 0;
+        String hidIsBSMonth = null;
+		
+        EgovMap getInvId = orderInvestMapper.saveCallResultSearchFirst(params);
+        
+        params.put("salesOrdId", getInvId.get("salesOrdId"));
+		
+		if(params.get("callResultStus") == "28"){
+			
+			EgovMap getBSMonth = orderInvestMapper.getBSMonth(params);
+			
+			if(getBSMonth != null){
+				BSStatusID = (int)getBSMonth.get("stusCodeId");
+                BSFailReasonID = (int)getBSMonth.get("failResnId");
+			}
+			
+			if (BSStatusID == 1 || BSStatusID == 4 || BSStatusID == 21) {
+				hidIsBSMonth = "0";
+            } else if (BSStatusID == 10 && BSFailReasonID == 1770) {
+            	hidIsBSMonth = "1";
+            } else if (BSStatusID == 10 && BSFailReasonID != 1770) {
+            	hidIsBSMonth = "0";
+            } else {
+            	EgovMap getBSScheduleStusCodeId = orderInvestMapper.getBSScheduleStusCodeId(params);
+            	if(getBSScheduleStusCodeId != null){
+            		
+            		int CheckExistLastBSStatusID = (int)getBSScheduleStusCodeId.get("stusCodeId");
+            		
+            		if(CheckExistLastBSStatusID == 21){
+            			hidIsBSMonth = "1";
+            		}else if(CheckExistLastBSStatusID == 0){
+            			EgovMap monthYearChk = orderInvestMapper.monthYearChk(params);
+            			params.put("EX_YYYY", monthYearChk.get("year"));
+            			params.put("EX_MM", monthYearChk.get("month"));
+            			int monthBetweenCnt = orderInvestMapper.monthBetween(params);
+            			
+            			// Visual Studio -- module.GetServiceViewByOrderID 로직하기.
+            			
+            			String todayYY = new SimpleDateFormat("yyyy").format(new Date());
+            			String todayMM = new SimpleDateFormat("mm").format(new Date());
+            			
+            		}
+            		
+            	}
+            	
+            }
+			
+		}
+		
+		return hidIsBSMonth;
 	}
 }

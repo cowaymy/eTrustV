@@ -40,6 +40,8 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 	
+	
+	
 	/**
 	 * 글 목록을 조회한다.
 	 * 
@@ -57,7 +59,7 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	
 	/**
-	 * 글 목록을 조회한다.
+	 * 상세 조회한다. - PST MailContact
 	 * 
 	 * @param pstRequestVO
 	 *            - 조회할 정보가 담긴 VO
@@ -65,11 +67,58 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 	 * @exception Exception
 	 */
 	
-	public EgovMap getPstRequestDODetailPop(Map<String, Object> params) {
+	public EgovMap pstRequestDOMailContact(Map<String, Object> params) {
 		
-		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : " + params.get("pstSalesOrdId"));
+		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : MailContact");
 		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
-		return pstRequestDOMapper.getPstRequestDODetailPop(params);
+		return pstRequestDOMapper.pstRequestDOMailContact(params);
+	}
+	
+	
+	/**
+	 * 상세 조회한다. - PST DeliveryContact
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	
+	public EgovMap pstRequestDODelvryContact(Map<String, Object> params) {
+		
+		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : DelvryContact");
+		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
+		return pstRequestDOMapper.pstRequestDODelvryContact(params);
+	}
+	
+	
+	/**
+	 * 상세 조회한다. - PST MailContact
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	
+	public EgovMap pstRequestDOMailAddress(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstRequestDOMailAddress(params);
+	}
+	
+	
+	/**
+	 * 상세 조회한다. - PST DeliveryContact
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	
+	public EgovMap pstRequestDODelvryAddress(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstRequestDODelvryAddress(params);
 	}
 	
 	
@@ -82,12 +131,106 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 	 * @exception Exception
 	 */
 	
+	public EgovMap pstRequestDOInfo(Map<String, Object> params) {
+		
+		logger.debug("getPstRequestDODetaiPop serviceImpl Info호출 : ");
+		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
+		return pstRequestDOMapper.pstRequestDOInfo(params);
+	}
+	
+	
+	/**
+	 * 글 목록을 조회한다.
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> pstRequestDOStockList(Map<String, Object> params) {
+		
+		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
+		return pstRequestDOMapper.pstRequestDOStockList(params);
+	}
+	
+	
+	/**
+	 * 글 목록을 조회한다. combo box Person In Charge
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> cmbPstInchargeList() {
+		
+		return pstRequestDOMapper.cmbPstInchargeList();
+	}
+	
+	
+	/**
+	 * 글 목록을 조회한다. ??
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 
 	public List<EgovMap> getPstRequestDOStockDetailPop(Map<String, Object> params) {
 		
 		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : " + params.get("pstSalesOrdId"));
 		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
 		return pstRequestDOMapper.getPstRequestDOStockDetailPop(params);
 	}
+	*/
+	
+	
+	/**
+	 * 글 목록을 조회한다. (new popup - dealer combo box)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> pstNewCmbDealerList() {
+		
+		return pstRequestDOMapper.pstNewCmbDealerList();
+	}
+	
+	
+	/**
+	 * 글 목록을 조회한다. (new popup - PIC combo box)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> pstNewCmbDealerChgList(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstNewCmbDealerChgList(params);
+	}
+	
+	
+	/**
+	 * 상세조회. (new popup - dealer infomation)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	
+	public EgovMap pstNewParticularInfo(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstNewParticularInfo(params);
+	}
+	
 	
 	/**
 	 * 글을 수정한다.
@@ -108,6 +251,9 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		int totalBal = 0;
 		int statusID = 0;
+		
+//		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+//		params.put("userId", sessionVO.getUserId());
 		
 		for(PSTSalesDVO pstSalesDVO : pstSalesDVOList) {
 			
@@ -131,7 +277,7 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
     			pstLogVO.setPstQty(newPstItmCanQty); //입력받은 취소수량
     			pstLogVO.setPstTypeId(SalesConstants.SALES_PSTCAN_CODEID);
     			pstLogVO.setPstRefNo(pstSalesMVO.getPstRefNo());
-    			pstLogVO.setCrtUserId(9999);
+    			pstLogVO.setCrtUserId(pstSalesDVO.getCrtUserId());
     			
     			pstRequestDOMapper.insertPstLog(pstLogVO);
 			}
@@ -165,5 +311,50 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 
         return totalAmt;
     }
+    
+    
+    /**
+	 * 글 목록을 조회한다. (contact popup)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	
+	public EgovMap pstNewContactPop(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstNewContactPop(params);
+	}
+	
+	
+    /**
+	 * 글 목록을 조회한다. (add / edit address popup)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	
+	public EgovMap pstEditAddrDetailTopPop(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstEditAddrDetailTopPop(params);
+	}
+	
+	
+	/**
+	 * 글 목록을 조회한다. (add / edit address popup)
+	 * 
+	 * @param pstRequestVO
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 글 목록
+	 * @exception Exception
+	 */
+	@Override
+	public List<EgovMap> pstEditAddrDetailListPop(Map<String, Object> params) {
+		
+		return pstRequestDOMapper.pstEditAddrDetailListPop(params);
+	}
     
 }

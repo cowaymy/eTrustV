@@ -320,11 +320,12 @@ public class OrderInvestController {
 		investCallResultInfo = orderInvestService.investCallResultInfo(params);
 		investCallResultCust = orderInvestService.investCallResultCust(params);
 		
-//		List<EgovMap> cmbRejReasonList = orderInvestService.cmbRejReasonList(params);
+		List<EgovMap> inchargeList = orderInvestService.inchargeList(params);
 		
 		model.addAttribute("investCallResultInfo", investCallResultInfo);
 		model.addAttribute("investCallResultCust", investCallResultCust);
-//		model.addAttribute("cmbRejReasonList", cmbRejReasonList);
+		model.addAttribute("inchargeList", inchargeList);
+		
 		
 		return "sales/order/orderInvestCallResultDtPop";
 	}
@@ -336,6 +337,61 @@ public class OrderInvestController {
 		List<EgovMap> investCallResultLog = orderInvestService.investCallResultLog(params);
 		logger.info("##### investCallResultLog #####" +investCallResultLog.toString());
 		return ResponseEntity.ok(investCallResultLog);
+	}
+	
+	
+	@RequestMapping(value = "/saveCallResultOk.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> saveCallResultOk(@RequestParam Map<String, Object> params, ModelMap model)
+			throws Exception {
+		
+		String retMsg = AppConstants.MSG_SUCCESS;
+		
+		Map<String, Object> map = new HashMap();
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		try{
+
+			orderInvestService.saveCallResultOk(params);
+			
+		}catch(Exception ex){
+			retMsg = AppConstants.MSG_FAIL;
+		}finally{
+			map.put("msg", retMsg);
+		}
+		
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	@RequestMapping(value = "/bsMonthCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> bsMonthCheck(@RequestParam Map<String, Object> params, ModelMap model)
+			throws Exception {
+		
+		Map<String, Object> saveOkMap = new HashMap();
+		
+//		String regSaveMsg = orderInvestService.bsMonthCheck(params);
+		String regSaveMsg = "0";
+		
+		saveOkMap.put("regSaveMsg", regSaveMsg);
+		
+		
+		return ResponseEntity.ok(saveOkMap);
+	}
+	
+	
+	@RequestMapping(value = "/bsMonthCheckOKPop.do")
+	public String bsMonthCheckOKPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("salesOrdNo", params.get("saveSalesOrdNo"));
+		return "sales/order/orderInvestCallResultRegSavePop";
+	}
+	
+	
+	@RequestMapping(value = "/bsMonthCheckNoPop.do")
+	public String bsMonthCheckNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("salesOrdNo", params.get("saveSalesOrdNo"));
+		return "sales/order/orderInvestCallResultRegSave2Pop";
 	}
 	
 }

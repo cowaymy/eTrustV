@@ -168,4 +168,47 @@ public interface OrderInvestService {
 	 * @exception Exception
 	 */
 	List<EgovMap> investCallResultLog(Map<String, Object> params);
+	
+	
+	/**
+	 * 상세화면 조회. Single Investigation Request
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.20
+	 *
+	EgovMap saveCallResultSearchFirst(Map<String, Object> params)throws Exception;
+	
+	
+	/**
+	 * 상세화면 조회. Single Investigation Request
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.20
+	 *
+	EgovMap saveCallResultSearchSecond(Map<String, Object> params)throws Exception;
+	
+	
+	/**
+	 * 상세화면 조회. Single Investigation Request
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 장광렬 2017.07.21
+	 *
+	EgovMap saveCallResultSearchThird(Map<String, Object> params)throws Exception;
+	*/
+	
+	void saveCallResultOk(Map<String, Object> params) throws Exception;
+	
+	
+	/**
+	 * Reject check
+	 * @param params 
+	 * @return 
+	 * @exception Exception
+	 * @author 이석희 2017.07.20
+	 */
+	String bsMonthCheck(Map<String, Object> params)throws Exception;
 }

@@ -104,4 +104,17 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 	public List<EgovMap> selectAssignCT(Map<String, Object> params) {
 		return orderCancelMapper.selectAssignCT(params);
 	}
+	
+	
+	/**
+	 * Assign CT  - New Cancellation Log Result
+	 * 
+	 * @param 
+	 *            - 
+	 * @return combo box
+	 * @exception Exception
+	 */
+	public List<EgovMap> selectFeedback(Map<String, Object> params) {
+		return orderCancelMapper.selectFeedback(params);
+	}
 }

@@ -54,7 +54,7 @@ public interface PSTRequestDOMapper {
 	 * @return 조회한 글
 	 * @exception Exception
 	 */
-	EgovMap getPstRequestDODetailPop(Map<String, Object> params);
+	EgovMap pstRequestDOInfo(Map<String, Object> params);
 
 	
 	/**
@@ -75,9 +75,11 @@ public interface PSTRequestDOMapper {
 	 *            - 조회할 정보가 담긴 VO
 	 * @return 조회한 글
 	 * @exception Exception
-	 */
+	 *
 	List<EgovMap> getPstRequestDOStockDetailPop(Map<String, Object> params);
-
+	 */
+	
+	
 	/**
 	 * 글을 수정한다.
 	 * 
@@ -99,4 +101,139 @@ public interface PSTRequestDOMapper {
 	void updatePstSalesD(PSTSalesDVO pstSalesDVO);
 	
 	void insertPstLog(PSTLogVO pstLogVO);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회) - PST MailContact
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstRequestDOMailContact(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회) - PST DeliveryContact
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstRequestDODelvryContact(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회) - PST MailAddress
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstRequestDOMailAddress(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회) - PST DeliveryAddress
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstRequestDODelvryAddress(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회팝업 Stock List)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> pstRequestDOStockList(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회 combo box Person In Charge)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> cmbPstInchargeList();
+	
+	
+	/**
+	 * 글을 조회한다. (new popup - dealer combo box)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> pstNewCmbDealerList();
+	
+	
+	/**
+	 * 글을 조회한다. (new popup - PIC combo box)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> pstNewCmbDealerChgList(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회) - (new popup - dealer infomation)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstNewParticularInfo(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회) - (new popup - Contact)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstNewContactPop(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (상세조회) - (add / edit address popup)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	EgovMap pstEditAddrDetailTopPop(Map<String, Object> params);
+	
+	
+	/**
+	 * 글을 조회한다. (add / edit address popup)
+	 * 
+	 * @param vo
+	 *            - 조회할 정보가 담긴 VO
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	List<EgovMap> pstEditAddrDetailListPop(Map<String, Object> params);
+	
+	
+	
 }

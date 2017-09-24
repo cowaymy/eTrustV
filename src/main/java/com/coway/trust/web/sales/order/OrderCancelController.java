@@ -71,7 +71,26 @@ public class OrderCancelController {
 		params.put("stusIdList", callStusId);
 		params.put("reqStageList", reqStageId);
 		params.put("branchList", dscBranchId);
-		
+		String stDate = (String)params.get("startCrtDt");
+		if(stDate != null && stDate != ""){
+			String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
+			params.put("startCrtDt", createStDate);
+		}
+		String enDate = (String)params.get("endCrtDt");
+		if(enDate != null && enDate != ""){
+			String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
+			params.put("endCrtDt", createEnDate);
+		}
+		String recallStDate = (String)params.get("startRecallDt");
+		if(recallStDate != null && recallStDate != ""){
+			String createStDate1 = recallStDate.substring(6) + "-" + recallStDate.substring(3, 5) + "-" + recallStDate.substring(0, 2);
+			params.put("startRecallDt", createStDate1);
+		}
+		String recallEnDate = (String)params.get("endRecallDt");
+		if(recallEnDate != null && recallEnDate != ""){
+			String createEnDate1 = recallEnDate.substring(6) + "-" + recallEnDate.substring(3, 5) + "-" + recallEnDate.substring(0, 2);
+			params.put("endRecallDt", createEnDate1);
+		}
 		List<EgovMap> orderCancelList = orderCancelService.orderCancellationList(params);
 		
 		return ResponseEntity.ok(orderCancelList);
@@ -84,9 +103,17 @@ public class OrderCancelController {
 	@RequestMapping(value = "/cancelReqInfoPop.do")
 	public String cancelReqInfoPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		
+		String paramTypeId = (String)params.get("typeId");
+		String paramDocId = (String)params.get("docId");
+		String paramRefId = (String)params.get("refId");
+		logger.info("##### paramRefId #####" +paramRefId);
+		logger.info("##### paramRefId #####" +(String)params.get("refId"));
 		EgovMap cancelReqInfo = orderCancelService.cancelReqInfo(params);
 		
 		model.addAttribute("cancelReqInfo", cancelReqInfo);
+		model.addAttribute("paramTypeId", paramTypeId);
+		model.addAttribute("paramDocId", paramDocId);
+		model.addAttribute("paramRefId", paramRefId);
 		
 		return "sales/order/orderCancelDetailPop";
 		
@@ -102,8 +129,8 @@ public class OrderCancelController {
 	@RequestMapping(value = "/cancelLogTransList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> cancelLogTransList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
-		params.put("typeId", "296");	//임시 CT Assignment
-		params.put("docId", "101795");	//임시 CT Assignment
+		//params.put("typeId", "296");	//임시 CT Assignment
+		//params.put("docId", "101795");	//임시 CT Assignment
 		
 		List<EgovMap> cancelLogTransList = orderCancelService.cancelLogTransctionList(params);
 		
@@ -120,8 +147,8 @@ public class OrderCancelController {
 	@RequestMapping(value = "/productReturnTransList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> productReturnTransList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
-		params.put("typeId", "296");	//임시 CT Assignment
-		params.put("refId", "8725");	//임시 CT Assignment
+		//params.put("typeId", "296");	//임시 CT Assignment
+		//params.put("refId", "8725");	//임시 CT Assignment
 		
 		List<EgovMap> productReturnTransList = orderCancelService.productReturnTransctionList(params);
 		
@@ -148,6 +175,35 @@ public class OrderCancelController {
 		model.addAttribute("ctAssignmentInfo", ctAssignmentInfo);
 		
 		return "sales/order/orderCancelCTAssignmentPop";
+		
+	}
+	
+	
+	/**
+	 * 화면 호출. - New Cancellation Log Result
+	 */
+	@RequestMapping(value = "/cancelNewLogResultPop.do")
+	public String cancelNewLogResultPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+		String paramTypeId = (String)params.get("typeId");
+		String paramDocId = (String)params.get("docId");
+		String paramRefId = (String)params.get("refId");
+		
+		EgovMap cancelReqInfo = orderCancelService.cancelReqInfo(params);
+		List<EgovMap> selectAssignCTList = orderCancelService.selectAssignCT(params);
+		List<EgovMap> selectFeedback = orderCancelService.selectFeedback(params);
+		
+		model.addAttribute("cancelReqInfo", cancelReqInfo);
+		model.addAttribute("paramTypeId", paramTypeId);
+		model.addAttribute("paramDocId", paramDocId);
+		model.addAttribute("paramRefId", paramRefId);
+		model.addAttribute("selectAssignCTList", selectAssignCTList);
+		model.addAttribute("selectFeedback", selectFeedback);
+		
+		logger.info("##### selectAssignCTList #####" +selectAssignCTList.get(0));
+		logger.info("##### selectAssignCTList #####" +selectAssignCTList.get(1));
+		
+		return "sales/order/orderCancelDetailAddPop";
 		
 	}
 }

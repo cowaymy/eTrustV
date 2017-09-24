@@ -352,7 +352,7 @@
 			        ELSE 0 END HAPY_CALLER_ID  ,
 			        CASE 
 			             WHEN ( Filter1.ORI_CALL_DT IS NOT NULL ) THEN Filter1.ORI_CALL_DT
-			        ELSE '1900-01-01' END ORI_CALL_DT  ,
+			        ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ORI_CALL_DT  ,
 			        CASE 
 			             WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
 			        ELSE '' END USER_NAME  

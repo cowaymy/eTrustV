@@ -73,6 +73,17 @@ public interface OrderCancelMapper {
 	
 	
 	/**
+	 * Assign CT  - New Cancellation Log Result ComboBox  
+	 * 
+	 * @param params
+	 * @return
+	 * @exception Exception
+	 * @author
+	 */
+	List<EgovMap> selectFeedback(Map<String, Object> params);
+	
+	
+	/**
 	 * Assignment CT Information.
 	 * 
 	 * @param REF_ID, TYPE_ID
