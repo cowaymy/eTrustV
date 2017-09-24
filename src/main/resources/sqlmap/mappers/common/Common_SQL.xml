@@ -244,17 +244,17 @@
 		 WHERE 1 = 1
 
       <if test="pgmCode !=null and pgmCode != ''">
-        AND UPPER(PGM_CODE) LIKE UPPER(#{pgmCode}) || '%'
+        AND PGM_CODE LIKE #{pgmCode}  || '%'
       </if>
       <if test="pgmNm !=null and pgmNm != ''">
-        AND UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmNm}) || '%'
+        AND UPPER(PGM_NAME) LIKE '%' || #{pgmNm} || '%'
       </if>
 
       <if test='programSelectBox == "01" '>
-         AND UPPER(PGM_CODE) LIKE UPPER(#{programCdNm}) || '%'
+         AND PGM_CODE LIKE #{programCdNm} || '%'
       </if>
       <if test='programSelectBox == "02" '>
-         AND UPPER(PGM_NAME) LIKE '%' || UPPER(#{programCdNm}) || '%'
+         AND UPPER(PGM_NAME) LIKE '%' || #{programCdNm} || '%'
       </if>
 
      ORDER BY  PGM_CODE
@@ -637,10 +637,10 @@
             AND ACC_CODE LIKE #{accCode} || '%'
           </if>
           <if test="accDesc !=null and accDesc != ''">
-            AND UPPER(ACC_DESC) LIKE  '%' || UPPER(#{accDesc}) || '%'
+            AND ACC_DESC LIKE  '%' || #{accDesc} || '%'
           </if>
           <if test="sapAccCode !=null and sapAccCode != ''">
-            AND SAP_ACC_CODE LIKE #{sapAccCode} || '%'
+            AND SAP_ACC_CODE = #{sapAccCode} 
           </if>
           <if test="paymentCd !=null and paymentCd == 'CSH' ">
             AND IS_PAY_CASH = 1
@@ -809,10 +809,10 @@
                     AND  CdMst.CODE_MASTER_ID  = #{cdMstId}
                 </if>
                 <if test="cdMstNm !=null and cdMstNm != ''">
-                    AND (UPPER(CdMst.CODE_MASTER_NAME) LIKE UPPER(#{cdMstNm}) || '%' )
+                    AND (UPPER(CdMst.CODE_MASTER_NAME) LIKE '%' || UPPER(#{cdMstNm}) || '%' )
                 </if>
                 <if test="cdMstDesc !=null and cdMstDesc != ''">
-                    AND (UPPER(CdMst.CODE_DESC) LIKE UPPER(#{cdMstDesc})  || '%' )
+                    AND (UPPER(CdMst.CODE_DESC) LIKE '%' || UPPER(#{cdMstDesc})  || '%' )
                 </if>
                 <if test="cdMstDisabled !=null and cdMstDisabled != ''">
                     AND (CdMst.DISAB = #{cdMstDisabled})
@@ -1017,9 +1017,6 @@
                   <when test="groupCode !=null and groupCode == 'post'">
                       POSTCODE CODE_ID , POSTCODE CODE_NAME
                   </when>
-                  <otherwise>
-                     '' as CODE_ID , '' as CODE_NAME
-                  </otherwise>
               </choose>
           FROM sys0064m
           WHERE STATUS_ID = '1'

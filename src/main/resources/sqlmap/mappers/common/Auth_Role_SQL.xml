@@ -232,12 +232,12 @@ SELECT
 </select>
 
 <select id="selectRoleAuthMappingList" parameterType="Map" resultType="egovMap">
-   SELECT 
+      SELECT 
        ROLE_ID
       , SUBSTR(ROLE_PATH,3,LENGTH(ROLE_PATH)) ROLE_NAME
       , ROLE_LEV ROLE_LEV
       , PARENT_ROLE 
-      , ROLE_NAME
+      , ROLE_NAME ROOT_NAME
       , L1 ROLE_1
       , L2 ROLE_2
       , L3 ROLE_3
