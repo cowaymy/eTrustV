@@ -66,57 +66,21 @@
     function createAUIGrid() {
         
     	//AUIGrid 칼럼 설정
-        var columnLayout = [{
-                dataField   : "ordNo",          headerText  : "Order No",
-                width       : 80,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "ordStusCode",    headerText  : "Status",
-                width       : 80,               editable    : false,
-                style           : 'left_style'
-            }, {
-                dataField   : "appTypeCode",    headerText  : "App Type",
-                width       : 80,               editable        : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "ordDt",          headerText  : "Order Date",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "refNo",          headerText  : "Ref No",
-                width       : 60,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "productName",    headerText  : "Product",
-                width       : 150,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "custId",         headerText  : "Cust ID",
-                width       : 70,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "custName",       headerText  : "Customer Name",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "custIc",         headerText  : "NRIC/Company No",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "crtUserId",      headerText  : "Creator",
-                width       : 100,              editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "pvYear",         headerText  : "PV Year",
-                width       : 60,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "pvMonth",        headerText  : "PV Mth",
-                width       : 60,               editable    : false,
-                style       : 'left_style'
-            }, {
-                dataField   : "ordId",          visible     : false //salesOrderId
-            }];
+        var columnLayout = [
+            { headerText : "Order No",        dataField : "ordNo",       editable : false, width : 80  }
+          , { headerText : "Status",          dataField : "ordStusCode", editable : false, width : 80  }
+          , { headerText : "App Type",        dataField : "appTypeCode", editable : false, width : 80  }
+          , { headerText : "Order Date",      dataField : "ordDt",       editable : false, width : 100 }
+          , { headerText : "Ref No",          dataField : "refNo",       editable : false, width : 60  }
+          , { headerText : "Product",         dataField : "productName", editable : false, width : 150 }
+          , { headerText : "Cust ID",         dataField : "custId",      editable : false, width : 70  }
+          , { headerText : "Customer Name",   dataField : "custName",    editable : false, width : 100 }
+          , { headerText : "NRIC/Company No", dataField : "custIc",      editable : false, width : 100 }
+          , { headerText : "Creator",         dataField : "crtUserId",   editable : false, width : 100 }
+          , { headerText : "PV Year",         dataField : "pvYear",      editable : false, width : 60  }
+          , { headerText : "PV Mth",          dataField : "pvMonth",     editable : false, width : 60  }
+          , { headerText : "ordId",           dataField : "ordId",       visible  : false }
+            ];
 
         //그리드 속성 설정
         var gridPros = {
@@ -165,12 +129,22 @@
             width: '100%'
         });
     }
-    
-    function fn_createEvent(objId, eventType) {
-        var e = jQuery.Event(eventType);
-        $('#'+objId).trigger(e);
-    }
 
+    $.fn.clearForm = function() {
+        return this.each(function() {
+            var type = this.type, tag = this.tagName.toLowerCase();
+            if (tag === 'form'){
+                return $(':input',this).clearForm();
+            }
+            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+                this.value = '';
+            }else if (type === 'checkbox' || type === 'radio'){
+                this.checked = false;
+            }else if (tag === 'select'){
+                this.selectedIndex = -1;
+            }
+        });
+    };
 </script>
 
 <section id="content"><!-- content start -->
@@ -376,4 +350,3 @@
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-

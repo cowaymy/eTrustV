@@ -351,22 +351,6 @@
         });
     }
 
-    $.fn.clearForm = function() {
-        return this.each(function() {
-            var type = this.type, tag = this.tagName.toLowerCase();
-            if (tag === 'form'){
-                return $(':input',this).clearForm();
-            }
-            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-                this.value = '';
-            }else if (type === 'checkbox' || type === 'radio'){
-                this.checked = false;
-            }else if (tag === 'select'){
-                this.selectedIndex = -1;
-            }
-        });
-    };
-
     function fn_setBillGrp(grpOpt) {
 
         if(grpOpt == 'new') {
@@ -637,7 +621,7 @@
                     $('#appType').val('');
                     Common.alert('<b>Please select customer first.</b>');
 
-                    fn_createEvent("aTabCS", "click");
+                    $('#aTabCS').click();
                 }
                 else {
                     var stkType = '1';
@@ -770,47 +754,47 @@
 //            fn_doSaveOrder();
 
             if(!fn_validCustomer()) {
-                fn_createEvent("aTabCS", "click");
+                $('#aTabCS').click();
                 return false;
             }
 
             if(!fn_validMailAddress()) {
-                fn_createEvent("aTabBD", "click");
+                $('#aTabBD').click();
                 return false;
             }
 
             if(!fn_validContact()) {
-                fn_createEvent("aTabMS", "click");
+                $('#aTabBD').click();
                 return false;
             }
 
             if(!fn_validSales()) {
-                fn_createEvent("aTabSO", "click");
+                $('#aTabSO').click();
                 return false;
             }
 
             if(!fn_validRentPaySet()) {
-                fn_createEvent("aTabPC", "click");
+                $('#aTabPC').click();
                 return false;
             }
 
             if(!fn_validBillGroup()) {
-                fn_createEvent("aTabBD", "click");
+                $('#aTabBD').click();
                 return false;
             }
 
             if(!fn_validInstallation()) {
-                fn_createEvent("aTabIN", "click");
+                $('#aTabIN').click();
                 return false;
             }
 
             if(!fn_validDocument()) {
-                fn_createEvent("aTabDC", "click");
+                $('#aTabDC').click();
                 return false;
             }
 
             if(!fn_validCert()) {
-                fn_createEvent("aTabRC", "click");
+                $('#aTabRC').click();
                 return false;
             }
 
@@ -2273,8 +2257,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="addBankAccountBtn" href="#">Add New Bank Account</a></p></li>
-    <li><p class="btn_grid"><a id="selBankAccountBtn" href="#">Select Another Bank Account</a></p></li>
+    <li><p class="btn_grid"><a id="btnAddBankAccount" href="#">Add New Bank Account</a></p></li>
+    <li><p class="btn_grid"><a id="btnSelBankAccount" href="#">Select Another Bank Account</a></p></li>
 </ul>
 <!------------------------------------------------------------------------------
     Direct Debit - Form ID(ddForm)
@@ -2293,7 +2277,7 @@
 <tr>
     <th scope="row">Account Number<span class="must">*</span></th>
     <td><input id="rentPayBankAccNo" name="rentPayBankAccNo" type="text" title="" placeholder="Account Number" class="w100p" />
-        <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="text" title="" placeholder="Account Number" class="w100p" /></td>
+        <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" /></td>
     <th scope="row">Account Type</th>
     <td><input id="rentPayBankAccType" name="rentPayBankAccType" type="text" title="" placeholder="Account Type" class="w100p" /></td>
 </tr>

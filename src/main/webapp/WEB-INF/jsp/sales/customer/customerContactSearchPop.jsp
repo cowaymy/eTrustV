@@ -90,14 +90,14 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Status",          dataField : "name",          editable : false, width : 80  }
-          , { headerText : "Name",            dataField : "name1",         editable : false, width : 100 }
-          , { headerText : "NRIC",            dataField : "nric",          editable : false, width : 80  }
-          , { headerText : "Tel (Mobile)",    dataField : "telM1",         editable : false, width : 100 }
-          , { headerText : "Tel (Office)",    dataField : "telO",          editable : false, width : 100 }
-          , { headerText : "Tel (Residence)", dataField : "telR",          editable : false, width : 100 }
-          , { headerText : "Tel (Fax)",       dataField : "telf",          editable : false, width : 100 }
-          , { headerText : "custCareCntId",   dataField : "custCareCntId", visible  : false  }
+            { headerText : "Status",          dataField : "name",          width : 80  }
+          , { headerText : "Name",            dataField : "name1",         width : 100 }
+          , { headerText : "NRIC",            dataField : "nric",          width : 80  }
+          , { headerText : "Tel (Mobile)",    dataField : "telM1",         width : 100 }
+          , { headerText : "Tel (Office)",    dataField : "telO",          width : 100 }
+          , { headerText : "Tel (Residence)", dataField : "telR",          width : 100 }
+          , { headerText : "Tel (Fax)",       dataField : "telf",          width : 100 }
+          , { headerText : "custCareCntId",   dataField : "custCareCntId", visible : false }
           ];
 
         //그리드 속성 설정

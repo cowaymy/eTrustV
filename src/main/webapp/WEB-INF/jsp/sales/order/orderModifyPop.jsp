@@ -3,16 +3,28 @@
 
 <script type="text/javaScript" language="javascript">
     
-    var ORD_ID      = '${salesOrderId}';
-    var CUST_ID     = '${custId}';
-    var APP_TYPE_ID = '${appTypeId}';
-    var TAB_NM      = '${ordEditType}';
+    var ORD_ID        = '${salesOrderId}';
+    var ORD_NO        = '${salesOrderNo}';
+    var CUST_ID       = '${custId}';
+    var APP_TYPE_ID   = '${appTypeId}';
+    var APP_TYPE_DESC = '${appTypeDesc}';
+    var TAB_NM        = '${ordEditType}';
+    var CUST_NRIC     = '${custNric}';
+    
+    var option = {
+		winName    : "popup",
+        width      : "1200px", //창 가로 크기
+        height     : "400px",  //창 세로 크기
+       	resizable  : "yes",    //창 사이즈 변경. (yes/no)(default : yes)
+        scrollbars : "no"      //스크롤바. (yes/no)(default : yes)
+    };
     
     $(document).ready(function(){
         doGetComboData('/common/selectCodeList.do', {groupCode :'335'}, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
         doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'dscBrnchId',     'S'); //Branch Code
-
+        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
+        
         if(FormUtil.isNotEmpty(TAB_NM)) {
             fn_changeTab(TAB_NM);
         }
@@ -21,6 +33,7 @@
     $(function(){
         $('#btnEditType').click(function() {
             var tabNm = $('#ordEditType').val();
+            
             fn_changeTab(tabNm);
         });
         $('#btnSaveBasicInfo').click(function() {            
@@ -60,6 +73,22 @@
         $('#btnInstSelAddr').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_INST_ADR"}, null, true);
         });
+        //Payment Channel - Add New Bank Account
+        $('#btnAddBankAccount').click(function() {
+            Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : CUST_ID}, null, true);
+        });
+        //Payment Channel - Select Another Bank Account
+        $('#btnSelBankAccount').click(function() {
+            Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_BANK_ACC"});
+        });
+        //Payment Channel - Add New Credit Card
+        $('#addCreditCardBtn').click(function() {
+            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : CUST_ID}, null, true);
+        });
+        //Payment Channel - Select Another Credit Card
+        $('#selCreditCardBtn').click(function() {
+            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_PAY_CHAN"}, null, true);
+        });
         $('#btnNewCntc').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewContactPop.do", {custId: CUST_ID, callParam : "ORD_MODIFY_CNTC_OWN"}, null , true);
         });
@@ -72,7 +101,157 @@
         $('#btnInstSelCntc').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_INST_CNTC"}, null, true);
         });
+        $('#chkRejectDate').click(function() {
+            
+            var isChk = $('#chkRejectDate').is(":checked");
+            
+            fn_clearControlReject();
+            
+            if(isChk) $('#chkRejectDate').prop("checked", true);
+            
+            if(isChk) {
+                if($("#rentPayMode option:selected").index() <= 0) {
+                    $("#chkRejectDate").prop("checked", false);
+                    Common.alert("Rental Paymode Required" + DEFAULT_DELIMITER + "<b>Please select the rental payment mode first.</b>");
+                }
+                else {
+                    $('#spRjctDate').text("*");
+                    $('#spRejectReason').text("*");
+                    $('#modStartDate').prop("disabled", true);
+                    $('#modRejectDate').removeAttr("disabled");
+                    $('#modRejectReason').removeAttr("disabled");
+                }
+            }
+        });
+        $('#thrdParty').click(function() {
+
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+            fn_clearControlReject();
+
+            $('#modApplyDate').val(${toDay});
+            $('#modSubmitDate').val('');
+            $('#modStartDate').val('');
+            $('#rentPayMode').val('');
+            
+            if($('#thrdParty').is(":checked")) {
+                $('#scPC_ThrdParty').removeClass("blind");
+            }
+        });
+        $('#thrdPartyId').change(function(event) {
+            
+            var InputCustID = 0;
+            
+            if(FormUtil.isNotEmpty($('#thrdPartyId').val())) {
+                InputCustID = $('#thrdPartyId').val();
+            }
+            
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+            fn_clearControlReject();
+            
+            $('#modApplyDate').val(${toDay});
+            $('#modSubmitDate').val('');
+            $('#modStartDate').val('');
+            $('#rentPayMode').val('');
+            
+            if(InputCustID != CUST_ID) {
+                fn_loadThirdParty(InputCustID, 2);
+            }
+            else {
+                Common.alert("Invalid Third Party ID" + DEFAULT_DELIMITER + "<b>Invalid third party ID.</b>");
+            }
+        });
+        $('#rentPayMode').change(function(event) {
+            if($('#rentPayMode').val() == '133' || $('#rentPayMode').val() == '134') {
+                Common.alert("Rental Paymode Restriction" + DEFAULT_DELIMITER + "<b>Currently we are not provide [" + $("#rentPayMode option:selected").text() + "] service.</b>");
+                $('#rentPayMode').val('');
+            }
+            else {
+                if($('#rentPayMode').val() == '131') {
+                    if($('#thrdParty').is(":checked")) {
+                        if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+                            Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
+                            $('#rentPayMode').val('');
+                        }
+                        else {
+                            $('#scPC_CrCard').removeClass("blind");
+                        }
+                    }
+                    else {
+                        $('#scPC_CrCard').removeClass("blind");
+                    }
+                }
+                else if($('#rentPayMode').val() == '132') {
+                    if($('#thrdParty').is(":checked")) {
+                        if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+                            Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
+                            $('#rentPayMode').val('');
+                        }
+                        else {
+                            $('#scPC_DirectDebit').removeClass("blind");
+                        }
+                    }
+                    else {
+                        $('#scPC_DirectDebit').removeClass("blind");
+                    }
+                }
+                
+                fn_loadRejectReasonList($('#rentPayMode').val(), 0)
+            }
+        });
     });
+    
+    //ClearControl_RentPaySet_ThirdParty
+    function fn_clearRentPayMode() {
+        $('#rentPayModeForm').clearForm();
+    }
+    
+    //ClearControl_RentPaySet_ThirdParty
+    function fn_clearRentPay3thParty() {
+        $('#scPC_ThrdParty').addClass("blind");
+        $('#thrdPartyForm').clearForm();
+    }
+
+    //ClearControl_RentPaySet_DD
+    function fn_clearRentPaySetDD() {
+        $('#scPC_DirectDebit').addClass("blind");
+        
+        $("#hiddenRentPayBankAccID").val('');
+        $("#rentPayBankAccNo").text('');
+        $("#rentPayBankAccNoEncrypt").val('');
+        $("#rentPayBankAccType").text('');
+        $("#accName").text('');
+        $("#accBranch").text('');
+        $("#accBank").text('');
+        $("#hiddenAccBankId").val('');
+    }
+
+    //ClearControl_RentPaySet_CRC
+    function fn_clearRentPaySetCRC() {
+        $('#scPC_CrCard').addClass("blind");
+        
+        $("#hiddenRentPayCRCId").val('');
+        $("#rentPayCRCNo").text('');
+        $("#hiddenRentPayEncryptCRCNo").val('');
+        $("#rentPayCRCType").text('');
+        $("#rentPayCRCName").text('');
+        $("#rentPayCRCExpiry").text('');
+        $("#rentPayCRCBank").text('');
+        $("#hiddenRentPayCRCBankId").val('');
+        $("#rentPayCRCCardType").text('');
+    }
+    
+    function fn_clearControlReject() {
+        $("#chkRejectDate").prop("checked", false);
+        $('#spRjctDate').text("");
+        $('#spRejectReason').text("");
+        $('#modStartDate').val('').removeAttr("disabled");
+        $('#modRejectDate').val('').prop("disabled", true);
+        $('#modRejectReason').val('').prop("disabled", true);
+    }
     
     function fn_loadMailAddr(custAddId){
         console.log("fn_loadMailAddr START");
@@ -145,7 +324,16 @@
         if(tabNm == 'NRC' && isEditableNRIC() == false) {
             return false;
         }
-    
+
+        if(tabNm == 'PAY' && APP_TYPE_ID != '66' && APP_TYPE_ID != '1412') {
+            var msg = "[" + ORD_NO + "] is [" + APP_TYPE_DESC + "] order.<br />"
+                    + "Only rental order is allow to edit rental pay setting.";
+                    
+            Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+                
+            return false;
+        }
+ 
         var vTit = 'Order Edit';
         
         if($("#ordEditType option:selected").index() > 0) {
@@ -189,8 +377,189 @@
         } else {
             $('#scIN').addClass("blind");
         }
+         if(tabNm == 'PAY') {
+            $('#scPC').removeClass("blind");
+            $('#aTabMI').click();
+            fn_loadRentPaySetInfo(ORD_ID);
+        } else {
+            $('#scPC').addClass("blind");
+        }
     }
 
+    function fn_loadRentPaySetInfo(ordId){
+        console.log("fn_loadRentPaySetInfo START");
+
+        Common.ajax("GET", "/sales/order/selectRentPaySetInfo.do", {salesOrderId : ordId}, function(rsltInfo) {
+
+            if(rsltInfo != null) {
+                
+                if(rsltInfo.is3Party == '1') {
+                    $("#thrdParty").attr("checked", true);
+                    $('#scPC_ThrdParty').removeClass("blind");
+                    fn_loadThirdParty(rsltInfo.payerCustId, 1);
+                }
+                
+                $("#rentPayMode").val(rsltInfo.payModeId);
+                
+                if(rsltInfo.payModeId == '131') {
+                    $('#scPC_CrCard').removeClass("blind");
+                    fn_loadCreditCard(rsltInfo.crcId);
+                }
+                else if(rsltInfo.payModeId == '132') {
+                    $('#scPC_DirectDebit').removeClass("blind");
+                    fn_loadBankAccount(rsltInfo.bankAccId);
+                }
+                
+                $('#rentPayIC').val(rsltInfo.oldIc);
+                if(rsltInfo.rentPayApplyDt  != '01/01/1900') $('#modApplyDate').val(rsltInfo.rentPayApplyDt);
+                if(rsltInfo.rentPaySubmitDt != '01/01/1900') $('#modSubmitDate').val(rsltInfo.rentPaySubmitDt);
+                if(rsltInfo.rentPayStartDt  != '01/01/1900') $('#modStartDate').val(rsltInfo.rentPayStartDt);
+                
+                if(rsltInfo.rentPayRejctDt  != '01/01/1900') {
+                    $('#spRjctDate').text("*");
+                    $('#spRejectReason').text("*");
+                    $('#modRejectDate').val(rsltInfo.rentPayRejctDt);
+                    $('#modRejectDate').removeAttr("disabled");
+                    $('#modStartDate').val("").prop("disabled", true);
+                    $('#modRejectReason').removeAttr("disabled");
+                }
+                
+                $('#modPayTerm').val(rsltInfo.payTrm);
+                
+                fn_loadRejectReasonList(rsltInfo.payModeId, rsltInfo.failResnId)
+            }
+        });
+    }
+    
+    function fn_loadRejectReasonList(paymodeId, failReasonId) {
+        
+        var typeId = 0, separator = ' - ';
+        
+        if(paymodeId == '131') {
+            typeId = 168;
+        }
+        else if(paymodeId == '132') {
+            typeId = 170;
+        }
+        
+        doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : typeId, inputId : failReasonId, separator : separator}, '', 'modRejectReason', 'S'); //Reason Code
+    }
+
+    function fn_loadThirdPartyPop(InputCustID) {
+
+            fn_clearRentPay3thParty();
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+            fn_clearControlReject();
+            
+            $('#modApplyDate').val(${toDay});
+            $('#modSubmitDate').val('');
+            $('#modStartDate').val('');
+            $('#rentPayMode').val('');
+            
+            if(InputCustID != CUST_ID) {
+                fn_loadThirdParty(InputCustID, 1);
+            }
+            else {
+                Common.alert("Third party and customer cannot be same person/company.<br/>Your input third party ID : "
+                    + InputCustID + DEFAULT_DELIMITER + "<b>Invalid third party ID.</b>");
+            }
+    }
+
+    function fn_loadThirdParty(custId, sMethd) {
+
+        Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId}, function(result) {
+
+            if(result != null && result.length == 1) {
+
+                var custInfo = result[0];
+
+                $('#hiddenThrdPartyId').val(custInfo.custId);
+                $('#thrdPartyId').val(custInfo.custId);
+                $('#thrdPartyType').val(custInfo.codeName1);
+                $('#thrdPartyName').val(custInfo.name);
+                $('#thrdPartyNric').val(custInfo.nric);
+            }
+            else {
+                if(sMethd == 2) {
+                    Common.alert('<b>Third party not found.<br/>Your input third party ID : ' + custId + '</b>'
+                        + InputCustID + DEFAULT_DELIMITER + "Third Party Not Found");
+                }
+            }
+        });
+
+        $('#sctThrdParty').removeClass("blind");
+    }
+
+    function fn_loadCreditCardPop(crcId) {
+        console.log("fn_loadCreditCardPop START");
+        //hiddenRentPayCRCId
+        fn_clearRentPaySetCRC();
+        fn_loadCreditCard(crcId);        
+        $('#scPC_CrCard').removeClass("blind");
+        
+        fn_clearControlReject();
+        $('#modApplyDate').val(${toDay});
+        $('#modSubmitDate').val('');
+        $('#modStartDate').val('');
+    }
+    
+    function fn_loadCreditCard(custCrcId) {
+        console.log("fn_loadCreditCard START");
+
+        Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : custCrcId}, function(rsltInfo) {
+            if(rsltInfo != null) {
+                $("#hiddenRentPayCRCId").val(rsltInfo.custCrcId);
+                $("#rentPayCRCNo").text(rsltInfo.decryptCRCNoShow);
+                $("#hiddenRentPayEncryptCRCNo").val(rsltInfo.custCrcNo);
+                $("#rentPayCRCType").text(rsltInfo.code);
+                $("#rentPayCRCName").text(rsltInfo.custCrcOwner);
+                $("#rentPayCRCExpiry").text(rsltInfo.custCrcExpr);
+                $("#rentPayCRCBank").text(rsltInfo.bankCode + ' - ' + rsltInfo.bankId);
+                $("#hiddenRentPayCRCBankId").val(rsltInfo.custCrcBankId);
+                $("#rentPayCRCCardType").text(rsltInfo.codeName);
+            }
+        });
+    }
+    
+    function fn_loadBankAccountPop(bankAccId) {
+        fn_clearRentPayMode();
+        fn_loadBankAccount(bankAccId);
+        
+        $('#scPC_DirectDebit').removeClass("blind");
+        
+        fn_clearControlReject();
+        
+        $('#modApplyDate').val('');
+        $('#modSubmitDate').val('');
+        $('#modStartDate').val('');
+        $('#rentPayMode').val('');
+        
+        if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#rentPayBankAccNo').val())) {
+            fn_clearRentPaySetDD();
+            $('#scPC_DirectDebit').removeClass("blind");
+            Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
+        }
+    }
+    
+    function fn_loadBankAccount(bankAccId) {
+        console.log("fn_loadBankAccount START");
+        
+        Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
+
+            if(rsltInfo != null) {
+                $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
+                $("#rentPayBankAccNo").text(rsltInfo.custAccNo);
+                $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
+                $("#rentPayBankAccType").text(rsltInfo.codeName);
+                $("#accName").text(rsltInfo.custAccOwner);
+                $("#accBranch").text(rsltInfo.custAccBankBrnch);
+                $("#accBank").text(rsltInfo.bankCode + ' - ' + rsltInfo.bankName);
+                $("#hiddenAccBankId").val(rsltInfo.custAccBankId);
+            }
+        });
+    }
+    
     function fn_loadInstallInfo(ordId){
         console.log("fn_loadInstallInfo START");
 
@@ -253,7 +622,8 @@
     
     function fn_checkInstallResult(ordId){
         Common.ajax("GET", "/sales/order/selectInstRsltCount.do", {salesOrdId : ordId}, function(rsltInfo) {
-            if(addrInfo != null) {
+            if(rsltInfo != null) {
+                console.log('fn_checkInstallResult:'+rsltInfo.cnt);
                 return rsltInfo.cnt;
             }
         }, null, {async : false});
@@ -261,7 +631,8 @@
     
     function fn_checkGSTZRLocation(areaId){
         Common.ajax("GET", "/sales/order/selectGSTZRLocationCount.do", {areaId : areaId}, function(rsltInfo) {
-            if(addrInfo != null) {
+            if(rsltInfo != null) {
+                console.log('fn_checkGSTZRLocation:'+rsltInfo.cnt);
                 return rsltInfo.cnt;
             }
         }, null, {async : false});
@@ -269,7 +640,8 @@
     
     function fn_checkGSTZRLocationByAddrId(custAddId){
         Common.ajax("GET", "/sales/order/selectGSTZRLocationByAddrIdCount.do", {custAddId : ordId}, function(rsltInfo) {
-            if(addrInfo != null) {
+            if(rsltInfo != null) {
+                console.log('fn_checkGSTZRLocationByAddrId:'+rsltInfo.cnt);
                 return rsltInfo.cnt;
             }
         }, null, {async : false});
@@ -287,9 +659,9 @@
                         
             if(fn_checkInstallResult(ORD_ID) == 0) {
                 
-                if(fn_checkGSTZRLocation($("#modInstAreaId").val()) == 0) {
+                if(fn_checkGSTZRLocation($("#modInstAreaId").val()) > 0) {
                     
-                    if(fn_checkGSTZRLocationByAddrId(addrIdOld)) {                        
+                    if(fn_checkGSTZRLocationByAddrId(addrIdOld) > 0) {                        
                         $("#modInstCustAddIdOld").val(addrIdNew);
                         fn_loadInstallAddrInfo2(addrIdNew);
                     }
@@ -298,7 +670,7 @@
                     }
                 }
                 else {
-                    if(fn_checkGSTZRLocationByAddrId(addrIdOld)) {
+                    if(fn_checkGSTZRLocationByAddrId(addrIdOld) > 0) {
                         Common.alert("Changed Failed" + DEFAULT_DELIMITER + "<b>Non-Zero Rate Area cannot change to Zero Rate Area.</b>");
                     }
                     else {
@@ -727,6 +1099,24 @@
     }
 
     function fn_doSaveInstallInfo() {
+        console.log('!@# fn_doSaveInstallInfo START');
+
+        Common.ajax("POST", "/sales/order/updateInstallInfo.do", $('#frmInstInfo').serializeJSON(), function(result) {
+                
+                Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                }
+                catch(e) {
+                    console.log(e);
+                }
+            }
+        );
+    }
+
+    function fn_doSavePaymentChannel() {
         console.log('!@# fn_doSaveInstallInfo START');
 
         Common.ajax("POST", "/sales/order/updateInstallInfo.do", $('#frmInstInfo').serializeJSON(), function(result) {
@@ -1230,11 +1620,11 @@
 </tr>
 <tr>
 	<th scope="row">Prefer Install Date<span class="must">*</span></th>
-	<td><input id="modPreferInstDt" name="preDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<td><input id="modPreferInstDt" name="preDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/></td>
 	<th scope="row">Prefer Install Time<span class="must">*</span></th>
 	<td>
 	<div class="time_picker w100p"><!-- time_picker start -->
-	<input id="modPreferInstTm" name="preTm" type="text" title="" placeholder="" class="time_date w100p" />
+	<input id="modPreferInstTm" name="preTm" type="text" title="" placeholder="" class="time_date w100p" readonly/>
 	<ul>
 		<li>Time Picker</li>
 		<li><a href="#">12:00 AM</a></li>
@@ -1280,6 +1670,244 @@
 </section>
 <!------------------------------------------------------------------------------
     Installation Edit END
+------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    Payment Channel Edit START
+------------------------------------------------------------------------------->
+<section id="scPC" class="blind">
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Payment Channel</h3>
+</aside><!-- title_line end -->
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a id="btnViewHistory" href="#">View Histoty</a></p></li>
+</ul>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Pay By Third Party</th>
+	<td colspan="3">
+	<label><input id="thrdParty" type="checkbox" /><span></span></label>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<!------------------------------------------------------------------------------
+    Third Party - Form ID(thrdPartyForm)
+------------------------------------------------------------------------------->
+<section id="scPC_ThrdParty" class="blind">
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Third Party</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a id="thrdPartyAddCustBtn" href="#">Add New Third Party</a></p></li>
+</ul>
+<form id="thrdPartyForm" name="thrdPartyForm" action="#" method="post">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Customer ID<span class="must">*</span></th>
+    <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="Third Party ID" class="" />
+        <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
+    <th scope="row">Type</th>
+    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Name</th>
+    <td><input id="thrdPartyName" name="thrdPartyName" type="text" title="" placeholder="Customer Name" class="w100p readonly" readonly/></td>
+    <th scope="row">NRIC/Company No</th>
+    <td><input id="thrdPartyNric" name="thrdPartyNric" type="text" title="" placeholder="NRIC/Company Number" class="w100p readonly" readonly/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section>
+
+<!------------------------------------------------------------------------------
+    Rental Paymode - Form ID(rentPayModeForm)
+------------------------------------------------------------------------------->
+<section id="scPC_RentPayMode">
+
+<form id="rentPayModeForm" id="rentPayModeForm">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Rental Paymode<span class="must">*</span></th>
+	<td>
+	<select id="rentPayMode" name="rentPayMode" class="w100p"></select>
+	</td>
+	<th scope="row">NRIC on DD/Passbook</th>
+	<td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+
+</section>
+
+<!------------------------------------------------------------------------------
+    Credit Card
+------------------------------------------------------------------------------->
+<section id="scPC_CrCard" class="blind">
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Credit Card</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb1m">
+    <li><p class="btn_grid"><a id="addCreditCardBtn" href="#">Add New Credit Card</a></p></li>
+    <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Another Credit Card</a></p></li>
+</ul>
+
+<form id="crcForm" name="crcForm" action="#" method="post">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Credit Card Number<span class="must">*</span></th>
+    <td><span id="rentPayCRCNo"></span>
+        <input id="hiddenRentPayCRCId" name="rentPayCRCId" type="hidden" />
+        <input id="hiddenRentPayEncryptCRCNo" name="hiddenRentPayEncryptCRCNo" type="hidden" /></td>
+    <th scope="row">Credit Card Type</th>
+    <td><span id="rentPayCRCType"></span></td>
+</tr>
+<tr>
+    <th scope="row">Name On Card</th>
+    <td><span id="rentPayCRCName"></span></td>
+    <th scope="row">Expiry</th>
+    <td><span id="rentPayCRCExpiry"></span></td>
+</tr>
+<tr>
+    <th scope="row">Issue Bank</th>
+    <td><span id="rentPayCRCBank"></span>
+        <input id="hiddenRentPayCRCBankId" name="rentPayCRCBankId" type="hidden" title="" class="w100p" /></td>
+    <th scope="row">Card Type</th>
+    <td><span id="rentPayCRCCardType"></span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section>
+<!------------------------------------------------------------------------------
+    Direct Debit
+------------------------------------------------------------------------------->
+<section id="scPC_DirectDebit" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h2>Direct Debit</h2>
+</aside><!-- title_line end -->
+
+<ul class="right_btns mb1m">
+    <li><p class="btn_grid"><a id="btnAddBankAccount" href="#">Add New Bank Account</a></p></li>
+    <li><p class="btn_grid"><a id="btnSelBankAccount" href="#">Select Another Bank Account</a></p></li>
+</ul>
+
+<form id="ddForm" name="ddForm" action="#" method="post">
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Account Number<span class="must">*</span></th>
+    <td><span id="rentPayBankAccNo"></span>
+        <input id="rentPayBankAccNoEncrypt" name="rentPayBankAccNoEncrypt" type="hidden" />
+        <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" />
+    <th scope="row">Account Type</th>
+    <td><span id="rentPayBankAccType"></span></td>
+</tr>
+<tr>
+    <th scope="row">Account Holder</th>
+    <td><span id="accName"></span></td>
+    <th scope="row">Issue Bank Branch</th>
+    <td><span id="accBranch"></span></td>
+</tr>
+<tr>
+    <th scope="row">Issue Bank</th>
+    <td colspan=3><span id="accBank"></span>
+        <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Apply Date<span class="must">*</span></th>
+	<td><input id="modApplyDate" name="applyDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<th scope="row">Submit Date</th>
+	<td><input id="modSubmitDate" name="submitDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Start Date</th>
+	<td><input id="modStartDate" name="startDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<th scope="row"><label>
+	    <input id="chkRejectDate" type="checkbox" /><span>Reject Date</span><span id="spRjctDate" class="must"></span></label></th>
+	<td><input id="modRejectDate" name="rejectDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled /></td>
+</tr>
+<tr>
+	<th scope="row">Pay Term</th>
+	<td>
+	<select id="modPayTerm" name="payTerm" class="w100p"></select>
+	</td>
+	<th scope="row">Reject Reason<span id="spRejectReason" class="must"></span></th>
+	<td>
+	<select id="modRejectReason" name="rejectReason" class="w100p" disabled></select>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a href="#">SAVE</a></p></li>
+</ul>  
+</section>
+<!------------------------------------------------------------------------------
+    Payment Channel Edit END
 ------------------------------------------------------------------------------->
 
 </section><!-- pop_body end -->

@@ -9,6 +9,7 @@
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+        
         fn_getCreditCardAjax();
 
         // 셀 더블클릭 이벤트 바인딩
@@ -23,7 +24,6 @@
                       ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "custCrcBankId")
                       ,AUIGrid.getCellValue(crcGridID , event.rowIndex , "codeName")
                       );
-            fn_createEvent('custPopCloseBtn', 'click');
         });
 	    
 	});
@@ -32,41 +32,27 @@
 	    if($('#callPrgm').val() == 'ORD_REGISTER_PAYM_CRC') {
 	        fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName);
 	    }
+	    else if($('#callPrgm').val() == 'ORD_MODIFY_PAY_CHAN') {
+	        console.log('callPrgm');
+	        fn_loadCreditCardPop(custCrcId);
+	    }
+	    $('#custPopCloseBtn').click();
 	}
 	
     function createAUIGrid() {
         
         //AUIGrid 칼럼 설정
-        var columnLayout = [{
-	            dataField : "codeName",
-	            headerText : "Card Type",
-	            width : 120
-	        }, {
-	            dataField : "custOriCrcNo",
-	            headerText : "Credit Card No",
-	            width : 140
-	        }, {
-	            dataField : "custCrcOwner",
-	            headerText : "Name On Card"
-	        }, {
-	            dataField : "codeName1",
-	            headerText : "Type",
-	            width : 120
-	        }, {
-	            dataField : "custCrcExpr",
-	            headerText : "Expiry",
-	            width : 100
-	        }, {
-	            dataField : "bankName",
-	            headerText : "Issue Bank",
-	            width : 160
-	        },{
-	            dataField : "custCrcId"
-	        },{
-	            dataField : "custCrcNo"
-	        },{
-	            dataField : "custCrcBankId"
-            }];
+        var columnLayout = [
+            { headerText : "Card Type",      dataField : "codeName",      width : 120 }
+          , { headerText : "Credit Card No", dataField : "custOriCrcNo",  width : 140 }
+          , { headerText : "Name On Card",   dataField : "custCrcOwner"}
+          , { headerText : "Type",           dataField : "codeName1",     width : 120 }
+          , { headerText : "Expiry",         dataField : "custCrcExpr",   width : 100 }
+          , { headerText : "Issue Bank",     dataField : "bankName",      width : 160 }
+          , { headerText : "custCrcId",      dataField : "custCrcId",     visible : false}
+          , { headerText : "custCrcNo",      dataField : "custCrcNo",     visible : false}
+          , { headerText : "custCrcBankId",  dataField : "custCrcBankId", visible : false}
+            ];
 
         //그리드 속성 설정
         var gridPros = {
@@ -86,7 +72,7 @@
             groupingMessage     : "Here groupping"
         };
         
-        crcGridID = GridCommon.createAUIGrid("grid_addr_wrap", columnLayout, "", gridPros);
+        crcGridID = GridCommon.createAUIGrid("grid_crc_wrap", columnLayout, "", gridPros);
     }
 
 	$(function(){
@@ -104,7 +90,6 @@
   
 </script>
 </head>
-<body>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -144,7 +129,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_addr_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+<div id="grid_crc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
@@ -154,5 +139,3 @@
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-</body>
-</html>
