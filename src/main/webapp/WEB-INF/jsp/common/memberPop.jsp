@@ -5,7 +5,8 @@
 
     //AUIGrid 생성 후 반환 ID
     var myGridID;
-
+	var callPrgm = '${callPrgm}';
+	
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
@@ -15,7 +16,13 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), AUIGrid.getCellValue(myGridID , event.rowIndex , "memcode"));
+            if(callPrgm == '' ) {
+                
+            }
+            else {
+                fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), AUIGrid.getCellValue(myGridID , event.rowIndex , "memcode"));
+            }
+            
             $("#memPopCloseBtn").click();
         });
     });

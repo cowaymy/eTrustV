@@ -16,53 +16,37 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
             fn_setData(AUIGrid.getCellValue(myGridID , event.rowIndex , "custId") , event.item );    //edit by hgham 2017-09-21    event.item 추가 
-            fn_createEvent('custPopCloseBtn', 'click');
         });
 	});
 	
-	function fn_setData(custId , item) {                                                                        //edit by hgham 2017-09-21    event.item 추가 
+	function fn_setData(custId , item) { //edit by hgham 2017-09-21    event.item 추가 
 	    if($('#callPrgm').val() == 'ORD_REGISTER_CUST_CUST') {
 	        fn_loadCustomer(custId);
 	    }
 	    else if ($('#callPrgm').val() == 'ORD_REGISTER_PAY_3RD_PARTY') {
 	        fn_loadThirdParty(custId, 1)
 	    }
+	    else if ($('#callPrgm').val() == 'ORD_MODIFY_PAY_3RD_PARTY') {
+	        fn_loadThirdPartyPop(custId)
+	    }
 	    else{   //edit by hgham 2017-09-21    callback function (item) 추가  
 	    	eval(${callPrgm}(item));
 	    }
+	    $('#custPopCloseBtn').click();
 	}
 	
 	
     function createAUIGrid() {
         
         //AUIGrid 칼럼 설정
-        var columnLayout = [{
-	            dataField : "custId",
-	            headerText : "ID",
-	            width : 100,
-	            editable : false
-	        }, {
-	            dataField : "codeName1",
-	            headerText : "Type",
-	            width : 100,
-	            editable : false
-	        }, {
-	            dataField : "codeName",
-	            headerText : "Corp Type",
-	            visible : false
-	        }, {
-	            dataField : "name",
-	            headerText : "Name",
-	            editable : false
-	        }, {
-	            dataField : "nric",
-	            headerText : "NRIC/Company No",
-	            width : 170,
-	            editable : false
-	        },{
-	            dataField : "custAddId",
-	            visible : false
-            }];
+        var columnLayout = [
+            { headerText : "ID",              dataField : "custId",    width : 100 }
+          , { headerText : "Type",            dataField : "codeName1", width : 100 }
+          , { headerText : "Corp Type",       dataField : "codeName"   }
+          , { headerText : "Name",            dataField : "name"       }
+          , { headerText : "NRIC/Company No", dataField : "nric",      width : 170 }
+          , { headerText : "custAddId",       dataField : "custAddId", visible : false }
+          ];
 
         //그리드 속성 설정
         var gridPros = {
@@ -90,11 +74,9 @@
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#custSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
-    }
-    
+    }    
 </script>
 </head>
-<body>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -160,5 +142,3 @@
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-</body>
-</html>

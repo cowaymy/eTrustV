@@ -149,7 +149,7 @@ public class OrderModifyController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setMessage("NRIC has been successfully updated.");
+		message.setMessage("Order Number : " + params.get("salesOrdNo") + "</br>Information successfully updated.");
 
 		return ResponseEntity.ok(message);
 	}

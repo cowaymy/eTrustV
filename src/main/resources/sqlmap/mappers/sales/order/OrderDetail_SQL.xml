@@ -655,6 +655,7 @@
     
     <select id="selectOrderRentPaySetInfoByOrderID" parameterType="Map" resultType="egovMap">
         SELECT V1.ORD_ID
+             , V1.RENT_PAY_ID
              , V1.RENT_PAY_MODE_CODE
              , V1.RENT_PAY_MODE_DESC
              , TO_CHAR(V1.RENT_PAY_APPLY_DT,  'dd/MM/yyyy') RENT_PAY_APPLY_DT

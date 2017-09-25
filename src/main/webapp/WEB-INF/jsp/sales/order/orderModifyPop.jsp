@@ -55,6 +55,10 @@
             if(!fn_validInstallInfo()) return false;
             fn_doSaveInstallInfo();
         });
+        $('#btnSavePayChan').click(function() {            
+            if(!fn_validPaymentChannel()) return false;
+            fn_doSavePaymentChannel();
+        });
         $('#btnSalesmanPop').click(function() {
             Common.popupDiv("/common/memberPop.do", { callPrgm : "ORD_MODIFY_BSC_INF" }, null, true);
         });
@@ -72,6 +76,14 @@
         });
         $('#btnInstSelAddr').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_INST_ADR"}, null, true);
+        });
+        //Payment Channel - Add New Third Party
+        $('#btnAddCust').click(function() {
+            Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "630x"});
+        });
+        $('#btnThrdParty').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
+            Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_MODIFY_PAY_3RD_PARTY"}, null, true);
         });
         //Payment Channel - Add New Bank Account
         $('#btnAddBankAccount').click(function() {
@@ -130,7 +142,7 @@
             fn_clearRentPaySetDD();
             fn_clearControlReject();
 
-            $('#modApplyDate').val(${toDay});
+            $('#modApplyDate').val('${toDay}');
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
             $('#rentPayMode').val('');
@@ -152,7 +164,7 @@
             fn_clearRentPaySetDD();
             fn_clearControlReject();
             
-            $('#modApplyDate').val(${toDay});
+            $('#modApplyDate').val('${toDay}');
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
             $('#rentPayMode').val('');
@@ -161,58 +173,95 @@
                 fn_loadThirdParty(InputCustID, 2);
             }
             else {
-                Common.alert("Invalid Third Party ID" + DEFAULT_DELIMITER + "<b>Invalid third party ID.</b>");
+                Common.alert("Third Party Restriction" + DEFAULT_DELIMITER + "<b>Third party and customer cannot be same person/company.<br />Your input third party ID : "+InputCustID+"</b>");
+            }
+        });
+        $('#thrdPartyId').keydown(function (event) {
+            if (event.which === 13) {    //enter  
+                var InputCustID = 0;
+                
+                if(FormUtil.isNotEmpty($('#thrdPartyId').val())) {
+                    InputCustID = $('#thrdPartyId').val();
+                }
+                
+                fn_clearRentPay3thParty();
+                fn_clearRentPaySetCRC();
+                fn_clearRentPaySetDD();
+                fn_clearControlReject();
+                
+                $('#modApplyDate').val('${toDay}');
+                $('#modSubmitDate').val('');
+                $('#modStartDate').val('');
+                $('#rentPayMode').val('');
+                
+                if(InputCustID != CUST_ID) {
+                    fn_loadThirdParty(InputCustID, 2);
+                }
+                else {
+                    Common.alert("Third Party Restriction" + DEFAULT_DELIMITER + "<b>Third party and customer cannot be same person/company.<br />Your input third party ID : "+InputCustID+"</b>");
+                }
             }
         });
         $('#rentPayMode').change(function(event) {
-            if($('#rentPayMode').val() == '133' || $('#rentPayMode').val() == '134') {
-                Common.alert("Rental Paymode Restriction" + DEFAULT_DELIMITER + "<b>Currently we are not provide [" + $("#rentPayMode option:selected").text() + "] service.</b>");
-                $('#rentPayMode').val('');
-            }
-            else {
-                if($('#rentPayMode').val() == '131') {
-                    if($('#thrdParty').is(":checked")) {
-                        if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                            Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
-                            $('#rentPayMode').val('');
+            
+            fn_clearRentPaySetCRC();
+            fn_clearRentPaySetDD();
+            fn_clearControlReject();
+            
+            $('#modApplyDate').val('${toDay}');
+            $('#modSubmitDate').val('');
+            $('#modStartDate').val('');
+            
+            if($("#rentPayMode option:selected").index() > 0) {
+            
+                if($('#rentPayMode').val() == '133' || $('#rentPayMode').val() == '134') {
+                    Common.alert("Rental Paymode Restriction" + DEFAULT_DELIMITER + "<b>Currently we are not provide [" + $("#rentPayMode option:selected").text() + "] service.</b>");
+                    $('#rentPayMode').val('');
+                }
+                else {
+                    if($('#rentPayMode').val() == '131') {
+                        if($('#thrdParty').is(":checked")) {
+                            if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+                                Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
+                                $('#rentPayMode').val('');
+                            }
+                            else {
+                                $('#scPC_CrCard').removeClass("blind");
+                            }
                         }
                         else {
                             $('#scPC_CrCard').removeClass("blind");
                         }
                     }
-                    else {
-                        $('#scPC_CrCard').removeClass("blind");
-                    }
-                }
-                else if($('#rentPayMode').val() == '132') {
-                    if($('#thrdParty').is(":checked")) {
-                        if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                            Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
-                            $('#rentPayMode').val('');
+                    else if($('#rentPayMode').val() == '132') {
+                        if($('#thrdParty').is(":checked")) {
+                            if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+                                Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
+                                $('#rentPayMode').val('');
+                            }
+                            else {
+                                $('#scPC_DirectDebit').removeClass("blind");
+                            }
                         }
                         else {
                             $('#scPC_DirectDebit').removeClass("blind");
                         }
                     }
-                    else {
-                        $('#scPC_DirectDebit').removeClass("blind");
-                    }
+                    
+                    fn_loadRejectReasonList($('#rentPayMode').val(), 0)
                 }
-                
-                fn_loadRejectReasonList($('#rentPayMode').val(), 0)
             }
         });
     });
     
     //ClearControl_RentPaySet_ThirdParty
-    function fn_clearRentPayMode() {
-        $('#rentPayModeForm').clearForm();
-    }
-    
-    //ClearControl_RentPaySet_ThirdParty
     function fn_clearRentPay3thParty() {
         $('#scPC_ThrdParty').addClass("blind");
-        $('#thrdPartyForm').clearForm();
+        $('#thrdPartyId').val('');
+        $('#hiddenThrdPartyId').val('');
+        $('#thrdPartyType').text('');
+        $('#thrdPartyName').text('');
+        $('#thrdPartyNric').text('');
     }
 
     //ClearControl_RentPaySet_DD
@@ -392,13 +441,14 @@
         Common.ajax("GET", "/sales/order/selectRentPaySetInfo.do", {salesOrderId : ordId}, function(rsltInfo) {
 
             if(rsltInfo != null) {
-                
-                if(rsltInfo.is3Party == '1') {
+                alert(rsltInfo.is3party);
+                if(rsltInfo.is3party == '1') {
                     $("#thrdParty").attr("checked", true);
                     $('#scPC_ThrdParty').removeClass("blind");
                     fn_loadThirdParty(rsltInfo.payerCustId, 1);
                 }
                 
+                $("#rentPayId").val(rsltInfo.rentPayId);
                 $("#rentPayMode").val(rsltInfo.payModeId);
                 
                 if(rsltInfo.payModeId == '131') {
@@ -452,7 +502,7 @@
             fn_clearRentPaySetDD();
             fn_clearControlReject();
             
-            $('#modApplyDate').val(${toDay});
+            $('#modApplyDate').val('${toDay}');
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
             $('#rentPayMode').val('');
@@ -476,9 +526,9 @@
 
                 $('#hiddenThrdPartyId').val(custInfo.custId);
                 $('#thrdPartyId').val(custInfo.custId);
-                $('#thrdPartyType').val(custInfo.codeName1);
-                $('#thrdPartyName').val(custInfo.name);
-                $('#thrdPartyNric').val(custInfo.nric);
+                $('#thrdPartyType').text(custInfo.codeName1);
+                $('#thrdPartyName').text(custInfo.name);
+                $('#thrdPartyNric').text(custInfo.nric);
             }
             else {
                 if(sMethd == 2) {
@@ -488,7 +538,7 @@
             }
         });
 
-        $('#sctThrdParty').removeClass("blind");
+        $('#scPC_ThrdParty').removeClass("blind");
     }
 
     function fn_loadCreditCardPop(crcId) {
@@ -499,7 +549,7 @@
         $('#scPC_CrCard').removeClass("blind");
         
         fn_clearControlReject();
-        $('#modApplyDate').val(${toDay});
+        $('#modApplyDate').val('${toDay}');
         $('#modSubmitDate').val('');
         $('#modStartDate').val('');
     }
@@ -523,7 +573,7 @@
     }
     
     function fn_loadBankAccountPop(bankAccId) {
-        fn_clearRentPayMode();
+        fn_clearRentPaySetDD();
         fn_loadBankAccount(bankAccId);
         
         $('#scPC_DirectDebit').removeClass("blind");
@@ -932,6 +982,119 @@
         return isValid;
     }
     
+    function fn_validPaymentChannel() {
+        var isValid = true, msg = "";
+
+        if($('#thrdParty').is(":checked")) {
+            if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
+                isValid = false;
+                msg += "* Please select the third party.<br/>";
+            }
+        }
+
+        if($("#rentPayMode option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select the rental paymode.<br/>";
+        }
+        else {
+            if($("#rentPayMode").val() == '131') {
+                //CRC
+                if(FormUtil.isEmpty($('#hiddenRentPayCRCId').val())) {
+                    isValid = false;
+                    msg += "* Please select a credit card.<br/>";
+                }
+                else {
+                    if(FormUtil.isEmpty($('#hiddenRentPayCRCBankId').val()) || $('#hiddenRentPayCRCBankId').val() == 0) {
+                        isValid = false;
+                        msg += "* Invalid credit card issue bank.<br/>";
+                    }
+                }
+            }
+            else if($("#rentPayMode").val() == '132') {
+                //DD
+                if(FormUtil.isEmpty($('#hiddenRentPayBankAccID').val())) {
+                    isValid = false;
+                    msg += "* Please select a bank account.<br/>";
+                }
+                else {
+                    if(FormUtil.isEmpty($('#hiddenAccBankId').val()) || $('#hiddenAccBankId').val() == 0) {
+                        isValid = false;
+                        msg += "* Invalid bank account issue bank.<br/>";
+                    }
+                }
+            }
+        }
+        
+        var arrAppDate = $('#modApplyDate').val().split('/');
+        var arrSubDate = $('#modSubmitDate').val().split('/');
+        var arrStaDate = $('#modStartDate').val().split('/');
+        var arrRjtDate = $('#modRejectDate').val().split('/');
+        
+        var sAppDate = arrAppDate[2]+arrAppDate[1]+arrAppDate[0];
+        var sSubDate = arrSubDate[2]+arrSubDate[1]+arrSubDate[0];
+        var sStaDate = arrStaDate[2]+arrStaDate[1]+arrStaDate[0];
+        var sRjtDate = arrRjtDate[2]+arrRjtDate[1]+arrRjtDate[0];
+        
+        console.log('sAppDate : '+sAppDate);
+        console.log('sSubDate : '+sSubDate);
+        console.log('sStaDate : '+sStaDate);
+        console.log('sRjtDate : '+sRjtDate);
+                
+        if(FormUtil.isEmpty($('#modApplyDate').val())) {
+            isValid = false;
+            msg += "* Apply date is required.<br/>";
+        }
+        else {
+            if(FormUtil.isNotEmpty($('#modSubmitDate').val())) {
+                if(sSubDate < sAppDate) {
+                    isValid = false;
+                    msg += "* Submit date must later than apply date.<br/>";
+                }
+            }
+        }
+
+        if(FormUtil.isNotEmpty($('#modStartDate').val())) {
+            if(FormUtil.isEmpty($('#modSubmitDate').val())) {
+                isValid = false;
+                msg += "* Submit date is required.<br/>";
+            }
+            else {
+                if(sStaDate < sSubDate) {
+                    isValid = false;
+                    msg += "* Start date must later than submit date.<br/>";
+                }
+            }
+        }
+
+        if($('#chkRejectDate').is(":checked")) {
+            if(FormUtil.isEmpty($('#modRejectDate').val())) {
+                isValid = false;
+                msg += "* Reject date is required.<br/>";
+            }
+            else {
+                if(FormUtil.isEmpty($('#modSubmitDate').val())) {
+                    isValid = false;
+                    msg += "* Submit date is required.<br/>";
+                }
+                else {
+                    if(sRjtDate < sSubDate) {
+                        isValid = false;
+                        msg += "* Reject date must later than submit date.<br/>";
+                    }
+                }
+            }
+            
+            if($("#modRejectReason option:selected").index() <= 0) {
+                isValid = false;
+                msg += "* Reject select the reject reason.<br/>";
+            }
+        }
+
+        if(!isValid) Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+    }
+    
     function fn_validCntcPerson() {
         var isValid = true, msg = "";
 
@@ -1117,9 +1280,9 @@
     }
 
     function fn_doSavePaymentChannel() {
-        console.log('!@# fn_doSaveInstallInfo START');
+        console.log('!@# fn_doSavePaymentChannel START');
 
-        Common.ajax("POST", "/sales/order/updateInstallInfo.do", $('#frmInstInfo').serializeJSON(), function(result) {
+        Common.ajax("POST", "/sales/order/updatePaymentChannel.do", $('#payChanlForm').serializeJSON(), function(result) {
                 
                 Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
@@ -1152,6 +1315,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
+<form id="searchForm" method="post"/>
 <form action="#" method="post">
 
 <table class="type1"><!-- table start -->
@@ -1683,6 +1847,14 @@
     <li><p class="btn_grid"><a id="btnViewHistory" href="#">View Histoty</a></p></li>
 </ul>
 
+<form id="payChanlForm" name="payChanlForm" action="#" method="post">
+    <input name="salesOrdId" type="hidden" value="${salesOrderId}"/>
+    <input name="salesOrdNo" type="hidden" value="${salesOrderNo}"/>
+    <input name="custId" type="hidden" value="${custId}" />
+    <input name="custNric" type="hidden" value="${custNric}" />
+    <input id="rentPayId" name="rentPayId" type="hidden" />
+    
+    
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1695,14 +1867,14 @@
 <tr>
 	<th scope="row">Pay By Third Party</th>
 	<td colspan="3">
-	<label><input id="thrdParty" type="checkbox" /><span></span></label>
+	<label><input id="thrdParty" name="thrdParty" id="thrdParty" type="checkbox" value="1" /><span></span></label>
 	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <!------------------------------------------------------------------------------
-    Third Party - Form ID(thrdPartyForm)
+    Third Party
 ------------------------------------------------------------------------------->
 <section id="scPC_ThrdParty" class="blind">
 
@@ -1711,9 +1883,9 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="thrdPartyAddCustBtn" href="#">Add New Third Party</a></p></li>
+    <li><p class="btn_grid"><a id="btnAddCust" href="#">Add New Third Party</a></p></li>
 </ul>
-<form id="thrdPartyForm" name="thrdPartyForm" action="#" method="post">
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1726,35 +1898,34 @@
 <tr>
     <th scope="row">Customer ID<span class="must">*</span></th>
     <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="Third Party ID" class="" />
-        <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <a href="#" class="search_btn" id="btnThrdParty"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
     <th scope="row">Type</th>
-    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
+    <td><span id="thrdPartyType"></span></td>
 </tr>
 <tr>
     <th scope="row">Name</th>
-    <td><input id="thrdPartyName" name="thrdPartyName" type="text" title="" placeholder="Customer Name" class="w100p readonly" readonly/></td>
+    <td><span id="thrdPartyName"></span></td>
     <th scope="row">NRIC/Company No</th>
-    <td><input id="thrdPartyNric" name="thrdPartyNric" type="text" title="" placeholder="NRIC/Company Number" class="w100p readonly" readonly/></td>
+    <td><span id="thrdPartyNric"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
-</form>
+
 </section>
 
 <!------------------------------------------------------------------------------
-    Rental Paymode - Form ID(rentPayModeForm)
+    Rental Paymode
 ------------------------------------------------------------------------------->
 <section id="scPC_RentPayMode">
 
-<form id="rentPayModeForm" id="rentPayModeForm">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
-    <col style="width:*" />
-    <col style="width:190px" />
-    <col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -1767,7 +1938,6 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-</form>
 
 </section>
 
@@ -1785,14 +1955,13 @@
     <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Another Credit Card</a></p></li>
 </ul>
 
-<form id="crcForm" name="crcForm" action="#" method="post">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
-    <col style="width:*" />
-    <col style="width:190px" />
-    <col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -1818,7 +1987,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-</form>
+
 </section>
 <!------------------------------------------------------------------------------
     Direct Debit
@@ -1833,7 +2002,6 @@
     <li><p class="btn_grid"><a id="btnSelBankAccount" href="#">Select Another Bank Account</a></p></li>
 </ul>
 
-<form id="ddForm" name="ddForm" action="#" method="post">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1864,7 +2032,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-</form>
+
 </section>
 
 <table class="type1"><!-- table start -->
@@ -1886,13 +2054,21 @@
 	<th scope="row">Start Date</th>
 	<td><input id="modStartDate" name="startDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 	<th scope="row"><label>
-	    <input id="chkRejectDate" type="checkbox" /><span>Reject Date</span><span id="spRjctDate" class="must"></span></label></th>
+	    <input id="chkRejectDate" type="checkbox" value="1" /><span>Reject Date</span><span id="spRjctDate" class="must"></span></label></th>
 	<td><input id="modRejectDate" name="rejectDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled /></td>
 </tr>
 <tr>
 	<th scope="row">Pay Term</th>
 	<td>
-	<select id="modPayTerm" name="payTerm" class="w100p"></select>
+	<select id="modPayTerm" name="payTerm" class="w100p">
+        <option value="0">No Term</option>
+        <option value="1">1 Month</option>
+        <option value="2">2 Months</option>
+        <option value="3">3 Months</option>
+        <option value="4">4 Months</option>
+        <option value="5">5 Months</option>
+        <option value="6">6 Months</option>
+	</select>
 	</td>
 	<th scope="row">Reject Reason<span id="spRejectReason" class="must"></span></th>
 	<td>
@@ -1902,8 +2078,10 @@
 </tbody>
 </table><!-- table end -->
 
+</form>
+
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#">SAVE</a></p></li>
+	<li><p class="btn_blue2"><a id="btnSavePayChan" href="#">SAVE</a></p></li>
 </ul>  
 </section>
 <!------------------------------------------------------------------------------

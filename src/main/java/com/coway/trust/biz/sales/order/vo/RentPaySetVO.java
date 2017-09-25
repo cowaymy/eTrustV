@@ -24,13 +24,13 @@ public class RentPaySetVO implements Serializable {
 
 	private int custId;
 
-	private Date ddApplyDt;
+	private String ddApplyDt;
 
-	private Date ddRejctDt;
+	private String ddRejctDt;
 
-	private Date ddStartDt;
+	private String ddStartDt;
 
-	private Date ddSubmitDt;
+	private String ddSubmitDt;
 
 	private int editTypeId;
 
@@ -111,35 +111,35 @@ public class RentPaySetVO implements Serializable {
 		this.custId = custId;
 	}
 
-	public Date getDdApplyDt() {
+	public String getDdApplyDt() {
 		return ddApplyDt;
 	}
 
-	public void setDdApplyDt(Date ddApplyDt) {
+	public void setDdApplyDt(String ddApplyDt) {
 		this.ddApplyDt = ddApplyDt;
 	}
 
-	public Date getDdRejctDt() {
+	public String getDdRejctDt() {
 		return ddRejctDt;
 	}
 
-	public void setDdRejctDt(Date ddRejctDt) {
+	public void setDdRejctDt(String ddRejctDt) {
 		this.ddRejctDt = ddRejctDt;
 	}
 
-	public Date getDdStartDt() {
+	public String getDdStartDt() {
 		return ddStartDt;
 	}
 
-	public void setDdStartDt(Date ddStartDt) {
+	public void setDdStartDt(String ddStartDt) {
 		this.ddStartDt = ddStartDt;
 	}
 
-	public Date getDdSubmitDt() {
+	public String getDdSubmitDt() {
 		return ddSubmitDt;
 	}
 
-	public void setDdSubmitDt(Date ddSubmitDt) {
+	public void setDdSubmitDt(String ddSubmitDt) {
 		this.ddSubmitDt = ddSubmitDt;
 	}
 

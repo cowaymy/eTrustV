@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO;
+import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -49,5 +50,7 @@ public interface OrderModifyMapper {
 	void updateInstallInfo(Map<String, Object> params);
 	
 	void updateInstallUpdateInfo(Map<String, Object> params);
+	
+	void updatePaymentChannel(RentPaySetVO rentPaySetVO);
 	
 }

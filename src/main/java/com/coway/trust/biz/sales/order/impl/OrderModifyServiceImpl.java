@@ -238,14 +238,44 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	public void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
 		logger.info("!@###### OrderModifyServiceImpl.updatePaymentChannel");
+		
+		RentPaySetVO rentPaySetVO = new RentPaySetVO();
+		
+		this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
 
-		params.put("updUserId", sessionVO.getUserId());
-
-		//orderModifyMapper.updatePaymentChannel(params);
+		orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+	}
+	
+	private void preprocRentPaySet(RentPaySetVO rentPaySetVO, Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+		logger.info("!@###### preprocRentPaySet START ");
+		
+		int iRentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
+		
+		rentPaySetVO.setRentPayId(Integer.parseInt((String) params.get("rentPayId")));
+//		rentPaySetVO.setSalesOrdId(Integer.parseInt((String) params.get("salesOrdId")));
+		rentPaySetVO.setModeId(iRentPayMode);
+		rentPaySetVO.setCustCrcId(iRentPayMode == 131 ? Integer.parseInt((String) params.get("rentPayCRCId")) : 0);
+		rentPaySetVO.setCustAccId(iRentPayMode == 132 ? Integer.parseInt((String) params.get("hiddenRentPayBankAccID")) : 0);
+		rentPaySetVO.setBankId(iRentPayMode == 131 ? Integer.parseInt((String) params.get("rentPayCRCBankId")) : iRentPayMode == 132 ? Integer.parseInt((String) params.get("hiddenAccBankId")) : 0);
+		rentPaySetVO.setDdApplyDt(CommonUtils.isNotEmpty(params.get("applyDate")) ? (String) params.get("applyDate") : SalesConstants.DEFAULT_DATE );
+		rentPaySetVO.setDdSubmitDt(CommonUtils.isNotEmpty(params.get("submitDate")) ? (String) params.get("submitDate") : SalesConstants.DEFAULT_DATE );
+		rentPaySetVO.setDdStartDt(CommonUtils.isNotEmpty(params.get("startDate")) ? (String) params.get("startDate") : SalesConstants.DEFAULT_DATE );
+		rentPaySetVO.setDdRejctDt(CommonUtils.isNotEmpty(params.get("rejectDate")) ? (String) params.get("rejectDate") : SalesConstants.DEFAULT_DATE );
+		rentPaySetVO.setFailResnId("1".equals((String) params.get("chkRejectDate")) ? Integer.parseInt((String) params.get("rejectReason")) : 0);
+		rentPaySetVO.setUpdUserId(sessionVO.getUserId());		
+//		rentPaySetVO.setStusCodeId(1);		
+		rentPaySetVO.setIs3rdParty("1".equals((String) params.get("thrdParty")) ? 1 : 0);
+		rentPaySetVO.setCustId("1".equals((String) params.get("thrdParty")) ? Integer.parseInt((String) params.get("hiddenThrdPartyId")) : 0);
+//		rentPaySetVO.setEditTypeId(0);
+		rentPaySetVO.setNricOld((String) params.get("rentPayIC"));
+		rentPaySetVO.setIssuNric(CommonUtils.isNotEmpty(params.get("rentPayIC")) ? (String) params.get("rentPayIC") : "1".equals((String) params.get("thrdParty")) ? (String) params.get("thrdPartyNric") : (String) params.get("custNric"));
+//		rentPaySetVO.setAeonCnvr(0);
+//		rentPaySetVO.setRem("");
+		rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
+		rentPaySetVO.setPayTrm(Integer.parseInt((String) params.get("payTerm")));
 	}
 	
 	private void preprocBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO, Map<String, Object> params, SessionVO sessionVO, String ordEditType) throws ParseException {
-
 		logger.info("!@###### preprocBillMasterHistory START ");
 		
 		custBillMasterHistoryVO.setCustBillId(Integer.parseInt((String) params.get("billGroupId")));
