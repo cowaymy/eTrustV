@@ -143,7 +143,8 @@
     overflow: auto;
     margin: 0;
     padding:0;
-	max-height:232px!important;
+	/*max-height:232px!important;*/
+	max-height:91px!important;
 }
 
 .ms-drop ul > li {
