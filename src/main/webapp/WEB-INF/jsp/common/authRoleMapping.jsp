@@ -335,7 +335,7 @@ function auiCellEditignHandler(event)
 
       if (authSelectList.length > 0)
       {
-          if (authSelectList.length = 1)
+          if (authSelectList.length == 1)
           {
             var gridAuthCode1 =  AUIGrid.getCellValue(AuthGridID, 0, "hidden");
             var gridAuthCode2 =  "";
@@ -350,7 +350,7 @@ function auiCellEditignHandler(event)
             }
 
           }
-          else if (authSelectList.length = 2)
+          else if (authSelectList.length == 2)
           {
              var gridAuthCode1 =  AUIGrid.getCellValue(AuthGridID, 0, "hidden");
              var gridAuthCode2 =  AUIGrid.getCellValue(AuthGridID, 1, "hidden");
@@ -388,8 +388,64 @@ function auiCellEditignHandler(event)
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                   return false;
               }
-          }
 
+
+              var authData = AUIGrid.getColumnValues(AuthGridID,"authCode").toString();
+              authData = authData.replace(selAuthCode,"");
+
+              if(selAuthCode == "INT" && authData.indexOf("INT") > -1){
+                  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='INT' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+
+              if(selAuthCode == "MGR" && authData.indexOf("MGR") > -1){
+                  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='MGR' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+
+              if(selAuthCode == "EXT" && authData.indexOf("EXT") > -1){
+                  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='EXT' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+
+              if(selAuthCode == "INT" && authData.indexOf("EXT") > -1){
+            	  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='EXT' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+
+              if(selAuthCode == "EXT" && authData.indexOf("INT") > -1){
+
+                  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='INT' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+
+              if(selAuthCode == "MGR" && authData.indexOf("EXT") > -1){
+            	//The {0} Must Exist.
+                  Common.alert("<spring:message code='sys.msg.Exists' arguments='INT' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+
+              if(selAuthCode == "MGR" && authData.indexOf("INT") == -1){
+            	//The {0} Must Exist.
+                  Common.alert("<spring:message code='sys.msg.Exists' arguments='INT' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+          }
+          /*
           //INT와 EXT는 같이 등록 안됨
           if (selAuthCode == "INT")
           {
@@ -425,6 +481,7 @@ function auiCellEditignHandler(event)
                 return false;
               }
           }
+          */
 
           //
           if (selAuthCode == "EXT")
@@ -897,6 +954,13 @@ $(document).ready(function()
 });   //$(document).ready
 
 
+
+
+/*
+
+ */
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -931,7 +995,7 @@ $(document).ready(function()
 <tr>
   <th scope="row">Role</th>
     <td>
-      <input type="text" id="txtRoleId" name="txtRoleId" width="250" title="" placeholder="Role Name" class="" />
+      <input type="text" id="txtRoleId" name="txtRoleId" width="250" title="" placeholder="Role Id or Name" class="" />
     </td>
 <!--   <th scope="row"></th>
   <td>

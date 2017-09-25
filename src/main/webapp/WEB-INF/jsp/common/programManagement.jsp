@@ -299,9 +299,9 @@ function auiCellEditignHandler(event)
   {
       console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
 
-      if (event.dataField == "pgmName" && event.headerText == "NAME" ) 
+      if (event.dataField == "pgmName" && event.headerText == "NAME" )
       {
-    	  AUIGrid.setCellValue(myGridID, event.rowIndex, 4, event.value);    
+    	  AUIGrid.setCellValue(myGridID, event.rowIndex, 4, event.value);
       }
   }
   else if(event.type == "cellEditCancel")
@@ -571,6 +571,50 @@ function fnSavePgmId()
 
 function fnUpdateTrans()
 {
+
+	var dfnChk1 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn1");
+	var dfnChk2 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn2");
+	var dfnChk3 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn3");
+	var dfnChk4 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn4");
+	var dfnChk5 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn5");
+
+	var dfnDesc1 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn1");
+	var dfnDesc2 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn2");
+    var dfnDesc3 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn3");
+    var dfnDesc4 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn4");
+    var dfnDesc5 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn5");
+    
+    if(dfnChk1 == "Y" && (dfnDesc1 == "" || typeof(dfnDesc1) == "undefined")){
+    	//The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#1 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk2 == "Y" && (dfnDesc2 == ""  || typeof(dfnDesc2) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#2 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk3 == "Y" && (dfnDesc3 == "" || typeof(dfnDesc3) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#3 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk4 == "Y" && (dfnDesc4 == "" || typeof(dfnDesc4) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#4 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk5 == "Y" && (dfnDesc5 == "" || typeof(dfnDesc5) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#5 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+
 	 gAddRowCnt = 0;
 	 Common.ajax("POST", "/program/updateTrans.do"
         , GridCommon.getEditData(transGridID)
@@ -882,14 +926,14 @@ $(document).ready(function()
 </colgroup>
 <tbody>
 <tr>
-  <th scope="row">ID</th>
+  <th scope="row">Program</th>
   <td>
-  <input type="text" title="" id="pgmCode" name="pgmCode" placeholder="program id" class="w100p" />
+  <input type="text" title="" id="pgmCode" name="pgmCode" placeholder="Program Id or Name" class="w100p" />
   </td>
-  <th scope="row">Name</th>
+  <!-- <th scope="row">Name</th>
   <td>
   <input type="text" title="" id="pgmNm" name="pgmNm" placeholder="program name" class="w100p" />
-  </td>
+  </td> -->
 </tr>
 </tbody>
 </table><!-- table end -->
