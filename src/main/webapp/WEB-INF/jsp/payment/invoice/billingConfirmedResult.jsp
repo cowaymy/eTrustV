@@ -27,17 +27,17 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"salesOrdNo", headerText:"Order No", width : 80},
-    {dataField:"accBillGrpId", headerText:"Bill Group", width : 120},
-    {dataField:"codeName", headerText:"Bill Type", width : 120},
-    {dataField:"accBillRefNo", headerText:"Bill No", width : 250},
-    {dataField:"name", headerText:"Customer Name", width : 100},
+    {dataField:"salesOrdNo", headerText:"Order No", width : 90},
+    {dataField:"accBillGrpId", headerText:"Bill Group", width : 90},
+    {dataField:"codeName", headerText:"Bill Type", width : 165},
+    {dataField:"accBillRefNo", headerText:"Bill No", width : 140},
+    {dataField:"name", headerText:"Customer Name", width : 250},
     {dataField:"accBillSchdulPriod", headerText:"Installment", width : 100},
-    {dataField:"accBillSchdulAmt", headerText:"Amount" , width : 160},
-    {dataField:"accBillAdjAmt", headerText:"Descount Amount", width : 100},
+    {dataField:"accBillSchdulAmt", headerText:"Amount" , width : 100},
+    {dataField:"accBillAdjAmt", headerText:"Descount Amount", width : 150},
     {dataField:"accBillTxsAmt", headerText:"Taxes Amount", width : 100},
     {dataField:"accBillNetAmt", headerText:"Net Amount", width : 100},
-    {dataField:"accBillRefDt", headerText:"Issued", width : 100, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
+    {dataField:"accBillRefDt", headerText:"Issued", width : 180, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
 ];
 
 function fn_initData(){

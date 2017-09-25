@@ -91,7 +91,10 @@ function fn_generateInv(){
 		if(taskInvoiceGenerate != 1){
 			Common.ajax("GET", "/payment/generateInvoice.do", {"taskId" : taskId}, function(result) {
 	            if(result == false) Common.alert("Failed to save request. Please try again later.");
-	            else Common.alert("Bill Task Confirmed.");
+	            else {
+	            	fn_getInvoiceList();
+	            	Common.alert("Bill Task Confirmed.");
+	            }
 	        });
 		}else{
 			Common.alert("Selected Task ID Was Generated.");
