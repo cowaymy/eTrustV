@@ -346,6 +346,8 @@
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 1, data.split(",")[4]);
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 8, data.split(",")[3]);
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 10, data.split(",")[5]);
+				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 2, "");
+				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 3, "");
 			} else if (event.columnIndex == 5) {
 				var val = event.value;
 				var data = getOrgItemData(val);
