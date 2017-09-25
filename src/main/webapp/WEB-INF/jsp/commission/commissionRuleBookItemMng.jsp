@@ -345,6 +345,7 @@
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex - 2, data.split(",")[1]);
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 1, data.split(",")[4]);
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 8, data.split(",")[3]);
+				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 10, data.split(",")[5]);
 			} else if (event.columnIndex == 5) {
 				var val = event.value;
 				var data = getOrgItemData(val);
@@ -390,7 +391,7 @@
 		$.each(orgGridCdList, function(key, value) {
 			var id = value.id;
 			if (id == val) {
-				retStr = value.orgSeq + "," + value.orgGrCd + "," + value.id + "," + value.value + "," + value.cdDs;
+				retStr = value.orgSeq + "," + value.orgGrCd + "," + value.id + "," + value.value + "," + value.cdDs+","+value.code;
 			}
 		});
 		return retStr;
@@ -449,7 +450,7 @@
 			type : "ComboBoxRenderer",
 			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
 			listFunction : function(rowIndex, columnIndex, item, dataField) {
-				$("#ItemOrgCd").val(item.orgNm);
+				$("#ItemOrgCd").val(item.code);
 				var list = getOrgRgCodeItemList();
 				return list;
 			},
@@ -557,7 +558,11 @@
 		dataField : "itemNm",
 		headerText : "Item Name",
 		visible : false,
-	} ];
+	}, {
+	    dataField : "code",
+	    headerText : "code",
+	    visible : false,
+	  } ];
 
 	/**********************
 	 rule AUIGrid 칼럼 설정
@@ -656,6 +661,7 @@
                 list.cdDs = result[i].cdds;
                 list.orgSeq = result[i].orgSeq;
                 list.orgGrCd = result[i].orgGrCd;
+                list.code = result[i].code;
                 orgGridCdList.push(list);
             }
             if (callBack) {
