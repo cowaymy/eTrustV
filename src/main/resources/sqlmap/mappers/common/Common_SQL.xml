@@ -15,12 +15,14 @@
 	 FROM SYS0051M A
 		   , SYS0050M B
    WHERE A.PGM_CODE = B.PGM_CODE(+)
-	<if test='menuCode !=null and menuCode != "" '>
-	   AND UPPER(A.MENU_CODE) LIKE '%' || UPPER(#{menuCode}) || '%'
-	</if>
-	<if test='pgmCode !=null and pgmCode !="" '>
-	   AND UPPER(B.PGM_CODE) LIKE '%' || UPPER(#{pgmCode}) || '%'
-	</if>
+    <if test='menuCode !=null and menuCode != "" '>
+       AND (UPPER(A.MENU_CODE) LIKE  UPPER(#{menuCode}) || '%' OR
+                UPPER(A.MENU_NAME) LIKE '%' || UPPER(#{menuCode}) || '%')
+    </if>
+    <if test='pgmCode !=null and pgmCode !="" '>
+       AND (UPPER(A.PGM_CODE) LIKE  UPPER(#{pgmCode}) || '%' OR
+                UPPER(B.PGM_NAME) LIKE '%' || UPPER(#{pgmCode}) || '%')
+    </if>
 	ORDER BY SUBSTR(A.MENU_CODE,1,3) ,A.MENU_LVL ,A.MENU_ORDER
 	</select>
 
@@ -244,7 +246,8 @@
 		 WHERE 1 = 1
 
       <if test="pgmCode !=null and pgmCode != ''">
-        AND PGM_CODE LIKE #{pgmCode}  || '%'
+        AND (UPPER(PGM_CODE) LIKE  UPPER(#{pgmCode}) || '%' OR
+                UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmCode}) || '%')
       </if>
       <if test="pgmNm !=null and pgmNm != ''">
         AND UPPER(PGM_NAME) LIKE '%' || #{pgmNm} || '%'
@@ -640,7 +643,7 @@
             AND ACC_DESC LIKE  '%' || #{accDesc} || '%'
           </if>
           <if test="sapAccCode !=null and sapAccCode != ''">
-            AND SAP_ACC_CODE = #{sapAccCode} 
+            AND SAP_ACC_CODE = #{sapAccCode}
           </if>
           <if test="paymentCd !=null and paymentCd == 'CSH' ">
             AND IS_PAY_CASH = 1
@@ -997,7 +1000,7 @@
                        WHERE T1.RESN_TYPE_ID = #{typeId}
                          AND 1 = T1.STUS_CODE_ID
                        UNION ALL
-                      SELECT 1 C1 
+                      SELECT 1 C1
                            , T2.RESN_ID CODE_ID
                            , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
                         FROM SYS0032M T2
@@ -1005,7 +1008,7 @@
                     ) T
              ) TT ORDER BY CODE_NAME
     </select>
-    
+
     <!--Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)  -->
     <select id="getAccountList" parameterType="Map" resultType="egovMap">
         SELECT
