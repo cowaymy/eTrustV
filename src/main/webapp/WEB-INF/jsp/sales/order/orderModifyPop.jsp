@@ -426,12 +426,19 @@
         } else {
             $('#scIN').addClass("blind");
         }
-         if(tabNm == 'PAY') {
+        if(tabNm == 'PAY') {
             $('#scPC').removeClass("blind");
             $('#aTabMI').click();
             fn_loadRentPaySetInfo(ORD_ID);
         } else {
             $('#scPC').addClass("blind");
+        }
+        if(tabNm == 'DOC') {
+            $('#scDS').removeClass("blind");
+            $('#aTabMI').click();
+            //fn_loadRentPaySetInfo(ORD_ID);
+        } else {
+            $('#scDS').addClass("blind");
         }
     }
 
@@ -441,7 +448,6 @@
         Common.ajax("GET", "/sales/order/selectRentPaySetInfo.do", {salesOrderId : ordId}, function(rsltInfo) {
 
             if(rsltInfo != null) {
-                alert(rsltInfo.is3party);
                 if(rsltInfo.is3party == '1') {
                     $("#thrdParty").attr("checked", true);
                     $('#scPC_ThrdParty').removeClass("blind");
@@ -2087,7 +2093,33 @@
 <!------------------------------------------------------------------------------
     Payment Channel Edit END
 ------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    NRIC/Company No. Edit START
+------------------------------------------------------------------------------->
+<section id="scDS" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3>Document Submission</h3>
+</aside><!-- title_line end -->
 
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#">INS</a></p></li>
+	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a id="btnSaveDocSub" href="#">SAVE</a></p></li>
+</ul>
+</section<
+<!------------------------------------------------------------------------------
+    NRIC/Company No. Edit END
+------------------------------------------------------------------------------->
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
