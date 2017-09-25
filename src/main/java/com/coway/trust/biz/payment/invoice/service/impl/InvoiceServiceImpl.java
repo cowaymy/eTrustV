@@ -1,0 +1,59 @@
+package com.coway.trust.biz.payment.invoice.service.impl;
+
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.coway.trust.biz.payment.billing.service.impl.SrvMembershipBillingMapper;
+import com.coway.trust.biz.payment.invoice.service.InvoiceService;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+
+/**
+ * @Class Name : EgovSampleServiceImpl.java
+ * @Description : Sample Business Implement Class
+ * @Modification Information
+ * @ @ 수정일 수정자 수정내용 @ --------- --------- ------------------------------- @ 2009.03.16 최초생성
+ *
+ * @author 개발프레임웍크 실행환경 개발팀
+ * @since 2009. 03.16
+ * @version 1.0
+ * @see
+ *
+ * 	 Copyright (C) by MOPAS All right reserved.
+ */
+
+@Service("invoiceService")
+public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements InvoiceService {
+
+	@Resource(name = "invoiceMapper")
+	private InvoiceMapper invoiceMapper;
+	
+	@Resource(name = "srvMembershipBillingMapper")
+	private SrvMembershipBillingMapper membershipMapper;
+
+	@Override
+	public List<EgovMap> selectInvoiceList(Map<String, Object> params) {
+		return invoiceMapper.selectInvoiceList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectInvoiceMaster(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.selectInvoiceMaster(params);
+	}
+
+	@Override
+	public List<EgovMap> selectInvoiceDetail(Map<String, Object> params) {
+		return invoiceMapper.selectInvoiceDetail(params);
+	}
+
+	@Override
+	public void createTaxInvoice(Map<String, Object> params) {
+		membershipMapper.createTaxInvoice(params);
+	}
+
+}
