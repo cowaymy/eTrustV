@@ -35,15 +35,8 @@ public class DiscountMgmtServiceImpl extends EgovAbstractServiceImpl implements 
 
 	private static final Logger logger = LoggerFactory.getLogger(DiscountMgmtServiceImpl.class);
 
-	@Value("${app.name}")
-	private String appName;
-
 	@Resource(name = "discountMgmtMapper")
 	private DiscountMgmtMapper discountMgmtMapper;
-
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
-
 	
 	/**
 	 * selectBasicInfo 조회
