@@ -491,7 +491,7 @@
                     // 체크박스 대신 라디오버튼 출력함
                     //rowCheckToRadio : true,
                     selectionMode : "singleRow",
-                    displayTreeOpen : true,
+                    displayTreeOpen : false,
                     // 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
                     rowIdField : "ruleSeq",
                     flat2tree : true,
