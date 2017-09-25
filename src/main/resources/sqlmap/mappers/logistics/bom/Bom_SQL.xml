@@ -45,6 +45,12 @@
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
               AND sm.CODE_ID = m2.STK_TYPE_ID
+               <choose>
+                <when test="bom != null and categoryid != null">
+                  AND m.BOM=#{bom}
+                  AND sm.CODE_ID=#{categoryid}
+                </when>
+                <otherwise>
 	           <if test="srchmtrcd != null and srchmtrcd!= ''">
 	              AND m.MATRL_NO LIKE  #{srchmtrcd}||'%'
 	          </if>  
@@ -54,6 +60,8 @@
 	           <if test="srchValid != null and srchValid != ''">
 	              AND TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY') = TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'DD/MM/YYYY')
 	           </if>  
+              </otherwise>
+             </choose>
                 ORDER BY m.BOM, d.BOM_ITM_NODE_NO 
     </select>
      <select id="materialInfo" parameterType="Map" resultType="egovMap">
