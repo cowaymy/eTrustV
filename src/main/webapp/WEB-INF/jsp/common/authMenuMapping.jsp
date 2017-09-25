@@ -413,9 +413,6 @@ $(document).ready(function(){
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -492,14 +489,14 @@ $(document).ready(function(){
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-<div class="border_box" style="width:40%;height:450px;"><!-- border_box start -->
+<div class="border_box" style="width:40%; height:450px;"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3 class="pt0">Auth</h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdAuth"  style="height:420px;"></div>
+    <div id="grdAuth" style="height:420px;"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
@@ -511,7 +508,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grdMenuMapping"  style="height:420px;"></div>
+    <div id="grdMenuMapping" style="height:420px;"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->

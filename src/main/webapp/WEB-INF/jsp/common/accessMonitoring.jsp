@@ -250,7 +250,9 @@ var grdAccessColumnLayout =
       },
     {
         dataField : "accessDtm",
+        dataType : "date",
         headerText : "Access Time",
+        formatString : "yyyy-mm-dd hh:MM:ss",
         editRenderer : {
             type : "InputEditRenderer",
 
@@ -348,7 +350,9 @@ var grdAccessDtmColumnLayout =
      {
          dataField : "accessDay",
          headerText : "Access Day",
+         dataType : "date",
          width:"18%",
+         formatString : "yyyy-mm-dd",
          editRenderer : {
              type : "InputEditRenderer",
 
@@ -516,7 +520,7 @@ $(document).ready(function(){
     // click 이벤트 바인딩
     AUIGrid.bind(grdAccessDtm, ["cellClick"], function(event) {
         selectedRow = event.rowIndex;
-        var searchDt = event.item.accessTime + event.item.accessDay.toString().replace(/\//g,"");
+        var searchDt = event.item.accessDay.toString().replace(/\//g,"")+event.item.accessTime;
         fn_detailSearch(event.item.systemId, searchDt ,event.item.pgmCode);
     });
 

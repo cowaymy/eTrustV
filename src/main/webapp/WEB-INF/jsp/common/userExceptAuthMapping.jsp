@@ -731,9 +731,9 @@ $(document).ready(function()
 </colgroup>
 <tbody>
  <tr>
-	<th scope="row">USER ID / NAME</th>
+	<th scope="row">USER</th>
 	 <td>
-	   <input type="text" id="txtUserId" name="txtUserId" title=""		placeholder="" class="" />
+	   <input type="text" id="txtUserId" name="txtUserId" title=""		placeholder="User Id or Name" class="" />
 	</td>
 <!-- 	<th scope="row">USER Name</th>
 	 <td><input type="text" id="userNm" name="userNm" title=""		placeholder="" class="" />
@@ -829,7 +829,7 @@ $(document).ready(function()
 
 </section><!-- content end -->
 
-<!-- 
+<!--
 <aside class="bottom_msg_box">bottom_msg_box start
 <p>Information Message Area</p>
 </aside>bottom_msg_box end
@@ -839,5 +839,5 @@ $(document).ready(function()
 
 </div>wrap end
 </body>
-</html> 
+</html>
 -->

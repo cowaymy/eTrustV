@@ -144,15 +144,15 @@ var MainColumnLayout =
                 keyField : "id",
                 valueField : "value",
             }
-                 
-           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) 
+
+           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item )
             {
               var retStr = value;
               var iCnt = StatusCdList.length;
-              
-              for(var iLoop = 0; iLoop < iCnt; iLoop++) 
+
+              for(var iLoop = 0; iLoop < iCnt; iLoop++)
               {
-            	  if(StatusCdList[iLoop]["id"] == value) 
+            	  if(StatusCdList[iLoop]["id"] == value)
                 {
             		  retStr = StatusCdList[iLoop]["value"];
                   break;
@@ -174,15 +174,15 @@ var MainColumnLayout =
 
 function getStatusComboListAjax(callBack)
 {
-	  //Common.ajaxSync("GET", "/menu/selectCodeList.do"
-	  Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
+	  Common.ajaxSync("GET", "/common/selectCodeList.do"
+// 	  Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
     	           , $("#MainForm").serialize()
     	           , function(result)
     	           {
 					          for (var i = 0; i < result.length; i++)
 						        {
 					        	  var list = new Object();
-							            list.id = result[i].stusCodeId;
+							            list.id = result[i].code;
 							            list.value = result[i].codeName ;
 							            StatusCdList.push(list);
 							      }
@@ -252,7 +252,7 @@ function addRowMenu()
   item.menuName   ="";
   item.pgmCode    ="";
   item.pgmName    ="";
-  item.statusCode ="1";
+  item.statusCode ="";
   item.menuSeq    ="";
   item.rowId      ="PkAddNew";
   // parameter
@@ -311,13 +311,13 @@ function fnSelectMenuListAjax()
 {
 	  if ($("#txtMenuCode").val().length > 0)
 		{
-		  $("#menuCode").val($("#txtMenuCode").val());  
+		  $("#menuCode").val($("#txtMenuCode").val());
 		}
 	  else
     {
-    	$("#menuCode").val("");  
+    	$("#menuCode").val("");
     }
-    	
+
    Common.ajax("GET", "/menu/selectMenuList.do"
            , $("#MainForm").serialize()
            , function(result)
@@ -702,7 +702,7 @@ $(document).ready(function()
 	<input type ="hidden" id="menuCode" name="menuCode" value=""/>
 	<input type ="hidden" id="selCategoryId" name="selCategoryId" value="1"/>
 	<input type ="hidden" id="parmDisab" name="parmDisab" value="0"/>
-
+	<input type ="hidden" id="groupCode" name="groupCode" value="345"/>
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -713,13 +713,13 @@ $(document).ready(function()
 	</colgroup>
 	<tbody>
 	<tr>
-		<th scope="row">Menu Id</th>
+		<th scope="row">Menu</th>
 		<td>
-		 <input type="text" id="txtMenuCode" name="txtMenuCode" title="" placeholder="" class="w100p" style="text-transform: uppercase;"/>
+		 <input type="text" id="txtMenuCode" name="txtMenuCode" title="" placeholder="Menu Id or Name" class="w100p" style="text-transform: uppercase;"/>
 		</td>
-		<th scope="row">Program Id</th>
+		<th scope="row">Program</th>
 		<td>
-		 <input type="text" id="pgmCode" name="pgmCode" title="" placeholder="" class="w100p" />
+		 <input type="text" id="pgmCode" name="pgmCode" title="" placeholder="Program Id or Name" class="w100p" />
 		</td>
 	</tr>
 	</tbody>
@@ -757,7 +757,7 @@ $(document).ready(function()
   <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
   </dd>
 </dl>
-	
+
 	</aside><!-- link_btns_wrap end -->
 
 </form>
