@@ -129,6 +129,13 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectReasonCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectReasonCodeList(@RequestParam Map<String, Object> params) 
+	{
+		List<EgovMap> codeList = commonService.selectReasonCodeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
 	 * 

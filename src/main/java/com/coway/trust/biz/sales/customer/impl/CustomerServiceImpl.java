@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.coway.trust.biz.sales.customer.CustomerBVO;
 import com.coway.trust.biz.sales.customer.CustomerCVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
+import com.coway.trust.biz.sales.order.vo.CustAccVO;
+import com.coway.trust.biz.sales.order.vo.CustCrcVO;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -550,6 +553,60 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 			customerMapper.insertBankAccountInfo(customerBVO);
 		}
 		
+	}
+	
+	@Override
+	public void insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO) {
+		
+		CustAccVO custAccVO = new CustAccVO();
+		
+		custAccVO.setCustId(Integer.parseInt((String) params.get("custId")));
+		custAccVO.setCustAccNo((String) params.get("accNo"));
+		custAccVO.setCustEncryptAccNo((String) params.get("accNo"));
+		custAccVO.setCustAccOwner((String) params.get("accName"));
+		custAccVO.setCustAccTypeId(Integer.parseInt((String) params.get("bankType")));
+		custAccVO.setCustAccBankId(Integer.parseInt((String) params.get("accBank")));
+		custAccVO.setCustAccBankBrnch((String) params.get("accBankBranch"));
+		custAccVO.setCustAccRem((String) params.get("accRemark"));
+		custAccVO.setCustAccStusId(1);
+		custAccVO.setCustAccUpdUserId(sessionVO.getUserId());
+		custAccVO.setCustAccNric("");
+		custAccVO.setCustAccIdOld(0);
+		custAccVO.setSoId(0);
+		custAccVO.setCustAccIdcm(0);
+		custAccVO.setCustHlbbId(0);
+		custAccVO.setCustAccCrtUserId(sessionVO.getUserId());
+		
+		customerMapper.insertBankAccountInfo2(custAccVO);		
+	}
+	
+	@Override
+	public void insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO) {
+		
+		String expDate = (String) params.get("expDate");
+		
+		expDate = expDate.substring(0, 2) + expDate.substring(5, 7);
+		
+		CustCrcVO custCrcVO = new CustCrcVO();
+		
+		custCrcVO.setCustId(Integer.parseInt((String) params.get("custId")));
+		custCrcVO.setCustCrcNo((String) params.get("cardNo")); //EncryptionProvider.Encrypt(txtCRCNo.Text.Trim());
+		custCrcVO.setCustOriCrcNo((String) params.get("cardNo"));
+		custCrcVO.setCustEncryptCrcNo((String) params.get("cardNo")); //CommonFunction.GetBytesFromString(txtCRCNo.Text.Trim());
+		custCrcVO.setCustCrcOwner((String) params.get("nameOnCard"));
+		custCrcVO.setCustCrcTypeId(Integer.parseInt((String) params.get("creditCardType")));
+		custCrcVO.setCustCrcBankId(Integer.parseInt((String) params.get("issBank")));
+		custCrcVO.setCustCrcStusId(1);
+		custCrcVO.setCustCrcRem((String) params.get("cardRem"));
+		custCrcVO.setCustCrcUpdUserId(sessionVO.getUserId());
+		custCrcVO.setCustCrcExpr(expDate);;
+		custCrcVO.setCustCrcIdOld(0);
+		custCrcVO.setSoId(0);
+		custCrcVO.setCustCrcIdcm(0);
+		custCrcVO.setCustCrcCrtUserId(sessionVO.getUserId());
+		custCrcVO.setCardTypeId(Integer.parseInt((String) params.get("cardType")));
+		
+		customerMapper.insertCreditCardInfo2(custCrcVO);		
 	}
 	
 	

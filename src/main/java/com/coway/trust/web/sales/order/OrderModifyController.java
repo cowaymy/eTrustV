@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderModifyService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
@@ -42,6 +48,9 @@ public class OrderModifyController {
 	@Resource(name = "orderModifyService")
 	private OrderModifyService orderModifyService;
 	
+	@Resource(name = "customerService")
+	private CustomerService customerService;
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
@@ -57,14 +66,19 @@ public class OrderModifyController {
 		model.put("ordEditType",  params.get("ordEditType"));
 		model.put("custId",       basicInfo.get("custId"));
 		model.put("appTypeId",    basicInfo.get("appTypeId"));
+		model.put("appTypeDesc",  basicInfo.get("appTypeDesc"));
 		model.put("salesOrderNo", basicInfo.get("ordNo"));
-		
+		model.put("custNric",     basicInfo.get("custNric"));
+		model.put("toDay", 		  CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
 		logger.debug("!@###### ordEditType  : "+model.get("ordEditType"));
 		logger.debug("!@###### custId       : "+model.get("custId"));
 		logger.debug("!@###### appTypeId    : "+model.get("appTypeId"));
-		logger.debug("!@###### ordNo        : "+model.get("salesOrderNo"));
+		logger.debug("!@###### appTypeDesc  : "+model.get("appTypeDesc"));
+		logger.debug("!@###### salesOrderNo : "+model.get("salesOrderNo"));
+		logger.debug("!@###### custNric     : "+model.get("custNric"));
 		logger.debug("!@##############################################################################");
 		
 		return "sales/order/orderModifyPop";
@@ -116,6 +130,20 @@ public class OrderModifyController {
 	public ResponseEntity<ReturnMessage> updateNric(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
 		
 		orderModifyService.updateNric(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("NRIC has been successfully updated.");
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updatePaymentChannel.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updatePaymentChannel(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		orderModifyService.updatePaymentChannel(params, sessionVO);
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
@@ -246,7 +274,7 @@ public class OrderModifyController {
 	@RequestMapping(value = "/updateInstallInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateInstallInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
 		
-		orderModifyService.updateInstallInfo(params, sessionVO);;
+		orderModifyService.updateInstallInfo(params, sessionVO);
 
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
@@ -256,4 +284,35 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/selectRentPaySetInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectRentPaySetInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = orderModifyService.selectRentPaySetInfo(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/selectCustomerBankDetailView.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectCustomerBankDetailView(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = customerService.selectCustomerBankDetailViewPop(params);
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+	@RequestMapping(value = "/selectCustomerCreditCardDetailView.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectCustomerCreditCardDetailView(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+
+		EgovMap resultMap = customerService.selectCustomerCreditCardDetailViewPop(params);
+		
+		resultMap.put("decryptCRCNoShow", CommonUtils.getMaskCreditCardNo(StringUtils.trim((String)resultMap.get("custOriCrcNo")), "*", 4));
+		
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+
+
 }

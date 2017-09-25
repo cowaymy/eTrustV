@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.coway.trust.biz.sales.customer.CustomerBVO;
 import com.coway.trust.biz.sales.customer.CustomerCVO;
+import com.coway.trust.biz.sales.order.vo.CustAccVO;
+import com.coway.trust.biz.sales.order.vo.CustCrcVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -303,6 +305,8 @@ public interface CustomerMapper {
 	 */
 	int insertCreditCardInfo(CustomerCVO customerCVO);
 	
+	int insertCreditCardInfo2(CustCrcVO custCrcVO);
+	
 	
 	/**
 	 * get Customer Id Max Seq 
@@ -322,6 +326,8 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 */
 	int insertBankAccountInfo(CustomerBVO customerBVO);
+	
+	int insertBankAccountInfo2(CustAccVO custAccVO);
 	
 	
 	

@@ -2,6 +2,9 @@ package com.coway.trust.biz.sales.customer;
 
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CustomerService {
@@ -534,4 +537,8 @@ public interface CustomerService {
 	 * @author 
 	 */
 	List<EgovMap> getNationList () throws Exception;
+	
+	void insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO);
+
+	void insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO);
 }

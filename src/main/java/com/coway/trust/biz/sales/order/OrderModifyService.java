@@ -41,4 +41,8 @@ public interface OrderModifyService {
 
 	void updateInstallInfo(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
+	EgovMap selectRentPaySetInfo(Map<String, Object> params) throws Exception;
+
+	void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
 }

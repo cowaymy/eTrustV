@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.customer;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,6 +135,55 @@ public class CustomerController {
 		return "sales/customer/customerBankAccountPop"	;
 	}
 	
+	/**
+	 * New Customer Add Bank Account Pop 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/customerBankAccountAddPop.do")
+	public String customerBankAccountAddPop(@RequestParam Map<String, Object> params, ModelMap model){
+		
+		model.put("custId", params.get("custId"));
+		
+		return "sales/customer/customerBankAccountAddPop"	;
+	}
+	
+	@RequestMapping(value = "/customerCreditCardAddPop.do")
+	public String customerCreditCardAddPop(@RequestParam Map<String, Object> params, ModelMap model){
+		
+		model.put("custId", params.get("custId"));
+		
+		return "sales/customer/customerCreditCardAddPop"	;
+	}
+
+	@RequestMapping(value = "/insertBankAccountInfo2.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertBankAccountInfo2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+		
+		customerService.insertBankAccountInfo2(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("New bank account added.");
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/insertCreditCardInfo2.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertCreditCardInfo2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+		
+		customerService.insertCreditCardInfo2(params, sessionVO);;
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("New credit card added.");
+
+		return ResponseEntity.ok(message);
+	}
 	
 	/**
 	 * Customer 상세 조회 Address List 
@@ -209,6 +259,15 @@ public class CustomerController {
 		model.put("custId", params.get("custId"));
 		
 		return "sales/customer/customerAddressSearchPop";
+	}
+	
+	@RequestMapping(value = "/customerBankAccountSearchPop.do")
+	public String customerBankAccountSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("callPrgm", params.get("callPrgm"));
+		model.put("custId", params.get("custId"));
+		
+		return "sales/customer/customerBankAccountSearchPop";
 	}
 	
 	@RequestMapping(value = "/customerBillGrpSearchPop.do")

@@ -231,5 +231,7 @@ public interface CommonService {
 	
 	String SysdateCall(Map<String, Object> params);
 
+	List<EgovMap> selectReasonCodeList(Map<String, Object> params);
+
 
 }

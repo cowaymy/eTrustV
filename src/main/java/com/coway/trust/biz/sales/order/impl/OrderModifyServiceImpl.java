@@ -234,6 +234,16 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		orderModifyMapper.updateNric(params);
 	}
 	
+	@Override
+	public void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		logger.info("!@###### OrderModifyServiceImpl.updatePaymentChannel");
+
+		params.put("updUserId", sessionVO.getUserId());
+
+		//orderModifyMapper.updatePaymentChannel(params);
+	}
+	
 	private void preprocBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO, Map<String, Object> params, SessionVO sessionVO, String ordEditType) throws ParseException {
 
 		logger.info("!@###### preprocBillMasterHistory START ");
@@ -288,8 +298,47 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	public EgovMap selectInstallInfo(Map<String, Object> params) throws Exception {
 
 		EgovMap instMap = orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
-
+		
+		String TM = this.convert12Tm((String) instMap.get("preferInstTm"));
+		
+		instMap.put("preferInstTm", TM);
+		
 		return instMap;
+	}
+	
+	private String convert12Tm(String TM) {
+		String HH = "", MI = "", cvtTM = "";
+		
+		if(CommonUtils.isNotEmpty(TM)) {
+			HH = CommonUtils.left(TM, 2);
+			MI = TM.substring(3, 5);
+			
+			if(Integer.parseInt(HH) > 12) {
+				cvtTM = String.valueOf(Integer.parseInt(HH) - 12) + ":" + String.valueOf(MI) + " PM";
+			}
+			else {
+				cvtTM = HH + ":" + String.valueOf(MI) + " AM";
+			}
+		}
+		return cvtTM;
+	}
+	
+	private String convert24Tm(String TM) {
+		String ampm = "", HH = "", MI = "", cvtTM = "";
+		
+		if(CommonUtils.isNotEmpty(TM)) {
+			ampm = CommonUtils.right(TM, 2);
+			HH = CommonUtils.left(TM, 2);
+			MI = TM.substring(3, 5);
+			
+			if("PM".equals(ampm)) {
+				cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
+			}
+			else  {
+				cvtTM = HH + ":" + MI + ":00";
+			}
+		}
+		return cvtTM;
 	}
 	
 	@Override
@@ -338,10 +387,19 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		logger.info("!@###### OrderModifyServiceImpl.updateInstallInfo");
 
 		params.put("updUserId", sessionVO.getUserId());
+		params.put("preTm", this.convert24Tm((String) params.get("preTm")));
 
 		orderModifyMapper.updateInstallInfo(params);
 
 		orderModifyMapper.updateInstallUpdateInfo(params);
+	}
+	
+	@Override
+	public EgovMap selectRentPaySetInfo(Map<String, Object> params) throws Exception {
+
+		EgovMap cnctMap = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
+		
+		return cnctMap;
 	}
 	
 }
