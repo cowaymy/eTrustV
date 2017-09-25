@@ -31,9 +31,10 @@ $(document).ready(function(){
 	selCodeNation = $("#selCodeNation").val();
 	selCodeRaceId = $("#selCodeRaceId").val(); //race id
 	
+	
 	doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'basicCmbCorpTypeId', 'S', '');     // Company Type Combo Box
 	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'basicCmbCustTypeId', 'S', '');       // Customer Type Combo Box
-	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , selCodeNation,'basicCmdNationTypeId', 'A', '');        // Nationality Combo Box
+	doGetCombo('/sales/customer/getNationList', '' , '' ,'basicCmdNationTypeId' , 'S');        // Nationality Combo Box
 	doGetCombo('/common/selectCodeList.do', '2', selCodeRaceId ,'basicCmdRaceTypeId', 'S', ''); //cmdRaceTypeId
 	//TypeId 에 따른 수정항목 Control
 	// individual
