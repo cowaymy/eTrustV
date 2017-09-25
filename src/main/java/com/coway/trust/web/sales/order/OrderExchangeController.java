@@ -62,21 +62,7 @@ public class OrderExchangeController {
 		
 		params.put("arrExcType", arrExcType);
 		params.put("arrExcStatus", arrExcStatus);
-		params.put("arrAppType", arrAppType);
-		
-		String stDate = (String)params.get("startCrtDt");
-		if(stDate != null && stDate != ""){
-			String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
-			logger.info("##### createStDate #####" +createStDate);
-			params.put("startCrtDt", createStDate);
-		}
-		String enDate = (String)params.get("endCrtDt");
-		if(enDate != null && enDate != ""){
-			String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
-			logger.info("##### createEnDate #####" +createEnDate);
-			params.put("endCrtDt", createEnDate);
-		}
-		
+		params.put("arrAppType", arrAppType);		
 				
 		List<EgovMap> orderExchangeList = orderExchangeService.orderExchangeList(params);
 		

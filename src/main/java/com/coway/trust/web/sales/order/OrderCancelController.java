@@ -71,26 +71,26 @@ public class OrderCancelController {
 		params.put("stusIdList", callStusId);
 		params.put("reqStageList", reqStageId);
 		params.put("branchList", dscBranchId);
-		String stDate = (String)params.get("startCrtDt");
-		if(stDate != null && stDate != ""){
-			String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
-			params.put("startCrtDt", createStDate);
-		}
-		String enDate = (String)params.get("endCrtDt");
-		if(enDate != null && enDate != ""){
-			String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
-			params.put("endCrtDt", createEnDate);
-		}
-		String recallStDate = (String)params.get("startRecallDt");
-		if(recallStDate != null && recallStDate != ""){
-			String createStDate1 = recallStDate.substring(6) + "-" + recallStDate.substring(3, 5) + "-" + recallStDate.substring(0, 2);
-			params.put("startRecallDt", createStDate1);
-		}
-		String recallEnDate = (String)params.get("endRecallDt");
-		if(recallEnDate != null && recallEnDate != ""){
-			String createEnDate1 = recallEnDate.substring(6) + "-" + recallEnDate.substring(3, 5) + "-" + recallEnDate.substring(0, 2);
-			params.put("endRecallDt", createEnDate1);
-		}
+//		String stDate = (String)params.get("startCrtDt");
+//		if(stDate != null && stDate != ""){
+//			String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
+//			params.put("startCrtDt", createStDate);
+//		}
+//		String enDate = (String)params.get("endCrtDt");
+//		if(enDate != null && enDate != ""){
+//			String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
+//			params.put("endCrtDt", createEnDate);
+//		}
+//		String recallStDate = (String)params.get("startRecallDt");
+//		if(recallStDate != null && recallStDate != ""){
+//			String createStDate1 = recallStDate.substring(6) + "-" + recallStDate.substring(3, 5) + "-" + recallStDate.substring(0, 2);
+//			params.put("startRecallDt", createStDate1);
+//		}
+//		String recallEnDate = (String)params.get("endRecallDt");
+//		if(recallEnDate != null && recallEnDate != ""){
+//			String createEnDate1 = recallEnDate.substring(6) + "-" + recallEnDate.substring(3, 5) + "-" + recallEnDate.substring(0, 2);
+//			params.put("endRecallDt", createEnDate1);
+//		}
 		List<EgovMap> orderCancelList = orderCancelService.orderCancellationList(params);
 		
 		return ResponseEntity.ok(orderCancelList);

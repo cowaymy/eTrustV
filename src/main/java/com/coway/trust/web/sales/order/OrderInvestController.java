@@ -47,16 +47,7 @@ public class OrderInvestController {
 		
 		logger.debug("!@###### startCrtDt : "+params.get("startCrtDt"));
 		logger.debug("!@###### ::::::::::: : "+params.toString());
-		String stDate = (String)params.get("startCrtDt");
-		if(stDate != null && stDate != ""){
-			String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
-			params.put("startCrtDt", createStDate);
-		}
-		String enDate = (String)params.get("endCrtDt");
-		if(enDate != null && enDate != ""){
-			String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
-			params.put("endCrtDt", createEnDate);
-		}
+		
 		
 		String[] invReqStusId = request.getParameterValues("invReqStusId");
 		params.put("invReqStusIdList", invReqStusId);
@@ -284,16 +275,6 @@ public class OrderInvestController {
 		
 		logger.debug("!@###### startCrtDt : "+params.get("startCrtDt"));
 		logger.debug("!@###### ::::::::::: : "+params.toString());
-		String stDate = (String)params.get("startCrtDt");
-		if(stDate != null && stDate != ""){
-			String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5) + "-" + stDate.substring(0, 2);
-			params.put("startCrtDt", createStDate);
-		}
-		String enDate = (String)params.get("endCrtDt");
-		if(enDate != null && enDate != ""){
-			String createEnDate = enDate.substring(6) + "-" + enDate.substring(3, 5) + "-" + enDate.substring(0, 2);
-			params.put("endCrtDt", createEnDate);
-		}
 		
 		String[] invStusList = request.getParameterValues("invStusId");
 		params.put("invStusList", invStusList);
