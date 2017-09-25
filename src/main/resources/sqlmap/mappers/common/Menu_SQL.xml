@@ -243,7 +243,7 @@
                 FROM SYS0050M A, SYS0051M B
                WHERE A.PGM_CODE = B.PGM_CODE
                  AND A.PGM_PATH = #{pgmPath})
-        SELECT T.FUNC_YN
+        SELECT  DISTINCT T.FUNC_YN
                     ,W.MENU_CODE
           FROM (SELECT DISTINCT H.MENU_CODE
                                ,H.VALID_DT_FROM
