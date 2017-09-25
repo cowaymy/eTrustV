@@ -178,16 +178,16 @@
                  AND A.CUST_IC = #{custIc}
              </if>
              <if test="startCrtDt != null and startCrtDt != '' ">
-                AND CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(#{startCrtDt}))
+                AND CRT_DT <![CDATA[   >= ]]>  TO_CHAR(TO_DATE( #{startCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
              </if>
              <if test="endCrtDt != null and endCrtDt != ''">                              
-                AND CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(#{endCrtDt}))
+                AND CRT_DT <![CDATA[   <   ]]>  TO_CHAR(TO_DATE( #{endCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
             </if>
             <if test="startRecallDt != null and startRecallDt != '' ">
-                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(#{startRecallDt}))
+                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_CHAR(TO_DATE( #{startRecallDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
             </if>
             <if test="endRecallDt != null and endRecallDt != '' ">           
-                AND CALL_RECALL_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(#{endRecallDt}))
+                AND CALL_RECALL_DT <![CDATA[   <   ]]>  TO_CHAR(TO_DATE( #{endRecallDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
             </if>
     </select>
     
