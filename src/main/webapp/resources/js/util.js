@@ -71,6 +71,23 @@ var FormUtil = {
 		return false;
 	},
 
+	/**
+	 * 입력 값에 특수문자가 포함되어있는지를 검사한다.
+	 */
+	checkSpecialChar : function(val) {
+		if (val.length > 0) {
+			var regExp = /[~!@\#$%<>^&*\()\-=+_\’]/gi;
+
+			if (!regExp.test(val)) {
+				return true;
+			}
+		} else if (val == '') {
+			return true;
+		}
+
+		return false;
+	},
+
 	isEmpty : function(str) {
 		return typeof str == 'string' && !str.trim()
 				|| typeof str == 'undefined' || str === null;
@@ -286,5 +303,136 @@ var FormUtil = {
 	lpad : function (param, length, str) {
 	    param = param + ""
 	    return param.length >= length ? param : new Array(length - param.length + 1).join(str) + param;
+	},
+	
+	IsValidBankAccount : function(IssueBankID, AccNo) {
+        var valid = true;
+        var LengthOfAccNo = AccNo.length;
+
+        if (IssueBankID == 21 || IssueBankID == 30) {
+            //MAYBANK
+            if (LengthOfAccNo != 12)
+                valid = false;
+        }
+        else if (IssueBankID == 3 || IssueBankID == 36) {
+            //CIMB BANK
+            if (LengthOfAccNo != 14 && LengthOfAccNo !=10)
+                valid = false;
+        }
+        else if (IssueBankID == 6 || IssueBankID == 32) {
+            //PUBLIC BANK
+            if (LengthOfAccNo != 10)
+                valid = false;
+        }
+        else if (IssueBankID == 7 || IssueBankID == 33) {
+            //RHB BANK
+            if (LengthOfAccNo != 14)
+                valid = false;
+        }
+        else if (IssueBankID == 2 || IssueBankID == 35) {
+            //ALLIANCE BANK
+            if (LengthOfAccNo != 15)
+                valid = false;
+        }
+        else if (IssueBankID == 5 || IssueBankID == 29) {
+            //HONG LEONG BANK
+            if (LengthOfAccNo != 11)
+                valid = false;
+        }
+        else if (IssueBankID == 9 || IssueBankID == 26) {
+            //BANK SIMPANAN NASIONAL
+            if (LengthOfAccNo != 16)
+                valid = false;
+        }
+        else if (IssueBankID == 25) {
+            //MY CLEAR - BANK RAKYAT
+            if (LengthOfAccNo != 12)
+                valid = false;
+        }
+        else if (IssueBankID == 10) {
+            //MY CLEAR - BANK ISLAM
+            if (LengthOfAccNo != 14)
+                valid = false;
+        }
+        else if (IssueBankID == 17) {
+            //MY CLEAR - HSBC
+            if (LengthOfAccNo != 12)
+                valid = false;
+        }
+        else if (IssueBankID == 18) {
+            //MY CLEAR - OCBC
+            if (LengthOfAccNo != 10)
+                valid = false;
+        }
+        else if (IssueBankID == 19 || IssueBankID == 34) {
+            //MY CLEAR - STANDARD CHARTED
+            if (LengthOfAccNo < 5 || LengthOfAccNo > 17)
+                valid = false;
+        }
+        else if (IssueBankID == 16) {
+            //MY CLEAR - CITIBANK
+            if (LengthOfAccNo < 9 || LengthOfAccNo > 16)
+                valid = false;
+        }
+        else if (IssueBankID == 27) {
+            //MY CLEAR - DEUTCHE BANK
+            if (LengthOfAccNo < 10 || LengthOfAccNo > 14)
+                valid = false;
+        }
+        else if (IssueBankID == 13) {
+            //MY CLEAR - BANK OF AMARICA
+            if (LengthOfAccNo != 12)
+                valid = false;
+        }
+        else if (IssueBankID == 45) {
+            //MY CLEAR - J.P MORGAN
+            if (LengthOfAccNo != 10)
+                valid = false;
+        }
+
+        var IsRejectAcc = false;
+        
+        if(valid) {
+            IsRejectAcc = FormUtil.IsRejectBankAccount(IssueBankID, AccNo);
+            if (IsRejectAcc)
+                valid = false;
+        }
+
+        return valid;
+	},
+	
+	IsRejectBankAccount : function(IssueBankID, AccNo) {
+        var isReject = false;
+        if (IssueBankID == 21 || IssueBankID == 30) {
+            //MAYBANK
+            if(AccNo.substring(0, 1) == "4")
+                isReject = true;
+        }
+        else if (IssueBankID == 3 || IssueBankID == 36) {
+            //CIMB BANK
+            if(AccNo.length == 14) {
+                if(AccNo.substring(11, 12).trim() == "9" 
+                || AccNo.substring(11, 12).trim() == "2"
+                || AccNo.substring(11, 12).trim() == "1")
+                    isReject = true;
+            }
+        }
+        else if (IssueBankID == 6 || IssueBankID == 32) {
+            //PUBLIC BANK
+            if(AccNo.substring(0, 1) == "2" || AccNo.substring(0, 1) == "8")
+                isReject = true;
+        }
+        else if (IssueBankID == 7 || IssueBankID == 33) {
+            //RHB BANK
+            if(AccNo.substring(0, 1) == "7")
+                isReject = true;
+        }
+        else if (IssueBankID == 5 || IssueBankID == 29) {
+            //HONG LEONG BANK
+            if(AccNo.substring(3, 4).trim() == "8" || AccNo.substring(3, 4).trim() == "9")
+                isReject = true;
+        }
+
+        return isReject;
 	}
 };
