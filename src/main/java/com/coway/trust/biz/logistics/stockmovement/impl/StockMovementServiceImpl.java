@@ -213,6 +213,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 
 		stockMoveMapper.StockMovementIssue(formMap);
+		
+		System.out.println( " ::: " + formMap.get("rdata"));
 
 	}
 
