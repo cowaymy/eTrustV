@@ -236,7 +236,7 @@
           FROM SAL0029D T1
          WHERE T1.CUST_ID = #{custId}
     </select>
-        
+    
     <select id="selectNricExist" parameterType="Map" resultType="egovMap">
         SELECT T1.CUST_ID
              , T1.NAME

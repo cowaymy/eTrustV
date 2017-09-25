@@ -606,6 +606,7 @@
                     Project1.custAccBankId CUST_ACC_BANK_ID  ,
                     Project1.bankCode BANK_CODE  ,
                     Project1.bankName BANK_NAME  ,
+                    Project1.bankCode ||' - '|| Project1.bankName BANK_CODE_NAME  ,
                     Project1.custAccBankBrnch CUST_ACC_BANK_BRNCH  ,
                     Project1.custAccOwner CUST_ACC_OWNER  , 
                     Project1.custAccStusId CUST_ACC_STUS_ID  , 
@@ -663,7 +664,26 @@
                                     LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CUST_ACC_CRT_USER_ID
                                     LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CUST_ACC_UPD_USER_ID
                           WHERE  8 <> Extent1.CUST_ACC_STUS_ID 
-                              AND  Extent1.CUST_ID = #{custId}) Project1 
+                              AND  Extent1.CUST_ID = #{custId}
+         ]]>
+					       <if test='custAccBankId != null and custAccBankId !=""'>
+					          AND Extent1.CUST_ACC_BANK_ID = #{custAccBankId}
+					       </if>
+                           <if test='custAccNo != null and custAccNo !=""'>
+                              AND Extent1.CUST_ACC_NO = #{custAccNo}
+                           </if>
+                           <if test='custEncryptAccNo != null and custEncryptAccNo !=""'>
+                              AND Extent1.CUST_ENCRYPT_ACC_NO = #{custEncryptAccNo}
+                           </if>
+					       <if test='searchWord != null and searchWord !=""'>
+					           AND (UPPER(Extent1.CUST_ACC_NO)    LIKE '%' || UPPER(#{searchWord}) || '%'
+					             OR UPPER(Extent1.CUST_ACC_OWNER) LIKE '%' || UPPER(#{searchWord}) || '%'
+					             OR UPPER(Extent3.CODE_NAME)      LIKE '%' || UPPER(#{searchWord}) || '%'
+					             OR UPPER(Extent2.CODE)           LIKE '%' || UPPER(#{searchWord}) || '%'
+					             OR UPPER(Extent2.NAME)           LIKE '%' || UPPER(#{searchWord}) || '%')
+					        </if>
+        <![CDATA[ 
+                              ) Project1 
                  ) Project1 
         ORDER BY Project1.CUST_ACC_ID ASC 
 		 ]]>   
@@ -753,6 +773,9 @@
 			                 WHERE  8 <> Extent1.CUST_CRC_STUS_ID
 			                          AND  CASE WHEN Extent1.CUST_ID IS NOT NULL THEN Extent1.CUST_ID ELSE 0 END = #{custId}
          ]]>   
+		                           <if test='custOriCrcNo != null and custOriCrcNo !=""'>
+		                              AND Extent1.CUST_ORI_CRC_NO = #{custOriCrcNo}
+		                           </if>
 							         <if test='searchWord != null and searchWord !=""'>
 							           AND (UPPER(Extent1.CUST_ORI_CRC_NO)  LIKE '%' || UPPER(#{searchWord}) || '%'
 							             OR UPPER(Extent3.CODE_NAME)        LIKE '%' || UPPER(#{searchWord}) || '%'
@@ -1536,6 +1559,55 @@
 						            #{cardType})
     </insert>
     
+    <insert id="insertCreditCardInfo2" parameterType="custCrcVO">
+      <selectKey keyProperty="custCrcId" resultType="Integer" order="BEFORE">
+        SELECT SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+		INSERT
+		  INTO SAL0028D
+		     ( CUST_CRC_ID
+		     , CUST_ID
+		     , CUST_CRC_NO
+		     , CUST_ORI_CRC_NO
+		     , CUST_ENCRYPT_CRC_NO
+		     , CUST_CRC_OWNER
+		     , CUST_CRC_TYPE_ID
+		     , CUST_CRC_BANK_ID
+		     , CUST_CRC_STUS_ID
+		     , CUST_CRC_REM
+		     , CUST_CRC_UPD_USER_ID
+		     , CUST_CRC_UPD_DT
+		     , CUST_CRC_EXPR
+		     , CUST_CRC_ID_OLD
+		     , SO_ID
+		     , CUST_CRC_IDCM
+		     , CUST_CRC_CRT_USER_ID
+		     , CUST_CRC_CRT_DT
+		     , CARD_TYPE_ID
+		     )
+		VALUES
+		     ( #{custCrcId}
+		     , #{custId}
+		     , #{custCrcNo}
+		     , #{custOriCrcNo}
+		     , #{custEncryptCrcNo}
+		     , #{custCrcOwner}
+		     , #{custCrcTypeId}
+		     , #{custCrcBankId}
+		     , #{custCrcStusId}
+		     , #{custCrcRem}
+		     , #{custCrcUpdUserId}
+		     , SYSDATE
+		     , #{custCrcExpr}
+		     , #{custCrcIdOld}
+		     , #{soId}
+		     , #{custCrcIdcm}
+		     , #{custCrcCrtUserId}
+		     , SYSDATE
+		     , #{cardTypeId}
+		     )
+    </insert>
+    
     <select id="selectAccBank" parameterType="Map" resultType="egovMap">
           SELECT   Mt.BANK_ID CODE_ID, <!-- Mt.BANK_ID -->
 				       Mt.CODE CODE ,
@@ -1551,45 +1623,94 @@
     
     <insert id="insertBankAccountInfo">
         INSERT INTO SAL0022D (CUST_ACC_ID, 
-					                      CUST_ID,
-					                      CUST_ACC_NO,
-					                      CUST_ENCRYPT_ACC_NO,
-					                      CUST_ACC_OWNER,
-					                      CUST_ACC_TYPE_ID,
-					                      CUST_ACC_BANK_ID,
-					                      CUST_ACC_BANK_BRNCH,
-					                      CUST_ACC_REM,
-					                      CUST_ACC_STUS_ID,
-					                      CUST_ACC_UPD_USER_ID,
-					                      CUST_ACC_UPD_DT,
-					                      CUST_ACC_NRIC,
-					                      CUST_ACC_ID_OLD,
-					                      SO_ID,
-					                      CUST_ACC_IDCM,
-					                      CUST_HLBB_ID,
-					                      CUST_ACC_CRT_USER_ID,
-					                      CUST_ACC_CRT_DT)
-					  VALUES   (
-					                SAL0022D_CUST_ACC_ID_SEQ.NEXTVAL,
-						            SAL0029D_CUST_ID_SEQ.CURRVAL,
-						            #{accNo},
-						            #{encAccNo},
-						            #{accOwner},
-						            #{accTypeId},
-						            #{accBankId},
-						            #{accBankBrnch},
-						            #{accRem},
-						            #{accStusId},
-						            #{accUpdUserId},
-						            SYSDATE,
-						            #{accNric},
-						            #{accIdOld},
-						            #{soId},
-						            #{accIdcm},
-						            #{hlbbId},
-						            #{accCrtUserId},
-						            SYSDATE
-						            )
+                                          CUST_ID,
+                                          CUST_ACC_NO,
+                                          CUST_ENCRYPT_ACC_NO,
+                                          CUST_ACC_OWNER,
+                                          CUST_ACC_TYPE_ID,
+                                          CUST_ACC_BANK_ID,
+                                          CUST_ACC_BANK_BRNCH,
+                                          CUST_ACC_REM,
+                                          CUST_ACC_STUS_ID,
+                                          CUST_ACC_UPD_USER_ID,
+                                          CUST_ACC_UPD_DT,
+                                          CUST_ACC_NRIC,
+                                          CUST_ACC_ID_OLD,
+                                          SO_ID,
+                                          CUST_ACC_IDCM,
+                                          CUST_HLBB_ID,
+                                          CUST_ACC_CRT_USER_ID,
+                                          CUST_ACC_CRT_DT)
+                      VALUES   (
+                                    SAL0022D_CUST_ACC_ID_SEQ.NEXTVAL,
+                                    SAL0029D_CUST_ID_SEQ.CURRVAL,
+                                    #{accNo},
+                                    #{encAccNo},
+                                    #{accOwner},
+                                    #{accTypeId},
+                                    #{accBankId},
+                                    #{accBankBrnch},
+                                    #{accRem},
+                                    #{accStusId},
+                                    #{accUpdUserId},
+                                    SYSDATE,
+                                    #{accNric},
+                                    #{accIdOld},
+                                    #{soId},
+                                    #{accIdcm},
+                                    #{hlbbId},
+                                    #{accCrtUserId},
+                                    SYSDATE
+                                    )
+    </insert>
+    
+    <insert id="insertBankAccountInfo2" parameterType="custAccVO">
+      <selectKey keyProperty="custAccId" resultType="Integer" order="BEFORE">
+        SELECT SAL0022D_CUST_ACC_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0022D
+             ( CUST_ACC_ID
+             , CUST_ID
+             , CUST_ACC_NO
+             , CUST_ENCRYPT_ACC_NO
+             , CUST_ACC_OWNER
+             , CUST_ACC_TYPE_ID
+             , CUST_ACC_BANK_ID
+             , CUST_ACC_BANK_BRNCH
+             , CUST_ACC_REM
+             , CUST_ACC_STUS_ID
+             , CUST_ACC_UPD_USER_ID
+             , CUST_ACC_UPD_DT
+             , CUST_ACC_NRIC
+             , CUST_ACC_ID_OLD
+             , SO_ID
+             , CUST_ACC_IDCM
+             , CUST_HLBB_ID
+             , CUST_ACC_CRT_USER_ID
+             , CUST_ACC_CRT_DT
+             )
+        VALUES
+             ( #{custAccId}
+             , #{custId}
+             , #{custAccNo}
+             , #{custEncryptAccNo}
+             , #{custAccOwner}
+             , #{custAccTypeId}
+             , #{custAccBankId}
+             , #{custAccBankBrnch}
+             , #{custAccRem}
+             , #{custAccStusId}
+             , #{custAccUpdUserId}
+             , SYSDATE
+             , #{custAccNric}
+             , #{custAccIdOld}
+             , #{soId}
+             , #{custAccIdcm}
+             , #{custHlbbId}
+             , #{custAccCrtUserId}
+             , SYSDATE
+             )
     </insert>
     
     <update id="updateCustomerAddressSetActive" parameterType="Map">

@@ -982,6 +982,30 @@
             USER_NAME
     </select>
 
+    <select id="selectReasonCodeList" parameterType="Map" resultType="egovMap">
+        SELECT TT.CODE_ID
+             , TT.CODE_NAME
+          FROM
+             ( SELECT DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.CODE ||#{separator}|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID = #{typeId}
+                         AND 1 = T1.STUS_CODE_ID
+                       UNION ALL
+                      SELECT 1 C1 
+                           , T2.RESN_ID CODE_ID
+                           , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T2
+                       WHERE T2.RESN_ID = #{inputId}
+                    ) T
+             ) TT ORDER BY CODE_NAME
+    </select>
+    
     <!--Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)  -->
     <select id="getAccountList" parameterType="Map" resultType="egovMap">
         SELECT

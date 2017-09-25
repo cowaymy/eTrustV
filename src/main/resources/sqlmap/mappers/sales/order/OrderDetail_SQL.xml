@@ -657,10 +657,10 @@
         SELECT V1.ORD_ID
              , V1.RENT_PAY_MODE_CODE
              , V1.RENT_PAY_MODE_DESC
-             , TO_CHAR(V1.RENT_PAY_APPLY_DT, 'yyyy-MM-dd') RENT_PAY_APPLY_DT
-             , TO_CHAR(V1.RENT_PAY_SUBMIT_DT, 'yyyy-MM-dd') RENT_PAY_SUBMIT_DT
-             , TO_CHAR(V1.RENT_PAY_START_DT, 'yyyy-MM-dd') RENT_PAY_START_DT
-             , TO_CHAR(V1.RENT_PAY_REJCT_DT, 'yyyy-MM-dd') RENT_PAY_REJCT_DT
+             , TO_CHAR(V1.RENT_PAY_APPLY_DT,  'dd/MM/yyyy') RENT_PAY_APPLY_DT
+             , TO_CHAR(V1.RENT_PAY_SUBMIT_DT, 'dd/MM/yyyy') RENT_PAY_SUBMIT_DT
+             , TO_CHAR(V1.RENT_PAY_START_DT,  'dd/MM/yyyy') RENT_PAY_START_DT
+             , TO_CHAR(V1.RENT_PAY_REJCT_DT,  'dd/MM/yyyy') RENT_PAY_REJCT_DT
              , V1.RENT_PAY_REJCT_CODE
              , V1.RENT_PAY_REJCT_DESC
              , V1.RENT_PAY_ISS_BANK_CODE
