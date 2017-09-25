@@ -249,7 +249,7 @@ function SearchListAjax() {
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="insert"><span class="search"></span>INS</a></p></li>            
+            <!-- <li><p class="btn_grid"><a id="insert"><span class="search"></span>INS</a></p></li> -->            
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:300px"></div>

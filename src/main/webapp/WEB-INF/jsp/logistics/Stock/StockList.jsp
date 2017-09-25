@@ -1289,11 +1289,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li>
-            <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li>
-            <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li>
-            <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li>
-            <li><p class="btn_grid"><a href="javascript:f_tabHide()"><span class="search"></span>ADD</a></p></li>
+<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
+<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li> -->
+<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
+<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>INS</a></p></li> -->
+<!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()"><span class="search"></span>ADD</a></p></li> -->
         </ul>
 
         <div id="grid_wrap" class="mt10" style="height:350px"></div>

@@ -699,10 +699,10 @@
 
 <ul class="right_btns">
 
-    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li>
-    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+<%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
+<%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
-    <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li>
+<%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
 </ul>
@@ -716,7 +716,7 @@
 <h3 id="title">Material Master Create/Change</h3>
 </aside>
 <form id="detailForm">
-<input type="text" id="ditmid"/>
+<input type="hidden" id="ditmid"/>
 <aside class="title_line"><!-- title_line start -->
 <h4>Main Value</h4>
 </aside><!-- title_line end -->

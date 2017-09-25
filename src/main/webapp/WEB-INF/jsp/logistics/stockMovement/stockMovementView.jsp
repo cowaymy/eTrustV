@@ -57,6 +57,7 @@ $(document).ready(function(){
     mainSearchFunc();
     
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
+    doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); //청구처 리스트 조회
     $("#cancelTr").hide();
     /**********************************
      * Header Setting End
@@ -398,6 +399,13 @@ function f_multiCombo() {
             selectAll : true
         });       
     });
+    $(function() {
+        $('#catetype').change(function() {
+
+        }).multipleSelect({
+            selectAll : true
+        });       
+    });
 }
 </script>
 
@@ -508,27 +516,9 @@ function f_multiCombo() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Material Code</th>
+    <th scope="row">Category</th>
     <td>
-
-    <div class="date_set"><!-- date_set start -->
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    <span>~</span>
-    <p>
-    <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </p>
-    </div><!-- date_set end -->
-
+        <select class="w100p" id="catetype" name="catetype"></select>
     </td>
     <th scope="row">Type</th>
     <td >
