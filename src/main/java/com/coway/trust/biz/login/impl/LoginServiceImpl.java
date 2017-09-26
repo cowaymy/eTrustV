@@ -43,9 +43,12 @@ public class LoginServiceImpl implements LoginService {
 		LOGGER.debug("loginInfo");
 		LoginVO loginVO = loginMapper.selectLoginInfo(params);
 
-		params.put("userId", loginVO.getUserId());
-		List<LoginSubAuthVO> loginSubAuthVOList = loginMapper.selectSubAuthInfo(params);
-		loginVO.setLoginSubAuthVOList(loginSubAuthVOList);
+		if(loginVO != null){
+			params.put("userId", loginVO.getUserId());
+			List<LoginSubAuthVO> loginSubAuthVOList = loginMapper.selectSubAuthInfo(params);
+			loginVO.setLoginSubAuthVOList(loginSubAuthVOList);
+		}
+
 		return loginVO;
 	}
 
