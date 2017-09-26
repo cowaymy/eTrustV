@@ -757,29 +757,365 @@ SELECT Extent1.CCP_ID   ,
           WHERE  Extent1.SALES_ORD_ID = #{salesOrderId} AND ROWNUM <= 1 ) Limit1
           ]]>
 </select>
-<!-- <select id="이건 언젠간 쓰겠지?">
-    SELECT Extent1.CCP_ID   ,
-       Extent1.CCP_STUS_ID   ,
-       Extent1.CCP_TOT_SCRE_POINT   ,
-       Extent1.CCP_INCOME_RANGE_ID   ,
-       Extent2.NAME   ,
-       CASE WHEN ( Extent1.CCP_REM IS NULL ) THEN null  ELSE Extent1.CCP_REM END CCP_REM  ,
-       CASE WHEN ( Extent1.CCP_PNC_REM IS NULL ) THEN null ELSE Extent1.CCP_PNC_REM END CCP_PNC_REM  ,
-       CASE WHEN ( Extent3.RESN_ID IS NULL ) THEN 0 ELSE Extent3.RESN_ID END RESN_ID  ,
-       CASE WHEN ( Extent3.RESN_DESC IS NULL ) THEN '' ELSE Extent3.RESN_DESC END RESN_DESC  ,
-       CASE WHEN ( 1 = Extent1.CCP_IS_LOU ) THEN 1 ELSE 0 END CCP_IS_LOU  ,
-       CASE WHEN ( 1 = Extent1.CCP_IS_SAMAN ) THEN 1 ELSE 0 END CCP_IS_SAMAN  ,
-       CASE WHEN ( 1 = Extent1.CCP_IS_HOLD ) THEN 1 ELSE 0 END CCP_IS_HOLD  ,
-       CASE WHEN ( Extent5.NAME IS NULL ) THEN '' ELSE Extent5.NAME END NAME1  ,
-       CASE WHEN ( Extent4.SCRE_CTGRY_DESC IS NULL ) THEN '' ELSE Extent4.SCRE_CTGRY_DESC END SCRE_CTGRY_DESC  ,
-       CASE WHEN ( Extent1.CCP_FICO IS NULL ) THEN 0 ELSE Extent1.CCP_FICO END CCP_FICO  
-  FROM SAL0102D Extent1
-         LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
-         LEFT JOIN SYS0032M Extent3   ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
-         LEFT JOIN SYS0008M Extent4   ON Extent1.CCP_INCOME_RANGE_ID = Extent4.SCRE_CTGRY_ID
-         LEFT JOIN SYS0038M Extent5   ON Extent1.CCP_RJ_STUS_ID = Extent5.STUS_CODE_ID
- <![CDATA[        
- WHERE  Extent1.CCP_ID = 691055 AND ROWNUM <= 1
+
+<select id="countCallEntry" parameterType="Map" resultType="egovMap">
+    SELECT GroupBy1.TOT_COUNT  
+  FROM ( SELECT COUNT(1) TOT_COUNT  
+         FROM CCR0006D Extent1
+         WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+         AND  10 != Extent1.STUS_CODE_ID )GroupBy1
+</select>
+
+<update id="updateCcpDecision" parameterType="Map">
+			UPDATE SAL0102D
+			SET 
+			       CCP_SCHEME_TYPE_ID = #{saveCustTypeId},
+			       CCP_INCOME_RANGE_ID = #{incomeRangeEdit},
+			       CCP_TOT_SCRE_POINT = #{ccpTotalScorePoint},
+			       CCP_STUS_ID = #{statusEdit},
+			       CCP_RESN_ID = #{reasonCodeEdit},
+			       CCP_REM = #{spcialRem},
+			       CCP_RJ_STUS_ID = #{rejectStatusEdit},
+			       CCP_UPD_DT = SYSDATE,
+			       CCP_UPD_USER_ID = #{userId},      
+			       CCP_IS_LOU = #{letterOfUdt},
+			       CCP_IS_SAMAN =#{summon},
+			       CCP_IS_SYNC = #{updateCCPIssynch},
+			       CCP_PNC_REM = #{pncRem},
+			       CCP_HAS_GRNT = #{hasGrnt},
+			       CCP_IS_HOLD = #{onHoldCcp},
+			       CCP_FICO = #{ficoScore}       
+			WHERE   CCP_ID = #{saveCcpId}
+</update>
+
+<select id="getCcpDecisionList" parameterType="Map" resultType="EgovMap">
+	    SELECT Extent1.CCP_ITM_ID   ,
+	       Extent1.CCP_ID   ,
+	       Extent1.CCP_SCRE_EVENT_ID   ,
+	       Extent1.CCP_ITM_SCRE_UNIT   ,
+	       Extent1.CCP_ITM_POINT_SCRE   ,
+	       Extent1.CCP_ITM_REM   ,
+	       Extent1.CCP_ITM_UPD_USER_ID   ,
+	       Extent1.CCP_ITM_UPD_DT   ,
+	       Extent1.CCP_ITM_STUS_ID   
+	  FROM SAL0103D Extent1
+	 WHERE  Extent1.CCP_ID = #{saveCcpId}
+</select>
+
+<update id="updateCcpDecisionStatus" parameterType="egovMap">
+		UPDATE 
+		    SAL0103D
+		SET 
+		    CCP_ITM_STUS_ID = #{ccpItmStusId}
+		WHERE 
+		    CCP_ITM_ID = #{ccpItmId}
+</update>
+
+<insert id="insertCcpDecision" parameterType="Map">
+			INSERT INTO SAL0103D  (CCP_ITM_ID,
+											    CCP_ID, 
+											    CCP_SCRE_EVENT_ID,
+											    CCP_ITM_SCRE_UNIT,
+											    CCP_ITM_POINT_SCRE,
+											    CCP_ITM_REM, 
+											    CCP_ITM_UPD_USER_ID,
+											    CCP_ITM_UPD_DT,
+											    CCP_ITM_STUS_ID )
+							  VALUES (SAL0103D_CCP_ITM_ID_SEQ.NEXTVAL,
+								           #{saveCcpId},
+								           #{insCcpScreEventId},
+								           #{insCcpItmScreUnit},
+								           #{insCcpItmPointScre},
+								           NULL, 
+								           #{userId},
+								           SYSDATE,
+								           #{insCcpItmStusId})
+</insert>
+
+<update id="updateOrdStus" parameterType="Map">
+			UPDATE 
+			        SAL0001D
+			SET REM = #{ordRem},
+			       STUS_CODE_ID = #{ordStusId},
+			       UPD_DT = SYSDATE,
+			       SYNC_CHK = #{syncChk},
+			       UPD_USER_ID = #{userId}
+			WHERE   SALES_ORD_ID = #{saveOrdId} 
+    
+</update>
+
+<select id="getCancelOrd" parameterType="Map" resultType="EgovMap">
+SELECT Extent1.SALES_ORD_ID   , 
+       Extent1.SALES_ORD_NO   ,
+       Extent1.REF_NO   ,
+       Extent1.SALES_DT   ,
+       Extent1.CUST_ID   ,
+       Extent1.CUST_CNT_ID   ,
+       Extent1.CUST_ADD_ID   ,
+       Extent1.MEM_ID   ,
+       Extent1.BRNCH_ID   ,
+       Extent1.APP_TYPE_ID   ,       
+       Extent1.TOT_AMT   ,
+       Extent1.PROMO_ID   ,
+       Extent1.BINDING_NO   ,
+       Extent1.CC_PROMO_ID   ,
+       Extent1.TOT_PV   ,
+       Extent1.REM   ,
+       Extent1.PV_MONTH   ,
+       Extent1.PV_YEAR   ,
+       Extent1.STUS_CODE_ID   ,
+       Extent1.UPD_DT   ,
+       Extent1.UPD_USER_ID   ,
+       Extent1.SYNC_CHK   ,
+       Extent1.CUST_PO_NO   ,
+       Extent1.REN_CHK_ID   ,
+       Extent1.INST_PRIOD   ,
+       Extent1.DO_NO   ,
+       Extent1.DEPT_CODE   ,
+       Extent1.GRP_CODE   ,
+       Extent1.ORG_CODE   ,
+       Extent1.SALES_ORD_ID_OLD   ,
+       Extent1.EDIT_TYPE_ID   ,
+       Extent1.CUST_BILL_ID   ,
+       Extent1.MTH_RENT_AMT   ,
+       Extent1.LOK   ,
+       Extent1.AEON_STUS_ID   ,
+       Extent1.COMM_DT   ,
+       Extent1.CRT_USER_ID   ,
+       Extent1.CRT_DT   ,
+       Extent1.PAY_COM_DT   ,
+       Extent1.DEF_RENT_AMT   ,
+       Extent1.REF_DOC_ID   ,       
+       Extent1.SALES_HM_ID   ,
+       Extent1.SALES_SM_ID   ,
+       Extent1.SALES_GM_ID   ,
+       Extent1.ADV_BILL   ,
+       Extent1.CNVR_SCHEME_ID   ,
+       Extent1.CUST_CARE_CNT_ID 
+  FROM SAL0001D Extent1
+ <![CDATA[
+ WHERE  Extent1.SALES_ORD_ID = #{saveOrdId} AND ROWNUM <= 1
  ]]>
-</select> -->
+</select>
+
+<select id="getAccRentLedgerAmt" parameterType="Map" resultType="egovMap">
+    SELECT 
+        SUM(Extent1.RENT_AMT)  RENT_AMT  
+    FROM 
+        PAY0022D Extent1
+    WHERE  
+        Extent1.RENT_SO_ID = #{saveOrdId}
+</select>
+
+<select id="getAccTradeLedgerAmt" parameterType="Map" resultType="egovMap">
+    SELECT 
+        SUM(Extent1.TRADE_AMT)  TRADE_AMT  
+    FROM 
+        PAY0035D Extent1
+    WHERE  
+        Extent1.TRADE_SO_ID = #{saveOrdId}
+</select>
+
+<select id="getCancelItm" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.SALES_ORD_ID   ,
+		       Extent1.ITM_NO   ,
+		       Extent1.ITM_STK_ID   ,
+		       Extent1.ITM_PRC_ID   ,
+		       Extent1.ITM_QTY   ,
+		       Extent1.ITM_PRC   ,
+		       Extent1.ITM_PV   ,
+		       Extent1.STUS_CODE_ID   ,
+		       Extent1.UPD_DT   ,
+		       Extent1.UPD_USER_ID   ,
+		       Extent1.EDIT_TYPE_ID   ,
+		       Extent1.ITM_ID   ,
+		       Extent1.ITM_CALL_ENTRY_ID   
+		  FROM SAL0002D Extent1
+		  <![CDATA[
+		 WHERE  Extent1.SALES_ORD_ID = #{saveOrdId} AND ROWNUM <= 1
+		 ]]>
+</select>
+
+<select id="crtSeqSAL0020D" resultType="java.lang.String">
+    SELECT SAL0020D_SO_REQ_ID_SEQ.NEXTVAL FROM DUAL    
+</select>
+
+<select id="crtSeqCCR0006D" resultType="java.lang.String">
+    SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL    
+</select>
+
+<select id="crtSeqCCR0007D" resultType="java.lang.String">
+    SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL    
+</select>
+
+<select id="crtSeqSAL0009D" resultType="java.lang.String">
+    SELECT SAL0009D_LOG_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertOrderCancel"  parameterType="Map" >
+INSERT INTO SAL0020D
+  ( SO_REQ_ID,
+    SO_REQ_SO_ID, 
+    SO_REQ_STUS_ID, 
+    SO_REQ_RESN_ID,
+    SO_REQ_PREV_CALL_ENTRY_ID,
+    SO_REQ_CUR_CALL_ENTRY_ID, 
+    SO_REQ_CUR_STUS_ID,  
+    SO_REQ_CRT_DT, 
+    SO_REQ_CRT_USER_ID,
+    SO_REQ_UPD_DT,
+    SO_REQ_UPD_USER_ID, 
+    SO_REQ_CUR_STK_ID, 
+    SO_REQ_CUR_APP_TYPE_ID,
+    SO_REQ_CUR_AMT, 
+    SO_REQ_CUR_PV,
+    SO_REQ_CURR_AMT,
+    SO_REQ_ACTUAL_CANCL_DT, 
+    SO_REQ_CANCL_TOT_OTSTND,
+    SO_REQ_CANCL_PNALTY_AMT,
+    SO_REQ_CANCL_OB_PRIOD,
+    SO_REQ_CANCL_UNDER_COOL_PRIOD,
+    SO_REQ_CANCL_RENTAL_OTSTND,
+    SO_REQ_CANCL_TOT_USED_PRIOD,
+    SO_REQ_NO,
+    SO_REQ_CANCL_ADJ_AMT,
+    SO_REQSTER,
+    SO_REQ_PRE_RETN_DT,
+    SO_REQ_REM, 
+    SO_REQ_BANK_ACC,
+    SO_REQ_ISS_BANK,
+    SO_REQ_ACC_NAME,
+    SO_REQ_ATTACH )
+  VALUES ( #{soReqSeq} ,
+            #{saveOrdId},
+           #{soReqStatusId},
+           #{soReqReasonId}, 
+           #{soReqPrevCallEntryId}, 
+           #{soReqCurCallEntryId}, 
+           #{soReqCurStatusId},
+           SYSDATE,
+           #{userId},
+           SYSDATE,
+           #{userId},
+           #{soReqCurStkId}, 
+           #{soReqCurAppTypeId}, 
+           #{soReqCurAmt}, 
+           #{soReqCurPv}, 
+           #{soReqCurRentAmt}, 
+           SYSDATE, 
+           #{soReqCancelTotalOutstanding}, 
+           #{soReqCancelPenaltyAmt}, 
+           #{soReqCancelObPeriod}, 
+           #{soReqCancelIsUnderCoolPeriod}, 
+           #{soReqCancelRentalOutstanding}, 
+           #{soReqCancelTotalUsePeriod},
+           #{soReqNo}, 
+           #{soReqCancelAdjustmentAmt}, 
+           #{soRequestor}, 
+           #{soReqPreReturnDate}, 
+           #{soReqRemark}, 
+           NULL, 
+           NULL, 
+           NULL, 
+           NULL )
+</insert>
+
+<insert id="insertCallEntry" parameterType="Map">
+    INSERT INTO CCR0006D
+  ( CALL_ENTRY_ID,    
+    SALES_ORD_ID, 
+    TYPE_ID,
+    STUS_CODE_ID,
+    RESULT_ID,
+    DOC_ID,
+    CRT_USER_ID,
+    CRT_DT,
+    CALL_DT,
+    IS_WAIT_FOR_CANCL,
+    HAPY_CALLER_ID,
+    UPD_DT,
+    UPD_USER_ID,
+    ORI_CALL_DT )
+  VALUES ( #{callEntrySeq},
+           #{saveOrdId},
+           #{callEntryTypeId}, 
+           #{callEntryStusCodeId}, 
+           #{callEntryMasterResultId},
+           #{callEntryDocId},
+           #{userId},
+           SYSDATE,
+           SYSDATE,
+           #{callEntryMasterIsWaitForCancel},
+           #{callEntryMasterHappyCallerId}, 
+           SYSDATE, 
+           #{userId},
+           SYSDATE )
+</insert>
+
+<insert id="insertCallResult" parameterType="Map">
+    INSERT INTO CCR0007D
+  ( CALL_RESULT_ID,
+    CALL_ENTRY_ID,
+    CALL_STUS_ID,
+    CALL_DT,
+    CALL_ACTN_DT, 
+    CALL_FDBCK_ID, 
+    CALL_CT_ID, 
+    CALL_REM, 
+    CALL_CRT_USER_ID,
+    CALL_CRT_DT,
+    CALL_CRT_USER_ID_DEPT,
+    CALL_HC_ID,
+    CALL_ROS_AMT, 
+    CALL_SMS,
+    CALL_SMS_REM )
+  VALUES ( #{callResultSeq},
+           #{callResultEntryId}, 
+           #{callResultCallStatusId}, 
+           SYSDATE,
+           SYSDATE,
+           #{callResultCallFeedbackId}, 
+           #{callResultCallCtId}, 
+           #{callResultCallRem},
+           #{userId},
+           SYSDATE,
+           #{callResultCrtByDept},  
+           #{callResultCallHcId},
+           #{callResultCallRosAmt},
+           #{callResultCallSms}, 
+           #{callResultCallSmsRem})
+</insert>
+
+<update id="updateCallEntryId" parameterType="Map">
+		UPDATE CCR0006D
+		   SET RESULT_ID = #{updCallEntryResultId}
+		 WHERE   CALL_ENTRY_ID = #{updCallEntryId} 
+</update>
+
+<update id="updateOrderRequest"  parameterType="Map">
+	    UPDATE SAL0020D
+	   SET SO_REQ_CUR_CALL_ENTRY_ID = #{updCallEntryId}
+	 WHERE  SO_REQ_ID = #{soReqSeq}
+</update>
+
+<insert id="insertLog" parameterType="Map">
+INSERT INTO SAL0009D
+  ( LOG_ID,
+    SALES_ORD_ID, 
+    PRGRS_ID,
+    LOG_DT,
+    REF_ID,
+    IS_LOK, 
+    LOG_CRT_USER_ID,
+    LOG_CRT_DT )
+  VALUES ( #{logSeq},
+	           #{saveOrdId},
+	           #{logProgId},
+	           SYSDATE,
+	           #{logRefId},
+	           #{logIsLock},
+	           #{userId},
+	           SYSDATE )
+</insert>
+
 </mapper>

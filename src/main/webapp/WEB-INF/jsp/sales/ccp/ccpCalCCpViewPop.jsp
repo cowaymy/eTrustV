@@ -6,6 +6,10 @@ var optionUnit = { isShowChoose: false};
 
 $(document).ready(function() {
     
+	//to List
+    $("#_btnList").click(function() {
+        $("#_btnClose").click();
+    });
     //Init
     var mst = getMstId();
     
@@ -32,22 +36,23 @@ $(document).ready(function() {
     
     
     //Make View
-    $("#_ordMth").attr("disabled" , "disabled");
-    $("#_ordSuspen").attr("disabled" , "disabled");
-    $("#_ordExistingCust").attr("disabled", "disabled");
+    $("#_ordMth").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     
-    $("#_statusEdit").attr("disabled" , "disabled");
-    $("#_incomeRangeEdit").attr("disabled" , "disabled");
-    $("#_rejectStatusEdit").attr("disabled" , "disabled");
-    $("#_reasonCodeEdit").attr("disabled" , "disabled");
-    $("#_spcialRem").attr("disabled" , "disabled");
-    $("#_pncRem").attr("disabled" , "disabled");
+    $("#_statusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_incomeRangeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_reasonCodeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_spcialRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_pncRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     
-    $("#_letterOfUdt").attr("disabled" , "disabled");
-    $("#_summon").attr("disabled" , "disabled");
-    $("#_onHoldCcp").attr("disabled" , "disabled");
-    $("#_updSmsChk").attr("disabled" , "disabled");
-    $("#_updSmsMsg").attr("disabled" , "disabled");
+    $("#_letterOfUdt").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_summon").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_onHoldCcp").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_updSmsChk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_updSmsMsg").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#_ficoScore").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     
 });//Doc Ready Func End
 
@@ -359,7 +364,7 @@ function chgTab(tabNm) {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order View</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -605,7 +610,7 @@ function chgTab(tabNm) {
 </table><!-- table end -->
 </div>
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#">List</a></p></li>
+    <li><p class="btn_blue2"><a id="_btnList">List</a></p></li>
 </ul>
 
 

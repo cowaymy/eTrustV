@@ -394,6 +394,13 @@ function createAUIGrid11() {
                     fn_selectDiscountList();
                 }
                 break;
+            case 'afterList' :
+                AUIGrid.resize(afterServceGridID, 1600, 380);
+                break;
+            case 'beforeList' :
+                AUIGrid.resize(beforeServceGridID, 1600, 380);
+                break;    
+                
         };
     }
 
@@ -722,7 +729,7 @@ function createAUIGrid11() {
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on">Order Info</a></li>
-    <li><a href="#" onclick="javascript:chgGridTab('afterList');">After Service</a></li>
+    <li><a href="#" onclick="javascript:chgGridTab('afterList');">After Service</a></li> 
     <li><a href="#" onclick="javascript:chgGridTab('beforeList');">Before Service</a></li>
 </ul>
 

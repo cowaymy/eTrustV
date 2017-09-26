@@ -2159,11 +2159,13 @@
   
   </select>
   
-  <select id="getNationList"  resultType="egovMap">
-			SELECT 
-				CNTY_ID CODE_ID,
-				NAME CODE_NAME
-			FROM 
-			    SYS0015M
+  <select id="getNationList"  parameterType="Map" resultType="egovMap">
+            SELECT 
+                CODE CODE_ID,
+                CODE_DESC CODE_NAME
+            FROM 
+                SYS0013M 
+            WHERE 
+                CODE_MASTER_ID = #{groupCode}
   </select>
 </mapper>

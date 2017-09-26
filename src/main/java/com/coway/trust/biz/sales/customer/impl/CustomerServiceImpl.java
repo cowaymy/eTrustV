@@ -787,9 +787,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 * @author 
 	 */
 	@Override
-	public List<EgovMap> getNationList() throws Exception {
+	public List<EgovMap> getNationList(Map<String, Object> params) throws Exception {
 		
-		return customerMapper.getNationList();
+		return customerMapper.getNationList(params);
 	}
 	
 	

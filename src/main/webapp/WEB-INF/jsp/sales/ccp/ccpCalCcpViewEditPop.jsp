@@ -6,6 +6,11 @@ var optionUnit = { isShowChoose: false};
 
 $(document).ready(function() {
     
+	//to List
+	$("#_btnList").click(function() {
+		$("#_btnClose").click();
+	});
+	
 	//Init
 	var mst = getMstId();
     var ordUnitSelVal = $("#_ordUnitSelVal").val();
@@ -67,8 +72,141 @@ $(document).ready(function() {
         
     });
     
+    //Save
+    $("#_calBtnSave").click(function() {
+	
+    	//Validation
+    	if( null == $("#_statusEdit").val() || '' == $("#_statusEdit").val()){
+    		
+    		 Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Status'/>");
+    		 return;
+    	}else{
+    	
+    		if( '6' == $("#_statusEdit").val()){
+            
+    			if(null == $("#_rejectStatusEdit").val() || '' == $("#_rejectStatusEdit").val()){
+    				Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Reject Status'/>");
+    				return;
+    			}
+            }
+    		
+    		if( '6' == $("#_statusEdit").val() || '1' == $("#_statusEdit").val()){
+    		
+    			if(null == $("#_reasonCodeEdit").val() || '' == $("#_reasonCodeEdit").val()){
+    				
+    				Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Feedback Code'/>");
+    				return;
+    			}
+    		}
+    		
+    	}
+    	
+    	if( null == $("#_incomeRangeEdit").val() || '' == $("#_incomeRangeEdit").val()){
+    		
+    		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Income Range'/>");
+    		return;
+    		
+    	}
+    	
+    	if( null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()){
+    		
+    		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
+    		return;
+    	}else{
+    		
+    		if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
+    			
+    			Common.alert("* Please key in FICO score range between 300 to 850 points.");
+    			return;
+    		}
+    		
+    	}
+    	
+    	//Validation (Call Entry Count)
+    	var ccpOrdEditId = $("#_editOrdId").val();
+    	var salData = {salesOrdId : ccpOrdEditId};
+    	console.log(salData);
+    	var callEntCount = 0;
+    	Common.ajax("GET", "/sales/ccp/countCallEntry", salData , function(result) {
+            callEntCount = result.totCount;
+            console.log("Call Entry Count : " + callEntCount);
+        });
+    	
+    	if(callEntCount > 0){
+    		Common.alert(" * Order already exists in call entry.");
+    		return;
+    	}
+       //Validation Success - Save
+       //Check box params Setting 
+       //_letterOfUdt
+       if($("#_letterOfUdt").is(":checked") == true){
+           $("#_letterOfUdt").val("1");
+       }else{
+    	   $("#_letterOfUdt").val("0");
+       }
+       //_summon  
+       if($("#_summon").is(":checked") == true){
+           $("#_summon").val("1");
+       }else{
+           $("#_summon").val("0");
+       } 
+       //_onHoldCcp
+       if($("#_onHoldCcp").is(":checked") == true){
+           $("#_onHoldCcp").val("1");
+       }else{
+           $("#_onHoldCcp").val("0");
+       }
+       calSave();
+    	
+	});//Save End
+    
     
 });//Doc Ready Func End
+
+function calSave(){
+    
+	var ordUnit = $("#_ordUnit").val();
+    var rosUnit = $("#_ordMth").val();
+    var susUnit = $("#_ordSuspen").val();
+    var custUnit = $("#_ordExistingCust").val();
+	
+	$("#_saveOrdUnit").val(ordUnit);
+	$("#_saveRosUnit").val(rosUnit);
+	$("#_saveSusUnit").val(susUnit);
+	$("#_saveCustUnit").val(custUnit);
+	
+	Common.ajax("POST", "/sales/ccp/calSave", $("#calSaveForm").serializeJSON() , function(result) {
+		
+        Common.alert(result.message);
+        //Btn Disabled
+        $("#_calBtnSave").css("display" , "none");
+        
+        //Make View
+        $("#_ordMth").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        
+        $("#_statusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_incomeRangeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_reasonCodeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_spcialRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_pncRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        
+        $("#_letterOfUdt").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_summon").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_onHoldCcp").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_updSmsChk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_updSmsMsg").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_ficoScore").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        
+        $("#_calSearch").click();
+    });
+	
+}
+
+
+
 
 function fn_ccpStatusChangeFunc(getVal){
 	
@@ -144,7 +282,7 @@ function fn_ccpStatusChangeFunc(getVal){
 			
 			//field
 	        $("#_incomeRangeEdit").attr("disabled" , false);
-	        $("#_rejectStatusEdit").attr("disabled" , false);
+	        $("#_rejectStatusEdit").attr({"disabled" : false , "class" : "w100p"});
 	        $("#_reasonCodeEdit").attr("disabled" , false);
 	        $("#_spcialRem").attr("disabled" , false);
 	        $("#_pncRem").attr("disabled" , false);
@@ -444,7 +582,7 @@ function chgTab(tabNm) {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order View</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -453,7 +591,7 @@ function chgTab(tabNm) {
     <input type="hidden" name="editCcpId" id="_editCcpId" value="${ccpId}"/>
     
     <!--  from Basic -->
-    <input type="hidden"  name="editOrdId" value="${orderDetail.basicInfo.ordId}">
+    <input type="hidden"  name="editOrdId" id="_editOrdId" value="${orderDetail.basicInfo.ordId}">
     <input type="hidden" name="editAppTypeCode" value="${orderDetail.basicInfo.appTypeCode }">
     <input type="hidden" name="editOrdStusId" value="${orderDetail.basicInfo.ordStusId}">
     <input type="hidden"  id="_editCustName" value="${orderDetail.basicInfo.custName}"> 
@@ -556,7 +694,7 @@ function chgTab(tabNm) {
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -572,7 +710,7 @@ function chgTab(tabNm) {
 <tr>
     <th scope="row">Order Unit</th>
     <td>
-        <select class="w100p" name="ordUnit" id="_ordUnit"></select>
+        <select class="w100p" name="ordUnit" id="_ordUnit"></select> 
     </td>
     <th scope="row">Count</th>
     <td><span><b>${fieldMap.ordUnitCount }</b></span></td>
@@ -610,12 +748,37 @@ function chgTab(tabNm) {
 </tbody>
 </table><!-- table end -->
 
-</form>
+
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3>CCP Result</h3>
 </aside><!-- title_line end -->
+<form  id="calSaveForm">
+<input type="hidden" name="saveCcpId" id="_saveCcpId" value="${ccpId}"/>
+<input type="hidden" name="ccpTotalScorePoint" value="${fieldMap.totUnitPoint}">
+<input type="hidden" id="_saveCustTypeId" name="saveCustTypeId" value="${orderDetail.basicInfo.custTypeId}">
+<input type="hidden"  name="saveOrdId" id="_saveOrdId" value="${orderDetail.basicInfo.ordId}">
+
+<!-- Ord Unit  -->
+<input type="hidden" name="saveOrdUnit"  id="_saveOrdUnit">
+<input type="hidden" name="saveOrdCount"  value="${fieldMap.ordUnitCount }">
+<input type="hidden" name="saveOrdPoint"  value="${fieldMap.orderUnitPoint}">
+
+<!-- Avg ROS Mth -->
+<input type="hidden" name="saveRosUnit"  id="_saveRosUnit">
+<input type="hidden" name="saveRosCount"  value="${fieldMap.rosCount}">
+<input type="hidden" name="saveRosPoint"  value="${fieldMap.rosUnitPoint}">
+
+<!-- Suspension/Termination  -->
+<input type="hidden" name="saveSusUnit"  id="_saveSusUnit"> 
+<input type="hidden" name="saveSusCount"  value="${fieldMap.susUnitCount}">
+<input type="hidden" name="saveSusPoint"  value="${fieldMap.susUnitPoint}">
+
+<!-- Existing Customer -->
+<input type="hidden" name="saveCustUnit"  id="_saveCustUnit" >
+<input type="hidden" name="saveCustCount"  value="${fieldMap.custUnitCount}">
+<input type="hidden" name="saveCustPoint"  value="${fieldMap.custUnitPoint}">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -662,7 +825,7 @@ function chgTab(tabNm) {
 </tr>
 </tbody>
 </table><!-- table end -->
-
+</form>
 <div id="_smsDiv" style="display: none;">
 <aside class="title_line"><!-- title_line start -->
 <h2>SMS Info</h2>
@@ -689,11 +852,12 @@ function chgTab(tabNm) {
 </tr>
 </tbody>
 </table><!-- table end -->
+
 </div>
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#">List</a></p></li>
+    <li><p class="btn_blue2"><a id="_btnList">List</a></p></li>
+    <li><p class="btn_blue2"><a id="_calBtnSave">Save</a></p></li>
 </ul>
-
 
 </section>
 </div>

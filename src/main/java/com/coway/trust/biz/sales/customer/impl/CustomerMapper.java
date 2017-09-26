@@ -607,5 +607,5 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author
 	 */
-	List<EgovMap> getNationList () throws Exception;
+	List<EgovMap> getNationList (Map<String, Object> params) throws Exception;
 }

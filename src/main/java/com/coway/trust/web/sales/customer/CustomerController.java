@@ -1573,11 +1573,11 @@ public class CustomerController {
 		
 		
 		@RequestMapping(value = "/getNationList")
-		public ResponseEntity<List<EgovMap>> getNationList () throws Exception{
+		public ResponseEntity<List<EgovMap>> getNationList (@RequestParam Map<String, Object> params) throws Exception{
 			
 			List<EgovMap> nationList = null;
 			
-			nationList = customerService.getNationList();
+			nationList = customerService.getNationList(params);
 			
 			return ResponseEntity.ok(nationList);
 			

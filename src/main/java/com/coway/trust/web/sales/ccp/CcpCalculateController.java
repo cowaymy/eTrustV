@@ -4,19 +4,26 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -26,11 +33,17 @@ public class CcpCalculateController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CcpCalculateController.class);
 	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
+	
 	@Resource(name = "ccpCalculateService") 
 	private CcpCalculateService ccpCalculateService;
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 	
 	@RequestMapping(value = "/selectCalCcpList.do")
 	public String selectCalCcpList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
@@ -212,6 +225,97 @@ public class CcpCalculateController {
     	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
     	
     	return ResponseEntity.ok(ccpInfoMap);
+		
+	}
+	
+	
+	@RequestMapping(value = "/countCallEntry")
+	public ResponseEntity<EgovMap> countCallEntry(@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap callMap = null;
+		callMap = ccpCalculateService.countCallEntry(params);
+		
+		return ResponseEntity.ok(callMap);
+		
+	}
+	
+	
+	@RequestMapping(value = "/calSave", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> calSave(@RequestBody Map<String, Object> params) throws Exception{
+		
+		//Session
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+		params.put("userFullName", session.getUserFullname());
+		params.put("userBranchId", session.getUserBranchId());
+		//Params Setting
+		
+		/*### Reject Status Params Setting ####*/
+		if(params.get("rejectStatusEdit") != null){
+			
+    		if(params.get("rejectStatusEdit").equals("12")){
+    			
+    			params.put("statusEdit", "1");
+    			params.put("rejectStatusEdit", "0");
+    			params.put("updateCCPIssynch", "0");
+    			
+    		}else{
+    			
+    			if( null == params.get("statusEdit") || ("").equals(params.get("statusEdit"))){
+    				params.put("statusEdit", "0");
+    			}
+    			
+    			if( null == params.get("rejectStatusEdit") || ("").equals(params.get("rejectStatusEdit"))){
+    				params.put("rejectStatusEdit", "0");
+    			}
+    			params.put("updateCCPIssynch", "0");
+    		}
+		
+		}
+		
+		/*####  Total Score Point ####*/
+		if( null == params.get("ccpTotalScorePoint") || ("").equals(params.get("ccpTotalScorePoint"))){
+			params.put("ccpTotalScorePoint", "0");
+		}
+		
+		/*####  Reason Code ####*/
+		if( null == params.get("reasonCodeEdit") || ("").equals(params.get("reasonCodeEdit"))){
+			params.put("reasonCodeEdit", "0");
+		}
+		
+		/*####  Special Remark ####*/
+		if( null == params.get("spcialRem") || ("").equals(params.get("spcialRem"))){
+			
+			params.put("spcialRem", "");
+		}
+		
+		/*####  PNC Rem ####*/
+		if( null == params.get("pncRem") || ("").equals(params.get("pncRem"))){
+			
+			params.put("pncRem", "");
+		}
+		
+		/*####  Fico Score ####*/
+		if( null == params.get("ficoScore") || ("").equals(params.get("ficoScore"))){
+			params.put("ficoScore", "0");
+		}
+		
+		params.put("hasGrnt", "0");
+		
+		LOGGER.info("#####################################################");
+		LOGGER.info("######  params.ToString : " + params.toString());
+		LOGGER.info("#####################################################");
+		
+		//Service
+		ccpCalculateService.calSave(params);
+		
+		//Return MSG
+		ReturnMessage message = new ReturnMessage();
+		
+	    message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message); 
 		
 	}
 }

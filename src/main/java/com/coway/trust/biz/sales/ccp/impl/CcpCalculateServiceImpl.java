@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -468,5 +470,336 @@ public class CcpCalculateServiceImpl implements CcpCalculateService {
 		
 		return ccpCalculateMapper.getCcpRejectCodeList();
 	}
+
+
+	@Override
+	public EgovMap countCallEntry(Map<String, Object> params) throws Exception {
+		
+		return ccpCalculateMapper.countCallEntry(params);
+	}
+
+
+	@Override
+	@Transactional
+	public void calSave(Map<String, Object> params) throws Exception {
+		
+		List<EgovMap> ccpDesList = null;
+		EgovMap desMap = null;
+		EgovMap cancelMap = null;
+		EgovMap itmMap = null;
+		double totalOutstanding = 0;
+		BigDecimal tempoVal = null;
+		EgovMap accMap = null;
+		String logseq = "";
+		String InsSeq = "";
+		String resultSeq = "";
+		String callSeq = "";
+		
+		//1. Update CCP Decision <Update Data.CcpDecisionM>
+		LOGGER.info("_________________________________________________________________________________________");
+		LOGGER.info("_______________  // 1. Update CCP Decision <Update Data.CcpDecisionM> Start _________________________");
+		LOGGER.info("_________________________________________________________________________________________");
+		ccpCalculateMapper.updateCcpDecision(params);
+		LOGGER.info("_________________________________________________________________________________________");
+		LOGGER.info("_______________ // 1. Update CCP Decision <Update Data.CcpDecisionM> End _________________________");
+		LOGGER.info("_________________________________________________________________________________________");
+		
+		ccpDesList = ccpCalculateMapper.getCcpDecisionList(params);
+		
+		// 1. Update  <Data.CcpDecisionD>
+		if(ccpDesList != null && ccpDesList.size() > 0){
+			for (int idx = 0; idx < ccpDesList.size(); idx++) {
+				desMap  = ccpDesList.get(idx);
+				if(!(SalesConstants.CCP_ITM_STUS_UPD).equals(desMap.get("ccpItmStusId"))){
+					desMap.put("ccpItmStusId", SalesConstants.CCP_ITM_STUS_UPD); // 8
+					LOGGER.info("_________________________________________________________________________________________");
+					LOGGER.info("_______________ // 2 -"+ idx +" Update  <Data.CcpDecisionD>Start _________________________");
+					LOGGER.info("_________________________________________________________________________________________");
+					ccpCalculateMapper.updateCcpDecisionStatus(desMap);
+					LOGGER.info("_________________________________________________________________________________________");
+					LOGGER.info("_______________ // 2 -"+ idx +" Update  <Data.CcpDecisionD> End _________________________");
+					LOGGER.info("_________________________________________________________________________________________");
+				}
+			}
+		}
+		
+		// 2. Insert <Data.CcpDecisionD>
+		params.put("insCcpItmStusId", SalesConstants.CCP_ITM_STUS_INS); // 1
+		//ord
+		if(null != params.get("saveOrdUnit") && null != params.get("saveOrdCount") && null != params.get("saveOrdPoint")){
+			
+			params.put("insCcpScreEventId", params.get("saveOrdUnit"));
+			params.put("insCcpItmScreUnit", params.get("saveOrdCount"));
+			params.put("insCcpItmPointScre", params.get("saveOrdPoint"));
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 -1. Insert <Data.CcpDecisionD>  //ord  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			ccpCalculateMapper.insertCcpDecision(params);
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 - 1. Insert <Data.CcpDecisionD>  //ord  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			
+		}
+		//ros
+		if(null != params.get("saveRosUnit") && null != params.get("saveRosCount") && null != params.get("saveRosPoint")){
+			
+			params.put("insCcpScreEventId", params.get("saveRosUnit"));
+			params.put("insCcpItmScreUnit", params.get("saveRosCount"));
+			params.put("insCcpItmPointScre", params.get("saveRosPoint"));
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 - 2. Insert <Data.CcpDecisionD>  //ros  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			ccpCalculateMapper.insertCcpDecision(params);
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 - 2. Insert <Data.CcpDecisionD>  //ros  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			
+		}
+		//sus
+		if(null != params.get("saveSusUnit") && null != params.get("saveSusCount") && null != params.get("saveSusPoint")){
+			
+			params.put("insCcpScreEventId", params.get("saveSusUnit"));
+			params.put("insCcpItmScreUnit", params.get("saveSusCount"));
+			params.put("insCcpItmPointScre", params.get("saveSusPoint"));
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 -3 . Insert <Data.CcpDecisionD>  //sus  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			ccpCalculateMapper.insertCcpDecision(params);
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 - 3. Insert <Data.CcpDecisionD>  //sus  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			
+		}
+		//cust
+		if(null != params.get("saveCustUnit") && null != params.get("saveCustCount") && null != params.get("saveCustPoint")){
+			
+			params.put("insCcpScreEventId", params.get("saveCustUnit"));
+			params.put("insCcpItmScreUnit", params.get("saveCustCount"));
+			params.put("insCcpItmPointScre", params.get("saveCustPoint"));
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 - 4. Insert <Data.CcpDecisionD>  //cust  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			ccpCalculateMapper.insertCcpDecision(params);
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 3 - 4. Insert <Data.CcpDecisionD>  //cust  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			
+			
+		}
+		
+		// Cancel Selected
+		/*####  Reject Status    Data.SalesOrderM  ####*/
+		if( ("10").equals(params.get("rejectStatusEdit")) || ("17").equals(params.get("rejectStatusEdit")) || ("18").equals(params.get("rejectStatusEdit"))){
+			
+			//ordStusId
+			params.put("ordStusId", SalesConstants.ORD_STATUS_UPD); // 10
+			params.put("ordRem", SalesConstants.ORD_REM); //  "CCP Reject Cancel"
+			params.put("syncChk", SalesConstants.ORD_SYNC_CHK); // 0
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - Cancel - 1 Reject Status    Data.SalesOrderM  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			ccpCalculateMapper.updateOrdStus(params);  // Condition if (salesorderM != null && salesorderM.SalesOrderID > 0)
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - Cancel - 1 Reject Status    Data.SalesOrderM  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			
+			//ord Map
+			
+			cancelMap = ccpCalculateMapper.getCancelOrd(params);  //  Map 1
+			itmMap = ccpCalculateMapper.getCancelItm(params);  //Map 2
+			//Cancel Order
+			
+			LOGGER.info("################################################# APP_TYPE_ID :  " + cancelMap.get("appTypeId"));
+			
+			BigDecimal appTypeDecimal = null;
+			appTypeDecimal = (BigDecimal)cancelMap.get("appTypeId");
+			
+			if(appTypeDecimal.intValue() == 66 ){
+				//Rent
+				accMap = ccpCalculateMapper.getAccRentLedgerAmt(params);  // if (updatesalesOrderM.AppTypeID == 66)
+				tempoVal = (BigDecimal)accMap.get("rentAmt");
+				totalOutstanding = tempoVal.doubleValue();
+			}else{
+				//Trade
+				accMap = ccpCalculateMapper.getAccTradeLedgerAmt(params); //  else
+				if(accMap == null){
+					totalOutstanding = 0;
+				}else{
+					tempoVal = (BigDecimal)accMap.get("tradeAmt");
+					totalOutstanding = tempoVal.doubleValue();
+				}
+			}
+			
+			//Cancel Insert
+			//params Set
+			params.put("soReqStatusId", SalesConstants.SO_REQ_STATUS_ID);  // 32
+			
+			if(("4").equals(cancelMap.get("stusCodeId"))){
+				params.put("soReqCurStatusId", SalesConstants.SO_REQ_CUR_STATUS_ID_SEC); //25
+			}else{
+				params.put("soReqCurStatusId", SalesConstants.SO_REQ_CUR_STATUS_ID); //24
+			}
+			
+			params.put("soReqReasonId", SalesConstants.SO_REQ_REASON_ID); // 1996
+			params.put("soReqPrevCallEntryId", SalesConstants.SO_REQ_PREV_CALL_ENTRY_ID); // 0
+			params.put("soReqCurCallEntryId", SalesConstants.SO_REQ_CUR_CALL_ENTRY_ID); //0  //Need Update?
+			
+			if(itmMap.get("itmStkId") != null){
+				params.put("soReqCurStkId", itmMap.get("itmStkId"));
+			}else{
+				params.put("soReqCurStkId", "0");
+			}
+			
+			
+			InsSeq = ccpCalculateMapper.crtSeqSAL0020D(); //Insert Sequence
+			
+			params.put("soReqSeq", InsSeq);
+			params.put("soReqCurAppTypeId", "0");  //TODO ASIS Query Need Confirm
+			params.put("soReqCurAmt", "0");  //TODO ASIS Query Need Confirm
+			params.put("soReqCurPv", "0"); //TODO ASIS Query Need Confirm
+			params.put("soReqCurRentAmt", "0"); //TODO ASIS Query Need Confirm
+			params.put("soReqCancelTotalOutstanding", totalOutstanding);
+			params.put("soReqCancelPenaltyAmt", SalesConstants.SO_REQ_CANCEL_PENALTY_AMT); //0
+			params.put("soReqCancelObPeriod", SalesConstants.SO_REQ_CANCEL_OB_PERIOD); // 0
+            params.put("soReqCancelIsUnderCoolPeriod", SalesConstants.SO_REQ_CANCEL_IS_UNDER_COOL_PERIOD); // 0 
+            params.put("soReqCancelRentalOutstanding", totalOutstanding);
+            params.put("soReqCancelTotalUsePeriod", SalesConstants.SO_REQ_CANCEL_TOTAL_USE_PERIOD); // 0
+            params.put("soReqNo", SalesConstants.SO_REQ_NO);
+            params.put("soReqCancelAdjustmentAmt", SalesConstants.SO_REQ_CANCEL_ADJUSTMENT_AMT);
+            params.put("soRequestor", SalesConstants.SO_REQ_REQUESTOR);
+            params.put("soReqPreReturnDate", SalesConstants.DEFAULT_DATE2);
+            params.put("soReqRemark", SalesConstants.ORD_REM);
+            
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - 2Cancel Reject Status    Data.SalesOrderM  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            ccpCalculateMapper.insertOrderCancel(params); //Ins Cancel
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - 2Cancel Reject Status    Data.SalesOrderM  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            
+            //Call Entry Insert
+           
+            callSeq = ccpCalculateMapper.crtSeqCCR0006D();
+            params.put("callEntrySeq", callSeq); //Seq
+            params.put("callEntryTypeId", SalesConstants.CALL_ENTRY_TYPE_ID); // 259
+            params.put("callEntryStusCodeId", SalesConstants.CALL_ENTRY_MASTER_STUS_CODE_ID); // 32
+            params.put("callEntryMasterResultId", SalesConstants.CALL_ENTRY_MASTER_RESULT_ID); //0
+            params.put("callEntryDocId", InsSeq);
+            params.put("callEntryMasterIsWaitForCancel", SalesConstants.CALL_ENTRY_MASTER_IS_WAIT_FOR_CANCEL); // CallEntryMaster.IsWaitForCancel = false;
+            params.put("callEntryMasterHappyCallerId", SalesConstants.CALL_ENTRY_MASTER_HAPPY_CALL_ID);  //CallEntryMaster.HappyCallerID = 0;
+			
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 -  3 Cancel Reject Status    Data.SalesOrderM  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            ccpCalculateMapper.insertCallEntry(params); //Ins Entry
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - 3 Cancel Reject Status    Data.SalesOrderM  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            
+            //Call Result Insert
+            
+            resultSeq = ccpCalculateMapper.crtSeqCCR0007D();
+            params.put("callResultSeq", resultSeq);
+            params.put("callResultEntryId", callSeq);
+            params.put("callResultCallStatusId", SalesConstants.CALL_RESULT_DETAILS_CALL_STATUS_ID);
+            params.put("callResultCallFeedbackId", SalesConstants.CALL_RESULT_DETAILS_CALL_FEEDBACK_ID);
+            params.put("callResultCallCtId", SalesConstants.CALL_RESULT_DETAILS_CALL_CT_ID);
+            params.put("callResultCallRem", SalesConstants.CALL_RESULT_DETAILS_CALL_REM);
+            params.put("callResultCrtByDept", SalesConstants.CALL_RESULT_DETAILS_CREATE_BY_DEPT); 
+            params.put("callResultCallHcId", SalesConstants.CALL_RESULT_DETAILS_CALL_HC_ID);
+            params.put("callResultCallRosAmt", SalesConstants.CALL_RESULT_DETAILS_CALL_ROS_AMT);
+            params.put("callResultCallSms", SalesConstants.CALL_RESULT_DETAILS_CALL_SMS); 
+            params.put("callResultCallSmsRem", SalesConstants.CALL_RESULT_DETAILS_CALL_SMS_REM); 
+            
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - 4 Cancel Reject Status    Data.SalesOrderM  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            ccpCalculateMapper.insertCallResult(params); //Ins Result
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 -  4Cancel Reject Status    Data.SalesOrderM  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            
+            //Call Entry Update
+            params.put("updCallEntryResultId" , resultSeq);
+            params.put("updCallEntryId", callSeq);
+            
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 -  5Cancel Reject Status    Data.SalesOrderM  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            ccpCalculateMapper.updateCallEntryId(params); //Upd 1
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 -  5Cancel Reject Status    Data.SalesOrderM  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            
+            //OrdRequest Update
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 -  6Cancel Reject Status    Data.SalesOrderM  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+            ccpCalculateMapper.updateOrderRequest(params); //Upd 2
+            LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 -  6Cancel Reject Status    Data.SalesOrderM  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+           
+			//log - Cancel > Select  10 , 17 , 18
+            logseq = ccpCalculateMapper.crtSeqSAL0009D();
+            params.put("logSeq", logseq);
+			params.put("logProgId", SalesConstants.SALES_ORDER_LOG_PRGID_CANCEL); //13
+			params.put("logRefId", SalesConstants.SALES_ORDER_REF_ID); // 0
+			params.put("logIsLock", SalesConstants.SALES_ORDER_IS_LOCK_CANCEL); //0
+			
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - 7 Cancel Reject Status    Data.SalesOrderM  Start _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			ccpCalculateMapper.insertLog(params);
+			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ // 4 - 7 Cancel Reject Status    Data.SalesOrderM  End _________________________");
+			LOGGER.info("_________________________________________________________________________________________");
+			
+		}// Cancel Selected End
+		
+		
+		 //Approve Selected
+		 if( ("5").equals(params.get("statusEdit")) || ("13").equals(params.get("statusEdit"))  || ("14").equals(params.get("statusEdit"))){ 
+ 			
+			 
+			 //Call Entry Insert
+			 callSeq = ccpCalculateMapper.crtSeqCCR0006D();
+             params.put("callEntrySeq", callSeq); //Seq
+             params.put("callEntryTypeId", SalesConstants.CALL_ENTRY_TYPE_ID_APPROVED); // 257
+             params.put("callEntryStusCodeId", SalesConstants.CALL_ENTRY_MASTER_STUS_CODE_ID_APPROVED); // 1
+             params.put("callEntryMasterResultId", SalesConstants.CALL_ENTRY_MASTER_RESULT_ID); //0
+             params.put("callEntryDocId", params.get("saveOrdId"));
+             params.put("callEntryMasterIsWaitForCancel", SalesConstants.CALL_ENTRY_MASTER_IS_WAIT_FOR_CANCEL); // CallEntryMaster.IsWaitForCancel = false;
+             params.put("callEntryMasterHappyCallerId", SalesConstants.CALL_ENTRY_MASTER_HAPPY_CALL_ID);  //CallEntryMaster.HappyCallerID = 0;
+			
+             LOGGER.info("_________________________________________________________________________________________");
+ 			LOGGER.info("_______________ // 4 - 1 //Approve Selected    Data.SalesOrderM  Start _________________________");
+ 			LOGGER.info("_________________________________________________________________________________________");
+             ccpCalculateMapper.insertCallEntry(params); //Ins Entry
+             LOGGER.info("_________________________________________________________________________________________");
+  			LOGGER.info("_______________ // 4 - 1 //Approve Selected    Data.SalesOrderM  End _________________________");
+  			LOGGER.info("_________________________________________________________________________________________");
+			 
+			 //log Select Aprove
+			 logseq = ccpCalculateMapper.crtSeqSAL0009D();
+		 	 params.put("logSeq", logseq);
+			 params.put("logProgId", SalesConstants.SALES_ORDER_LOG_PRGID_APPROVED); // 2
+			 params.put("logRefId", SalesConstants.SALES_ORDER_REF_ID); // 0
+			 params.put("logIsLock", SalesConstants.SALES_ORDER_IS_LOCK_APPROVED); // 1
+
+			 LOGGER.info("_________________________________________________________________________________________");
+	 			LOGGER.info("_______________ // 4 - 2 //Approve Selected    Data.SalesOrderM  Start _________________________");
+	 			LOGGER.info("_________________________________________________________________________________________");
+			 ccpCalculateMapper.insertLog(params);
+			 LOGGER.info("_________________________________________________________________________________________");
+	 			LOGGER.info("_______________ // 4 - 2 //Approve Selected    Data.SalesOrderM  End _________________________");
+	 			LOGGER.info("_________________________________________________________________________________________");
+ 			
+ 		}
+		
+	}//Impl End
+	
+	
 	
 }

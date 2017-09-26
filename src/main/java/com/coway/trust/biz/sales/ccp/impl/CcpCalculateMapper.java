@@ -48,4 +48,44 @@ public interface CcpCalculateMapper {
 	EgovMap selectCcpInfoByCcpId(Map<String, Object> params) throws Exception;
 	
 	EgovMap selectSalesManViewByOrdId(Map<String, Object> params) throws Exception;
+	
+	EgovMap countCallEntry(Map<String, Object> params) throws Exception;
+	
+	void updateCcpDecision(Map<String, Object> params )throws Exception;
+	
+	List<EgovMap> getCcpDecisionList (Map<String, Object> params) throws Exception; 
+	
+	void updateCcpDecisionStatus(EgovMap params) throws Exception;
+	
+	void insertCcpDecision(Map<String, Object> params) throws Exception;
+	
+	void updateOrdStus(Map<String, Object> params) throws Exception;
+	
+	EgovMap getCancelOrd(Map<String, Object> params) throws Exception; 
+	
+	EgovMap getAccRentLedgerAmt(Map<String, Object> params) throws Exception; 
+	
+	EgovMap getAccTradeLedgerAmt(Map<String, Object> params) throws Exception;
+	
+	EgovMap getCancelItm(Map<String, Object> params) throws Exception;
+	
+	void insertOrderCancel(Map<String, Object> params) throws Exception;
+	
+	String crtSeqSAL0020D() throws Exception; 
+	
+	void insertCallEntry(Map<String, Object> params) throws Exception;
+	
+	String crtSeqCCR0006D() throws Exception;
+	
+	String crtSeqCCR0007D() throws Exception;
+	
+	String crtSeqSAL0009D() throws Exception;
+	
+	void insertCallResult(Map<String, Object> params) throws Exception;
+	
+	void updateCallEntryId(Map<String, Object> params) throws Exception;
+	
+	void updateOrderRequest(Map<String, Object> params) throws Exception;
+	
+	void insertLog(Map<String, Object>params) throws Exception;
 }

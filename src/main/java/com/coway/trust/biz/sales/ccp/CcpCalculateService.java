@@ -30,4 +30,8 @@ public interface CcpCalculateService {
 	EgovMap selectSalesManViewByOrdId(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> getCcpRejectCodeList() throws Exception;
+	
+	EgovMap countCallEntry(Map<String, Object> params) throws Exception;
+	
+	void calSave (Map<String, Object> params) throws Exception;
 }

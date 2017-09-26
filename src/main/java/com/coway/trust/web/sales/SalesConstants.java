@@ -123,6 +123,45 @@ public class SalesConstants {
 	public static final String RENTAL_STATUS_TER = "TER";
 	public static final String APPLICANT_TYPE_ID_INDIVIDUAL = "964";
 	public static final String APPLICANT_TYPE_ID_COMPANY = "965";
+	public static final String CCP_ITM_STUS_UPD = "8"; //
+	public static final String CCP_ITM_STUS_INS = "1";
+	public static final String ORD_STATUS_UPD = "10";
+	public static final String ORD_REM = "CCP Reject Cancel";
+	public static final String ORD_SYNC_CHK = "0";
+	public static final String SO_REQ_STATUS_ID = "32"; //SOReqStatusID
+	public static final String SO_REQ_CUR_STATUS_ID = "24";   
+	public static final String SO_REQ_CUR_STATUS_ID_SEC = "25";   
+	public static final String SO_REQ_REASON_ID = "1996";  //SOReqReasonID
+	public static final String SO_REQ_PREV_CALL_ENTRY_ID = "0"; 
+	public static final String SO_REQ_CUR_CALL_ENTRY_ID = "0";
+	public static final String SO_REQ_CANCEL_PENALTY_AMT = "0";  //soReqCancelPenaltyAmt
+	public static final String SO_REQ_CANCEL_OB_PERIOD = "0";  //soReqCancelObPeriod
+	public static final String SO_REQ_CANCEL_IS_UNDER_COOL_PERIOD = "0"; //soReqCancelIsUnderCoolPeriod
+	public static final String SO_REQ_CANCEL_TOTAL_USE_PERIOD = "0";  //soReqCancelTotalUsePeriod
+	public static final String SO_REQ_NO = ""; //soReqNo
+	public static final String SO_REQ_CANCEL_ADJUSTMENT_AMT = "0"; //soReqCancelAdjustmentAmt
+	public static final String SO_REQ_REQUESTOR = "0"; //soRequestor
+	public static final String CALL_ENTRY_TYPE_ID = "259";  //callEntryTypeId
+	public static final String CALL_ENTRY_TYPE_ID_APPROVED = "257";  //callEntryTypeId
+	public static final String CALL_ENTRY_MASTER_STUS_CODE_ID = "32"; //CallEntryMaster.StatusCodeID = 32;
+	public static final String CALL_ENTRY_MASTER_STUS_CODE_ID_APPROVED = "1";
+	public static final String CALL_ENTRY_MASTER_RESULT_ID = "0"; // CallEntryMaster.ResultID = 0; //NEED UPDATE
+	public static final String CALL_ENTRY_MASTER_IS_WAIT_FOR_CANCEL = "0";// CallEntryMaster.IsWaitForCancel = false;
+	public static final String CALL_ENTRY_MASTER_HAPPY_CALL_ID = "0"; //CallEntryMaster.HappyCallerID = 0;
+	public static final String CALL_RESULT_DETAILS_CALL_STATUS_ID = "32"; //allResultDetails.CallStatusID = 32;
+	public static final String CALL_RESULT_DETAILS_CALL_FEEDBACK_ID = "1996"; //  CallResultDetails.CallFeedBackID = 1996;
+	public static final String CALL_RESULT_DETAILS_CALL_CT_ID = "0"; // CallResultDetails.CallCTID = 0;
+	public static final String CALL_RESULT_DETAILS_CALL_REM = "CCP Reject Cancel"; //  CallResultDetails.CallRemark = "CCP Reject Cancel";
+	public static final String CALL_RESULT_DETAILS_CREATE_BY_DEPT = "0";//	CallResultDetails.CallCreateByDept = 0;
+	public static final String CALL_RESULT_DETAILS_CALL_HC_ID = "0"; //    CallResultDetails.CallHCID = 0;
+	public static final String CALL_RESULT_DETAILS_CALL_ROS_AMT = "0"; //    CallResultDetails.CallROSAmt = 0;
+	public static final String CALL_RESULT_DETAILS_CALL_SMS = "0"; //CallResultDetails.CallSMS = false;
+	public static final String CALL_RESULT_DETAILS_CALL_SMS_REM = ""; // CallResultDetails.CallSMSRemark = "";
+	public static final String SALES_ORDER_LOG_PRGID_CANCEL = "13";
+	public static final String SALES_ORDER_LOG_PRGID_APPROVED = "2";
+	public static final String SALES_ORDER_IS_LOCK_CANCEL = "0";
+	public static final String SALES_ORDER_IS_LOCK_APPROVED = "1";
+	public static final String SALES_ORDER_REF_ID = "0";
 	
 	//Order Investigation
 	public static final String  INVEST_CODEID = "73"; // Investigation (Get DocNo)

@@ -536,7 +536,7 @@ public interface CustomerService {
 	 * @exception Exception
 	 * @author 
 	 */
-	List<EgovMap> getNationList () throws Exception;
+	List<EgovMap> getNationList (Map<String, Object> params) throws Exception;
 	
 	void insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO);
 
