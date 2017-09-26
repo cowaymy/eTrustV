@@ -609,7 +609,7 @@ function fn_subGrid(invntryNo){
 <div id="popup_wrap" class="size_big popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1 id="popup_title">New Stock Audit Main</h1>
+<h1 id="popup_title">New Stock Audit</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>

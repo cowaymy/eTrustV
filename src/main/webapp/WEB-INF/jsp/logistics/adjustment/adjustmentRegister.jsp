@@ -511,7 +511,7 @@ function fn_ReqAdjLocList(){
     <th scope="row">Location Type</th>
 <td>
      <label><input type="checkbox"  id="chcdc" name="chcdc" value="01"/><span>CDC</span></label>
-     <label><input type="checkbox"  id="chctcd" name="chcdcrdc" value="05"/><span>CDC&RDC</span></label>
+     <label><input type="checkbox"  id="chcdcrdc" name="chcdcrdc" value="05"/><span>CDC&RDC</span></label>
      <label><input type="checkbox"  id="chcody" name="chcody" value="04"/><span>CODY</span></label>
      <label><input type="checkbox"  id="chct" name="chct" value="03"/><span>CT</span></label>
      <label><input type="checkbox"  id="chrdc" name="chrdc" value="02"/><span>RDC</span></label>

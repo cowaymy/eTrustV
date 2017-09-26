@@ -163,7 +163,7 @@ var serialcolumn  =[{dataField:"itmcd"        ,headerText:"Material Code"       
                          {dataField:"cnt61"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false },
                          {dataField:"cnt62"        ,headerText:"Serial"                      ,width:120     ,height:30 ,visible:false},
                          {dataField:"cnt63"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false },
-                         {dataField:"cnt73"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false},
+                         {dataField:"cnt74"        ,headerText:"Serial"                      ,width:120     ,height:30,visible:false},
                          {dataField:"statustype"   ,headerText:"status"                     ,width:120     ,height:30 ,visible:false}
                         ];                              
 var resop = {rowIdField : "rnum"
@@ -558,7 +558,7 @@ function fn_serialChck(rowindex , rowitem , str){
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
-            AUIGrid.setCellValue(serialGrid , rowindex , "cnt73" , 0 );
+            AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" , 0 );
             
             schk = false;
             ichk = false;
@@ -569,7 +569,7 @@ function fn_serialChck(rowindex , rowitem , str){
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" ,data[0].l61cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" ,data[0].l62cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].l63cnt );
-             AUIGrid.setCellValue(serialGrid , rowindex , "cnt73" ,data[0].l74cnt );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" ,data[0].l74cnt );
              
              if (data[0].l74cnt > 0){
                  schk = false;
