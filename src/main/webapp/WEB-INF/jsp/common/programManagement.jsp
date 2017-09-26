@@ -17,7 +17,7 @@
 </style>
 <script type="text/javaScript">
 var gAddRowCnt = 0;
-var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCN"];
+var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM"];
 
 var MainColumnLayout =
     [
