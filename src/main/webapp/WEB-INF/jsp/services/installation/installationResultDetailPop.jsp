@@ -215,34 +215,55 @@ var gridPros = {
 </tr>
 <tr>
     <th scope="row">Last updated by</th>
-    <td>
-    <span><c:out value="${installResult.userName}"/></span>
-    </td>
+	    <td>
+	    <span><c:out value="${installResult.userName}"/></span>
+	    </td>
     <th scope="row">Product</th>
     <c:if test="${installResult.codeid1  == '257' }">
-    <td>
-    <span><c:out value="${orderInfo.stkCode} - ${orderInfo.stkDesc} " /></span>
-    </td>
+	    <td>
+	    <span><c:out value="${orderInfo.stkCode} - ${orderInfo.stkDesc} " /></span>
+	    </td>
     </c:if>
     <c:if test="${installResult.codeid1  == '258' }">
-    <td>
-    <span><c:out value="${orderInfo.c6} - ${orderInfo.c7} " /></span>
-    </td>
+	    <td>
+	    <span><c:out value="${orderInfo.c6} - ${orderInfo.c7} " /></span>
+	    </td>
     </c:if>
     <th scope="row">Promotion</th>
-    <td>
-    <span><c:out value="${orderInfo.c3} - ${orderInfo.c4} " /></span>
-    </td>
+    <c:if test="${installResult.codeid1  == '257' }">
+	    <td>
+	    <span><c:out value="${orderInfo.c3} - ${orderInfo.c4} " /></span>
+	    </td>
+    </c:if>
+    <c:if test="${installResult.codeid1  == '258' }">
+	     <td>
+	    <span><c:out value="${orderInfo.c9} - ${orderInfo.c10} " /></span>
+	    </td>
+    </c:if>
 </tr>
 <tr>
     <th scope="row">Price</th>
-    <td>
-    <span><c:out value="${orderInfo.c5}"/></span>
-    </td>
+    <c:if test="${installResult.codeid1  == '257' }">
+	    <td>
+	    <span><c:out value="${orderInfo.c5}"/></span>
+	    </td>
+    </c:if>
+    <c:if test="${installResult.codeid1  == '258' }">
+	    <td>
+	    <span><c:out value="${orderInfo.c12}"/></span>
+	    </td>
+    </c:if>
     <th scope="row">PV</th>
-    <td>
-    <span><c:out value="${orderInfo.c6}"/></span>
-    </td>
+    <c:if test="${installResult.codeid1  == '257' }">
+	    <td>
+	    <span><c:out value="${orderInfo.c6}"/></span>
+	    </td>
+    </c:if>
+    <c:if test="${installResult.codeid1  == '258' }">
+	    <td>
+	    <span><c:out value="${orderInfo.c13}"/></span>
+	    </td>
+    </c:if>
     <th scope="row"></th>
     <td>
     </td>

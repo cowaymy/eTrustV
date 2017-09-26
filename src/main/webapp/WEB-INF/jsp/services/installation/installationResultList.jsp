@@ -16,10 +16,15 @@ $(document).ready(function() {
 
     AUIGrid.bind(myGridID, "cellClick", function(event) {
       //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-      memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
-      memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
+      installEntryId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId");
+      codeid1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1");
+      orderId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+      docId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "c1");
+      
       //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
   }); 
+    
+    
    
 });
 
@@ -31,6 +36,13 @@ function fn_installationListSearch(){
     });
 }
 
+function fn_addInstallation(codeid1){
+	if(codeid1 == 257){
+		   Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
+	}else{
+		 Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId);
+	}
+}
 var myGridID;
 function createInstallationListAUIGrid() {
     //AUIGrid 칼럼 설정
@@ -81,6 +93,10 @@ function createInstallationListAUIGrid() {
         width : 0
     }, {
         dataField : "codeid1",
+        headerText : "",
+        width : 0
+    }, {
+        dataField : "c1",
         headerText : "",
         width : 0
     }];
@@ -272,8 +288,8 @@ var gridPros = {
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_addInstallation(codeid1)" id="addInstallation">Add Installation Result</a></p></li>
+        <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
