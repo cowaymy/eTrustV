@@ -1,7 +1,10 @@
 package com.coway.trust.biz.services.installation;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -36,4 +39,24 @@ public interface InstallationResultListService {
 	EgovMap selectCallType(Map<String, Object> params);
 	
 	EgovMap getOrderExchangeTypeByInstallEntryID(Map<String, Object> params);
+	
+	List<EgovMap> selectFailReason(Map<String, Object> params);
+	
+	EgovMap getStockInCTIDByInstallEntryIDForInstallationView(Map<String, Object> params);
+	
+	EgovMap getSirimLocByInstallEntryID(Map<String, Object> params);
+	
+	List<EgovMap> checkCurrentPromoIsSwapPromoIDByPromoID(int promotionId);
+	
+	List<EgovMap> selectSalesPromoMs(int promotionId);
+	
+	//EgovMap getPromoPriceAndPV(int promotionId, int productId);
+	
+	EgovMap getAssignPromoIDByCurrentPromoIDAndProductID(int promotionId,int productId,boolean flag);
+	
+	EgovMap selectViewDetail(Map<String, Object> params);
+	
+	boolean insertInstallationProductExchange(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
+	
+	boolean insertInstallationResult(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
 }
