@@ -92,11 +92,18 @@
              , #{userId}
              , #{userName}
              , #{ipAddr}
+             /* Remark for all log
              , a.pgm_code
              , a.pgm_path
+             */
+             ,#{pgmCode}
+             ,#{pgmPath}
              , TO_CHAR(SYSDATE,'YYYYMMDD')
       FROM SYS0050M a
-     WHERE a.pgm_path = #{pgmPath}
+     WHERE ROWNUM = 1
+     /* Remark for all log
+     WHERE a.pgm_path = :pgmPath
+     */
 </insert>
 
 
