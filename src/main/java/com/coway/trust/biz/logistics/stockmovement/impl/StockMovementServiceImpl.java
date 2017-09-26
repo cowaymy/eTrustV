@@ -214,7 +214,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 		stockMoveMapper.StockMovementIssue(formMap);
 		
-		System.out.println( " ::: " + formMap.get("rdata"));
+		
 
 	}
 
@@ -263,11 +263,11 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
 
 		} else {
-			// System.out.println(" ::::: 256Line :::::: ");
+
 			stockMoveMapper.StockMovementIssue(formMap);
 		}
 
-		System.out.println(formMap.get("rdata"));
+
 
 		return formMap;
 	}

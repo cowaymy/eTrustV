@@ -127,7 +127,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 				docno = (String) imap.get("docno");
 				
 				String delCd = (String) imap.get("reqstno");
-				System.out.println("delCd :   "+delCd );
+				
 				if (delCd != null && !(tmpdelCd.equals(delCd))) {
 					tmpdelCd = delCd;
 					if (iCnt == 0) {
@@ -141,8 +141,6 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 		}
 		String[] delvcd = delyCd.split("∈");
-//		System.out.println("delvcd [0] ::"+delvcd[0]);
-//		System.out.println("delvcd [1] ::"+delvcd[1]);
 		GiMap.put("parray", delvcd);
 		GiMap.put("gtype", ttype);
 		GiMap.put("prgnm", "POS PROGRAM");
@@ -150,20 +148,12 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		GiMap.put("salesorder", "");
 		GiMap.put("userId", params.get("userId"));
 		
-		System.out.println("gtype @@ ::"+GiMap.get("gtype"));
-		System.out.println("gitype ??? ::"+GiMap.get("gitype"));
-		
 		
 		if ("GC".equals(GiMap.get("gitype"))) {
-			// System.out.println(" ::::: 254Line :::::: ");
 			PointOfSalesMapper.GICancelIssue(GiMap);
 		} else {
-			// System.out.println(" ::::: 256Line :::::: ");
 			PointOfSalesMapper.GIRequestIssue(GiMap);
 		}
-		
-		System.out.println("ERRCODE :::"+GiMap.get("rdata"));
-		
 	}
 
 	@Override

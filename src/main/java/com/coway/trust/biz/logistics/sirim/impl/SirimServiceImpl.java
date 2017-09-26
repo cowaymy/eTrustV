@@ -213,12 +213,12 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 			Map<String , Object> hmap = (Map<String, Object>)doctype.get(0);
 			//DOC_NO_PREFIX, DOC_NO
 			transitNo = (String)hmap.get("docNoPrefix") + (String)hmap.get("docNo");
-			System.out.println("213Line ::::: " + transitNo);
+			
 			tmpDocno = (String)hmap.get("docNo");
-			System.out.println("215Line ::::: " + tmpDocno);
+			
 			int serial = Integer.parseInt(tmpDocno);
 			tmpDocno = String.format("%0"+tmpDocno.length()+"d", (serial + 1));
-			System.out.println("218Line ::::: " + tmpDocno);
+			
 			for (int i  = 0; i < grid.size() ; i++){
 				//LOG0036D INSERT : SirimTransferD
 				Map<String , Object> mMap =  (Map<String, Object>)grid.get(i);
