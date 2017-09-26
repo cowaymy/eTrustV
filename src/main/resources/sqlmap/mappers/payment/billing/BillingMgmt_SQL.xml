@@ -130,7 +130,7 @@
 	
 	<resultMap id="earyBillMap" type="egovMap"></resultMap>
 	<select id="callEaryBillProcedure" statementType="CALLABLE" parameterType="Map">
-        {call SP_INITIIZE_BILL_GST_EARY_RENT(#{year}, #{month}, #{userId}), #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillillMap}}
+        {call SP_INITIIZE_BILL_GST_EARY_RENT(#{year}, #{month}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillMap})}
     </select>
     
     <resultMap id="billMap" type="egovMap"></resultMap>
