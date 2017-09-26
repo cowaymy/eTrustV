@@ -9,15 +9,13 @@
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="../images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>E-Accounting - Expense Management</h2>
+<h2><spring:message code="expense.title" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -35,7 +33,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Claim Type</th>
+	<th scope="row"><spring:message code="expense.ClaimType" /></th>
 	<td>
 	<select class="multy_select w100p" multiple="multiple">
 		<option value="2">Web Invoice</option>
@@ -48,7 +46,7 @@
 		<option value="9">CT Claim</option>
 	</select>
 	</td>
-	<th scope="row">Expense Type</th>
+	<th scope="row"><spring:message code="expense.ExpenseType" /></th>
 	<td>
 	<select class="multy_select w100p" multiple="multiple">
 		<option value="1">11</option>
@@ -66,8 +64,8 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">Add Expense Type</a></p></li>
-	<li><p class="btn_grid"><a href="#">Edit</a></p></li>
+	<li><p class="btn_grid"><a href="#"><spring:message code="expense.AddExpenseType" /></a></p></li>
+	<li><p class="btn_grid"><a href="#"><spring:message code="expense.Edit" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
