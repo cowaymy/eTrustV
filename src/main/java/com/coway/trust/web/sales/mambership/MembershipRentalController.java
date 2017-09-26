@@ -16,13 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.mambership.MembershipRentalService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.util.CommonUtils;
 import com.rometools.rome.io.SyndFeedOutput;
 
@@ -482,8 +486,12 @@ public class  MembershipRentalController {
 		logger.debug(map.toString());
 		
 		return ResponseEntity.ok(map);
-		
 	}
+	
+	
+	
+	
+	
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;

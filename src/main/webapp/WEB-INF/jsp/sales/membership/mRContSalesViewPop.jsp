@@ -86,7 +86,9 @@ function fn_doback(){
 		  var ord_id;
 		  var moption = {
 					srvCntrctId :'${srvCntrctId}',
-			        callbackFun : 'fn_setMRentalOrderInfoData(vmrMemResultObj.srvCntrctOrdId)'
+			        callbackFun : 'fn_setMRentalOrderInfoData(vmrMemResultObj.srvCntrctOrdId)',
+			        showViewLeder : true,
+                    showQuotationInfo:true
 		  };                     
          
 		  ord_id = fn_setMRentalMembershipInfoData(moption);

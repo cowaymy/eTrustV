@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <article class="tap_area"><!-- tap_area start -->
 
-<ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goLedgerPopOut()"><span class="search"></span>View Ledger</a></p></li>
+<ul class="right_btns mb10" >
+    <li><p class="btn_blue2" id ='viewLederLay'><a href="#" onclick="javascript:fn_goLedgerPopOut()" ><span class="search"></span>View Ledger</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -95,11 +95,13 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+
+
+<aside class="title_line viewQuotLay"><!-- title_line start -->
 <h3>Quotation Information</h3>
 </aside><!-- title_line end -->
 
-<table class="type1"><!-- table start -->
+<table class="type1 viewQuotLay"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:120px" />
@@ -141,7 +143,19 @@ function fn_setMRentalMembershipInfoData(_options ){
 		    	  
 		    	  fn_setMRentalMembershipInfoSet();  
 		    	  fn_setMRentalBillInfoData(_options.srvCntrctId);
+		    	 
+		    	  if(_options.showViewLeder){
+                    	  $("#viewLederLay").attr("style","display:inline");
+		    	  }else{
+		    		     $("#viewLederLay").attr("style","display:none");
+		    	  }
 		    	  
+		    	  if(_options.showQuotationInfo){
+		    		  $(".viewQuotLay").attr("style","display:inline");
+		    	  }else{
+		    		  $(".viewQuotLay").attr("style","display:none");
+		    	  }
+	    	  
 		    	  if(_options.callbackFun !=""){
 		    		  eval(_options.callbackFun);
 		    	  }	  

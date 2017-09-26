@@ -130,8 +130,19 @@ function createAUIGrid() {
     
 
 function  fn_goPayChannel(){
+
+
+    var selectedItems = AUIGrid.getSelectedItems(gridID);
+    
+    if(selectedItems ==""){
+       Common.alert("Membership Missing"+DEFAULT_DELIMITER+"No membership  selected. ");
+       return ;
+    }
+    
+     var pram  ="?srvCntrctId="+selectedItems[0].item.srvCntrctId+"&srvCntrctOrdId="+selectedItems[0].item.srvCntrctOrdId;
+     Common.popupDiv("/sales/membershipRentalChannel/membershipRentalChannelPop.do"+pram ,null, null , true , '_PayChannelDiv1');
+     
 	
-    alert('fn_goPayChannel');	
 }
 
 function fn_goRetPromo(){

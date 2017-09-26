@@ -350,10 +350,15 @@
 												       S.MODE_ID   ,
 												       S.CODE   ,
 												       S.CODE_DESC   ,
-												       S.DD_APPLY_DT   ,
-												       S.DD_SUBMIT_DT   ,
-												       S.DD_START_DT   ,
-												       S.DD_REJCT_DT   ,
+												       to_char(S.DD_APPLY_DT, 'yyyymmdd') CV_DD_APPLY_DT,
+												       to_char(S.DD_SUBMIT_DT,'yyyymmdd') CV_DD_SUBMIT_DT,
+												       to_char(S.DD_START_DT, 'yyyymmdd') CV_DD_START_DT,
+												       to_char(S.DD_REJCT_DT, 'yyyymmdd') CV_DD_REJCT_DT,
+												       to_char(SYSDATE, 'yyyymmdd') CV_DD_NOW_DT,
+        										       to_char(S.DD_APPLY_DT,'dd/mm/yyyy') DD_APPLY_DT ,
+												       to_char(S.DD_SUBMIT_DT,'dd/mm/yyyy' ) DD_SUBMIT_DT ,
+												       to_char(S.DD_START_DT,'dd/mm/yyyy' ) DD_START_DT   ,
+												       to_char(S.DD_REJCT_DT,'dd/mm/yyyy' ) DD_REJCT_DT   ,
 												       S.FAIL_RESN_ID   ,
 												       S.RESN_ID   ,
 												       S.BANK_ID   ,
@@ -369,7 +374,7 @@
 												       S.CARD_TYPE_ID   ,
 												       S.CODE_NAME   ,
 												       S.ISSU_NRIC   ,
-												       S.NRIC_OLD   ,
+												       nvl(S.NRIC_OLD,'   ') NRIC_OLD,
 												       S.ACC_CL_CLM_LIMIT   ,
 												       S.ACC_CL_BILL_DT   ,
 												       S.IS_3RD_PARTY   ,
@@ -382,25 +387,46 @@
 											                E3.CODE   ,
 											                E3.CODE_DESC   ,
 											                CASE  WHEN ( E1.MODE_ID IS NOT NULL ) THEN E1.MODE_ID ELSE 0 END MODE_ID  ,
-											                CASE  WHEN ( ( E1.DD_APPLY_DT IS NOT NULL )
-											                            AND ( to_char(E1.DD_APPLY_DT,'yyyymmdd') > '19000101' ) ) THEN  to_char(E1.DD_APPLY_DT,'dd-mm-yyyy')
-											                      ELSE to_char('1900-01-01')
-											                END DD_APPLY_DT  ,
-											                CASE 
-											                     WHEN ( ( E1.DD_SUBMIT_DT IS NOT NULL )
-											                       AND ( to_char(E1.DD_SUBMIT_DT,'yyyymmdd') > '19000101' ) ) THEN to_char(E1.DD_SUBMIT_DT,'dd-mm-yyyy')
-											                     ELSE to_char('1900-01-01')
-											                END DD_SUBMIT_DT  ,
-											                CASE 
-											                     WHEN ( ( E1.DD_START_DT IS NOT NULL )
-											                       AND ( to_char(E1.DD_START_DT,'yyyymmdd') > '19000101' ) ) THEN  to_char(E1.DD_START_DT,'dd-mm-yyyy')
-											                     ELSE to_char('1900-01-01')
-											                END DD_START_DT  ,
-											                CASE 
-											                     WHEN ( ( E1.DD_REJCT_DT IS NOT NULL )
-											                       AND ( to_char(E1.DD_REJCT_DT,'yyyymmdd' )> '19000101' ) ) THEN  to_char(E1.DD_REJCT_DT,'dd-mm-yyyy')
-											                     ELSE  to_char('1900-01-01')
-											                END DD_REJCT_DT  ,
+											                 CASE
+											                      WHEN ( (E1.DD_APPLY_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_APPLY_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                          E1.DD_APPLY_DT 
+											                      ELSE
+											                         to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                      DD_APPLY_DT,
+											                   CASE
+											                      WHEN ( (E1.DD_SUBMIT_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_SUBMIT_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                          E1.DD_SUBMIT_DT
+											                      ELSE
+											                          to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                       DD_SUBMIT_DT,
+											                   CASE
+											                      WHEN ( (E1.DD_START_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_START_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                         E1.DD_START_DT
+											                      ELSE
+											                          to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                      DD_START_DT,
+											                   CASE
+											                      WHEN ( (E1.DD_REJCT_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_REJCT_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                         E1.DD_REJCT_DT
+											                      ELSE
+											                         to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                      DD_REJCT_DT,
 											                CASE 
 											                     WHEN ( E1.FAIL_RESN_ID IS NOT NULL ) THEN E1.FAIL_RESN_ID
 											                     ELSE 0
@@ -1007,5 +1033,27 @@
          ]]>
          </select>
     
-         
+
+ <select id="getLoadRejectReasonList" parameterType="Map" resultType="egovMap">
+            <![CDATA[    
+						   
+						SELECT  RESN_ID  code_Id ,
+						        CODE||'-'||RESN_DESC  code_Name ,
+						        CODE
+						 FROM  SYS0032M 
+						WHERE  RESN_TYPE_ID = #{RESN_TYPE_ID}
+						  AND  STUS_CODE_ID ='1'
+						UNION 
+						SELECT RESN_ID  code_Id ,
+						       CODE||'-'||RESN_DESC  code_Name ,
+						       CODE
+						 FROM SYS0032M 
+						WHERE   RESN_ID = #{RESN_ID}
+            ]]>
+  </select>
+  
+  
+   
+      
+
 </mapper>
