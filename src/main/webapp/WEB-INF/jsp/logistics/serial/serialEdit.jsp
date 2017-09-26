@@ -404,8 +404,6 @@ $(document).ready(function(){
 	                }
 
 	                var jsonObj = process_wb(workbook);
-	                //console.log(jsonObj);
-	                //console.log(JSON.stringify(jsonObj.Sheet1, 2, 2));
 	                
 	                createAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
 	            };
@@ -425,7 +423,7 @@ function searchAjax() {
     var url = "/logistics/serial/searchSeialList.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
-        //console.log(data);
+        
         AUIGrid.setGridData(myGridID, data.dataList);
     });
 }       
@@ -434,7 +432,7 @@ function fn_detailSerialInfo(serialNo){
     var url = "/logistics/serial/selectSerialDetails.do";
     var param = "serialNo="+serialNo;
     Common.ajax("GET" , url , param , function(data){
-    	//console.log(data);
+    	
         AUIGrid.setGridData(detailGridID, data.dataList);
     });
 	   $("#grid_wrap_2nd_art").show();
@@ -457,8 +455,7 @@ function fn_popSave(index){
 	//var serialNo =AUIGrid.getCellValue(myGridID ,index,'serialNo');
     var url = "/logistics/serial/modifySerialOne.do";
     var param = GridCommon.getEditData(popGridId) ;
-    console.log("param");
-    console.log(param);
+    
     Common.ajax("POST" , url , param , function(data){
 		$("#popup_wrap").hide();
         searchAjax();
@@ -485,7 +482,7 @@ function fn_serialChck(str){
 
 
 function fn_itempopList(data){
-    console.log(data);
+    
     var rtnVal = data[0].item.itemcode;
     selectedItem = AUIGrid.getSelectedIndex(popGridId);
     var rowIndex=selectedItem[0];
@@ -506,18 +503,14 @@ function fn_excelSave(){
         }
     }
     param.add = AUIGrid.exportToObject("#popup_wrap_excel");
-    console.log(param);
+    
     Common.ajax("POST", "/logistics/serial/saveExcelGrid.do",param , function(result) {
     	 Common.alert(result.message);
     },  function(jqXHR, textStatus, errorThrown) {
         try {
-             console.log("status : " + jqXHR.status);
-            console.log("code : " + jqXHR.responseJSON.code);
-            console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage); 
+              
         } catch (e) {
-            //console.log(e);
+            
         }
 
         alert("Fail : " + jqXHR.responseJSON.message);
@@ -562,12 +555,12 @@ function createAUIGrid(jsonData) {
     }
     // 그리드 생성
     myGridIDExcel = AUIGrid.create("#popup_wrap_excel", excelLayout2 );
-     console.log(jsonData);
+     
      for(var i = 0; i<jsonData.length; i++){
     	var serialChck = jsonData[i].Serial_Number;
     	var matrChck = jsonData[i].Material_Code;
     	fn_serialExist(serialChck,matrChck);
-    	console.log(serialChck+":"+matrChck)
+    	
     	
     }
 
@@ -586,7 +579,7 @@ function fn_serialExist(serialChck,matrChck){
 	   };
  
 	        Common.ajaxSync("GET", "/logistics/serial/selectSerialExist.do", param, function(result) {
-	               console.log(result);
+	               
 	               var data = result.dataList;
 	               rowList ={
 	            		   serialNo    : serialChck,

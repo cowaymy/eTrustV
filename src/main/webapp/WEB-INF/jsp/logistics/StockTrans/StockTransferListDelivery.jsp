@@ -143,7 +143,7 @@ $(document).ready(function(){
 	        		AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
 	        	}
         	}else{
-        		console.log('11');
+        		
         		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
         		AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);        		
         	}
@@ -191,7 +191,7 @@ $(function(){
     });
     $('#delivery').click(function(){
     	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	console.log(checkedItems);
+    	
     	if(checkedItems.length <= 0) {
     		return false;
     	}else{
@@ -217,7 +217,7 @@ function SearchListAjax() {
    
     var url = "/logistics/stocktransfer/StocktransferSearchList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
+    
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
     });

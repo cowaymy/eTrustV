@@ -403,7 +403,7 @@ function  fn_itemChck(data,tmp2,str){
 function searchAjax(){
     var url = "/logistics/adjustment/adjustmentLocationList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
+    
     Common.ajax("POST" , url , param , function(result){
         AUIGrid.setGridData(resGrid, result.dataList);
     });

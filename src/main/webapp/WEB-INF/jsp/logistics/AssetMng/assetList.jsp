@@ -443,7 +443,7 @@
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
              url="/logistics/assetmng/copyAsset.do?assetid="+selectedItems[i].item.assetid+"&copyquantity="+v;
-             //console.log(url);
+
              f_others(url, div);
             }
          });
@@ -503,7 +503,7 @@
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                 var gridData = data             
-                //console.log(gridData.data);            
+            
                 AUIGrid.setGridData(myGridID, gridData.data);
                 hideModal();
             },
@@ -525,7 +525,7 @@
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                  var gridData = data             
-                //console.log(gridData.data);  
+  
                  //f_dtail_info(gridData); 
                  if(div == "viewitem"){
                     
@@ -598,7 +598,7 @@
                contentType : "application/json;charset=UTF-8",
                success : function(_data) {
                    //var data = _data.data;
-                   //console.log(data);
+
                   // f_info(data, v);
                },
                error : function(jqXHR, textStatus, errorThrown) {
@@ -1074,18 +1074,18 @@
 	   function fn_srvMembershipList(itemtype) {
 	        Common.ajaxSync("GET", "/logistics/assetmng/selectTypeList.do", { groupCode : itemtype},			
 	                function(result) {
-	            //console.log(result);
+
 	        	srvMembershipList = new Array();
 	                    for (var i = 0; i < result.length; i++) {
 	                        var list = new Object();
 	                        list.codeId = result[i].codeId;
-	                        //console.log(list.codeId);
+	                        
 	                        //list.memcd = result[i].memcd;
 	                        list.codeName = result[i].codeName;
-	                       // console.log(list.codeName);
+	                       
 	                        srvMembershipList.push(list);
 	                    } 
-	                        //console.log(list);
+	                        
 	                });
 	    }
 	   
@@ -1096,13 +1096,13 @@
 	                        for (var i = 0; i < result.length; i++) {
 	                            var list = new Object();
 	                            list.codeId = result[i].codeId;
-	                            console.log(list.codeId);
+	                            
 	                            //list.memcd = result[i].memcd;
 	                            list.codeName = result[i].codeName;
-	                            //console.log(list.codeName);
+	                            
 	                            upBramdList.push(list);
 	                        } 
-	                            //console.log(list);
+	                            
 	                    });
 	        }
 	   

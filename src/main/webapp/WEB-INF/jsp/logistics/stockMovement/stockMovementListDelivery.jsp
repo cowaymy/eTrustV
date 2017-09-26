@@ -300,7 +300,7 @@ $(document).ready(function(){
      });
      
      /*AUIGrid.bind(serialGrid, "keyDown", function(event){
-    	 console.log(event);
+    	 
     	 if (event.keyCode == 13){
     		 f_addrow();
     	 }
@@ -326,7 +326,7 @@ $(function(){
     	SearchListAjax();
     });
     $("#sttype").change(function(){
-    	console.log('11');
+    	
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });

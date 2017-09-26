@@ -231,7 +231,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
         
         Common.ajax("GET", "/logistics/helpdesk/selectDataChangeList.do",  $('#SearchForm').serialize(), function(result) {
           var gridData = result;             
-          //console.log(gridData.data);            
+                      
           AUIGrid.setGridData(myGridID, gridData.data); 
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
@@ -246,7 +246,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
         param={"dcfreqentryid" :dcfreqentryid };
         
         Common.ajax("POST", "/logistics/helpdesk/DetailInfoList.do", param, function(result) {
-            console.log(result);
+            
           var gridData = result;  
             
          $("#viewApprovalStatus").val(result.data4[0].c6);

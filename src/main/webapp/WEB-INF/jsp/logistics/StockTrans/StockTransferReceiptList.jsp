@@ -141,7 +141,7 @@ $(document).ready(function(){
         	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }else{
         	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
-        	console.log(rown);
+        	
         	for (var i = 0 ; i < rown.length ; i++){
         		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
         	}
@@ -215,7 +215,7 @@ $(function(){
     });
     $("#receiptcancel").click(function(){
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-        console.log(checkedItems);
+        
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;

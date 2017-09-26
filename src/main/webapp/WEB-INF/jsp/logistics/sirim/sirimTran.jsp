@@ -248,12 +248,12 @@
         });
         $("#updtran").click(function(){
         	var selectedItems = AUIGrid.getSelectedItems(listGrid);
-        	console.log(selectedItems);
+        	
         	if (selectedItems.length > 0){
         		param = "trnsitid="+selectedItems[0].item.trnsitid;
         		
         		Common.ajax("GET","/logistics/sirim/selectSirimModDetail.do",param,function(result){
-        			console.log(result);
+        			
         			$("#utrnsitno"  ).text(result.data[0].stn    );
                     $("#utrnsitdt"  ).text(result.data[0].std    );
                     //$("#utrnsitstus").text(result.data[0].tsn    );
@@ -285,7 +285,6 @@
         	}else{
         		Common.alert('Please Selected Grid Data');
         	}
-        	//console.log(selectedItems)
         	
         });
         $(".numberAmt").keyup(function(e) {
@@ -305,7 +304,7 @@
     function getListAjax() {
     	var url = "/logistics/sirim/selectSirimTransList.do";
     	var param = $("#searchForm").serializeJSON();
-    	console.log(param);
+    	
     	Common.ajax("POST",url,param,function(result){
     		AUIGrid.setGridData(listGrid, result.data);
         });
@@ -366,7 +365,6 @@
             $("#ntrnsitno").val(result.data);
         });
     	
-    	console.log(data);
     }
     function updValidatChk(){
     	var bool = true; 

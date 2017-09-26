@@ -249,7 +249,7 @@
         getAddrRelay2( 'curstateid' ,'detail', 'state' , setVal[0].curierStateId , setVal);
         getAddrRelay2( 'curareaid' ,'detail', 'area' , setVal[0].curierAreaId , setVal);
         getAddrRelay2( 'curpostcod' ,'detail', 'post' , setVal[0].curierPostCodeId , setVal);
-        console.log(setVal);
+        
         $("#curcntcno1").val(setVal[0].curierCntcNo1);
         $("#curcntcno2").val(setVal[0].curierCntcNo2);
         $("#curfaxno").val(setVal[0].curierFaxNo);

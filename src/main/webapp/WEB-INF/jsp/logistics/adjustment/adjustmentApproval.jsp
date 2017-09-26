@@ -149,7 +149,7 @@ Common.ajax("GET" , url , param , function(result){
 
 
 	function fn_approvalStatus(data) {
-	    console.log(data);
+	    
 		if ("Y" == data[0].saveYn) {
 			if (null == data[0].cnfm1 || "" == data[0].cnfm1) {
 				$("#approve").show();

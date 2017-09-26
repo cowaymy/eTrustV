@@ -195,7 +195,7 @@
     	        dataType : "json",
     	        contentType : "application/json;charset=UTF-8",
     	        success : function(data) {
-    	        	//console.log(rData);
+    	        	
     	           var rData = data;
     	           doDefCombo(rData, selCode, obj , type,  callbackFn);
     	        },
@@ -244,7 +244,7 @@
            contentType : "application/json;charset=UTF-8",
            success : function(_data) {
                var data = _data.data;
-               console.log(data);
+               
                f_info(data, v);
            },
            error : function(jqXHR, textStatus, errorThrown) {

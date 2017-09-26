@@ -308,8 +308,7 @@ function fn_ViewSerial(str){
     		data,
     		function(result) {
 		        AUIGrid.setGridData(serialGrid, result.data);
-			    console.log(result);
-		        
+			    
 		        $("#serialopenwindow").show();
 		  
     },  function(jqXHR, textStatus, errorThrown) {

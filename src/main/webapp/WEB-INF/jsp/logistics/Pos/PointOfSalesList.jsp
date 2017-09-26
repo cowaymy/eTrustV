@@ -399,8 +399,7 @@ function SearchMaterialDocListAjax( reqno ) {
     
     Common.ajax("GET" , url , param , function(data){
         AUIGrid.resize(mdcGrid,1620,150); 
-        AUIGrid.setGridData(mdcGrid, data.data2);
-        console.log(data.data2);
+        AUIGrid.setGridData(mdcGrid, data.data2);        
     });
 }
 

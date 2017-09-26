@@ -81,7 +81,7 @@ function searchHead(){
     var url = "/logistics/adjustment/oneAdjustmentNo.do";
     Common.ajax("GET" , url , param , function(result){
         var data = result.dataList;
-        console.log(data);
+        
         fn_setVal(data);
         searchGrid();
     });
@@ -96,7 +96,7 @@ function searchHead(){
     Common.ajax("GET" , url , param , function(result){
         var data = result.dataList;
         var data2 = result.cnt
-        console.log(result);
+        
         AUIGrid.setGridData(myGridID, data);
         fn_chck_approval(data2);        	
     });

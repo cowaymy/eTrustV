@@ -99,8 +99,8 @@ $(document).ready(function(){
         var url = "/logistic/TRBook/searchTRBookManagement.do";
         var param = $('#searchForm').serializeJSON();
         Common.ajax("POST" , url , param , function(data){
-            console.log(data);
-           // console.log(data.data);
+            
+           
             AUIGrid.setGridData(myGridID, data.dataList);
            // hideModal();
         });

@@ -51,7 +51,7 @@ var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
 var uomlist = f_getTtype('42' , '');
 var paramdata;
 
-console.log('${SESSION_INFO.userBranchId}');
+
 $(document).ready(function(){
     /**********************************
     * Header Setting
@@ -167,7 +167,7 @@ $(function(){
     	if (f_validatation('save')){
 	    	var dat = GridCommon.getEditData(reqGrid);
 	    	dat.form = $("#headForm").serializeJSON();
-	    	console.log(dat.form);
+	    	
 	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
 	            Common.alert(result.message , locationList);
 	            AUIGrid.resetUpdatedItems(reqGrid, "all");
@@ -212,7 +212,7 @@ $(function(){
         }
     });
     $("#tlocation").change(function(){
-    	console.log('1');
+    	
     	tlocationFunc();
     });
 });
@@ -251,7 +251,7 @@ function SearchListAjax() {
     
     var url = "/logistics/stocktransfer/stockTransferTolocationItemList.do";
     var param = $('#searchForm').serialize();
-    console.log($('#searchForm').serializeJSON());
+    
     /*Common.ajax("GET" , url , param , function(result){
     	AUIGrid.setGridData(resGrid, result.data);
     });*/

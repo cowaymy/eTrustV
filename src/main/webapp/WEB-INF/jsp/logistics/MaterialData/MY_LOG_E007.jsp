@@ -540,7 +540,7 @@
         });
         Common.ajax("POST" , url , param , function(data){
         	
-            console.log(data.data);
+            
             AUIGrid.setGridData(myGridID, data.data);
             hideModal();
             if (rid != ""){

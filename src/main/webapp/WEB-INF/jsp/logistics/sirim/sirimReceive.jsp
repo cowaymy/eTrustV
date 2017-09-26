@@ -284,7 +284,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
     function getReceiveSirimListAjax() {  
         Common.ajax("POST", "/logistics/sirim/selectReceiveList.do",  $('#SearchForm').serializeJSON(), function(result) {
           var gridData = result;             
-          //console.log(gridData.data);            
+                      
           AUIGrid.setGridData(myGridID, gridData.data); 
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
@@ -308,7 +308,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
           } 
         Common.ajax("POST", "/logistics/sirim/detailReceiveList.do", param, function(result) {
           var gridData = result;             
-          //console.log(gridData.data);   
+             
           if(div=="showAll"){
         	  AUIGrid.setGridData(detailGridID, gridData.data);
         	  
@@ -334,7 +334,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
     function SirimReceiveInfoAjax(trnsitId) {  
         Common.ajax("POST", "/logistics/sirim/getSirimReceiveInfo.do",{"trnsitId" :trnsitId } , function(result) {
           var gridData = result;             
-          //console.log(gridData.data);            
+                      
             AUIGrid.setGridData(receiveInfoGridID, gridData.data);
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
@@ -355,7 +355,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
 	       checkedItems = AUIGrid.getCheckedRowItemsAll(PendingGridID);
 	    } 
 
-        console.log(checkedItems);
+        
         if(checkedItems.length <= 0) {
             return false;
         }else{
@@ -378,7 +378,6 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
        
     Common.ajax("POST", "/logistics/sirim/InsertReceiveInfo.do",data , function(result) {
           var gridData = result;             
-          //console.log(gridData.data);
                 
         if(TransitStatusID == "44" ){
         	 $("#ReceivePending_info").click(); 

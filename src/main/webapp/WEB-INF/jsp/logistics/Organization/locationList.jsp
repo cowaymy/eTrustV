@@ -142,7 +142,7 @@
 	    AUIGrid.bind(myGridID, "updateRow", function(event) {
 	    	$( "#editWindow" ).hide();
 	        
-	        console.log(GridCommon.getEditData(myGridID));
+	        
 	        
 	        Common.ajax("POST", "/logistics/organization/locationUpdate.do", GridCommon.getEditData(myGridID), function(result) {
 	        	Common.alert(result.message);
@@ -438,7 +438,7 @@
             contentType : "application/json;charset=UTF-8",
             success : function(data) {
                 var gridData = data;
-                console.log(gridData.data);
+                
                 AUIGrid.setGridData(myGridID, gridData.data);
             },
             error: function(jqXHR, textStatus, errorThrown){
@@ -468,7 +468,7 @@
     function f_multiCombo(){
         /*$(function() {
             $('#cmbCategory').change(function() {
-            //console.log($(this).val());
+            
             }).multipleSelect({
                 selectAll: true, // 전체선택 
                 width: '80%'
@@ -490,16 +490,8 @@
                 /* $("#search").click(); */
                 }, function(jqXHR, textStatus, errorThrown) {
                     Common.alert("실패하였습니다.");
-                    console.log("실패하였습니다.");
-                    console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
                     
                     alert(jqXHR.responseJSON.message);
-                    console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-                  
-                    console.log("status : " + jqXHR.status);
-                    console.log("code : " + jqXHR.responseJSON.code);
-                    console.log("message : " + jqXHR.responseJSON.message);
-                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
                     
                 });                        
            }
@@ -511,7 +503,7 @@
 
      
      function fn_itempopList(data){
-    	 console.log(data);
+    	 
     	 var rtnVal = data[0].item.loccd;
     	 $("#loccd").val(rtnVal);
     	} 

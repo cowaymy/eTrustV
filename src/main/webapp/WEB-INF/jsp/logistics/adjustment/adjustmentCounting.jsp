@@ -316,8 +316,6 @@ $(document).ready(function(){
                 }
 
                 var jsonObj = process_wb(workbook);
-                //console.log(jsonObj);
-                //console.log(JSON.stringify(jsonObj.Sheet1, 2, 2));
                 
                 createAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
             };
@@ -660,18 +658,14 @@ function fn_serialCountSet(){
 function fn_excelSave(){
 	var param  =  {};
 	param.add = AUIGrid.exportToObject("#popup_wrap_excel");
-	console.log(param);
+	
     Common.ajax("POST", "/logistics/adjustment/saveExcelGrid.do",param , function(result) {
         set_subGrid(adjNo,adjLocation);
     },  function(jqXHR, textStatus, errorThrown) {
         try {
-            /* console.log("status : " + jqXHR.status);
-            console.log("code : " + jqXHR.responseJSON.code);
-            console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : "
-                    + jqXHR.responseJSON.detailMessage); */
+            
         } catch (e) {
-            //console.log(e);
+            
         }
 
         alert("Fail : " + jqXHR.responseJSON.message);

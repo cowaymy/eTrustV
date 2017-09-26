@@ -542,11 +542,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             fdata = $("#" + v).serializeJSON();
         }
         var keys = Object.keys(fdata);
-        console.log("keys " + keys);
-        for ( var i in keys) {
-            //console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
-            //+ ",  data="+ obj[keys[i]]);
-        }
+        
+//         for ( var i in keys) {
+//             //console.log("key=" + keys[i] + ",  data=" + fdata[keys[i]]);
+//             //+ ",  data="+ obj[keys[i]]);
+//         }
         if (v == "stockInfo") {
             if ($("#cbSirim").is(":checked") == true) {
                 $.extend(fdata, {
@@ -761,10 +761,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         var data = _data.data;
         var data2 = _data.data2;
         
-    
-
-        console.log(data);
-        //console.log(data2);
         if (v == 'S') {
             $("#txtStockType").empty();
             $("#txtStockCode").empty();

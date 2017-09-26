@@ -141,7 +141,7 @@
     function getSirimListAjax() {  
         Common.ajax("POST", "/logistics/sirim/selectSirimList.do",  $('#SearchForm').serializeJSON(), function(result) {
       	  var gridData = result;             
-          //console.log(gridData.data);            
+                      
           AUIGrid.setGridData(myGridID, gridData.data);	
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
@@ -155,7 +155,7 @@
         Common.ajax("POST", "/logistics/sirim/insertSirimList.do",  $('#AddSirimForm').serializeJSON(), function(result) {
           var gridData = result;
           cancelAddSirim()
-          //console.log(gridData.data);            
+                      
         // 공통 메세지 영역에 메세지 표시.
         Common.setMsg("<spring:message code='sys.msg.success'/>");
         }, function(jqXHR, textStatus, errorThrown) {
@@ -179,8 +179,6 @@
                };
 	        Common.ajaxSync("post", "/logistics/sirim/selectSirimNo.do", param, function(result) {
 	//           var gridData = result;    
-	//           console.log(gridData.data);
-	        console.log(result);
 	        chekFlag=result.data;
 	         return chekFlag;
 	    

@@ -324,7 +324,7 @@ function fn_newAdjustment(){
     var url = "/logistics/adjustment/createAdjustment.do";
     var param = $("#popform").serializeJSON();
     $.extend(param,{'auto_manual':'M'});//강제세팅함 
-    console.log(param);
+    
     Common.ajax("POST" , url , param , function(data){
         $("#popup_wrap").hide();
         searchAjax();
@@ -502,7 +502,7 @@ function fn_subGrid(invntryNo){
         var param = "invntryNo="+invntryNo;
         Common.ajax("GET" , url , param , function(data){
         	var list= data.dataList
-        	console.log(list.length);
+        	
             AUIGrid.setGridData(reqGrid, list);
           $("#grid_wrap_sub_art").show();
           

@@ -88,7 +88,7 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(subGrid, "ready", function(event) {
-    	console.log(event);
+    	
     });
     
 });
@@ -248,7 +248,7 @@ function validationchk(){
 }
 
 function fn_itempopList(d){
-	console.log(d[0].item);
+	
 	if (d[0].item.itemcode != undefined && d[0].item.itemcode != "undefined" && d[0].item.itemcode != null){
 		$("#itmcd").val(d[0].item.itemcode);
 		$("#itmnm").val(d[0].item.itemname);

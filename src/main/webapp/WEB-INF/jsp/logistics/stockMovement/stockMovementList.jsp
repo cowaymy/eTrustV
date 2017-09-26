@@ -208,7 +208,7 @@ function SearchDeliveryListAjax( reqno ) {
         //mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
         AUIGrid.resize(mdcGrid,1620,150); 
         AUIGrid.setGridData(mdcGrid, data.data2);
-        console.log(data.data2);
+        
     });
 }
 

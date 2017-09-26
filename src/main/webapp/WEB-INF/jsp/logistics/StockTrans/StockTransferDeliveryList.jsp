@@ -72,7 +72,7 @@ var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Man
 var uomlist = f_getTtype('42' , '');
 var paramdata;
 $(document).ready(function(){
-	console.log(rescolumnLayout);
+	
 	/**********************************
     * Header Setting
     **********************************/
@@ -143,7 +143,7 @@ $(document).ready(function(){
         	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }else{
         	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
-        	console.log(rown);
+        	
         	for (var i = 0 ; i < rown.length ; i++){
         		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
         	}
@@ -155,7 +155,7 @@ $(document).ready(function(){
         
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
         	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
-            console.log(rown);
+            
             for (var i = 0 ; i < rown.length ; i++){
                 AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
             }
@@ -285,7 +285,7 @@ function giFunc(){
 	data.check   = check;
 	data.checked = check;
 	data.form    = $("#giForm").serializeJSON();
-	console.log(data);
+	
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
         
         Common.alert(result.message.message);

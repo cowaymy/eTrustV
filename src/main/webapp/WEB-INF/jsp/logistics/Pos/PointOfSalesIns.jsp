@@ -481,10 +481,7 @@ function f_validatation(v){
 			 for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
 				    
 // 				    	alert(reqcheckedItems[i].itmcode);
-// 				    	console.log(AUIGrid.getRowCount(serialGrid));
-// 				    	console.log(reqcheckedItems[i].itemserialChk);
-// 				    	console.log(reqcheckedItems[i].itmcode);
-// 				    	console.log(AUIGrid.getCellValue(serialGrid , i , "itmcd"));
+
 				 if(reqcheckedItems[j].itmcode == AUIGrid.getCellValue(serialGrid , i , "itmcd")){
 					 bool = true;
 					 break;

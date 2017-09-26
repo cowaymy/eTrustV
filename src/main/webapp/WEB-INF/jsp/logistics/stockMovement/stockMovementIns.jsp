@@ -245,7 +245,7 @@ function f_validatation(v){
 }
 
 function SearchListAjax() {
-    console.log($("#slocation").val());
+    
     var url = "/logistics/stockMovement/StockMovementTolocationItemList.do";
     var param = $('#searchForm').serialize();
     
