@@ -197,7 +197,7 @@
    }
    
    function fn_downFile() {
-	   Common.ajax("GET", "/commission/calculation/cntData7002CD", $("#form7002CD").serialize(), function(result) {
+	   Common.ajax("GET", "/commission/calculation/cntData7002HP", $("#form7002HP").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
 			   //excel down load name 형식 어떻게 할지?
