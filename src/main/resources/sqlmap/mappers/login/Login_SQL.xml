@@ -11,7 +11,7 @@
 	       ,USR.USER_FULL_NAME AS userFullName
 	       ,USR.USER_EMAIL AS userEmail
 	       ,USR.USER_STUS_ID AS userStatusId
-	       ,USR.USER_TYPE_ID
+	       ,USR.USER_TYPE_ID AS userTypeId
 	       ,CASE
 	          WHEN (USR.USER_BRNCH_ID IS NOT NULL)
 	             THEN USR.USER_BRNCH_ID

@@ -67,7 +67,7 @@ public class LoginController {
 
 		if (loginVO == null || loginVO.getUserId() == 0) {
 			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_NOT_EXIST, new Object[] { "ID" }));
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_INVALID, new Object[] { "ID/Password" }));
 		} else {
 
 			String clientIp = CommonUtils.getClientIp(request);

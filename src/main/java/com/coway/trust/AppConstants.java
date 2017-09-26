@@ -151,6 +151,7 @@ public class AppConstants {
 	public static final String MSG_SUCCESS = "sys.msg.success";
 	public static final String MSG_FAIL = "sys.msg.success";
 	public static final String MSG_NOT_EXIST = "sys.msg.notexist";
+	public static final String MSG_INVALID = "sys.msg.invalid";
 	public static final String MSG_NECESSARY = "sys.msg.necessary";
 	public static final String MSG_FILE_MAX_LIMT = "sys.msg.file.limit";
 	/**
