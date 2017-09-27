@@ -11,7 +11,7 @@ public interface SerialService {
 
 	List<EgovMap> selectSerialDetails(Map<String, Object> params);
 
-	int updateSerial(List<Object> list);
+	int updateSerial(List<Object> list, String loginId);
 
 	int insertSerial(List<Object> addList, String loginId);
 

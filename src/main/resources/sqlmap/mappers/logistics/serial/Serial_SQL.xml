@@ -163,11 +163,9 @@
         WHEN MATCHED THEN
             UPDATE 
                 SET  MATNR= #{matnr}, 
-                LATRANSIT =  #{latransit},
                 GLTRI  = TO_CHAR(TO_DATE(#{gltri},'YYYY/MM/DD'), 'YYYYMMDD'),
-                LVORM  =  #{lvorm},
-                CRT_DT =TO_CHAR(TO_DATE(#{crtDt},'DD/MM/YYYY'), 'YYYY-MM-DD'),
-                CRT_USER_ID  =  #{crtUserId}  
+                CRT_DT =SYSDATE,
+                CRT_USER_ID  =  #{loginId}  
              WHERE SERIAL_NO= #{serialNo}     
                  
         WHEN NOT MATCHED THEN
@@ -175,8 +173,6 @@
                 (
                 SERIAL_NO,
                 MATNR,
-                LATRANSIT,
-                LVORM,
                 CRT_DT,
                 CRT_USER_ID               
                 )        
@@ -184,10 +180,8 @@
                 (
                 #{serialNo},
                 #{matnr},
-                TO_CHAR(TO_DATE(#{gltri},'YYYY/MM/DD'), 'YYYYMMDD'),
-                #{lvorm},
-                TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
-                #{crtUserId} 
+                SYSDATE,
+                #{loginId} 
                 )    
     </update>
     
@@ -214,7 +208,7 @@
                 #{serialNo},
                 #{matnr},
                 TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
-                #{crtUserId} 
+                #{loginId} 
                 )    
     </insert>
 </mapper>

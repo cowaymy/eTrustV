@@ -41,10 +41,11 @@ public class SerialServiceImpl implements SerialService {
 	}
 
 	@Override
-	public int updateSerial(List<Object> updateList) {
+	public int updateSerial(List<Object> updateList, String loginId) {
 		// TODO Auto-generated method stub
 		int cnt = 0;
 		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("loginId", loginId);
 		for (Object obj : updateList) {
 			param.put("serialNo", ((Map<String, Object>) obj).get("serialNoPop"));
 			param.put("matnr", ((Map<String, Object>) obj).get("matnrPop"));
@@ -52,7 +53,7 @@ public class SerialServiceImpl implements SerialService {
 			param.put("gltri", ((Map<String, Object>) obj).get("gltriPop"));
 			param.put("lvorm", ((Map<String, Object>) obj).get("lvormPop"));
 			param.put("crtDt", ((Map<String, Object>) obj).get("crtDtPop"));
-			param.put("crtUserId", ((Map<String, Object>) obj).get("crtUserIdPop"));
+			// param.put("crtUserId", ((Map<String, Object>) obj).get("crtUserIdPop"));
 			cnt = serialMapper.updateSerial(param);
 		}
 		return cnt;
@@ -71,7 +72,7 @@ public class SerialServiceImpl implements SerialService {
 			param.put("gltri", ((Map<String, Object>) obj).get("gltriPop"));
 			param.put("lvorm", ((Map<String, Object>) obj).get("lvormPop"));
 			param.put("crtDt", ((Map<String, Object>) obj).get("crtDtPop"));
-			param.put("crtUserId", ((Map<String, Object>) obj).get("crtUserIdPop"));
+			// param.put("crtUserId", ((Map<String, Object>) obj).get("crtUserIdPop"));
 			cnt = serialMapper.updateSerial(param);
 		}
 		return cnt;
@@ -91,7 +92,7 @@ public class SerialServiceImpl implements SerialService {
 		for (Object obj : addList) {
 			param.put("serialNo", ((Map<String, Object>) obj).get("serialNo"));
 			param.put("matnr", ((Map<String, Object>) obj).get("matnr"));
-			param.put("crtUserId", loginId);
+			param.put("loginId", loginId);
 			serialMapper.insertExcelSerial(param);
 		}
 	}
