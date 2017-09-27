@@ -95,7 +95,7 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     var LocData = {sLoc : userCode};
-    doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
+    //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
        
@@ -133,6 +133,12 @@ $(function(){
         SearchListAjax();
     	}
     });
+    $('#searchLoc').keypress(function(event) {
+        if (event.which == '13') {
+        	$("#sUrl").val("/logistics/organization/locationCdSearch.do");
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
 
 });
 
@@ -156,10 +162,10 @@ function SearchListAjax() {
 
 function f_validatation(v){
              
-            if ($("#searchLoc").val() == null || $("#searchLoc").val() == undefined || $("#searchLoc").val() == ""){
-                Common.alert("Please Select Location.");
-                return false;
-            }
+//             if ($("#searchLoc").val() == null || $("#searchLoc").val() == undefined || $("#searchLoc").val() == ""){
+//                 Common.alert("Please Select Location.");
+//                 return false;
+//             }
             return true;
 }
 
@@ -190,6 +196,11 @@ function f_multiCombos() {
     });
 }
 
+function fn_itempopList(data){
+    
+    var rtnVal = data[0].item.loccd;
+    $("#searchLoc").val(rtnVal);
+   } 
 
 
 </script>
@@ -218,6 +229,7 @@ function f_multiCombos() {
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
+        <input type="hidden" id="sUrl" name="sUrl">
         <input type="hidden" name="LocCode" id="LocCode" />    
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
@@ -235,7 +247,7 @@ function f_multiCombos() {
                     </td> 
                     <th scope="row">Location</th>
                     <td>
-                        <select class="w100p" id="searchLoc" name="searchLoc"><option value=''>Choose One</option></select>
+                        <INPUT type="text" class="w100p" id="searchLoc" name="searchLoc">
                     </td> 
                 </tr>
                 <tr>
