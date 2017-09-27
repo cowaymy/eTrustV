@@ -690,8 +690,6 @@ public class SearchPaymentController {
 		LOGGER.debug("마스터조회값 collMemId : {}", collMemId);
 		LOGGER.debug("마스터조회값 allowComm : {}", allowComm);
 		LOGGER.debug("마스터조회값 trIssuDt : {}", trIssuDt);
-		
-		LOGGER.debug("params======"+params);
 
 		Map<String, Object> trMap = new HashMap<String, Object>();
 		Map<String, Object> branchMap = new HashMap<String, Object>();
@@ -721,8 +719,8 @@ public class SearchPaymentController {
             searchPaymentService.saveChanges(trMap);
 		}
 		
-		//1128 : Key-In Branch
-		if(!brnchId.equals(String.valueOf(params.get("edit_branchId")))){
+		//1128 : Key-In Branch		
+		if(params.get("edit_branchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 			
 			Map<String, Object> frBranchIdMap = new HashMap<String, Object>();
 			Map<String, Object> toBranchIdMap = new HashMap<String, Object>();
@@ -836,7 +834,7 @@ public class SearchPaymentController {
 			updMap.put("trNo", "");
 		}
 			
-		if(!brnchId.equals(String.valueOf(params.get("edit_branchId")))){
+		if(params.get("edit_branchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 			updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
 			
 			EgovMap payD = searchPaymentService.selectPayDs(params);
@@ -852,7 +850,7 @@ public class SearchPaymentController {
 			updMap.put("brnchId", "");
 		}
 		
-		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
+		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){			
 			updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId")));
 		}else{
 			updMap.put("collMemId", "");
