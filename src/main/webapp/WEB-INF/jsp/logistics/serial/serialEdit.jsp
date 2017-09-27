@@ -176,7 +176,7 @@ var popLayout = [
 							    }
 							},
 							{dataField:"lvormPop" ,headerText:"Deletion Flag for Serial",width:120 ,height:30 , editable:true},
-							{dataField:"crtDtPop" ,headerText:"Create Date",width:120 ,height:30 , editable:true,
+							{dataField:"crtDtPop" ,headerText:"Create Date",width:120 ,height:30 , editable:true, visible:false, 
 							    dataType : "date",
                                 formatString : "dd/mm/yyyy",
                                 editRenderer : {
@@ -186,7 +186,7 @@ var popLayout = [
                                     showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
                                 }	
 							},
-							{dataField:"crtUserIdPop" ,headerText:"Create User",width:120 ,height:30 , editable:true}
+							{dataField:"crtUserIdPop" ,headerText:"Create User",width:120 ,height:30 , editable:true, visible:false}
 							/*
 							{dataField:"usedSerialNoPop" ,headerText:"usedSerialNo",width:120 ,height:30 , editable:true},
 							{dataField:"usedMatnrPop" ,headerText:"usedMatnr",width:120 ,height:30 , editable:true} ,

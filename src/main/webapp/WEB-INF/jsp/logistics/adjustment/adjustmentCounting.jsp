@@ -63,6 +63,7 @@ var columnLayout=[
                 	  ,dataType : "numeric" ,editRenderer : {
                           type : "InputEditRenderer",
                           onlyNumeric : true, // 0~9 까지만 허용
+                          allowNegative : true,
                           allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                     }  
                   },
@@ -120,6 +121,7 @@ var columnLayout2=[
                 	  ,dataType : "numeric" ,editRenderer : {
                           type : "InputEditRenderer",
                           onlyNumeric : true, // 0~9 까지만 허용
+                          allowNegative : true,
                           allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                     }  
                   },
@@ -212,7 +214,8 @@ $(document).ready(function(){
     
     AUIGrid.bind(myGridID, "cellEditEnd", function (event){
     	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-        var qty = AUIGrid.getCellValue(myGridID , selectedItem[0] , 'sysQty') - AUIGrid.getCellValue(myGridID ,selectedItem[0] , 'cntQty');
+        //var qty = AUIGrid.getCellValue(myGridID , selectedItem[0] , 'sysQty') - AUIGrid.getCellValue(myGridID ,selectedItem[0] , 'cntQty');
+        var qty = AUIGrid.getCellValue(myGridID ,selectedItem[0] , 'cntQty') -AUIGrid.getCellValue(myGridID , selectedItem[0] , 'sysQty');
         AUIGrid.setCellValue(myGridID, selectedItem[0], 'diffQty', qty);
     	
     });
@@ -281,7 +284,7 @@ $(document).ready(function(){
     	
     	var rowCnt = AUIGrid.getRowCount(myGridID);
         for (var i = 0 ; i < rowCnt ; i++){
-            var qty = AUIGrid.getCellValue(myGridID , i , 'sysQty') - AUIGrid.getCellValue(myGridID , i , 'cntQty');
+            var qty = AUIGrid.getCellValue(myGridID , i , 'cntQty') -AUIGrid.getCellValue(myGridID , i , 'sysQty');
             AUIGrid.setCellValue(myGridID, i, 'diffQty', qty);
         }
         AUIGrid.resetUpdatedItems(myGridID, "all");
@@ -645,7 +648,7 @@ function fn_serialCountSet(){
         Common.ajax("GET", "/logistics/adjustment/selectInsertSerialCount.do", param, function(result) {
                
              AUIGrid.setCellValue(myGridID ,  selectedItem[0], "cntQty" , result.data);
-             var qty = AUIGrid.getCellValue(myGridID , selectedItem[0] , 'sysQty') - AUIGrid.getCellValue(myGridID ,selectedItem[0] , 'cntQty');
+             var qty = AUIGrid.getCellValue(myGridID ,selectedItem[0] , 'cntQty') - AUIGrid.getCellValue(myGridID , selectedItem[0] , 'sysQty');
              AUIGrid.setCellValue(myGridID, selectedItem[0], 'diffQty', qty);
     },  function(jqXHR, textStatus, errorThrown) {
         try {
