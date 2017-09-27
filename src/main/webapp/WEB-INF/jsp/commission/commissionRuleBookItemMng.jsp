@@ -225,6 +225,10 @@
                      $("#searchFormRule [name=valueTypeNm]").val(result[0].valueTypeNm);
                      $("#searchFormRule [name=valueType]").val(result[0].valueType);
                      $("#searchFormRule [name=resultValueNm]").val(result[0].resultValueNm);
+                     
+                     $("#searchFormRule [name=valueTypeNmText]").text(result[0].valueTypeNm);
+                     $("#searchFormRule [name=valueTypeText]").text(result[0].valueType);
+                     $("#searchFormRule [name=resultValueNmText]").text(result[0].resultValueNm);
                 }
                 
             });
@@ -482,6 +486,9 @@
                 $("#searchFormRule [name=orgSeq]").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
                 $("#searchFormRule [name=orgNm]").val(AUIGrid.getCellValue(myGridID, rowIndex, 4));
                 $("#searchFormRule [name=itemNm]").val(AUIGrid.getCellValue(myGridID, rowIndex, 6));
+                
+                $("#searchFormRule [name=orgNmText]").text(AUIGrid.getCellValue(myGridID, rowIndex, 4));
+                $("#searchFormRule [name=itemNmText]").text(AUIGrid.getCellValue(myGridID, rowIndex, 6));
 
                 //mygridid2 option
                 var options = {
@@ -1054,31 +1061,36 @@
 <tr>
   <th scope="row">ORG Name</th>
   <td>
-  <input type="text" title="" placeholder="Org Name" class="readonly w100p" id="orgNm" name="orgNm" readonly="readonly" />
+  <span id="orgNmText" name="orgNmText" ></span>
+  <input type="hidden" title="" placeholder="Org Name" class=" w100p" id="orgNm" name="orgNm" readonly="readonly" /> 
   </td>
 </tr>
 <tr>
   <th scope="row">Title</th>
   <td>
-  <input type="text" title="" placeholder="Performance Evaluation Awards" class="readonly w100p"  id="itemNm" name="itemNm" readonly="readonly" />
+  <span id="itemNmText" name="itemNmText" ></span>
+  <input type="hidden" title="" placeholder="Performance Evaluation Awards" class=" w100p"  id="itemNm" name="itemNm" readonly="readonly" /> 
   </td>
 </tr>
 <tr>
   <th scope="row">Range Value Name</th>
   <td>
-  <input type="text" title="" class="readonly w100p"  id="valueTypeNm" name="valueTypeNm" readonly="readonly" />
+  <span id="valueTypeNmText" name="valueTypeNmText" ></span>
+  <input type="hidden" title="" class=" w100p"  id="valueTypeNm" name="valueTypeNm" readonly="readonly" /> 
   </td>
 </tr>
 <tr>
   <th scope="row">Range value type</th>
   <td>
-  <input type="text" title="" class="readonly w100p" id="valueType" name="valueType" readonly="readonly"/>
+  <span id="valueTypeText" name="valueTypeText" ></span>
+  <input type="hidden" title="" class=" w100p" id="valueType" name="valueType" readonly="readonly"/> 
   </td>
 </tr>
 <tr>
   <th scope="row">Conditional Result Value Name</th>
   <td>
-  <input type="text" title="" class="readonly w100p"  id="resultValueNm" name="resultValueNm" readonly="readonly"/>
+  <span id="resultValueNmText" name="resultValueNmText" ></span>
+  <input type="hidden" title="" class=" w100p"  id="resultValueNm" name="resultValueNm" readonly="readonly"/>
   </td>
 </tr>
 </tbody>
