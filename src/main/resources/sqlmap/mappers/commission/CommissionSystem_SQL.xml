@@ -560,7 +560,7 @@
           FROM CMM0055M     
        WHERE 1=1
            ]]>
-         <if test="year != null and month != ''">
+         <if test="year != null and month != null">
              AND YEAR=#{year} AND MONTH=#{month}
         </if>
           <![CDATA[       
@@ -585,8 +585,8 @@
     #{year},
     #{month},  
     #{weeks},
-    #{startDt},
-    #{endDt},
+    TO_DATE(#{startDt},'YYYY/MM/DD'),
+    TO_DATE(#{endDt},'YYYY/MM/DD'),
     #{crtUserId},
     SYSDATE
     )
