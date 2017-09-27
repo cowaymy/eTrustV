@@ -77,7 +77,7 @@ function fn_generateInvoice(){
 	        if( parseInt(year) ==  2014 && parseInt(month) < 5 ){
 	        	$("#reportPDFForm #reportFileName").val('/statement/Official_StatementOfAccount_PDF.rpt');
 	        }else{
-	        	$("#reportPDFForm #reportFileName").val('/statement/Official_StatementOfAccount_PDF.rpt');
+	        	$("#reportPDFForm #reportFileName").val('/statement/Official_StatementOfAccount_PDF201405.rpt');
 	        }
 	    }
 	    
@@ -197,10 +197,10 @@ function fn_generateInvoice(){
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />    
-    <input type="text" id="v_month" name="v_month" />
-    <input type="text" id="v_year" name="v_year" />
-    <input type="text" id="v_brNo" name="v_brNo" />
-    <input type="text" id="v_type" name="v_type" />
-    <input type="text" id="v_printLive" name="v_printLive" />
-    <input type="text" id="v_taskId" name="v_taskId" />
+    <input type="hidden" id="v_month" name="v_month" />
+    <input type="hidden" id="v_year" name="v_year" />
+    <input type="hidden" id="v_brNo" name="v_brNo" />
+    <input type="hidden" id="v_type" name="v_type" />
+    <input type="hidden" id="v_printLive" name="v_printLive" />
+    <input type="hidden" id="v_taskId" name="v_taskId" />
 </form>
