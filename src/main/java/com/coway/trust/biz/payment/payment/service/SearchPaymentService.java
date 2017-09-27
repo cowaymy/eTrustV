@@ -182,6 +182,6 @@ public interface SearchPaymentService
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectPaymentItemIsPassRecon(Map<String, Object> params);
+	List<EgovMap> selectPaymentItemIsPassRecon(Map<String, Object> params);
 
 }

@@ -320,7 +320,7 @@
 		       Extent1.CLCTR_ID CLCTR_ID  ,
 		       Extent1.ALLOW_COMM ALLOW_COMM  ,
 		       Extent1.ADV_MONTH ADV_MONTH  ,
-		       Extent1.TR_ISSU_DT TR_ISSU_DT  ,
+		       TO_CHAR(Extent1.TR_ISSU_DT,'DD/MM/YYYY') TR_ISSU_DT,
 		       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
 		  FROM ( SELECT PaymentMasterView.TRX_ID TRX_ID  ,
                 PaymentMasterView.TRX_DT TRX_DT  ,
@@ -733,7 +733,7 @@
           , BRNCH_ID = #{brnchId}
        </if>
        <if test="trIssueDate != '' ">
-          , TR_ISSU_DT = #{trIssueDate}
+          , TR_ISSU_DT = TO_CHAR(TO_DATE(#{trIssueDate}, 'DD/MM/YYYY'), 'YYYY/MM/DD')
        </if>
        <if test="allowComm != '' ">
           , ALLOW_COMM = #{allowComm}
@@ -800,7 +800,7 @@
 		       Extent1.HSPTLZ HSPTLZ  
 		  FROM ORG0001D Extent1
 				LEFT JOIN SYS0064M nads ON Extent1.AREA_ID = nads.AREA_ID AND nads.STATUS_ID = 1			
-		 WHERE  Extent1.MEM_ID = #{edit_txtCollectorCode} AND ROWNUM <![CDATA[   <= ]]>  1
+		 WHERE  Extent1.MEM_ID = #{edit_txtCollectorId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
      
      <select id="selectBranchCode" parameterType="Map" resultType="egovMap">
@@ -833,7 +833,7 @@
         UPDATE PAY0009D
         SET
         GL_RECIPT_BRNCH_ID = #{brnchId} 
-        ID=#{id}
+        WHERE ID=#{id}
     </update>
     
     <select id="selectPayDs" parameterType="Map" resultType="egovMap">

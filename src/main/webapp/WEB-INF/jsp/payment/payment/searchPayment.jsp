@@ -379,8 +379,7 @@ function fn_openDivPop(val){
                 $('#edit_branchId').val(result.viewMaster.clctrBrnchId);$("#edit_branchId").css("backgroundColor","#F5F6CE");
                 $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
                 $('#edit_txtClctrName').text(result.viewMaster.clctrName);
-                
-                
+                $('#edit_txtCollectorId').text(result.viewMaster.clctrId);
                 
                 if(result.viewMaster.allowComm != "1"){
                 	$("#btnAllowComm").attr('checked', false);
@@ -389,7 +388,7 @@ function fn_openDivPop(val){
                 }
                 
                 if(result.passReconSize  > 0 ){
-                	$("#edit_branchId").attr('disabled', true);
+                	/* $("#edit_branchId").attr('disabled', true); */
                 	reconLock = 1;
                 }else{
                 	$("#edit_branchId").attr('disabled', false);
@@ -626,13 +625,10 @@ function saveChanges() {
 	}
 	
 	$("#hiddenPayId").val(payId);
-	
+	$("#edit_branchId").attr('disabled', false);
 	Common.ajax("POST", "/payment/saveChanges", $('#myForm').serializeJSON(), function(result) {
-		
-		var msg = result.message;
-        Common.alert(msg);
-        // 공통 메세지 영역에 메세지 표시.
-        Common.setMsg("<spring:message code='sys.msg.success'/>");
+		$("#edit_branchId").attr('disabled', true);
+        Common.alert(result.message);
 
 	}, function(jqXHR, textStatus, errorThrown) {
         Common.alert("Failed to update. Please try again later.");
@@ -651,6 +647,73 @@ function fn_officialReceiptReport(){
         Common.alert('No payment selected.');
    }
 }
+
+function  fn_goSalesPerson(){
+    Common.popupDiv("/sales/membership/paymentCollecter.do?resultFun=S");
+} 
+
+function fn_doSalesResult(item){
+    
+    if (typeof (item) != "undefined"){
+            
+           $("#edit_txtCollectorCode").val(item.memCode);
+           $("#edit_txtClctrName").html(item.name);
+           $("#edit_txtCollectorId").val(item.memId);
+           $("#sale_confirmbt").attr("style" ,"display:none");
+           $("#sale_searchbt").attr("style" ,"display:none");
+           $("#sale_resetbt").attr("style" ,"display:inline");
+           $("#edit_txtCollectorCode").attr("class","readonly");
+           
+    }else{
+           $("#edit_txtCollectorCode").val("");
+           $("#edit_txtClctrName").html("");
+           $("#edit_txtCollectorCode").attr("class","");
+    }
+}
+
+function fn_goSalesPersonReset(){
+
+    $("#sale_confirmbt").attr("style" ,"display:inline");
+    $("#sale_searchbt").attr("style" ,"display:inline");
+    $("#sale_resetbt").attr("style" ,"display:none");
+    $("#edit_txtCollectorCode").attr("class","");
+    $("#txtClctrName").html("");
+    $("#edit_txtCollectorId").val("");
+}
+
+function fn_goSalesConfirm(){
+    
+    if($("#edit_txtCollectorCode").val() =="") {
+             
+             Common.alert("Please Key-In Sales Person Code. ");
+             return ;
+     }
+         
+         
+     Common.ajax("GET", "/sales/membership/paymentColleConfirm", { COLL_MEM_CODE:   $("#edit_txtCollectorCode").val() } , function(result) {
+              console.log( result);
+              
+              if(result.length > 0){
+                  
+                  $("#edit_txtCollectorCode").val(result[0].memCode);
+                  $("#edit_txtClctrName").html(result[0].name);
+                  $("#edit_txtCollectorId").val(result[0].memId);
+                  
+                  
+                  $("#sale_confirmbt").attr("style" ,"display:none");
+                  $("#sale_searchbt").attr("style" ,"display:none");
+                  $("#sale_resetbt").attr("style" ,"display:inline");
+                  $("#edit_txtClctrName").attr("class","readonly");
+                  
+              }else {
+                  
+                  $("#edit_txtClctrName").html("");
+                  Common.alert(" Unable to find [" +$("#edit_txtCollectorCode").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
+                  return ;
+              }
+              
+      });
+} 
 </script>
 
 <!-- content start -->
@@ -1065,7 +1128,12 @@ function fn_officialReceiptReport(){
                 <tbody>
                     <tr>
                         <th scope="row">Collector Code</th>
-                        <td id=""><input type="text" name="edit_txtCollectorCode" id="edit_txtCollectorCode"></td>
+                        <td id="">
+                            <input type="text" name="edit_txtCollectorCode" id="edit_txtCollectorCode" style="width:100px">
+                            <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
+                            <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
+                            <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
+                         </td>
                         <th scope="row">HP Code/Dealer</th>
                         <td id="edit_txtSalesPerson"></td>
                     </tr>
@@ -1091,6 +1159,7 @@ function fn_officialReceiptReport(){
 </section><!-- pop_body end -->
 <input type="hidden" name="hiddenPayId" id="hiddenPayId">
 <input type="hidden" name="allowComm" id="allowComm">
+<input type="hidden" name="edit_txtCollectorId"  id="edit_txtCollectorId"/> 
 </form>
 </div><!-- popup_wrap end -->
 <div id="view_history_wrap" class="popup_wrap size_small" style="display:none;">

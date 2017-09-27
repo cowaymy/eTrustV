@@ -282,7 +282,7 @@ public class SearchPaymentController {
 		List<EgovMap> selectPaymentDetailSlaveList = searchPaymentService.selectPaymentDetailSlaveList(params);
 		
 		//selectPaymentItemIsPassRecon
-		EgovMap paymentItemIsPassRecon = searchPaymentService.selectPaymentItemIsPassRecon(params);
+		List<EgovMap> paymentItemIsPassRecon = searchPaymentService.selectPaymentItemIsPassRecon(params);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("viewMaster", viewMaster);
@@ -664,7 +664,8 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveChanges", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveChanges(@RequestBody Map<String, Object> params, ModelMap model) throws Exception{
+	public ResponseEntity<ReturnMessage> saveChanges(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+		int userId = sessionVO.getUserId();
 		
         // 마스터조회
 		EgovMap viewMaster = searchPaymentService.selectPayMaster(params);
@@ -677,11 +678,11 @@ public class SearchPaymentController {
 		String trIssuDt = "";
 		
 		if(viewMaster != null){
-			trNo = viewMaster.get("trNo") == null ? "" : String.valueOf(viewMaster.get("trNo"));
-			brnchId = viewMaster.get("brnchId") == null ? "" : String.valueOf(viewMaster.get("brnchId"));
-			collMemId = viewMaster.get("collMemId") == null ? "" : String.valueOf(viewMaster.get("collMemId"));
-			allowComm = viewMaster.get("allowComm") == null ? "" : String.valueOf(viewMaster.get("allowComm"));
-			trIssuDt = viewMaster.get("trIssuDt") == null ? "" : String.valueOf(viewMaster.get("trIssuDt"));
+			trNo = viewMaster.get("trNo") != null ? String.valueOf(viewMaster.get("trNo")) : ""  ;
+			brnchId = viewMaster.get("brnchId") != null ? String.valueOf(viewMaster.get("brnchId")) : "" ;
+			collMemId = viewMaster.get("collMemId") != null ? String.valueOf(viewMaster.get("collMemId")) : "" ;
+			allowComm = viewMaster.get("allowComm") != null ? String.valueOf(viewMaster.get("allowComm")) : "";
+			trIssuDt = viewMaster.get("trIssuDt") != null ? String.valueOf(viewMaster.get("trIssuDt")) : "" ;
 		}
 		
 		LOGGER.debug("마스터조회값 trNo : {}", trNo);
@@ -689,6 +690,8 @@ public class SearchPaymentController {
 		LOGGER.debug("마스터조회값 collMemId : {}", collMemId);
 		LOGGER.debug("마스터조회값 allowComm : {}", allowComm);
 		LOGGER.debug("마스터조회값 trIssuDt : {}", trIssuDt);
+		
+		LOGGER.debug("params======"+params);
 
 		Map<String, Object> trMap = new HashMap<String, Object>();
 		Map<String, Object> branchMap = new HashMap<String, Object>();
@@ -705,7 +708,7 @@ public class SearchPaymentController {
             String valueTo = String.valueOf(params.get("edit_txtTRRefNo")).trim();
             String refIDFr = "0";
             String refIDTo = "0";
-            String createBy = "52366";
+            int createBy = userId;
             
             trMap.put("typeID", typeID);
             trMap.put("payID", payID);
@@ -748,7 +751,8 @@ public class SearchPaymentController {
             String valueTo = toBranchCode;
             String refIDFr = brnchId;
             String refIDTo = String.valueOf(params.get("edit_branchId"));
-            String createBy = "52366";
+            int createBy = userId;
+            
             
             branchMap.put("typeID", typeID);
             branchMap.put("payID", payID);
@@ -762,7 +766,7 @@ public class SearchPaymentController {
 		}
 
 		//1129 : Collector
-		if(!collMemId.equals(String.valueOf(params.get("collMemId")))){
+		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
 			
 			Map<String, Object> frMemberIdMap = new HashMap<String, Object>();
 			Map<String, Object> toMemberIdMap = new HashMap<String, Object>();
@@ -788,10 +792,10 @@ public class SearchPaymentController {
             String typeID = "1129";
             String payID = String.valueOf(params.get("hiddenPayId"));
             String valueFr = frMemberCode;//변경전 멤버코드
-            String valueTo = toMemberCode;//공통 멤버조회 생기면 넣자! 변경후 멤버코드
+            String valueTo = toMemberCode;//변경후 멤버코드
             String refIDFr = collMemId;//마스터멤버아이디(변경전데이터)
             String refIDTo = String.valueOf(params.get("edit_txtCollectorId"));//인서트쳐야할 멤버아이디(변경후데이터)
-            String createBy = "52366";
+            int createBy = userId;
             
             collectorMap.put("typeID", typeID);
             collectorMap.put("payID", payID);
@@ -801,7 +805,7 @@ public class SearchPaymentController {
             collectorMap.put("refIDTo", refIDTo);
             collectorMap.put("createBy", createBy);
             
-            //searchPaymentService.saveChanges(collectorMap); 멤버조회 공통생성되면 그때붙이자
+            searchPaymentService.saveChanges(collectorMap);
 		}
 		//1137 : Allow Commission
 		if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
@@ -812,7 +816,7 @@ public class SearchPaymentController {
             String valueTo = String.valueOf(params.get("allowComm")).equals("0") ? "No":"Yes";
             String refIDFr = "0";
             String refIDTo = "0";
-            String createBy = "52366";
+            int createBy = userId;
             
             allowMap.put("typeID", typeID);
             allowMap.put("payID", payID);
@@ -849,8 +853,7 @@ public class SearchPaymentController {
 		}
 		
 		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
-			//updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId"))); todo 입력받은 COLL_MEM_ID 로 업데이트쳐야됨
-			updMap.put("collMemId", "");
+			updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId")));
 		}else{
 			updMap.put("collMemId", "");
 		}
