@@ -13,7 +13,7 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(popOrderGridID, "cellDoubleClick", function(event) {
             fn_setData(AUIGrid.getCellValue(popOrderGridID , event.rowIndex , "ordNo"), AUIGrid.getCellValue(popOrderGridID , event.rowIndex , "ordId"))
-            fn_createEvent('custPopCloseBtn', 'click');
+            $('#custPopCloseBtn').click();
         });
         
         var selVal = '';

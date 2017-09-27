@@ -106,8 +106,8 @@
             Common.alert("New Promotion Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
             fn_selectPromoListAjax();
-            
-            fn_createEvent("btnClosePop", "click");
+
+            $('#btnClosePop').click();
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -125,11 +125,6 @@
 
 //          alert("Fail : " + jqXHR.responseJSON.message);
         });
-    }
-    
-    function fn_createEvent(objId, eventType) {
-        var e = jQuery.Event(eventType);
-        $('#'+objId).trigger(e);
     }
     
     function fn_calcDiscountPrice() {

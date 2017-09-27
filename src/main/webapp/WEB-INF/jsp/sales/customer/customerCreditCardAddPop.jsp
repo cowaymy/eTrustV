@@ -117,7 +117,7 @@
         
         Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
                 
-                Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {

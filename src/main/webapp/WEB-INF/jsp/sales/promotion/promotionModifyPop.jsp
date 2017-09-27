@@ -147,12 +147,7 @@
 //          alert("Fail : " + jqXHR.responseJSON.message);
         });
     }
-    
-    function fn_createEvent(objId, eventType) {
-        var e = jQuery.Event(eventType);
-        $('#'+objId).trigger(e);
-    }
-    
+
     function fn_calcDiscountPrice() {
         
         var orgPrcVal = 0;
@@ -362,7 +357,7 @@
             //Free Gift List Search
             fn_selectPromotionFreeGiftListAjax(${promoInfo.promoId});
         
-            $(':input').prop("disabled", true);
+            $('#modifyForm').find(':input').prop("disabled", true);
             
             AUIGrid.setProp(stckGridID, "editable" , false);
         }
@@ -612,7 +607,7 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>Promotion Information</h2>
 </aside><!-- title_line end -->
-<form id="modifyForm" name="modifyForm"></form>
+<form id="modifyForm" name="modifyForm">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

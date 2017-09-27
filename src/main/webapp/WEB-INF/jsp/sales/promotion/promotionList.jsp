@@ -17,13 +17,14 @@
             fn_setDetail(listGridID, event.rowIndex);
         });
         
-        doGetCombo('/common/selectCodeList.do', '320', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Promo Application
+        doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Common Code
+//        doGetCombo('/common/selectCodeList.do', '320', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Promo Application
         doGetCombo('/common/selectCodeList.do',  '76', '', 'list_promoTypeId',    'M', 'fn_multiCombo'); //Promo Type
     });
 
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
-//        Common.popupWin("listSearchForm", "/sales/promotion/promotionModifyPop.do?promoId=31555");
+//        Common.popupWin("listSearchForm", "/sales/promotion/promotionModifyPop.do?promoId="+AUIGrid.getCellValue(gridID, rowIdx, 'promoId'));
         Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(gridID, rowIdx, "promoId") });
     }
     

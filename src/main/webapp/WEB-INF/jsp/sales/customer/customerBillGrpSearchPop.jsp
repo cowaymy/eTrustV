@@ -19,7 +19,7 @@
                      , AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "billAddrFull")
                      , AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "custBillRem")
                      , AUIGrid.getCellValue(billGrpGridID , event.rowIndex , "custBillAddId"))
-            fn_createEvent('custPopCloseBtn', 'click');
+            $('#custPopCloseBtn').click();
         });
 	    
 	});

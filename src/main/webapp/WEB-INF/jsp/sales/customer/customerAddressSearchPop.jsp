@@ -14,7 +14,7 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(addrGridID, "cellDoubleClick", function(event) {
             fn_setData(AUIGrid.getCellValue(addrGridID , event.rowIndex , "custAddId"))
-            fn_createEvent('custPopCloseBtn', 'click');
+            $('#custPopCloseBtn').click();
         });
 	    
 	});

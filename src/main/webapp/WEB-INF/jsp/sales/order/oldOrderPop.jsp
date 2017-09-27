@@ -3,18 +3,18 @@
 <head>
 <script type="text/javaScript" language="javascript">
 
-	//AUIGrid »ý¼º ÈÄ ¹ÝÈ¯ ID
+	//AUIGrid ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯ ID
 //	var addrGridID;
 //
 //	$(document).ready(function(){
-//	    //AUIGrid ±×¸®µå¸¦ »ý¼ºÇÕ´Ï´Ù.
+//	    //AUIGrid ï¿½×¸ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 //        createAUIGrid();
 //        fn_getCustomerAddressAjax();
 //
-//        // ¼¿ ´õºíÅ¬¸¯ ÀÌº¥Æ® ¹ÙÀÎµù
+//        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å¬ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½Îµï¿½
 //        AUIGrid.bind(addrGridID, "cellDoubleClick", function(event) {
 //            fn_setData(AUIGrid.getCellValue(addrGridID , event.rowIndex , "custAddId"))
-//            fn_createEvent('custPopCloseBtn', 'click');
+//            $('#custPopCloseBtn').click();
 //        });
 //	    
 //	});
@@ -30,7 +30,7 @@
 //	
 //    function createAUIGrid() {
 //        
-//        //AUIGrid Ä®·³ ¼³Á¤
+//        //AUIGrid Ä®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //        var columnLayout = [{
 //	            dataField : "name",
 //	            headerText : "Status",
@@ -43,20 +43,20 @@
 //	            visible : false
 //            }];
 //
-//        //±×¸®µå ¼Ó¼º ¼³Á¤
+//        //ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ó¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 //        var gridPros = {
-//            usePaging           : true,         //ÆäÀÌÂ¡ »ç¿ë
-//            pageRowCount        : 10,           //ÇÑ È­¸é¿¡ Ãâ·ÂµÇ´Â Çà °³¼ö 20(±âº»°ª:20)            
+//            usePaging           : true,         //ï¿½ï¿½ï¿½ï¿½Â¡ ï¿½ï¿½ï¿½
+//            pageRowCount        : 10,           //ï¿½ï¿½ È­ï¿½é¿¡ ï¿½ï¿½ÂµÇ´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 20(ï¿½âº»ï¿½ï¿½:20)            
 //            editable            : false,            
 //            fixedColumnCount    : 0,            
 //            showStateColumn     : false,             
 //            displayTreeOpen     : false,            
 //            selectionMode       : "singleRow",  //"multipleCells",            
 //            headerHeight        : 30,       
-//            useGroupingPanel    : false,        //±×·ìÇÎ ÆÐ³Î »ç¿ë
-//            skipReadonlyColumns : true,         //ÀÐ±â Àü¿ë ¼¿¿¡ ´ëÇØ Å°º¸µå ¼±ÅÃÀÌ °Ç³Ê ¶ÛÁö ¿©ºÎ
-//            wrapSelectionMove   : true,         //Ä®·³ ³¡¿¡¼­ ¿À¸¥ÂÊ ÀÌµ¿ ½Ã ´ÙÀ½ Çà, Ã³À½ Ä®·³À¸·Î ÀÌµ¿ÇÒÁö ¿©ºÎ
-//            showRowNumColumn    : true,         //ÁÙ¹øÈ£ Ä®·³ ·»´õ·¯ Ãâ·Â    
+//            useGroupingPanel    : false,        //ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½
+//            skipReadonlyColumns : true,         //ï¿½Ð±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//            wrapSelectionMove   : true,         //Ä®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, Ã³ï¿½ï¿½ Ä®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//            showRowNumColumn    : true,         //ï¿½Ù¹ï¿½È£ Ä®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½    
 //            noDataMessage       : "No order found.",
 //            groupingMessage     : "Here groupping"
 //        };
@@ -101,7 +101,7 @@
                     $('#lblOldOrderNo').text('* Order number invalid!');
                 }
                 if(RESULT.rootState == 'ROOT_4') {
-                    fn_createEvent("oldOrderCloseBtn", "click");
+                    $('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
                     Common.confirm("Check Old Order No" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid));
                 }
@@ -110,7 +110,7 @@
                     $('#lblOldOrderNo').text('* Rental status not under REG, INV, SUS is disallowed to register for ex-trade!');
                 }
                 if(RESULT.rootState == 'ROOT_6') {
-                    fn_createEvent("oldOrderCloseBtn", "click");
+                    $('#oldOrderCloseBtn').click();
                     $('#speclInstct').val(RESULT.instSpecInst);
                     Common.confirm("Confirm To Proceed" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid));
                 }
@@ -131,8 +131,8 @@
 	    console.log('isInValid :'+isInValid);
 	    
 	    
-	    //TODO InValidÀÎ°æ¿ì Approval PopupÀ» ÅëÇÏ¿© È®ÀÎ °úÁ¤ °ÅÄ§
-	    //ÀÏ´Ü ·ÎÁ÷ Á¦¿Ü
+	    //TODO InValidï¿½Î°ï¿½ï¿½ Approval Popupï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä§
+	    //ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //	    if(isInValid == 'InValid') {
 //          this.txtApprovalCode.Text = "";
 //          this.txtApprovalBy.Text = "";

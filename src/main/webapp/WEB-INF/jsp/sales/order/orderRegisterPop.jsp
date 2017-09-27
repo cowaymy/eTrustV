@@ -26,7 +26,7 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
     		    dataField : "chkfield",
-    		    headerText : '',
+    		    headerText : ' ',
     		    width: 70,
     		    renderer : {
         			type : "CheckBoxEditRenderer",
@@ -142,7 +142,7 @@
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#email").val(custInfo.email); //Email
-                $("#rem").val(custInfo.rem); //Remark
+                $("#custRem").val(custInfo.rem); //Remark
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -392,11 +392,14 @@
                 $('#billMthdEstm').prop("checked", true);
                 $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                 $('#billMthdEmail2').removeAttr("disabled");
-
+                $('#billMthdEmailTxt1').removeAttr("disabled");
+                $('#billMthdEmailTxt2').removeAttr("disabled");
             }
             else if($('#typeId').val() == '964') { //Individual
 
                 console.log("fn_setBillGrp 2 typeId : "+$('#typeId').val());
+                console.log("custCntcEmail : "+$('#custCntcEmail').val());
+                console.log(FormUtil.isNotEmpty($('#custCntcEmail').val().trim()));
 
                 if(FormUtil.isNotEmpty($('#custCntcEmail').val().trim())) {
                     /*
@@ -410,6 +413,8 @@
                     $('#billMthdEstm').prop("checked", true);
                     $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                     $('#billMthdEmail2').removeAttr("disabled");
+                    $('#billMthdEmailTxt1').removeAttr("disabled");
+                    $('#billMthdEmailTxt2').removeAttr("disabled");
                 }
 
                 $('#billMthdSms').prop("checked", true);
@@ -508,14 +513,29 @@
             //Common.popupWin("searchForm", "/customerBillGrpSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_GRP"}, null, true);
         });
+        $('#addCreditCardBtn').click(function() {
+            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
+            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId}, null, true);
+        });
         $('#selCreditCardBtn').click(function() {
+            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             //Common.popupWin("searchForm", "/sales/customer/customerCreditCardSearchPop.do", {width : "1200px", height : "630x"});
-            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
-        });    
+            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
+        });
+        //Payment Channel - Add New Bank Account
+        $('#btnAddBankAccount').click(function() {
+            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
+            Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId}, null, true);
+        });
+        //Payment Channel - Select Another Bank Account
+        $('#btnSelBankAccount').click(function() {
+            var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
+            Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_BANK_ACC"});
+        });
         $('#trialNoBtn').click(function() {
             //Common.popupWin("searchForm", "/sales/order/orderSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "ORD_REGISTER_SALE_ORD", indicator : "SearchTrialNo"});
-        });    
+        });
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
@@ -821,11 +841,12 @@
                 msg += "<b>Are you sure want to save this order without any document submission ?</b><br /><br />";
             }
 
+            console.log('!@#### isValid'+isValid);
+            
             if(!isValid) {
                 Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + msg, fn_hiddenSave);
             }
-//         else
-//         {
+            else {
 //             if (this.cmbOrderPromo.SelectedIndex > -1)
 //             {
 //                 if (cmbOrderPromo.SelectedItem.Text.Contains("EX-TRADE"))
@@ -846,7 +867,23 @@
 //                 this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
 //                 this.LoadRadWindowOrderInfo();
 //             }
-//        }
+                if($("#ordPromo option:selected").index() > 0) {
+                    console.log('!@#### ordSaveBtn click START 00000');
+                    if(($("#ordPromo option:selected").text()).indexOf('EX-TRADE') > 0) {
+                        console.log('!@#### ordSaveBtn click START 11111');
+                        $('#txtOldOrderID').val('');
+                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+                    }
+                    else {
+                        console.log('!@#### ordSaveBtn click START 22222');
+                        Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                    }
+                }
+                else {
+                    console.log('!@#### ordSaveBtn click START 33333');                    
+                    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                }
+            }
 
         });
     });
@@ -907,19 +944,33 @@
         console.log('!@#### fn_hiddenSave START');
         
         if($("#ordPromo option:selected").index() > 0) {
+            
+            console.log('!@#### fn_hiddenSave START 00000');
+            
             if(($("#ordPromo option:selected").text()).indexOf('EX-TRADE') > 0) {
+                
+                console.log('!@#### fn_hiddenSave START 11111');
+                
                 //this.RW_OldOrder.VisibleOnPageLoad = true;
                 //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
             }
             else {
+                console.log('!@#### fn_hiddenSave START 22222');
+                
                 //this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
                 //this.LoadRadWindowOrderInfo();
+                
+                Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
             }
         }
         else {
+            console.log('!@#### fn_hiddenSave START 33333');
+            
             //this.RadWindow_OrderDetail.VisibleOnPageLoad = true;
             //this.LoadRadWindowOrderInfo();
+            
+            Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
         }
     }
 
@@ -1197,14 +1248,14 @@
                     msg += "* Please key in the installment duration.<br>";
                 }
             }
-
+/*
             if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '144' || appTypeVal == '1412') {
                 if($("#ordPromo option:selected").index() <= 0) {
                     isValid = false;
                     msg += "* Please select the promotion code.<br>";
                 }
             }
-
+*/
             if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#refereNo'))) {
                     isValid = false;
@@ -1468,6 +1519,39 @@
         fn_loadMailAddr(custBillAddId);
     }
     
+    function fn_loadBankAccountPop(bankAccId) {
+        fn_clearRentPaySetDD();
+        fn_loadBankAccount(bankAccId);
+        
+        $('#sctDirectDebit').removeClass("blind");
+
+        if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#rentPayBankAccNo').val())) {
+            fn_clearRentPaySetDD();
+            $('#sctDirectDebit').removeClass("blind");
+            Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
+        }
+    }
+    
+    function fn_loadBankAccount(bankAccId) {
+        console.log("fn_loadBankAccount START");
+        
+        Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
+
+            if(rsltInfo != null) {
+                console.log("fn_loadBankAccount Setting");
+                
+                $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
+                $("#rentPayBankAccNo").val(rsltInfo.custAccNo);
+                $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
+                $("#rentPayBankAccType").val(rsltInfo.codeName);
+                $("#accName").val(rsltInfo.custAccOwner);
+                $("#accBranch").val(rsltInfo.custAccBankBrnch);
+                $("#accBank").val(rsltInfo.bankCode + ' - ' + rsltInfo.bankName);
+                $("#hiddenAccBankId").val(rsltInfo.custAccBankId);
+            }
+        });
+    }
+    
     function fn_loadCreditCard(crcId, custOriCrcNo, custCrcNo, custCrcType, custCrcName, custCrcExpr, custCRCBank, custCrcBankId, crcCardType) {
         
         console.log(crcId);
@@ -1500,8 +1584,8 @@
 
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
-            if(memInfo == null || memInfo == 'undefined') {
-                Common.alert('<b>Member not found.</br>Your input member code : '+memCd+'</b>');
+            if(memInfo == null) {
+                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
             }
             else {
                 $('#hiddenSalesmanId').val(memInfo.memId);
@@ -1692,11 +1776,13 @@
 
     //ClearControl_RentPaySet_DD
     function fn_clearRentPaySetDD() {
+        $('#sctDirectDebit').addClass("blind");
         $('#ddForm').clearForm();
     }
 
     //ClearControl_RentPaySet_CRC
     function fn_clearRentPaySetCRC() {
+        $('#sctCrCard').addClass("blind");
         $('#crcForm').clearForm();
     }
 
@@ -2044,7 +2130,7 @@
     <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Promotion<span class="must">*</span></th>
+    <th scope="row">Promotion</th>
     <td>
     <select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
@@ -2290,7 +2376,7 @@
 <tr>
     <th scope="row">Issue Bank</th>
     <td colspan=3><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p" />
-        <input id="hiddenAccBankId" name="hiddenAccBankId" type="text" title="" class="w100p" /></td>
+        <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->

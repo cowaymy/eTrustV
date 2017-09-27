@@ -80,7 +80,7 @@
         
         Common.ajax("POST", "/sales/customer/insertBankAccountInfo2.do", $('#frmBankAcc').serializeJSON(), function(result) {
                 
-                Common.alert("Bank Account Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert("Bank Account Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {

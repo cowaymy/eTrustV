@@ -42,7 +42,7 @@ console.log('!@# fn_doSaveOrder before call');
 //              Common.confirm("Session Expired" + DEFAULT_DELIMITER + "<b>Your login session was expired. Please relogin to system.</b>");
 //          }        
 
-            fn_createEvent("btnBack_RW", "click");
+            $('#btnBack_RW').click();
 	    });
 	});
 

@@ -20,7 +20,8 @@
             fn_setDetail(listMyGridID, event.rowIndex);
         });
         
-        doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
+        //doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
         doGetProductCombo('/common/selectProductCodeList.do', '', '', 'listProductId', 'S'); //Product Code
 
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
@@ -50,6 +51,9 @@
         });
         $('#btnSrch').click(function() {
         	fn_selectListAjax();
+        });
+        $('#btnClear').click(function() {
+        	$('#listSearchForm').clearForm();
         });
     });
     
@@ -162,6 +166,7 @@
     <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
 	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

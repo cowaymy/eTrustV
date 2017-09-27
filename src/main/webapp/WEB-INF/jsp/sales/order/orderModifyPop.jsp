@@ -5,6 +5,7 @@
     
     var ORD_ID        = '${salesOrderId}';
     var ORD_NO        = '${salesOrderNo}';
+    var ORD_STUS_ID   = '${ordStusId}';
     var CUST_ID       = '${custId}';
     var APP_TYPE_ID   = '${appTypeId}';
     var APP_TYPE_DESC = '${appTypeDesc}';
@@ -18,6 +19,8 @@
        	resizable  : "yes",    //창 사이즈 변경. (yes/no)(default : yes)
         scrollbars : "no"      //스크롤바. (yes/no)(default : yes)
     };
+
+    var modDocGridID;
     
     $(document).ready(function(){
         doGetComboData('/common/selectCodeList.do', {groupCode :'335'}, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
@@ -28,12 +31,80 @@
         if(FormUtil.isNotEmpty(TAB_NM)) {
             fn_changeTab(TAB_NM);
         }
+        
+        createModAUIGrid1();
+        
+        AUIGrid.bind(modDocGridID, "cellClick", function(event) {
+            if(event.dataField == 'chkfield') {
+                fn_setDocSubQty(event.rowIndex, AUIGrid.getCellValue(modDocGridID , event.rowIndex, "chkfield"));
+            }
+        });
     });
+    
+    function fn_setDocSubQty(idx, chkYN) {//AUIGrid.getCellValue(modDocGridID , event.rowIndex, "chkfield"), event.rowIndex
+        if(chkYN == '1') {
+            AUIGrid.setCellValue(modDocGridID, idx, "docCopyQty", '1');
+        }
+        else {
+            AUIGrid.setCellValue(modDocGridID, idx, "docCopyQty", '');
+        }
+    }
+    
+    function createModAUIGrid1() {
+        console.log('createModAUIGrid1() START');
+        
+        //AUIGrid 칼럼 설정
+        var docColumnLayout = [
+            { headerText : ' ',
+    		  dataField : "chkfield",
+    		  width: 70,
+    		  renderer : {
+        	    type : "CheckBoxEditRenderer",
+        		showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+        		editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+        		checkValue : 1, // true, false 인 경우가 기본
+        		unCheckValue : 0
+              }
+            }
+          , { headerText : "Document",  dataField : "typeDesc",   editable : false }
+          , { headerText : "Qty",       dataField : "docCopyQty", editable : true,  width : 120 }
+          , { headerText : "docTypeId", dataField : "docTypeId",  visible  : true }
+          , { headerText : "docSoId",   dataField : "docSoId",    visible  : true }
+          ];
+
+        //그리드 속성 설정
+        var docGridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 40,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : true,
+            fixedColumnCount    : 0,
+            showStateColumn     : false,
+            showRowCheckColumn  : false,
+            displayTreeOpen     : false,
+            rowIdField          : "codeId",
+            selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        modDocGridID = GridCommon.createAUIGrid("grid_mod_doc_wrap", docColumnLayout, "", docGridPros);
+    }
+    
+    // 리스트 조회.
+    function fn_selectEditDocSubmList(ordId) {
+        Common.ajax("GET", "/sales/order/selectEditDocSubmList.do", {salesOrderId : ordId, typeCodeId : '248'}, function(result) {
+            AUIGrid.setGridData(modDocGridID, result);
+        });
+    }
     
     $(function(){
         $('#btnEditType').click(function() {
-            var tabNm = $('#ordEditType').val();
-            
+            var tabNm = $('#ordEditType').val();            
             fn_changeTab(tabNm);
         });
         $('#btnSaveBasicInfo').click(function() {            
@@ -58,6 +129,10 @@
         $('#btnSavePayChan').click(function() {            
             if(!fn_validPaymentChannel()) return false;
             fn_doSavePaymentChannel();
+        });
+        $('#btnSaveDocSub').click(function() {            
+            if(!fn_validDocSubmission()) return false;
+            fn_doSaveDocSub();
         });
         $('#btnSalesmanPop').click(function() {
             Common.popupDiv("/common/memberPop.do", { callPrgm : "ORD_MODIFY_BSC_INF" }, null, true);
@@ -382,6 +457,14 @@
                 
             return false;
         }
+        
+        if(tabNm == 'DOC' && ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
+            var msg = "This order is not in active/complete status.<br/>Edit document submission is disallowed.";
+                    
+            Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+                
+            $('#btnSaveDocSub').addClass("blind");
+        }
  
         var vTit = 'Order Edit';
         
@@ -436,7 +519,8 @@
         if(tabNm == 'DOC') {
             $('#scDS').removeClass("blind");
             $('#aTabMI').click();
-            //fn_loadRentPaySetInfo(ORD_ID);
+            AUIGrid.resize(modDocGridID, 960, 380);
+            fn_selectEditDocSubmList(ORD_ID);
         } else {
             $('#scDS').addClass("blind");
         }
@@ -882,6 +966,23 @@
         });
     }
 
+    function fn_validDocSubmission() {
+        var isValid = true, msg = "";
+        
+        for(var i = 0; i < AUIGrid.getRowCount(modDocGridID) ; i++) {
+            var isChk = AUIGrid.getCellValue(modDocGridID, i, "chkfield");
+            var qty   = AUIGrid.getCellValue(modDocGridID, i, "docCopyQty");
+            
+            if(isChk == 1 && (FormUtil.isEmpty(qty) || qty == 0)) {
+                isValid = false;
+                msg = "* Please key in the quantity for your selected documents.";
+                break;
+            }
+        }
+        
+        return isValid;
+    }
+    
     function fn_validNric() {
         var isValid = true, msg = "";
 
@@ -1294,7 +1395,7 @@
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -1303,6 +1404,28 @@
         );
     }
 
+    function fn_doSaveDocSub() {
+        console.log('!@# fn_doSaveDocSub START');
+
+        var orderVO = {            
+            salesOrdId : ORD_ID,
+            docSubmissionVOList : GridCommon.getEditData(modDocGridID)
+        };
+
+        Common.ajax("POST", "/sales/order/saveDocSubmission.do", orderVO, function(result) {
+
+            Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>Order Number : "+ORD_NO+"<br/>"+result.message+"</b>", fn_reloadPage);
+            
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                }
+                catch (e) {
+                    console.log(e);
+                }
+        });
+    }
+    
 	function fn_reloadPage(){
 	    Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
 	    $('#btnCloseModify').click();
@@ -2094,7 +2217,7 @@
     Payment Channel Edit END
 ------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------
-    NRIC/Company No. Edit START
+    Document Submissioon Edit START
 ------------------------------------------------------------------------------->
 <section id="scDS" class="blind">
 <aside class="title_line"><!-- title_line start -->
@@ -2102,7 +2225,7 @@
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<div id="grid_mod_doc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
@@ -2110,7 +2233,7 @@
 </ul>
 </section>
 <!------------------------------------------------------------------------------
-    NRIC/Company No. Edit END
+    Document Submissioon Edit END
 ------------------------------------------------------------------------------->
 </section><!-- pop_body end -->
 
