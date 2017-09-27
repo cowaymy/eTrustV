@@ -7,11 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  *
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -69,9 +71,14 @@ public class OrderVO implements Serializable {
 	private String billGrp;
 	
 	private int orderAppType;
+	
 	private String sInstallDate;
+	
 	private int itmStkId;
+	
 	private Date dInstallDate;
+	
+	private int salesOrdId;
 	
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
@@ -311,6 +318,14 @@ public class OrderVO implements Serializable {
 
 	public void setdInstallDate(Date dInstallDate) {
 		this.dInstallDate = dInstallDate;
+	}
+
+	public int getSalesOrdId() {
+		return salesOrdId;
+	}
+
+	public void setSalesOrdId(int salesOrdId) {
+		this.salesOrdId = salesOrdId;
 	}
 
 }

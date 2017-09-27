@@ -233,6 +233,37 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
 		orderModifyMapper.updateNric(params);
 	}
+
+	@Override
+	public void saveDocSubmission(OrderVO orderVO, SessionVO sessionVO) throws Exception {
+
+		logger.info("!@###### OrderModifyServiceImpl.saveDocSubmission");
+		
+		GridDataSet<DocSubmissionVO>    documentList     = orderVO.getDocSubmissionVOList();
+
+		List<DocSubmissionVO> docSubVOList = documentList.getUpdate(); // 수정 리스트 얻기
+		
+		int salesOrdId = orderVO.getSalesOrdId();
+		
+		for(DocSubmissionVO docSubVO : docSubVOList) {
+			if(docSubVO.getChkfield() == 1) {
+				
+				docSubVO.setDocSoId(salesOrdId);
+				docSubVO.setDocSubTypeId(SalesConstants.CCP_DOC_SUB_CODE_ID_ICS);
+				docSubVO.setDocMemId(0);
+				docSubVO.setCrtUserId(sessionVO.getUserId());
+				docSubVO.setUpdUserId(sessionVO.getUserId());
+				
+				orderModifyMapper.saveDocSubmission(docSubVO);
+			}
+			else {
+				
+				docSubVO.setUpdUserId(sessionVO.getUserId());
+				
+				orderModifyMapper.updateDocSubmissionDel(docSubVO);
+			}
+		}
+	}
 	
 	@Override
 	public void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception {

@@ -122,4 +122,6 @@ public interface OrderRegisterMapper {
 	
 	void insertSalesOrderContract(SalesOrderContractVO salesOrderContractVO);
 	
+	void updateCustBillId(SalesOrderMVO salesOrderMVO);
+	
 }

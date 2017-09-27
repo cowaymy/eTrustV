@@ -4,9 +4,12 @@
 package com.coway.trust.web.sales.order;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +29,13 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderModifyService;
+import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
+import java.math.BigDecimal;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -47,6 +54,9 @@ public class OrderModifyController {
 	
 	@Resource(name = "orderModifyService")
 	private OrderModifyService orderModifyService;
+	
+	@Resource(name = "orderRegisterService")
+	private OrderRegisterService orderRegisterService;
 	
 	@Resource(name = "customerService")
 	private CustomerService customerService;
@@ -69,6 +79,7 @@ public class OrderModifyController {
 		model.put("appTypeDesc",  basicInfo.get("appTypeDesc"));
 		model.put("salesOrderNo", basicInfo.get("ordNo"));
 		model.put("custNric",     basicInfo.get("custNric"));
+		model.put("ordStusId",    basicInfo.get("ordStusId"));
 		model.put("toDay", 		  CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 		 
 		logger.debug("!@##############################################################################");
@@ -150,6 +161,20 @@ public class OrderModifyController {
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setMessage("Order Number : " + params.get("salesOrdNo") + "</br>Information successfully updated.");
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveDocSubmission.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveDocSubmission(@RequestBody OrderVO orderVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		orderModifyService.saveDocSubmission(orderVO, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Order document submission information successfully updated.");
 
 		return ResponseEntity.ok(message);
 	}
@@ -314,5 +339,50 @@ public class OrderModifyController {
 		return ResponseEntity.ok(resultMap);
 	}
 
+	@RequestMapping(value = "/selectEditDocSubmList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectEditDocSubmList(@RequestParam Map<String, Object>params, ModelMap model) {
 
+		logger.debug("!@##############################################################################");
+		logger.debug("!@###### /selectEditDocSubmList.do : salesOrderId : "+params.get("salesOrderId"));
+		logger.debug("!@##############################################################################");
+		
+		List<EgovMap> docuList = orderRegisterService.selectDocSubmissionList(params);
+		List<EgovMap> saveList = orderDetailService.selectDocumentList(params);
+		
+		int chkfield = 0;
+		BigDecimal docCopyQty = BigDecimal.ZERO;
+		BigDecimal codeId = BigDecimal.ZERO;
+		BigDecimal docTypeId = BigDecimal.ZERO;
+		
+		List<EgovMap> mapList = new ArrayList<EgovMap>();
+		
+		for(EgovMap docuMap : docuList) {
+			
+			chkfield = 0;
+			docCopyQty = BigDecimal.ZERO;
+			codeId = (BigDecimal)docuMap.get("codeId");
+			
+			for(EgovMap saveMap : saveList) {
+				
+				docTypeId = (BigDecimal)saveMap.get("docTypeId");
+				
+				if(codeId.compareTo(docTypeId) == 0) {
+					chkfield = 1;
+					docCopyQty = (BigDecimal)saveMap.get("docCopyQty");
+					
+					break;
+				}
+			}
+
+			docuMap.put("chkfield",   chkfield);
+			docuMap.put("docCopyQty", docCopyQty);
+			docuMap.put("docTypeId",  codeId);
+			docuMap.put("docSoId",    params.get("salesOrderId"));
+			
+			mapList.add(docuMap);
+		}
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(mapList);
+	}
 }

@@ -1367,8 +1367,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		custBillMasterVO.setCustBillSoId(salesOrdId);
         		orderRegisterMapper.insertCustBillMaster(custBillMasterVO);
         		
+        		logger.info("!@#### GET NEW CUST_BILL_ID  :"+custBillMasterVO.getCustBillId());
+        		
         		salesOrderMVO.setCustBillId(custBillMasterVO.getCustBillId());
-        		//TODO salesOrderMVO UPDATE
+        		orderRegisterMapper.updateCustBillId(salesOrderMVO);
         	}
         	
         	if(eStatementReqVO != null && eStatementReqVO.getStusCodeId() > 0) {
