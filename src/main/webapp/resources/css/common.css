@@ -241,6 +241,7 @@ table+.center_btns{padding-top:5px;}
 .date_set > span{position:absolute; top:0; left:50%; width:22px; margin-left:-11px; line-height:20px; text-align:center;}
 .date_set > .sel_year {float:left; width:calc(30% - 5px); margin-right:5px;}
 .date_set > .sel_date {width:70%;}
+.date_set .search_type input[type=text] {width:calc(100% - 21px); margin-right:4px;}
 .w100p{width:100%!important;}
 .ms-parent.multy_select{width:237px!important;}
 .ms-parent.multy_select.w100p{width:100%!important;}
@@ -276,7 +277,7 @@ table.type1 tbody td.bg-black > span {color:#fff;}
 
 table.type2{border-top:1px solid #d3d9dd;}
 table.type2 thead th,
-table.type2 tbody th{height:20px; color:#333; font-weight:bold; line-height:15px; background:#e9f0f4; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; vertical-align:middle;}
+table.type2 tbody th{height:20px; color:#333; font-weight:normal; line-height:15px; background:#e9f0f4; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; vertical-align:middle;}
 table.type2 thead tr th:first-child,
 table.type2 tbody tr th:first-child{border-left:0 none;}
 table.type2 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9dd; border-left:1px solid #d3d9dd; text-align:center; vertical-align:middle;}
