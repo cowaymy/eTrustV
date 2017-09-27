@@ -19,10 +19,12 @@
         	   
         	$("#ORD_ID").val(event.item.ordId);
             $("#MBRSH_ID").val(event.item.mbrshId);
-        	 Common.popupDiv("/sales/membership/selMembershipView.do", $("#popForm").serializeJSON());
+        	 Common.popupDiv("/sales/membership/selMembershipView.do", {ORD_ID :event.item.ordId ,MBRSH_ID: event.item.mbrshId } );
         });
         
         f_multiCombo();
+        
+        fn_keyEvent();
     });
 
 	
@@ -235,6 +237,17 @@
 	}
     
 
+	
+
+function fn_keyEvent(){
+    
+
+    $("#MBRSH_NO").keydown(function(key)  {
+            if (key.keyCode == 13) {
+            	fn_selectListAjax();
+            }
+     });
+}
 function fn_clear(){
 	$("#MBRSH_NO").val("");
 	$("#ORD_NO").val("");

@@ -44,9 +44,9 @@ function createAUIGrid() {
        var keyValueList = [{"code":"1", "value":"ACT"}, {"code":"8", "value":"IACT"}];
         
         var columnLayout = [
-                            {dataField : "srvCntrPacId",     headerText  : "" ,editable       : false ,visible : false } ,
-                            { dataField : "srvCntrctPacCode", headerText  : "Package Code",    width : 200 ,editable : true},
-                            { dataField : "srvCntrctPacDesc", headerText  : "Package Description",width : 200 ,editable       : true},
+                            {dataField : "srvMemPacId",     headerText  : "" ,editable       : false ,visible : false } ,
+                            { dataField : "srvMemCode", headerText  : "Package Code",    width : 200 ,editable : true},
+                            { dataField : "srvMemDesc", headerText  : "Package Description",width : 200 ,editable       : true},
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
                                             , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
 		                                     var retStr = "";
@@ -66,25 +66,10 @@ function createAUIGrid() {
 					                 }
                             },
                             
-                            { dataField : "srvCntrctPacDur", headerText  : "Package Duration ",  width  : 80 , dataType:"numeric", formatString : "#,##0.00"},
-                            { dataField : "srvCntrctPacStartDt",headerText  : "Start Date",  width : 150 ,dataType : "date", formatString : "dd/mm/yyyy",
-                            	 editRenderer : {
-                                     type : "CalendarRenderer",
-                                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-                                     onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-                                     showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
-                                 }   
-                            },
-                            { dataField : "srvCntrctPacEndDt",         headerText  : "End Date",   width : 150,  dataType : "date", formatString : "dd/mm/yyyy",
-                            	 editRenderer : {
-                                     type : "CalendarRenderer",
-                                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-                                     onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-                                     showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
-                                 }   
-                            },
-                            { dataField : "userName",       headerText  : "Creator",  width  : 150},
-                            { dataField : "c1",     headerText  : "Created",  width          :150,    editable       : false ,dataType : "date", formatString : "dd/mm/yyyy"}
+                            { dataField : "srvMemDur", headerText  : "Package Duration ",  width  : 80 , dataType:"numeric", formatString : "#,##0.00"},
+                            { dataField : "srvMemLabChrg", headerText  : "Lab chrg ",  width  : 80 , dataType:"numeric", formatString : "#,##0.00" ,editable       : false },
+                            { dataField : "srvMemCrtUserId",       headerText  : "Creator",  width  : 100 ,editable       : false },
+                            { dataField : "srvMemCrtDt",     headerText  : "Created",  width          :150,    editable       : false ,dataType : "date", formatString : "dd/mm/yyyy"}
                           
        ];
 
@@ -123,12 +108,12 @@ function createDetailAUIGrid() {
                                     }
                                 }
                             },
-                            { dataField : "srvPacItmProductId", headerText  : "Product ID",    width : 100,  editable : false},
+                            { dataField : "stkId", headerText  : "Product ID",    width : 100,  editable : false},
                             { dataField : "stkDesc", headerText  : "Product Name",width : 150,  editable: false },
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : false},
-                            { dataField : "srvPacItmRental", headerText  : "price ",  width          : 100, editable       : false   ,dataType:"numeric", formatString : "#,##0.00"},
-                            { dataField : "srvPacItmSvcFreq",headerText  : "Period",  width          : 100,   editable       : false },
-                            { dataField : "",         headerText  : "Remark",   width          : 300,     editable       : false  }
+                            { dataField : "c1", headerText  : "price ",  width          : 100, editable       : false   ,dataType:"numeric", formatString : "#,##0.00"},
+                            { dataField : "srvMemItemPriod",headerText  : "Period",  width          : 100,   editable       : false },
+                            { dataField : "srvMemItmRem",         headerText  : "Remark",   width          : 300,     editable       : false  }
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
@@ -150,7 +135,7 @@ function fn_gSave(){
     param = GridCommon.getEditData(gridID); 
    
     
-    Common.ajax("POST", "/sales/mPackages/mListUpdate.do", param, function(result) {
+    Common.ajax("POST", "/sales/mQPackages/mListUpdate.do", param, function(result) {
        
          // Common.alert(result.message);
           Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
@@ -171,10 +156,6 @@ function fn_gSave(){
 }
 
 
-
-function fn_New(){
-    alert('fn_New');
-}
 
 
 function fn_Clear(){
@@ -200,8 +181,8 @@ function  fn_goAdd(){
 	  console.log("====fn_goAdd=====>");  
 	  console.log(selectedItems);
 	  
-	  var pram ="?packID="+selectedItems[0].item.srvCntrctPacId+"&mod=ADD";
-	  Common.popupDiv("/sales/mPackages/membershipPackageRPop.do"+pram ,null, null , true , '_AddDiv1');
+	  var pram ="?packID="+selectedItems[0].item.srvMemPacId+"&mod=ADD";
+	  Common.popupDiv("/sales/mQPackages/membershipPackageQPop.do"+pram ,null, null , true , '_AddDiv1');
     
 }
 
@@ -211,14 +192,23 @@ function  fn_goAdd(){
 function  fn_goSelectAdd(){
     var selectedItems = AUIGrid.getSelectedItems(detailGridID);
      console.log(selectedItems);
-     var pram  ="?packItemID="+selectedItems[0].item.srvPacItmId+"&packID="+selectedItems[0].item.srvCntrctPacId+"&mod=EDIT";
-     Common.popupDiv("/sales/mPackages/membershipPackageRPop.do"+pram ,null, null , true , '_goSelectAddDiv1');
+     var pram  ="?packItemID="+selectedItems[0].item.stkId+"&packID="+selectedItems[0].item.srvMemPacId+"&mod=EDIT";
+     Common.popupDiv("/sales/mQPackages/membershipPackageQPop.do"+pram ,null, null , true , '_goSelectAddDiv1');
    
 }
 
+
+
+function fn_new(){
+    Common.popupDiv("/sales/mQPackages/membershipPackageQNew.do" ,null, null , true , '_NewAddDiv1');
+    
+}
+
+
+
 //리스트 조회.
 function fn_selectListAjax() {        
-Common.ajax("GET", "/sales/mPackages/selectList", $("#sForm").serialize(), function(result) {
+Common.ajax("GET", "/sales/mQPackages/selectList", $("#sForm").serialize(), function(result) {
 	       
 	    console.log(result);
 	    AUIGrid.setGridData(gridID, result);
@@ -241,11 +231,11 @@ function fn_selectDetailListAjax(statecd) {
 	console.log(selectedItems[0]);
 	
 	var  vcd  = statecd;
-	var srvCntrPacId = selectedItems[0].item.srvCntrctPacId;
+	var srvMemPacId = selectedItems[0].item.srvMemPacId;
 	
-	if(vcd =="" ) vcd =selectedItems[0].item.srvCntrctPacStusId;
+	if(vcd =="" ) vcd =selectedItems[0].item.srvMemPacStusId;
 	
-	Common.ajax("GET", "/sales/mPackages/selectPopDetail", { SRV_CNTRCT_PAC_ID: srvCntrPacId , SRV_PAC_ITM_STUS_ID:vcd }, function(result) {
+	Common.ajax("GET", "/sales/mQPackages/selectPopDetail", { SRV_MEM_PAC_ID: srvMemPacId ,SRV_MEM_ITM_STUS_ID:vcd }, function(result) {
 	         
       console.log(result);
       AUIGrid.setGridData(detailGridID, result);
@@ -262,18 +252,20 @@ function fn_delete(){
     
 	var selectedItems = AUIGrid.getSelectedItems(detailGridID);
 	
-	var srvPacItmStusId =1; 
-	
-	if(selectedItems[0].item.srvPacItmStusId  == 1){
-		srvPacItmStusId = 8;
+	var srvMemItmStusId =1; 
+	console.log(selectedItems[0]);
+	if(selectedItems[0].item.srvMemItmStusId  == 1){
+		srvMemItmStusId = 8;
 	}
 	
+    
     var deleteForm ={
-			SRV_PAC_ITM_ID : selectedItems[0].item.srvPacItmId ,
-			SRV_PAC_ITM_STUS_ID : srvPacItmStusId
+    		SRV_MEM_PAC_ID : selectedItems[0].item.srvMemPacId ,
+    		SRV_MEM_ITM_STUS_ID : srvMemItmStusId,
+            SRV_MEM_ITM_STK_ID :  selectedItems[0].item.stkId
    };
 
-  Common.ajax("POST", "/sales/mPackages/deletePackage.do", deleteForm, function(result) {
+  Common.ajax("POST", "/sales/mQPackages/deletePackage.do", deleteForm, function(result) {
       
       Common.alert("PRODUCT ITEM DEACTIVATED  "+DEFAULT_DELIMITER + "The product item has been deactivated for this package.  ");
       fn_selectDetailListAjax('1');
@@ -307,7 +299,7 @@ function fn_delete(){
 <ul class="right_btns">
 
 
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_New()" >New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_new()" >New</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"  ><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()" ><span class="clear"></span>Clear</a></p></li>
 </ul>

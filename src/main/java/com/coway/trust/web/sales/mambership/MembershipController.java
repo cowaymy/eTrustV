@@ -137,7 +137,7 @@ public class MembershipController {
 		
 		return ResponseEntity.ok(map);
 		
-	}
+	} 
 
 	@RequestMapping(value = "/inc_membershipInfo.do")
 	public String inc_membershipInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
@@ -364,7 +364,7 @@ public class MembershipController {
 
 		basic = membershipService.selectMembershipFree_Basic(params);
 		installation = membershipService.selectMembershipFree_installation(params);
-		srvconfig = membershipService.selectMembershipFree_srvconfig(params);
+		srvconfig = membershipService.selectMembershipFree_srvconfig(params); 
 
 		Map<String, Object> map = new HashMap();
 		map.put("basic", basic);
