@@ -154,7 +154,7 @@ var popEditColumnLayout = [
              }
            }
     },    
-    { dataField:"payId" ,headerText:"TEST",editable : false  },
+    { dataField:"payId" ,headerText:"TEST",editable : false , visible : false },
     { dataField:"codeName" ,headerText:"Mode",editable : false},
     { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
     { dataField:"c7" ,headerText:"CardType",editable : false },
@@ -196,7 +196,7 @@ var popColumnLayout = [
               } 
             }
      }, 
-     { dataField:"payId" ,headerText:"TEST",editable : false  },
+     { dataField:"payId" ,headerText:"TEST",editable : false , visible : false },
      { dataField:"codeName" ,headerText:"Mode",editable : false},
      { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
      { dataField:"c7" ,headerText:"CardType",editable : false },
