@@ -21,6 +21,7 @@
             $("#typeId").val(event.item.typeId);
             $("#docId").val(event.item.docId);
             $("#refId").val(event.item.refId);
+            $("#paramReqStageId").val(event.item.paramReqStageId);
 
             Common.popupDiv("/sales/order/cancelReqInfoPop.do", $("#detailForm").serializeJSON());
             
@@ -128,7 +129,7 @@
             
             fixedColumnCount : 1,
             
-            showStateColumn : true, 
+            showStateColumn : false, 
             
             displayTreeOpen : true,
             
@@ -199,6 +200,22 @@
     	
     }
     
+    	$.fn.clearForm = function() {
+            return this.each(function() {
+                var type = this.type, tag = this.tagName.toLowerCase();
+                if (tag === 'form'){
+                    return $(':input',this).clearForm();
+                }
+                if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+                    this.value = '';
+                }else if (type === 'checkbox' || type === 'radio'){
+                    this.checked = false;
+                }else if (tag === 'select'){
+                    this.selectedIndex = -1;
+                }
+            });
+        };
+    
 </script>
 
 
@@ -214,9 +231,9 @@
 <h2>Order Cancellation</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()">New Log Result</a></p></li>
-    <li><p class="btn_blue"><a href="#">CT Assignment</a></p></li>
+<!--     <li><p class="btn_blue"><a href="#">CT Assignment</a></p></li> -->
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#"  onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -234,6 +251,7 @@
     <input type="hidden" id="paramReqNo" name="paramReqNo">
     <input type="hidden" id="paramReqStusId" name="paramReqStusId">
     <input type="hidden" id="paramReqStusCode" name="paramReqStusCode">
+    <input type="hidden" id="paramReqStageId" name="paramReqStageId">
 </form>
 <form id="searchForm" name="searchForm" method="post">
 

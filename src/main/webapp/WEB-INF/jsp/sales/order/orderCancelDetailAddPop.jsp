@@ -179,6 +179,26 @@
     	
     }
     
+    function fn_saveCancel(){
+    	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
+            Common.alert(result.msg, fn_reloadPage);
+        }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    console.log("status : " + jqXHR.status);
+                    console.log("code : " + jqXHR.responseJSON.code);
+                    console.log("message : " + jqXHR.responseJSON.message);
+                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                    Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    }
+                catch (e) {
+                    console.log(e);
+                    alert("Saving data prepration failed.");
+                }
+                alert("Fail : " + jqXHR.responseJSON.message);
+        }); 
+    }
+    
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -186,9 +206,11 @@
 <header class="pop_header">
 <h1>Order Cancellation - View</h1>
 <ul class="right_opt">
+<!-- 
     <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
+ -->
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
@@ -1104,7 +1126,14 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="addCallForm" name="addCallForm" action="#" method="post">
-
+    <input id="paramdocId" name="paramdocId" type="hidden" value="${paramDocId}">
+    <input id="paramtypeId" name="paramtypeId" type="hidden" value="${paramTypeId}">
+    <input id="paramrefId" name="paramrefId" type="hidden" value="${paramRefId}">
+    <input id="reqStageId" name="reqStageId" type="hidden" value="${reqStageId}">
+    <input id="paramCallEntryId" name="paramCallEntryId" type="text" value="${cancelReqInfo.callEntryId}">
+    <input id="paramReqId" name="paramReqId" type="text" value="${cancelReqInfo.reqId}">
+    <input id="paramOrdId" name="paramOrdId" type="text" value="${cancelReqInfo.ordId}">
+    
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -1177,7 +1206,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

@@ -119,12 +119,16 @@
 <!-- pop_header start -->
 <header class="pop_header">
 <h1>Order Cancellation - View</h1>
+
 <ul class="right_opt">
+ <!-- 
     <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
+-->
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
+ 
 </header><!-- pop_header end -->
 <form id="tabForm" name="tabForm" action="#" method="post">
     <input id="docId" name="docId" type="hidden" value="${paramDocId}">
