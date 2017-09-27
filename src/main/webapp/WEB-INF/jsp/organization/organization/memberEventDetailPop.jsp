@@ -37,7 +37,7 @@
 
 	//Start AUIGrid
 	$(document).ready(function() {
-        createAUIGrid();
+        //createAUIGrid();
         fn_confirm();
 
     });
