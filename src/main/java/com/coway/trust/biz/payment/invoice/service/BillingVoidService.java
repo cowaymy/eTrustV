@@ -20,5 +20,11 @@ public interface BillingVoidService {
       	 */
 		List<EgovMap> selectInvoiceDetailList(Map<String, Object> params);
 		
-      
+		/**
+      	 * saveInvoiceVoidResult (SP_INST_VOID_INVC_STATE)
+      	 * @param params
+      	 * @return
+      	 */
+		void saveInvoiceVoidResult(Map<String, Object> params);
+		
 }

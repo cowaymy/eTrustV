@@ -1,6 +1,5 @@
 package com.coway.trust.biz.payment.invoice.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -25,5 +24,10 @@ public class BillingVoidServiceImpl extends EgovAbstractServiceImpl implements B
 		return billingVoidMapper.selectInvoiceDetailList(params);
 	}
 
+	@Override
+	public void saveInvoiceVoidResult(Map<String, Object> params) {
+		billingVoidMapper.saveInvoiceVoidResult(params);
+	}
+	
 	
 }

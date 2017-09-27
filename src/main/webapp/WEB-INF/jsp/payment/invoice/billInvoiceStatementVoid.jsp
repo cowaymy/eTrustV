@@ -32,18 +32,15 @@ var detailListLayout = [
                        }, {
                            dataField : "accBillRefNo",
                            headerText : "Bill No",
-                           editable : false,
-                           width: 100,
+                           editable : false
                        }, {
                            dataField : "accBillSchdulPriod",
                            headerText : "Installment",
-                           editable : false,
-                           width: 100
+                           editable : false
                        }, {
                            dataField : "codeName",
                            headerText : "Bill Type",
-                           editable : false,
-                           width: 200
+                           editable : false
                        }, {
                            dataField : "codename1",
                            headerText : "Bill Mode",
@@ -75,8 +72,8 @@ var detailListLayout = [
 	            
 	            console.log(result);
 	            if(result.data.invoiceInfo != null || result.data.invoiceInfo != undefined){
-	            	$("#search").hide();
-	                $("#reSelect").show();
+	            	$("#btnSearch").hide();
+	                $("#btnReSelect").show();
 	                $("#displayVisible").show();
 	                
 	                $("#statementNo").addClass('readonly');
@@ -101,11 +98,22 @@ var detailListLayout = [
 	}
 	
 	function fn_reSelect(){
-        $("#search").show();
+        $("#btnSearch").show();
         $("#displayVisible").hide();
-        $("#reSelect").hide();
+        $("#btnReSelect").hide();
         $("#statementNo").val("");
         $("#statementNo").removeClass('readonly');
+        
+        $("#brNo").text('');
+        $("#startDt").text('');
+        $("#custName").text('');
+        $("#cntcPerson").text('');
+        $("#mailAddress").text('');
+        $("#mailAddress2").text('');
+        $("#mailAddress3").text('');
+        $("#postCode").text('');
+        $("#stateName").text('');
+        $("#remark").val('');
     }
 	
 	//btn clickevent
@@ -114,13 +122,18 @@ var detailListLayout = [
 		$("#btnSave").click(function(){
 			
 			var remark = $("#remark").val();
+			var statementNo = $("#statementNo").val();
 			if(remark.trim() == "" ){
 	            Common.alert("Remark are empty.");
 	        }else{
 	        	Common.ajax("GET","/payment/saveInvoiceVoidResult.do", {"statementNo" : statementNo, "remark" : remark}, function(result){
 	                
-	                console.log(result);
+	                fn_reSelect();
+	                Common.alert("Result Saved successfully.<br />" +
+                    "Statement No. [" + statementNo + "] has been Voided.");
 	                
+	            }, function(jqXHR, textStatus, errorThrown) {
+	            	Common.alert("Data preparation failed. Please try again later.");
 	            });
 	        }
 	        
@@ -155,18 +168,18 @@ var detailListLayout = [
 			<tr>
 			    <th scope="row">Invoice/Statement No</th>
 			    <td><input type="text" title="" placeholder="" class="" id="statementNo" name="statementNo" />
-			         <p class="btn_sky"><a href="javascript:searchList();" id="search">Search</a></p>
-			         <p class="btn_sky"><a href="javascript:fn_reSelect();" id="reSelect" style="display: none">Reselect</a></p>
+			         <p class="btn_sky"><a href="javascript:searchList();" id="btnSearch">Search</a></p>
+			         <p class="btn_sky"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none">Reselect</a></p>
 			    </td>
 			</tr>
 			</tbody>
         </table><!-- table end -->
-        <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+        <%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
         <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
         <dl class="link_list">
             <dt>Link</dt>
             <dd>
-            <!-- <ul class="btns">
+            <ul class="btns">
                 <li><p class="link_btn"><a href="#">menu1</a></p></li>
                 <li><p class="link_btn"><a href="#">menu2</a></p></li>
                 <li><p class="link_btn"><a href="#">menu3</a></p></li>
@@ -185,11 +198,11 @@ var detailListLayout = [
                 <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
                 <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
                 <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-            </ul> -->
+            </ul>
             <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
         </dl>
-        </aside><!-- link_btns_wrap end -->
+        </aside> --%><!-- link_btns_wrap end -->
         <div style="display: none" id="displayVisible">
         <aside class="title_line"><!-- title_line start -->
 		      <h3>Invoice/Statement Particular Information</h3>
@@ -258,7 +271,6 @@ var detailListLayout = [
 		</tr>
 		</tbody>
 		</table><!-- table end -->
-		
 		</section><!-- search_table end -->
 		<ul class="center_btns">
 		    <li><p class="btn_blue2"><a href="#" id="btnSave">Save</a></p></li>

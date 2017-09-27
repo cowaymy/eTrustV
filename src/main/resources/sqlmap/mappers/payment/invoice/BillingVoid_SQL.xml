@@ -5,7 +5,7 @@
     <select id="selectStatementView" parameterType="Map" resultType="egovMap">
         SELECT 
 	       Distinct1.BR_NO BR_NO  ,
-	       TO_CHAR(TO_DATE(Distinct1.START_DT , 'YYYY-MM-DD'), 'DD-MM-YYYY') START_DT,
+	       TO_CHAR(Distinct1.START_DT, 'DD-MM-YYYY') START_DT,
 	       Distinct1.CUST_NAME CUST_NAME  ,
 	       Distinct1.CNTC_PERSON CNTC_PERSON  ,
 	       Distinct1.ADDR1 ADDR1  ,
@@ -131,9 +131,8 @@
 	          AND ( Extent3.ACC_BILL_REM = #{statementNo} ) ) Distinct1
     </select>
     
-    <!-- <resultMap id="cTaxesAdvanceBill" type="egovMap"></resultMap>
-    <select id="confirmTaxesAdvanceBill" statementType="CALLABLE" parameterType="Map">
-        {call SP_GEN_BILL_GST_ADV(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cTaxesAdvanceBill})}
-    </select> -->
+    <select id="saveInvoiceVoidResult" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_VOID_INVC_STATE(#{statementNo}, #{remark},#{userId})}
+    </select>
     
 </mapper>
