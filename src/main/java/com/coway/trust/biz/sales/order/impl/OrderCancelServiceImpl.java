@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.order.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,15 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 	
 	@Resource(name = "orderCancelMapper")
 	private OrderCancelMapper orderCancelMapper;
+	
+	@Resource(name = "orderSuspensionMapper")
+	private OrderSuspensionMapper orderSuspensionMapper;
+	
+	@Resource(name = "orderInvestMapper")
+	private OrderInvestMapper orderInvestMapper;
+	
+	@Resource(name = "orderExchangeMapper")
+	private OrderExchangeMapper orderExchangeMapper;
 	
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -83,6 +93,56 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 	 */
 	public List<EgovMap> productReturnTransctionList(Map<String, Object> params) {
 		return orderCancelMapper.productReturnTransctionList(params);
+	}
+	
+	
+	@Override
+	public void saveCancel(Map<String, Object> params) {
+		
+		Map<String, Object> saveParam = new HashMap<String, Object>();
+		
+		saveParam.put("callEntryId", params.get("paramCallEntryId"));
+		saveParam.put("callStusId", params.get("addStatus"));
+		saveParam.put("callFdbckId", params.get("cmbFeedbackCd"));
+		saveParam.put("callCtId", 0);
+		saveParam.put("callRem", params.get("addRem"));
+		saveParam.put("callCrtUserId", params.get("userId"));
+		saveParam.put("callCrtUserIdDept", 0);
+		saveParam.put("callHcId", 0);
+		saveParam.put("callRosAmt", 0);
+		saveParam.put("callSms", 0);
+		saveParam.put("callSmsRem", "");
+		
+		orderSuspensionMapper.insertCCR0007DSuspend(saveParam);
+		
+		EgovMap getResultId = orderSuspensionMapper.newSuspendSearch2(saveParam);
+		saveParam.put("resultId", getResultId.get("resultId"));
+		
+		orderCancelMapper.updateCancelCCR0006D(saveParam);
+		
+		saveParam.put("soReqId", params.get("paramReqId"));
+		orderCancelMapper.updateCancelSAL0020D(saveParam);
+		
+		saveParam.put("salesOrdId", params.get("paramOrdId"));
+		EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam);
+		saveParam.put("renSchId", getRenSchId.get("renSchId"));
+		saveParam.put("rentalSchemeStusId", params.get("addStatus"));
+		
+		orderInvestMapper.updateSAL0071D(saveParam);
+		
+		if((int)params.get("reqStageId") == 25){
+			saveParam.put("prgrsId", 5);
+			saveParam.put("isLok", 0);
+		}else{
+			saveParam.put("prgrsId", 2);
+			saveParam.put("isLok", 1);
+		}
+//		EgovMap getRefId = orderExchangeMapper.firstSearchForCancel(saveParam);
+//		saveParam.put("refId", getRefId.get("refId"));
+		saveParam.put("refId", 0);
+		
+		orderInvestMapper.insertSalesOrdLog(saveParam);
+		
 	}
 	
 	

@@ -178,16 +178,16 @@
                  AND A.CUST_IC = #{custIc}
              </if>
              <if test="startCrtDt != null and startCrtDt != '' ">
-                AND CRT_DT <![CDATA[   >= ]]>  TO_CHAR(TO_DATE( #{startCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                AND CRT_DT <![CDATA[   >= ]]>  TO_DATE( #{startCrtDt} , 'DD/MM/YYYY')
              </if>
              <if test="endCrtDt != null and endCrtDt != ''">                              
-                AND CRT_DT <![CDATA[   <   ]]>  TO_CHAR(TO_DATE( #{endCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                AND CRT_DT <![CDATA[   <   ]]>  TO_DATE( #{endCrtDt} , 'DD/MM/YYYY')
             </if>
             <if test="startRecallDt != null and startRecallDt != '' ">
-                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_CHAR(TO_DATE( #{startRecallDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_DATE( #{startRecallDt} , 'DD/MM/YYYY')
             </if>
             <if test="endRecallDt != null and endRecallDt != '' ">           
-                AND CALL_RECALL_DT <![CDATA[   <   ]]>  TO_CHAR(TO_DATE( #{endRecallDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                AND CALL_RECALL_DT <![CDATA[   <   ]]>  TO_DATE( #{endRecallDt} , 'DD/MM/YYYY')
             </if>
     </select>
     
@@ -653,5 +653,23 @@
 		   WHERE RESN_TYPE_ID = 537
 		       AND STUS_CODE_ID = 1
     </select>
+    
+    <update id="updateCancelCCR0006D" parameterType="Map">
+        UPDATE CCR0006D
+		     SET STUS_CODE_ID = #{callStusId},
+		           RESULT_ID = #{resultId},
+		           CALL_DT = TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), 
+		           UPD_DT = SYSDATE,
+		           UPD_USER_ID = #{callCrtUserId}
+		 WHERE CALL_ENTRY_ID = #{callEntryId}
+    </update>
+    
+    <update id="updateCancelSAL0020D" parameterType="Map">
+        UPDATE SAL0020D
+			 SET SO_REQ_STUS_ID = #{resultId},
+			       SO_REQ_UPD_DT = SYSDATE,
+			       SO_REQ_UPD_USER_ID = #{callCrtUserId}
+		 WHERE SO_REQ_ID = #{soReqId}
+    </update>
     
 </mapper>

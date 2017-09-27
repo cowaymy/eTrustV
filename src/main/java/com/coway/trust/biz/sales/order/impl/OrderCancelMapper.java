@@ -91,5 +91,27 @@ public interface OrderCancelMapper {
 	 * @exception Exception
 	 */
 	EgovMap ctAssignmentInfo(Map<String, Object> params); 
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param vo
+	 *  
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	void updateCancelCCR0006D(Map<String, Object> params);
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param vo
+	 *   
+	 * @return 조회한 글
+	 * @exception Exception
+	 */
+	void updateCancelSAL0020D(Map<String, Object> params);
 
 }

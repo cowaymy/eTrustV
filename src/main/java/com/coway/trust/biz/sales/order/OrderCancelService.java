@@ -59,6 +59,9 @@ public interface OrderCancelService {
 	List<EgovMap> productReturnTransctionList(Map<String, Object> params);
 	
 	
+	void saveCancel(Map<String, Object> params);
+	
+	
 	/**
 	 * CT Assignment Information.
 	 * 

@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.order;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.biz.sales.order.OrderCancelVO;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -34,6 +37,9 @@ public class OrderCancelController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 	
 	
 	/**
@@ -156,6 +162,32 @@ public class OrderCancelController {
 	}
 	
 	
+	@RequestMapping(value = "/saveCancel.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> saveCancel(@RequestParam Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		logger.info("##### sessionVO.getUserId() #####" +sessionVO.getUserId());
+		logger.info("##### params ###############" +params.toString());
+		//String retMsg = AppConstants.MSG_SUCCESS;
+		String retMsg = "SUCCESS";
+		
+		Map<String, Object> map = new HashMap();
+		
+		try{
+			orderCancelService.saveCancel(params);
+		}catch(Exception ex){
+			//retMsg = AppConstants.MSG_FAIL;
+			retMsg = "FAIL";
+		}finally{
+			map.put("msg", retMsg);
+		}
+		return ResponseEntity.ok(map);
+	}
+	
+	
 	/**
 	 * 화면 호출. - Assignment CT Information
 	 */
@@ -199,6 +231,7 @@ public class OrderCancelController {
 		model.addAttribute("paramRefId", paramRefId);
 		model.addAttribute("selectAssignCTList", selectAssignCTList);
 		model.addAttribute("selectFeedback", selectFeedback);
+		model.addAttribute("reqStageId", params.get("paramReqStageId"));
 		
 		logger.info("##### selectAssignCTList #####" +selectAssignCTList.get(0));
 		logger.info("##### selectAssignCTList #####" +selectAssignCTList.get(1));
