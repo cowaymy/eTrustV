@@ -53,13 +53,13 @@
 		//Rule Book Item search
 		$("#search").click(function(){	
 			if(Number(year) < Number($("#searchDt").val().substr(3,7))){
-				alert("검색 날짜 오류");
+				Common.alert("<spring:message code='commission.alert.currentDate'/>");
 			}else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
-				alert("검색 날짜 오류");
+				Common.alert("<spring:message code='commission.alert.currentDate'/>");
 			}else{
 				Common.ajax("GET", "/commission/calculation/selectCalculationList", $("#searchForm").serialize(), function(result) {
 					$("#batchYn").val("");
-					console.log("성공.");
+					console.log("<spring:message code='sys.msg.success'/>");
 					console.log("data : " + result);
 					AUIGrid.setGridData(myGridID, result);
 				});
@@ -68,15 +68,15 @@
 		
 		$("#runBatch").click(function(){
 			if(Number(year) < Number($("#searchDt").val().substr(3,7))){
-                alert("검색 날짜 오류");
+				Common.alert("<spring:message code='commission.alert.currentDate'/>");
             }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
-                alert("검색 날짜 오류");
+            	Common.alert("<spring:message code='commission.alert.currentDate'/>");
             }else{
 				var  myGridIdLength = AUIGrid.getGridData(myGridID).length;
 				
 				for(var i=0;i<myGridIdLength ;i++){
 					if(AUIGrid.getCellValue(myGridID, i, 2) == "1"){
-						alert("실행 중 입니다.");
+						Common.alert("<spring:message code='commission.alert.calRunning'/>");
                         return false;
 					}
 				}
@@ -117,7 +117,7 @@
 	        headerText : "Procedure Name",
 	        style : "my-column",
 	        editable : false,
-	        width : 160
+	        width : 200
 		}, {
 			dataField : "cdds",
 	        headerText : "Description",
@@ -195,18 +195,24 @@
 	            	for(var i=0;i<rowIndex;i++){
 	            		state= AUIGrid.getCellValue(myGridID, i, "calState");
 	            		if(state != "0"){
-	            			alert("선행 프로시저를 먼저 실행해주세요."); 	
+	            			Common.alert("<spring:message code='commission.alert.calFirstExecute'/>");
 	            			return false;
 	            		}
 	            	}
 	            	
-	            	if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="1"){
-	            		alert("실행 중 입니다.");
+	            	if(Number(year) < Number($("#searchDt").val().substr(3,7))){
+	            		Common.alert("<spring:message code='commission.alert.currentDate'/>");
+                        return false;
+                    }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
+                    	Common.alert("<spring:message code='commission.alert.currentDate'/>");
+                        return false;
+                    }else if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="1"){
+                    	Common.alert("<spring:message code='commission.alert.calRunning'/>");
 	            		return false;
 	            	}else if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="8" && (AUIGrid.getCellValue(myGridID, failCnt, 2))=="9" ){
-	            		alert("에러가 난 프로시저를 먼저 실행해주세요."); 
+	            		Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
 	            		return false;
-	            	}else{
+	            	}else {
 		            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
 		            		$("#search").trigger("click");
 		                }); 

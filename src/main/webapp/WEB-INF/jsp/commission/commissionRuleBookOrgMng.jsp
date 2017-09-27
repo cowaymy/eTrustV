@@ -220,6 +220,7 @@
 		headerText : "ORG NAME",
 		//width : 120,
 		editable : false,
+		style:"my-column",
         width : "10%"
     }, {
 		dataField : "cdds",

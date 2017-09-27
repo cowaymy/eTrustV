@@ -93,7 +93,7 @@
         headerText : "Procedure Name",
         style : "my-column",
         editable : false,
-        width : 160
+        width : 200
 	}, {
 		dataField : "cdds",
         headerText : "Description",
@@ -195,11 +195,7 @@
 					<tr>
 						<th scope="row">Month/Year</th>
 						<td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
-						<th scope="row">ORG Group</th>
-						<td>
-							<label><input type="radio" name="use_yn" checked/><span>Actual</span></label>
-							<label><input type="radio" name="use_yn" /><span>Simulation</span></label>
-						</td>
+						
 						<th scope="row">Status</th>
 						<td><span id="status"></span></td>
 						<th scope="row">Execute Date</th>
