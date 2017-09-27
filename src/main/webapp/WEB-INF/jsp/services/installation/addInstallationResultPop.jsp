@@ -28,16 +28,16 @@ $(document).ready(function() {
     }
 
     
-    /* if(stock != null){
+    if("${stock}"  != null){
     	
     	$("#hidActualCTMemCode").val("${stock.memCode}");
     	$("#hidActualCTId").val("${stock.movToLocId}");
     }else{
     	$("#hidActualCTMemCode").val("0");
         $("#hidActualCTId").val("0");
-    } */
+    } 
     
-    if(orderInfo != null){
+    if("${orderInfo}" != null){
     	$("#hidCategoryId").val("${orderInfo.stkCtgryId}"); 
     	if(callType == 258){
     		$("#hidPromotionId").val("${orderInfo.c8}");
@@ -67,7 +67,7 @@ $(document).ready(function() {
     	}
     	  
     }
-    ("#hiddenCustomerType").val("${customerContractInfo.typeId}");
+    $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
 /*     ("#hiddenPostCode").val("${customerAddress.typeId}");
     ("#hiddenStateName").val("${customerAddress.typeId}");
     ("#hiddenCountryName").val("${customerAddress.typeId}"); */
@@ -78,6 +78,7 @@ function fn_saveInstall(){
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
+        alert()
         //AUIGrid.setGridData(myGridID, result);
     });
 }
@@ -146,7 +147,7 @@ function createInstallationViewAUIGrid() {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : false,
+        showRowNumColumn : false
 
     };
     
@@ -599,52 +600,52 @@ var gridPros = {
 </aside><!-- title_line end -->
 
 <form action="#" id="addInstallForm" method="post">
-<input type="text" value="${callType.typeId}" id="hidCallType" name="hidCallType"/>
-<input type="text" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId"/>
-<input type="text" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" />
-<input type="text" value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" />
-<input type="text" value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" />
-<input type="text" value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" />
-<input type="text" value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" />
-<input type="text" value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" />
-<input type="text" value="${installResult.stkCtgryId}" id="hidSirimTypeId" name="hidSirimTypeId" />
-<input type="text" value="${installResult.codeId}" id="hidAppTypeId" name="hidAppTypeId" />
-<input type="text" value="${installResult.installStkId}" id="hidProductId" name="hidProductId" />
-<input type="text" value="${installResult.custAddId}" id="hidCustAddressId" name="hidCustAddressId" />
-<input type="text" value="${installResult.custCntId}" id="hidCustContactId" name="hidCustContactId" />
-<input type="text" value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" />
-<input type="text" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" />
-<input type="text" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" />
-<input type="text" value="" id="hidActualCTId" name="hidActualCTId" />
-<input type="text" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
-<input type="text" value="" id="hidCategoryId" name="hidCategoryId" />
-<input type="text" value="" id="hidPromotionId" name="hidPromotionId" />
-<input type="text" value="" id="hidPriceId" name="hidPriceId" />
-<input type="text" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" />
-<input type="text" value="" id="hiddenOriPrice" name="hiddenOriPrice" />
-<input type="text" value="" id="hiddenOriPV" name="hiddenOriPV" />
-<input type="text" value="" id="hiddenCatogory" name="hiddenCatogory" />
-<input type="text" value="" id="hiddenProductItem" name="hiddenProductItem" />
-<input type="text" value="" id="hidPERentAmt" name="hidPERentAmt" />
-<input type="text" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" />
-<input type="text" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" />
-<input type="text" value="" id="hidPEPreviousStatus" name="hidPEPreviousStatus" />
-<input type="text" value="" id="hidDocId" name="hidDocId" />
-<input type="text" value="" id="hidOldPrice" name="hidOldPrice" />
-<input type="text" value="" id="hidExchangeAppTypeId" name="hidExchangeAppTypeId" />
-<input type="text" value="" id="hiddenCustomerType" name="hiddenCustomerType" />
-<input type="text" value="" id="hiddenPostCode" name="hiddenPostCode" />
-<input type="text" value="" id="hiddenCountryName" name="hiddenCountryName" />
-<input type="text" value="" id="hiddenStateName" name="hiddenStateName" />
-<input type="text" value="${promotionView.promoId}" id="hidPromoId" name="hidPromoId" />
-<input type="text" value="${promotionView.promoPrice}" id="hidPromoPrice" name="hidPromoPrice" />
-<input type="text" value="${promotionView.promoPV}" id="hidPromoPV" name="hidPromoPV" />
-<input type="text" value="${promotionView.swapPromoId}" id="hidSwapPromoId" name="hidSwapPromoId" />
-<input type="text" value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice" name="hidSwapPromoPrice" />
-<input type="text" value="${promotionView.swapPromoPV}" id="hidSwapPromoPV" name="hidSwapPromoPV" />
-<input type="text" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
-<input type="text" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
-<input type="text" value="" id="hiddenInstallStateName" name="hiddenInstallStateName" />
+<input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType"/>
+<input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId"/>
+<input type="hidden" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" />
+<input type="hidden" value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" />
+<input type="hidden" value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" />
+<input type="hidden" value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" />
+<input type="hidden" value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" />
+<input type="hidden" value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" />
+<input type="hidden" value="${installResult.stkCtgryId}" id="hidSirimTypeId" name="hidSirimTypeId" />
+<input type="hidden" value="${installResult.codeId}" id="hidAppTypeId" name="hidAppTypeId" />
+<input type="hidden" value="${installResult.installStkId}" id="hidProductId" name="hidProductId" />
+<input type="hidden" value="${installResult.custAddId}" id="hidCustAddressId" name="hidCustAddressId" />
+<input type="hidden" value="${installResult.custCntId}" id="hidCustContactId" name="hidCustContactId" />
+<input type="hidden" value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" />
+<input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" />
+<input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" />
+<input type="hidden" value="" id="hidActualCTId" name="hidActualCTId" />
+<input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
+<input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" />
+<input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" />
+<input type="hidden" value="" id="hidPriceId" name="hidPriceId" />
+<input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" />
+<input type="hidden" value="" id="hiddenOriPrice" name="hiddenOriPrice" />
+<input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" />
+<input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" />
+<input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" />
+<input type="hidden" value="" id="hidPERentAmt" name="hidPERentAmt" />
+<input type="hidden" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" />
+<input type="hidden" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" />
+<input type="hidden" value="" id="hidPEPreviousStatus" name="hidPEPreviousStatus" />
+<input type="hidden" value="" id="hidDocId" name="hidDocId" />
+<input type="hidden" value="" id="hidOldPrice" name="hidOldPrice" />
+<input type="hidden" value="" id="hidExchangeAppTypeId" name="hidExchangeAppTypeId" />
+<input type="hidden" value="" id="hiddenCustomerType" name="hiddenCustomerType" />
+<input type="hidden" value="" id="hiddenPostCode" name="hiddenPostCode" />
+<input type="hidden" value="" id="hiddenCountryName" name="hiddenCountryName" />
+<input type="hidden" value="" id="hiddenStateName" name="hiddenStateName" />
+<input type="hidden" value="${promotionView.promoId}" id="hidPromoId" name="hidPromoId" />
+<input type="hidden" value="${promotionView.promoPrice}" id="hidPromoPrice" name="hidPromoPrice" />
+<input type="hidden" value="${promotionView.promoPV}" id="hidPromoPV" name="hidPromoPV" />
+<input type="hidden" value="${promotionView.swapPromoId}" id="hidSwapPromoId" name="hidSwapPromoId" />
+<input type="hidden" value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice" name="hidSwapPromoPrice" />
+<input type="hidden" value="${promotionView.swapPromoPV}" id="hidSwapPromoPV" name="hidSwapPromoPV" />
+<input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
+<input type="hidden" value="" id="hiddenInstallPostcode" name="hiddenInstallPostcode" />
+<input type="hidden" value="" id="hiddenInstallStateName" name="hiddenInstallStateName" />
 
 
 
