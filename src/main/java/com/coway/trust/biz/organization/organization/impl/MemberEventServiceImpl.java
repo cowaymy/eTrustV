@@ -142,6 +142,9 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
             EgovMap mQryMemUpOrg = memberEventMapper.getMemberOrganizationsMemUpId(mQryMemOrg.get("memUpId").toString());
             EgovMap mQryMemPrOrg = memberEventMapper.getMemberOrganizationsMemPrId(formList.get("prMemId").toString());
 
+            logger.debug("mQryMemOrg : {}",mQryMemOrg);
+            logger.debug("mQryMemUpOrg : {}",mQryMemUpOrg);
+            logger.debug("mQryMemPrOrg : {}",mQryMemPrOrg);
             
             String prevDeptCode = mQryMemOrg.get("deptCode").toString();            
             String prevMemberUpID;
@@ -162,7 +165,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMemOrg.put("prevDeptCode", prevDeptCode);
 			mQryMemOrg.put("prevMemIdId", prevMemberUpID);
 			mQryMemOrg.put("prevMemLvl", prevMemberLvl);
-			mQryMemOrg.put("prevGrpCode", mQryMemUpOrg.get("deptCode"));
+			mQryMemOrg.put("prevGrpCode", mQryMemPrOrg.get("deptCode"));
 			mQryMemOrg.put("deptCode", newDeptCode1);
 			mQryMemOrg.put("memUpId", formList.get("memUpId"));
 			mQryMemOrg.put("memLvlTo", formList.get("memLvlTo"));
@@ -188,16 +191,16 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			memberEventMapper.updateMember(mQryMember);
 			
 
-
+			logger.debug("formList::::" + formList );
             //MemberPromoEntry
 			Map<String, Object> mPromoEntry = new HashMap<String, Object>();
-			mPromoEntry.put("stusId", formList.get("stusId"));
+			mPromoEntry.put("stusId", "04");
 			mPromoEntry.put("deptCode", newDeptCode1);
 			mPromoEntry.put("updDt", formList.get("updDt"));
 			mPromoEntry.put("updUserId", formList.get("updUserId"));
 			mPromoEntry.put("promoId", params.get("promoId"));
 
-            memberEventMapper.updateMemberPromoEntry(mMemOrg);
+            memberEventMapper.updateMemberPromoEntry(mPromoEntry);
 		}
 
 	}

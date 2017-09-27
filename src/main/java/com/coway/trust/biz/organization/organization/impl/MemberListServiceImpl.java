@@ -114,7 +114,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 	
 	
-	
+	@Transactional
 	@Override
 	public Boolean saveMember(Map<String, Object> params, List<Object> docType) {
 		
@@ -224,11 +224,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("termDate","1900-01-01");
 		params.put("RenewDate",params.get("joinDate"));
 		params.put("AgrmntNo","");
-		params.put("branch", params.get("branch")!=null ? Integer.parseInt(params.get("branch").toString().trim()) : 0);
+		params.put("branch", params.get("branch")!=null &&  params.get("branch")!=""? Integer.parseInt(params.get("branch").toString().trim()) : 0);
 		params.put("status","1");
 		params.put("SyncCheck",false);
 		params.put("rank",rank);
-		params.put("transportCd", params.get("transportCd")!=null ? Integer.parseInt(params.get("transportCd").toString().trim()) : 0);
+		params.put("transportCd", params.get("transportCd")!=null &&  params.get("transportCd")!=""? Integer.parseInt(params.get("transportCd").toString().trim()) : 0);
 		params.put("promoteDate","1900-01-01");
 		params.put("trNo", params.get("trNo")!=null ? params.get("trNo").toString().trim() : "");
 		params.put("created",new Date());
@@ -371,9 +371,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		logger.debug("selectDocNoNumber : {}",selectDocNoNumber);
 		int nextDocNoNumber = Integer.parseInt((String)selectDocNoNumber.get("c1")) + 1;
 		String nextDocNo="";
-		if(docNoId.equals("145")){
+		if(docNoId.equals("145") || docNoId.equals("12")){
 			nextDocNo = String.format("%07d", nextDocNoNumber);
-		}else{//130일때
+		}else{//130일때,120일때,119일때
 		nextDocNo = String.format("%08d", nextDocNoNumber);
 		}
 		selectDocNoNumber.put("nextDocNo", nextDocNo);
@@ -401,7 +401,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 	
 	@Transactional
-	public Boolean doSaveMember(Map<String, Object> params,List<Object> docType) {
+	public boolean doSaveMember(Map<String, Object> params,List<Object> docType) {
 			Boolean success = false;
 			String memberCode = "";
 			int ID = 0;
@@ -541,7 +541,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				}
 			}
 			
-			EgovMap selectHpBillNo = null;
+			/*EgovMap selectHpBillNo = null;
 			String hpBillNo="";
 			EgovMap selectInvoiceNo = null;
 			//AcBilling Save (for Hp)
@@ -691,7 +691,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				memberListMapper.updateBillRem(accOrderBill);
     			}
 			
-			}
+			}*/
 			
 			//Save DocSubmission (For HP)
 			if(params.get("memberType").toString().equals("1") && docType.size() > 0){
@@ -749,7 +749,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				MA.put("agreementTypeID", 1416);
 				MA.put("agreementStatusID", 1);
 				MA.put("agreementRemark", "");
-				MA.put("agreementStartDate", "1900-01-01");
+				MA.put("agreementStartDate", "01/01/1900");
 				MA.put("agreementExpiryDate", params.get("codyPaExpr"));
 				MA.put("agreementCreator", params.get("creator"));
 				MA.put("agreementCreated", new Date());
@@ -813,7 +813,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					roleuser.put("updatedBy",params.get("creator"));
 					
 					logger.debug("roleuser : {}",roleuser);
-					memberListMapper.insertRoleUser(roleuser);
+					//memberListMapper.insertRoleUser(roleuser);
 				}
 			}
 			
@@ -933,8 +933,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			member.put("updated", new Date());
         			member.put("updator", userId);
         			member.put("status", Integer.parseInt(params.get("action").toString()) == 757 ? 3:51);
-        			member.put("termDate", Integer.parseInt(params.get("action").toString()) == 757 ? params.get("dtT/R").toString() : "1900-01-01" );
-        			member.put("resignDate", Integer.parseInt(params.get("action").toString()) == 758 ? params.get("dtT/R").toString() : "1900-01-01" );
+        			member.put("termDate", Integer.parseInt(params.get("action").toString()) == 757 ? params.get("dtT/R").toString() : "01/01/1900" );
+        			member.put("resignDate", Integer.parseInt(params.get("action").toString()) == 758 ? params.get("dtT/R").toString() : "01/01/1900" );
         			
         			logger.debug("member : {}",member);
         			
