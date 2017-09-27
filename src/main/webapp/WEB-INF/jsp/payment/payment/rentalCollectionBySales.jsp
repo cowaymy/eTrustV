@@ -21,18 +21,18 @@ var gridPros = {
 
 
 var columnLayout=[
-    {dataField:"orgCode", headerText:"Org Code"},
-    {dataField:"grpCode", headerText:"Grp Code"},
-    {dataField:"deptCode", headerText:"Dept Code"},
-    {dataField:"memberCode", headerText:"Cody Code"},
-    {dataField:"sUnit", headerText:"Unit", dataType:"numeric"},
-    {dataField:"sLMOS", headerText:"Pre-Out", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"sCMCHG", headerText:"Charges", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"sCLCTG", headerText:"Target", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"sCOL", headerText:"Collection", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"sADJ", headerText:"Adjsutment", dataType:"numeric"},
-    {dataField:"sOUT", headerText:"Outstanding", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"sRate", headerText:"Out Rate", dataType:"numeric", formatString:"###0.##", style:"my-column-style2"}
+    {dataField:"orgcode", headerText:"Org Code"},
+    {dataField:"grpcode", headerText:"Grp Code"},
+    {dataField:"deptcode", headerText:"Dept Code"},
+    {dataField:"membercode", headerText:"Cody Code"},
+    {dataField:"sunit", headerText:"Unit", dataType:"numeric"},
+    {dataField:"slmos", headerText:"Pre-Out", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"scmchg", headerText:"Charges", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"sclctg", headerText:"Target", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"scol", headerText:"Collection", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"sadj", headerText:"Adjsutment", dataType:"numeric"},
+    {dataField:"sout", headerText:"Outstanding", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"srate", headerText:"Out Rate", dataType:"numeric", formatString:"###0.##", style:"my-column-style2"}
     ];
 
 //리스트 조회.
