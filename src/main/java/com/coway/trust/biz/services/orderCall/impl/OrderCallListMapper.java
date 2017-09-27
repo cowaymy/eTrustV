@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("orderCallListMapper")
 public interface OrderCallListMapper {
 
-	List<EgovMap> selectOrderCall();
+	List<EgovMap> selectOrderCall(Map<String, Object> params);
 	
 	EgovMap getOrderCall(Map<String, Object> params);
 	

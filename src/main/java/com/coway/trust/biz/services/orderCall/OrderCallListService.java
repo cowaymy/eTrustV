@@ -8,7 +8,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface OrderCallListService {
-	List<EgovMap> selectOrderCall();
+	List<EgovMap> selectOrderCall(Map<String, Object> params);
 	
 	EgovMap getOrderCall(Map<String, Object> params);
 	

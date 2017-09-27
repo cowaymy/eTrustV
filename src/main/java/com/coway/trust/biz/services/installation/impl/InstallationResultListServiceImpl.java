@@ -1273,7 +1273,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			boolean success = Save(true,params,sessionVO);
 		}
 		
-		return false;
+		return true;
 	}
 	private boolean Save(boolean isfreepromo,Map<String, Object> params,SessionVO sessionVO) throws ParseException{
 		
@@ -1293,7 +1293,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installResult.put("resultID", 0);
     		installResult.put("entryId", Integer.parseInt(params.get("hidEntryId").toString()));
     		installResult.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-    		installResult.put("CTID", params.get(""));
+    		installResult.put("CTID", Integer.parseInt(params.get("ctCode").toString()));
     		installResult.put("installDate", params.get("installDate"));
     		installResult.put("remark", params.get("remark").toString().trim());
     		installResult.put("GLPost", 0);

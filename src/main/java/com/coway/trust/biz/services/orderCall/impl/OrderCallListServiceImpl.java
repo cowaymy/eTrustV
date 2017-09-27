@@ -34,8 +34,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	
 	
 	@Override
-	public List<EgovMap> selectOrderCall() {
-		return orderCallListMapper.selectOrderCall();
+	public List<EgovMap> selectOrderCall(Map<String, Object> params) {
+		return orderCallListMapper.selectOrderCall(params);
 	}
 	
 	@Override
@@ -180,6 +180,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	private Map<String, Object> getSaveInstallMaster(Map<String, Object> params,SessionVO sessionVO){
 		Map<String, Object> installMaster = new HashMap<String, Object>();
 		int CTId = 0;
+		CTId = Integer.parseInt(params.get("CTCode").toString());
 		//CT 받아오는거 다시 확인
 		String appointmentDate = "01/01/1900";
 		if(params.get("appDate") != null){
@@ -224,6 +225,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			feedbackId = Integer.parseInt(params.get("feedBackCode").toString());
 		}
 		int CTId = 0;
+		CTId = Integer.parseInt(params.get("CTCode").toString());
 		//if(params.get("CT").TO) CT 내용 가져오는거 해야함
 		callDetails.put("callResultId", 0);
 		callDetails.put("callEntryId", params.get("callEntryId"));
