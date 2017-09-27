@@ -1,26 +1,11 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
-<title>eTrust system</title>
-<link rel="stylesheet" type="text/css" href="../css/master.css" />
-<link rel="stylesheet" type="text/css" href="../css/common.css" />
-<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
-<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="../js/multiple-select.js"></script>
-<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
-<script type="text/javascript" src="../js/common_pub.js"></script>
+
 <script type="text/javaScript">
 
 function fn_memberSave(){
 			    var jsonObj =  GridCommon.getEditData(myGridID);
-			    jsonObj.form = $("#searchForm").serializeJSON();
+			    jsonObj.form = $("#memberAddForm").serializeJSON();
 	Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
 	});
 }
@@ -229,7 +214,7 @@ var gridPros = {
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" id="searchForm" method="post">
+<form action="#" id="memberAddForm" method="post">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -552,7 +537,7 @@ var gridPros = {
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_memberSave()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_memberSave()">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
 </ul>
 

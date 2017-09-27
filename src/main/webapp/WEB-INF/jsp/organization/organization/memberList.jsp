@@ -30,12 +30,14 @@ function fn_TerminateResign(val){
 				     MemberID :memberid,
 		            MemberType : memberType
 		    };
+		console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1");
 		Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1",'');
 	}else{
 		 var jsonObj = {
                  MemberID :memberid,
                 MemberType : memberType
         };
+		 console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2");
     Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2",'');
 	}
 }

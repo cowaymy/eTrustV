@@ -623,7 +623,7 @@ function fn_requestTermiReSave(val){
 <aside class="title_line"><!-- title_line start -->
 <h4>Member Information</h4>
 </aside><!-- title_line end -->
- <input type="text" value="<c:out value="${codeValue}"/>" id="codeValue"/>
+ <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue"/>
  <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/>
  <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
  <input type="hidden" value="<c:out value="${memberView.bank}"/> "  id="bank"/>
