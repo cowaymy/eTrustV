@@ -6,7 +6,6 @@ function fn_addCallSave(){
 	Common.ajax("POST", "/callCenter/addCallLogResult.do", $("#addCallForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
-        //AUIGrid.setGridData(myGridID, result);
     });
 }
 </script>
@@ -925,12 +924,12 @@ function fn_addCallSave(){
 <h2>New Call Log Result</h2>
 </aside><!-- title_line end -->
 <form action="#" id="addCallForm">
-<input type="text" value="${orderCall.c4}" id="hiddenProductId" name="hiddenProductId"/>
-<input type="text" value="${orderCall.callStusId}" id="hiddenCallLogStatusId" name="hiddenCallLogStatusId"/>
-<input type="text" value="${callStusCode}" id="callStusCode" name="callStusCode"/>
-<input type="text" value="${callStusId}" id="callStusId" name="callStusId"/>
-<input type="text" value="${salesOrdId}" id="salesOrdId" name="salesOrdId"/>
-<input type="text" value="${callEntryId}" id="callEntryId" name="callEntryId"/>
+<input type="hidden" value="${orderCall.c4}" id="hiddenProductId" name="hiddenProductId"/>
+<input type="hidden" value="${orderCall.callStusId}" id="hiddenCallLogStatusId" name="hiddenCallLogStatusId"/>
+<input type="hidden" value="${callStusCode}" id="callStusCode" name="callStusCode"/>
+<input type="hidden" value="${callStusId}" id="callStusId" name="callStusId"/>
+<input type="hidden" value="${salesOrdId}" id="salesOrdId" name="salesOrdId"/>
+<input type="hidden" value="${callEntryId}" id="callEntryId" name="callEntryId"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

@@ -27,7 +27,7 @@ $(document).ready(function() {
 });
 
 	function fn_orderCallList(){
-		Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#searchForm").serialize(), function(result) {
+		Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
 	        console.log("성공.");
 	        console.log("data : " + result);
 	        AUIGrid.setGridData(myGridID, result);
@@ -87,15 +87,15 @@ $(document).ready(function() {
         }, {
             dataField : "callStusId",
             headerText : "",
-            width : 180
+            width : 0
         }, {
             dataField : "salesOrdId",
             headerText : "",
-            width : 180
+            width : 0
         }, {
             dataField : "callEntryId",
             headerText : "",
-            width : 180
+            width : 0
         }];
          // 그리드 속성 설정
         var gridPros = {
@@ -184,7 +184,7 @@ var gridPros = {
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form action="#" method="post" id="orderCallSearchForm">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -200,7 +200,7 @@ var gridPros = {
 <tr>
     <th scope="row">Order No</th>
     <td>
-    <input type="text" title="" placeholder="Order Number" class="w100p" />
+    <input type="text" title="" placeholder="Order Number" class="w100p" id="orderNo" name="orderNo" />
     </td>
     <th scope="row">Application Type</th>
     <td>
