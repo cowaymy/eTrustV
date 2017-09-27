@@ -226,16 +226,16 @@
     <select id="selectMemberListView" parameterType="Map" resultType="egovMap">
     <![CDATA[
       SELECT Limit1.MEM_ID MEM_ID  ,
-       Limit1.ADDR1 ADDR1  ,
-       Limit1.ADDR2 ADDR2  ,
-       Limit1.ADDR3 ADDR3  ,
-       Limit1.C1 C1  ,
-       Limit1.C2 C2  ,
+       --Limit1.ADDR1 ADDR1  ,
+       --Limit1.ADDR2 ADDR2  ,
+       --Limit1.ADDR3 ADDR3  ,
+      -- Limit1.C1 C1  ,
+       --Limit1.C2 C2  ,
        Limit1.C3 C3  ,
        Limit1.C4 C4  ,
        Limit1.C5 C5  ,
-       Limit1.C6 C6  ,
-       Limit1.C7 C7  ,
+      -- Limit1.C6 C6  ,
+       --Limit1.C7 C7  ,
        Limit1.C8 C8  ,
        Limit1.C9 C9  ,
        Limit1.EMAIL EMAIL  ,
@@ -275,8 +275,8 @@
        Limit1.C34 C34  ,
        Limit1.C35 C35  ,
        Limit1.C36 C36  ,
-       Limit1.C37 C37  ,
-       Limit1.C38 C38  ,
+      -- Limit1.C37 C37  ,
+     --  Limit1.C38 C38  ,
        Limit1.C39 C39  ,
        Limit1.C40 C40  ,
        Limit1.C41 C41  ,
@@ -287,8 +287,8 @@
        Limit1.C46 C46  ,
        Limit1.C47 C47  ,
        Limit1.C48 C48  ,
-       Limit1.C49 C49  ,
-       Limit1.C50 C50  ,
+       --Limit1.C49 C49  ,
+      -- Limit1.C50 C50  ,
        Limit1.C51 C51  ,
        Limit1.C52 C52  ,
        Limit1.C53 C53  ,
@@ -317,9 +317,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.NAME NAME  ,
                 Extent1.NRIC NRIC  ,
                 Extent1.GENDER GENDER  ,
-                Extent1.ADDR1 ADDR1  ,
-                Extent1.ADDR2 ADDR2  ,
-                Extent1.ADDR3 ADDR3  ,
+              --  Extent1.ADDR1 ADDR1  ,
+              --  Extent1.ADDR2 ADDR2  ,
+                --Extent1.ADDR3 ADDR3  ,
                 Extent1.TEL_OFFICE TEL_OFFICE  ,
                 Extent1.TEL_HUSE TEL_HUSE  ,
                 Extent1.TEL_MOBILE TEL_MOBILE  ,
@@ -336,14 +336,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.HSPTLZ HSPTLZ  ,
                 Extent2.NAME NAME1  ,
                 Extent3.CODE_NAME CODE_NAME   ,
-                CASE 
-                     WHEN ( Extent1.AREAL IS NOT NULL ) THEN Extent1.AREAL
-                ELSE 0
-                   END C1  ,
-                CASE 
-                     WHEN ( Extent6.AREA_ID IS NOT NULL ) THEN Extent6.AREA_NAME
-                ELSE ''
-                   END C2  ,
+              --  CASE 
+              --       WHEN ( Extent1.AREAL IS NOT NULL ) THEN Extent1.AREAL
+               -- ELSE 0
+               --    END C1  ,
+                --CASE 
+                 --    WHEN ( Extent6.AREA_ID IS NOT NULL ) THEN Extent6.AREA_NAME
+               -- ELSE ''
+                --   END C2  ,
                 CASE 
                      WHEN ( Extent1.BRNCH IS NOT NULL ) THEN TO_NUMBER(Extent1.BRNCH,99999.99)
                 ELSE 0
@@ -356,14 +356,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                      WHEN ( Extent10.BRNCH_ID IS NOT NULL ) THEN Extent10.NAME
                 ELSE ''
                    END C5  ,
-                CASE 
-                     WHEN ( Extent1.CNTY IS NOT NULL ) THEN TO_NUMBER(Extent1.CNTY,99999.99)
-                ELSE 0
-                   END C6  ,
-                CASE 
-                     WHEN ( Extent9.CNTY_ID IS NOT NULL ) THEN Extent9.NAME
-                ELSE ''
-                   END C7  ,
+                --CASE 
+                --     WHEN ( Extent1.CNTY IS NOT NULL ) THEN TO_NUMBER(Extent1.CNTY,99999.99)
+                --ELSE 0
+                 -- END C6  ,
+               -- CASE 
+               --      WHEN ( Extent9.CNTY_ID IS NOT NULL ) THEN Extent9.NAME
+                --ELSE ''
+                 --  END C7  ,
                 CASE 
                      WHEN ( Extent1.EDC_LEV IS NOT NULL ) THEN TO_NUMBER(Extent1.EDC_LEV,99999.99)
                 ELSE 0
@@ -491,14 +491,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                      WHEN ( Extent17.CNTY_ID IS NOT NULL ) THEN Extent17.NAME
                 ELSE ''
                    END C36  ,
-                CASE 
-                     WHEN ( Extent1.POST_CODE IS NOT NULL ) THEN Extent1.POST_CODE
-                ELSE 0
-                   END C37  ,
-                CASE 
-                     WHEN ( Extent7.POST_CODE_ID IS NOT NULL ) THEN Extent7.POST_CODE
-                ELSE ''
-                   END C38  ,
+               -- CASE 
+              --       WHEN ( Extent1.POST_CODE IS NOT NULL ) THEN Extent1.POST_CODE
+              --  ELSE 0
+               --    END C37  ,
+               --CASE 
+                --     WHEN ( Extent7.POST_CODE_ID IS NOT NULL ) THEN Extent7.POST_CODE
+               -- ELSE ''
+                --   END C38  ,
                 CASE 
                      WHEN ( Extent1.RACE IS NOT NULL ) THEN TO_NUMBER(Extent1.RACE,99999.99)
                 ELSE 0
@@ -616,14 +616,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                      WHEN ( Extent1.RESIGN_DT IS NOT NULL ) THEN to_char(Extent1.RESIGN_DT,'yyyy-mm-dd')
                 ELSE ''
                    END C48  ,
-                CASE 
-                     WHEN ( Extent1.STATE IS NOT NULL ) THEN TO_NUMBER(Extent1.STATE,99999.99)
-                ELSE 0
-                   END C49  ,
-                CASE 
-                     WHEN ( Extent8.STATE_ID IS NOT NULL ) THEN Extent8.NAME
-                ELSE ''
-                   END C50  ,
+              --  CASE 
+                --     WHEN ( Extent1.STATE IS NOT NULL ) THEN TO_NUMBER(Extent1.STATE,99999.99)
+               -- ELSE 0
+                --   END C49  ,
+              --  CASE 
+              --       WHEN ( Extent8.STATE_ID IS NOT NULL ) THEN Extent8.NAME
+               -- ELSE ''
+                --   END C50  ,
                 CASE 
                      WHEN ( Extent20.MEM_ID IS NOT NULL ) THEN Extent20.MEM_CODE
                 ELSE ''
@@ -682,10 +682,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                             FROM ORG1001V vMemberOrg  ) Extent4   ON Extent4.MEM_ID = Extent1.MEM_ID
                 LEFT JOIN ORG0012D Extent5   ON ( Extent5.MEM_ORG_LVL = Extent4.MEM_LVL )
                 AND ( Extent5.MEM_TYPE_ID = Extent1.MEM_TYPE )
-                LEFT JOIN SYS0039M Extent6   ON Extent6.AREA_ID = Extent1.AREAL
-                LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE
-                LEFT JOIN SYS0035M Extent8   ON Extent8.STATE_ID = TO_NUMBER(Extent1.STATE,99999.99)
-                LEFT JOIN SYS0015M Extent9   ON Extent9.CNTY_ID = TO_NUMBER(Extent1.CNTY,99999.99)
+                --LEFT JOIN SYS0039M Extent6   ON Extent6.AREA_ID = Extent1.AREAL
+               -- LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE
+                --LEFT JOIN SYS0035M Extent8   ON Extent8.STATE_ID = TO_NUMBER(Extent1.STATE,99999.99)
+                --LEFT JOIN SYS0015M Extent9   ON Extent9.CNTY_ID = TO_NUMBER(Extent1.CNTY,99999.99)
                 LEFT JOIN SYS0005M Extent10   ON Extent10.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,99999.99)
                 LEFT JOIN SYS0013M Extent11   ON Extent11.CODE_ID = TO_NUMBER(Extent1.EDC_LEV,99999.99)
                 LEFT JOIN SYS0013M Extent12   ON Extent12.CODE_ID = TO_NUMBER(Extent1.LANG,99999.99)
@@ -919,14 +919,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , RACE
         , MARTL
         , NATION
-        , ADDR1
-        , ADDR2
-        , ADDR3
+      <!-- , ADDR1
+       , ADDR2
+       , ADDR3
         , ADDR4
         , AREAL
         , POST_CODE
         , STATE
         , CNTY
+       -->
         , TEL_OFFICE
         , TEL_HUSE
         , TEL_MOBILE
@@ -975,14 +976,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{race}
             , #{marrital}
             , #{nation}
-            , #{address1}
-            , #{address2}
+            <!-- , #{address1}
+           , #{address2}
             , #{address3}
             , #{address4}
             , #{area}
-            , #{postCode}
-            , #{state}
-            , #{country}
+           , #{postCode}
+           , #{state}
+           , #{country}
+           -->
             , #{officeNo}
             , #{residenceNo}
             , #{mobileNo}
@@ -1013,7 +1015,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{SyncCheck}
             , #{rank}
             , #{transportCd}
-            , #{promoteDate}
+            , TO_DATE(#{promoteDate},'yyyy-mm-dd')
             , #{trNo}
             , SYSDATE
             , #{creator}
@@ -1237,7 +1239,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	         , ACC_BILL_ACCT_CNVR
 	         , ACC_BILL_CNTRCT_ID )
 	           VALUES ( 
-	           (SELECT PAY0016D_SEQ.NEXTVAL FROM DUAL)
+	          PAY0016D_SEQ.NEXTVAL
 	           , #{accBillTaskId}
 	           ,  SYSDATE
 	           , #{accBillRefNo}
@@ -1493,14 +1495,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , APLICNT_RACE
 	   , APLICNT_MARTL
 	   , APLICNT_NATION
-	   , APLICNT_ADD1
-	   , APLICNT_ADD2
-	   , APLICNT_ADD3
-	   , APLICNT_ADD4
-	   , APLICNT_AREAL_D
-	   , APLICNT_POST_CODE_ID
-	   , APLICNT_STATE_ID
-	   , APLICNT_CNTY_ID
+	   --, APLICNT_ADD1
+	  -- , APLICNT_ADD2
+	   --, APLICNT_ADD3
+	   --, APLICNT_ADD4
+	   --, APLICNT_AREAL_D
+	   --, APLICNT_POST_CODE_ID
+	   --, APLICNT_STATE_ID
+	   --, APLICNT_CNTY_ID
 	   , APLICNT_TEL_OFFICE
 	   , APLICNT_TEL_HUSE
 	   , APLICNT_TEL_MOBILE
@@ -1528,25 +1530,25 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   )
 	  VALUES ( 
 	  (SELECT MAX(APLCTN_ID)+1 FROM ORG0003D)
-	  , #{applicantCode}
+        , #{applicantCode}
 	  , #{applicantType}
 	  , #{applicantName}
 	  , #{applicantFullName}
 	  , #{applicantIdentification}
 	  , #{applicantNRIC}
-	  , #{applicantDOB}
+	  , TO_DATE(#{applicantDOB},'dd-mm-yyyy')
 	  , #{applicantGender}
 	  , #{applicantRace}
 	  , #{applicantMarital}
 	  , #{applicantNationality}
-	  , #{applicantAdd1}
+	 <!--  , #{applicantAdd1}
 	  , #{applicantAdd2}
 	  , #{applicantAdd3}
 	  , #{applicantAdd4}
 	  , #{applicantAreald}
 	  , #{applicantPostCodeId}
 	  , #{applicantStateId}
-	  , #{applicantCountryId}
+	  , #{applicantCountryId}  -->
 	  , #{applicantTelOffice}
 	  , #{applicantTelHouse}
 	  , #{applicantTelMobile}
@@ -1556,7 +1558,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{applicantSpouseNRIC}
 	  , #{applicantSpouseOccupation}
 	  , #{applicantSpouseTelContact}
-	  , TO_CHAR(TO_DATE(#{applicantSpouseDOB},'dd-mm-yyyy'),'yyyy-mm-dd')
+	  ,TO_DATE(#{applicantSpouseDOB},'dd-mm-yyyy')
 	  , #{applicantEduLevel}
 	  , #{applicantLanguage}
 	  , #{applicantBankID}
@@ -1595,25 +1597,25 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , #{agreementTypeID}
 	   , #{agreementStatusID}
 	   , #{agreementRemark}
-	   , #{agreementStartDate}
-	   , #{agreementExpiryDate}
+	   , TO_DATE(#{agreementStartDate},'dd-mm-yyyy')
+	   ,  TO_DATE(#{agreementExpiryDate},'dd-mm-yyyy')
 	   , #{agreementCreator}
 	   , SYSDATE
 	   , NULL
-	   , NULL )
+	   , SYSDATE )
   </insert>
    <insert id="insertinvWH" parameterType="Map">
 	  INSERT INTO SYS0028M (
 	     WH_LOC_ID
 	   , WH_LOC_CODE
 	   , WH_LOC_DESC
-	   , WH_LOC_ADD1
-	   , WH_LOC_ADD2
-	   , WH_LOC_ADD3
-	   , WH_LOC_AREA_ID
-	   , WH_LOC_POST_CODE_ID
-	   , WH_LOC_STATE_ID
-	   , WH_LOC_CNTY_ID
+	  -- , WH_LOC_ADD1
+	   --, WH_LOC_ADD2
+	  -- , WH_LOC_ADD3
+	   --, WH_LOC_AREA_ID
+	   --, WH_LOC_POST_CODE_ID
+	   --, WH_LOC_STATE_ID
+	   --, WH_LOC_CNTY_ID
 	   , WH_LOC_TEL1
 	   , WH_LOC_TEL2
 	   , WH_LOC_BRNCH_ID
@@ -1631,13 +1633,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  (SELECT MAX(WH_LOC_ID)+1 FROM SYS0028M)
 	  , #{WHLocCode}
 	  , #{WHLocDesc}
-	  , #{WHLocAdd1}
+	 <!--  , #{WHLocAdd1}
 	  , #{WHLocAdd2}
 	  , #{WHLocAdd3}
 	  , #{WHLocAreaId}
 	  , #{WHLocPostcodeID}
 	  , #{WHLocStateID}
-	  , #{WHLocCountryID}
+	  , #{WHLocCountryID} -->
 	  , #{WHLocTel1}
 	  , #{WHLocTel2}
 	  , #{WHLocBranchID}
@@ -1749,62 +1751,62 @@ SELECT Extent1.MEM_ID MEM_ID  ,
    </insert>
    
    <select id="selectMember" parameterType="Map" resultType="egovMap">
-	   SELECT Extent1.MEM_ID MEM_ID  ,
-	       Extent1.MEM_CODE MEM_CODE  ,
-	       Extent1.MEM_TYPE MEM_TYPE  ,
-	       Extent1.NAME NAME  ,
-	       Extent1.FULL_NAME FULL_NAME  ,
-	       Extent1.PASSWD PASSWD  ,
-	       Extent1.NRIC NRIC  ,
-	       Extent1.DOB DOB  ,
-	       Extent1.GENDER GENDER  ,
-	       Extent1.RACE RACE  ,
-	       Extent1.MARTL MARTL  ,
-	       Extent1.NATION NATION  ,
-	       Extent1.ADDR1 ADDR1  ,
-	       Extent1.ADDR2 ADDR2  ,
-	       Extent1.ADDR3 ADDR3  ,
-	       Extent1.ADDR4 ADDR4  ,
-	       Extent1.AREAL AREAL  ,
-	       Extent1.POST_CODE POST_CODE  ,
-	       Extent1.STATE STATE  ,
-	       Extent1.CNTY CNTY  ,
-	       Extent1.TEL_OFFICE TEL_OFFICE  ,
-	       Extent1.TEL_HUSE TEL_HUSE  ,
-	       Extent1.TEL_MOBILE TEL_MOBILE  ,
-	       Extent1.EMAIL EMAIL  ,
-	       Extent1.SPUSE_CODE SPUSE_CODE  ,
-	       Extent1.SPOUSE_NAME SPOUSE_NAME  ,
-	       Extent1.SPOUSE_NRIC SPOUSE_NRIC  ,
-	       Extent1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
-	       Extent1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
-	       Extent1.SPOUSE_DOB SPOUSE_DOB  ,
-	       Extent1.EDC_LEV EDC_LEV  ,
-	       Extent1.LANG LANG  ,
-	       Extent1.BANK BANK  ,
-	       Extent1.BANK_ACC_NO BANK_ACC_NO  ,
-	       Extent1.SPONS_CODE SPONS_CODE  ,
-	       Extent1.JOIN_DT JOIN_DT  ,
-	       Extent1.RESIGN_DT RESIGN_DT  ,
-	       Extent1.TRM_DT TRM_DT  ,
-	       Extent1.RENEW_DT RENEW_DT  ,
-	       Extent1.AGRMNT_NO AGRMNT_NO  ,
-	       Extent1.BRNCH BRNCH  ,
-	       Extent1.STUS STUS  ,
-	       Extent1.SYNC_CHK SYNC_CHK  ,
-	       Extent1.RANK RANK  ,
-	       Extent1.TRNSPRT TRNSPRT  ,
-	       Extent1.PROMO_DT PROMO_DT  ,
-	       Extent1.TR_NO TR_NO  ,
-	       Extent1.CRT_DT CRT_DT  ,
-	       Extent1.CRT_USER_ID CRT_USER_ID  ,
-	       Extent1.UPD_DT UPD_DT  ,
-	       Extent1.UPD_USER_ID UPD_USER_ID  ,
-	       Extent1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
-	       Extent1.APLICNT_ID APLICNT_ID  ,
-	       Extent1.BIZ_TYPE BIZ_TYPE  ,
-	       Extent1.HSPTLZ HSPTLZ  
-	  FROM ORG0001D Extent1
+	  SELECT Extent1.MEM_ID MEM_ID  ,
+           Extent1.MEM_CODE MEM_CODE  ,
+           Extent1.MEM_TYPE MEM_TYPE  ,
+           Extent1.NAME NAME  ,
+           Extent1.FULL_NAME FULL_NAME  ,
+           Extent1.PASSWD PASSWD  ,
+           Extent1.NRIC NRIC  ,
+           Extent1.DOB DOB  ,
+           Extent1.GENDER GENDER  ,
+           Extent1.RACE RACE  ,
+           Extent1.MARTL MARTL  ,
+           Extent1.NATION NATION  ,
+           --Extent1.ADDR1 ADDR1  ,
+          -- Extent1.ADDR2 ADDR2  ,
+          -- Extent1.ADDR3 ADDR3  ,
+          -- Extent1.ADDR4 ADDR4  ,
+          -- Extent1.AREAL AREAL  ,
+         --  Extent1.POST_CODE POST_CODE  ,
+         -- Extent1.STATE STATE  ,
+        --   Extent1.CNTY CNTY  ,
+           Extent1.TEL_OFFICE TEL_OFFICE  ,
+           Extent1.TEL_HUSE TEL_HUSE  ,
+           Extent1.TEL_MOBILE TEL_MOBILE  ,
+           Extent1.EMAIL EMAIL  ,
+           Extent1.SPUSE_CODE SPUSE_CODE  ,
+           Extent1.SPOUSE_NAME SPOUSE_NAME  ,
+           Extent1.SPOUSE_NRIC SPOUSE_NRIC  ,
+           Extent1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+           Extent1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+           Extent1.SPOUSE_DOB SPOUSE_DOB  ,
+           Extent1.EDC_LEV EDC_LEV  ,
+           Extent1.LANG LANG  ,
+           Extent1.BANK BANK  ,
+           Extent1.BANK_ACC_NO BANK_ACC_NO  ,
+           Extent1.SPONS_CODE SPONS_CODE  ,
+           Extent1.JOIN_DT JOIN_DT  ,
+           Extent1.RESIGN_DT RESIGN_DT  ,
+           Extent1.TRM_DT TRM_DT  ,
+           Extent1.RENEW_DT RENEW_DT  ,
+           Extent1.AGRMNT_NO AGRMNT_NO  ,
+           Extent1.BRNCH BRNCH  ,
+           Extent1.STUS STUS  ,
+           Extent1.SYNC_CHK SYNC_CHK  ,
+           Extent1.RANK RANK  ,
+           Extent1.TRNSPRT TRNSPRT  ,
+           Extent1.PROMO_DT PROMO_DT  ,
+           Extent1.TR_NO TR_NO  ,
+           Extent1.CRT_DT CRT_DT  ,
+           Extent1.CRT_USER_ID CRT_USER_ID  ,
+           Extent1.UPD_DT UPD_DT  ,
+           Extent1.UPD_USER_ID UPD_USER_ID  ,
+           Extent1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+           Extent1.APLICNT_ID APLICNT_ID  ,
+           Extent1.BIZ_TYPE BIZ_TYPE  ,
+           Extent1.HSPTLZ HSPTLZ  
+      FROM ORG0001D Extent1
 	 WHERE  Extent1.MEM_ID = #{memberId}
    </select>
     <select id="selectOrganization" parameterType="Map" resultType="egovMap">
@@ -1931,11 +1933,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	 
 	 <update id="updateMember" parameterType="Map">
 	   UPDATE ORG0001D
-	   SET RESIGN_DT = to_date(#{resignDate},'dd/mm/yyyy'),
-	       TRM_DT = #{termDate},
+	   SET RESIGN_DT = to_date(#{resignDate},'dd-mm-yyyy'),
+	       TRM_DT =  to_date(#{termDate},'dd-mm-yyyy'),
 	       STUS =#{status},
 	       SYNC_CHK = NULL,
-	       UPD_DT = to_date(SYSDATE,'dd/mm/yyyy'),
+	       UPD_DT = SYSDATE,
 	       UPD_USER_ID = #{updator}
 	 WHERE  ( MEM_ID =  #{memId} )
 	 </update>

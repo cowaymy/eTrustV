@@ -563,14 +563,14 @@
 			            ,RACE
 			            ,MARTL
 			            ,NATION
-			            ,ADDR1
-			            ,ADDR2
-			            ,ADDR3
-			            ,ADDR4
-			            ,AREAL
-			            ,POST_CODE
-			            ,STATE
-			            ,CNTY
+			            --,ADDR1
+			            --,ADDR2
+			            --,ADDR3
+			            --,ADDR4
+			            --,AREAL
+			            --,POST_CODE
+			            --,STATE
+			            --,CNTY
 			            ,TEL_OFFICE
 			            ,TEL_HUSE
 			            ,TEL_MOBILE
@@ -678,8 +678,8 @@
         <update id="updateMemberPromoEntry" parameterType="Map">
                     UPDATE ORG0007D
 					   SET STUS_ID = #{stusId},
-					       UPD_DT = #{updUserId},
-					       UPD_USER_ID = #{updDt},
+					       UPD_DT = SYSDATE,
+					       UPD_USER_ID = #{updUserId},
 					       DEPT_CODE_TO = #{deptCode}
 					 WHERE  ( PROMO_ID = #{promoId} )           
         </update>
