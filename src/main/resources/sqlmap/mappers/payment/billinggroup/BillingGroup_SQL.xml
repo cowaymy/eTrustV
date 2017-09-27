@@ -991,8 +991,10 @@
 	       Extent1.MEM_ID MEM_ID  ,
 	       Extent1.BRNCH_ID BRNCH_ID  ,
 	       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+	       /*
 	       Extent1.DSCNT_AMT DSCNT_AMT  ,
 	       Extent1.TAX_AMT TAX_AMT  ,
+	       */
 	       Extent1.TOT_AMT TOT_AMT  ,
 	       Extent1.PROMO_ID PROMO_ID  ,
 	       Extent1.BINDING_NO BINDING_NO  ,
@@ -1024,7 +1026,9 @@
 	       Extent1.PAY_COM_DT PAY_COM_DT  ,
 	       Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
 	       Extent1.REF_DOC_ID REF_DOC_ID  ,
+	       /*
 	       Extent1.RENT_PROMO_ID RENT_PROMO_ID  ,
+	       */
 	       Extent1.SALES_HM_ID SALES_HM_ID  ,
 	       Extent1.SALES_SM_ID SALES_SM_ID  ,
 	       Extent1.SALES_GM_ID SALES_GM_ID  ,
@@ -1330,8 +1334,10 @@
 	       Extent1.MEM_ID MEM_ID  ,
 	       Extent1.BRNCH_ID BRNCH_ID  ,
 	       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+	       /*
 	       Extent1.DSCNT_AMT DSCNT_AMT  ,
 	       Extent1.TAX_AMT TAX_AMT  ,
+	       */
 	       Extent1.TOT_AMT TOT_AMT  ,
 	       Extent1.PROMO_ID PROMO_ID  ,
 	       Extent1.BINDING_NO BINDING_NO  ,
@@ -1363,7 +1369,9 @@
 	       Extent1.PAY_COM_DT PAY_COM_DT  ,
 	       Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
 	       Extent1.REF_DOC_ID REF_DOC_ID  ,
+	       /*
 	       Extent1.RENT_PROMO_ID RENT_PROMO_ID  ,
+	       */
 	       Extent1.SALES_HM_ID SALES_HM_ID  ,
 	       Extent1.SALES_SM_ID SALES_SM_ID  ,
 	       Extent1.SALES_GM_ID SALES_GM_ID  ,
@@ -1386,8 +1394,10 @@
 			MEM_ID, 
 			BRNCH_ID, 
 			APP_TYPE_ID, 
+			/*
 			DSCNT_AMT, 
-			TAX_AMT, 
+			TAX_AMT,
+			*/ 
 			TOT_AMT, 
 			PROMO_ID, 
 			BINDING_NO, 
@@ -1417,8 +1427,10 @@
 			CRT_DT, 
 			PAY_COM_DT, 
 			DEF_RENT_AMT, 
-			REF_DOC_ID, 
-			RENT_PROMO_ID, 
+			REF_DOC_ID,
+			/* 
+			RENT_PROMO_ID,
+			*/ 
 			SALES_HM_ID, 
 			SALES_SM_ID, 
 			SALES_GM_ID, 
@@ -1435,8 +1447,10 @@
 			                Project1.MEM_ID MEM_ID  ,
 			                Project1.BRNCH_ID BRNCH_ID  ,
 			                Project1.APP_TYPE_ID APP_TYPE_ID  ,
+			                /*
 			                Project1.DSCNT_AMT DSCNT_AMT  ,
 			                Project1.TAX_AMT TAX_AMT  ,
+			                */
 			                Project1.TOT_AMT TOT_AMT  ,
 			                Project1.PROMO_ID PROMO_ID  ,
 			                Project1.BINDING_NO BINDING_NO  ,
@@ -1468,7 +1482,9 @@
 			                Project1.PAY_COM_DT PAY_COM_DT  ,
 			                Project1.DEF_RENT_AMT DEF_RENT_AMT  ,
 			                Project1.REF_DOC_ID REF_DOC_ID  ,
+			                /*
 			                Project1.RENT_PROMO_ID RENT_PROMO_ID  ,
+			                */
 			                Project1.SALES_HM_ID SALES_HM_ID  ,
 			                Project1.SALES_SM_ID SALES_SM_ID  ,
 			                Project1.SALES_GM_ID SALES_GM_ID  ,
@@ -1485,8 +1501,10 @@
 			                Extent1.MEM_ID MEM_ID  ,
 			                Extent1.BRNCH_ID BRNCH_ID  ,
 			                Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+			                /*
 			                Extent1.DSCNT_AMT DSCNT_AMT  ,
 			                Extent1.TAX_AMT TAX_AMT  ,
+			                */
 			                Extent1.TOT_AMT TOT_AMT  ,
 			                Extent1.PROMO_ID PROMO_ID  ,
 			                Extent1.BINDING_NO BINDING_NO  ,
@@ -1518,7 +1536,9 @@
 			                Extent1.PAY_COM_DT PAY_COM_DT  ,
 			                Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
 			                Extent1.REF_DOC_ID REF_DOC_ID  ,
+			                /*
 			                Extent1.RENT_PROMO_ID RENT_PROMO_ID  ,
+			                */
 			                Extent1.SALES_HM_ID SALES_HM_ID  ,
 			                Extent1.SALES_SM_ID SALES_SM_ID  ,
 			                Extent1.SALES_GM_ID SALES_GM_ID  ,
