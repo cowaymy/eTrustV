@@ -57,6 +57,26 @@
        </select>
   
   
+  
+           <select id="getCdList_1" parameterType="Map" resultType="egovMap">
+          
+                select b.mem_code as CODY_ID 
+                        ,B.MEM_ID  AS MEM_ID
+                        ,b.name as CODY_NAME
+                        ,b.STUS,EXTENT2.CODE
+                from ORG1001V a
+                        ,ORG0001D b
+                        ,SYS0038M EXTENT2
+                where a.MEM_ID = b.MEM_ID
+                AND b.STUS = EXTENT2.STUS_CODE_ID
+                and b.MEM_TYPE = 2
+                and b.stus = '1' 
+                and b.BRNCH = #{BrnchCdList}
+                order by b.mem_code
+                                              
+          </select>
+       
+  
 		   <select id="getCdList" parameterType="Map" resultType="egovMap">
 		  
 				select b.mem_code as CODE_ID 
@@ -74,8 +94,109 @@
 		  
 		  
 		  
-		  <select id="selectHsManualList" parameterType="Map" resultType="egovMap">
-		      
+          <select id="selectHsManualList" parameterType="Map" resultType="egovMap">
+              
+                            SELECT   rownum as rnum,C.CUST_ID CUST_ID
+                                        , C.NAME Name
+                                         ,SOM.SALES_ORD_NO SALES_ORD_NO
+                                         ,HSM.MONTH
+                                         ,HSM.YEAR YEAR
+                                         ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
+                                         ,HSM.NO
+                                         ,HSM.CODY_ID
+                                         ,HSM.STUS_CODE_ID STUS_CODE_ID
+                                         ,EXTENT2.CODE CODE
+                                         ,SOM.BRNCH_ID  AS BRNCH_ID
+                                FROM SAL0001D SOM
+                                        ,SAL0029D C
+                                        ,SYS0013M CORPTYPE 
+                                        ,SAL0002D SOD
+                                        ,SVC0008D HSM
+                                        ,SYS0038M EXTENT2
+                                WHERE 1=1
+                                AND SOM.CUST_ID = C.CUST_ID
+                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
+                                AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID 
+                                AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
+                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>   
+			                 <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
+		                              AND  hsm.YEAR(+) = #{myBSYear} 
+                                      AND  hsm.MONTH(+) = #{myBSMonth} 
+			                 </if>                                   
+                               <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
+                                      AND SOM.SALES_ORD_NO = #{ManuaSalesOrder}
+                               </if>
+                               <if test="ManualCustomer != null and ManualCustomer != ''">
+                                      AND c.CUST_ID = #{ManualCustomer}
+                               </if>
+		                        <if test="saleOrdListSp != null and saleOrdListSp != '' ">
+		                            AND SOM.SALES_ORD_NO IN
+                                   <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
+		                            #{item}
+		                            </foreach>
+		                        </if>
+                         
+
+          </select>
+
+          
+          
+          
+          
+          
+          
+                    <select id="selectHsManualListPop" parameterType="Map" resultType="egovMap">
+              
+                            SELECT   rownum as rnum,C.CUST_ID CUST_ID
+                                        , C.NAME Name
+                                         ,SOM.SALES_ORD_NO SALES_ORD_NO
+                                         ,HSM.MONTH
+                                         ,HSM.YEAR YEAR
+                                         ,HSM.MONTH || '/' || HSM.YEAR HS_DATE
+                                         ,HSM.NO
+                                         ,HSM.CODY_ID
+                                         ,HSM.STUS_CODE_ID STUS_CODE_ID
+                                         ,EXTENT2.CODE CODE
+                                         ,SOM.BRNCH_ID  AS BRNCH_ID
+                                FROM SAL0001D SOM
+                                        ,SAL0029D C
+                                        ,SYS0013M CORPTYPE 
+                                        ,SAL0002D SOD
+                                        ,SVC0008D HSM
+                                        ,SYS0038M EXTENT2
+                                WHERE 1=1
+                                AND SOM.CUST_ID = C.CUST_ID
+                                AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
+                                AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID 
+                                AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
+                                AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+                 <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>   
+                             <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
+                                      AND  hsm.YEAR(+) = #{myBSYear} 
+                                      AND  hsm.MONTH(+) = #{myBSMonth} 
+                             </if>                                   
+                               <if test="ManuaSalesOrder != null and ManuaSalesOrder != ''">
+                                      AND SOM.SALES_ORD_NO = #{ManuaSalesOrder}
+                               </if>
+                               <if test="ManualCustomer != null and ManualCustomer != ''">
+                                      AND c.CUST_ID = #{ManualCustomer}
+                               </if>
+                                <if test="saleOrdListSp != null and saleOrdListSp != ''">
+                                    AND SOM.SALES_ORD_NO IN
+                                   <foreach item="item" collection="saleOrdListSp" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                    </foreach>
+                                </if>
+                         
+
+          </select>
+          
+          
+          
+          
+                  <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
+              
 
                          SELECT Project2.C1 C1  ,
                                     Project2.SCHDUL_ID SCHDUL_ID  ,
@@ -264,12 +385,12 @@
                                                         and 1 = Extent1.STUS_CODE_ID
                                                         AND  Extent1.YEAR = #{myBSYear} 
                                                         AND  Extent1.MONTH = #{myBSMonth} 
-		                                              <if test="txtSalesOrder != null and txtSalesOrder != ''">
-		                                                     AND ( Extent3.SALES_ORD_NO = #{txtSalesOrder})
-		                                              </if>
-		                                              <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-		                                                     AND ( Extent1.No = #{txtHsOrderNo})
-		                                              </if>
+                                                      <if test="txtSalesOrder != null and txtSalesOrder != ''">
+                                                             AND ( Extent3.SALES_ORD_NO = #{txtSalesOrder})
+                                                      </if>
+                                                      <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+                                                             AND ( Extent1.No = #{txtHsOrderNo})
+                                                      </if>
                                                       <if test="cmdBranchCode != null and cmdBranchCode != ''">
                                                              AND ( Extent3.BRNCH_ID = #{cmdBranchCode})
                                                       </if>
@@ -277,8 +398,37 @@
                      WHERE  Project2.row_number > 0
                       ORDER BY Project2.SCHDUL_ID ASC 
           </select>
+          
+          
+ 	          <insert id="insertHsResult" parameterType="Map">
+              insert into SVC0008D (
+	                   SCHDUL_ID
+					    ,NO
+						,SALES_ORD_ID
+						,MONTH
+						,YEAR
+                        ,STUS_CODE_ID
+                        ,LAST_SVC
+                        ,LOK
+						,TYPE_ID
+						,CODY_ID
+						,CRT_USER_ID
+						,CRT_DT
+						)
+	             values (
+	                  GBSLCVD.SVC0008D_SCHDUL_ID_SEQ.nextval
+	                , '111111'
+			        , #{salesOrdNo}
+			        , #{month}
+			        , #{year}
+                    , #{stus}
+                    , #{lastSvc}
+                    , #{lok}
+			        , #{typeId}
+			        , #{codyId}
+     			    , #{creator}   
+			        , SYSDATE
+	        )
+	        </insert> 
 
-          
-          
-		  
 </mapper>      		  
