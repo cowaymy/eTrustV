@@ -55,7 +55,8 @@ public class OrderCallListController {
 	 */
 	@RequestMapping(value = "/searchOrderCallList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOrderCallListSearch(@RequestParam Map<String, Object> params, ModelMap model) {
-		List<EgovMap> orderCallList = orderCallListService.selectOrderCall();
+		logger.debug("params : {}", params);
+		List<EgovMap> orderCallList = orderCallListService.selectOrderCall(params);
 		
 		logger.debug("orderCallList : {}", orderCallList);
 		return ResponseEntity.ok(orderCallList);

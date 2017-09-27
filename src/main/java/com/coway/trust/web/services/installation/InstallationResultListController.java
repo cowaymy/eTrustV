@@ -300,6 +300,12 @@ public class InstallationResultListController {
 		
 		success = installationResultListService.insertInstallationResult(params, sessionVO);
 		
+		if(success){
+			message.setMessage("저장성공");
+		}else{
+			message.setMessage("저장실패");
+		}
+		
 		return ResponseEntity.ok(message);
 	}
 }
