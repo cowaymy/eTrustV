@@ -344,5 +344,59 @@
 		 WHERE RENT_PAY_ID     = #{rentPayId}
     </update>
     
+    <update id="saveDocSubmission" parameterType="docSubmissionVO">
+        MERGE
+         INTO ORG0010D T1
+        USING DUAL
+           ON (T1.DOC_SUB_TYPE_ID = 248
+          AND  T1.DOC_TYPE_ID     = #{docTypeId}
+          AND  T1.DOC_SO_ID       = #{docSoId})
+         WHEN MATCHED THEN
+       UPDATE
+          SET T1.DOC_COPY_QTY    = #{docCopyQty}
+            , T1.UPD_USER_ID     = #{updUserId}
+            , T1.UPD_DT          = SYSDATE
+            , T1.STUS_ID         = 1
+         WHEN NOT MATCHED THEN
+       INSERT
+            ( T1.DOC_SUB_ID
+            , T1.DOC_SUB_TYPE_ID
+            , T1.DOC_TYPE_ID
+            , T1.DOC_SO_ID
+            , T1.DOC_MEM_ID
+            , T1.DOC_SUB_DT
+            , T1.DOC_COPY_QTY
+            , T1.STUS_ID
+            , T1.CRT_USER_ID
+            , T1.CRT_DT
+            , T1.UPD_USER_ID
+            , T1.UPD_DT
+            , T1.DOC_SUB_BATCH_ID
+            )
+       VALUES
+            ( ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL
+            , #{docSubTypeId}
+            , #{docTypeId}
+            , #{docSoId}
+            , #{docMemId}
+            , SYSDATE
+            , #{docCopyQty}
+            , 1
+            , #{crtUserId}
+            , SYSDATE
+            , #{updUserId}
+            , SYSDATE
+            , #{docSubBatchId}
+            )
+    </update>
+    
+    <update id="updateDocSubmissionDel" parameterType="docSubmissionVO">
+       UPDATE ORG0010D
+          SET STUS_ID     = 8
+            , UPD_USER_ID = #{updUserId}
+            , UPD_DT      = SYSDATE
+        WHERE DOC_TYPE_ID = #{docTypeId}
+          AND DOC_SO_ID   = #{docSoId}
+    </update>
     
 </mapper>
