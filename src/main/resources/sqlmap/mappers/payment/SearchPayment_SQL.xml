@@ -180,7 +180,7 @@
      SELECT V.ORG_CODE tOrgCode  ,
        V.GRP_CODE tGrpCode  ,
        V.DEPT_CODE tDeptCode  ,
-       V.ORG_CODE OrgCode ,
+       V.ORG_CODE  OrgCode,
        V.GRP_CODE GrpCode,
        V.DEPT_CODE DeptCode,
        R1.MEM_CODE MemberCode,
@@ -209,7 +209,7 @@
  WHERE  R1.STUS = 1
           AND SOM.APP_TYPE_ID = 66
           
-          --AND SOM.DeptCode like '%CCS%'
+          /* AND SOM.DeptCode like '%CCS%'*/
           AND Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET > 0
           AND SOM.STUS_CODE_ID = 4
           AND V.DEPT_CODE <![CDATA[ <> ]]> ' '
@@ -320,7 +320,8 @@
 		       Extent1.CLCTR_ID CLCTR_ID  ,
 		       Extent1.ALLOW_COMM ALLOW_COMM  ,
 		       Extent1.ADV_MONTH ADV_MONTH  ,
-		       TO_CHAR(Extent1.TR_ISSU_DT,'DD/MM/YYYY') TR_ISSU_DT,
+		       /*Extent1.TR_ISSU_DT TR_ISSU_DT  ,*/
+		       TO_CHAR(Extent1.TR_ISSU_DT,'DD/MM/YYYY') TR_ISSU_DT  ,
 		       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
 		  FROM ( SELECT PaymentMasterView.TRX_ID TRX_ID  ,
                 PaymentMasterView.TRX_DT TRX_DT  ,
@@ -404,7 +405,7 @@
 		            WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO
 		       ELSE ''
 		          END C1  ,
-		       Extent1.PAY_ITM_ENCRYPT_CC_NO   ,
+		       Extent1.PAY_ITM_ORI_CC_NO AS PAY_ITM_ENCRYPT_CC_NO   ,
 		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
 		       Extent3.CODE_NAME CODENAME1  ,
 		       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
@@ -733,7 +734,7 @@
           , BRNCH_ID = #{brnchId}
        </if>
        <if test="trIssueDate != '' ">
-          , TR_ISSU_DT = TO_CHAR(TO_DATE(#{trIssueDate}, 'DD/MM/YYYY'), 'YYYY/MM/DD')
+          , TR_ISSU_DT = TO_DATE(#{trIssueDate},'DD/MM/YYYY')
        </if>
        <if test="allowComm != '' ">
           , ALLOW_COMM = #{allowComm}
@@ -833,7 +834,8 @@
         UPDATE PAY0009D
         SET
         GL_RECIPT_BRNCH_ID = #{brnchId} 
-        WHERE ID=#{id}
+        WHERE
+        ID=#{id}
     </update>
     
     <select id="selectPayDs" parameterType="Map" resultType="egovMap">
