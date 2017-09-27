@@ -153,7 +153,14 @@
                   )
                    AND ( Extent1.CALL_STUS_ID IN ( 1,19 )
                   )
-                   AND ( Extent1.CALL_LOG_DT >= '2016-09-22 00:00:00' ) ) Project1
+                    ]]>
+                    <if test="orderNo != null and orderNo != ''">
+                          AND (Extent1.SALES_ORD_NO=#{orderNo} )  
+                        
+                     </if>
+                  -- AND ( Extent1.CALL_LOG_DT >= '2016-09-22 00:00:00' ) 
+                  <![CDATA[
+                   ) Project1
 ORDER BY Project1.CALL_ENTRY_ID ASC
           ]]>
     </select>
