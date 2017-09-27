@@ -599,8 +599,8 @@
    ON ( T0.YEAR = T1.YEAR AND T0.MONTH = T1.MONTH AND T0.WEEKS = T1.WEEKS)
    WHEN MATCHED THEN 
    UPDATE 
-        SET    START_DT= #{startDt}
-              , END_DT= #{endDt}
+        SET    START_DT= TO_DATE(#{startDt},'YYYY/MM/DD')
+              , END_DT= TO_DATE(#{endDt},'YYYY/MM/DD')
               , UPD_USER_ID=#{updUserId}
               , UPD_DT=SYSDATE
    WHEN NOT MATCHED THEN
@@ -619,8 +619,8 @@
     #{year},
     #{month},  
     #{weeks},
-    #{startDt},
-    #{endDt},
+    TO_DATE(#{startDt},'YYYY/MM/DD'),
+    TO_DATE(#{endDt},'YYYY/MM/DD'),
     #{crtUserId},
     SYSDATE
     )
