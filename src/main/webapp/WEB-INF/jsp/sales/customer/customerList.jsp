@@ -9,7 +9,7 @@
 	// popup 크기
 	var option = {
             width : "1200px",   // 창 가로 크기
-            height : "800px"    // 창 세로 크기
+            height : "500px"    // 창 세로 크기
     };
 	
 	$(document).ready(function(){
@@ -95,7 +95,7 @@
             
             fixedColumnCount : 1,
             
-            showStateColumn : true, 
+            showStateColumn : false, 
             
             displayTreeOpen : true,
             

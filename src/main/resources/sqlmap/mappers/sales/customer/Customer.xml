@@ -189,7 +189,7 @@
                                                 AND S1.CUST_VA_NO = #{custVaNo}
                                             </if>
                                             <if test="dob != null and dob !=''">
-                                                AND S1.DOB1 =   TO_CHAR(TO_DATE( #{dob} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                                                AND S1.DOB1 =   TO_DATE( #{dob} , 'DD/MM/YYYY')
                                             </if>
 				                     ) D1
 				            ) P1
@@ -1345,8 +1345,8 @@
 						            #{crtUserId},
 						            SYSDATE,
 						            #{cmbTypeId},
-						            TO_CHAR(TO_DATE(#{pasSportExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
-                                    TO_CHAR(TO_DATE(#{visaExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+						            TO_CHAR(TO_DATE(#{pasSportExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),
+                                    TO_CHAR(TO_DATE(#{visaExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),
 						            NULL,
 						            #{cmbCorpTypeId},
 						            #{gstRgistNo})
@@ -1502,8 +1502,8 @@
        SET 
             UPD_DT = SYSDATE,
             NAME = #{basicName} , 
-            PAS_SPORT_EXPR =TO_CHAR(TO_DATE(#{basicPasSportExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
-            VISA_EXPR = TO_CHAR(TO_DATE(#{basicVisaExpr}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),  
+            PAS_SPORT_EXPR =TO_CHAR(TO_DATE(#{basicPasSportExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),  
+            VISA_EXPR = TO_CHAR(TO_DATE(#{basicVisaExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),  
             EMAIL = #{basicEmail},
             REM = #{basicRem},
             <if test="basicTypeId == 964">
@@ -1767,7 +1767,7 @@
             NAME = #{cntcName},
             RACE_ID = #{cntcCmbRaceTypeId},
             NRIC = #{cntcNric},
-            DOB = TO_CHAR(TO_DATE(#{cntcDob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+            DOB = TO_DATE(#{cntcDob}, 'DD/MM/YYYY'),
             TEL_M1 = #{cntcTelm},
             TEL_O = #{cntcTelo},
             TEL_R = #{cntcTelr},
@@ -1969,7 +1969,7 @@
                                            #{cntcTelo},
                                            #{cntcTelr},
                                            #{cntcTelf},
-                                           TO_CHAR(TO_DATE(#{cntcDob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+                                           TO_CHAR(TO_DATE(#{cntcDob}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),
                                            #{cntcGender},
                                            #{cntcCmbRaceTypeId},
                                            #{cntcEmail},
@@ -2167,5 +2167,6 @@
                 SYS0013M 
             WHERE 
                 CODE_MASTER_ID = #{groupCode}
+            ORDER BY CODE_NAME
   </select>
 </mapper>

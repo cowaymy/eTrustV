@@ -52,7 +52,7 @@ $(document).ready(function(){
 		$("#basicCmbCustTypeId").attr("disabled" , "disabled");
 		$("#basicCmbCorpTypeId").attr({"class" : "w100p" , "disabled" : false});
 		$("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
-		$("input[name='basicGender']").attr("disabled" , "disabled");
+		$("input[name='basicGender']").attr({"disabled" : "disabled" , "checked" : false});
 		$("#basicCmdRaceTypeId").attr({"disabled" : "disabled" , "class":"disabled w100p"});
 		$("#basicCmdNationTypeId").attr("disabled" , "disabled");
 		$("#basicDob").attr("disabled" , "disabled");

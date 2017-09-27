@@ -27,6 +27,24 @@
 	
     $(document).ready(function(){
         
+    	 //j_date
+        var pickerOpts={
+                changeMonth:true,
+                changeYear:true,
+                dateFormat: "dd/mm/yy"
+        };
+        
+        $(".j_date").datepicker(pickerOpts);
+
+        var monthOptions = {
+            pattern: 'mm/yyyy',
+            selectedYear: 2017,
+            startYear: 2007,
+            finalYear: 2027
+        };
+
+        $(".j_date2").monthpicker(monthOptions);
+    	
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
@@ -39,6 +57,14 @@
         //Magic Address
         fn_initAddress(); //init
         CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , '', optionState);
+         //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
+        doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'S' , '');                              // Customer Type Combo Box
+        doGetCombo('/sales/customer/getNationList', '338' , '' ,'cmbNation' , 'S');        // Nationality Combo Box
+        doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'S' , '');                      // Company Type Combo Box 
+        doGetCombo('/common/selectCodeList.do', '17', '','cmbInitials', 'S' , '');                             // Initials Combo Box
+        doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');                                 // Race Combo Box
+        doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
+       // getAddrRelay('mstate' , '1' , 'state', '');
         
     
     });
@@ -209,16 +235,6 @@
         AUIGrid.setGridData(myGridID1, []);
     }
 	
-	    
-	//f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-	doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'S' , '');                              // Customer Type Combo Box
-	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','cmbNation', 'A', '');  // Nationality Combo Box
-	doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'S' , '');                      // Company Type Combo Box 
-	doGetCombo('/common/selectCodeList.do', '17', '','cmbInitials', 'S' , '');                             // Initials Combo Box
-	doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');                                 // Race Combo Box
-//	doGetComboAddr('/common/selectAddrSelCodeList.do', 'state' , '' , '','cmbState', 'A', '');      // State Combo Box (installation Address)
-    doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
-	getAddrRelay('mstate' , '1' , 'state', '');
 	// 조회조건 combo box
 //    function f_multiCombo(){
 //        $(function() {
@@ -253,12 +269,12 @@
             $("select[name=cmbRace]").addClass("w100p disabled");
             $("select[name=cmbRace]").attr('disabled', 'disabled');
             $("#dob").val('');
-            $("#dob").addClass("j_date readonly");
 //            $("select[name=dob]").attr('readonly','readonly');
-            $("#dob").attr('disabled', 'disabled');
+            $("#dob").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'}); 
             $("#genderForm").attr('disabled',true);
             $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
             $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
+            $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
 		}else{
 			$("#cmbCorpTypeId").val('');
@@ -270,11 +286,10 @@
 			$("select[name=cmbRace]").removeClass("w100p disabled");
 			$("select[name=cmbRace]").addClass("w100p");
             $("select[name=cmbRace]").removeAttr("disabled");
-            $("#dob").removeClass("j_date readonly");
-            $("#dob").addClass("j_date");
+            $("#dob").attr({'disabled' : false , 'class' : 'j_date3 w100p'}); 
 //            $("select[name=dob]").removeAttr("readonly");
-            $("#dob").removeAttr("disabled");
             $("#genderForm").removeAttr('disabled');
+            $("input:radio[name='gender']").attr("disabled" , false);
 		}
 		
 	}
@@ -692,7 +707,7 @@
 		<tr>
 		    <th scope="row">Customer Type<span class="must">*</span></th>
 		    <td>
-			    <select class="w100p"  id="cmbTypeId" name="cmbTypeId" onchange="onChangeCompanyType()">
+			    <select class="w100p"  id="cmbTypeId" name="cmbTypeId" onchange="onChangeCompanyType(this.value)">
 			    </select>
 		    </td>
 		    <th scope="row">Company Type</th>
@@ -735,7 +750,7 @@
 		<tr>
 		    <th scope="row">DOB <span class="brown_text">#</span></th>
 		    <td>
-		        <input type="text" id="dob" name="dob" title="Create start Date" placeholder="Date Of Brith" class="j_date readonly" disabled="disabled" />
+		        <input type="text" id="dob" name="dob" title="Create start Date" placeholder="Date Of Brith" class="j_date3 w100p"  disabled="disabled"/>
 		    </td>
 		    <th scope="row">Visa Expire</th>
 		    <td>
@@ -745,9 +760,9 @@
 		<tr>
 		    <th scope="row">Gender <span class="brown_text">#</span></th>
 		    <td>
-		        <div id="genderForm" disabled="disabled">
-			    <label><input type="radio" name="gender" id="gender" value="M"/><span>Male</span></label>
-			    <label><input type="radio" name="gender" id="gender" value="F"/><span>Female</span></label>
+		        <div id="genderForm" >
+			    <label><input type="radio" name="gender"  value="M" disabled="disabled"/><span>Male</span></label>
+			    <label><input type="radio" name="gender"  value="F" disabled="disabled"/><span>Female</span></label>
 			    </div>
 		    </td>
 		    <th scope="row">Email(1)</th>
