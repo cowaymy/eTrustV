@@ -267,7 +267,7 @@
 <h1>Member Promote/Demote Confirmation</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close()">CLOSE</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_confirm()">CONFIRM</a></p></li>       
+<!--     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_confirm()">CONFIRM</a></p></li> -->       
 </ul>
 </header><!-- pop_header end -->
 
