@@ -301,8 +301,8 @@
 		     , PROMO_TYPE_ID           = #{promoTypeId}
 		     , PROMO_APP_TYPE_ID       = #{promoAppTypeId}
 		     , PROMO_SRV_MEM_PAC_ID    = #{promoSrvMemPacId}
-		     , PROMO_DT_FROM           = #{promoDtFrom}
-		     , PROMO_DT_END            = #{promoDtEnd}
+		     , PROMO_DT_FROM           = TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
+		     , PROMO_DT_END            = TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
 		     , PROMO_UPD_DT            = #{promoUpdDt}
 		     , PROMO_UPD_USER_ID       = #{promoUpdUserId}
 		     , PROMO_IS_TRIAL_CNVR     = #{promoIsTrialCnvr}
