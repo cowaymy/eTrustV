@@ -168,14 +168,14 @@ public interface SearchPaymentService
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectPayDs(Map<String, Object> params);
+	List<EgovMap> selectPayDs(Map<String, Object> params);
 	
 	/**
 	 * selectGlRoute   조회
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectGlRoute(Map<String, Object> params);
+	EgovMap selectGlRoute(String param);
 	
 	/**
 	 * selectPaymentItemIsPassRecon 조회

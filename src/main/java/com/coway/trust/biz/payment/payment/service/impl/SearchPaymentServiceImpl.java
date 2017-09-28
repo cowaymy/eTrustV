@@ -699,7 +699,7 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 */
 	@Override
-	public EgovMap selectPayDs(Map<String, Object> params) {
+	public List<EgovMap> selectPayDs(Map<String, Object> params) {
 		return searchPaymentMapper.selectPayDs(params);
 	}
 	
@@ -709,8 +709,8 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 */
 	@Override
-	public EgovMap selectGlRoute(Map<String, Object> params) {
-		return searchPaymentMapper.selectGlRoute(params);
+	public EgovMap selectGlRoute(String param) {
+		return searchPaymentMapper.selectGlRoute(param);
 	}
 	
 	/**
