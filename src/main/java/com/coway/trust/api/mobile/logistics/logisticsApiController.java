@@ -125,23 +125,39 @@ public class logisticsApiController {
 			throws Exception {
 
 		Map<String, Object> params = LogStockReceiveForm.createMap(LogStockReceiveForm);
-
+		
 		List<EgovMap> headerList = MlogApiService.StockReceiveList(params);
 		
 		for (int i = 0; i < headerList.size(); i++) {
-		Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(i);
+			LOGGER.debug("headerList    값 : {}",headerList.get(i));
+		}
 		
+		
+		
+		for (int i = 0; i < headerList.size(); i++) {
+		
+	    List<LogStockReceiveDto> hList = headerList.stream().map(r -> LogStockReceiveDto.create(r)).collect(Collectors.toList());	
+			
+			
+		Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(i);
 		List<EgovMap> serialList  = MlogApiService.selectStockReceiveSerial(tmpMap);
 		
+		for (int j = 0; j < serialList.size(); j++) {
+			
+			LOGGER.debug("serialList    값 : {}",serialList.get(j));
+			
+			List<LogStockPartsReceiveDto> pList = headerList.stream().map(r -> LogStockPartsReceiveDto.create(r)).collect(Collectors.toList());
+			
+			
+			
+			
+		}
 		
 		
 		
 		}
 		
 
-		
-		
-		
 		
 		List<LogStockReceiveDto> list = headerList.stream().map(r -> LogStockReceiveDto.create(r))
 				.collect(Collectors.toList());
