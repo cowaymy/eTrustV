@@ -1293,7 +1293,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installResult.put("resultID", 0);
     		installResult.put("entryId", Integer.parseInt(params.get("hidEntryId").toString()));
     		installResult.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-    		installResult.put("CTID", Integer.parseInt(params.get("ctCode").toString()));
+    		installResult.put("CTID", 0);
     		installResult.put("installDate", params.get("installDate"));
     		installResult.put("remark", params.get("remark").toString().trim());
     		installResult.put("GLPost", 0);
