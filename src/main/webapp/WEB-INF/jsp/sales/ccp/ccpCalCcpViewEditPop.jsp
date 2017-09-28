@@ -4,6 +4,19 @@
 
 var optionUnit = { isShowChoose: false};
 
+$(function() {
+    $('#_updSmsMsg').keyup(function (e){
+        
+    	var content = $(this).val();
+    	
+       // $(this).height(((content.split('\n').length + 1) * 2) + 'em');
+        
+        $('#_charCounter').html('Total Character(s) : '+content.length);
+    });
+    $('#_updSmsMsg').keyup();
+});
+
+
 $(document).ready(function() {
     
 	//to List
@@ -160,7 +173,7 @@ $(document).ready(function() {
     	
 	});//Save End
     
-    
+	
 });//Doc Ready Func End
 
 function calSave(){
@@ -182,6 +195,7 @@ function calSave(){
         $("#_calBtnSave").css("display" , "none");
         
         //Make View
+        $("#_ordUnit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ordMth").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -407,7 +421,8 @@ function setSMSMessage(){
 	
 	$("#_updSmsMsg").val(message);
 	
-	
+	//Msg Count Init
+    $('#_charCounter').html('Total Character(s) : '+ message.length);
 }
 
 
@@ -801,7 +816,7 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">FICO Score</th>
-    <td colspan="5"><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" disabled="disabled"></span></td>
+    <td colspan="5"><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" disabled="disabled" maxlength="10"></span></td>
 </tr>
 <tr>
     <th scope="row">CCP Feedback Code</th>
@@ -809,11 +824,11 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">Special Remark</th>
-    <td colspan="5"><textarea cols="20" rows="5" id="_spcialRem" name="spcialRem">${ccpInfoMap.ccpRem}</textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" id="_spcialRem" name="spcialRem" maxlength="4000">${ccpInfoMap.ccpRem}</textarea></td>
 </tr>
 <tr>
     <th scope="row">P &amp; C Remark</th>
-    <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem">${ccpInfoMap.ccpPncRem}</textarea></td> 
+    <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem" maxlength="4000">${ccpInfoMap.ccpPncRem}</textarea></td> 
 </tr>
 <tr>
     <th scope="row">Letter Of Undertaking</th>
@@ -845,10 +860,10 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">SMS Message</th>
-    <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg"></textarea></td>
+    <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg" ></textarea></td>
 </tr>
 <tr>
-    <td colspan="2"><span>Total Character(s) : 75</span></td>
+    <td colspan="2"><span id="_charCounter">Total Character(s) :</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -36,6 +36,7 @@ $(document).ready(function() {
     
     
     //Make View
+    $("#_ordUnit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordMth").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordSuspen").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});

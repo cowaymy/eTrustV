@@ -88,4 +88,8 @@ public interface CcpCalculateMapper {
 	void updateOrderRequest(Map<String, Object> params) throws Exception;
 	
 	void insertLog(Map<String, Object>params) throws Exception;
+	
+	EgovMap getRentPayInfo(Map<String, Object> params) throws Exception;
+	
+	void updatePayChannel(Map<String, Object> params) throws Exception;
 }

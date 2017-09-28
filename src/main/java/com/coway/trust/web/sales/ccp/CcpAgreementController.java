@@ -53,6 +53,11 @@ public class CcpAgreementController {
 	@RequestMapping(value = "/selectCcpAgreementJsonList" , method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCcpAgreementJsonList (@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) throws Exception{
 		
+		LOGGER.info("_______________________-_______________-_______________-_______________-_______________-");
+		LOGGER.info("_______________________ 파라미터 확인 : " + params.toString());
+		LOGGER.info("_______________________-_______________-_______________-_______________-_______________-");
+		
+		
 		List<EgovMap> ccpAgrList = null;
 		
 		String govAgPrgsIdList[] = request.getParameterValues("progressVal");

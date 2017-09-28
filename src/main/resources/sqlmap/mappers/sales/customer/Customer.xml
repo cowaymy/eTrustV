@@ -1345,8 +1345,8 @@
 						            #{crtUserId},
 						            SYSDATE,
 						            #{cmbTypeId},
-						            TO_CHAR(TO_DATE(#{pasSportExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),
-                                    TO_CHAR(TO_DATE(#{visaExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),
+						            TO_DATE(#{pasSportExpr}, 'DD/MM/YYYY'),
+                                    TO_DATE(#{visaExpr}, 'DD/MM/YYYY'),
 						            NULL,
 						            #{cmbCorpTypeId},
 						            #{gstRgistNo})
@@ -1502,8 +1502,8 @@
        SET 
             UPD_DT = SYSDATE,
             NAME = #{basicName} , 
-            PAS_SPORT_EXPR =TO_CHAR(TO_DATE(#{basicPasSportExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),  
-            VISA_EXPR = TO_CHAR(TO_DATE(#{basicVisaExpr}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),  
+            PAS_SPORT_EXPR =TO_DATE(#{basicPasSportExpr}, 'DD/MM/YYYY'),  
+            VISA_EXPR = TO_DATE(#{basicVisaExpr}, 'DD/MM/YYYY'),  
             EMAIL = #{basicEmail},
             REM = #{basicRem},
             <if test="basicTypeId == 964">
@@ -1969,7 +1969,7 @@
                                            #{cntcTelo},
                                            #{cntcTelr},
                                            #{cntcTelf},
-                                           TO_CHAR(TO_DATE(#{cntcDob}, 'DD/MM/YYYY'), 'YYYY-MM-DD'),
+                                           TO_DATE(#{cntcDob}, 'DD/MM/YYYY'),
                                            #{cntcGender},
                                            #{cntcCmbRaceTypeId},
                                            #{cntcEmail},

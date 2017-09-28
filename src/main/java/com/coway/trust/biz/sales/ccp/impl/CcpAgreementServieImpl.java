@@ -366,25 +366,27 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		EgovMap statusMap = null;
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		int resultPrg = 0;
-		
 		String msgLogSeq = "";
 		
-		if(!params.get("updPrgId").equals("10")){ 
+		int getPrgId = Integer.parseInt((String)params.get("updPrgId"));
+		int getupdMsgStatus = Integer.parseInt((String)params.get("updMsgStatus"));
+		
+		if(getPrgId != 10){ 
 			
-			if(params.get("updMsgStatus").equals("5")){
+			if(getupdMsgStatus == 5){
 				
 				params.put("ordByNext", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
 				
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepNext")).intValue();
 				
-			}else if(params.get("updMsgStatus").equals("6")){
+			}else if(getupdMsgStatus == 6){
 				
 				params.put("ordByPre", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepPrev")).intValue();
 				
-			}else if(params.get("updMsgStatus").equals("44")){
+			}else if(getupdMsgStatus == 44){
 				
 				params.put("ordByStep", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
@@ -397,13 +399,13 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			}
 		}else{
 			
-			if(params.get("updMsgStatus").equals("5")){
+			if(getupdMsgStatus == 5){
 				
 				params.put("ordByStepSeqNo", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepSeqNo")).intValue();
 				
-			}else if(params.get("updMsgStatus").equals("6")){
+			}else if(getupdMsgStatus == 6){
 				
 				params.put("ordByPre", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
@@ -432,13 +434,13 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		
 		// '10'
-		if(params.get("updPrgId").equals("10")){
+		if(getPrgId == 10){
 			
-			if(params.get("updMsgStatus").equals("5")){
+			if(getupdMsgStatus == 5){
 				
 				params.put("govAgrStatusId", "4"); 
 				
-			}else if(params.get("updMsgStatus").equals("44")){
+			}else if(getupdMsgStatus == 44){
 				
 				params.put("govAgrStatusId", "1"); 
 				
@@ -447,17 +449,17 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 				params.put("govAgrStatusId", "1");
 				
 			}
-		}else if(params.get("updPrgId").equals("7")){
+		}else if(getPrgId == 7){
 			
-			if(params.get("updMsgStatus").equals("5")){
+			if(getupdMsgStatus == 5){
 				
 				params.put("govAgrStatusId", "1");
 				
-			}else if(params.get("updMsgStatus").equals("10")){
+			}else if(getupdMsgStatus == 10){
 				
 				params.put("govAgrStatusId", "10");
 				
-			}else if(params.get("updMsgStatus").equals("44")){
+			}else if(getupdMsgStatus == 44){
 				
 				params.put("govAgrStatusId", "1");
 				
@@ -466,15 +468,15 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 				params.put("govAgrStatusId", "8");
 			}
 			
-		}else if(params.get("updPrgId").equals("9")){
+		}else if(getPrgId == 9){
 			
-			if(params.get("updMsgStatus").equals("5")){
+			if(getupdMsgStatus == 5){
 				
 				params.put("govAgrStatusId", "1");
 				params.put("updIsNotification", "1");
 				params.put("updNotificationMonth", "1");
 				
-			}else if(params.get("updMsgStatus").equals("44")){
+			}else if(getupdMsgStatus == 44){
 				
 				params.put("govAgrStatusId", "1");
 				params.put("updIsNotification", "1");
@@ -490,11 +492,11 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			
 		}else{
 			
-			if(params.get("updMsgStatus").equals("5")){
+			if(getupdMsgStatus == 5){
 				
 				params.put("govAgrStatusId", "1");
 				
-			}else if(params.get("updMsgStatus").equals("44")){
+			}else if(getupdMsgStatus == 44){
 				
 				params.put("govAgrStatusId", "1");
 				
@@ -636,7 +638,9 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     	//TODO  GovAgreement.First().GovAgrPreUpdator = Agreement.GovAgrID;  :: ASIS Source Need Confirm(CCP.cs)
     	//Update 
     	//param Set
-    	if(params.get("hiddenUpdMsgStatus").equals("5") || params.get("hiddenUpdMsgStatus").equals("44")){
+    	int hidMsgStus = Integer.parseInt((String)params.get("hiddenUpdMsgStatus"));
+    	
+    	if(hidMsgStus == 5 || hidMsgStus == 44){
     		params.put("changeMsgDate", "1");
     	}
     	ccpAgreementMapper.updateAgrPrgDate(params);

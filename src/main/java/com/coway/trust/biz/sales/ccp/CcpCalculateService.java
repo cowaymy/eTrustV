@@ -34,4 +34,6 @@ public interface CcpCalculateService {
 	EgovMap countCallEntry(Map<String, Object> params) throws Exception;
 	
 	void calSave (Map<String, Object> params) throws Exception;
+	
+	void updatePayChannel(Map<String, Object> params) throws Exception;
 }

@@ -81,14 +81,14 @@
 		        
 		        <!-- CRT_DT // FROM -->		        
 		        <if test="null != govAgCrtDtFrom and '' != govAgCrtDtFrom">
-		              AND Project2.GOV_AG_CRT_DT >= TO_CHAR(TO_DATE(#{govAgCrtDtFrom}, 'DD-MM-YYYY'), 'YYYY-MM-DD' )
+		              AND Project2.GOV_AG_CRT_DT >= TO_DATE(#{govAgCrtDtFrom}, 'DD/MM/YYYY')
 		        </if> 
 		        
 		         <!-- CRT_DT // TO -->			         	         
 		         <if test="null != govAgCrtDtTo and '' != govAgCrtDtTo">
 		             
 		             <![CDATA[   
-		              AND Project2.GOV_AG_CRT_DT <= TO_CHAR(TO_DATE(#{govAgCrtDtTo}, 'DD-MM-YYYY'), 'YYYY-MM-DD')  
+		              AND Project2.GOV_AG_CRT_DT <= TO_DATE(#{govAgCrtDtTo}, 'DD/MM/YYYY')  
 		             ]]>
 		             
 		         </if> 
@@ -106,14 +106,14 @@
 		          </if>         
 		        
 		         <if test="null != govAgStartDtFrom and  '' != govAgStartDtFrom ">
-		              AND Project2.GOV_AG_START_DT >= TO_CHAR(TO_DATE(#{govAgStartDtFrom}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+		              AND Project2.GOV_AG_START_DT >= TO_DATE(#{govAgStartDtFrom}, 'DD/MM/YYYY')
 		         </if>
 		        
 		        
                  <if test="null != govAgStartDtTo and  '' != govAgStartDtTo ">
 	                
 	                 <![CDATA[
-	                      AND Project2.GOV_AG_START_DT <= TO_CHAR(TO_DATE(#{govAgStartDtTo}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+	                      AND Project2.GOV_AG_START_DT <= TO_DATE(#{govAgStartDtTo}, 'DD/MM/YYYY')
 	                 ]]>
 	                 
                  </if>
@@ -125,13 +125,13 @@
 		        
 		       
 		        <if test=" null != govAgEndDtFrom  and '' != govAgEndDtFrom">
-	                   AND Project2.GOV_AG_END_DT >= TO_CHAR(TO_DATE(#{govAgEndDtFrom}, 'DD-MM-YYYY'), 'YYYY-MM-DD') 
+	                   AND Project2.GOV_AG_END_DT >= TO_DATE(#{govAgEndDtFrom}, 'DD/MM/YYYY') 
 		        </if>
 		        
 		        
 		        <if test=" null != govAgEndDtTo and '' != govAgEndDtTo ">
 	                   <![CDATA[
-	                   AND Project2.GOV_AG_END_DT <= TO_CHAR(TO_DATE(#{govAgEndDtTo}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+	                   AND Project2.GOV_AG_END_DT <= TO_DATE(#{govAgEndDtTo}, 'DD/MM/YYYY')
 	                     ]]>
 		        </if>
 		         
@@ -403,7 +403,7 @@
 				                AND ( Extent1.ORD_NO = #{searchOrdNo})
 				           </if>
 				           <if test=" '' != searchOrdDate and null != searchOrdDate">
-				                AND (Extent1.ORD_DT = TO_CHAR(#{searchOrdDate}, 'YYYY-MM-DD') )
+				                AND (Extent1.ORD_DT = TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY') )
 				           </if>
 				           <if test=" '' != searchOrdCustName and null != searchOrdCustName">
 				                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NAME), UPPER(#{searchOrdCustName})),10,0)) > 0 )
@@ -438,7 +438,7 @@
 					</if>
 					<if test=" '' != searchDate and null != searchDate">    
 					AND 
-					    Extent1.JOIN_DT = TO_CHAR(#{searchDate}, 'YYYY-MM-DD')
+					    Extent1.JOIN_DT = TO_DATE(#{searchDate}, 'DD/MM/YYYY')
 					</if>
 					<if test=" '' != searchCustName and null != searchCustName">    
 					AND 
@@ -607,8 +607,8 @@
 					           1, 
 					           #{inputProgress}, 
 					           #{inputAgreementType},
-					           TO_CHAR(TO_DATE(#{inputPeriodStart}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
-					           TO_CHAR(TO_DATE(#{inputPeriodEnd}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+					           TO_DATE(#{inputPeriodStart}, 'DD/MM/YYYY'), 
+					           TO_DATE(#{inputPeriodEnd}, 'DD/MM/YYYY'),
 					           0,
 					           #{agreementAgmRemark}, 
 					           #{userId}, 
@@ -621,7 +621,7 @@
 					           0, 
 					           1, 
 					           #{sendDt}, 
-					           TO_CHAR(TO_DATE(#{rcivDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD') )
+					           TO_DATE(#{rcivDt}, 'DD/MM/YYYY'))
     </insert>
     
     <select id="getUserInfo"  parameterType="Map" resultType="egovMap">
@@ -696,13 +696,13 @@
 				           0,
 				           NVL(#{inputConsignmentNo} , ' '),
 				           #{inputAgmReq},
-				           TO_CHAR(TO_DATE(#{consignmentReciveDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+				           TO_DATE(#{consignmentReciveDt}, 'DD/MM/YYYY'), 
 				           NVL(#{inputCourierSelect}, 0),
 				           SYSDATE,
 				           #{userId},
 				           SYSDATE,
 				           #{userId},
-				           TO_CHAR(TO_DATE(#{agCnsgnSendDt}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+				           TO_DATE(#{agCnsgnSendDt}, 'DD/MM/YYYY'), 
 				           #{consignBtHand}, 
 				           1237 )
     </insert>
@@ -733,8 +733,8 @@
 				           #{userId},
 				           SYSDATE,
 				           #{userId},
-				           TO_CHAR(TO_DATE(#{inputPeriodStart}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
-                           TO_CHAR(TO_DATE(#{inputPeriodEnd}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+				           TO_DATE(#{inputPeriodStart}, 'DD/MM/YYYY'), 
+                           TO_DATE(#{inputPeriodEnd}, 'DD/MM/YYYY'),
 				           '', 
 				           '' )
     </insert>
@@ -1102,7 +1102,7 @@
                 #{updAgmReq},
                 <choose>
                     <when test=" '' != updConReceiveDate and null != updConReceiveDate ">
-                         TO_CHAR(TO_DATE(#{updConReceiveDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+                         TO_DATE(#{updConReceiveDate}, 'DD/MM/YYYY'), 
                     </when>
                     <otherwise>
                         #{defaultDate},
@@ -1115,7 +1115,7 @@
                 #{userId}, 
                 <choose>
                     <when test=" '' != updConSendDate and null != updConSendDate ">
-                         TO_CHAR(TO_DATE(#{updConSendDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
+                         TO_DATE(#{updConSendDate}, 'DD/MM/YYYY'), 
                     </when>
                     <otherwise>
                         #{defaultDate},
@@ -1393,8 +1393,8 @@ SET RESULT_ID = #{resultId},
 			UPDATE SAL0033D
 			SET  GOV_AG_PRGRS_ID = #{govAgrPrgId},
 			       <if test=" '' != changeMsgDate and null != changeMsgDate">
-			             GOV_AG_START_DT = TO_CHAR(TO_DATE(#{updPeriodStart}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), 
-			             GOV_AG_END_DT = TO_CHAR(TO_DATE(#{updPeriodEnd}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),
+			             GOV_AG_START_DT = TO_DATE(#{updPeriodStart}, 'DD/MM/YYYY'), 
+			             GOV_AG_END_DT = TO_DATE(#{updPeriodEnd}, 'DD/MM/YYYY'),
 			       </if>
 			       GOV_AG_UPD_DT = SYSDATE
 			 WHERE   GOV_AG_ID = #{updAgrId}

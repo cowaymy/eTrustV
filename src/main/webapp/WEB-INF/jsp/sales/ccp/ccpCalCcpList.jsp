@@ -27,17 +27,58 @@ $(document).ready(function() {
 	//Edit
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(calGrid, "cellDoubleClick", function(event){
-        
-    	if(event.item.ccpStusId != 1){
-    		Common.alert("* Not Exceptable CCP Status  : (Approve, Rejected)");
-    		return;
+    	if(event.item.ccpStusId == 1){
+    		$("#_ccpId").val(event.item.ccpId);
+            $("#_salesOrdId").val(event.item.salesOrdId);
+            $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
+            Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
+            
+    	}else{
+    		$("#_ccpId").val(event.item.ccpId);
+            $("#_salesOrdId").val(event.item.salesOrdId);
+            $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
+            Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
     	}
-    	
-    	$("#_ccpId").val(event.item.ccpId);
-        $("#_salesOrdId").val(event.item.salesOrdId);
-        $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
-        Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv');
     });
+	
+	//Update Pay Channel (_updPayBtn)############################### Pay
+	$("#_updPayBtn").click(function() {
+		//Validation 
+		var selectedItem = AUIGrid.getSelectedItems(calGrid);
+		if(selectedItem.length <= 0){
+			Common.alert(" No result selected. ");
+            return;
+		}
+		
+		if(selectedItem[0].item.ccpStusId != 1){
+			Common.alert("CCP Status not in active .");
+			return;
+		}
+		
+		//PopUp
+		$("#_salesOrdId").val(selectedItem[0].item.salesOrdId);
+        Common.popupDiv("/sales/ccp/ccpCalCcpPayChannelEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv');
+	});
+	
+	//Update Cust Limit Info  (_updCustBtn)  ######################## Cust
+	$("#_updCustBtn").click(function() {
+        //Validation 
+        var selectedItem = AUIGrid.getSelectedItems(calGrid);
+        if(selectedItem.length <= 0){
+            Common.alert(" No result selected. ");
+            return;
+        }
+        
+        if(selectedItem[0].item.ccpStusId != 1){
+            Common.alert("CCP Status not in active .");
+            return;
+        }
+        
+        //PopUp
+        $("#_custId").val(selectedItem[0].item.custId);
+        Common.popupDiv("/sales/ccp/ccpCalCcpCustInfoLimitEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv');
+    });
+	
 });
 
 function createCalGrid(){
@@ -60,7 +101,8 @@ function createCalGrid(){
 	                     {dataField : "ccpId", visible : false},
 	                     {dataField : "salesOrdId", visible : false},
 	                     {dataField : "ccpStusId", visible : false}, 
-	                     {dataField : "ccpTotScrePoint", visible : false}
+	                     {dataField : "ccpTotScrePoint", visible : false},
+	                     {dataField : "custId", visible : false}
 	                     
 	]
 	
@@ -117,8 +159,8 @@ function f_multiCombo(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Customer Credibility Point List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Update Payment Channel</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Update Customer Info</a></p></li>
+    <li><p class="btn_blue"><a id="_updPayBtn"><span class="search"></span>Update Payment Channel</a></p></li> 
+    <li><p class="btn_blue"><a id="_updCustBtn"><span class="search"></span>Update Customer Info</a></p></li>
     <li><p class="btn_blue"><a id="_calSearch"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -127,6 +169,7 @@ function f_multiCombo(){
     <input type="hidden" name="ccpId" id="_ccpId">
     <input type="hidden" name="salesOrdId" id="_salesOrdId">
     <input type="hidden" name="ccpTotScrePoint" id="_ccpTotScrePoint">
+    <input type="hidden" name="custId" id="_custId">
 </form>
 
 <section class="search_table"><!-- search_table start -->

@@ -494,7 +494,7 @@ public class CustomerController {
 		
 		int getCustCareCntId = 0;
 		String defaultDate = "1900-01-01";
-		
+		SessionVO sessionVo = sessionHandler.getCurrentSessionInfo();
 		CustomerVO vo = customerForm.getCustomerVO();
 		
 		// Credit Card addList
@@ -533,11 +533,11 @@ public class CustomerController {
 			insmap.put("rem", null);
 		}
 		insmap.put("stusCodeId", 1);				//고정
-		insmap.put("updUserId", 999999);		// 임시번호 (login User로 바꿔야)
+		insmap.put("updUserId", sessionVo.getUserId());		
 		insmap.put("renGrp", "");					//고정
 		insmap.put("pstTerms", 0);					//고정
 		insmap.put("idOld", 0);						//고정
-		insmap.put("crtUserId", 999999);			// 임시번호 (login User로 바꿔야)
+		insmap.put("crtUserId", sessionVo.getUserId());			
 		insmap.put("cmbTypeId", vo.getCmbTypeId());
 		insmap.put("pasSportExpr", vo.getPasSportExpr() != null ? vo.getPasSportExpr() : defaultDate);
 		insmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);

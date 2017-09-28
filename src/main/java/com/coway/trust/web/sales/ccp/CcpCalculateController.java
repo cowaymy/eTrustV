@@ -13,18 +13,17 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -170,6 +169,73 @@ public class CcpCalculateController {
 		}
 	}
 	
+	
+	@RequestMapping(value = "/ccpCalCCpViewPop.do")
+	public String ccpCalCCpViewPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.info("############################################################");
+		LOGGER.info("############ CalCcpViewPop Params Confirm : " + params.toString());
+		LOGGER.info("############################################################");
+		
+		//Log Service
+		EgovMap prgMap = null;
+		BigDecimal prgDecimal = null;
+		int resultVal = 0;
+		prgMap = ccpCalculateService.getLatestOrderLogByOrderID(params);
+		prgDecimal = (BigDecimal)prgMap.get("prgrsId");
+		resultVal = prgDecimal.intValue();
+		
+    	//params Set
+    	params.put("prgrsId", resultVal); 
+    	params.put("salesOrderId", params.get("salesOrdId"));
+    	//service1
+    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+    	EgovMap salesMan = ccpCalculateService.selectSalesManViewByOrdId(params);
+    	
+    	
+    	EgovMap tempMap = null;
+    	tempMap = (EgovMap)orderDetail.get("basicInfo");
+    	
+    	BigDecimal tempIntval = (BigDecimal)tempMap.get("custTypeId");
+    	
+    	//Set Param
+    	if(tempIntval.intValue() == 965){
+    		model.addAttribute("ccpMasterId", "1"); //Company
+    		params.put("ccpMasterId", "1"); //order unit MasterId
+    	}else{
+    		model.addAttribute("ccpMasterId", "0"); //Individual
+    		params.put("ccpMasterId", "2"); //oder unit MasterId
+    	}
+    	
+    	EgovMap fieldMap = null;
+    	//params Set
+    	params.put("custId", tempMap.get("custId"));
+    	
+    	fieldMap = ccpCalculateService.getCalViewEditField(params);
+    	
+    	
+    	//loadIncomRange
+    	Map<String, Object> incomMap = new HashMap<String, Object>();
+    	incomMap = ccpCalculateService.selectLoadIncomeRange(params);
+    	
+    	
+    	//ccpId
+    	EgovMap ccpInfoMap = null;
+    	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
+    	
+    	//Model
+    	model.put("ccpId", params.get("ccpId"));
+    	model.put("orderDetail", orderDetail);
+    	model.put("fieldMap", fieldMap);
+    	model.put("incomMap", incomMap);
+    	model.put("ccpInfoMap", ccpInfoMap);
+    	model.put("salesMan", salesMan);
+			
+		//return 
+    	return "sales/ccp/ccpCalCCpViewPop";
+		
+	}
+
 	
 	@RequestMapping(value = "/getOrderUnitList")
 	public ResponseEntity<List<EgovMap>> getOrderUnitList(@RequestParam Map<String, Object> params) throws Exception{
@@ -318,5 +384,33 @@ public class CcpCalculateController {
 		return ResponseEntity.ok(message); 
 		
 	}
+	
+	
+	@RequestMapping(value = "/ccpCalCcpPayChannelEditPop.do")
+	public String selectCalPaymentChannel(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.info("#####################################################");
+		LOGGER.info("######  params.ToString : " + params.toString());
+		LOGGER.info("#####################################################");
+		params.put("salesOrderId", params.get("salesOrdId"));
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		
+		model.put("orderDetail", orderDetail);
+		model.put("salesOrdId", params.get("salesOrdId"));
+		
+		return "sales/ccp/ccpCalCcpPayChannelEditPop";
+	}
+	
+	
+	@RequestMapping(value = "/ccpCalCcpCustInfoLimitEditPop.do")
+	public String selectCalCustInfo(@RequestParam Map<String, Object> params) throws Exception{
+		
+		LOGGER.info("#####################################################");
+		LOGGER.info("######  params.ToString : " + params.toString());
+		LOGGER.info("#####################################################");
+		
+		return "sales/ccp/ccpCalCcpCustInfoLimitEditPop";
+	}
+	
 }
 
