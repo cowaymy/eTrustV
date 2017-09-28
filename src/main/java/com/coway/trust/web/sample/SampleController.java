@@ -1,7 +1,12 @@
 package com.coway.trust.web.sample;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -58,12 +63,76 @@ public class SampleController {
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 
+	@Value("${batch.jar.dir}")
+	private String batchDir;
+
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
 	@Autowired
 	private FileApplication fileApplication;
+
+	/**
+	 * batch excute sample.....
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/batchExcute.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> batchExcute() throws Exception {
+
+		ProcessBuilder builder = new ProcessBuilder();
+		List<String> command = new ArrayList<>();
+
+		if (isWindows()) {
+			setCommand(builder, command);
+		} else {
+			setCommand(builder, command);
+		}
+		builder.directory(new File(batchDir));
+		Process process = builder.start();
+
+		StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), str -> LOGGER.debug("{}", str));
+		Executors.newSingleThreadExecutor().submit(streamGobbler);
+		// int exitCode = process.waitFor();
+
+		return ResponseEntity.ok(new ReturnMessage());
+	}
+
+	private void setCommand(ProcessBuilder builder, List<String> command) {
+		command.add("java");
+		command.add("-jar");
+		command.add("-Denv=local");
+		command.add("-Dspring.profiles.active=local");
+		command.add("batch-1.0.0-SNAPSHOT.jar");
+		command.add("org.springframework.batch.core.launch.support.CommandLineJobRunner");
+		command.add(" ctosJob");
+		command.add("aa=" + command);
+		// command.add("--spring.batch.job.names=ctosJob");
+		LOGGER.debug("command : {}", command.toString());
+		builder.command(command);
+	}
+
+	private static class StreamGobbler implements Runnable {
+		private InputStream inputStream;
+		private Consumer<String> consumer;
+
+		public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+			this.inputStream = inputStream;
+			this.consumer = consumer;
+		}
+
+		@Override
+		public void run() {
+			new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+		}
+	}
+
+	private static boolean isWindows() {
+		String osName = System.getProperty("os.name");
+		return osName.contains("Windows");
+	}
 
 	/**
 	 * 트랜잭션 rollback 예제.
@@ -392,7 +461,6 @@ public class SampleController {
 	/**
 	 * Map을 이용한 Grid 편집 데이터 저장/수정/삭제 데이터 처리 샘플.
 	 *
-	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
@@ -441,7 +509,6 @@ public class SampleController {
 	/**
 	 * VO 을 이용한 Grid 편집 데이터 저장/수정/삭제 데이터 처리 샘플.
 	 *
-	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
@@ -545,7 +612,6 @@ public class SampleController {
 	/**
 	 * 저장 샘플.
 	 *
-	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
@@ -687,7 +753,6 @@ public class SampleController {
 	 *            - 조회할 정보가 담긴 VO
 	 * @param searchVO
 	 *            - 목록 조회조건 정보가 담긴 VO
-	 * @param status
 	 * @return @ModelAttribute("sampleVO") - 조회한 정보
 	 * @exception Exception
 	 */

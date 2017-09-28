@@ -69,6 +69,7 @@
             <mvc:exclude-mapping path="/webjars/**"/>
             <mvc:exclude-mapping path="/v2/**"/>
             <mvc:exclude-mapping path="/configuration/**"/>
+            <mvc:exclude-mapping path="/sample/**"/>
 
             <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>

@@ -92,10 +92,18 @@ var Common = {
                 if (_errcallback) {
                     _errcallback(jqXHR, textStatus, errorThrown);
                 } else {
+
+                    if(jqXHR.status == "401"){
+                        Common.alert(_SESSION_EXPIRE_MESSAGE);
+                        return false;
+                    }
+
                     if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
                         Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
                     }else{
                         Common.setMsg("Fail ........ ");
+                        Common.alert("Fail ........ ");
                     }
                 }
             }
@@ -143,6 +151,10 @@ var Common = {
                 } else {
                     if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
                         Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    }else{
+                        Common.setMsg("Fail ........ ");
+                        Common.alert("Fail ........ ");
                     }
                 }
             },

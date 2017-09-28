@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.coway.trust.config.datasource.DataSource;
+import com.coway.trust.config.datasource.DataSourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +117,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 * @exception Exception
 	 */
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	 public Map<String, Object> callCommProcedure(Map<String, Object> param){
 		return commissionCalculationMapper.callCommProcedure(param);
 	}
@@ -127,6 +130,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 * @exception Exception
 	 */
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	 public int callCommPrdLogIns(Map<String, Object> param){
 		commissionCalculationMapper.callCommLogUpdate(param);
 		int cnt  = commissionCalculationMapper.callCommPrdLogIns(param);
@@ -141,6 +145,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 * @exception Exception
 	 */
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	 public List<EgovMap> selectCommRunningPrdLog(Map<String, Object> param){
 		return commissionCalculationMapper.selectCommRunningPrdLog(param);
 	}
@@ -153,6 +158,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 * @exception Exception
 	 */
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	 public void callCommPrdLogUpdate(Map<String, Object> param){
 		commissionCalculationMapper.callCommLogUpdate(param);
 		commissionCalculationMapper.callCommPrdLog(param);
@@ -166,6 +172,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 * @exception Exception
 	 */
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	 public int callCommFailNextPrdLog(Map<String, Object> param){
 		commissionCalculationMapper.callCommPrdLog(param);
 		return 8;
