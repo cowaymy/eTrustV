@@ -135,12 +135,12 @@ function createAUIGrid() {
             wrapSelectionMove : true,
             
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
+            showRowNumColumn : true
 
         };
         
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+        myGridID = AUIGrid.create("#grid_wrap_memList", columnLayout, gridPros);
     }
 
 var gridPros = {
@@ -173,7 +173,7 @@ var gridPros = {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : false,
+        showRowNumColumn : false
         
     };
     
@@ -361,7 +361,7 @@ var gridPros = {
 
 <article class="grid_wrap">
     <!-- grid_wrap start -->
-    <div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    <div id="grid_wrap_memList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

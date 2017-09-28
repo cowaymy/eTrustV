@@ -6,7 +6,9 @@
 function fn_memberSave(){
 			    var jsonObj =  GridCommon.getEditData(myGridID);
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
-	Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
+			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
+		console.log("message : " + result.message );
+		alert(result.message);
 	});
 }
 
