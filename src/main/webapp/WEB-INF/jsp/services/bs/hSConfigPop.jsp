@@ -224,7 +224,7 @@
 	    });
 	    
 	    
-	      Common.ajax("GET", "/bs/selectPopUpCustList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}'}, function(result) {
+	      Common.ajax("GET", "/bs/selectPopUpCustList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}', ManuaMyBSMonth:'${ManuaMyBSMonth}'}, function(result) {
 	         console.log("성공.");
 	         console.log("data : " + result);
 	         

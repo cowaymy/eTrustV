@@ -283,9 +283,9 @@
 		        
                   //Common.popupDiv("/bs/selectHSConfigListPop.do",jsonObj);
                   
+
                   
-                  
-                  Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId    ); 
+                  Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  ); 
                 //Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true&custId=" + 31258 ,"");
 /*                 Common.popupDiv("/bs/selectHSConfigListPop.do?isPop=true", jsonObj, function(params) {
                 }); */
