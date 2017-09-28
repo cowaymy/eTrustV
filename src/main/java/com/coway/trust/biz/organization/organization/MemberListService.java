@@ -39,7 +39,7 @@ public interface MemberListService {
 	
 	EgovMap selectCodyPAExpired(Map<String, Object> params);
 	
-	Boolean saveMember(Map<String, Object> params, List<Object> docType);
+	String saveMember(Map<String, Object> params, List<Object> docType);
 
 	List<EgovMap> selectCodyDocSubmission(Map<String, Object> params);
 	

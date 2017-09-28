@@ -116,7 +116,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	
 	@Transactional
 	@Override
-	public Boolean saveMember(Map<String, Object> params, List<Object> docType) {
+	public String saveMember(Map<String, Object> params, List<Object> docType) {
 		
 		String appId="";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
@@ -252,8 +252,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
 		
 		Boolean success = false;
+		String memCode = "";
 		if(params != null){
-			success = doSaveMember(params, docType);
+			memCode = doSaveMember(params, docType);
 			
 			/*if(success){
 				if(Integer.parseInt((String) params.get("memberType")) == 2){
@@ -266,7 +267,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		
 		
-		return success;
+		return memCode;
 	}
 	
 	public String getRandomNumber(int a){
@@ -401,7 +402,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 	
 	@Transactional
-	public boolean doSaveMember(Map<String, Object> params,List<Object> docType) {
+	public String doSaveMember(Map<String, Object> params,List<Object> docType) {
 			Boolean success = false;
 			String memberCode = "";
 			int ID = 0;
@@ -847,8 +848,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memberListMapper.insertinvWH(invWH);
 			}
 			success=true;
+			String memCode = selectMemberCode.get("docNo").toString();
 		
-		return success;
+		return memCode;
 	}	
 	
 	@Transactional
