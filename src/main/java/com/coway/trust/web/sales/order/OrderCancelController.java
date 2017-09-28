@@ -175,15 +175,11 @@ public class OrderCancelController {
 		String retMsg = "SUCCESS";
 		
 		Map<String, Object> map = new HashMap();
-		
-		try{
+
 			orderCancelService.saveCancel(params);
-		}catch(Exception ex){
-			//retMsg = AppConstants.MSG_FAIL;
-			retMsg = "FAIL";
-		}finally{
+
 			map.put("msg", retMsg);
-		}
+
 		return ResponseEntity.ok(map);
 	}
 	
