@@ -269,6 +269,7 @@
                $("#insertFormRule [name=codeName]").val($("#searchFormRule [name=itemNm]").val());
                $("#insertFormRule [name=itemCd]").val($("#searchFormRule [name=itemCd]").val());
                $("#insertFormRule [name=itemSeq]").val($("#searchFormRule [name=itemSeq]").val());
+               $("#insertFormRule [name=ruleNm]").val($("#searchFormRule [name=itemNm]").val());
            });
        }); // addrule     
 
@@ -357,7 +358,8 @@
 				var data = getOrgItemData(val);
 				//	AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex - 2, "");
 				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 1, data.split(",")[2]);
-				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 7, data.split(",")[1]);
+				//AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 7, data.split(",")[1]);
+				AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex + 7, data.split(",")[4]);
 			} else if (event.columnIndex == 8) { //use_yn
 				var val = event.value;
 				if (val == "") {
@@ -409,7 +411,7 @@
 		$.each(orgItemList, function(key, value) {
 			var id = value.id;
 			if (id == val) {
-				retStr = value.id + "," + value.value + "," + value.cdNm + "," + value.cdDs;
+				retStr = value.id + "," + value.value + "," + value.cdNm + "," + value.cdDs + "," +value.code;
 			}
 		});
 		return retStr;
@@ -646,10 +648,12 @@
             orgItemList = new Array();
             for (var i = 0; i < result.length; i++) {
                 var list = new Object();
-                list.id = result[i].codeId;
-                list.value = result[i].code;
+                list.id = result[i].codeId
+               //list.value = result[i].code;
+               list.value = result[i].codeName;
                 list.cdNm = result[i].codeName;
                 list.cdDs = result[i].cdDs;
+                list.code = result[i].code;     
                 orgItemList.push(list);
             }
             if (callBack) {
