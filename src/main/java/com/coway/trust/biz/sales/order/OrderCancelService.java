@@ -60,6 +60,7 @@ public interface OrderCancelService {
 	
 	
 	void saveCancel(Map<String, Object> params);
+	void updateCancelSAL0071D(Map<String, Object> params);
 	
 	
 	/**

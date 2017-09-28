@@ -672,4 +672,11 @@
 		 WHERE SO_REQ_ID = #{soReqId}
     </update>
     
+    <update id="updateCancelSAL0071D" parameterType="Map">
+        UPDATE SAL0071D
+             SET STUS_CODE_ID = #{rentalSchemeStusId},
+                   REN_SCH_DT = SYSDATE
+         WHERE REN_SCH_ID = #{renSchId}
+    </update>
+    
 </mapper>

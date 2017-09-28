@@ -181,7 +181,7 @@
     
     function fn_saveCancel(){
     	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
-            Common.alert(result.msg, fn_reloadPage);
+            Common.alert(result.msg);
         }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     console.log("status : " + jqXHR.status);

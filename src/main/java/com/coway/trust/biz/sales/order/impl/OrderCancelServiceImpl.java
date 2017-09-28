@@ -127,21 +127,28 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam);
 		saveParam.put("renSchId", getRenSchId.get("renSchId"));
 		saveParam.put("rentalSchemeStusId", params.get("addStatus"));
+		saveParam.put("rentalSchemeStusId", "REG");
 		
-		orderInvestMapper.updateSAL0071D(saveParam);
+//		int success = orderInvestMapper.updateSAL0071D(saveParam);
+		orderCancelMapper.updateCancelSAL0071D(saveParam);
+		logger.info("##### reqStageId ###############" +(int)params.get("reqStageId"));
+//		if(success == 1){
+			if((int)params.get("reqStageId") == 25){
+				saveParam.put("prgrsId", 5);
+				saveParam.put("isLok", 0);
+			}else{
+				saveParam.put("prgrsId", 2);
+				saveParam.put("isLok", 1);
+			}
+//			EgovMap getRefId = orderExchangeMapper.firstSearchForCancel(saveParam);
+//			saveParam.put("refId", getRefId.get("refId"));
+			saveParam.put("refId", 0);
+			
+			orderInvestMapper.insertSalesOrdLog(saveParam);
+//		 }else{
+			 
+//		 }
 		
-		if((int)params.get("reqStageId") == 25){
-			saveParam.put("prgrsId", 5);
-			saveParam.put("isLok", 0);
-		}else{
-			saveParam.put("prgrsId", 2);
-			saveParam.put("isLok", 1);
-		}
-//		EgovMap getRefId = orderExchangeMapper.firstSearchForCancel(saveParam);
-//		saveParam.put("refId", getRefId.get("refId"));
-		saveParam.put("refId", 0);
-		
-		orderInvestMapper.insertSalesOrdLog(saveParam);
 		
 	}
 	
@@ -176,5 +183,12 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 	 */
 	public List<EgovMap> selectFeedback(Map<String, Object> params) {
 		return orderCancelMapper.selectFeedback(params);
+	}
+
+
+	@Override
+	public void updateCancelSAL0071D(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		
 	}
 }

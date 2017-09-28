@@ -103,6 +103,8 @@ public interface OrderCancelMapper {
 	 */
 	void updateCancelCCR0006D(Map<String, Object> params);
 	
+	void updateCancelSAL0071D(Map<String, Object> params);
+	
 	
 	/**
 	 * 
