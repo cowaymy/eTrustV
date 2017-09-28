@@ -182,6 +182,7 @@
     function fn_saveCancel(){
     	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
             Common.alert(result.msg);
+            $("#addDiv").hide();
         }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     console.log("status : " + jqXHR.status);
@@ -198,6 +199,13 @@
                 alert("Fail : " + jqXHR.responseJSON.message);
         }); 
     }
+    
+//    function fn_reloadPage(){
+        //Parent Window Method Call
+//        fn_orderCancelListAjax();
+//        Common.popupDiv('/sales/order/cancelReqInfoPop.do', $('#detailForm').serializeJSON(), null , true, '_editDiv2');
+//        $("#_close").click();
+//    }
     
 </script>
 
@@ -1120,6 +1128,7 @@
 </dl>
 </article><!-- acodi_wrap end -->
 
+<div id="addDiv">
 <aside class="title_line"><!-- title_line start -->
 <h2>Add Call Result</h2>
 </aside><!-- title_line end -->
@@ -1204,6 +1213,7 @@
 
 </form>
 </section><!-- search_table end -->
+</div>
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
