@@ -316,8 +316,8 @@
                   AND T2.PROMO_APP_TYPE_ID = #{appTypeId}
                   AND 1034 = T2.PROMO_TYPE_ID
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND T2.PROMO_DT_FROM &lt;= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
-                  AND T2.PROMO_DT_END  &gt;= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+                  AND T2.PROMO_DT_FROM &lt;= SYSDATE
+                  AND T2.PROMO_DT_END  &gt;= SYSDATE
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND 1 = T1.PROMO_ITM_STUS_ID
              ) T
@@ -754,10 +754,10 @@
 		     , #{mthRentAmt}
 		     , #{lok}
 		     , #{aeonStusId}
-		     , #{commDt}
+		     , TO_DATE(#{commDt}, 'yyyy-MM-dd')
 		     , #{crtUserId}
 		     , SYSDATE
-		     , #{payComDt}
+		     , TO_DATE(#{payComDt}, 'yyyy-MM-dd')
 		     , #{defRentAmt}
 		     , #{refDocId}
 		     , #{salesHmId}
@@ -843,7 +843,7 @@
 		     , TO_DATE(#{preDt}, 'DD/MM/YYYY') - 1
 		     , TO_DATE(#{preDt}, 'DD/MM/YYYY')
 		     , #{preTm}
-		     , #{actDt}
+		     , TO_DATE(#{actDt}, 'YYYY/MM/DD')
 		     , #{actTm}
 		     , #{stusCodeId}
 		     , #{instct}
