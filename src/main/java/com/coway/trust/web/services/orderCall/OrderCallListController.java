@@ -96,7 +96,7 @@ public class OrderCallListController {
 	public ResponseEntity<ReturnMessage>  insertCallResult(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		boolean success = false;
-		
+		logger.debug("params : {}", params);
 		success = orderCallListService.insertCallResult(params,sessionVO);
 		return ResponseEntity.ok(message);
 	}
