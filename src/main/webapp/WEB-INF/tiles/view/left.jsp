@@ -210,7 +210,7 @@
 
 <form id="_menuForm">
     <input type="hidden" id="CURRENT_MENU_CODE" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
+    <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
     <input type="hidden" id="CURRENT_GROUP_MY_MENU_CODE" name="CURRENT_GROUP_MY_MENU_CODE" value="${param.CURRENT_GROUP_MY_MENU_CODE}"/>
     <input type="hidden" id="CURRENT_MENU_TYPE" name="CURRENT_MENU_TYPE" value="${param.CURRENT_MENU_TYPE}"/>
-    <input type="hidden" id="CURRENT_MENU_FULL_PATH_NAME" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
 </form>
