@@ -104,6 +104,8 @@
 .title_line h2{float:left; font-size:20px; color:#25527c; font-weight:normal;}
 .title_line h2.total_text{font-size:12px; color:#25527c; font-weight:bold;}
 .title_line h3{float:left; padding:10px 0 0 0; font-size:13px; color:#25527c;}
+.title_line.budget {text-align:center;}
+.title_line.budget h3 {float:none; display:inline-block;}
 .title_line h4{position:relative; float:left;padding:10px 0 0 0; font-size:12px; color:#333;}
 .title_line .right_opt{float:right;}
 .title_line .right_opt:after{content:""; display:block; clear:both;}
@@ -239,7 +241,7 @@ table+.center_btns{padding-top:5px;}
 .j_date.w100p,
 .j_date2.w100p
 .j_date3.w100p{width:100%!important;}
-.date_set{position:relative; width:220px;}
+.date_set{position:relative; width:236px;}
 .date_set .w100p{position:relative; width:100%;}
 .date_set > p,
 .date_set > .time_picker{float:left!important; width:50%!important; padding-left:11px; box-sizing:border-box;}
@@ -394,7 +396,7 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .pop_header .right_opt{float:right;}
 .pop_header .right_opt:after{content:""; display:block; clear:both;}
 .pop_header .right_opt li{float:left; margin-left:5px;}
-.pop_body{max-height:450px; height:450px; padding:10px; background:#fff; overflow-y:scroll;}
+.pop_body{max-height:450px; min-height:450px; padding:10px; background:#fff; overflow-y:scroll;}
 .pop_body.win_popup{max-height:100%;overflow-y:auto;}
 .popup_wrap.no_scroll .pop_body{max-height:100%;}
 .popup_wrap.size_small .pop_body{max-height:350px;}
