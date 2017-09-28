@@ -78,8 +78,6 @@ function fn_saveInstall(){
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
-        alert()
-        //AUIGrid.setGridData(myGridID, result);
     });
 }
 function fn_viewInstallResultSearch(){
