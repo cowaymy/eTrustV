@@ -28,7 +28,7 @@ public class SysTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SysTest.class);
 
-	// @Test
+	@Test
 	public void smsTest() {
 		String hostName = "gensuite.genusis.com";
 		String hostPath = "/api/gateway.php";
@@ -43,7 +43,7 @@ public class SysTest {
 		int vendorID = 2;
 
 		String message = "RM0.00" + "test message";
-		String mobileNo = "01091887015";
+		String mobileNo = "01133681677"; // 말레이시아 번호이어야 함.
 
 		String smsUrl = "http://" + hostName + hostPath + "?" + "ClientID=" + strClientID + "&Username=" + strUserName
 				+ "&Password=" + strPassword + "&Type=" + strType + "&Message=" + message + "&SenderID=" + strSenderID
@@ -58,6 +58,8 @@ public class SysTest {
 		// 2017-07-25 14:00:59,683 DEBUG [com.coway.trust.common.SysTest] getStatusCode : 200
 		// 2017-07-25 14:00:59,684 DEBUG [com.coway.trust.common.SysTest] getBody : no_route
 
+		// 2017-09-28 13:50:15,119 DEBUG [com.coway.trust.common.SysTest] getStatusCode : 200
+		// 2017-09-28 13:50:15,121 DEBUG [com.coway.trust.common.SysTest] getBody : success
 	}
 
 	// @Test

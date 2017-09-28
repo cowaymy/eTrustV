@@ -93,9 +93,6 @@ public class AdaptorServiceImpl implements AdaptorService {
 		return isSuccess;
 	}
 
-	/**
-	 * TODO : 테스트 코딩중. 사용하면 안됨.
-	 */
 	@Override
 	public SmsResult sendSMS(SmsVO smsVO) {
 

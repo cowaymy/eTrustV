@@ -12,6 +12,8 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample2.Sample2Service;
 import com.coway.trust.cmmn.model.EmailVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -74,5 +76,34 @@ public class SampleApplicationImpl extends EgovAbstractServiceImpl implements Sa
 		boolean isSuccess = adaptorService.sendEmail(email, false);
 
 		return isSuccess;
+	}
+
+	/**
+	 * 서비스 로직 + SMS 전송 예제.
+	 */
+	@Override
+	public SmsResult sendSmsAndProcess(Map<String, Object> params) {
+
+		// 1. service 로직...
+		// sampleService.insertClobData(params);
+
+		// 2. sms 처리.
+		SmsVO sms = new SmsVO();
+		sms.setMessage((String) params.get("smsMessage"));
+		sms.setMobile("0101112222"); // 말레이시아 번호이어야 함.
+
+		/**
+		 * isTransactional == true : 메일 전송 실패시 rollback 처리고 ApplicationException 발생. isTransactional == false : 메일 전송
+		 * 실패시 그냥 진행. 결과는 true/false 로 확인.
+		 */
+		SmsResult smsResult = adaptorService.sendSMS(sms);
+
+		LOGGER.debug("getErrorCount : {}", smsResult.getErrorCount());
+		LOGGER.debug("getFailCount : {}", smsResult.getFailCount());
+		LOGGER.debug("getSuccessCount : {}", smsResult.getSuccessCount());
+		LOGGER.debug("getFailReason : {}", smsResult.getFailReason());
+		LOGGER.debug("getReqCount : {}", smsResult.getReqCount());
+
+		return smsResult;
 	}
 }
