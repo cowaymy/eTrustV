@@ -1345,8 +1345,8 @@
 						            #{crtUserId},
 						            SYSDATE,
 						            #{cmbTypeId},
-						            TO_DATE(#{pasSportExpr}, 'DD/MM/YYYY'),
-                                    TO_DATE(#{visaExpr}, 'DD/MM/YYYY'),
+						            TO_CHAR(TO_DATE(#{pasSportExpr}, 'DD/MM/YYYY') , 'YYYY-MM-DD'),
+                                    TO_CHAR(TO_DATE(#{visaExpr}, 'DD/MM/YYYY') , 'YYYY-MM-DD'),
 						            NULL,
 						            #{cmbCorpTypeId},
 						            #{gstRgistNo})
