@@ -205,7 +205,7 @@
 			       var useYnCombo = $("#useYnCombo_23T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"'/>");
+			       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"'/>";
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
@@ -229,7 +229,7 @@
         </ul>
     </header><!-- pop_header end -->
     
-    <section class="pop_body"><!-- pop_body start -->
+    <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
           <h2>Commission calculation Data Collection
           <br>
