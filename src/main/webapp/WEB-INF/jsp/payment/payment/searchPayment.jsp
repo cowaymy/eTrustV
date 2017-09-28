@@ -415,6 +415,11 @@ function fn_close() {
     $('#popup_wrap').hide();
     AUIGrid.destroy(popGridID); 
     AUIGrid.destroy(popSlaveGridID);
+}
+
+function fn_close2() {
+    $('#popup_wrap2').hide();
+    AUIGrid.destroy(editPopGridID);
     
     //EDIT POPUP RESET
     $('#edit_txtORNo').text('');
@@ -445,11 +450,6 @@ function fn_close() {
     $('#edit_txtCollectorCode').val('');
     $('#edit_txtClctrName').text('');
     $('#edit_txtCollectorId').val('');
-}
-
-function fn_close2() {
-    $('#popup_wrap2').hide();
-    AUIGrid.destroy(editPopGridID); 
 }
 
 function showViewHistory(){
