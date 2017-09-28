@@ -28,7 +28,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap orderInvestInfo(Map<String, Object> params) throws Exception;
+	EgovMap orderInvestInfo(Map<String, Object> params) ;
 	
 	
 	/**
@@ -39,7 +39,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap orderCustomerInfo(Map<String, Object> params) throws Exception;
+	EgovMap orderCustomerInfo(Map<String, Object> params) ;
 	
 	
 	/**
@@ -94,7 +94,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap orderNoChk(Map<String, Object> params) throws Exception;
+	EgovMap orderNoChk(Map<String, Object> params) ;
 	
 	
 	/**
@@ -105,7 +105,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap orderNoInfo(Map<String, Object> params) throws Exception;
+	EgovMap orderNoInfo(Map<String, Object> params) ;
 	
 	
 	/**
@@ -116,18 +116,18 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap singleInvestView(Map<String, Object> params) throws Exception;
+	EgovMap singleInvestView(Map<String, Object> params) ;
 	
 	
 	/************************** Order Investigation save ****************************/
 	int searchBSScheduleM(Map<String, Object> params);
-	EgovMap searchInvestigateReqM(Map<String, Object> params) throws Exception;
+	EgovMap searchInvestigateReqM(Map<String, Object> params) ;
 	int updateInvestReqM(Map<String, Object> params);
 	int insertInvestigateReqD(Map<String, Object> params);
 	
 	
 	/************************** Order Investigation Request ****************************/
-	String getDocNo(Map<String, Object> params)throws Exception;
+	String getDocNo(Map<String, Object> params);
 	int insertInvestReqM(Map<String, Object> params);
 	int insertSalesOrdLog(Map<String, Object> params);
 	
@@ -151,7 +151,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap investCallResultInfo(Map<String, Object> params) throws Exception;
+	EgovMap investCallResultInfo(Map<String, Object> params) ;
 	
 	
 	/**
@@ -162,7 +162,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap investCallResultCust(Map<String, Object> params) throws Exception;
+	EgovMap investCallResultCust(Map<String, Object> params) ;
 	
 	
 	/**
@@ -184,7 +184,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap saveCallResultSearchFirst(Map<String, Object> params) throws Exception;
+	EgovMap saveCallResultSearchFirst(Map<String, Object> params) ;
 	
 	
 	/**
@@ -195,7 +195,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap saveCallResultSearchSecond(Map<String, Object> params) throws Exception;
+	EgovMap saveCallResultSearchSecond(Map<String, Object> params) ;
 	
 	
 	/**
@@ -206,7 +206,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap saveCallResultSearchThird(Map<String, Object> params) throws Exception;
+	EgovMap saveCallResultSearchThird(Map<String, Object> params) ;
 	
 	
 	/**
@@ -217,7 +217,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap getBSMonth(Map<String, Object> params) throws Exception;
+	EgovMap getBSMonth(Map<String, Object> params) ;
 	
 	
 	/**
@@ -228,7 +228,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap getBSScheduleStusCodeId(Map<String, Object> params) throws Exception;
+	EgovMap getBSScheduleStusCodeId(Map<String, Object> params) ;
 	
 	
 	/**
@@ -239,7 +239,7 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap saveCallResultSearchFourth(Map<String, Object> params) throws Exception;
+	EgovMap saveCallResultSearchFourth(Map<String, Object> params);
 	
 	
 	int updateSAL0071D(Map<String, Object> params);
@@ -253,11 +253,11 @@ public interface OrderInvestMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	EgovMap saveCallResultSearchFifth(Map<String, Object> params) throws Exception;
+	EgovMap saveCallResultSearchFifth(Map<String, Object> params) ;
 	
 	int updateSAL0049D(Map<String, Object> params);
 	
-	EgovMap monthYearChk(Map<String, Object> params) throws Exception;
+	EgovMap monthYearChk(Map<String, Object> params) ;
 	
 	int monthBetween(Map<String, Object> params);
 	
