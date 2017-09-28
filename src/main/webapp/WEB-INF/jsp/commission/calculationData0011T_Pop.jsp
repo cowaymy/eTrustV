@@ -224,12 +224,11 @@
             <table class="type1 mt10"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
-                    <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                    <col style="width:130px" />
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
@@ -243,7 +242,7 @@
                               <input type="text" id="salesPersonId_11T" name="salesPersonId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
-                        <th scope="row">ORD ID<span class="must">*</span></th>
+                        <th scope="row">ORDER ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="ordId_11T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
