@@ -348,8 +348,6 @@ public class CcpAgreementController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		params.put("userId", sessionVO.getUserId());
-		//TODO 추후 삭제 세션
-		params.put("userId", "52366");
 		
 		returnMap = ccpAgreementService.updateAgreementMtcEdit(params);
 		
