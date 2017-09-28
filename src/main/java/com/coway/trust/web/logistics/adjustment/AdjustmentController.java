@@ -185,26 +185,26 @@ public class AdjustmentController {
 	@RequestMapping(value = "/adjustmentLocationList.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> adjustmentLocationList(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
-		logger.debug("chcdc : {} ", params.get("chcdc"));
-		logger.debug("chrdc : {} ", params.get("chrdc"));
-		logger.debug("chcdcrdc : {} ", params.get("chcdcrdc"));
-		logger.debug("chcody : {} ", params.get("chcody"));
-		logger.debug("chct : {} ", params.get("chct"));
+		logger.debug("srchcdc : {} ", params.get("srchcdc"));
+		logger.debug("srchcdcrdc : {} ", params.get("srchcdcrdc"));
+		logger.debug("srchcody : {} ", params.get("srchcody"));
+		logger.debug("srchct : {} ", params.get("srchct"));
+		logger.debug("srchrdc : {} ", params.get("srchrdc"));
 		List<Object> locList = new ArrayList<Object>();
-		if ("" != params.get("chcdc") & null != params.get("chcdc")) {
-			locList.add((params.get("chcdc")));
+		if ("" != params.get("srchcdc") & null != params.get("srchcdc")) {
+			locList.add((params.get("srchcdc")));
 		}
-		if ("" != params.get("chcdcrdc") & null != params.get("chcdcrdc")) {
-			locList.add((params.get("chcdcrdc")));
+		if ("" != params.get("srchcdcrdc") & null != params.get("srchcdcrdc")) {
+			locList.add((params.get("srchcdcrdc")));
 		}
-		if ("" != params.get("chcody") & null != params.get("chcody")) {
-			locList.add((params.get("chcody")));
+		if ("" != params.get("srchcody") & null != params.get("srchcody")) {
+			locList.add((params.get("srchcody")));
 		}
-		if ("" != params.get("chct") & null != params.get("chct")) {
-			locList.add((params.get("chct")));
+		if ("" != params.get("srchct") & null != params.get("srchct")) {
+			locList.add((params.get("srchct")));
 		}
-		if ("" != params.get("chrdc") & null != params.get("chrdc")) {
-			locList.add((params.get("chrdc")));
+		if ("" != params.get("srchrdc") & null != params.get("srchrdc")) {
+			locList.add((params.get("srchrdc")));
 		}
 
 		params.put("locList", locList);
