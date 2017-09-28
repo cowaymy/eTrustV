@@ -281,13 +281,7 @@
 				<caption>search table</caption>
 				<colgroup>
 					<col style="width: 110px" />
-					<col style="width: *" />
-					<col style="width: 110px" />
-					<col style="width: *" />
-					<col style="width: 110px" />
-					<col style="width: *" />
-					<col style="width: 110px" />
-					<col style="width: *" />
+					<col style="width: *" />			
 				</colgroup>
 				<tbody>
 					<tr>
@@ -321,21 +315,15 @@
 			<!-- grid_wrap end -->
         </form>
 	</section>
-	<aside class="bottom_msg_box">
-		<!-- bottom_msg_box start -->
-		<p></p>
-	</aside>
 	<!-- bottom_msg_box end -->
 	<!-- search_result end -->
 
 </section>
 <!-- content end -->
 
-</section>
 <!-- container end -->
 <hr />
 
-</div>
 <!-- wrap end -->
 </body>
 </html>
