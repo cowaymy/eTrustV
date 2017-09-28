@@ -50,7 +50,19 @@
             //}
         });
         
+        $('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_10T").serializeJSON(), null, true);
+        });
+        
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#salesPersonId_10T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+    
     function fn_saveExculde(){
     	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_10T);
         var check     = AUIGrid.getCheckedRowItems(myGridID_10T);
@@ -216,6 +228,7 @@
                         <th scope="row">SALES PERSON ID</th>
                         <td>
                               <input type="text" id="salesPersonId_10T" name="salesPersonId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                         <th scope="row">ORD ID<span class="must">*</span></th>
                         <td>

@@ -49,7 +49,19 @@
 	        	
         });
         
+        $('#svcMemBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_09T").serializeJSON(), null, true);
+        });
+        
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#svcPersonId_09T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+    
     function fn_saveExculde(){
     	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_09T);
         var check     = AUIGrid.getCheckedRowItems(myGridID_09T);
@@ -69,6 +81,7 @@
         });
     //}
     }
+    
    function createAUIGrid() {
     var columnLayout3 = [ {
         dataField : "svcPersonId",
@@ -173,12 +186,11 @@
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
 			       var code = $("#code_09T").val();
 			       var svcPersonId = $("#svcPersonId_09T").val();
-			       var custRespnsId = $("#custRespnsId_09T").val();
 			       var ordId = $("#ordId_09T").val();
 			       var useYnCombo = $("#useYnCombo_09T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&svcPersonId="+svcPersonId+"&custRespnsId="+custRespnsId+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"'/>");
+			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&svcPersonId="+svcPersonId+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"'/>");
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
@@ -235,10 +247,7 @@
                         <th scope="row">SVC PERSON ID</th>
                         <td>
                               <input type="text" id="svcPersonId_09T" name="svcPersonId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
-                        </td>
-                        <th scope="row">CUST RESPNS ID</th>
-                        <td>
-                              <input type="text" id="custRespnsId_09T" name="custRespnsId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="svcMemBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>

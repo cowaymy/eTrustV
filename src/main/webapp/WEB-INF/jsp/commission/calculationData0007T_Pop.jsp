@@ -64,7 +64,18 @@
             //}
         });
         
+        $('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_07T").serializeJSON(), null, true);
+        });
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#memberId_07T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+    
     function fn_saveExculde(){
     	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_07T);
         var check     = AUIGrid.getCheckedRowItems(myGridID_07T);
@@ -264,6 +275,7 @@
                         <th scope="row">MEMBER ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="memberId_07T" name="memberId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                         </tr>
                         <tr>

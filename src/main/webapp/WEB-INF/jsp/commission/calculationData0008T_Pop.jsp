@@ -50,7 +50,19 @@
             //}
         });
         
+        $('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_08T").serializeJSON(), null, true);
+        });
+        
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#svcPersonId_08T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+    
     function fn_saveExculde(){
     	 //var gridList = AUIGrid.getCheckedRowItems(myGridID_08T);
         var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_08T);
@@ -213,6 +225,7 @@
                         <th scope="row">SVC PERSON ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="svcPersonId_08T" name="svcPersonId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                         <th scope="row">isEx</th>
                         <td>

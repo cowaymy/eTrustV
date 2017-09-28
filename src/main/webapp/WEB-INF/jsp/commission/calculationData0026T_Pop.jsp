@@ -50,7 +50,19 @@
             //}
         });
         
+        $('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_26").serializeJSON(), null, true);
+        });
+        
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#emplyId_26T").val(memCode);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+    
     function fn_saveExculde(){
     	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_26T);
         var check     = AUIGrid.getCheckedRowItems(myGridID_26T);
@@ -253,6 +265,7 @@
                         <th scope="row">EMPLY ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="emplyId_26T" name="emplyId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>

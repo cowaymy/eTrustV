@@ -36,7 +36,19 @@
         	
         });
         
+        $('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_20T").serializeJSON(), null, true);
+        });
+        
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#asEntryId_20T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+    
     function fn_saveExculde(){
     	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_20T);
         var check     = AUIGrid.getCheckedRowItems(myGridID_20T);
@@ -149,11 +161,10 @@
 		       var code = $("#code_20T").val();
 		       var ordId = $("#ordId_20T").val();
 		       var asEntryId = $("#asEntryId_20T").val();
-		       var asrId = $("#asrId_20T").val();
 		       var useYnCombo = $("#useYnCombo_20T").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&asEntryId="+asEntryId+"&asrId="+asrId+"&useYnCombo="+useYnCombo+"'/>");
+		       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&asEntryId="+asEntryId+"&useYnCombo="+useYnCombo+"'/>");
 	       }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
@@ -213,15 +224,12 @@
                         <th scope="row">AS ENTRY ID</th>
                         <td>
                               <input type="text" id="asEntryId_20T" name="asEntryId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">ASR ID</th>
-                        <td>
-                              <input type="text" id="asrId_20T" name="asrId" style="width: 100px;" maxlength="10">
-                        </td>
                         <th scope="row">isEx</th>
-                        <td colspan="3">
+                        <td colspan="5">
                           <select id="useYnCombo_20T" name="useYnCombo" style="width:100px;">
                             <option value="" selected></option>
                             <option value="1">Y</option>

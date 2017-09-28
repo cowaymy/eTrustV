@@ -165,6 +165,19 @@
             console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(myGridID, result);
+            
+            var date = new Date();
+            var month = date.getMonth()+1;
+            var month = Number(month)<10?"0"+month:month;
+            var currDate = date.getFullYear() +""+month;
+            
+            var searchDt=$("#searchDt").val();
+            searchDt = searchDt.substr(3,7) +""+searchDt.substr(0,2);
+            if(Number(searchDt)< Number(currDate)){
+                 AUIGrid.showColumnByDataField(myGridID, "updDt");
+            }else{
+            	AUIGrid.hideColumnByDataField(myGridID, "updDt");
+            }
         });
     }
 
@@ -251,7 +264,14 @@
 		dataField : "orgSeq",
 		headerText : "",
 		width : 0
-	} ];
+	},{
+        dataField : "updDt",
+        headerText : "UPDATE",
+        //width : 120,
+        editable : false,
+        visible : false,
+        width : "10%"
+    } ];
 	
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx) {

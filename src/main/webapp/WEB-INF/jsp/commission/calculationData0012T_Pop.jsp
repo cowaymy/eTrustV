@@ -58,7 +58,19 @@
              //}
         });
         
+        $('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_12T").serializeJSON(), null, true);
+        });
+        
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#salesPersonId_11T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+    
     function fn_saveExculde(){
     	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_12T);
         var check     = AUIGrid.getCheckedRowItems(myGridID_12T);
@@ -176,12 +188,11 @@
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
 			       var code = $("#code_12T").val();
 			       var clctrId = $("#clctrId_12T").val();
-			       var custId = $("#custId_12T").val();
 			       var ordId = $("#ordId_12T").val();
 			       var useYnCombo = $("#useYnCombo_12T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&clctrId="+clctrId+"&custId="+custId+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"'/>");
+			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&clctrId="+clctrId+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"'/>");
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
@@ -235,13 +246,10 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0012T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">CLCTR ID</th>
+                        <th scope="row">Collector ID</th>
                         <td>
                               <input type="text" id="clctrId_12T" name="clctrId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
-                        </td>
-                        <th scope="row">CUST ID</th>
-                        <td>
-                              <input type="text" id="custId_12T" name="custId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>

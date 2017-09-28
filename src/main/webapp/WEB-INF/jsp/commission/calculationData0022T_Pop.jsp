@@ -50,7 +50,19 @@
             //}
 		});
 		
+		$('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_22").serializeJSON(), null, true);
+        });
+		
 	});
+	
+	function fn_loadOrderSalesman(memId, memCode) {
+        $("#srvCntrctId_22T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
+	
 	function fn_saveExculde(){
 		var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_22T);
         var check     = AUIGrid.getCheckedRowItems(myGridID_22T);
@@ -238,6 +250,7 @@
 						<th scope="row">SRV CNTRCT ID</th>
                         <td>
                               <input type="text" id="srvCntrctId_22T" name="srvCntrctId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>

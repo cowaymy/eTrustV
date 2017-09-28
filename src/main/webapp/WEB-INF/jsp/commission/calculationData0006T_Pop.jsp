@@ -24,7 +24,7 @@
         //Rule Book Item search
         $("#search_06T").click(function(){
         	/* var codeGroupId = $("#codeGroupId").val();
-        	var memberId = $("#memberId").val();
+        	var memberId = $("#memberId_06T").val();
         	
         	if(codeGroupId == "" || codeGroupId == null){
         		Common.alert("<spring:message code='sys.msg.necessary' arguments='ORG Group' htmlEscape='false'/>");
@@ -44,7 +44,7 @@
         
         $("#save_06T").click(function(){  
         	/* var codeGroupId = $("#codeGroupId").val();
-            var memberId = $("#memberId").val();
+            var memberId = $("#memberId_06T").val();
             
             if(codeGroupId == "" || codeGroupId == null){
             	Common.alert("<spring:message code='sys.msg.necessary' arguments='ORG Group' htmlEscape='false'/>");
@@ -58,7 +58,17 @@
             //}
         });
         
+        $('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form_06T").serializeJSON(), null, true);
+        });
     });
+    
+    function fn_loadOrderSalesman(memId, memCode) {
+        $("#memberId_06T").val(memId);
+        console.log('fn_loadOrderSalesman memId:'+memId);
+        console.log('fn_loadOrderSalesman memCd:'+memCode);
+    }
     
     function fn_saveExculde(){
     	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_06T);
@@ -193,7 +203,7 @@
    
    function fn_downFile() {
 	   var codeGroupId = $("#codeGroupId").val();
-       var memberId = $("#memberId").val();
+       var memberId = $("#memberId_06T").val();
        Common.ajax("GET", "/commission/calculation/cntCMM0006T", $("#form_06T").serialize(), function(result) {
 	       var cnt = result;
 	       if(cnt > 0){
@@ -211,7 +221,7 @@
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
 			       var code = $("#code_06T").val();
 			       var codeId = $("#codeGroupId").val();
-			       var memberId = $("#memberId").val();
+			       var memberId = $("#memberId_06T").val();
 			       var useYnCombo = $("#useYnCombo_06T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
@@ -279,7 +289,8 @@
                         </select></td>
                         <th scope="row">Member Id<span class="must">*</span></th>
                         <td>
-                              <input type="text" id="memberId" name="memberId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="memberId_06T" name="memberId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>

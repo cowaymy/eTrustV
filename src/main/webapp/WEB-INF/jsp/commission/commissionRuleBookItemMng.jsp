@@ -74,6 +74,19 @@
 				console.log("성공.");
 				console.log("data : " + result);
 				AUIGrid.setGridData(myGridID, result);
+				
+				var date = new Date();
+	            var month = date.getMonth()+1;
+	            var month = Number(month)<10?"0"+month:month;
+	            var currDate = date.getFullYear() +""+month;
+	            
+	            var searchDt=$("#searchDt").val();
+	            searchDt = searchDt.substr(3,7) +""+searchDt.substr(0,2);
+	            if(Number(searchDt)< Number(currDate)){
+	                AUIGrid.showColumnByDataField(myGridID, "updDt");
+	            }else{
+	            	AUIGrid.hideColumnByDataField(myGridID, "updDt");
+	            }
 			});
 	   });
 
@@ -269,7 +282,6 @@
                $("#insertFormRule [name=codeName]").val($("#searchFormRule [name=itemNm]").val());
                $("#insertFormRule [name=itemCd]").val($("#searchFormRule [name=itemCd]").val());
                $("#insertFormRule [name=itemSeq]").val($("#searchFormRule [name=itemSeq]").val());
-               $("#insertFormRule [name=ruleNm]").val($("#searchFormRule [name=itemNm]").val());
            });
        }); // addrule     
 
@@ -573,7 +585,12 @@
 	    dataField : "code",
 	    headerText : "code",
 	    visible : false,
-	  } ];
+	  },{
+        dataField : "updDt",
+        headerText : "UPDATE<br>DATE",
+        width : 120,
+        visible : false
+      } ];
 
 	/**********************
 	 rule AUIGrid 칼럼 설정
