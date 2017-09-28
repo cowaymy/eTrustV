@@ -1130,9 +1130,9 @@
     <input id="paramtypeId" name="paramtypeId" type="hidden" value="${paramTypeId}">
     <input id="paramrefId" name="paramrefId" type="hidden" value="${paramRefId}">
     <input id="reqStageId" name="reqStageId" type="hidden" value="${reqStageId}">
-    <input id="paramCallEntryId" name="paramCallEntryId" type="text" value="${cancelReqInfo.callEntryId}">
-    <input id="paramReqId" name="paramReqId" type="text" value="${cancelReqInfo.reqId}">
-    <input id="paramOrdId" name="paramOrdId" type="text" value="${cancelReqInfo.ordId}">
+    <input id="paramCallEntryId" name="paramCallEntryId" type="hidden" value="${cancelReqInfo.callEntryId}">
+    <input id="paramReqId" name="paramReqId" type="hidden" value="${cancelReqInfo.reqId}">
+    <input id="paramOrdId" name="paramOrdId" type="hidden" value="${cancelReqInfo.ordId}">
     
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
