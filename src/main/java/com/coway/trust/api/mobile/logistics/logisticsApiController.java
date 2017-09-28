@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
-import com.coway.trust.biz.logistics.stockmovement.vo.StrockMovementVoForMobile;
+import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;

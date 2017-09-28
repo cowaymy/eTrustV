@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
-import com.coway.trust.biz.logistics.stockmovement.vo.StrockMovementVoForMobile;
+import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;

@@ -3,7 +3,7 @@ package com.coway.trust.biz.logistics.mlog;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.biz.logistics.stockmovement.vo.StrockMovementVoForMobile;
+import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 

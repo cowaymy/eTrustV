@@ -1,4 +1,4 @@
-package com.coway.trust.biz.logistics.stockmovement.vo;
+package com.coway.trust.biz.logistics.mlog.vo;
 
 import java.io.Serializable;
 import java.util.List;

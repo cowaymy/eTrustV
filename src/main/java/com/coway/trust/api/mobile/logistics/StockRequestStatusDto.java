@@ -2,7 +2,7 @@ package com.coway.trust.api.mobile.logistics;
 
 import java.util.List;
 
-import com.coway.trust.biz.logistics.stockmovement.vo.StrockMovementVoForMobile;
+import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
