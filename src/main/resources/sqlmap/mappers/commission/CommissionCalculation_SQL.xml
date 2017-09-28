@@ -533,9 +533,6 @@
                 <if test="svcPersonId != null and svcPersonId != ''"> 
                   AND SVC_PERSON_ID LIKE '%'|| #{svcPersonId} ||'%'     
                 </if>
-                <if test="svcPersonId != null and svcPersonId != ''">
-                  AND CUST_RESPNS_ID LIKE '%'|| #{svcPersonId} ||'%'   
-                </if>
                 <if test="ordId != null and ordId != ''">
                   AND ORD_ID LIKE '%'|| #{ordId} ||'%'   
                 </if>
@@ -556,9 +553,6 @@
 		        WHERE TASK_ID=#{taskId} 
 		        <if test="svcPersonId != null and svcPersonId != ''"> 
 		          AND SVC_PERSON_ID LIKE '%'|| #{svcPersonId} ||'%'     
-		        </if>
-		        <if test="svcPersonId != null and svcPersonId != ''">
-		          AND CUST_RESPNS_ID LIKE '%'|| #{svcPersonId} ||'%'   
 		        </if>
 		        <if test="ordId != null and ordId != ''">
 		          AND ORD_ID LIKE '%'|| #{ordId} ||'%'   
@@ -666,9 +660,6 @@
                 <if test="ordId != null and ordId != ''">
                   AND ORD_ID LIKE '%'|| #{ordId} ||'%'   
                 </if>
-                <if test="custId != null and custId != ''">
-                  AND CUST_ID LIKE '%'|| #{custId} ||'%'   
-                </if>
             )T2 ON t1.RUN_ID=t2.RUN_ID 
         WHERE T1.TASK_ID = #{taskId}
         <if test="useYnCombo != null and useYnCombo != ''">
@@ -688,9 +679,6 @@
 		        </if>
 		        <if test="ordId != null and ordId != ''">
 		          AND ORD_ID LIKE '%'|| #{ordId} ||'%'   
-		        </if>
-		        <if test="custId != null and custId != ''">
-		          AND CUST_ID LIKE '%'|| #{custId} ||'%'   
 		        </if>
 		    )T2 ON t1.RUN_ID=t2.RUN_ID 
         WHERE T1.TASK_ID = #{taskId}
@@ -929,9 +917,6 @@
                 <if test="bsPersonId != null and bsPersonId != ''">
                     AND BS_PERSON_ID LIKE '%'|| #{bsPersonId} ||'%'  
                 </if>
-                <if test="bsrId != null and bsrId != ''">
-                    AND BSR_ID LIKE '%'|| #{bsrId} ||'%'  
-                </if>
             )T2 ON t1.RUN_ID=t2.RUN_ID 
         WHERE T1.TASK_ID = #{taskId}
         <if test="useYnCombo != null and useYnCombo != ''">
@@ -952,9 +937,6 @@
 		        <if test="bsPersonId != null and bsPersonId != ''">
 		            AND BS_PERSON_ID LIKE '%'|| #{bsPersonId} ||'%'  
 		        </if>
-		        <if test="bsrId != null and bsrId != ''">
-		            AND BSR_ID LIKE '%'|| #{bsrId} ||'%'  
-		        </if>
 		    )T2 ON t1.RUN_ID=t2.RUN_ID 
         WHERE T1.TASK_ID = #{taskId}
         <if test="useYnCombo != null and useYnCombo != ''">
@@ -974,10 +956,7 @@
                     AND ORD_ID LIKE '%'|| #{ordId} ||'%'  
                 </if>
                 <if test="asEntryId != null and asEntryId != ''">
-                    AND AS_ENTRY_IDLIKE '%'|| #{asEntryId} ||'%'  
-                </if>
-                <if test="asrId != null and asrId != ''">
-                    AND ASR_ID LIKE '%'|| #{asrId} ||'%'   
+                    AND AS_ENTRY_ID LIKE '%'|| #{asEntryId} ||'%'  
                 </if>
             )T2 ON t1.RUN_ID=t2.RUN_ID 
         WHERE T1.TASK_ID = #{taskId}
@@ -997,10 +976,7 @@
 		            AND ORD_ID LIKE '%'|| #{ordId} ||'%'  
 		        </if>
 		        <if test="asEntryId != null and asEntryId != ''">
-		            AND AS_ENTRY_IDLIKE '%'|| #{asEntryId} ||'%'  
-		        </if>
-		        <if test="asrId != null and asrId != ''">
-		            AND ASR_ID LIKE '%'|| #{asrId} ||'%'   
+		            AND AS_ENTRY_ID LIKE '%'|| #{asEntryId} ||'%'  
 		        </if>
 		    )T2 ON t1.RUN_ID=t2.RUN_ID 
         WHERE T1.TASK_ID = #{taskId}
@@ -1056,7 +1032,7 @@
             count(*) cnt
         FROM CMM0022T T1 JOIN (
                 SELECT BILL_RUN_ID, nvl(IS_EXCLUDE,'0') IS_EXCLUDE
-                FROM CMM0023T  
+                FROM CMM0022T  
                 WHERE TASK_ID=#{taskId}
                 <if test="ordId != null and ordId != ''">
                     AND ORD_ID LIKE '%'|| #{ordId} ||'%' 
@@ -1076,9 +1052,9 @@
 		    T1.PV,  T1.PRC,  T1.ORD_TYPE_ID,  T1.BILL_RUN_ID runId,  T1.TASK_ID, 
 		    T2.IS_EXCLUDE
 		FROM CMM0022T T1 JOIN (
-		        SELECT RUN_ID, nvl(IS_EXCLUDE,'0') IS_EXCLUDE
+		        SELECT BILL_RUN_ID, nvl(IS_EXCLUDE,'0') IS_EXCLUDE
 		        FROM CMM0022T  
-		        WHERE TASK_ID={taskId}
+		        WHERE TASK_ID=#{taskId}
 	            <if test="ordId != null and ordId != ''">
                     AND ORD_ID LIKE '%'|| #{ordId} ||'%' 
                 </if>
@@ -1153,7 +1129,7 @@
 		<if test="emplyId != null and emplyId != ''">
 		AND EMPLY_ID LIKE '%'|| #{emplyId} ||'%' 
 		</if>
-        ORDER BY T1.EMPLY_CODE
+        ORDER BY EMPLY_CODE
     </select>
     
     <select id="cntCMM0025T" parameterType="Map" resultType="integer">
@@ -1304,9 +1280,6 @@
 	        <if test="svcPersonId != null and svcPersonId != ''"> 
 	          AND SVC_PERSON_ID LIKE '%'|| #{svcPersonId} ||'%'   
 	        </if>
-	        <if test="custRespnsId != null and custRespnsId != ''">
-	          AND CUST_RESPNS_ID LIKE '%'|| #{custRespnsId} ||'%'     
-	        </if>
 	        <if test="ordId != null and ordId != ''">
 	          AND ORD_ID LIKE '%'|| #{ordId} ||'%'    
 	        </if>
@@ -1366,9 +1339,6 @@
 	        </if>
 	        <if test="ordId != null and ordId != ''">
 	        AND ORD_ID LIKE '%'|| #{ordId} ||'%'   
-	        </if>
-	        <if test="custId != null and custId != ''">
-	        AND CUST_ID LIKE '%'|| #{custId} ||'%'    
 	        </if>
 	        <if test="useYnCombo != null and useYnCombo != ''">
 	            AND IS_EXCLUDE = #{useYnCombo}
@@ -1475,9 +1445,6 @@
         <if test="bsPersonId != null and bsPersonId != ''">
             AND BS_PERSON_ID LIKE '%'|| #{bsPersonId} ||'%'   
         </if>
-        <if test="bsrId != null and bsrId != ''">
-            AND BSR_ID LIKE '%'|| #{bsrId} ||'%'   
-        </if>
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
         </if> 
@@ -1496,9 +1463,6 @@
         </if>
         <if test="asEntryId != null and asEntryId != ''">
             AND AS_ENTRY_ID LIKE '%'|| #{asEntryId} ||'%'   
-        </if>
-        <if test="asrId != null and asrId != ''">
-            AND ASR_ID LIKE '%'|| #{asrId} ||'%'   
         </if>
         <if test="useYnCombo != null and useYnCombo != ''">
             AND IS_EXCLUDE = #{useYnCombo}
@@ -1583,4 +1547,45 @@
         AND RUN_ID=#{runId}
     </update>
   
+    <select id="adjustmentCodeList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+	    SELECT 
+	        CODE_ID, CODE, CODE_NAME, CODE_DESC 
+	    FROM SYS0013M 
+	    WHERE CODE_MASTER_ID=#{mstId}
+	    AND CODE_ID <> '1157'
+	  ]]>  
+    </select>
+    
+    <select id="memberInfoSearch" parameterType="Map" resultType="Map">
+        SELECT
+            MEM_ID memId,
+            MEM_CODE memCode
+        FROM ORG0001D 
+        WHERE MEM_CODE=#{memCode} AND ROWNUM=1
+    </select>
+    
+    <select id="ordNoInfoSearch" parameterType="Map" resultType="Map">
+	    SELECT 
+			SALES_ORD_ID ordId, 
+			SALES_ORD_NO ordNo
+		FROM SAL0001D 
+		WHERE SALES_ORD_NO=#{ordNo}
+		AND ROWNUM=1
+   </select>
+   
+   <insert id="adjustmentInsert" parameterType="Map">
+	   INSERT INTO CMM0026T(ID,TASK_ID,ORD_ID,AYEAR,AMONTH,EMPLY_ID,A_TYPE_ID,PRC,TYPE_DESC,UPD_USER_ID,UPD_DT) 
+	       VALUES(CMM0026T_ID_SEQ.nextval, #{taskId}, #{ordId}, #{aYear}, #{aMonth},#{memId}, #{adjustmentType}, #{adjustmentAmt}, #{adjustmentDesc}, #{loginId}, sysdate)
+   </insert>
+   
+   <delete id="neoProDel" parameterType="Map">
+        DELETE FROM ORG0011D
+        WHERE PV_MONTH =#{pvMonth} and PV_YEAR = #{pvYear}
+    </delete>
+   
+   <insert id="neoProInsert" parameterType="Map">
+       INSERT INTO ORG0011D(HP_CODE, HP_TYPE, PV_MONTH, PV_YEAR, USER_ADD, DT_ADD, JOIN_DT, IS_NW, HP_RANK_ID) 
+           VALUES(#{hpCode},#{hpType},#{pvMonth},#{pvYear},#{loginId},sysdate,#{joinDt},#{isNw},ORG0011D_HP_RANK_ID_SEQ.nextval)
+   </insert>
 </mapper>
