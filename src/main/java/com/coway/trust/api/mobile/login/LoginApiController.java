@@ -13,7 +13,10 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.login.LoginService;
@@ -26,7 +29,6 @@ import com.coway.trust.util.Precondition;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 @Api(value = "Login api", description = "Login api")
 @RestController(value = "LoginApiController")
@@ -45,8 +47,7 @@ public class LoginApiController {
 
 	@ApiOperation(value = "Login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<LoginDto> login(
-			@RequestBody LoginForm loginForm) throws Exception {
+	public ResponseEntity<LoginDto> login(@RequestBody LoginForm loginForm) throws Exception {
 
 		Map<String, Object> params = loginForm.createMap(loginForm);
 
@@ -54,8 +55,11 @@ public class LoginApiController {
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "ID" }));
 		Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_PW)),
 				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "PASSWORD" }));
-		Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_MOBILE_NO)),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "DEVICE NUMBER" }));
+
+		if (loginForm.isCheckDeviceNumber()) {
+			Precondition.checkState(CommonUtils.isNotEmpty(params.get(LoginConstants.P_USER_MOBILE_NO)),
+					messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "DEVICE NUMBER" }));
+		}
 
 		LoginVO loginVO = loginService.loginByMobile(params);
 

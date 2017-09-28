@@ -13,8 +13,10 @@ public class LoginForm {
 	private String userName;
 	@ApiModelProperty(value = "사용자 pw", required = true)
 	private String userPw;
-	@ApiModelProperty(value = "휴대폰 번호", required = true)
+	@ApiModelProperty(value = "휴대폰 번호")
 	private String deviceNumber;
+	@ApiModelProperty(value = "휴대폰 번호 체크 여부")
+	private boolean checkDeviceNumber;
 	@ApiModelProperty(value = "device 고유번호")
 	private String deviceImei;
 	@ApiModelProperty(value = "앱 버전")
@@ -24,7 +26,9 @@ public class LoginForm {
 		Map<String, Object> params = new HashMap<>();
 		params.put(LoginConstants.P_USER_ID, loginForm.getUserName());
 		params.put(LoginConstants.P_USER_PW, loginForm.getUserPw());
-		params.put(LoginConstants.P_USER_MOBILE_NO, loginForm.getDeviceNumber());
+		if (loginForm.isCheckDeviceNumber()) {
+			params.put(LoginConstants.P_USER_MOBILE_NO, loginForm.getDeviceNumber());
+		}
 		params.put(LoginConstants.P_DEVICE_IMEI, loginForm.getDeviceImei());
 		params.put(LoginConstants.P_APP_VERSION, loginForm.getAppVersion());
 		return params;
@@ -52,6 +56,14 @@ public class LoginForm {
 
 	public void setDeviceNumber(String deviceNumber) {
 		this.deviceNumber = deviceNumber;
+	}
+
+	public boolean isCheckDeviceNumber() {
+		return checkDeviceNumber;
+	}
+
+	public void setCheckDeviceNumber(boolean checkDeviceNumber) {
+		this.checkDeviceNumber = checkDeviceNumber;
 	}
 
 	public String getDeviceImei() {
