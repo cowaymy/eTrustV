@@ -107,21 +107,21 @@ var columnLayout = [
                 <tbody>
                     <tr>
                         <th scope="row">Transaction No.</th>
-                        <td><input type="text" title="Reference No." id="tranNo" name="tranNo" /></td>
+                        <td><input type="text" title="Reference No." id="tranNo" name="tranNo" class="w100p"/></td>
                         <th scope="row">Bank Account</th>
                         <td>
-                            <select id="bankAccount" name="bankAccount">                               
+                            <select id="bankAccount" name="bankAccount" class="w100p">                               
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Branch Code</th>
                         <td>
-                            <select id="branchList" name="branchList"></select>
+                            <select id="branchList" name="branchList" class="w100p"></select>
                         </td>
                         <th scope="row">Payment Date</th>
                         <td>
-                            <div class="date_set"><!-- date_set start -->
+                            <div class="date_set w100p"><!-- date_set start -->
                                 <p><input type="text"  name="paymentDate1" id="paymentDate1" title="Payment Date From" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             <span>To</span>
                             <p><input type="text"  name="paymentDate2" id="paymentDate2" title="Payment Date To" placeholder="DD/MM/YYYY" class="j_date" /></p>
@@ -131,7 +131,7 @@ var columnLayout = [
                     <tr>
                         <th scope="row">Status</th>
                         <td>
-                            <select  id="status" name="status" class="multy_select" multiple="multiple">
+                            <select  id="status" name="status" class="multy_select w100p" multiple="multiple">
 						        <option value="44">Pending</option>
 						        <option value="6">Rejected</option>
 						        <option value="10">Cancelled</option>
