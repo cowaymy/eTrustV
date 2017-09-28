@@ -98,11 +98,7 @@ public class TotalStockController {
 		String[] searchCtgry = request.getParameterValues("searchCtgry");
 		String LocCode = request.getParameter("LocCode");
 		
-//		logger.debug("searchMatCode    값 : {}",searchMatCode);
-		logger.debug("searchLoc    값 : {}",searchLoc);
-//		logger.debug("searchCtgry    값 : {}", searchCtgry);
-//		logger.debug("searchType    값 : {}",searchType);
-		logger.debug("LocCode    값 : {}",LocCode);
+		String svalue = request.getParameter("svalue");
 
 		Map<String, Object> smap = new HashMap();
 		
@@ -110,6 +106,7 @@ public class TotalStockController {
 		smap.put("searchLoc", searchLoc);
 		smap.put("searchType", searchType);
 		smap.put("searchCtgry", searchCtgry);
+		smap.put("svalue", svalue);
 		
 
 		List<EgovMap> list = TotalStockService.totStockSearchList(smap);
