@@ -115,6 +115,6 @@ public interface CcpAgreementMapper {
 	
 	List<EgovMap> selectEditAfAgreementList(Map<String, Object> params) throws Exception;
 	
-	void updateAgrPrgDate(Map<String, Object> params) throws Exception;
+	void updateAgreement(Map<String, Object> params) throws Exception;
 	
 }

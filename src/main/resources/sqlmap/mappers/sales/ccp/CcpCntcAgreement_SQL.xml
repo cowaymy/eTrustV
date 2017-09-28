@@ -1105,7 +1105,7 @@
                          TO_DATE(#{updConReceiveDate}, 'DD/MM/YYYY'), 
                     </when>
                     <otherwise>
-                        #{defaultDate},
+                        TO_DATE(#{defaultDate}, 'DD/MM/YYYY'),
                     </otherwise>
                 </choose>
                 #{updCourierSelect}, 
@@ -1118,7 +1118,7 @@
                          TO_DATE(#{updConSendDate}, 'DD/MM/YYYY'), 
                     </when>
                     <otherwise>
-                        #{defaultDate},
+                        TO_DATE(#{defaultDate}, 'DD/MM/YYYY'),
                     </otherwise>
                 </choose>
                 #{byHand},
@@ -1252,8 +1252,8 @@
   VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL, 
 													  #{callEntryId}, 
 													 #{callStatusId},
-												          #{callDate},
-													   #{callActnDt},
+												          TO_DATE(#{callDate} , 'DD/MM/YYYY'),
+													   TO_DATE(#{callActnDt}, 'DD/MM/YYYY'),
 												#{callFeedBackId},
 												         #{callCTId},
 												      #{callRemark},
@@ -1324,7 +1324,7 @@ SET RESULT_ID = #{resultId},
 		                                 (SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL),
 		                                #{callerUserId}, 
 		                                #{callerReasonId}, 
-		                                #{callerRecallDate},
+		                                TO_DATE(#{callerRecallDate}, 'DD/MM/YYYY'),
 		                                #{callerStatusId},
 		                                SYSDATE,
 		                                #{userId},
@@ -1389,9 +1389,14 @@ SET RESULT_ID = #{resultId},
 				 WHERE  Extent1.GOV_AG_ID = #{updAgrId}
 </select>
 
-<update id="updateAgrPrgDate"  parameterType="Map">
-			UPDATE SAL0033D
-			SET  GOV_AG_PRGRS_ID = #{govAgrPrgId},
+<update id="updateAgreement"  parameterType="Map">
+			UPDATE 
+			     SAL0033D
+			SET 
+			       GOV_AG_PRE_UPD_USER_ID = #{updAgrId},
+			       GOV_AG_STUS_ID = #{govAgrStatusId},
+			       GOV_AG_PRGRS_ID = #{govAgrPrgId},
+			       GOV_AG_UPD_USER_ID = #{userId},
 			       <if test=" '' != changeMsgDate and null != changeMsgDate">
 			             GOV_AG_START_DT = TO_DATE(#{updPeriodStart}, 'DD/MM/YYYY'), 
 			             GOV_AG_END_DT = TO_DATE(#{updPeriodEnd}, 'DD/MM/YYYY'),

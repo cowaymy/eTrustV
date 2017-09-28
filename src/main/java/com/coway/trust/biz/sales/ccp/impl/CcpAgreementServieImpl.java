@@ -361,14 +361,16 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		LOGGER.info("##################################################################");
 		// updAgrId == Agreement Id ,  updPrgId == Progress Hidden Id ,  updMsgStatus == messageStatus Id
 		
-
-    /*    int AgreementID = int.Parse(Request["AGRID"].ToString());
-        string AgrMessage = this.txtRemark.Text.Replace("'", "''");
-        int AgrProgressID = int.Parse(this.hidAgrProgressID.Value);
-        int AgrMessageStatusID = int.Parse(this.cmbStatus.SelectedValue);
-        int? AgrResultProgressID = module.GetProgressStatus(AgreementID, AgrProgressID, AgrMessageStatusID);
-        bool HasNotification = bool.Parse(this.ddlNotification.SelectedValue);
-        int NoticeMonth = int.Parse(this.ddlNoticeMonth.SelectedValue);*/
+		/*int AgreementID = int.Parse(Request["AGRID"].ToString());-------------------------------------------세팅 끝
+        string AgrMessage = this.txtRemark.Text.Replace("'", "''"); -------------------------------------------세팅 끝
+        int AgrProgressID = int.Parse(this.hidAgrProgressID.Value); -------------------------------------------세팅 끝
+        int AgrMessageStatusID = int.Parse(this.cmbStatus.SelectedValue); -------------------------------------------세팅 끝
+        
+        int? AgrResultProgressID = module.GetProgressStatus(AgreementID, AgrProgressID, AgrMessageStatusID); ----- 아래 로직으로 가져오기
+        bool HasNotification = bool.Parse(this.ddlNotification.SelectedValue); -------------------------------------------세팅 끝
+        int NoticeMonth = int.Parse(this.ddlNoticeMonth.SelectedValue);*/ //-------------------------------------------세팅 끝
+		
+		//Params : {updAgrId=3988, updPrgId=7, hiddenUpdMsgStatus=10, pudAgrNo=AGM0002915, updMsgStatus=10, updIsNotification=true, updNotificationMonth=2, updResultRemark=FDGDSDSFGF, userId=184}
 		
 		
 		//1 . ProgressStatus 를 가져오기
@@ -380,153 +382,147 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		int getPrgId = Integer.parseInt((String)params.get("updPrgId"));
 		int getupdMsgStatus = Integer.parseInt((String)params.get("updMsgStatus"));
-		
+		LOGGER.info("_______________________________________________ getPrgId : " + getPrgId);
+		LOGGER.info("_______________________________________________ getupdMsgStatus : " + getupdMsgStatus);
 		if(getPrgId != 10){ 
 			
 			if(getupdMsgStatus == 5){
-				
+				LOGGER.info("__________________________________   (resultPrg 구하기 )  getPrgId != 10 && getupdMsgStatus == 5 ");
 				params.put("ordByNext", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
 				
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepNext")).intValue();
 				
 			}else if(getupdMsgStatus == 6){
-				
+				LOGGER.info("__________________________________    (resultPrg 구하기 )  getPrgId != 10 && getupdMsgStatus == 6 ");
 				params.put("ordByPre", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepPrev")).intValue();
 				
 			}else if(getupdMsgStatus == 44){
-				
+				LOGGER.info("__________________________________    (resultPrg 구하기 )  getPrgId != 10 && getupdMsgStatus == 44 ");
 				params.put("ordByStep", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepId")).intValue();
 				
 			}else{
+				LOGGER.info("__________________________________    (resultPrg 구하기 )  getPrgId != 10 && else ");
 				params.put("ordByStepSeqNo", "1");
 				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepSeqNo")).intValue();
 			}
 		}else{
 			
-			if(getupdMsgStatus == 5){
-				
-				params.put("ordByStepSeqNo", "1");
-				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
-				resultPrg = ((BigDecimal)statusMap.get("govAgStepSeqNo")).intValue();
-				
-			}else if(getupdMsgStatus == 6){
-				
-				params.put("ordByPre", "1");
-				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
-				resultPrg = ((BigDecimal)statusMap.get("govAgStepPrev")).intValue();
-				
-			}else{
-				
-				params.put("ordByStep", "1");
-				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
-				resultPrg = ((BigDecimal)statusMap.get("govAgStepId")).intValue();
-			}
+        			if(getupdMsgStatus == 5){
+        				LOGGER.info("__________________________________    (resultPrg 구하기 )  getPrgId == 10 && getupdMsgStatus == 5  ");
+        				params.put("ordByStepSeqNo", "1");
+        				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
+        				resultPrg = ((BigDecimal)statusMap.get("govAgStepSeqNo")).intValue();
+        				
+        			}else if(getupdMsgStatus == 6){
+        				LOGGER.info("__________________________________   (resultPrg 구하기 )   getPrgId == 10 && getupdMsgStatus == 6  ");
+        				params.put("ordByPre", "1");
+        				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
+        				resultPrg = ((BigDecimal)statusMap.get("govAgStepPrev")).intValue();
+        				
+        			}else{
+        				LOGGER.info("__________________________________   (resultPrg 구하기 )   getPrgId == 10 && else  ");
+        				params.put("ordByStep", "1");
+        				statusMap = ccpAgreementMapper.selectProgressStatus(params); //Progress Result
+        				resultPrg = ((BigDecimal)statusMap.get("govAgStepId")).intValue();
+        			}
 			
 		}// params Set End (AgrResultPrgId)
+		LOGGER.info("__________________________________ 가져온 resultPrg : " + resultPrg);
 		
+		/*##################     Update  Start ##################################*/
 		
-		//Params Set
-		params.put("govAgrPreUpdator", "0"); // PreUpdator
-		params.put("govAgrPrgId", resultPrg); // Agreement Progress Id
-		
-		
+		//Params Set ( 1. Message Log // 2. Agreement)
+		// 1. 공통 파라미터 세팅
 		if(params.get("updIsNotification").equals("true")){ //Notification
+			LOGGER.info("__________________________________ updIsNotification 는  true 이므로 1로 세팅됨 쿼리에서 미사용");
 			params.put("updIsNotification", "1");
 		}else{
+			LOGGER.info("__________________________________ updIsNotification 는  false 이므로 0으로 세팅됨 쿼리에서 미사용");
 			params.put("updIsNotification", "0");
 		}
-		
-		
+		if(params.get("updAgrType") == null || "".equals(params.get("updAgrType"))){
+			params.put("updAgrType", "949");
+		}
+		params.put("govAgrPreUpdator", "0"); // PreUpdator
+		params.put("govAgrPrgId", resultPrg); // Agreement Progress Id
 		// '10'
+		LOGGER.info("__________________________________ getPrgId : " + getPrgId);
+		LOGGER.info("__________________________________ getupdMsgStatus : " + getupdMsgStatus);
 		if(getPrgId == 10){
-			
+
 			if(getupdMsgStatus == 5){
-				
+				LOGGER.info("__________________________________ getPrgId == 10 && getupdMsgStatus == 5");
 				params.put("govAgrStatusId", "4"); 
-				
 			}else if(getupdMsgStatus == 44){
-				
+				LOGGER.info("__________________________________ getPrgId == 10 && getupdMsgStatus == 44");
 				params.put("govAgrStatusId", "1"); 
-				
 			}else{
-				
+				LOGGER.info("__________________________________ getPrgId == 10 && else");
 				params.put("govAgrStatusId", "1");
-				
 			}
 		}else if(getPrgId == 7){
 			
 			if(getupdMsgStatus == 5){
-				
+				LOGGER.info("__________________________________ getPrgId == 7 && getupdMsgStatus == 5");
 				params.put("govAgrStatusId", "1");
-				
 			}else if(getupdMsgStatus == 10){
-				
+				LOGGER.info("__________________________________ getPrgId == 7 && getupdMsgStatus == 10");
 				params.put("govAgrStatusId", "10");
-				
 			}else if(getupdMsgStatus == 44){
-				
+				LOGGER.info("__________________________________ getPrgId == 7 && getupdMsgStatus == 44");
 				params.put("govAgrStatusId", "1");
-				
 			}else{
-				
+				LOGGER.info("__________________________________ getPrgId == 7 && else");
 				params.put("govAgrStatusId", "8");
 			}
-			
 		}else if(getPrgId == 9){
 			
 			if(getupdMsgStatus == 5){
-				
+				LOGGER.info("__________________________________ getPrgId == 9 && getupdMsgStatus == 5");
 				params.put("govAgrStatusId", "1");
 				params.put("updIsNotification", "1");
 				params.put("updNotificationMonth", "1");
-				
 			}else if(getupdMsgStatus == 44){
-				
+				LOGGER.info("__________________________________ getPrgId == 9 && getupdMsgStatus == 44");
 				params.put("govAgrStatusId", "1");
 				params.put("updIsNotification", "1");
 				params.put("updNotificationMonth", "1");
-				
 			}else{
-				
+				LOGGER.info("__________________________________ getPrgId == 9 && else");
 				params.put("govAgrStatusId", "1");
 				params.put("updIsNotification", "1");
 				params.put("updNotificationMonth", "1");
-				
 			}
-			
 		}else{
 			
 			if(getupdMsgStatus == 5){
-				
+				LOGGER.info("__________________________________ getPrgId  가  10, 7, 9 아님  && getupdMsgStatus == 5" );	
 				params.put("govAgrStatusId", "1");
 				
 			}else if(getupdMsgStatus == 44){
-				
+				LOGGER.info("__________________________________ getPrgId  가  10, 7, 9 아님  && getupdMsgStatus == 44" );
 				params.put("govAgrStatusId", "1");
-				
 			}else{
-				
+				LOGGER.info("__________________________________ getPrgId  가  10, 7, 9 아님  && else" );
 				params.put("govAgrStatusId", "1");
-				
 			}
-			
 		} // if End
 		
 		LOGGER.info("################################################################");
-		LOGGER.info("######## params 확인 : " + params.toString());
+		LOGGER.info("######## 최종 Parameter 확인  : " + params.toString());
 		LOGGER.info("################################################################");
 		//여기서 부터 시작 2017-09-05 일정
 		
 		//GEt Sales Order Id LIST
 		List<EgovMap> soIdList = null;
 		soIdList = ccpAgreementMapper.selectAgmSoIdList(params);
-		
+		LOGGER.info("__________________________________ soIdList : " + soIdList.size() );
 		// 2 Save 2 Map
     	for (int idx = 0; idx < soIdList.size(); idx++) {
     		
@@ -637,14 +633,19 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     	
     	//Insert Message << 범인  returnItemID = MessLog.GovAgrMsgID;
     	
-    	msgLogSeq = ccpAgreementMapper.crtSeqSAL0036D();
+    	msgLogSeq = ccpAgreementMapper.crtSeqSAL0036D(); //Seq
     	
     	params.put("msgLogSeq", msgLogSeq);
     	ccpAgreementMapper.insertAgreementMessLog(params);
 		
     	//Agreement List
-    	ccpAgreementMapper.selectEditAfAgreementList(params);
-    	
+    	List<EgovMap> editAfList = null;
+    	editAfList = ccpAgreementMapper.selectEditAfAgreementList(params);
+    	if(editAfList != null && editAfList.size() > 0){
+    		
+    		
+    		
+    	}
     	//TODO  GovAgreement.First().GovAgrPreUpdator = Agreement.GovAgrID;  :: ASIS Source Need Confirm(CCP.cs)
     	//Update 
     	//param Set
@@ -653,7 +654,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     	if(hidMsgStus == 5 || hidMsgStus == 44){
     		params.put("changeMsgDate", "1");
     	}
-    	ccpAgreementMapper.updateAgrPrgDate(params);
+    	ccpAgreementMapper.updateAgreement(params);
     	
     	LOGGER.info("#########################################################################");
     	LOGGER.info("##############Agreement Maintenance Save Success!!!");
