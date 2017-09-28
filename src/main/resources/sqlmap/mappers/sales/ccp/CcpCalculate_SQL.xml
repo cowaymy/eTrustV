@@ -1012,7 +1012,7 @@ INSERT INTO SAL0020D
            #{soReqNo}, 
            #{soReqCancelAdjustmentAmt}, 
            #{soRequestor}, 
-           #{soReqPreReturnDate}, 
+           TO_DATE(#{soReqPreReturnDate} , 'DD/MM/YYYY'), 
            #{soReqRemark}, 
            NULL, 
            NULL, 
