@@ -390,28 +390,28 @@
              } 
      </select>
      <select id="selectStockMovementSerial" parameterType="Map" resultType="Map">
-	     select max(serial_no)  serial_no , max(matnr) stkcode , max(stkdesc) stkdesc , max(l62cnt) l62cnt , max(l61cnt) l61cnt , max(l63cnt) l63cnt
-		  from (  
-			SELECT serial_no , matnr , stk_desc stkdesc , count(1) l62cnt , 0 l61cnt , 0 l63cnt
-			  FROM LOG0062M l62 , 
-			       sys0026m s26 
-			 WHERE l62.matnr = s26.stk_code
-			    and l62.SERIAL_NO =  #{serial}
-			  group by serial_no , matnr , stk_desc
-			 union 
-			select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt     
-			  from log0061d l61 
-			  WHERE l61.SERIAL_NO =  #{serial}
-			  group by l61.serial_no
-			 union 
-			select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt  
-			  from log0063d l63 
-			  WHERE l63.SERIAL_NO =  #{serial}
-			  <if test='locid != null and locid !=""'>
-			   and l63.loc_id <![CDATA[<>]]> #{locid} 
-			  </if>
-			 group by l63.serial_no
-		 )
+         select max(serial_no)  serial_no , max(matnr) stkcode , max(stkdesc) stkdesc , max(l62cnt) l62cnt , max(l61cnt) l61cnt , max(l63cnt) l63cnt
+          from (  
+            SELECT serial_no , matnr , stk_desc stkdesc , count(1) l62cnt , 0 l61cnt , 0 l63cnt
+              FROM LOG0062M l62 , 
+                   sys0026m s26 
+             WHERE l62.matnr = s26.stk_code
+                and l62.SERIAL_NO =  #{serial}
+              group by serial_no , matnr , stk_desc
+             union 
+            select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt     
+              from log0061d l61 
+              WHERE l61.SERIAL_NO =  #{serial}
+              group by l61.serial_no
+             union 
+            select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt  
+              from log0063d l63 
+              WHERE l63.SERIAL_NO =  #{serial}
+              <if test='locid != null and locid !=""'>
+               and l63.loc_id <![CDATA[<>]]> #{locid} 
+              </if>
+             group by l63.serial_no
+         )
      </select>
      <insert id="insertMovementSerial" parameterType="Map">
      INSERT INTO LOG0061D (
@@ -534,4 +534,7 @@
                        AND L47.REQST_NO = L48.REQST_NO
                        AND L47.REQST_NO = #{reqno}
      </insert>
+     
+     
+  
 </mapper>
