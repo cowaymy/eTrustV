@@ -46,6 +46,8 @@
             fn_orderInfo(ordNo, ordId);
         } else if($('#callPrgm').val() == 'PRODUCT_LOST') {
         	fn_callbackOrder(ordId);
+        }else if($('#callPrgm').val() == 'BILLING_STATEMENT_PO') {
+            fn_callbackOrder(ordId);
         }
 	}
 	
