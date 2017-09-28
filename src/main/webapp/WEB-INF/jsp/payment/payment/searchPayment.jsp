@@ -414,7 +414,37 @@ function fn_openDivPop(val){
 function fn_close() {
     $('#popup_wrap').hide();
     AUIGrid.destroy(popGridID); 
-    AUIGrid.destroy(popSlaveGridID); 
+    AUIGrid.destroy(popSlaveGridID);
+    
+    //EDIT POPUP RESET
+    $('#edit_txtORNo').text('');
+    $('#edit_txtLastUpdator').text('');
+    $('#edit_txtKeyInUser').text('');
+    $('#edit_txtOrderNo').text('');
+    $('#edit_txtTRRefNo').val('');
+    $("#edit_txtTRIssueDate").val('');
+    $('#edit_txtProductCategory').text('');
+    $('#edit_txtProductName').text('');
+    $('#edit_txtAppType').text('');
+    $('#edit_txtCustomerName').text('');
+    $('#edit_txtCustomerType').text('');
+    $('#edit_txtCustomerID').text('');
+    $('#edit_txtOrderProgressStatus').text('');
+    $('#edit_txtInstallNo').text('');
+    $('#edit_txtNRIC').text('');
+    $('#edit_txtPayType').text('');
+    $('#edit_txtAdvMth').text('');
+    $('#edit_txtPayDate').text('');
+    $('#edit_txtHPCode').text('');
+    $('#edit_txtHPName').text('');
+    $('#edit_txtBatchPaymentID').text('');
+    $('#edit_txtSalesPerson').text('');
+    $('#edit_txtBranch').text('');
+    $('#edit_txtDebtor').text('');
+    $('#edit_branchId').val('');
+    $('#edit_txtCollectorCode').val('');
+    $('#edit_txtClctrName').text('');
+    $('#edit_txtCollectorId').val('');
 }
 
 function fn_close2() {
