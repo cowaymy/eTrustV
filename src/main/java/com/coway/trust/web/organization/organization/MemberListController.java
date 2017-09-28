@@ -295,13 +295,19 @@ public class MemberListController {
 		
 		logger.debug("udtList : {}", updList);
 		logger.debug("formMap : {}", formMap);
-
-		success = memberListService.saveMember(formMap, updList); 
+		String memCode = "";
+		memCode = memberListService.saveMember(formMap, updList);
+		logger.debug("memCode : {}", memCode);
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
 //    	message.setCode(AppConstants.SUCCESS);
 //    	message.setData(map);
-//    	message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
+   	if(memCode.equals("") && memCode.equals(null)){
+   		message.setMessage("fail saved");
+   	}else{
+   		message.setMessage("successfully saved. \n MemberCode  : " +memCode);
+   	}
+   	logger.debug("message : {}", message);
    	
    	System.out.println("msg   " + success);
 //		
