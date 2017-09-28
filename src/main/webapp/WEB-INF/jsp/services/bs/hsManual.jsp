@@ -401,8 +401,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <!--조회조건 추가  -->
-    <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Management</label>
-    <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />HS Manual</label>
+    <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
+    <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label>
 </aside><!-- title_line end -->
 
 
@@ -580,7 +580,7 @@
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" " onclick="javascript:fn_getBSListAjax();">Search</a></p></li>
-    <li><p class="btn_grid"><a id="hSConfiguration"><span class="search"></span>HS Configuration</a></p></li>
+    <li><p class="btn_grid"><a id="hSConfiguration"><span class="search"></span>HS Order Create</a></p></li>
 </ul>
 <!-- <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" " onclick="javascript:fn_getHSConfAjax();">HS Configuration</a></p></li>

@@ -317,12 +317,12 @@ function fn_getCheckedRowItems() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>HS Management</h1>
+<h1>HS Order Create</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();">Confirm</a></p></li>
+    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();">Create</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
