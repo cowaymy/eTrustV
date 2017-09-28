@@ -134,9 +134,9 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		orderCancelMapper.updateCancelSAL0071D(saveParam);
 //		logger.info("##### reqStageId ###############" +(int)params.get("reqStageId"));
 		logger.info("##### reqStageId ###############" +(String)params.get("reqStageId"));
-		if((String)params.get("reqStageId") != null && (String)params.get("reqStageId") != ""){
+		if((String)params.get("reqStageId") != null && !"".equals((String)params.get("reqStageId")) ){
 			int reqStageId = Integer.parseInt((String)params.get("reqStageId"));
-			logger.info("##### reqStageId ###############" +reqStageId);
+
 			if(reqStageId == 25){
 				saveParam.put("prgrsId", 5);
 				saveParam.put("isLok", 0);
