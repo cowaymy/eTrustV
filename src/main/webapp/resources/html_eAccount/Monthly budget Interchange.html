@@ -178,7 +178,13 @@
 	<th scope="row">Year</th>
 	<td><input type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">Month</th>
-	<td><input type="text" title="" placeholder="" class="w100p" /></td>
+	<td>
+	<div class="date_set w100p"><!-- date_set start -->
+	<p class=""><input type="text" title="" placeholder="" class="w100p" /></p>
+	<span>~</span>
+	<p class=""><input type="text" title="" placeholder="" class="w100p" /></p>
+	</div><!-- date_set end -->
+	</td>
 	<th scope="row">Cost Center</th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
@@ -207,7 +213,7 @@
 	</td>
 </tr>
 <tr>
-	<th scope="row">GL Account</th>
+	<th scope="row">Budget Plan</th>
 	<td colspan="3">
 	<label><input type="radio" name="GLaccount" checked="checked" /><span>All</span></label>
 	<label><input type="radio" name="GLaccount" /><span>Only Plan</span></label>
@@ -224,10 +230,8 @@
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
+		<li><p class="link_btn"><a href="#">Adjustment</a></p></li>
 		<li><p class="link_btn"><a href="#">Approval</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#">Adjustment</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
@@ -240,7 +244,7 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">Excel Down</a></p></li>
+	<li><p class="btn_grid"><a href="#">Excel Download</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
