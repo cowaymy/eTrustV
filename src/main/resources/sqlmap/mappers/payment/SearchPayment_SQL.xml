@@ -886,7 +886,7 @@
          AND ( 1 = Extent1.PAY_ITM_STUS_ID )
      </select>
      
-     <select id="selectGlRoute" parameterType="Map" resultType="egovMap">
+     <select id="selectGlRoute" parameterType="java.lang.String" resultType="egovMap">
           SELECT 
             Extent1.ID ID  ,
             Extent1.GL_POSTNG_DT GL_POSTNG_DT  ,
@@ -910,7 +910,7 @@
 	       Extent1.GL_CNVR_DT GL_CNVR_DT  ,
 	       Extent1.GL_RECIPT_ITM_CHRG GL_RECIPT_ITM_CHRG  
 	  FROM PAY0009D Extent1
-	 WHERE  Extent1.GL_RECIPT_ITM_ID = #{payItmId} AND ROWNUM <![CDATA[   <= ]]>  1
+	 WHERE  Extent1.GL_RECIPT_ITM_ID = #{value} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
 
 	<select id="selectPaymentItem" parameterType="java.lang.Integer" resultType="egovMap">
