@@ -620,7 +620,7 @@
 					           0, 
 					           0, 
 					           1, 
-					           #{sendDt}, 
+					           TO_DATE(#{sendDt} , 'DD/MM/YYYY'), 
 					           TO_DATE(#{rcivDt}, 'DD/MM/YYYY'))
     </insert>
     
