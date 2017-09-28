@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.order.impl;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,17 +133,26 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 //		int success = orderInvestMapper.updateSAL0071D(saveParam);
 		orderCancelMapper.updateCancelSAL0071D(saveParam);
 //		logger.info("##### reqStageId ###############" +(int)params.get("reqStageId"));
-//		if(success == 1){
-			if((Integer)params.get("reqStageId") == 25){
+		logger.info("##### reqStageId ###############" +(String)params.get("reqStageId"));
+		if((String)params.get("reqStageId") != null && (String)params.get("reqStageId") != ""){
+			int reqStageId = Integer.parseInt((String)params.get("reqStageId"));
+			logger.info("##### reqStageId ###############" +reqStageId);
+			if(reqStageId == 25){
 				saveParam.put("prgrsId", 5);
 				saveParam.put("isLok", 0);
 			}else{
 				saveParam.put("prgrsId", 2);
 				saveParam.put("isLok", 1);
 			}
+		}else{
+			saveParam.put("prgrsId", 2);
+			saveParam.put("isLok", 1);
+		}
+		
 //			EgovMap getRefId = orderExchangeMapper.firstSearchForCancel(saveParam);
 //			saveParam.put("refId", getRefId.get("refId"));
 			saveParam.put("refId", 0);
+			saveParam.put("userId", params.get("userId"));
 			
 			orderInvestMapper.insertSalesOrdLog(saveParam);
 //		 }else{
