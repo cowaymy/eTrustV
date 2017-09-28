@@ -837,20 +837,31 @@ public class SearchPaymentController {
 		if(params.get("edit_branchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 			updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
 			
-			EgovMap payD = searchPaymentService.selectPayDs(params);
+			List<EgovMap> payD = searchPaymentService.selectPayDs(params);
 			
-			EgovMap glRoute = searchPaymentService.selectGlRoute(payD);
-			
-			if(glRoute != null){
-				glRoute.put("brnchId", String.valueOf(params.get("edit_branchId")));
-				searchPaymentService.updGlReceiptBranchId(glRoute);//PAY0009D 테이블 GL_RECIPT_BRNCH_ID 업데이트
+			EgovMap hm = null;
+			EgovMap glRoute = null;
+			if(payD.size() > 0){
+				for (int i=0; i< payD.size() ; i++) {
+					hm = (EgovMap) payD.get(i);
+					
+					glRoute = searchPaymentService.selectGlRoute(String.valueOf(hm.get("payItmId")));
+					
+					if(glRoute != null){
+						Map<String, Object> glRouteMap = new HashMap<String, Object>();
+						glRouteMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
+						glRouteMap.put("id", String.valueOf(glRoute.get("id")));
+						searchPaymentService.updGlReceiptBranchId(glRouteMap);//PAY0009D 테이블 GL_RECIPT_BRNCH_ID 업데이트
+					}
+				}
 			}
+			
 			
 		}else{
 			updMap.put("brnchId", "");
 		}
 		
-		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){			
+		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
 			updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId")));
 		}else{
 			updMap.put("collMemId", "");
