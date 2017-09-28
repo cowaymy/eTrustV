@@ -68,6 +68,7 @@ function fn_getInvoiceList(){
 	if($("#year").val() != null && $("#month").val() != null){
 		Common.ajax("GET", "/payment/selectInvoiceStmtMgmtList.do", $("#searchForm").serialize(), function(result) {
 	        AUIGrid.setGridData(myGridID, result);
+	        selectedGridValue = undefined;
 	    });
 	}
 }

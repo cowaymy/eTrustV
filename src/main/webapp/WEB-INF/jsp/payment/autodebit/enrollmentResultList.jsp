@@ -135,6 +135,7 @@ var newColumn=[
 function fn_getOrderListAjax() {        
     Common.ajax("GET", "/payment/selectResultList", $("#resultForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
+        selectedGridValue = undefined;
     });
 }
 

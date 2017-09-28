@@ -100,6 +100,7 @@ function fn_loadOrderPO(orderId){
         $("#orderId").val(result.ordId);
         $("#orderNo").val(result.ordNo);
         $("#custName").val(result.custName);
+        selectedEntryId = undefined;
         
     });
 	
