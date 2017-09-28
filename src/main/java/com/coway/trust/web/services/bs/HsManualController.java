@@ -73,6 +73,7 @@ public class HsManualController {
 
 			model.addAttribute("brnchCdList",  params.get("BrnchId"));	
 			model.addAttribute("ordCdList",  params.get("CheckedItems"));
+			model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
 //			
 //			List<EgovMap> resultList1 = hsManualService.selectHsManualListPop(params);
 
