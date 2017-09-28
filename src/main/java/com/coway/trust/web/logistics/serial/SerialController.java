@@ -103,7 +103,7 @@ public class SerialController {
 			cnt = serialService.insertSerial(addList, loginId);
 		} else if (updateList.size() > 0) {
 			logger.info("updateList : {}", updateList.toString());
-			cnt = serialService.updateSerial(updateList);
+			cnt = serialService.updateSerial(updateList, loginId);
 
 		}
 		ReturnMessage message = new ReturnMessage();
