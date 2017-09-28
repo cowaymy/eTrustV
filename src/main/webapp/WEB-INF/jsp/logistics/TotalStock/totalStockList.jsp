@@ -89,13 +89,14 @@ var resop = {
 var paramdata;
 
 $(document).ready(function(){
-	
-	SearchSessionAjax();
+    
+    SearchSessionAjax();
     /**********************************
     * Header Setting
     **********************************/
     var LocData = {sLoc : userCode};
     //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
+    doGetComboCodeId('/common/selectStockLocationList.do','', '','searchLoc', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
        
@@ -129,15 +130,8 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	if (f_validatation()){
+        if (f_validatation()){
         SearchListAjax();
-    	}
-    });
-    $('#svalue').keypress(function(event) {
-        if (event.which == '13') {
-        	$("#sUrl").val("/logistics/organization/locationCdSearch.do");
-
-            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
         }
     });
 
@@ -163,7 +157,7 @@ function SearchListAjax() {
 
 function f_validatation(v){
              
-            if ($("#svalue").val() == null || $("#svalue").val() == undefined || $("#svalue").val() == ""){
+            if ($("#searchLoc").val() == null || $("#searchLoc").val() == undefined || $("#searchLoc").val() == ""){
                 Common.alert("Please Select Location.");
                 return false;
             }
@@ -172,9 +166,9 @@ function f_validatation(v){
 
 function f_LocMultiCombo() {
     $(function() {
-        $('#svalue').change(function() {
-         	
-            $("#svalue").val(userCode);
+        $('#searchLoc').change(function() {
+            
+            $("#searchLoc").val(userCode);
         });
     });
 }
@@ -197,12 +191,6 @@ function f_multiCombos() {
     });
 }
 
-function fn_itempopList(data){
-    
-    var rtnVal = data[0].item;
-    $("#searchLoc").val(rtnVal.loccd);
-    $("#svalue").val(rtnVal.locdesc);
-   } 
 
 
 </script>
@@ -231,8 +219,6 @@ function fn_itempopList(data){
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
-        <input type="hidden" id="sUrl" name="sUrl">
-        
         <input type="hidden" name="LocCode" id="LocCode" />    
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
@@ -250,8 +236,7 @@ function fn_itempopList(data){
                     </td> 
                     <th scope="row">Location</th>
                     <td>
-                        <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc">
-                        <INPUT type="text" class="w100p" id="svalue" name="svalue">
+                        <select class="w100p" id="searchLoc" name="searchLoc"><option value=''>Choose One</option></select>
                     </td> 
                 </tr>
                 <tr>
