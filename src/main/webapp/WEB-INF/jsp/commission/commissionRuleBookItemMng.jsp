@@ -132,20 +132,19 @@
 	                var levCnt=0;
                 	var categoryTmp = "";
                 	
+                    categoryTmp = categoryTmp+ "<table id='lev_1' class='type2 gray'>";
+                    categoryTmp = categoryTmp+ " <caption>table</caption>";
+                    categoryTmp = categoryTmp+ " <thead>";
+                    categoryTmp = categoryTmp+ "     <tr id='thead_1' />";
+                    categoryTmp = categoryTmp+ " </thead>";
+                    categoryTmp = categoryTmp+ " <tbody>";
+                    categoryTmp = categoryTmp+ "     <tr id='tbody_1' />";
+                    categoryTmp = categoryTmp+ " </tbody>";
+                    categoryTmp = categoryTmp+ "</table>";
+                    $("#category").append(categoryTmp);
+                    
 	                for (var i = 0; i < result.length; i++) {
 	                	var obj = result[i];
-	                	if(i==0 || obj.ruleLevel == 1){
-	                		categoryTmp = categoryTmp+ "<table id='lev_"+obj.ruleLevel+"' class='type2 gray'>";
-                            categoryTmp = categoryTmp+ " <caption>table</caption>";
-                            categoryTmp = categoryTmp+ " <thead>";
-                            categoryTmp = categoryTmp+ "     <tr id='thead_"+obj.ruleLevel+"' />";
-                            categoryTmp = categoryTmp+ " </thead>";
-                            categoryTmp = categoryTmp+ " <tbody>";
-                            categoryTmp = categoryTmp+ "     <tr id='tbody_"+obj.ruleLevel+"' />";
-                            categoryTmp = categoryTmp+ " </tbody>";
-                            categoryTmp = categoryTmp+ "</table>";
-                            $("#category").append(categoryTmp);
-	                	}
 	                	$("#thead_"+obj.ruleLevel).append("<th scope='col'>"+obj.ruleCategory+"</th>");
                         $("#tbody_"+obj.ruleLevel).append("<td><span>"+obj.resultValue+"</span></td>");
                         if(obj.ruleLevel > 1){
@@ -163,10 +162,10 @@
 	                			categoryTmp = categoryTmp+ "        <td scope='col' rowspan=2 align='center' valign='bottom'  style='font-weight: bold; background: #eee;'>"+result[i].ruleCategory+"</td>";
 	                			categoryTmp = categoryTmp+ "     </tr>";
 	                			categoryTmp = categoryTmp+ "   </thead>";
+	                            categoryTmp = categoryTmp+ "   <tbody>";
 	                			categoryTmp = categoryTmp+ "        <tr id='tbody_2_"+result[i].ruleSeq+"'>";
 	                			categoryTmp = categoryTmp+ "            <td style='background: #eee'> </td>";
 	                			categoryTmp = categoryTmp+ "        </tr>";
-	                            categoryTmp = categoryTmp+ "   <tbody>";
 	                            categoryTmp = categoryTmp+ "   </tbody>";
 	                			categoryTmp = categoryTmp+ "</table>";
 	                		}
@@ -1043,72 +1042,72 @@
 </tbody>
 </table><!-- table end -->
 
-<section class="search_result"><!-- search_result start -->
-
-<article id="category" class="award_wrap"><!-- award_wrap start -->
-</article><!-- award_wrap end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h2>Rule Information & Edit</h2>
-</aside><!-- title_line end -->
-
-<table class="type1 mt10"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-  <col style="width:180px" />
-  <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-  <th scope="row">ORG Name</th>
-  <td>
-  <span id="orgNmText" name="orgNmText" ></span>
-  <input type="hidden" title="" placeholder="Org Name" class=" w100p" id="orgNm" name="orgNm" readonly="readonly" /> 
-  </td>
-</tr>
-<tr>
-  <th scope="row">Title</th>
-  <td>
-  <span id="itemNmText" name="itemNmText" ></span>
-  <input type="hidden" title="" placeholder="Performance Evaluation Awards" class=" w100p"  id="itemNm" name="itemNm" readonly="readonly" /> 
-  </td>
-</tr>
-<tr>
-  <th scope="row">Range Value Name</th>
-  <td>
-  <span id="valueTypeNmText" name="valueTypeNmText" ></span>
-  <input type="hidden" title="" class=" w100p"  id="valueTypeNm" name="valueTypeNm" readonly="readonly" /> 
-  </td>
-</tr>
-<tr>
-  <th scope="row">Range value type</th>
-  <td>
-  <span id="valueTypeText" name="valueTypeText" ></span>
-  <input type="hidden" title="" class=" w100p" id="valueType" name="valueType" readonly="readonly"/> 
-  </td>
-</tr>
-<tr>
-  <th scope="row">Conditional Result Value Name</th>
-  <td>
-  <span id="resultValueNmText" name="resultValueNmText" ></span>
-  <input type="hidden" title="" class=" w100p"  id="resultValueNm" name="resultValueNm" readonly="readonly"/>
-  </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<ul class="right_btns">
-  <li><p class="btn_grid"><a href="#" id="addRule"><spring:message code='sys.btn.add'/></a></p></li>
-  <li><p class="btn_grid"><a href="#" id="editRule"><spring:message code='sys.btn.update'/></a></p></li>
-  <!-- <li><p class="btn_grid"><a href="#">저장</a></p></li> -->
-</ul>
-
-<article class="grid_wrap2"><!-- grid_wrap start -->
-  <!-- grid_wrap start -->
-      <div id="grid_wrap2" style="width: 100%; height: 334px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->
-
-</section><!-- search_result end -->
+	<section class="search_result"><!-- search_result start -->
+	
+		<article id="category" class="award_wrap"><!-- award_wrap start -->
+		</article><!-- award_wrap end -->
+		
+		<aside class="title_line"><!-- title_line start -->
+		  <h2>Rule Information & Edit</h2>
+		</aside><!-- title_line end -->
+		
+		<table class="type1 mt10"><!-- table start -->
+			<caption>table</caption>
+			<colgroup>
+				<col style="width:180px" />
+				<col style="width:*" />
+			</colgroup>
+			<tbody>
+				<tr>
+				  <th scope="row">ORG Name</th>
+				  <td>
+					  <span id="orgNmText" name="orgNmText" ></span>
+					  <input type="hidden" title="" placeholder="Org Name" class=" w100p" id="orgNm" name="orgNm" readonly="readonly" /> 
+				  </td>
+				</tr>
+				<tr>
+				  <th scope="row">Title</th>
+				  <td>
+					  <span id="itemNmText" name="itemNmText" ></span>
+					  <input type="hidden" title="" placeholder="Performance Evaluation Awards" class=" w100p"  id="itemNm" name="itemNm" readonly="readonly" /> 
+				  </td>
+				</tr>
+				<tr>
+				  <th scope="row">Range Value Name</th>
+				  <td>
+				  <span id="valueTypeNmText" name="valueTypeNmText" ></span>
+				  <input type="hidden" title="" class=" w100p"  id="valueTypeNm" name="valueTypeNm" readonly="readonly" /> 
+				  </td>
+				</tr>
+				<tr>
+				  <th scope="row">Range value type</th>
+				  <td>
+				  <span id="valueTypeText" name="valueTypeText" ></span>
+				  <input type="hidden" title="" class=" w100p" id="valueType" name="valueType" readonly="readonly"/> 
+				  </td>
+				</tr>
+				<tr>
+				  <th scope="row">Conditional Result Value Name</th>
+				  <td>
+				  <span id="resultValueNmText" name="resultValueNmText" ></span>
+				  <input type="hidden" title="" class=" w100p"  id="resultValueNm" name="resultValueNm" readonly="readonly"/>
+				  </td>
+				</tr>
+			</tbody>
+		</table><!-- table end -->
+		
+		<ul class="right_btns">
+		  <li><p class="btn_grid"><a href="#" id="addRule"><spring:message code='sys.btn.add'/></a></p></li>
+		<li><p class="btn_grid"><a href="#" id="editRule"><spring:message code='sys.btn.update'/></a></p></li>
+		<!-- <li><p class="btn_grid"><a href="#">저장</a></p></li> -->
+		</ul>
+		
+		<article class="grid_wrap2"><!-- grid_wrap start -->
+		<!-- grid_wrap start -->
+		<div id="grid_wrap2" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+		</article><!-- grid_wrap end -->
+	
+	</section><!-- search_result end -->
 </form>
 </section><!-- pop_body end -->
 
