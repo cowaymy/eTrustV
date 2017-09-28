@@ -493,7 +493,7 @@ public class CustomerController {
 	public ResponseEntity<ReturnMessage> insCustBasicInfo(@RequestBody CustomerForm customerForm, Model model) {
 		
 		int getCustCareCntId = 0;
-		String defaultDate = "1900-01-01";
+		String defaultDate = "01/01/1900";
 		SessionVO sessionVo = sessionHandler.getCurrentSessionInfo();
 		CustomerVO vo = customerForm.getCustomerVO();
 		
@@ -517,12 +517,10 @@ public class CustomerController {
 		insmap.put("custName", vo.getCustName());
 		insmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
 		if(vo.getDob() != null && !"".equals(vo.getDob())){
-			String dob = vo.getDob().substring(6)  + "-" + vo.getDob().substring(3, 5) + "-" + vo.getDob().substring(0, 2);
-			insmap.put("dob", dob);
+			insmap.put("dob", vo.getDob());
 		}else{
 			insmap.put("dob", defaultDate);
 		}
-//		insmap.put("dob", vo.getDob() != null ? vo.getDob() : defaultDate);
 		insmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
 		insmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
 		insmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
