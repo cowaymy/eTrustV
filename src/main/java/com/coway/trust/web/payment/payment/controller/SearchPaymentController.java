@@ -677,6 +677,10 @@ public class SearchPaymentController {
 		String allowComm = "";
 		String trIssuDt = "";
 		
+		//화면에서 넘어온값
+		String hiddenCollMemId = params.get("edit_txtCollectorId").equals("0") ?  "" : String.valueOf(params.get("edit_txtCollectorId"));
+		String btnAllowComm = params.get("btnAllowComm") != null ? "1" : "0"  ;
+		
 		if(viewMaster != null){
 			trNo = viewMaster.get("trNo") != null ? String.valueOf(viewMaster.get("trNo")) : ""  ;
 			brnchId = viewMaster.get("brnchId") != null ? String.valueOf(viewMaster.get("brnchId")) : "" ;
@@ -690,7 +694,9 @@ public class SearchPaymentController {
 		LOGGER.debug("마스터조회값 collMemId : {}", collMemId);
 		LOGGER.debug("마스터조회값 allowComm : {}", allowComm);
 		LOGGER.debug("마스터조회값 trIssuDt : {}", trIssuDt);
-
+		LOGGER.debug("params===="+params);
+		LOGGER.debug("hiddenCollMemId===="+hiddenCollMemId);
+		LOGGER.debug("btnAllowComm===="+btnAllowComm);
 		Map<String, Object> trMap = new HashMap<String, Object>();
 		Map<String, Object> branchMap = new HashMap<String, Object>();
 		Map<String, Object> collectorMap = new HashMap<String, Object>();
@@ -764,14 +770,14 @@ public class SearchPaymentController {
 		}
 
 		//1129 : Collector
-		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
+		if(!collMemId.equals(hiddenCollMemId)){
 			
 			Map<String, Object> frMemberIdMap = new HashMap<String, Object>();
 			Map<String, Object> toMemberIdMap = new HashMap<String, Object>();
 			String frMemberCode = "";
 			String toMemberCode = "";
 			frMemberIdMap.put("edit_txtCollectorId", collMemId);
-			toMemberIdMap.put("edit_txtCollectorId", String.valueOf(params.get("edit_txtCollectorId")));
+			toMemberIdMap.put("edit_txtCollectorId", hiddenCollMemId);
 			EgovMap frCodeMap = searchPaymentService.selectMemCode(frMemberIdMap);
 			EgovMap toCodeMap = searchPaymentService.selectMemCode(toMemberIdMap);
 			
@@ -792,7 +798,7 @@ public class SearchPaymentController {
             String valueFr = frMemberCode;//변경전 멤버코드
             String valueTo = toMemberCode;//변경후 멤버코드
             String refIDFr = collMemId;//마스터멤버아이디(변경전데이터)
-            String refIDTo = String.valueOf(params.get("edit_txtCollectorId"));//인서트쳐야할 멤버아이디(변경후데이터)
+            String refIDTo = hiddenCollMemId;//인서트쳐야할 멤버아이디(변경후데이터)
             int createBy = userId;
             
             collectorMap.put("typeID", typeID);
@@ -806,12 +812,12 @@ public class SearchPaymentController {
             searchPaymentService.saveChanges(collectorMap);
 		}
 		//1137 : Allow Commission
-		if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
+		if(!allowComm.equals(btnAllowComm)){
 			
             String typeID = "1137";
             String payID = String.valueOf(params.get("hiddenPayId"));
             String valueFr = allowComm.equals("0") ? "No":"Yes" ;
-            String valueTo = String.valueOf(params.get("allowComm")).equals("0") ? "No":"Yes";
+            String valueTo = btnAllowComm.equals("0") ? "No":"Yes";
             String refIDFr = "0";
             String refIDTo = "0";
             int createBy = userId;
@@ -861,14 +867,14 @@ public class SearchPaymentController {
 			updMap.put("brnchId", "");
 		}
 		
-		if(!collMemId.equals(String.valueOf(params.get("edit_txtCollectorId")))){
-			updMap.put("collMemId", String.valueOf(params.get("edit_txtCollectorId")));
+		if(!collMemId.equals(hiddenCollMemId)){
+			updMap.put("collMemId", hiddenCollMemId);
 		}else{
 			updMap.put("collMemId", "");
 		}
 			
-		if(!allowComm.equals(String.valueOf(params.get("allowComm")))){
-			updMap.put("allowComm", String.valueOf(params.get("allowComm")));
+		if(!allowComm.equals(btnAllowComm)){
+			updMap.put("allowComm", btnAllowComm);
 		}else{
 			updMap.put("allowComm", "");
 		}
