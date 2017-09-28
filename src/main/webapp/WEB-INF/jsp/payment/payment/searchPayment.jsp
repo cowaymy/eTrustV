@@ -379,7 +379,7 @@ function fn_openDivPop(val){
                 $('#edit_branchId').val(result.viewMaster.clctrBrnchId);$("#edit_branchId").css("backgroundColor","#F5F6CE");
                 $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
                 $('#edit_txtClctrName').text(result.viewMaster.clctrName);
-                $('#edit_txtCollectorId').text(result.viewMaster.clctrId);
+                $('#edit_txtCollectorId').val(result.viewMaster.clctrId);
                 
                 if(result.viewMaster.allowComm != "1"){
                 	$("#btnAllowComm").attr('checked', false);
@@ -388,7 +388,7 @@ function fn_openDivPop(val){
                 }
                 
                 if(result.passReconSize  > 0 ){
-                	/* $("#edit_branchId").attr('disabled', true); */
+                	$("#edit_branchId").attr('disabled', true);
                 	reconLock = 1;
                 }else{
                 	$("#edit_branchId").attr('disabled', false);
@@ -625,9 +625,7 @@ function saveChanges() {
 	}
 	
 	$("#hiddenPayId").val(payId);
-	$("#edit_branchId").attr('disabled', false);
 	Common.ajax("POST", "/payment/saveChanges", $('#myForm').serializeJSON(), function(result) {
-		$("#edit_branchId").attr('disabled', true);
         Common.alert(result.message);
 
 	}, function(jqXHR, textStatus, errorThrown) {
