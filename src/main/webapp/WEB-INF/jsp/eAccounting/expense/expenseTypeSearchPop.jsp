@@ -45,24 +45,23 @@ $(document).ready(function() {
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(expensSearchGridID, "cellDoubleClick", function(event){
-        
-         //var selectedItem = AUIGrid.getSelectedIndex(expPopGridID);
+                                   
+         var selectedItems = AUIGrid.getSelectedItems(myGridID);
          
-         var gridName = "${popClaimType}" + "GridID";
+         alert(selectedItems);
          
-         var selectedItems = AUIGrid.getSelectedItems(gridName);
          if(selectedItems.length <= 0) return;
          // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
          var first = selectedItems[0];
          
-         AUIGrid.setCellValue(gridName , first.rowIndex , "budgetCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCode"));
-         AUIGrid.setCellValue(gridName , first.rowIndex , "budgetCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCodeName"));
+         AUIGrid.setCellValue(myGridID , first.rowIndex , "budgetCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCode"));
+         AUIGrid.setCellValue(myGridID , first.rowIndex , "budgetCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "budgetCodeName"));
          
-         AUIGrid.setCellValue(gridName , first.rowIndex , "expType", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expType"));
-         AUIGrid.setCellValue(gridName , first.rowIndex , "expTypeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expTypeName"));
+         AUIGrid.setCellValue(myGridID , first.rowIndex , "expType", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expType"));
+         AUIGrid.setCellValue(myGridID , first.rowIndex , "expTypeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "expTypeName"));
          
-         AUIGrid.setCellValue(gridName , first.rowIndex , "glAccCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCode"));
-         AUIGrid.setCellValue(gridName , first.rowIndex , "glAccCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCodeName"));
+         AUIGrid.setCellValue(myGridID , first.rowIndex , "glAccCode", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCode"));
+         AUIGrid.setCellValue(myGridID , first.rowIndex , "glAccCodeName", AUIGrid.getCellValue(expensSearchGridID , event.rowIndex , "glAccCodeName"));
          
          $("#expenseTypeSearchPop").remove();
     });
