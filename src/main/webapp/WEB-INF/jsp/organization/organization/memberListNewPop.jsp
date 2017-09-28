@@ -8,7 +8,7 @@ function fn_memberSave(){
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
 		console.log("message : " + result.message );
-		alert(result.message);
+		Common.alert(result.message);
 	});
 }
 

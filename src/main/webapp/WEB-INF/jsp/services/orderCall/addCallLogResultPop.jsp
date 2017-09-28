@@ -6,6 +6,7 @@ function fn_addCallSave(){
 	Common.ajax("POST", "/callCenter/addCallLogResult.do", $("#addCallForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
+        Common.alert(result.message);
     });
 }
 </script>
