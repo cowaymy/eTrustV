@@ -310,7 +310,7 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
                    ORDER BY SY26M.STK_DESC
          </select>
          
-            <resultMap id="movement" type="com.coway.trust.biz.logistics.stockmovement.vo.StrockMovementVoForMobile" />
+            <resultMap id="movement" type="com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile" />
      <select id="getStockRequestStatusHeader" parameterType="Map" resultMap="movement">
              SELECT 
                     LG47M.REQST_NO smoNo,
