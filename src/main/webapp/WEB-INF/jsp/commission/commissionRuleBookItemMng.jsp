@@ -1004,7 +1004,7 @@
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"  style="max-height:680px;"><!-- pop_body start -->
+<section class="pop_body"  style="max-height:680px;height:680px"><!-- pop_body start -->
 <form id="searchFormRule" action="" method="post">
 <input type="hidden" name="itemCd" id="itemCd"/>
 <input type="hidden" name="itemSeq" id="itemSeq"/>
