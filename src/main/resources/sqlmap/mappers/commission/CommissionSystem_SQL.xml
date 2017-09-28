@@ -456,7 +456,8 @@
 	       VALUE_TYPE_NM = #{valueTypeNm},
 	       RESULT_VALUE_NM = #{resultValueNm},
 	       PRT_ORDER = #{printOrder},
-	       RULE_DESC = #{ruleDesc}
+	       RULE_DESC = #{ruleDesc},
+	       USE_YN = #{useYn}
 	   WHERE RULE_SEQ=#{ruleSeq} AND RULE_OPT1=#{ruleOpt1} AND RULE_OPT2=#{ruleOpt2} AND RESULT_VALUE=#{resultValue}
 	</update>
 	
