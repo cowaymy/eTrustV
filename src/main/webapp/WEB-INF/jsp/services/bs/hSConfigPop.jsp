@@ -83,6 +83,10 @@
             dataField : "custId",
             headerText : "Customer",
             width : 120
+        }, {   
+            dataField : "salesOrdId",
+            headerText : "salesordid",
+            width : 120
         }, {
             dataField : "salesOrdNo",
             headerText : "Order",
