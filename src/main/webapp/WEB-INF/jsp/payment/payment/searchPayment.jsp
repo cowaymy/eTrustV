@@ -382,16 +382,17 @@ function fn_openDivPop(val){
                 $('#edit_txtCollectorId').val(result.viewMaster.clctrId);
                 
                 if(result.viewMaster.allowComm != "1"){
-                	$("#btnAllowComm").attr('checked', false);
+                	$("#btnAllowComm").prop('checked', false);
+                	
                 }else{
-                	$("#btnAllowComm").attr('checked', true);
+                	$("#btnAllowComm").prop('checked', true);
                 }
                 
                 if(result.passReconSize  > 0 ){
-                	$("#edit_branchId").attr('disabled', true);
+                	$("#edit_branchId").prop('disabled', true);
                 	reconLock = 1;
                 }else{
-                	$("#edit_branchId").attr('disabled', false);
+                	$("#edit_branchId").prop('disabled', false);
                 }
                  
                 //팝업그리드 뿌리기
@@ -615,13 +616,6 @@ function saveChanges() {
 	if($.trim(branchId ) == ""){
 		Common.alert("* Please select the key-in branch.");
 		return;
-	}
-	
-	
-	if($("#btnAllowComm").is(":checked")){
-		$("#allowComm").val(1);
-	}else{
-		$("#allowComm").val(0);
 	}
 	
 	$("#hiddenPayId").val(payId);
