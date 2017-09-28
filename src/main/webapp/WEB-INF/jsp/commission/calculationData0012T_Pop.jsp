@@ -250,14 +250,14 @@
                               <input type="text" id="clctrId_12T" name="clctrId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
-                    </tr>
-                    <tr>
                         <th scope="row">ORD ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="ordId_12T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
+                    </tr>
+                    <tr>
                         <th scope="row">isEx</th>
-                        <td colspan="3">
+                        <td colspan="5">
                           <select id="useYnCombo_12T" name="useYnCombo" style="width:100px;" maxlength="10">
                             <option value="" selected></option>
                             <option value="1">Y</option>

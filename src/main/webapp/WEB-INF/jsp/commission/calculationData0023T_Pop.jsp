@@ -270,7 +270,7 @@
                     </tr>
                     <tr>
                         <th scope="row">isEx</th>
-                        <td colsapn=5>
+                        <td colspan=5>
                           <select id="useYnCombo_23T" name="useYnCombo" style="width:100px;">
                             <option value=""selected></option>
                             <option value="1">Y</option>
