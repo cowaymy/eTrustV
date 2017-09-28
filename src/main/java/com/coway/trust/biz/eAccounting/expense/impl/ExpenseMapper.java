@@ -1,14 +1,22 @@
 package com.coway.trust.biz.eAccounting.expense.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("expenseMapper")
 public interface ExpenseMapper {
 
-	/*List<EgovMap> selectContactAgreementList(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectExpenseList( Map<String, Object> params) throws Exception;
 	
-	List<String> selectItemBatchNofromSalesOrdNo(Map<String, Object> params) throws Exception;*/
+	String selectMaxExpType(Map<String, Object> params) throws Exception;
 	
+	int insertExpenseInfo(Map<String, Object> params) throws Exception;
 	
+	List<EgovMap> selectBudgetCodeList( Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectGlCodeList( Map<String, Object> params) throws Exception;
 	
 }
