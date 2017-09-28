@@ -32,8 +32,8 @@ public class LogStockReceiveDto {
 	@ApiModelProperty(value = "gr 날짜")
 	private int grDate;
 	
-	List<LogStockPartsReceiveDto> sList =null;
 	
+	List<LogStockPartsReceiveDto> sList =null;
 	
 	
 	
