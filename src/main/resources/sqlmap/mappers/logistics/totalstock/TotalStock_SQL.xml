@@ -48,7 +48,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
       AND L56.LOC_ID = #{searchLoc}
     </if>
     <if test="svalue != null and svalue !=''">
-      AND L28.WH_LOC_DESC LIKE '%'||#{svalue}||'%'
+      AND (UPPER(S28.WH_LOC_DESC) LIKE '%' || UPPER(#{svalue}) || '%' OR UPPER(S28.WH_LOC_CODE) LIKE UPPER(#{svalue}) || '%')
     </if>
      <if test="searchType != null and searchType !=''">
       and S26.STK_TYPE_ID in
