@@ -249,10 +249,9 @@
                 <caption>table</caption>
                 <colgroup>
                     <col style="width:100px" />
+                    <col style="width:*" />
                     <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
+                    <col style="width:*" />
                     <col style="width:100px" />
                     <col style="width:*" />
                 </colgroup>
@@ -267,8 +266,6 @@
                               <input type="text" id="emplyId_26T" name="emplyId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
-                    </tr>
-                    <tr>
                         <th scope="row">EXCLUDE</th>
                         <td>
                           <select id="useYnCombo_26T" name="useYnCombo" style="width:100px;">

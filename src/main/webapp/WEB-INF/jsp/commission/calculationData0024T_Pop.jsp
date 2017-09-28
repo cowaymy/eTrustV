@@ -166,7 +166,7 @@
                 <caption>table</caption>
                 <colgroup>
                     <col style="width:130px" />
-                    <col style="width:200px" />
+                    <col style="width:*" />
                     <col style="width:130px" />
                     <col style="width:*" />
                 </colgroup>

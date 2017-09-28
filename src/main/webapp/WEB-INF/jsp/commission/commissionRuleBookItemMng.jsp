@@ -74,19 +74,6 @@
 				console.log("성공.");
 				console.log("data : " + result);
 				AUIGrid.setGridData(myGridID, result);
-				
-				var date = new Date();
-	            var month = date.getMonth()+1;
-	            var month = Number(month)<10?"0"+month:month;
-	            var currDate = date.getFullYear() +""+month;
-	            
-	            var searchDt=$("#searchDt").val();
-	            searchDt = searchDt.substr(3,7) +""+searchDt.substr(0,2);
-	            if(Number(searchDt)< Number(currDate)){
-	                AUIGrid.showColumnByDataField(myGridID, "updDt");
-	            }else{
-	            	AUIGrid.hideColumnByDataField(myGridID, "updDt");
-	            }
 			});
 	   });
 
@@ -588,8 +575,7 @@
 	  },{
         dataField : "updDt",
         headerText : "UPDATE<br>DATE",
-        width : 120,
-        visible : false
+        width : 120
       } ];
 
 	/**********************
@@ -997,21 +983,15 @@
 		<!-- grid_wrap end -->
 
 	</section>
-	<aside class="bottom_msg_box">
-		<!-- bottom_msg_box start -->
-		<p></p>
-	</aside>
 	<!-- bottom_msg_box end -->
 	<!-- search_result end -->
 
 </section>
 <!-- content end -->
 
-</section>
 <!-- container end -->
 <hr />
 
-</div>
 <!-- wrap end -->
 
 <!-- ================ Search rule book Start ================ -->

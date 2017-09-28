@@ -185,10 +185,9 @@
                 <caption>table</caption>
                 <colgroup>
                     <col style="width:100px" />
+                    <col style="width:*" />
                     <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
+                    <col style="width:*" />
                     <col style="width:100px" />
                     <col style="width:*" />
                 </colgroup>

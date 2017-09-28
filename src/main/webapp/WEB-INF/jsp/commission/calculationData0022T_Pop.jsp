@@ -230,10 +230,9 @@
 				<caption>table</caption>
 				<colgroup>
 					<col style="width:100px" />
+                    <col style="width:*" />
                     <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
-                    <col style="width:100px" />
+                    <col style="width:*" />
                     <col style="width:100px" />
                     <col style="width:*" />
 				</colgroup>
@@ -255,7 +254,7 @@
                     </tr>
                     <tr>
 						<th scope="row">isEx</th>
-                        <td>
+                        <td colspan=5>
                           <select id="useYnCombo_22T" name="useYnCombo" style="width:100px;">
                             <option value="" selected></option>
                             <option value="1">Y</option>
