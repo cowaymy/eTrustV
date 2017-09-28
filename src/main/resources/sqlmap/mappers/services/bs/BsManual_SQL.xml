@@ -150,6 +150,7 @@
               
                             SELECT   rownum as rnum,C.CUST_ID CUST_ID
                                         , C.NAME Name
+                                        , SOM.SALES_ORD_ID SALES_ORD_ID
                                          ,SOM.SALES_ORD_NO SALES_ORD_NO
                                          ,HSM.MONTH
                                          ,HSM.YEAR YEAR
@@ -400,7 +401,7 @@
           </select>
           
           
- 	          <insert id="insertHsResult" parameterType="Map">
+         <insert id="insertHsResult" parameterType="Map">
               insert into SVC0008D (
 	                   SCHDUL_ID
 					    ,NO
@@ -416,9 +417,9 @@
 						,CRT_DT
 						)
 	             values (
-	                  GBSLCVD.SVC0008D_SCHDUL_ID_SEQ.nextval
-	                , '111111'
-			        , #{salesOrdNo}
+	                  #{schdulId}
+	                , #{no}
+			        , #{salesOrdId}
 			        , #{month}
 			        , #{year}
                     , #{stus}
@@ -430,5 +431,14 @@
 			        , SYSDATE
 	        )
 	        </insert> 
+
+
+
+
+	    <select id="getNextSchdulId"  resultType="int">
+	         select GBSLCVD.SVC0008D_SCHDUL_ID_SEQ.nextval
+                from dual
+	    </select>
+    
 
 </mapper>      		  
