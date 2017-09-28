@@ -23,7 +23,7 @@
 	}
 	
 	// Make AUIGrid 
-	var myGridID;
+	var myGridID_Basic;
 	var orgList = new Array(); //그룹 리스트
 	var orgGridCdList = new Array(); //그리드 등록 그룹 리스트
 	var orgItemList = new Array();   //그리드 등록 아이템 리스트
@@ -32,25 +32,25 @@
 	$(document).ready(function() {
 		
 		// AUIGrid 그리드를 생성합니다.
-		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"itemSeq");
+		myGridID_Basic = GridCommon.createAUIGrid("grid_wrap", columnLayout,"itemSeq");
 
 		// cellClick event.
-		AUIGrid.bind(myGridID, "cellClick", function(event) {
+		AUIGrid.bind(myGridID_Basic, "cellClick", function(event) {
 			console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");			
 		});		
 		
-		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditingHandler);      // 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);        // 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditingHandler);    // 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩 
-		AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩 
+		AUIGrid.bind(myGridID_Basic, "cellEditBegin", auiCellEditingHandler);      // 에디팅 시작 이벤트 바인딩
+		AUIGrid.bind(myGridID_Basic, "cellEditEnd", auiCellEditingHandler);        // 에디팅 정상 종료 이벤트 바인딩
+		AUIGrid.bind(myGridID_Basic, "cellEditCancel", auiCellEditingHandler);    // 에디팅 취소 이벤트 바인딩
+		AUIGrid.bind(myGridID_Basic, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩 
+		AUIGrid.bind(myGridID_Basic, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩 
 		
 		//Rule Book Item search
 		$("#search").click(function(){	
 			Common.ajax("GET", "/commission/calculation/selectBasicCalculationList", $("#basicForm").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
-				AUIGrid.setGridData(myGridID, result);
+				AUIGrid.setGridData(myGridID_Basic, result);
 			});
 			Common.ajax("GET", "/commission/calculation/selectBasicStatus", $("#basicForm").serialize(), function(result) {
 				if(result == null){
@@ -107,9 +107,9 @@
             type : "ButtonRenderer",
             labelText : "SEARCH",
             onclick : function(rowIndex, columnIndex, value, item) {
-            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 5));
-            	$("#prdNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
-            	$("#prdDec").val(AUIGrid.getCellValue(myGridID, rowIndex, 1));
+            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 5));
+            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 0));
+            	$("#prdDec").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 1));
                 Common.popupDiv("/commission/calculation/calBasicDataPop.do", $("#basicForm").serializeJSON());
             }
         },
@@ -123,7 +123,7 @@
             type : "ButtonRenderer",
             labelText : "SEARCH",
             onclick : function(rowIndex, columnIndex, value, item) {
-            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 4));
+            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 4));
             	Common.popupDiv("/commission/calculation/calBasicLogPop.do", $("#basicForm").serializeJSON());
             }
         },
