@@ -96,7 +96,6 @@ $(document).ready(function(){
     **********************************/
     var LocData = {sLoc : userCode};
     //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
-    doGetComboCodeId('/common/selectStockLocationList.do','', '','searchLoc', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
        
@@ -134,6 +133,14 @@ $(function(){
         SearchListAjax();
         }
     });
+    $('#svalue').keypress(function(event) {
+    	$('#searchLoc').val('');
+        if (event.which == '13') {
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
 
 });
 
@@ -149,6 +156,7 @@ function SearchSessionAjax() {
 function SearchListAjax() {
     var url = "/logistics/totalstock/totStockSearchList.do";
     var param = $('#searchForm').serialize();
+    
     Common.ajax("GET" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
         
@@ -157,7 +165,7 @@ function SearchListAjax() {
 
 function f_validatation(v){
              
-            if ($("#searchLoc").val() == null || $("#searchLoc").val() == undefined || $("#searchLoc").val() == ""){
+            if ($("#svalue").val() == null || $("#svalue").val() == undefined || $("#svalue").val() == ""){
                 Common.alert("Please Select Location.");
                 return false;
             }
@@ -166,9 +174,9 @@ function f_validatation(v){
 
 function f_LocMultiCombo() {
     $(function() {
-        $('#searchLoc').change(function() {
+        $('#svalue').change(function() {
             
-            $("#searchLoc").val(userCode);
+            $("#svalue").val(userCode);
         });
     });
 }
@@ -191,6 +199,13 @@ function f_multiCombos() {
     });
 }
 
+function fn_itempopList(data){
+    
+    var rtnVal = data[0].item;
+    console.log(rtnVal);
+    $("#searchLoc").val(rtnVal.locid);
+    $("#svalue").val(rtnVal.locdesc);
+   } 
 
 
 </script>
@@ -219,6 +234,8 @@ function f_multiCombos() {
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
+        <input type="hidden" id="sUrl" name="sUrl">
+        
         <input type="hidden" name="LocCode" id="LocCode" />    
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
@@ -236,7 +253,8 @@ function f_multiCombos() {
                     </td> 
                     <th scope="row">Location</th>
                     <td>
-                        <select class="w100p" id="searchLoc" name="searchLoc"><option value=''>Choose One</option></select>
+                        <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc">
+                        <INPUT type="text" class="w100p" id="svalue" name="svalue">
                     </td> 
                 </tr>
                 <tr>
