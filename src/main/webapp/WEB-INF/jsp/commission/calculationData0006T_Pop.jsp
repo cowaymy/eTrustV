@@ -225,7 +225,8 @@
 			       var useYnCombo = $("#useYnCombo_06T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&useYnCombo="+useYnCombo+"'/>");
+			       //window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&useYnCombo="+useYnCombo+"'/>");
+			       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&useYnCombo="+useYnCombo+"'/>";
 		       //}
 	       }else{
 	    	   Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
