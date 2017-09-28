@@ -57,7 +57,7 @@
 		                            cellMerge : true,
 		                            mergeRef : "matrlNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
 		                            mergePolicy : "restrict"},
-								{dataField:"",headerText:"Base Qty",width:"5%",visible:true},
+								{dataField:"",headerText:"Base Qty",width:"5%",visible:false},
 								{dataField:"bomUse",headerText:"",width:100,visible:false},
 								{dataField:"bomItmNodeNo",headerText:"Component No.",width:"9%",visible:true,style :"aui-grid-user-custom-right"},
 								{dataField:"bomCtgry",headerText:"",width:100,visible:false},

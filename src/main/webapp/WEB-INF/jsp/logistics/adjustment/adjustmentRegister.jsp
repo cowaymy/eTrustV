@@ -324,23 +324,23 @@ function fn_setVal(data,status){
 	        	$("input[name='chcdcrdc']").prop('disabled', true);
 	for(var i=0; i<tmp.length;i++){
 	        if(tmp[i]=="2456"){
-	        	$("input[name='chcdc']").prop('disabled', false);
+	        	//$("input[name='chcdc']").prop('disabled', false);
 	            $("#chcdc").attr("checked", true);
 	            $("#srchcdc").val("01");
 	        }else if (tmp[i]=="2457") {
-	        	$("input[name='chrdc']").prop('disabled', false);
+	        	//$("input[name='chrdc']").prop('disabled', false);
 	            $("#chrdc").attr("checked", true);
 	            $("#srchrdc").val("02");
 	        }else if (tmp[i]=="2458") {
-	        	$("input[name='chct']").prop('disabled', false);
+	        	//$("input[name='chct']").prop('disabled', false);
 	            $("#chct").attr("checked", true);
 	            $("#srchct").val("03");
 	        }else if (tmp[i]=="2459") {
-	        	$("input[name='chcody']").prop('disabled', false);
+	        	//$("input[name='chcody']").prop('disabled', false);
 	            $("#chcody").attr("checked", true);
 	            $("#srchcody").val("04");
 	        } else if(tmp[i]=="2460"){
-	        	$("input[name='chcdcrdc']").prop('disabled', false);
+	        	//$("input[name='chcdcrdc']").prop('disabled', false);
 	            $("#chcdcrdc").attr("checked", true);  
 	            $("#srchcdcrdc").val("05");  
 	        }
