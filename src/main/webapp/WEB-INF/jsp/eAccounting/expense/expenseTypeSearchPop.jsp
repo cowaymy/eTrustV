@@ -48,8 +48,6 @@ $(document).ready(function() {
                                    
          var selectedItems = AUIGrid.getSelectedItems(myGridID);
          
-         alert(selectedItems);
-         
          if(selectedItems.length <= 0) return;
          // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
          var first = selectedItems[0];
