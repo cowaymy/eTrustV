@@ -16,6 +16,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.organization.organization.MemberEventListController;
@@ -31,6 +32,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	
 	@Value("${app.name}")
 	private String appName;
+	
+	@Resource(name = "commonMapper")
+	private CommonMapper commonMapper;
 	
 	@Resource(name = "hsManualMapper")
 	private HsManualMapper hsManualMapper;
@@ -206,11 +210,21 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
     	
+
+		
 		for(int i=0; i< docType.size(); i++){
+//		for(Object obj : docType){
+			
 			Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
 			
 			int fomSalesOrdNo = Integer.parseInt((String)docSub.get("salesOrdNo"));
-    		
+//			int nextSchId = (int) docSub.get("salesOrdNo");
+			int nextSchId  = hsManualMapper.getNextSchdulId();
+			String docNo= commonMapper.selectDocNo("10");
+			
+			docSub.put("no", docNo);
+			docSub.put("schdulId", nextSchId);
+			docSub.put("salesOrdId", docSub.get("salesOrdId"));
     		docSub.put("resultID", 0);
     		//hsResult.put("custId", (params.get("custId").toString()));
     		docSub.put("salesOrdNo", String.format("%08d", fomSalesOrdNo));
@@ -226,7 +240,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			
     		hsManualMapper.insertHsResult(docSub);
+//    		hsManualMapper.insertHsResult((Map<String, Object>)obj);
 		}
+		success=true;
 		//hsManualMapper.insertHsResult(MemApp);
 
 		return success;
