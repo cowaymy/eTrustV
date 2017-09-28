@@ -216,9 +216,9 @@
         </td>
     </tr>
     <tr>
-        <th scope="row">Under Cooling Off Period ?</th>
+        <th scope="row">Under Cooling Off Period </th>
         <td>
-        <span>11111</span>
+        <span></span>
         </td>
         <th scope="row">Appointment Date</th>
         <td>${cancelReqInfo.appRetnDg}

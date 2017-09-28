@@ -195,7 +195,7 @@
                     return false;
     			}
     		}
-    		Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON());
+    		Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
     	}
     	
     }
