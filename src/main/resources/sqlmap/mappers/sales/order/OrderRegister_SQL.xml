@@ -1453,7 +1453,7 @@
 		     , #{hapyCallerId}
 		     , SYSDATE
 		     , #{updUserId}
-		     , #{callDt}
+		     , TO_DATE(#{callDt}, 'YYYY-MM-DD')
 		     )
     </insert>
     
