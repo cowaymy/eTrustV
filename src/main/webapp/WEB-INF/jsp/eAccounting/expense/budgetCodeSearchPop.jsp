@@ -12,7 +12,7 @@ var bgGridID;
 $(document).ready(function() {
 
 	// 아이템 AUIGrid 칼럼 설정
-	var columnLayout = [ {
+	var budgetcolumnLayout = [ {
 	    dataField : "budgetCode",
 	    headerText : '<spring:message code="expense.Activity" />',
 	    width : 100
@@ -32,7 +32,7 @@ $(document).ready(function() {
 	}];
 
 	
-    bgGridID = GridCommon.createAUIGrid("#budgetGrid", columnLayout,"budgetCode", {editable:false});
+    bgGridID = GridCommon.createAUIGrid("#budgetGrid", budgetcolumnLayout, "budgetCode", {editable:false});
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(bgGridID, "cellDoubleClick", function(event){

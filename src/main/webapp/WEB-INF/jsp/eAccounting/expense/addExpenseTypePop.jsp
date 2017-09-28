@@ -34,7 +34,7 @@ function createAUIGrid() {
     var columnLayout = [ {
 	        dataField : "clmType",
 	        headerText : '',
-	        width : 0,
+            visible : false,
 	        editable : false
 	    },{
             dataField : "expType",
@@ -50,7 +50,7 @@ function createAUIGrid() {
         }, {
             dataField : "budgetCode",
             headerText : '<spring:message code="expense.Activity" />',
-            width : 0,
+            visible : false,
             editable : false
         }, {
             dataField : "budgetCodeName",
@@ -79,7 +79,7 @@ function createAUIGrid() {
         }, {
             dataField : "glAccCode",
             headerText : '<spring:message code="expense.GLAccount" />',
-            width : 0,
+            visible : false,
             editable : false
         }, {
             dataField : "glAccCodeName",
@@ -122,7 +122,8 @@ function createAUIGrid() {
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력   
         noDataMessage       :  gridMsg["sys.info.grid.noDataMessage"],
-        groupingMessage     : gridMsg["sys.info.grid.groupingMessage"]
+        groupingMessage     : gridMsg["sys.info.grid.groupingMessage"],
+        softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
     }; 
     
     expPopGridID = AUIGrid.create("#popGrid_wrap", columnLayout, gridPros);
@@ -156,6 +157,10 @@ function createAUIGrid() {
         }
         return false; // 다른 필드들은 편집 허용
     });
+    
+
+    // 행 삭제 이벤트 바인딩
+    AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 
 }
 
@@ -163,6 +168,11 @@ function createAUIGrid() {
 function auiAddRowHandler(event)
 {
       console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
+}
+//행 삭제 이벤트 핸들러
+function auiRemoveRowHandler(event)
+{ 
+    console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
 }
 
 function fn_selectPopListAjax(){

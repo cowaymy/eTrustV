@@ -77,6 +77,11 @@ function fn_expenseTypePop(){
    Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, null, true, "addExpenseTypePop");
 }
 
+/* //Expense Type Pop 호출
+function fn_test(){
+    
+   Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J1'}, null, true, "expenseTypeSearchPop");
+} */
 
 function createAUIGrid() {
     // AUIGrid 칼럼 설정
@@ -211,7 +216,7 @@ function createAUIGrid() {
 
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" onClick="javascript:fn_expenseTypePop();"><spring:message code="expense.AddExpenseType" /></a></p></li>
-	<li><p class="btn_grid"><a href="#"><spring:message code="expense.Edit" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" onClick="javascript:fn_expenseEdit();"><spring:message code="expense.Edit" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

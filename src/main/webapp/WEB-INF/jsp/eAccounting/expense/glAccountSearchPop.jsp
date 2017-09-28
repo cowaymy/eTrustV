@@ -12,7 +12,7 @@ var glCodeGridID;
 $(document).ready(function() {
 	
 	//아이템 AUIGrid 칼럼 설정
-	var columnLayout2 = [ {
+	var glCodecolumnLayout = [ {
 	    dataField : "glAccCode",
 	    headerText : '<spring:message code="expense.GLAccount" />',
 	    width : 150
@@ -23,7 +23,7 @@ $(document).ready(function() {
 	    width : 300
 	}];
     
-    glCodeGridID = GridCommon.createAUIGrid("#glCodeGrid", columnLayout2, "budgetCode", {editable:false});
+    glCodeGridID = GridCommon.createAUIGrid("#glCodeGrid", glCodecolumnLayout, "budgetCode", {editable:false});
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(glCodeGridID, "cellDoubleClick", function(event){

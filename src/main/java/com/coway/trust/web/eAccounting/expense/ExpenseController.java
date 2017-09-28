@@ -77,6 +77,13 @@ public class ExpenseController {
 	public String glAccountSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{		
 		return "eAccounting/expense/glAccountSearchPop";
 	}
+	
+	@RequestMapping(value = "/expenseTypeSearchPop.do")
+	public String expenseTypeSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{	
+		
+		model.addAttribute("popClaimType", params.get("popClaimType").toString());
+		return "eAccounting/expense/expenseTypeSearchPop";
+	}
 		
 	@RequestMapping(value = "/insertExpenseInfo", method = RequestMethod.POST) 
 	public ResponseEntity<ReturnMessage> insertExpenseInfo (@RequestBody Map<String, ArrayList<Object>> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
