@@ -27,4 +27,6 @@ public interface HsManualMapper {
 	
 	void insertHsResult(Map<String, Object> params);
 	
+	int getNextSchdulId();
+	
 }
