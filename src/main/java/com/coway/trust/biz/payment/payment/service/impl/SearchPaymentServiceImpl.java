@@ -265,7 +265,6 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		//INSERT HISTORY
 		if(list.size() > 0){
 			for(int i=0; i<list.size(); i++){
-				System.out.println("~~~~~~get(i) : " + list.get(i));
 				searchPaymentMapper.insertPayDHistory(list.get(i));
 			}
 		}
