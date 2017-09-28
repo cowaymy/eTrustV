@@ -147,7 +147,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		/* ################## insert 1 ##########################*/
 		//Send Date
-		formMap.put("sendDt", SalesConstants.DEFAULT_DATE2);
+		formMap.put("sendDt", SalesConstants.DEFAULT_DATE);
 		//RECIVE DATE
 		if(SalesConstants.AGREEMENT_TRUE.equals(formMap.get("consignment"))){
 			formMap.put("rcivDt", formMap.get("consignmentReciveDt"));
@@ -361,6 +361,16 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		LOGGER.info("##################################################################");
 		// updAgrId == Agreement Id ,  updPrgId == Progress Hidden Id ,  updMsgStatus == messageStatus Id
 		
+
+    /*    int AgreementID = int.Parse(Request["AGRID"].ToString());
+        string AgrMessage = this.txtRemark.Text.Replace("'", "''");
+        int AgrProgressID = int.Parse(this.hidAgrProgressID.Value);
+        int AgrMessageStatusID = int.Parse(this.cmbStatus.SelectedValue);
+        int? AgrResultProgressID = module.GetProgressStatus(AgreementID, AgrProgressID, AgrMessageStatusID);
+        bool HasNotification = bool.Parse(this.ddlNotification.SelectedValue);
+        int NoticeMonth = int.Parse(this.ddlNoticeMonth.SelectedValue);*/
+		
+		
 		//1 . ProgressStatus 를 가져오기
 		// Not Equal '10'
 		EgovMap statusMap = null;
@@ -418,7 +428,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 				resultPrg = ((BigDecimal)statusMap.get("govAgStepId")).intValue();
 			}
 			
-		}// params Set End
+		}// params Set End (AgrResultPrgId)
 		
 		
 		//Params Set
@@ -527,7 +537,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     			callLogMap.put("salesOrdId", soIdList.get(idx).get("govAgItmSalesOrdId"));
     			callLogMap.put("callerUserId", "0");
     			callLogMap.put("callerReasonId", "0");
-    			callLogMap.put("callerRecallDate", SalesConstants.DEFAULT_DATE2);
+    			callLogMap.put("callerRecallDate", SalesConstants.DEFAULT_DATE);
     			callLogMap.put("callerStatusId", "4");
     			callLogMap.put("userId", params.get("userId"));
     			
@@ -535,8 +545,8 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
     			resultMap.put("callResultId", "0");
     			resultMap.put("callEntryId", "0");
     			resultMap.put("callStatusId", "1");
-    			resultMap.put("callDate", SalesConstants.DEFAULT_DATE2);
-    			resultMap.put("callActnDt", SalesConstants.DEFAULT_DATE2);
+    			resultMap.put("callDate", SalesConstants.DEFAULT_DATE);
+    			resultMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
     			resultMap.put("callFeedBackId", "0");
     			resultMap.put("callCTId", "0");
     			resultMap.put("callRemark", params.get("updResultRemark"));
@@ -677,7 +687,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 			params.put("byHand", 0);
 		}
 		
-		params.put("defaultDate", SalesConstants.DEFAULT_DATE2);
+		params.put("defaultDate", SalesConstants.DEFAULT_DATE);
 		
 		//1. update (Agreement) 
 		ccpAgreementMapper.updateReceiveDate(params);

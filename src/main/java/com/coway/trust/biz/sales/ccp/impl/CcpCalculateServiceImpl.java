@@ -667,7 +667,7 @@ public class CcpCalculateServiceImpl implements CcpCalculateService {
             params.put("soReqNo", SalesConstants.SO_REQ_NO);
             params.put("soReqCancelAdjustmentAmt", SalesConstants.SO_REQ_CANCEL_ADJUSTMENT_AMT);
             params.put("soRequestor", SalesConstants.SO_REQ_REQUESTOR);
-            params.put("soReqPreReturnDate", SalesConstants.DEFAULT_DATE2);
+            params.put("soReqPreReturnDate", SalesConstants.DEFAULT_DATE);
             params.put("soReqRemark", SalesConstants.ORD_REM);
             
             LOGGER.info("_________________________________________________________________________________________");
