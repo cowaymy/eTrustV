@@ -223,10 +223,14 @@
              AND     s28m.WH_LOC_STUS_ID     = s38m.STUS_CODE_ID(+)
              ]]>
                  <if test="scode != null and scode !=''">
-                      AND UPPER(s28m.WH_LOC_CODE)  like '%'||UPPER(#{scode})||'%'
+                      AND (UPPER(s28m.WH_LOC_CODE)  like UPPER(#{scode})||'%'
+                      or UPPER(s28m.WH_LOC_DESC)  like '%'||UPPER(#{scode})||'%'
+                      )
                  </if>
                  <if test="sname != null and sname !=''">
-                      AND UPPER(s28m.WH_LOC_DESC) like '%'||UPPER(#{sname})||'%'
+                      AND (UPPER(s28m.WH_LOC_CODE)  like UPPER(#{sname})||'%'
+                      or UPPER(s28m.WH_LOC_DESC)  like '%'||UPPER(#{sname})||'%'
+                      )
                  </if>
         ORDER BY WH_LOC_CODE        
     </select>

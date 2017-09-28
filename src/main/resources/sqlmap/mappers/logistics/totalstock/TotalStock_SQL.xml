@@ -47,6 +47,9 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
     <if test="searchLoc != null and searchLoc !=''">
       AND L56.LOC_ID = #{searchLoc}
     </if>
+    <if test="svalue != null and svalue !=''">
+      AND L28.WH_LOC_DESC LIKE '%'||#{svalue}||'%'
+    </if>
      <if test="searchType != null and searchType !=''">
       and S26.STK_TYPE_ID in
       <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">

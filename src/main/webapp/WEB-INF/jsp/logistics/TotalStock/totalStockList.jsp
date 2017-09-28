@@ -133,9 +133,10 @@ $(function(){
         SearchListAjax();
     	}
     });
-    $('#searchLoc').keypress(function(event) {
+    $('#svalue').keypress(function(event) {
         if (event.which == '13') {
         	$("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
         }
     });
@@ -162,18 +163,18 @@ function SearchListAjax() {
 
 function f_validatation(v){
              
-//             if ($("#searchLoc").val() == null || $("#searchLoc").val() == undefined || $("#searchLoc").val() == ""){
-//                 Common.alert("Please Select Location.");
-//                 return false;
-//             }
+            if ($("#svalue").val() == null || $("#svalue").val() == undefined || $("#svalue").val() == ""){
+                Common.alert("Please Select Location.");
+                return false;
+            }
             return true;
 }
 
 function f_LocMultiCombo() {
     $(function() {
-        $('#searchLoc').change(function() {
+        $('#svalue').change(function() {
          	
-            $("#searchLoc").val(userCode);
+            $("#svalue").val(userCode);
         });
     });
 }
@@ -198,8 +199,9 @@ function f_multiCombos() {
 
 function fn_itempopList(data){
     
-    var rtnVal = data[0].item.loccd;
-    $("#searchLoc").val(rtnVal);
+    var rtnVal = data[0].item;
+    $("#searchLoc").val(rtnVal.loccd);
+    $("#svalue").val(rtnVal.locdesc);
    } 
 
 
@@ -230,6 +232,7 @@ function fn_itempopList(data){
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
         <input type="hidden" id="sUrl" name="sUrl">
+        
         <input type="hidden" name="LocCode" id="LocCode" />    
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
@@ -247,7 +250,8 @@ function fn_itempopList(data){
                     </td> 
                     <th scope="row">Location</th>
                     <td>
-                        <INPUT type="text" class="w100p" id="searchLoc" name="searchLoc">
+                        <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc">
+                        <INPUT type="text" class="w100p" id="svalue" name="svalue">
                     </td> 
                 </tr>
                 <tr>
