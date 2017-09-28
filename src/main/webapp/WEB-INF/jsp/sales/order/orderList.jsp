@@ -198,9 +198,9 @@
 	<th scope="row">Order Date</th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input id="listOrdStartDt" name="ordStartDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	<span>To</span>
-	<p><input id="listOrdEndDt" name="ordEndDt" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	</div><!-- date_set end -->
 	</td>
 </tr>
@@ -341,11 +341,13 @@
 
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#">Rental to Outright Simulator</a></p></li>
+<!--
 	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
 	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
 	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
 	<li><p class="btn_grid"><a href="#">INS</a></p></li>
 	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
+-->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

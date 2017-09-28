@@ -42,6 +42,13 @@ public class OrderListController {
 	
 	@RequestMapping(value = "/orderList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
+		
 		return "sales/order/orderList";
 	}
 	
