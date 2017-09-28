@@ -106,7 +106,7 @@ $(function(){
     });
     $('#save').click(function(){
     	var dat = GridCommon.getEditData(listGrid);
-        
+        console.log(dat);
         Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
             Common.alert(result.message , SearchListAjax);
         },  function(jqXHR, textStatus, errorThrown) {

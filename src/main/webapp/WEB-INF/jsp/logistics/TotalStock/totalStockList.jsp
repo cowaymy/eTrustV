@@ -130,7 +130,7 @@ $(document).ready(function(){
 $(function(){
     $('#search').click(function() {
         if (f_validatation()){
-        SearchListAjax();
+            SearchListAjax();
         }
     });
     $('#svalue').keypress(function(event) {
