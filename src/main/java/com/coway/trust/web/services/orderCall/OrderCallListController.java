@@ -1,5 +1,6 @@
 package com.coway.trust.web.services.orderCall;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +80,7 @@ public class OrderCallListController {
 		model.addAttribute("callStusId", params.get("callStusId"));
 		model.addAttribute("salesOrdId", params.get("salesOrdId"));
 		model.addAttribute("callEntryId", params.get("callEntryId"));
+		model.addAttribute("salesOrdNo", params.get("salesOrdNo"));
 		model.addAttribute("orderCall", orderCall);
 		model.addAttribute("callStatus", callStatus);
 		return "services/orderCall/addCallLogResultPop";
@@ -98,8 +100,9 @@ public class OrderCallListController {
 		boolean success = false;
 		logger.debug("params : {}", params);
 		String installationNo = "";
-		installationNo = orderCallListService.insertCallResult(params,sessionVO);
-		message.setMessage("success Installation No : " + installationNo );
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		resultValue = orderCallListService.insertCallResult(params,sessionVO);
+		message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
 		return ResponseEntity.ok(message);
 	}
 	

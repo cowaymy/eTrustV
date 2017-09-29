@@ -1,6 +1,7 @@
 package com.coway.trust.web.services.installation;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -294,17 +295,14 @@ public class InstallationResultListController {
 	@RequestMapping(value = "/addInstallation.do",method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertInstallationResult(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
 		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
 		logger.debug("params : {}", params);
 		
 		boolean success = false;
 		
-		success = installationResultListService.insertInstallationResult(params, sessionVO);
+		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
 		
-		if(success){
-			message.setMessage("저장성공");
-		}else{
-			message.setMessage("저장실패");
-		}
+		message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
 		
 		return ResponseEntity.ok(message);
 	}
