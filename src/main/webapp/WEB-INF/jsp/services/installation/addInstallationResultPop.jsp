@@ -671,7 +671,9 @@ var gridPros = {
 </tr>
 <tr>
     <th scope="row">CT Code</th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px;" id="ctCode" name="ctCode" /><p class="btn_sky"><a href="#">Search</a></p></td>
+    <td><input type="text" title="" placeholder="" class="" style="width:200px;" id="ctCode" name="ctCode" />
+    <input type="text" title="" value="16495" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
+    <p class="btn_sky"><a href="#">Search</a></p></td>
     <th scope="row">CT Name</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td>
 </tr>
