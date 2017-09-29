@@ -60,18 +60,18 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:true},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30                },
+                     {dataField:"reqstqty"     ,headerText:"Requested Qty"                 ,width:120    ,height:30                },
                      {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"indelyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 , editable:true 
+                     {dataField:"indelyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 , editable:true 
                     	 ,dataType : "numeric" ,editRenderer : {
                              type : "InputEditRenderer",
                              onlyNumeric : true, // 0~9 까지만 허용
                              allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                        }
                      },
-                     {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30                },
+                     {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
 var reqcolumnLayout;
@@ -96,18 +96,18 @@ var serialcolumnLayout =[{dataField:"rnum"         ,headerText:"RowNum"         
                          {dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 ,cellMerge : true  },
                          {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 ,cellMerge : true                 },
                          {dataField:"num"     ,headerText:"Seq."                 ,width:"5%"    ,height:30   ,style :"aui-grid-user-custom-right"          },
-                         {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30   , visible:false              },
+                         {dataField:"reqstqty"     ,headerText:"Requested Qty"                 ,width:120    ,height:30   , visible:false              },
                          {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30    , visible:false             },
                          {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                          {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                         {dataField:"indelyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 , editable:true 
+                         {dataField:"indelyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 , editable:true 
                              ,dataType : "numeric" ,editRenderer : {
                                  type : "InputEditRenderer",
                                  onlyNumeric : true, // 0~9 까지만 허용
                                  allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                            } , visible:false
                          },
-                         {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30     , visible:false            },
+                         {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30     , visible:false            },
                          {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                          {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30  , visible:false              },
                          {dataField:"serial"      ,headerText:"Serial"    ,width:"30%"    ,height:30,editable:true,
@@ -623,11 +623,11 @@ function fn_serialChck(rowindex , rowitem , str){
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">To Location</th>
+                    <th scope="row">From Location</th>
                     <td>
                         <select class="w100p" id="tlocation" name="tlocation"></select>
                     </td>
-                    <th scope="row">From Location</th>
+                    <th scope="row">To Location</th>
                     <td >
                         <select class="w100p" id="flocation" name="flocation"></select>
                     </td>
@@ -706,7 +706,7 @@ function fn_serialChck(rowindex , rowitem , str){
                 <tr>
                     <th scope="row">GI Posting Date</th>
                     <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>    
-                    <th scope="row">GI Proof Date</th>
+                    <th scope="row">GI Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
                 </tr>
                 <tr>    
