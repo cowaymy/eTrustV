@@ -50,8 +50,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public String  insertCallResult(Map<String, Object> params, SessionVO sessionVO) {
+	public Map<String, Object>  insertCallResult(Map<String, Object> params, SessionVO sessionVO) {
+		String salesOrdNo = params.get("salesOrdNo").toString();
 		String installationNo = "";
+		Map<String, Object> resultValue = new HashMap<String, Object>();
 		if(sessionVO != null){
 			Map<String, Object> callMaster = getSaveCallCenter(params, sessionVO);
 			Map<String, Object> callDetails = getSaveCallDetails(params, sessionVO);
@@ -64,14 +66,14 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			
 			String returnNo="";
 			boolean success = false;
-			installationNo = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList);
+			resultValue = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList ,salesOrdNo);
 			//returnNo = 
 		}
 		
-		return installationNo;
+		return resultValue;
 	}
 	@Transactional
-	private  String orderCallLogSave(Map<String, Object> callMaster,Map<String, Object> callDetails,Map<String, Object> installMaster,Map<String, Object> orderLogList){
+	private  Map<String, Object> orderCallLogSave(Map<String, Object> callMaster,Map<String, Object> callDetails,Map<String, Object> installMaster,Map<String, Object> orderLogList,String salesOrdNo){
 		String returnNo="";
 		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
 		EgovMap maxIdValue = new EgovMap();
@@ -122,8 +124,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			}
 			
 		}
+		Map<String, Object> resultValue = new HashMap<String, Object>();
 		String installationNo = installNo.get("docNo").toString();
-		return installationNo;
+		resultValue.put("installationNo", installationNo);
+		resultValue.put("salesOrdNo", salesOrdNo);
+		return resultValue;
 	}
 	
 	public String getNextDocNo(String prefixNo,String docNo){

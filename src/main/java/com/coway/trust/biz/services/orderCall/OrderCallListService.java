@@ -12,7 +12,7 @@ public interface OrderCallListService {
 	
 	EgovMap getOrderCall(Map<String, Object> params);
 	
-	String insertCallResult(Map<String, Object> params, SessionVO sessionVO);
+	 Map<String, Object> insertCallResult(Map<String, Object> params, SessionVO sessionVO);
 	
 	List<EgovMap> selectCallStatus();
 	
