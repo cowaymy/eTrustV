@@ -20,6 +20,7 @@ $(document).ready(function() {
         callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
         salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
         callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
+        salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
         //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
         console.log(callStusCode+ "     " + callStusId + "     " + salesOrdId+ "     "  + callEntryId)
     });  
@@ -34,7 +35,7 @@ $(document).ready(function() {
 	    });
 	}
 	function fn_openAddCall(){
-		Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId);
+		Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo);
 	}
 	var myGridID;
 	function orderCallListGrid() {
@@ -205,9 +206,6 @@ var gridPros = {
     <th scope="row">Application Type</th>
     <td>
     <select class="multy_select w100p" multiple="multiple">
-        <option value="1">11</option>
-        <option value="2">22</option>
-        <option value="3">33</option>
     </select>
     </td>
     <th scope="row">Order Date</th>
@@ -225,25 +223,16 @@ var gridPros = {
     <th scope="row">State</th>
     <td>
     <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Area</th>
     <td>
     <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Product</th>
     <td>
     <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
 </tr>
@@ -251,17 +240,11 @@ var gridPros = {
     <th scope="row">Call Log Type</th>
     <td>
     <select class="multy_select w100p" multiple="multiple">
-        <option value="1">11</option>
-        <option value="2">22</option>
-        <option value="3">33</option>
     </select>
     </td>
     <th scope="row">Call Log Status</th>
     <td>
     <select class="multy_select w100p" multiple="multiple">
-        <option value="1">11</option>
-        <option value="2">22</option>
-        <option value="3">33</option>
     </select>
     </td>
     <th scope="row">Call Log Date</th>
@@ -297,9 +280,6 @@ var gridPros = {
     <th scope="row">DSC Code</th>
     <td>
     <select class="multy_select w100p" multiple="multiple">
-        <option value="1">11</option>
-        <option value="2">22</option>
-        <option value="3">33</option>
     </select>
     </td>
     <th scope="row">PO Number</th>
@@ -311,17 +291,11 @@ var gridPros = {
     <th scope="row">Sort By</th>
     <td>
     <select class="w100p">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Feedback Code</th>
     <td colspan="3">
     <select class="multy_select" multiple="multiple">
-        <option value="1">11</option>
-        <option value="2">22</option>
-        <option value="3">33</option>
     </select>
     </td>
 </tr>

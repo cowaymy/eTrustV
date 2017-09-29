@@ -38,7 +38,7 @@ function fn_addCallSave(){
     <tr>
         <th scope="row">Call Log Type</th>
         <td>
-        <span>1111</span>
+        <span></span>
         </td>
         <th scope="row">Create Date</th>
         <td>
@@ -47,7 +47,7 @@ function fn_addCallSave(){
     <tr>
         <th scope="row">Wait For Cancel</th>
         <td>
-        <span>1111</span>
+        <span></span>
         </td>
         <th scope="row">Creator</th>
         <td>
@@ -56,7 +56,7 @@ function fn_addCallSave(){
     <tr>
         <th scope="row">Product To Install </th>
         <td>
-        <span>1111</span>
+        <span></span>
         </td>
         <th scope="row">Call Log Status</th>
         <td>
@@ -109,7 +109,7 @@ function fn_addCallSave(){
     <tr>
         <th scope="row">Progress Status</th>
         <td>
-        <span>1111</span>
+        <span></span>
         </td>
         <th scope="row">Agreement No</th>
         <td>
@@ -238,37 +238,37 @@ function fn_addCallSave(){
     <tbody>
     <tr>
         <th scope="row" rowspan="3">Order Made By</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Salesman Code</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Salesman Name</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Salesman NRIC</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Mobile No</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Office No</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">House No</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     </tbody>
     </table><!-- table end -->
@@ -294,37 +294,37 @@ function fn_addCallSave(){
     <tbody>
     <tr>
         <th scope="row" rowspan="3">Service By</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Cody Code</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Cody Name</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Cody NRIC</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Mobile No</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">Office No</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     <tr>
         <th scope="row">House No</th>
-        <td><span>1111</span></td>
+        <td><span></span></td>
     </tr>
     </tbody>
     </table><!-- table end -->
@@ -352,7 +352,7 @@ function fn_addCallSave(){
     <tr>
         <th scope="row">Customer ID</th>
         <td>
-        <span>1111</span>
+        <span></span>
         </td>
         <th scope="row">Customer Name</th>
         <td colspan="3">
@@ -931,6 +931,7 @@ function fn_addCallSave(){
 <input type="hidden" value="${callStusId}" id="callStusId" name="callStusId"/>
 <input type="hidden" value="${salesOrdId}" id="salesOrdId" name="salesOrdId"/>
 <input type="hidden" value="${callEntryId}" id="callEntryId" name="callEntryId"/>
+<input type="hidden" value="${salesOrdNo}" id="salesOrdNo" name="salesOrdNo"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

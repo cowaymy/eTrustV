@@ -78,6 +78,7 @@ function fn_saveInstall(){
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
+        Common.alert(result.message);
     });
 }
 function fn_viewInstallResultSearch(){
@@ -613,6 +614,7 @@ var gridPros = {
 <input type="hidden" value="${installResult.custCntId}" id="hidCustContactId" name="hidCustContactId" />
 <input type="hidden" value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" />
 <input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" />
+<input type="hidden" value="${installResult.installEntryNo}" id="hiddeninstallEntryNo" name="hiddeninstallEntryNo" />
 <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" />
 <input type="hidden" value="" id="hidActualCTId" name="hidActualCTId" />
 <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
