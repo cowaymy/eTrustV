@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper">
+
+<select id="selectWebInvoiceByParamsList" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceByParamsList */
+    SELECT INVC_NO,
+                INVC_DT
+    FROM FCM0002M            
+</select>
+
+<insert id="insertWebInvoiceByMap" parameterType="Map">
+/* webInvoiceMapper.insertWebInvoiceByMap */
+
+</insert>
+
+<select id="selectSupplier" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.selectSupplier */
+    SELECT ACC_GRP,
+                MEM_ACC_ID,
+                MEM_ACC_NAME,
+                GST_RGIST_NO,
+                BANK_NAME,
+                BANK_ACC_NO
+    FROM FCM0006M
+    WHERE 1=1
+    <if test="memberAccountCode != null and memberAccountCode != ''">
+    AND MEM_ACC_ID LIKE '%' || #{memberAccountCode} || '%'
+    </if>
+    <if test="group != null and group != ''">
+    AND ACC_GRP = #{group}
+    </if>
+    <if test="memberAccountName != null and memberAccountName != ''">
+    <![CDATA[
+    AND MEM_ACC_NAME LIKE '%' || #{memberAccountName} || '%'
+    ]]>
+    </if>
+    <if test="gstRegistrationNo != null and gstRegistrationNo != ''">
+    AND GST_RGIST_NO LIKE '%' || #{gstRegistrationNo} || '%'
+    </if>
+</select>
+
+<select id="selectCostCenter" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.selectCostCenter */
+    SELECT COST_CENTER,
+                COST_CENTER_TEXT
+    FROM FCM0008M
+    WHERE 1=1
+    <if test="costCenter != null and costCenter != ''">
+    AND COST_CENTER LIKE '%' || #{costCenter} || '%'
+    </if>
+    <if test="costCenterText != null and costCenterText != ''">
+    AND COST_CENTER_TEXT LIKE '%' || #{costCenterText} || '%'
+    </if>
+</select>
+
+<select id="selectTextCodeWebInvoiceFlag" resultType="egovMap">
+/* webInvoiceMapper.selectTextCodeWebInvoiceFlag */
+    SELECT TAX_CODE ,
+                TAX_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
+    FROM FCM0007C
+    WHERE WEB_INVC_FLAG = 'X'
+</select>
+
+<select id="selectNextClmNo" resultType="String">
+/* webInvoiceMapper.selectNextClmNo */
+    SELECT    'J1'
+       || TO_CHAR (SYSDATE, 'yymm')
+       || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS clmNo
+    FROM FCM0002M
+    WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+</select>
+
+</mapper>
