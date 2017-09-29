@@ -97,7 +97,9 @@ public class OrderCallListController {
 		ReturnMessage message = new ReturnMessage();
 		boolean success = false;
 		logger.debug("params : {}", params);
-		success = orderCallListService.insertCallResult(params,sessionVO);
+		String installationNo = "";
+		installationNo = orderCallListService.insertCallResult(params,sessionVO);
+		message.setMessage("success Installation No : " + installationNo );
 		return ResponseEntity.ok(message);
 	}
 	
