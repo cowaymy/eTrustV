@@ -561,34 +561,7 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author
 	 */
-	List<EgovMap> selectMagicStateList (Map<String, Object> params) throws Exception;
-	
-	
-	/**
-	 * Get City List (Magic Address)
-	 * @param params
-	 * @exception Exception
-	 * @author
-	 */
-	List<EgovMap> selectMagicCityList (Map<String, Object> params) throws Exception;
-	
-	
-	/**
-	 * Get PostCode List (Magic Address)
-	 * @param params
-	 * @exception Exception
-	 * @author
-	 */
-	List<EgovMap> selectMagicPostCodeList (Map<String, Object> params) throws Exception;
-	
-	
-	/**
-	 * Get Area List (Magic Address)
-	 * @param params
-	 * @exception Exception
-	 * @author
-	 */
-	List<EgovMap> selectMagicAreaList (Map<String, Object> params) throws Exception;
+	List<EgovMap> selectMagicAddressComboList (Map<String, Object> params) throws Exception;
 	
 	
 	/**

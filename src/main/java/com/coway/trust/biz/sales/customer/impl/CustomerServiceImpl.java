@@ -710,58 +710,35 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 	
 	/**
-	 * Get State List (Magic Address) 
+	 * selectMagicAddressComboList (Magic Address) 
 	 * @param params 
 	 * @return 
 	 * @exception Exception
 	 * @author 
 	 */
-	@Override
-	public List<EgovMap> selectMagicStateList(Map<String, Object> params) throws Exception {
-		
-		return customerMapper.selectMagicStateList(params);
-	}
-	
-	
-	/**
-	 * Get City List (Magic Address) 
-	 * @param params 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	@Override
-	public List<EgovMap> selectMagicCityList(Map<String, Object> params) throws Exception {
-		
-		return customerMapper.selectMagicCityList(params);
-	}
-
-	
-	/**
-	 * Get PostCode List (Magic Address) 
-	 * @param params 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
-	@Override
-	public List<EgovMap> selectMagicPostCodeList(Map<String, Object> params) throws Exception {
-		
-		return customerMapper.selectMagicPostCodeList(params);
-	}
 
 
-	/**
-	 * Get Area List (Magic Address) 
-	 * @param params 
-	 * @return 
-	 * @exception Exception
-	 * @author 
-	 */
 	@Override
-	public List<EgovMap> selectMagicAreaList(Map<String, Object> params) throws Exception {
+	public List<EgovMap> selectMagicAddressComboList(Map<String, Object> params) throws Exception {
 		
-		return customerMapper.selectMagicAreaList(params);
+		//State
+		if(params.get("state") == null && params.get("city") == null && params.get("postcode") == null){
+			params.put("colState", "1");
+		}
+		//City
+		if(params.get("state") != null  && params.get("city") == null && params.get("postcode") == null){
+			params.put("colCity", "1");
+		}
+		//Post Code
+		if(params.get("state") != null  && params.get("city") != null && params.get("postcode") == null){
+			params.put("colPostCode", "1");
+		}
+		//Area
+		if(params.get("state") != null  && params.get("city") != null && params.get("postcode") != null){
+			params.put("colArea", "1");
+		}
+		
+		return customerMapper.selectMagicAddressComboList(params);
 	}
 
 

@@ -42,6 +42,8 @@
     		Common.ajax("GET", "/sales/ccp/updateAgreementMtcEdit.do", $("#_saveForm").serialize() , function(result){  
     			//Save Btn Disable
     			$("#_btnSave").css("display" , "none");
+    			//List Reload
+    			fn_selectCcpAgreementListAjax();
     			Common.confirm('Contract agreement successfully updated. Are you sure want to upload attachment(s) for this agreement ?' , fn_fileUpload , ""); 
     			
     			//Send E-Mail

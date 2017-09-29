@@ -56,7 +56,7 @@
         
         //Magic Address
         fn_initAddress(); //init
-        CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , '', optionState);
+        CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
          //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
         doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'S' , '');                              // Customer Type Combo Box
         doGetCombo('/sales/customer/getNationList', '338' , '' ,'cmbNation' , 'S');        // Nationality Combo Box
@@ -101,8 +101,8 @@
             $("#mArea").val('');
             
             //Call ajax
-            var cityJson = {groupCode : tempVal}; //Condition
-            CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", cityJson, '' , optionCity);
+            var cityJson = {state : tempVal}; //Condition
+            CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
         }
         
     }
@@ -127,8 +127,8 @@
             $("#mArea").val('');
             
             //Call ajax
-            var postCodeJson = {groupCode : tempVal}; //Condition
-            CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, '' , optionPostCode);
+            var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
+            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
         }
         
     }
@@ -148,8 +148,8 @@
             $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
             
             //Call ajax
-            var areaJson = {groupCode : tempVal}; //Condition
-            CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", areaJson, '' , optionArea);
+            var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
+            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
         }
         
     }
@@ -543,16 +543,17 @@
             
             //Call Ajax
            
-            CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , mstate, optionState);
+            CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
             
-            var cityJson = {groupCode : mstate};
-            CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", cityJson, mcity , optionCity);
+            var cityJson = {state : mstate}; //Condition
+            CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
             
-            var postCodeJson = {groupCode : mcity};
-            CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, mpostcode , optionCity);
+            var postCodeJson = {state : mstate , city : mcity}; //Condition
+            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
             
             var areaJson = {groupCode : mpostcode};
-            CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", areaJson, marea , optionArea);
+            var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
+            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
             
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();

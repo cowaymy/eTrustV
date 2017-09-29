@@ -2100,17 +2100,62 @@
                    ]]>
   </select>
   
-  <select id="selectMagicStateList" resultType="egovMap">
+  <select id="selectMagicAddressComboList" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT 
-        STATE AS CODE_ID,
-        STATE AS CODE_NAME 
+        
+        <if test=" null != colState and '' != colState">
+            STATE AS CODE_ID,
+            STATE AS CODE_NAME
+        </if>
+        
+        <if test=" null != colCity and '' != colCity">
+            CITY AS CODE_ID,
+            CITY AS CODE_NAME
+        </if>
+        
+        <if test=" null != colPostCode and '' != colPostCode">
+            POSTCODE AS CODE_ID,
+            POSTCODE AS CODE_NAME 
+        </if>
+        
+        <if test=" null != colArea and '' != colArea">
+            AREA AS CODE_ID,
+            AREA AS CODE_NAME
+        </if>
+        
     FROM 
         SYS0064M
-    WHERE STATUS_ID = 1
-    ORDER BY STATE    
+    WHERE STATUS_ID = 1 <!-- state -->
+    <if test="null != state and '' != state"> <!-- city  -->
+        AND STATE = #{state} 
+    </if>
+    <if test="null != city and '' != city"> <!-- post code  -->
+        AND CITY = #{city} 
+    </if>
+    <if test="null != postcode and '' != postcode"> <!-- area  -->
+        AND POSTCODE = #{postcode} 
+    </if>
+    
+    <!-- Sorting  -->
+    <if test=" null != colState and '' != colState">
+        ORDER BY STATE
+    </if>
+    
+    <if test=" null != colCity and '' != colCity">
+        ORDER BY CITY    
+    </if>
+    
+    <if test=" null != colPostCode and '' != colPostCode">
+         ORDER BY POSTCODE    
+    </if>
+    
+    <if test=" null != colArea and '' != colArea">
+         ORDER BY AREA    
+    </if>
+        
   </select>
   
-    <select id="selectMagicCityList" resultType="egovMap">
+<!--     <select id="selectMagicCityList" resultType="egovMap">
     SELECT DISTINCT 
         CITY AS CODE_ID,
         CITY AS CODE_NAME
@@ -2140,7 +2185,7 @@
     WHERE POSTCODE = #{groupCode}
     AND STATUS_ID = 1
     ORDER BY AREA
-  </select>
+  </select> -->
   
   <select id="getAreaId" parameterType="Map" resultType="egovMap">
   

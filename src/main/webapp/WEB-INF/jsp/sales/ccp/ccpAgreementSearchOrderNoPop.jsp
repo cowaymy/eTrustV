@@ -36,7 +36,13 @@ $(document).ready(function() {
 	$(".j_date2").monthpicker(monthOptions);
 	
 	 
-	 //
+	 //Grid Cell Double Click Func
+	 AUIGrid.bind(orderGridID, "cellDoubleClick", function(event) {
+	        
+	         $("#_closeOrdPop").click();
+             $("#_salesOrderNo").val(event.item.ordNo);
+             $("#_confirm").click();
+	  });
 	
 });
 
@@ -46,11 +52,11 @@ $(document).ready(function() {
 	                               {dataField : "ordNo",headerText : "Order No", width : '10%'},
 	                               {dataField : "ordDt", headerText : "Order Date", width : '10%'},
 	                               {dataField : "appTypeCode", headerText : "App Type", width : '10%'},
-	                               {dataField : "ordStusCode", headerText : "Status", width : '15%'},
-	                               {dataField : " ", headerText : "Product", width : '5%'},
+	                               {dataField : "ordStusCode", headerText : "Status", width : '20%'},
+	                               {dataField : "stockDesc", headerText : "Product", width : '10%'},  
 	                               {dataField : "custName", headerText : "Customer Name",width : '30%'},
-	                               {dataField : "custNric", headerText : "NRIC/Company No", width : '10%'},
-	                               {
+	                               {dataField : "custNric", headerText : "NRIC/Company No", width : '10%'}
+	                               /* {
 	                                   dataField : "undefined", 
 	                                   headerText : " ", 
 	                                   width : '10%',
@@ -65,7 +71,7 @@ $(document).ready(function() {
 	                                                $("#_confirm").click();
 	                                          }
 	                                   }
-	                               }];
+	                               } */];
 	 
 	 var gridPros = {
              

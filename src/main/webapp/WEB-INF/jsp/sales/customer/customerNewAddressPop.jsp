@@ -13,7 +13,7 @@
 		
 		 //Filed Init
 		 fn_initAddress();
-		 CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , '', optionState);
+		 CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
 		 /* ### Get Cust AddrID ####*/
 		 fn_getCustAddrId();
 		/* ###  Page Param #### */
@@ -121,8 +121,8 @@
 	            $("#mArea").val('');
 	            
 	            //Call ajax
-	            var cityJson = {groupCode : tempVal}; //Condition
-	            CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", cityJson, '' , optionCity);
+	            var cityJson = {state : tempVal}; //Condition
+	            CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
 	        }
 	        
 	    }
@@ -147,8 +147,8 @@
 	            $("#mArea").val('');
 	            
 	            //Call ajax
-	            var postCodeJson = {groupCode : tempVal}; //Condition
-	            CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, '' , optionPostCode);
+	            var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
+	            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
 	        }
 	        
 	    }
@@ -168,8 +168,8 @@
 	            $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
 	            
 	            //Call ajax
-	            var areaJson = {groupCode : tempVal}; //Condition
-	            CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", areaJson, '' , optionArea);
+	            var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
+	            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
 	        }
 	        
 	    }

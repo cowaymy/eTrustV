@@ -1510,50 +1510,14 @@ public class CustomerController {
 		}
 		
 		
-		@RequestMapping(value = "/selectMagicStateList")
-		public ResponseEntity<List<EgovMap>>  selectMagicStateList (@RequestParam Map<String, Object> params) throws Exception{
-			
-			List<EgovMap> stateList = null;
-			
-			stateList = customerService.selectMagicStateList(params);
-			
-			return ResponseEntity.ok(stateList);
-			
-		}
-		
-		
-		@RequestMapping(value = "/selectMagicPostCodeList")
-		public ResponseEntity<List<EgovMap>>  selectMagicPostCodeList (@RequestParam Map<String, Object> params) throws Exception{
+		@RequestMapping(value = "/selectMagicAddressComboList")
+		public ResponseEntity<List<EgovMap>>  selectMagicAddressComboList (@RequestParam Map<String, Object> params) throws Exception{
 			
 			List<EgovMap> postList = null;
 			
-			postList = customerService.selectMagicPostCodeList(params);
+			postList = customerService.selectMagicAddressComboList(params);
 			
 			return ResponseEntity.ok(postList);
-			
-		}
-		
-		
-		@RequestMapping(value = "/selectMagicCityList")
-		public ResponseEntity<List<EgovMap>>  selectMagicCityList (@RequestParam Map<String, Object> params) throws Exception{
-			
-			List<EgovMap> cityList = null;
-			
-			cityList = customerService.selectMagicCityList(params);
-			
-			return ResponseEntity.ok(cityList);
-			
-		}
-		
-		
-		@RequestMapping(value = "/selectMagicAreaList")
-		public ResponseEntity<List<EgovMap>>  selectMagicAreaList (@RequestParam Map<String, Object> params) throws Exception{
-			
-			List<EgovMap> areaList = null;
-			
-			areaList = customerService.selectMagicAreaList(params);
-			
-			return ResponseEntity.ok(areaList);
 			
 		}
 		
