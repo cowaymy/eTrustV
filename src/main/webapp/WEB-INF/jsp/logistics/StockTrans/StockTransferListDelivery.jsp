@@ -50,17 +50,17 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30                },
+                     {dataField:"reqstqty"     ,headerText:"Requested Qty"                 ,width:120    ,height:30                },
                      {dataField:"rmqty"        ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 , editable:true 
+                     {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 , editable:true 
                     	 ,dataType : "numeric" ,editRenderer : {
                              type : "InputEditRenderer",
                              onlyNumeric : true, // 0~9 까지만 허용
                              allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                        }
                      },
-                     {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30                },
+                     {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30,visible:false},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
 var reqcolumnLayout;
@@ -301,11 +301,11 @@ function f_getTtype(g , v){
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">To Location</th>
+                    <th scope="row">From Location</th>
                     <td>
                         <select class="w100p" id="tlocation" name="tlocation"></select>
                     </td>
-                    <th scope="row">From Location</th>
+                    <th scope="row">To Location</th>
                     <td >
                         <select class="w100p" id="flocation" name="flocation"></select>
                     </td>
