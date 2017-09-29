@@ -22,7 +22,7 @@
 	}
 	  
 	// Make AUIGrid 
-	var myGridID;
+	var myGridID_CAL_CAL;
 	var orgList = new Array(); //그룹 리스트
 	var orgGridCdList = new Array(); //그리드 등록 그룹 리스트
 	var orgItemList = new Array();   //그리드 등록 아이템 리스트
@@ -36,19 +36,19 @@
 	$(document).ready(function() {
 		
 		// AUIGrid 그리드를 생성합니다.
-		//myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);
+		//myGridID_CAL = GridCommon.createAUIGrid("grid_wrap", columnLayout);
 		createAUIGrid();
 
 		// cellClick event.
-		AUIGrid.bind(myGridID, "cellClick", function(event) {
+		AUIGrid.bind(myGridID_CAL, "cellClick", function(event) {
 			console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");			
 		});		
 		
-		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditingHandler);      // 에디팅 시작 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);        // 에디팅 정상 종료 이벤트 바인딩
-		AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditingHandler);    // 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩 
-		AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩 
+		AUIGrid.bind(myGridID_CAL, "cellEditBegin", auiCellEditingHandler);      // 에디팅 시작 이벤트 바인딩
+		AUIGrid.bind(myGridID_CAL, "cellEditEnd", auiCellEditingHandler);        // 에디팅 정상 종료 이벤트 바인딩
+		AUIGrid.bind(myGridID_CAL, "cellEditCancel", auiCellEditingHandler);    // 에디팅 취소 이벤트 바인딩
+		AUIGrid.bind(myGridID_CAL, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩 
+		AUIGrid.bind(myGridID_CAL, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩 
 		
 		//Rule Book Item search
 		$("#search").click(function(){	
@@ -61,7 +61,7 @@
 					$("#batchYn").val("");
 					console.log("<spring:message code='sys.msg.success'/>");
 					console.log("data : " + result);
-					AUIGrid.setGridData(myGridID, result);
+					AUIGrid.setGridData(myGridID_CAL, result);
 				});
 			}
 	   });
@@ -72,17 +72,17 @@
             }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
             	Common.alert("<spring:message code='commission.alert.currentDate'/>");
             }else{
-				var  myGridIdLength = AUIGrid.getGridData(myGridID).length;
+				var  myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
 				
-				for(var i=0;i<myGridIdLength ;i++){
-					if(AUIGrid.getCellValue(myGridID, i, 2) == "1"){
+				for(var i=0;i<myGridID_CALLength ;i++){
+					if(AUIGrid.getCellValue(myGridID_CAL, i, 2) == "1"){
 						Common.alert("<spring:message code='commission.alert.calRunning'/>");
                         return false;
 					}
 				}
 				$("#batchYn").val("Y");
 				//array에 담기        
-				var gridList = AUIGrid.getGridData(myGridID);       //그리드 데이터
+				var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
 				var formList = $("#searchForm").serializeArray();       //폼 데이터
 				
 				//param data array
@@ -149,10 +149,10 @@
 	            type : "ButtonRenderer",
 	            labelText : "SEARCH",
 	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 8));
-	            	$("#code").val(AUIGrid.getCellValue(myGridID, rowIndex, 9));
-	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
-	                $("#prdDec").val(AUIGrid.getCellValue(myGridID, rowIndex, 1));
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 8));
+	            	$("#code").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 9));
+	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 0));
+	                $("#prdDec").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 1));
 	                Common.popupDiv("/commission/calculation/calCommDataPop.do", $("#searchForm").serializeJSON());
 	            }
 	        },
@@ -166,7 +166,7 @@
 	            type : "ButtonRenderer",
 	            labelText : "SEARCH",
 	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 8));
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 8));
 	            	Common.popupDiv("/commission/calculation/calCommLogPop.do", $("#searchForm").serializeJSON());
 	            }
 	        },
@@ -180,20 +180,20 @@
 	            type : "ButtonRenderer",
 	            labelText : "EXECUTE",
 	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#procedureNm").val(AUIGrid.getCellValue(myGridID, rowIndex, 0));
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID, rowIndex, 8));
+	            	$("#procedureNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 0));
+	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, 8));
 	            	$("#batchYn").val("N");
-	            	var  myGridIdLength = AUIGrid.getGridData(myGridID).length;
+	            	var  myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
 	            	var failCnt = "0";
 	            	var state;
-	            	for(var i=0;i<myGridIdLength;i++){
-	            		state= AUIGrid.getCellValue(myGridID, i, "calState");
+	            	for(var i=0;i<myGridID_CALLength;i++){
+	            		state= AUIGrid.getCellValue(myGridID_CAL, i, "calState");
 	            		if(state == "9"){
 	            			failCnt = i;
 	            		}
 	            	}
 	            	for(var i=0;i<rowIndex;i++){
-	            		state= AUIGrid.getCellValue(myGridID, i, "calState");
+	            		state= AUIGrid.getCellValue(myGridID_CAL, i, "calState");
 	            		if(state != "0"){
 	            			Common.alert("<spring:message code='commission.alert.calFirstExecute'/>");
 	            			return false;
@@ -206,10 +206,10 @@
                     }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
                     	Common.alert("<spring:message code='commission.alert.currentDate'/>");
                         return false;
-                    }else if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="1"){
+                    }else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, 2))=="1"){
                     	Common.alert("<spring:message code='commission.alert.calRunning'/>");
 	            		return false;
-	            	}else if((AUIGrid.getCellValue(myGridID, rowIndex, 2))=="8" && (AUIGrid.getCellValue(myGridID, failCnt, 2))=="9" ){
+	            	}else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, 2))=="8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, 2))=="9" ){
 	            		Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
 	            		return false;
 	            	}else {
@@ -249,7 +249,7 @@
             showRowNumColumn : true,
     
         };
-        myGridID = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
+        myGridID_CAL = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
 	}
     
 </script>
