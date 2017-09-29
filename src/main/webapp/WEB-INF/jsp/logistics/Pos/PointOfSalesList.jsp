@@ -207,9 +207,9 @@ function f_onchange(obj, value, tag, selvalue){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	if(valiedcheck('search')){
+    	//if(valiedcheck('search')){
         SearchListAjax();
-    	}
+    	//}
     });
     $('#insert').click(function(){
          document.searchForm.action = '/logistics/pos/PosOfSalesIns.do';
@@ -270,6 +270,8 @@ $(function(){
             }
             document.giForm.gitype.value="GI";
             $("#dataTitle").text("Good Issue Posting Data");
+            doSysdate(0 , 'giptdate');
+            doSysdate(0 , 'gipfdate');
             $("#giopenwindow").show();
         }
     });
@@ -290,6 +292,8 @@ $(function(){
             }
             document.giForm.gitype.value="GC";
             $("#dataTitle").text("Issue Cancel Posting Data");
+            doSysdate(0 , 'giptdate');
+            doSysdate(0 , 'gipfdate');
             $("#giopenwindow").show();
         }
     });
@@ -319,9 +323,11 @@ function GiSaveAjax() {
 
         Common.alert(result.message);
 
-        // AUIGrid.resetUpdatedItems(listGrid, "all");    
+        // AUIGrid.resetUpdatedItems(listGrid, "all");
+        $("#giptdate").val("");
+        $("#gipfdate").val("");
         $("#giopenwindow").hide();
-        // $('#search').click();
+         $('#search').click();
 
     }, function(jqXHR, textStatus, errorThrown) {
         try {
@@ -557,7 +563,7 @@ function f_getTtype(g , v){
                 <tr>
                     <th scope="row">GI Posting Date</th>
                     <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
-                    <th scope="row">GI Proof Date</th>
+                    <th scope="row">GI Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
                 </tr>
                 <tr>    
