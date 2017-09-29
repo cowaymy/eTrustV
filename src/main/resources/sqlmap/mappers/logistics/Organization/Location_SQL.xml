@@ -42,8 +42,8 @@
 		         s28m.SERIAL_FT_CHK serialftchk,
 		         s28m.SERIAL_PT_CHK serialptchk,
 		         s28m.SERIAL_PD_CHK serialpdchk,
-		         s28.CDC_CODE cdccode,
-		         s28.RDC_CODE rdccode,
+		         s28m.CDC_CODE cdccode,
+		         s28m.RDC_CODE rdccode,
 		         (SELECT code_name
 		            FROM SYS0013M
 		           WHERE code_id = s28m.WH_LOC_TYPE_ID)
@@ -133,6 +133,8 @@
             , WH_LOC_STK_GRAD       = #{locgrad}
             , WH_LOC_UPD_DT         = SYSDATE
             , WH_LOC_IS_SYNC        = #{up_sync}
+            , CDC_CODE              = #{cdccode}
+            , RDC_CODE              = #{rdccode}
             , WH_LOC_MOBILE         = #{up_mobile}
         WHERE WH_LOC_ID = #{locid}
 	</update>

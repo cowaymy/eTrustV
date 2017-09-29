@@ -153,6 +153,7 @@
 		
 	    AUIGrid.bind(myGridID, "updateRow", function(event) {
 	    	$( "#editWindow" ).hide();
+	    	$('#modForm')[0].reset();
 	        
 	    	pagestate = "";
 	        
@@ -253,7 +254,6 @@
     	$("#mcontact1").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel1'));
     	$("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
     	$("#streetDtl").val(AUIGrid.getCellValue(myGridID ,rowid,'street'));
-    	
     	$("#mareaId").val(AUIGrid.getCellValue(myGridID ,rowid,'areaid'));
     	
     	doDefCombo(stockgradecomboData, AUIGrid.getCellValue(myGridID ,rowid,'locgrad') ,'mstockgrade', 'S', '');
@@ -261,23 +261,52 @@
     	var paramdata = { groupCode : '339' , orderValue : 'CODE'};
         doGetComboData('/common/selectCodeList.do', paramdata, AUIGrid.getCellValue(myGridID ,rowid,'whlocgb'),'locationtype', 'S' , '');
         
-    	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty'),'mcountry', 'S', ''); 
+    	CommonCombo.make('mState',  "/sales/customer/selectMagicAddressComboList", '' , AUIGrid.getCellValue(myGridID ,rowid,'state'), optionState);
     	
+    	var Json = {state : AUIGrid.getCellValue(myGridID ,rowid,'state')}; //Condition
+    	CommonCombo.make('mCity',   "/sales/customer/selectMagicAddressComboList", Json, AUIGrid.getCellValue(myGridID ,rowid,'locdt2') , optionCity);
     	
-    	CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , AUIGrid.getCellValue(myGridID ,rowid,'state'), optionState);
-    	
-    	var Json = {groupCode : AUIGrid.getCellValue(myGridID ,rowid,'state')}; //Condition
-        CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", Json, AUIGrid.getCellValue(myGridID ,rowid,'locdt2') , optionCity);
-    	
-        Json = {groupCode : AUIGrid.getCellValue(myGridID ,rowid,'postcd')}; //Condition
-        CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", Json, AUIGrid.getCellValue(myGridID ,rowid,'areanm') , optionArea);
+        Json = {state : AUIGrid.getCellValue(myGridID ,rowid,'state') , city : AUIGrid.getCellValue(myGridID ,rowid,'locdt2') ,  postcode : AUIGrid.getCellValue(myGridID ,rowid,'postcd')}; //Condition
+        CommonCombo.make('mArea',   "/sales/customer/selectMagicAddressComboList", Json, AUIGrid.getCellValue(myGridID ,rowid,'areanm') , optionArea);
         
-        Json = {groupCode : AUIGrid.getCellValue(myGridID ,rowid,'locdt2')}; //Condition
-        CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", Json, AUIGrid.getCellValue(myGridID ,rowid,'postcd') , optionPostCode);
+        Json = {state : AUIGrid.getCellValue(myGridID ,rowid,'state') , city : AUIGrid.getCellValue(myGridID ,rowid,'locdt2') , }; //Condition
+        CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", Json, AUIGrid.getCellValue(myGridID ,rowid,'postcd') , optionPostCode);
 
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch1'),'mwarebranch1', 'S' , ''); 
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch2'),'mwarebranch2', 'S' , '');
     	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch3'),'mwarebranch3', 'S' , '');
+    	
+    	if (AUIGrid.getCellValue(myGridID ,rowid,'serialpdchk') == "Y"){
+    		$("#pdchk").prop("checked" , true);
+    	}else{
+    		$("#pdchk").prop("checked" , false);
+    	}
+    	if (AUIGrid.getCellValue(myGridID ,rowid,'serialftchk') == "Y"){
+            $("#ftchk").prop("checked" , true);
+        }else{
+        	$("#ftchk").prop("checked" , false);
+        }
+    	if (AUIGrid.getCellValue(myGridID ,rowid,'serialptchk') == "Y"){
+            $("#ptchk").prop("checked" , true);
+        }else{
+        	$("#ptchk").prop("checked" , false);
+        }
+    	
+    	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
+        doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
+        
+        
+        if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '01'){
+        	$("#mcdccode").prop("disabled" , true);
+        	$("#mrdccode").prop("disabled" , true);
+        }else if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '02' || AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '02'){
+            $("#mcdccode").prop("disabled" , false);
+            $("#mrdccode").prop("disabled" , true);
+        }else{
+            $("#mcdccode").prop("disabled" , false);
+            $("#mrdccode").prop("disabled" , false);
+        }
+    	
         $( "#editWindow" ).show();
     }
     
@@ -389,9 +418,12 @@
         item.locbranch3 = $("#mwarebranch3").val();
         item.whlocgb = $("#locationtype").val();
         
-        if ($("#pdchk").is(":checked")) item.serialpdchk = 'Y';
-        if ($("#ftchk").is(":checked")) item.serialftchk = 'Y';
-        if ($("#ptchk").is(":checked")) item.serialptchk = 'Y';
+        if ($("#pdchk").is(":checked")) item.serialpdchk = 'Y';else item.serialpdchk = '';
+        if ($("#ftchk").is(":checked")) item.serialftchk = 'Y';else item.serialftchk = '';
+        if ($("#ptchk").is(":checked")) item.serialptchk = 'Y';else item.serialptchk = '';
+        
+        item.cdccode = $("#mcdccode").val();
+        item.rdccode = $("#mrdccode").val();
         
         AUIGrid.updateRow(myGridID, item, selectedItem[0]);
     }
@@ -489,6 +521,7 @@
     }        
      function fn_updateCancel(){
     	 $( "#editWindow" ).hide();
+    	 $('#modForm')[0].reset();
      }
      
      function fn_insertGrid(){
@@ -498,8 +531,8 @@
              //$('#instockgrade').attr("disabled",false)
                Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
                 Common.alert(result.message);
-               // $( "#registWindow" ).hide();
-               // $('#insForm')[0].reset();
+                $( "#registWindow" ).hide();
+                $('#insForm')[0].reset();
                 
                 }, function(jqXHR, textStatus, errorThrown) {
                     Common.alert("실패하였습니다.");
@@ -689,7 +722,6 @@
 </section><!-- search_result end -->
 
 <div class="popup_wrap" id="editWindow" style="display:none"><!-- popup_wrap start -->
-
 <header class="pop_header"><!-- pop_header start -->
 <h1>Warehouse Information</h1>
 <ul class="right_opt">
@@ -717,7 +749,7 @@
     <th scope="row">Warehouse Code</th>
     <td><input type="text" name="mwarecd" id="mwarecd"/></td>    
     <th scope="row">Serial Check</th>
-    <td colspan="3">
+    <td>
         <label><input type="checkbox" id="pdchk" name="pdchk"/><span>Product</span></label>
         <label><input type="checkbox" id="ftchk" name="ftchk"/><span>Filter</span></label>
         <label><input type="checkbox" id="ptchk" name="ptchk"/><span>Parts</span></label>
@@ -726,6 +758,12 @@
 <tr>
     <th scope="row">Warehouse Name</th>
     <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
+</tr>
+<tr>
+    <th scope="row">CDC CODE</th>
+    <td><select id="mcdccode"></select></td>
+    <th scope="row">RDC CODE</th>
+    <td><select id="mrdccode"></select></td>
 </tr>
 <tr>
     <th scope="row">Location Type</th>
@@ -927,16 +965,17 @@
              
              //Call Ajax
             
-             CommonCombo.make(pagestate+'State', "/sales/customer/selectMagicStateList", '' , mstate, optionState);
+             CommonCombo.make(pagestate+'State', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
              
              var cityJson = {groupCode : mstate};
-             CommonCombo.make(pagestate+'City', "/sales/customer/selectMagicCityList", cityJson, mcity , optionCity);
+             CommonCombo.make(pagestate+'City', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
              
-             var postCodeJson = {groupCode : mcity};
-             CommonCombo.make(pagestate+'PostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, mpostcode , optionPostCode);
+             var postCodeJson = {state : mstate , city : mcity}; //Condition
+             CommonCombo.make(pagestate+'PostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionPostCode);
              
-             var areaJson = {groupCode : mpostcode};
-             CommonCombo.make(pagestate+'Area', "/sales/customer/selectMagicAreaList", areaJson, marea , optionArea);
+             var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
+             CommonCombo.make(pagestate+'Area', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
+             
              
              $("#"+pagestate+"areaId").val(areaid);
              $("#_searchDiv").remove();
@@ -995,8 +1034,8 @@
             $("#"+d+"Area").val('');
             
             //Call ajax
-            var postCodeJson = {groupCode : tempVal}; //Condition
-            CommonCombo.make(d+'PostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, '' , optionPostCode);
+            var postCodeJson = {state : $("#"+d+"State").val() ,city : tempVal}; //Condition
+            CommonCombo.make(d+'PostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
         }
         
     }
@@ -1015,8 +1054,8 @@
             $("#"+d+"Area").attr({"disabled" : false  , "class" : "w100p"});
             
             //Call ajax
-            var areaJson = {groupCode1 : $("#test").val() , groupCode : tempVal}; //Condition
-            CommonCombo.make(d+'Area', "/sales/customer/selectMagicAreaList", areaJson, '' , optionArea);
+            var areaJson = {state : $("#"+d+"State").val(), city : $("#"+d+"City").val() , postcode : tempVal}; //Condition
+            CommonCombo.make(d+'Area', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
         }
         
     }
@@ -1040,8 +1079,8 @@
             $("#"+d+"Area").val('');
             
             //Call ajax
-            var cityJson = {groupCode : tempVal}; //Condition
-            CommonCombo.make(d+'City', "/sales/customer/selectMagicCityList", cityJson, '' , optionCity);
+            var cityJson = {state : tempVal}; //Condition
+            CommonCombo.make(d+'City', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
         }
         
     }
