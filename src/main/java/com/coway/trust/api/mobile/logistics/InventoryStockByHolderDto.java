@@ -6,8 +6,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "logisticsCodeAllDto", description = "공통코드 Dto")
-public class logStockHolderDto {
+@ApiModel(value = "InventoryStockByHolderDto", description = "공통코드 Dto")
+public class InventoryStockByHolderDto {
 
 	@ApiModelProperty(value = "CT Code")
 	private String memCode;
@@ -28,8 +28,8 @@ public class logStockHolderDto {
 	private String serialNo;
 	
 
-	public static logStockHolderDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, logStockHolderDto.class);
+	public static InventoryStockByHolderDto create(EgovMap egvoMap) {
+		return BeanConverter.toBean(egvoMap, InventoryStockByHolderDto.class);
 	}
 
 

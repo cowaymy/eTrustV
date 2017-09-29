@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "logisticsAllStockListDto", description = "공통코드 Dto")
-public class logisticsAllStockListDto {
+public class InventoryAllListDto {
 
 	@ApiModelProperty(value = "Filter Name")
 	private String stkDesc;
@@ -22,8 +22,8 @@ public class logisticsAllStockListDto {
 	private String serialNo;
 	
 
-	public static logisticsAllStockListDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, logisticsAllStockListDto.class);
+	public static InventoryAllListDto create(EgovMap egvoMap) {
+		return BeanConverter.toBean(egvoMap, InventoryAllListDto.class);
 	}
 
 

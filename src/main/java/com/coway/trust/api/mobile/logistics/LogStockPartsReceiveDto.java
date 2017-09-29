@@ -1,7 +1,5 @@
 package com.coway.trust.api.mobile.logistics;
 
-import java.util.List;
-
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -12,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class LogStockPartsReceiveDto {
 
 	@ApiModelProperty(value = "SMO item no")
-	private String smoNoItem;
+	private int smoNoItem;
 	
 	@ApiModelProperty(value = "부품코드")
 	private String partsCode;
@@ -21,7 +19,7 @@ public class LogStockPartsReceiveDto {
 	private String partsName;
 	
 	@ApiModelProperty(value = "요청수량")
-	private String requestQty;
+	private int requestQty;
 	
 	@ApiModelProperty(value = "부품 sn")
 	private String serialNo;
@@ -38,14 +36,29 @@ public class LogStockPartsReceiveDto {
 
 
 
-
-	public String getSmoNoItem() {
+	public int getSmoNoItem() {
 		return smoNoItem;
 	}
 
-	public void setSmoNoItem(String smoNoItem) {
+
+
+	public void setSmoNoItem(int smoNoItem) {
 		this.smoNoItem = smoNoItem;
 	}
+
+
+
+	public int getRequestQty() {
+		return requestQty;
+	}
+
+
+
+	public void setRequestQty(int requestQty) {
+		this.requestQty = requestQty;
+	}
+
+
 
 	public String getPartsCode() {
 		return partsCode;
@@ -63,13 +76,7 @@ public class LogStockPartsReceiveDto {
 		this.partsName = partsName;
 	}
 
-	public String getRequestQty() {
-		return requestQty;
-	}
 
-	public void setRequestQty(String requestQty) {
-		this.requestQty = requestQty;
-	}
 
 	public String getSerialNo() {
 		return serialNo;

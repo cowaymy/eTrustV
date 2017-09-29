@@ -33,10 +33,9 @@ public class LogStockReceiveDto {
 	private int grDate;
 	
 	
-	List<LogStockPartsReceiveDto> sList =null;
+	private List<LogStockPartsReceiveDto> sList =null;
 	
-	
-	
+
 	public static LogStockReceiveDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, LogStockReceiveDto.class);
 	}
@@ -109,6 +108,15 @@ public class LogStockReceiveDto {
 
 	public void setGrDate(int grDate) {
 		this.grDate = grDate;
+	}
+	
+	public List<LogStockPartsReceiveDto> getsList() {
+		return sList;
+	}
+
+
+	public void setsList(List<LogStockPartsReceiveDto> sList) {
+		this.sList = sList;
 	}
 		
 

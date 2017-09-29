@@ -38,51 +38,12 @@ public class logisticsApiController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@ApiOperation(value = "CT 재고 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/StockbyHolderList", method = RequestMethod.GET)
-	public ResponseEntity<List<logisticsCodeAllDto>> CTStockList(
-			@ModelAttribute logisticsCodeAllForm logisticsCodeAllForm) throws Exception {
+	@ApiOperation(value = "Inventory Status Display - All List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/inventoryAllList", method = RequestMethod.GET)
+	public ResponseEntity<List<InventoryAllListDto>> getAllStockList(
+			@ModelAttribute InventoryAllListForm InventoryAllListForm) throws Exception {
 
-		Map<String, Object> params = logisticsCodeAllForm.createMap(logisticsCodeAllForm);
-
-		List<EgovMap> CTStockList = MlogApiService.getCTStockList(params);
-
-		for (int i = 0; i < CTStockList.size(); i++) {
-			LOGGER.debug("CTStockList    값 : {}", CTStockList.get(i));
-
-		}
-		List<logisticsCodeAllDto> list = CTStockList.stream().map(r -> logisticsCodeAllDto.create(r))
-				.collect(Collectors.toList());
-
-		return ResponseEntity.ok(list);
-	}
-
-	@ApiOperation(value = "RDC 재고 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/RDCStockList", method = RequestMethod.GET)
-	public ResponseEntity<List<logisticsRdcStockDto>> RDCStockList(
-			@ModelAttribute logisticsRdcStockForm logisticsRdcStockForm) throws Exception {
-
-		Map<String, Object> params = logisticsRdcStockForm.createMap(logisticsRdcStockForm);
-
-		List<EgovMap> RDCStockList = MlogApiService.getRDCStockList(params);
-
-		for (int i = 0; i < RDCStockList.size(); i++) {
-			LOGGER.debug("RDCStockList    값 : {}", RDCStockList.get(i));
-
-		}
-
-		List<logisticsRdcStockDto> list = RDCStockList.stream().map(r -> logisticsRdcStockDto.create(r))
-				.collect(Collectors.toList());
-
-		return ResponseEntity.ok(list);
-	}
-
-	@ApiOperation(value = "parts 재고 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/MyStockList", method = RequestMethod.GET)
-	public ResponseEntity<List<logisticsAllStockListDto>> MyStockList(
-			@ModelAttribute logisticsAllStockListForm logisticsAllStockListForm) throws Exception {
-
-		Map<String, Object> params = logisticsAllStockListForm.createMap(logisticsAllStockListForm);
+		Map<String, Object> params = InventoryAllListForm.createMap(InventoryAllListForm);
 
 		List<EgovMap> MyStockList = MlogApiService.getAllStockList(params);
 
@@ -91,72 +52,109 @@ public class logisticsApiController {
 
 		}
 
-		List<logisticsAllStockListDto> list = MyStockList.stream().map(r -> logisticsAllStockListDto.create(r))
+		List<InventoryAllListDto> list = MyStockList.stream().map(r -> InventoryAllListDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	@ApiOperation(value = "RDC Stock List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/rdcStockList", method = RequestMethod.GET)
+	public ResponseEntity<List<RdcStockListDto>> getRDCStockList(
+			@ModelAttribute RdcStockListForm RdcStockListForm) throws Exception {
+
+		Map<String, Object> params = RdcStockListForm.createMap(RdcStockListForm);
+
+		List<EgovMap> RDCStockList = MlogApiService.getRDCStockList(params);
+
+		for (int i = 0; i < RDCStockList.size(); i++) {
+			LOGGER.debug("RDCStockList    값 : {}", RDCStockList.get(i));
+
+		}
+
+		List<RdcStockListDto> list = RDCStockList.stream().map(r -> RdcStockListDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+
+	@ApiOperation(value = "Stock by Holder List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/stockbyHolderList", method = RequestMethod.GET)
+	public ResponseEntity<List<DisplayCt_CodyListDto>> getCTStockList(
+			@ModelAttribute DisplayCt_CodyListForm DisplayCt_CodyListForm) throws Exception {
+
+		Map<String, Object> params = DisplayCt_CodyListForm.createMap(DisplayCt_CodyListForm);
+
+		List<EgovMap> CTStockList = MlogApiService.getCTStockList(params);
+
+		for (int i = 0; i < CTStockList.size(); i++) {
+			LOGGER.debug("CTStockList    값 : {}", CTStockList.get(i));
+
+		}
+		List<DisplayCt_CodyListDto> list = CTStockList.stream().map(r -> DisplayCt_CodyListDto.create(r))
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(list);
 	}
 
-	// @ApiOperation(value = "StockHolder 재고 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces =
-	// MediaType.APPLICATION_JSON_VALUE)
-	// @RequestMapping(value = "/StockHolderList", method = RequestMethod.GET)
-	// public ResponseEntity<List<logStockHolderDto>> StockHolderList(@ModelAttribute logisticsStockHolderForm
-	// logisticsStockHolderForm)
-	// throws Exception {
-	//
-	// Map<String, Object> params = logisticsStockHolderForm.createMap(logisticsStockHolderForm);
-	//
-	// List<EgovMap> StockHolder = MlogApiService.selectPartsStockHolder(params);
-	//
-	// for (int i = 0; i < StockHolder.size(); i++) {
-	// LOGGER.debug("StockHolder 값 : {}",StockHolder.get(i));
-	//
-	// }
-	//
-	// List<logStockHolderDto> list = StockHolder.stream().map(r -> logStockHolderDto.create(r))
-	// .collect(Collectors.toList());
-	//
-	// return ResponseEntity.ok(list);
-	// }
+
+
+	 @ApiOperation(value = "Inventory Status Display - Stock by Holder", consumes = MediaType.APPLICATION_JSON_VALUE, produces =
+	 MediaType.APPLICATION_JSON_VALUE)
+	 @RequestMapping(value = "/inventoryStockByHolder", method = RequestMethod.GET)
+	 public ResponseEntity<List<InventoryStockByHolderDto>> selectPartsStockHolder(@ModelAttribute InventoryStockByHolderForm
+			 InventoryStockByHolderForm)
+	 throws Exception {
+	
+	 Map<String, Object> params = InventoryStockByHolderForm.createMap(InventoryStockByHolderForm);
+	
+	 List<EgovMap> StockHolder = MlogApiService.selectPartsStockHolder(params);
+	
+	 for (int i = 0; i < StockHolder.size(); i++) {
+	 LOGGER.debug("StockHolder 값 : {}",StockHolder.get(i));
+	
+	 }
+	
+	 List<InventoryStockByHolderDto> list = StockHolder.stream().map(r -> InventoryStockByHolderDto.create(r))
+	 .collect(Collectors.toList());
+	
+	 return ResponseEntity.ok(list);
+	 }
 
 	@ApiOperation(value = "StockReceive 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/StockReceiveList", method = RequestMethod.GET)
-	public ResponseEntity<List<LogStockReceiveDto>> StockReceiveList(
+	@RequestMapping(value = "/stockReceiveList", method = RequestMethod.GET)
+	public ResponseEntity<List<LogStockReceiveDto>> stockReceiveList(
 			@ModelAttribute LogStockReceiveForm LogStockReceiveForm) throws Exception {
 
 		Map<String, Object> params = LogStockReceiveForm.createMap(LogStockReceiveForm);
 
 		List<EgovMap> headerList = MlogApiService.StockReceiveList(params);
 
+		List<LogStockReceiveDto> hList = null;
 		for (int i = 0; i < headerList.size(); i++) {
-			Map<String, Object> tmpMap = headerList.get(i);
+			LOGGER.debug("headerList 값 : {}", headerList.get(i));
+		}
 
-			List<EgovMap> serialList = MlogApiService.selectStockReceiveSerial(tmpMap);
+		for (int i = 0; i < headerList.size(); i++) {
+
+			hList = headerList.stream().map(r -> LogStockReceiveDto.create(r)).collect(Collectors.toList());
+
+			for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				List<EgovMap> serialList = MlogApiService.selectStockReceiveSerial(tmpMap);
+
+				List<LogStockPartsReceiveDto> partsList = serialList.stream()
+						.map(r -> LogStockPartsReceiveDto.create(r)).collect(Collectors.toList());
+				hList.get(i).setsList(partsList);
+			}
 
 		}
 
-		List<LogStockReceiveDto> list = headerList.stream().map(r -> LogStockReceiveDto.create(r))
-				.collect(Collectors.toList());
+		return ResponseEntity.ok(hList);
 
-		return ResponseEntity.ok(list);
 	}
-
-	// class AllDto{
-	// private List<HeaderDto> headers;
-	// private List<PartDto> parts;
-	//
-	//
-	//
-	// class HeaderDto{
-	// private String headerId;
-	// private String headerName;
-	// }
-	//
-	// class PartDto{
-	// private String partId;
-	// private String partName;
-	// }
-	// }
 
 	/**
 	 * 아래부분 현창배 추가

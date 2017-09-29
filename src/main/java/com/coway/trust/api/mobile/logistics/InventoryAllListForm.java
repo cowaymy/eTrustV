@@ -6,8 +6,8 @@ import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "AllStockListForm", description = "공통코드 Form")
-public class logisticsAllStockListForm {
+@ApiModel(value = "InventoryAllListForm", description = "공통코드 Form")
+public class InventoryAllListForm {
 
 
 	@ApiModelProperty(value = "productCode [default : '' 전체] 예) 1100305,110181",  example = "1100305,110181")
@@ -20,11 +20,11 @@ public class logisticsAllStockListForm {
 	private String searchKeyword;
 	
 	
-	public static Map<String, Object> createMap(logisticsAllStockListForm AllStockListForm) {
+	public static Map<String, Object> createMap(InventoryAllListForm InventoryAllListForm) {
 		Map<String, Object> params = new HashMap<>();
-		params.put("productCode", AllStockListForm.getProductCode());
-		params.put("searchType", AllStockListForm.getSearchType());
-		params.put("searchKeyword", AllStockListForm.getSearchKeyword());
+		params.put("productCode", InventoryAllListForm.getProductCode());
+		params.put("searchType", InventoryAllListForm.getSearchType());
+		params.put("searchKeyword", InventoryAllListForm.getSearchKeyword());
 		return params;
 	}
 

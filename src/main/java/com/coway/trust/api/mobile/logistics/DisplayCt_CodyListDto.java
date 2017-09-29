@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "logisticsCodeAllDto", description = "공통코드 Dto")
-public class logisticsCodeAllDto {
+public class DisplayCt_CodyListDto {
 
 	@ApiModelProperty(value = "CtNmae")
 	private String name;
@@ -18,8 +18,8 @@ public class logisticsCodeAllDto {
 	@ApiModelProperty(value = "제품 코드")
 	private String stkCode;
 
-	public static logisticsCodeAllDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, logisticsCodeAllDto.class);
+	public static DisplayCt_CodyListDto create(EgovMap egvoMap) {
+		return BeanConverter.toBean(egvoMap, DisplayCt_CodyListDto.class);
 	}
 
 	public String getName() {
