@@ -41,7 +41,10 @@
                        vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE  ,
                        vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC  
                 FROM CCR1002V vCallLogOrderCall
-          WHERE  APP_TYPE_ID = 144
+		          WHERE    1=1
+	               AND ( CALLTYPEID IN ( 257 ) )
+                  AND ( CALL_STUS_ID IN ( 1 ,19,20) )
+		          AND ROWNUM < 100
                     ]]>   
                     <if test="orderNo != null and orderNo != '' ">
                           AND (SALES_ORD_NO=#{orderNo} )  
