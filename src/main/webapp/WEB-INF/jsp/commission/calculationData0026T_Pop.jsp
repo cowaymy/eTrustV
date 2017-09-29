@@ -58,7 +58,7 @@
     });
     
     function fn_loadOrderSalesman(memId, memCode) {
-        $("#emplyId_26T").val(memCode);
+        $("#emplyId_26T").val(memId);
         console.log('fn_loadOrderSalesman memId:'+memId);
         console.log('fn_loadOrderSalesman memCd:'+memCode);
     }

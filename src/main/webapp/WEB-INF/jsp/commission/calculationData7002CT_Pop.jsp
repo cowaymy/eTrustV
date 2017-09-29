@@ -30,7 +30,17 @@
 			});
 		});
 		
+		$('#memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#form7002CT").serializeJSON(), null, true);
+        });
 	});
+	
+	function fn_loadOrderSalesman(memId, memCode) {
+        $("#memberId_7002CT").val(memId);
+        console.log(' memId:'+memId);
+        console.log(' memCd:'+memCode);
+    }
 	
    function createAUIGrid() {
 	var columnLayout_7002CT = [ {
@@ -116,7 +126,7 @@
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
-		       var memberId = $("#memberId").val();
+		       var memberId = $("#memberId_7002CT").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 		       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberId="+memberId+"'/>";
@@ -166,7 +176,8 @@
 						</td>
 						<th scope="row">Member Id</th>
 						<td>
-						      <input type="text" id="memberId" name="memberId" style="width: 100px;">
+						      <input type="text" id="memberId_7002CT" name="memberId" style="width: 100px;">
+						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 					</tr>
 				</tbody>
