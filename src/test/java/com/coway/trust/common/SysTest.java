@@ -29,7 +29,7 @@ public class SysTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SysTest.class);
 
 	@Test
-	public void smsTest() {
+	public void smsGenSuiteTest() {
 		String hostName = "gensuite.genusis.com";
 		String hostPath = "/api/gateway.php";
 		String strClientID = "coway";
@@ -60,6 +60,36 @@ public class SysTest {
 
 		// 2017-09-28 13:50:15,119 DEBUG [com.coway.trust.common.SysTest] getStatusCode : 200
 		// 2017-09-28 13:50:15,121 DEBUG [com.coway.trust.common.SysTest] getBody : success
+	}
+
+	@Test
+	public void smsBulkTest(){
+
+		String toMobile = "0165420960"; // 말레이시아 번호이어야 함.   01133681677, 0165420960
+		String token = "279BhJNk22i80c339b8kc8ac29";
+		String userName = "coway";
+		String password = "coway";
+		String msg = "test message by MVGate...";
+		String trId = UUIDGenerator.get();
+
+		String smsUrl = "http://103.246.204.24/bulksms/v4/api/mt?to=6" + toMobile + "&token=" + token + "&username=" + userName
+				+ "&password=" + password + "&code=coway&mt_from=63660&text=" + msg + "&lang=0&trid=" + trId;
+
+		ResponseEntity<String> res = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
+
+		LOGGER.debug("getStatusCode : {}", res.getStatusCode());
+		LOGGER.debug("getBody : {}", res.getBody());
+
+//		2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getStatusCode : 200
+//		2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getBody : 000,812472eedc1be64e8d7b1e880932,f9c125f3ca8146ac9d4efac2c45daf63
+
+		String response = res.getBody();
+		String[] resArray = response.split(",");
+
+		String status = resArray[0];
+		String resMsgId = resArray[1];
+		String restrId = resArray[2];
+
 	}
 
 	// @Test

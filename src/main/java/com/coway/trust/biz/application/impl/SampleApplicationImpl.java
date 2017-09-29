@@ -90,7 +90,7 @@ public class SampleApplicationImpl extends EgovAbstractServiceImpl implements Sa
 		// 2. sms 처리.
 		SmsVO sms = new SmsVO();
 		sms.setMessage((String) params.get("smsMessage"));
-		sms.setMobile("0101112222"); // 말레이시아 번호이어야 함.
+		sms.setMobiles("0101112222"); // 말레이시아 번호이어야 함.
 
 		/**
 		 * isTransactional == true : 메일 전송 실패시 rollback 처리고 ApplicationException 발생. isTransactional == false : 메일 전송

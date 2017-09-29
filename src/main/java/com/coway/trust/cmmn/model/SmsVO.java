@@ -37,18 +37,18 @@ public class SmsVO {
 	/**
 	 * mobile : 0101112222|!|0101112222|!|0101112222 같이 다건 처리 가능.(단, 구분자를 AppConstants.DEFAULT_DELIMITER를 사용해야 함.)
 	 * 
-	 * @param mobile
+	 * @param mobiles
 	 */
-	public void setMobile(String mobile) {
+	public void setMobiles(String mobiles) {
 		if (this.mobiles == null) {
 			this.mobiles = new ArrayList<>();
 		}
 
-		String[] mobileArray = CommonUtils.getDelimiterValues(mobile);
+		String[] mobileArray = CommonUtils.getDelimiterValues(mobiles);
 		if (mobileArray.length > 0) {
 			this.mobiles.addAll(Arrays.asList(mobileArray));
 		} else {
-			this.mobiles.add(mobile);
+			this.mobiles.add(mobiles);
 		}
 	}
 }
