@@ -50,7 +50,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public boolean  insertCallResult(Map<String, Object> params, SessionVO sessionVO) {
+	public String  insertCallResult(Map<String, Object> params, SessionVO sessionVO) {
+		String installationNo = "";
 		if(sessionVO != null){
 			Map<String, Object> callMaster = getSaveCallCenter(params, sessionVO);
 			Map<String, Object> callDetails = getSaveCallDetails(params, sessionVO);
@@ -63,19 +64,19 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			
 			String returnNo="";
 			boolean success = false;
-			success = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList);
+			installationNo = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList);
 			//returnNo = 
 		}
 		
-		return true;
+		return installationNo;
 	}
 	@Transactional
-	private  boolean orderCallLogSave(Map<String, Object> callMaster,Map<String, Object> callDetails,Map<String, Object> installMaster,Map<String, Object> orderLogList){
+	private  String orderCallLogSave(Map<String, Object> callMaster,Map<String, Object> callDetails,Map<String, Object> installMaster,Map<String, Object> orderLogList){
 		String returnNo="";
 		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
 		EgovMap maxIdValue = new EgovMap();
 		EgovMap callEntry = orderCallListMapper.selectCallEntry(callMaster);
-		
+		EgovMap installNo = new EgovMap();
 		if(callEntry != null){
 			//Insert CALL LOG RESULT
 			orderCallListMapper.insertCallResult(callDetails);
@@ -100,7 +101,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			if(installMaster != null && Integer.parseInt(installMaster.get("callEntryId").toString()) > 0){
 				
 				//INSERT INSTALL ENTRY
-				EgovMap installNo = getDocNo("9");
+				installNo = getDocNo("9");
 				returnNo = installNo.get("docNo").toString();
 				int ID = 9;
 				String nextDocNo=getNextDocNo("INS",installNo.get("docNo").toString());
@@ -121,7 +122,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			}
 			
 		}
-		return false;
+		String installationNo = installNo.get("docNo").toString();
+		return installationNo;
 	}
 	
 	public String getNextDocNo(String prefixNo,String docNo){
@@ -180,7 +182,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	private Map<String, Object> getSaveInstallMaster(Map<String, Object> params,SessionVO sessionVO){
 		Map<String, Object> installMaster = new HashMap<String, Object>();
 		int CTId = 0;
-		//CTId = Integer.parseInt(params.get("CTID").toString());
+		CTId = Integer.parseInt(params.get("CTID").toString());
 		//CT 받아오는거 다시 확인
 		String appointmentDate = "01/01/1900";
 		if(params.get("appDate") != null){
@@ -225,7 +227,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			feedbackId = Integer.parseInt(params.get("feedBackCode").toString());
 		}
 		int CTId = 0;
-		//CTId = Integer.parseInt(params.get("CTID").toString());
+		CTId = Integer.parseInt(params.get("CTID").toString());
 		//if(params.get("CT").TO) CT 내용 가져오는거 해야함
 		callDetails.put("callResultId", 0);
 		callDetails.put("callEntryId", params.get("callEntryId"));
