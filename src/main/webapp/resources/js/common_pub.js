@@ -147,7 +147,6 @@ $(document).on(
 	var thisLi=$(this).parent("li");
 	var thisHasChild=thisLi.children("ul").length;
 	var thisUl=$(this).parent().parent("ul").find("li ul");
-
 	if(thisHasChild>0){
 		if(thisLi.children("ul").is(":visible")){
 			$(this).removeClass("on")
@@ -163,6 +162,19 @@ $(document).on(
 	}else{
 	}
 });
+
+/* 레프트메뉴 3뎁스 하위메뉴 (4뎁스)가 있을 경우 앞에 화살표 표시 on/off */ 
+$(document).ready(function(){
+	var depth3 = $(".inb_menu").children("li").children("ul").children("li").children("ul").children("li");
+
+	for( var i=0; i < depth3.length; i++ ){
+		if(depth3.eq(i).children("ul").length>0){
+			depth3.eq(i).children("a").css("background","url(../images/common/lnb_arrow_sub_off.gif) no-repeat 26px 7px");
+		} else{
+			depth3.eq(i).children("a").css("background","none");
+		}
+	}
+})
 /* LNB end */
 
 //트리메뉴 시작
