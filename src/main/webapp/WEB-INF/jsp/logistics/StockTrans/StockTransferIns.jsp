@@ -403,13 +403,13 @@ function f_multiCombo() {
     </td>
 </tr>
 <tr>
-    <th scope="row">To Location</th>
+    <th scope="row">From Location</th>
     <td colspan="3">
     <select class="w100p" id="tlocation" name="tlocation"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">From Location</th>
+    <th scope="row">To Location</th>
     <td colspan="3">
     <select class="w100p" id="flocation" name="flocation"></select>
     </td>
