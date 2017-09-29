@@ -21,6 +21,7 @@ import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationResultListController;
+import com.ibm.icu.util.BytesTrie.Entry;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -1268,15 +1269,19 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	
 	@Override
 	@Transactional
-	public boolean insertInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+	public Map<String, Object> insertInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
 		if(sessionVO != null){
-			boolean success = Save(true,params,sessionVO);
+			resultValue= Save(true,params,sessionVO);
 		}
 		
-		return true;
+		return resultValue;
 	}
-	private boolean Save(boolean isfreepromo,Map<String, Object> params,SessionVO sessionVO) throws ParseException{
-		
+	private Map<String, Object> Save(boolean isfreepromo,Map<String, Object> params,SessionVO sessionVO) throws ParseException{
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		Map<String, Object> callEntry = new HashMap<String, Object>();
+		Map<String, Object> callResult = new HashMap<String, Object>();
+		Map<String, Object> orderLog = new HashMap<String, Object>();
 		int statusId =  Integer.parseInt(params.get("installStatus").toString());
 		String sirimNo = params.get("hidStockIsSirim").toString() != "0" ? params.get("hidStockIsSirim").toString().toUpperCase() : "";
 		String serialNo = params.get("serialNo").toString();
@@ -1313,9 +1318,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installResult.put("adjAmount", 0);
     		logger.debug("installResult : {}", installResult);	
 		
-		Map<String, Object> callEntry = new HashMap<String, Object>();
-		Map<String, Object> callResult = new HashMap<String, Object>();
-		Map<String, Object> orderLog = new HashMap<String, Object>();
+		
 		if( params.get("installStatus").toString().equals("21")){
 			//FAIL
 			callEntry.put("callEntryId", 0);
@@ -1371,8 +1374,15 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			//installationResultListMapper.insertOrderLog(orderLog);
 			
 		}
+		
+		if(Integer.parseInt(params.get("installStatus").toString()) == 4){
+			resultValue.put("value", "Completed");
+		}else{
+			resultValue.put("value", "Fail");
+		}
+		resultValue.put("installEntryNo", params.get("hiddeninstallEntryNo"));
 		insertInstallation(statusId,installResult,callEntry,callResult,orderLog);
-		return true;
+		return resultValue;
 	}
 	@Transactional
 	private boolean insertInstallation(int statusId,Map<String, Object> installResult,Map<String, Object> callEntry,Map<String, Object> callResult,Map<String, Object> orderLog) throws ParseException{

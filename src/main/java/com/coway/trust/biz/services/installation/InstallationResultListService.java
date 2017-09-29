@@ -58,5 +58,5 @@ public interface InstallationResultListService {
 	
 	boolean insertInstallationProductExchange(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
 	
-	boolean insertInstallationResult(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
+	 Map<String, Object> insertInstallationResult(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
 }
