@@ -191,7 +191,9 @@ function fn_AddRow()
     var item = new Object();
         
     if($("#popClaimType").val() == ''){
-    	Common.alert("<spring:message code='sys.msg.first.Select' arguments='clmType' htmlEscape='false'/>");
+    	var msg = '<spring:message code="expense.ClaimType" />';
+    	
+    	Common.alert("<spring:message code='sys.msg.first.Select' arguments='"+msg+"' htmlEscape='false'/>");
     	return false;
     }else{
         item.clmType = $("#popClaimType").val();
@@ -250,25 +252,30 @@ function fn_validation(){
         var budgetCode = itemsList[i].budgetCode;
         
         if (expenseTypeName == "") {
+        	var msg = '<spring:message code="expense.ExpenseTypeName" />';
             result = false;
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Expense Type Name' htmlEscape='false'/>");
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>");
             break;
         }
         if (budgetCode == "") {
+        	var msg = '<spring:message code="expense.ActivityName" />';
             result = false;
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Activity Name' htmlEscape='false'/>");
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>");
             break;
         }
         if (glAccCode == "") {
+        	var msg = '<spring:message code="expense.GLAccountName" />';
             result = false;
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Gl Account Name' htmlEscape='false'/>");
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>");
             break;
         }
 	}
 	
-	if(result){
+	return result;
+	
+	/* if(result){
 	    Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveExpenseType);
-	}
+	} */
 }
 
 function fn_saveExpenseType(){
@@ -295,6 +302,30 @@ function fn_saveExpenseType(){
     });
 }
   
+function fn_setGlData (){
+	 var selectedItems = AUIGrid.getSelectedItems(expPopGridID); 
+	
+	 if(selectedItems.length <= 0) return;
+     // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
+     var first = selectedItems[0];
+	 
+	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "glAccCode", $("#pGlAccCode").val());
+	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "glAccCodeName", $("#pGlAccCodeName").val());
+}  
+
+function  fn_setBudgetData(){
+	
+	var selectedItems = AUIGrid.getSelectedItems(expPopGridID); 
+    
+    if(selectedItems.length <= 0) return;
+    // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
+    var first = selectedItems[0];
+    
+    AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCode", $("#pBudgetCode").val());
+    AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCodeName",  $("#pBudgetCodeName").val());
+    	
+}
+  
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -306,13 +337,17 @@ function fn_saveExpenseType(){
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" onClick="javascript:fn_selectPopListAjax();"><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>    
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="popSForm" name ="popSForm">
+    <input type="hidden" id = "pbudgetCode" name="pBudgetCode" />
+    <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
+    <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
+    <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -353,6 +388,3 @@ function fn_saveExpenseType(){
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-</body>
-</html>

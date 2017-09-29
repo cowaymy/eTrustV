@@ -10,6 +10,9 @@
 
 var myGridID;
 
+var glAccCode;
+var glAccDesc;
+
 $(document).ready(function(){
     
     // AUIGrid 그리드를 생성합니다.
@@ -77,11 +80,24 @@ function fn_expenseTypePop(){
    Common.popupDiv("/eAccounting/expense/addExpenseTypePop.do", null, null, true, "addExpenseTypePop");
 }
 
-/* //Expense Type Pop 호출
-function fn_test(){
+//Expense Edit Pop 호출
+function fn_expenseEdit(){
+
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
     
-   Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J1'}, null, true, "expenseTypeSearchPop");
-} */
+    if(selectedItems.length <= 0) {
+    	Common.alert("<spring:message code='expense.msg.NoData'/> ");
+    	return;
+    }
+    // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
+    var first = selectedItems[0];
+    
+    var clmType = AUIGrid.getCellValue(myGridID , first.rowIndex , "clmType");
+    var expType = AUIGrid.getCellValue(myGridID , first.rowIndex , "expType");
+	
+    
+   Common.popupDiv("/eAccounting/expense/editExpenseTypePop.do", {popClaimType:clmType, popExpType:expType}, null, true, "editExpenseTypePop");
+} 
 
 function createAUIGrid() {
     // AUIGrid 칼럼 설정
@@ -92,14 +108,23 @@ function createAUIGrid() {
 	        dataField : "clmType",
 	        headerText : '<spring:message code="expense.ClaimType" />',
 	        width : 150,
-	        editable : false
+            visible : false
 	    }, {
+            dataField : "clmTypeName",
+            headerText : '<spring:message code="expense.ClaimType" />',
+            width : 150
+        }, {
+            dataField : "expType",
+            headerText : '<spring:message code="expense.expType" />',
+            width : 150,
+            visible : false
+        }, {
 	        dataField : "expTypeName",
 	        headerText : '<spring:message code="expense.ExpenseType" />',
             style : "aui-grid-user-custom-left",
-	        width : 100,
+	        width : 120,
 	        editable : false
-	    },{
+	    }, {
             dataField : "glAccCode",
             headerText : '<spring:message code="expense.GLAccount" />',
             width : 100,

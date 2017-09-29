@@ -84,6 +84,14 @@ public class ExpenseController {
 		model.addAttribute("popClaimType", params.get("popClaimType").toString());
 		return "eAccounting/expense/expenseTypeSearchPop";
 	}
+	
+	@RequestMapping(value = "/editExpenseTypePop.do")
+	public String editExpenseTypePop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{	
+		
+		model.addAttribute("popClaimType", params.get("popClaimType").toString());
+		model.addAttribute("popExpType", params.get("popExpType").toString());
+		return "eAccounting/expense/editExpenseTypePop";
+	}
 		
 	@RequestMapping(value = "/insertExpenseInfo", method = RequestMethod.POST) 
 	public ResponseEntity<ReturnMessage> insertExpenseInfo (@RequestBody Map<String, ArrayList<Object>> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
@@ -136,5 +144,25 @@ public class ExpenseController {
 		
 	}
 	
+	@RequestMapping(value = "/updateExpenseInfo", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> updateExpenseInfo (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("clmType", params.get("pClmType"));
+		params.put("expType", params.get("pExpType"));
+		
+		int totCnt = expenseService.updateExpenseInfo(params);
+		
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(totCnt);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
+		
+	}		
 }
 

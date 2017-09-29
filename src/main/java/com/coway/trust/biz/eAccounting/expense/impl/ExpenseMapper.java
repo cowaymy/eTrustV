@@ -19,4 +19,6 @@ public interface ExpenseMapper {
 	
 	List<EgovMap> selectGlCodeList( Map<String, Object> params) throws Exception;
 	
+	int updateExpenseInfo (Map<String, Object> params) throws Exception;
+	
 }

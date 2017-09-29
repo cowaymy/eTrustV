@@ -3,7 +3,8 @@
 <mapper namespace="com.coway.trust.biz.eAccounting.expense.impl.ExpenseMapper">
 <!--                  ,(select user_name from SYS0047M where user_id = CRT_USER_ID)   -->
  <select id="selectExpenseList" parameterType="Map" resultType="egovMap">
-		    SELECT FN_GET_CODENAME('343', CLM_TYPE) CLM_TYPE
+		    SELECT CLM_TYPE
+		           ,FN_GET_CODENAME('343', CLM_TYPE) CLM_TYPE_NAME
 		           ,EXP_TYPE
 		           ,EXP_TYPE_NAME
 		           ,GL_ACC_CODE
@@ -115,5 +116,25 @@
            AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
         </if>
   </select>
+  
+  <update id="updateExpenseInfo" parameterType="Map">
+   UPDATE FCM0001M
+      SET  
+      <if test ="disabFlag != nul and disabFlag !=''">
+            ,DISAB_FLAG = #{disabFlag}            
+            ,DISAB_USER_ID   = #{userId}
+            ,DISAB_DT        = SYSDATE
+      </if>
+      <if test ="disabFlag == nul || disabFlag ==''">
+            GL_ACC_CODE = #{glAccCode}
+            ,GL_ACC_CODE_NAME = #{glAccCodeName}
+            ,BUDGET_CODE = #{budgetCode}
+            ,BUDGET_CODE_NAME = #{budgetCodeName}
+            ,UPD_USER_ID   = #{userId}
+            ,UPD_DT        = SYSDATE
+    </if>
+    WHERE  CLM_TYPE     = #{clmType}
+      AND  EXP_TYPE       = #{expType}
+</update>
 
 </mapper>

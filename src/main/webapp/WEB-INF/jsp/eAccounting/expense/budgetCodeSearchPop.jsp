@@ -9,6 +9,9 @@
 <script  type="text/javascript">
 var bgGridID;
 
+var budgetCode;
+var budgetCodeText;
+
 $(document).ready(function() {
 
 	// 아이템 AUIGrid 칼럼 설정
@@ -36,16 +39,26 @@ $(document).ready(function() {
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(bgGridID, "cellDoubleClick", function(event){
-    	
-    	 //var selectedItem = AUIGrid.getSelectedIndex(expPopGridID);
+    	    	 
+    	 /* var selectedItems = AUIGrid.getSelectedItems(expPopGridID);
+         
+    	 budgetCode = AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode");
+    	 budgetCodeText = AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText");
+         
+         $("#budgetCode").val(budgetCode);
+         $("#budgetCodeName").val(budgetCodeText);
     	 
-    	 var selectedItems = AUIGrid.getSelectedItems(expPopGridID);
     	 if(selectedItems.length <= 0) return;
     	 // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
     	 var first = selectedItems[0];
     	 
-    	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCode", AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode"))
-    	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCodeName", AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText"))
+    	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCode", budgetCode);
+    	 AUIGrid.setCellValue(expPopGridID , first.rowIndex , "budgetCodeName", budgetCodeText); */
+    	 
+    	 $("#pBudgetCode").val(AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCode"));
+         $("#pBudgetCodeName").val( AUIGrid.getCellValue(bgGridID , event.rowIndex , "budgetCodeText"));
+         
+         fn_setBudgetData();
     	 
     	 $("#budgetCodeSearchPop").remove();
     });
@@ -73,7 +86,7 @@ function fn_selectBudgetListAjax() {
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_selectBudgetListAjax();"><spring:message code="expense.btn.Search" /></a></p></li>
@@ -114,6 +127,3 @@ function fn_selectBudgetListAjax() {
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-</body>
-</html>

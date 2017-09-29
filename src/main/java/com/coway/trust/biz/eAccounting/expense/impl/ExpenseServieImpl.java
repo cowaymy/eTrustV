@@ -69,5 +69,10 @@ public class ExpenseServieImpl extends EgovAbstractServiceImpl implements Expens
 		return expenseMapper.selectGlCodeList(params);
 	}
 	
+	@Override
+	public int updateExpenseInfo(Map<String, Object> params) throws Exception {
+				
+		return expenseMapper.updateExpenseInfo(params);
+	}
 	
 }

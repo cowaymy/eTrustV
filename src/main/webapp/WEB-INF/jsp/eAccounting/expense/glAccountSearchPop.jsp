@@ -24,22 +24,16 @@ $(document).ready(function() {
 	}];
     
     glCodeGridID = GridCommon.createAUIGrid("#glCodeGrid", glCodecolumnLayout, "budgetCode", {editable:false});
-    
-    // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(glCodeGridID, "cellDoubleClick", function(event){
         
-         //var selectedItem = AUIGrid.getSelectedIndex(expPopGridID);
+     // 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(glCodeGridID, "cellDoubleClick", function(event){
          
-         var selectedItems = AUIGrid.getSelectedItems(expPopGridID);
-         if(selectedItems.length <= 0) return;
-         // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
-         var first = selectedItems[0];
+         $("#pGlAccCode").val(AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccCode"));
+         $("#pGlAccCodeName").val( AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccDesc"));
          
-         AUIGrid.setCellValue(expPopGridID , first.rowIndex , "glAccCode", AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccCode"))
-         AUIGrid.setCellValue(expPopGridID , first.rowIndex , "glAccCodeName", AUIGrid.getCellValue(glCodeGridID , event.rowIndex , "glAccDesc"))
-         
+         fn_setGlData();
          $("#glAccountSearchPop").remove();
-    });
+    }); 
     
 });
 
@@ -63,7 +57,7 @@ function fn_selectGlListAjax() {
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_selectGlListAjax();"><spring:message code="expense.btn.Search" /></a></p></li>
@@ -104,6 +98,3 @@ function fn_selectGlListAjax() {
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-</body>
-</html>

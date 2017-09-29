@@ -47,7 +47,7 @@ $(document).ready(function() {
     AUIGrid.bind(expensSearchGridID, "cellDoubleClick", function(event){
                                    
          var selectedItems = AUIGrid.getSelectedItems(myGridID);
-         
+                  
          if(selectedItems.length <= 0) return;
          // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
          var first = selectedItems[0];
@@ -92,13 +92,13 @@ function fn_selectExpensePopListAjax() {
 <div id="popup_wrap" class="popup_wrap size_mid2"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="espense.ExpenseTypeSearch" /></h1>
+<h1><spring:message code="expense.ExpenseTypeSearch" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <%-- <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_selectExpensePopListAjax();"><spring:message code="expense.btn.Search" /></a></p></li>
@@ -131,7 +131,7 @@ function fn_selectExpensePopListAjax() {
 <section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="expensSearchGrid" style="width:100%; height:350px; margin:0 auto;"></div>
+    <div id="expensSearchGrid" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
@@ -144,6 +144,3 @@ function fn_selectExpensePopListAjax() {
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
-</body>
-</html>
