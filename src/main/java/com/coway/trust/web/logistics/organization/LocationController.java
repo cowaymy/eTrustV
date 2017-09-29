@@ -155,50 +155,79 @@ public class LocationController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-		if (loc_Sync == true) {
-			inis_sync = 1;
+//		if (loc_Sync == true) {
+//			inis_sync = 1;
+//		}
+//
+//		if (loc_Mobile == true) {
+//			inmobile = 1;
+//		}
+		
+		logger.debug(":: {}", params);
+		
+		String inwarecd      = (String) params.get("inwarecd");
+		String inwarenm      = (String) params.get("inwarenm");
+		
+		String incontact1    = (String) params.get("incontact1");
+		String incontact2    = (String) params.get("incontact2");
+		String instockgrade  = (String) params.get("instockgrade");
+		String ilocationtype = (String) params.get("ilocationtype");
+		String inwarebranch1 = (String) params.get("inwarebranch1");
+		String inwarebranch2 = (String) params.get("inwarebranch2");
+		String inwarebranch3 = (String) params.get("inwarebranch3");
+		
+		String iareaId       = (String) params.get("iareaId");
+		String iaddrdtl      = (String) params.get("iaddrdtl");
+		String istreet       = (String) params.get("istreet");
+		
+		String ipdchk        = (String) params.get("ipdchk");
+		String iftchk        = (String) params.get("iftchk");
+		String iptchk        = (String) params.get("iptchk");
+		
+		String cdccode       = (String) params.get("icdccode");
+		String rdccode       = (String) params.get("irdccode");
+		
+		if (ipdchk != null && "on".equals(ipdchk)){
+				ipdchk = "Y";
 		}
-
-		if (loc_Mobile == true) {
-			inmobile = 1;
+		if (iftchk != null  && "on".equals(iftchk)){
+				iftchk = "Y";
 		}
-
-		String inwarecd = (String) params.get("inwarecd");
-		String inwarenm = (String) params.get("inwarenm");
-		String inaddr1 = (String) params.get("inaddr1");
-		String inaddr2 = (String) params.get("inaddr2");
-		String inaddr3 = (String) params.get("inaddr3");
-		String incontact1 = (String) params.get("incontact1");
-		String incontact2 = (String) params.get("incontact2");
-		String instockgrade = (String) params.get("instockgrade");
-		String inwarebranch = (String) params.get("inwarebranch");
-		int incnty = CommonUtils.intNvl((String) params.get("incountry"));
-		int instat = CommonUtils.intNvl((String) params.get("instate"));
-		int inarea = CommonUtils.intNvl((String) params.get("inarea"));
-		int inpost = CommonUtils.intNvl((String) params.get("inpostcd"));
-
+		if (iptchk != null && "on".equals(iptchk)){
+				iptchk = "Y";
+		}
 		Map<String, Object> insmap = new HashMap();
 
-		insmap.put("inwarecd", inwarecd);
-		insmap.put("inwarenm", inwarenm);
-		insmap.put("inaddr1", inaddr1);
-		insmap.put("inaddr2", inaddr2);
-		insmap.put("inaddr3", inaddr3);
-		insmap.put("incontact1", incontact1);
-		insmap.put("incontact2", incontact2);
-		insmap.put("inarea", inarea);
-		insmap.put("inpost", inpost);
-		insmap.put("incnty", incnty);
-		insmap.put("instat", instat);
-		insmap.put("intype_id", 277);
-		insmap.put("incode2", inwarecd);
-		insmap.put("instus_id", 1);
-		insmap.put("ingrad", instockgrade);
-		insmap.put("indesc2", inwarenm);
+		insmap.put("inwarecd"    , inwarecd);
+		insmap.put("inwarenm"    , inwarenm);
+		insmap.put("incontact1"  , incontact1);
+		insmap.put("incontact2"  , incontact2);
+		insmap.put("intype_id"   , 277);
+		insmap.put("incode2"     , inwarecd);
+		insmap.put("instus_id"   , 1);
+		insmap.put("ingrad"      , instockgrade);
+		insmap.put("indesc2"     , inwarenm);
 		insmap.put("inup_user_id", loginId);
-		insmap.put("inbranch", inwarebranch);
-		insmap.put("inis_sync", inis_sync);
-		insmap.put("inmobile", inmobile);
+		
+		insmap.put("branch1"     , inwarebranch1);
+		insmap.put("branch2"     , inwarebranch2);
+		insmap.put("branch3"     , inwarebranch3);
+		                         
+		insmap.put("pdchk"       , ipdchk);
+		insmap.put("ftchk"       , iftchk);
+		insmap.put("ptchk"       , iptchk);
+		                         
+		insmap.put("areaid "     , iareaId );
+		insmap.put("addrdtl"     , iaddrdtl);
+		insmap.put("street "     , istreet );
+		
+		insmap.put("locationtype", ilocationtype);
+		
+		insmap.put("cdccode"     , cdccode);
+		insmap.put("rdccode"     , rdccode);
+		
+		insmap.put("inis_sync"   , inis_sync);
+		insmap.put("inmobile"    , inmobile);
 
 		loc.insertLocationInfo(insmap);
 

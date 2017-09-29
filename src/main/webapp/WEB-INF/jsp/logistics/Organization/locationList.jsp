@@ -27,7 +27,7 @@
 #editWindow {
     font-size:13px;
 }
-#editWindow label, input { display:block; }
+#editWindow label, input { display:inline; }
 #editWindow input.text { margin-bottom:10px; width:95%; padding: 0.1em;  }
 #editWindow fieldset { padding:0; border:0; margin-top:10px; }
 </style>
@@ -44,43 +44,54 @@
     // 수정창
     var dialog;
     
+    var pagestate="";
+
+	var optionState = {chooseMessage: " 1.States "};
+	var optionCity = {chooseMessage: "2. City"};
+	var optionPostCode = {chooseMessage: "3. Post Code"};
+	var optionArea = {chooseMessage: "4. Area"};
+
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "8","codeName": "Inactive"}];
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
     var instockgradecomboData = [{"codeId": "A","codeName": "A"}];
     
     // AUIGrid 칼럼 설정                                                                            visible : false
-    var columnLayout = [{dataField:"locid"      ,headerText:"WHID"           ,width:"8%"  ,height:30 , visible:true},
-                        {dataField:"loccd"      ,headerText:"Code"           ,width:"12%" ,height:30 , visible:true},
-                        {dataField:"locdesc"    ,headerText:"Description"    ,width:"40%" ,height:30 , visible:true},
-                        {dataField:"locaddr1"   ,headerText:"locaddr1"       ,width:120 ,height:30 , visible:false},
-                        {dataField:"locaddr2"   ,headerText:"locaddr2"       ,width:140 ,height:30 , visible:false},
-                        {dataField:"locaddr3"   ,headerText:"locaddr3"       ,width:120 ,height:30 , visible:false},
-                        {dataField:"locarea"    ,headerText:"locarea"        ,width:120 ,height:30 , visible:false},
-                        {dataField:"locpost"    ,headerText:"locpost"        ,width:120 ,height:30 , visible:false},
-                        {dataField:"locstat"    ,headerText:"locstat"        ,width:120 ,height:30 , visible:false},
-                        {dataField:"loccnty"    ,headerText:"loccnty"        ,width:90  ,height:30 , visible:false},
-                        {dataField:"loctel1"    ,headerText:"loctel1"        ,width:90  ,height:30 , visible:false},
-                        {dataField:"loctel2"    ,headerText:"loctel2"        ,width:120 ,height:30 , visible:false},
-                        {dataField:"locBranch"  ,headerText:"loc_branch"     ,width:100 ,height:30 , visible:false},
-                        {dataField:"loctype"    ,headerText:"loctype"        ,width:100 ,height:30 , visible:false},
-                        {dataField:"locgrad"    ,headerText:"locgrad"        ,width:100 ,height:30 , visible:false},
-                        {dataField:"locuserid"  ,headerText:"locuserid"      ,width:100 ,height:30 , visible:false},
-                        {dataField:"locupddt"   ,headerText:"locupddt"       ,width:100 ,height:30 , visible:false},
-                        {dataField:"code2"      ,headerText:"code2"          ,width:100 ,height:30 , visible:false},
-                        {dataField:"desc2"      ,headerText:"desc2"          ,width:100 ,height:30 , visible:false},
-                        {dataField:"areanm"     ,headerText:"areanm"         ,width:100 ,height:30 , visible:false},
-                        {dataField:"postcd"     ,headerText:"postcd"         ,width:100 ,height:30 , visible:false},
-                        {dataField:"code"       ,headerText:"code"           ,width:100 ,height:30 , visible:false},
-                        {dataField:"name"       ,headerText:"name"           ,width:100 ,height:30 , visible:false},
-                        {dataField:"countrynm"  ,headerText:"countrynm"      ,width:100 ,height:30 , visible:false},
-                        {dataField:"branchcd"   ,headerText:"branchcd"       ,width:100 ,height:30 , visible:false},
-                        {dataField:"branchnm"   ,headerText:"Branch"         ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"dcode"      ,headerText:"dcode"          ,width:100 ,height:30 , visible:false},
-                        {dataField:"descr"      ,headerText:"descr"          ,width:100 ,height:30 , visible:false},
-                        {dataField:"codenm"     ,headerText:"Type"           ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"statnm"     ,headerText:"Status"         ,width:"10%" ,height:30 , visible:true},
-                        {dataField:"locstus"    ,headerText:"locstus"        ,width:100 ,height:30 , visible:false},
-                        {dataField:"user_name"  ,headerText:"nser_name"      ,width:100 ,height:30 , visible:false}
+    var columnLayout = [{dataField:"locid"       ,headerText:"WHID"           ,width:"8%"  ,height:30 , visible:true},
+                        {dataField:"loccd"       ,headerText:"Code"           ,width:"12%" ,height:30 , visible:true},
+                        {dataField:"locdesc"     ,headerText:"Description"    ,width:"40%" ,height:30 , visible:true},
+                        {dataField:"locdtl"      ,headerText:"locaddr1"       ,width:120   ,height:30 , visible:false},
+                        {dataField:"areaid"      ,headerText:"locarea"        ,width:120   ,height:30 , visible:false},
+                        {dataField:"street"      ,headerText:"street"         ,width:120   ,height:30 , visible:false},
+                        {dataField:"loctel1"     ,headerText:"loctel1"        ,width:90    ,height:30 , visible:false},
+                        {dataField:"loctel2"     ,headerText:"loctel2"        ,width:120   ,height:30 , visible:false},
+                        {dataField:"locbranch1"  ,headerText:"loc_branch"     ,width:100   ,height:30 , visible:false},
+                        {dataField:"locbranch2"  ,headerText:"loc_branch"     ,width:100   ,height:30 , visible:false},
+                        {dataField:"locbranch3"  ,headerText:"loc_branch"     ,width:100   ,height:30 , visible:false},
+                        {dataField:"whlocgb"     ,headerText:"Location Type"  ,width:100   ,height:30 , visible:false},
+                        {dataField:"serialftchk" ,headerText:"Serial Check"   ,width:100   ,height:30 , visible:false},
+                        {dataField:"serialptchk" ,headerText:"Serial Check"   ,width:100   ,height:30 , visible:false},
+                        {dataField:"serialpdchk" ,headerText:"Serial Check"   ,width:100   ,height:30 , visible:false},
+                        {dataField:"loctype"     ,headerText:"loctype"        ,width:100   ,height:30 , visible:false},
+                        {dataField:"locgrad"     ,headerText:"locgrad"        ,width:100   ,height:30 , visible:false},
+                        {dataField:"locuserid"   ,headerText:"locuserid"      ,width:100   ,height:30 , visible:false},
+                        {dataField:"locupddt"    ,headerText:"locupddt"       ,width:100   ,height:30 , visible:false},
+                        {dataField:"code2"       ,headerText:"code2"          ,width:100   ,height:30 , visible:false},
+                        {dataField:"desc2"       ,headerText:"desc2"          ,width:100   ,height:30 , visible:false},
+                        {dataField:"areanm"      ,headerText:"areanm"         ,width:100   ,height:30 , visible:false},
+                        {dataField:"postcd"      ,headerText:"postcd"         ,width:100   ,height:30 , visible:false},
+                        {dataField:"code"        ,headerText:"code"           ,width:100   ,height:30 , visible:false},
+                        {dataField:"name"        ,headerText:"name"           ,width:100   ,height:30 , visible:false},
+                        {dataField:"countrynm"   ,headerText:"countrynm"      ,width:100   ,height:30 , visible:false},
+                        {dataField:"branchcd"    ,headerText:"branchcd"       ,width:100   ,height:30 , visible:false},
+                        {dataField:"branchnm"    ,headerText:"Branch"         ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"dcode"       ,headerText:"dcode"          ,width:100   ,height:30 , visible:false},
+                        {dataField:"descr"       ,headerText:"descr"          ,width:100   ,height:30 , visible:false},
+                        {dataField:"codenm"      ,headerText:"Type"           ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"statnm"      ,headerText:"Status"         ,width:"10%" ,height:30 , visible:true},
+                        {dataField:"locstus"     ,headerText:"locstus"        ,width:100   ,height:30 , visible:false},
+                        {dataField:"user_name"   ,headerText:"nser_name"      ,width:100   ,height:30 , visible:false},
+                        {dataField:"cdccode"     ,headerText:"CDC_CODE"       ,width:100   ,height:30 , visible:false},
+                        {dataField:"rdccode"     ,headerText:"RDC_CODE"       ,width:100   ,height:30 , visible:false}
                        ];
     
     var detailLayout = [{dataField:"stkid"      ,headerText:"stkid"          ,width:"12%" ,height:30 , visible:false},
@@ -117,14 +128,14 @@
 
     $(document).ready(function(){
         // masterGrid 그리드를 생성합니다.
-		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
-		detailGrid  = GridCommon.createAUIGrid("stockBalanceGrid", detailLayout,"", gridoptions);
+		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
+        detailGrid  = GridCommon.createAUIGrid("stockBalanceGrid", detailLayout,"", gridoptions);
+		
+		$("#detailView").hide();
 		
 		doDefCombo(comboData, '' ,'status', 'S', '');
-		
 		doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
-		
 		AUIGrid.bind(myGridID, "cellClick", function( event ) 
 	    {
 			
@@ -136,13 +147,14 @@
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 	    {
 	    	$("#detailView").show();
+	    	pagestate = "m";
             fn_locDetail(AUIGrid.getCellValue(myGridID , event.rowIndex , "locid"));
         });
 		
 	    AUIGrid.bind(myGridID, "updateRow", function(event) {
 	    	$( "#editWindow" ).hide();
 	        
-	        
+	    	pagestate = "";
 	        
 	        Common.ajax("POST", "/logistics/organization/locationUpdate.do", GridCommon.getEditData(myGridID), function(result) {
 	        	Common.alert(result.message);
@@ -159,9 +171,7 @@
 	       // $("#search").click();
 	    });
 		
- 		$("#detailView").hide();
-
-	    /* 팝업 드래그 start */
+ 		/* 팝업 드래그 start */
         $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
         /* 팝업 드래그 end */
 
@@ -186,7 +196,7 @@
         });
         $("#update").click(function(){
         	$("#detailView").hide();
-        	
+        	pagestate = "m";
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
                 fn_modyWare(selectedItem[0]);
@@ -208,7 +218,9 @@
         
     
          $("#insert").click(function(){
+        	 pagestate = "i";
         	 fn_insertWare();
+        	 
         	$("#detailView").hide();
         	$("#registWindow").show();
 	     });     
@@ -223,7 +235,10 @@
             Common.alert('Choice Data please..');
             }
           
-        });     
+        });
+        $("#icdccode").change(function(){
+        	rdccodeFunc();
+        });
                
     });
     
@@ -234,31 +249,35 @@
     	$("#mstatus").text(AUIGrid.getCellValue(myGridID ,rowid,'statnm'));
     	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'loccd'));
     	$("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
-    	$("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr1'));
-    	$("#maddr2").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr2'));
-    	$("#maddr3").val(AUIGrid.getCellValue(myGridID ,rowid,'locaddr3'));
+    	$("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locdtl'));
     	$("#mcontact1").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel1'));
     	$("#mcontact2").val(AUIGrid.getCellValue(myGridID ,rowid,'loctel2'));
+    	$("#streetDtl").val(AUIGrid.getCellValue(myGridID ,rowid,'street'));
+    	
+    	$("#mareaId").val(AUIGrid.getCellValue(myGridID ,rowid,'areaid'));
     	
     	doDefCombo(stockgradecomboData, AUIGrid.getCellValue(myGridID ,rowid,'locgrad') ,'mstockgrade', 'S', '');
     	
-    	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty'),'mcountry', 'S', ''); 
+    	var paramdata = { groupCode : '339' , orderValue : 'CODE'};
+        doGetComboData('/common/selectCodeList.do', paramdata, AUIGrid.getCellValue(myGridID ,rowid,'whlocgb'),'locationtype', 'S' , '');
+        
+    	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty'),'mcountry', 'S', ''); 
     	
-    	doDefCombo('', '' ,'mstate', 'S', '');
-    	doDefCombo('', '' ,'marea', 'S', '');
-    	doDefCombo('', '' ,'mpostcd', 'S', '');
     	
-    	if (AUIGrid.getCellValue(myGridID ,rowid,'loccnty') != "" && AUIGrid.getCellValue(myGridID ,rowid,'loccnty') != undefined){
-    		getAddrRelay('mstate' , AUIGrid.getCellValue(myGridID ,rowid,'loccnty') , 'state' , AUIGrid.getCellValue(myGridID ,rowid,'locstat'));
-    	}
-    	if (AUIGrid.getCellValue(myGridID ,rowid,'locstat') != "" && AUIGrid.getCellValue(myGridID ,rowid,'locstat') != undefined){
-            getAddrRelay('marea' , AUIGrid.getCellValue(myGridID ,rowid,'locstat') , 'area' , AUIGrid.getCellValue(myGridID ,rowid,'locarea'));
-        }
-    	if (AUIGrid.getCellValue(myGridID ,rowid,'locarea') != "" && AUIGrid.getCellValue(myGridID ,rowid,'locarea') != undefined){
-            getAddrRelay('mpostcd' , AUIGrid.getCellValue(myGridID ,rowid,'locarea') , 'post', AUIGrid.getCellValue(myGridID ,rowid,'locpost'));
-        }
+    	CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , AUIGrid.getCellValue(myGridID ,rowid,'state'), optionState);
     	
-    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locBranch'),'mwarebranch', 'S' , ''); 
+    	var Json = {groupCode : AUIGrid.getCellValue(myGridID ,rowid,'state')}; //Condition
+        CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", Json, AUIGrid.getCellValue(myGridID ,rowid,'locdt2') , optionCity);
+    	
+        Json = {groupCode : AUIGrid.getCellValue(myGridID ,rowid,'postcd')}; //Condition
+        CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", Json, AUIGrid.getCellValue(myGridID ,rowid,'areanm') , optionArea);
+        
+        Json = {groupCode : AUIGrid.getCellValue(myGridID ,rowid,'locdt2')}; //Condition
+        CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", Json, AUIGrid.getCellValue(myGridID ,rowid,'postcd') , optionPostCode);
+
+    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch1'),'mwarebranch1', 'S' , ''); 
+    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch2'),'mwarebranch2', 'S' , '');
+    	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , AUIGrid.getCellValue(myGridID ,rowid,'locbranch3'),'mwarebranch3', 'S' , '');
         $( "#editWindow" ).show();
     }
     
@@ -269,13 +288,23 @@
 	    //$("#instockgrade option:eq(1)").prop("selected", true);
  	    //$("#instockgrade").attr("disabled",true);	
  	    
-        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch', 'S' , ''); //브런치 등록
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , 'this.value','incountry', 'S', ''); //주소 등록
-        doDefCombo('', '' ,'instate', 'S', ''); 
-        doDefCombo('', '' ,'inarea', 'S', '');
-        doDefCombo('', '' ,'inpostcd', 'S', '');    
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch1', 'S' , ''); //브런치 등록
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch2', 'S' , ''); //브런치 등록
+        doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , 'this.value','inwarebranch3', 'S' , ''); //브런치 등록
+        
+        
+        fn_addMaddr();
+        
+        var paramdata = { groupCode : '339' , orderValue : 'CODE'};
+        doGetComboData('/common/selectCodeList.do', paramdata, '','ilocationtype', 'S' , '');
+        
+        paramdata = { locgb:'01'}; // session 정보 등록 
+        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','icdccode', 'S' , '');
+        doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02'}, '','irdccode', 'S' , '');
     }
-  
+  function rdccodeFunc(){
+	    doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#icdccode").val()}, '','irdccode', 'S' , '');
+  }
   function fn_deleteWare(rowid){      
 	  var locid=AUIGrid.getCellValue(myGridID ,rowid,'locid');	    
       var param = "?locid="+locid;
@@ -302,7 +331,7 @@
 	   var inwarecd = $("#inwarecd").val().trim();
 	   var inwarenm = $("#inwarenm").val().trim();
 	   var instockgrade = $("#instockgrade").val().trim();
-	   var inwarebranch = $("#inwarebranch").val().trim();
+	   var inwarebranch = $("#inwarebranch1").val().trim();
 	   var incontact1 = $("#incontact1").val().trim();  
 	   var incontact2 = $("#incontact2").val().trim();   
 	   
@@ -321,15 +350,10 @@
            $("#instockgrade").focus();
            return false;
      }
-	   if(inaddr1 == null || inaddr1 == "" ){
+	 
+	   if(inwarebranch == null || inwarebranch == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
-           $("#inaddr1").focus();
-           return false;
-     }
-	   
-       if(inwarebranch == null || inwarebranch == "" ){
-           Common.alert('Some required fields are empty. Please fill up all the required fields. ');
-           $("#inwarebranch").focus();
+           $("#inwarebranch1").focus();
            return false;
      }
        
@@ -354,17 +378,20 @@
         
         item.loccd   = $("#mwarecd").val();
         item.locdesc = $("#mwarenm").val();
-        item.locaddr1 = $("#maddr1").val();
-        item.locaddr2 = $("#maddr2").val();
-        item.locaddr3 = $("#maddr3").val();
+        item.locdtl  = $("#maddr1").val();
         item.loctel1  = $("#mcontact1").val();
         item.loctel2  = $("#mcontact2").val();
         item.locgrad  = $("#mstockgrade").val();
-        item.loccnty  = $("#mcountry").val();
-        item.locstat  = $("#mstate").val();
-        item.locarea  = $("#marea").val();
-        item.locpost  = $("#mpostcd").val();
-        item.locBranch = $("#mwarebranch").val();
+        item.areaid   = $("#mareaId").val();
+        item.street   = $("#streetDtl").val();
+        item.locbranch1 = $("#mwarebranch1").val();
+        item.locbranch2 = $("#mwarebranch2").val();
+        item.locbranch3 = $("#mwarebranch3").val();
+        item.whlocgb = $("#locationtype").val();
+        
+        if ($("#pdchk").is(":checked")) item.serialpdchk = 'Y';
+        if ($("#ftchk").is(":checked")) item.serialftchk = 'Y';
+        if ($("#ptchk").is(":checked")) item.serialptchk = 'Y';
         
         AUIGrid.updateRow(myGridID, item, selectedItem[0]);
     }
@@ -400,14 +427,14 @@
         
         
         var fullAddr = "";
-        if (detail[0].locaddr1 != ""&& detail[0].locaddr1 != undefined){
-        	fullAddr = detail[0].locaddr1; 
+        if (detail[0].countrynm != ""&& detail[0].countrynm != undefined){
+        	fullAddr = detail[0].countrynm; 
         }
-        if (fullAddr != "" && detail[0].locaddr2 != "" && detail[0].locaddr2 != undefined){
-        	fullAddr += " " + detail[0].locaddr2
+        if (fullAddr != "" && detail[0].state != "" && detail[0].state != undefined){
+        	fullAddr += " " + detail[0].state
         }
-        if (fullAddr != "" && detail[0].locaddr3 != ""&& detail[0].locaddr3 != undefined){
-            fullAddr += " " + detail[0].locaddr3
+        if (fullAddr != "" && detail[0].locdt2 != ""&& detail[0].locdt2 != undefined){
+            fullAddr += " " + detail[0].locdt2
         }
         if (fullAddr != "" && detail[0].areanm != "" && detail[0].areanm != undefined){
             fullAddr += " " + detail[0].areanm
@@ -415,8 +442,8 @@
         if (fullAddr != "" && detail[0].postcd != ""&& detail[0].postcd != undefined){
             fullAddr += " " + detail[0].postcd
         }
-        if (fullAddr != "" && detail[0].name != ""&& detail[0].name != undefined){
-            fullAddr += " " + detail[0].name
+        if (fullAddr != "" && detail[0].locdtl != ""&& detail[0].locdtl != undefined){
+            fullAddr += " " + detail[0].locdtl
         }
         if (fullAddr != "" && detail[0].countrynm != ""&& detail[0].countrynm != undefined){
             fullAddr += " " + detail[0].countrynm
@@ -428,9 +455,8 @@
     }
     
     function getLocationListAjax() {
-        f_showModal();
         var param = $('#searchForm').serialize();
-        
+        Common.showLoader();
         $.ajax({
             type : "POST",
             url : "/logistics/organization/LocationList.do?"+param,
@@ -442,28 +468,14 @@
                 AUIGrid.setGridData(myGridID, gridData.data);
             },
             error: function(jqXHR, textStatus, errorThrown){
-                alert("실패하였습니다.");
+            	Common.alert("Fail : " + jqXHR.responseJSON.message);
             },
             complete: function(){
-                hideModal();
+            	Common.removeLoader();
             }
         });       
     }
      
-    
-    function f_showModal(){
-        $.blockUI.defaults.css = {textAlign:'center'}
-        $('div.SalesWorkDiv').block({
-                message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' /><div class='preloader'><i id='iloader'>.</i><i id='iloader'>.</i><i id='iloader'>.</i></div>",
-                centerY: false,
-                centerX: true,
-                css: { top: '300px', border: 'none'} 
-        });
-    }
-    function hideModal(){
-        $('div.SalesWorkDiv').unblock();
-        
-    }
     
     function f_multiCombo(){
         /*$(function() {
@@ -481,13 +493,14 @@
      
      function fn_insertGrid(){
     	 
-    	 if(inValidation()){                        
+    	 if(inValidation()){ 
+    		 console.log($("#insForm").serialize());
              //$('#instockgrade').attr("disabled",false)
                Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
                 Common.alert(result.message);
-                $( "#registWindow" ).hide();
-                $('#insForm')[0].reset();
-                /* $("#search").click(); */
+               // $( "#registWindow" ).hide();
+               // $('#insForm')[0].reset();
+                
                 }, function(jqXHR, textStatus, errorThrown) {
                     Common.alert("실패하였습니다.");
                     
@@ -507,7 +520,6 @@
     	 var rtnVal = data[0].item.loccd;
     	 $("#loccd").val(rtnVal);
     	} 
-        
      
 </script>
 </head>
@@ -687,6 +699,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <form id="modForm" name="modForm" method="POST">
+<input type="hidden" id="mareaId" name="mareaId">
 <table class="type1"><!-- table start -->
 <caption>search table</caption>
 <colgroup>
@@ -702,45 +715,75 @@
 </tr>
 <tr>
     <th scope="row">Warehouse Code</th>
-    <td colspan="3"><input type="text" name="mwarecd" id="mwarecd"/></td>    
+    <td><input type="text" name="mwarecd" id="mwarecd"/></td>    
+    <th scope="row">Serial Check</th>
+    <td colspan="3">
+        <label><input type="checkbox" id="pdchk" name="pdchk"/><span>Product</span></label>
+        <label><input type="checkbox" id="ftchk" name="ftchk"/><span>Filter</span></label>
+        <label><input type="checkbox" id="ptchk" name="ptchk"/><span>Parts</span></label>
+    </td>
 </tr>
 <tr>
     <th scope="row">Warehouse Name</th>
     <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
 </tr>
 <tr>
+    <th scope="row">Location Type</th>
+    <td><select id="locationtype"></select></td>
     <th scope="row">Stock Grade</th>
     <td><select id="mstockgrade"></select></td>
+</tr>
+<tr>
     <th scope="row">Branch</th>
-    <td><select id="mwarebranch"></select></td>
-</tr>
-<tr>
-    <th scope="row" rowspan="3">Address</th>
-    <td colspan="3"><input type="text" id="maddr1" name="maddr1" class="w100p"/></td>
-</tr>
-<tr>
-    <td colspan="3"><input type="text" id="maddr2" name="maddr2" class="w100p"/></td>
-</tr>
-<tr>
-    <td colspan="3"><input type="text" id="maddr3" name="maddr3" class="w100p"/></td>
-</tr>
-<tr>
-    <th scope="row">Country</th>
-    <td><select id="mcountry" onchange="getAddrRelay('mstate' , this.value , 'state', '')"></select></td>
-    <th scope="row">State</th>
-    <td><select id="mstate"  class="msap" onchange="getAddrRelay('marea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
-</tr>
-<tr>
-    <th scope="row">Area</th>
-    <td><select id="marea" class="msap" onchange="getAddrRelay('mpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
-    <th scope="row">Postcode</th>
-    <td><select id="mpostcd" class="msap" disabled=true><option>Choose One</option></select></td>
+    <td colspan='3'><select id="mwarebranch1"></select><select id="mwarebranch2"></select><select id="mwarebranch3"></select></td>
 </tr>
 <tr>
     <th scope="row">Contact No (1)</th>
     <td><input type="text" name="mcontact1" id="mcontact1"/></td>
     <th scope="row">Contact No (2)</th>
     <td><input type="text" name="mcontact2" id="mcontact2"/></td>
+</tr>
+<tr>
+    <th scope="row">Street search<span class="must">*</span></th>
+    <td colspan="3">
+    <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Address Detail</th>
+    <td colspan="3"><input type="text" id="maddr1" name="maddr1" class="w100p"/></td>
+</tr>
+<tr>
+	<th scope="row" >Street</th>
+	<td colspan="3">
+	<input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+	</td>
+</tr>
+<tr>
+   <th scope="row">Area(4)<span class="must">*</span></th>
+	<td colspan="3">
+	<select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId('m')"></select> 
+	</td>
+</tr>
+<tr>
+	 <th scope="row">City(2)<span class="must">*</span></th>
+	<td>
+	<select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value , 'm')"></select>  
+	</td>
+	<th scope="row">PostCode(3)<span class="must">*</span></th>
+	<td>
+	<select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value , 'm')"></select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">State(1)<span class="must">*</span></th>
+	<td>
+	<select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value , 'm')"></select>
+	</td>
+	<th scope="row">Country<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -763,7 +806,9 @@
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form id="insForm" name="insForm" method="GET">
+<form id="insForm" name="insForm" method="POST">
+<input type="hidden" name="extype" id="extype" value="INS">
+<input type="hidden" name="iareaId" id="iareaId">
 <table class="type1">
 <caption>search table</caption>
 <colgroup>
@@ -781,35 +826,59 @@
     <th scope="row">Warehouse Name</th>
     <td colspan="3"><input type="text" name="inwarenm" id="inwarenm" class="w100p"/></td>
 </tr>
- <tr>
+<tr>
+    <th scope="row">CDC_CODE</th>
+    <td><select id="icdccode" name="icdccode" ></select></td>
+    <th scope="row">RDC_CODE</th>
+    <td><select id="irdccode" name="irdccode"></select></td>
+</tr>
+<tr>
     <th scope="row">Stock Grade</th>
     <td><select id="instockgrade" name="instockgrade" ></select></td>
+    <th scope="row">Location Type</th>
+    <td><select id="ilocationtype" name="ilocationtype"></select></td>
+</tr>
+<tr> 
     <th scope="row">Branch</th>
-    <td><select id="inwarebranch" name="inwarebranch" >
-  
-    </select></td>
-</tr> 
-<tr>
-    <th scope="row" rowspan="3">Address</th>
-    <td colspan="3"><input type="text" id="inaddr1" name="inaddr1" class="w100p"/></td>
+    <td colspan="3">
+        <select id="inwarebranch1" name="inwarebranch1" ></select> <select id="inwarebranch2" name="inwarebranch2" ></select> <select id="inwarebranch3" name="inwarebranch3" ></select>
+    </td>
+</tr>
+<tr> 
+    <th scope="row">Serial Check</th>
+    <td>
+        <label><input type="checkbox" id="ipdchk" name="ipdchk"/><span>Product</span></label>
+        <label><input type="checkbox" id="iftchk" name="iftchk"/><span>Filter</span></label>
+        <label><input type="checkbox" id="iptchk" name="iptchk"/><span>Parts</span></label>
+    </td>
 </tr>
 <tr>
-    <td colspan="3"><input type="text" id="inaddr2" name="inaddr2" class="w100p"/></td>
+    <th scope="row">Street search<span class="must">*</span></th>
+    <td colspan="3">
+    <input type="text" title="" id="isearchSt" name="isearchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch1()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
 </tr>
 <tr>
-    <td colspan="3"><input type="text" id="inaddr3" name="inaddr3" class="w100p"/></td>
+    <th scope="row">Address Detail</th>
+    <td colspan="3"><input type="text" id="iaddrdtl" name="iaddrdtl" class="w100p"/></td>
 </tr>
  <tr>
     <th scope="row">Country</th>
-    <td><select id="incountry" name="incountry" onchange="getAddrRelay('instate' , this.value , 'state', '')"></select></td>
+    <td><input type="text" title="" id="iCountry" name="iCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/></td>
     <th scope="row">State</th>
-    <td><select id="instate" name="instate" onchange="getAddrRelay('inarea' , this.value , 'area', this.value)" disabled=true><option>Choose One</option></select></td>
+    <td><select class="w100p" id="iState"  name="iState" onchange="javascript : fn_selectState(this.value , 'i')"></select></td>
+</tr>
+<tr>
+    <th scope="row">City</th>
+    <td><select class="w100p" id="iCity"  name="iCity" onchange="javascript : fn_selectCity(this.value , 'i')"></select></td>
+    <th scope="row">Postcode</th>
+    <td><select class="w100p" id="iPostCd"  name="iPostCd" onchange="javascript : fn_selectPostCode(this.value , 'i')"></select></td>
 </tr>
 <tr>
     <th scope="row">Area</th>
-    <td><select id="inarea" name="inarea" onchange="getAddrRelay('inpostcd' , this.value , 'post', this.value)" disabled=true><option>Choose One</option></select></td>
-    <th scope="row">Postcode</th>
-    <td><select id="inpostcd" name="inpostcd" disabled=true><option>Choose One</option></select></td>
+    <td><select class="w100p" id="iArea"  name="iArea" onchange="javascript : fn_getAreaId('i')"></select></td>
+    <th scope="row">Street</th>
+    <td><input type="text" title="" id="istreet" name="istreet" placeholder="Detail Address" class="w100p"  /></td>
 </tr>  
 <tr>
     <th scope="row">Contact No (1)</th>
@@ -830,4 +899,162 @@
 </div>
 
 </section><!-- content end -->
+<script type="text/javaScript" language="javascript">
+	function fn_addrSearch(){
+         if($("#searchSt").val() == ''){
+             Common.alert("Please search.");
+             return false;
+         }
+         Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#modForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
+     }
+	
+	function fn_addrSearch1(){
+        if($("#isearchSt").val() == ''){
+            Common.alert("Please search.");
+            return false;
+        }
+        Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
+    }
+     
+     function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
+         
+         if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
+             
+             $("#"+pagestate+"Area").attr({"disabled" : false  , "class" : "w100p"});
+             $("#"+pagestate+"City").attr({"disabled" : false  , "class" : "w100p"});
+             $("#"+pagestate+"PostCd").attr({"disabled" : false  , "class" : "w100p"});
+             $("#"+pagestate+"State").attr({"disabled" : false  , "class" : "w100p"});
+             
+             //Call Ajax
+            
+             CommonCombo.make(pagestate+'State', "/sales/customer/selectMagicStateList", '' , mstate, optionState);
+             
+             var cityJson = {groupCode : mstate};
+             CommonCombo.make(pagestate+'City', "/sales/customer/selectMagicCityList", cityJson, mcity , optionCity);
+             
+             var postCodeJson = {groupCode : mcity};
+             CommonCombo.make(pagestate+'PostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, mpostcode , optionPostCode);
+             
+             var areaJson = {groupCode : mpostcode};
+             CommonCombo.make(pagestate+'Area', "/sales/customer/selectMagicAreaList", areaJson, marea , optionArea);
+             
+             $("#"+pagestate+"areaId").val(areaid);
+             $("#_searchDiv").remove();
+         }else{
+             Common.alert("Please check your address.");
+         }
+     }
+     
+   //Get Area Id
+     function fn_getAreaId(d){
+         
+         var statValue = $("#"+d+"State").val();
+         var cityValue = $("#"+d+"City").val();
+         var postCodeValue = $("#"+d+"PostCd").val();
+         var areaValue = $("#"+d+"Area").val();
+         
+         
+         
+         if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
+             
+             var jsonObj = { statValue : statValue ,
+                                   cityValue : cityValue,
+                                   postCodeValue : postCodeValue,
+                                   areaValue : areaValue
+                                 };
+             Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
+            	 console.log(result);
+                 if (result != null){
+                	 $("#"+d+"areaId").val(result.areaId);
+                 }else{
+                	 Common.alert("Address research please!");
+                 }
+             });
+             
+         }
+         
+     }
 
+	 function fn_selectCity(selVal , d){
+        
+        var tempVal = selVal;
+        
+        if('' == selVal || null == selVal){
+           
+            $("#"+d+"PostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $("#"+d+"PostCd").val('');
+            
+            $("#"+d+"Area").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $("#"+d+"Area").val('');
+            
+        }else{
+            
+            $("#"+d+"PostCd").attr({"disabled" : false  , "class" : "w100p"});
+            
+            $("#"+d+"Area").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $("#"+d+"Area").val('');
+            
+            //Call ajax
+            var postCodeJson = {groupCode : tempVal}; //Condition
+            CommonCombo.make(d+'PostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, '' , optionPostCode);
+        }
+        
+    }
+
+	function fn_selectPostCode(selVal , d){
+        
+        var tempVal = selVal;
+        
+        if('' == selVal || null == selVal){
+           
+            $("#"+d+"Area").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $("#"+d+"Area").val('');
+            
+        }else{
+            
+            $("#"+d+"Area").attr({"disabled" : false  , "class" : "w100p"});
+            
+            //Call ajax
+            var areaJson = {groupCode1 : $("#test").val() , groupCode : tempVal}; //Condition
+            CommonCombo.make(d+'Area', "/sales/customer/selectMagicAreaList", areaJson, '' , optionArea);
+        }
+        
+    }
+
+	function fn_selectState(selVal , d){
+        
+        var tempVal = selVal;
+        
+        if('' == selVal || null == selVal){
+            //전체 초기화
+            fn_initAddress(d);   
+            
+        }else{
+            
+            $("#"+d+"City").attr({"disabled" : false  , "class" : "w100p"});
+            
+            $("#"+d+"PostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $("#"+d+"PostCd").val('');
+            
+            $("#"+d+"Area").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+            $("#"+d+"Area").val('');
+            
+            //Call ajax
+            var cityJson = {groupCode : tempVal}; //Condition
+            CommonCombo.make(d+'City', "/sales/customer/selectMagicCityList", cityJson, '' , optionCity);
+        }
+        
+    }
+	
+	function fn_initAddress(d){
+        
+        $("#"+d+"PostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        $("#"+d+"PostCd").val('');
+        
+        $("#"+d+"City").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        $("#"+d+"City").val('');
+        
+        $("#"+d+"Area").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        $("#"+d+"Area").val('');
+   }
+</script>

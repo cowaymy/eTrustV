@@ -1235,8 +1235,11 @@ public class CustomerController {
 		@RequestMapping(value = "/searchMagicAddressPop.do")
 		public String searchMagicAddressPop(@RequestParam Map<String, Object>params, ModelMap model){
 			
-			
-			model.addAttribute("searchStreet", params.get("searchSt"));
+			if (params.get("extype") != null  && "INS".equals((String)params.get("extype"))){
+				model.addAttribute("searchStreet", params.get("isearchSt"));
+			}else{
+				model.addAttribute("searchStreet", params.get("searchSt"));
+			}
 			
 			// 데이터 리턴.
 			return "sales/customer/customerMagicAddrPop";

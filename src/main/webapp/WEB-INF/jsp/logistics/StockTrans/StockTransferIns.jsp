@@ -161,7 +161,8 @@ $(function(){
         AUIGrid.removeSoftRows(reqGrid);
     });
     $('#list').click(function(){
-    	document.location.href = '/logistics/stocktransfer/StocktransferList.do';
+    	document.searchForm.action = '/logistics/stocktransfer/StocktransferList.do';
+        document.searchForm.submit();
     });
     $('#save').click(function() {
     	if (f_validatation('save')){
@@ -375,6 +376,7 @@ function f_multiCombo() {
 <form id="headForm" name="headForm" method="post">
 <input type='hidden' id='pridic' name='pridic' value='M'/>
 <input type='hidden' id='headtitle' name='headtitle' value='STO'/>
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -447,6 +449,11 @@ function f_multiCombo() {
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" >
 <input type="hidden" id="slocation" name="slocation">
+
+<!-- menu setting -->
+<input type="hidden" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
+<input type="hidden" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
+<!-- menu setting -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

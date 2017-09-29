@@ -15,9 +15,13 @@
 		         WH_LOC_CODE loccd,
 		         WH_LOC_DESC locdesc,
 		         ADDR_DTL    locdtl ,
+		         s28m.AREA_ID areaid,
+		         s28m.STREET street,
 		         WH_LOC_TEL1 loctel1,
 		         WH_LOC_TEL2 loctel2,
-		         WH_LOC_BRNCH_ID loc_branch,
+		         WH_LOC_BRNCH_ID locbranch1,
+		         WH_LOC_BRNCH_ID2 locbranch2,
+		         WH_LOC_BRNCH_ID3 locbranch3,
 		         WH_LOC_TYPE_ID loctype,
 		         WH_LOC_STK_GRAD locgrad,
 		         WH_LOC_STUS_ID locstus,
@@ -34,6 +38,12 @@
 		         s05m.name branchnm,
 		         s05m.dcode,
 		         s05m.descr,
+		         s28m.WH_LOC_GB whlocgb,
+		         s28m.SERIAL_FT_CHK serialftchk,
+		         s28m.SERIAL_PT_CHK serialptchk,
+		         s28m.SERIAL_PD_CHK serialpdchk,
+		         s28.CDC_CODE cdccode,
+		         s28.RDC_CODE rdccode,
 		         (SELECT code_name
 		            FROM SYS0013M
 		           WHERE code_id = s28m.WH_LOC_TYPE_ID)
@@ -106,74 +116,34 @@
 	
 	<update id="updateLocationInfo" parameterType="Map">
 	   UPDATE SYS0028M
-	      SET WH_LOC_CODE           = #{loccd}
-	        , WH_LOC_DESC           = #{locdesc}
-	        , WH_LOC_ADD1           = #{locaddr1}
-	        , WH_LOC_ADD2           = #{locaddr2}
-	        , WH_LOC_ADD3           = #{locaddr3}
-	        , WH_LOC_TEL1           = #{loctel1}
-	        , WH_LOC_TEL2           = #{loctel2}
-	        , WH_LOC_AREA_ID        = #{locarea}
-	        , WH_LOC_POST_CODE_ID   = #{locpost}
-	        , WH_LOC_STATE_ID       = #{locstat}
-	        , WH_LOC_BRNCH_ID       = #{locBranch}
-	        , WH_LOC_STK_GRAD       = #{locgrad}
-	        , WH_LOC_CNTY_ID        = #{loccnty}
-	        , WH_LOC_UPD_DT         = SYSDATE
-	        , WH_LOC_IS_SYNC        = #{up_sync}
-	        , WH_LOC_MOBILE        = #{up_mobile}
-	    WHERE WH_LOC_ID = #{locid}
+          SET WH_LOC_CODE           = #{loccd}
+            , WH_LOC_DESC           = #{locdesc}
+            , WH_LOC_TEL1           = #{loctel1}
+            , WH_LOC_TEL2           = #{loctel2}
+            , AREA_ID               = #{areaid}
+            , STREET                = #{street}
+            , ADDR_DTL              = #{locdtl}
+            , SERIAL_PD_CHK         = #{serialpdchk}
+            , SERIAL_FT_CHK         = #{serialftchk}
+            , SERIAL_PT_CHK         = #{serialptchk}
+            , WH_LOC_GB             = #{whlocgb}
+            , WH_LOC_BRNCH_ID       = #{locbranch1}
+            , WH_LOC_BRNCH_ID2      = #{locbranch2}
+            , WH_LOC_BRNCH_ID3      = #{locbranch3}
+            , WH_LOC_STK_GRAD       = #{locgrad}
+            , WH_LOC_UPD_DT         = SYSDATE
+            , WH_LOC_IS_SYNC        = #{up_sync}
+            , WH_LOC_MOBILE         = #{up_mobile}
+        WHERE WH_LOC_ID = #{locid}
 	</update>
 	
 	
     <insert id="insertLocationInfo" parameterType="Map">
 	     INSERT INTO SYS0028M(
-	       WH_LOC_ID
-	      ,WH_LOC_CODE 
-	      , WH_LOC_DESC  
-	      , WH_LOC_ADD1
-	      , WH_LOC_ADD2
-	      , WH_LOC_ADD3
-	      , WH_LOC_AREA_ID
-	      , WH_LOC_POST_CODE_ID
-	      , WH_LOC_STATE_ID
-	      , WH_LOC_CNTY_ID 
-	      , WH_LOC_TEL1
-	      , WH_LOC_TEL2
-          , WH_LOC_BRNCH_ID
-	      , WH_LOC_TYPE_ID
-	      , WH_LOC_STK_GRAD  
-	      , WH_LOC_STUS_ID
-	      , WH_LOC_UPD_USER_ID 
-	      , WH_LOC_UPD_DT
-	      , CODE2
-	      , DESC2
-	      , WH_LOC_IS_SYNC
-	      , WH_LOC_MOBILE  
+	       WH_LOC_ID, WH_LOC_CODE, WH_LOC_DESC, WH_LOC_TEL1, WH_LOC_TEL2    , CDC_CODE, RDC_CODE, WH_LOC_BRNCH_ID, WH_LOC_TYPE_ID, WH_LOC_STK_GRAD, WH_LOC_STUS_ID, WH_LOC_UPD_USER_ID, WH_LOC_UPD_DT, CODE2, DESC2, WH_LOC_IS_SYNC, WH_LOC_MOBILE, AREA_ID, ADDR_DTL, STREET, WH_LOC_BRNCH_ID2, WH_LOC_BRNCH_ID3, WH_LOC_GB, SERIAL_PD_CHK, SERIAL_FT_CHK, SERIAL_PT_CHK
 	     )  
 	    VALUES (
-	     #{inlocid}
-	    ,#{inwarecd}
-	    ,#{inwarenm} 
-	    ,#{inaddr1}
-	    ,#{inaddr2}
-	    ,#{inaddr3}
-	    ,#{inarea}
-	    ,#{inpost}    
-	    ,#{instat}
-	    ,#{incnty}	    
-	    ,#{incontact1}
-        ,#{incontact2}  
-	    ,#{inbranch}  
-	    ,#{intype_id}
-	    ,#{ingrad}
-	    ,#{instus_id}	    
-        ,#{inup_user_id}
-	    ,SYSDATE  
-	    ,#{incode2}
-	    ,#{indesc2}
-	    ,#{inis_sync}
-	    ,#{inmobile}
+	     #{inlocid} ,#{inwarecd} ,#{inwarenm},#{incontact1},#{incontact2} ,#{cdccode},#{rdccode}, #{branch1},#{intype_id}  , #{ingrad}      , #{instus_id}  , #{inup_user_id}   , SYSDATE      ,#{incode2} , #{indesc2},#{inis_sync}  , #{inmobile}  , #{areaid}, #{addrdtl} , #{street} , #{branch2},#{branch3},#{locationtype} , #{pdchk} , #{ftchk}, #{ptchk}
 	    )
     </insert>
     <delete id="deleteLocationInfo" parameterType="Map">
