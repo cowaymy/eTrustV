@@ -172,7 +172,8 @@ var Common = {
      */
     getFormData: function (_sFormId) {
         var formData = new FormData();
-        $.each($("#" + _sFormId + " > input[type=file]"), function (i, obj) {
+
+        $.each($("#" + _sFormId + " :file"), function (i, obj) {
             $.each(obj.files, function (j, file) {
                 formData.append("file[" + i + j + "]", file);
             })
