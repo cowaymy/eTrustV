@@ -20,7 +20,7 @@
                 
             //}
             //else {
-                fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), AUIGrid.getCellValue(myGridID , event.rowIndex , "memcode"));
+                fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"));
             //}
             
             $("#memPopCloseBtn").click();
