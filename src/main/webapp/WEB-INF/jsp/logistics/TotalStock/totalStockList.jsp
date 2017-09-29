@@ -41,7 +41,7 @@ var userCode;
                       {dataField:"typeName"        ,headerText:"Type"            ,width:120    ,height:30 },
                       {dataField:"locDesc"        ,headerText:"Location"               ,width:120    ,height:30 },
                       {dataField:"qty"       ,headerText:"QTY"               ,width:120    ,height:30},
-                      {dataField:"movQty"      ,headerText:"Move QTY"       ,width:120    ,height:30                },
+                      {dataField:"movQty"      ,headerText:"In-Transit QTY"       ,width:120    ,height:30                },
                       {dataField:"bookingQty"        ,headerText:"Booking QTY"         ,width:120    ,height:30                },
                       {dataField:"availableQty"        ,headerText:"Available Qty"         ,width:120    ,height:30                }
                       ];                     
