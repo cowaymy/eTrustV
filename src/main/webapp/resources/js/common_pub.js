@@ -168,10 +168,8 @@ $(document).ready(function(){
 	var depth3 = $(".inb_menu").children("li").children("ul").children("li").children("ul").children("li");
 
 	for( var i=0; i < depth3.length; i++ ){
-		if(depth3.eq(i).children("ul").length>0){
-			depth3.eq(i).children("a").css("background","url(../images/common/lnb_arrow_sub_off.gif) no-repeat 26px 7px");
-		} else{
-			depth3.eq(i).children("a").css("background","none");
+		if(!depth3.eq(i).children("ul").length>0){
+			depth3.eq(i).children("a").addClass("none");
 		}
 	}
 })
