@@ -196,7 +196,7 @@ function createAUIGrid4() {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
+        showRowNumColumn : true
 
     };
     
@@ -276,7 +276,7 @@ function createAUIGrid1() {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
+        showRowNumColumn : true
 
     };
     
@@ -376,7 +376,7 @@ function createAUIGrid2() {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
+        showRowNumColumn : true
 
     };
     
@@ -471,7 +471,7 @@ function createAUIGrid3() {
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
+        showRowNumColumn : true
 
     };
     
@@ -594,12 +594,15 @@ function fn_requestTermiReSave(val){
 	Common.ajax("POST", "/organization/terminateResignSave",  $("#requestTermiReForm").serializeJSON(), function(result) {
 		console.log("성공.");
 		console.log("data : " + result);
+		
 	});
 	
 	}else{//Request Promote/Demote
 		Common.ajax("POST", "/organization/terminateResignSave",  $("#requestProDeForm").serializeJSON(), function(result) {
+			alert("22222");
 	        console.log("성공.");
 	        console.log("data : " + result);
+	        Common.alert(result.message);
 	    });
 	}
 		//성공했으면.... 팝업 띄워주고.... 인설트한 내용들.... 비활성화....
@@ -1165,6 +1168,7 @@ function fn_requestTermiReSave(val){
 <input type="hidden" value="<c:out value="${memberView.c44}"/>" id="memberLvl" name="memberLvl"/>
 <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype" name="memtype"/>
 <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue" name="codeValue"/>
+<input type="text" value="<c:out value="${memberView.memCode}"/>" id="codeValue" name="codeValue"/>
 <input type="hidden" value="" id="lvlTo" name="lvlTo"/>
 <aside class="title_line"><!-- title_line start -->
 <h2>Promote/Demote Information</h2>

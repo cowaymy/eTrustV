@@ -73,9 +73,14 @@ $(document).ready(function() {
 	$("#memberType").change(function (){
         var memberType = $("#memberType").val();
         fn_departmentCode(memberType);
-    });
+        
+      
+});
 	
 	
+	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
+	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
+	 
 	/* $("#state").change(function() {
 		//doGetCombo('/common/selectAddrSelCode.do','area'  ,  '' , 'area' , 'S', '');
 		
@@ -293,10 +298,7 @@ var gridPros = {
 <tr>
     <th scope="row">Nationality<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="nation" name="nation">
-        <c:forEach var="list" items="${nationality }" varStatus="status">
-           <option value="${list.countryid}">${list.name}</option>
-        </c:forEach>
+    <select class="w100p" id="national" name="national">
     </select>
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
@@ -332,9 +334,6 @@ var gridPros = {
     <th scope="row">Country<span class="must">*</span></th>
     <td>
     <select class="w100p" id="country" name="country">
-        <c:forEach var="list" items="${nationality }" varStatus="status">
-           <option value="${list.countryid}">${list.name}</option>
-        </c:forEach>
     </select>
     </td>
     <th scope="row">State<span class="must">*</span></th>
@@ -356,9 +355,6 @@ var gridPros = {
     <th scope="row">Postcode<span class="must">*</span></th>
     <td>
     <select class="w100p" id="postCode" name="postCode">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Email</th>
@@ -400,28 +396,19 @@ var gridPros = {
     </td>
 </tr>
 <tr>
+    <th scope="row">Branch<span class="must">*</span></th>
+    <td>
+    <select class="w100p" id="branch" name="branch">
+    </select>
+    </td>
     <th scope="row">Department Code<span class="must">*</span></th>
     <td>
     <select class="w100p" id="deptCd" name="deptCd">
-        <option value="CRS3221">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
-    </select>
-    </td>
-    <th scope="row">Branch<span class="must">*</span></th>
-    <td>
-    <select class="w100p disabled" id="branch" name="branch">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Transport Code<span class="must">*</span></th>
     <td>
     <select class="w100p disabled"  id="transportCd" name="transportCd">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
 </tr>
