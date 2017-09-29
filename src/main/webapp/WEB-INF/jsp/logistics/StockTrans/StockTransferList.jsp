@@ -262,6 +262,12 @@ function f_getTtype(g , v){
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
+
+        <!-- menu setting -->
+        <input type="hidden" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
+        <input type="hidden" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
+        <!-- menu setting -->
+
         <input type="hidden" name="rStcode" id="rStcode" />    
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
