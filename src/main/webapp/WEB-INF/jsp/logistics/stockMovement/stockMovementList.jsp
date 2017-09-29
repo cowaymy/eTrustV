@@ -51,10 +51,10 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"reqstqty"     ,headerText:"Request Qty"                 ,width:120    ,height:30                },
+                     {dataField:"reqstqty"     ,headerText:"Requested Qty"                 ,width:120    ,height:30                },
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                     {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30                },
+                     {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
+                     {dataField:"greceipt"     ,headerText:"Good Receipted"                ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
                      
@@ -74,8 +74,8 @@ var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"        
                        {dataField:"grdt"         ,headerText:"GR Date"                     ,width:120    ,height:30 },
                        {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                        {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                       {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                       {dataField:"rciptqty"        ,headerText:"Good ReceiptQty"             ,width:120    ,height:30                },
+                       {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
+                       {dataField:"rciptqty"        ,headerText:"Good Receipted Qty"             ,width:120    ,height:30                },
                        {dataField:"reqstno"      ,headerText:"Stock Movement Request"      ,width:120    ,height:30},
                        {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                        {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
@@ -290,11 +290,11 @@ function f_getTtype(g , v){
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">To Location</th>
+                    <th scope="row">From Location</th>
                     <td>
                         <select class="w100p" id="tlocation" name="tlocation"></select>
                     </td>
-                    <th scope="row">From Location</th>
+                    <th scope="row">To Location</th>
                     <td >
                         <select class="w100p" id="flocation" name="flocation"></select>
                     </td>
