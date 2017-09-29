@@ -101,7 +101,7 @@
         editable : false
 	}, {
         dataField : "DATA",
-        headerText : "조회",
+        headerText : "Data Search",
         style : "my-column",
         renderer : {
             type : "ButtonRenderer",
@@ -117,7 +117,7 @@
         width : 105
     },{
         dataField : "LOGE",
-        headerText : "로그 조회",
+        headerText : "Log Search",
         style : "my-column",
         renderer : {
             type : "ButtonRenderer",
