@@ -45,8 +45,8 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"delyqty"      ,headerText:"Delivery Qty"                ,width:120    ,height:30 },
-                     {dataField:"rciptqty"     ,headerText:"Good ReceiptQty"             ,width:120    ,height:30 , editalble:true},
+                     {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
+                     {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"             ,width:120    ,height:30 , editalble:true},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
                      {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30},
@@ -350,11 +350,11 @@ function grFunc(){
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">To Location</th>
+                    <th scope="row">From Location</th>
                     <td>
                         <select class="w100p" id="tlocation" name="tlocation"></select>
                     </td>
-                    <th scope="row">From Location</th>
+                    <th scope="row">To Location</th>
                     <td >
                         <select class="w100p" id="flocation" name="flocation"></select>
                     </td>
@@ -424,7 +424,7 @@ function grFunc(){
 		        <tr>
 		            <th scope="row">GR Posting Date</th>
                     <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
-                    <th scope="row">GR Proof Date</th>
+                    <th scope="row">GR Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
                 </tr>
                 <tr>    
