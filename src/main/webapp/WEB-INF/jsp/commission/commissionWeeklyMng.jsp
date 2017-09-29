@@ -94,8 +94,8 @@
 
 	//event management
 	function auiCellEditingHandler(event) {
-		if (event.type == "cellEditEnd") {		
-			 var value = AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex);
+		var value = AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex);
+		if (event.type == "cellEditEnd") {
 			if (event.columnIndex == 1) {			    
 			     if (value >= 10000 ) {
 			    	 AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
@@ -108,9 +108,21 @@
             if (value > 4 ) {
            	  AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
             }
-     }      
+     }else  if (event.columnIndex == 5) {           
+    	 var stVal =AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex-1);       
+         if(parseInt(value.replace(/\//g,""))<=parseInt(stVal.replace(/\//g,""))){
+           Common.alert("Please enter a value greater than Start Date");
+           AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
+         }    
+    }      
 		} else if (event.type == "cellEditBegin") {
-			
+			 if (event.columnIndex == 5) {         
+				  var stVal =AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex-1);				
+		           if (stVal == "" ) {
+		        	   Common.alert("<spring:message code='sys.common.alert.validation' arguments='START DATE' htmlEscape='false'/>");
+		             return false;
+		           }
+		      }
 		}
 	}
 	// 행 추가 이벤트 핸들러
