@@ -949,12 +949,12 @@
 				                Extent1.CNSGN_USER_ID_HAND   ,
 				                Extent2.CURIER_NAME   ,
 				                Extent3.CODE_NAME   ,
-				                CASE WHEN ( Extent1.AG_CNSGN_RCIV_DT > TO_DATE('1900-01-01') ) THEN TO_CHAR(Extent1.AG_CNSGN_RCIV_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END AG_CNSGN_RCIV_DT  ,
-				                CASE WHEN ( Extent1.CRT_DT > TO_DATE('1900-01-01') ) THEN TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END CRT_DT  ,
+				                CASE WHEN ( Extent1.AG_CNSGN_RCIV_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.AG_CNSGN_RCIV_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END AG_CNSGN_RCIV_DT  ,
+				                CASE WHEN ( Extent1.CRT_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END CRT_DT  ,
 				                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE '' END USER_NAME  ,
-				                CASE WHEN ( Extent1.UPD_DT > TO_DATE('1900-01-01') ) THEN TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END UPD_DT  ,
+				                CASE WHEN ( Extent1.UPD_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END UPD_DT  ,
 				                CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END USER_NAME1  ,
-				                CASE WHEN ( Extent1.AG_CNSGN_SEND_DT > TO_DATE('1900-01-01') ) THEN TO_CHAR(Extent1.AG_CNSGN_SEND_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END AG_CNSGN_SEND_DT  
+				                CASE WHEN ( Extent1.AG_CNSGN_SEND_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.AG_CNSGN_SEND_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END AG_CNSGN_SEND_DT  
 				         FROM SAL0035D Extent1
 				                LEFT JOIN SYS0016M Extent2   ON Extent2.CURIER_ID = Extent1.CURIER_ID
 				                LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.AG_REQSTER_TYPE_ID
