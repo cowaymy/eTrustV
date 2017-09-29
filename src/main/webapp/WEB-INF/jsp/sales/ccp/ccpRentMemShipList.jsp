@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
-   
+  
    var memConfirmGridID; // Membership Confirm List Grid
    
    $(document).ready(function(){
@@ -28,6 +28,7 @@
 	   AUIGrid.bind(memConfirmGridID, "cellDoubleClick", function(event){
 	       
 		   $("#_cnfmCntrctId").val(event.item.cnfmCntrctId);
+		   console.log(event.item.cnfmCntrctId);
 	       Common.popupDiv("/sales/ccp/selectCcpRentDetailVeiwPop.do", $("#detailForm").serializeJSON());
 	   });
 	   
@@ -142,6 +143,9 @@
 				<li><p class="btn_blue">
 						<a href="#" id="_btnSearch"><span class="search"></span>Search</a>
 					</p></li>
+				<li><p class="btn_blue">
+                       <a href="#" id="_confirmBtn"><span class="search"></span>Confirm Result</a> 
+                   </p></li>
 				<li><p class="btn_blue">
 						<a href="#"><span class="clear"></span>Clear</a>
 					</p></li>
@@ -320,27 +324,6 @@
 
 		<section class="search_result">
 			<!-- search_result start -->
-
-			<ul class="right_btns">
-				<li><p class="btn_grid">
-						<a id="_confirmBtn">CONFIRM RESULT</a>
-					</p></li>
-				<li><p class="btn_grid">
-						<a href="#">EXCEL UP</a>
-					</p></li>
-				<li><p class="btn_grid">
-						<a href="#">EXCEL DW</a>
-					</p></li>
-				<li><p class="btn_grid">
-						<a href="#">DEL</a>
-					</p></li>
-				<li><p class="btn_grid">
-						<a href="#">INS</a>
-					</p></li>
-				<li><p class="btn_grid">
-						<a href="#">ADD</a>
-					</p></li>
-			</ul>
 
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->

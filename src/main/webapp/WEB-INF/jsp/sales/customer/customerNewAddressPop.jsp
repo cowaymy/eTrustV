@@ -249,16 +249,17 @@
             
             //Call Ajax
            
-            CommonCombo.make('mState', "/sales/customer/selectMagicStateList", '' , mstate, optionState);
+            CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
             
-            var cityJson = {groupCode : mstate};
-            CommonCombo.make('mCity', "/sales/customer/selectMagicCityList", cityJson, mcity , optionCity);
+            var cityJson = {state : mstate}; //Condition
+            CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
             
-            var postCodeJson = {groupCode : mcity};
-            CommonCombo.make('mPostCd', "/sales/customer/selectMagicPostCodeList", postCodeJson, mpostcode , optionCity);
+            var postCodeJson = {state : mstate , city : mcity}; //Condition
+            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
             
             var areaJson = {groupCode : mpostcode};
-            CommonCombo.make('mArea', "/sales/customer/selectMagicAreaList", areaJson, marea , optionArea);
+            var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
+            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
             
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();

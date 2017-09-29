@@ -305,7 +305,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
                 "Thank you.";
 		
 		email.setTo(toList);
-		email.setHtml(false);
+		email.setHtml(true);
 		email.setSubject(subject);
 		email.setText(content);
 		

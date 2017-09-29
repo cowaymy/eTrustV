@@ -124,32 +124,46 @@ public class CcpRentMemShipController {
 		EgovMap mailMap = null;
 		
 		//Basic Info
+		LOGGER.info("_____________________________________________ (1)");
 		contractMap =  ccpRentMemShipService.selectServiceContract(params);
+		LOGGER.info("_____________________________________________ (2)");
 		params.put("srvCntrctOrdId", contractMap.get("srvCntrctOrdId")); //Order Id
 		
 		//fee and Amount (Basic Info)
+		LOGGER.info("_____________________________________________ (3)");
 		unbillMap = ccpRentMemShipService.selectServiceContactBillingInfo(params);
+		LOGGER.info("_____________________________________________ (4)");
 		
 		//Order Info
+		LOGGER.info("_____________________________________________ (5)");
 		orderInfoMap = ccpRentMemShipService.selectOrderInfo(params);
+		LOGGER.info("_____________________________________________ (6)");
 		//TODO 마이그레이션 이후 주석 해제(Magic Addr 관련)
 		//installMap = ccpRentMemShipService.selectOrderInfoInstallation(params);
+		LOGGER.info("_____________________________________________ (7)");
 		cofigMap = ccpRentMemShipService.selectSrvMemConfigInfo(params);
+		LOGGER.info("_____________________________________________ (8)");
 		
 		//Payment Info
+		LOGGER.info("_____________________________________________ (9)");
 		payMap = ccpRentMemShipService.selectPaySetInfo(params);
+		LOGGER.info("_____________________________________________ (10)");
 		
 		BigDecimal thirdPartyDec = (BigDecimal)payMap.get("is3rdParty");
 		
 		if(thirdPartyDec.intValue() == 1){
 			
 			params.put("custId", payMap.get("custId"));
+			LOGGER.info("_____________________________________________ (11)");
 			thirdMap = ccpRentMemShipService.selectCustThridPartyInfo(params);
+			LOGGER.info("_____________________________________________ (12)");
 		}
 		
 		//Mailing Info
 		params.put("salesOrderId", params.get("srvCntrctOrdId"));
+		LOGGER.info("_____________________________________________ (13)");
 		mailMap = ccpRentMemShipService.selectOrderMailingInfoByOrderID(params);
+		LOGGER.info("_____________________________________________ (14)");
 		
 		model.addAttribute("cnfmCntrctId", params.get("cnfmCntrctId"));
 		model.addAttribute("contractInfo", contractMap);

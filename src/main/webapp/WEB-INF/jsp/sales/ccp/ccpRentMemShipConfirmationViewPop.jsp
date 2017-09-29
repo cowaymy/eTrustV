@@ -13,20 +13,22 @@
     	createPayGrid();
     	createCallGrid();
     	
-    	
-    	//Call Ajax
-    	fn_selectPayListAjax();
-    	fn_selectCallListAjax();
-    	
-    	
-    	//Resize
+    	//Selected Pay Tab Set Gird  and Resize
     	$("#_payTab").click(function() {
-    		 AUIGrid.resize(payGrid, 950, 380);
+			 if(AUIGrid.getRowCount(payGrid) <= 0) {
+				 fn_selectPayListAjax();
+             }
+			 AUIGrid.resize(payGrid, 950, 380);
 		});
     	
-    	$("#_callTab").click(function() {
-    		AUIGrid.resize(callGrid, 950, 380);
-		});
+    	//Selected Call Tab Set Gird
+        $("#_callTab").click(function() {
+        	if(AUIGrid.getRowCount(callGrid) <= 0) {
+        		fn_selectCallListAjax();
+            }
+        	AUIGrid.resize(callGrid, 950, 380);
+        });
+    	
 	});
     
     //Create Grid
@@ -135,7 +137,7 @@
     <li><a href="#">Order Info</a></li>
     <li><a href="#">Rental Payment Info</a></li>
     <li><a href="#">Mailing Info</a></li> 
-    <li><a href="#" id="_payTab">Payment List</a></li> 
+    <li><a href="#" id="_payTab">Payment List</a></li>  
     <li><a href="#" id="_callTab">Call Log List</a></li>
 </ul>
 

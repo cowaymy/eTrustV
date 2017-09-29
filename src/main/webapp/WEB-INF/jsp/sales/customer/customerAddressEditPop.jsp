@@ -111,7 +111,7 @@ $(document).ready(function(){
         var gridPros = {
                 
                 usePaging           : true,         //페이징 사용
-                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
                 editable            : false,            
                 fixedColumnCount    : 1,            
                 showStateColumn     : true,             
