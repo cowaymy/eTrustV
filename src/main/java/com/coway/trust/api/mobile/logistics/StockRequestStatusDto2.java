@@ -12,6 +12,8 @@ public class StockRequestStatusDto2 {
 	private String smoNoItem;
 	@ApiModelProperty(value = "부품코드")
 	private String partsCode;
+	@ApiModelProperty(value = "부품명 id")
+	private int partsId;
 	@ApiModelProperty(value = "부품명")
 	private String partsName;
 	@ApiModelProperty(value = "요청수량")
@@ -26,6 +28,7 @@ public class StockRequestStatusDto2 {
 		StockRequestStatusDto2 dto = new StockRequestStatusDto2();
 		dto.setSmoNoItem(tmp.getSmoNoItem());
 		dto.setPartsCode(tmp.getPartsCode());
+		dto.setPartsId(tmp.getPartsId());
 		dto.setPartsName(tmp.getPartsName());
 		dto.setRequestQty(tmp.getRequestQty());
 		dto.setSerialNo(tmp.getSerialNo());
@@ -47,6 +50,14 @@ public class StockRequestStatusDto2 {
 
 	public void setPartsCode(String partsCode) {
 		this.partsCode = partsCode;
+	}
+
+	public int getPartsId() {
+		return partsId;
+	}
+
+	public void setPartsId(int partsId) {
+		this.partsId = partsId;
 	}
 
 	public String getPartsName() {

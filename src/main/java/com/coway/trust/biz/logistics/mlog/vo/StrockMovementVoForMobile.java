@@ -10,13 +10,12 @@ public class StrockMovementVoForMobile implements Serializable {
 	private String smoNo;
 	private String reqType;
 	private String reqStatus;
-	private String giCustName;
-	private String giLocationCode;
-	private String giDate;
-	private String grDate;
+	private String requestorId;
+	private String requestorName;
 	private List<StrockMovementVoForMobile> partsList;
 	private String smoNoD;
 	private String smoNoItem;
+	private int partsId;
 	private String partsCode;
 	private String partsName;
 	private String requestQty;
@@ -47,36 +46,28 @@ public class StrockMovementVoForMobile implements Serializable {
 		this.reqStatus = reqStatus;
 	}
 
-	public String getGiCustName() {
-		return giCustName;
+	public String getRequestorId() {
+		return requestorId;
 	}
 
-	public void setGiCustName(String giCustName) {
-		this.giCustName = giCustName;
+	public void setRequestorId(String requestorId) {
+		this.requestorId = requestorId;
 	}
 
-	public String getGiLocationCode() {
-		return giLocationCode;
+	public String getRequestorName() {
+		return requestorName;
 	}
 
-	public void setGiLocationCode(String giLocationCode) {
-		this.giLocationCode = giLocationCode;
+	public void setRequestorName(String requestorName) {
+		this.requestorName = requestorName;
 	}
 
-	public String getGiDate() {
-		return giDate;
+	public List<StrockMovementVoForMobile> getPartsList() {
+		return partsList;
 	}
 
-	public void setGiDate(String giDate) {
-		this.giDate = giDate;
-	}
-
-	public String getGrDate() {
-		return grDate;
-	}
-
-	public void setGrDate(String grDate) {
-		this.grDate = grDate;
+	public void setPartsList(List<StrockMovementVoForMobile> partsList) {
+		this.partsList = partsList;
 	}
 
 	public String getSmoNoD() {
@@ -93,6 +84,14 @@ public class StrockMovementVoForMobile implements Serializable {
 
 	public void setSmoNoItem(String smoNoItem) {
 		this.smoNoItem = smoNoItem;
+	}
+
+	public int getPartsId() {
+		return partsId;
+	}
+
+	public void setPartsId(int partsId) {
+		this.partsId = partsId;
 	}
 
 	public String getPartsCode() {
@@ -137,14 +136,6 @@ public class StrockMovementVoForMobile implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public List<StrockMovementVoForMobile> getPartsList() {
-		return partsList;
-	}
-
-	public void setPartsList(List<StrockMovementVoForMobile> partsList2) {
-		this.partsList = partsList2;
 	}
 
 }

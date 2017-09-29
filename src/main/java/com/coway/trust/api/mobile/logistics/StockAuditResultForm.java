@@ -6,7 +6,7 @@ import com.coway.trust.util.BeanConverter;
 
 public class StockAuditResultForm {
 
-	private int userId;
+	private String userId;
 	private String adjustBaseDate;
 
 	public static Map<String, Object> createMap(StockAuditResultForm stockauditresultForm) {
@@ -14,11 +14,11 @@ public class StockAuditResultForm {
 		return map;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

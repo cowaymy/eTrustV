@@ -19,6 +19,8 @@ public class StockAuditResultDto {
 	private String adjustBaseDate;
 	@ApiModelProperty(value = "재고 실사 location")
 	private int adjustLocation;
+	@ApiModelProperty(value = "재고 실사 location Name")
+	private String adjustLocationNm;
 	@ApiModelProperty(value = "재고 실사 systemQty")
 	private int adjustNormalQty;
 	@ApiModelProperty(value = "재고 실사 Not Counted")
@@ -43,6 +45,7 @@ public class StockAuditResultDto {
 		dto.setAdjustCreateDate((String) egvoMap.get("crtDate"));
 		dto.setAdjustBaseDate((String) egvoMap.get("baseDt"));
 		dto.setAdjustLocation(CommonUtils.getInt(egvoMap.get("locId")));
+		dto.setAdjustLocationNm((String) egvoMap.get("whLocCode"));
 		dto.setAdjustNormalQty(CommonUtils.getInt(egvoMap.get("sysQty")));
 		dto.setAdjustNotQty(CommonUtils.getInt(egvoMap.get("diffQty")));
 		dto.setAdjustQty(CommonUtils.getInt(egvoMap.get("cntQty")));
@@ -91,6 +94,14 @@ public class StockAuditResultDto {
 
 	public void setAdjustLocation(int adjustLocation) {
 		this.adjustLocation = adjustLocation;
+	}
+
+	public String getAdjustLocationNm() {
+		return adjustLocationNm;
+	}
+
+	public void setAdjustLocationNm(String adjustLocationNm) {
+		this.adjustLocationNm = adjustLocationNm;
 	}
 
 	public int getAdjustNormalQty() {

@@ -12,7 +12,7 @@ public class BarcodeListForm {
 	// private int userId = 1404;
 	// private String adjustBaseDate = "09/09/2017";
 
-	private int userId;
+	private String userId;
 	private String adjustBaseDate;
 
 	public static Map<String, Object> createMap(BarcodeListForm barcodeListForm) {
@@ -20,11 +20,11 @@ public class BarcodeListForm {
 		return map;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

@@ -217,28 +217,30 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
 <!-- 현창배 작업 -->
      
         <select id="getBarcodeList" parameterType="Map" resultType="EgovMap">
-        SELECT 
-                   LG71M.INVNTRY_NO 
-                  ,LG72M.SAVE_YN 
-                  ,TO_CHAR (LG71M.CRT_DATE, 'DD/MM/YYYY') CRT_DATE
-                  ,LG71M.BASE_DT 
-                  ,LG72M.LOC_ID 
-                  ,LG73D.SYS_QTY 
-                  , (LG73D.SYS_QTY - LG73D.CNT_QTY)  DIFF_QTY
-                  ,LG73D.CNT_QTY 
-                  ,LG73D.ITM_ID 
-                  ,SY26M.STK_CODE  
-                  ,LG73D.ITM_NM
-                  ,LG73D.SERIAL_CHK 
-                  ,LG62M.SERIAL_NO 
-              FROM LOG0071M LG71M, LOG0072M LG72M, LOG0073D LG73D,SYS0026M SY26M, LOG0062M LG62M
-                     WHERE 1 = 1
-                       AND LG71M.INVNTRY_NO = LG72M.INVNTRY_NO
-                       AND LG72M.INVNTRY_LOC_ID = LG73D.INVNTRY_LOC_ID
-                       AND LG73D.ITM_ID=SY26M.STK_ID
-                       AND SY26M.STK_CODE = LG62M.MATNR
-                       AND LG73D.SERIAL_CHK = 'Y'
-                       AND LG72M.LOC_ID = #{userId}
+	       SELECT 
+	                   LG71M.INVNTRY_NO 
+	                  ,LG72M.SAVE_YN 
+	                  ,TO_CHAR (LG71M.CRT_DATE, 'DD/MM/YYYY') CRT_DATE
+	                  ,LG71M.BASE_DT 
+	                  ,LG72M.LOC_ID 
+	                  ,SY28M.WH_LOC_CODE
+	                  ,LG73D.SYS_QTY 
+	                  , (LG73D.SYS_QTY - LG73D.CNT_QTY)  DIFF_QTY
+	                  ,LG73D.CNT_QTY 
+	                  ,LG73D.ITM_ID 
+	                  ,SY26M.STK_CODE  
+	                  ,LG73D.ITM_NM
+	                  ,LG73D.SERIAL_CHK 
+	                  ,LG62M.SERIAL_NO 
+	              FROM LOG0071M LG71M, LOG0072M LG72M, LOG0073D LG73D,SYS0026M SY26M, LOG0062M LG62M, SYS0028M SY28M
+	                     WHERE 1 = 1
+	                       AND LG71M.INVNTRY_NO = LG72M.INVNTRY_NO
+	                       AND LG72M.INVNTRY_LOC_ID = LG73D.INVNTRY_LOC_ID
+	                       AND LG73D.ITM_ID=SY26M.STK_ID
+	                       AND SY26M.STK_CODE = LG62M.MATNR
+	                       AND SY28M.WH_LOC_ID=LG72M.LOC_ID 
+	                       AND LG73D.SERIAL_CHK = 'Y'
+                       AND LG72M.LOC_ID =  (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
                        AND SUBSTR (LG72M.DOC_DT, 0, 6) = TO_CHAR (TO_DATE (#{adjustBaseDate}, 'DD/MM/YYYY'), 'YYYYMM')
      </select>  
         <select id="getNonBarcodeList" parameterType="Map" resultType="EgovMap">
@@ -248,6 +250,7 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
                   ,TO_CHAR (LG71M.CRT_DATE, 'DD/MM/YYYY') CRT_DATE
                   ,LG71M.BASE_DT 
                   ,LG72M.LOC_ID 
+                  ,SY28M.WH_LOC_CODE
                   ,LG73D.SYS_QTY 
                   , (LG73D.SYS_QTY - LG73D.CNT_QTY)  DIFF_QTY
                   ,LG73D.CNT_QTY 
@@ -256,13 +259,14 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
                   ,LG73D.ITM_NM
                   ,LG73D.SERIAL_CHK 
                   ,LG62M.SERIAL_NO 
-              FROM LOG0071M LG71M, LOG0072M LG72M, LOG0073D LG73D,SYS0026M SY26M, LOG0062M LG62M
+              FROM LOG0071M LG71M, LOG0072M LG72M, LOG0073D LG73D,SYS0026M SY26M, LOG0062M LG62M , SYS0028M SY28M
                      WHERE 1 = 1
                        AND LG71M.INVNTRY_NO = LG72M.INVNTRY_NO
                        AND LG72M.INVNTRY_LOC_ID = LG73D.INVNTRY_LOC_ID
                        AND LG73D.ITM_ID=SY26M.STK_ID
                        AND SY26M.STK_CODE = LG62M.MATNR
-                       AND LG72M.LOC_ID = #{userId}
+                        AND SY28M.WH_LOC_ID=LG72M.LOC_ID 
+                       AND LG72M.LOC_ID = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
                        AND LG73D.SERIAL_CHK IS NULL
                        AND SUBSTR (LG72M.DOC_DT, 0, 6) = TO_CHAR (TO_DATE (#{adjustBaseDate}, 'DD/MM/YYYY'), 'YYYYMM')
      </select>
@@ -273,6 +277,7 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
                   ,TO_CHAR (LG71M.CRT_DATE, 'DD/MM/YYYY') CRT_DATE
                   ,LG71M.BASE_DT 
                   ,LG72M.LOC_ID 
+                   ,SY28M.WH_LOC_CODE
                   ,LG73D.SYS_QTY 
                   , (LG73D.SYS_QTY - LG73D.CNT_QTY)  DIFF_QTY
                   ,LG73D.CNT_QTY 
@@ -281,13 +286,14 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
                   ,LG73D.ITM_NM
                   ,LG73D.SERIAL_CHK 
                   ,LG62M.SERIAL_NO 
-              FROM LOG0071M LG71M, LOG0072M LG72M, LOG0073D LG73D,SYS0026M SY26M, LOG0062M LG62M
+              FROM LOG0071M LG71M, LOG0072M LG72M, LOG0073D LG73D,SYS0026M SY26M, LOG0062M LG62M , SYS0028M SY28M
                      WHERE 1 = 1
                        AND LG71M.INVNTRY_NO = LG72M.INVNTRY_NO
                        AND LG72M.INVNTRY_LOC_ID = LG73D.INVNTRY_LOC_ID
                        AND LG73D.ITM_ID=SY26M.STK_ID
                        AND SY26M.STK_CODE = LG62M.MATNR
-                       AND LG72M.LOC_ID = #{userId}
+                       AND SY28M.WH_LOC_ID=LG72M.LOC_ID 
+                       AND LG72M.LOC_ID =  (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
                        AND SUBSTR (LG72M.DOC_DT, 0, 6) = TO_CHAR (TO_DATE (#{adjustBaseDate}, 'DD/MM/YYYY'), 'YYYYMM')
      </select>
               <select id="getStockPriceList" parameterType="Map" resultType="egovMap">
@@ -316,22 +322,20 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
                     LG47M.REQST_NO smoNo,
                     LG47M. PRIDIC_FRQNCY reqType,
                     LG47M.REQST_STUS reqStatus,
-                    SY28M.WH_LOC_DESC giCustName,
-                    LG47M.REQST_CDC_RDC giLocationCode,
-                    '미정' giDate,
-                    '미정' grDate
+                    LG47M.RCIV_CDC_RDC requestorId,<!--  추후에 구분자로 분리예정   -->
+                    SY28M.WH_LOC_DESC requestorName <!--  추후에 구분자로 분리예정   -->
                     
               FROM SYS0028M SY28M ,LOG0047M LG47M
                       WHERE 1=1
-                      AND  SY28M.WH_LOC_ID = LG47M.REQST_CDC_RDC
+                      AND  SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC   <!--  추후에 구분자로 분리예정   -->
                       AND  LG47M.TRNSC_TYPE = 'UM'
-                      AND  LG47M.RCIV_CDC_RDC = #{userId}
+                      AND  LG47M.RCIV_CDC_RDC =  (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
      <!--        추후에 구분자로 분리예정         <choose>
                         <when test="">
-                          AND  LG47M.RCIV_CDC_RDC = #{userId}
+                          AND  LG47M.RCIV_CDC_RDC =  (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
                         </when>
                         <otherwise>
-                          AND  LG47M.REQST_CDC_RDC = #{userId}
+                          AND  LG47M.REQST_CDC_RDC =  (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
                         </otherwise>
                       </choose> -->
                       AND  TO_CHAR( LG47M.REQST_REQUIRE_DT,'YYYYMMDD')  
@@ -349,20 +353,22 @@ ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
      
      </select>
      <select id="getRequestStatusParts" parameterType="Map" resultMap="movement">
-         SELECT
-                LG48D.REQST_NO smoNoD,
-                LG48D.REQST_NO_ITM smoNoItem,
-                LG48D.ITM_CODE partsCode,
-                LG48D.ITM_NAME partsName,
-                LG48D.REQST_QTY requestQty,
-                'serial' serialNo,
-                LG55D.DELVRY_QTY selectQty
-                FROM
-            LOG0048D LG48D, LOG0055D LG55D
-             WHERE 1=1
-                AND LG48D.REQST_NO = LG55D.REQST_NO (+)
-                 AND NVL(LG48D.REQST_DEL , 'N') = 'N'
-                 AND LG48D.REQST_NO =#{reqstNo}
+	    SELECT
+	                LG48D.REQST_NO smoNoD,
+	                LG48D.REQST_NO_ITM smoNoItem,
+	                SY26M.STK_ID partsId,
+	                LG48D.ITM_CODE partsCode,
+	                LG48D.ITM_NAME partsName,
+	                LG48D.REQST_QTY requestQty,
+	                SY26M.SERIAL_CHK serialNo,
+	                LG55D.DELVRY_QTY selectQty
+	                FROM
+	            LOG0048D LG48D, LOG0055D LG55D, SYS0026M SY26M
+	             WHERE 1=1
+	                 AND LG48D.REQST_NO = LG55D.REQST_NO (+)
+	                 AND NVL(LG48D.REQST_DEL , 'N') = 'N'
+	                 AND LG48D.ITM_CODE=SY26M.STK_CODE
+                     AND LG48D.REQST_NO =#{reqstNo}
                 ORDER BY LG48D.REQST_NO_ITM 
      </select>
 </mapper>

@@ -2,8 +2,6 @@ package com.coway.trust.api.mobile.logistics;
 
 import java.util.List;
 
-import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -41,18 +39,18 @@ public class StockRequestStatusDto {
 	@ApiModelProperty(value = "선택 수량")
 	private String selectQty;
 
-	public static StockRequestStatusDto create(StrockMovementVoForMobile tmp) {
-		// TODO Auto-generated method stub
-		StockRequestStatusDto dto = new StockRequestStatusDto();
-		dto.setSmoNo(tmp.getSmoNo());
-		dto.setReqType(tmp.getReqType());
-		dto.setReqStatus(tmp.getReqStatus());
-		dto.setGiCustName(tmp.getGiCustName());
-		dto.setGiLocationCode(tmp.getGiLocationCode());
-		dto.setGiDate(tmp.getGiDate());
-		dto.setGrDate(tmp.getGrDate());
-		return dto;
-	}
+	// public static StockRequestStatusDto create(StrockMovementVoForMobile tmp) {
+	// // TODO Auto-generated method stub
+	// StockRequestStatusDto dto = new StockRequestStatusDto();
+	// dto.setSmoNo(tmp.getSmoNo());
+	// dto.setReqType(tmp.getReqType());
+	// dto.setReqStatus(tmp.getReqStatus());
+	// dto.setGiCustName(tmp.getGiCustName());
+	// dto.setGiLocationCode(tmp.getGiLocationCode());
+	// dto.setGiDate(tmp.getGiDate());
+	// dto.setGrDate(tmp.getGrDate());
+	// return dto;
+	// }
 
 	public String getSmoNo() {
 		return smoNo;

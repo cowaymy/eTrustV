@@ -6,7 +6,7 @@ import com.coway.trust.util.BeanConverter;
 
 public class StockRequestStatusForm {
 
-	int userId;
+	String userId;
 	String searchFromDate;
 	String searchToDate;
 	String searchStatus;
@@ -16,11 +16,11 @@ public class StockRequestStatusForm {
 		return map;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

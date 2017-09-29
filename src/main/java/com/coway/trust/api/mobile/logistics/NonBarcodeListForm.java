@@ -6,7 +6,7 @@ import com.coway.trust.util.BeanConverter;
 
 public class NonBarcodeListForm {
 
-	private int userId;
+	private String userId;
 	private String adjustBaseDate;
 
 	public static Map<String, Object> createMap(NonBarcodeListForm nonbarcodeListForm) {
@@ -14,11 +14,11 @@ public class NonBarcodeListForm {
 		return map;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
