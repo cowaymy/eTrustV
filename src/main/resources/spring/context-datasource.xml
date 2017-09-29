@@ -24,7 +24,7 @@
 			<property name="password" value="${spring.datasource.password}" />
 			<property name="connectionTimeout" value="${spring.datasource.connection.timeout}" />
 			<property name="idleTimeout" value="0" />
-			<property name="leakDetectionThreshold" value="3000" />
+			<property name="leakDetectionThreshold" value="0" />
 			<property name="maxLifetime" value="0" />
 			<property name="maximumPoolSize" value="${spring.datasource.maximumPoolSize}" />
 			<property name="connectionTestQuery" value="${spring.datasource.validation-query}" />
