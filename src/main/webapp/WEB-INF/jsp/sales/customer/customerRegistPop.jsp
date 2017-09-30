@@ -67,18 +67,29 @@
        // getAddrRelay('mstate' , '1' , 'state', '');
         
     
+        //Enter Event
+        $('#searchSt').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+            	fn_addrSearch();
+            }  
+        });
+        
     });
  
     function fn_initAddress(){
     	
-    	   $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-           $("#mPostCd").val('');
-           
+           $('#mCity').append($('<option>', { value: '', text: '2. City' }));
+           $('#mCity').val('');
            $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-           $("#mCity").val('');
            
+           $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+           $('#mPostCd').val('');
+           $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+           
+           $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+           $('#mArea').val('');
            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-           $("#mArea").val('');
+           
     }
     
     /*####### Magic Address #########*/
@@ -94,11 +105,13 @@
             
             $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
             
+            $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+            $('#mPostCd').val('');
             $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            $("#mPostCd").val('');
             
+            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+            $('#mArea').val('');
             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            $("#mArea").val('');
             
             //Call ajax
             var cityJson = {state : tempVal}; //Condition
@@ -113,18 +126,21 @@
         
         if('' == selVal || null == selVal){
            
-            $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            $("#mPostCd").val('');
+        	 $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+             $('#mPostCd').val('');
+             $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
-            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            $("#mArea").val('');
+             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+             $('#mArea').val('');
+             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
             
         }else{
             
             $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
             
+            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+            $('#mArea').val('');
             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            $("#mArea").val('');
             
             //Call ajax
             var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
@@ -140,8 +156,9 @@
         
         if('' == selVal || null == selVal){
            
+        	$('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+            $('#mArea').val('');
             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            $("#mArea").val('');
             
         }else{
             
@@ -837,7 +854,7 @@
 	</colgroup>
 		 <tbody>
             <tr>
-                <th scope="row">Street search<span class="must">*</span></th>
+                <th scope="row">Area search<span class="must">*</span></th>
                 <td colspan="3">
                 <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>

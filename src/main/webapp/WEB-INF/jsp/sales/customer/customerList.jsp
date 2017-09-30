@@ -132,7 +132,7 @@
     
     // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
     doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'M' , 'f_multiCombo');            // Customer Type Combo Box
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'nation' , 'S');        // Nationality Combo Box
+    doGetCombo('/sales/customer/getNationList', '338' , '1' ,'nation' , 'S');        // Nationality Combo Box
     doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
     
     // 조회조건 combo box
@@ -190,7 +190,6 @@
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span>NEW</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#" ><span></span>Print</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
