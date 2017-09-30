@@ -443,7 +443,7 @@
 		</p>
 		<h2>Commission Organization Mgmt</h2>
 		<ul class="right_opt">
-			<li><p class="btn_gray">
+			<li><p class="btn_blue">
                      <a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a>
                  </p></li>
 		</ul>

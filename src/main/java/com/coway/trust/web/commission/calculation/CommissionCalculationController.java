@@ -344,7 +344,6 @@ public class CommissionCalculationController {
 		Date date = calendar.getTime();
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());	
-		
 		params.put("calYM", (params.get("searchDt").toString()).replace("/", ""));
 		params.put("searchDt",df.format(date));
 		params.put("taskId", String.valueOf(sTaskID));
@@ -1672,5 +1671,198 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/commAdjustment.do")
+	public String commAdjustment(@RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("mstId",CommissionConstants.COMIS_ADJUST_CD);
+		List<EgovMap> adjustList = commissionCalculationService.adjustmentCodeList(params);
+		model.addAttribute("adjustList", adjustList);
+		
+		// 호출될 화면
+		return "commission/commissionAdjustment";
+	}
+	
+	@RequestMapping(value = "/memberInfoSearch")
+	public ResponseEntity<Map> memberExistence(@RequestParam Map<String, Object> params, ModelMap model) {
+		Map<String, Object> memInfo = commissionCalculationService.memberInfoSearch(params);
+		return ResponseEntity.ok(memInfo);
+	}
+	
+	@RequestMapping(value = "/saveAdjustment")
+	public ResponseEntity<ReturnMessage> saveAdjustment(@RequestParam Map<String, Object> params, ModelMap model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if (sessionVO == null) {
+			loginId = "1000000000";
+		} else {
+			loginId = String.valueOf(sessionVO.getUserId());
+		}
+		params.put("loginId", loginId);
+		
+		Map<String, Object> ordNoInfo = commissionCalculationService.ordNoInfoSearch(params);
+		String ordId = ordNoInfo.get("ORDID") != null?ordNoInfo.get("ORDID").toString():"0";
+		
+		params.put("ordId",ordId);
+		
+		int sTaskID = 0;
+		String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
+		
+		int pvMonth = Integer.parseInt(dt.substring(0,2))-1;
+		int pvYear = Integer.parseInt(dt.substring(3));
+		
+		sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
+		
+		params.put("aMonth",pvMonth);
+		params.put("aYear",pvYear);
+		params.put("taskId",sTaskID);
+		
+		//params : {memId=8393, adjustmentType=900, memCode=508023, ordNo=0410694, adjustmentAmt=, adjustmentDesc=, ordId=64244, aMonth=8, aYear=2017, taskId=55}
+		commissionCalculationService.adjustmentInsert(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/commNeoUpload.do")
+	public String commNeoUpload(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "commission/commissionNeoProUpload";
+	}
+	
+	/**
+	 * EnrollResultNew업로드
+	 * @param Map
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/neoUploadFile", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> neoUploadFile(
+			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
+		String message = "";
+		
+		// 결과 만들기.
+    	ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	msg.setMessage(message );
+    	
+    	int loginId = sessionVO.getUserId();
+    	
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	
+    	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
+		
+		String pvMonth = dt.substring(0,2);
+		int pvYear = Integer.parseInt(dt.substring(3));
+		
+		Map<String, Object> delMap = new HashMap<String, Object>();
+		delMap.put("pvYear", pvYear);
+		delMap.put("pvMonth", pvMonth);
+		commissionCalculationService.neoProDel(delMap);
+		
+    	Map<String, Object> dataMap = null;
+    	if(gridList.size() > 1){
+    		for(int i=1; i<gridList.size(); i++){
+    			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
+    			dataMap = new HashMap<String, Object>();
+    			
+    			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
+        			String month= csvMap.get("2").toString();
+        			month=month.length()<2?"0"+month:month;
+        			String days= csvMap.get("3").toString();
+        			days=days.length()<2?"0"+days:days;
+        			String joinDt = csvMap.get("1")+""+month+""+days;
+        			
+        			dataMap.put("hpCode", csvMap.get("0"));
+        			dataMap.put("hpType", CommissionConstants.COMIS_NEO_TYPE);
+        			dataMap.put("pvMonth", pvMonth);
+        			dataMap.put("pvYear", pvYear);
+        			dataMap.put("loginId", loginId);
+        			dataMap.put("joinDt", joinDt);
+        			dataMap.put("isNw", csvMap.get("4"));
+        			
+    				commissionCalculationService.neoProInsert(dataMap);
+    			}
+    		}
+    	}
+    	
+    	
+		msg.setMessage(message);
+        return ResponseEntity.ok(msg);
+	}
+	
+	@RequestMapping(value = "/commCTUpload.do")
+	public String commCTUpload(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "commission/commissionCTUpload";
+	}
+	
+	/**
+	 * EnrollResultNew업로드
+	 * @param Map
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/ctUploadFile", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ctUploadFile(
+			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
+		String message = "";
+		
+		// 결과 만들기.
+    	ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	msg.setMessage(message );
+    	
+    	int loginId = sessionVO.getUserId();
+    	
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	
+    	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
+		
+		int pvMonth = Integer.parseInt(dt.substring(0,2))-1;
+		int pvYear = Integer.parseInt(dt.substring(3));
+		
+		Map<String, Object> delMap = new HashMap<String, Object>();
+		delMap.put("fYear", pvYear);
+		delMap.put("fMonth", pvMonth);
+		commissionCalculationService.ctUploadDel(delMap);
+		
+    	Map<String, Object> dataMap = null;
+    	if(gridList.size() > 1){
+    		for(int i=1; i<gridList.size(); i++){
+    			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
+    			dataMap = new HashMap<String, Object>();
+    			
+    			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
+    				dataMap.put("fBatchId", pvMonth+""+pvYear);
+    				dataMap.put("fCtCode", csvMap.get("0"));
+    				dataMap.put("fCtRank", "0");
+    				dataMap.put("fCtPerFac", csvMap.get("1"));
+    				dataMap.put("fCffCmplmt", "0");
+    				dataMap.put("fCffCmplnt", "0");
+    				dataMap.put("f3c", "0");
+    				dataMap.put("fAttLat", "0");
+    				dataMap.put("fAttEl", "0");
+    				dataMap.put("fCffCmplnt", "0");
+    				dataMap.put("fAttMc", "0");
+    				dataMap.put("fDtAllow", csvMap.get("2"));
+    				dataMap.put("fAdj", csvMap.get("3"));
+    				dataMap.put("fCffRewrd", csvMap.get("4"));
+    				dataMap.put("fYear", pvYear);
+    				dataMap.put("fMonth", pvMonth);
+    				
+    				commissionCalculationService.ctUploadInsert(dataMap);
+    			}
+    		}
+    	}
+    	
+    	
+		msg.setMessage(message);
+        return ResponseEntity.ok(msg);
+	}
 }

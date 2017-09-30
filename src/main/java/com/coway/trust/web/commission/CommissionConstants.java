@@ -16,6 +16,8 @@ public class CommissionConstants {
 	public static final String COMIS_HP_CD = "303";				//Commission HP main code
 	public static final String COMIS_ITEM_CD = "304";			//Commission Item code
 	public static final String COMIS_PRO_CD = "311";			//Commission Procedure code
+	public static final String COMIS_ADJUST_CD = "77";		//Commission Adjustment Code
+	public static final String COMIS_TYPE_CD = "346";			//Commission Value Type Code
 	public static final String COMIS_HP = "HP";					//Health Planner
 	public static final String COMIS_CD = "CD";					//Coway Lady
 	public static final String COMIS_CT = "CT";					//Coway Technician
@@ -87,5 +89,5 @@ public class CommissionConstants {
 	public static final String COMIS_BSD_P015 = "BSD-P15";					//
 	public static final String COMIS_BSG_P01 = "BSG-P01";					//
 	
-	
+	public static final String COMIS_NEO_TYPE = "NEOPRO";					//
 }

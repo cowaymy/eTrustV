@@ -212,4 +212,43 @@ public interface CommissionCalculationService
     void udtDataCMM0026T(Map<String, Object> param);
     void udtExcludeDataCMM0026T(Map<String, Object> param);
     
+    /**
+     * Adjustment Code List
+     */
+    List<EgovMap> adjustmentCodeList(Map<String, Object> params);
+    
+    /**
+     * member info Search
+     */
+    Map<String, Object> memberInfoSearch(Map<String, Object> params);
+
+    /**
+     * order Number info Search
+     */
+    Map<String, Object> ordNoInfoSearch(Map<String, Object> params);
+    
+    /**
+     * Adjustment Insert
+     */
+    void adjustmentInsert(Map<String, Object> params);
+    
+    /**
+     * HP NeoPro Delete
+     */
+    void neoProDel(Map<String, Object> params);
+    
+    /**
+     * HP NeoPro insert
+     */
+    void neoProInsert(Map<String, Object> params);
+    
+    /**
+     * CT Delete
+     */
+    void ctUploadDel(Map<String, Object> params);
+    
+    /**
+     * CT Upload insert
+     */
+    void ctUploadInsert(Map<String, Object> params);
 }

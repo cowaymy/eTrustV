@@ -184,6 +184,11 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 		return commissionSystemMapper.selectRuleBookOrgMngList(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectRuleValueType(Map<String, Object> params) {
+		return commissionSystemMapper.selectRuleValueType(params);
+	}
+	
 	/**
 	 * search Organization Gruop Code List
 	 * 

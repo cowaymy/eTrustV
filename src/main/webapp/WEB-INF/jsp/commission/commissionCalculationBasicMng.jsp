@@ -159,10 +159,10 @@
 		<h2>Commission Basic Data Collection</h2>
 
 		<ul class="right_btns">
-		<li><p class="btn_gray">          
+		<li><p class="btn_grid">    
                     <a href="#"  id="logSearch" ><span class="search"></span>LOG Data</a>
                 </p></li>
-			<li><p class="btn_gray">			
+			<li><p class="btn_blue">	
 					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
 				</p></li>
 		</ul>

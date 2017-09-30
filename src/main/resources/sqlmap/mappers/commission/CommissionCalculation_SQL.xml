@@ -412,13 +412,35 @@
             </if>
     </select>
     <select id="selectCMM0006T" parameterType="Map" resultType="EgovMap">
-        SELECT * FROM(
+        SELECT 
+            NVL( DEPT_CODE,' ') DEPT_CODE,
+			NVL( MANGR_ID,0) mangrId,
+			NVL( MEM_ID,0) MEM_ID,
+			NVL( EMPLY_TYPE_CODE ,' ') EMPLY_TYPE_CODE,
+			NVL( joinDt,' ') joinDt,
+			NVL( EMPLY_LEV,0) EMPLY_LEV,
+			NVL(EMPLY_LEV_AGE,0) EMPLY_LEV_AGE,
+			NVL( WORKING_MONTH,0) WORKING_MONTH,
+			NVL(SPONS_CODE,' ') SPONS_CODE,
+			NVL(EMPLY_STUS_ID,0) EMPLY_STUS_ID,
+			NVL( EMPLY_STUS_CODE,' ') EMPLY_STUS_CODE,
+			NVL(EMPLY_LEV_RANK,0) EMPLY_LEV_RANK,
+			NVL(EMPLY_VEH,0) emplyVeh,
+			NVL(EMPLY_BIZ_TYPE_ID,0) EMPLY_BIZ_TYPE_ID,
+			NVL(MANGR_CODE ,' ') mangrCode,
+			NVL(EMPLY_CODE,' ') emplyCode,
+			NVL(PAY_STUS,0) payStus,
+			NVL(IS_HSPTLZ,0) isHsptlz,
+			NVL( RUN_ID,0) RUN_ID,
+			NVL(COMM_TASK_ID,0) taskId,
+			NVL(IS_EXCLUDE  ,0) IS_EXCLUDE
+         FROM(
 	        SELECT 
-	          T1.DEPT_CODE, nvl(T1.MANGR_ID,'0') mangrId, T2.MEM_ID,T1.EMPLY_TYPE_CODE,TO_CHAR(T1.JOIN_DT,'yyyy-mm-dd')joinDt,
+	          T1.DEPT_CODE, T1.MANGR_ID, T2.MEM_ID,T1.EMPLY_TYPE_CODE,TO_CHAR(T1.JOIN_DT,'yyyy-mm-dd') joinDt,
 	          T1.EMPLY_LEV,T1.EMPLY_LEV_AGE,T1.WORKING_MONTH,T1.SPONS_CODE,T1.EMPLY_STUS_ID,
-	          T1.EMPLY_STUS_CODE,T1.EMPLY_LEV_RANK,nvl(T1.EMPLY_VEH,'0') emplyVeh,T1.EMPLY_BIZ_TYPE_ID, 
-	          nvl(T1.MANGR_CODE,'0') mangrCode, nvl(T1.EMPLY_CODE,'0') emplyCode, nvl(T1.PAY_STUS,'0') payStus, nvl(T1.IS_HSPTLZ,'0') isHsptlz,
-	          T1.RUN_ID,T1.COMM_TASK_ID taskId,nvl(T1.IS_EXCLUDE,'0') IS_EXCLUDE
+	          T1.EMPLY_STUS_CODE,T1.EMPLY_LEV_RANK,T1.EMPLY_VEH,T1.EMPLY_BIZ_TYPE_ID, 
+	          T1.MANGR_CODE, T1.EMPLY_CODE, T1.PAY_STUS, T1.IS_HSPTLZ,
+	          T1.RUN_ID,T1.COMM_TASK_ID,nvl(T1.IS_EXCLUDE,'0') IS_EXCLUDE
 	        FROM CMM0006T T1 JOIN ORG0001D T2 
 	                ON T1.EMPLY_ID = T2.MEM_ID
 	            JOIN SYS0013M T3
@@ -431,7 +453,7 @@
 	              AND T1.EMPLY_ID LIKE '%'|| #{memberId} ||'%'
 	            </if>
             ) scr
-            WHERE scr.taskId = #{taskId}
+            WHERE scr.COMM_TASK_ID = #{taskId}
             <if test="useYnCombo != null and useYnCombo != ''">
               AND  scr.IS_EXCLUDE = #{useYnCombo}
             </if>
@@ -462,10 +484,22 @@
             </if>
     </select>
     <select id="selectCMM0007T" parameterType="Map" resultType="EgovMap">
-        SELECT * FROM(
+        SELECT 
+            nvl(ORD_ID,'0') ORD_ID,
+			nvl(MEM_ID,'0') MEM_ID,
+			nvl(CODE,'0') CODE,
+			nvl(ORD_TYPE_ID,'0') ORD_TYPE_ID,
+			nvl(PRODUCT_ID,'0') PRODUCT_ID,
+			nvl(UNIT_VALU,'0') UNIT_VALU,
+			nvl(PRC,'0') PRC,
+			nvl(PV_VALU,'0') PV_VALU,
+			nvl(RUN_ID,'0') RUN_ID,
+			nvl(TASK_ID,'0') TASK_ID,
+			nvl(IS_EXCLUDE,'0') IS_EXCLUDE
+         FROM(
             SELECT 
 	            T1.ORD_ID, T2.MEM_ID,T3.CODE,  T1.ORD_TYPE_ID, T1.PRODUCT_ID, T1.UNIT_VALU,
-	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, nvl(T1.IS_EXCLUDE,'0') IS_EXCLUDE
+	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE
 			FROM CMM0007T T1 JOIN ORG0001D T2 
 			        ON T1.SALES_EMPLY_ID = T2.MEM_ID
 			    JOIN SYS0013M T3
@@ -506,8 +540,13 @@
     </select>
     <select id="selectCMM0008T" parameterType="Map" resultType="EgovMap">
 		 SELECT 
-		    T1.BS_SCHDUL_ID, T1.SVC_PERSON_ID, T1.BS_STUS_ID,T1. CRDIT_POINT, T1.RUN_ID,
-		    T1.TASK_ID, T2.IS_EXCLUDE
+		    nvl(T1.BS_SCHDUL_ID,'0') BS_SCHDUL_ID,
+			nvl(T1.SVC_PERSON_ID,'0') SVC_PERSON_ID,
+			nvl(T1.BS_STUS_ID,'0') BS_STUS_ID,
+			nvl(T1.CRDIT_POINT,'0') CRDIT_POINT,
+			nvl(T1.RUN_ID,'0') RUN_ID,
+			nvl(T1.TASK_ID,'0') TASK_ID,
+			nvl(T2.IS_EXCLUDE, '0') IS_EXCLUDE
 		FROM CMM0008T T1 JOIN (
 		        SELECT RUN_ID, nvl(IS_EXCLUDE,'0') IS_EXCLUDE
 		        FROM CMM0008T  
@@ -544,9 +583,18 @@
     </select>
     <select id="selectCMM0009T" parameterType="Map" resultType="EgovMap">
 		SELECT 
-		    T1.SVC_PERSON_ID, T1.HAPY_CALL_ID, T1.ORD_ID, T1.CUST_RESPNS_ID, T1.PNCTULT,
-		    T1.APPRAN, T1.XPLNT, T1.QLY, T1.OVERAL, T1.RUN_ID,
-		    T1.TASK_ID, T2.IS_EXCLUDE
+		    nvl(T1.SVC_PERSON_ID,'0') SVC_PERSON_ID,
+			nvl(T1.HAPY_CALL_ID,'0') HAPY_CALL_ID ,
+			nvl(T1.ORD_ID,'0') ORD_ID ,
+			nvl(T1.CUST_RESPNS_ID,'0') CUST_RESPNS_ID,
+			nvl(T1.PNCTULT,'0') PNCTULT,
+			nvl(T1.APPRAN,'0') APPRAN,
+			nvl(T1.XPLNT,'0') XPLNT,
+			nvl(T1.QLY,'0') QLY,
+			nvl(T1.OVERAL,'0')OVERAL ,
+			nvl(T1.RUN_ID,'0') RUN_ID,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
 		FROM CMM0009T T1 JOIN (
 		        SELECT RUN_ID, nvl(IS_EXCLUDE,'0') IS_EXCLUDE
 		        FROM CMM0009T  
@@ -586,8 +634,13 @@
     </select>
     <select id="selectCMM0010T" parameterType="Map" resultType="EgovMap">
         SELECT 
-            T1.SALES_PERSON_ID, T1.MBRSH_ID, T1.ORD_ID, T1.MBRSH_AMT, T1.RUN_ID,
-		    T1.TASK_ID, T2.IS_EXCLUDE
+            nvl(T1.SALES_PERSON_ID,'0') SALES_PERSON_ID ,
+			nvl(T1.MBRSH_ID,'0') MBRSH_ID ,
+			nvl(T1.ORD_ID,'0') ORD_ID ,
+			nvl(T1.MBRSH_AMT,'0')MBRSH_AMT ,
+			nvl(T1.RUN_ID,'0') RUN_ID,
+			nvl(T1.TASK_ID,'0') TASK_ID,
+			nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE 
 		FROM CMM0010T T1 JOIN (
 		        SELECT RUN_ID, nvl(IS_EXCLUDE,'0') IS_EXCLUDE
 		        FROM CMM0010T  
@@ -1586,6 +1639,16 @@
    
    <insert id="neoProInsert" parameterType="Map">
        INSERT INTO ORG0011D(HP_CODE, HP_TYPE, PV_MONTH, PV_YEAR, USER_ADD, DT_ADD, JOIN_DT, IS_NW, HP_RANK_ID) 
-           VALUES(#{hpCode},#{hpType},#{pvMonth},#{pvYear},#{loginId},sysdate,#{joinDt},#{isNw},ORG0011D_HP_RANK_ID_SEQ.nextval)
+           VALUES(#{hpCode},#{hpType},#{pvMonth},#{pvYear},#{loginId},sysdate,to_date(#{joinDt},'yyyy-mm-dd'),#{isNw},ORG0011D_HP_RANK_ID_SEQ.nextval)
+   </insert>
+   
+   <delete id="ctUploadDel" parameterType="Map">
+        DELETE FROM CMM0002D
+        WHERE F_MONTH =#{fMonth} and F_YEAR = #{fYear}
+   </delete>
+   
+   <insert id="ctUploadInsert" parameterType="Map">
+       INSERT INTO CMM0002D(ID, F_BATCH_ID, F_CT_CODE, F_CT_RANK, F_CT_PER_FAC, F_CFF_CMPLMT, F_CFF_CMPLNT, F3C, F_ATT_LAT, F_ATT_EL, F_ATT_MC, F_DT_ALLOW, F_ADJ, F_CFF_REWRD, F_YEAR, F_MONTH) 
+           VALUES(CMM0002D_ID_SEQ.nextval, #{fBatchId}, #{fCtCode}, #{fCtRank}, #{fCtPerFac}, #{fCffCmplmt}, #{fCffCmplnt}, #{f3c}, #{fAttLat}, #{fAttEl}, #{fAttMc}, #{fDtAllow}, #{fAdj}, #{fCffRewrd}, #{fYear}, #{fMonth})
    </insert>
 </mapper>

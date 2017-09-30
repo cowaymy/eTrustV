@@ -218,6 +218,8 @@ public interface CommissionSystemMapper {
 	
 	void udtRuleDescData(Map<String, Object> params);
 	
+	List<EgovMap> selectRuleValueType(Map<String, Object> params);
+	
 	/**
 	 * search Organization Gruop List
 	 * 

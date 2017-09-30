@@ -276,6 +276,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		return commissionCalculationMapper.cntCMM0008T(params);
 	}
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public List<EgovMap> selectCMM0008T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0008T(params);
 	}
@@ -612,4 +613,70 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		commissionCalculationMapper.udtDataCMM0026T(params);
 	}	
 
+	
+	
+	/**
+     * Adjustment Code List
+     */
+	@Override
+	public List<EgovMap> adjustmentCodeList(Map<String, Object> params) {
+		return commissionCalculationMapper.adjustmentCodeList(params);
+	}
+	
+	/**
+     * Member Code info search
+     */
+	@Override
+	public Map<String, Object> memberInfoSearch(Map<String, Object> params) {
+		return commissionCalculationMapper.memberInfoSearch(params);
+	}
+	
+	/**
+     * order number info search
+     */
+	@Override
+	public Map<String, Object> ordNoInfoSearch(Map<String, Object> params) {
+		return commissionCalculationMapper.ordNoInfoSearch(params);
+	}
+	
+	/**
+     * adjustment Insert
+     */
+	@Override
+	public void adjustmentInsert(Map<String, Object> params) {
+		commissionCalculationMapper.adjustmentInsert(params);
+	}
+	
+	/**
+     * HP NeoPro Delete
+     */
+	@Override
+	public void neoProDel(Map<String, Object> params) {
+		commissionCalculationMapper.neoProDel(params);
+	}
+	
+	/**
+     * HP NeoPro insert
+     */
+	@Override
+	public void neoProInsert(Map<String, Object> params) {
+		commissionCalculationMapper.neoProInsert(params);
+	}
+	
+	/**
+     * CT Data Delete
+     */
+	@Override
+	public void ctUploadDel(Map<String, Object> params) {
+		commissionCalculationMapper.ctUploadDel(params);
+	}
+	
+	/**
+     * CT Upload insert
+     */
+	@Override
+	public void ctUploadInsert(Map<String, Object> params) {
+		commissionCalculationMapper.ctUploadInsert(params);
+	}
+	
 }

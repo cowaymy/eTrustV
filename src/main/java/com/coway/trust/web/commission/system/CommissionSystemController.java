@@ -4,6 +4,7 @@
 package com.coway.trust.web.commission.system;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -431,9 +432,35 @@ public class CommissionSystemController {
 		}
 		
 		List<EgovMap> ruleBookMngList = commissionSystemService.selectRuleBookMngList(params);
-		System.out.println(ruleBookMngList);
+		
 		// return data
 		return ResponseEntity.ok(ruleBookMngList);
+	}
+	
+	@RequestMapping(value = "/selectRuleBookInfo", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectRuleBookInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String dt = String.valueOf(params.get("searchDt"));
+		if (dt.trim().equals("")) {
+			dt = CommonUtils.getNowDate().substring(0, 6);
+			params.put("searchDt", dt);
+		} else if (dt.contains("/")) {
+			dt = dt.replaceAll("/", "");
+			dt = dt.substring(2) + dt.substring(0, 2);
+			params.put("searchDt", dt);
+		}
+		
+		
+		List<EgovMap> ruleBookMngList = commissionSystemService.selectRuleBookMngList(params);
+		params.put("mstId", CommissionConstants.COMIS_TYPE_CD);
+		List<EgovMap> ruleValueList = commissionSystemService.selectRuleValueType(params);
+		
+		Map<String, Object> map= new HashMap<String, Object>();
+		map.put("typeList", ruleValueList);
+		map.put("ruleList", ruleBookMngList);
+		
+		// return data
+		return ResponseEntity.ok(map);
 	}
 	
 	/**

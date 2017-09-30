@@ -147,6 +147,8 @@ public interface CommissionSystemService
     
     void udtCommissionRuleData(Map<String, Object> params);
     
+    List<EgovMap> selectRuleValueType(Map<String, Object> params);
+    
     /**
      *  search Weekly List
      * @param params

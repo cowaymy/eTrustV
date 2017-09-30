@@ -247,9 +247,24 @@
            if (len > 0) {
                $("#searchFormRule [name=ruleSeq]").val(rowItem.item.ruleSeq);
            }
-           Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {
+           Common.ajax("GET", "/commission/system/selectRuleBookInfo", $("#searchFormRule").serialize(), function(result) {
                console.log("성공.");
-               console.log("data : " + result);
+               console.log("data : " + result.typeList);
+               
+               var typeTemp1="";
+               typeTemp1 = "<option value='' onClick='fn_typeDesc()'></option>";
+               for(var i=0;i<result.typeList.length; i++){
+            	   typeTemp1 = typeTemp1 + "<option value='"+result.typeList[i].codeName+"' onClick='fn_typeDesc(\""+result.typeList[i].codeDesc+"\")'>"+result.typeList[i].codeName+"</option>";
+               }
+               $("#insertFormRule [name=valueType]").html(typeTemp1);
+               
+               var typeTemp2="";
+               typeTemp2 = "<option value='' onClick='fn_typeDesc()'></option>";
+               for(var i=0;i<result.typeList.length; i++){
+                   typeTemp2 = typeTemp2 + "<option value='"+result.typeList[i].codeName+"' >"+result.typeList[i].codeName+"</option>";
+               }
+               $("#insertFormRule [name=resultValueNm]").html(typeTemp2);
+               
                //to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
                $("#popup_wrap2").show();
 
@@ -259,10 +274,20 @@
                    $("#insertFormRule [name=ruleLevel]").val("1");
                    $("#insertFormRule [name=rulePid]").val("0");
                } else {
-                   str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name + "\n";
+                   str += "row : " + rowItem.rowIndex + ", ruleLevel :" + rowItem.item.ruleLevel + ", ruleSeq : " + rowItem.item.ruleSeq + "\n";
                    console.log("str===" + str);
+                   console.log("===" + rowItem.item);
                    $("#insertFormRule [name=ruleLevel]").val(parseInt(rowItem.item.ruleLevel, 10) + 1);
                    $("#insertFormRule [name=rulePid]").val(rowItem.item.ruleSeq);
+                   
+                   $("#insertFormRule [name=ruleNm]").val(rowItem.item.ruleNm);
+                   $("#insertFormRule [name=useYn]").val(rowItem.item.useYn);
+                   $("#insertFormRule [name=ruleCategory]").val(rowItem.item.ruleCategory);
+                   $("#insertFormRule [name=valueType]").val(rowItem.item.valueType);
+                   $("#insertFormRule [name=valueTypeNm]").val(rowItem.item.valueTypeNm);
+                   $("#insertFormRule [name=resultValueNm]").val(rowItem.item.resultValueNm);
+                   $("#insertFormRule [name=ruleDesc]").val(rowItem.item.ruleDesc);
+                   
                }
                $("#insertFormRule [name=orgDs]").val($("#searchFormRule [name=orgNm]").val());
                $("#insertFormRule [name=codeName]").val($("#searchFormRule [name=itemNm]").val());
@@ -286,22 +311,38 @@
             str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name + "\n";
             $("#searchFormRule [name=ruleSeq]").val(rowItem.item.ruleSeq);
 
-            Common.ajax("GET", "/commission/system/selectRuleBookMngList", $("#searchFormRule").serialize(), function(result) {
+            Common.ajax("GET", "/commission/system/selectRuleBookInfo", $("#searchFormRule").serialize(), function(result) {
                 console.log("성공.");
-                console.log("data : " + result);
-                $("#insertFormRule [name=orgDs]").val(result[0].orgds);
+                console.log("data : " + result.ruleList);
+                
+                var typeTemp1="";
+                typeTemp1 = "<option value='' onClick='fn_typeDesc()'></option>";
+                for(var i=0;i<result.typeList.length; i++){
+                    typeTemp1 = typeTemp1 + "<option value='"+result.typeList[i].codeName+"' onClick='fn_typeDesc(\""+result.typeList[i].codeDesc+"\")'>"+result.typeList[i].codeName+"</option>";
+                }
+                $("#insertFormRule [name=valueType]").html(typeTemp1);
+                
+                var typeTemp2="";
+                typeTemp2 = "<option value='' onClick='fn_typeDesc()'></option>";
+                for(var i=0;i<result.typeList.length; i++){
+                    typeTemp2 = typeTemp2 + "<option value='"+result.typeList[i].codeName+"' >"+result.typeList[i].codeName+"</option>";
+                }
+                $("#insertFormRule [name=resultValueNm]").html(typeTemp2);
+                
+                
+                $("#insertFormRule [name=orgDs]").val(result.ruleList[0].orgds);
                 //to-do list 1.div show(),신규인지 하위등록 인지 체크 , 조회값 셋팅
                 $("#popup_wrap2").show();
 
                 //data set
-                Common.setData(result[0], $("#insertFormRule"));
-                if(result[0].rulePid==null ||result[0].rulePid==""){
+                Common.setData(result.ruleList[0], $("#insertFormRule"));
+                if(result.ruleList[0].rulePid==null ||result.ruleList[0].rulePid==""){
                     $("#insertFormRule [name=rulePid]").val("0");
                 }
                 
                 $("#insertFormRule [name=saveType]").val("U");
-                $("#printOrder").val(result[0].prtOrder);
-                $("#insertFormRule [name=rulePid]").val(result[0].rulePid);
+                $("#printOrder").val(result.ruleList[0].prtOrder);
+                $("#insertFormRule [name=rulePid]").val(result.ruleList[0].rulePid);
             });
 
         }); //editRule
@@ -320,6 +361,11 @@
         });
       
 	});//Ready
+	
+	function fn_typeDesc(desc){
+		$("#insertFormRule [name=valueTypeNm]").val(desc);
+		
+	}
 	
 	//get Ajax data and set organization combo data
     function fn_getOrgCdListAllAjax(callBack) {
@@ -906,7 +952,7 @@
 		<h2>Commission Group Rule Book Mgmt</h2>
 
 		<ul class="right_btns">
-			<li><p class="btn_gray">			
+			<li><p class="btn_blue">			
 					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
 				</p></li>
 		</ul>
@@ -1174,15 +1220,15 @@
 </tr>
 <tr>
   <th scope="row">Range Value Type<span class="must">*</span></th>
-  <td><input type="text" title="" placeholder="Range Value Type" class="w100p" id="valueType" name="valueType"  maxlength="50"/></td>
+  <td><select id="valueType" name="valueType"></select></td>
   <th scope="row">Range Value Type Name<span class="must">*</span></th>
-  <td><input type="text" title="" placeholder="Range Value Type Name" class="w100p" id="valueTypeNm" name="valueTypeNm" maxlength="200" /></td>
+  <td><input type="text" title="" placeholder="Range Value Type Name" class="w100p" id="valueTypeNm" name="valueTypeNm" readonly="readonly" /></td>
 </tr>
 <tr>
   <th scope="row">Result Value<span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Result Value" class="w100p" id="resultValue" name="resultValue"  value="" onchange="floatCh(this);" maxlength="10"/></td>
   <th scope="row">Result Value  Name<span class="must">*</span></th>
-  <td><input type="text" title="" placeholder="Result Vallue  Name" class="w100p" id="resultValueNm" name="resultValueNm"  maxlength="200"/></td>
+  <td><select class="w100p" id="resultValueNm" name="resultValueNm" ></select></td>
 </tr>
 <tr>
   <th scope="row">Print Order<span class="must">*</span></th>

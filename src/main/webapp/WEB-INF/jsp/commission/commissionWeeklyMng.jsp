@@ -275,7 +275,7 @@
 		<h2>Weekly Management</h2>
 
 		<ul class="right_btns">
-			<li><p class="btn_gray">			
+			<li><p class="btn_blue"> 
 					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
 				</p></li>
 		</ul>
