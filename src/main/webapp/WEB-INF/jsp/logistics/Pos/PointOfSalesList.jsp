@@ -57,6 +57,7 @@ var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}
                       {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30,  visible:false  },
                       {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
+                      {dataField:"serialChk"        ,headerText:"Serial Chk"             ,width:120    ,height:30                },
                       {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];     
                       
                       
@@ -147,7 +148,7 @@ $(document).ready(function(){
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','searchStatus', 'S' , '');
 	   doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , '');
 	   var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
-       doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');     
+       doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , 'SearchListAjax');     
        doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
        doGetComboData('/logistics/pos/selectPosReqNo.do','', '','searchOthersReq2', 'S' , '');
        
@@ -216,58 +217,25 @@ $(function(){
          document.searchForm.submit();
     });
 
-//     $('#goodIssue').click(function(){
-//     	var sflag ='false';
-//     	var cflag='false';
-//     	var oflag='false';
-    	
-//     $("#giForm")[0].reset();
-//     var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
-
-//     	if (checkedItems.length > 0){
-//     	  for (var i = 0 ; i < checkedItems.length ; i++){
-    			 
-// 	       if (checkedItems[i].item.status == 'S'){
-// 	    	   sflag='true';
-//            }else if(checkedItems[i].item.status == 'C'){
-//         	    cflag='true';
-//            }else if(checkedItems[i].item.status == 'O'){
-//         	   oflag='true'; 
-//            }   
-
-// 	     }	
-    	  
-//     	  if(sflag=="true" && cflag=="false" && oflag=="false" ){
-//               $("#giopenwindow").show();      
-//     	  }else if(sflag=="false" && cflag=="true" && oflag=="false" ){
-//     		  Common.alert('Complete!');  
-//     	  }else if(sflag=="flase" || cflag=="false" || oflag=="true" ){
-//     		  Common.alert('Please enter the Serial Number.');   
-//     	  }
-// 	    	  }else{
-// 	    		  Common.alert('Choice Data please..');
-// 	    	  }
-   
-//    });
-
     $("#goodIssue").click(function(){
      $("#giForm")[0].reset();
      var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+     console.log(checkedItems);
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
         }else{
-            for (var i = 0 ; i < checkedItems.length ; i++){
-                if(checkedItems[i].item.status == 'O'){
-                    Common.alert('Please enter the Serial Number.');
-                    return false;
-                    break;
-                }else if(checkedItems[i].item.status == 'C'){
-                	 Common.alert('Complete!');
-                     return false;
-                     break;
-                }             
-            }
+        	  for (var i = 0 ; i < checkedItems.length ; i++){
+                  if(checkedItems[i].item.serialChk == 'Y' && checkedItems[i].item.status == 'O'){
+                      Common.alert('Please enter the Serial Number.');
+                      return false;
+                      break;
+                  }else if(checkedItems[i].item.status == 'C'){
+                       Common.alert('Complete!');
+                       return false;
+                       break;
+                  }             
+              }  	       	
             document.giForm.gitype.value="GI";
             $("#dataTitle").text("Good Issue Posting Data");
             doSysdate(0 , 'giptdate');
