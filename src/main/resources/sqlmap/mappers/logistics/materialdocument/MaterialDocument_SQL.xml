@@ -24,7 +24,17 @@
 		, l60.INVNTRY_MOV_TYPE
 		, mt.code_name movtype
 		, l60.DEBT_CRDIT_INDICT
+		, DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', 'Credit',
+                 'S', 'Debit',
+                 l60.DEBT_CRDIT_INDICT)
+          DEBT_CRDIT_INDICT  
 		, l60.AUTO_CRT_ITM
+		, DECODE (l60.AUTO_CRT_ITM,
+                 'A', 'Auto',
+                 'M', 'Manual',
+                 l60.AUTO_CRT_ITM)
+          AUTO_CRT_ITM    
 		, l60.matrl_no
 		, s26.stk_desc
 		, l60.qty
