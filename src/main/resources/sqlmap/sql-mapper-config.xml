@@ -73,6 +73,7 @@
         <typeAlias alias="custBillMasterHistoryVO" type="com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO"/>
         <typeAlias alias="custAccVO" type="com.coway.trust.biz.sales.order.vo.CustAccVO"/>
         <typeAlias alias="custCrcVO" type="com.coway.trust.biz.sales.order.vo.CustCrcVO"/>
+        <typeAlias alias="referralVO" type="com.coway.trust.biz.sales.order.vo.ReferralVO"/>
         
         <!-- Enrollment Result Update -->
         <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />

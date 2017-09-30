@@ -504,6 +504,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 			
 			addVO.setSalesOrdId(orderModifyVO.getSalesOrdId());
 			addVO.setCrtUserId(sessionVO.getUserId());
+			addVO.setStusCode(1);
 			
 			orderModifyMapper.insertReferral(addVO);
 		}
