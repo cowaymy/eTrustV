@@ -122,6 +122,7 @@ var LocData = {sLoc : UserCode};
      doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , 'f_LocMultiCombo');
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
       doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombos'); 
+      doSysdate(0 , 'insReqDate');
       $("#giopenwindow").hide();
 //     /**********************************
 //      * Header Setting End
