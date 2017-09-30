@@ -338,6 +338,25 @@ $(document).ready(function(){
 		});
 		$("#search").click(function(){
 			$("#popup_wrap").hide();
+			var fromVal = $("#srchcrtdtfrom").val();
+			var toVal = $("#srchcrtdtto").val();
+			var from =  new Date( $("#srchcrtdtfrom").datepicker("getDate"));
+			var to =  new Date( $("#srchcrtdtto").datepicker("getDate"));
+			if("" != $("#srchcrtdtfrom").val() &&  "" == $("#srchcrtdtto").val()){
+					Common.alert("Please Check Create To Date.")
+                     $("#srchcrtdtto").focus();   
+					return false;
+			}else if("" == $("#srchcrtdtfrom").val() &&   "" != $("#srchcrtdtto").val()){
+					Common.alert("Please Check Create From Date.")
+                     $("#srchcrtdtfrom").focus();   
+					return false;
+			}else if("" !=  $("#srchcrtdtfrom").val() && "" !=  $("#srchcrtdtto").val() ){
+				if(0>= to - from ){
+					Common.alert("Please Check Create Date.")
+					return false;
+				}
+				
+			}
 			searchAjax();
 		});
 		$("#cancel").click(function(){
