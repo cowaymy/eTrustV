@@ -54,7 +54,8 @@ var columnLayout=[
                   {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30, visible:false ,editable:false},
                   {dataField:"saveYn" ,headerText:"saveYn",width:120 ,height:30, visible:false ,editable:false},
                   {dataField:"seq" ,headerText:"Seq.",width:120 ,height:30 ,editable:false},
-                  {dataField:"itmId" ,headerText:"Item Id",width:120 ,height:30 ,editable:false},
+                  {dataField:"itmId" ,headerText:"Item Id",width:120 ,height:30 , visible:false,editable:false},
+                  {dataField:"stkCode" ,headerText:"Item Code",width:120 ,height:30 ,editable:false},
                   {dataField:"itmNm" ,headerText:"Item Name",width:250 ,height:30 ,editable:false},
                   {dataField:"itmType" ,headerText:"itmType",width:120 ,height:30 , visible:false ,editable:false},
                   {dataField:"serialChk" ,headerText:"Serial Check",width:120 ,height:30 ,editable:false},
@@ -68,7 +69,6 @@ var columnLayout=[
                     }  
                   },
                   {dataField:"diffQty" ,headerText:"Diff Qty",width:120 ,height:30  ,editable:false},
-                  {dataField:"stkCode" ,headerText:"stkCode",width:120 ,height:30, visible:false ,editable:false},
                   {dataField:"stkDesc" ,headerText:"stkDesc",width:120 ,height:30  , visible:false ,editable:false},
                   {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30 , visible:false,editable:false},
                   {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30 , visible:false,editable:false},
@@ -209,7 +209,13 @@ $(document).ready(function(){
     
     AUIGrid.bind(myGridID, "addRow", function(event){});
     
-    AUIGrid.bind(myGridID, "cellEditBegin", function (event){});
+    AUIGrid.bind(myGridID, "cellEditBegin", function (event){
+    	  var serialChk = AUIGrid.getCellValue(myGridID, event.rowIndex, "serialChk");
+    	  if('Y'==serialChk){
+    		  return false;
+    	  }
+    	  
+    });
         
     
     AUIGrid.bind(myGridID, "cellEditEnd", function (event){
