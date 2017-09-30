@@ -57,7 +57,7 @@ $(document).ready(function() {
 		
 		//PopUp
 		$("#_salesOrdId").val(selectedItem[0].item.salesOrdId);
-        Common.popupDiv("/sales/ccp/ccpCalCcpPayChannelEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv');
+        Common.popupDiv("/sales/order/orderRentPaySetLimitPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv');
 	});
 	
 	//Update Cust Limit Info  (_updCustBtn)  ######################## Cust

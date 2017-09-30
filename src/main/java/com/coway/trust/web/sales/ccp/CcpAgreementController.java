@@ -105,7 +105,7 @@ public class CcpAgreementController {
         orderDetail = orderDetailService.selectOrderBasicInfo(params);
 		
 		model.put("orderDetail", orderDetail);
-		model.put("salesOrderNo", params.get("salesOrderNo"));
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
 		
 		return "sales/ccp/ccpAgreementNewSearchResult";
 	}

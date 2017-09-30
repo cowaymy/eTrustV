@@ -2,23 +2,43 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#_termSave").click(function() {
-		
-		if(termValidation() == true){
-			
-		}
-		
-	});
-});
+    $("#_termSave").click(function() {
+        
+        if(termValidation() == true){
+            // Param Flow : Sales Order Id > Rent Pay Id > Update
+            Common.ajax("POST", "/sales/order/rentalPaySetEdit", $("#_termEditForm").serializeJSON() , function(result) {
+                Common.alert(result.message, fn_closePop());
+            });
+        }
+    });
+    //Term Selected Value
+    fn_setInitValue();
+    
+});//Doc Ready Func End
+
+function fn_setInitValue(){
+    
+    var selVal = $("#_curPayTerm").val();
+    if(selVal == null || selVal == ""){
+        $("#_payTerm").val("0");
+    }else{
+        $("#_payTerm").val(selVal);
+    }
+}
+
+function fn_closePop(){
+    $("#_close").click();
+    $("#_calSearch").click();
+}
 
 function termValidation(){
-	if($("#_payTerm").val() == null || $("#_payTerm").val() == ""){
-		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Pay Term'/>");
-		return false;
-	}
-	
-	//Success
-	return true;
+    if($("#_payTerm").val() == null || $("#_payTerm").val() == ""){
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Pay Term'/>");
+        return false;
+    }
+    
+    //Success
+    return true;
 }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -26,7 +46,7 @@ function termValidation(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>RENTAL PAY SETTING</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_close">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -42,6 +62,9 @@ function termValidation(){
 <aside class="title_line"><!-- title_line start -->
 <h2>Rental Payment Setting</h2>
 </aside><!-- title_line end -->
+
+<input type="hidden" id="_curPayTerm" value="${payMap.payTrm}">
+
 <form id="_termEditForm" method="POST">
 <input type="hidden" name="termSalesOrdId" id="_termSalesOrdId" value="${salesOrdId}">  <!-- SalesOrdId  -->
 

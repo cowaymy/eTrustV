@@ -35,5 +35,4 @@ public interface CcpCalculateService {
 	
 	void calSave (Map<String, Object> params) throws Exception;
 	
-	void updatePayChannel(Map<String, Object> params) throws Exception;
 }

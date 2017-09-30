@@ -799,23 +799,4 @@ public class CcpCalculateServiceImpl implements CcpCalculateService {
  		}
 		
 	}//Impl End
-
-
-	@Override
-	public void updatePayChannel(Map<String, Object> params) throws Exception {
-		
-		// 1. Search
-		EgovMap rentMap = null;
-		
-		rentMap = ccpCalculateMapper.getRentPayInfo(params); //params : OrdId
-		
-		params.put("rentPayId", rentMap.get("rentPayId"));
-		
-		// 2. Update
-		ccpCalculateMapper.updatePayChannel(params); // params : 위에서 가져온 rentPayId , payTerm
-		
-		
-	}
-	
-	
 }

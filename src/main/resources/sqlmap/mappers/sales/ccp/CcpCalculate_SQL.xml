@@ -1118,43 +1118,4 @@ INSERT INTO SAL0009D
 	           SYSDATE )
 </insert>
 
-<select id="getRentPayInfo" parameterType="Map" resultType="egovMap">
-    SELECT Extent1.RENT_PAY_ID   ,
-       Extent1.SALES_ORD_ID   ,
-       Extent1.MODE_ID   ,
-       Extent1.CUST_CRC_ID   ,
-       Extent1.BANK_ID   ,
-       Extent1.CUST_ACC_ID   ,
-       Extent1.DD_APPLY_DT   ,
-       Extent1.DD_SUBMIT_DT   ,
-       Extent1.DD_START_DT   ,
-       Extent1.DD_REJCT_DT   ,
-       Extent1.UPD_USER_ID   ,
-       Extent1.UPD_DT   ,
-       Extent1.STUS_CODE_ID   ,
-       Extent1.IS_3RD_PARTY   ,
-       Extent1.CUST_ID   ,
-       Extent1.EDIT_TYPE_ID   ,
-       Extent1.NRIC_OLD   ,
-       Extent1.FAIL_RESN_ID   ,
-       Extent1.ISSU_NRIC   ,
-       Extent1.AEON_CNVR   ,
-       Extent1.REM   ,
-       Extent1.LAST_APPLY_USER   ,
-       Extent1.PAY_TRM   ,
-       Extent1.SVC_CNTRCT_ID   
-  FROM SAL0074D Extent1
- WHERE  Extent1.SALES_ORD_ID = #{salesOrderId}
- <![CDATA[ 
- AND ROWNUM <= 1
- ]]>
-</select>
-
-<update id="updatePayChannel"  parameterType="Map">
-	UPDATE SAL0074D
-	SET UPD_USER_ID = #{userId},
-	    UPD_DT = SYSDATE,
-	    PAY_TRM = #{payTerm}
-	WHERE RENT_PAY_ID = #{rentPayId}
-</update>
 </mapper>

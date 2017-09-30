@@ -24,6 +24,8 @@ import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.web.sales.SalesConstants;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -154,12 +156,12 @@ public class CcpCalculateController {
     	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
     	
     	//Model
-    	model.put("ccpId", params.get("ccpId"));
-    	model.put("orderDetail", orderDetail);
-    	model.put("fieldMap", fieldMap);
-    	model.put("incomMap", incomMap);
-    	model.put("ccpInfoMap", ccpInfoMap);
-    	model.put("salesMan", salesMan);
+    	model.addAttribute("ccpId", params.get("ccpId"));
+    	model.addAttribute("orderDetail", orderDetail);
+    	model.addAttribute("fieldMap", fieldMap);
+    	model.addAttribute("incomMap", incomMap);
+    	model.addAttribute("ccpInfoMap", ccpInfoMap);
+    	model.addAttribute("salesMan", salesMan);
 			
 		//return 
 		if(resultVal > 1){
@@ -224,12 +226,12 @@ public class CcpCalculateController {
     	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
     	
     	//Model
-    	model.put("ccpId", params.get("ccpId"));
-    	model.put("orderDetail", orderDetail);
-    	model.put("fieldMap", fieldMap);
-    	model.put("incomMap", incomMap);
-    	model.put("ccpInfoMap", ccpInfoMap);
-    	model.put("salesMan", salesMan);
+    	model.addAttribute("ccpId", params.get("ccpId"));
+    	model.addAttribute("orderDetail", orderDetail);
+    	model.addAttribute("fieldMap", fieldMap);
+    	model.addAttribute("incomMap", incomMap);
+    	model.addAttribute("ccpInfoMap", ccpInfoMap);
+    	model.addAttribute("salesMan", salesMan);
 			
 		//return 
     	return "sales/ccp/ccpCalCCpViewPop";
@@ -386,28 +388,15 @@ public class CcpCalculateController {
 	}
 	
 	
-	@RequestMapping(value = "/ccpCalCcpPayChannelEditPop.do")
-	public String selectCalPaymentChannel(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
-		
-		LOGGER.info("#####################################################");
-		LOGGER.info("######  params.ToString : " + params.toString());
-		LOGGER.info("#####################################################");
-		params.put("salesOrderId", params.get("salesOrdId"));
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
-		
-		model.put("orderDetail", orderDetail);
-		model.put("salesOrdId", params.get("salesOrdId"));
-		
-		return "sales/ccp/ccpCalCcpPayChannelEditPop";
-	}
 	
 	
 	@RequestMapping(value = "/ccpCalCcpCustInfoLimitEditPop.do")
-	public String selectCalCustInfo(@RequestParam Map<String, Object> params) throws Exception{
+	public String selectCalCustInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		LOGGER.info("#####################################################");
 		LOGGER.info("######  params.ToString : " + params.toString());
 		LOGGER.info("#####################################################");
+		
 		
 		return "sales/ccp/ccpCalCcpCustInfoLimitEditPop";
 	}

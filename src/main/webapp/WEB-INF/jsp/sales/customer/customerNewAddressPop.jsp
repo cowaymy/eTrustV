@@ -85,6 +85,14 @@
 			 });
 		});
 		
+		 
+		//Enter Event
+        $('#searchSt').keydown(function (event) {  
+            if (event.which === 13) {    //enter  
+                fn_addrSearch();
+            }  
+        });
+		 
 	});//Document Ready Func End
 	
 	 
