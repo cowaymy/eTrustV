@@ -17,4 +17,6 @@ public interface BomService {
 
 	List<EgovMap> spareInfo(Map<String, Object> params);
 
+	List<EgovMap> selectCodeList(Map<String, Object> params);
+
 }

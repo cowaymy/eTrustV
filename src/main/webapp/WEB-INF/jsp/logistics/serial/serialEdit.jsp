@@ -50,7 +50,9 @@ var myGridIDExcelHide;
 var selectedItem; 
 var columnLayout = [
 							{dataField:"serialNo" ,headerText:"Serial Number",width:500 ,height:30},
-							{dataField:"matnr" ,headerText:"Material Code ",width:120 ,height:30},
+							{dataField:"matnr" ,headerText:"Material Code",width:120 ,height:30},
+							{dataField:"stkDesc" ,headerText:"Material Name",width:200 ,height:30},
+							{dataField:"stkCtgryNm" ,headerText:"Catagory Type",width:150 ,height:30},
 							{dataField:"latransit" ,headerText:"latransit",width:120 ,height:30, visible:false},
 							{dataField:"gltri" ,headerText:"gltri",width:120 ,height:30, visible:false},
 							{dataField:"lvorm" ,headerText:"lvorm",width:120 ,height:30, visible:false},
@@ -307,6 +309,7 @@ $(document).ready(function(){
 	   
 	
 	$(function(){
+		doGetCombo('/common/selectCodeList.do', '11', '','srchcatagorytype', 'M' , 'f_multiCombo'); 
 		$("#create").click(function(){
 	        AUIGrid.clearGridData(popGridId);
 	         //popGridId  = GridCommon.createAUIGrid("popup_wrap_div", popLayout,"", subgridPros);
@@ -422,6 +425,7 @@ $(document).ready(function(){
 function searchAjax() {
     var url = "/logistics/serial/searchSeialList.do";
     var param = $('#searchForm').serializeJSON();
+    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         
         AUIGrid.setGridData(myGridID, data.dataList);
@@ -458,6 +462,8 @@ function fn_popSave(index){
     
     Common.ajax("POST" , url , param , function(data){
 		$("#popup_wrap").hide();
+		
+		
         searchAjax();
     });
 	
@@ -625,6 +631,15 @@ function createInitGrid() {
     AUIGrid.resize(myGridIDExcel,1203);
 }
 
+function f_multiCombo() {
+    $(function() {
+        $('#srchcatagorytype').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        });
+    });
+}
 </script>
         
 <section id="content"><!-- content start -->
@@ -662,7 +677,7 @@ function createInitGrid() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Material Master</th>
+    <th scope="row">Material Code</th>
     <td>
     <input type="text" id="srchmaterial" name="srchmaterial"  class="w100p" />
 
@@ -674,10 +689,9 @@ function createInitGrid() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Location</th>
+    <th scope="row">Category Type</th>
     <td>
-    <input type="text" id="srchloc" name="srchloc"  class="w100p" />
-
+    <select class="multy_select" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" /></select>
     </td>
     <th scope="row">Create Date</th>
     <td>

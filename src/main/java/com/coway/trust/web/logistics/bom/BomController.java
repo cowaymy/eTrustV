@@ -24,14 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.logistics.bom.BomService;
 import com.coway.trust.config.handler.SessionHandler;
-import com.coway.trust.web.logistics.courier.CourierController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/logistics/bom")
 public class BomController {
-	private static final Logger logger = LoggerFactory.getLogger(CourierController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BomController.class);
 
 	@Value("${app.name}")
 	private String appName;
@@ -54,9 +53,21 @@ public class BomController {
 		return "logistics/bom/bomList";
 	}
 
+	/**
+	 * Not using Confirm by 김덕호 위원
+	 * 
+	 * @param params
+	 * @return
+	 */
 	@RequestMapping(value = "selectCdcList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCdcList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> cdcList = bomService.selectCdcList(params);
+		return ResponseEntity.ok(cdcList);
+	}
+
+	@RequestMapping(value = "selectCodeList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> cdcList = bomService.selectCodeList(params);
 		return ResponseEntity.ok(cdcList);
 	}
 

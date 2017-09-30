@@ -52,4 +52,10 @@ public class BomServiceImpl extends EgovAbstractServiceImpl implements BomServic
 		return bomMapper.selectBomList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return bomMapper.selectCodeList(params);
+	}
+
 }

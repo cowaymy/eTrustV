@@ -2,39 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.serial.impl.SerialMapper">
 	<select id="searchSeialList" parameterType="Map"  resultType="EgovMap">
-	SELECT 
-				lg62m.SERIAL_NO,
-				lg62m.MATNR,
-				lg62m.LATRANSIT,
-				lg62m.GLTRI,
-				lg62m.LVORM,
-				TO_CHAR(lg62m.CRT_DT , 'DD/MM/YYYY') CRT_DT,
-				lg62m.CRT_USER_ID,
-				lg63d.SERIAL_NO   AS  used_SERIAL_NO,       
-				lg63d.MATNR       AS  used_MATNR,     
-				lg63d.LOC_ID      AS  used_LOC_ID,    
-				lg63d.GLTRI       AS  used_GLTRI,     
-				lg63d.LWEDT       AS  used_LWEDT,     
-				lg63d.SWAOK       AS  used_SWAOK,     
-				TO_CHAR(lg63d.CRT_DT, 'DD/MM/YYYY')      AS  used_CRT_DT,    
-				lg63d.CRT_USER_ID AS  used_CRT_USER_ID
-		FROM LOG0062M lg62m left outer join LOG0063D lg63d
-		ON  lg62m.SERIAL_NO = lg63d.SERIAL_NO
-             WHERE 1=1		
-<!-- 		<if test="srchmaterial !=null and srchmaterial !=''">
-		</if>  -->
+    SELECT 
+                lg62m.SERIAL_NO,
+                lg62m.MATNR,
+                sy26m.STK_DESC,
+                sy26m.STK_CTGRY_ID,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = sy26m.STK_CTGRY_ID) STK_CTGRY_NM ,
+                lg62m.LATRANSIT,
+                lg62m.GLTRI,
+                lg62m.LVORM,
+                TO_CHAR(lg62m.CRT_DT , 'DD/MM/YYYY') CRT_DT,
+                lg62m.CRT_USER_ID,
+                lg63d.SERIAL_NO   AS  used_SERIAL_NO,       
+                lg63d.MATNR       AS  used_MATNR,     
+                lg63d.LOC_ID      AS  used_LOC_ID,    
+                lg63d.GLTRI       AS  used_GLTRI,     
+                lg63d.LWEDT       AS  used_LWEDT,     
+                lg63d.SWAOK       AS  used_SWAOK,     
+                TO_CHAR(lg63d.CRT_DT, 'DD/MM/YYYY')      AS  used_CRT_DT,    
+                lg63d.CRT_USER_ID AS  used_CRT_USER_ID
+        FROM LOG0062M lg62m, LOG0063D lg63d , SYS0026M sy26m 
+        WHERE lg62m.SERIAL_NO    = lg63d.SERIAL_NO (+)
+              AND sy26m.STk_CODE = lg62m.MATNR      
+	       <if test="srchmaterial !=null and srchmaterial !=''">
+	          AND lg62m.MATNR  LIKE #{srchmaterial} || '%'
+		</if>     
 		<if test="srchserial !=null and srchserial !=''">
 			AND lg62m.SERIAL_NO LIKE '%' || #{srchserial} || '%'
 		</if> 
-<!-- 		<if test="srchloc !=null and srchloc !=''">
-		</if>  
-		<if test="srchgrdtfrom !=null and srchgrdtfrom !='' and srchgrdtto !=null and srchgrdtto !=''">
-		</if> 
+		 <if test="srchcatagorytype != null">
+                    AND sy26m.STK_CTGRY_ID IN
+                    <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+         </if>
 		<if test="srchcrtdtfrom !=null and srchcrtdtfrom !='' and srchcrtdtto !=null and srchcrtdtto !=''">
+		  AND TO_CHAR(lg62m.CRT_DT, 'YYYYMMDD') 
+		         BETWEEN TO_CHAR(TO_DATE(#{srchcrtdtfrom},'DD/MM/YYYY'),'YYYYMMDD')
+		         AND TO_CHAR(TO_DATE(#{srchcrtdtto},'DD/MM/YYYY'),'YYYYMMDD')
 		</if> 
-		<if test="srchcitdtfrom !=null and srchcitdtfrom !='' and srchcitdtto !=null and srchcitdtto !=''">
-		</if> 
--->		
 		ORDER BY lg62m.SERIAL_NO
     </select>
         <select id="searchSeialListPop" parameterType="Map"  resultType="EgovMap">

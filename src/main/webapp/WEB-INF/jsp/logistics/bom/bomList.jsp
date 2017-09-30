@@ -99,7 +99,8 @@
         // masterGrid 그리드를 생성합니다.
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions); // 셀병합으로  안씀
         myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridoptions);
-        doGetComboCDC('/logistics/bom/selectCdcList', '' , '' , '','srchcdc', 'S', '');
+        //doGetComboCDC('/logistics/bom/selectCdcList', '' , '' , '','srchcdc', 'S', '');
+        doGetCombo('/logistics/bom/selectCodeList', '15', '','srchcatagorytype', 'A' , '');
         
         AUIGrid.bind(myGridID, "cellClick", function( event ) 
         {   
@@ -211,6 +212,7 @@
    function searchAjax() {
         var url = "/logistics/bom/selectBomList.do";
         var param = $('#searchForm').serializeJSON();
+        console.log(param);
         Common.ajax("POST" , url , param , function(data){
             AUIGrid.setGridData(myGridID, data.data);
             $("#subDiv").hide();
@@ -311,6 +313,15 @@
          }
  }
  
+   function f_multiCombo() {
+	    $(function() {
+	        $('#catagorytype').change(function() {
+	        }).multipleSelect({
+	            selectAll : true
+	        });       
+	    });
+	}
+
 </script>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 	<section id="content">
@@ -363,9 +374,14 @@
 								<input id="srchmtrcd" name="srchmtrcd" type="text" title=""  class="w100p" />
 								<!-- date_set end -->
 							</td>
-							<th scope="row">CDC</th>
+						    <th scope="row">Category Type</th>
+						    <td>
+						    <select  id="srchcatagorytype" name="srchcatagorytype"  /></select>
+						    <!-- <select class="multy_select" multiple="multiple" id="catagorytype" name="catagorytype[]" /></select> -->
+						    </td>
+<!-- 							<th scope="row">CDC</th>
 							<td><select class="w100p" id="srchcdc" name="srchcdc">
-							</td>
+							</td> -->
 							<th scope="row">Valid From Date</th>
 							<td><div class="date_set">
 									<!-- date_set start -->
@@ -378,7 +394,7 @@
 					</tbody>
 				</table>
 				<!-- table end -->
-			</form>
+			</form>02
 		</section>
 		<!-- search_table end -->
 		<aside class="link_btns_wrap">

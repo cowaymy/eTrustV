@@ -57,6 +57,11 @@ public class SerialController {
 	public ResponseEntity<ReturnMessage> searchSeialList(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
 
+		if (!"".equals(params.get("srchcatagorytype")) || null != params.get("srchcatagorytype")) {
+			logger.debug("srchcatagorytype : {}", params.get("srchcatagorytype"));
+			List<Object> tmp = (List<Object>) params.get("srchcatagorytype");
+			params.put("cateList", tmp);
+		}
 		List<EgovMap> list = serialService.searchSeialList(params);
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
