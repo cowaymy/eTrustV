@@ -24,7 +24,7 @@ public class GSTEURCertificateVO implements Serializable {
 
 	private String eurcFilePathName;
 
-	private String eurcRefDt;
+	private Date eurcRefDt;
 
 	private String eurcRefNo;
 
@@ -93,11 +93,11 @@ public class GSTEURCertificateVO implements Serializable {
 		this.eurcFilePathName = eurcFilePathName;
 	}
 
-	public String getEurcRefDt() {
+	public Date getEurcRefDt() {
 		return eurcRefDt;
 	}
 
-	public void setEurcRefDt(String eurcRefDt) {
+	public void setEurcRefDt(Date eurcRefDt) {
 		this.eurcRefDt = eurcRefDt;
 	}
 

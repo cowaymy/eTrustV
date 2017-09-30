@@ -12,6 +12,8 @@
     var TAB_NM        = '${ordEditType}';
     var CUST_NRIC     = '${custNric}';
     
+    var keyValueList = [];
+    
     var option = {
 		winName    : "popup",
         width      : "1200px", //창 가로 크기
@@ -21,6 +23,7 @@
     };
 
     var modDocGridID;
+    var modRfrGridID;
     
     $(document).ready(function(){
         doGetComboData('/common/selectCodeList.do', {groupCode :'335'}, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
@@ -28,19 +31,29 @@
         doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'dscBrnchId',     'S'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         
+        fn_statusCodeSearch();
+
         if(FormUtil.isNotEmpty(TAB_NM)) {
             fn_changeTab(TAB_NM);
         }
         
         createModAUIGrid1();
+        createModAUIGrid2();
         
         AUIGrid.bind(modDocGridID, "cellClick", function(event) {
             if(event.dataField == 'chkfield') {
                 fn_setDocSubQty(event.rowIndex, AUIGrid.getCellValue(modDocGridID , event.rowIndex, "chkfield"));
             }
         });
+        
     });
-    
+
+    function fn_statusCodeSearch(){
+        Common.ajax("GET", "/sales/order/selectStateCodeList.do", $("#searchForm").serialize(), function(result) {
+            keyValueList = result;
+        }, null, {async : false});
+    }
+
     function fn_setDocSubQty(idx, chkYN) {//AUIGrid.getCellValue(modDocGridID , event.rowIndex, "chkfield"), event.rowIndex
         if(chkYN == '1') {
             AUIGrid.setCellValue(modDocGridID, idx, "docCopyQty", '1');
@@ -50,32 +63,39 @@
         }
     }
     
+    function fn_addRowReferral() {
+        var item = new Object(); //{ "salesOrdNo" : "새 이름", "country" : "새 나라", "price" : 0 };
+        
+        item.salesOrdNo = ORD_NO;
+        item.refName    = "";
+        item.refStateId = "";
+        item.refCntc    = "";
+        item.refRem     = "";
+        item.crtDt      = "";
+        item.userName   = "";
+
+        AUIGrid.addRow(modRfrGridID, item, "first");
+    }
+    
     function createModAUIGrid1() {
         console.log('createModAUIGrid1() START');
         
         //AUIGrid 칼럼 설정
         var docColumnLayout = [
-            { headerText : ' ',
-    		  dataField : "chkfield",
-    		  width: 70,
-    		  renderer : {
-        	    type : "CheckBoxEditRenderer",
-        		showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-        		editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-        		checkValue : 1, // true, false 인 경우가 기본
-        		unCheckValue : 0
-              }
-            }
-          , { headerText : "Document",  dataField : "typeDesc",   editable : false }
-          , { headerText : "Qty",       dataField : "docCopyQty", editable : true,  width : 120 }
-          , { headerText : "docTypeId", dataField : "docTypeId",  visible  : true }
-          , { headerText : "docSoId",   dataField : "docSoId",    visible  : true }
+            { headerText : "Order No",   dataField : "typeDesc",   editable : false }
+          , { headerText : "Name",       dataField : "docCopyQty", editable : true,  width : 100 }
+          , { headerText : "State",      dataField : "docCopyQty", editable : true,  width : 120 }
+          , { headerText : "Contact No", dataField : "docCopyQty", editable : true,  width : 120 }
+          , { headerText : "Remark",     dataField : "docCopyQty", editable : true,  width : 120 }
+          , { headerText : "Created",    dataField : "docCopyQty", editable : false,  width : 120 }
+          , { headerText : "Creator",    dataField : "docCopyQty", editable : false,  width : 120 }
+          , { headerText : "docSoId",    dataField : "docSoId",    visible  : true }
           ];
 
         //그리드 속성 설정
         var docGridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 40,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
             editable            : true,
             fixedColumnCount    : 0,
             showStateColumn     : false,
@@ -95,10 +115,72 @@
         modDocGridID = GridCommon.createAUIGrid("grid_mod_doc_wrap", docColumnLayout, "", docGridPros);
     }
     
+    function createModAUIGrid2() {
+        console.log('createModAUIGrid2() START');
+        
+        //AUIGrid 칼럼 설정
+        var rfrColumnLayout = [
+            { headerText : "Order No",  dataField : "salesOrdNo", editable : false, width : 100 }
+          , { headerText : "Name",      dataField : "refName",    editable : true,  width : 200 }
+          , { headerText : "State",     dataField : "refStateId", editable : true,  width : 100,
+                    labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+                    var retStr = value;
+                    for(var i=0,len=keyValueList.length; i<len; i++) {
+                        if(keyValueList[i]["stateId"] == value) {
+                            retStr = keyValueList[i]["name"];
+                            break;
+                        }
+                    }
+                    return retStr;
+                },
+                editRenderer : {
+                    type       : "DropDownListRenderer",
+                    list       : keyValueList, //key-value Object 로 구성된 리스트
+                    keyField   : "stateId", //key 에 해당되는 필드명
+                    valueField : "name"        //value 에 해당되는 필드명
+                }
+            }
+          , { headerText : "ContactNo", dataField : "refCntc",    editable : true,  width : 110 }
+          , { headerText : "Remark",    dataField : "refRem",     editable : true}
+          , { headerText : "Created",   dataField : "crtDt",      editable : false, width : 120 }
+          , { headerText : "Creator",   dataField : "userName",   editable : false, width : 100 }
+          , { headerText : "ordRefId",  dataField : "ordRefId",   visible  : false}
+          ];
+
+        //그리드 속성 설정
+        var rfrGridPros = {
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : true,
+            fixedColumnCount    : 0,
+            showStateColumn     : false,
+            showRowCheckColumn  : false,
+            displayTreeOpen     : false,
+            rowIdField          : "codeId",
+            selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+            noDataMessage       : "No order found.",
+            groupingMessage     : "Here groupping"
+        };
+        
+        modRfrGridID = GridCommon.createAUIGrid("grid_mod_rfr_wrap", rfrColumnLayout, "", rfrGridPros);
+    }
+    
     // 리스트 조회.
     function fn_selectEditDocSubmList(ordId) {
         Common.ajax("GET", "/sales/order/selectEditDocSubmList.do", {salesOrderId : ordId, typeCodeId : '248'}, function(result) {
             AUIGrid.setGridData(modDocGridID, result);
+        });
+    }
+    
+    // 리스트 조회.
+    function fn_selectReferralList(ordNo) {
+        Common.ajax("GET", "/sales/order/selectReferralList.do", {salesOrdNo : ordNo}, function(result) {
+            AUIGrid.setGridData(modRfrGridID, result);
         });
     }
     
@@ -327,6 +409,16 @@
                 }
             }
         });
+        $('#btnAddRowReferral').click(function() {
+            fn_addRowReferral();
+        });
+        $('#btnCanclChg').click(function() {
+            fn_selectReferralList(ORD_NO)
+        });
+        $('#btnSaveReferral').click(function() {
+            fn_doSaveReferral();
+        });
+        
     });
     
     //ClearControl_RentPaySet_ThirdParty
@@ -521,6 +613,14 @@
             $('#aTabMI').click();
             AUIGrid.resize(modDocGridID, 960, 380);
             fn_selectEditDocSubmList(ORD_ID);
+        } else {
+            $('#scDS').addClass("blind");
+        }
+        if(tabNm == 'RFR') {
+            $('#scRI').removeClass("blind");
+            $('#aTabDS').click();
+          //AUIGrid.resize(modRfrGridID, 960, 380);
+          fn_selectReferralList(ORD_NO);
         } else {
             $('#scDS').addClass("blind");
         }
@@ -1425,6 +1525,33 @@
                 }
         });
     }
+
+    function fn_doSaveReferral() {
+        console.log('!@# fn_doSaveReferral START');
+        
+        var orderModifyVO = {
+            salesOrdId         : ORD_ID,
+            gridReferralVOList : GridCommon.getEditData(modRfrGridID)
+        };
+
+        Common.ajax("POST", "/sales/order/saveReferral.do", orderModifyVO, function(result) {
+            
+            Common.alert("New Member Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save new member. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+            }
+            catch (e) {
+                console.log(e);
+            }
+        });
+    }
     
 	function fn_reloadPage(){
 	    Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
@@ -2225,7 +2352,7 @@
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_mod_doc_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+<div id="grid_mod_doc_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
@@ -2234,6 +2361,52 @@
 </section>
 <!------------------------------------------------------------------------------
     Document Submissioon Edit END
+------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    Referrals Info Edit START
+------------------------------------------------------------------------------->
+<section id="scRI" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3>Referrals Info</h3>
+</aside><!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+<form id="frmRefrl" method="post">
+<input name="custId" value="${custId}" type="hidden" />
+<input id="modCustNricOld" name="custNricOld" type="hidden" />
+<input id="modCustGender" name="custGender" type="hidden" />
+<input id="modNationality" name="nationality" type="hidden" />
+<input id="modCustType" name="custType" type="hidden" />
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:190px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Order No.</th>
+	<td><input type="text" value="${salesOrderNo}" title="" placeholder="" class="" disabled /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+<ul class="right_btns">
+	<li><p class="btn_grid"><a id="btnCanclChg" href="#">CANCEL CHANGES</a></p></li>
+	<li><p class="btn_grid"><a id="btnAddRowReferral" href="#">ADD</a></p></li>
+</ul>
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_mod_rfr_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+</form>
+</section><!-- search_table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a id="btnSaveReferral" href="#">SAVE</a></p></li>
+</ul>
+</section>
+<!------------------------------------------------------------------------------
+    Referrals Info Edit END
 ------------------------------------------------------------------------------->
 </section><!-- pop_body end -->
 

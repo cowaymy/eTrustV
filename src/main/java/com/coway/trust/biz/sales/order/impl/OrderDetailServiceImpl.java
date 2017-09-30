@@ -353,6 +353,23 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		basicInfo.put("obligtYear", 		 Integer.valueOf(obligationYear)+ " " + "mth");		
 	}
 	
+	private String convert12Tm(String TM) {
+		String HH = "", MI = "", cvtTM = "";
+		
+		if(CommonUtils.isNotEmpty(TM)) {
+			HH = CommonUtils.left(TM, 2);
+			MI = TM.substring(3, 5);
+			
+			if(Integer.parseInt(HH) > 12) {
+				cvtTM = String.valueOf(Integer.parseInt(HH) - 12) + ":" + String.valueOf(MI) + " PM";
+			}
+			else {
+				cvtTM = HH + ":" + String.valueOf(MI) + " AM";
+			}
+		}
+		return cvtTM;
+	}
+	
 	private void loadInstallationInfo(EgovMap installationInfo) {
 		
 		if(installationInfo != null) {

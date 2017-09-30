@@ -109,7 +109,7 @@
     			  keyField   : "code", // key 에 해당되는 필드명
     			  valueField : "value" // value 에 해당되는 필드명
     		  }}
-          , { headerText : "promoId",           dataField : "promoId",          visible  : false,   width : 120 }
+          , { headerText : "promoId",           dataField : "promoId",          visible  : false}
           ];
 
         //그리드 속성 설정

@@ -30,7 +30,9 @@ import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderModifyService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -384,5 +386,31 @@ public class OrderModifyController {
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(mapList);
+	}
+	
+    @RequestMapping(value = "/selectReferralList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectReferralList(@RequestParam Map<String, Object> params)    {
+    	List<EgovMap> rsltList = orderModifyService.selectReferralList(params);
+    	return ResponseEntity.ok(rsltList);
+    }
+	
+    @RequestMapping(value = "/selectStateCodeList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectStateCodeList(@RequestParam Map<String, Object> params)    {
+    	List<EgovMap> rsltList = orderModifyService.selectStateCodeList(params);
+    	return ResponseEntity.ok(rsltList);
+    }
+    
+	@RequestMapping(value = "/saveReferral.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updatePromotion(@RequestBody OrderModifyVO orderModifyVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+		
+		orderModifyService.saveReferral(orderModifyVO, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(messageAccessor.getMessage("Inactive Referral successfully saved."));
+
+		return ResponseEntity.ok(message);
 	}
 }

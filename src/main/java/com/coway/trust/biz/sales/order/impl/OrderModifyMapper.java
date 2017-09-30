@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO;
 import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
+import com.coway.trust.biz.sales.order.vo.ReferralVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -57,5 +58,13 @@ public interface OrderModifyMapper {
 	void saveDocSubmission(DocSubmissionVO docSubmissionVO);
 	
 	void updateDocSubmissionDel(DocSubmissionVO docSubmissionVO);
+	
+	List<EgovMap> selectReferralList(Map<String, Object> params);
+	
+	List<EgovMap> selectStateCodeList(Map<String, Object> params);
+	
+	void insertReferral(ReferralVO referralVO);	
+	
+	void updateReferral(ReferralVO referralVO);
 	
 }

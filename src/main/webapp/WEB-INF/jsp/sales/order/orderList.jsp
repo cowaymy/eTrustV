@@ -119,7 +119,8 @@
         }).multipleSelect({
             selectAll: true, // 전체선택 
             width: '100%'
-        });            
+        });
+        $('#listAppType').multipleSelect("checkAll");
         $('#listKeyinBrnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
@@ -132,6 +133,7 @@
             selectAll: true, // 전체선택 
             width: '100%'
         });
+        $('#listOrdStusId').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {
@@ -145,7 +147,7 @@
             }else if (type === 'checkbox' || type === 'radio'){
                 this.checked = false;
             }else if (tag === 'select'){
-                this.selectedIndex = -1;
+                this.selectedIndex = 0;
             }
         });
     };

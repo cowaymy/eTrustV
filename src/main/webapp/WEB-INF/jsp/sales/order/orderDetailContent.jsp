@@ -85,7 +85,7 @@
 	<li><a href="#">Payment Channel</a></li>
 </c:if>
 	<li><a id="aTabMI" href="#" onClick="javascript:chgTab('memInfo');">Membership Info</a></li>
-	<li><a href="#" onClick="javascript:chgTab('docInfo');">Document Submission</a></li>
+	<li><a id="aTabDS" href="#" onClick="javascript:chgTab('docInfo');">Document Submission</a></li>
 	<li><a href="#" onClick="javascript:chgTab('callLogInfo');">Call Log</a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
 	<li><a href="#">Quarantee Info</a></li>

@@ -377,12 +377,31 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		salesOrderDVO.setItmCallEntryId(0);
 	}
 	
+	private String convert24Tm(String TM) {
+		String ampm = "", HH = "", MI = "", cvtTM = "";
+		
+		if(CommonUtils.isNotEmpty(TM)) {
+			ampm = CommonUtils.right(TM, 2);
+			HH = CommonUtils.left(TM, 2);
+			MI = TM.substring(3, 5);
+			
+			if("PM".equals(ampm)) {
+				cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
+			}
+			else  {
+				cvtTM = HH + ":" + MI + ":00";
+			}
+		}
+		return cvtTM;
+	}
+	
 	private void preprocInstallationMaster(InstallationVO installationVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocInstallationMaster START ");
 		
 		installationVO.setInstallId(0);
 		installationVO.setSalesOrdId(0);
+		installationVO.setPreTm(this.convert24Tm(installationVO.getPreTm()));
 		installationVO.setActDt(SalesConstants.DEFAULT_DATE2);
 		installationVO.setActTm(SalesConstants.DEFAULT_TM);
 		installationVO.setStusCodeId(1);

@@ -35,7 +35,7 @@
                 headerText : "Member ID",
                 width : 120
             }, {
-                dataField : "memcode",
+                dataField : "memCode",
                 headerText : "Member Code",
                 width : 120
             }, {

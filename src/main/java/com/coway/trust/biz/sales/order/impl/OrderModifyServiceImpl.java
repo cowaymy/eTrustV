@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.OrderModifyService;
@@ -40,7 +41,9 @@ import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
 import com.coway.trust.biz.sales.order.vo.InstallEntryVO;
 import com.coway.trust.biz.sales.order.vo.InstallResultVO;
 import com.coway.trust.biz.sales.order.vo.InstallationVO;
+import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.order.vo.ReferralVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
 import com.coway.trust.biz.sales.order.vo.RentalSchemeVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderContractVO;
@@ -53,8 +56,11 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
+import com.coway.trust.biz.sales.promotion.vo.SalesPromoDVO;
+import com.coway.trust.biz.sales.promotion.vo.SalesPromoFreeGiftVO;
 import com.coway.trust.biz.sales.promotion.vo.SalesPromoMVO;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -463,4 +469,62 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		return cnctMap;
 	}
 	
+	@Override
+	public List<EgovMap> selectReferralList(Map<String, Object> params) {
+		return orderModifyMapper.selectReferralList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectStateCodeList(Map<String, Object> params) {
+		return orderModifyMapper.selectStateCodeList(params);
+	}
+	
+	@Override
+	public void saveReferral(OrderModifyVO orderModifyVO, SessionVO sessionVO) throws Exception {
+
+		GridDataSet<ReferralVO> gridReferralVOList  = orderModifyVO.getGridReferralVOList();
+		
+		List<ReferralVO> addList = gridReferralVOList.getAdd();
+		List<ReferralVO> udtList = gridReferralVOList.getUpdate();
+
+		for(ReferralVO addVO : addList) {
+			
+			if(CommonUtils.isEmpty(addVO.getRefCntc().trim())) {
+				throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
+			}
+			if(!CommonUtils.isNumCheck(addVO.getRefCntc().trim())) {
+				throw new ApplicationException(AppConstants.FAIL, "Invalid Contact number.");
+			}
+			if(CommonUtils.intNvl(addVO.getRefStateId()) <= 0) {
+				throw new ApplicationException(AppConstants.FAIL, "Please Select State.");
+			}
+			if(addVO.getRefCntc().trim().length() >= 12) {
+				throw new ApplicationException(AppConstants.FAIL, "Contact number exceed valid digit.");
+			}
+			
+			addVO.setSalesOrdId(orderModifyVO.getSalesOrdId());
+			addVO.setCrtUserId(sessionVO.getUserId());
+			
+			orderModifyMapper.insertReferral(addVO);
+		}
+		
+		for(ReferralVO udtVO : udtList) {
+			
+			if(CommonUtils.isEmpty(udtVO.getRefCntc().trim())) {
+				throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
+			}
+			if(!CommonUtils.isNumCheck(udtVO.getRefCntc().trim())) {
+				throw new ApplicationException(AppConstants.FAIL, "Invalid Contact number.");
+			}
+			if(CommonUtils.intNvl(udtVO.getRefStateId()) <= 0) {
+				throw new ApplicationException(AppConstants.FAIL, "Please Select State.");
+			}
+			if(udtVO.getRefCntc().trim().length() >= 12) {
+				throw new ApplicationException(AppConstants.FAIL, "Contact number exceed valid digit.");
+			}
+
+			orderModifyMapper.updateReferral(udtVO);
+		}
+	}
+
 }

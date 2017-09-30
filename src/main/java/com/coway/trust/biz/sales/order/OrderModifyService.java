@@ -1,8 +1,10 @@
 package com.coway.trust.biz.sales.order;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -47,5 +49,11 @@ public interface OrderModifyService {
 	void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
 	void saveDocSubmission(OrderVO orderVO, SessionVO sessionVO) throws Exception;
+
+	List<EgovMap> selectReferralList(Map<String, Object> params);
+
+	List<EgovMap> selectStateCodeList(Map<String, Object> params);
+
+	void saveReferral(OrderModifyVO orderModifyVO, SessionVO sessionVO) throws Exception;
 
 }
