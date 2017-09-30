@@ -280,7 +280,7 @@
 <div id="popup_wrap2" class="popup_wrap"><!-- popup_wrap start -->
 
 	<header class="pop_header"><!-- pop_header start -->
-		<h1>Basic Data</h1>
+		<h1>${prdDec }</h1>
 		<ul class="right_opt">
 		    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 		</ul>
@@ -288,9 +288,7 @@
 	
 	<section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
 	   <aside class="title_line"><!-- title_line start -->
-          <h2>Commission calculation CD Data Collection
-          <br>
-          ${prdNm } - ${prdDec }</h2>
+          <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
 		<form id="form7002CD">
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>

@@ -223,7 +223,7 @@
 <div id="popup_wrap2" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1>Basic Data</h1>
+        <h1>${prdDec }</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
         </ul>
@@ -231,9 +231,7 @@
     
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission calculation Data Collection
-          <br>
-          ${prdNm } - ${prdDec }</h2>
+          <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_23">
            <input type="hidden" name="code" id="code_23T" value="${code}"/>
@@ -258,18 +256,18 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0023T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">ORDER ID<span class="must">*</span></th>
+                        <th scope="row">Order ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="ordId_23T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
-                        <th scope="row">MEM CODE<span class="must">*</span></th>
+                        <th scope="row">Member CODE<span class="must">*</span></th>
                         <td>
                               <input type="text" id="memCode_23T" name="memCode" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">isEx</th>
+                        <th scope="row">is Exclude</th>
                         <td colspan=5>
                           <select id="useYnCombo_23T" name="useYnCombo" style="width:100px;">
                             <option value=""selected></option>

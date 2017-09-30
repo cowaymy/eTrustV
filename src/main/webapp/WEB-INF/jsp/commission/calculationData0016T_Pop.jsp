@@ -155,7 +155,7 @@
 <div id="popup_wrap2" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1>Basic Data</h1>
+        <h1>${prdDec }</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
         </ul>
@@ -163,9 +163,7 @@
     
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission Basic Data Collection
-          <br>
-          ${prdNm } - ${prdDec }</h2>
+          <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_16T">
            <input type="hidden" name="code" id="code_16T" value="${code}"/>
@@ -190,11 +188,11 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0016T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">C_MEM_ID</th>
+                        <th scope="row">C Member ID</th>
                         <td>
                               <input type="text" id="cMemId_16T" name="cMemId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
-                        <th scope="row">P_MEM_ID</th>
+                        <th scope="row">P Member ID</th>
                         <td>
                               <input type="text" id="pMemId_16T" name="pMemId" style="width: 100px;" onkeydown="onlyNumber(this)">
                         </td>

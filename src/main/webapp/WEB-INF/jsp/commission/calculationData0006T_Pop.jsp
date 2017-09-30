@@ -245,7 +245,7 @@
 <div id="popup_wrap2" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1>Basic Data</h1>
+        <h1>${prdDec }</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
         </ul>
@@ -253,9 +253,8 @@
     
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission Basic Data Collection
-          <br>
-          ${prdNm } - ${prdDec }</h2>
+          <h2>${prdNm } - ${prdDec }<br>
+          </h2>
         </aside><!-- title_line end -->
         <form id="form_06T">
            <input type="hidden" name="code" id="code_06T" value="${code}"/>
@@ -294,7 +293,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">isEx</th>
+                        <th scope="row">is Exclude</th>
                          <td colspan="5">
 			              <select id="useYnCombo_06T" name="useYnCombo" style="width:100px;">
 			                <option value="" selected></option>

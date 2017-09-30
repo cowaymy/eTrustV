@@ -210,7 +210,7 @@
 <div id="popup_wrap2" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1>Basic Data</h1>
+        <h1>${prdDec }</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
         </ul>
@@ -218,9 +218,7 @@
     
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission Basic Data Collection
-          <br>
-          ${prdNm } - ${prdDec }</h2>
+          <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_12T">
            <input type="hidden" name="code" id="code_12T" value="${code}"/>
@@ -250,13 +248,13 @@
                               <input type="text" id="clctrId_12T" name="clctrId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
-                        <th scope="row">ORD ID<span class="must">*</span></th>
+                        <th scope="row">Order ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="ordId_12T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">isEx</th>
+                        <th scope="row">is Exclude</th>
                         <td colspan="5">
                           <select id="useYnCombo_12T" name="useYnCombo" style="width:100px;" maxlength="10">
                             <option value="" selected></option>

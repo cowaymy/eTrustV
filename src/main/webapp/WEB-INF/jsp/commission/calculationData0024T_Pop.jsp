@@ -143,7 +143,7 @@
 <div id="popup_wrap2" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1>Basic Data</h1>
+        <h1>${prdDec }</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
         </ul>
@@ -151,9 +151,7 @@
     
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission calculation Data Collection
-          <br>
-          ${prdNm } - ${prdDec }</h2>
+          <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_24">
            <input type="hidden" name="code" id="code_24T" value="${code}"/>
@@ -176,7 +174,7 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0024T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">EMPLY ID</th>
+                        <th scope="row">Employed ID</th>
                         <td>
                               <input type="text" id="emplyId_24T" name="emplyId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
