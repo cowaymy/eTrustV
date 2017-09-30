@@ -68,9 +68,8 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 				PointOfSalesMapper.insRequestItem(insMap);
 			}
 		}
-
+		insertStockBooking(formMap);
 		return posSeq;
-
 	}
 
 	@Override
@@ -96,7 +95,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		formMap.put("userId", params.get("userId"));
 		PointOfSalesMapper.updateReqstStus(formMap);
 		
-		insertStockBooking(formMap);
+		//insertStockBooking(formMap);
 	}
 
 	@Override
