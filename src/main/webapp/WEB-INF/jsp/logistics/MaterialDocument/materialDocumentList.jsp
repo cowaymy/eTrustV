@@ -34,20 +34,23 @@ var myGridID;
 var detailGridID;
 
 // AUIGrid 칼럼 설정                                                                            visible : false
-var columnLayout = [{dataField:"matrlNo"      ,headerText:"Material Code"           ,width:"8%"  ,height:30 , visible:true},
-                              {dataField:"stkDesc"      ,headerText:"Material Code Text"           ,width:"18%" ,height:30 , visible:true},
-                              {dataField:"revStorgNm"      ,headerText:"Plant Text"           ,width:"22%"  ,height:30 , visible:true},
-                              {dataField:"reqStorgNm"      ,headerText:"Sloc"           ,width:"23%" ,height:30 , visible:true},
-                              {dataField:"invntryMovType"      ,headerText:"MvT"    ,width:"9%" ,height:30 , visible:true},
-                              {dataField:"movtype"      ,headerText:"MvT Text"           ,width:"23%" ,height:30 , visible:true},
+var columnLayout = [{dataField:"matrlNo"      ,headerText:"Material Code"           ,width:120  ,height:30 , visible:true},
+                              {dataField:"stkDesc"      ,headerText:"Material Code Text"           ,width:120 ,height:30 , visible:true},
+                              {dataField:"revStorgNm"      ,headerText:"Plant Text"           ,width:120  ,height:30 , visible:true},
+                              {dataField:"reqStorgNm"      ,headerText:"Sloc"           ,width:120 ,height:30 , visible:true},
+                              {dataField:"trantype"      ,headerText:"Transaction Type Text"    ,width:120 ,height:30 , visible:true},
+                              {dataField:"invntryMovType"      ,headerText:"Movemen type"    ,width:120 ,height:30 , visible:true},
+                              {dataField:"movtype"      ,headerText:"Movement Text"           ,width:120 ,height:30 , visible:true},
                               {dataField:"qty"      ,headerText:"Qty"    ,width:"8%" ,height:30 , visible:true},
-                              {dataField:"matrlDocNo"      ,headerText:"Material Documents"    ,width:"13%" ,height:30 , visible:true},
-                              {dataField:"matrlDocItm"      ,headerText:"Item"           ,width:"8%" ,height:30 , visible:true},
-                              {dataField:"postingdate"      ,headerText:"Posting date"    ,width:"9%" ,height:30 , visible:true},
-                              {dataField:""      ,headerText:""    ,width:"15%" ,height:30 , visible:false},
+                              {dataField:"matrlDocNo"      ,headerText:"Material Documents"    ,width:120 ,height:30 , visible:true},
+                              {dataField:"matrlDocItm"      ,headerText:"Item"           ,width:120 ,height:30 , visible:true},
+                              {dataField:"postingdate"      ,headerText:"Posting date"    ,width:120 ,height:30 , visible:true},
+                              {dataField:"delvryNo"      ,headerText:"Delivery No"           ,width:120  ,height:30 , visible:true},
+                              {dataField:"debtCrditIndict"      ,headerText:"Debit/Credit"           ,width:120  ,height:30 , visible:true},
+                              {dataField:"autoCrtItm"      ,headerText:"Auto/Manual"           ,width:120  ,height:30 , visible:true},
+                              {dataField:"codeName"      ,headerText:"Unit of Measure"           ,width:"15%"  ,height:30 , visible:true},
                               {dataField:""      ,headerText:""           ,width:"15%"  ,height:30 , visible:false},
-                              {dataField:""      ,headerText:""           ,width:"15%"  ,height:30 , visible:false},
-                   
+                             
                               {dataField:"dcfreqapproveremark"      ,headerText:"DCFReqApproveRemark"           ,width:"15%"  ,height:30 , visible:false},
                               {dataField:"dcfreqapproveby"      ,headerText:"DCFReqApproveBy"           ,width:"15%"  ,height:30 , visible:false},
                               {dataField:"reasondesc1"      ,headerText:"Reason (Approver Verified)"           ,width:"15%"  ,height:30 , visible:false},
@@ -83,7 +86,7 @@ $(document).ready(function(){
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, '','searchTrcType', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','sstatus', 'S' , ''); 
-    doGetCombo('/common/selectStockLocationList.do', '', '','searchFromLoc', 'S' , '');//From Location 조회
+    doGetCombo('/common/selectStockLocationList.do', '', '','searchFromLoc', 'S' , 'SearchListAjax');//From Location 조회
     doGetCombo('/common/selectStockLocationList.do', '', '','searchToLoc', 'S' , '');//To Location 조회
 
     
