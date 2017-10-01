@@ -87,6 +87,14 @@ public class PromotionController {
 		return ResponseEntity.ok(resultList);
 	}
 	
+	@RequestMapping(value = "/selectPromotionPrdWithPriceList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPromotionPrdWithPriceList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		List<EgovMap> resultList = promotionService.selectPromotionPrdWithPriceList(params);
+
+		return ResponseEntity.ok(resultList);
+	}
+	
 	@RequestMapping(value = "/selectPromotionFreeGiftList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPromotionFreeGiftList(@RequestParam Map<String, Object>params, ModelMap model) {
 
