@@ -1,6 +1,6 @@
 package com.coway.trust.web.organization.organization;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -305,7 +305,7 @@ public class MemberListController {
    	if(memCode.equals("") && memCode.equals(null)){
    		message.setMessage("fail saved");
    	}else{
-   		message.setMessage("successfully saved. \n MemberCode  : " +memCode);
+   		message.setMessage("Compelete to Create a Member Code : " +memCode);
    	}
    	logger.debug("message : {}", message);
    	
@@ -371,8 +371,8 @@ public class MemberListController {
 	}
 	
 	/**
-	 * Search rule book management list
-	 *
+	 * Member - Request Terminate/Resign
+	 * Member - Request Promote/Demote
 	 * @param request
 	 * @param model
 	 * @return
@@ -381,17 +381,24 @@ public class MemberListController {
 	@RequestMapping(value = "/terminateResignSave", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertTerminateResign(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
-		logger.debug("params : {}", params);
-		logger.debug("sessionVO : {}", sessionVO.getUserId());
-		boolean success = false;
-		if(params.get("codeValue").toString().equals("1")){
-    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
-    		params.put("MemberID", memberId);
-    		success = memberListService.insertTerminateResign(params,sessionVO);
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		if(sessionVO != null){
+			logger.debug("params : {}", params);
+			logger.debug("sessionVO : {}", sessionVO.getUserId());
+			boolean success = false;
+			if(params.get("codeValue").toString().equals("1")){
+	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+	    		params.put("MemberID", memberId);
+	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
+	    		
+			}else{
+				int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+	    		params.put("memberId", memberId);
+	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
+	    		message.setMessage(resultValue.get("message").toString());
+			}
 		}else{
-			int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
-    		params.put("memberId", memberId);
-    		success = memberListService.insertTerminateResign(params,sessionVO);
+			message.setMessage("<b>Your login session has expired. Please relogin to our system.</b>");
 		}
 		return ResponseEntity.ok(message);
 	}
