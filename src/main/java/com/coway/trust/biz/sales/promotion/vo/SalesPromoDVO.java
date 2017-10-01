@@ -50,6 +50,10 @@ public class SalesPromoDVO implements Serializable {
 	
 	private BigDecimal prcPv;
 	
+	private int crtUserId;
+	
+	private int updUserId;
+	
 	public int getPromoItmId() {
 		return promoItmId;
 	}
@@ -184,6 +188,22 @@ public class SalesPromoDVO implements Serializable {
 
 	public void setPrcPv(BigDecimal prcPv) {
 		this.prcPv = prcPv;
+	}
+
+	public int getCrtUserId() {
+		return crtUserId;
+	}
+
+	public void setCrtUserId(int crtUserId) {
+		this.crtUserId = crtUserId;
+	}
+
+	public int getUpdUserId() {
+		return updUserId;
+	}
+
+	public void setUpdUserId(int updUserId) {
+		this.updUserId = updUserId;
 	}
 	
 }

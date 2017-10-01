@@ -31,6 +31,8 @@ public interface PromotionMapper {
 
 	List<EgovMap> selectPromotionPrdList(Map<String, Object> params);
 	
+	List<EgovMap> selectPromotionPrdWithPriceList(Map<String, Object> params);
+	
 	List<EgovMap> selectPromotionFreeGiftList(Map<String, Object> params);
 
 	void updateSalesPromoM(SalesPromoMVO salesPromoMVO);

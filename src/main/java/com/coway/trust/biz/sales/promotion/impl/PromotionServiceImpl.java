@@ -61,6 +61,18 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 	}
 	
 	@Override
+	public List<EgovMap> selectPromotionPrdWithPriceList(Map<String, Object> params) {
+		
+		int appTypeId = Integer.parseInt((String) params.get("promoAppTypeId"));
+		
+		appTypeId = this.getAppTypeId(appTypeId);
+		
+		params.put("appTypeId", appTypeId);
+		
+		return promotionMapper.selectPromotionPrdWithPriceList(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectPromotionFreeGiftList(Map<String, Object> params) {
 		return promotionMapper.selectPromotionFreeGiftList(params);
 	}
@@ -178,6 +190,8 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 				addVo.setPromoItmCurId(0);
 				addVo.setPromoItmStusId(1);
 				addVo.setPromoItmUpdUserId(sessionVO.getUserId());
+				addVo.setCrtUserId(sessionVO.getUserId());
+				addVo.setUpdUserId(sessionVO.getUserId());
 			}
 		}
 	}

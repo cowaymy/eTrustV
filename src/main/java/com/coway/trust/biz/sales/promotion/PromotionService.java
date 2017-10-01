@@ -34,4 +34,6 @@ public interface PromotionService {
 	List<EgovMap> selectPromotionFreeGiftList(Map<String, Object> params);
 
 	void updatePromotion(PromotionVO promotionVO, SessionVO sessionVO);
+
+	List<EgovMap> selectPromotionPrdWithPriceList(Map<String, Object> params);
 }
