@@ -24,7 +24,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements OrderCallListService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(InstallationResultListController.class);
-	
+	   
 	@Resource(name = "orderCallListMapper")
 	private OrderCallListMapper orderCallListMapper;
 	
