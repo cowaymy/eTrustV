@@ -199,10 +199,10 @@
                            AND  TO_NUMBER(Extent1.BRNCH,99999.99) =  #{keyBranch}
                          </if>
                          <if test="createDate != '' and endDate == '' ">
-                            <![CDATA[ AND  Extent1.CRT_DT  >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
                          </if>
                           <if test="endDate != '' and createDate == '' ">
-                            <![CDATA[  AND Extent1.CRT_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD')   <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                          </if>
                           <if test="createDate != '' and endDate != '' ">
                             <![CDATA[  AND Extent1.CRT_DT  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
