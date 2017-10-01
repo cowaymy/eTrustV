@@ -45,7 +45,7 @@ public interface MemberListService {
 	
 	List<EgovMap> selectHpDocSubmission(Map<String, Object> params);
 	
-	Boolean insertTerminateResign(Map<String, Object> params,SessionVO sessionVO);
+	Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO);
 	
 	List<EgovMap> selectSuperiorTeam(Map<String, Object> params);
 	

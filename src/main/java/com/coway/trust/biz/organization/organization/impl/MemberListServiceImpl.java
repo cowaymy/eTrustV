@@ -132,9 +132,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("applicantNRIC",params.get("nric").toString());
 			MemApp.put("applicantDOB",params.get("Birth").toString());
 			MemApp.put("applicantGender", params.get("gender"));
-			MemApp.put("applicantRace",Integer.parseInt((String) params.get("race")));
+			MemApp.put("applicantRace",Integer.parseInt((String) params.get("cmbRace")));
 			MemApp.put("applicantMarital",0);
-			MemApp.put("applicantNationality",Integer.parseInt((String) params.get("nation")));
+			MemApp.put("applicantNationality",Integer.parseInt((String) params.get("national")));
 			MemApp.put("applicantAdd1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
 			MemApp.put("applicantAdd2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
 			MemApp.put("applicantAdd3", params.get("address3").toString().trim()!=null ? params.get("address3").toString().trim() : "");
@@ -206,8 +206,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("address4", "");
 		params.put("area", params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
 		params.put("postCode", params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
-		params.put("race", Integer.parseInt((String) params.get("race")));
-		params.put("nation", Integer.parseInt((String) params.get("nation")));
+		params.put("race", Integer.parseInt((String) params.get("cmbRace")));
+		params.put("nation", Integer.parseInt((String) params.get("national")));
 		params.put("marrital", Integer.parseInt((String) params.get("marrital")));
 		params.put("state", params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
 		params.put("country", params.get("country")!=null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
@@ -855,15 +855,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	
 	@Transactional
 	@Override
-	public Boolean insertTerminateResign(Map<String, Object> params,SessionVO sessionVO) {
+	public Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO) {
 		boolean success = false;
 		Map<String, Object>  member = new HashMap<String, Object>();
 		Map<String, Object>  promoEntry = new HashMap<String, Object>();
 		int userId = sessionVO.getUserId();
 		logger.debug("userId : {}",userId);
-		
+		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
 		if(params.get("codeValue").toString().equals("2")){
-			
+			//Promote/Demote
 			promoEntry.put("promoId", 0);
 			promoEntry.put("requestNo", "");
 			promoEntry.put("statusId", 60);
@@ -924,11 +924,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("promoEntry : {}",promoEntry);
 				
 				memberListMapper.insertPromoEntry(promoEntry);
+				resultValue.put("message", params.get("action1").toString() + " request successfully saved.<br />"  
+				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+			}else{
+				resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
+				
 			}
+			
 		}else{
         		//Request Terminate/Resign
         		EgovMap memberView = memberListMapper.selectMemberListView(params);
         		logger.debug("memberView : {}",memberView);
+        		EgovMap eventCode = null;
         		
         		if(memberView.get("c32").toString().equals("1")){
         			member.put("memberId", memberView.get("memId"));
@@ -997,7 +1004,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         					
         					memberListMapper.updateOrganization(selectOrganization);
         				}
-        				EgovMap eventCode = null;
+        				
         				eventCode = getDocNo("66");
         				int ID = 66;
         				String nextDocNo = getNextDocNo("PMR", eventCode.get("docNo").toString());
@@ -1035,7 +1042,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			}
         		}
 		}
-		return success;
+		/*resultValue.put("message", params.get("action1").toString() + " request successfully saved.<br />"  
+				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+		*/
+		return resultValue;
 	}
 	
 	@Override
