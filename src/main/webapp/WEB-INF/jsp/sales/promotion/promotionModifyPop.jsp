@@ -11,10 +11,10 @@
         //AUIGrid 그리드를 생성합니다.
         createAUIGridStk();
         
-        doGetCombo('/common/selectCodeList.do', '320', ${promoInfo.promoAppTypeId},    'promoAppTypeId',    'S'); //Promo Application
+        doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', ${promoInfo.promoAppTypeId},    'promoAppTypeId', 'S'); //Promo Application
         doGetCombo('/common/selectCodeList.do', '76',  ${promoInfo.promoTypeId},       'promoTypeId',       'S'); //Promo Type
         doGetCombo('/common/selectCodeList.do', '8',   ${promoInfo.promoCustType},     'promoCustType',     'S'); //Customer Type
-        doGetCombo('/common/selectCodeList.do', '322', ${promoInfo.promoDiscPeriodTp}, 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', ${promoInfo.promoDiscPeriodTp}, 'promoDiscPeriodTp', 'S'); //Discount period
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, ${promoInfo.exTrade},              'exTrade',              'S'); //EX_Trade
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, ${promoInfo.empChk},               'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, ${promoInfo.promoDiscType},        'promoDiscType',        'S'); //Discount Type
@@ -63,6 +63,7 @@
             displayTreeOpen     : false,            
             selectionMode       : "singleRow",  //"multipleCells", 
             showRowCheckColumn  : true,
+            showEditedCellMarker: false,
             softRemoveRowMode   : false,
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용
@@ -268,6 +269,14 @@
         });
         $('#promoTypeId').change(function() {
         	fn_chgPromoDetail(null, null, null);
+        });
+        $('#promoDiscPeriodTp').change(function() {
+        	if($('#promoDiscPeriodTp').val() == '2293') {
+        	    $('#promoDiscPeriod').val('').prop("disabled", true);
+        	}
+        	else {
+        	    $('#promoDiscPeriod').removeAttr("disabled");
+        	}
         });
         $('#promoCustType').change(function() {
         	fn_chgPromoDetail(null, null, null);

@@ -11,10 +11,10 @@
         //AUIGrid 그리드를 생성합니다.
         createAUIGridStk();
         
-        doGetCombo('/common/selectCodeList.do', '320', '', 'promoAppTypeId',    'S'); //Promo Application
+        doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '', 'promoAppTypeId',    'S', 'fn_delApptype'); //Promo Application
         doGetCombo('/common/selectCodeList.do', '76',  '', 'promoTypeId',       'S'); //Promo Type
         doGetCombo('/common/selectCodeList.do', '8',   '', 'promoCustType',     'S'); //Customer Type
-        doGetCombo('/common/selectCodeList.do', '322', '', 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '', 'exTrade',              'S'); //EX_Trade
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '', 'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
@@ -22,7 +22,7 @@
         
         doGetCombo('/sales/promotion/selectMembershipPkg.do', '', '9', 'promoSrvMemPacId', 'S'); //Common Code
     });
-    
+
     function createAUIGridStk() {
         
     	//AUIGrid 칼럼 설정
@@ -246,6 +246,14 @@
         });
         $('#promoTypeId').change(function() {
         	fn_chgPromoDetail();
+        });
+        $('#promoDiscPeriodTp').change(function() {
+        	if($('#promoDiscPeriodTp').val() == '2293') {
+        	    $('#promoDiscPeriod').val('').prop("disabled", true);
+        	}
+        	else {
+        	    $('#promoDiscPeriod').removeAttr("disabled");
+        	}
         });
         $('#promoCustType').change(function() {
         	fn_chgPromoDetail();

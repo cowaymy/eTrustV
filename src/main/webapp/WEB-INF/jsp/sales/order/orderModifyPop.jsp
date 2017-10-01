@@ -11,6 +11,8 @@
     var APP_TYPE_DESC = '${appTypeDesc}';
     var TAB_NM        = '${ordEditType}';
     var CUST_NRIC     = '${custNric}';
+    var PROMO_CODE    = '${promoCode}';
+    var PROMO_DESC    = '${promoDesc}';
     
     var keyValueList = [];
     
@@ -542,7 +544,7 @@
         }
 
         if(tabNm == 'PAY' && APP_TYPE_ID != '66' && APP_TYPE_ID != '1412') {
-            var msg = "[" + ORD_NO + "] is [" + APP_TYPE_DESC + "] order.<br />"
+            var msg = "[" + ORD_NO + "] is [" + APP_TYPE_DESC + "] order.<br/>"
                     + "Only rental order is allow to edit rental pay setting.";
                     
             Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
@@ -556,6 +558,28 @@
             Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
                 
             $('#btnSaveDocSub').addClass("blind");
+        }
+        
+        if(tabNm == 'PRM') {
+            if(PROMO_CODE.indexOf('CMCPG160105') != -1 || PROMO_DESC.indexOf('EX-TRADE')    != -1 || PROMO_DESC.indexOf('EXTRADE')     != -1
+            || PROMO_CODE.indexOf('CMCPG160401') != -1 || PROMO_DESC.indexOf('CMCPG160402') != -1 || PROMO_DESC.indexOf('CMCPG160403') != -1
+            || PROMO_CODE.indexOf('CMCPG160404') != -1 || PROMO_DESC.indexOf('CMCPG160601') != -1 || PROMO_DESC.indexOf('CMCPG160602') != -1
+            || PROMO_CODE.indexOf('CMCPG160605') != -1 || PROMO_DESC.indexOf('CMCPG160607') != -1) {
+                var msg = "[" + ORD_NO + "] is under [" + PROMO_CODE + "] promotion.<br/>"
+                        + "Edit promotion request is disallowed.";
+                        
+                Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+                    
+                return false;
+            }
+            
+            if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
+                var msg = "This order is not in active/complete status.<br/>Edit promotion is disallowed.";
+                        
+                Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+                
+                $('#btnSavePromo').addClass("blind");
+            }
         }
  
         var vTit = 'Order Edit';
@@ -619,10 +643,17 @@
         if(tabNm == 'RFR') {
             $('#scRI').removeClass("blind");
             $('#aTabDS').click();
-          //AUIGrid.resize(modRfrGridID, 960, 380);
           fn_selectReferralList(ORD_NO);
         } else {
-            $('#scDS').addClass("blind");
+            $('#scRI').addClass("blind");
+        }
+        if(tabNm == 'PRM') {
+            $('#scPR').removeClass("blind");
+            $('#aTabDS').click();
+          //AUIGrid.resize(modRfrGridID, 960, 380);
+          //fn_selectReferralList(ORD_NO);
+        } else {
+            $('#scPR').addClass("blind");
         }
     }
 
@@ -2404,6 +2435,64 @@
 <ul class="center_btns">
 	<li><p class="btn_blue2"><a id="btnSaveReferral" href="#">SAVE</a></p></li>
 </ul>
+</section>
+<!------------------------------------------------------------------------------
+    Referrals Info Edit END
+------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    Referrals Info Edit START
+------------------------------------------------------------------------------->
+<section id="scPR" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3>Promotion Information</h3>
+</aside><!-- title_line end -->
+
+<ul class="left_btns">
+	<li><p class="btn_blue"><p>Expired Promotion ?</p></li>
+</ul>
+
+<section class="search_table"><!-- search_table start -->
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Product</th>
+	<td><span>text</span></td>
+	<th scope="row">Price/RPF (RM)</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Promotion<span class="must">*</span></th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Rental Fees (RM)</th>
+	<td><span>text</span></td>
+</tr>
+<tr>
+	<th scope="row">Related No</th>
+	<td><input type="text" title="" placeholder="Related Number" class="w100p" /></td>
+	<th scope="row">PV</th>
+	<td><span>text</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</section>
+
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a id="btnSavePromo" href="#">SAVE</a></p></li>
+</ul>
+
 </section>
 <!------------------------------------------------------------------------------
     Referrals Info Edit END
