@@ -188,7 +188,11 @@
              , PROMO_ITM_PV
              , PROMO_ITM_STUS_ID
              , PROMO_ITM_UPD_USER_ID
-             , PROMO_ITM_UPD_DT) 
+             , PROMO_ITM_UPD_DT
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT) 
         VALUES
              ( #{promoItmId}
              , #{promoId}
@@ -197,7 +201,12 @@
              , #{promoItmPv}
              , #{promoItmStusId}
              , #{promoItmUpdUserId}
-             , SYSDATE)
+             , SYSDATE
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             )
     </insert>
     
     <insert id="insertSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">
@@ -276,6 +285,36 @@
          WHERE T1.PROMO_ID = #{promoId}
     </select>
 
+    <select id="selectPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.AMT
+             , T4.PRC_RPF
+             , T4.PRC_PV
+             , FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , T4.PRC_RPF - t3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0016M T4
+            ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.APP_TYPE_ID = #{appTypeId}
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+
     <select id="selectPromotionFreeGiftList" parameterType="Map" resultType="egovMap">
         SELECT T1.PROMO_FREE_GIFT_ID
              , T1.PROMO_FREE_GIFT_PROMO_ID
@@ -338,6 +377,5 @@
         DELETE
           FROM SAL0019D
          WHERE PROMO_FREE_GIFT_ID = #{promoFreeGiftId}
-    </delete>
-    
+    </delete>    
 </mapper>
