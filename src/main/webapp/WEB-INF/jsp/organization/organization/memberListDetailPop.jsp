@@ -1,21 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
-<title>eTrust system</title>
-<link rel="stylesheet" type="text/css" href="../css/master.css" />
-<link rel="stylesheet" type="text/css" href="../css/common.css" />
-<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
-<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="../js/multiple-select.js"></script>
-<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
-<script type="text/javascript" src="../js/common_pub.js"></script>
 <script type="text/javaScript">
 
 var myGridID4;/* promote */
@@ -591,15 +575,14 @@ function fn_tabSize(){
 
 function fn_requestTermiReSave(val){
 	if(val == '1'){//Request Terminate/Resign
-	Common.ajax("POST", "/organization/terminateResignSave",  $("#requestTermiReForm").serializeJSON(), function(result) {
+	    Common.ajax("POST", "/organization/terminateResignSave",  $("#requestTermiReForm").serializeJSON(), function(result) {
 		console.log("성공.");
 		console.log("data : " + result);
 		
 	});
 	
 	}else{//Request Promote/Demote
-		Common.ajax("POST", "/organization/terminateResignSave",  $("#requestProDeForm").serializeJSON(), function(result) {
-			alert("22222");
+		   Common.ajax("POST", "/organization/terminateResignSave",  $("#requestProDeForm").serializeJSON(), function(result) {
 	        console.log("성공.");
 	        console.log("data : " + result);
 	        Common.alert(result.message);
@@ -609,8 +592,6 @@ function fn_requestTermiReSave(val){
 	
 }
 </script>
-</head>
-<body>
 
 <div id="popup_wrap"><!-- popup_wrap start -->
 
@@ -1044,11 +1025,11 @@ function fn_requestTermiReSave(val){
 </tr>
 <tr>
     <th scope="row">Mobile No</th>
-    <td><span><c:out value="${memberView.c24}"/></span></td>
+    <td><span><c:out value="${memberView.telMobile}"/></span></td>
     <th scope="row">Residence No</th>
-    <td><span><c:out value="${memberView.c26}"/></span></td>
+    <td><span><c:out value="${memberView.telHuse}"/></span></td>
     <th scope="row">Office No</th>
-    <td><span><c:out value="${memberView.c25}"/></span></td>
+    <td><span><c:out value="${memberView.telOffice}"/></span></td>
 </tr>
 <tr>
     <th scope="row">Senior Manager</th>
@@ -1168,7 +1149,7 @@ function fn_requestTermiReSave(val){
 <input type="hidden" value="<c:out value="${memberView.c44}"/>" id="memberLvl" name="memberLvl"/>
 <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype" name="memtype"/>
 <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue" name="codeValue"/>
-<input type="text" value="<c:out value="${memberView.memCode}"/>" id="codeValue" name="codeValue"/>
+<input type="text" value="<c:out value="${memberView.memCode}"/>" id="memCode" name="memCode"/>
 <input type="hidden" value="" id="lvlTo" name="lvlTo"/>
 <aside class="title_line"><!-- title_line start -->
 <h2>Promote/Demote Information</h2>
@@ -1223,5 +1204,3 @@ function fn_requestTermiReSave(val){
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-</body>
-</html>

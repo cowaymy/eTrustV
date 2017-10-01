@@ -21,7 +21,7 @@ function fn_memberListSearch(){
 
 function fn_excelDown(){
 	// type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    GridCommon.exportTo("grid_wrap", type, "test");
+    GridCommon.exportTo("grid_wrap_memList", "xlsx", "MemberList");
 }
 
 function fn_TerminateResign(val){
@@ -113,29 +113,18 @@ function createAUIGrid() {
 		 // 그리드 속성 설정
         var gridPros = {
             
-            // 페이징 사용       
-            usePaging : true,
-            
-            // 한 화면에 출력되는 행 개수 20(기본값:20)
-            pageRowCount : 20,
-            
-            editable : true,
-            
-            showStateColumn : true, 
-            
-            displayTreeOpen : true,
-            
-            
-            headerHeight : 30,
-            
-            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-            skipReadonlyColumns : true,
-            
-            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            wrapSelectionMove : true,
-            
-            // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true
+        		 usePaging           : true,         //페이징 사용
+                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                 editable            : false,            
+                 fixedColumnCount    : 1,            
+                 showStateColumn     : false,             
+                 displayTreeOpen     : false,            
+                 selectionMode       : "singleRow",  //"multipleCells",            
+                 headerHeight        : 30,       
+                 useGroupingPanel    : false,        //그룹핑 패널 사용
+                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                 showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
 
         };
         
@@ -182,7 +171,7 @@ var gridPros = {
 <body>
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Organization</li>
     <li>Member</li>
 </ul>
@@ -317,31 +306,31 @@ var gridPros = {
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
         <li><p class="link_btn"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn"><a href="#">Vacation Request</a></p></li>
+<!--         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn"><a href="#">menu6</a></p></li>
         <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <!-- <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
     </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
@@ -352,11 +341,12 @@ var gridPros = {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="javascript:fn_excelDown();">EXCEL DW</a></p></li>
+<li><p class="btn_grid"><a href="javascript:fn_excelDown();">EXCEL DW</a></p></li>
+   <!--  <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+    
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
 </ul>
 
 <article class="grid_wrap">

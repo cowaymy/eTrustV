@@ -4,16 +4,16 @@
 <script type="text/javaScript">
 
 function fn_memberSave(){
-			    var jsonObj =  GridCommon.getEditData(myGridID);
-			    jsonObj.form = $("#memberAddForm").serializeJSON();
-			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
-		console.log("message : " + result.message );
-		Common.alert(result.message);
-	});
+		    var jsonObj =  GridCommon.getEditData(myGridID);
+		    jsonObj.form = $("#memberAddForm").serializeJSON();
+		    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
+			console.log("message : " + result.message );
+			Common.alert(result.message);
+		});
 }
 
 function fn_docSubmission(){
-	Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memberType").serialize(), function(result) {
+	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memberType").serialize(), function(result) {
 		console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID, result);
@@ -22,6 +22,11 @@ function fn_docSubmission(){
 }
 
 function fn_departmentCode(value){
+	 if($("#memberType").val() != 2){
+	        $("#hideContent").hide();
+	    }else{
+	    	$("#hideContent").show();
+	    }
 	var action = value;
 	switch(action){
 	   case "1" :
@@ -38,6 +43,7 @@ function fn_departmentCode(value){
         };
            doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
            break;
 	   case "3" :
            var jsonObj = {
@@ -46,6 +52,7 @@ function fn_departmentCode(value){
         };
            doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
            break;
            
 	   case "4" :
@@ -58,9 +65,20 @@ function fn_departmentCode(value){
 	}
 }
 $(document).ready(function() {
-	  createAUIGridDoc();
+  
+	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
+    doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
+     
+    doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , ''); 
+    doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');
+    doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
+    doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
+    doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
+    
+	createAUIGridDoc();
 	fn_docSubmission();
 	fn_departmentCode();
+	
 	$("#state").change(function (){
 		var state = $("#state").val();
 		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'','area', 'S', '');  
@@ -75,30 +93,10 @@ $(document).ready(function() {
         fn_departmentCode(memberType);
         
       
-});
+     });
 	
 	
-	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
-	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
-	 
-	/* $("#state").change(function() {
-		//doGetCombo('/common/selectAddrSelCode.do','area'  ,  '' , 'area' , 'S', '');
-		
-		  var jsonObj = {
-		           codevalue : $("#state").val()
-		    };
-		Common.ajax("GET", "/organization/selectArea", jsonObj, function(result) {
-		$("#area").find('option').each(function() {
-			var list = new Object();
-			list.id = result.id;
-            list.value = result.text();
-			area.push(list);
-		 });
-	    console.log("성공.");
-	    console.log("data : " + result);
-		alert($("#state").val());
-	    }); 
-	});*/
+	
 	
 });
 function createAUIGridDoc() {
@@ -207,6 +205,64 @@ var gridPros = {
     
 };
 
+//Validation Check
+function fn_saveValidation(){
+	if($("#memberNm").val() == ''){
+        Common.alert("Please key  in member name");
+        return false;
+    }
+	if($("#nric").val() == ''){
+        Common.alert("Please key  in NRIC");
+        return false;
+    }
+	if($("#gender").val() == ''){
+        Common.alert("Please select gender");
+        return false;
+    }
+	if($("#cmbRace").val() == ''){
+        Common.alert("Please select race");
+        return false;
+    }
+	if($("#marrital").val() == ''){
+        Common.alert("Please select marrital");
+        return false;
+    }
+	if($("#Birth").val() == ''){
+        Common.alert("Please select DOB");
+        return false;
+    }
+	// 주소 validation 추가해야된다
+	
+	if($("#state").val() == ''){
+        Common.alert("Please select the state");
+        return false;
+    }
+	if($("#area").val() == ''){
+        Common.alert("Please select the area");
+        return false;
+    }
+	if($("#postCode").val() == ''){
+        Common.alert("Please select the postcode");
+        return false;
+    }
+	if($("#postCode").val() == ''){
+        Common.alert("Please select the postcode");
+        return false;
+    }
+	if($("#issuedBank").val() == ''){
+        Common.alert("Please select the issued bank");
+        return false;
+    }
+	if($("#bankAccNo").val() == ''){
+        Common.alert("Please key in the bank account no");
+        return false;
+    }
+	if($("#deptCd").val() == ''){
+        Common.alert("Please select the department code");
+        return false;
+    }
+	return true
+}
 </script>
 </head>
 <body>
@@ -288,10 +344,7 @@ var gridPros = {
     </td>
     <th scope="row">Race<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="race" name="race">
-       <c:forEach var="list" items="${race }" varStatus="status">
-           <option value="${list.detailcodeid}">${list.detailcodename}</option>
-        </c:forEach>
+    <select class="w100p" id="cmbRace" name="cmbRace">
     </select>
     </td>
 </tr>
@@ -308,9 +361,6 @@ var gridPros = {
     <th scope="row">Marrital Status<span class="must">*</span></th>
     <td>
     <select class="w100p" id="marrital" name="marrital">
-         <c:forEach var="list" items="${marrital }" varStatus="status">
-           <option value="${list.detailcodeid}">${list.detailcodename}</option>
-        </c:forEach>
     </select>
     </td>
 </tr>
@@ -382,7 +432,7 @@ var gridPros = {
 
     <div class="search_100p"><!-- search_100p start -->
     <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="sponsorCd" name="sponsorCd"/>
-    <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a>
+    <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </div><!-- search_100p end -->
 
     </td>
@@ -412,12 +462,6 @@ var gridPros = {
     </select>
     </td>
 </tr>
-<tr>
-    <th scope="row">e-Approval Status</th>
-    <td colspan="5">
-    <input type="text" title="" placeholder="e-Approval Status" class="w100p" id="approval" name="approval" />
-    </td>
-</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -438,9 +482,6 @@ var gridPros = {
     <th scope="row">Issued Bank<span class="must">*</span></th>
     <td>
     <select class="w100p" id="issuedBank" name="issuedBank">
-      <c:forEach var="list" items="${issuedBank }" varStatus="status">
-           <option value="${list.bankId}">${list.c1}</option>
-       </c:forEach>
     </select>
     </td>
     <th scope="row">Bank Account No<span class="must">*</span></th>
@@ -468,17 +509,11 @@ var gridPros = {
     <th scope="row">Education Level</th>
     <td>
     <select class="w100p" id="educationLvl" name="educationLvl">
-        <c:forEach var="list" items="${educationLvl }" varStatus="status">
-           <option value="${list.detailcodeid}">${list.detailcodename}</option>
-        </c:forEach>
     </select>
     </td>
     <th scope="row">Language</th>
     <td>
     <select class="w100p" id="language" name="language">
-        <c:forEach var="list" items="${language }" varStatus="status">
-           <option value="${list.detailcodeid}">${list.detailcodename}</option>
-        </c:forEach>
     </select>
     </td>
 </tr>
@@ -505,11 +540,11 @@ var gridPros = {
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+<aside class="title_line" ><!-- title_line start -->
 <h2>Agreedment</h2>
 </aside><!-- title_line end -->
 
-<table class="type1"><!-- table start -->
+<table class="type1" id="hideContent"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:150px" />
@@ -517,8 +552,8 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Cody PA Expiry<span class="must">*</span></th>
-    <td>
+    <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
+    <td  class="hideContent"> 
     <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"/>
     </td>
 </tr>
