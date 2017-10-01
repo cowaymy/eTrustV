@@ -1,132 +1,143 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<script type="text/javascript">
-//AUIGrid 생성 후 반환 ID
-var creditCardGridID; // credit card list
 
-$(document).ready(function(){
-	
-	/*  Gird */
-    //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
-    createCardGrid();
-    fn_getCustomerCreditCardAjax(); // credit card list
+<script type="text/javascript">
+
+var selCodeCustId;  
+var selCodeCorpId;
+
+$(document).ready(function() {
     
-	/* Move Page */
+    //Select Value
+    selCodeCustId = $("#selCodeCustId").val(); // TypeId 
+    selCodeCorpId = $("#selCodeCorpId").val();
+    
+    doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'basicCmbCustTypeId', 'S', '');       // Customer Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'basicCmbCorpTypeId', 'S', '');     // Company Type Combo Box
+    
+    //visible  _selVisible
+    if( null != $("#_selVisible").val() && '' != $("#_selVisible").val()){
+        $("#_visibleDiv").css("display" , "none");
+    }
+    
     $("#_editCustomerInfo").change(function(){
-          
+        
         var stateVal = $(this).val();
         $("#_selectParam").val(stateVal);
+     });
+    
+     $("#_confirm").click(function (currPage) {
+            var status = $("#_selectParam").val();
+           
+            if(status == '1'){
+                Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
+                $("#_close").click();
+            }
+            if(status == '2'){
+                Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
+                $("#_close").click();
+            }
+            if(status == '3'){
+                Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
+                $("#_close").click();
+            }
+            if(status == '4'){
+                Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
+                $("#_close").click();
+            }
+            if(status == '5'){
+                Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
+                $("#_close").click();
+            }
+            if(status == '6'){ 
+               Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
+               $("#_close").click();
+            }
+            
+        });
+     
+     //Display Controll
+     if(selCodeCustId == '965'){
+           $("#basicCmbCorpTypeId").attr("disabled" , false);
+           $("#basicCmbCustTypeId").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+           $("#_gstRgstNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+     }else{
+           $("#basicCmbCorpTypeId").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+           $("#basicCmbCustTypeId").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+           $("#_gstRgstNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+     }
+     
+    $("#_update").click(function() {
+           
+        //Validation
+        if( null == $("#basicCmbCustTypeId").val() || '' == $("#basicCmbCustTypeId").val()){ 
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Type'/>");
+            return;
+        }
+        
+        if( $("#basicCmbCustTypeId").val() == '965'){
+            
+            if(null == $("#basicCmbCorpTypeId").val() || '' == $("basicCmbCorpTypeId").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Company Type'/>");
+                return;
+            }
+        }
+        //Update
+        
+        fn_updateLimitBasicInfo();
         
     });
-    
-    $("#_confirm").click(function (currPage) {
-        var status = $("#_selectParam").val();
-        if(status == '1'){
-            Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
-            $("#_close").click();
-        }
-        if(status == '2'){
-            Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
-            $("#_close").click();
-        }
-        if(status == '3'){
-            Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
-            $("#_close").click();
-        }
-        if(status == '4'){
-            Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
-            $("#_close").click();
-        }
-        if(status == '5'){
-            Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
-            $("#_close").click();
-        }
-        if(status == '6'){ 
-            Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
-            $("#_close").click();
-         }
-        
-    });
-    
-    // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(creditCardGridID, "cellDoubleClick", function(event){
-       
-    	$("#_editCustId").val(event.item.custId);
-        $("#_editCustCardId").val(event.item.custCrcId);
-        Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv5Pop');
-    });
-    
-    
-    $("#_newCard").click(function() {
-    	Common.popupDiv('/sales/customer/updateCustomerNewCardPop.do', $("#popForm").serializeJSON(), null , true ,'_editDiv5New');
-	});
-    
-});// Document Ready End
+});//Doc Ready Func End
 
-    function  createCardGrid(){
-	
-    	// CreditCard Column
-        var creditCardColumnLayout = [
-               {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
-               {dataField : "codeName", headerText : "Card Type", width : '15%'}, 
-               {dataField : "codeName1", headerText : "Type", width : '15%'},
-               {dataField : "bankName", headerText : "Issue Bank", width : '25%'},
-               {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
-               {dataField : "custCrcExpr", headerText : "Expiry", width : '15%'},
-               {dataField : "custCrcId", visible : false},
-               {dataField : "custId", visible : false}
-         ];	
-    	 
-      //그리드 속성 설정
-        var gridPros = {
-                
-                usePaging           : true,         //페이징 사용
-                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-                editable            : false,            
-                fixedColumnCount    : 1,            
-                showStateColumn     : true,             
-                displayTreeOpen     : false,            
-                selectionMode       : "singleRow",  //"multipleCells",            
-                headerHeight        : 30,       
-                useGroupingPanel    : false,        //그룹핑 패널 사용
-                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
-        };
-      
-        creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
-      
+function fn_updateLimitBasicInfo(){
+    $("#_tempCustTypeId").val($("#basicCmbCustTypeId").val());
+    Common.ajax("POST", "/sales/customer/updateLimitBasicInfo", $("#_limUpdForm").serializeJSON(), function(result){
+           
+        Common.alert(result.message, fn_reloadPage);
+    });
+    //
+}
+
+//reload Page func
+function fn_reloadPage(){
+    //Parent Window Method Call
+    if($("#_selVisible").val() == null || $("#_selVisible").val() == ''){
+        console.log("sleVisible == null");
+        fn_selectPstRequestDOListAjax();   
+    }else{
+        console.log("sleVisible == 1");
+        $("#_calSearch").click();
     }
-	//creaditcard Ajax
-	function fn_getCustomerCreditCardAjax(){
-	    Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList",$("#popForm").serialize(), function(result) {
-	        AUIGrid.setGridData(creditCardGridID, result);
-	    });
-	}
-	
-	//close Func
-    function fn_closeFunc(){
-         $("#_selectParam").val('1');
-    }
+    
+    $("#_selectParam").val('6');
+    Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
+    $("#_close").click();
+}
+
+//close Func
+function fn_closeFunc(){
+    $("#_selectParam").val('1');
+}
 </script>
+
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<!-- getParams  -->
+<input type="hidden" value="${result.typeId }" id="selCodeCustId"> <!-- TypeId : 964(Individual) / 965(Company)  --> 
+<input type="hidden" value="${result.corpTypeId}" id="selCodeCorpId">
+<input type="hidden" value="${result.nation }" id="selCodeNation">
+<input type="hidden" value="${result.raceId }" id="selCodeRaceId">
+<!-- Select ComboMenu Show/Hide -->
+<input type="hidden" value="${selVisible}" id="_selVisible">
+
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Credit Card Maintenance</h1>
+<h1>Customer Basic Info Maintenance(Limit)</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
-<!-- move Page Form  -->
-<form id="editForm">
-    <input type="hidden" name="custId" value="${custId}"/>
-    <input type="hidden" name="custAddId" value="${custAddId}"/>
-    <input type="hidden" name="custCntcId" value="${custCntcId}" > 
-    <input type="hidden" name="custCrcId" id="custCrcId">
-    <input type="hidden" name="selectParam"  id="_selectParam"/>
-</form>
+
 <section class="pop_body"><!-- pop_body start -->
+<div id="_visibleDiv">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -137,25 +148,23 @@ $(document).ready(function(){
 <tr>
     <th scope="row">EDIT Type</th>
     <td>
-     <select id="_editCustomerInfo">
+    <select id="_editCustomerInfo">
         <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>>Edit Basic Info</option>
         <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>>Edit Customer Address</option>
         <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>>Edit Contact Info</option>
         <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>>Edit Bank Account</option>
         <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>>Edit Credit Card</option>
         <option value="6" <c:if test="${selectParam eq 6}">selected</c:if>>Edit Basic Info(Limit)</option>
-        
     </select>
     <p class="btn_sky"><a href="#" id="_confirm">Confirm</a></p>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
-
+</div>
 <aside class="title_line"><!-- title_line start -->
 <h2>Customer Information</h2>
 </aside><!-- title_line end -->
-
 <section class="tap_wrap mt10"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on">Basic Info</a></li>
@@ -256,9 +265,7 @@ $(document).ready(function(){
 <tbody>
 <tr>
     <th scope="row">Full Address</th>
-    <td>
-        <span>${addresinfo.fullAddress}</span>
-    </td>
+    <td><span>${addresinfo.fullAddress}</span></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
@@ -329,7 +336,7 @@ $(document).ready(function(){
     <th scope="row">Tel (Residence)</th>
     <td><span>${contactinfo.telR}</span></td>
     <th scope="row">Tel (Office)</th>
-    <td><span>${contactinfo.telO}</span></td>
+    <td><span>${contactinfo.telO }</span></td>
 </tr>
 <tr>
     <th scope="row">Tel (Fax)</th>
@@ -343,14 +350,47 @@ $(document).ready(function(){
 </table><!-- table end -->
 </article><!-- tap_area end -->
 </section><!-- tap_wrap end -->
-<!-- ########## Basic Info End ##########  -->
-<!-- ########## Credit Card Grid Start ########## -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Customer Basic Information</h2>
+</aside><!-- title_line end -->
+
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="_newCard">ADD New Credit Card Account</a></p></li>
+    <li><p><span class="red_text">* Compulsory Field</span> <span class="brown_text"># Compulsory Field (For Individual Type)</span></p></li>
 </ul>
-<article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="creditcard_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
-</article><!-- grid_wrap end -->
-<!-- ########## Credit Card Grid End ########## -->
+<form id="_limUpdForm" method="post">
+<input type="hidden" id="_tempCustTypeId" name="tempCustTypeId">
+<input type="hidden" value="${result.custId}" name="basicCustId">  
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Customer Type</th>
+    <td>
+    <select class="w100p" id="basicCmbCustTypeId"></select>
+    </td>
+    <th scope="row">Company Type</th>
+    <td>
+    <select class="w100p" id="basicCmbCorpTypeId" name="basicCmbCorpTypeId"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">GST Registration No</th>
+    <td colspan="3"><input type="text" title="" placeholder="GST Registration No" class="w100p"  id="_gstRgstNo"/>${result.gstRgistNo}</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a id="_update">Update</a></p></li>
+</ul>
+
 </section><!-- pop_body end -->
-</div>
+
+</div><!-- popup_wrap end -->

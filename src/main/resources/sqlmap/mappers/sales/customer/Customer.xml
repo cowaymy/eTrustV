@@ -1501,6 +1501,7 @@
             SAL0029D 
        SET 
             UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId},
             NAME = #{basicName} , 
             PAS_SPORT_EXPR =TO_DATE(#{basicPasSportExpr}, 'DD/MM/YYYY'),  
             VISA_EXPR = TO_DATE(#{basicVisaExpr}, 'DD/MM/YYYY'),  
@@ -2214,4 +2215,16 @@
                 CODE_MASTER_ID = #{groupCode}
             ORDER BY CODE_NAME
   </select>
+  
+  <update id="updateLimitBasicInfo" parameterType="Map">
+    UPDATE 
+            SAL0029D 
+       SET 
+            UPD_DT = SYSDATE,
+            <if test="tempCustTypeId == 965">
+                CORP_TYPE_ID = #{basicCmbCorpTypeId},
+            </if>
+            UPD_USER_ID = #{userId}
+            WHERE CUST_ID = #{basicCustId}
+  </update>
 </mapper>

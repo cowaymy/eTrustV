@@ -1,70 +1,70 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
-	 var selCodeCustId;  
-	 var selCodeCorpId; 
-	 var selCodeNation; 
-	 var selCodeRaceId;
+     var selCodeCustId;  
+     var selCodeCorpId; 
+     var selCodeNation; 
+     var selCodeRaceId;
 $(document).ready(function(){
-	
-	//j_date
-	var pickerOpts={
-		    changeMonth:true,
-		    changeYear:true,
-		    dateFormat: "dd/mm/yy"
-	};
-	
-	$(".j_date").datepicker(pickerOpts);
+    
+    //j_date
+    var pickerOpts={
+            changeMonth:true,
+            changeYear:true,
+            dateFormat: "dd/mm/yy"
+    };
+    
+    $(".j_date").datepicker(pickerOpts);
 
-	var monthOptions = {
-	    pattern: 'mm/yyyy',
-	    selectedYear: 2017,
-	    startYear: 2007,
-	    finalYear: 2027
-	};
+    var monthOptions = {
+        pattern: 'mm/yyyy',
+        selectedYear: 2017,
+        startYear: 2007,
+        finalYear: 2027
+    };
 
-	$(".j_date2").monthpicker(monthOptions);
-	
-	//selected Codes
-	selCodeCustId = $("#selCodeCustId").val(); // TypeId 
-	selCodeCorpId = $("#selCodeCorpId").val();
-	selCodeNation = $("#selCodeNation").val();
-	selCodeRaceId = $("#selCodeRaceId").val(); //race id
-	
-	
-	doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'basicCmbCorpTypeId', 'S', '');     // Company Type Combo Box
-	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'basicCmbCustTypeId', 'S', '');       // Customer Type Combo Box
-	doGetCombo('/sales/customer/getNationList', '' , '' ,'basicCmdNationTypeId' , 'S');        // Nationality Combo Box
-	doGetCombo('/common/selectCodeList.do', '2', selCodeRaceId ,'basicCmdRaceTypeId', 'S', ''); //cmdRaceTypeId
-	//TypeId 에 따른 수정항목 Control
-	// individual
-	if(selCodeCustId == '964'){
-		$("#basicCmbCustTypeId").attr("disabled" , "disabled");
-		$("#basicCmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
-		$("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
-		$("input[name='basicGender']").attr("disabled" , false);
-		$("#basicCmdRaceTypeId").attr("disabled" , false);
-		$("#basicCmdNationTypeId").attr("disabled" , "disabled");
-		$("#basicDob").attr("disabled" , "disabled");
-	}
-	// company
-	if(selCodeCustId == '965'){
-		$("#basicCmbCustTypeId").attr("disabled" , "disabled");
-		$("#basicCmbCorpTypeId").attr({"class" : "w100p" , "disabled" : false});
-		$("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
-		$("input[name='basicGender']").attr({"disabled" : "disabled" , "checked" : false});
-		$("#basicCmdRaceTypeId").attr({"disabled" : "disabled" , "class":"disabled w100p"});
-		$("#basicCmdNationTypeId").attr("disabled" , "disabled");
-		$("#basicDob").attr("disabled" , "disabled");
-	}
+    $(".j_date2").monthpicker(monthOptions);
+    
+    //selected Codes
+    selCodeCustId = $("#selCodeCustId").val(); // TypeId 
+    selCodeCorpId = $("#selCodeCorpId").val();
+    selCodeNation = $("#selCodeNation").val();
+    selCodeRaceId = $("#selCodeRaceId").val(); //race id
+    
+    
+    doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'basicCmbCorpTypeId', 'S', '');     // Company Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'basicCmbCustTypeId', 'S', '');       // Customer Type Combo Box
+    doGetCombo('/sales/customer/getNationList', '' , '' ,'basicCmdNationTypeId' , 'S');        // Nationality Combo Box
+    doGetCombo('/common/selectCodeList.do', '2', selCodeRaceId ,'basicCmdRaceTypeId', 'S', ''); //cmdRaceTypeId
+    //TypeId 에 따른 수정항목 Control
+    // individual
+    if(selCodeCustId == '964'){
+        $("#basicCmbCustTypeId").attr("disabled" , "disabled");
+        $("#basicCmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
+        $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+        $("input[name='basicGender']").attr("disabled" , false);
+        $("#basicCmdRaceTypeId").attr("disabled" , false);
+        $("#basicCmdNationTypeId").attr("disabled" , "disabled");
+        $("#basicDob").attr("disabled" , "disabled");
+    }
+    // company
+    if(selCodeCustId == '965'){
+        $("#basicCmbCustTypeId").attr("disabled" , "disabled");
+        $("#basicCmbCorpTypeId").attr({"class" : "w100p" , "disabled" : false});
+        $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+        $("input[name='basicGender']").attr({"disabled" : "disabled" , "checked" : false});
+        $("#basicCmdRaceTypeId").attr({"disabled" : "disabled" , "class":"disabled w100p"});
+        $("#basicCmdNationTypeId").attr("disabled" , "disabled");
+        $("#basicDob").attr("disabled" , "disabled");
+    }
     //edit
-	 // 수정 항목 변경 
+     // 수정 항목 변경 
     $("#_editCustomerInfo").change(function(){
               
             var stateVal = $(this).val();
             $("#_selectParam").val(stateVal);
     });
-	 
+     
     $("#_confirm").click(function (currPage) {
         var status = $("#_selectParam").val();
        
@@ -73,8 +73,8 @@ $(document).ready(function(){
             $("#_close").click();
         }
         if(status == '2'){
-        	Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
-        	$("#_close").click();
+            Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
+            $("#_close").click();
         }
         if(status == '3'){
             Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
@@ -88,13 +88,13 @@ $(document).ready(function(){
             Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
             $("#_close").click();
         }
-        if(status == '6'){ //추후 정책 
-           /*  Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#editForm").serializeJSON(), null , true , '_editDiv');
-        	$("#_editDiv"+currPage).remove(); */
+        if(status == '6'){ 
+           Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
+           $("#_close").click();
         }
         
     });
-	
+    
     
  // update Button Click
     $("#_updBtn").click(function(){
@@ -152,21 +152,21 @@ $(document).ready(function(){
 }); // document ready end
 
     //update
-	function fn_getCustomerBasicAjax(){
-	    Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serialize(), function(result) {
-	        Common.alert(result.message, fn_reloadPage);
-	    });
-	}
-	
+    function fn_getCustomerBasicAjax(){
+        Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serialize(), function(result) {
+            Common.alert(result.message, fn_reloadPage);
+        });
+    }
+    
     //reload Page func
-	function fn_reloadPage(){
-		//Parent Window Method Call
-    	fn_selectPstRequestDOListAjax();
-    	Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
-    	$("#_close").click();
-	}
-	
-	//close Func
+    function fn_reloadPage(){
+        //Parent Window Method Call
+        fn_selectPstRequestDOListAjax();
+        Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
+        $("#_close").click();
+    }
+    
+    //close Func
     function fn_closeFunc(){
         $("#_selectParam").val(1);
     }
@@ -203,6 +203,7 @@ $(document).ready(function(){
         <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>>Edit Contact Info</option>
         <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>>Edit Bank Account</option>
         <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>>Edit Credit Card</option>
+        <option value="6" <c:if test="${selectParam eq 6}">selected</c:if>>Edit Basic Info(Limit)</option>
     </select>
     <p class="btn_sky"><a href="#" id="_confirm">Confirm</a></p>
     </td>

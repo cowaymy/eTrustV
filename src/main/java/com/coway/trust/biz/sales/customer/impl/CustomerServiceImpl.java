@@ -768,7 +768,12 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		
 		return customerMapper.getNationList(params);
 	}
-	
-	
-	
+
+
+	@Override
+	public void updateLimitBasicInfo(Map<String, Object> params) throws Exception {
+		
+		customerMapper.updateLimitBasicInfo(params);
+		
+	}
 }

@@ -581,4 +581,6 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	List<EgovMap> getNationList (Map<String, Object> params) throws Exception;
+	
+	void updateLimitBasicInfo(Map<String, Object> params) throws Exception;
 }

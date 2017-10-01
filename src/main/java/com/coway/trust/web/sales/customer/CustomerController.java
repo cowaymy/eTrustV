@@ -712,7 +712,7 @@ public class CustomerController {
 			model.addAttribute("addresinfo", addresinfo);
 			model.addAttribute("contactinfo", contactinfo);
 			
-			return "sales/customer/cusotmerBasicEditPop";
+			return "sales/customer/customerBasicEditPop";
 		}
 		
 		
@@ -860,7 +860,7 @@ public class CustomerController {
 		 * @return
 		 * @author 이석희 2017.07.28
 		 * */
-		//TODO 유무 확인
+		
 		@RequestMapping(value = "/updateCustomerBasicInfoLimitPop.do")
 		public String updateCustomerBasicInfoLimitPop(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 			
@@ -868,8 +868,17 @@ public class CustomerController {
 			EgovMap addresinfo = null;
 			EgovMap contactinfo = null;
 			
-			LOGGER.info("##### customer Address Edit START #####");
+			LOGGER.info("##### customer Basic Limit Edit START #####");
 			basicinfo = customerService.selectCustomerViewBasicInfo(params);
+			
+			if(null ==params.get("custAddId") || "" == params.get("custAddId")){
+				params.put("custAddId", basicinfo.get("custAddId"));
+			}
+			
+			if(null ==params.get("custCntcId") || "" == params.get("custCntcId")){
+				params.put("custCntcId", basicinfo.get("custCntcId"));
+			}
+			
 			addresinfo = customerService.selectCustomerViewMainAddress(params);
 			contactinfo = customerService.selectCustomerViewMainContact(params);
 			
@@ -882,8 +891,12 @@ public class CustomerController {
 			model.addAttribute("result", basicinfo);
 			model.addAttribute("addresinfo", addresinfo);
 			model.addAttribute("contactinfo", contactinfo);
+			//ComboBox params
+			if( null != params.get("useDisable")){
+				model.addAttribute("selVisible" , "1");
+			}
 			
-			return "sales/customer/customerBasicLimitPop"; 
+			return "sales/customer/customerBasicLimitEditPop"; 
 		}
 		
 		
@@ -897,7 +910,9 @@ public class CustomerController {
 		 * */
 		@RequestMapping(value = "/updateCustomerBasicInfoAf.do")
 		public ResponseEntity<ReturnMessage> updateCustomerBasicInfoAf(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
-			
+			//Session
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
 			//service 
 			customerService.updateCustomerBasicInfoAf(params);
 			
@@ -1547,4 +1562,27 @@ public class CustomerController {
 			return ResponseEntity.ok(nationList);
 			
 		}
+		
+		
+		@RequestMapping(value = "/updateLimitBasicInfo")
+		public ResponseEntity<ReturnMessage> updateLimitBasicInfo(@RequestBody Map<String, Object> params) throws Exception{
+			
+			//Session
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			params.put("userId", sessionVO.getUserId());
+			
+			LOGGER.info("############################################################");
+			LOGGER.info("########  Params : " + params.toString());
+			LOGGER.info("############################################################");
+			
+			customerService.updateLimitBasicInfo(params);
+			
+			// 결과 만들기
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+			return ResponseEntity.ok(message);
+		}
+		
 }

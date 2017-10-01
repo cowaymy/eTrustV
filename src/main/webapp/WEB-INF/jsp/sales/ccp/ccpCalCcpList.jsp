@@ -76,7 +76,7 @@ $(document).ready(function() {
         
         //PopUp
         $("#_custId").val(selectedItem[0].item.custId);
-        Common.popupDiv("/sales/ccp/ccpCalCcpCustInfoLimitEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv');
+        Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#_detailForm").serializeJSON(), null , true , '_editDiv6');
     });
 	
 });
@@ -170,6 +170,9 @@ function f_multiCombo(){
     <input type="hidden" name="salesOrdId" id="_salesOrdId">
     <input type="hidden" name="ccpTotScrePoint" id="_ccpTotScrePoint">
     <input type="hidden" name="custId" id="_custId">
+    
+    <input type="hidden" name="useDisable" value="1">
+    
 </form>
 
 <section class="search_table"><!-- search_table start -->

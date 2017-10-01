@@ -41,10 +41,10 @@ $(document).ready(function(){
             Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
             $("#_close").click();
         }
-        if(status == '6'){ //추후 정책 
-           /*  Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#editForm").serializeJSON(), null , true , '_editDiv');
-            $("#_editDiv"+currPage).remove(); */
-        }
+        if(status == '6'){ 
+            Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
+            $("#_close").click();
+         }
         
     });
 	
@@ -204,6 +204,7 @@ $(document).ready(function(){
         <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>>Edit Contact Info</option>
         <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>>Edit Bank Account</option>
         <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>>Edit Credit Card</option>
+        <option value="6" <c:if test="${selectParam eq 6}">selected</c:if>>Edit Basic Info(Limit)</option>
     </select>
     <p class="btn_sky"><a href="#" id="_confirm">Confirm</a></p>
     </td>
