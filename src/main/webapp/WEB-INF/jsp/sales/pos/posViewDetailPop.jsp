@@ -1,42 +1,43 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <script type="text/javascript">
   
   //AUIGrid 생성 후 반환 ID  
-  var posGridID;
+  var posDetGridID;
   var paymentGridID;
   
   $(document).ready(function() {
-	
-	  createPosGrid();
-	  createPaymentGrid();
-	  
-	  fn_getPosListAjax(); // Pos list
-	  fn_getPayMentAjax(); //Payment list
-	  
-	  fn_resizefunc(posGridID);
-	  fn_resizefunc(paymentGridID);
-	  
+    
+      createPosGrid();
+      createPaymentGrid();
+      
+      fn_getPosViewListAjax(); // Pos list
+      fn_getPayMentAjax(); //Payment list
+      
+     /*  fn_resizefunc(posDetGridID);
+      fn_resizefunc(paymentGridID); */
+      
   });
   
   function fn_getPayMentAjax(){
-	 
-	  Common.ajax("GET", "/sales/pos/selectPosPaymentJsonList",$("#getParamForm").serialize(), function(result) {
+     
+      Common.ajax("GET", "/sales/pos/selectPosPaymentJsonList",$("#getParamForm").serialize(), function(result) {
           AUIGrid.setGridData(paymentGridID, result);
       });
-	  
+      
   };
   
-  function fn_getPosListAjax(){
-	  Common.ajax("GET", "/sales/pos/selectPosDetailJsonList",$("#getParamForm").serialize(), function(result) {
-          AUIGrid.setGridData(posGridID, result);
+  function fn_getPosViewListAjax(){
+      Common.ajax("GET", "/sales/pos/selectPosDetailJsonList",$("#getParamForm").serialize(), function(result) {
+          AUIGrid.setGridData(posDetGridID, result);
       });
   };
   
   
   
   function createPosGrid(){
-	  // Pos Column
+      // Pos Column
       var posColumnLayout = [ 
            {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
            {dataField : "stkDesc", headerText : "Item Description", width : '40%'},
@@ -46,7 +47,7 @@
            {dataField : "posItmTxs", headerText : "GST(6%)", width : '10%'},
            {dataField : "posItmTot", headerText : "Total", width : '10%'}
        ];
-	  
+      
       //그리드 속성 설정
       var gridPros = {
               
@@ -66,13 +67,13 @@
               groupingMessage     : "Here groupping"
           };
       
-      posGridID = GridCommon.createAUIGrid("pos_grid_wrap", posColumnLayout,'', gridPros);    // Pos list 
+      posDetGridID = GridCommon.createAUIGrid("pos_detail_grid_wrap", posColumnLayout,'', gridPros);    // Pos list 
       
   }
   
   function createPaymentGrid(){
-	  
-	  var paymentColumnLayout = [ 
+      
+      var paymentColumnLayout = [ 
            {dataField : "codeDesc", headerText : "Mode", width : '10%'}, 
            {dataField : "payItmRefNo", headerText : "Ref No", width : '10%'},
            {dataField : "payItmAmt", headerText : "Amount", width : '10%'},  
@@ -83,8 +84,8 @@
            {dataField : "accDesc", headerText : "Bank Acc", width : '10%'},
            {dataField : "payItmRefDt", headerText : "Ref Date", width : '10%'},
            {dataField : "payItmRem", headerText : "Remark", width : '10%'}
-	   ];
-	                    
+       ];
+                        
       //그리드 속성 설정
       var gridPros = {
               
@@ -103,9 +104,9 @@
               noDataMessage       : "No order found.",
               groupingMessage     : "Here groupping"
           };
-	                    
+                        
       paymentGridID = GridCommon.createAUIGrid("payment_grid_wrap", paymentColumnLayout,'', gridPros);    // Payment list 
-	  
+      
   }
   
   //resize func (tab click)
@@ -114,157 +115,25 @@
  }
   
   function fn_resize(){
-	  
-	  fn_resizefunc(posGridID);
+      
+      fn_resizefunc(posDetGridID);
       fn_resizefunc(paymentGridID);
-	  
+      
   }
 </script>
-<div id="wrap"><!-- wrap start -->
-<form id="getParamForm">
-    <input type="hidden" name="posId" id="_posId"  value="${purchaseMap.posId}"> 
-    <input type="hidden" name="payId" id="_payId" value="${purchaseMap.payId}">
-</form>
-<header id="header"><!-- header start -->
-<ul class="left_opt">
-    <li>Neo(Mega Deal): <span>2394</span></li> 
-    <li>Sales(Key In): <span>9304</span></li> 
-    <li>Net Qty: <span>310</span></li>
-    <li>Outright : <span>138</span></li>
-    <li>Installment: <span>4254</span></li>
-    <li>Rental: <span>4702</span></li>
-    <li>Total: <span>45080</span></li>
-</ul>
+
+
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Point Of Sales View</h1>
 <ul class="right_opt">
-    <li>Login as <span>KRHQ9001-HQ</span></li>
-    <li><a href="#" class="logout">Logout</a></li>
-    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
-    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
+    <li><p class="btn_blue2"><a href="#" id="_close" >CLOSE</a></p></li>
 </ul>
-</header><!-- header end -->
-<hr />
-        
-<section id="container"><!-- container start -->
+</header><!-- pop_header end -->
 
-<aside class="lnb_wrap"><!-- lnb_wrap start -->
-
-<header class="lnb_header"><!-- lnb_header start -->
-<form action="#" method="post">
-<h1><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a></h1>
-<p class="search">
-<input type="text" title="검색어 입력" />
-<input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
-</p>
-
-</form>
-</header><!-- lnb_header end -->
-
-<section class="lnb_con"><!-- lnb_con start -->
-<p class="click_add_on_solo on"><a href="#">All menu</a></p>
-<ul class="inb_menu">
-    <li class="active">
-    <a href="#" class="on">menu 1depth</a>
-
-    <ul>
-        <li class="active">
-        <a href="#" class="on">menu 2depth</a>
-
-        <ul>
-            <li class="active">
-            <a href="#" class="on">menu 3depth</a>
-            </li>
-            <li>
-            <a href="#">menu 3depth</a>
-            </li>
-            <li>
-            <a href="#">menu 3depth</a>
-            </li>
-            <li>
-            <a href="#">menu 3depth</a>
-            </li>
-            <li>
-            <a href="#">menu 3depth</a>
-            </li>
-            <li>
-            <a href="#">menu 3depth</a>
-            </li>
-        </ul>
-
-        </li>
-        <li>
-        <a href="#">menu 2depth</a>
-        </li>
-        <li>
-        <a href="#">menu 2depth</a>
-        </li>
-        <li>
-        <a href="#">menu 2depth</a>
-        </li>
-        <li>
-        <a href="#">menu 2depth</a>
-        </li>
-        <li>
-        <a href="#">menu 2depth</a>
-        </li>
-    </ul>
-
-    </li>
-    <li>
-    <a href="#">menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">menu 1depth</a>
-    </li>
-</ul>
-<p class="click_add_on_solo"><a href="#"><span></span>My menu</a></p>
-<ul class="inb_menu">
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-    <li>
-    <a href="#">My menu 1depth</a>
-    </li>
-</ul>
-</section><!-- lnb_con end -->
-
-</aside><!-- lnb_wrap end -->
-
-<section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
-</ul>
-
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>POS View Details</h2>
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
-</ul>
-</aside><!-- title_line end -->
+<section class="pop_body"><!-- pop_body start -->
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
@@ -331,20 +200,8 @@
     <td><span>${purchaseMap.posCustName}</span></td>
 </tr>
 <tr>
-    <th scope="row">Address 1</th>
-    <td><span>${purchaseMap.posAddr1}</span></td>
-</tr>
-<tr>
-    <th scope="row">Address 2</th>
-    <td><span>${purchaseMap.posAddr2}</span></td>
-</tr>
-<tr>
-    <th scope="row">Address 3</th>
-    <td><span>${purchaseMap.posAddr3}</span></td>
-</tr>
-<tr>
-    <th scope="row">Address 4</th>
-    <td><span>${purchaseMap.posAddr4}</span></td>
+    <th scope="row">Address</th>
+    <td><span>${purchaseMap.fullAddress}</span></td> 
 </tr>
 <tr>
     <th scope="row">POS Reason</th>
@@ -389,7 +246,7 @@
 </div>
 </div><!-- divine_auto end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
-   <div id="pos_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+   <div id="pos_detail_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -444,8 +301,7 @@
    <div id="payment_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 </article><!-- tap_area end -->
-</section><!-- tap_wrap end -->
-</section><!-- content end -->
-</section><!-- container end -->
-<hr />
-</div><!-- wrap end -->
+
+</section> <!--tap_wrap end  -->
+</section><!-- pop_body end -->
+</div><!-- popup_wrap end -->

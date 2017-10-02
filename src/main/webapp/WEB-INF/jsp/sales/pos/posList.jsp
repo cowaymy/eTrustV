@@ -28,7 +28,7 @@
         AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
             
             $("#_posNo").val(event.item.posNo);
-            $("#detailForm").attr({'target' : '_self' , 'action' : '/sales/pos/selectPosViewDetail.do'}).submit();
+            Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '_editDiv');
             
         });
         
@@ -187,9 +187,6 @@
 <form id="detailForm" method="get">
     <input type="hidden" id="_posNo" name="posNo"> 
 </form>
-<hr />
-
-
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -306,8 +303,4 @@
 
 </section><!-- content end -->
 
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-<hr />
 </div><!-- wrap end -->

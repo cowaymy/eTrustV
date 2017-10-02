@@ -159,12 +159,12 @@
 				</if>
 				<if test="sDate != null and sDate != '' "> <!-- to_date  --> 
 				    <![CDATA[
-				    AND  Extent1.POS_DT >=  TO_CHAR(TO_DATE(#{sDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD')
+				    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}, 'DD-MM-YYYY')
 				     ]]>
 				</if>
 				<if test="eDate != null and eDate != '' "> <!-- to_date  -->
 				   <![CDATA[				    
-				    AND  Extent1.POS_DT <= TO_CHAR(TO_DATE(#{eDate}, 'DD-MM-YYYY'), 'YYYY-MM-DD')  
+				    AND  Extent1.POS_DT <= TO_DATE(#{eDate}, 'DD-MM-YYYY')  
 				    ]]>
 				</if> 
 				<if test="memId != null and memId != '' ">  
@@ -182,108 +182,120 @@
     <select id="selectPosViewPurchaseInfo" parameterType="Map" resultType="egovMap">
 				<![CDATA[
 				SELECT Limit1.POS_ID ,
-				       Limit1.POS_NO ,
-				       CASE WHEN ( Limit1.POSID1 IS NOT NULL ) THEN Limit1.POSNO1 ELSE '' END POS_NO1,
-				       Limit1.POS_MODULE_TYPE_ID ,
-				       Limit1.CODE_NAME ,
-				       Limit1.POS_TYPE_ID ,
-				       Limit1.CODENAME1 CODE_NAME1  ,
-				       Limit1.POS_WH_ID ,
-				       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
-				       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_DESC ELSE NULL END WH_LOC_DESC,
-				       TO_CHAR(TO_DATE(Limit1.POS_DT, 'YYYY-MM-DD') , 'DD-MM-YYYY') POS_DT , 
-				       Limit1.POS_CUST_NAME ,
-				       Limit1.POS_MEM_ID ,
-				       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE ELSE '' END MEM_CODE,
-				       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME ELSE '' END NAME,
-				       Limit1.POS_ADDR1 ,
-				       Limit1.POS_ADDR2 ,
-				       Limit1.POS_ADDR3 ,
-				       Limit1.POS_ADDR4 ,
-				       Limit1.POS_REM ,
-				       Limit1.POS_CRT_USER_ID ,
-				       Limit1.USER_NAME ,
-				       Limit1.USER_FULL_NAME ,
-				       Limit1.CR_ACC_ID ,
-				       Limit1.DR_ACC_ID ,
-				       Limit1.POS_BILL_ID ,
-				      TO_CHAR(Limit1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT, 
+                       Limit1.POS_NO ,
+                       CASE WHEN ( Limit1.POSID1 IS NOT NULL ) THEN Limit1.POSNO1 ELSE '' END POS_NO1,
+                       Limit1.POS_MODULE_TYPE_ID ,
+                       Limit1.CODE_NAME ,
+                       Limit1.POS_TYPE_ID ,
+                       Limit1.CODENAME1 CODE_NAME1  ,
+                       Limit1.POS_WH_ID ,
+                       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+                       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_DESC ELSE NULL END WH_LOC_DESC,
+                       TO_CHAR(TO_DATE(Limit1.POS_DT, 'YYYY-MM-DD') , 'DD-MM-YYYY') POS_DT , 
+                       Limit1.POS_CUST_NAME ,
+                       Limit1.POS_MEM_ID ,
+                       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE ELSE '' END MEM_CODE,
+                       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME ELSE '' END NAME,
+                       Limit1.AREA_ID,
+                       Limit1.ADDR_DTL,
+                       Limit1.STREET,
+                       Limit1.AREA,
+                       Limit1.POSTCODE,
+                       Limit1.CITY,
+                       Limit1.STATE,
+                       Limit1.COUNTRY,
+                       Limit1.FULL_ADDRESS,
+                       Limit1.POS_REM ,
+                       Limit1.POS_CRT_USER_ID ,
+                       Limit1.USER_NAME ,
+                       Limit1.USER_FULL_NAME ,
+                       Limit1.CR_ACC_ID ,
+                       Limit1.DR_ACC_ID ,
+                       Limit1.POS_BILL_ID ,
+                      TO_CHAR(Limit1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT, 
                        TO_CHAR(Limit1.POS_TOT_CHRG , 'FM9999999999990.00') AS POS_TOT_CHRG ,
                        TO_CHAR(Limit1.POS_TOT_TXS , 'FM9999999999990.00') AS POS_TOT_TXS ,
                        TO_CHAR(Limit1.POS_TOT_DSCNT , 'FM9999999999990.00') AS POS_TOT_DSCNT ,
-				       Limit1.POS_RESN_ID ,
-				       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.PAY_ID ELSE 0 END PAY_ID , 
-				       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.OR_NO ELSE '' END OR_NO ,
-				       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BRNCH_ID ELSE 0 END BRNCH_ID ,
-				       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.CODE ELSE '' END BRANCH_CODE,
-				       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.NAME1 ELSE '' END BRANCH_NAME,
-				       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.TR_NO ELSE '' END TR_NO,
-				       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN TO_CHAR(TO_DATE(Limit1.TR_ISSU_DT , 'YYYY-MM-DD'), 'DD-MM-YYYY') ELSE '01-01-1900' END TR_ISSU_DT,
-				       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BANK_ACC_ID ELSE 0 END BANK_ACC_ID,
-				       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_CODE ELSE '' END ACC_CODE,
-				       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_DESC ELSE '' END ACC_DESC,
-				       CASE WHEN ( Limit1.RESN_ID IS NOT NULL ) THEN Limit1.CODE1 || ' - ' || Limit1.RESN_DESC ELSE NULL END RESN_DESC  
-				  FROM ( SELECT Extent1.POS_ID POS_ID  ,
-				                Extent1.POS_NO POS_NO  ,
-				                Extent1.POS_BILL_ID POS_BILL_ID  ,
-				                Extent1.POS_CUST_NAME POS_CUST_NAME  ,
-				                Extent1.POS_DT POS_DT  ,
-				                Extent1.POS_TYPE_ID POS_TYPE_ID  ,
-				                Extent1.POS_MODULE_TYPE_ID POS_MODULE_TYPE_ID  ,
-				                Extent1.POS_TOT_AMT POS_TOT_AMT  ,
-				                Extent1.POS_TOT_CHRG POS_TOT_CHRG  ,
-				                Extent1.POS_TOT_TXS POS_TOT_TXS  ,
-				                Extent1.POS_TOT_DSCNT POS_TOT_DSCNT  ,
-				                Extent1.POS_WH_ID POS_WH_ID  ,
-				                Extent1.POS_REM POS_REM  ,
-				                Extent1.POS_MEM_ID POS_MEM_ID  ,
-				                Extent1.POS_CRT_USER_ID POS_CRT_USER_ID  ,
-				                Extent1.POS_ADDR1 POS_ADDR1  ,
-				                Extent1.POS_ADDR2 POS_ADDR2  ,
-				                Extent1.POS_ADDR3 POS_ADDR3  ,
-				                Extent1.POS_ADDR4 POS_ADDR4  ,
-				                Extent1.CR_ACC_ID CR_ACC_ID  ,
-				                Extent1.DR_ACC_ID DR_ACC_ID  ,
-				                Extent1.POS_RESN_ID POS_RESN_ID  ,
-				                Extent2.CODE_NAME CODE_NAME  ,
-				                Extent3.CODE_NAME CODENAME1  ,
-				                Extent4.MEM_ID MEM_ID  ,
-				                Extent4.MEM_CODE MEM_CODE  ,
-				                Extent4.NAME NAME  ,
-				                Extent5.WH_LOC_ID WH_LOC_ID  ,
-				                Extent5.WH_LOC_CODE WH_LOC_CODE  ,
-				                Extent5.WH_LOC_DESC WH_LOC_DESC  ,
-				                Extent6.USER_NAME USER_NAME  ,
-				                Extent6.USER_FULL_NAME USER_FULL_NAME  ,
-				                Extent7.PAY_ID PAY_ID  ,
-				                Extent7.OR_NO OR_NO  ,
-				                Extent7.TR_NO TR_NO  ,
-				                Extent7.BRNCH_ID BRNCH_ID  ,
-				                Extent7.BANK_ACC_ID BANK_ACC_ID  ,
-				                Extent7.TR_ISSU_DT TR_ISSU_DT  ,
-				                Extent8.BRNCH_ID BRANCHID1  ,
-				                Extent8.CODE CODE  ,
-				                Extent8.NAME NAME1  ,
-				                Extent9.ACC_ID ACC_ID  ,
-				                Extent9.ACC_CODE ACC_CODE  ,
-				                Extent9.ACC_DESC ACC_DESC  ,
-				                Extent10.POS_ID POSID1  ,
-				                Extent10.POS_NO POSNO1  ,
-				                Extent11.RESN_ID RESN_ID  ,
-				                Extent11.CODE CODE1  ,
-				                Extent11.RESN_DESC RESN_DESC  
-				         FROM SAL0057D Extent1
-				                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
-				                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
-				                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
-				                LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
-				                JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
-				                LEFT JOIN PAY0064D Extent7   ON Extent7.BILL_ID = Extent1.POS_BILL_ID
-				                LEFT JOIN SYS0005M Extent8   ON Extent8.BRNCH_ID = Extent7.BRNCH_ID
-				                LEFT JOIN SYS0001M Extent9   ON Extent9.ACC_ID = Extent7.BANK_ACC_ID
-				                LEFT JOIN SAL0057D Extent10   ON Extent10.POS_ID = Extent1.POS_MTCH_ID
-				                LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent1.POS_RESN_ID
-				          WHERE  Extent1.POS_NO = #{posNo} AND ROWNUM <= 1 ) Limit1
+                       Limit1.POS_RESN_ID ,
+                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.PAY_ID ELSE 0 END PAY_ID , 
+                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.OR_NO ELSE '' END OR_NO ,
+                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BRNCH_ID ELSE 0 END BRNCH_ID ,
+                       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.CODE ELSE '' END BRANCH_CODE,
+                       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.NAME1 ELSE '' END BRANCH_NAME,
+                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.TR_NO ELSE '' END TR_NO,
+                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN TO_CHAR(Limit1.TR_ISSU_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END TR_ISSU_DT,
+                       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BANK_ACC_ID ELSE 0 END BANK_ACC_ID,
+                       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_CODE ELSE '' END ACC_CODE,
+                       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_DESC ELSE '' END ACC_DESC,
+                       CASE WHEN ( Limit1.RESN_ID IS NOT NULL ) THEN Limit1.CODE1 || ' - ' || Limit1.RESN_DESC ELSE NULL END RESN_DESC  
+                  FROM ( SELECT Extent1.POS_ID POS_ID  ,
+                                Extent1.POS_NO POS_NO  ,
+                                Extent1.POS_BILL_ID POS_BILL_ID  ,
+                                Extent1.POS_CUST_NAME POS_CUST_NAME  ,
+                                Extent1.POS_DT POS_DT  ,
+                                Extent1.POS_TYPE_ID POS_TYPE_ID  ,
+                                Extent1.POS_MODULE_TYPE_ID POS_MODULE_TYPE_ID  ,
+                                Extent1.POS_TOT_AMT POS_TOT_AMT  ,
+                                Extent1.POS_TOT_CHRG POS_TOT_CHRG  ,
+                                Extent1.POS_TOT_TXS POS_TOT_TXS  ,
+                                Extent1.POS_TOT_DSCNT POS_TOT_DSCNT  ,
+                                Extent1.POS_WH_ID POS_WH_ID  ,
+                                Extent1.POS_REM POS_REM  ,
+                                Extent1.POS_MEM_ID POS_MEM_ID  ,
+                                Extent1.POS_CRT_USER_ID POS_CRT_USER_ID  ,
+                                Extent1.AREA_ID,                          
+                                Extent1.ADDR_DTL,
+                                NVL(Extent1.STREET, '') STREET,
+                                NVL(Extent12.AREA, '') AREA,
+                                NVL(Extent12.POSTCODE, '') POSTCODE,
+                                NVL(Extent12.CITY, '') CITY,
+                                NVL(Extent12.STATE, '') STATE,
+                                NVL(Extent12.COUNTRY, '') COUNTRY,
+                                CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
+                                NVL(Extent1.STREET, '') ||' '|| Extent12.AREA ||' '|| Extent12.POSTCODE ||' '|| Extent12.CITY ||' '|| Extent12.STATE ||' '|| Extent12.COUNTRY AS FULL_ADDRESS, 
+                                Extent1.CR_ACC_ID CR_ACC_ID  ,
+                                Extent1.DR_ACC_ID DR_ACC_ID  ,
+                                Extent1.POS_RESN_ID POS_RESN_ID  ,
+                                Extent2.CODE_NAME CODE_NAME  ,
+                                Extent3.CODE_NAME CODENAME1  ,
+                                Extent4.MEM_ID MEM_ID  ,
+                                Extent4.MEM_CODE MEM_CODE  ,
+                                Extent4.NAME NAME  ,
+                                Extent5.WH_LOC_ID WH_LOC_ID  ,
+                                Extent5.WH_LOC_CODE WH_LOC_CODE  ,
+                                Extent5.WH_LOC_DESC WH_LOC_DESC  ,
+                                Extent6.USER_NAME USER_NAME  ,
+                                Extent6.USER_FULL_NAME USER_FULL_NAME  ,
+                                Extent7.PAY_ID PAY_ID  ,
+                                Extent7.OR_NO OR_NO  ,
+                                Extent7.TR_NO TR_NO  ,
+                                Extent7.BRNCH_ID BRNCH_ID  ,
+                                Extent7.BANK_ACC_ID BANK_ACC_ID  ,
+                                Extent7.TR_ISSU_DT TR_ISSU_DT  ,
+                                Extent8.BRNCH_ID BRANCHID1  ,
+                                Extent8.CODE CODE  ,
+                                Extent8.NAME NAME1  ,
+                                Extent9.ACC_ID ACC_ID  ,
+                                Extent9.ACC_CODE ACC_CODE  ,
+                                Extent9.ACC_DESC ACC_DESC  ,
+                                Extent10.POS_ID POSID1  ,
+                                Extent10.POS_NO POSNO1  ,
+                                Extent11.RESN_ID RESN_ID  ,
+                                Extent11.CODE CODE1  ,
+                                Extent11.RESN_DESC RESN_DESC  
+                         FROM SAL0057D Extent1
+                                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+                                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+                                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+                                LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+                                JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+                                LEFT JOIN PAY0064D Extent7   ON Extent7.BILL_ID = Extent1.POS_BILL_ID
+                                LEFT JOIN SYS0005M Extent8   ON Extent8.BRNCH_ID = Extent7.BRNCH_ID
+                                LEFT JOIN SYS0001M Extent9   ON Extent9.ACC_ID = Extent7.BANK_ACC_ID
+                                LEFT JOIN SAL0057D Extent10   ON Extent10.POS_ID = Extent1.POS_MTCH_ID
+                                LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent1.POS_RESN_ID
+                                LEFT JOIN SYS0064M Extent12 ON  Extent12.AREA_ID = Extent1.AREA_ID
+                          WHERE  Extent1.POS_NO = #{posNo} AND ROWNUM <= 1 ) Limit1
 				           ]]>
     </select>
     

@@ -49,25 +49,8 @@ public class PosController {
 	public String selectPosList(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
 		
 		LOGGER.info("###### Post List Start ###########");
-		
-		//TODO 추후 삭제 (임시 Session)
-		params.put("userId", "KRHQ9001");
-		params.put("password", "zaq12w");
-		LoginVO loginVO = loginService.getLoginInfo(params);
-		HttpSession session = sessionHandler.getCurrentSession();
-		session.setAttribute(AppConstants.SESSION_INFO,SessionVO.create(loginVO));
-		LOGGER.info("########### Session Created !!! @@@@@@@@@@@@@");
-		// Session 임시 생성 끝
-		
-		// Session 가져오기 TEST
-		/*if(session.getAttribute(AppConstants.SESSION_INFO) != null){
-			
-			SessionVO sessionVO = (SessionVO)session.getAttribute(AppConstants.SESSION_INFO);
-			LOGGER.info("Session User Id : " + sessionVO.getUserId());
-			
-		}else{
-			LOGGER.info(" %%%%%%%%%% Session Create Failed!!!!!  %%%%%%%%%%");
-		}*/
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
 		
 		return "sales/pos/posList";
 	}
@@ -108,7 +91,7 @@ public class PosController {
 		//Add Attribute
 		model.addAttribute("purchaseMap", purchaseMap); 
 		
-		return "sales/pos/posViewDetail";
+		return "sales/pos/posViewDetailPop";
 	}
 	
 	@RequestMapping(value = "/selectPosDetailJsonList", method = RequestMethod.GET)
