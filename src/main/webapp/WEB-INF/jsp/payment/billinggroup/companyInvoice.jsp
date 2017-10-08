@@ -28,6 +28,7 @@ var columnLayout=[
     {dataField:"taskId", headerText:"Task ID",visible : false},
     {dataField:"renDateTimeYear", headerText:"Year",visible : false},
     {dataField:"renDateTimeMonth", headerText:"Month",visible : false},
+    {dataField:"email", headerText:"Email",visible : false},
     {dataField:"salesOrdNo", headerText:"Order No"},
     {dataField:"name", headerText:"Customer Name"},
     {dataField:"rentDocNo", headerText:"Invoice No"}, 
@@ -116,9 +117,11 @@ function fn_generateInvoice(){
 //Send E-Invoice 팝업
 function fn_sendEInvoicePop(){
     var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    var email = AUIGrid.getCellValue(myGridID, selectedGridValue, "email");
     
     if (selectedItem[0] > -1){
         $('#einvoice_wrap').show();
+        $('#send_email').val(email);
     }else{
         Common.alert('No claim record selected.');
     }
