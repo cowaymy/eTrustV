@@ -114,9 +114,9 @@
 				0,
 				0,
 				SYSDATE,
-				4238,
+				#{userId},
 				SYSDATE,
-	            4238,
+	            #{userId},
 	            #{crcStateTot}
 			)
     </update>
@@ -151,7 +151,7 @@
                 #{crcTrnsAmt},
                 0,
                 SYSDATE,
-                4238
+                #{userId}
             )            
     </update>
     
@@ -161,7 +161,7 @@
     <!-- testCallStoredProcedure  -->
     <select id="testCallStoredProcedure" statementType="CALLABLE" parameterType="Map">
         {
-        call SP_INST_RSC_ENRL(2,'20100616','20100616',4238,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=testMap})
+        call SP_INST_RSC_ENRL(2,'20100616','20100616',#{userId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=testMap})
         }
     </select>
 

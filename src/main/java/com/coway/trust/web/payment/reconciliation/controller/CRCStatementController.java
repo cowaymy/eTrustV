@@ -39,6 +39,7 @@ import com.coway.trust.biz.sample.SampleVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
 
@@ -100,8 +101,9 @@ public class CRCStatementController {
      */
     @RequestMapping(value = "/updateCRCStatementUpload.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> updateCRCStatementUpload(@RequestBody Map<String, ArrayList<Object>> params,
-    		Model model) {
+    		Model model, SessionVO sessionVO) {
     	
+    	int userId = sessionVO.getUserId();
     	List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
@@ -162,7 +164,7 @@ public class CRCStatementController {
                 crcTransactionMap.put("crcTrnscMid", ((String)hm.get("3")).trim());
                 crcTransactionMap.put("crcTrnscRefNo", ((String)hm.get("4")).trim());
                 crcTransactionMap.put("crcTrnsAmt", ((Integer)hm.get("5")));
-                
+                crcTransactionMap.put("userId", userId);
                 totalTrnscAmt += (Integer)hm.get("5");
                 
                 transactionList.add(crcTransactionMap);
@@ -171,6 +173,7 @@ public class CRCStatementController {
     		
     	//CRCStatement Total Amount 설정하기
     	crcSatementMap.put("crcStateTot", totalTrnscAmt);
+    	crcSatementMap.put("userId", userId);
     	LOGGER.debug("crcTrnsAmt : {}", totalTrnscAmt);
     	
     	// 데이터 등록
@@ -289,11 +292,12 @@ public class CRCStatementController {
      */
     @RequestMapping(value = "/testCallStoredProcedure.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> testCallStoredProcedure(@RequestBody Map<String, ArrayList<Object>> params,
-    		Model model) {
+    		Model model, SessionVO sessionVO) {
     	
     	//parameter 객체를 생성한다. 프로시저에서 CURSOR 반환시 해당 paramter 객체에 리스트를 세팅한다.
     	//프로시저에서 사용하는 parameter가 없어도 객체는 생성한다.
     	Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("userId", sessionVO.getUserId());
     	
     	//프로시저 함수 호출
     	crcStatementService.testCallStoredProcedure(param);

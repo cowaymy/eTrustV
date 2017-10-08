@@ -107,7 +107,7 @@
 
     <update id="updateClaimResultLive" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_TEST(0,2,'20170803',4238,5)            
+            call SP_TEST(0,2,'20170803',#{userId},5)            
         }
     </update>
     
@@ -117,7 +117,7 @@
         UPDATE PAY0041D SET 
             CTRL_WAIT_SYNC = 1
             , UPD_DT = SYSDATE
-            , UPD_USER_ID = 4238
+            , UPD_USER_ID = #{userId}
         WHERE
             CTRL_ID = #{ctrlId}     
     </update>

@@ -26,6 +26,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
 
@@ -235,12 +236,13 @@ public class ClaimController {
      */
     @RequestMapping(value = "/updateClaimResultLive.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> updateClaimResultLive(@RequestBody Map<String, ArrayList<Object>> params,
-    		Model model) {
+    		Model model, SessionVO sessionVO) {
     	
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
     	// 폼객체 처리.
 		Map<String, Object> claimMap = (Map<String, Object>)formList.get(0);
+		claimMap.put("userId", sessionVO.getUserId());
 		
 		// 데이터 수정
 		claimService.updateClaimResultLive(claimMap);
@@ -263,12 +265,14 @@ public class ClaimController {
      */
     @RequestMapping(value = "/updateClaimResultNextDay.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> updateClaimResultNextDay(@RequestBody Map<String, ArrayList<Object>> params,
-    		Model model) {
+    		Model model, SessionVO sessionVO) {
     	
     	List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
     	
     	// 폼객체 처리.
+    	
 		Map<String, Object> claimMap = (Map<String, Object>)formList.get(0);
+		claimMap.put("userId", sessionVO.getUserId());
 		
 		// 데이터 수정
     	claimService.updateClaimResultNextDay(claimMap);	
