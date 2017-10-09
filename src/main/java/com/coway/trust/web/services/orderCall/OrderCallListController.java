@@ -55,8 +55,18 @@ public class OrderCallListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/searchOrderCallList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrderCallListSearch(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectOrderCallListSearch(@RequestParam Map<String, Object> params, HttpServletRequest request,ModelMap model) {
 		logger.debug("params : {}", params);
+		
+		String[] appTypeList =  request.getParameterValues("appType");
+		String[] callLogTypeList =  request.getParameterValues("callLogType");
+		String[] callLogStatusList =  request.getParameterValues("callLogStatus");
+		String[] DSCCodeList =  request.getParameterValues("DSCCode");
+		
+		params.put("appTypeList", appTypeList);
+		params.put("callLogTypeList", callLogTypeList);
+		params.put("callLogStatusList", callLogStatusList);
+		params.put("DSCCodeList", DSCCodeList);
 		List<EgovMap> orderCallList = orderCallListService.selectOrderCall(params);
 		
 		logger.debug("orderCallList : {}", orderCallList);
