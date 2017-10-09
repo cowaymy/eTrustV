@@ -11,13 +11,17 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("MlogApiMapper")
 public interface MlogApiMapper {
 
-	List<EgovMap> getCTStockList(Map<String, Object> params);
-
 	List<EgovMap> getRDCStockList(Map<String, Object> params);
+	
+	List<EgovMap> getStockbyHolderList(Map<String, Object> params);
+	
+	List<EgovMap> getCommonQty(Map<String, Object> params);
+
+	List<EgovMap> getCt_CodyList(Map<String, Object> params);
 
 	List<EgovMap> getAllStockList(Map<String, Object> params);
 
-	List<EgovMap> selectPartsStockHolder(Map<String, Object> params);
+	List<EgovMap> getInventoryStockByHolder(Map<String, Object> params);
 
 	List<EgovMap> StockReceiveList(Map<String, Object> params);
 
