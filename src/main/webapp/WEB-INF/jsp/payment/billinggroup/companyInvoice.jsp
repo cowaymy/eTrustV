@@ -187,6 +187,10 @@ function fn_sendEInvoice(){
   }
 }
 
+//Layer close
+hideViewPopup=function(val){
+    $(val).hide();
+}
 </script>
 
 <!-- content start -->
@@ -299,9 +303,6 @@ function fn_sendEInvoice(){
     <input type="hidden" id="emailText" name="emailText" value="" />
     <input type="hidden" id="emailTo" name="emailTo" value="" />
 </form>
-
-
-
     
 
 <!--------------------------------------------------------------- 
