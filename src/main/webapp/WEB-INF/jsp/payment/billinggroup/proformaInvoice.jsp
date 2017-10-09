@@ -80,7 +80,6 @@ function fn_getProformaInvoiceListAjax() {
 		 Common.alert("* Please key in either Bill No or Order No.<br />");
 	}else{
 		Common.ajax("GET", "/payment/selectProformaInvoiceList.do", $("#searchForm").serialize(), function(result) {
-			console.log(result);
 	    	AUIGrid.setGridData(myGridID, result);
 	    });
 	}
@@ -155,45 +154,51 @@ function fn_generateStatement(){
 //EMAIL
 function fn_sendEInvoice(){    
     
-	if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
-	      Common.alert('* Please key in the email.<br />');
-	      return;
-	}
+	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 	
-    //report form에 parameter 세팅
-    //옵션 초기화
-    $("#reportPDFForm #v_adv1Boolean").val(0);
-    $("#reportPDFForm #v_adv2Boolean").val(0);
-    $("#reportPDFForm #v_bustPump").val(0);
-    
-    //옵션 세팅
-    $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid"));
-    $("#reportPDFForm #viewType").val("MAIL_PDF");
-    
-    if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
-    if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
-    if ($("#boosterPump").is(":checked")) $("#reportPDFForm #v_bustPump").val(1); 
-    
-    
-    var message = "";
-    message += "Dear customer,\n\n" +
-        "Please refer to the attachment of the re-send invoice as per requested.\n" +
-        "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
-        "\n\n" +
-        "NOTE :Please do not reply this email as this is computer generated e-mail." +
-        "\n\n\n" +
-        "Thank you and have a wonderful day.\n\n" +
-        "Regards\n" +
-        "Management Team of Coway Malaysia Sdn. Bhd.";
-    
-    //E-mail 제목
-    var emailTitle = "Proforma Invoice " + AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid");
-    $("#reportPDFForm #emailSubject").val(emailTitle);
-    $("#reportPDFForm #emailText").val(message);
-    $("#reportPDFForm #emailTo").val($("#eInvoiceForm #send_email").val());
+	if (selectedItem[0] > -1){
+		
+		if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
+	          Common.alert('* Please key in the email.<br />');
+	          return;
+	    }
+	    
+	    //report form에 parameter 세팅
+	    //옵션 초기화
+	    $("#reportPDFForm #v_adv1Boolean").val(0);
+	    $("#reportPDFForm #v_adv2Boolean").val(0);
+	    $("#reportPDFForm #v_bustPump").val(0);
+	    
+	    //옵션 세팅
+	    $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid"));
+	    $("#reportPDFForm #viewType").val("MAIL_PDF");
+	    
+	    if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
+	    if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
+	    if ($("#boosterPump").is(":checked")) $("#reportPDFForm #v_bustPump").val(1); 
+	    
+	    
+	    var message = "";
+	    message += "Dear customer,\n\n" +
+	        "Please refer to the attachment of the re-send invoice as per requested.\n" +
+	        "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
+	        "\n\n" +
+	        "NOTE :Please do not reply this email as this is computer generated e-mail." +
+	        "\n\n\n" +
+	        "Thank you and have a wonderful day.\n\n" +
+	        "Regards\n" +
+	        "Management Team of Coway Malaysia Sdn. Bhd.";
+	    
+	    //E-mail 제목
+	    var emailTitle = "Proforma Invoice " + AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid");
+	    $("#reportPDFForm #emailSubject").val(emailTitle);
+	    $("#reportPDFForm #emailText").val(message);
+	    $("#reportPDFForm #emailTo").val($("#eInvoiceForm #send_email").val());
 
-    Common.report("reportPDFForm");
-    
+	    Common.report("reportPDFForm");
+	}else{
+	      Common.alert('<b>No print type selected.</b>');
+	}
 }
 
 //Send E-Invoice 팝업
