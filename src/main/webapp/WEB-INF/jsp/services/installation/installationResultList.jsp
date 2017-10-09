@@ -11,7 +11,14 @@ $(document).ready(function() {
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
           alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId"));
-          Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId")+"&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
+          var statusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
+          if(statusCode == "ACT"){
+        	  alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
+        	  Common.alert("Installation is under status [active]. No result to view.");
+          }else{
+        	  alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
+        	  Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId")+"&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
+          }
       });
 
     AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -20,6 +27,7 @@ $(document).ready(function() {
       codeid1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1");
       orderId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
       docId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "c1");
+      statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
       
       //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
   }); 
@@ -36,11 +44,15 @@ function fn_installationListSearch(){
     });
 }
 
-function fn_addInstallation(codeid1){
-	if(codeid1 == 257){
-		   Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
+function fn_addInstallation(codeid1){//active 일때만 열림
+	if(statusCode == "ACT"){
+		if(codeid1 == 257){
+	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
+	    }else{
+	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId);
+	    }	
 	}else{
-		 Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId);
+		Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
 	}
 }
 var myGridID;
@@ -166,6 +178,11 @@ var gridPros = {
     showRowNumColumn : false,
     
 };
+
+function fn_excelDown(){
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("grid_wrap", "xlsx", "Installation Result Log Search");
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -289,23 +306,23 @@ var gridPros = {
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="javascript:fn_addInstallation(codeid1)" id="addInstallation">Add Installation Result</a></p></li>
-        <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
+       <!--  <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn"><a href="#">menu6</a></p></li>
         <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <!-- <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -313,13 +330,14 @@ var gridPros = {
 </aside><!-- link_btns_wrap end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li>
+   <!--  <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

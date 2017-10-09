@@ -956,8 +956,8 @@ function fn_installProductExchangeSave(){
 </tr>
 <tr>
     <th scope="row">CT Code</th>
-    <td><input type="text" title="" placeholder="" class="" id="CTCode" name="CTCode"/><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a>
-    <input type="text" title="" placeholder="" class="" id="CTID" name="CTID"/>
+    <td><input type="text" title="" placeholder="" class="" id="CTCode" name="CTCode"/><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    <input type="hidden" title="" placeholder="" class="" id="CTID" name="CTID"/>
     </td>
     <th scope="row">CT Name</th>
     <td><input type="text" title="" placeholder="" class="" id="CTName" name="CTName"/></td>

@@ -2,7 +2,8 @@
 
 //Start AUIGrid
 $(document).ready(function() {
-
+	
+	
     // AUIGrid 그리드를 생성합니다.
     orderCallListGrid();
     
@@ -25,8 +26,26 @@ $(document).ready(function() {
         console.log(callStusCode+ "     " + callStusId + "     " + salesOrdId+ "     "  + callEntryId)
     });  
      
+ 
+ doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
+ doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDSCCode', 'M', 'fn_multiCombo'); //Branch Code
+ doGetProductCombo('/common/selectProductCodeList.do', '', '', 'product', 'S'); //Product Code
 });
 
+    function fn_multiCombo(){
+    	 $('#listAppType').change(function() {
+             //console.log($(this).val());
+         }).multipleSelect({
+             selectAll: true, // 전체선택 
+             width: '100%'
+         });
+    	 $('#listDSCCode').change(function() {
+             //console.log($(this).val());
+         }).multipleSelect({
+             selectAll: true, // 전체선택 
+             width: '100%'
+         });
+    }
 	function fn_orderCallList(){
 		Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
 	        console.log("성공.");
@@ -35,7 +54,13 @@ $(document).ready(function() {
 	    });
 	}
 	function fn_openAddCall(){
-		Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo);
+		if(callStusId == "1" || callStusId == "19" || callStusId == "30"  ){ //1 10 19 20 30)
+		  Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo);
+		}else if(callStusId == "10" ){
+			Common.alert("This call log is under [CAN] status. Add call log result is disallowed.  ");
+		}else if(callStusId == "20" ){
+            Common.alert("This call log is under [RDY] status. Add call log result is disallowed.   ");
+        }
 	}
 	var myGridID;
 	function orderCallListGrid() {
@@ -165,11 +190,15 @@ var gridPros = {
         
     };
     
+function fn_excelDown(){
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("grid_wrap_callList", "xlsx", "Order Call Log Search");
+}
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
@@ -205,16 +234,16 @@ var gridPros = {
     </td>
     <th scope="row">Application Type</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple">
+    <select class="multy_select w100p" multiple="multiple" id="listAppType" name="appType">
     </select>
     </td>
     <th scope="row">Order Date</th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="createDate" name="createDate"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  id="endDate"  name="endDate"/></p>
     </div><!-- date_set end -->
 
     </td>
@@ -222,38 +251,46 @@ var gridPros = {
 <tr>
     <th scope="row">State</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="ordStatus" name="ordStatus">
     </select>
     </td>
     <th scope="row">Area</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="ordArea" name="ordArea">
     </select>
     </td>
     <th scope="row">Product</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="product" name="product">
     </select>
     </td>
 </tr>
 <tr>
     <th scope="row">Call Log Type</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple">
+    <select class="multy_select w100p" multiple="multiple" id="callLogType" name="callLogType">
+        <option value="257" selected>New Installation Order</option>
+        <option value="258" selected>Product Exchange</option>
+
     </select>
     </td>
     <th scope="row">Call Log Status</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple">
+    <select class="multy_select w100p" multiple="multiple" id="callLogStatus" name="callLogStatus">
+     <option value="1" selected>Active</option>
+     <option value="10">Cancelled</option>
+     <option value="19" selected>Recall</option>
+     <option value="20">Ready To Install</option>
+     <option value="30">Waiting For Cancel</option>
     </select>
     </td>
     <th scope="row">Call Log Date</th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="callStrDate" name="callStrDate"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  id="callEndDate" name="callEndDate"/></p>
     </div><!-- date_set end -->
 
     </td>
@@ -261,41 +298,39 @@ var gridPros = {
 <tr>
     <th scope="row">Customer ID</th>
     <td>
-    <input type="text" title="" placeholder="Customer ID" class="w100p" />
+    <input type="text" title="" placeholder="Customer ID" class="w100p" id="custId" name="custId"/>
     </td>
     <th scope="row">Customer Name</th>
     <td>
-    <input type="text" title="" placeholder="Customer Name" class="w100p" />
+    <input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/>
     </td>
     <th scope="row">NRIC/Company No</th>
     <td>
-    <input type="text" title="" placeholder="NRIC/Company Number" class="w100p" />
+    <input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="nricNo" name="nricNo"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Contact No</th>
     <td>
-    <input type="text" title="" placeholder="Contact Number" class="w100p" />
+    <input type="text" title="" placeholder="Contact Number" class="w100p" id="contactNo" name="contactNo"/>
     </td>
     <th scope="row">DSC Code</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple">
+    <select class="multy_select w100p" multiple="multiple" id="listDSCCode" name="DSCCode">
     </select>
     </td>
     <th scope="row">PO Number</th>
     <td>
-    <input type="text" title="" placeholder="PO Number" class="w100p" />
+    <input type="text" title="" placeholder="PO Number" class="w100p" id="PONum" name="PONum"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Sort By</th>
     <td>
-    <select class="w100p">
-    </select>
-    </td>
-    <th scope="row">Feedback Code</th>
-    <td colspan="3">
-    <select class="multy_select" multiple="multiple">
+    <select class="w100p" id="sortBy" name="sortBy">
+        <option value="0" selected>No Sorting</option>
+        <option value="1">Order Number</option>
+        <option value="2">Customer Name</option>
     </select>
     </td>
 </tr>
@@ -303,31 +338,31 @@ var gridPros = {
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="#" onClick="fn_openAddCall()">Add Call Log Result</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+       <!--  <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn"><a href="#">menu6</a></p></li>
         <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <!-- <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
     </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
@@ -338,11 +373,12 @@ var gridPros = {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li>
+   <!-- <l  i><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
