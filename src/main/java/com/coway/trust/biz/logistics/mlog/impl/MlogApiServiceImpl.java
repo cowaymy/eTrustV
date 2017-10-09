@@ -23,15 +23,27 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	private MlogApiMapper MlogApiMapper;
 
 	@Override
-	public List<EgovMap> getCTStockList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return MlogApiMapper.getCTStockList(params);
-	}
-
-	@Override
 	public List<EgovMap> getRDCStockList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getRDCStockList(params);
+	}
+
+	@Override
+	public List<EgovMap> getStockbyHolderList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getStockbyHolderList(params);
+	}
+
+	@Override
+	public List<EgovMap> getStockbyHolderQty(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getCommonQty(params);
+	}
+
+	@Override
+	public List<EgovMap> getCt_CodyList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getCt_CodyList(params);
 	}
 
 	@Override
@@ -41,9 +53,9 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	}
 
 	@Override
-	public List<EgovMap> selectPartsStockHolder(Map<String, Object> params) {
+	public List<EgovMap> getInventoryStockByHolder(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return MlogApiMapper.selectPartsStockHolder(params);
+		return MlogApiMapper.getInventoryStockByHolder(params);
 	}
 
 	@Override
