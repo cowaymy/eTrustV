@@ -9,88 +9,85 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "InventoryStockByHolderDto", description = "공통코드 Dto")
 public class InventoryStockByHolderDto {
 
-	@ApiModelProperty(value = "CT Code")
-	private String memCode;
-	
-	@ApiModelProperty(value = "CT Name")
-	private String name;
-	
-	@ApiModelProperty(value = "Parts Name")
-	private String stkDesc;
-	
-	@ApiModelProperty(value = "Parts Code")
-	private String bomCompnt;
-	
-	@ApiModelProperty(value = "Qty")
-	private int qty;
-	
-	@ApiModelProperty(value = "No S/N")
+	@ApiModelProperty(value = "CT/CODY 이름")
+	private String ctCodyName;
+
+	@ApiModelProperty(value = "CT/CODY ID")
+	private String ctCodyId;
+
+	@ApiModelProperty(value = "부품코드")
+	private String partsCode;
+
+	@ApiModelProperty(value = "부품 ID")
+	private int partsId;
+
+	@ApiModelProperty(value = "부품명")
+	private String partsName;
+
+	@ApiModelProperty(value = "재고")
+	private int stockQty;
+
+	@ApiModelProperty(value = "제품 s/n")
 	private String serialNo;
-	
 
 	public static InventoryStockByHolderDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, InventoryStockByHolderDto.class);
 	}
 
-
-	public String getMemCode() {
-		return memCode;
+	public String getCtCodyName() {
+		return ctCodyName;
 	}
 
-
-	public void setMemCode(String memCode) {
-		this.memCode = memCode;
+	public void setCtCodyName(String ctCodyName) {
+		this.ctCodyName = ctCodyName;
 	}
 
-
-	public String getName() {
-		return name;
+	public String getCtCodyId() {
+		return ctCodyId;
 	}
 
-
-	public void setName(String name) {
-		this.name = name;
+	public void setCtCodyId(String ctCodyId) {
+		this.ctCodyId = ctCodyId;
 	}
 
-
-	public String getStkDesc() {
-		return stkDesc;
+	public String getPartsCode() {
+		return partsCode;
 	}
 
-
-	public void setStkDesc(String stkDesc) {
-		this.stkDesc = stkDesc;
+	public void setPartsCode(String partsCode) {
+		this.partsCode = partsCode;
 	}
 
-
-	public String getBomCompnt() {
-		return bomCompnt;
+	public int getPartsId() {
+		return partsId;
 	}
 
-
-	public void setBomCompnt(String bomCompnt) {
-		this.bomCompnt = bomCompnt;
+	public void setPartsId(int partsId) {
+		this.partsId = partsId;
 	}
 
-
-	public int getQty() {
-		return qty;
+	public String getPartsName() {
+		return partsName;
 	}
 
-
-	public void setQty(int qty) {
-		this.qty = qty;
+	public void setPartsName(String partsName) {
+		this.partsName = partsName;
 	}
 
+	public int getStockQty() {
+		return stockQty;
+	}
+
+	public void setStockQty(int stockQty) {
+		this.stockQty = stockQty;
+	}
 
 	public String getSerialNo() {
 		return serialNo;
 	}
 
-
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
 	}
-
 
 }

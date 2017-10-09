@@ -38,7 +38,7 @@ public class LogisticsApiController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@ApiOperation(value = "RDC Stock List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "RDC Stock List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/rdcStockList", method = RequestMethod.GET)
 	public ResponseEntity<List<RdcStockListDto>> getRDCStockList(@ModelAttribute RdcStockListForm RdcStockListForm)
 			throws Exception {
@@ -57,8 +57,53 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
+	
+	
+	@ApiOperation(value = "Stock by Holder List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/stockbyHolderList", method = RequestMethod.GET)
+	public ResponseEntity<List<StockByHolderListDto>> getStockbyHolderList(
+			@ModelAttribute StockByHolderListForm StockByHolderListForm) throws Exception {
 
-	@ApiOperation(value = "DisplayCt_CodyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		Map<String, Object> params = StockByHolderListForm.createMap(StockByHolderListForm);
+
+		List<EgovMap> StockbyHolderList = MlogApiService.getStockbyHolderList(params);
+
+		for (int i = 0; i < StockbyHolderList.size(); i++) {
+			LOGGER.debug("StockbyHolderList    값 : {}", StockbyHolderList.get(i));
+
+		}
+		List<StockByHolderListDto> list = StockbyHolderList.stream().map(r -> StockByHolderListDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	@ApiOperation(value = "Stock by Holder Qty 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/stockbyHolderQty", method = RequestMethod.GET)
+	public ResponseEntity<List<StockByHolderQtyDto>> getStockbyHolderQty(
+			@ModelAttribute StockByHolderQtyForm StockByHolderQtyForm) throws Exception {
+
+		Map<String, Object> params = StockByHolderQtyForm.createMap(StockByHolderQtyForm);
+
+		List<EgovMap> StockbyHolderQty = MlogApiService.getStockbyHolderQty(params);
+
+		for (int i = 0; i < StockbyHolderQty.size(); i++) {
+			LOGGER.debug("StockbyHolderQty    값 : {}", StockbyHolderQty.get(i));
+
+		}
+		List<StockByHolderQtyDto> list = StockbyHolderQty.stream().map(r -> StockByHolderQtyDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+	
+
+	@ApiOperation(value = "DisplayCt_CodyList 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/displayCt_CodyList", method = RequestMethod.GET)
 	public ResponseEntity<List<DisplayCt_CodyListDto>> getCTStockList(
 			@ModelAttribute DisplayCt_CodyListForm DisplayCt_CodyListForm) throws Exception {
@@ -79,7 +124,7 @@ public class LogisticsApiController {
 
 	
 	
-	@ApiOperation(value = "Inventory Status Display - All List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Inventory Status Display - All List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryAllList", method = RequestMethod.GET)
 	public ResponseEntity<List<InventoryAllListDto>> getAllStockList(
 			@ModelAttribute InventoryAllListForm InventoryAllListForm) throws Exception {
@@ -100,14 +145,14 @@ public class LogisticsApiController {
 	}
 	
 	
-	@ApiOperation(value = "Inventory Status Display - Stock by Holder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Inventory Status Display - Stock by Holder 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryStockByHolder", method = RequestMethod.GET)
-	public ResponseEntity<List<InventoryStockByHolderDto>> selectPartsStockHolder(
+	public ResponseEntity<List<InventoryStockByHolderDto>> getInventoryStockByHolder(
 			@ModelAttribute InventoryStockByHolderForm InventoryStockByHolderForm) throws Exception {
 
 		Map<String, Object> params = InventoryStockByHolderForm.createMap(InventoryStockByHolderForm);
 
-		List<EgovMap> StockHolder = MlogApiService.selectPartsStockHolder(params);
+		List<EgovMap> StockHolder = MlogApiService.getInventoryStockByHolder(params);
 
 		for (int i = 0; i < StockHolder.size(); i++) {
 			LOGGER.debug("StockHolder 값 : {}", StockHolder.get(i));

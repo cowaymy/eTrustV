@@ -6,11 +6,11 @@ import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "StockByHolderListForm", description = "공통코드 Form")
-public class StockByHolderListForm {
+@ApiModel(value = "StockByHolderQtyForm", description = "공통코드 Form")
+public class StockByHolderQtyForm {
 
-	@ApiModelProperty(value = "userId [default : '' 전체] 예) CD100087 ", example = "1, 2, 3")
-	private String userId;
+	@ApiModelProperty(value = "locCode [default : '' 전체] 예) CD100615 ", example = "1, 2, 3")
+	private String locCode;
 
 	@ApiModelProperty(value = "partsCode [default : '' 전체] 예) 100750, 3001499 ,3105547, 3300513", example = "1, 2, 3")
 	private String partsCode;
@@ -18,20 +18,20 @@ public class StockByHolderListForm {
 	@ApiModelProperty(value = "partsId [default : '' 전체] 예) Water Purifier=54, Air Purifier=55, Bidet=56", example = "1, 2, 3")
 	private String partsId;
 
-	public static Map<String, Object> createMap(StockByHolderListForm StockByHolderListForm) {
+	public static Map<String, Object> createMap(StockByHolderQtyForm StockByHolderQtyForm) {
 		Map<String, Object> params = new HashMap<>();
-		params.put("userId", StockByHolderListForm.getUserId());
-		params.put("partsCode", StockByHolderListForm.getPartsCode());
-		params.put("partsId", StockByHolderListForm.getPartsId());
+		params.put("locCode", StockByHolderQtyForm.getLocCode());
+		params.put("partsCode", StockByHolderQtyForm.getPartsCode());
+		params.put("partsId", StockByHolderQtyForm.getPartsId());
 		return params;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getLocCode() {
+		return locCode;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setLocCode(String locCode) {
+		this.locCode = locCode;
 	}
 
 	public String getPartsCode() {
