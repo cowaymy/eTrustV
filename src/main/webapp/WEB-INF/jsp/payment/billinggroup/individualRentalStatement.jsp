@@ -28,16 +28,13 @@ var columnLayout=[
     {dataField:"taskId", headerText:"Task ID",visible : false},
     {dataField:"rdtmonth", headerText:"MONTH",visible : false},
     {dataField:"rdtyear", headerText:"YEAR",visible : false},
+    {dataField:"email", headerText:"Email",visible : false},
     {dataField:"salesOrdNo", headerText:"Order No"},
     {dataField:"name", headerText:"Customer Name"},
     {dataField:"rentDocNo", headerText:"Invoice No"},
     {dataField:"salesDt", headerText:"Invoice Date"},
     {dataField:"rentAmt", headerText:"Invoice Amount"},
     {dataField:"rentInstNo", headerText:"Installment No"}
-    
-    
-    
-    
 ];
 
 function fn_getIndividualStatementListAjax() {        
@@ -81,6 +78,7 @@ function fn_generateInvoice(){
 	        }
 	    }
 	    
+	    $("#reportPDFForm #viewType").val("PDF");
 	    $("#reportPDFForm #v_month").val(month);    
 	    $("#reportPDFForm #v_year").val(year);
 	    $("#reportPDFForm #v_brNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo"));    
@@ -98,6 +96,87 @@ function fn_generateInvoice(){
 	}else{
 	    Common.alert('<b>No print type selected.</b>');
 	}
+}
+
+//EMAIL
+function fn_sendEInvoice(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if($("#eInvoiceForm #send_email").val() == ""){
+    	Common.alert('* Please key in the email address.');
+    	return;
+    }
+    
+    if (selectedItem[0] > -1){
+        //report form에 parameter 세팅
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "rdtyear");
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "rdtmonth");
+        
+        if(parseInt(year) < 2014){
+            $("#reportPDFForm #reportFileName").val('/statement/Official_StatementOfAccount_PDF.rpt');
+        }else{
+            if( parseInt(year) ==  2014 && parseInt(month) < 5 ){
+                $("#reportPDFForm #reportFileName").val('/statement/Official_StatementOfAccount_PDF.rpt');
+            }else{
+                $("#reportPDFForm #reportFileName").val('/statement/Official_StatementOfAccount_PDF201405.rpt');
+            }
+        }
+        
+        $("#reportPDFForm #viewType").val("MAIL_PDF");
+        $("#reportPDFForm #v_month").val(month);    
+        $("#reportPDFForm #v_year").val(year);
+        $("#reportPDFForm #v_brNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "rentDocNo"));    
+        $("#reportPDFForm #v_type").val(2);
+        $("#reportPDFForm #v_printLive").val(0);
+        $("#reportPDFForm #v_taskId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taskId"));
+        
+        //E-mail 내용
+        var paramMonth  = parseInt(month) < 10 ? "0" + month : month;
+        var message = "";
+        message += "Dear customer,\n\n" +
+            "Please refer to the attachment of the re-send invoice as per requested.\n" +
+            "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
+            "\n\n" +
+            "NOTE :Please do not reply this email as this is computer generated e-mail." +
+            "\n\n\n" +
+            "Thank you and have a wonderful day.\n\n" +
+            "Regards\n" +
+            "Management Team of Coway Malaysia Sdn. Bhd.";
+            
+        //E-mail 제목
+        var emailTitle = "Individual Statement  " + paramMonth + "/" + year;
+        $("#reportPDFForm #emailSubject").val(emailTitle);
+        $("#reportPDFForm #emailText").val(message);
+        $("#reportPDFForm #emailTo").val($("#eInvoiceForm #send_email").val());
+          
+        //report 호출
+        var option = {
+            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+            };
+    
+        Common.report("reportPDFForm", option);
+     
+    }else{
+        Common.alert('<b>No print type selected.</b>');
+    }
+}
+
+//Send E-Invoice 팝업
+function fn_sendEStatementPop(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+    	var email = AUIGrid.getCellValue(myGridID, selectedGridValue, "email");
+        $('#einvoice_wrap').show();
+        $('#send_email').val(email);
+    }else{
+        Common.alert('No claim record selected.');
+    }
+}
+
+//Layer close
+hideViewPopup=function(val){
+    $(val).hide();
 }
 </script>
 
@@ -180,9 +259,9 @@ function fn_generateInvoice(){
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_generateInvoice();">Statement Generate</a></p></li>
                     </ul>
-                    <!-- <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
-                    </ul>-->
+                    <ul class="btns">
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_sendEStatementPop();">Send E-Statement</a></p></li>
+                    </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
@@ -196,11 +275,62 @@ function fn_generateInvoice(){
 </section>
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
-    <input type="hidden" id="viewType" name="viewType" value="PDF" />    
+    <input type="hidden" id="viewType" name="viewType" value="" />    
     <input type="hidden" id="v_month" name="v_month" />
     <input type="hidden" id="v_year" name="v_year" />
     <input type="hidden" id="v_brNo" name="v_brNo" />
     <input type="hidden" id="v_type" name="v_type" />
     <input type="hidden" id="v_printLive" name="v_printLive" />
     <input type="hidden" id="v_taskId" name="v_taskId" />
+    <!-- 이메일 전송인 경우 모두 필수-->
+    <input type="hidden" id="emailSubject" name="emailSubject" value="" />
+    <input type="hidden" id="emailText" name="emailText" value="" />
+    <input type="hidden" id="emailTo" name="emailTo" value="" />
 </form>
+
+<!--------------------------------------------------------------- 
+    POP-UP (E-INVOICE)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="einvoice_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="einvoice_pop_header">
+        <h1>COMPANY INVOICE - E-INVOICE</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#einvoice_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="eInvoiceForm" id="eInvoiceForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>
+                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>
+        
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
