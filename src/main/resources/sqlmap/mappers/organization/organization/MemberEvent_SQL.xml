@@ -20,8 +20,6 @@
 	<select id="selectOrganizationEventList" parameterType="Map" resultType="egovMap">
 
        <![CDATA[
-          SELECT * 
-              FROM (
                  SELECT Project1.PROMO_ID PROMO_ID  ,
 			                Project1.REQST_NO REQST_NO  ,
 			                Project1.TYPE_DESC TYPE_DESC  ,
@@ -88,64 +86,115 @@
 			                                           AND ( Extent16.MEM_TYPE_ID = Extent10.MEM_TYPE_ID )
 			                                           LEFT JOIN ORG0001D Extent17   ON Extent10.PARENT_ID_TO = Extent17.MEM_ID
 			                                           JOIN SYS0047M Extent18   ON Extent10.CRT_USER_ID = Extent18.USER_ID
-			                                     WHERE  8 <> Extent10.STUS_ID ) GroupBy1
-			                 WHERE  8 <> Extent1.STUS_ID ) Project1 ) Project1
-			 WHERE  Project1.ROW_NUMBER > 0
-			     ]]>                       
-				                 
-				 <if test="requestNoF != '' and requestNoT == '' " >	
-                    <![CDATA[ and  Project1.REQST_NO  >= #{requestNoF} ]]>   
+			                                     WHERE  8 <> Extent10.STUS_ID 
+			                                      ]]>  
+			     <if test="requestNoF != '' and requestNoT == '' " >    
+                    <![CDATA[ and  Extent10.REQST_NO  >= #{requestNoF} ]]>   
                  </if>
                  <if test="requestNoF != '' and requestNoT != '' ">
-                     and  Project1.REQST_NO between  #{requestNoF} and #{requestNoT}
+                     and  Extent10.REQST_NO between  #{requestNoF} and #{requestNoT}
                  </if>
-			     <if test="requestNoF == '' and requestNoT != '' ">
-		             <![CDATA[ and  Project1.REQST_NO  <= #{requestNoT} ]]>
-			     </if>
-
-			     
-			     <if test="StatusList != null and StatusList != '' ">
-			         and Project1.STUS_ID in
+                 <if test="requestNoF == '' and requestNoT != '' ">
+                     <![CDATA[ and  Extent10.REQST_NO  <= #{requestNoT} ]]>
+                 </if>
+                 <if test="StatusList != null and StatusList != '' ">
+                     and Extent10.STUS_ID in
                     <foreach item="item" collection="StatusList" index="index" open="(" separator="," close=")">
                     #{item}
                     </foreach>
-			     </if>
-			     
-			         
-                 <if test="requestDateF != '' and requestDateT == '' " >    
-                    <![CDATA[  AND AND Project1.CRT_DT <=  TO_DATE(#{requestDateF},'DD/MM/YYYY') ]]>   
                  </if>
-                 <if test="requestDateF != '' and requestDateT != '' ">
-                     <![CDATA[ AND Project1.CRT_DT <= TO_DATE(#{requestDateF},'DD/MM/YYYY') AND Project1.CRT_DT <= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>   
-                 </if>
-                 <if test="requestDateF == '' and requestDateT != '' ">
-                     <![CDATA[ AND AND Project1.CRT_DT <= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>
-                 </if>
-
-
-    	         <if test="requestType != '' and requestType == '' " >    
-		               and Project1.NAME1 in  
-                    <foreach item="item" collection="requestType" index="index" open="(" separator="," close=")">
+                 <if test="memTypeList != null and memTypeList != '' ">
+                     and Extent11.CODE_ID in
+                    <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
                     #{item}
                     </foreach>
-		         </if>
-	
-
-	
-                 <if test="requestPerson != '' and requestPerson == '' " >    
-                       and Project1.NAME1 =  #{requestPerson}
+                 </if>
+                 <if test="requestDateF != '' and requestDateT == '' " >    
+                    <![CDATA[  AND Extent10.CRT_DT >= TO_DATE(#{requestDateF},'DD/MM/YYYY') ]]>   
+                 </if>
+                 <if test="requestDateF != '' and requestDateT != '' ">
+                     <![CDATA[ AND Extent10.CRT_DT >= TO_DATE(#{requestDateF},'DD/MM/YYYY') AND Extent10.CRT_DT<= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>   
+                 </if>
+                 <if test="requestDateF == '' and requestDateT != '' ">
+                     <![CDATA[ AND  Extent10.CRT_DT <= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>
+                 </if>
+                 <if test="requestTypeList != null and requestTypeList != '' " >    
+                       and Extent12.CODE_ID in  
+                    <foreach item="item" collection="requestTypeList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                 </if>
+                 <if test="requestPerson != null and requestPerson  != '' " >    
+                       and Extent18.USER_NAME =  #{requestPerson}
+                 </if>
+                 <if test="memberCode != null and memberCode  !='' " >    
+                       AND Extent13.MEM_CODE LIKE #{memberCode}
+                 </if>
+                 
+                 
+			        <![CDATA[                              
+			           ) GroupBy1
+			                 WHERE  8 <> Extent1.STUS_ID 
+			         ]]> 
+			         <if test="requestNoF != '' and requestNoT == '' " > 
+                    <![CDATA[ and  Extent1.REQST_NO  >= #{requestNoF} ]]>   
+                 </if>
+                 <if test="requestNoF != '' and requestNoT != '' ">
+                     and  Extent1.REQST_NO between  #{requestNoF} and #{requestNoT}
+                 </if>
+                 <if test="requestNoF == '' and requestNoT != '' ">
+                     <![CDATA[ and  Extent1.REQST_NO  <= #{requestNoT} ]]>
                  </if>
 
-                 <if test="memberCode != '' and memberCode == '' " >    
-                       AND Project1.MEM_CODE LIKE #{memberCode}
+                 
+                 <if test="StatusList != null and StatusList != '' ">
+                     and Extent1.STUS_ID in
+                    <foreach item="item" collection="StatusList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                 </if>
+                 <if test="memTypeList != null and memTypeList != '' ">
+                     and Extent2.CODE_ID in
+                    <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                 </if>
+                 
+                     
+                 <if test="requestDateF != '' and requestDateT == '' " >    
+                    <![CDATA[  AND Extent1.CRT_DT  >= TO_DATE(#{requestDateF},'DD/MM/YYYY') ]]>   
+                 </if>
+                 <if test="requestDateF != '' and requestDateT != '' ">
+                     <![CDATA[ AND Extent1.CRT_DT  >= TO_DATE(#{requestDateF},'DD/MM/YYYY') AND Extent1.CRT_DT <= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>   
+                 </if>
+                 <if test="requestDateF == '' and requestDateT != '' ">
+                     <![CDATA[ AND  Extent1.CRT_DT <= TO_DATE(#{requestDateT},'DD/MM/YYYY') ]]>
                  </if>
 
 
-	
-			     			     
-			  ORDER BY Project1.PROMO_ID DESC )
-              <![CDATA[  WHERE ROWNUM <= 100 ]]> 
+                 <if test="requestTypeList != null and requestTypeList  != '' " >    
+                       and Extent3.CODE_ID in  
+                    <foreach item="item" collection="requestTypeList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                 </if>
+    
 
+    
+                 <if test="requestPerson != null and requestPerson != '' " >    
+                       and Extent9.USER_NAME =  #{requestPerson}
+                 </if>
+
+                 <if test="memberCode != null and memberCode != '' " >    
+                       AND Extent4.MEM_CODE LIKE #{memberCode}
+                 </if>
+			      <![CDATA[    
+			              
+			              ) Project1 
+			       ) Project1
+			 WHERE  Project1.ROW_NUMBER > 0
+			  ORDER BY Project1.PROMO_ID DESC 
+			  ]]> 
     </select>
 
 
