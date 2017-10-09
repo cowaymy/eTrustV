@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.organization.organization.MemberEventService;
 
@@ -87,9 +88,9 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 	}
 
 	
-	
-	public void selectMemberPromoEntries(Map<String, Object> params) {
-		
+	@Transactional
+	public boolean selectMemberPromoEntries(Map<String, Object> params) {
+		boolean success = false;
 		logger.debug("getMemberEventDetailPop serviceImpl 호출 : " + params.get("promoId"));
 		
 		EgovMap formList = memberEventMapper.selectMemberPromoEntries(params);
@@ -176,7 +177,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMemOrg.put("grandPrCode", mQryMemPrOrg.get("prCode"));
 			mQryMemOrg.put("grandPrMemId", mQryMemPrOrg.get("prMemId"));
 			mQryMemOrg.put("brnchId", formList.get("brnchId")  != null ? formList.get("brnchId") :0);
-
+			
 			memberEventMapper.updateMemberOrganizations(mQryMemOrg);
 			
 			
@@ -194,15 +195,17 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			logger.debug("formList::::" + formList );
             //MemberPromoEntry
 			Map<String, Object> mPromoEntry = new HashMap<String, Object>();
-			mPromoEntry.put("stusId", "04");
+			mPromoEntry.put("stusId", params.get("confirmStatus"));
 			mPromoEntry.put("deptCode", newDeptCode1);
 			mPromoEntry.put("updDt", formList.get("updDt"));
 			mPromoEntry.put("updUserId", formList.get("updUserId"));
 			mPromoEntry.put("promoId", params.get("promoId"));
 
             memberEventMapper.updateMemberPromoEntry(mPromoEntry);
+            
+            success = true;
 		}
-
+		return success;
 	}
 	
 

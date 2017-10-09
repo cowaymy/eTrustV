@@ -135,14 +135,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("applicantRace",Integer.parseInt((String) params.get("cmbRace")));
 			MemApp.put("applicantMarital",0);
 			MemApp.put("applicantNationality",Integer.parseInt((String) params.get("national")));
-			MemApp.put("applicantAdd1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
-			MemApp.put("applicantAdd2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
-			MemApp.put("applicantAdd3", params.get("address3").toString().trim()!=null ? params.get("address3").toString().trim() : "");
-			MemApp.put("applicantAdd4","");
-			MemApp.put("applicantAreald",params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
-			MemApp.put("applicantPostCodeId",params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
-			MemApp.put("applicantStateId",params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
-			MemApp.put("applicantCountryId",params.get("country")!=null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
+			//MemApp.put("applicantAdd1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
+			//MemApp.put("applicantAdd2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
+			//MemApp.put("applicantAdd3", params.get("address3").toString().trim()!=null ? params.get("address3").toString().trim() : "");
+			//MemApp.put("applicantAdd4","");
+			//MemApp.put("applicantAreald",params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
+			//MemApp.put("applicantPostCodeId",params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
+			//MemApp.put("applicantStateId",params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
+			//MemApp.put("applicantCountryId",params.get("country")!=null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
 			MemApp.put("applicantTelOffice","");
 			MemApp.put("applicantTelHouse",params.get("residenceNo").toString().trim()!=null ? params.get("residenceNo").toString().trim() : "");
 			MemApp.put("applicantTelMobile",params.get("mobileNo").toString().trim()!=null ? params.get("mobileNo").toString().trim() : "");
@@ -168,6 +168,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("confirmation",false);
 			MemApp.put("confirmDate","1900-01-01");
 			MemApp.put("deptCode",params.get("deptCd").toString());
+			//addr 주소 가져오기
+			MemApp.put("areaId",params.get("areaId").toString());
+			MemApp.put("streetDtl",params.get("streetDtl").toString());
+			MemApp.put("addrDtl",params.get("addrDtl").toString());
 			
 			logger.debug("MemApp : {}",MemApp);
 			
@@ -200,16 +204,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("fulllName", params.get("memberNm").toString().trim().toUpperCase());
 		params.put("password", params.get("nric").toString().trim().substring(((String) params.get("nric")).trim().length() - 6, 6));
 		params.put("nric", params.get("nric").toString().trim().toUpperCase());
-		params.put("address1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
-		params.put("address2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
-		params.put("address3", params.get("address3").toString().trim()!=null ? params.get("address3").toString().trim() : "");
-		params.put("address4", "");
-		params.put("area", params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
-		params.put("postCode", params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
+		//params.put("address1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
+		//params.put("address2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
+		//params.put("address3", params.get("address3").toString().trim()!=null ? params.get("address3").toString().trim() : "");
+		//params.put("address4", "");
+		//params.put("area", params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
+		//params.put("postCode", params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
 		params.put("race", Integer.parseInt((String) params.get("cmbRace")));
 		params.put("nation", Integer.parseInt((String) params.get("national")));
 		params.put("marrital", Integer.parseInt((String) params.get("marrital")));
-		params.put("state", params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
+		//params.put("state", params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
 		params.put("country", params.get("country")!=null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
 		params.put("mobileNo", params.get("mobileNo").toString().trim()!=null ? params.get("mobileNo").toString().trim() : "");
 		params.put("officeNo", params.get("officeNo").toString().trim()!=null ? params.get("officeNo").toString().trim() : "");
@@ -241,6 +245,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("Hospitalization",false);
 		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
 		params.put("codyPaExpr",params.get("codyPaExpr")!=null ? params.get("codyPaExpr").toString().trim() : "");
+		
+		//addr 가져오기
+		params.put("areaId",params.get("areaId").toString());
+		params.put("streetDtl",params.get("streetDtl").toString());
+		params.put("addrDtl",params.get("addrDtl").toString());
 		
 		
 		//두번째 탭 text 가져오기
