@@ -25,6 +25,7 @@ var gridPros = {
 
 var columnLayout=[             
     {dataField:"salesOrdId", headerText:"Order ID" ,visible : false},
+    {dataField:"email", headerText:"Email" ,visible : false},
     {dataField:"salesOrdNo", headerText:"Order No"},
     {dataField:"codeName", headerText:"App Type"},
     {dataField:"salesDt", headerText:"Order Date"},
@@ -44,10 +45,48 @@ function fn_getOutrightInvoiceListAjax() {
 //크리스탈 레포트
 function fn_generateStatement(){
   var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+  
+  if (selectedItem[0] > -1){
+      //report form에 parameter 세팅
+      $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "salesOrdId"));
+      $("#reportPDFForm #viewType").val("PDF");
+      Common.report("reportPDFForm");
+  }else{
+      Common.alert('<b>No print type selected.</b>');
+  }
+}
+
+//Email
+function fn_sendEInvoice(){
+  var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+  
+  if($("#eInvoiceForm #send_email").val() == ""){
+      Common.alert('* Please key in the email address.');
+      return;
+  }
 
   if (selectedItem[0] > -1){
       //report form에 parameter 세팅
       $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "salesOrdId"));
+      $("#reportPDFForm #viewType").val("MAIL_PDF");
+      
+      var message = "";
+      message += "Dear customer,\n\n" +
+          "Please refer to the attachment of the re-send invoice as per requested.\n" +
+          "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
+          "\n\n" +
+          "NOTE :Please do not reply this email as this is computer generated e-mail." +
+          "\n\n\n" +
+          "Thank you and have a wonderful day.\n\n" +
+          "Regards\n" +
+          "Management Team of Coway Malaysia Sdn. Bhd.";
+          
+      //E-mail 제목
+      var emailTitle = "Outright Invoice " + AUIGrid.getCellValue(myGridID, selectedGridValue, "salesOrdId");
+      $("#reportPDFForm #emailSubject").val(emailTitle);
+      $("#reportPDFForm #emailText").val(message);
+      $("#reportPDFForm #emailTo").val($("#eInvoiceForm #send_email").val());
+      
       Common.report("reportPDFForm");
    
   }else{
@@ -55,7 +94,23 @@ function fn_generateStatement(){
   }
 }
 
+//Send E-Invoice 팝업
+function fn_sendEStatementPop(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+        var email = AUIGrid.getCellValue(myGridID, selectedGridValue, "email");
+        $('#einvoice_wrap').show();
+        $('#send_email').val(email);
+    }else{
+        Common.alert('No claim record selected.');
+    }
+}
 
+//Layer close
+hideViewPopup=function(val){
+    $(val).hide();
+}
 </script>
 
 <!-- content start -->
@@ -127,9 +182,9 @@ function fn_generateStatement(){
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
                     </ul>
-                    <!-- <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
-                    </ul>-->
+                    <ul class="btns">
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_sendEStatementPop();">Send E-Statement</a></p></li>
+                    </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
@@ -144,7 +199,57 @@ function fn_generateStatement(){
 
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/InstOutInvoice_PDF.rpt" />
-    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="viewType" name="viewType" value="" />
     <input type="hidden" id="v_orderId" name="v_orderId" />
+    <!-- 이메일 전송인 경우 모두 필수-->
+    <input type="hidden" id="emailSubject" name="emailSubject" value="" />
+    <input type="hidden" id="emailText" name="emailText" value="" />
+    <input type="hidden" id="emailTo" name="emailTo" value="" /> 
 </form>
 
+<!--------------------------------------------------------------- 
+    POP-UP (E-INVOICE)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="einvoice_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="einvoice_pop_header">
+        <h1>COMPANY INVOICE - E-INVOICE</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#einvoice_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="eInvoiceForm" id="eInvoiceForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>
+                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>
+        
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
