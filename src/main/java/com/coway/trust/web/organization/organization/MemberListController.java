@@ -153,6 +153,7 @@ public class MemberListController {
 		List<EgovMap> nationality = memberListService.nationality();
 		params.put("groupCode","state");
 		params.put("codevalue","1");
+		params.put("country","Malaysia");
 		List<EgovMap> state = commonService.selectAddrSelCode(params);
 		params.put("mstCdId",5);
 		List<EgovMap> educationLvl = commonService.getDetailCommonCodeList(params);
@@ -278,6 +279,8 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/memberSave", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveMemberl(@RequestBody Map<String, Object> params, Model model) {
+		
+		
 		Boolean success = false;
 		String msg = "";
 		logger.debug("memberNm : {}", params.get("memberNm"));
@@ -289,6 +292,7 @@ public class MemberListController {
 		logger.debug("myGridID : {}", params.get("params"));
 		
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		//Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);

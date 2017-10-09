@@ -76,13 +76,19 @@ public class MemberEventListController {
         
         String[] reqStatusComboList = request.getParameterValues("requestStatus");		// reqStatus 콤보박스 값        
 		String[] requestPersonComboList = request.getParameterValues("requestPerson");		// reqStatus 콤보박스 값
+		String[] requestTypeList = request.getParameterValues("requestType");		// reqStatus 콤보박스 값
+		String[] memTypeList = request.getParameterValues("memberType");		// reqStatus 콤보박스 값
 		
 		params.put("StatusList", reqStatusComboList);
 		params.put("PersonList", requestPersonComboList);
+		params.put("requestTypeList", requestTypeList);
+		params.put("memTypeList", memTypeList);
 		
         // 조회.
 		organizationEvent = memberEventService.selectOrganizationEventList(params);        
 		
+		
+		logger.debug("organizationEvent : {}", organizationEvent);
         // 화면 단으로 전달할 데이터.
 //        model.addAttribute("organizationEvent", organizationEvent);
         
@@ -120,8 +126,9 @@ public class MemberEventListController {
 	
 
 	@RequestMapping(value = "/selectMemberPromoEntries" , method = RequestMethod.GET)
-	public String selectMemberPromoEntries(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {	
-		String success = "0";
+	public   ResponseEntity<ReturnMessage> selectMemberPromoEntries(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {	
+		ReturnMessage message = new ReturnMessage();
+		boolean success =false;
 //		int promoId = 0;
 //		List<EgovMap> promoEntries = null;
 		
@@ -132,14 +139,25 @@ public class MemberEventListController {
 //		String promoId = request.getParameterValues("promoId");	
 //		params.put("promoId", promoId);
 
-		memberEventService.selectMemberPromoEntries(param);		
+		success = memberEventService.selectMemberPromoEntries(param);		
 		
 //		List<EgovMap> promoEntries = memberEventService.selectMemberPromoEntries(param);		
 //		logger.debug("promoEntries : {}", promoEntries);
 //
 //		model.put("promoEntries", promoEntries);
-
-		return success;
+		if(success){
+			if(params.get("confirmStatus").toString() == "04"){
+				message.setMessage("Complete this event Success " + params.get("memCode"));
+			}
+    		else{
+    			message.setMessage("Complete this event Fail " + params.get("memCode"));
+    		}
+			
+			
+			
+			
+		}
+		return ResponseEntity.ok(message);
 		
 	}
 	
