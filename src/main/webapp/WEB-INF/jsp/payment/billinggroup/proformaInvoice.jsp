@@ -155,10 +155,10 @@ function fn_generateStatement(){
 //EMAIL
 function fn_sendEInvoice(){    
     
-	if($("#eInvoiceForm #send_email").val() == ""){
-        Common.alert('* Please key in the email address.');
-        return;
-    }
+	if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
+	      Common.alert('* Please key in the email.<br />');
+	      return;
+	}
 	
     //report form에 parameter 세팅
     //옵션 초기화

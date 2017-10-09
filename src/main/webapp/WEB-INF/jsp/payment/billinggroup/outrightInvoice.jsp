@@ -59,13 +59,12 @@ function fn_generateStatement(){
 //Email
 function fn_sendEInvoice(){
   var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-  
-  if($("#eInvoiceForm #send_email").val() == ""){
-      Common.alert('* Please key in the email address.');
-      return;
-  }
 
   if (selectedItem[0] > -1){
+	  if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
+	      Common.alert('* Please key in the email.<br />');
+	      return;
+	  }
       //report form에 parameter 세팅
       $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "salesOrdId"));
       $("#reportPDFForm #viewType").val("MAIL_PDF");

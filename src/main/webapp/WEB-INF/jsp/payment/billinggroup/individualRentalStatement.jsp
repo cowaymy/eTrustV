@@ -102,12 +102,11 @@ function fn_generateInvoice(){
 function fn_sendEInvoice(){
     var selectedItem = AUIGrid.getSelectedIndex(myGridID);
     
-    if($("#eInvoiceForm #send_email").val() == ""){
-    	Common.alert('* Please key in the email address.');
-    	return;
-    }
-    
     if (selectedItem[0] > -1){
+    	if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
+    	      Common.alert('* Please key in the email.<br />');
+    	      return;
+    	  }
         //report form에 parameter 세팅
         var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "rdtyear");
         var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "rdtmonth");
