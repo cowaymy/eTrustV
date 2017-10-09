@@ -426,7 +426,15 @@
 			<version>3.16</version>
 		</dependency>
 
-    </dependencies>
+		<!-- csv -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.5</version>
+		</dependency>
+
+
+	</dependencies>
 
 	<build>
 		<defaultGoal>install</defaultGoal>

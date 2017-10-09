@@ -21,6 +21,18 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
         });
     }
 
+    function fn_uploadCsvFile() {
+
+        var formData = new FormData();
+        formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+        formData.append("param01", "param01");
+        formData.append("param02", "param02");
+
+        Common.ajaxFile("/commission/csv/upload", formData, function (result) {
+            Common.alert("완료~")
+        });
+    }
+
     // 파일 다운로드는 db 설계에 따른 재 구현이 필요함.  현재는 단순 테스트용입니다.
     function fn_downFile() {
 
@@ -36,6 +48,7 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
     <input type="file" id="uploadfile" name="uploadfile"/>
     <input type="text" id="param01" name="param01"/>
     <a class="" href="javascript:fn_uploadFile();">[엑셀 전송]</a>
+    <a class="" href="javascript:fn_uploadCsvFile();">[CSV 전송]</a>
 </form>
 
 <form id="fileDownForm">

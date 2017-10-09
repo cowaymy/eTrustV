@@ -1,6 +1,8 @@
 package com.coway.trust.common;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -11,6 +13,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +28,9 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class SysTest {
 
@@ -147,6 +155,19 @@ public class SysTest {
 	@Test
 	public void formatFileSizeTest() {
 		LOGGER.debug(">>>>> {}", CommonUtils.formatFileSize(1024 * 1024 * 100));
+	}
+
+	@Test
+	public void testParseWillTrimAndConvertToNull() throws Exception {
+		String CSV_HEADER = "Name,MobileNo,Location";
+		String CSV_ROW_1 = " abc,@@,australia"; // MobileNo is 3 whitespaces
+		CSVParser parse = CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreSurroundingSpaces().withNullString("@@")
+				.parse(new BufferedReader(new StringReader(CSV_HEADER + "\n" + CSV_ROW_1)));
+
+		CSVRecord rec = parse.getRecords().get(0);
+		assertEquals("abc", rec.get("Name"));
+		assertNull(rec.get("MobileNo"));
+		assertEquals("australia", rec.get("Location"));
 	}
 
 	@Test
