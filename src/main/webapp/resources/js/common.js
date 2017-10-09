@@ -256,6 +256,7 @@ var Common = {
          *
          */
         _jsonObj = $.extend(_jsonObj, {
+            isShowLoader : true,
             isPop: true,
             isDiv: true // div  팝업인 경우 본문만 삽입. : /etrust/src/main/webapp/WEB-INF/tiles/layout/emptyScript.jsp
         });
@@ -281,6 +282,18 @@ var Common = {
             url: getContextPath() + _url,
             data: _jsonObj,
             dataType: "html",
+            beforeSend: function (request) {
+                // loading start....
+                if(_jsonObj.isShowLoader){
+                    Common.showLoader();
+                }
+            },
+            complete: function (data) {
+                // loading end....
+                if(_jsonObj.isShowLoader) {
+                    Common.removeLoader();
+                }
+            },
             success: function (result, textStatus, XMLHttpRequest) {
 
                 $obj.html(result);
