@@ -2,8 +2,16 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
+var optionState = {chooseMessage: " 1.States "};
+var optionCity = {chooseMessage: "2. City"};
+var optionPostCode = {chooseMessage: "3. Post Code"};
+var optionArea = {chooseMessage: "4. Area"};
+
 
 function fn_memberSave(){
+            
+            $("#streetDtl").val(insAddressForm.streetDtl.value);
+            $("#addrDtl").val(insAddressForm.addrDtl.value);
 		    var jsonObj =  GridCommon.getEditData(myGridID);
 		    jsonObj.form = $("#memberAddForm").serializeJSON();
 		    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
@@ -66,8 +74,12 @@ function fn_departmentCode(value){
 }
 $(document).ready(function() {
   
-	doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
-    doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
+	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
+	  
+    //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
+    
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S'); 
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S'); 
      
     doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , ''); 
     doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');
@@ -81,7 +93,7 @@ $(document).ready(function() {
 	
 	$("#state").change(function (){
 		var state = $("#state").val();
-		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'','area', 'S', '');  
+		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');  
 	});
 	$("#area").change(function (){
         var area = $("#area").val();
@@ -91,13 +103,7 @@ $(document).ready(function() {
 	$("#memberType").change(function (){
         var memberType = $("#memberType").val();
         fn_departmentCode(memberType);
-        
-      
      });
-	
-	
-	
-	
 });
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
@@ -263,6 +269,146 @@ function fn_saveValidation(){
     }
 	return true
 }
+
+function fn_addrSearch(){
+    if($("#searchSt").val() == ''){
+        Common.alert("Please search.");
+        return false;
+    }
+    Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
+}
+function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
+    
+    if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
+        
+        $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
+        $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
+        $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+        $("#mState").attr({"disabled" : false  , "class" : "w100p"});
+        
+        //Call Ajax
+       
+        CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
+        
+        var cityJson = {state : mstate}; //Condition
+        CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
+        
+        var postCodeJson = {state : mstate , city : mcity}; //Condition
+        CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
+        
+        var areaJson = {groupCode : mpostcode};
+        var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
+        CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
+        
+        $("#areaId").val(areaid);
+        $("#_searchDiv").remove();
+    }else{
+        Common.alert("Please check your address.");
+    }
+}
+//Get Area Id
+function fn_getAreaId(){
+    
+    var statValue = $("#mState").val();
+    var cityValue = $("#mCity").val();
+    var postCodeValue = $("#mPostCd").val();
+    var areaValue = $("#mArea").val();
+    
+    
+    
+    if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
+        
+        var jsonObj = { statValue : statValue ,
+                              cityValue : cityValue,
+                              postCodeValue : postCodeValue,
+                              areaValue : areaValue
+                            };
+        Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
+            
+             $("#areaId").val(result.areaId);
+            
+        });
+        
+    }
+    
+}
+
+function fn_selectCity(selVal){
+    
+    var tempVal = selVal;
+    
+    if('' == selVal || null == selVal){
+       
+         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+         $('#mPostCd').val('');
+         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+         $('#mArea').val('');
+         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+    }else{
+        
+        $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
+        
+        $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+        $('#mArea').val('');
+        $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+        //Call ajax
+        var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
+        CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
+    }
+    
+}
+
+function fn_selectPostCode(selVal){
+    
+    var tempVal = selVal;
+    
+    if('' == selVal || null == selVal){
+       
+        $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+        $('#mArea').val('');
+        $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+    }else{
+        
+        $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
+        
+        //Call ajax
+        var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
+        CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
+    }
+    
+}
+
+function fn_selectState(selVal){
+    
+    var tempVal = selVal;
+    
+    if('' == selVal || null == selVal){
+        //전체 초기화
+        fn_initAddress();   
+        
+    }else{
+        
+        $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
+        
+        $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
+        $('#mPostCd').val('');
+        $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+        $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
+        $('#mArea').val('');
+        $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+        
+        //Call ajax
+        var cityJson = {state : tempVal}; //Condition
+        CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
+    }
+    
+}
 </script>
 </head>
 <body>
@@ -278,6 +424,10 @@ function fn_saveValidation(){
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="memberAddForm" method="post">
+<input type="hidden" id="areaId" name="areaId">
+<input type="hidden" id="streetDtl" name="streetDtl">
+<input type="hidden" id="addrDtl" name="addrDtl">
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -304,6 +454,7 @@ function fn_saveValidation(){
     <li><a href="#" class="on">Basic Info</a></li>
     <li><a href="#">Spouse Info</a></li>
     <li><a href="#">Document Submission</a></li>
+    <li><a href="#">Member Address</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -364,7 +515,7 @@ function fn_saveValidation(){
     </select>
     </td>
 </tr>
-<tr>
+<%-- <tr>
     <th scope="row" rowspan="3">Address<span class="must">*</span></th>
     <td colspan="5">
     <input type="text" title="" placeholder="Address(1)" class="w100p" id="address1" name="address1"/>
@@ -410,6 +561,12 @@ function fn_saveValidation(){
     <th scope="row">Email</th>
     <td colspan="3">
     <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email"/>
+    </td>
+</tr> --%>
+<tr>
+    <th scope="row">Email</th>
+    <td colspan="5">
+    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
     </td>
 </tr>
 <tr>
@@ -621,59 +778,80 @@ function fn_saveValidation(){
 <article class="tap_area"><!-- tap_area start -->
 <div id="grid_wrap_doc" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- tap_area end -->
-
+</form>
 <article class="tap_area"><!-- tap_area start -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
+<aside class="title_line"><!-- title_line start -->
+<h2>Installation Address</h2>
+</aside><!-- title_line end -->
 
+<form id="insAddressForm" name="insAddressForm" method="POST">
+    
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:135px" />
+        <col style="width:*" />
+        <col style="width:130px" />
+        <col style="width:*" />
+    </colgroup>
+         <tbody>
+            <tr>
+                <th scope="row">Area search<span class="must">*</span></th>
+                <td colspan="3">
+                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" >Address Detail<span class="must">*</span></th>
+                <td colspan="3">
+                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" >Street</th>
+                <td colspan="3">
+                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
+               <th scope="row">Area(4)<span class="must">*</span></th>
+                <td colspan="3">
+                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+                </td>
+            </tr>
+            <tr>
+                 <th scope="row">City(2)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+                </td>
+                <th scope="row">PostCode(3)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">State(1)<span class="must">*</span></th>
+                <td>
+                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                </td>
+                <th scope="row">Country<span class="must">*</span></th>
+                <td>
+                <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+                </td>
+            </tr>
+        </tbody>
+    </table><!-- table end -->
+</form>
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
 </ul>
 
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
-</article><!-- tap_area end -->
-
-<article class="tap_area"><!-- tap_area start -->
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
 </article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
-</form>
-</section><!-- pop_body end -->
+
 
 </div><!-- popup_wrap end -->
 </body>

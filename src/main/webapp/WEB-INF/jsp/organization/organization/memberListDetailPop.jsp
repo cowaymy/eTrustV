@@ -753,31 +753,31 @@ function fn_requestTermiReSave(val){
 <tr>
     <th scope="row" rowspan="3">Address</th>
     <td colspan="3">
-    <span><c:out value="${memberView.addr1}"/></span>
+    <span><c:out value="${memberView.areaId}   ${memberView.city} "/></span>
      </td>
     <th scope="row">Country</th>
     <td>
-    <span><c:out value="${memberView.c36}"/></span>
+    <span><c:out value="${memberView.country}"/></span>
     </td>
   
 </tr>
 <tr>
     <td colspan="3">
-    <span><c:out value="${memberView.addr2}"/></span>
+    <span><c:out value="${memberView.street}"/></span>
      </td>
     <th scope="row">State</th>
     <td>
-    <span><c:out value="${memberView.c50}"/></span>
+    <span><c:out value="${memberView.state}"/></span>
     </td>
 
 </tr>
 <tr>
     <td colspan="3">
-    <span><c:out value="${memberView.addr3}"/></span>
+    <span><c:out value="${memberView.addrDtl}"/></span>
    </td>
     <th scope="row">Area<span class="must">*</span></th>
     <td>
-    <span><c:out value="${memberView.c2}"/></span>
+    <span><c:out value="${memberView.area}"/></span>
     </td>
 
 </tr>
@@ -794,7 +794,7 @@ function fn_requestTermiReSave(val){
     </td>
     <th scope="row">Postcode</th>
     <td>
-    <span><c:out value="${memberView.c38}"/></span>
+    <span><c:out value="${memberView.postcode}"/></span>
     </td>
 </tr>
 <tr>

@@ -72,38 +72,38 @@ function createAUIGrid() {
 		    dataField : "codename",
 		    headerText : "Type Name",
 		    editable : false,
-		    width : 180
+		    width : 130
 		}, {
 		    dataField : "memberid",
 		    headerText : "MemberID",
 		    editable : false,
-		    width : 180
+		    width : 130
 		}, {
 		    dataField : "membercode",
 		    headerText : "Member Code",
 		    editable : false,
-		    width : 180
+		    width : 130
 		}, {
 		    dataField : "name",
 		    headerText : "Member Name",
 		    editable : false,
-		    width : 250
+		    width : 130
 		}, {
 		    dataField : "nric",
-		    headerText : "Member NRID",
+		    headerText : "Member NRIC",
 		    editable : false,
 		    style : "my-column",
-		    width : 180
+		    width : 130
 		}, {
 		    dataField : "name1",
 		    headerText : "Status",
 		    editable : false,
-		    width : 180
+		    width : 130
 		}, {
 		    dataField : "updated",
 		    headerText : "Last Update",
 		    editable : false,
-		    width : 180
+		    width : 130
 		    
 		}, {
             dataField : "membertype",
@@ -313,7 +313,7 @@ var gridPros = {
     <ul class="btns">
         <li><p class="link_btn"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
         <li><p class="link_btn"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
-        <li><p class="link_btn"><a href="#">Vacation Request</a></p></li>
+        <li><p class="link_btn"><a href="#">Request Vacation </a></p></li>
 <!--         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn"><a href="#">menu6</a></p></li>

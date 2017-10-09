@@ -70,12 +70,14 @@
      function fn_confirmMemberEventPromote(val){
         
         var jsonObj = {
-        PromoID : $("#promoId").val()
+ 		  PromoID : $("#promoId").val(),
+         memCode : $("#memCode").val()
        
         };
     
         Common.ajax("GET", "/organization/selectMemberPromoEntries" ,  $("#myForm").serialize() , function(result) {
             AUIGrid.setGridData(newGridID, result);
+            Common.alert(result.message);
         });
     }
 
@@ -351,10 +353,11 @@
 
 <section class="search_table"><!-- search_table start -->
  <form name="myForm" id="myForm">
-     <td>
+     <%-- <td>
     <span><c:out value="${promoInfo.promoId}"/></span>
-    </td>
+    </td> --%>
     <input type="hidden" id="promoId" name="promoId" value="${promoInfo.promoId}">
+     <input type="hidden" id="memCode" name="memCode" value="${promoInfo.memCode}">
 <aside class="title_line"><!-- title_line start -->
 <h2>Request Information</h2>
 </aside><!-- title_line end -->
@@ -369,7 +372,7 @@
 <tr>
     <th scope="row">Confirm Status</th>
     <td>
-    <select class="w100p">
+    <select class="w100p" id="confirmStatus" name="confirmStatus" >
          <option value="" selected></option>
          <option value="04">Complete this event</option>
          <option value="10">Cancel this event</option>
@@ -379,14 +382,15 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+<!-- <aside class="title_line">
+<!-- title_line start 
 <h2>Current Downline</h2>
-</aside><!-- title_line end -->
+</aside> --> <!-- title_line end --> 
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<!-- <article class="grid_wrap">grid_wrap start
 <div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-<!-- <div id="grid_wrap_new"  style="width: 100%; height: 500px; margin: 0 auto;"></div> -->
-</article><!-- grid_wrap end -->
+<div id="grid_wrap_new"  style="width: 100%; height: 500px; margin: 0 auto;"></div>
+</article>grid_wrap end -->
     </form>
 </section><!-- search_table end -->
 

@@ -4,8 +4,14 @@
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-    <script type="text/javaScript" language="javascript">
+    <script type="text/javaScript">
 
+    function fn_excelDown(){
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon.exportTo("grid_wrap", "xlsx", "Member Event Search");
+    }
+
+    
  // AUIGrid 생성 후 반환 ID
     var myGridID;
     
@@ -34,8 +40,12 @@
         
                 // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+        	if(AUIGrid.getCellValue(myGridID, event.rowIndex, "stusId") == 60){//in progress 일때만 confirm event open
 //            fn_setDetail(myGridID, event.rowIndex);
-            Common.popupWin("searchForm", "/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"), option);
+                Common.popupWin("searchForm", "/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"), option);
+        	}else{
+        		Common.alert("Only event [In Progress] status is allowed.");
+        	}
         });
         
 
@@ -99,34 +109,28 @@
 	                dataField : "crtDt",
 	                headerText : "ReqAt",
 	                width : 120
-		    
+	            }, {
+                    dataField : "stusId",
+                    headerText : "",
+                    width : 0
+	                
+	                
 		    }];
 		    // 그리드 속성 설정
 		    var gridPros = {
 		        
-		        // 페이징 사용       
-		        usePaging : true,
-		        
-		        // 한 화면에 출력되는 행 개수 20(기본값:20)
-		        pageRowCount : 20,
-		        
-		        editable : true,
-		        
-		        showStateColumn : true, 
-		        
-		        displayTreeOpen : true,
-		        
-		        
-		        headerHeight : 30,
-		        
-		        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-		        skipReadonlyColumns : true,
-		        
-		        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-		        wrapSelectionMove : true,
-		        
-		        // 줄번호 칼럼 렌더러 출력
-		        showRowNumColumn : true,
+		    		 usePaging           : true,         //페이징 사용
+	                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+	                 editable            : false,            
+	                 fixedColumnCount    : 1,            
+	                 showStateColumn     : false,             
+	                 displayTreeOpen     : false,            
+	                 selectionMode       : "singleRow",  //"multipleCells",            
+	                 headerHeight        : 30,       
+	                 useGroupingPanel    : false,        //그룹핑 패널 사용
+	                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	                 showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
 		
 		    };
 		            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
@@ -172,25 +176,25 @@ function f_info(data , v){
                 selectAll: true,
                 width: '80%'
             });
-            $('#memberType').change(function() {
+             $('#memberType').change(function() {
             
             }).multipleSelect({
                 selectAll: true,
                 width: '80%'
-            });                   
+            });                  
         });
     }
 
 //    doGetCombo('/common/selectCodeList.do', '165', '','requestStatus', 'M' , 'f_multiCombo'); // Request Status
 //    doGetCombo('/common/selectCodeList.do', '18', '','requestPerson', 'M' , 'f_multiCombo'); //Request Person
     doGetCombo('/common/selectCodeList.do', '18', '','requestType', 'M' , 'f_multiCombo'); //Request Type
-    doGetCombo('/common/selectCodeList.do', '18', '','memberType', 'M' , 'f_multiCombo'); //MemberType
+    //doGetCombo('/common/selectCodeList.do', '1', '','memberType', 'M' , 'f_multiCombo'); //MemberType
     
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Organization</li>
     <li>Member Event</li>
 </ul>
@@ -241,7 +245,7 @@ function f_info(data , v){
 <tr>
     <th scope="row">Request Status</th>
     <td>
-    <select id="requestStatus" name="requestStatus" class="multy_select w100p">
+    <select id="requestStatus" name="requestStatus" class="multy_select w100p" multiple="multiple">
          <option value="60">In Progress</option>
          <option value="04">Completed</option>
          <option value="10">Cancelled</option>
@@ -249,14 +253,14 @@ function f_info(data , v){
     </td>
     <th scope="row">Request Type</th>
     <td>
-    <select  id="requestType" name="requestType" class="multy_select w100p">    </select>
+    <select  id="requestType" name="requestType" class="multy_select w100p" multiple="multiple">    </select>
     </td>
     <th scope="row">Request Person</th>
     <td>
     <select  id="requestPerson" name="requestPerson" class="w100p">
         <option value="" selected>Person</option>
             <c:forEach var="list" items="${ reqPersonComboList}" varStatus="status">
-                 <option value="${list.userId}">${list.userName } </option>
+                 <option value="${list.userName}">${list.userName } </option>
             </c:forEach>
     </select>
     </td>
@@ -267,7 +271,10 @@ function f_info(data , v){
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select id="memberType" name="memberType"  class="multy_select w100p">    </select>
+    <select id="memberType" name="memberType"  class="multy_select w100p" multiple="multiple">    
+         <option value="1">Health Planner</option>
+         <option value="2">Coway Lady</option>
+    </select>
     </td>
     <th scope="row">Member Code</th>
     <td>
@@ -283,8 +290,8 @@ function f_info(data , v){
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
@@ -308,10 +315,10 @@ function f_info(data , v){
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end -->
+</aside><!-- link_btns_wrap end --> --%>
 
 </form>
 </section><!-- search_table end -->
@@ -319,15 +326,15 @@ function f_info(data , v){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="javascript:fn_excelDown()">EXCEL DW</a></p></li>
+   <!--  <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역 
     <div id="grid_wrap" style="width:100%; height:500px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
