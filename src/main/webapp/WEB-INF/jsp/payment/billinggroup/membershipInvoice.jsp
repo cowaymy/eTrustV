@@ -220,13 +220,13 @@ function fn_sendEInvoicePop(){
 </section>
 </section>
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="text" id="reportFileName" name="reportFileName" value="/statement/SrvMembership_Invoice.rpt" />
-    <input type="text" id="viewType" name="viewType" value="PDF" />
-    <input type="text" id="v_invoiceNo" name="v_invoiceNo" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/SrvMembership_Invoice.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="" />
+    <input type="hidden" id="v_invoiceNo" name="v_invoiceNo" />
     <!-- 이메일 전송인 경우 모두 필수-->
-    <input type="text" id="emailSubject" name="emailSubject" value="" />
-    <input type="text" id="emailText" name="emailText" value="" />
-    <input type="text" id="emailTo" name="emailTo" value="" />
+    <input type="hidden" id="emailSubject" name="emailSubject" value="" />
+    <input type="hidden" id="emailText" name="emailText" value="" />
+    <input type="hidden" id="emailTo" name="emailTo" value="" />
 </form>
 
 <!--------------------------------------------------------------- 
