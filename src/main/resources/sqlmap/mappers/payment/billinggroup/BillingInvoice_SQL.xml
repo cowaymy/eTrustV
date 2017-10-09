@@ -149,7 +149,8 @@
                Extent4.SALES_DT SALES_DT  ,
                Extent5.NAME NAME  ,
                Extent5.NRIC NRIC  ,
-               Extent6.TEL_M1 TEL_M1  
+               Extent6.TEL_M1 TEL_M1,
+               Extent5.EMAIL EMAIL 
        FROM PAY0013D Extent1
               LEFT JOIN PAY0014D Extent2   ON Extent1.INVC_ID = Extent2.INVC_ID
               LEFT JOIN SAL0093D Extent3   ON Extent2.INVC_SUB_MEM_QOTAT_ID = Extent3.SRV_MEM_QUOT_ID
@@ -271,7 +272,6 @@
                                          StatementCompanyRelatedOrder.CRT_DT CRT_DT  
                                FROM PAY0101M StatementCompanyRelatedOrder ) Extent4   ON Extent1.BILL_ID = Extent4.BILL_ID
                           LEFT JOIN SAL0001D Extent5   ON Extent4.SO_ID = Extent5.SALES_ORD_ID
-                          LEFT JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent5.CUST_ID
                           LEFT JOIN PAY0022D Extent6   ON ( Extent5.SALES_ORD_ID = Extent6.RENT_SO_ID )
                                   AND ( Extent6.RENT_AMT > 0 )
                WHERE  1=1]]>
