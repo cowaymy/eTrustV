@@ -30,7 +30,8 @@ var columnLayout=[
     {dataField:"invcRefNo", headerText:"Invoice No"},
     {dataField:"invcRefDt", headerText:"Invoice Date"},
     {dataField:"invcSubMemPacAmt", headerText:"Invoice Amount"},
-    {dataField:"invcSubMemBsAmt", headerText:"Installment No"}
+    {dataField:"invcSubMemBsAmt", headerText:"Installment No"},
+    {dataField:"email", headerText:"email", visible:false}
 ];
 
 function fn_getMembershipInvoiceListAjax() {        
@@ -60,6 +61,7 @@ function fn_generateStatement(){
 	if (selectedItem[0] > -1){
 		//report form에 parameter 세팅
 		$("#reportPDFForm #v_invoiceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "invcRefNo"));
+	    $("#reportPDFForm #viewType").val("PDF");
 		//report 호출
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -71,6 +73,56 @@ function fn_generateStatement(){
 	}
 }
 
+//크리스탈 레포트 - send E-Invoice
+function fn_sendEInvoice(){
+	//E-mail 내용
+    var message = "";
+    message += "Dear customer,\n\n" +
+        "Please refer to the attachment of the re-send invoice as per requested.\n" +
+        "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
+        "\n\n" +
+        "NOTE :Please do not reply this email as this is computer generated e-mail." +
+        "\n\n\n" +
+        "Thank you and have a wonderful day.\n\n" +
+        "Regards\n" +
+        "Management Team of Coway Malaysia Sdn. Bhd.";
+        
+    //E-mail 제목
+    var emailTitle = "Membership Invoice ";
+    
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+        //report form에 parameter 세팅
+        $("#reportPDFForm #v_invoiceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "invcRefNo"));
+        //report 호출
+        var option = {
+                isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+        };
+        
+        //report form에 parameter 세팅
+        $("#reportPDFForm #viewType").val("MAIL_PDF");
+        
+        $("#reportPDFForm #emailSubject").val(emailTitle);
+        $("#reportPDFForm #emailText").val(message);
+        $("#reportPDFForm #emailTo").val($("#eInvoiceForm #send_email").val());
+        
+       Common.report("reportPDFForm", option);
+    }else{
+        Common.alert('<b>No print type selected.</b>');
+    }
+}
+
+function fn_sendEInvoicePop(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){
+    	$("#send_email").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "email"));
+        $('#einvoice_wrap').show();
+    }else{
+        Common.alert('No claim record selected.');
+    }
+}
 </script>
 
 <!-- content start -->
@@ -153,9 +205,9 @@ function fn_generateStatement(){
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
                     </ul>
-                    <!-- <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showViewPopup()">Send E-Invoice</a></p></li>
-                    </ul> -->
+                    <ul class="btns">
+                        <li><p class="link_btn type2"><a href="javascript:fn_sendEInvoicePop();">Send E-Invoice</a></p></li>
+                    </ul>
                     <p class="hide_btn"><a href="#"><img src="/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
@@ -168,8 +220,58 @@ function fn_generateStatement(){
 </section>
 </section>
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/SrvMembership_Invoice.rpt" />
-    <input type="hidden" id="viewType" name="viewType" value="PDF" />
-    <input type="hidden" id="v_invoiceNo" name="v_invoiceNo" />
+    <input type="text" id="reportFileName" name="reportFileName" value="/statement/SrvMembership_Invoice.rpt" />
+    <input type="text" id="viewType" name="viewType" value="PDF" />
+    <input type="text" id="v_invoiceNo" name="v_invoiceNo" />
+    <!-- 이메일 전송인 경우 모두 필수-->
+    <input type="text" id="emailSubject" name="emailSubject" value="" />
+    <input type="text" id="emailText" name="emailText" value="" />
+    <input type="text" id="emailTo" name="emailTo" value="" />
 </form>
 
+<!--------------------------------------------------------------- 
+    POP-UP (E-INVOICE)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="einvoice_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="einvoice_pop_header">
+        <h1>COMPANY INVOICE - E-INVOICE</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#einvoice_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="eInvoiceForm" id="eInvoiceForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>
+                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>
+        
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
