@@ -9,10 +9,24 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "logisticsCodeAllDto", description = "공통코드 Dto")
 public class RdcStockListDto {
 
-	@ApiModelProperty(value = "CtNmae")
-	private String whLocDesc;
-	@ApiModelProperty(value = "Available Qty")
-	private int availableQty;
+	@ApiModelProperty(value = "부품코드")
+	private String partsCode;
+	
+	@ApiModelProperty(value = "rdc 위치 코드")
+	private String locationCode;
+	
+	@ApiModelProperty(value = "rdc 명")
+	private String locationName;
+	
+	@ApiModelProperty(value = "총 수량")
+	private int totQty;
+	
+	@ApiModelProperty(value = "요청중 수량")
+	private int inTransitQty;
+	
+	@ApiModelProperty(value = "예약 수량")
+	private int bookingQty;
+	
 	@ApiModelProperty(value = "RDC/CDC")
 	private String codeName;
 
@@ -22,22 +36,63 @@ public class RdcStockListDto {
 	}
 
 
-	public String getWhLocDesc() {
-		return whLocDesc;
+	public String getPartsCode() {
+		return partsCode;
 	}
 
 
-	public void setWhLocDesc(String whLocDesc) {
-		this.whLocDesc = whLocDesc;
-	}
-
-	public int getAvailableQty() {
-		return availableQty;
+	public void setPartsCode(String partsCode) {
+		this.partsCode = partsCode;
 	}
 
 
-	public void setAvailableQty(int availableQty) {
-		this.availableQty = availableQty;
+	public String getLocationCode() {
+		return locationCode;
+	}
+
+
+	public void setLocationCode(String locationCode) {
+		this.locationCode = locationCode;
+	}
+
+
+	public String getLocationName() {
+		return locationName;
+	}
+
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
+	}
+
+
+	public int getTotQty() {
+		return totQty;
+	}
+
+
+	public void setTotQty(int totQty) {
+		this.totQty = totQty;
+	}
+
+
+	public int getInTransitQty() {
+		return inTransitQty;
+	}
+
+
+	public void setInTransitQty(int inTransitQty) {
+		this.inTransitQty = inTransitQty;
+	}
+
+
+	public int getBookingQty() {
+		return bookingQty;
+	}
+
+
+	public void setBookingQty(int bookingQty) {
+		this.bookingQty = bookingQty;
 	}
 
 
@@ -50,6 +105,8 @@ public class RdcStockListDto {
 		this.codeName = codeName;
 	}
 
+
+	
 	
 
 }
