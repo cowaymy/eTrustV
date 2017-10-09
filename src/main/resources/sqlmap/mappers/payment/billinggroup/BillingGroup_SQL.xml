@@ -411,7 +411,7 @@
                 REQ_ID,
 				CNFM_CODE, 
 				CNFM_DT, 
-				TO_CHAR(TO_DATE(CRT_DT, 'YYYY-MM-DD'), 'DD/MM/YY') CRT_DT , 
+				TO_CHAR(CRT_DT,  'DD/MM/YY hh:mi:ss A.M.') CRT_DT , 
 				CRT_USER_ID, 
 				USER_NAME, 
 				CUST_BILL_ID, 
