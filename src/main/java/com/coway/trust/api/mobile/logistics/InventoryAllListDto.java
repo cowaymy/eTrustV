@@ -9,62 +9,140 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "logisticsAllStockListDto", description = "공통코드 Dto")
 public class InventoryAllListDto {
 
-	@ApiModelProperty(value = "Filter Name")
-	private String stkDesc;
-	
-	@ApiModelProperty(value = "Material Code")
-	private String matrlNo;
-	
-	@ApiModelProperty(value = "Qty")
-	private int qty;
-	
-	@ApiModelProperty(value = "No S/N")
+	@ApiModelProperty(value = "부품코드")
+	private String partsCode;
+
+	@ApiModelProperty(value = "부품명")
+	private String partsName;
+
+	@ApiModelProperty(value = "재고")
+	private int stockQty;
+
+	@ApiModelProperty(value = "제품 s/n")
 	private String serialNo;
-	
+
+	@ApiModelProperty(value = "접속한 유저의 Avail Qty")
+	private String byUserAvailQty;
+
+	@ApiModelProperty(value = "접속한 유저의 In-Transit Qty")
+	private String byUserInTransitQty;
+
+	@ApiModelProperty(value = "RDC의 Avail Qty")
+	private String byRDCAvailQty;
+
+	@ApiModelProperty(value = "RDC의 In-Transit Qty")
+	private String byRDCInTransitQty;
+
+	@ApiModelProperty(value = "CDC의 Avail Qty")
+	private String byCDCAvailQty;
+
+	@ApiModelProperty(value = "CDC의 In-Transit Qty")
+	private String byCDCInTransitQty;
+
+	@ApiModelProperty(value = "재고위치 Code")
+	private String locationCode;
+
+	@ApiModelProperty(value = "재고위치명")
+	private String locationName;
 
 	public static InventoryAllListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, InventoryAllListDto.class);
 	}
 
-
-	public String getStkDesc() {
-		return stkDesc;
+	public String getPartsCode() {
+		return partsCode;
 	}
 
-
-	public void setStkDesc(String stkDesc) {
-		this.stkDesc = stkDesc;
+	public void setPartsCode(String partsCode) {
+		this.partsCode = partsCode;
 	}
 
-
-	public String getMatrlNo() {
-		return matrlNo;
+	public String getPartsName() {
+		return partsName;
 	}
 
-
-	public void setMatrlNo(String matrlNo) {
-		this.matrlNo = matrlNo;
+	public void setPartsName(String partsName) {
+		this.partsName = partsName;
 	}
 
-
-	public int getQty() {
-		return qty;
+	public int getStockQty() {
+		return stockQty;
 	}
 
-
-	public void setQty(int qty) {
-		this.qty = qty;
+	public void setStockQty(int stockQty) {
+		this.stockQty = stockQty;
 	}
-
 
 	public String getSerialNo() {
 		return serialNo;
 	}
 
-
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
 	}
-	
+
+	public String getByUserAvailQty() {
+		return byUserAvailQty;
+	}
+
+	public void setByUserAvailQty(String byUserAvailQty) {
+		this.byUserAvailQty = byUserAvailQty;
+	}
+
+	public String getByUserInTransitQty() {
+		return byUserInTransitQty;
+	}
+
+	public void setByUserInTransitQty(String byUserInTransitQty) {
+		this.byUserInTransitQty = byUserInTransitQty;
+	}
+
+	public String getByRDCAvailQty() {
+		return byRDCAvailQty;
+	}
+
+	public void setByRDCAvailQty(String byRDCAvailQty) {
+		this.byRDCAvailQty = byRDCAvailQty;
+	}
+
+	public String getByRDCInTransitQty() {
+		return byRDCInTransitQty;
+	}
+
+	public void setByRDCInTransitQty(String byRDCInTransitQty) {
+		this.byRDCInTransitQty = byRDCInTransitQty;
+	}
+
+	public String getByCDCAvailQty() {
+		return byCDCAvailQty;
+	}
+
+	public void setByCDCAvailQty(String byCDCAvailQty) {
+		this.byCDCAvailQty = byCDCAvailQty;
+	}
+
+	public String getByCDCInTransitQty() {
+		return byCDCInTransitQty;
+	}
+
+	public void setByCDCInTransitQty(String byCDCInTransitQty) {
+		this.byCDCInTransitQty = byCDCInTransitQty;
+	}
+
+	public String getLocationName() {
+		return locationName;
+	}
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
+	}
+
+	public String getLocationCode() {
+		return locationCode;
+	}
+
+	public void setLocationCode(String locationCode) {
+		this.locationCode = locationCode;
+	}
 
 }
