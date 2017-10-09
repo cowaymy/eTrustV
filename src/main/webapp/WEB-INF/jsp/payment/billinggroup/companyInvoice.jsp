@@ -117,9 +117,9 @@ function fn_generateInvoice(){
 //Send E-Invoice 팝업
 function fn_sendEInvoicePop(){
     var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-    var email = AUIGrid.getCellValue(myGridID, selectedGridValue, "email");
     
     if (selectedItem[0] > -1){
+    	var email = AUIGrid.getCellValue(myGridID, selectedGridValue, "email");
         $('#einvoice_wrap').show();
         $('#send_email').val(email);
     }else{
