@@ -25,6 +25,6 @@ public interface MemberEventService {
 	
 	List<EgovMap> selectPromteDemoteList(Map<String, Object> params);
 	
-	void selectMemberPromoEntries(Map<String, Object> params);
+	boolean selectMemberPromoEntries(Map<String, Object> params);
 	
 }
