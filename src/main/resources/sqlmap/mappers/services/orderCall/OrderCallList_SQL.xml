@@ -5,7 +5,51 @@
      
      <select id="selectOrderCall" parameterType="Map" resultType="egovMap">
     <![CDATA[
-      SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+    SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+                Extent1.CALL_TYPE_ID CALL_TYPE_ID  ,
+                Extent1.CALL_TYPE_CODE CALL_TYPE_CODE  ,
+                Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+                Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+                Extent1.APP_TYPE_NAME APP_TYPE_NAME  ,
+                Extent1.CALL_STUS_ID CALL_STUS_ID  ,
+                Extent1.CALL_STUS_CODE CALL_STUS_CODE  ,
+                Extent1.PRODUCT_CODE PRODUCT_CODE  ,
+                Extent1.PRODUCT_NAME PRODUCT_NAME  ,
+                Extent1.CUST_NAME CUST_NAME  ,
+                Extent1.CUST_IC CUST_IC  ,
+                Extent1.INSTALL_AREA_ID INSTALL_AREA_ID  ,
+               /* Extent1.INSTALL_STATE_ID INSTALL_STATE_ID  ,*/
+                Extent1.INSTALL_AREA_NAME INSTALL_AREA_NAME  ,
+                Extent1.CALL_LOG_DT CALL_LOG_DT  ,
+                Extent1.DSC_BRNCH_ID DSC_BRNCH_ID  ,
+                Extent1.PO_NO PO_NO  ,
+                Extent1.INSTALL_TEL_M INSTALL_TEL_M  ,
+                Extent1.INSTALL_TEL_O INSTALL_TEL_O  ,
+                Extent1.INSTALL_TEL_R INSTALL_TEL_R  ,
+                Extent1.INSTALL_TEL_F INSTALL_TEL_F  ,
+                Extent1.DOC_ID DOC_ID  ,
+                Extent1.IS_WAIT_CANCL IS_WAIT_CANCL  ,
+                Extent1.CRT_USER_ID_ID CRT_USER_ID_ID  ,
+                Extent1.CRT_USER_ID CRT_USER_ID  ,
+                Extent1.CRT_DT CRT_DT  ,
+                Extent1.CALL_TYPE_NAME CALL_TYPE_NAME  ,
+                CASE 
+                     WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                ELSE 0
+                   END C1  ,
+                CASE 
+                     WHEN ( Extent1.CUST_ID IS NOT NULL ) THEN Extent1.CUST_ID
+                ELSE 0
+                   END C2  ,
+                CASE 
+                     WHEN ( Extent1.SALES_ORD_DT IS NOT NULL ) THEN TO_DATE(Extent1.SALES_ORD_DT)
+                ELSE TO_DATE('1900-01-01','YYYY-MM-DD')
+                   END C3  ,
+                CASE 
+                     WHEN ( Extent1.PRODUCT_ID IS NOT NULL ) THEN Extent1.PRODUCT_ID
+                ELSE 0
+                   END C4  
+         FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID  ,
                        vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID  ,
                        vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE  ,
                        vCallLogOrderCall.SALES_ORD_ID SALES_ORD_ID  ,
@@ -16,7 +60,7 @@
                        vCallLogOrderCall.CALL_STUS_ID CALL_STUS_ID  ,
                        vCallLogOrderCall.CALL_STUS_CODE CALL_STUS_CODE  ,
                        vCallLogOrderCall.PRODUCT_ID PRODUCT_ID  ,
-                       vCallLogOrderCall.PRODUCT_CODE || ' - ' || vCallLogOrderCall.PRODUCT_NAME PRODUCT_CODE  ,
+                       vCallLogOrderCall.PRODUCT_CODE  || ' - ' ||  vCallLogOrderCall.PRODUCT_NAME PRODUCT_CODE,
                        vCallLogOrderCall.PRODUCT_NAME PRODUCT_NAME  ,
                        vCallLogOrderCall.CUST_ID CUST_ID  ,
                        vCallLogOrderCall.CUST_NAME CUST_NAME  ,
@@ -40,16 +84,111 @@
                        vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID  ,
                        vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE  ,
                        vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC  
-                FROM CCR1002V vCallLogOrderCall
-		          WHERE    1=1
-	               AND ( CALLTYPEID IN ( 257 ) )
-                  AND ( CALL_STUS_ID IN ( 1 ,19,20) )
-		          AND ROWNUM < 100
-                    ]]>   
-                    <if test="orderNo != null and orderNo != '' ">
-                          AND (SALES_ORD_NO=#{orderNo} )  
-                     </if>
-                    
+                FROM CCR1002V vCallLogOrderCall ) Extent1
+          WHERE  ( ( 144 = (CASE 
+                                 WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) )
+                   OR ( 145 = (CASE 
+                                    WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) )
+                   OR ( 68 = (CASE 
+                                   WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) )
+                   OR ( 67 = (CASE 
+                                   WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) )
+                   OR ( 1412 = (CASE 
+                                     WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) )
+                   OR ( 66 = (CASE 
+                                   WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) )
+                   OR ( 143 = (CASE 
+                                    WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) )
+                   OR ( 142 = (CASE 
+                                    WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN Extent1.APP_TYPE_ID
+                 ELSE 0
+                    END) ) )
+                  ]]> 
+                  <if test="orderNo != null and orderNo != '' ">
+                     AND (Extent1.SALES_ORD_NO=#{orderNo} )  
+                  </if>
+                  <if test="product != null and product != '' ">
+                     AND (Extent1.PRODUCT_ID=#{product} )  
+                  </if>
+                  <if test="custId != null and custId != '' ">
+                     AND (Extent1.CUST_ID=#{custId} )  
+                  </if>
+                  <if test="custName != null and custName != '' ">
+                     AND (Extent1.CUST_NAME=#{custName} )  
+                  </if>
+                  <if test="nricNo != null and nricNo != '' ">
+                     AND (Extent1.CUST_IC=#{nricNo} )  
+                  </if>
+                   <if test="contactNo != null and contactNo != '' ">
+                     AND ((Extent1.INSTALL_TEL_F LIKE '%' ||  #{contactNo} || '%') OR (Extent1.INSTALL_TEL_M LIKE '%' ||  #{contactNo} || '%'') OR (Extent1.INSTALL_TEL_O LIKE '%' ||  #{contactNo} || '%') OR (Extent1.INSTALL_TEL_R LIKE '%' ||  #{contactNo} || '%'))
+                  </if>
+                  <if test="PONum != null and PONum != '' ">
+                     AND (Extent1.PO_NO=#{PONum} )  
+                  </if>
+                  <if test="ordArea != null and ordArea != '' ">
+                     AND (Extent1.INSTALL_AREA_ID=#{ordArea} )  
+                  </if>
+                  
+                   <if test="callLogTypeList != null and callLogTypeList != '' ">
+                            and Extent1.CALL_TYPE_ID IN
+                            <foreach item="item" collection="callLogTypeList" index="index" open="(" separator="," close=")">
+                            #{item}
+                            </foreach>
+                   </if>
+                   <if test="callLogStatusList != null and callLogStatusList != '' ">
+                            and Extent1.CALL_STUS_ID IN
+                            <foreach item="item" collection="callLogStatusList" index="index" open="(" separator="," close=")">
+                            #{item}
+                            </foreach>
+                   </if>
+                   <if test="DSCCodeList != null and DSCCodeList != '' ">
+                            and Extent1.DSC_BRNCH_ID IN
+                            <foreach item="item" collection="DSCCodeList" index="index" open="(" separator="," close=")">
+                            #{item}
+                            </foreach>
+                   </if>
+                   <if test="createDate != '' and endDate == '' ">
+                            <![CDATA[ AND  TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')  >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
+                   </if>
+                   <if test="endDate != '' and createDate == '' ">
+                            <![CDATA[  AND  TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                   </if>
+                   <if test="createDate != '' and endDate != '' ">
+                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    between TO_DATE(#{createDate},  'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                   </if>
+                    <if test="callStrDate != '' and callEndDate == '' ">
+                            <![CDATA[ AND  TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')  >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
+                   </if>
+                   <if test="callEndDate != '' and callStrDate == '' ">
+                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    <=  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+                   </if>
+                   <if test="callStrDate != '' and callEndDate != '' ">
+                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+                   </if>
+                   <![CDATA[
+                AND ROWNUM < 1000
+            ]]> 
+                   <if test="sortBy != null and sortBy != '' and sortBy == 1 " >
+                     ORDER BY Extent1.SALES_ORD_NO ASC 
+                  </if>
+                  <if test="sortBy != null and sortBy != '' and sortBy == 2 " >
+                     ORDER BY Extent1.CUST_NAME
+                  </if>
+        
     </select>
      <select id="getOrderCall" parameterType="Map" resultType="egovMap">
       <![CDATA[
