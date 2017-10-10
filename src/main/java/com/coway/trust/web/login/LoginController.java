@@ -1,5 +1,6 @@
 package com.coway.trust.web.login;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/login")
@@ -115,6 +118,14 @@ public class LoginController {
 		LOGGER.debug("findIdPop: {} ", params.toString());
 		return "/login/findIdPop";
 	}
+	
+	// UserSetting Popup
+	@RequestMapping(value = "/userSettingPop.do")
+	public String userSettingPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		model.addAttribute("userSettingFlag", sessionVO);
+		LOGGER.debug("userSettingPop: {} ,getUserId: {}", params.toString(),sessionVO.getUserId());
+		return "/login/userSettingPop";
+	}
 
 	// program search UserID popup
 	@RequestMapping(value = "/findIdRestPassPop.do")
@@ -149,7 +160,7 @@ public class LoginController {
 
 		int cnt = loginService.updatePassWord(params, sessionVO.getUserId());
 
-		// 결과 만들기 예.
+		// 결과 만들기 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(cnt);
@@ -157,6 +168,32 @@ public class LoginController {
 
 		return ResponseEntity.ok(message);
 
+	}
+	
+	@RequestMapping(value = "/udateUserInfoSetting.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateUserSetting(@RequestBody Map<String, Object> params,	SessionVO sessionVO) 
+	{
+		LOGGER.debug("udateUserInfoSetting: " + params.toString());
+		
+		int cnt = loginService.updateUserSetting(params, sessionVO.getUserId());
+		
+		// 결과 만들기 
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(cnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
+	}
+	
+	@RequestMapping(value = "/selectSecureResnList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSecureResnList(@RequestParam Map<String, Object> params, ModelMap model) 
+	{
+		LOGGER.debug("selectSecureResnList : {}", params.toString());
+		
+		List<EgovMap> selectSecureResnList = loginService.selectSecureResnList(params);
+		return ResponseEntity.ok(selectSecureResnList);
 	}
 
 }
