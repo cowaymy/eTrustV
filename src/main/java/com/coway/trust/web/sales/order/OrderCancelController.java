@@ -120,6 +120,7 @@ public class OrderCancelController {
 		model.addAttribute("paramTypeId", paramTypeId);
 		model.addAttribute("paramDocId", paramDocId);
 		model.addAttribute("paramRefId", paramRefId);
+		model.addAttribute("reqStageId", params.get("paramReqStageId"));
 		
 		return "sales/order/orderCancelDetailPop";
 		

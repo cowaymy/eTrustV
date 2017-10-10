@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderExchangeService;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -39,6 +41,9 @@ public class OrderExchangeController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 	
 	/**
 	 * Order Exchange List 초기화 화면 
@@ -79,6 +84,7 @@ public class OrderExchangeController {
 	@RequestMapping(value = "/orderExchangeDetailPop.do")
 	public String orderExchangeDetailPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 		logger.info("##### cmbExcType #####" +params.get("exchgType"));
+		logger.info("##### exchgStus #####" +params.get("exchgStus"));
 		EgovMap exchangeDetailInfo = orderExchangeService.exchangeInfoProduct(params);
 		
 		params.put("soExchgOldCustId", exchangeDetailInfo.get("soExchgOldCustId"));
@@ -89,14 +95,12 @@ public class OrderExchangeController {
 		
 		model.addAttribute("exchangeDetailInfo", exchangeDetailInfo);
 		model.addAttribute("initType", params.get("exchgType"));
+		model.addAttribute("exchgStus", params.get("exchgStus"));
+		model.addAttribute("exchgCurStusId", params.get("exchgCurStusId"));
 		model.addAttribute("soExchgIdDetail", exchangeDetailInfo.get("soExchgId"));
 		model.addAttribute("exchangeInfoOwnershipFr", exchangeInfoOwnershipFr);
 		model.addAttribute("exchangeInfoOwnershipTo", exchangeInfoOwnershipTo);
-		
-		//[Tap]Basic Info
-		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
-		
-		model.put("orderDetail", orderDetail);
+
 		
 		return "sales/order/orderExchangeDetailPop";
 		
@@ -107,19 +111,17 @@ public class OrderExchangeController {
 	public ResponseEntity<Map<String, Object>> saveCancelReq(@RequestParam Map<String, Object> params, ModelMap mode)
 			throws Exception {
 		
-		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
 		
 		String retMsg = AppConstants.MSG_SUCCESS;
 		
 		Map<String, Object> map = new HashMap();
-		
-		try{
+
 			orderExchangeService.saveCancelReq(params);
-		}catch(Exception ex){
-			retMsg = AppConstants.MSG_FAIL;
-		}finally{
+
 			map.put("msg", retMsg);
-		}
+
 		return ResponseEntity.ok(map);
 	}
 	
