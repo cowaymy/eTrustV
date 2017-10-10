@@ -126,13 +126,13 @@
             ,DISAB_DT        = SYSDATE
       </if>
       <if test ="disabFlag == nul || disabFlag ==''">
-            GL_ACC_CODE = #{glAccCode}
+             GL_ACC_CODE = #{glAccCode}
             ,GL_ACC_CODE_NAME = #{glAccCodeName}
             ,BUDGET_CODE = #{budgetCode}
             ,BUDGET_CODE_NAME = #{budgetCodeName}
+    </if>    
             ,UPD_USER_ID   = #{userId}
             ,UPD_DT        = SYSDATE
-    </if>
     WHERE  CLM_TYPE     = #{clmType}
       AND  EXP_TYPE       = #{expType}
 </update>
