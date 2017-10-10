@@ -54,11 +54,11 @@ public interface OrderExchangeMapper {
 	EgovMap firstSearchForCancel(Map<String, Object> params);
 	EgovMap secondSearchForCancel(Map<String, Object> params);
 	void updateStusSAL0004D(Map<String, Object> params);
-	List<EgovMap> thirdSearchForCancel(Map<String, Object> params);
+	EgovMap thirdSearchForCancel(Map<String, Object> params);
 	int getCallResultIdMaxSeq();
 	int insertCCR0007D(Map<String, Object> params);
 	int updateCCR0006D(Map<String, Object> params);
-	List<EgovMap> fourthSearchForCancel(Map<String, Object> params);
+	EgovMap fourthSearchForCancel(Map<String, Object> params);
 	int getCallEntryIdMaxSeq();
 	int insertCCR0006D(Map<String, Object> params);
 	int updateResultIdCCR0006D(Map<String, Object> params);

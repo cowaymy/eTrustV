@@ -105,15 +105,73 @@ public interface OrderCancelMapper {
 	
 	void updateCancelSAL0071D(Map<String, Object> params);
 	
+	void updateCancelSAL0001D(Map<String, Object> params);
+	
+	void insertCancelLOG0013D(Map<String, Object> params);
+	
+	void insertCancelLOG0038D(Map<String, Object> params);
+	
 	
 	/**
+	 * Cancellation Sales master info.
 	 * 
+	 * @param REQ_ID
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	EgovMap newSearchCancelSAL0001D(Map<String, Object> params); 
+	
+	
+	/**
+	 * Cancellation Sales master info.
 	 * 
+	 * @param REQ_ID
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	EgovMap newSearchCancelSAL0046D(Map<String, Object> params);
+	
+	
+	/**
+	 * Cancellation Sales master info.
+	 * 
+	 * @param REQ_ID
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	String crtSeqLOG0031D();
+	
+	
+	/**
+	 * Cancellation Sales master info.
+	 * 
+	 * @param REQ_ID
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	String crtSeqLOG0038D();
+	
+	
+	/**
 	 * @param vo
 	 *   
 	 * @return 조회한 글
 	 * @exception Exception
 	 */
 	void updateCancelSAL0020D(Map<String, Object> params);
+	
+	void updReservalCancelSAL0020D(Map<String, Object> params);
+	
+	void insertCancelCCR0006D(Map<String, Object> params);
+	
+	
+	/**
+	 * Cancellation Sales master info.
+	 * 
+	 * @param REQ_ID
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	EgovMap newSearchCancelSAL0020D(Map<String, Object> params);
 
 }

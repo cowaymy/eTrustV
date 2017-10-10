@@ -13,6 +13,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.order.OrderSuspensionService;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -106,8 +107,8 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		saveParam.put("callEntryId", newSuspendSearch1.get("callEntryId"));
 		saveParam.put("callStusId", params.get("newSuspResultStus"));
-//		saveParam.put("callDt", defaultDate);
-//		saveParam.put("callActnDt", defaultDate);
+		saveParam.put("callDt", SalesConstants.DEFAULT_DATE);
+		saveParam.put("callActnDt", SalesConstants.DEFAULT_DATE);
 		saveParam.put("callFdbckId", 0);
 		saveParam.put("callCtId", 0);
 		saveParam.put("callRem", params.get("newSuspResultRem"));

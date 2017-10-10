@@ -13,6 +13,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.order.OrderExchangeService;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -86,17 +87,76 @@ public class OrderExchangeServiceImpl extends EgovAbstractServiceImpl implements
 		EgovMap firstSearchForCancel = orderExchangeMapper.firstSearchForCancel(params);
 		EgovMap secondSearchForCancel = orderExchangeMapper.secondSearchForCancel(params);
 		
+		
 		logger.info("##### save soExchgId #####" +params.get("soExchgIdDetail"));
 		logger.info("##### save soExchgRem #####" +params.get("soExchgRem"));
 		logger.info("##### save salesOrderId #####" +params.get("salesOrderId"));
 		logger.info("##### save soExchgNwCallEntryId #####" +secondSearchForCancel.get("soExchgNwCallEntryId"));//SO_EXCHG_NW_CALL_ENTRY_ID
-		//orderExchangeMapper.updateStusSAL0004D(params);
+		
+		int reqStageId = 0;	// before , after install
+		if((String)params.get("exchgCurStusId") != null && !"".equals((String)params.get("exchgCurStusId")) ){
+			reqStageId = Integer.parseInt((String)params.get("exchgCurStusId"));
+		}
+		logger.info("##### save reqStageId #####" +reqStageId);
 		
 		Map<String, Object> drdExchgMt = new HashMap<String, Object>();
+		
 		drdExchgMt.put("soExchgStusId", 10);
-		drdExchgMt.put("soExchgUpdUserId", 999999);
-		drdExchgMt.put("soExchgRem", "");
-		drdExchgMt.put("soExchgRem", "");
+		drdExchgMt.put("soExchgUpdUserId", params.get("userId"));
+		drdExchgMt.put("soExchgRem", "(Product Exchange Request Cancelled) "+params.get("soExchgRem"));
+		orderExchangeMapper.updateStusSAL0004D(drdExchgMt);
+		
+		drdExchgMt.put("soExchgNwCallEntryId", secondSearchForCancel.get("soExchgNwCallEntryId"));
+		//공통저장
+		drdExchgMt.put("callStusId", 10);
+		drdExchgMt.put("callDt", SalesConstants.DEFAULT_DATE);
+		drdExchgMt.put("callActnDt", SalesConstants.DEFAULT_DATE);
+		drdExchgMt.put("callFdbckId", 0);
+		drdExchgMt.put("callCtId", 0);
+		drdExchgMt.put("callRem", params.get("soExchgRem"));
+		drdExchgMt.put("callCrtUserId", params.get("userId"));
+		drdExchgMt.put("callCrtUserIdDept", 0);
+		drdExchgMt.put("callHcId", 0);
+		drdExchgMt.put("callRosAmt", 0);
+		drdExchgMt.put("callSms", 0);
+		drdExchgMt.put("callSms", "");
+		orderExchangeMapper.insertCCR0007D(drdExchgMt);
+		////////////////////seq로 다시 insert함.
+		
+		EgovMap thirdSearchForCancel = orderExchangeMapper.thirdSearchForCancel(drdExchgMt);	// new
+		drdExchgMt.put("callSms", thirdSearchForCancel.get("resultId"));
+		orderExchangeMapper.updateCCR0006D(drdExchgMt);
+		
+		drdExchgMt.put("soExchgOldCallEntryId", secondSearchForCancel.get("soExchgOldCallEntryId"));
+		if(reqStageId == 24){
+			drdExchgMt.put("callStusId", 1);
+			drdExchgMt.put("callDt", SalesConstants.DEFAULT_DATE);
+			drdExchgMt.put("callActnDt", SalesConstants.DEFAULT_DATE);
+			drdExchgMt.put("callFdbckId", 0);
+			drdExchgMt.put("callCtId", 0);
+			drdExchgMt.put("callRem", params.get("soExchgRem"));
+			drdExchgMt.put("callCrtUserId", params.get("userId"));
+			drdExchgMt.put("callCrtUserIdDept", 0);
+			drdExchgMt.put("callHcId", 0);
+			drdExchgMt.put("callRosAmt", 0);
+			drdExchgMt.put("callSms", 0);
+			drdExchgMt.put("callSms", "");
+			orderExchangeMapper.insertCCR0007D(drdExchgMt);
+		}
+		
+		
+		
+		EgovMap fourthSearchForCancel = orderExchangeMapper.fourthSearchForCancel(drdExchgMt);	// old
+		
+		drdExchgMt.put("salesOrdId", params.get("salesOrderId"));
+		drdExchgMt.put("typeId", "");
+		drdExchgMt.put("stusCodeId", "");
+		drdExchgMt.put("resultId", "");
+		drdExchgMt.put("docId", "");
+		drdExchgMt.put("isWaitForCancl", "");
+		drdExchgMt.put("hapyCallerId", "");
+		orderExchangeMapper.insertCCR0006D(drdExchgMt);
+		
 		logger.info("##### 2222244444444 soCurStusId #####" +secondSearchForCancel.get("soCurStusId"));
 		if(Integer.parseInt(secondSearchForCancel.get("soCurStusId").toString()) == 24){
 			logger.info("##### 2222244444444 soCurStusId #####" +secondSearchForCancel.get("soCurStusId"));
