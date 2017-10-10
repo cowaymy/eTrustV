@@ -26,6 +26,20 @@ public interface HsManualService {
 
 	List<EgovMap> selectHsManualListPop(Map<String, Object> params);
 
+	EgovMap selectHsInitDetailPop(Map<String, Object> params);
+	
+	List<EgovMap> cmbCollectTypeComboList(Map<String, Object> params);
+
+	List<EgovMap> cmbServiceMemList(Map<String, Object> params);
+	
 	Boolean insertHsResult(Map<String, Object> params, List<Object> docType);
+
+	boolean addIHsResult(Map<String, Object> params,  List<Object> docType, SessionVO sessionVO)  throws ParseException;
+
+	List<EgovMap> selectHsFilterList(Map<String, Object> params);
+
+	EgovMap selectHsViewBasicInfo(Map<String, Object> params);
+	
+	
 	
 }
