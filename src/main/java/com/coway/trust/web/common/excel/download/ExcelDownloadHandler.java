@@ -33,7 +33,7 @@ public class ExcelDownloadHandler implements ResultHandler<Map<String, Object>> 
 	private int currentRows = 0;
 
 	private CellStyle[] dataCellStyleList;
-	private ExcelCellValues.ValueTypes[] dataCellValueList;
+	private ExcelCellValues.Types[] dataCellValueList;
 
 	public ExcelDownloadHandler(ExcelDownloadVO excelVo, HttpServletResponse response) {
 		this.response = response;
@@ -143,7 +143,7 @@ public class ExcelDownloadHandler implements ResultHandler<Map<String, Object>> 
 
 	private void makeColumnInfos(Map<String, Object> values) {
 		dataCellStyleList = new CellStyle[excelVo.getExcelColumns().size()];
-		dataCellValueList = new ExcelCellValues.ValueTypes[excelVo.getExcelColumns().size()];
+		dataCellValueList = new ExcelCellValues.Types[excelVo.getExcelColumns().size()];
 
 		Object dataValue;
 		int index = 0;
@@ -153,27 +153,27 @@ public class ExcelDownloadHandler implements ResultHandler<Map<String, Object>> 
 			dataValue = values.get(columnVo.getColumnName());
 
 			if (dataValue instanceof String) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.STRING;
+				dataCellValueList[index] = ExcelCellValues.Types.STRING;
 			} else if (dataValue instanceof Short) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.SHORT;
+				dataCellValueList[index] = ExcelCellValues.Types.SHORT;
 			} else if (dataValue instanceof Integer) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.INTEGER;
+				dataCellValueList[index] = ExcelCellValues.Types.INTEGER;
 			} else if (dataValue instanceof Long) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.LONG;
+				dataCellValueList[index] = ExcelCellValues.Types.LONG;
 			} else if (dataValue instanceof Float) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.FLOAT;
+				dataCellValueList[index] = ExcelCellValues.Types.FLOAT;
 			} else if (dataValue instanceof Double) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.DOUBLE;
+				dataCellValueList[index] = ExcelCellValues.Types.DOUBLE;
 			} else if (dataValue instanceof BigDecimal) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.BIGDECIMAL;
+				dataCellValueList[index] = ExcelCellValues.Types.BIGDECIMAL;
 			} else if (dataValue instanceof Date) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.DATE;
+				dataCellValueList[index] = ExcelCellValues.Types.DATE;
 			} else if (dataValue instanceof Calendar) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.CALENDAR;
+				dataCellValueList[index] = ExcelCellValues.Types.CALENDAR;
 			} else if (dataValue instanceof Boolean) {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.BOOLEAN;
+				dataCellValueList[index] = ExcelCellValues.Types.BOOLEAN;
 			} else {
-				dataCellValueList[index] = ExcelCellValues.ValueTypes.STRING;
+				dataCellValueList[index] = ExcelCellValues.Types.STRING;
 			}
 			index++;
 		}
@@ -303,7 +303,7 @@ public class ExcelDownloadHandler implements ResultHandler<Map<String, Object>> 
 	}
 
 	private void createDataCell(Row row, int index, Object value, CellStyle style,
-			ExcelCellValues.ValueTypes valueType) {
+			ExcelCellValues.Types valueType) {
 		Cell cell = row.createCell(index);
 
 		switch (valueType) {
