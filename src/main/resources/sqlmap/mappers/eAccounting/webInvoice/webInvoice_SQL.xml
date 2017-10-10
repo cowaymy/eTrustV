@@ -2,41 +2,253 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper">
 
-<select id="selectWebInvoiceByParamsList" parameterType="Map" resultType="egovMap">
-/* webInvoiceMapper.selectWebInvoiceByParamsList */
-    SELECT INVC_NO,
-                INVC_DT
-    FROM FCM0002M            
+<select id="selectWebInvoiceList" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceList */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+            SELECT T1.CLM_NO
+                   ,T1.INVC_NO
+                   ,T1.INVC_DT
+                   ,T1.COST_CENTR
+                   ,T1.COST_CENTR_NAME
+                   ,(CASE T1.INVC_TYPE WHEN 'F' THEN 'Full Tax invoice'
+                            WHEN '1' THEN 'Simplified Tax invoice'
+                    END) INVC_TYPE
+                   ,T1.MEM_ACC_ID
+                   ,T2.MEM_ACC_NAME
+                   ,T1.TOT_AMT
+                   ,T3.REQST_DT
+                   ,NVL((CASE T3.APPV_PRCSS_STUS
+                            WHEN 'R' THEN 'Request'
+                            WHEN 'P' THEN 'Approve In-Progress'
+                            WHEN 'A' THEN 'Approved'
+                            WHEN 'J' THEN 'Reject'
+                            END), 'Temporary save') APPV_PRCSS_STUS
+                   ,T3.APPV_PRCSS_DT
+          FROM FCM0002M T1
+          LEFT JOIN FCM0006M T2
+          ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+          LEFT JOIN FCM0004M T3
+          ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+          WHERE 1=1
+        <if test="startDt != null and startDt != ''">
+        <![CDATA[ 
+             AND T1.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YY')
+        ]]>
+        </if>          
+        <if test="endDt != null and endDt != ''">
+        <![CDATA[ 
+             AND T1.INVC_DT <= TO_DATE(#{endDt} || ' 23:59:59', 'DD/MM/YY HH24:MI:SS')
+        ]]>
+        </if>          
+        <if test="memAccID != null and memAccID != ''">
+             AND T1.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
+        </if>          
+        <if test="costCenter != null and costCenter != ''">
+             AND T1.COST_CENTR LIKE '%' || #{costCenter} || '%'
+        </if>     
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+             AND T3.APPV_PRCSS_STUS IN
+         <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+        </if>          
 </select>
 
-<insert id="insertWebInvoiceByMap" parameterType="Map">
-/* webInvoiceMapper.insertWebInvoiceByMap */
+<select id="selectWebInvoiceInfo" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceInfo */
+            SELECT T1.CLM_NO
+                   ,T1.INVC_NO
+                   ,TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT
+                   ,T1.COST_CENTR
+                   ,T1.COST_CENTR_NAME
+                   ,T1.INVC_TYPE
+                   ,T1.MEM_ACC_ID
+                   ,T1.GST_RGIST_NO
+                   ,T1.BANK_CODE
+                   ,T2.BANK_NAME
+                   ,T1.BANK_ACC_NO
+                   ,TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT
+                   ,T1.ATCH_FILE_GRP_ID
+                   ,T1.INVC_REM
+                   ,T1.APPV_PRCSS_NO
+                   ,T1.CRT_DT
+                   ,T1.CRT_USER_ID
+                   ,T1.TOT_AMT
+          FROM FCM0002M T1
+          LEFT JOIN FCM0006M T2
+          ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+          WHERE CLM_NO = #{clmNo}         
+</select>
 
+<select id="selectWebInvoiceItems" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceItems */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+            SELECT EXP_TYPE
+                   ,EXP_TYPE_NAME
+                   ,GL_ACC_CODE
+                   ,GL_ACC_CODE_NAME
+                   ,BUDGET_CODE
+                   ,BUDGET_CODE_NAME
+                   ,TAX_CODE
+                   ,NET_AMT
+                   ,TAX_AMT
+                   ,TOT_AMT
+                   ,EXP_DESC
+          FROM FCM0003D
+          WHERE CLM_NO = #{clmNo}         
+</select>
+
+<select id="selectWebInvoiceAttachment" parameterType="int" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceAttachment */
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}         
+</select>
+
+<select id="selectAttachmentInfo" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.selectAttachmentInfo */
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          AND T1.ATCH_FILE_ID = #{atchFileId}         
+</select>
+
+<insert id="insertWebInvoiceInfo" parameterType="Map">
+/* webInvoiceMapper.insertWebInvoiceInfo */
+   INSERT INTO FCM0002M
+   (
+        CLM_NO
+       ,CLM_TYPE
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,MEM_ACC_ID
+       ,GST_RGIST_NO
+       ,BANK_CODE
+       ,BANK_ACC_NO
+       ,INVC_TYPE
+       ,INVC_NO
+       ,INVC_DT
+       ,PAY_DUE_DT
+       ,ATCH_FILE_GRP_ID
+       ,INVC_REM
+       ,TOT_AMT
+       ,APPV_PRCSS_NO
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,'J1'
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{memAccId}
+       ,#{gstRgistNo}
+       ,#{bankCode}
+       ,#{bankAccNo}
+       ,#{invcType}
+       ,#{invcNo}
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{atchFileGrpId}
+       ,#{invcRem}
+       ,#{totAmt}
+       ,#{appvPrcssNo}
+       ,SYSDATE
+       ,#{crtUserId}
+       ,SYSDATE
+       ,#{crtUserId}
+    )
+</insert>
+
+<insert id="insertWebInvoiceDetail" parameterType="Map">
+/* webInvoiceMapper.insertWebInvoiceDetail */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0003D
+   (
+        CLM_NO
+       ,CLM_SEQ
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,TOT_AMT
+       ,EXP_DESC
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,#{clmSeq}
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{netAmt}
+       ,#{taxAmt}
+       ,#{totAmt}
+       ,#{expDesc}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
 </insert>
 
 <select id="selectSupplier" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectSupplier */
     SELECT ACC_GRP,
+                ACC_GRP_NAME,
                 MEM_ACC_ID,
                 MEM_ACC_NAME,
                 GST_RGIST_NO,
+                BANK_CODE,
                 BANK_NAME,
                 BANK_ACC_NO
     FROM FCM0006M
     WHERE 1=1
-    <if test="memberAccountCode != null and memberAccountCode != ''">
-    AND MEM_ACC_ID LIKE '%' || #{memberAccountCode} || '%'
+    <if test="memAccId != null and memAccId != ''">
+    AND MEM_ACC_ID LIKE '%' || #{memAccId} || '%'
     </if>
-    <if test="group != null and group != ''">
-    AND ACC_GRP = #{group}
+    <if test="accGrp != null and accGrp != ''">
+    AND ACC_GRP = #{accGrp}
     </if>
-    <if test="memberAccountName != null and memberAccountName != ''">
+    <if test="memAccName != null and memAccName != ''">
     <![CDATA[
-    AND MEM_ACC_NAME LIKE '%' || #{memberAccountName} || '%'
+    AND MEM_ACC_NAME LIKE '%' || #{memAccName} || '%'
     ]]>
     </if>
-    <if test="gstRegistrationNo != null and gstRegistrationNo != ''">
-    AND GST_RGIST_NO LIKE '%' || #{gstRegistrationNo} || '%'
+    <if test="gstRgistNo != null and gstRgistNo != ''">
+    AND GST_RGIST_NO LIKE '%' || #{gstRgistNo} || '%'
     </if>
 </select>
 
@@ -54,8 +266,8 @@
     </if>
 </select>
 
-<select id="selectTextCodeWebInvoiceFlag" resultType="egovMap">
-/* webInvoiceMapper.selectTextCodeWebInvoiceFlag */
+<select id="selectTaxCodeWebInvoiceFlag" resultType="egovMap">
+/* webInvoiceMapper.selectTaxCodeWebInvoiceFlag */
     SELECT TAX_CODE ,
                 TAX_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
     FROM FCM0007C
@@ -69,6 +281,11 @@
        || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS clmNo
     FROM FCM0002M
     WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+</select>
+
+<select id="selectNextClmSeq" resultType="int">
+/* webInvoiceMapper.selectNextClmNo */
+    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS clmSeq FROM FCM0003D
 </select>
 
 </mapper>
