@@ -25,6 +25,7 @@ public class SessionVO implements Serializable {
 	private int userBranchId;
 	private String branchName;
 	private String deptName;
+	private String userPassWord;
 
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 
@@ -182,6 +183,14 @@ public class SessionVO implements Serializable {
 	public void setLoginSubAuthVOList(List<LoginSubAuthVO> loginSubAuthVOList) {
 		this.loginSubAuthVOList = loginSubAuthVOList;
 	}
+	
+	public String getUserPassWord() {
+		return userPassWord;
+	}
+
+	public void setUserPassWord(String userPassWord) {
+		this.userPassWord = userPassWord;
+	}
 
 	public static SessionVO create(LoginVO loginVO) {
 		SessionVO sessionVO = new SessionVO();
@@ -205,6 +214,7 @@ public class SessionVO implements Serializable {
 			sessionVO.setBranchName(loginVO.getBranchName());
 			sessionVO.setUserBranchId(loginVO.getUserBranchId());
 			sessionVO.setDeptName(loginVO.getDeptName());
+			sessionVO.setUserPassWord(loginVO.getUserPassWord());
 
 			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
 		}
