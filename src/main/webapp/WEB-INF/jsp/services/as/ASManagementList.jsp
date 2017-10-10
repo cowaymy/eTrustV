@@ -152,6 +152,10 @@ var gridPros = {
     
 };
 
+function fn_excelDown(){
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("grid_wrap_asList", "xlsx", "AS Management");
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -227,7 +231,7 @@ var gridPros = {
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<!-- <aside class="link_btns_wrap">link_btns_wrap start
 <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
@@ -255,16 +259,17 @@ var gridPros = {
     <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end -->
+</aside>link_btns_wrap end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
-    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
