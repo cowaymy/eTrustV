@@ -36,7 +36,7 @@ var myGridID;
 function asManagementGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
-        dataField : "code2",
+        dataField : "code",
         headerText : "Type",
         editable : false,
         width : 100
@@ -56,13 +56,13 @@ function asManagementGrid() {
         editable : false,
         width : 150
     }, {
-        dataField : "c3",
+        dataField : "asResultNo",
         headerText : "Result No",
         editable : false,
         style : "my-column",
         width : 100
     }, {
-        dataField : "c4",
+        dataField : "salesOrdNo",
         headerText : "Key By",
         editable : false,
         width : 180
@@ -73,7 +73,7 @@ function asManagementGrid() {
         width : 180
         
     }, {
-        dataField : "code1",
+        dataField : "appType",
         headerText : "App Type",
         width : 180
     }, {
@@ -159,7 +159,7 @@ function fn_excelDown(){
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
@@ -191,42 +191,42 @@ function fn_excelDown(){
 <tr>
     <th scope="row">AS Type</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple">
-        <option value="1">11</option>
-        <option value="2">22</option>
-        <option value="3">33</option>
+    <select class="multy_select w100p" multiple="multiple" id="asType" name="asType">
+    <option value="675">Auto AS</option>
+    <option value="674">Normal AS</option>
     </select>
     </td>
     <th scope="row">AS Status</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple">
-        <option value="1">11</option>
-        <option value="2">22</option>
-        <option value="3">33</option>
+    <select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
+    <option value="1">Active</option>
+    <option value="4">Completed</option>
+    <option value="21">Fail</option>
+    <option value="10">Cancelled</option>
     </select>
     </td>
     <th scope="row">Request Date</th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="createStrDate"  name="createStrDate"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="createEndDate" name="createEndDate"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
     <th scope="row">AS Number</th>
-    <td><input type="text" title="" placeholder="AS Number" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="AS Number" class="w100p" id="asNum" name="asNum"/></td>
     <th scope="row">Result Number</th>
-    <td><input type="text" title="" placeholder="Result Number" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="Result Number" class="w100p" id="resultNum" name="resultNum"/></td>
     <th scope="row">Order Number</th>
-    <td><input type="text" title="" placeholder="Order Number" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
 </tr>
 <tr>
     <th scope="row">Customer Name</th>
-    <td colspan="3"><input type="text" title="" placeholder="Customer Name" class="w100p" /></td>
+    <td colspan="3"><input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/></td>
     <th scope="row">NRIC/Company No</th>
-    <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" /></td>
+    <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="nricNum"  name="nricNum"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
