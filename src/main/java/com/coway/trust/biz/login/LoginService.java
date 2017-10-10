@@ -22,7 +22,11 @@ public interface LoginService {
 	List<EgovMap> getLanguages();
 
 	int updatePassWord(Map<String, Object> params, Integer crtUserId);
+	
+	int updateUserSetting(Map<String, Object> params, Integer crtUserId);
 
 	void saveLoginHistory(LoginHistory loginHistory);
+	
+	List<EgovMap> selectSecureResnList(Map<String, Object> params);
 
 }
