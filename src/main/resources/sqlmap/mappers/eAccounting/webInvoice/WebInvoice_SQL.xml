@@ -98,8 +98,8 @@
           WHERE CLM_NO = #{clmNo}         
 </select>
 
-<select id="selectWebInvoiceAttachment" parameterType="int" resultType="egovMap">
-/* webInvoiceMapper.selectWebInvoiceAttachment */
+<select id="selectWebInvoiceAttachList" parameterType="int" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceAttachList */
             SELECT T1.ATCH_FILE_GRP_ID
                    ,T1.ATCH_FILE_ID
                    ,T2.ATCH_FILE_NAME
