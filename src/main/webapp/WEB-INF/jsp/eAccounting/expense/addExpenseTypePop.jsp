@@ -11,11 +11,97 @@
 var expPopGridID;
 
 $(document).ready(function(){
+	
+	 var expPopColumnLayout = [ {     /* PK , rowid 용 칼럼*/
+         dataField : "rowId",
+         dataType : "string",
+         visible : false
+     },{
+         dataField : "clmType",
+         headerText : '',
+         visible : false,
+         editable : false
+     },{
+         dataField : "expType",
+         headerText : '<spring:message code="expense.ExpenseType" />',
+         width : 100,
+         editable : false
+     },{
+         dataField : "expTypeName",
+         headerText : '<spring:message code="expense.ExpenseTypeName" />',
+         style : "aui-grid-user-custom-left",
+         width : 230,
+         editable : true
+     }, {
+         dataField : "budgetCode",
+         headerText : '<spring:message code="expense.Activity" />',
+         visible : false,
+         editable : false
+     }, {
+         dataField : "budgetCodeName",
+         headerText : '<spring:message code="expense.ActivityName" />',
+         style : "aui-grid-user-custom-left",
+         width : 230,
+         editable : false,
+         colSpan : 2
+     }, {
+         dataField : "",
+         headerText : '',
+         width: 30,
+         editable : false,
+         renderer : {
+             type : "IconRenderer",
+             iconTableRef :  {
+                 "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
+                     },         
+                     iconWidth : 16,
+                     iconHeight : 16,
+                     onclick : function(rowIndex, columnIndex, value, item) {
+                         fn_budgetCodePop(rowIndex);
+                         }
+                     },
+         colSpan : -1
+     }, {
+         dataField : "glAccCode",
+         headerText : '<spring:message code="expense.GLAccount" />',
+         visible : false,
+         editable : false
+     }, {
+         dataField : "glAccCodeName",
+         headerText : '<spring:message code="expense.GLAccountName" />',
+         style : "aui-grid-user-custom-left",
+         width : 230,
+         editable : false,
+         colSpan : 2
+     }, {
+         dataField : "",
+         headerText : '<spring:message code="expense.GLAccountName" />',
+         width: 30,
+         editable : false,
+         renderer : {
+             type : "IconRenderer",
+             iconTableRef :  {
+                 "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
+                     },         
+                     iconWidth : 16,
+                     iconHeight : 16,
+                     onclick : function(rowIndex, columnIndex, value, item) {
+                         fn_glAccountSearchPop(rowIndex);
+                         }
+                     },
+        colSpan : -1
+     }];
+ 
+ var options = {
+     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+     selectionMode : "multipleRows"
+   };
+
     
     // AUIGrid 그리드를 생성합니다.
-    createAUIGrid();
+    //createAUIGrid();
     
-    AUIGrid.setSelectionMode(expPopGridID, "singleRow");
+  //  AUIGrid.setSelectionMode(expPopGridID, "singleRow");
     
     CommonCombo.make("popClaimType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
         id: "code",
@@ -24,143 +110,52 @@ $(document).ready(function(){
     //, calback
     );
     
-});
-
-function createAUIGrid() {
-    // AUIGrid 칼럼 설정
+    expPopGridID = GridCommon.createAUIGrid("#addExpenseGrid", expPopColumnLayout,"rowId", options);
     
-    // 데이터 형태는 다음과 같은 형태임,
-    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-    var columnLayout = [ {
-	        dataField : "clmType",
-	        headerText : '',
-            visible : false,
-	        editable : false
-	    },{
-            dataField : "expType",
-            headerText : '<spring:message code="expense.ExpenseType" />',
-            width : 100,
-            editable : false
-        },{
-            dataField : "expTypeName",
-            headerText : '<spring:message code="expense.ExpenseTypeName" />',
-            style : "aui-grid-user-custom-left",
-            width : 230,
-            editable : true
-        }, {
-            dataField : "budgetCode",
-            headerText : '<spring:message code="expense.Activity" />',
-            visible : false,
-            editable : false
-        }, {
-            dataField : "budgetCodeName",
-            headerText : '<spring:message code="expense.ActivityName" />',
-            style : "aui-grid-user-custom-left",
-            width : 230,
-            editable : false,
-            colSpan : 2
-        }, {
-            dataField : "",
-            headerText : '',
-            width: 30,
-            editable : false,
-            renderer : {
-                type : "IconRenderer",
-                iconTableRef :  {
-                    "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
-                        },         
-                        iconWidth : 16,
-                        iconHeight : 16,
-                        onclick : function(rowIndex, columnIndex, value, item) {
-                        	fn_budgetCodePop(rowIndex);
-                            }
-                        },
-            colSpan : -1
-        }, {
-            dataField : "glAccCode",
-            headerText : '<spring:message code="expense.GLAccount" />',
-            visible : false,
-            editable : false
-        }, {
-            dataField : "glAccCodeName",
-            headerText : '<spring:message code="expense.GLAccountName" />',
-            style : "aui-grid-user-custom-left",
-            width : 230,
-            editable : false,
-            colSpan : 2
-        }, {
-            dataField : "",
-            headerText : '<spring:message code="expense.GLAccountName" />',
-            width: 30,
-            editable : false,
-            renderer : {
-                type : "IconRenderer",
-                iconTableRef :  {
-                    "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
-                        },         
-                        iconWidth : 16,
-                        iconHeight : 16,
-                        onclick : function(rowIndex, columnIndex, value, item) {
-                            fn_glAccountSearchPop(rowIndex);
-                            }
-                        },
-           colSpan : -1
-        }];
-   
-    //그리드 속성 설정
-    var gridPros = {
-        usePaging           : false,             //페이징 사용
-        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-        editable                : true,            
-        fixedColumnCount    : 2,            
-        showStateColumn     : true,             
-        displayTreeOpen     : false,            
-        selectionMode       : "singleRow",  //"multipleCells",            
-        headerHeight        : 30,       
-        useGroupingPanel    : false,        //그룹핑 패널 사용
-        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력   
-        noDataMessage       :  gridMsg["sys.info.grid.noDataMessage"],
-        groupingMessage     : gridMsg["sys.info.grid.groupingMessage"],
-        softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-    }; 
-    
-    expPopGridID = AUIGrid.create("#popGrid_wrap", columnLayout, gridPros);
-    
-     // 행 추가 이벤트 바인딩
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(expPopGridID, "addRow", auiAddRowHandler); 
-
-    /* // 셀 에디팅 바인딩
-    AUIGrid.bind(expPopGridID, "cellEditBegin", function(event) {    	
-       if(event.dataField == "expTypeName") {
-    	   
-    	   var str = event.item.expType.substring(2,5);
-    	   
-            if(str != "xxx") {
-                return false;
-            }
-        } 
-    }); */
-    
+   
     
     // 에디팅 시작 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellEditBegin", function(event) {
-        
-        if(event.dataField == "expTypeName") {
-            // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
-            if(AUIGrid.isAddedById(event.pid, event.item.id)) {
-                return true; 
-            } else {
-                return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
-            }
-        }
-        return false; // 다른 필드들은 편집 허용
-    });
-    
+    AUIGrid.bind(expPopGridID, "cellEditBegin", auiCellEditignHandler);
 
+    // 에디팅 정상 종료 이벤트 바인딩
+    AUIGrid.bind(expPopGridID, "cellEditEnd", auiCellEditignHandler);
+
+    // 에디팅 취소 이벤트 바인딩
+   AUIGrid.bind(expPopGridID, "cellEditCancel", auiCellEditignHandler); 
+   
     // 행 삭제 이벤트 바인딩
-    AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
+    AUIGrid.bind(expPopGridID, "removeRow", auiRemoveRowHandler);
+    
+});
+
+//AUIGrid 메소드
+function auiCellEditignHandler(event)
+{
+  if(event.type == "cellEditBegin")
+  {
+      console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+      //var menuSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, 9);
+
+      if(event.dataField == "expTypeName")
+      {
+    	  // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
+        if(AUIGrid.isAddedById(expPopGridID, event.item.rowId)){  //추가된 Row
+              return true; 
+          } else {
+              return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
+          }
+      }
+  }
+  else if(event.type == "cellEditEnd")
+  {
+      console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+  }
+  else if(event.type == "cellEditCancel")
+  {
+      console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+  }
 
 }
 
@@ -204,6 +199,7 @@ function fn_AddRow()
           item.budgetCodeName  ="";
           item.glAccCode  ="";
           item.glAccCodeName  ="";
+          item.rowId ="new";
           // parameter
           // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
           // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -376,7 +372,7 @@ function  fn_setBudgetData(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="popGrid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+    <div id="addExpenseGrid" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
