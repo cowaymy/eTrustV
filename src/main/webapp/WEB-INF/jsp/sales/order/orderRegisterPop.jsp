@@ -600,12 +600,20 @@
             }  
         });
         $('#salesmanCd').change(function(event) {
-
             var memCd = $('#salesmanCd').val().trim();
 
             if(FormUtil.isNotEmpty(memCd)) {
                 fn_loadOrderSalesman(0, memCd);
             }
+        });
+        $('#salesmanCd').keydown(function (event) {  
+            if (event.which === 13) {    //enter
+                var memCd = $('#salesmanCd').val().trim();
+    
+                if(FormUtil.isNotEmpty(memCd)) {
+                    fn_loadOrderSalesman(0, memCd);
+                }
+            }  
         });
         $('#thrdPartyId').change(function(event) {
             fn_loadThirdParty($('#thrdPartyId').val().trim(), 2);
@@ -1602,9 +1610,9 @@
                 $('#orgMemId').val(memInfo.lvl1UpId);
 
                 $('#salesmanCd').removeClass("readonly");
-                $('#salesmanType').removeClass("readonly");
-                $('#salesmanNm').removeClass("readonly");
-                $('#salesmanNric').removeClass("readonly");
+              //$('#salesmanType').removeClass("readonly");
+              //$('#salesmanNm').removeClass("readonly");
+              //$('#salesmanNric').removeClass("readonly");
                 $('#departCd').removeClass("readonly");
                 $('#grpCd').removeClass("readonly");
                 $('#orgCd').removeClass("readonly");

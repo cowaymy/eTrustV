@@ -26,6 +26,8 @@
 
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        
+        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo')
     });
 
     // 컬럼 선택시 상세정보 세팅.
@@ -108,12 +110,6 @@
     }
     
     function fn_multiCombo(){
-//        $('#cmbCategory').change(function() {
-//            //console.log($(this).val());
-//        }).multipleSelect({
-//            selectAll: true, // 전체선택 
-//            width: '100%'
-//        });            
         $('#listAppType').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
@@ -134,6 +130,13 @@
             width: '100%'
         });
         $('#listOrdStusId').multipleSelect("checkAll");
+        $('#listRentStus').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택 
+            width: '100%'
+        });
+        $('#listRentStus').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {
@@ -249,15 +252,7 @@
 	</td>
 	<th scope="row">Rental Status</th>
 	<td>
-	<select id="listRentStus" name="rentStus" class="multy_select w100p" multiple="multiple">
-		<option value="REG">Regular</option>
-		<option value="INV">Investigate</option>
-        <option value="SUS">Suspend</option>
-        <option value="RET">Returned</option>
-        <option value="CAN">Cancelled</option>
-        <option value="TER">Terminated</option>
-        <option value="WOF">Write Off</option>
-	</select>
+	<select id="listRentStus" name="rentStus" class="multy_select w100p" multiple="multiple"></select>
 	</td>
 </tr>
 <tr>

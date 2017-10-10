@@ -222,7 +222,12 @@
             Common.popupDiv("/common/memberPop.do", { callPrgm : "ORD_MODIFY_BSC_INF" }, null, true);
         });
         $('#modSalesmanCd').change(function() {
-            fn_loadOrderSalesman(null, $('#modSalesmanCd').val())
+            fn_loadOrderSalesman(null, $('#modSalesmanCd').val());
+        });
+        $('#modSalesmanCd').keydown(function (event) {  
+            if (event.which === 13) {    //enter
+                fn_loadOrderSalesman(null, $('#modSalesmanCd').val());
+            }  
         });
         $('#btnBillNewAddr').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : CUST_ID, callParam : "ORD_MODIFY_MAIL_ADR"}, null , true);
@@ -423,6 +428,21 @@
         
     });
     
+    function fn_clearOrderSalesman() {
+        $('#modSalesmanId').val('');
+        $('#modSalesmanCd').val('');
+        $('#modSalesmanType').val('');
+        $('#modSalesmanTypeId').val('');
+        $('#modSalesmanName').val('');
+        $('#modSalesmanIc').val('');
+        $('#modOrderDeptCode').val('');
+        $('#modDeptMemId').val('');
+        $('#modOrderGrpCode').val('');
+        $('#modGrpMemId').val('');
+        $('#modOrderOrgCode').val('');
+        $('#modOrgMemId').val('');
+    }
+    
     //ClearControl_RentPaySet_ThirdParty
     function fn_clearRentPay3thParty() {
         $('#scPC_ThrdParty').addClass("blind");
@@ -499,7 +519,7 @@
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
             if(memInfo == null || memInfo == 'undefined') {
-                Common.alert('<b>Member not found.</br>Your input member code : '+memCd+'</b>');
+                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
             }
             else {
                 $('#modSalesmanId').val(memInfo.memId);
@@ -517,6 +537,8 @@
             }
         });
     }
+    
+    
     
     function isEditableNRIC() {
         var isEditable;
@@ -1673,13 +1695,13 @@
 	<th scope="row">Reference No</th>
 	<td><input id="modOrdRefNo" name="ordRefNo" type="text" title="" placeholder="Reference Number" class="w100p" /></td>
 	<th scope="row">Salesman Type</th>
-	<td><input id="modSalesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="" /></td>
+	<td><input id="modSalesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="readonly" readonly/></td>
 </tr>
 <tr>
 	<th scope="row">PO No</th>
 	<td><input id="modOrdPoNo" name="ordPoNo" type="text" title="" placeholder="PO Number" class="w100p" /></td>
 	<th scope="row">Salesman Name</th>
-	<td><input id="modSalesmanName" name="salesmanName" type="text" title="" placeholder="Salesman Name" class="" /></td>
+	<td><input id="modSalesmanName" name="salesmanName" type="text" title="" placeholder="Salesman Name" class="readonly" readonly/></td>
 </tr>
 <tr>
 	<th scope="row">Key-In Branch<span class="must">*</span></th>
@@ -1687,21 +1709,21 @@
 	<select id="modKeyInBranch" name="keyInBranch" class="w100p"></select>
 	</td>
 	<th scope="row">Salesman NRIC</th>
-	<td><input id="modSalesmanIc" name="salesmanIc" type="text" title="" placeholder="Salesman NRIC" class="" /></td>
+	<td><input id="modSalesmanIc" name="salesmanIc" type="text" title="" placeholder="Salesman NRIC" class="readonly" readonly/></td>
 </tr>
 <tr>
 	<th scope="row" rowspan="3">Remark</th>
 	<td rowspan="3"><textarea id="modOrdRem" name="ordRem" cols="20" rows="5"></textarea></td>
 	<th scope="row">Department Code</th>
-	<td><input id="modOrderDeptCode" name="orderDeptCode" type="text" title="" placeholder="Department Code" class="" /></td>
+	<td><input id="modOrderDeptCode" name="orderDeptCode" type="text" title="" placeholder="Department Code" class="readonly" readonly/></td>
 </tr>
 <tr>
 	<th scope="row">Group Code</th>
-	<td><input id="modOrderGrpCode" name="orderGrpCode" type="text" title="" placeholder="Group Code" class="" /></td>
+	<td><input id="modOrderGrpCode" name="orderGrpCode" type="text" title="" placeholder="Group Code" class="readonly" readonly/></td>
 </tr>
 <tr>
 	<th scope="row">Organization Code</th>
-	<td><input id="modOrderOrgCode" name="orderOrgCode" type="text" title="" placeholder="Organization Code" class="" /></td>
+	<td><input id="modOrderOrgCode" name="orderOrgCode" type="text" title="" placeholder="Organization Code" class="readonly" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
