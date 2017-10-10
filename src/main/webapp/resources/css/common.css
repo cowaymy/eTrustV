@@ -256,6 +256,7 @@ table+.center_btns{padding-top:5px;}
 .date_set > .sel_date {width:70%;}
 .date_set .search_type input[type=text] {width:calc(100% - 21px); margin-right:4px;}
 .w100p{width:100%!important;}
+.w23_5p{width:23.5%!important;}
 .ms-parent.multy_select{width:237px!important;}
 .ms-parent.multy_select.w100p{width:100%!important;}
 
