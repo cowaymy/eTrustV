@@ -751,7 +751,10 @@ function fn_goSalesConfirm(){
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Search Payment</h2>
-        <ul class="right_btns">
+        <ul class="right_btns">                
+            <li><p class="btn_blue"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>            
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside>
@@ -875,16 +878,13 @@ function fn_goSalesConfirm(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="/payment/initPaymentListing.do">Payment Listing</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initRentalCollectionBySales.do">RC By Sales</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initRentalCollectionByBS.do">RC By BS</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initDailyCollection.do">Daily Collection Raw</a></p></li>
-                        <li><p class="link_btn"><a href="/payment/initLateSubmission.do">Late Submission Raw</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>                                              
+                        <!-- 
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>
+                         -->                                              
                     </ul>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
                         <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>                        
                         <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
                     </ul>
@@ -898,8 +898,7 @@ function fn_goSalesConfirm(){
     <!-- search_table end -->
 
     <!-- search_result start -->
-    <section class="search_result">		
-
+    <section class="search_result">
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
@@ -907,7 +906,6 @@ function fn_goSalesConfirm(){
         <!-- grid_wrap start -->
         <article id="grid_sub_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
-
     </section>
     <!-- search_result end -->
 
