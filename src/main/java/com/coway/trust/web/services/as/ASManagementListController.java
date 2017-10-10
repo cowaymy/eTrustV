@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +53,18 @@ public class ASManagementListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
-		List<EgovMap> ASMList = ASManagementListService.selectASManagementList();
+	public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params : {}", params);
 		
+		String[] asTypeList =  request.getParameterValues("asType");
+		String[] asStatusList =  request.getParameterValues("asStatus");
+		
+		params.put("asTypeList",asTypeList);
+		params.put("asStatusList",asStatusList);
+		
+		List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
+		
+	
 		logger.debug("ASMList : {}", ASMList);
 		return ResponseEntity.ok(ASMList);
 	}
