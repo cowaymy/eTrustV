@@ -168,23 +168,6 @@ $(document).ready(function () {
     	}
     	fn_attachmentDown(fileGrpId, fileId);
     });
-    
-    // 파일 미리보기 (jpg, pdf)
-    $(".input_text").mouseenter(function() {
-    	var oriFileName = $(this).val();
-    	var fileGrpId;
-    	var fileId;
-    	console.log(oriFileName);
-    	console.log(attachmentList);
-    	/* for(var i = 0; i < attachmentList.length; i++) {
-    		if(attachmentList[i].atchFileName == oriFileName) {
-    			fileGrpId = attachmentList[i].atchFileGrpId;
-    			fileId = attachmentList[i].atchFileId;
-    		}
-    	}
-    	var result = fn_getAttachmentInfo(fileGrpId, fileId);
-    	fn_attachmentView(fileGrpId, fileId); */
-    });
 });
 
 /* 인풋 파일(멀티) start */
@@ -303,35 +286,21 @@ function fn_attachmentUpload() {
 }
 
 function fn_attachmentDown(fileGrpId, fileId) {
-	console.log(data);
-    var subPath = data.fileSubPath;
-    var fileName = data.physiclFileName;
-    var orignlFileNm = data.atchFileName;
-    
-    window.open("/file/fileDown.do?subPath=" + subPath
-            + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
-            + "");
-}
-
-function fn_attachmentView(fileGrpId, fileId) {
-	console.log(data);
-	window.open("${pageContext.request.contextPath}" + data.fileViewPath);
-}
-
-function fn_getAttachmentInfo(fileGrpId, fileId) {
-	var fileInfo;
 	var data = {
             atchFileGrpId : fileGrpId,
             atchFileId : fileId
     };
-	Common.ajax("POST", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+    Common.ajax("POST", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
         console.log(result);
-        fileInfo = JSON.parse(result);
+        var subPath = result.fileSubPath;
+        var fileName = result.physiclFileName;
+        var orignlFileNm = result.atchFileName;
+        
+        window.open("/file/fileDown.do?subPath=" + subPath
+                + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
+                + "");
     });
-	
-	return fileInfo;
 }
-
 
 function fn_insertWebInvoiceInfo() {
     var data = {
