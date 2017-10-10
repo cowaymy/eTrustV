@@ -10,7 +10,8 @@
 
 
         var StatusTypeData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
-    
+       var gradioVal = $("input:radio[name='searchDivCd']:checked").val();
+       
         // AUIGrid 생성 후 반환 ID
         var myGridID;
         var gridValue;
@@ -21,17 +22,45 @@
             };
     
     
+                // 그리드 속성 설정
+/*                 var gridPros = {
+                    // 페이징 사용       
+                    usePaging : true,
+                    // 한 화면에 출력되는 행 개수 20(기본값:20)
+                    pageRowCount : 20,
+                    
+                    editable : false,
+                    
+                    //showStateColumn : true, 
+                    
+                    displayTreeOpen : true,
+                    
+                    
+                    headerHeight : 30,
+                    
+                    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                    skipReadonlyColumns : true,
+                    
+                    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                    wrapSelectionMove : true,
+                    
+                    // 줄번호 칼럼 렌더러 출력
+                    showRowNumColumn : true
+
+                    // 체크박스 표시 설정
+//                    showRowCheckColumn : true,
+                    // 전체 체크박스 표시 설정
+   //                 showRowAllCheckBox : true
+            
+                };     */
+    
     
         function fn_close(){
             window.close();
         }
         
-        
-        
-        
-        function createAUIGrid(){
-                // AUIGrid 칼럼 설정
-                var columnLayout = [ {
+
+       var columnManualLayout = [ {
                             dataField:"rnum",
                             headerText:"RowNum",
                             width:120,
@@ -90,60 +119,100 @@
                             headerText : "salesOrdId",
                             width : 120
                             ,                             
-                            visible:false
-                         },{
-                            dataField : "undefined",
-                            headerText : "Edit",
-                            width : 170,
-                            renderer : {
-                                  type : "ButtonRenderer",
-                                  labelText : "Edit",
-                                  onclick : function(rowIndex, columnIndex, value, item) {
-                                       //pupupWin
-                                       //alert("11111: "+ item.schdulId + ":2222:" +  item.salesOrdId);
-                                       
-                                      $("#_schdulId").val(item.schdulId);
-                                      $("#_salesOrdId").val(item.salesOrdId);
-
-//                                    $("#_custCntcId").val(item.custCntcId);
-//                                    Common.popupDiv("/bs/hsBasicInfoPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
-                                      Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
-                      }
-               }                            
+                            visible:false                          
                     }];
-                    // 그리드 속성 설정
-                    var gridPros = {
-                        // 페이징 사용       
-                        usePaging : true,
-                        // 한 화면에 출력되는 행 개수 20(기본값:20)
-                        pageRowCount : 20,
-                        
-                        editable : false,
-                        
-                        //showStateColumn : true, 
-                        
-                        displayTreeOpen : true,
-                        
-                        
-                        headerHeight : 30,
-                        
-                        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                        skipReadonlyColumns : true,
-                        
-                        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                        wrapSelectionMove : true,
-                        
-                        // 줄번호 칼럼 렌더러 출력
-                        showRowNumColumn : true
+                            
 
-                        // 체크박스 표시 설정
-    //                    showRowCheckColumn : true,
-                        // 전체 체크박스 표시 설정
-       //                 showRowAllCheckBox : true
-                
-                    };
+            var columnAssiinLayout = [ {
+                        dataField:"rnum",
+                        headerText:"RowNum",
+                        width:120,
+                        height:30
+                        ,
+                        visible:false
+                          }, {                        
+                        dataField : "custId",
+                        headerText : "Customer",
+                        width : 120
+                    }, {
+                        dataField : "name",
+                        headerText : "Customer Name",
+                        width : 120                            
+                   }, {
+                        dataField : "salesOrdNo",
+                        headerText : "Sales Order",
+                        width : 120
+                    }, {
+                        dataField : "hsDate",
+                        headerText : "HS Date",
+                        width : 120
+                    }, {                        
+                        dataField : "no",
+                        headerText : "HS Order",
+                        width : 120
+                    }, {
+                        dataField : "c5",
+                        headerText : "Assign Cody",
+                        width : 120              
+                    }, {
+                        dataField : "codyStatusNm",
+                        headerText : "Cody Status",
+                        width : 120
+                    }, {
+                        dataField : "code",
+                        headerText : "HS Status",
+                        width : 120           
+                    }, {
+                        dataField : "stusCodeId",
+                        headerText : "HS Statuscd",
+                        width : 120 ,                             
+                        visible:false                                
+                    }, {
+                        dataField : "month",
+                        headerText : "Complete Cody",
+                        width : 120
+                    }, {
+                        dataField : "brnchId",
+                        headerText : "Branch",
+                        width : 120,                             
+                        visible:false        
+                    }, {
+                        dataField : "schdulId",
+                        headerText : "schdulId",
+                        width : 120    
+                          ,                             
+                        visible:false     
+                    }, {
+                        dataField : "salesOrdId",
+                        headerText : "salesOrdId",
+                        width : 120
+                        ,                             
+                        visible:false
+                     },{
+                        dataField : "undefined",
+                        headerText : "Edit",
+                        width : 170,
+                        renderer : {
+                              type : "ButtonRenderer",
+                              labelText : "Edit",
+                              onclick : function(rowIndex, columnIndex, value, item) {
+                                   
+                                  $("#_schdulId").val(item.schdulId);
+                                  $("#_salesOrdId").val(item.salesOrdId);
+
+                                  Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
+                  }
+           }                            
+                }];
+                        
+        
+        
+        function createAUIGrid(){
+                // AUIGrid 칼럼 설정
+
+
                             //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-                        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+                        //myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
             }
     
     
@@ -188,6 +257,14 @@
 
 			function fn_getHSAddListAjax(){
 //	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
+
+                alert(hsStuscd);
+                
+                 if(hsStuscd == 4) {
+                    alert("already has result. Result entry is disallowed.");
+                    return false;
+                 }
+                 
 	           Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId);
 			}
 
@@ -262,8 +339,8 @@
                  $('#ManuaMyBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
                  
                 // AUIGrid 그리드를 생성합니다.
-                createAUIGrid();
-                AUIGrid.setSelectionMode(myGridID, "singleRow");
+//                createAUIGrid();
+//                AUIGrid.setSelectionMode(myGridID, "singleRow");
 
          $("#cmdBranchCode").change(function() {
             $("#cmdCdManager").find('option').each(function() {
@@ -299,6 +376,8 @@
 			      //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
 			      schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
 			      salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+			      hsStuscd = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
+			      
                     //Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
 			  }); 
 			  
@@ -314,34 +393,125 @@
         
         });
     
-    function fn_checkRadioButton(objName){
+        function fn_checkRadioButton(objName){
+    
+            if( document.searchForm.elements['searchDivCd'][0].checked == true ) {
+                          
+                        var divhsManuaObj = document.querySelector("#hsManua");
+                        divhsManuaObj.style.display="none";
+    
+                        var divhsManagementObj = document.querySelector("#hsManagement");
+                        divhsManagementObj.style.display="block";
+                        
+                        //2번영역 데이터 클리어
+                        //fn_checkboxChangeHandler();
+                        fn_destroyGridA();
 
-        if( document.searchForm.elements['searchDivCd'][0].checked == true ) {
+                        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnAssiinLayout ,gridProsAssiin);
+                        //createAssinAUIGrid(columnAssiinLayout);
+            }else{
+            
+                        var divhsManagementObj = document.querySelector("#hsManagement");
+                        divhsManagementObj.style.display="none";
+                        
+                        var divhsManuaObj = document.querySelector("#hsManua");
+                        divhsManuaObj.style.display="block";
+                        
+                        //1번영역 데이터 클리어
+                        $("#ManuaSalesOrder").val('');
+//                        $("#ManuaMyBSMonth").val('');
+                        $("#manualCustomer").val('');
+                        
+//                      fn_checkboxChangeHandler();
+                        fn_destroyGridM();
+                  
+                        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnManualLayout ,gridProsManual);
                       
-                    var divhsManuaObj = document.querySelector("#hsManua");
-                    divhsManuaObj.style.display="none";
 
-                    var divhsManagementObj = document.querySelector("#hsManagement");
-                    divhsManagementObj.style.display="block";
-                    
-
-                    //2번영역 데이터 클리어
-                    
-        }else{
-        
-                    var divhsManagementObj = document.querySelector("#hsManagement");
-                    divhsManagementObj.style.display="none";
-                    
-                    var divhsManuaObj = document.querySelector("#hsManua");
-                    divhsManuaObj.style.display="block";
-                    
-                    //1번영역 데이터 클리어
-                    $("#ManuaSalesOrder").val('');
-                    $("#ManuaMyBSMonth").val('');
-                    $("#manualCustomer").val('');
-                    
+            }
         }
-    }
+    
+    
+            var gridProsAssiin = {
+          // 페이징 사용       
+             usePaging : true,
+          // 한 화면에 출력되는 행 개수 20(기본값:20)
+             pageRowCount : 20,
+             editable :  false,
+             };
+    
+           var gridProsManual = {
+                 showRowCheckColumn : true,
+                 // 페이징 사용       
+                 usePaging : true,
+                 // 한 화면에 출력되는 행 개수 20(기본값:20)
+                 pageRowCount : 20,
+                 // 전체 체크박스 표시 설정
+                 showRowAllCheckBox : true,
+                 editable :  false
+                 }
+                     
+		// AUIGrid 를 생성합니다.
+		function createAssinAUIGrid(columnAssiinLayout) {
+		    
+          // 그리드 속성 설정
+		    // 실제로 #grid_wrap 에 그리드 생성
+		      myGridID = AUIGrid.create("#grid_wrap", columnAssiinLayout, gridProsAssiin);
+		}
+    
+    
+        // AUIGrid 를 생성합니다.
+        function createManualAUIGrid(columnManualLayout) {
+            
+	         // 그리드 속성 설정
+
+                
+            // 실제로 #grid_wrap 에 그리드 생성
+              myGridID = AUIGrid.create("#grid_wrap", columnManualLayout, gridProsManual);
+        }
+            
+    
+    
+        function fn_destroyGridA() {
+            myGridID = null;
+            
+            AUIGrid.setProp(myGridID, gridProsAssiin );
+            AUIGrid.destroy("#grid_wrap");
+            createAssinAUIGrid(columnAssiinLayout);
+            
+          
+        }
+        
+        
+         function fn_destroyGridM() {
+           
+            myGridID = null;
+            
+            AUIGrid.setProp(myGridID, gridProsManual );
+            AUIGrid.destroy("#grid_wrap");
+            createManualAUIGrid(columnManualLayout);
+            
+       
+        }
+        
+/*         function fn_destroyAssiinGrid() {
+            AUIGrid.destroy("#grid_wrap");
+            myAssiinlGridID = null;
+        } */
+        
+        
+        function fn_checkboxChangeHandler(event) {
+
+            var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+            
+            if(radioVal == 1 ){
+                fn_destroyGrid();
+                myGridID = GridCommon.createAUIGrid("grid_wrap", columnAssiinLayout ,gridProsAssiin);
+            }else {
+                fn_destroyGrid();
+                myGridID = GridCommon.createAUIGrid("grid_wrap", columnManualLayout ,gridProsManual);
+            }
+        }
     
     
     </script>
@@ -519,24 +689,8 @@
                 <dt>Link</dt>
                 <dd>
                 <ul class="btns">
-                    <li><p class="link_btn"><a href="#">menu1</a></p></li>
-                    <li><p class="link_btn"><a href="#">menu2</a></p></li>
-                    <li><p class="link_btn"><a href="#">menu3</a></p></li>
-                    <li><p class="link_btn"><a href="#">menu4</a></p></li>
-                    <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-                    <li><p class="link_btn"><a href="#">menu6</a></p></li>
-                    <li><p class="link_btn"><a href="#">menu7</a></p></li>
-                    <li><p class="link_btn"><a href="#">menu8</a></p></li>
                 </ul>
                 <ul class="btns">
-                    <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-                    <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                    <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-                    <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-                    <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-                    <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-                    <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-                    <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
