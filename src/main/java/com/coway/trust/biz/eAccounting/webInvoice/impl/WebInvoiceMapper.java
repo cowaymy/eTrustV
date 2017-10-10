@@ -23,6 +23,10 @@ public interface WebInvoiceMapper {
 	
 	void insertWebInvoiceDetail(Map<String, Object> params);
 	
+	void updateWebInvoiceInfo(Map<String, Object> params);
+	
+	void updateWebInvoiceDetail(Map<String, Object> params);
+	
 	List<EgovMap> selectSupplier(Map<String, Object> params);
 	
 	List<EgovMap> selectCostCenter(Map<String, Object> params);

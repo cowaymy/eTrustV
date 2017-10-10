@@ -277,11 +277,12 @@ function fn_removeRow() {
 }
 
 function fn_attachmentUpload() {
+	// TODO 파일 리스트에서 delete btn click인 경우 어떻게 처리할것인지
     var formData = Common.getFormData("form_viewEditWebInvoice");
     Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
         console.log(result);
         $("#atchFileGrpId").val(result.fileGroupKey);
-        fn_insertWebInvoiceInfo();
+        fn_updateWebInvoiceInfo();
     });
 }
 
@@ -302,7 +303,7 @@ function fn_attachmentDown(fileGrpId, fileId) {
     });
 }
 
-function fn_insertWebInvoiceInfo() {
+function fn_updateWebInvoiceInfo() {
     var data = {
             costCentr : $("#newCostCenter").val(),
             costCentrName : $("#newCostCenterText").val(),
@@ -320,7 +321,7 @@ function fn_insertWebInvoiceInfo() {
             crtUserId : $("#crtUserId").val()
     };
     
-    Common.ajax("POST", "/eAccounting/webInvoice/insertWebInvoiceInfo.do", data, function(result) {
+    Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", data, function(result) {
         console.log(result);
         $("#clmNo").val(result.clmNo);
         fn_saveGridInfo();
@@ -329,6 +330,7 @@ function fn_insertWebInvoiceInfo() {
 }
 
 function fn_saveGridInfo() {
+	// TODO update인 경우 clmSeq값 필요, 어떻게 처리할것인지
     //var data = AUIGrid.exportToObject(myGridID);
     var gridData = GridCommon.getEditData(myGridID);
     var clmNo = $("#clmNo").val();

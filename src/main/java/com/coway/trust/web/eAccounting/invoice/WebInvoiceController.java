@@ -180,6 +180,14 @@ public class WebInvoiceController {
 		return ResponseEntity.ok(params);
 	}
 	
+	@RequestMapping(value = "/updateWebInvoiceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateWebInvoiceInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		params.put("userId", sessionVO.getUserId());
+		//webInvoiceService.updateWebInvoiceInfo(params);
+		
+		return ResponseEntity.ok(params);
+	}
+	
 	@RequestMapping(value = "/saveGridInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveGridInfo(@RequestBody Map<String, ArrayList<Object>> params, @RequestParam Map<String, Object> queryString, ModelMap model, SessionVO sessionVO) {
 		

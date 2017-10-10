@@ -72,6 +72,18 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		webInvoiceMapper.insertWebInvoiceDetail(params);
 	}
+	
+	@Override
+	public void updateWebInvoiceInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.updateWebInvoiceInfo(params);
+	}
+
+	@Override
+	public void updateWebInvoiceDetail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.updateWebInvoiceDetail(params);
+	}
 
 	@Override
 	public List<EgovMap> selectSupplier(Map<String, Object> params) {
