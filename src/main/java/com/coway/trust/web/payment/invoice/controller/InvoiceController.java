@@ -84,75 +84,17 @@ public class InvoiceController {
 		boolean result = false;
 		int userId = sessionVO.getUserId();
 		
-//		if(userId > 0){
-//			params.put("userId", userId);
-//			invoiceService.createTaxInvoice(params);
-//			int resVal = Integer.parseInt(String.valueOf(params.get("p1")));
-//			
-//			if(resVal == 1)
-//				result = true;
-//		}
+		if(userId > 0){
+			params.put("userId", userId);
+			invoiceService.createTaxInvoice(params);
+			int resVal = Integer.parseInt(String.valueOf(params.get("p1")));
+			
+			if(resVal == 1)
+				result = true;
+		}
 
 		return ResponseEntity.ok(result);
 	}
 	
-//	
-//	@RequestMapping(value = "/createBills.do")
-//	public ResponseEntity<ReturnMessage> createBills(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
-//		c		
-//		//System.out.println("today : " + curDate + ", curYear : " + curYear + ", curMonth : " + curMonth);
-//		int result = 0;
-//		if(curYear < year){
-//			billingRentalService.callEaryBillProcedure(map);
-//			result = Integer.parseInt(String.valueOf(map.get("p1")));
-//		}else if(curYear == year){
-//			if(curMonth < month){
-//				billingRentalService.callEaryBillProcedure(map);
-//				result = Integer.parseInt(String.valueOf(map.get("p1")));
-//			}else{
-//				billingRentalService.callBillProcedure(map);
-//				result = Integer.parseInt(String.valueOf(map.get("p1")));
-//			}
-//		}
-//		
-//		System.out.println("result : " + result);
-//		if(result < 1){
-//			message="Stopped With Errors.";
-//		}else{
-//			message = "Billing Task Completed Successfully.";
-//		}
-//		msg.setMessage(message);
-//		return ResponseEntity.ok(msg);
-//	}
-//	
-//	@RequestMapping(value = "/getExistBill.do")
-//	public ResponseEntity<Integer> getExistBill(@RequestParam Map<String, Object> params, ModelMap model) {	
-//		int value= 0;
-//		
-//		LOGGER.debug("params : {}", params);
-//		
-//		value = billingRentalService.getExistBill(params);
-//		
-//		return ResponseEntity.ok(value);
-//	}
-//	
-//	@RequestMapping(value = "/confirmAlltBill.do")
-//	public ResponseEntity<Integer> confirmAllBills(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
-//		int value= -1;
-//		
-//		params.put("userId", sessionVO.getUserId());
-//		LOGGER.debug("params : {}", params);
-//		
-//		if(String.valueOf(params.get("type")).equals("EARLY BILL")){
-//			billingRentalService.confirmEarlyBills(params);
-//			value=Integer.parseInt(String.valueOf(params.get("p1")));
-//		}else{
-//			billingRentalService.confirmBills(params);
-//			value=Integer.parseInt(String.valueOf(params.get("p1")));
-//		}
-//		
-//		System.out.println("######value : " + value);
-//		
-//		return ResponseEntity.ok(value);
-//	}
+
 }

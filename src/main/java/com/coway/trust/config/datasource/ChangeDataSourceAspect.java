@@ -23,6 +23,25 @@ import org.springframework.stereotype.Component;
 @Order(value = 1)
 public class ChangeDataSourceAspect implements InitializingBean {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeDataSourceAspect.class);
+	
+	/**
+	 * Payment - Create Bill 
+	 */
+	@Pointcut("execution(* com.coway.trust.biz.*..impl.BillingMgmtServiceImpl.*(..))")
+	public void paymentBillingServiceMethod() {
+	}	
+	/**
+	 * Payment - Invoice 생성 
+	 */
+	@Pointcut("execution(* com.coway.trust.biz.*..impl.InvoiceServiceImpl.*(..))")
+	public void paymentInvoiceServiceMethod() {
+	}	
+	/**
+	 * Payment - Service Membership Invoice 생성
+	 */
+	@Pointcut("execution(* com.coway.trust.biz.*..impl.SrvMembershipBillingServiceImpl.*(..))")
+	public void paymentSrvMemBillingServiceMethod() {
+	}
 
 	@Pointcut("execution(* com.coway.trust.biz.*..impl.CommissionCalculationServiceImpl.*(..))")
 	public void commissionCalculationServiceMethod() {
@@ -32,7 +51,7 @@ public class ChangeDataSourceAspect implements InitializingBean {
 	public void xxxxServiceMethod() {
 	}
 
-	@Before("commissionCalculationServiceMethod() || xxxxServiceMethod()")
+	@Before("paymentBillingServiceMethod() || paymentInvoiceServiceMethod() || paymentSrvMemBillingServiceMethod() || commissionCalculationServiceMethod() || xxxxServiceMethod()")
 	public void before(JoinPoint joinPoint) throws Exception {
 		final String methodName = joinPoint.getSignature().getName();
 		final MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
@@ -51,7 +70,7 @@ public class ChangeDataSourceAspect implements InitializingBean {
 		LOGGER.debug("DataSource ===> " + ContextHolder.getDataSourceType());
 	}
 
-	@After("commissionCalculationServiceMethod() || xxxxServiceMethod()")
+	@After("paymentBillingServiceMethod() || paymentInvoiceServiceMethod() || paymentSrvMemBillingServiceMethod() || commissionCalculationServiceMethod() || xxxxServiceMethod()")
 	public void after(JoinPoint joinPoint) throws Exception {
 		ContextHolder.clearDataSourceType();
 	}

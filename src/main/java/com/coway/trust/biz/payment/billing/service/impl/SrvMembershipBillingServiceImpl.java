@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.billing.service.SrvMembershipBillingService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.datasource.DataSource;
+import com.coway.trust.config.datasource.DataSourceType;
 import com.ibm.icu.text.DecimalFormat;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -33,6 +35,7 @@ public class SrvMembershipBillingServiceImpl extends EgovAbstractServiceImpl imp
 	 * @return
 	 */
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public int saveSrvMembershipBilling(Map<String, Object> formData, List<Object> taskBillList, SessionVO sessionVO) {
 		
 		int userId = sessionVO.getUserId();

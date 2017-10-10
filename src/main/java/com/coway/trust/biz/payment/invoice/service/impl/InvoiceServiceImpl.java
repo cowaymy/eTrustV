@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.payment.billing.service.impl.SrvMembershipBillingMapper;
 import com.coway.trust.biz.payment.invoice.service.InvoiceService;
+import com.coway.trust.config.datasource.DataSource;
+import com.coway.trust.config.datasource.DataSourceType;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -52,6 +54,7 @@ public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements Invoi
 	}
 
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public void createTaxInvoice(Map<String, Object> params) {
 		membershipMapper.createTaxInvoice(params);
 	}

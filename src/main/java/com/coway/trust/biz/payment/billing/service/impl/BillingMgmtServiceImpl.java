@@ -11,6 +11,9 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.payment.billing.service.BillingMgmtService;
+import com.coway.trust.config.datasource.DataSource;
+import com.coway.trust.config.datasource.DataSourceType;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -65,11 +68,13 @@ public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements B
 	}
 
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public void callEaryBillProcedure(Map<String, Object> params) {
 		billingRentalMapper.callEaryBillProcedure(params);
 	}
 
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public void callBillProcedure(Map<String, Object> params) {
 		billingRentalMapper.callBillProcedure(params);
 	}
@@ -80,11 +85,13 @@ public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements B
 	}
 
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public void confirmEarlyBills(Map<String, Object> params) {
 		billingRentalMapper.confirmEarlyBills(params);
 	}
 
 	@Override
+	@DataSource(value = DataSourceType.LONG_TIME)
 	public void confirmBills(Map<String, Object> params) {
 		billingRentalMapper.confirmBills(params);
 	}
