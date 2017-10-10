@@ -3,52 +3,54 @@
 
 <script type="text/javascript">
 var webInvoiceColumnLayout = [ {
-    dataField : "invoiceNo",
+    dataField : "clmNo",
+    visible : false
+},{
+    dataField : "invcNo",
     headerText : '<spring:message code="webInvoice.invoiceNo" />',
     width : 140
 }, {
-    dataField : "postingDate",
+    dataField : "invcDt",
     headerText : '<spring:message code="webInvoice.postingDate" />',
-    //width : 120
+    dataType : "date",
+    formatString : "dd/mm/yyyy",
 
 }, {
-    dataField : "cc",
-    headerText : '<spring:message code="webInvoice.cc" />',
-    //width: 120
+    dataField : "costCentr",
+    headerText : '<spring:message code="webInvoice.cc" />'
 }, {
-    dataField : "ccDate",
-    headerText : '<spring:message code="webInvoice.ccDate" />'
+    dataField : "costCentrName",
+    headerText : '<spring:message code="webInvoice.ccName" />'
 }, {
-    dataField : "type",
-    headerText : '<spring:message code="webInvoice.type" />',
-    //dataType : "numeric"
+    dataField : "invcType",
+    headerText : '<spring:message code="webInvoice.type" />'
 }, {
-    dataField : "suppliers",
+    dataField : "memAccId",
     headerText : '<spring:message code="webInvoice.suppliers" />'
 }, {
-    dataField : "name",
+    dataField : "memAccName",
     headerText : '<spring:message code="webInvoice.name" />'
 }, {
-    dataField : "amount",
-    headerText : '<spring:message code="webInvoice.amount" />'
+    dataField : "totAmt",
+    headerText : '<spring:message code="webInvoice.amount" />',
+    dataType: "numeric",
+    formatString : "#,##0"
 }, {
-    dataField : "requestDate",
+    dataField : "reqstDt",
     headerText : '<spring:message code="webInvoice.requestDate" />'
 }, {
-    dataField : "status",
+    dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />'
 }, {
-    dataField : "approvedDate",
+    dataField : "appvPrcssDt",
     headerText : '<spring:message code="webInvoice.approvedDate" />'
 }
 ];
 
 //그리드 속성 설정
 var webInvoiceGridPros = {
-    
     // 페이징 사용       
     usePaging : true,
-    
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20
 };
@@ -61,6 +63,14 @@ $(document).ready(function () {
 	$("#search_supplier_btn").click(fn_supplierSearchPop);
 	$("#search_costCenter_btn").click(fn_costCenterSearchPop);
 	$("#registration_btn").click(fn_newWebInvoicePop);
+	
+	AUIGrid.bind(webInvoiceGridID, "cellDoubleClick", function( event ) 
+		    {
+		        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+		        console.log("CellDoubleClick clmNo : " + event.item.clmNo);
+		        // TODO detail popup open
+		        fn_viewEditWebInvoicePop(event.item.clmNo);
+		    });
 });
 
 function fn_supplierSearchPop() {
@@ -78,9 +88,22 @@ function fn_costCenterSearchPop() {
 function fn_newWebInvoicePop() {
 	Common.popupDiv("/eAccounting/webInvoice/newWebInvoicePop.do", null, null, true, "newWebInvoicePop");
 }
-</script>
 
-<div id="wrap">
+function fn_viewEditWebInvoicePop(clmNo) {
+	var data = {
+            clmNo : clmNo
+    };
+	
+	Common.popupDiv("/eAccounting/webInvoice/viewEditWebInvoicePop.do", data, null, true, "viewEditWebInvoicePop");
+}
+
+function fn_selectWebInvoiceList() {
+    Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceList.do", $("#form_webInvoice").serialize(), function(result) {
+    	console.log(result);
+        AUIGrid.setGridData(webInvoiceGridID, result);
+    });
+}
+</script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -93,7 +116,7 @@ function fn_newWebInvoicePop() {
 <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
 <h2><spring:message code="webInvoice.title" /></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_selectWebInvoiceList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -112,7 +135,7 @@ function fn_newWebInvoicePop() {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="webInvoice.supplier" /></th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="supplier" name="supplier"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="memAccId" name="memAccId"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
     <td><input type="text" title="" placeholder="" class="" style="width:200px" id="costCenter" name="costCenter"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
@@ -127,7 +150,7 @@ function fn_newWebInvoicePop() {
     </td>
     <th scope="row"><spring:message code="webInvoice.status" /></th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" name="status">
+    <select class="multy_select w100p" multiple="multiple" name="appvPrcssStus">
         <option value="T"><spring:message code="webInvoice.select.save" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
@@ -154,5 +177,3 @@ function fn_newWebInvoicePop() {
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-
-</div>
