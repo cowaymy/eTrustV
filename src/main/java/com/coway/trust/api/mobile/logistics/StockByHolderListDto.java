@@ -28,16 +28,8 @@ public class StockByHolderListDto {
 	private String stkCode;
 	
 	@ApiModelProperty(value = "STK CTGRY ID")
-	private String stkId;
+	private int stkId;
 	
-
-	public String getStkId() {
-		return stkId;
-	}
-
-	public void setStkId(String stkId) {
-		this.stkId = stkId;
-	}
 
 	public static StockByHolderListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, StockByHolderListDto.class);
@@ -89,6 +81,14 @@ public class StockByHolderListDto {
 
 	public void setStkCode(String stkCode) {
 		this.stkCode = stkCode;
+	}
+
+	public int getStkId() {
+		return stkId;
+	}
+
+	public void setStkId(int stkId) {
+		this.stkId = stkId;
 	}
 
 }
