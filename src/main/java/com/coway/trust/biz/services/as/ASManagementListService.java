@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface ASManagementListService {
 
-	List<EgovMap> selectASManagementList();
+	List<EgovMap> selectASManagementList(Map<String, Object> params);
 	
 	EgovMap selectOrderBasicInfo(Map<String, Object> params);
 	

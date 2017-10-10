@@ -22,8 +22,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	private ASManagementListMapper ASManagementListMapper;
 	
 	@Override
-	public List<EgovMap> selectASManagementList() {
-		return ASManagementListMapper.selectASManagementList();
+	public List<EgovMap> selectASManagementList(Map<String, Object> params) {
+		return ASManagementListMapper.selectASManagementList(params);
 	}
 	
 	@Override

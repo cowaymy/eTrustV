@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("ASManagementListMapper")
 public interface ASManagementListMapper {
 	
-	 List<EgovMap> selectASManagementList();
+	 List<EgovMap> selectASManagementList(Map<String, Object> params);
 	 
 	 EgovMap selectOrderBasicInfo(Map<String, Object> params);
 }
