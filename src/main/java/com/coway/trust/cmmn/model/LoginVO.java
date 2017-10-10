@@ -32,6 +32,26 @@ public class LoginVO {
 	private String securityQuestion;
 	private String userSecQuesAns;
 	private String userPassWord;
+	private String userNric;
+	private String userWorkNo;
+	
+	
+
+	public String getUserNric() {
+		return userNric;
+	}
+
+	public void setUserNric(String userNric) {
+		this.userNric = userNric;
+	}
+
+	public String getUserWorkNo() {
+		return userWorkNo;
+	}
+
+	public void setUserWorkNo(String userWorkNo) {
+		this.userWorkNo = userWorkNo;
+	}
 
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 
