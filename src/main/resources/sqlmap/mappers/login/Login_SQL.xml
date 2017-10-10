@@ -23,6 +23,7 @@
 	          ELSE 0
 	       END AS userDeptId
 	       ,USR.USER_UPD_DT AS userUpdateAt
+	       ,USR.USER_PASSWD AS userPassWord
 	       ,USR.USER_PASSWD_LAST_UPD_DT AS userPasswdLastUpdateAt
 	       ,USR.USER_MOBILE_NO AS userMobileNo
 	       ,USR.USER_EXT_NO AS userExtNo
@@ -130,4 +131,23 @@
             ,#{browser}
         )
     </insert>
+    
+    <update id="updateUserSetting" parameterType="loginVO">
+	    UPDATE SYS0047M
+	       SET USER_EMAIL  =  #{eMail}  
+	          ,USER_UPD_DT =  SYSDATE
+	          ,USER_NRIC    = #{nricNo} 
+	          ,USER_WORK_NO = #{userWorkNo}
+	          ,USER_MOBILE_NO = #{mobileNo}
+	          ,USER_EXT_NO =  #{exNo}
+	     WHERE USER_ID = #{updUserId}
+    </update>
+    
+    <select id="selectSecureResnList" parameterType="Map" resultType="egovMap">
+	    SELECT RESN_ID
+	         , Code ||' - '||RESN_DESC SECURE_RESN
+	      FROM SYS0032M 
+	     WHERE RESN_TYPE_ID = #{resnTypeId}
+	     ORDER BY Code 
+    </select>
 </mapper>
