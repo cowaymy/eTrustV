@@ -5,104 +5,58 @@
 
     <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
     <![CDATA[
-            SELECT Project2.C1 C1  ,
-		       Project2.AS_ID AS_ID  ,
-		       Project2.AS_NO AS_NO  ,
-		       Project2.AS_STUS_ID AS_STUS_ID  ,
-		       Project2.CODE1 CODE  ,
-		       Project2.AS_REQST_DT AS_REQST_DT  ,
-		       Project2.C2 C2  ,
-		       Project2.C3 C3  ,
-		       Project2.AS_SO_ID AS_SO_ID  ,
-		       Project2.SALES_ORD_NO SALES_ORD_NO  ,
-		       Project2.CODE2 CODE1  ,
-		       Project2.NAME NAME  ,
-		       Project2.NRIC NRIC  ,
-		       Project2.AS_TYPE_ID AS_TYPE_ID  ,
-		       Project2.CODE CODE2  ,
-		       Project2.C4 C4  ,
-		       Project2.C5 C5  
-		  FROM ( SELECT Project2.AS_ID AS_ID  ,
-		                Project2.AS_NO AS_NO  ,
-		                Project2.AS_SO_ID AS_SO_ID  ,
-		                Project2.AS_REQST_DT AS_REQST_DT  ,
-		                Project2.AS_STUS_ID AS_STUS_ID  ,
-		                Project2.AS_TYPE_ID AS_TYPE_ID  ,
-		                Project2.CODE CODE  ,
-		                Project2.CODE1 CODE1  ,
-		                Project2.SALES_ORD_NO SALES_ORD_NO  ,
-		                Project2.CODE2 CODE2  ,
-		                Project2.NAME NAME  ,
-		                Project2.NRIC NRIC  ,
-		                Project2.C1 C1  ,
-		                Project2.C2 C2  ,
-		                Project2.C3 C3  ,
-		                Project2.C4 C4  ,
-		                Project2.C5 C5  ,
-		                ROW_NUMBER() OVER ( ORDER BY Project2.AS_ID ASC  ) ROW_NUMBER  
-		         FROM ( SELECT Distinct1.AS_ID AS_ID  ,
-		                       Distinct1.AS_NO AS_NO  ,
-		                       Distinct1.AS_SO_ID AS_SO_ID  ,
-		                       Distinct1.AS_REQST_DT AS_REQST_DT  ,
-		                       Distinct1.AS_STUS_ID AS_STUS_ID  ,
-		                       Distinct1.AS_TYPE_ID AS_TYPE_ID  ,
-		                       Distinct1.CODE CODE  ,
-		                       Distinct1.CODE1 CODE1  ,
-		                       Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
-		                       Distinct1.CODE2 CODE2  ,
-		                       Distinct1.NAME NAME  ,
-		                       Distinct1.NRIC NRIC  ,
-		                       Distinct1.C1 C1  ,
-		                       Distinct1.C2 C2  ,
-		                       Distinct1.C3 C3  ,
-		                       Distinct1.C4 C4  ,
-		                       Distinct1.C5 C5  
-		                FROM ( SELECT DISTINCT Extent1.AS_ID AS_ID  ,
-		                                       Extent1.AS_NO AS_NO  ,
-		                                       Extent1.AS_SO_ID AS_SO_ID  ,
-		                                        TO_CHAR(Extent1.AS_REQST_DT,'DD-MM-YYYY') AS_REQST_DT  ,
-		                                       Extent1.AS_STUS_ID AS_STUS_ID  ,
-		                                       Extent1.AS_TYPE_ID AS_TYPE_ID  ,
-		                                       Extent2.CODE CODE  ,
-		                                       Extent3.CODE CODE1  ,
-		                                       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
-		                                       Extent5.CODE CODE2  ,
-		                                       Extent6.NAME NAME  ,
-		                                       Extent6.NRIC NRIC  ,
-		                                       1 C1  ,
-		                                       CASE 
-		                                            WHEN ( Extent7.AS_RESULT_ID IS NOT NULL ) THEN Extent7.AS_RESULT_ID
-		                                       ELSE 0
-		                                          END C2  ,
-		                                       CASE 
-		                                            WHEN ( Extent7.AS_RESULT_ID IS NOT NULL ) THEN Extent7.AS_RESULT_NO
-		                                       ELSE ' - '
-		                                          END C3  ,
-		                                       CASE 
-		                                            WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
-		                                       ELSE ' -' 
-		                                          END C4  ,
-		                                       CASE 
-		                                            WHEN ( Extent7.AS_RESULT_ID IS NOT NULL ) THEN Extent7.AS_TOT_AMT
-		                                       ELSE 0
-		                                          END C5  
-		                       FROM SVC0001D Extent1
-		                              JOIN SYS0013M Extent2   ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
-		                              JOIN SYS0038M Extent3   ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
-		                              JOIN SAL0001D Extent4   ON Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
-		                              JOIN SYS0013M Extent5   ON Extent4.APP_TYPE_ID = Extent5.CODE_ID
-		                              JOIN SAL0029D Extent6   ON Extent4.CUST_ID = Extent6.CUST_ID
-		                              LEFT JOIN SVC0004D Extent7   ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
-		                              AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
-		                              AND ( 1 = Extent7.AS_RESULT_IS_CURR )
-		                              LEFT JOIN SYS0047M Extent8   ON Extent1.AS_CRT_USER_ID = Extent8.USER_ID
-		                        WHERE  ( 8 <> Extent1.AS_STUS_ID )
-		                                 AND ( Extent1.AS_TYPE_ID IN ( 675,674 )
-		                                )
-		                                 AND ( 1 = Extent1.AS_STUS_ID )
-		                                 AND ( Extent1.AS_REQST_DT >= TO_DATE('2017-05-18','YYYY-MM-DD') ) ) Distinct1 ) Project2 ) Project2
-		            ORDER BY Project2.AS_ID ASC
-              ]]>
+           SELECT 
+			D.CODE, C.AS_NO, C.AS_REQST_DT, J.CODE, F.AS_RESULT_NO, H.NAME, B.SALES_ORD_NO, I.CODE APP_TYPE, A.NAME, A.NRIC
+			FROM SAL0029D A 
+			INNER JOIN SAL0001D B ON B.CUST_ID = A.CUST_ID
+			INNER JOIN SVC0001D C ON C.AS_SO_ID = B.SALES_ORD_ID
+			INNER JOIN SVC0004D F ON F.AS_ENTRY_ID = C.AS_ID
+			INNER JOIN SVC0004D G ON G.AS_RESULT_ID = F.AS_RESULT_ID
+			INNER JOIN SYS0038M C ON C.STUS_CODE_ID = F.AS_RESULT_STUS_ID
+			INNER JOIN SYS0038M J ON J.STUS_CODE_ID = C.AS_STUS_ID
+			INNER JOIN SYS0013M D ON D.CODE_ID = C.AS_TYPE_ID
+			INNER JOIN ORG0001D H ON H.MEM_ID = G.AS_CT_ID
+			INNER JOIN SYS0013M I ON I.CODE_ID = B.APP_TYPE_ID
+			WHERE 1=1
+			 ]]> 
+			<if test="asNum != null and asNum != '' ">
+			  AND  C.AS_NO = #{asNum}
+			 </if>
+             <if test="asTypeList != null and asTypeList != '' ">
+                     AND C.AS_TYPE_ID IN
+                  <foreach item="item" collection="asTypeList" index="index" open="(" separator="," close=")">
+                  #{item}
+                  </foreach>
+              </if>
+                
+                <if test="asStatusList != null and asStatusList != '' ">
+                   AND C.AS_STUS_ID IN
+                 <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
+                 #{item}
+                 </foreach>
+              </if>
+			 <if test="resultNum != null and resultNum != '' ">
+               AND F.AS_RESULT_NO = #{resultNum}
+             </if>
+			  <if test="orderNum != null and orderNum != '' ">
+               AND B.SALES_ORD_NO =#{orderNum}
+             </if>
+			  <if test="custName != null and custName != '' ">
+               AND A.NAME = #{custName}
+             </if>
+			  <if test="nricNum != null and nricNum != '' ">
+              AND A.NRIC = #{nricNum}
+             </if>
+             
+             <if test="createStrDate != '' and createEndDate == '' ">
+              <![CDATA[ AND C.AS_REQST_DT  >= TO_DATE(#{createStrDate}, 'DD/MM/YYYY') ]]>
+              </if>
+              <if test="createEndDate != '' and createStrDate == '' ">
+                       <![CDATA[  AND  C.AS_REQST_DT   <=  TO_DATE(#{createEndDate}, 'DD/MM/YYYY') ]]>
+              </if>
+              <if test="createStrDate != '' and createEndDate != '' ">
+                <![CDATA[  AND C.AS_REQST_DT    between TO_DATE(#{createStrDate},  'DD/MM/YYYY') and  TO_DATE(#{createEndDate}, 'DD/MM/YYYY') ]]>
+                 </if>
     </select>
     <select id="selectOrderBasicInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
