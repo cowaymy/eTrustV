@@ -25,13 +25,15 @@ $(document).ready(function () {
 	costCenterGridID = AUIGrid.create("#costCenter_grid_wrap", costCenterColumnLayout, costCenterGridPros);
 	
 	AUIGrid.bind(costCenterGridID, "cellDoubleClick", function( event ) {
-	      if($("#newCostCenter").length > 0){
-	          $("#newCostCenter").val(event.item.costCenter);
-	          $("#newCostCenterText").val(event.item.costCenterText);
-	      }else{
-	          $("#costCenter").val(event.item.costCenter);
-	      }
-	      $("#costCenterSearchPop").remove();
+        // if($("#newCostCenter").length > 0){
+             $("#newCostCenter").val(event.item.costCenter);
+             $("#newCostCenterText").val(event.item.costCenterText);
+        // }else{
+          //   $("#costCenter").val(event.item.costCenter);
+         //}
+        
+        fn_setCostCenter();
+         $("#costCenterSearchPop").remove();
 	});
 });
 
@@ -51,7 +53,7 @@ function fn_selectCostCenter() {
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" onclick="fn_selectCostCenter()"><spring:message code="webInvoice.btn.search" /></a></p></li>
