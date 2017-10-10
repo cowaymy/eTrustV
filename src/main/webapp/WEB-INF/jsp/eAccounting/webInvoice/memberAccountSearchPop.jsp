@@ -72,7 +72,7 @@ function fn_selectMember() {
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" onclick="fn_selectMember()"><spring:message code="webInvoice.btn.search" /></a></p></li>
