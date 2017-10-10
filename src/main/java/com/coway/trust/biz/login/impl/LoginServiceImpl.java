@@ -106,6 +106,28 @@ public class LoginServiceImpl implements LoginService {
 
 		return saveCnt;
 	}
+	
+	@Override
+	public int updateUserSetting(Map<String, Object> params, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+
+		((Map<String, Object>) params).put("crtUserId", crtUserId);
+		((Map<String, Object>) params).put("updUserId", crtUserId);
+		
+		LOGGER.debug(" >>>>> updateUserSetting ");
+		LOGGER.debug(" Login_UserId : {}", ((Map<String, Object>) params).get("newUserIdTxt"));
+		
+		
+		saveCnt = loginMapper.updateUserSetting((Map<String, Object>) params);
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public List<EgovMap> selectSecureResnList(Map<String, Object> params) {
+		return loginMapper.selectSecureResnList(params);
+	}
 
 	@Override
 	public void saveLoginHistory(LoginHistory loginHistory) {

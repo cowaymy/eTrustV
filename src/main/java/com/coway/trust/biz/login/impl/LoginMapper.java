@@ -19,8 +19,12 @@ public interface LoginMapper {
 	LoginVO selectFindUserIdPop(Map<String, Object> params);
 
 	int updatePassWord(Map<String, Object> params);
+	
+	int updateUserSetting(Map<String, Object> params);
 
 	void insertLoginHistory(LoginHistory loginHistory);
 
 	List<EgovMap> selectLanguages();
+	
+	List<EgovMap> selectSecureResnList(Map<String, Object> params);
 }
