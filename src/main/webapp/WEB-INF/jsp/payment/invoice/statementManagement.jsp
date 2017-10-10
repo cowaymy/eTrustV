@@ -32,14 +32,15 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"taskId", headerText:"Task ID"},
-    {dataField:"billingYear", headerText:"Year"},
-    {dataField:"billingMonth", headerText:"Month"},
-    {dataField:"sum", headerText:"Bills"},
-    {dataField:"accBillNetAmt", headerText:"Amount", dataType : "numeric", formatString : "#,##0.00"},
-    {dataField:"startDt", headerText:"Started", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
-    {dataField:"endDt", headerText:"Ended", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
-    {dataField:"isInvcGenrt", headerText:"Generate",
+    {dataField:"taskId", headerText:"Task ID", width : 150},
+    {dataField:"taskType", headerText:"Task Type"},
+    {dataField:"billingYear", headerText:"Year" , width : 150},
+    {dataField:"billingMonth", headerText:"Month", width : 150},
+    {dataField:"sum", headerText:"Bills" , width : 150, dataType : "numeric", formatString : "#,##0"},
+    {dataField:"accBillNetAmt", headerText:"Amount", width : 150, dataType : "numeric", formatString : "#,##0.00"},
+    {dataField:"startDt", headerText:"Started", width : 200, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
+    {dataField:"endDt", headerText:"Ended", width : 200, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
+    {dataField:"isInvcGenrt", headerText:"Generate",width : 80,
         renderer:{
         	type : "CheckBoxEditRenderer",
         	showLabel : false,

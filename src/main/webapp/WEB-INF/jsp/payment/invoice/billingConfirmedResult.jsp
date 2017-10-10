@@ -11,8 +11,7 @@ var selectedGridValue;
 var _totalRowCount;
 
 $(document).ready(function(){
-    $("#taskId").val("${taskId}");
-    console.log("taskId2 : " + $("#taskId").val());
+    $("#taskId").val("${taskId}");    
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     
    fn_initData();
@@ -107,7 +106,7 @@ function commaSeparateNumber(val){
     return val;
 }
 
-/* //크리스탈 레포트
+//크리스탈 레포트
 function fn_billList(){    
     //report 호출
     var option = {
@@ -115,7 +114,7 @@ function fn_billList(){
     };
 
     Common.report("reportPDFForm", option);    
-} */ 
+} 
 
 </script>
 <!-- content start -->
@@ -238,7 +237,7 @@ function fn_billList(){
 </section><!-- content end -->
 
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/bill/RentledgerMaster.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/bill/FinalBilling.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="EXCEL" />    
     <input type="hidden" id="v_taskId" name="v_taskId" value="${taskId }" />
 </form>
