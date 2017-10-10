@@ -233,51 +233,7 @@
     }
         
         
-/* // 체크된 아이템 얻기
-function fn_getCheckedRowItems() {
-    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
-    
-    if(checkedItems.length <= 0 ) {
-        alert("체크된 항목 없음!!");
-        return;
-    }
-    var str = "";
-    var rowItem = checkedItems[0].item;
-    
-    for(var p in rowItem) {
-        str += p + " : " + rowItem[p] + ", ";
-    }
-    alert(str);
-} */
 
-
-
-
-/*          $(function(){
-               $("#hSConfiguration").click(function(){
-                    var checkedItems = AUIGrid.getCheckedRowItemsAll(myCustGridID);
-                    
-                    alert("checkedItems.length:::"+checkedItems.length);
-                    
-                    if(checkedItems.length <= 0) {
-                        Common.alert('No data selected.');
-                        return false;
-                    }else{
-        
-                        var str = "";
-                        var custStr = "";
-                        var rowItem;
-                        var brnchId = "";
-                        var saleOrdList = "";
-                        var list = "";
-                        
-                        for(var i=0, len = checkedItems.length; i<len; i++) {
-                            rowItem = checkedItems[i];
-                            saleOrdList += rowItem.salesOrdNo;
-                        }
-                    }
-                });
-          }); */
 
 
 
@@ -290,6 +246,7 @@ function fn_getCheckedRowItems() {
 
         
     $(document).ready(function() {
+    
     
         console.log("성공 data : " + $("#searchForm"));
         
