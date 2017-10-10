@@ -32,15 +32,45 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
-	public List<EgovMap> selectSampleList(Map<String, Object> params) {
+	public List<EgovMap> selectWebInvoiceList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectWebInvoiceByParamsList(params);
+		return webInvoiceMapper.selectWebInvoiceList(params);
+	}
+	
+	@Override
+	public EgovMap selectWebInvoiceInfo(String clmNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectWebInvoiceInfo(clmNo);
+	}
+	
+	@Override
+	public List<EgovMap> selectWebInvoiceItems(String clmNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectWebInvoiceItems(clmNo);
+	}
+	
+	@Override
+	public List<EgovMap> selectWebInvoiceAttachList(int atchFileGrpId) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectWebInvoiceAttachList(atchFileGrpId);
+	}
+	
+	@Override
+	public EgovMap selectAttachmentInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectAttachmentInfo(params);
 	}
 
 	@Override
-	public void insertWebInvoiceByMap(Map<String, Object> params) {
+	public void insertWebInvoiceInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		webInvoiceMapper.insertWebInvoiceByMap(params);
+		webInvoiceMapper.insertWebInvoiceInfo(params);
+	}
+	
+	@Override
+	public void insertWebInvoiceDetail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.insertWebInvoiceDetail(params);
 	}
 
 	@Override
@@ -56,9 +86,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 	
 	@Override
-	public List<EgovMap> selectTextCodeWebInvoiceFlag() {
+	public List<EgovMap> selectTaxCodeWebInvoiceFlag() {
 		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectTextCodeWebInvoiceFlag();
+		return webInvoiceMapper.selectTaxCodeWebInvoiceFlag();
 	}
 	
 	@Override
@@ -66,6 +96,14 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectNextClmNo();
 	}
+
+	@Override
+	public int selectNextClmSeq() {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectNextClmSeq();
+	}
+	
+	
 	
 	
 

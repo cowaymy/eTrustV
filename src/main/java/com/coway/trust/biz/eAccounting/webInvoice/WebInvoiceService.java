@@ -7,16 +7,28 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface WebInvoiceService {
 	
-	List<EgovMap> selectSampleList(Map<String, Object> params);
+	List<EgovMap> selectWebInvoiceList(Map<String, Object> params);
 	
-	void insertWebInvoiceByMap(Map<String, Object> params);
+	EgovMap selectWebInvoiceInfo(String clmNo);
+	
+	List<EgovMap> selectWebInvoiceItems(String clmNo);
+	
+	List<EgovMap> selectWebInvoiceAttachList(int atchFileGrpId);
+	
+	EgovMap selectAttachmentInfo(Map<String, Object> params);
+	
+	void insertWebInvoiceInfo(Map<String, Object> params);
+	
+	void insertWebInvoiceDetail(Map<String, Object> params);
 	
 	List<EgovMap> selectSupplier(Map<String, Object> params);
 	
 	List<EgovMap> selectCostCenter(Map<String, Object> params);
 	
-	List<EgovMap> selectTextCodeWebInvoiceFlag();
+	List<EgovMap> selectTaxCodeWebInvoiceFlag();
 	
 	String selectNextClmNo();
+	
+	int selectNextClmSeq();
 	
 }
