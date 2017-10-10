@@ -40,6 +40,8 @@
             $("#paramReqNo").val(event.item.reqNo);
             $("#paramReqStusId").val(event.item.reqStusId);
             $("#paramReqStusCode").val(event.item.reqStusCode);
+            $("#paramReqStageId").val(event.item.reqStageId);
+            
             gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
         });
     
@@ -61,7 +63,7 @@
                 width : 100,
                 editable : false
             }, {
-                dataField : "ordId",
+                dataField : "ordNo",
                 headerText : "Order No.",
                 width : 120,
                 editable : false
@@ -113,6 +115,9 @@
                 visible : false
             },{
                 dataField : "callStusCode",
+                visible : false
+            },{
+                dataField : "reqStageId",
                 visible : false
             }];
         

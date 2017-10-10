@@ -7,6 +7,10 @@
     var prodReturnGridID;      // Product Return Transaction list
     
     $(document).ready(function(){
+    	if($("#callStusId").val() == '1'){
+    		$("#addDiv").css("display" , "none");
+    		$("#callStusId").val('');
+    	}
         //AUIGrid 그리드를 생성합니다. 
         cancelLogGrid();  
         prodReturnGrid();
@@ -33,6 +37,12 @@
         };
 
         $(".j_date2").monthpicker(monthOptions);
+//        alert(("#callStusId").val());
+//        if($("#callStusId").val() == '32' || $("#callStusId").val() == '31'){
+//            $("#addDiv").css("display" , "none");
+//          $("#addDiv").hide();
+//        }
+        
     });
     
     function cancelLogGrid(){
@@ -154,12 +164,21 @@
             $("select[name=cmbFeedbackCd]").removeAttr("disabled");
             $("select[name=cmbFeedbackCd]").removeClass("w100p disabled");
             $("select[name=cmbFeedbackCd]").addClass("w100p");
-            $("select[name=cmbCtGroup]").removeAttr("disabled");
-            $("select[name=cmbCtGroup]").removeClass("w100p disabled");
-            $("select[name=cmbCtGroup]").addClass("w100p");
             $("#addCallRecallDt").attr('disabled','disabled');
             $("#addCallRecallDt").val('');
-            $("#addAppRetnDt").removeAttr("disabled");
+            if($("#reqStageId").val() == '24'){     // before installl
+            	$("select[name=cmbCtGroup]").attr('disabled', 'disabled');
+                $("select[name=cmbCtGroup]").addClass("w100p disabled");
+                $("select[name=cmbCtGroup]").val('');
+                $("#addAppRetnDt").attr('disabled','disabled');
+                $("#addAppRetnDt").val('');
+            }else{
+            	$("select[name=cmbCtGroup]").removeAttr("disabled");
+                $("select[name=cmbCtGroup]").removeClass("w100p disabled");
+                $("select[name=cmbCtGroup]").addClass("w100p");
+                $("#addAppRetnDt").removeAttr("disabled");
+            }
+            
         }
     	if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
             $("select[name=cmbAssignCt]").removeAttr("disabled");
@@ -171,18 +190,103 @@
             $("select[name=cmbCtGroup]").attr('disabled', 'disabled');
             $("select[name=cmbCtGroup]").addClass("w100p disabled");
             $("select[name=cmbCtGroup]").val('');
-            $("#addCallRecallDt").attr('disabled','disabled');
             $("#addAppRetnDt").attr('disabled','disabled');
-            $("#addCallRecallDt").val('');
             $("#addAppRetnDt").val('');
+            if($("#reqStageId").val() == '24'){     // before installl
+            	$("#addCallRecallDt").removeAttr("disabled");
+            }else{
+            	$("#addCallRecallDt").attr('disabled','disabled');
+                $("#addCallRecallDt").val('');
+            }
         }
-    	
     }
     
     function fn_saveCancel(){
+    	if(addCallForm.addStatus.value == ""){
+    		Common.alert("Please select the Status");
+    		return false;
+    	}
+    	if($("#addStatus").val() == '19'){     // Recall
+//    		if($("#reqStageId").val() == '24'){     // before installl
+    			if(addCallForm.cmbFeedbackCd.value == ""){
+    				Common.alert("Please select the Feedback Code");
+    				return false;
+    			}
+    			if(addCallForm.addCallRecallDt.value == ""){
+                    Common.alert("Please key in the recall Date");
+                    return false;
+                }
+    			if(addCallForm.addRem.value == ""){
+                    Common.alert("Please key in the remark");
+                    return false;
+                }
+//    		}
+    	}
+    	if($("#addStatus").val() == '32'){     // Confirm To Cancel
+          if($("#reqStageId").val() == '24'){     // before installl
+                if(addCallForm.cmbFeedbackCd.value == ""){
+                    Common.alert("Please select the Feedback Code");
+                    return false;
+                }
+                if(addCallForm.addRem.value == ""){
+                    Common.alert("Please key in the remark");
+                    return false;
+                }
+            }else{
+            	if(addCallForm.cmbFeedbackCd.value == ""){
+                    Common.alert("Please select the Feedback Code");
+                    return false;
+                }
+                if(addCallForm.cmbAssignCt.value == ""){
+                    Common.alert("Please key in the Assign CT");
+                    return false;
+                }
+                if(addCallForm.cmbCtGroup.value == ""){
+                    Common.alert("Please key in the CT Group");
+                    return false;
+                }
+                if(addCallForm.addAppRetnDt.value == ""){
+                    Common.alert("Please key in the Appointment Date");
+                    return false;
+                }
+                if(addCallForm.addRem.value == ""){
+                    Common.alert("Please key in the remark");
+                    return false;
+                }
+            }
+        }
+    	if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
+            if($("#reqStageId").val() == '24'){     // before installl
+                  if(addCallForm.cmbFeedbackCd.value == ""){
+                      Common.alert("Please select the Feedback Code");
+                      return false;
+                  }
+                  if(addCallForm.addRem.value == ""){
+                      Common.alert("Please key in the remark");
+                      return false;
+                  }
+                  if(addCallForm.addCallRecallDt.value == ""){
+                      Common.alert("Please key in the recall Date");
+                      return false;
+                  }
+              }else{
+                  if(addCallForm.cmbFeedbackCd.value == ""){
+                      Common.alert("Please select the Feedback Code");
+                      return false;
+                  }
+                  if(addCallForm.addRem.value == ""){
+                      Common.alert("Please key in the remark");
+                      return false;
+                  }
+                  if(addCallForm.cmbAssignCt.value == ""){
+                      Common.alert("Please key in the Assign CT");
+                      return false;
+                  }
+              }
+          }
     	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
-            Common.alert(result.msg);
-            $("#addDiv").hide();
+            Common.alert(result.msg, fn_success);
+            
         }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     console.log("status : " + jqXHR.status);
@@ -207,6 +311,22 @@
 //        $("#_close").click();
 //    }
     
+    function fn_cancelReload(){
+    	fn_orderCancelListAjax();
+    	if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31'){
+    		$("#callStusId").val(1);
+    	}
+    	
+    	$("#_close").click();
+    	Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
+    	
+    	
+    	
+    }
+    
+    function fn_success(){
+    	fn_cancelReload();
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -219,7 +339,7 @@
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
  -->
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <form id="tabForm" name="tabForm" action="#" method="post">
@@ -256,7 +376,7 @@
         <th scope="row">Request Status</th>
         <td><span>${cancelReqInfo.reqStusName}</span></td>
         <th scope="row">Request Stage</th>
-        <td>${cancelReqInfo.reqstage}
+        <td>${cancelReqInfo.reqStage}
         </td>
         <th scope="row">Request Reason</th>
         <td>${cancelReqInfo.reqResnCode} - ${cancelReqInfo.reqResnDesc}
@@ -319,6 +439,7 @@
         <td>${cancelReqInfo.actualCanclDt}
         </td>
     </tr>
+<!--     
     <tr>
         <th scope="row">Bank Account</th>
         <td>
@@ -336,6 +457,7 @@
         <td colspan="5">${cancelReqInfo.attach}
         </td>
     </tr>
+ -->
     <tr>
         <th scope="row">OCR Remark</th>
         <td colspan="5">${cancelReqInfo.reqRem}
@@ -1142,6 +1264,8 @@
     <input id="paramCallEntryId" name="paramCallEntryId" type="hidden" value="${cancelReqInfo.callEntryId}">
     <input id="paramReqId" name="paramReqId" type="hidden" value="${cancelReqInfo.reqId}">
     <input id="paramOrdId" name="paramOrdId" type="hidden" value="${cancelReqInfo.ordId}">
+    <input id="paramStockId" name="paramStockId" type="hidden" value="${cancelReqInfo.stockId}">
+    <input id="callStusId" name="callStusId" type="hidden" >
     
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
@@ -1213,11 +1337,10 @@
 
 </form>
 </section><!-- search_table end -->
-</div>
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
 </ul>
-
+</div>
 </section><!-- pop_body end -->
 </div>
