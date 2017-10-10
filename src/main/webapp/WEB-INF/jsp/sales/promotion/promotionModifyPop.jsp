@@ -102,10 +102,10 @@
             
             salesPromoMVO : {
 	            promoId                 : ${promoInfo.promoId},
-	            promoCode               : $('#promoCode').val().trim(),
+//	            promoCode               : $('#promoCode').val().trim(),
 	            promoDesc               : $('#promoDesc').val().trim(),
-	            promoTypeId             : $('#promoTypeId').val(),
-	            promoAppTypeId          : $('#promoAppTypeId').val(),
+//	            promoTypeId             : $('#promoTypeId').val(),
+//	            promoAppTypeId          : $('#promoAppTypeId').val(),
 	            promoSrvMemPacId        : $('#promoSrvMemPacId').val(),
 	            promoDtFrom             : $('#promoDtFrom').val().trim(),
 	            promoDtEnd              : $('#promoDtEnd').val().trim(),
@@ -339,6 +339,7 @@
     function fn_chgPageMode(vMode) {
         
         if(vMode == 'MODIFY') {
+
             $('#btnPromoEdit').addClass("blind");
             $('#btnPromoSave').removeClass("blind");
             
@@ -348,7 +349,11 @@
             $('#liFreeGiftAdd').removeClass("blind");
 
             fn_chgPromoDetail(null, null, null);
-            
+
+            $('#promoAppTypeId').prop("disabled", true);
+            $('#promoTypeId').prop("disabled", true);
+            $('#promoCode').prop("disabled", true);
+        
             AUIGrid.setProp(stckGridID, "editable" , true);
         }
         else if(vMode == 'VIEW') {
@@ -386,11 +391,13 @@
         if(FormUtil.isEmpty($('#promoDtFrom').val()) || FormUtil.isEmpty($('#promoDtEnd').val())) {
             isValid = false;
             msg += "* Please key in the promotion period.<br />";
-        }        
+        }
+/*        
         if(FormUtil.checkReqValue($('#promoCode'))) {
             isValid = false;
             msg += "* Please key in the promotion code.<br />";
         }
+*/
         if(FormUtil.checkReqValue($('#promoCustType'))) {
             isValid = false;
             msg += "* Please select the customer type.<br />";
@@ -493,7 +500,7 @@
         else {
             $('#empChk').val('').prop("disabled", true);
         }
-        
+
         //Promo Application = Rental & Promotion Type = Discount
         if(promoAppVal == '2284' && promoTypVal == '2282') {
             console.log('Promo Application = Rental & Promotion Type = Discount');
@@ -650,7 +657,7 @@
 	<th scope="row">Promotion Name</th>
 	<td><input id="promoDesc" name="promoDesc" value="${promoInfo.promoDesc}" type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">Promotion Code<span class="must">*</span></th>
-	<td><input id="promoCode" name="promoCode" value="${promoInfo.promoCode}" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="promoCode" name="promoCode" value="${promoInfo.promoCode}" type="text" title="" placeholder="" class="w100p" disabled/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

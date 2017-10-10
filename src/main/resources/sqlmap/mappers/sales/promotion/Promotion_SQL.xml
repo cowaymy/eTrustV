@@ -151,7 +151,7 @@
         VALUES
              ( #{promoId}
              , #{promoMtchId}
-             , #{promoCode}
+             , FN_GET_PROMO_CODE(#{promoAppTypeId}, #{promoTypeId}, TO_CHAR(SYSDATE, 'YYMMDD'))
              , #{promoDesc}
              , #{promoTypeId}
              , #{promoAppTypeId}
@@ -228,8 +228,8 @@
              , #{promoFreeGiftPromoId}
              , #{promoFreeGiftStkId}
              , #{promoFreeGiftStusId}
-             , #{promoFreeGiftStartDt}
-             , #{promoFreeGiftExprDt}
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , TO_DATE('9999-12-31', 'YYYY-MM-DD')
              , #{promoFreeGiftCrtUserId}
              , SYSDATE)
     </insert>
@@ -283,6 +283,7 @@
           JOIN SYS0026M T2
             ON T1.PROMO_ITM_STK_ID = T2.STK_ID
          WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
     </select>
 
     <select id="selectPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
@@ -331,14 +332,12 @@
           JOIN MSC0039D T2
             ON T1.PROMO_FREE_GIFT_STK_ID = T2.ITM_ID
          WHERE T1.PROMO_FREE_GIFT_PROMO_ID = #{promoId}
+           AND T1.PROMO_FREE_GIFT_STUS_ID = 1
     </select>
     
     <update id="updateSalesPromoM" parameterType="salesPromoMVO">
 		UPDATE SAL0017D
-		   SET PROMO_CODE              = #{promoCode}
-		     , PROMO_DESC              = #{promoDesc}
-		     , PROMO_TYPE_ID           = #{promoTypeId}
-		     , PROMO_APP_TYPE_ID       = #{promoAppTypeId}
+		   SET PROMO_DESC              = #{promoDesc}
 		     , PROMO_SRV_MEM_PAC_ID    = #{promoSrvMemPacId}
 		     , PROMO_DT_FROM           = TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
 		     , PROMO_DT_END            = TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
@@ -362,20 +361,15 @@
     <update id="updateSalesPromoD" parameterType="salesPromoDVO">
         UPDATE SAL0018D
            SET PROMO_ITM_PV          = #{promoItmPv}
+             , PROMO_ITM_STUS_ID     = #{promoItmStusId}
              , PROMO_ITM_UPD_USER_ID = #{promoItmUpdUserId}
              , PROMO_ITM_UPD_DT      = #{promoItmUpdDt}
          WHERE PROMO_ITM_ID          = #{promoItmId}
     </update>
     
-    <delete id="deleteSalesPromoD" parameterType="salesPromoDVO">
-        DELETE
-          FROM SAL0018D
-         WHERE PROMO_ITM_ID = #{promoItmId}
-    </delete>
-    
-    <delete id="deleteSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">
-        DELETE
-          FROM SAL0019D
+    <update id="updateSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">
+        UPDATE SAL0019D
+           SET PROMO_FREE_GIFT_STUS_ID = #{promoFreeGiftStusId}
          WHERE PROMO_FREE_GIFT_ID = #{promoFreeGiftId}
-    </delete>    
+    </update>    
 </mapper>

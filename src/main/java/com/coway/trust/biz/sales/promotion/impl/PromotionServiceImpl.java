@@ -137,14 +137,16 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		List<SalesPromoDVO> udtSalesPromoDVOList = salesPromoDDataSetList.getUpdate();
 		List<SalesPromoDVO> delSalesPromoDVOList = salesPromoDDataSetList.getRemove();
 		List<SalesPromoFreeGiftVO> addSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getAdd();
+		List<SalesPromoFreeGiftVO> udtSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getUpdate();
 		List<SalesPromoFreeGiftVO> delSalesPromoFreeGiftVOList = freeGiftGridDataSetList.getRemove();
 		
 		this.preprocSalesPromotionMaster(salesPromoMVO, sessionVO);
 
-		promotionMapper.updateSalesPromoM(salesPromoMVO);;
+		promotionMapper.updateSalesPromoM(salesPromoMVO);
 
 		this.preprocSalesPromotionDetail(addSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
 		this.preprocSalesPromotionDetail(udtSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
+		this.preprocSalesPromotionDetail(delSalesPromoDVOList, salesPromoMVO.getPromoId(),  sessionVO);
 		
 		for(SalesPromoDVO addVO : addSalesPromoDVOList) {
 			promotionMapper.insertSalesPromoD(addVO);
@@ -155,17 +157,25 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		}
 		
 		for(SalesPromoDVO delVO : delSalesPromoDVOList) {
-			promotionMapper.deleteSalesPromoD(delVO);
+			delVO.setPromoItmStusId(8);
+			promotionMapper.updateSalesPromoD(delVO);
 		}
 		
 		this.preprocSalesPromoFreeGift(addSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
+		this.preprocSalesPromoFreeGift(udtSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
+		this.preprocSalesPromoFreeGift(delSalesPromoFreeGiftVOList, salesPromoMVO.getPromoId(), sessionVO);
 		
 		for(SalesPromoFreeGiftVO addVO : addSalesPromoFreeGiftVOList) {
 			promotionMapper.insertSalesPromoFreeGift(addVO);
 		}
 
+		for(SalesPromoFreeGiftVO udtVO : udtSalesPromoFreeGiftVOList) {
+			promotionMapper.updateSalesPromoFreeGift(udtVO);
+		}
+
 		for(SalesPromoFreeGiftVO delVO : delSalesPromoFreeGiftVOList) {
-			promotionMapper.deleteSalesPromoFreeGift(delVO);
+			delVO.setPromoFreeGiftStusId(8);
+			promotionMapper.updateSalesPromoFreeGift(delVO);
 		}
 	}
 	
@@ -200,8 +210,9 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		
 		if(salesPromoFreeGiftVOList != null) {
 			for(SalesPromoFreeGiftVO addVo : salesPromoFreeGiftVOList) {
-				addVo.setPromoFreeGiftPromoId(promoId);;
+				addVo.setPromoFreeGiftPromoId(promoId);
 				addVo.setPromoFreeGiftCrtUserId(sessionVO.getUserId());
+				addVo.setPromoFreeGiftStusId(1);
 			}
 		}
 	}

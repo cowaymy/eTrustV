@@ -325,10 +325,12 @@
             isValid = false;
             msg += "* Please key in the promotion period.<br />";
         }        
+/*
         if(FormUtil.checkReqValue($('#promoCode'))) {
             isValid = false;
             msg += "* Please key in the promotion code.<br />";
         }
+*/
         if(FormUtil.checkReqValue($('#promoCustType'))) {
             isValid = false;
             msg += "* Please select the customer type.<br />";
@@ -574,7 +576,7 @@
 	<th scope="row">Promotion Name</th>
 	<td><input id="promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">Promotion Code<span class="must">*</span></th>
-	<td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" disabled /></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -223,13 +223,15 @@
         }).multipleSelect({
             selectAll: true, // 전체선택 
             width: '100%'
-        });            
+        });
+        $('#list_promoAppTypeId').multipleSelect("checkAll");
         $('#list_promoTypeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
             selectAll: true, // 전체선택 
             width: '100%'
         });
+        $('#list_promoTypeId').multipleSelect("checkAll");
     }
 
     $.fn.clearForm = function() {

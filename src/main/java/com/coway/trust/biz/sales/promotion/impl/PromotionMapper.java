@@ -39,8 +39,6 @@ public interface PromotionMapper {
 
 	void updateSalesPromoD(SalesPromoDVO salesPromoDVO);
 
-	void deleteSalesPromoD(SalesPromoDVO salesPromoDVO);
-
-	void deleteSalesPromoFreeGift(SalesPromoFreeGiftVO salesPromoFreeGiftVO);
+	void updateSalesPromoFreeGift(SalesPromoFreeGiftVO salesPromoFreeGiftVO);
 
 }
