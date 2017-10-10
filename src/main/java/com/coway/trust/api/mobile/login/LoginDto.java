@@ -16,6 +16,8 @@ public class LoginDto {
 	private String userFullNm;
 	@ApiModelProperty(value = "userId")
 	private int userId;
+	@ApiModelProperty(value = "userPassWord")
+	private String userPassWord;
 	@ApiModelProperty(value = "사업장 이름")
 	private String companyName;
 	@ApiModelProperty(value = "사업장 주소")
@@ -41,6 +43,8 @@ public class LoginDto {
 		dto.setCompanyTelNo2(loginVO.getBranchTel2());
 		dto.setManagerYn("-");
 		dto.setUserGroupId(loginVO.getUserTypeId());
+		dto.setUserPassWord(loginVO.getUserPassWord());
+		
 		return dto;
 	}
 
@@ -74,6 +78,14 @@ public class LoginDto {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public String getUserPassWord() {
+		return userPassWord;
+	}
+
+	public void setUserPassWord(String userPassWord) {
+		this.userPassWord = userPassWord;
 	}
 
 	public String getCompanyName() {
