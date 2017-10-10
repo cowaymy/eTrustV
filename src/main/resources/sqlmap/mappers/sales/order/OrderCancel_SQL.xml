@@ -658,18 +658,157 @@
         UPDATE CCR0006D
 		     SET STUS_CODE_ID = #{callStusId},
 		           RESULT_ID = #{resultId},
-		           CALL_DT = TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), 
+		           CALL_DT = TO_DATE(#{callDt}, 'DD/MM/YYYY'),
 		           UPD_DT = SYSDATE,
 		           UPD_USER_ID = #{callCrtUserId}
 		 WHERE CALL_ENTRY_ID = #{callEntryId}
     </update>
     
+    <select id="newSearchCancelSAL0020D" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.SO_REQ_ID SO_REQ_ID  ,
+				     Extent1.SO_REQ_SO_ID SO_REQ_SO_ID  ,
+				     Extent1.SO_REQ_STUS_ID SO_REQ_STUS_ID  ,
+				     Extent1.SO_REQ_RESN_ID SO_REQ_RESN_ID  ,
+				     Extent1.SO_REQ_PREV_CALL_ENTRY_ID SO_REQ_PREV_CALL_ENTRY_ID  ,
+				     Extent1.SO_REQ_CUR_CALL_ENTRY_ID SO_REQ_CUR_CALL_ENTRY_ID  ,
+				     Extent1.SO_REQ_CUR_STUS_ID SO_REQ_CUR_STUS_ID  ,
+				     Extent1.SO_REQ_CRT_DT SO_REQ_CRT_DT  ,
+				     Extent1.SO_REQ_CRT_USER_ID SO_REQ_CRT_USER_ID  ,
+				     Extent1.SO_REQ_UPD_DT SO_REQ_UPD_DT  ,
+				     Extent1.SO_REQ_UPD_USER_ID SO_REQ_UPD_USER_ID  ,
+				     Extent1.SO_REQ_CUR_STK_ID SO_REQ_CUR_STK_ID  ,
+				     Extent1.SO_REQ_CUR_APP_TYPE_ID SO_REQ_CUR_APP_TYPE_ID  ,
+				     Extent1.SO_REQ_CUR_AMT SO_REQ_CUR_AMT  ,
+				     Extent1.SO_REQ_CUR_PV SO_REQ_CUR_PV  ,
+				     Extent1.SO_REQ_CURR_AMT SO_REQ_CURR_AMT  ,
+				     Extent1.SO_REQ_ACTUAL_CANCL_DT SO_REQ_ACTUAL_CANCL_DT  ,
+				     Extent1.SO_REQ_CANCL_TOT_OTSTND SO_REQ_CANCL_TOT_OTSTND  ,
+				     Extent1.SO_REQ_CANCL_PNALTY_AMT SO_REQ_CANCL_PNALTY_AMT  ,
+				     Extent1.SO_REQ_CANCL_OB_PRIOD SO_REQ_CANCL_OB_PRIOD  ,
+				     Extent1.SO_REQ_CANCL_UNDER_COOL_PRIOD SO_REQ_CANCL_UNDER_COOL_PRIOD  ,
+				     Extent1.SO_REQ_CANCL_RENTAL_OTSTND SO_REQ_CANCL_RENTAL_OTSTND  ,
+				     Extent1.SO_REQ_CANCL_TOT_USED_PRIOD SO_REQ_CANCL_TOT_USED_PRIOD  ,
+				     Extent1.SO_REQ_NO SO_REQ_NO  ,
+				     Extent1.SO_REQ_CANCL_ADJ_AMT SO_REQ_CANCL_ADJ_AMT  ,
+				     Extent1.SO_REQSTER SO_REQSTER  ,
+				     Extent1.SO_REQ_PRE_RETN_DT SO_REQ_PRE_RETN_DT  ,
+				     Extent1.SO_REQ_REM SO_REQ_REM  ,
+				     Extent1.SO_REQ_BANK_ACC SO_REQ_BANK_ACC  ,
+				     Extent1.SO_REQ_ISS_BANK SO_REQ_ISS_BANK  ,
+				     Extent1.SO_REQ_ACC_NAME SO_REQ_ACC_NAME  ,
+				     Extent1.SO_REQ_ATTACH SO_REQ_ATTACH  
+			 FROM SAL0020D Extent1
+		   WHERE Extent1.SO_REQ_ID = #{soReqId} 
+		       <![CDATA[
+		       AND ROWNUM <= 1
+		       ]]>
+    </select>
+    
     <update id="updateCancelSAL0020D" parameterType="Map">
         UPDATE SAL0020D
-			 SET SO_REQ_STUS_ID = #{resultId},
-			       SO_REQ_UPD_DT = SYSDATE,
-			       SO_REQ_UPD_USER_ID = #{callCrtUserId}
+			 SET SO_REQ_UPD_DT = SYSDATE,
+			       <if test="reqStageId == 24">
+                   SO_REQ_STUS_ID = #{resultId},
+                   </if>
+                   SO_REQ_UPD_USER_ID = #{callCrtUserId}
 		 WHERE SO_REQ_ID = #{soReqId}
+    </update>
+    
+    <update id="updReservalCancelSAL0020D" parameterType="Map">
+        UPDATE SAL0020D
+             SET SO_REQ_UPD_DT = SYSDATE,
+                   SO_REQ_UPD_USER_ID = #{callCrtUserId},
+                   SO_REQ_STUS_ID = #{callStusId}
+         WHERE SO_REQ_ID = #{soReqId}
+    </update>
+    
+    <select id="newSearchCancelSAL0001D" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+				     Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+				     Extent1.REF_NO REF_NO  ,
+				     Extent1.SALES_DT SALES_DT  ,
+				     Extent1.CUST_ID CUST_ID  ,
+				     Extent1.CUST_CNT_ID CUST_CNT_ID  ,
+				     Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+				     Extent1.MEM_ID MEM_ID  ,
+				     Extent1.BRNCH_ID BRNCH_ID  ,
+				     Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+				     Extent1.TOT_AMT TOT_AMT  ,
+				     Extent1.PROMO_ID PROMO_ID  ,
+				     Extent1.BINDING_NO BINDING_NO  ,
+				     Extent1.CC_PROMO_ID CC_PROMO_ID  ,
+				     Extent1.TOT_PV TOT_PV  ,
+				     Extent1.REM REM  ,
+				     Extent1.PV_MONTH PV_MONTH  ,
+				     Extent1.PV_YEAR PV_YEAR  ,
+				     Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+				     Extent1.UPD_DT UPD_DT  ,
+				     Extent1.UPD_USER_ID UPD_USER_ID  ,
+				     Extent1.SYNC_CHK SYNC_CHK  ,
+				     Extent1.CUST_PO_NO CUST_PO_NO  ,
+				     Extent1.REN_CHK_ID REN_CHK_ID  ,
+				     Extent1.INST_PRIOD INST_PRIOD  ,
+				     Extent1.DO_NO DO_NO  ,
+				     Extent1.DEPT_CODE DEPT_CODE  ,
+				     Extent1.GRP_CODE GRP_CODE  ,
+				     Extent1.ORG_CODE ORG_CODE  ,
+				     Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD  ,
+				     Extent1.EDIT_TYPE_ID EDIT_TYPE_ID  ,
+				     Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+				     Extent1.MTH_RENT_AMT MTH_RENT_AMT  ,
+				     Extent1.LOK LOK  ,
+				     Extent1.AEON_STUS_ID AEON_STUS_ID  ,
+				     Extent1.COMM_DT COMM_DT  ,
+				     Extent1.CRT_USER_ID CRT_USER_ID  ,
+				     Extent1.CRT_DT CRT_DT  ,
+				     Extent1.PAY_COM_DT PAY_COM_DT  ,
+				     Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
+				     Extent1.REF_DOC_ID REF_DOC_ID  ,
+				     Extent1.SALES_HM_ID SALES_HM_ID  ,
+				     Extent1.SALES_SM_ID SALES_SM_ID  ,
+				     Extent1.SALES_GM_ID SALES_GM_ID  ,
+				     Extent1.ADV_BILL ADV_BILL  ,
+				     Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID  ,
+				     Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID  
+			 FROM SAL0001D Extent1
+		   WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+               <![CDATA[
+               AND ROWNUM <= 1
+               ]]>
+    </select>
+    
+    <select id="newSearchCancelSAL0046D" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.INSTALL_ENTRY_ID   ,
+				     Extent1.INSTALL_ENTRY_NO   ,
+				     Extent1.SALES_ORD_ID   ,
+				     Extent1.STUS_CODE_ID   ,
+				     Extent1.CT_ID   ,
+				     Extent1.INSTALL_DT   ,
+				     Extent1.CALL_ENTRY_ID   ,
+				     Extent1.INSTALL_STK_ID   ,
+				     Extent1.INSTALL_RESULT_ID   ,
+				     Extent1.CRT_USER_ID   ,
+				     Extent1.CRT_DT   ,
+				     Extent1.ALLOW_COMM   ,
+				     Extent1.IS_TRADE_IN   ,
+				     Extent1.CT_GRP   ,
+				     Extent1.UPD_DT UP_DT  ,
+				     Extent1.UPD_USER_ID   ,
+				     Extent1.REV_ID   
+			 FROM SAL0046D Extent1
+		   WHERE Extent1.CALL_ENTRY_ID = #{callEntryId}
+		       AND 4 = Extent1.STUS_CODE_ID
+               <![CDATA[
+               AND ROWNUM <= 1
+               ]]>
+    </select>
+    
+    <update id="updateCancelSAL0001D" parameterType="Map">
+        UPDATE SAL0001D
+			 SET REM = #{callRem},
+			       UPD_DT = SYSDATE,
+			       UPD_USER_ID = #{userId}
+		 WHERE SALES_ORD_ID = #{salesOrdId}
     </update>
     
     <update id="updateCancelSAL0071D" parameterType="Map">
@@ -678,5 +817,94 @@
                    REN_SCH_DT = SYSDATE
          WHERE REN_SCH_ID = #{renSchId}
     </update>
+    
+    <select id="crtSeqLOG0031D"  resultType="java.lang.String">
+        SELECT LOG0013D_MOV_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertCancelLOG0013D" parameterType="Map">
+        INSERT INTO LOG0013D (MOV_ID,
+					                      INSTALL_ENTRY_ID,
+					                      MOV_FROM_LOC_ID,
+					                      MOV_TO_LOC_ID,
+					                      MOV_TYPE_ID,
+					                      MOV_STUS_ID,
+					                      MOV_CNFM,
+					                      MOV_CRT_DT,
+					                      MOV_UPD_DT,
+					                      MOV_CRT_USER_ID,
+					                      MOV_UPD_USER_ID,
+					                      STK_CRD_POST,
+					                      STK_CRD_POST_DT,
+					                      STK_CRD_POST_TO_WEB_ON_TM)
+				              VALUES (#{movId},
+					                      #{installEntryId},
+					                      #{movFromLocId},
+					                      #{movToLocId},
+					                      #{movTypeId},
+					                      #{movStusId},
+					                      #{movCnfm},
+					                      SYSDATE,
+					                      SYSDATE,
+					                      #{userId},
+					                      #{userId},
+					                      #{stkCrdPost},
+					                      TO_DATE(#{stkCrdPostDt}, 'DD/MM/YYYY'),
+					                      #{stkCrdPostToWebOnTm})
+    </insert>
+    
+    <select id="crtSeqLOG0038D"  resultType="java.lang.String">
+        SELECT LOG0038D_STK_RETN_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertCancelLOG0038D" parameterType="Map">
+        INSERT INTO LOG0038D (STK_RETN_ID,
+					                      STUS_CODE_ID,
+					                      TYPE_ID,
+					                      SALES_ORD_ID,
+					                      MOV_ID,
+					                      REQST_DT,
+					                      CRT_DT,
+					                      CRT_USER_ID,
+					                      UPD_DT,
+					                      UPD_USER_ID,
+					                      REF_ID,
+					                      STOCK_ID,
+					                      IS_SYNCH,
+					                      RETN_NO,
+					                      APP_DT,
+					                      CT_ID,
+					                      CT_GRP,
+					                      CALL_ENTRY_ID)
+					           VALUES (#{stkRetnId},
+					                        #{stusCodeId},
+					                        #{typeId},
+					                        #{salesOrdId},
+					                        #{movId},
+					                        SYSDATE,
+					                        SYSDATE,
+					                        #{userId},
+					                        SYSDATE,
+					                        #{userId},
+					                        #{refId},
+					                        #{stockId},
+					                        #{isSynch},
+					                        #{retnNo},
+					                        TO_DATE(#{appDt}, 'DD/MM/YYYY'),
+					                        #{ctId},
+					                        #{ctGrp},
+					                        #{callEntryId}
+					                        )
+    </insert>
+    
+    <insert id="insertCancelCCR0006D" parameterType="Map">
+        INSERT INTO CCR0006D
+                  ( CALL_ENTRY_ID, SALES_ORD_ID, TYPE_ID, STUS_CODE_ID, RESULT_ID
+                  , DOC_ID, CRT_USER_ID, CRT_DT, CALL_DT, IS_WAIT_FOR_CANCL
+                  , HAPY_CALLER_ID, UPD_DT, UPD_USER_ID, ORI_CALL_DT )
+        VALUES ( #{getCallEntryIdMaxSeq}, #{salesOrdId}, #{typeId}, #{stusCodeId}, #{resultId}
+                  , #{docId}, #{callCrtUserId}, SYSDATE, TO_DATE(#{callDt}, 'DD/MM/YYYY'), #{isWaitForCancl}
+                  , #{hapyCallerId}, SYSDATE, #{callCrtUserId}, TO_DATE(#{callDt}, 'DD/MM/YYYY') )
+    </insert>
     
 </mapper>

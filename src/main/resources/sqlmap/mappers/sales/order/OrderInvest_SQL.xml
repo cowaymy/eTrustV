@@ -452,7 +452,7 @@
 				  , INV_REQ_HAS_ATTACH, INV_REQ_ATTACH_FILE, INV_REQ_REJCT_RESN_ID 
 			  )
         VALUES ( SAL0050D_INV_REQ_ID_SEQ.NEXTVAL, #{invReqNo}, #{soId}, #{invReqStusId}, #{invReqPartyId}, #{invReqRem}, SYSDATE, #{userId}
-                    , SYSDATE, #{userId}, #{invReqUserIdAuto}, #{insCallDt}, #{insVisitDt}, #{invReqTypeId}
+                    , SYSDATE, #{userId}, #{invReqUserIdAuto}, TO_DATE(#{insCallDt}, 'DD/MM/YYYY'), TO_DATE(#{insVisitDt}, 'DD/MM/YYYY'), #{invReqTypeId}
                     , #{invReqHasAttach}, #{invReqAttachFile}, #{invReqRejctResnId} )
     </insert>
     

@@ -717,7 +717,7 @@
 		           SO_EXCHG_UPD_DT = SYSDATE,
 		           SO_EXCHG_UPD_USER_ID = #{soExchgUpdUserId},
 		           SO_EXCHG_REM = #{soExchgRem}
-		 WHERE SO_EXCHG_ID = #{soExchgId}
+		 WHERE SO_EXCHG_ID = #{soExchgIdDetail}
   </update>
     
     <select id="thirdSearchForCancel" parameterType="Map" resultType="egovMap">
@@ -737,11 +737,13 @@
 			       Extent1.ORI_CALL_DT  
 			  FROM CCR0006D Extent1
 			 WHERE  Extent1.CALL_ENTRY_ID = #{soExchgNwCallEntryId}
-
+                <![CDATA[
+                 AND ROWNUM <= 1
+                ]]>
     </select>
     
     <select id="getCallResultIdMaxSeq" resultType="Integer">
-        SELECT NVL(MAX(CALL_RESULT_ID),1) + 1 from CCR0007D
+        SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
     </select>
     
     <insert id="insertCCR0007D" parameterType="Map">
@@ -749,8 +751,8 @@
 					  ( CALL_RESULT_ID, CALL_ENTRY_ID, CALL_STUS_ID, CALL_DT, CALL_ACTN_DT
 					  , CALL_FDBCK_ID, CALL_CT_ID, CALL_REM, CALL_CRT_USER_ID, CALL_CRT_DT
 					  , CALL_CRT_USER_ID_DEPT, CALL_HC_ID, CALL_ROS_AMT, CALL_SMS, CALL_SMS_REM )
-        VALUES ( #{getCallResultIdMaxSeq}, #{callEntryId}, #{callStusId}, #{callDt}, #{callActnDt}
-                      , #{callFdbckId}, #{callCtId}, #{callRem}, #{callCrtUserId}, SYSDATE
+        VALUES ( #{getCallResultIdMaxSeq}, #{soExchgNwCallEntryId}, #{callStusId}, TO_DATE(#{callDt}, 'DD/MM/YYYY')
+                      , TO_DATE(#{callActnDt}, 'DD/MM/YYYY'), #{callFdbckId}, #{callCtId}, #{callRem}, #{callCrtUserId}, SYSDATE
                       , #{callCrtUserIdDept}, #{callHcId}, #{callRosAmt}, #{callSms}, #{callSmsRem} )
     </insert>
     
@@ -758,8 +760,8 @@
         UPDATE CCR0006D
 		   SET RESULT_ID = #{resultId},
 			     UPD_DT = SYSDATE,
-			     UPD_USER_ID = #{updUserId}
-		 WHERE CALL_ENTRY_ID = #{callEntryId}
+			     UPD_USER_ID = #{soExchgUpdUserId}
+		 WHERE CALL_ENTRY_ID = #{soExchgNwCallEntryId}
     </update>
     
     <select id="fourthSearchForCancel" parameterType="Map" resultType="egovMap">
@@ -781,9 +783,9 @@
              WHERE  Extent1.CALL_ENTRY_ID = #{soExchgOldCallEntryId}
 
     </select>
-    
-    <select id="getCallEntryIdMaxSeq" resultType="Integer">
-        SELECT NVL(MAX(CALL_ENTRY_ID),1) + 1 from CCR0006D 
+
+    <select id="getCallEntryIdMaxSeq"  resultType="Integer">
+        SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
     </select>
     
     <insert id="insertCCR0006D" parameterType="Map">
@@ -791,9 +793,9 @@
 				  ( CALL_ENTRY_ID, SALES_ORD_ID, TYPE_ID, STUS_CODE_ID, RESULT_ID
 				  , DOC_ID, CRT_USER_ID, CRT_DT, CALL_DT, IS_WAIT_FOR_CANCL
 				  , HAPY_CALLER_ID, UPD_DT, UPD_USER_ID, ORI_CALL_DT )
-        VALUES ( CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL, #{salesOrdId}, #{typeId}, #{stusCodeId}, #{resultId}
-                  , #{docId}, #{crtUserId}, SYSDATE, SYSDATE+1, #{isWaitForCancl}
-                  , #{hapyCallerId}, SYSDATE, #{updUserId}, SYSDATE+1 )
+        VALUES ( #{getCallEntryIdMaxSeq}, #{salesOrdId}, #{typeId}, #{stusCodeId}, #{resultId}
+                  , #{docId}, #{callCrtUserId}, SYSDATE, SYSDATE+1, #{isWaitForCancl}
+                  , #{hapyCallerId}, SYSDATE, #{callCrtUserId}, SYSDATE+1 )
     </insert>
     
     <update id="updateResultIdCCR0006D" parameterType="Map">
@@ -803,7 +805,7 @@
     </update>
     
     <select id="getLogIdMaxSeq" resultType="Integer">
-        SELECT NVL(MAX(LOG_ID),1) + 1 from SAL0009D 
+        SELECT SAL0009D_LOG_ID_SEQ.NEXTVAL from DUAL 
     </select>
     
     <insert id="insertLogSAL0009D" parameterType="Map">
