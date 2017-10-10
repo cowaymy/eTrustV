@@ -287,7 +287,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
     $(function(){
         $("#stock_info").click(function(){
-            
             if($("#stock_info_div").css("display") == "none"){
                 f_removeclass();
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
@@ -296,7 +295,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     f_view("/stock/StockInfo.do?stkid="+selectedItems[i].item.stkid , "S");
                 }
                 $("#stock_info_div").show();
-                
             }else{
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
@@ -305,10 +303,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 }
             }
             $(this).find("a").attr("class","on");
-            
         });
+        
         $("#price_info").click(function(){
-            
             if($("#price_info_div").css("display") == "none"){
                 f_removeclass();
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
@@ -316,68 +313,63 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
                 }
                 $("#price_info_div").show();
-                
             }else{
-                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                 for(i=0; i<selectedItems.length; i++) {
-                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
-                 }
-            }
-            $(this).find("a").attr("class","on");
-        });
-        $("#filter_info").click(function(){
-            
-                f_removeclass();
-
-                $("#filter_info_div").show();
-                
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
                 for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=filter", "F");
+                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
                 }
-            $(this).find("a").attr("class","on");
-        });
-        $("#spare_info").click(function(){
-            
-               f_removeclass();
-                $("#spare_info_div").show();
-                
-                var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=spare", "R");
-                }                
-            $(this).find("a").attr("class","on");
-        });
-        $("#service_info").click(function(){
-            
-                f_removeclass();
-                $("#service_info_div").show();
-                var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/ServiceInfo.do?stkid="+selectedItems[i].item.stkid, "V");
-                }
-                
-            $(this).find("a").attr("class","on");
-        });
-        $("#stock_image").click(function(){
-            
-            if($("#stock_img_td").css("display") == "none"){
-                f_removeclass();
-                $("#stock_img_td").show();
-                
-                
-                var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/selectStockImgList.do?stkid="+selectedItems[i].item.stkid, "I");
-                }
-                
-            }else{
-                
             }
             $(this).find("a").attr("class","on");
         });
         
-         $("#stock_commisssion").click(function(){
+        $("#filter_info").click(function(){
+            f_removeclass();
+            $("#filter_info_div").show();
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            for(i=0; i<selectedItems.length; i++) {
+                f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=filter", "F");
+            }
+            $(this).find("a").attr("class","on");
+        });
+        
+        $("#spare_info").click(function(){
+            f_removeclass();
+            $("#spare_info_div").show();
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            for(i=0; i<selectedItems.length; i++) {
+                f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=spare", "R");
+            }                
+            $(this).find("a").attr("class","on");
+        });
+        
+        $("#service_info").click(function(){
+            f_removeclass();
+            $("#service_info_div").show();
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
+            for(i=0; i<selectedItems.length; i++) {
+                f_view("/stock/ServiceInfo.do?stkid="+selectedItems[i].item.stkid, "V");
+            }
+            $(this).find("a").attr("class","on");
+        });
+        
+        $("#stock_image").click(function(){
+
+            if($("#stock_img_td").css("display") == "none"){
+                f_removeclass();
+                $("#stock_img_td").show();
+
+                var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                for(i=0; i<selectedItems.length; i++) {
+                    f_view("/stock/selectStockImgList.do?stkid="+selectedItems[i].item.stkid, "I");
+                }
+
+            }else{
+
+            }
+            $(this).find("a").attr("class","on");
+        });
+
+        $("#stock_commisssion").click(function(){
             var type;
             f_removeclass();
             $("#stock_commisssion_div").show();
@@ -385,23 +377,22 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
             var stusid = AUIGrid.getCellValue(myGridID, selectedItems[0], "statuscodeid")              
             if(stusid ==1){
-                    $("#stock_comm_edit").show();
-                    type="CE";
+                $("#stock_comm_edit").show();
+                type="CE";
             }else{
                 $("#stock_comm_edit").hide();
-                   type="C";
+                type="C";
             }
-                f_view("/stock/StockCommisionSetting.do?stkid="+stkid, type);
+            f_view("/stock/StockCommisionSetting.do?stkid="+stkid, type);
             $(this).find("a").attr("class","on");
-            
+
         });
-        
-        
-        
+
         $("#search").click(function(){
             $('#subDiv').hide();
             getSampleListAjax();
         });
+
         $("#clear").click(function(){
             doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //청구처 리스트 조회
             doGetCombo('/common/selectCodeList.do', '15', '','cmbType', 'M' , 'f_multiCombo'); //청구처 리스트 조회
@@ -409,8 +400,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $("#stkCd").val('');
             $("#stkNm").val('');
         });
+
         $("#stock_info_edit").click(function(){
-            
+
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#stock_info_edit").text() == "EDIT"){
@@ -419,17 +411,15 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     }else{
                         alert(selectedItems[i].item.name + ' is a state that can not be changed.');
                     }
-                    
                 }else if ($("#stock_info_edit").text() == "SAVE"){
                     f_info_save("/stock/modifyStockInfo.do" , selectedItems[i].item.stkid , "stockInfo" ,"stock_info");
                     //$("#stock_info_edit").text("EDIT");
                 }
             }
-            
         });
-        
+
         $("#price_info_edit").click(function(){
-            
+
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#price_info_edit").text() == "EDIT"){
@@ -438,102 +428,98 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     }else{
                         alert(selectedItems[i].item.name + ' is a state that can not be changed.');
                     }
-                    
                 }else if ($("#price_info_edit").text() == "SAVE"){
                     f_info_save("/stock/modifyPriceInfo.do" , selectedItems[i].item.stkid , "priceForm" ,"price_info");
                     //$("#stock_info_edit").text("EDIT");
                 }
             }
-            
         });
         
+        //
         $("#service_info_edit").click(function(){
-             var selectedItems = AUIGrid.getSelectedItems(myGridID);
-             
-                if($("#service_info_edit").text() == "EDIT"){ 
-                    colShowHide(serviceGrid,"",true);
-                    $("#service_info_edit").text("Add Service Charge") ;
-                }else if ($("#service_info_edit").text() == "Add Service Charge"){
-                    addRowSvr();
-                    fn_srvMembershipList();
-                }else if ($("#service_info_edit").text() == "SAVE"){
+            var selectedItems = AUIGrid.getSelectedItems(myGridID);
 
-                    f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(serviceGrid),"service_info");  
-                }
-            
+            if($("#service_info_edit").text() == "EDIT"){ 
+                colShowHide(serviceGrid,"",true);
+                $("#service_info_edit").text("Add Service Charge") ;
+            }else if ($("#service_info_edit").text() == "Add Service Charge"){
+                addRowSvr();
+                fn_srvMembershipList();
+            }else if ($("#service_info_edit").text() == "SAVE"){
+                f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(serviceGrid),"service_info");  
+            }
+
         });
         
+        //
         $("#filter_info_edit").click(function(){
-        if($("#filter_info_edit").text() == "EDIT"){    
-            colShowHide(filterGrid,"",true);
-            $("#filter_info_edit").text("Add Filter");
-        }else if ($("#filter_info_edit").text() == "Add Filter"){
-            popClear();
-            $("#regFilterWindow").show();
-            var comUrl= "/common/selectCodeList.do";
-            doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
-            //doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
-            
-        }else if($("#filter_info_edit").text() == "SAVE"){
-            var selectedItems = AUIGrid.getSelectedItems(myGridID);
-            
-            
-            f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
-            
-        }
-             
-        
-    });
-        
- 
-    $("#spare_info_edit").click(function() {
-                            if($("#spare_info_edit").text() == "EDIT"){
-                                colShowHide(spareGrid,"",true);
-                                $("#spare_info_edit").text("Add Spare Part");
-                            } else if ($("#spare_info_edit").text() == "Add Spare Part") {
-                                popClear();
-                                $("#regSpareWindow").show();
-                                var comUrl = "/common/selectCodeList.do";
-                                doGetCombo(comUrl, '11', '', 'categoryPop_sp',
-                                        'S', '');
+            if($("#filter_info_edit").text() == "EDIT"){    
+                colShowHide(filterGrid,"",true);
+                $("#filter_info_edit").text("Add Filter");
+            }else if ($("#filter_info_edit").text() == "Add Filter"){
+                popClear();
+                $("#regFilterWindow").show();
+                var comUrl= "/common/selectCodeList.do";
+                doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
+                //doGetCombo(comUrl, '15', '','cmbTypePop', 'A' , ''); //청구처 리스트 조회
 
-                            } else if ($("#spare_info_edit").text() == "SAVE") {
-                                var selectedItems = AUIGrid
-                                        .getSelectedItems(myGridID);
+            }else if($("#filter_info_edit").text() == "SAVE"){
+                var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                f_info_save("/stock/modifyFilterInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(filterGrid),"filter_info");  
+            }
+
+        });
 
 
-                                f_info_save("/stock/modifyFilterInfo.do",
-                                        selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
-                                        "spare_info");
-                            }
+        $("#spare_info_edit").click(function() {
+            if($("#spare_info_edit").text() == "EDIT"){
+                colShowHide(spareGrid,"",true);
+                $("#spare_info_edit").text("Add Spare Part");
+            } else if ($("#spare_info_edit").text() == "Add Spare Part") {
+                popClear();
+                $("#regSpareWindow").show();
+                var comUrl = "/common/selectCodeList.do";
+                doGetCombo(comUrl, '11', '', 'categoryPop_sp','S', '');
 
-                        });
+            } else if ($("#spare_info_edit").text() == "SAVE") {
+                var selectedItems = AUIGrid.getSelectedItems(myGridID);
 
-    $("#stock_comm_edit").click(function(){
-    	var selectedItems = AUIGrid.getSelectedIndex(myGridID);
-        var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
-    	f_info_save("/stock/StockCommisionUpdate.do" , stkid , "commForm" ,"");
-        
-    });
- 
+                f_info_save("/stock/modifyFilterInfo.do",
+                selectedItems[0].item.stkid, GridCommon.getEditData(spareGrid),
+                "spare_info");
+            }
 
-    });
-    $(".numberAmt").keyup(function(e) {
-        //regex = /^[0-9]+(\.[0-9]+)?$/g;
-        regex = /[^.0-9]/gi;
+        });
 
-        v = $(this).val();
-        if (regex.test(v)) {
-            var nn = v.replace(regex, '');
-            $(this).val(v.replace(regex, ''));
-            $(this).focus();
-            return;
-        }
+        $("#stock_comm_edit").click(function(){
+            var selectedItems = AUIGrid.getSelectedIndex(myGridID);
+            var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
+            f_info_save("/stock/StockCommisionUpdate.do" , stkid , "commForm" ,"");
+
+        });
+
+        $(".numberAmt").keyup(function(e) {
+            //regex = /^[0-9]+(\.[0-9]+)?$/g;
+            regex = /[^.0-9]/gi;
+
+            v = $(this).val();
+            if (regex.test(v)) {
+                var nn = v.replace(regex, '');
+                $(this).val(v.replace(regex, ''));
+                $(this).focus();
+                return;
+            }
+        });
+
+        $("#stkCd").keypress(function(event) {
+            if (event.which == '13') {
+                $("#svalue").val($("#stkCd").val());
+                $("#sUrl").val("/logistics/material/materialcdsearch.do");
+                Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
+            }
+        });
     });
     
-    
-
-
     function f_info_save(url, key, v, f) {
         var fdata;
         if (f == "service_info" || f == "filter_info" || f == "spare_info") {
@@ -600,7 +586,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
     function getMainListAjax(_da) {
 
-        var param = $('#listForm').serialize();
+        var param = $('#searchForm').serialize();
         var selcell = 0;
         var selectedItems = AUIGrid.getSelectedItems(myGridID);
         for (i = 0; i < selectedItems.length; i++) {
@@ -695,7 +681,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
         //$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
         f_showModal();
-        var param = $('#listForm').serialize();
+        var param = $('#searchForm').serialize();
 
         $.ajax({
             type : "POST",
@@ -1239,7 +1225,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     </aside><!-- title_line end -->
 
     <section class="search_table"><!-- search_table start -->
-    <form id="listForm" method="post" onsubmit="return false;">    
+    <form id="searchForm" method="post" onsubmit="return false;">
+        <input type="hidden" id="svalue" name="svalue"/>
+        <input type="hidden" id="sUrl"   name="sUrl"  />    
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>

@@ -21,6 +21,7 @@
 		       ITM_NAME  itemname,
 		       ITM_CODE  itemcode,
 		       CTGRY_ID  cateid,
+		       STUS_CODE_ID statid,
 		       DBMS_LOB.SUBSTR (ITM_DESC, 4000)  description,
 			   (SELECT code_name
 				  FROM SYS0013M
@@ -38,6 +39,7 @@
 		     , STK_DESC itemname
 		     , STK_CTGRY_ID cateid
 		     , STK_TYPE_ID typeid
+		     , STUS_CODE_ID stateid
 		     ,(SELECT CODE_NAME
 		          FROM SYS0013M
 		         WHERE CODE_ID = SYS0026M.STK_CTGRY_ID)
@@ -65,6 +67,24 @@
        </if>
        <if test="typeid != null and typeid !=''">
             and typeid =  #{typeid}
+       </if>
+       <if test="catelist != null and catelist != ''">
+            AND cateid in 
+            <foreach item="item" collection="catelist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="typelist != null and typelist != ''">
+            AND typeid in 
+            <foreach item="item" collection="typelist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="statlist != null and statlist != ''">
+            AND stateid in 
+            <foreach item="item" collection="statlist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
        </if>
 	</select>
 	

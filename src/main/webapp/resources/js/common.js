@@ -436,7 +436,7 @@ var Common = {
         _input.id   = "isgubun";
         _input.name = "isgubun";
         _input.value = gubun;
-        _input.style.display = 'block';
+        _input.style.display = 'none';
         
         frm.appendChild(_input);
 

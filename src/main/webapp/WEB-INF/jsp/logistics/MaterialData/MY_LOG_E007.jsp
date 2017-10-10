@@ -513,6 +513,11 @@
         }
         return true;
     }
+    function fn_itempopList(data){
+    	doGetCombo('/common/selectCodeList.do', '63', data[0].item.cateid ,'spgroup', 'A' , '');
+    	$("#svalue").val(data[0].item.itemcode);
+        $("#sname").text(data[0].item.itemname);
+    }
     
     function fn_itempop(cd , nm , ct , tp){
     	doGetCombo('/common/selectCodeList.do', '63', ct ,'spgroup', 'A' , '');

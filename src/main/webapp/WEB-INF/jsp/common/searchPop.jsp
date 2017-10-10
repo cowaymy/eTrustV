@@ -32,6 +32,7 @@
 var myGridID;
 
 var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 15, usePaging : true, useGroupingPanel : false };
+var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "8","codeName": "Inactive"}];
 
 $(document).ready(function(){
 	var surl = "${url.sUrl }";
@@ -40,18 +41,34 @@ $(document).ready(function(){
     console.log("${url}")
     if (gb == "item"){
         col  = itemLayout;
+        $("#material").hide();
+//         doGetCombo('/common/selectCodeList.do', '63', '','cmbCategory', 'M' , 'f_multiCombo'); //청구처 리스트 조회
+//         doGetCombo('/common/selectCodeList.do', '141', '','cmbType', 'M' , 'f_multiCombo'); //청구처 리스트 조회
+//         doDefCombo(comboData, '','cmbStatus', 'M', 'f_multiCombo');
+        
     }else if(gb == "stock"){
         col  = stockLayout;
+        $("#material").show();
+        doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //청구처 리스트 조회
+        doGetCombo('/common/selectCodeList.do', '15', '','cmbType', 'M' , 'f_multiCombo'); //청구처 리스트 조회
+        doDefCombo(comboData, '','cmbStatus', 'M', 'f_multiCombo');
     }else if(gb == "stocklist"){
     	gridoptions = {showRowCheckColumn : true, selectionMode : "multipleCells", showStateColumn : false , editable : false, pageRowCount : 15, usePaging : true, useGroupingPanel : false };
         col  = stockLayout;
+        $("#material").show();
+        doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //청구처 리스트 조회
+        doGetCombo('/common/selectCodeList.do', '15', '','cmbType', 'M' , 'f_multiCombo'); //청구처 리스트 조회
+        doDefCombo(comboData, '','cmbStatus', 'M', 'f_multiCombo');
     }else if(gb == "location"){ 
     	$("#srchCdTh").text("Search WH_Code");
     	$("#srchNmTh").text("Search WH_Description");
     	col= locLayout;
+    	
+    	$("#material").hide();
     }else{
         gb="item";
         col  = itemLayout;
+        $("#material").hide();
     }
     $("#gubun").val(gb);
     $("#scode").val("${url.svalue }");
@@ -62,25 +79,27 @@ $(document).ready(function(){
     //fn_getSampleListAjax();
     
     // 셀 더블클릭 이벤트 바인딩
-    if(gb == "location" || gb == "stock" ){
+//     if(gb == "location" || gb == "stock" ){
+	if (gb != "stocklist"){
     	AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
-    	        {
-    	       var selectedItems = AUIGrid.getSelectedItems(myGridID);
-    	        opener.fn_itempopList(selectedItems);
-    	            self.close();
-    	        });
+ 	   {
+ 	       var selectedItems = AUIGrid.getSelectedItems(myGridID);
+ 	       opener.fn_itempopList(selectedItems);
+ 	       self.close();
+ 	   });
         
-    } else {
-    	if (gb != "stocklist"){
-	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
-	    {
+    } 
+// 	else {
+//     	if (gb != "stocklist"){
+// 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+// 	    {
 	    	
-	    	opener.fn_itempop(AUIGrid.getCellValue(myGridID , event.rowIndex , "itemcode") , AUIGrid.getCellValue(myGridID , event.rowIndex , "itemname") , 
-	                          AUIGrid.getCellValue(myGridID , event.rowIndex , "cateid") , AUIGrid.getCellValue(myGridID , event.rowIndex , "typeid"));
-	    	self.close();
-	    });
-	    	}
-    }
+// 	    	opener.fn_itempop(AUIGrid.getCellValue(myGridID , event.rowIndex , "itemcode") , AUIGrid.getCellValue(myGridID , event.rowIndex , "itemname") , 
+// 	                          AUIGrid.getCellValue(myGridID , event.rowIndex , "cateid") , AUIGrid.getCellValue(myGridID , event.rowIndex , "typeid"));
+// 	    	self.close();
+// 	    });
+// 	    	}
+//     }
 });
 
 $(function(){
@@ -150,19 +169,43 @@ var locLayout = [
 function fn_SearchList(url) {
    // f_showModal();
     var param = $('#searchForm').serializeJSON();
-    
+    console.log(param);
     Common.ajax("POST" , url , param , function(data){
-    	console.log(data.data);
+    	
     	AUIGrid.setGridData(myGridID, data.data);
     });
 }
+
+function f_multiCombo() {
+    $(function() {
+        $('#cmbCategory').change(function() {
+
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        });
+        $('#cmbType').change(function() {
+
+        }).multipleSelect({
+            selectAll : true,
+            width : '80%'
+        });
+        $('#cmbStatus').change(function() {
+
+        }).multipleSelect({
+            selectAll : true,
+            width : '80%'
+        });
+    });
+}
+
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Training</li>
-    <li>Course</li>
+    <li>Search</li>
+    <li>Popup</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -181,20 +224,36 @@ function fn_SearchList(url) {
 <colgroup>
     <col style="width:120px" />
     <col style="width:*" />    
-    <col style="width:140px" />
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
     <col style="width:*" />    
 </colgroup>
 <tbody>
-<tr>
-    <th scope="row" id="srchCdTh">Search Code</th>
-    <td>
-    <input type="text" id="scode" name="scode" placeholder="Search Code" class="w100p" />
-    </td>
-    <th scope="row" id="srchNmTh">Search Name</th>
-    <td>
-    <input type="text" id="sname" name="sname" placeholder="Search Name" class="w100p" />
-    </td>
-</tr>
+	<tr>
+	    <th scope="row" id="srchCdTh">Search Code</th>
+	    <td>
+	    <input type="text" id="scode" name="scode" placeholder="Search Code" class="w100p" />
+	    </td>
+	    <th scope="row" id="srchNmTh">Search Name</th>
+	    <td colspan="3">
+	    <input type="text" id="sname" name="sname" placeholder="Search Name" class="w100p" />
+	    </td>
+	</tr>
+	<tr id="material">
+       <th scope="row">Category</th>
+       <td>
+           <select class="w100p" id="cmbCategory" name="cmbCategory[]"></select>
+       </td>
+       <th scope="row">Type</th>
+       <td>
+           <select class="w100p" id="cmbType" name="cmbType[]"></select>
+       </td>
+       <th scope="row">Status</th>
+       <td>
+           <select class="w100p" id="cmbStatus" name="cmbStatus[]"></select>
+       </td>
+   </tr>
 </tbody>
 </table><!-- table end -->
 </form>

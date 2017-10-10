@@ -69,6 +69,38 @@ public class MstDataController {
 	@RequestMapping(value = "/materialcdsearch.do" , method = RequestMethod.POST)
 	public ResponseEntity<Map> selectMaterialCodeList(@RequestBody Map<String, Object> params, Model model) throws Exception {
 		
+		if (params.get("cmbCategory") != null ){
+    		List<String> list = (List)params.get("cmbCategory");
+    		if (!list.isEmpty()){
+    			String[] cate = new String[list.size()];
+    			for (int i = 0 ; i < list.size(); i++){
+        			cate[i] = list.get(i);
+        		}
+        		params.put("catelist" , cate);
+    		}
+		}
+		
+		if (params.get("cmbType") != null ){
+    		List<String> list = (List)params.get("cmbType");
+    		if (!list.isEmpty()){
+    			String[] type = new String[list.size()];
+    			for (int i = 0 ; i < list.size(); i++){
+        			type[i] = list.get(i);
+        		}
+        		params.put("typelist" , type);
+    		}
+		}
+		
+		if (params.get("cmbStatus") != null ){
+    		List<String> list = (List)params.get("cmbStatus");
+    		if (!list.isEmpty()){
+    			String[] stat = new String[list.size()];
+    			for (int i = 0 ; i < list.size(); i++){
+    				stat[i] = list.get(i);
+        		}
+        		params.put("statlist" , stat);
+    		}
+		}
 		
 		List<EgovMap> codeList = mst.selectStockMstList(params);
 
