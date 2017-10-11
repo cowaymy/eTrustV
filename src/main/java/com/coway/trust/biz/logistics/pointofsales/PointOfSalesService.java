@@ -17,8 +17,6 @@ public interface PointOfSalesService {
 	
 	String insertPosInfo(Map<String, Object> params);
 	
-	void  insertSerial(Map<String, Object> params);
-	
 	void  insertGiInfo(Map<String, Object> params);
 	
 	Map<String, Object> PosDataDetail(String param);
