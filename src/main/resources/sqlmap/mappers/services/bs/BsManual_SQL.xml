@@ -60,7 +60,7 @@
   
            <select id="getCdList_1" parameterType="Map" resultType="egovMap">
           
-                select b.mem_code as CODY_ID 
+<!--                 select b.mem_code as CODY_ID 
                         ,B.MEM_ID  AS MEM_ID
                         ,b.name as CODY_NAME
                         ,b.STUS,EXTENT2.CODE
@@ -72,8 +72,26 @@
                 and b.MEM_TYPE = 2
                 and b.stus = '1' 
                 and b.BRNCH = #{BrnchCdList}
-                order by b.mem_code
+                order by b.mem_code -->
                                               
+                                              
+                                              
+                                              
+	                select DISTINCT  b.mem_id 
+	                        ,d.mem_code AS CODY_ID
+	                        ,d.name AS CODY_NAME
+	                        ,d.STUS
+					from SYS0005M a
+					        ,org0005d b
+					        ,SYS0064M c
+					        ,ORG0001D D
+					        ,SYS0038M EXTENT2
+					where a.BRNCH_ID = b.BRNCH_ID
+					and c.CODY_MANGR_USER_ID = b.dept_code
+					and b.mem_id = d.MEM_ID
+					AND d.STUS = EXTENT2.STUS_CODE_ID 
+					AND d.MEM_TYPE = 2
+					and  a.code = #{BrnchCdList}                
           </select>
        
   
@@ -106,19 +124,27 @@
                                          ,HSM.CODY_ID
                                          ,HSM.STUS_CODE_ID STUS_CODE_ID
                                          ,EXTENT2.CODE CODE
-                                         ,SOM.BRNCH_ID  AS BRNCH_ID
+                                         ,sys064.CODY_BRNCH_CODE AS BRNCH_ID
+                                         ,SAL023.area_id,
+                                           sys064.area_id,
+                                           sys064.CODY_BRNCH_CODE,
+                                           sys064.CODY_MANGR_USER_ID
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
                                         ,SYS0013M CORPTYPE 
                                         ,SAL0002D SOD
                                         ,SVC0008D HSM
                                         ,SYS0038M EXTENT2
+                                        ,sal0023d sal023
+                                        ,SYS0064M sys064
                                 WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
                                 AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID 
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+                                and som.cust_id = sal023.cust_id
+                                and sal023.area_id = sys064.area_id
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>   
 			                 <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
 		                              AND  hsm.YEAR(+) = #{myBSYear} 
@@ -960,17 +986,29 @@
 			        </select>
 			        
 			        
-<!--                   <select id="cmbServiceMemList" parameterType="Map" resultType="egovMap">
-                                SELECT Extent1.MEM_ID MEM_ID  ,
-                                          Extent1.MEM_CODE MEM_CODE  ,
-                                          Extent1.NAME NAME  
-                                     FROM ORG0001D Extent1
-                                    WHERE   Extent1.MEM_TYPE IN ( 2,3 )
-                                        AND  1 = Extent1.STUS 
-                                     ORDER BY Extent1.MEM_CODE ASC
-                    </select> -->
+
+                
+                   <select id="failReasonList" parameterType="Map" resultType="egovMap">
+							SELECT Extent1.RESN_ID AS CODE_ID,
+							           Extent1.CODE  || '-' || Extent1.RESN_DESC AS CODE_NAME  
+							  FROM SYS0032M Extent1
+							 WHERE  ( 167 = Extent1.RESN_TYPE_ID )
+							          AND ( 1 = Extent1.STUS_CODE_ID )
+							  ORDER BY Extent1.CODE ASC
+                    </select>
                     
                     
+               
+                    <select id="serMemList" parameterType="Map" resultType="egovMap">
+		                    SELECT Extent1.MEM_ID CODE_ID  ,
+								       Extent1.MEM_CODE   || '-' ||  Extent1.NAME as CODE_NAME,  
+								       Extent1.MEM_CODE MEM_CODE  ,
+								       Extent1.NAME NAME  
+								  FROM ORG0001D Extent1
+								 WHERE   Extent1.MEM_TYPE IN ( 2,3 ) 
+								          AND  Extent1.STUS = 1
+								  ORDER BY Extent1.MEM_CODE ASC
+				    </select>		  
         
         
                     <select id="selectSrvConfiguration" parameterType="Map" resultType="egovMap">

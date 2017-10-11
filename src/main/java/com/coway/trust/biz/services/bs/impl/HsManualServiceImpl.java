@@ -285,12 +285,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	
 	@Override
 	@Transactional
-	public boolean addIHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
-		if(sessionVO != null){
-			boolean success = SaveResult(true,params,docType,sessionVO);
-		}
+	public Map<String, Object> addIHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
 		
-		return true;
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		
+			resultValue = SaveResult(true,params,docType,sessionVO);
+		
+		return resultValue;
 	}
 	
 	
@@ -313,7 +314,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	}
 	
 	
-	private boolean SaveResult(boolean isfreepromo,Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException{
+	private Map<String, Object> SaveResult(boolean isfreepromo,Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException{
 		
 		int schdulId =  Integer.parseInt(params.get("hidschdulId").toString());
 		String docNo= commonMapper.selectDocNo("11");
@@ -471,8 +472,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		
 		
 		
-
-		return true;
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		resultValue.put("resultId", nextSeq);
+		return resultValue;
 	}
 	
 	
@@ -548,6 +550,21 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public EgovMap selectHsViewBasicInfo(Map<String, Object> params) {
 
 		return hsManualMapper.selectHsViewBasicInfo(params);
+	}
+
+
+
+	@Override
+	public List<EgovMap> failReasonList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.failReasonList(params);
+	}
+
+
+
+	@Override
+	public List<EgovMap> serMemList(Map<String, Object> params) {
+		return hsManualMapper.serMemList(params);
 	}
 	
 	

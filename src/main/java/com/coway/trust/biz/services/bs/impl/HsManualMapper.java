@@ -66,6 +66,10 @@ public interface HsManualMapper {
 	EgovMap selectHsViewBasicInfo(Map<String, Object> params);
 
 	void updateHsSrvConfigM(EgovMap params);
+
+	List<EgovMap> failReasonList(Map<String, Object> params);
+
+	List<EgovMap> serMemList(Map<String, Object> params);
 	
 
 

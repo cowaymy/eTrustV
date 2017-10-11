@@ -185,17 +185,20 @@ public class HsManualController {
 		Boolean success = false;
 		String msg = "";
 		
+		
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
 
+		Map<String, Object> resultValue = new HashMap<String, Object>();
 		ReturnMessage message = new ReturnMessage();
 		success = hsManualService.insertHsResult(formMap, updList);
 		
+
 		if(success){
-			message.setMessage("저장성공");
+			message.setMessage("Complete to Add a HS Result.  " );
 		}else{
 			message.setMessage("저장실패");
 		}
@@ -216,6 +219,9 @@ public class HsManualController {
 		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
 		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
+		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
+		List<EgovMap>  serMemList = hsManualService.serMemList(params);
+
 		
 		logger.debug(" params : " , params);
 		logger.debug("hsDefaultInfo : {}", hsDefaultInfo);
@@ -223,8 +229,11 @@ public class HsManualController {
 		model.addAttribute("hsDefaultInfo", hsDefaultInfo);
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
-		
 		model.addAttribute("orderDetail", orderDetail);
+		model.addAttribute("failReasonList", cmbCollectTypeComboList);
+		model.addAttribute("serMemList", serMemList);
+
+		
 		
 		return "services/bs/hsDetailPop";
 		
@@ -294,19 +303,16 @@ public class HsManualController {
 		logger.debug("params : {}", params);
 		
 		boolean success = false;
+		Map<String, Object> resultValue = new HashMap<String, Object>();
 		
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 		
-		success = hsManualService.addIHsResult(formMap, updList, sessionVO);
+		resultValue = hsManualService.addIHsResult(formMap, updList, sessionVO);
 
-		if(success){
-			message.setMessage("저장성공");
-		}else{
-			message.setMessage("저장실패");
-		}
+		message.setMessage("Complete to Add a HS Result : " + resultValue.get("resultId") );
 		
 		return ResponseEntity.ok(message);
 	}
