@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.budget.impl.BudgetMapper">
+<!--                  ,(select user_name from SYS0047M where user_id = CRT_USER_ID)   -->
+ <select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap">
+		        SELECT  BUDGET_PLAN_YEAR
+               ,COST_CENTR              
+               ,(SELECT B.COST_CENTER_TEXT FROM FCM0008M B WHERE B.COST_CENTER = A.COST_CENTR) COST_CENTER_TEXT
+               ,GL_ACC_CODE
+               ,(SELECT B.GL_ACC_DESC FROM FCM0009M B WHERE B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC
+               ,BUDGET_CODE
+               ,(SELECT B.BUDGET_CODE_TEXT FROM FCM0010M B WHERE B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT
+               ,M1, M2, M3, M4, M5, M6
+               ,M7, M8, M9, M10, M11, M12 
+      FROM (
+            SELECT BUDGET_PLAN_YEAR
+                       ,COST_CENTR
+                       ,GL_ACC_CODE
+                       ,BUDGET_CODE
+                       ,NVL(M1,0) M1, NVL(M2,0) M2, NVL(M3,0)M3, NVL(M4,0)M4, NVL(M5,0)M5, NVL(M6,0)M6
+                       ,NVL(M7,0) M7, NVL(M8,0) M8, NVL(M9,0) M9, NVL(M10,0) M10, NVL(M11,0) M11, NVL(M12,0) M12
+              FROM FCM0101M  
+              PIVOT (MAX(CASE WHEN '0'=#{budgetPlan} THEN PLAN_AMT +  CHNG_AMT  WHEN '1'=#{budgetPlan} THEN PLAN_AMT ELSE 0 END) 
+                FOR BUDGET_PLAN_MONTH IN ( '1' AS M1, '2' AS M2, '3' AS M3, '4' AS M4, '5' AS M5, '6' AS M6
+                                                              ,'7' AS M7, '8' AS M8, '9' AS M9, '10' AS M10, '11' AS M11, '12' AS M12)
+                        )
+                ) A
+         WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear} 
+          <if test="stCostCentr != null and stCostCentr != ''">
+           AND COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
+        </if>  
+          <if test="stGlAccCode != null and stGlAccCode != ''">
+           AND GL_ACC_CODE BETWEEN #{stGlAccCode} AND #{edGlAccCode}
+        </if>  
+          <if test="stBudgetCode != null and stBudgetCode != ''">
+           AND BUDGET_CODE BETWEEN #{stBudgetCode} AND #{edBudgetCode}
+        </if>  
+         ORDER BY COST_CENTR
+  </select>
+  
+<!--   <select id="selectMaxExpType" parameterType="Map" resultType="String">
+     SELECT #{clmType} || NVL(TO_CHAR(MAX(REPLACE(EXP_TYPE, #{clmType}, '')) + 1, 'FM000'), '001') EXP_TYPE 
+      FROM FCM0001M
+    WHERE CLM_TYPE = #{clmType}  
+  </select>
+  
+  <insert id="insertExpenseInfo" parameterType="Map">
+
+   INSERT INTO FCM0001M
+   (
+        CLM_TYPE
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmType}
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+    </insert>
+
+  <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
+		SELECT BUDGET_CODE    
+		        ,TO_CHAR(START_DT, 'yyyy-mm-dd')   START_DT  
+		        ,TO_CHAR(END_DT, 'yyyy-mm-dd')         END_DT
+		        ,BUDGET_CODE_TEXT
+		        ,CRT_USER_ID
+		        ,CRT_DT
+		        ,UPD_USER_ID
+		        ,UPD_DT
+		 FROM FCM0010M
+		 WHERE 1=1
+        <![CDATA[ 
+		     AND START_DT <= SYSDATE
+		     AND END_DT  >= SYSDATE
+        ]]>
+        <if test="budgetCode != null and budgetCode != ''">
+	       AND BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
+        </if>  
+        <if test="budgetCodeText != null and budgetCodeText != ''">
+           AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
+        </if>
+  </select>
+  
+  <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
+	  SELECT GL_ACC_CODE
+	            ,GL_ACC_DESC
+	            ,GL_ACC_CRT_DT
+	            ,CRT_USER_ID
+	            ,CRT_DT
+	            ,UPD_USER_ID
+	            ,UPD_DT
+	    FROM FCM0009M
+		 WHERE 1=1
+        <if test="glAccCode != null and glAccCode != ''">
+	       AND GL_ACC_COD LIKE '%'|| #{glAccCode} || '%'
+        </if>  
+        <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
+           AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
+        </if>
+  </select>
+  
+  <update id="updateExpenseInfo" parameterType="Map">
+   UPDATE FCM0001M
+      SET  
+      <if test ="disabFlag != nul and disabFlag !=''">
+            ,DISAB_FLAG = #{disabFlag}            
+            ,DISAB_USER_ID   = #{userId}
+            ,DISAB_DT        = SYSDATE
+      </if>
+      <if test ="disabFlag == nul || disabFlag ==''">
+             GL_ACC_CODE = #{glAccCode}
+            ,GL_ACC_CODE_NAME = #{glAccCodeName}
+            ,BUDGET_CODE = #{budgetCode}
+            ,BUDGET_CODE_NAME = #{budgetCodeName}
+    </if>    
+            ,UPD_USER_ID   = #{userId}
+            ,UPD_DT        = SYSDATE
+    WHERE  CLM_TYPE     = #{clmType}
+      AND  EXP_TYPE       = #{expType}
+</update>
+ -->
+</mapper>
