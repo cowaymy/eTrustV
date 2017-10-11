@@ -77,10 +77,10 @@ public class ASManagementListController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/initASReceiveEntry.do")
+	@RequestMapping(value = "/ASReceiveEntryPop.do")
 	public String initASReceiveEntry(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
-		return "services/as/ASReceiveEntry";
+		return "services/as/ASReceiveEntryPop";
 	}
 	
 	/**
@@ -118,4 +118,19 @@ public class ASManagementListController {
 		// 호출될 화면
 		return ResponseEntity.ok(message);
 	}
+	
+	/**
+	 * Services - AS  - ASReceiveEntry 메인화면
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ASNewResultPop.do")
+	public String insertASResult(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/as/newASResultPop";
+	}
+	
 }
