@@ -74,9 +74,11 @@ $(document).ready(function () {
 });
 
 function fn_supplierSearchPop() {
-	var value = $("#supplier").val();
-	var object = {value:value};
-	Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+    var object = {
+            accGrp : "VM01",
+            accGrpName : "Coway_Suppliers_Local"
+    };
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", object, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
@@ -103,6 +105,16 @@ function fn_selectWebInvoiceList() {
         AUIGrid.setGridData(webInvoiceGridID, result);
     });
 }
+
+function fn_setCostCenter() {
+    $("#costCenter").val($("#search_costCentr").val());
+    $("#costCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setSupplier() {
+    $("#memAccId").val($("#search_memAccId").val());
+    $("#memAccName").val($("#search_memAccName").val());
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -121,6 +133,8 @@ function fn_selectWebInvoiceList() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_webInvoice">
+<input type="hidden" id="memAccId" name="memAccId">
+<input type="hidden" id="costCenter" name="costCenter">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -133,9 +147,9 @@ function fn_selectWebInvoiceList() {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="webInvoice.supplier" /></th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="memAccId" name="memAccId"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="memAccName" name="memAccName"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="costCenter" name="costCenter"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="costCenterText" name="costCenterText"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>

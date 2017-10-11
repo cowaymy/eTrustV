@@ -240,9 +240,11 @@ function fn_getTotalAmount() {
 }
 
 function fn_supplierSearchPop() {
-    var value = $("#supplier").val();
-    var object = {value:value};
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", null, null, true, "supplierSearchPop");
+	var object = {
+            accGrp : "VM01",
+            accGrpName : "Coway_Suppliers_Local"
+    };
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", object, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
@@ -342,12 +344,28 @@ function fn_saveGridInfo() {
     
     Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(myGridID), function(result) {
         console.log(result);
+        Common.alert("Temporary save succeeded.");
+        //fn_SelectMenuListAjax() ;
     });
 }
 
 function fn_setGridData(data) {
 	console.log(data);
 	AUIGrid.setGridData(myGridID, data);
+}
+
+function fn_setCostCenter() {
+    $("#newCostCenter").val($("#search_costCentr").val());
+    $("#newCostCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setSupplier() {
+    $("#newMemAccId").val($("#search_memAccId").val());
+    $("#newMemAccName").val($("#search_memAccName").val());
+    $("#gstRgistNo").val($("#search_gstRgistNo").val());
+    $("#bankCode").val($("#search_bankCode").val());
+    $("#bankName").val($("#search_bankName").val());
+    $("#bankAccNo").val($("#search_bankAccNo").val());
 }
 
 </script>
@@ -372,6 +390,7 @@ function fn_setGridData(data) {
 <form action="#" method="post" id="">
 <input type="hidden" id="clmNo" name="clmNo" value="${webInvoiceInfo.clmNo}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${webInvoiceInfo.atchFileGrpId}">
+<input type="hidden" id="newMemAccId" name="memAccId" value="${webInvoiceInfo.memAccId}">
 <input type="hidden" id="newCostCenter" name="costCentr" value="${webInvoiceInfo.costCentr}">
 <input type="hidden" id="bankCode" name="bankCode" value="${webInvoiceInfo.bankCode}">
 <input type="hidden" id="totAmt" name="totAmt" value="${webInvoiceInfo.totAmt}">
@@ -399,7 +418,7 @@ function fn_setGridData(data) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" value="${webInvoiceInfo.memAccId}"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
 	<select class="w100p">

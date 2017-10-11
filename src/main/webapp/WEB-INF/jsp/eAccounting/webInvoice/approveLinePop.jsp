@@ -4,10 +4,10 @@
 <script type="text/javascript">
 var approveLineColumnLayout = [ {
     dataField : "approveNo",
-    headerText : "Approve No"
+    headerText : '<spring:message code="approveLine.approveNo" />'
 }, {
     dataField : "userId",
-    headerText : "User ID",
+    headerText : '<spring:message code="approveLine.userId" />',
     renderer : {
         type : "IconRenderer",
         iconTableRef :  {
@@ -23,10 +23,21 @@ var approveLineColumnLayout = [ {
 
 }, {
     dataField : "name",
-    headerText : "Name"
+    headerText : '<spring:message code="approveLine.name" />'
 }, {
     dataField : "addition",
-    headerText : "Addition"
+    headerText : '<spring:message code="approveLine.addition" />',
+    renderer : {
+        type : "IconRenderer",
+        iconTableRef :  {
+            "default" : "${pageContext.request.contextPath}/resources/images/common/btn_plus.gif"// default
+        },         
+        iconWidth : 12,
+        iconHeight : 12,
+        onclick : function(rowIndex, columnIndex, value, item) {
+        	fn_addRow();
+            }
+        }
 }
 ];
 
@@ -43,20 +54,7 @@ var approveLineGridID;
 $(document).ready(function () {
     approveLineGridID = AUIGrid.create("#approveLine_grid_wrap", approveLineColumnLayout, approveLineGridPros);
     
-    AUIGrid.bind(approveLineGridID, "cellDoubleClick", function( event ) {
-        console.log(event.item);
-        
-        if($("#newSupplier").length > 0) {
-            $("#newSupplier").val(event.item.memAccId);
-            $("#gstRegistrationNo").val(event.item.memAccId)
-            $("#bank").val(event.item.bankName)
-            $("#bankAccount").val(event.item.bankAccNo)
-        } else {
-            $("#supplier").val(event.item.memAccId);
-        }
-        
-        $("#supplierSearchPop").remove();
-  });
+    $("#submit").click(fn_approveLineSubmit);
     
     fn_addRow();
 });
@@ -77,12 +75,26 @@ function fn_selectApproveLine() {
         AUIGrid.setGridData(approveLineGridID, result);
     });
 }
+
+function fn_approveLineSubmit() {
+	//var data = AUIGrid.exportToObject(approveLineGridID);
+    var gridData = GridCommon.getEditData(approveLineGridID);
+    
+    console.log(gridData);
+    
+    /* Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(myGridID), function(result) {
+        console.log(result);
+        Common.alert("Temporary save succeeded.");
+        //fn_SelectMenuListAjax() ;
+
+    }); */
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap size_mid2"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Approve Line</h1>
+<h1><spring:message code="approveLine.title" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
@@ -94,7 +106,7 @@ function fn_selectApproveLine() {
 
 <ul class="right_btns">
 	<!--li><p class="btn_grid"><a href="#">Add</a></p></li-->
-	<li><p class="btn_grid"><a href="#">Delete</a></p></li>
+	<li><p class="btn_grid"><a href="#"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="approveLine_grid_wrap"><!-- grid_wrap start -->

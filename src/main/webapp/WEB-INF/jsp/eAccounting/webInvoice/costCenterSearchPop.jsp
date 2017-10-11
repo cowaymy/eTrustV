@@ -25,6 +25,8 @@ $(document).ready(function () {
 	costCenterGridID = AUIGrid.create("#costCenter_grid_wrap", costCenterColumnLayout, costCenterGridPros);
 	
 	AUIGrid.bind(costCenterGridID, "cellDoubleClick", function( event ) {
+		$("#search_costCentr").val(event.item.costCenter);
+		$("#search_costCentrName").val(event.item.costCenterText);
 		
         fn_setCostCenter();
         

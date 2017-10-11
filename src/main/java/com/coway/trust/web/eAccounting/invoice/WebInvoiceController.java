@@ -79,7 +79,11 @@ public class WebInvoiceController {
 	}
 
 	@RequestMapping(value = "/supplierSearchPop.do")
-	public String supplierSearchPop(ModelMap model) {
+	public String supplierSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("params", params);
 		return "eAccounting/webInvoice/memberAccountSearchPop";
 	}
 	
@@ -90,6 +94,9 @@ public class WebInvoiceController {
 	
 	@RequestMapping(value = "/expenseTypeSearchPop.do")
 	public String expenseTypeSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
 		model.addAttribute("rowIndex", params.get("rowIndex"));
 		
 		return "eAccounting/webInvoice/expenseTypeSearchPop";
@@ -107,6 +114,9 @@ public class WebInvoiceController {
 	
 	@RequestMapping(value = "/viewEditWebInvoicePop.do")
 	public String viewEditWebInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
 		List<EgovMap> taxCodeList = webInvoiceService.selectTaxCodeWebInvoiceFlag();
 		String clmNo = (String)params.get("clmNo");
 		EgovMap webInvoiceInfo = webInvoiceService.selectWebInvoiceInfo(clmNo);
@@ -136,6 +146,9 @@ public class WebInvoiceController {
 	
 	@RequestMapping(value = "/selectCostCenter.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectcostCenter(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
 		List<EgovMap> list = webInvoiceService.selectCostCenter(params);
 		
 		return ResponseEntity.ok(list);
@@ -143,13 +156,30 @@ public class WebInvoiceController {
 	
 	@RequestMapping(value = "/selectWebInvoiceList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectWebInvoiceList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
 		List<EgovMap> list = webInvoiceService.selectWebInvoiceList(params);
 		
 		return ResponseEntity.ok(list);
 	}
 	
+	@RequestMapping(value = "/getAttachmentInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> getAttachmentInfo(@RequestBody Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		Map<String, Object> fileInfo = webInvoiceService.selectAttachmentInfo(params);
+//		fileInfo.put("fileViewPath", fileViewPath);
+		
+		return ResponseEntity.ok(fileInfo);
+	}
+	
 	@RequestMapping(value = "/attachmentUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> sampleUploadCommon(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		
+		LOGGER.debug("params =====================================>>  " + params);
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
 				"eAccounting" + File.separator + "webInvoice", AppConstants.UPLOAD_MAX_FILE_SIZE);
@@ -159,42 +189,31 @@ public class WebInvoiceController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		//fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
+		fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
 		
 		params.put("attachment", list);
 		
 		return ResponseEntity.ok(params);
 	}
 	
-	@RequestMapping(value = "/getAttachmentInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> getAttachmentInfo(@RequestBody Map<String, Object> params, ModelMap model) {
-		Map<String, Object> fileInfo = webInvoiceService.selectAttachmentInfo(params);
-//		fileInfo.put("fileViewPath", fileViewPath);
-		
-		return ResponseEntity.ok(fileInfo);
-	}
-	
 	@RequestMapping(value = "/insertWebInvoiceInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertWebInvoiceInfo(@RequestBody Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
 		
 		String clmNo = webInvoiceService.selectNextClmNo();
 		params.put("clmNo", clmNo);
 		
-		//webInvoiceService.insertWebInvoiceInfo(params);
-		
-		return ResponseEntity.ok(params);
-	}
-	
-	@RequestMapping(value = "/updateWebInvoiceInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> updateWebInvoiceInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		params.put("userId", sessionVO.getUserId());
-		//webInvoiceService.updateWebInvoiceInfo(params);
+		webInvoiceService.insertWebInvoiceInfo(params);
 		
 		return ResponseEntity.ok(params);
 	}
 	
 	@RequestMapping(value = "/saveGridInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveGridInfo(@RequestBody Map<String, ArrayList<Object>> params, @RequestParam Map<String, Object> queryString, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		LOGGER.debug("queryString =====================================>>  " + queryString);
 		
 		String clmNo = (String) queryString.get("clmNo");
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // 추가 리스트 얻기
@@ -210,7 +229,7 @@ public class WebInvoiceController {
 				int clmSeq = webInvoiceService.selectNextClmSeq();
 				hm.put("clmSeq", clmSeq);
 				hm.put("userId", sessionVO.getUserId());
-				//webInvoiceService.insertWebInvoiceDetail(hm);
+				webInvoiceService.insertWebInvoiceDetail(hm);
 			}
 		}
 		if (updateList.size() > 0) {
@@ -221,11 +240,11 @@ public class WebInvoiceController {
 				Map<String, Object> test = (Map<String, Object>) obj;
 				test.put("clmNo", clmNo);
 				test.put("userId", sessionVO.getUserId());
-				System.out.println("====================== update 시작 =====================");
+				LOGGER.debug("====================== update 시작 =====================");
 				for(String key : test.keySet()) {
-					System.out.println("key : " + key + "=============> value : " + test.get(key));
+					LOGGER.debug("key : " + key + "=============> value : " + test.get(key));
 				}
-				System.out.println("====================== update 종료 =====================");
+				LOGGER.debug("====================== update 종료 =====================");
 							
 			});
 			
@@ -244,11 +263,11 @@ public class WebInvoiceController {
 				Map<String, Object> test = (Map<String, Object>) obj;
 				test.put("clmNo", clmNo);
 				test.put("userId", sessionVO.getUserId());
-				System.out.println("====================== remove 시작 =====================");
+				LOGGER.debug("====================== remove 시작 =====================");
 				for(String key : test.keySet()) {
-					System.out.println("key : " + key + "=============> value : " + test.get(key));
+					LOGGER.debug("key : " + key + "=============> value : " + test.get(key));
 				}
-				System.out.println("====================== remove 종료 =====================");
+				LOGGER.debug("====================== remove 종료 =====================");
 							
 			});
 			
@@ -263,12 +282,23 @@ public class WebInvoiceController {
 		LOGGER.info("추가 : {}", addList.toString());
 		LOGGER.info("수정 : {}", updateList.toString());
 		LOGGER.info("삭제 : {}", removeList.toString());
-					
+		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateWebInvoiceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateWebInvoiceInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+		//webInvoiceService.updateWebInvoiceInfo(params);
+		
+		return ResponseEntity.ok(params);
 	}
 
 }

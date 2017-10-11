@@ -2,34 +2,34 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-var myGridColumnLayout = [ {
+var InvoAprveGridColLayout = [ {
     dataField : "clmNo",
-    headerText : 'Claim No',
+    headerText : '<spring:message code="invoiceApprove.clmNo" />',
     width : 140
 },{
     dataField : "reqstDt",
-    headerText : 'Request Date',
+    headerText : '<spring:message code="webInvoice.requestDate" />',
     dataType : "date",
     formatString : "dd/mm/yyyy",
 
 }, {
     dataField : "clmType",
-    headerText : 'Claim Type'
+    headerText : '<spring:message code="invoiceApprove.clmType" />'
 }, {
     dataField : "costCentr",
-    headerText : 'Cost Center'
+    headerText : '<spring:message code="webInvoice.costCenter" />'
 }, {
     dataField : "costCentrName",
-    headerText : 'C/C Name'
+    headerText : '<spring:message code="webInvoice.ccName" />'
 }, {
     dataField : "invcType",
-    headerText : 'Type'
+    headerText : '<spring:message code="invoiceApprove.type" />'
 }, {
     dataField : "memAccId",
-    headerText : 'Suppliers / Employee'
+    headerText : '<spring:message code="invoiceApprove.suppliEmploy" />'
 }, {
     dataField : "memAccName",
-    headerText : 'Name'
+    headerText : '<spring:message code="webInvoice.name" />'
 }, {
     dataField : "totAmt",
     headerText : '<spring:message code="webInvoice.amount" />',
@@ -39,8 +39,8 @@ var myGridColumnLayout = [ {
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />'
 }, {
-    dataField : "reqstDt",
-    headerText : 'Attachment'
+    dataField : "atchFileName",
+    headerText : '<spring:message code="newWebInvoice.attachment" />'
 }, {
     dataField : "appvPrcssDt",
     headerText : '<spring:message code="webInvoice.approvedDate" />'
@@ -48,7 +48,7 @@ var myGridColumnLayout = [ {
 ];
 
 //그리드 속성 설정
-var myGridPros = {
+var InvoAprveGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
@@ -58,42 +58,82 @@ var myGridPros = {
     showRowNumColumn : false
 };
 
-var myGridId;
+var InvoAprveGridID;
 
 $(document).ready(function () {
-    myGridId = AUIGrid.create("#approve_grid_wrap", myGridColumnLayout, myGridPros);
+	InvoAprveGridID = AUIGrid.create("#approve_grid_wrap", InvoAprveGridColLayout, InvoAprveGridPros);
     
-    AUIGrid.bind(myGridId, "cellDoubleClick", function( event ) 
+    $("#search_supplier_btn").click(fn_supplierSearchPop);
+    $("#search_costCenter_btn").click(fn_costCenterSearchPop);
+    
+    AUIGrid.bind(InvoAprveGridID, "cellDoubleClick", function( event ) 
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo);
                 // TODO detail popup open
                 //fn_viewEditWebInvoicePop(event.item.clmNo);
             });
+    
+    CommonCombo.make("clmType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
+        id: "code",
+        name: "codeName",
+        type:"M"
+    });
 });
+
+function fn_supplierSearchPop() {
+	var object = {
+            accGrp : "VM01",
+            accGrpName : "Coway_Suppliers_Local"
+    };
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", object, null, true, "supplierSearchPop");
+}
+
+function fn_costCenterSearchPop() {
+    var value = $("#costCenter").val();
+    var object = {value:value};
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+}
+
+function fn_setCostCenter() {
+    $("#costCenter").val($("#search_costCentr").val());
+    $("#costCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_setSupplier() {
+    $("#memAccId").val($("#search_memAccId").val());
+    $("#memAccName").val($("#search_memAccName").val());
+}
+
+function fn_selectApproveList() {
+    Common.ajax("GET", "/eAccounting/webInvoice/fn_selectApproveList.do", $("#form_approve").serialize(), function(result) {
+        console.log(result);
+        AUIGrid.setGridData(InvoAprveGridID, result);
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
-	<li><img src="../images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
+	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Web Invoice - Approve</h2>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
+<h2><spring:message code="invoiceApprove.title" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form action="#" method="post" id="form_approve">
+<input type="hidden" id="memAccId" name="memAccId">
+<input type="hidden" id="costCenter" name="costCenter">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:140px" />
 	<col style="width:*" />
@@ -102,38 +142,35 @@ $(document).ready(function () {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Claim Type</th>
+	<th scope="row"><spring:message code="invoiceApprove.clmType" /></th>
 	<td>
-	<select class="w100p">
-		<option value="1">111</option>
-		<option value="2">222</option>
-		<option value="3">333</option>
+	<select class="w100p" id="clmType" name="clmType" multiple="multiple">
 	</select>
 	</td>
-	<th scope="row">Create User</th>
-	<td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a></td>
+	<th scope="row"><spring:message code="invoiceApprove.createUser" /></th>
+	<td><input type="text" title="" placeholder="" class="" id="createUser" name="createUser" /><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row">Supplier / Employee</th>
-	<td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row">Cost Center</th>
-	<td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a></td>
+	<th scope="row"><spring:message code="invoiceApprove.suppliEmploy" /></th>
+	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCenterText" /><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row">Posting Date</th>
+	<th scope="row"><spring:message code="webInvoice.postingDate" /></th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
+	<span><spring:message code="webInvoice.to" /></span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt"/></p>
 	</div><!-- date_set end -->
 	</td>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="webInvoice.status" /></th>
 	<td>
-	<select class="multy_select w100p" multiple="multiple">
-		<option value="1">Approved</option>
-		<option value="2">Request</option>
-		<option value="3">Reject</option>
+	<select class="multy_select w100p" multiple="multiple" name="appvPrcssStus">
+		<option value="A"><spring:message code="webInvoice.select.approved" /></option>
+		<option value="R"><spring:message code="webInvoice.select.request" /></option>
+		<option value="J"><spring:message code="webInvoice.select.reject" /></option>
 	</select>
 	</td>
 </tr>
@@ -146,8 +183,8 @@ $(document).ready(function () {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">Approve</a></p></li>
-	<li><p class="btn_grid"><a href="#">Reject</a></p></li>
+	<li><p class="btn_grid"><a href="#"><spring:message code="invoiceApprove.title" /></a></p></li>
+	<li><p class="btn_grid"><a href="#"><spring:message code="webInvoice.select.reject" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="approve_grid_wrap"><!-- grid_wrap start -->
