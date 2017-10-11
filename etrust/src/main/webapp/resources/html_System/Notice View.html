@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
+<title>eTrust system</title>
+<link rel="stylesheet" type="text/css" href="../css/master.css" />
+<link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
+<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="../js/common_pub.js"></script>
+<script type="text/javascript" src="../js/multiple-select.js"></script>
+<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
+</head>
+<body>
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Notice View</h1>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Subject<span class="must">*</span></th>
+	<td colspan="5">
+	<input type="text" title="" placeholder="" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Writer</th>
+	<td>
+	<input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" />
+	</td>
+	<th scope="row">Issue Date</th>
+	<td>
+	<input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" />
+	</td>
+	<th scope="row">Read Count</th>
+	<td>
+	<input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Emergency</th>
+	<td>
+	<label><input type="checkbox" /><span></span></label>
+	</td>
+	<th scope="row">Password</th>
+	<td colspan="3">
+	<input type="password" title="" placeholder="" class="" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Notice Period</th>
+	<td colspan="5">
+	
+	<div class="date_set"><!-- date_set start -->
+	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span>To</span>
+	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	</div><!-- date_set end -->
+
+	</td>
+</tr>
+<tr>
+	<th scope="row">Contents<span class="must">*</span></th>
+	<td colspan="5">
+	<textarea cols="20" rows="5"></textarea>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:130px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row" rowspan="2">Attached File</th>
+	<td>
+	<div class="auto_file2"><!-- auto_file start -->
+	<input type="file" title="file add" />
+	</div><!-- auto_file end -->
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="left_btns">
+	<li><p class="red_text">* 표시가 된 곳은 필수 입력입니다.</p></li>
+</ul>
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#">Modify</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#">Delete</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#">List</a></p></li>
+</ul>
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
+
+</body>
+</html>

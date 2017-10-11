@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.InterfaceMonitoringMapper">
+
+<select id="selectInterfaceMonitoringList" parameterType="Map" resultType="egovMap">
+/* Temporarily conduct a job before ECC Connection complete. by mun,do-hyun */
+/**
+    CHK_COL - WGBEZ
+    BIZ_COL  - EWBEZ
+*/
+WITH ZCOMT_IF000 AS (
+    SELECT *
+      FROM GBSLCVD.ITF0000D_TEMP
+)
+SELECT a.IF_TYPE
+	     , c.CHK_COL
+	     , COUNT(CASE WHEN a.IF_KEY IS NOT NULL THEN 1 END) AS SND_CNT
+	     , COUNT(CASE WHEN b.IF_KEY IS NOT NULL THEN 1 END) AS RCV_CNT
+	     , SUM(a.WGBEZ) AS SND_CHK_VAL
+	     , SUM(b.WGBEZ) AS RCV_CHK_VAL
+	     , c.BIZ_COL
+	     , COUNT(CASE WHEN a.EWBEZ IS NOT NULL THEN 1 END) AS BIZ_CNT /* If business conduct successful Data exist */
+	     , a.IF_TYPE as row_id
+  FROM GBSLCVD.ITF0001D_TEMP a        /*From Table*/
+	     , ZCOMT_IF000 b /*To Table*/
+	     , ITF0001M c
+ WHERE 1=1
+	 AND a.IF_KEY = b.IF_KEY(+)
+	 AND a.IF_TYPE = c.IF_TYPE(+)
+	 AND a.rgst_dt BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
+	 <if test="tranStatusCd != null and tranStatusCd !=''">
+	 AND a.TRAN_STATUS_CD =  #{tranStatusCd} /* Param */
+	 </if>
+	 <if test="ifType != null and ifType !=''">
+	 AND UPPER(a.if_type) LIKE UPPER(#{ifType}) || '%' /* Param */
+	 </if>
+	GROUP BY a.IF_TYPE, c.CHK_COL, c.BIZ_COL
+/*
+
+UNION ALL
+
+.
+.
+.
+.
+.
+.
+
+*/
+</select>
+
+<select id="selectInterfaceMonitoringDtmList" parameterType="Map" resultType="egovMap">
+/* Temporarily conduct a job before ECC Connection complete. by mun,do-hyun*/
+/**
+    CHK_COL - WGBEZ
+    BIZ_COL  - EWBEZ
+*/
+
+WITH ZCOMT_IF000 AS (
+    SELECT *
+      FROM GBSLCVD.ITF0000D_TEMP
+)
+SELECT a.if_type
+	     , TO_CHAR(a.rgst_dt,'DD-MM-YYYY') AS rgst_dt
+	     , c.chk_col
+	     , COUNT(CASE WHEN a.if_key IS NOT NULL THEN 1 END) AS snd_cnt
+	     , COUNT(CASE WHEN b.if_key IS NOT NULL THEN 1 END) AS rcv_cnt
+	     , SUM(a.wgbez) AS snd_chk_val
+	     , SUM(b.wgbez) AS rcv_chk_val
+	     , c.biz_col
+	     , COUNT(CASE WHEN a.EWBEZ IS NOT NULL THEN 1 END) AS biz_cnt /* If business conduct successful Data exist */
+	     , a.IF_TYPE||TO_CHAR(a.rgst_dt,'DD-MM-YYYY') as row_id
+  FROM ${fromTable} a /* From Table */
+         , ${toTable} b   /* To Table    */
+         , ITF0001M c
+ WHERE 1=1
+     AND a.if_key = b.if_key(+)
+     AND a.if_type = c.if_type(+)
+     AND a.rgst_dt BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
+     AND a.if_type = #{ifType} /* Essential Param*/
+GROUP BY a.if_type, TO_CHAR(a.rgst_dt,'DD-MM-YYYY'), c.chk_col, c.biz_col
+ORDER BY TO_CHAR(a.rgst_dt,'DD-MM-YYYY')
+</select>
+
+<select id="selectInterfaceMonitoringKeyList" parameterType="Map" resultType="egovMap">
+/* Temporarily conduct a job before ECC Connection complete. by mun,do-hyun*/
+/**
+    CHK_COL - WGBEZ
+    BIZ_COL  - EWBEZ
+*/
+WITH ZCOMT_IF000 AS (
+    SELECT *
+      FROM GBSLCVD.ITF0000D_TEMP
+)
+SELECT a.IF_TYPE
+	     , a.IF_KEY
+	     , a.SEQ
+	     , a.tran_status_cd
+	     , (SELECT a.code_name
+	           FROM sys0013m a
+	         WHERE a.code_master_id = 332
+	             AND a.code = a.tran_status_cd) AS tran_status_nm
+	     , a.err_cd
+	     , a.err_msg
+	     , c.chk_col
+	     , a.WGBEZ AS snd_chk_val
+	     , b.WGBEZ AS rcv_chk_val
+	     , c.biz_col
+	     , a.EWBEZ AS biz_val  /* If business conduct successful Data exist */
+	     , TO_CHAR(a.rgst_dt,'HH24:MI:SSSSS DD-MM-YYYY') AS rgst_dt
+	     , a.IF_KEY as row_id
+  FROM ${fromTable} a /* From Table */
+         , ${toTable} b   /* To Table    */
+         , ITF0001M c
+ WHERE 1=1
+    AND a.if_key = b.if_key(+)
+    AND a.if_type = c.if_type(+)
+
+    AND TO_CHAR(a.rgst_dt,'DDMMYYYY') = #{selectDate} /* Essential Param */
+    AND a.if_type = #{ifType} /* Essential Param */
+
+ORDER BY a.RGST_DT
+</select>
+
+<select id="selectCommonCodeStatusList"  parameterType="Map" resultType="egovMap">
+    SELECT code
+             , code_name as value
+      FROM SYS0013M
+     WHERE CODE_MASTER_ID = 332
+</select>
+</mapper>

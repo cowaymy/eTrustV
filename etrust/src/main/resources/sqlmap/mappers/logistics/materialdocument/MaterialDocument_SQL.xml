@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.coway.trust.biz.logistics.materialdocument.impl.MaterialDocumentMapper">
+
+	<select id="selectLocation" parameterType="Map" resultType="egovMap">
+		select
+		STK_CODE CODE_ID,
+		STK_DESC CODE_NAME
+		from sys0026m
+	</select>
+
+
+
+	<select id="MaterialDocSearchList" parameterType="Map" resultType="egovMap">
+		select
+		rownum rnum
+		, l59.matrl_doc_no
+		, l59.matrl_doc_year
+		, l59.trnsc_type_code
+		, l60.MATRL_DOC_ITM
+		, l60.delvry_no
+		, tt.code_name trantype
+		, l60.INVNTRY_MOV_TYPE
+		, mt.code_name movtype
+		, l60.DEBT_CRDIT_INDICT
+		, DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', 'Credit',
+                 'S', 'Debit',
+                 l60.DEBT_CRDIT_INDICT)
+          DEBT_CRDIT_INDICT  
+		, l60.AUTO_CRT_ITM
+		, DECODE (l60.AUTO_CRT_ITM,
+                 'A', 'Auto',
+                 'M', 'Manual',
+                 l60.AUTO_CRT_ITM)
+          AUTO_CRT_ITM    
+		, l60.matrl_no
+		, s26.stk_desc
+		, l60.qty
+		, l60.measure_bas_unit
+		, ut.code_name
+		, l60.storg_loc
+		, (select wh_loc_desc from sys0028m where wh_loc_id = l60.storg_loc) req_storg_nm
+		, l60.rciv_issu_storg_loc
+		, (select wh_loc_desc from sys0028m where wh_loc_id = l60.rciv_issu_storg_loc) rev_storg_nm
+		, to_char(to_date(l59.USNAM , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
+		,l59.CRT_DT
+		from log0059m l59
+		, log0060d l60
+		, sys0026m s26
+		, (select * from sys0013m where code_master_id = 306) tt
+		, (select * from sys0013m where code_master_id = 308) mt
+		, (select * from sys0013m where code_master_id = 42) ut
+		where 1 = 1
+		and l60.matrl_no = s26.STK_CODE(+)
+		and l60.matrl_no = s26.STK_CODE(+)
+		and l60.measure_bas_unit = ut.code_id(+)
+		and l59.trnsc_type_code = tt.code
+		and l60.INVNTRY_MOV_TYPE = mt.code <!-- 밑에서부터 where조건 시작 -->
+		<if test="searchFromLoc !=null and searchFromLoc !=''">
+			and l60.rciv_issu_storg_loc = #{searchFromLoc}
+		</if>
+		<if test="searchToLoc !=null and searchToLoc !=''">
+			and l60.storg_loc = #{searchToLoc}
+		</if>
+		<if test="searchMaterialCode !=null and searchMaterialCode !=''">
+			and l60.matrl_no = #{searchMaterialCode}
+		</if>
+		<if test="searchTrcType !=null and searchTrcType !=''">
+			and l59.trnsc_type_code = #{searchTrcType}
+		</if>
+		<if test="searchMoveType !=null and searchMoveType !=''">
+			and l60.INVNTRY_MOV_TYPE = #{searchMoveType}
+		</if>
+	  <if test="PostingDt1 != null and PostingDt2 != null and PostingDt1 != '' and PostingDt2 != ''" > 
+         <![CDATA[  AND to_char(to_date(l59.USNAM , 'yyyymmdd') ,'yyyy-MM-DD')   >= TO_CHAR(TO_DATE(#{PostingDt1},'DD/MM/YYYY'),'YYYY-MM-DD') 
+          AND to_char(to_date(l59.USNAM , 'yyyymmdd') ,'yyyy-MM-DD')   <   TO_CHAR(TO_DATE(#{PostingDt2},'DD/MM/YYYY')+1,'YYYY-MM-DD') ]]>
+       </if> 
+         <if test="CreateDt1 != null and CreateDt2 != null and CreateDt1 != '' and CreateDt2 != ''" > 
+         <![CDATA[  AND l59.CRT_DT   >= TO_DATE(TO_CHAR(TO_DATE(#{CreateDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') 
+          AND l59.CRT_DT   <   TO_DATE(TO_CHAR(TO_DATE(#{CreateDt2},'DD/MM/YYYY')+1,'YYYYMMDD') || '000000','yyyymmddhh24miss') ]]>
+       </if> 
+		and l59.matrl_doc_no = l60.matrl_doc_no
+		order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
+	</select>
+
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.replenishment.impl.ReplenishmentMapper">
+    <select id="excelDataSearch" parameterType="Map" resultType="Map">
+        SELECT #{period} as PERIOD , WH_LOC_ID as LOCID, WH_LOC_CODE as LOCCD , WH_LOC_DESC as LOCNM,
+		       #{materialcode} as ITMCD , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{materialcode}) as ITMNM,
+		       #{maximumqty} as MAXQTY, #{reorderqty} as REORDQTY
+		       ,nvl(#{safetyqty} , 0) as SFTYQTY
+		  FROM SYS0028M WHERE WH_LOC_CODE = #{locationcode}
+    </select>
+    
+    <insert id="relenishmentSave" parameterType="Map">
+        MERGE INTO LOG0077M A
+             USING DUAL
+                ON (A.PERIOD = to_char(to_date(#{period},'mm/yyyy') , 'yyyymm') AND LOC_CODE = #{loccd} AND STK_CODE = #{itmcd})
+            WHEN MATCHED THEN
+                UPDATE SET 
+                       A.MAX_QTY   = #{maxqty}
+                      ,A.REORD_QTY = #{reordqty}
+                      ,A.SFTY_QTY  = #{sftyqty}
+                      ,A.CRT_DT    = SYSDATE
+                      ,A.CRT_USER  = #{userid}
+            WHEN NOT MATCHED THEN 
+                INSERT ( PERIOD, LOC_CODE, STK_CODE, MAX_QTY, REORD_QTY, SFTY_QTY, CRT_DT, CRT_USER)
+                VALUES ( to_char(to_date(#{period},'mm/yyyy') , 'yyyymm') , 
+                         #{loccd} , #{itmcd} , #{maxqty}, #{reordqty} ,#{sftyqty} , SYSDATE , #{userid})
+    </insert>
+    
+    <select id="selectSearchList" parameterType="Map" resultType="egovMap">
+        select ROWNUM          AS rnum
+             , to_char(to_date(L77.PERIOD , 'yyyymm') , 'mm/yyyy')      AS period  
+		     , S28.WH_LOC_ID      AS locid
+		     , L77.LOC_CODE    AS loccd
+		     , S28.WH_LOC_DESC AS locnm
+		     , L77.STK_CODE    AS itmcd
+		     , S26.STK_DESC    AS itmnm
+		     , S13.CODE        AS locgb
+		     , L77.MAX_QTY     AS maxqty
+		     , L77.REORD_QTY   AS reordqty
+		     , L77.SFTY_QTY    AS sftyqty
+		  from LOG0077M L77 ,
+		       SYS0028M S28 , 
+		       SYS0026M S26 ,
+		       (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 339) S13
+		 WHERE 1 = 1
+		   AND S28.WH_LOC_GB = S13.CODE
+		   AND L77.LOC_CODE = S28.WH_LOC_CODE
+		   AND L77.STK_CODE = S26.STK_CODE
+		   <if test="slocgb != null and slocgb !=''">
+		      AND S28.WH_LOC_GB = #{slocgb}
+		   </if>
+		   <if test="sloccode != null and sloccode !=''">
+		      AND L77.LOC_CODE = #{sloccode}
+           </if>
+           <if test="speriod != null and speriod !=''">
+              AND L77.PERIOD = to_char(to_date(#{speriod},'mm/yyyy') , 'yyyymm')
+           </if>
+           <if test="sttype != null and sttype !=''">
+              AND S26.STK_TYPE_ID = #{sttype}
+           </if>
+           <if test="scate != null and scate !=''">
+              AND S26.STK_CTGRY_ID = #{scate}
+           </if>
+    </select>
+</mapper>
