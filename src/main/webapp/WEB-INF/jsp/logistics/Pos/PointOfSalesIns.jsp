@@ -107,14 +107,8 @@ var reqcolumnLayout;
 //     ***********************************/
 SearchSessionAjax();
 
-
-
-
-
-
 // var paramdatas = { groupCode : '306' ,Codeval: 'OH' , orderValue : 'CODE' , likeValue:''};
 // doGetComboData('/common/selectCodeList.do', paramdatas, '','smtype', 'S' , '');
-
 
 var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
 var LocData = {sLoc : UserCode};
@@ -276,15 +270,59 @@ $(function(){
     
     $('#clear').click(function() {
     });
+ 
     
  $('#save').click(function() {
-	 
-	 if (f_validatation('save')){
-         insPosInfo();           
-         }     
-    });
+   var chkfalg;
+   var checkDelqty= false; 
+   var checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
+	 for (var i = 0 ; i < checkedItems.length ; i++){
+	       
+	       if (checkedItems[i].itemserialChk == 'Y'){
+	           chkfalg="Y";
+	           break;
+	      }else{
+	          chkfalg ="N";
+	      } 
+	      
+	   } 
+   
+	 if(chkfalg =="Y") {   
 
+         var checkedItems = AUIGrid.getCheckedRowItems(reqGrid);
+         var str = "";
+         var rowItem;
+         for(var i=0, len = checkedItems.length; i<len; i++) {
+             rowItem = checkedItems[i];
+             if(rowItem.item.rqty==0){
+             str += "Please Check Delivery Qty of  " + rowItem.item.itmcode   + ", " + rowItem.item.itmdesc + "<br />";
+             checkDelqty= true;
+             }
+         }
+         if(checkDelqty){
+             var option = {
+                 content : str,
+                 isBig:true
+             };
+             Common.alertBase(option); 
+         }else{
+          $("#giopenwindow").show();
+             AUIGrid.clearGridData(serialGrid);
+             AUIGrid.resize(serialGrid); 
+             fn_itempopList(checkedItems);
+             //fn_itempopList_T(checkedItems);
+         } 
+         
+      }else{
+	   if (f_validatation('save')){
+	    	  insPosInfo();           
+	     }      
+	   }	 
+   });
+
+ 
     $('#reqdel').click(function(){
+    	alert("딜리트!!!");
     	AUIGrid.removeRow(reqGrid, "selectedIndex");
         AUIGrid.removeSoftRows(reqGrid);
     });
@@ -321,9 +359,7 @@ $(function(){
 	        } 
 	        
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);
-   
-    }     
-        
+    }           
     });
     
 });
@@ -372,8 +408,7 @@ function fn_serialChck(rowindex , rowitem , str){
 
                      ichk = false;
                  }
-             }
-             
+             }       
         }
         
          if (schk && ichk){
@@ -414,13 +449,8 @@ function f_validatation(v){
 	        if ($("#insReqLoc").val() == null || $("#insReqLoc").val() == undefined || $("#insReqLoc").val() == ""){
                 Common.alert("Please Select Request Location.");
                 return false;
-            }
-	        
+            }   
 	    }
-	
-	
-	
-	
     if(v == 'save'){
         
         if ($("#insReqType").val() == "") {
@@ -491,14 +521,9 @@ function f_validatation(v){
 			 if(!bool){
                  Common.alert("The Material Code No Same");   
                  return false;
-                }
-		  
+                }	  
     	   }
-
-     }
-
-
-     
+     } 
   } 
 
     return true;  
@@ -549,14 +574,6 @@ function f_LocMultiCombo() {
     });
 }
 
-
-// function addRow() {
-//     var rowPos = "first";
-       
-//     var item = new Object();
-       
-//     AUIGrid.addRow(reqGrid, item, rowPos);
-// }
 
 function fn_itempopList(data){
     
@@ -623,8 +640,7 @@ function fn_itempopList_T(data){
 
     $("#serialqty").val(itm_qty);
     
-    
-    //f_addrow();
+   
 }
 
 function f_addrow(){
@@ -634,79 +650,24 @@ function f_addrow(){
     return false;
 }
 
-// function savePosInfo(){
-// 	if(f_validatation("saveSerial")){
-// 	insPosInfo();		
-// 	}	
-// }
-
-
-function getSerialInfo(){
- 
-	var chkfalg;
-    var checkDelqty= false; 
-       var checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
-       
-       for (var i = 0 ; i < checkedItems.length ; i++){
-             
-            if (checkedItems[i].itemserialChk == 'Y'){
-                chkfalg="Y";
-                break;
-           }else{
-               chkfalg ="N";
-           } 
-           
-       }
-
-       
-  if(chkfalg =="Y") {   
-
-           var checkedItems = AUIGrid.getCheckedRowItems(reqGrid);
-           var str = "";
-           var rowItem;
-           for(var i=0, len = checkedItems.length; i<len; i++) {
-               rowItem = checkedItems[i];
-               if(rowItem.item.rqty==0){
-               str += "Please Check Delivery Qty of  " + rowItem.item.itmcode   + ", " + rowItem.item.itmdesc + "<br />";
-               checkDelqty= true;
-               }
-           }
-           if(checkDelqty){
-               var option = {
-                   content : str,
-                   isBig:true
-               };
-               Common.alertBase(option); 
-           }else{
-            $("#giopenwindow").show();
-               AUIGrid.clearGridData(serialGrid);
-               AUIGrid.resize(serialGrid); 
-               fn_itempopList(checkedItems);
-               //fn_itempopList_T(checkedItems);
-           } 
-   }
-	
-}
-
 
 function insPosInfo(){
 	
         var data = {};
 		var checkdata = AUIGrid.getCheckedRowItemsAll(reqGrid);
-		
+		var serials = AUIGrid.getAddedRowItems(serialGrid);
+		console.log(serials);
+	    data.add = serials;
 		data.checked = checkdata;
 		data.form = $("#headForm").serializeJSON();
 
 		Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data, function(result) {
 
 			Common.alert(result.message);
-
+			$("#giopenwindow").hide();
 			$("#posReqSeq").val(result.data);
 			
-			getSerialInfo();
-			// AUIGrid.resetUpdatedItems(listGrid, "all");    
-			//$("#giopenwindow").hide();
-			// $('#search').click();
+			$("#list").click();
 
 		}, function(jqXHR, textStatus, errorThrown) {
 			try {
@@ -722,29 +683,12 @@ function insPosInfo(){
 	}
 	
 function saveSerialInfo(){
-	   if(f_validatation("saveSerial")){
-		   saveSerialAjax();       
-		}   
-	
-}
-	
-function saveSerialAjax(){
-    
-    var data = {};
-    var serials = AUIGrid.getAddedRowItems(serialGrid);
-    data.add = serials;
-    data.form = $("#giForm").serializeJSON();
-    Common.ajaxSync("POST", "/logistics/pos/insertSerial.do", data, function(result) {
 
-        Common.alert(result.message, SearchListAjax);
-    	$("#list").click();
-    }, function(jqXHR, textStatus, errorThrown) {
-        try {
-        } catch (e) {
-        }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);
-    });
-      
+	   if(f_validatation("save") && f_validatation("saveSerial")){
+		   insPosInfo();
+		}   
+    $("#giopenwindow").hide();
+	
 }
 
 </script>
@@ -910,7 +854,8 @@ function saveSerialAjax(){
 </div><!-- divine_auto end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li> 
+    <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;
+    <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li>
     <!-- <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a onclick="javascript:insPosInfo();">SAVE</a></p></li> -->
 </ul>
 
