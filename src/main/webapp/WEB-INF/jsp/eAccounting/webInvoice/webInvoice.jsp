@@ -107,9 +107,7 @@ function fn_selectWebInvoiceList() {
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
-    <li><spring:message code="webInvoice.path" /></li>
-    <li><spring:message code="webInvoice.title" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
