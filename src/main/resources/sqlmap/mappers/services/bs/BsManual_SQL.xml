@@ -159,19 +159,27 @@
                                          ,HSM.CODY_ID
                                          ,HSM.STUS_CODE_ID STUS_CODE_ID
                                          ,EXTENT2.CODE CODE
-                                         ,SOM.BRNCH_ID  AS BRNCH_ID
+                                         ,sys064.CODY_BRNCH_CODE AS BRNCH_ID
+									     ,SAL023.area_id,
+									       sys064.area_id,
+									       sys064.CODY_BRNCH_CODE,
+									       sys064.CODY_MANGR_USER_ID
                                 FROM SAL0001D SOM
                                         ,SAL0029D C
                                         ,SYS0013M CORPTYPE 
                                         ,SAL0002D SOD
                                         ,SVC0008D HSM
                                         ,SYS0038M EXTENT2
+                                        ,sal0023d sal023
+                                        ,SYS0064M sys064
                                 WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
                                 AND   SOM.SALES_ORD_ID = SOD.SALES_ORD_ID 
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+                                and som.cust_id = sal023.cust_id
+                                and sal023.area_id = sys064.area_id
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>   
                              <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
                                       AND  hsm.YEAR(+) = #{myBSYear} 
@@ -652,7 +660,8 @@
 						,TYPE_ID
 						,CODY_ID
 						,CRT_USER_ID
-						,CRT_DT
+						,CRT_DT,
+                      PREV_CODY_ID
 						)
 	             values (
 	                  #{schdulId}
@@ -667,6 +676,7 @@
 			        , #{codyId}
      			    , #{creator}   
 			        , SYSDATE
+			        , 0
 	        )
 	        </insert> 
 
@@ -948,6 +958,19 @@
 									    AND  1 = Extent1.STUS 
 									 ORDER BY Extent1.MEM_CODE ASC
 			        </select>
+			        
+			        
+<!--                   <select id="cmbServiceMemList" parameterType="Map" resultType="egovMap">
+                                SELECT Extent1.MEM_ID MEM_ID  ,
+                                          Extent1.MEM_CODE MEM_CODE  ,
+                                          Extent1.NAME NAME  
+                                     FROM ORG0001D Extent1
+                                    WHERE   Extent1.MEM_TYPE IN ( 2,3 )
+                                        AND  1 = Extent1.STUS 
+                                     ORDER BY Extent1.MEM_CODE ASC
+                    </select> -->
+                    
+                    
         
         
                     <select id="selectSrvConfiguration" parameterType="Map" resultType="egovMap">
