@@ -340,7 +340,7 @@ function  fn_setBudgetData(){
 </ul>    
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="popSForm" name ="popSForm">
-    <input type="hidden" id = "pbudgetCode" name="pBudgetCode" />
+    <input type="hidden" id = "pBudgetCode" name="pBudgetCode" />
     <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
     <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
     <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
