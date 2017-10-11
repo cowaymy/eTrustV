@@ -258,8 +258,6 @@
 			function fn_getHSAddListAjax(){
 //	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
 
-                alert(hsStuscd);
-                
                  if(hsStuscd == 4) {
                     alert("already has result. Result entry is disallowed.");
                     return false;

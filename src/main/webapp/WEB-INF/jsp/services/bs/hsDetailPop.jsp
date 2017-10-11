@@ -221,7 +221,10 @@
     <th scope="row">Fail Reason</th>
     <td>
     <select class="w100p" id ="failReason"  name ="failReason">
-
+        <option value="" selected>Collection Code</option>
+            <c:forEach var="list" items="${ failReasonList}" varStatus="status">
+                 <option value="${list.code}">${list.c1 } </option>
+            </c:forEach>
     </select>
     </td>
     <th scope="row">Collection Code<span class="must">*</span></th>
@@ -238,12 +241,10 @@
     <th scope="row">Service Member</th>
     <td>
     <select class="w100p" id ="cmbServiceMem" name = "cmbServiceMem">
-<!--         <option value="" selected>Service Member</option> 
+         <option value="" selected>Service Member</option> 
             <c:forEach var="list" items="${ cmbServiceMemList}" varStatus="status">
                  <option value="${list.memCode}">${list.name } </option>
             </c:forEach>
-            -->
-            
     </select>
     </td>
     <th scope="row">Warehouse</th>

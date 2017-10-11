@@ -83,16 +83,17 @@
         }, {   
             dataField : "custId",
             headerText : "Customer",
-            width : 120
+            width : 100
         }, {   
             dataField : "salesOrdId",
             headerText : "salesordid",
-            width : 120
+            width : 100,
+            visible:false
         }, {
             dataField : "salesOrdNo",
             headerText : "Sales Order",
             editable : false,
-            width : 130
+            width : 110
         }, {
             dataField : "hsDate",
             headerText : "Hs Date",
@@ -102,7 +103,7 @@
             dataField : "codyId",
             headerText : "Cody",
             editable : false,
-            width : 110
+            width : 90
         }, {
             dataField : "year",
             headerText : "year",
@@ -241,9 +242,17 @@
             var jsonObj =  GridCommon.getEditData(myCustGridID);
                  jsonObj.form = $("#searchForm").serializeJSON();
                 Common.ajax("POST", "/bs/hsOrderSave.do",  jsonObj, function(result) {
+                Common.alert(result.message, fn_parentReload);
         });
     }
 
+
+
+    function fn_parentReload() {
+        fn_getBSListAjax(); //parent Method (Reload)
+    }
+    
+    
         
     $(document).ready(function() {
     
@@ -277,7 +286,7 @@
 <h1>HS Order Create</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();">Create</a></p></li>
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
@@ -313,7 +322,7 @@
 <h2>HS Order List</h2>
 </aside><!-- title_line end -->
 
-<div class="border_box" style="height:400px; width: 681px"><!-- border_box start -->
+<div class="border_box" style="height:400px; width: 550px"><!-- border_box start -->
 
 <ul class="right_btns">
 <!--     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
@@ -321,7 +330,7 @@
 </ul>
 
 <article class="grid_wrapCust"><!-- grid_wrap start -->
-      <div id="grid_wrapCust" style="width: 600px; height: 334px; margin: 0 auto;"></div>
+      <div id="grid_wrapCust" style="width: 550px; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
