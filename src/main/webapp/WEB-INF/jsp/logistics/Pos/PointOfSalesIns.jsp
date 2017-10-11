@@ -322,7 +322,6 @@ $(function(){
 
  
     $('#reqdel').click(function(){
-    	alert("딜리트!!!");
     	AUIGrid.removeRow(reqGrid, "selectedIndex");
         AUIGrid.removeSoftRows(reqGrid);
     });
