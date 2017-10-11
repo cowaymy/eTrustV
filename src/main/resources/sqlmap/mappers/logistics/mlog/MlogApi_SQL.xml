@@ -9,12 +9,13 @@
 		WH_LOC_CODE LOCATION_CODE ,
 		WH_LOC_DESC LOCATION_NAME,
 		WH_LOC_GB ,
-		CODE_NAME ,
+		CODE_NAME LOCATION_TYPE,
 		STK_CODE PARTS_CODE,
 		STK_DESC ,
 		QTY TOT_QTY,
 		NVL(QTY - T5.bookqty,0) BOOKING_QTY,
-		MOV_QTY INTRANSIT_QTY
+		MOV_QTY INTRANSIT_QTY,
+		STK_TYPE_ID,STK_CTGRY_ID PARTS_ID
 		FROM SYS0028M T1, LOG0056M T3 ,
 		(SELECT CDC_CODE, RDC_CODE
 		FROM SYS0028M A
@@ -24,13 +25,13 @@
 		as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]>
 		'Y' group by loc_id , itm_code ) T5
 		WHERE T1.WH_LOC_GB = T4.CODE
-		AND T3.STK_CODE = #{MaterialCode}
+		AND T3.STK_CODE = #{partsCode}
 		AND T1.WH_LOC_ID = T3.LOC_ID
 		AND T3.STK_CODE = T5.itm_code
 		<!-- AND T3.LOC_ID=T5.LOC_ID -->
 		AND T1.WH_LOC_CODE IN (T2.CDC_CODE, T2.RDC_CODE)
+        AND T3.STK_CTGRY_ID= #{partsId}
 	</select>
-
 
 
 	<select id="getStockbyHolderList" parameterType="Map"
@@ -42,7 +43,8 @@
 		S28.RDC_CODE,
 		S28.WH_LOC_CODE LOGIN_CODE,
 		L56.STK_CODE,
-		L56.STK_CTGRY_ID STK_ID
+		L56.STK_CTGRY_ID STK_ID,
+		L56.QTY
 		FROM ORG0001D O01, SYS0028M S28,LOG0056M L56
 		WHERE 1 = 1
 		AND O01.MEM_CODE=S28.WH_LOC_CODE
@@ -53,8 +55,48 @@
 		AND L56.STK_CTGRY_ID=#{partsId}
 	</select>
 	
+     <select id="getCommonQty" parameterType="Map" resultType="egovMap">
+		WITH CRDC
+	     AS (SELECT WH_LOC_CODE , CDC_CODE , RDC_CODE
+	                   FROM SYS0028M S28
+	                  WHERE 1 = 1 AND S28.WH_LOC_CODE = #{userId}
+	         )
+			SELECT STK_CODE,
+			       STK_DESC,
+			       S28.WH_LOC_CODE,
+			       S28.WH_LOC_GB,
+			       DECODE (S28.WH_LOC_GB,
+	                 '01', 'CDC',
+	                 '02', 'RDC',
+	                 '03', 'CT',
+	                 '04', 'CODY',
+	                 '05', 'CDC/RDC',
+	                 S28.WH_LOC_GB) LOCATION_TYPE,
+			       WH_LOC_DESC,
+			       WH_LOC_ID,
+			       NVL(QTY , 0),
+			       NVL (BOOKQTY, 0) BOOKQTY,
+			       QTY -NVL(BOOKQTY , 0) AVAIL_QTY,
+			       L75.MOV_QTY INTRANSIT_QTY
+			  FROM LOG0056M L56,
+			       SYS0028M S28,
+			       (  SELECT LOC_ID,
+			                 ITM_CODE,
+			                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY,MOV_QTY
+			            FROM LOG0075M
+			           WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
+			        GROUP BY LOC_ID, ITM_CODE,MOV_QTY) L75 ,
+			        CRDC
+			 WHERE     1 = 1
+			       AND L56.LOC_ID = L75.LOC_ID(+)
+			       AND L56.STK_CODE = L75.ITM_CODE(+)
+			       AND S28.WH_LOC_ID = L56.LOC_ID(+)
+			       AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE)
+			       AND #{partsCode} = L56.STK_CODE(+)
+     </select> 
 	
-    <select id="getCommonQty" parameterType="Map" resultType="egovMap">
+	
+<!--     <select id="getCommonQty" parameterType="Map" resultType="egovMap">
       SELECT  (SELECT NVL(MOV_QTY , 0) FROM LOG0056M A ,  SYS0028M B WHERE A.LOC_ID = B.WH_LOC_ID AND B.WH_LOC_CODE = T.CDC_CODE AND A.STK_CODE = #{partsCode} AND A.STK_CTGRY_ID= #{partsId} ) by_CDC_In_Transit_Qty   
 		        , (SELECT NVL(MOV_QTY , 0) FROM LOG0056M A ,  SYS0028M B WHERE A.LOC_ID = B.WH_LOC_ID AND B.WH_LOC_CODE = T.RDC_CODE AND A.STK_CODE = #{partsCode} AND A.STK_CTGRY_ID= #{partsId} ) by_RDC_In_Transit_Qty
 		        , (SELECT NVL(MOV_QTY , 0) FROM LOG0056M A ,  SYS0028M B WHERE A.LOC_ID = B.WH_LOC_ID AND B.WH_LOC_CODE = T.WH_LOC_CODE AND A.STK_CODE = #{partsCode} AND A.STK_CTGRY_ID= #{partsId} ) by_User_In_Transit_Qty
@@ -72,21 +114,20 @@
 		        GROUP BY L75.LOC_ID, L75.ITM_CODE) L75
 		  WHERE WH_LOC_CODE = #{locCode}
 		  AND T.WH_LOC_ID=L75.LOC_ID
-    </select>
-	
+    </select> -->
+
 
 
 
 	<select id="getCt_CodyList" parameterType="Map" resultType="egovMap">
-		SELECT
-		O01.NAME,O01.MEM_CODE,L56.QTY,L56.STK_CODE
-		FROM ORG0001D O01, SYS0028M S28, LOG0056M L56
+		SELECT O01.NAME CT_CODY_NAME,
+		O01.MEM_CODE CT_CODY_ID
+		FROM ORG0001D O01, SYS0028M S28
 		WHERE 1 = 1
-		AND O01.MEM_CODE=S28.WH_LOC_CODE
-		AND S28.WH_LOC_ID =L56.LOC_ID
-		AND O01.BRNCH= (select USER_BRNCH_ID from sys0047m where
-		USER_NAME=#{userId})
-		AND L56.STK_CODE=#{partsCode}
+		AND O01.MEM_CODE = S28.WH_LOC_CODE
+		AND O01.BRNCH = (SELECT WH_LOC_BRNCH_ID
+		FROM SYS0028M
+		WHERE WH_LOC_CODE = #{userId})
 	</select>
 
 
@@ -146,19 +187,6 @@
 		l43.matrl_no,l44.BOM_COMPNT,l56.qty,l56.serial_no,l56.STK_CTGRY_ID,l56.STK_TYPE_ID,s26.stk_desc,s28.WH_LOC_CODE,s28.WH_LOC_DESC
 		<!-- AND l43.MATRL_NO = '110181' -->
 	</select>
-
-
-
-	<select id="selectStockHolder" parameterType="Map" resultType="egovMap">
-		SELECT
-		O01.NAME,O01.MEM_CODE
-		FROM ORG0001D O01, SYS0028M S28
-		WHERE 1 = 1
-		AND O01.MEM_CODE=S28.WH_LOC_CODE
-		AND O01.BRNCH='66'
-	</select>
-
-
 
 	<select id="getInventoryStockByHolder" parameterType="Map"
 		resultType="egovMap">
@@ -258,11 +286,11 @@
 	</select>
 
 
-	<select id="selectStockReceiveSerial" parameterType="Map"
-		resultType="egovMap">
+	<select id="selectStockReceiveSerial" parameterType="Map" resultType="egovMap">
 		SELECT l55d.DELVRY_NO,
 		l55d.ITM_CODE PARTS_CODE,
-		l55d.ITM_NAME PARTS_NAME,
+		l55d.ITM_NAME
+		PARTS_NAME,
 		l61d.SERIAL_NO SERIAL_NO,
 		l55d.DELVRY_QTY REQUEST_QTY,
 		l55d.DELVRY_NO_ITM SMO_NO_ITEM,
@@ -272,14 +300,52 @@
 		FROM LOG0055D l55d, LOG0061D l61d
 		WHERE l55d.DELVRY_NO = l61d.DELVRY_NO
 		AND l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM
-		AND l61d.DELVRY_NO = #{delyno}
+		AND l61d.DELVRY_NO =  #{delyno}
 		ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
-
 	</select>
 
-
-
-
+	<select id="getMyStockList" parameterType="Map" resultType="egovMap">
+		SELECT L56.LOC_ID,
+		L56.STK_CODE PARTS_CODE,
+		L56.STK_DESC,
+		L56.STK_TYPE_ID PARTS_TYPE,
+		L56.STK_CTGRY_ID PARTS_ID,
+		QTY STOCK_QTY,
+		WH_LOC_DESC,
+		L63.SERIAL_NO PARTSSERIAL_NO,
+		T1.REF_DOC_NO SERVICE_NO,
+		QTY - NVL (L75.BOOKING_QTY, 0) STOCK_QTY,
+		S26.STK_ID PARTS_ID
+		FROM LOG0056M L56,
+		SYS0028M S28,
+		LOG0063D L63,
+		SYS0026m S26,
+		(SELECT L61.SERIAL_NO,
+		L61.DELVRY_NO,
+		L47.REQST_NO,
+		L47.REF_DOC_NO
+		FROM LOG0061D L61, LOG0055D L55, LOG0047M L47
+		WHERE L61.DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO) T1,
+		( SELECT l75.loc_id,
+		l75.itm_code,
+		SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+		FROM log0075m l75
+		WHERE NVL (l75.final_cmplt, 'N') <![CDATA[<>]]> 'Y'
+		AND l75.reqst_no IN (SELECT reqst_no
+		FROM log0047m
+		WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+		GROUP BY l75.loc_id, l75.itm_code) L75
+		WHERE 1 = 1
+		AND L63.SERIAL_NO = T1.SERIAL_NO(+)
+		AND L56.STK_CODE = L63.MATNR(+)
+		AND L56.LOC_ID = L63.LOC_ID(+)
+		AND L56.STK_CODE = L75.ITM_CODE(+)
+		AND L56.LOC_ID = L75.LOC_ID(+)
+		AND L56.STK_CODE =S26.STK_CODE(+)
+		AND L56.LOC_ID = S28.WH_LOC_ID
+		AND S28.WH_LOC_ID = (SELECT WH_LOC_ID FROM sys0028m WHERE WH_LOC_CODE = #{userId})
+</select>
+	
 
 	<!-- 현창배 작업 -->
 
