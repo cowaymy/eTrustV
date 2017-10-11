@@ -25,6 +25,8 @@ public interface MlogApiService {
 
 	List<EgovMap> selectStockReceiveSerial(Map<String, Object> params);
 	
+	List<EgovMap> getMyStockList(Map<String, Object> params);
+	
 
 	/**
 	 * 현창배 추가
