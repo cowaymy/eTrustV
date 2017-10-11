@@ -89,13 +89,13 @@
             width : 120
         }, {
             dataField : "salesOrdNo",
-            headerText : "Order",
+            headerText : "Sales Order",
             editable : false,
             width : 130
         }, {
             dataField : "hsDate",
             headerText : "Hs Date",
-            editable : false,
+            visible:false,
             width : 130
         }, {
             dataField : "codyId",
@@ -105,17 +105,17 @@
         }, {
             dataField : "year",
             headerText : "year",
-            editable : false,
+            visible : false,
             width : 130
         }, {
             dataField : "month",
             headerText : "month",
-            editable : false,
+            visible : false,
             width : 130
         }, {
             dataField : "stus",
             headerText : "stusCodeId",
-            editable : false,
+            visible : false,
             width : 130
            }];
         // 그리드 속성 설정
@@ -127,7 +127,7 @@
             
             editable : true,
             
-            showStateColumn : true, 
+            //showStateColumn : true, 
             
             displayTreeOpen : true,
             
@@ -159,10 +159,9 @@
                     headerText : "Cody Id",
                     width : 120
            }, {     
-		            dataField : "memId",
-		            headerText : "memId",
-		            width : 120,
-                     visible:false
+		            dataField : "codyName",
+		            headerText : "cody Name",
+		            width : 120
            }, {     
                     dataField : "stus",
                     headerText : "stus",
@@ -179,7 +178,7 @@
                 
                 editable : true,
                 
-                showStateColumn : true, 
+                //showStateColumn : true, 
                 
                 displayTreeOpen : true,
                 
@@ -276,11 +275,10 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>HS Order Create</h1>
 <ul class="right_opt">
+    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();">Create</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();">Create</a></p></li>
-</ul>
+
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
@@ -322,7 +320,7 @@
 </ul>
 
 <article class="grid_wrapCust"><!-- grid_wrap start -->
-      <div id="grid_wrapCust" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+      <div id="grid_wrapCust" style="width: 600px; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
