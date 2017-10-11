@@ -5,14 +5,34 @@
 
 var memberTypeData = [{"codeId": "1","codeName": "Health Planner"},{"codeId": "2","codeName": "Coway Lady"},{"codeId": "3","codeName": "Coway Technician"}];
 
+
+function fn_saveConfirm(){
+	if(fn_ValidationCheck()){
+        Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_transferSave);
+    }
+}
 function fn_transferSave(){
-	$.each($("#transferToBox option:selected"), function(key, value){
-		console.log($(this).val());
-		});
-	Common.ajax("POST", "/organization/insertTransfer.do",  $("#transferForm").serializeJSON(), function(result) {
-		
+	$("#transferToBox > option").attr("selected", "selected")
+	$("#selectValue").val(($("#transferToBox").val()));
+	$("#selectText").val(($("#transferToBox").text()));
+	Common.ajax("POST", "/organization/insertTransfer.do", $("#transferForm").serializeJSON() , function(result) {
+		Common.alert(result.message);
 	});
 }
+
+function fn_ValidationCheck(){
+	if($("#toTransfer").val() == ''){
+        Common.alert("Please select TO Transfer");
+        return false;
+    }
+	
+	if($("#transferDate").val() == ''){
+        Common.alert("Please select Planned Transfer Date");
+        return false;
+    }
+	return true;
+}
+
 
 $(document).ready(function(){
     doDefCombo(memberTypeData, '' ,'memberType', 'S', '');   
@@ -38,7 +58,7 @@ $(document).ready(function(){
     });
     
     
-   //버튼 누르면 이동하는거
+   //Button Transfer
     $('#btnRight').click(function (e) {
       var selectedOpts = $('#transferFromBox option:selected');
       if (selectedOpts.length == 0) {
@@ -96,12 +116,14 @@ $(document).ready(function(){
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Member Transfer</h2>
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_blue"><a href="#">Confirm Transfer</a></p></li>
-</ul>
+</ul> -->
 </aside><!-- title_line end -->
 
 <form action="#" method="post" id="transferForm">
+<input type="hidden" id="selectValue" name="selectValue">
+<input type="hidden" id="selectText" name="selectText">
 <section class="search_table"><!-- search_table start -->
 
 <table class="type1"><!-- table start -->
@@ -146,49 +168,37 @@ $(document).ready(function(){
     <td>
     <input type="text" title="Manual Search" placeholder="" class="" /><p class="btn_sky"><a href="#">Confirm</a></p>
     </td>
-    <th scope="row"></th>
+    <th scope="row">Planned Transfer Date</th>
     <td>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="transferDate" name="transferDate" /></p>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
-
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-    <dt>Link</dt>
-    <dd>
-    <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul>
-    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-    </dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
-
-
 </section><!-- search_table end -->
 
 <section class="transfer_wrap"><!-- transfer_wrap start -->
 
-<div class="tran_list" style="width:550px; height:300px;"><!-- tran_list start -->
+<div class="tran_list"><!-- tran_list start -->
+<select multiple="multiple" id="transferFromBox" name="transferFromBox" style="height:300px; width:100%">
+   
+</select> 
+</div><!-- tran_list end -->
+
+<ul class="btns">
+    <li><a href="#" id="btnRight"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right.gif" alt="right" /></a></li>
+    <li class="sec" id="btnLeft"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left.gif" alt="left" /></a></li>
+    <li><a href="#" id="btnAllRight"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right2.gif" alt="right" /></a></li>
+    <li><a href="#" id="btnAllLeft"><img src="${pageContext.request.contextPath}/resources/images/common/btn_left2.gif" alt="left" /></a></li>
+</ul>
+
+<div class="tran_list"><!-- tran_list start -->
+<select multiple="multiple" id="transferToBox" name="transferToBox" style="height:300px; width:100%">
+    
+</select> 
+</div><!-- tran_list end -->
+
+<%-- <div class="tran_list" ><!-- tran_list start -->
 <select multiple="multiple" id="transferFromBox" name="transferFromBox">
    
 </select> 
@@ -205,14 +215,12 @@ $(document).ready(function(){
 <select multiple="multiple" id="transferToBox" name="transferToBox" >
     
 </select> 
-</div><!-- tran_list end -->
+</div><!-- tran_list end --> --%>
 
 </section><!-- transfer_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_transferSave();">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_saveConfirm();">Confirm Transfer</a></p></li>
 </ul>
 </form>
 </section><!-- content end -->
-
-</html>
