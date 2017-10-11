@@ -117,7 +117,10 @@ var myGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     editable : true,
-    showStateColumn : true
+    showStateColumn : true,
+    // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
+    enableRestore : true,
+
 };
 
 $(document).ready(function () {
@@ -145,7 +148,6 @@ $(document).ready(function () {
   });
     
     fn_setKeyInDate();
-    fn_addRow();
     
     if(gridDataList.length > 0) {
         fn_setGridData(gridDataList);
