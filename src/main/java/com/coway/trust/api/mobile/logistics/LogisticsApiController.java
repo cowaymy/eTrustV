@@ -198,6 +198,29 @@ public class LogisticsApiController {
 
 	}
 
+	
+	@ApiOperation(value = "My Stock List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/myStockList", method = RequestMethod.GET)
+	public ResponseEntity<List<MyStockListDto>> getMyStockList(
+			@ModelAttribute MyStockListForm MyStockListForm) throws Exception {
+
+		Map<String, Object> params = MyStockListForm.createMap(MyStockListForm);
+
+		List<EgovMap> MyStockList = MlogApiService.getMyStockList(params);
+
+		for (int i = 0; i < MyStockList.size(); i++) {
+			LOGGER.debug("MyStockList    값 : {}", MyStockList.get(i));
+
+		}
+
+		List<MyStockListDto> list = MyStockList.stream().map(r -> MyStockListDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+
+	
 	/**
 	 * 아래부분 현창배 추가
 	 */

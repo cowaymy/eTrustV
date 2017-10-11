@@ -9,74 +9,41 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "StockByHolderQtyDto", description = "공통코드 Dto")
 public class StockByHolderQtyDto {
 
-	@ApiModelProperty(value = "user Avail Qty")
-	private int byUserAvailQty;
+	@ApiModelProperty(value = "위치")
+	private String locationType;
 
-	@ApiModelProperty(value = "user In-Transit Qty")
-	private int byUserInTransitQty;
+	@ApiModelProperty(value = "가용 재고")
+	private int availQty;
 
-	@ApiModelProperty(value = "rdc Avail Qty")
-	private int byRdcAvailQty;
-
-	@ApiModelProperty(value = "rdc In-Transit Qty")
-	private int byRdcInTransitQty;
-
-	@ApiModelProperty(value = "cdc Avail Qty")
-	private int byCdcAvailQty;
-
-	@ApiModelProperty(value = "cdc In-Transit Qty")
-	private int byCdcInTransitQty;
+	@ApiModelProperty(value = "이동중 재고")
+	private int intransitQty;
 
 	public static StockByHolderQtyDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, StockByHolderQtyDto.class);
 	}
 
-	public int getByUserAvailQty() {
-		return byUserAvailQty;
+	public String getLocationType() {
+		return locationType;
 	}
 
-	public void setByUserAvailQty(int byUserAvailQty) {
-		this.byUserAvailQty = byUserAvailQty;
+	public void setLocationType(String locationType) {
+		this.locationType = locationType;
 	}
 
-	public int getByUserInTransitQty() {
-		return byUserInTransitQty;
+	public int getAvailQty() {
+		return availQty;
 	}
 
-	public void setByUserInTransitQty(int byUserInTransitQty) {
-		this.byUserInTransitQty = byUserInTransitQty;
+	public void setAvailQty(int availQty) {
+		this.availQty = availQty;
 	}
 
-	public int getByRdcAvailQty() {
-		return byRdcAvailQty;
+	public int getIntransitQty() {
+		return intransitQty;
 	}
 
-	public void setByRdcAvailQty(int byRdcAvailQty) {
-		this.byRdcAvailQty = byRdcAvailQty;
-	}
-
-	public int getByRdcInTransitQty() {
-		return byRdcInTransitQty;
-	}
-
-	public void setByRdcInTransitQty(int byRdcInTransitQty) {
-		this.byRdcInTransitQty = byRdcInTransitQty;
-	}
-
-	public int getByCdcAvailQty() {
-		return byCdcAvailQty;
-	}
-
-	public void setByCdcAvailQty(int byCdcAvailQty) {
-		this.byCdcAvailQty = byCdcAvailQty;
-	}
-
-	public int getByCdcInTransitQty() {
-		return byCdcInTransitQty;
-	}
-
-	public void setByCdcInTransitQty(int byCdcInTransitQty) {
-		this.byCdcInTransitQty = byCdcInTransitQty;
+	public void setIntransitQty(int intransitQty) {
+		this.intransitQty = intransitQty;
 	}
 
 }

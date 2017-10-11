@@ -6,15 +6,16 @@ import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "DisplayCt_CodyListForm", description = "공통코드 Form")
-public class DisplayCt_CodyListForm {
+@ApiModel(value = "MyStockListForm", description = "공통코드 Form")
+public class MyStockListForm {
 
-	@ApiModelProperty(value = "사용자 ID 예) C180,CT100069,YUZAIREEN", example = "CT100069,YUZAIREEN")
+	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) T120", example = "T120")
 	private String userId;
 
-	public static Map<String, Object> createMap(DisplayCt_CodyListForm DisplayCt_CodyListForm) {
+
+	public static Map<String, Object> createMap(MyStockListForm MyStockListForm) {
 		Map<String, Object> params = new HashMap<>();
-		params.put("userId", DisplayCt_CodyListForm.getUserId());
+		params.put("userId", MyStockListForm.getUserId());
 		return params;
 	}
 

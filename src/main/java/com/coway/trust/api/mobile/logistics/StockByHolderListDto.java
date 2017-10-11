@@ -15,21 +15,8 @@ public class StockByHolderListDto {
 	@ApiModelProperty(value = "Ct_CodyId")
 	private String ctCodyId;
 
-	@ApiModelProperty(value = "CDC CODE")
-	private String cdcCode;
-
-	@ApiModelProperty(value = "RDC CODE")
-	private String rdcCode;
-
-	@ApiModelProperty(value = "Login CODE")
-	private String loginCode;
-
-	@ApiModelProperty(value = "parts CODE")
-	private String stkCode;
-	
-	@ApiModelProperty(value = "STK CTGRY ID")
-	private int stkId;
-	
+	@ApiModelProperty(value = "CT/CODY 별 예정 수량")
+	private int qty;
 
 	public static StockByHolderListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, StockByHolderListDto.class);
@@ -51,44 +38,12 @@ public class StockByHolderListDto {
 		this.ctCodyId = ctCodyId;
 	}
 
-	public String getCdcCode() {
-		return cdcCode;
+	public int getQty() {
+		return qty;
 	}
 
-	public void setCdcCode(String cdcCode) {
-		this.cdcCode = cdcCode;
-	}
-
-	public String getRdcCode() {
-		return rdcCode;
-	}
-
-	public void setRdcCode(String rdcCode) {
-		this.rdcCode = rdcCode;
-	}
-
-	public String getLoginCode() {
-		return loginCode;
-	}
-
-	public void setLoginCode(String loginCode) {
-		this.loginCode = loginCode;
-	}
-
-	public String getStkCode() {
-		return stkCode;
-	}
-
-	public void setStkCode(String stkCode) {
-		this.stkCode = stkCode;
-	}
-
-	public int getStkId() {
-		return stkId;
-	}
-
-	public void setStkId(int stkId) {
-		this.stkId = stkId;
+	public void setQty(int qty) {
+		this.qty = qty;
 	}
 
 }
