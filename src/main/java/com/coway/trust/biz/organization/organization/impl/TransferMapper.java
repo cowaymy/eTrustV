@@ -14,4 +14,18 @@ public interface TransferMapper {
 	List<EgovMap> selectFromTransfer(Map<String, Object> params);
 	
 	List<EgovMap> selectTransferList(Map<String, Object> params);
+	
+	EgovMap selectMemberModel(String memCode);
+	
+	EgovMap selectDepartment(int memberId);
+	
+	EgovMap selectMemberOrg(int memberId);
+	
+	void insertTransferPromoEntry(Map<String, Object> params);
+	
+	void updateTransfrrOrganization(Map<String, Object> params);
+	
+	String selectPromoId();
+	
+	String selectBranchId(int codeId);
 }
