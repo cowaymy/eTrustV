@@ -1,5 +1,7 @@
 package com.coway.trust.common;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
+import com.coway.trust.biz.common.LargeExcelQuery;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.RestTemplateFactory;
 import com.coway.trust.util.UUIDGenerator;
@@ -28,9 +31,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class SysTest {
 
@@ -71,25 +71,26 @@ public class SysTest {
 	}
 
 	@Test
-	public void smsBulkTest(){
+	public void smsBulkTest() {
 
-		String toMobile = "0165420960"; // 말레이시아 번호이어야 함.   01133681677, 0165420960
+		String toMobile = "0165420960"; // 말레이시아 번호이어야 함. 01133681677, 0165420960
 		String token = "279BhJNk22i80c339b8kc8ac29";
 		String userName = "coway";
 		String password = "coway";
 		String msg = "test message by MVGate...";
 		String trId = UUIDGenerator.get();
 
-		String smsUrl = "http://103.246.204.24/bulksms/v4/api/mt?to=6" + toMobile + "&token=" + token + "&username=" + userName
-				+ "&password=" + password + "&code=coway&mt_from=63660&text=" + msg + "&lang=0&trid=" + trId;
+		String smsUrl = "http://103.246.204.24/bulksms/v4/api/mt?to=6" + toMobile + "&token=" + token + "&username="
+				+ userName + "&password=" + password + "&code=coway&mt_from=63660&text=" + msg + "&lang=0&trid=" + trId;
 
 		ResponseEntity<String> res = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
 
 		LOGGER.debug("getStatusCode : {}", res.getStatusCode());
 		LOGGER.debug("getBody : {}", res.getBody());
 
-//		2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getStatusCode : 200
-//		2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getBody : 000,812472eedc1be64e8d7b1e880932,f9c125f3ca8146ac9d4efac2c45daf63
+		// 2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getStatusCode : 200
+		// 2017-09-29 13:10:03,431 DEBUG [com.coway.trust.common.SysTest] getBody :
+		// 000,812472eedc1be64e8d7b1e880932,f9c125f3ca8146ac9d4efac2c45daf63
 
 		String response = res.getBody();
 		String[] resArray = response.split(",");
@@ -168,6 +169,27 @@ public class SysTest {
 		assertEquals("abc", rec.get("Name"));
 		assertNull(rec.get("MobileNo"));
 		assertEquals("australia", rec.get("Location"));
+	}
+
+	@Test
+	public void methodTest() {
+		String fullQueryId = "com.coway.trust.biz.commission.calculation.impl.CommissionCalculationMapper.selectCMM0013T";
+		String simpleQueryId = "selectCMM0013T";
+
+		assertEquals(LargeExcelQuery.CMM0013T, LargeExcelQuery.get(getSimpleQueryId(fullQueryId)));
+		assertEquals(simpleQueryId, getSimpleQueryId(fullQueryId));
+		assertTrue(isNotLargeExcelQuery(fullQueryId));
+	}
+
+	private boolean isNotLargeExcelQuery(String fullQueryId) {
+		return LargeExcelQuery.get(getSimpleQueryId(fullQueryId)) != null;
+	}
+
+	private String getSimpleQueryId(String fullQueryId) {
+		if (fullQueryId.lastIndexOf(".") != -1 && fullQueryId.lastIndexOf(".") != 0)
+			return fullQueryId.substring(fullQueryId.lastIndexOf(".") + 1);
+		else
+			return "";
 	}
 
 	@Test
