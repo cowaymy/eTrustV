@@ -48,6 +48,7 @@
             showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
             editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
             checkValue : "1", // true, false 인 경우가 기본
+            size : "10",
             unCheckValue : "0",
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
@@ -101,7 +102,7 @@
             dataField : "codyId",
             headerText : "Cody",
             editable : false,
-            width : 130
+            width : 110
         }, {
             dataField : "year",
             headerText : "year",
@@ -161,7 +162,7 @@
            }, {     
 		            dataField : "codyName",
 		            headerText : "cody Name",
-		            width : 120
+		            width : 220
            }, {     
                     dataField : "stus",
                     headerText : "stus",
@@ -285,7 +286,7 @@
 
 <div class="divine_auto"><!-- divine_auto start -->
 
-<div style="width: 299px;">
+<div style="width: 400px;">
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Cody List</h2>
