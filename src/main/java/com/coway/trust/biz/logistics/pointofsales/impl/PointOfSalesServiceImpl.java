@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.map.ListOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,6 +48,17 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+
+		for (int i = 0; i < checkList.size(); i++) {
+			logger.debug("checkList    값 : {}", checkList.get(i));
+		}
+
+		if (serialList.size() > 0) {
+			for (int i = 0; i < serialList.size(); i++) {
+				logger.debug("serialList    값 : {}", serialList.get(i));
+			}
+		}
 
 		formMap.put("reqno", formMap.get("headtitle") + seq);
 		formMap.put("userId", params.get("userId"));
@@ -62,40 +72,29 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		if (checkList.size() > 0) {
 			for (int i = 0; i < checkList.size(); i++) {
+				// logger.debug("checkList 값 : {}", checkList.get(i));
 				Map<String, Object> insMap = (Map<String, Object>) checkList.get(i);
 				insMap.put("reqno", formMap.get("headtitle") + seq);
 				insMap.put("userId", params.get("userId"));
 				PointOfSalesMapper.insRequestItem(insMap);
 			}
 		}
-		insertStockBooking(formMap);
-		return posSeq;
-	}
-
-	@Override
-	public void insertSerial(Map<String, Object> params) {
-
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 
 		if (serialList.size() > 0) {
 			for (int i = 0; i < serialList.size(); i++) {
 				Map<String, Object> serialMap = (Map<String, Object>) serialList.get(i);
-				serialMap.put("reqno", formMap.get("posReqSeq"));
-				serialMap.put("ttype", formMap.get("ttype"));
+				serialMap.put("reqno", posSeq);
+				serialMap.put("ttype", formMap.get("trnscType"));
 				serialMap.put("userId", params.get("userId"));
 
-				logger.debug("ttype    값 : {}", formMap.get("ttype"));
+				logger.debug("ttype??????    값 : {}", formMap.get("ttype"));
 
 				PointOfSalesMapper.insertSerial(serialMap);
 			}
 		}
-		// update
-		formMap.put("reqno", formMap.get("posReqSeq"));
-		formMap.put("userId", params.get("userId"));
-		PointOfSalesMapper.updateReqstStus(formMap);
-		
-		//insertStockBooking(formMap);
+
+		insertStockBooking(formMap);
+		return posSeq;
 	}
 
 	@Override
@@ -104,17 +103,16 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		List<EgovMap> GIList = (List<EgovMap>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> GiMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 
-//		logger.debug("GIList사이즈    값 : {}", GIList.size());
-//		for (int i = 0; i < GIList.size(); i++) {
-//		logger.debug("GIList! : {}", GIList.get(i));
-//	}
+		// logger.debug("GIList사이즈 값 : {}", GIList.size());
+		// for (int i = 0; i < GIList.size(); i++) {
+		// logger.debug("GIList! : {}", GIList.get(i));
+		// }
 		int iCnt = 0;
 		String ttype = "";
 		String docno = "";
 		String tmpdelCd = "";
 		String delyCd = "";
-		
-		
+
 		if (GIList.size() > 0) {
 
 			for (int i = 0; i < GIList.size(); i++) {
@@ -124,9 +122,9 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 				imap = (Map<String, Object>) tmpMap.get("item");
 				ttype = (String) imap.get("ttype");
 				docno = (String) imap.get("docno");
-				
+
 				String delCd = (String) imap.get("reqstno");
-				
+
 				if (delCd != null && !(tmpdelCd.equals(delCd))) {
 					tmpdelCd = delCd;
 					if (iCnt == 0) {
@@ -146,8 +144,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		GiMap.put("refdocno", docno);
 		GiMap.put("salesorder", "");
 		GiMap.put("userId", params.get("userId"));
-		
-		
+
 		if ("GC".equals(GiMap.get("gitype"))) {
 			PointOfSalesMapper.GICancelIssue(GiMap);
 		} else {
@@ -164,13 +161,12 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		return list;
 	}
-	
-	
+
 	@Override
 	public Map<String, Object> PosDataDetail(String param) {
 
 		Map<String, Object> hdMap = PointOfSalesMapper.selectPosHead(param);
-		
+
 		List<EgovMap> list = PointOfSalesMapper.selectPosItem(param);
 
 		Map<String, Object> pMap = new HashMap();
@@ -185,29 +181,27 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 		return reMap;
 	}
-	
+
 	@Override
 	public List<EgovMap> selectSerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		
+
 		List<EgovMap> list = PointOfSalesMapper.selectSerial(params);
-		
+
 		return list;
 	}
-	
+
 	@Override
 	public void insertStockBooking(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		//return stocktran.selectStockTransferMtrDocInfoList(params);
+		// return stocktran.selectStockTransferMtrDocInfoList(params);
 		PointOfSalesMapper.insertStockBooking(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectMaterialDocList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return PointOfSalesMapper.selectMaterialDocList(params);
 	}
-	
-	
 
 }
