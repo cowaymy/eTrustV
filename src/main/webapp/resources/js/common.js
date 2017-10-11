@@ -300,7 +300,7 @@ var Common = {
 
                 $obj.show();
 
-                $obj.find('.btn_blue2').on('click', function () {
+                $obj.find('.right_opt .btn_blue2').on('click', function () {
                     if (_callback) {
                         _callback(_jsonObj);
                     }

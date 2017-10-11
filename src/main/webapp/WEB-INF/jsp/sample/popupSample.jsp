@@ -24,9 +24,10 @@
     	
     	jsonObj = $("#dataForm").serializeJSON();
         
-        var divObj = Common.popupDiv("/sample/sampleView.do", jsonObj, function(params){
-            alert("params01 : " + params.param01);
-        });
+        var divObj = Common.popupDiv("/account//accountCodeEditPop.do", jsonObj, function(params){
+            alert("callback....");
+            //alert("params01 : " + params.param01);
+        }, null, "testId");
     }
 
     function fn_openWinPop(){
@@ -41,7 +42,7 @@
 		<input type="button" class="btn" onclick="javascript:fn_openWinPop();" value="새창 팝업 예" />
 	</form>
 
-	<div id="div_pop">
+	<div id="testId">
 		<input type="button" onclick="javascript:fn_openDivPop();"
 			value="DIV 팝업 예" />
 	</div>
