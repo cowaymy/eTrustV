@@ -194,7 +194,14 @@ public class HsManualController {
 		ReturnMessage message = new ReturnMessage();
 		success = hsManualService.insertHsResult(formMap, updList);
 		
+		if(success){
+			message.setMessage("저장성공");
+		}else{
+			message.setMessage("저장실패");
+		}
+		
 		return ResponseEntity.ok(message);
+		
 	}
 	
 	
