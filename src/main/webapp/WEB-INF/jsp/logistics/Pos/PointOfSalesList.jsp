@@ -220,13 +220,12 @@ $(function(){
     $("#goodIssue").click(function(){
      $("#giForm")[0].reset();
      var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
-     console.log(checkedItems);
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
         }else{
         	  for (var i = 0 ; i < checkedItems.length ; i++){
-                  if(checkedItems[i].item.serialChk == 'Y' && checkedItems[i].item.status == 'O'){
+                  if(checkedItems[i].item.status != 'O'){
                       Common.alert('Please enter the Serial Number.');
                       return false;
                       break;
@@ -252,7 +251,7 @@ $(function(){
             return false;
         }else{
             for (var i = 0 ; i < checkedItems.length ; i++){
-                if(checkedItems[i].item.status == 'S' || checkedItems[i].item.status == 'O'){
+                if(checkedItems[i].item.status == 'O'){
                     Common.alert('Already processed.');
                     return false;
                     break;
