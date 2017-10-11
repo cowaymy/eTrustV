@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.CommDeductionMapper">
+    
+    <!--Search Payment Order List(Master Grid) 리스트 조회  -->
+    <select id="selectCommitionDeduction" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.FILE_ID FILE_ID  ,
+			       Extent1.FILE_NAME FILE_NAME  ,
+			       Extent1.FILE_DT FILE_DT  ,
+			       Extent1.FILE_REF_NO FILE_REF_NO  ,
+			       Extent1.TOT_RCORD TOT_RCORD  ,
+			       Extent1.TOT_AMT TOT_AMT  ,
+			       Extent1.FILE_STUS FILE_STUS  
+		  FROM CMM0052M Extent1
+		WHERE 1=1
+		<if test="fileId != null and fileId != '' ">
+		    AND Extent1.FILE_ID = #{fileId}
+		</if>
+    ORDER BY Extent1.FILE_ID DESC
+    </select>
+    
+    <select id="selectExistLogMList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.FILE_ID FILE_ID  ,
+			       Extent1.FILE_NAME FILE_NAME  ,
+			       Extent1.FILE_DT FILE_DT  ,
+			       Extent1.FILE_REF_NO FILE_REF_NO  ,
+			       Extent1.TOT_RCORD TOT_RCORD  ,
+			       Extent1.TOT_AMT TOT_AMT  ,
+			       Extent1.FILE_STUS FILE_STUS 
+		  FROM CMM0052M Extent1
+	   WHERE  Extent1.FILE_REF_NO LIKE '%' || #{fileRefNo} || '%'
+    </select>
+    
+    <insert id="insertMaster" parameterType="Map">
+        <selectKey keyProperty="fileId" resultType="int" order="BEFORE">
+            SELECT CMM0052M_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO CMM0052M
+		( 
+		  FILE_ID, 
+		  FILE_NAME, 
+		  FILE_DT, 
+		  FILE_REF_NO, 
+		  TOT_RCORD, 
+		  TOT_AMT, 
+		  FILE_STUS
+		)
+		VALUES 
+		( 
+		  #{fileId}, 
+		  #{fileName}, 
+		  #{fileDate}, 
+		  #{fileRefNo},
+		  #{totalRecords}, 
+		  #{totalAmount}, 
+		  #{fileStatus} 
+		)
+    </insert>
+    
+    <insert id="insertDetail" parameterType="Map">
+        INSERT INTO CMM0051D
+		(
+		   ITM_ID, 
+		   FILE_ID, 
+		   ORD_NO, 
+		   MEM_CODE, 
+		   AMT, 
+		   SYNC_CMPLT, 
+		   PAID_MONTH 
+		)
+		VALUES
+	   ( 
+	       CMM0051D_SEQ.NEXTVAL, 
+	       #{fileId}, 
+	       #{orderNo}, 
+	       #{memberCode}, 
+	       #{amount}, 
+	       #{syncCompleted}, 
+	       #{paidMonth} 
+	   )
+    </insert>
+    
+    <select id="selectMasterView" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.TRX_ID TRX_ID  ,
+			       Extent1.TRX_DT TRX_DT  ,
+			       Extent1.TRX_AMT TRX_AMT  ,
+			       Extent1.PAY_ID PAY_ID  ,
+			       Extent1.OR_NO OR_NO  ,
+			       Extent1.TR_NO TR_NO  ,
+			       Extent1.PAY_DT PAY_DT  ,
+			       Extent1.LAST_UPD_DT LAST_UPD_DT  ,
+			       Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
+			       Extent1.PAY_TYPE_NAME PAY_TYPE_NAME  ,
+			       Extent1.LAST_UPD_USER_ID LAST_UPD_USER_ID  ,
+			       Extent1.LAST_UPD_USER_NAME LAST_UPD_USER_NAME  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent1.OR_AMT OR_AMT  ,
+			       Extent1.PO_NO PO_NO  ,
+			       Extent1.CLCTR_BRNCH_ID CLCTR_BRNCH_ID  ,
+			       Extent1.CLCTR_BRNCH_CODE CLCTR_BRNCH_CODE  ,
+			       Extent1.CLCTR_BRNCH_NAME CLCTR_BRNCH_NAME  ,
+			       Extent1.CUST_ID CUST_ID  ,
+			       Extent1.CUST_NAME CUST_NAME  ,
+			       Extent1.CUST_IC CUST_IC  ,
+			       Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+			       Extent1.CUST_TYPE_NAME CUST_TYPE_NAME  ,
+			       Extent1.PRODUCT_CTGRY_ID PRODUCT_CTGRY_ID  ,
+			       Extent1.PRODUCT_CTGRY_NAME PRODUCT_CTGRY_NAME  ,
+			       Extent1.PRODUCT_ID PRODUCT_ID  ,
+			       Extent1.PRODUCT_CODE PRODUCT_CODE  ,
+			       Extent1.PRODUCT_DESC PRODUCT_DESC  ,
+			       Extent1.KEYIN_USER_ID KEYIN_USER_ID  ,
+			       Extent1.KEYIN_USER_NAME KEYIN_USER_NAME  ,
+			       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+			       Extent1.APP_TYPE_NAME APP_TYPE_NAME  ,
+			       Extent1.CLCTR_NAME CLCTR_NAME  ,
+			       Extent1.CLCTR_CODE CLCTR_CODE  ,
+			       Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+			       Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+			       Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+			       Extent1.DEBTOR_ACC_ID DEBTOR_ACC_ID  ,
+			       Extent1.DEBTOR_ACC_CODE DEBTOR_ACC_CODE  ,
+			       Extent1.DEBTOR_ACC_DESC DEBTOR_ACC_DESC  ,
+			       Extent1.SALES_MEM_ID SALES_MEM_ID  ,
+			       Extent1.SALES_MEM_CODE SALES_MEM_CODE  ,
+			       Extent1.SALES_MEM_NAME SALES_MEM_NAME  ,
+			       Extent1.VIRTL_ACC_NO VIRTL_ACC_NO  ,
+			       Extent1.HP_CODE HP_CODE  ,
+			       Extent1.HP_NAME HP_NAME  ,
+			       Extent1.HP_ID HP_ID  ,
+			       Extent1.CLCTR_ID CLCTR_ID  ,
+			       Extent1.ALLOW_COMM ALLOW_COMM  ,
+			       Extent1.ADV_MONTH ADV_MONTH  ,
+			       Extent1.TR_ISSU_DT TR_ISSU_DT  ,
+			       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+		  FROM PAY1001V Extent1
+		WHERE Extent1.TR_NO = #{fileRefNo}
+        
+    </select>
+    
+    <select id="selectLogDetail" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.ITM_ID ITM_ID  ,
+			       Extent1.FILE_ID FILE_ID  ,
+			       Extent1.ORD_NO ORD_NO  ,
+			       Extent1.MEM_CODE MEM_CODE  ,
+			       Extent1.AMT AMT  ,
+			       Extent1.SYNC_CMPLT SYNC_CMPLT  ,
+			       Extent1.PAID_MONTH PAID_MONTH  
+		  FROM CMM0051D Extent1
+	   WHERE  Extent1.FILE_ID = #{fileId}
+    </select>
+
+</mapper>
