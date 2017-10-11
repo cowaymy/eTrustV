@@ -13,6 +13,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.coway.trust.biz.common.LargeExcelQuery;
+
 @Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
 		RowBounds.class, ResultHandler.class }) })
 public class ExcecutorInterceptor implements Interceptor {
@@ -29,9 +31,10 @@ public class ExcecutorInterceptor implements Interceptor {
 		LOGGER.debug("SqlCommandType : {}", ms.getSqlCommandType());
 		LOGGER.debug("StatementType : {}", ms.getStatementType());
 
-		if (ms != null && SqlCommandType.SELECT == ms.getSqlCommandType() && StatementType.CALLABLE != ms.getStatementType()) {
-			String[] keyPropertyies = ms.getKeyProperties();
-			String keyProperty = keyPropertyies == null ? "" : String.join(",", String.join(",", keyPropertyies));
+		if (ms != null && SqlCommandType.SELECT == ms.getSqlCommandType()
+				&& StatementType.CALLABLE != ms.getStatementType() && isNotLargeExcelQuery(ms.getId())) {
+			String[] keyProperties = ms.getKeyProperties();
+			String keyProperty = keyProperties == null ? "" : String.join(",", String.join(",", keyProperties));
 
 			String[] keyColumns = ms.getKeyColumns();
 			String keyColumn = keyColumns == null ? "" : String.join(",", keyColumns);
@@ -51,6 +54,17 @@ public class ExcecutorInterceptor implements Interceptor {
 		}
 
 		return invocation.proceed();
+	}
+
+	private boolean isNotLargeExcelQuery(String fullQueryId) {
+		return LargeExcelQuery.get(getSimpleQueryId(fullQueryId)) == null;
+	}
+
+	private String getSimpleQueryId(String fullQueryId) {
+		if (fullQueryId.lastIndexOf(".") != -1 && fullQueryId.lastIndexOf(".") != 0)
+			return fullQueryId.substring(fullQueryId.lastIndexOf(".") + 1);
+		else
+			return "";
 	}
 
 	@Override
