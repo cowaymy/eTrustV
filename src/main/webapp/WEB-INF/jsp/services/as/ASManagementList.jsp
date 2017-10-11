@@ -1,12 +1,29 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
+var option = {
+        width : "1200px",   // 창 가로 크기
+        height : "500px"    // 창 세로 크기
+};
+
 function fn_searchASManagement(){
         Common.ajax("GET", "/services/as/searchASManagementList.do", $("#ASForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(myGridID, result);
         });
+}
+
+function fn_newASPop(){
+	//Common.popupDiv("/services/as/initASReceiveEntryPop.do?isPop=true", "searchForm");
+	//Common.popupWin("saveASForm", "/services/as/ASReceiveEntryPop.do", option);
+	Common.popupDiv("/services/as/ASReceiveEntryPop.do?isPop=true",'');
+}
+
+function fn_newASResultPop(){
+    //Common.popupDiv("/services/as/initASReceiveEntryPop.do?isPop=true", "searchForm");
+    //Common.popupWin("saveASForm", "/services/as/ASReceiveEntryPop.do", option);
+    Common.popupDiv("/services/as/ASNewResultPop.do?isPop=true",'');
 }
 $(document).ready(function() {
 
@@ -231,35 +248,35 @@ function fn_excelDown(){
 </tbody>
 </table><!-- table end -->
 
-<!-- <aside class="link_btns_wrap">link_btns_wrap start
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+ <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>
+       <!--  <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
         <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn"><a href="#">menu6</a></p></li>
         <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_newASPop()">New AS Application</a></p></li>
+        <!-- <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
         <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
     </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside>link_btns_wrap end -->
+</aside><!-- link_btns_wrap end -->
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li>
