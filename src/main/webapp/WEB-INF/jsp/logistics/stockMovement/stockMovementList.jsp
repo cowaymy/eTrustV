@@ -169,7 +169,8 @@ $(document).ready(function(){
     
 });
 function f_change(){
-    $("#sttype").change();
+	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+    doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
 }
 //btn clickevent
 $(function(){
