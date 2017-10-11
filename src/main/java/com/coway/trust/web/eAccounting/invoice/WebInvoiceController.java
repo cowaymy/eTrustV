@@ -55,8 +55,8 @@ public class WebInvoiceController {
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 	
-	@Value("${eAccounting.webInvoice}")
-	private String fileViewPath;
+//	@Value("${eAccounting.webInvoice}")
+//	private String fileViewPath;
 	
 	// DataBase message accessor....
 	@Autowired
@@ -169,7 +169,7 @@ public class WebInvoiceController {
 	@RequestMapping(value = "/getAttachmentInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> getAttachmentInfo(@RequestBody Map<String, Object> params, ModelMap model) {
 		Map<String, Object> fileInfo = webInvoiceService.selectAttachmentInfo(params);
-		fileInfo.put("fileViewPath", fileViewPath);
+//		fileInfo.put("fileViewPath", fileViewPath);
 		
 		return ResponseEntity.ok(fileInfo);
 	}
