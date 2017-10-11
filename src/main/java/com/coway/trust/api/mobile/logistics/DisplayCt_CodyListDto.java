@@ -9,49 +9,29 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "logisticsCodeAllDto", description = "공통코드 Dto")
 public class DisplayCt_CodyListDto {
 
-	@ApiModelProperty(value = "CtNmae")
-	private String name;
-	@ApiModelProperty(value = "CtCode ")
-	private String memCode;
-	@ApiModelProperty(value = "제품 보유수량")
-	private int qty;
-	@ApiModelProperty(value = "제품 코드")
-	private String stkCode;
+	@ApiModelProperty(value = "브랜치에 속한 CT/CODY 명")
+	private String ctCodyName;
+	@ApiModelProperty(value = "브랜치에 속한 CT/CODY ID ")
+	private String ctCodyId;
 
 	public static DisplayCt_CodyListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, DisplayCt_CodyListDto.class);
 	}
 
-	public String getName() {
-		return name;
+	public String getCtCodyName() {
+		return ctCodyName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCtCodyName(String ctCodyName) {
+		this.ctCodyName = ctCodyName;
 	}
 
-	public String getMemCode() {
-		return memCode;
+	public String getCtCodyId() {
+		return ctCodyId;
 	}
 
-	public void setMemCode(String memCode) {
-		this.memCode = memCode;
-	}
-
-	public int getQty() {
-		return qty;
-	}
-
-	public void setQty(int qty) {
-		this.qty = qty;
-	}
-
-	public String getStkCode() {
-		return stkCode;
-	}
-
-	public void setStkCode(String stkCode) {
-		this.stkCode = stkCode;
+	public void setCtCodyId(String ctCodyId) {
+		this.ctCodyId = ctCodyId;
 	}
 
 }
