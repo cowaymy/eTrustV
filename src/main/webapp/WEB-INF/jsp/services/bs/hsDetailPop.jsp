@@ -132,13 +132,18 @@
                      var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
               Common.ajax("POST", "/bs/addIHsResult.do", jsonObj, function(result) {
-
-                console.log("성공.");
-                console.log("data : " + result);
-                Common.alert(result.message.message);
+              Common.alert(result.message.message);
+              
+              Common.alert(result.message, fn_parentReload);
+              
+              
             });
         }
     
+    
+    function fn_parentReload() {
+        fn_getBSListAjax(); //parent Method (Reload)
+    }    
     
     
     </script>
@@ -221,16 +226,16 @@
     <th scope="row">Fail Reason</th>
     <td>
     <select class="w100p" id ="failReason"  name ="failReason">
-        <option value="" selected>Collection Code</option>
+        <option value="" selected>Choose One</option>
             <c:forEach var="list" items="${ failReasonList}" varStatus="status">
-                 <option value="${list.code}">${list.c1 } </option>
+                 <option value="${list.codeId}">${list.codeName } </option>
             </c:forEach>
     </select>
     </td>
     <th scope="row">Collection Code<span class="must">*</span></th>
     <td>
     <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
-        <option value="" selected>Collection Code</option>
+        <option value="" selected>Choose One</option>
             <c:forEach var="list" items="${ cmbCollectTypeComboList}" varStatus="status">
                  <option value="${list.code}">${list.c1 } </option>
             </c:forEach>
@@ -240,16 +245,16 @@
 <tr>
     <th scope="row">Service Member</th>
     <td>
-    <select class="w100p" id ="cmbServiceMem" name = "cmbServiceMem">
-         <option value="" selected>Service Member</option> 
-            <c:forEach var="list" items="${ cmbServiceMemList}" varStatus="status">
-                 <option value="${list.memCode}">${list.name } </option>
+    <select class="w100p" id ="serMemList" name = "serMemList">
+         <option value="" selected>Choose One</option> 
+            <c:forEach var="list" items="${ serMemList}" varStatus="status">
+                 <option value="${list.CodeId}">${list.codeName } </option>
             </c:forEach>
     </select>
     </td>
     <th scope="row">Warehouse</th>
     <td>
-    <select class="w100p" id ="wareHouse" name ="wareHouse">
+    <select class="w100p" id ="wareHouse" name ="wareHouse" >
 
     </select>
     </td>

@@ -106,8 +106,7 @@
                         }, {
                             dataField : "brnchId",
                             headerText : "Branch",
-                            width : 120,                             
-                            visible:false        
+                            width : 120    
                         }, {
                             dataField : "schdulId",
                             headerText : "schdulId",
