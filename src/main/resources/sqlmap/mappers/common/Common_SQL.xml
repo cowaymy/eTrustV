@@ -424,8 +424,7 @@
 
   <select id="selectStatusCategoryCodeList" parameterType="Map" resultType="egovMap">
 					SELECT  B.STUS_CODE_ID
-                           ,C.CODE
-                           ,C.NAME CODE_NAME
+					       ,C.NAME CODE_NAME
 					       ,B.SEQ_NO
 					       ,DECODE(B.DISAB, 0,'N',1,'Y','N') CODE_DISAB
 					  FROM SYS0036M A
