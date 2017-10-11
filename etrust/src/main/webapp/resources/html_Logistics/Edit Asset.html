@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
+<title>eTrust system</title>
+<link rel="stylesheet" type="text/css" href="../css/master.css" />
+<link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
+<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="../js/common_pub.js"></script>
+<script type="text/javascript" src="../js/multiple-select.js"></script>
+<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
+</head>
+<body>
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Edit Asset</h1>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<section class="tap_wrap mt0"><!-- tap_wrap start -->
+<ul class="tap_type1">
+	<li><a href="#" class="on">Master Info</a></li>
+	<li><a href="#">Details Info</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1 mt10"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Asset Status</th>
+	<td>
+	<span>11111</span>
+	</td>
+	<th scope="row">Branch (Belong To)</th>
+	<td>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Department (Belong To)</th>
+	<td>
+	<span>11111</span>
+	</td>
+	<th scope="row">User (Belong To)</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Category</th>
+	<td>
+	<span>11111</span>
+	</td>
+	<th scope="row">Type</th>
+	<td>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Model Name</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+	<th scope="row">Color</th>
+	<td>
+	<select>
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Invoice No</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+	<th scope="row">Dealer</th>
+	<td>
+	<select>
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Purchase Date</th>
+	<td>
+	<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+	</td>
+	<th scope="row">Brand</th>
+	<td>
+	<select>
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Purchase Amount</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+	<th scope="row">Ref No</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Serial No</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+	<th scope="row">Warranty No</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Mac Address</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+	<th scope="row">IMEI No</th>
+	<td>
+	<input type="text" title="" placeholder="" class="" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Remark</th>
+	<td colspan="3">
+	<textarea cols="20" rows="5"></textarea>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+</ul>
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Detail Type</th>
+	<td>
+	<input type="text" title="" placeholder="Details Type" class="w100p" />
+	</td>
+	<th scope="row">Brand</th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Model Name</th>
+	<td>
+	<input type="text" title="" placeholder="Details Model Name" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Detail Type</th>
+	<td colspan="5">
+	<textarea cols="20" rows="5" placeholder="Details Remark"></textarea>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+
+<ul class="right_btns mt30">
+	<li><p class="btn_grid"><a href="#">Add Item</a></p></li>
+	<li><p class="btn_grid"><a href="#">Add Item Info</a></p></li>
+	<li><p class="btn_grid"><a href="#">Refresh</a></p></li>
+</ul>
+
+<table class="type2 acodi mt10"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:60px" />
+	<col style="width:60px" />
+	<col style="width:100px" />
+	<col style="width:100px" />
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:100px" />
+	<col style="width:100px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="col"><a href="#" class="aco_btn"><img src="../images/common/btn_down.gif" alt="View Info" /></a></th>
+	<th scope="col">No</th>
+	<th scope="col">Type</th>
+	<th scope="col">Brand</th>
+	<th scope="col">Model Name</th>
+	<th scope="col">Remark</th>
+	<th scope="col">Name</th>
+	<th scope="col">Value</th>
+	<th scope="col">Remark</th>
+</tr>
+<tr class="aco_tr">
+	<td><span></span></td>
+	<td><span>1</span></td>
+	<td><span>cpu</span></td>
+	<td><span>intel</span></td>
+	<td><span>i3-3217U</span></td>
+	<td><span></span></td>
+	<td><span>speed</span></td>
+	<td><span>1.6GHz</span></td>
+	<td><span></span></td>
+</tr>
+<tr>
+	<th scope="col"><a href="#" class="aco_btn"><img src="../images/common/btn_down.gif" alt="View Info" /></a></th>
+	<th scope="col">No</th>
+	<th scope="col">Type</th>
+	<th scope="col">Brand</th>
+	<th scope="col">Model Name</th>
+	<th scope="col">Remark</th>
+	<th scope="col">Name</th>
+	<th scope="col">Value</th>
+	<th scope="col">Remark</th>
+</tr>
+<tr class="aco_tr">
+	<td><span></span></td>
+	<td><span>1</span></td>
+	<td><span>cpu</span></td>
+	<td><span>intel</span></td>
+	<td><span>i3-3217U</span></td>
+	<td><span></span></td>
+	<td><span>speed</span></td>
+	<td><span>1.6GHz</span></td>
+	<td><span></span></td>
+</tr>
+<tr>
+	<th scope="col"><a href="#" class="aco_btn"><img src="../images/common/btn_down.gif" alt="View Info" /></a></th>
+	<th scope="col">No</th>
+	<th scope="col">Type</th>
+	<th scope="col">Brand</th>
+	<th scope="col">Model Name</th>
+	<th scope="col">Remark</th>
+	<th scope="col">Name</th>
+	<th scope="col">Value</th>
+	<th scope="col">Remark</th>
+</tr>
+<tr class="aco_tr">
+	<td><span></span></td>
+	<td><span>1</span></td>
+	<td><span>cpu</span></td>
+	<td><span>intel</span></td>
+	<td><span>i3-3217U</span></td>
+	<td><span></span></td>
+	<td><span>speed</span></td>
+	<td><span>1.6GHz</span></td>
+	<td><span></span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</article><!-- tap_area end -->
+
+</section><!-- tap_wrap end -->
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
+
+</body>
+</html>

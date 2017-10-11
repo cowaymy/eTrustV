@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
+<title>eTrust system</title>
+<link rel="stylesheet" type="text/css" href="../css/master.css" />
+<link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
+<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="../js/common_pub.js"></script>
+<script type="text/javascript" src="../js/multiple-select.js"></script>
+<script type="text/javascript" src="../js/jquery.mtz.monthpicker.js"></script>
+</head>
+<body>
+
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>New Customer</h1>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<ul class="right_btns">
+	<li><span class="red_text">*Compulsory Field</span> <span class="brown_text">#Compulsory Field(For Indvidual Type)</span></li>
+</ul>
+
+<section class="tap_wrap mt20"><!-- tap_wrap start -->
+<ul class="tap_type1">
+	<li><a href="#" class="on">Basic Info</a></li>
+	<li><a href="#">Install Address</a></li>
+	<li><a href="#">Additional Service Contact</a></li>
+	<li><a href="#">Credit Card</a></li>
+	<li><a href="#">Bank Account</a></li>
+</ul>
+
+<article class="tap_area"><!-- tap_area start -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:180px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Customer Type<span class="must">*</span></th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Company Type</th>
+	<td>
+	<select class="w100p disabled" disabled="disabled">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+</tr>
+<tr>
+	<th scope="row">Inltials<span class="must">*</span></th>
+	<td>
+	<select class="w100p">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Customer Name<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Customer Name" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">NRIC/Company No<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="NRIC/Company No" class="w100p" />
+	</td>
+	<th scope="row">GST Registration No</th>
+	<td>
+	<input type="text" title="" placeholder="NRIC/Company No" class="w100p readonly" readonly="readonly" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Nationality <span class="brown_text">#</span></th>
+	<td>
+	<select class="w100p disabled" disabled="disabled">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Passport Expire</th>
+	<td>
+	<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">DOB <span class="brown_text">#</span></th>
+	<td>
+	<input type="text" title="Create start Date" placeholder="Date Of Brith" class="j_date readonly" readonly="readonly" />
+	</td>
+	<th scope="row">Visa Expire</th>
+	<td>
+	<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Gender <span class="brown_text">#</span></th>
+	<td>
+	<label><input type="radio" name="gender" /><span>Male</span></label>
+	<label><input type="radio" name="gender" /><span>Female</span></label>
+	</td>
+	<th scope="row">Email(1)</th>
+	<td>
+	<input type="text" title="" placeholder="Email" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Race <span class="brown_text">#</span></th>
+	<td>
+	<select class="w100p disabled" disabled="disabled">
+		<option value="">11</option>
+		<option value="">22</option>
+		<option value="">33</option>
+	</select>
+	</td>
+	<th scope="row">Tel(Mobile)(1)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Tel(Residence)(1)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+	</td>
+	<th scope="row">Tel(Fax)(1)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Tel(Office)(1)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />
+	</td>
+	<th scope="row">Ext No.<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Extension Number" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Remark</th>
+	<td colspan="3">
+	<textarea cols="20" rows="5" placeholder="Remark"></textarea>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+</ul>
+
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Installation Address</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:135px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Street search<span class="must">*</span></th>
+	<td colspan="3">
+	<input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a>
+	</td>
+</tr>
+<tr>
+	<th scope="row" rowspan="2">Address<span class="must">*</span></th>
+	<td colspan="3">
+	<input type="text" title="" placeholder="Address(1)" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<td colspan="3">
+	<input type="text" title="" placeholder="Address(2)" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Country<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
+	</td>
+	<th scope="row">Region<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">City<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
+	</td>
+	<th scope="row">Town<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Street<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
+	</td>
+	<th scope="row">PostCode<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" />
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+</ul>
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Installation Address</h2>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#">Copy From Customer Info</a></p></li>
+</ul>
+</aside><!-- title_line end -->
+
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:180px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Name<span class="must">*</span></th>
+	<td colspan="3">
+	<input type="text" title="" placeholder="Name" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Tel(Mobile)(2)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
+	</td>
+	<th scope="row">Tel(Residence)(2)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Tel(Office)(2)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />
+	</td>
+	<th scope="row">Ext</th>
+	<td>
+	<input type="text" title="" placeholder="Extension Number" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row">Tel(Fax)(2)<span class="must">*</span></th>
+	<td>
+	<input type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+	</td>
+	<th scope="row">Email(2)</th>
+	<td>
+	<input type="text" title="" placeholder="Email" class="w100p" />
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+</ul>
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">ADD CREDIT CARD</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+</ul>
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">ADD BANK ACCOUNT</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+</ul>
+</article><!-- tap_area end -->
+
+</section><!-- tap_wrap end -->
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
+
+</body>
+</html>

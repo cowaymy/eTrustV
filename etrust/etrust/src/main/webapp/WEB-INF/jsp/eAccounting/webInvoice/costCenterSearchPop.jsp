@@ -1,0 +1,95 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<script type="text/javascript">
+var costCenterColumnLayout = [ {
+    dataField : "costCenter",
+    headerText : '<spring:message code="webInvoice.costCenter" />'
+}, {
+    dataField : "costCenterText",
+    headerText : '<spring:message code="costCentr.costCenterText" />'
+}
+];
+
+//그리드 속성 설정
+var costCenterGridPros = {
+    // 페이징 사용       
+    usePaging : true,
+    // 한 화면에 출력되는 행 개수 20(기본값:20)
+    pageRowCount : 20
+};
+
+var costCenterGridID;
+
+$(document).ready(function () {
+	costCenterGridID = AUIGrid.create("#costCenter_grid_wrap", costCenterColumnLayout, costCenterGridPros);
+	
+	AUIGrid.bind(costCenterGridID, "cellDoubleClick", function( event ) {
+        // if($("#newCostCenter").length > 0){
+             $("#newCostCenter").val(event.item.costCenter);
+             $("#newCostCenterText").val(event.item.costCenterText);
+        // }else{
+          //   $("#costCenter").val(event.item.costCenter);
+         //}
+        
+        fn_setCostCenter();
+         $("#costCenterSearchPop").remove();
+	});
+});
+
+function fn_selectCostCenter() {
+    Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do", $("#form_costCenter").serialize(), function(result) {
+        AUIGrid.setGridData(costCenterGridID, result);
+    });
+}
+</script>
+
+<div id="popup_wrap" class="popup_wrap size_mid2"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1><spring:message code="costCentr.title" /></h1>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
+
+<ul class="right_btns mb10">
+	<li><p class="btn_blue2"><a href="#" onclick="fn_selectCostCenter()"><spring:message code="webInvoice.btn.search" /></a></p></li>
+</ul>
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post" id="form_costCenter">
+
+<table class="type1"><!-- table start -->
+<caption><spring:message code="webInvoice.table" /></caption>
+<colgroup>
+	<col style="width:100px" />
+	<col style="width:*" />
+	<col style="width:130px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+	<td><input type="text" title="" placeholder="" class="w100p" name="costCenter" /></td>
+	<th scope="row"><spring:message code="costCentr.costCenterText" /></th>
+	<td><input type="text" title="" placeholder="" class="w100p" name="costCenterText" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</form>
+</section><!-- search_table end -->
+
+<section class="search_result"><!-- search_result start -->
+
+<article class="grid_wrap" id="costCenter_grid_wrap"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->

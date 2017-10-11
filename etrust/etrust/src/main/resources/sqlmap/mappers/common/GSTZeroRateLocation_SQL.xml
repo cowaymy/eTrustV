@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.GSTZeroRateLocationMapper">
+
+    <delete id="deleteGSTExportation" parameterType="Map">
+         DELETE FROM SYS0067M  WHERE  ZRE_EXPT_ID = #{zreExptId} 
+    </delete>
+
+     <update id="updateGSTExportation" parameterType="Map">
+          UPDATE  SYS0067M
+             SET  ZRE_EXPT_DEALER_ID = #{zreExptDealerId} 
+                , ZRE_EXPT_STUS_ID   = #{zreExptStusId}
+                , ZRE_EXPT_REM       = #{zreExptRem}  
+           WHERE  ZRE_EXPT_ID        = #{zreExptId} 
+    </update>
+    
+     <insert id="insertGSTExportation" parameterType="Map">
+					 INSERT INTO SYS0067M 
+					       ( 
+					         ZRE_EXPT_ID
+					       , ZRE_EXPT_DEALER_ID
+					       , ZRE_EXPT_STUS_ID
+					       , ZRE_EXPT_REM
+					       , ZRE_EXPT_CRT_USER_ID
+					       , ZRE_EXPT_CRT_DT
+					       )
+					 VALUES    
+					       ( 
+					         (SELECT DECODE(COUNT(ZRE_EXPT_ID),0,1,(MAX(ZRE_EXPT_ID) +1)) ExptId FROM SYS0067M)
+					       , #{zreExptDealerId} 
+					       , #{zreExptStusId}
+					       , #{zreExptRem}  
+					       , #{crtUserId}  
+					       , SYSDATE
+					       )
+    </insert>
+
+    <select id="selectGSTExportDealerList" parameterType="Map" resultType="egovMap">
+        SELECT DEALER_ID
+				     , DEALER_NAME
+				  FROM SAL0030D
+				 WHERE DEALER_STUS_ID = 1
+				 ORDER BY DEALER_NAME
+    </select>
+
+    <select id="selectGSTExportationList" parameterType="Map" resultType="egovMap">
+         SELECT 
+				        ZRE_EXPT_ID 
+				      , SAL30D.DEALER_NAME 
+				      , SYS38M.NAME STATUS
+				      , ZRE_EXPT_DEALER_ID
+				      , ZRE_EXPT_STUS_ID 
+				      , ZRE_EXPT_REM 
+				      , ZRE_EXPT_CRT_USER_ID  
+				      , ZRE_EXPT_CRT_DT 
+				  FROM  SYS0067M SYS67M
+				      , SAL0030D SAL30D
+				      , SYS0038M SYS38M
+				  WHERE SAL30D.DEALER_ID(+)    = SYS67M.ZRE_EXPT_DEALER_ID
+				    AND SYS38M.STUS_CODE_ID(+) = SYS67M.ZRE_EXPT_STUS_ID
+				    
+         <if test='zreExptId != null and zreExptId != "" '>
+            AND SYS67M.ZRE_EXPT_ID = #{zreExptId} 
+         </if>
+
+				 <if test='dealerName != null and dealerName != "" '>
+				    AND UPPER(DEALER_NAME) LIKE '%' || UPPER(#{dealerName}) || '%' 
+				 </if>
+ 
+         <if test='zreExptStusId != "0" and zreExptStusId != "" '>
+            AND SYS67M.ZRE_EXPT_STUS_ID = #{zreExptStusId} 
+         </if>
+				 
+				  ORDER BY ZRE_EXPT_ID ASC
+    </select>
+
+    <select id="selectStateCodeList" parameterType="Map" resultType="egovMap">
+        SELECT STATECODE.STATE_ID,
+               STATECODE.CODE,
+               STATECODE.NAME,
+               STATECODE.CNTY_ID,
+               STATECODE.STUS_CODE_ID,
+               STATECODE.CRT_DT
+        FROM   SYS0035M STATECODE
+        WHERE  STATECODE.STUS_CODE_ID = #{stusCodeId}
+        ORDER  BY STATECODE.NAME ASC
+    </select>
+
+    <select id="selectSubAreaList" parameterType="Map" resultType="egovMap">
+        SELECT   SUBAREA.AREA_ID
+                ,SUBAREA.AREA_NAME
+                ,SUBAREA.AREA_STATE_ID
+                ,SUBAREA.AREA_IDCM
+                ,SUBAREA.AREA_STUS_ID
+            FROM SYS0039M SUBAREA
+           WHERE SUBAREA.AREA_STUS_ID = #{areaStusId}
+             AND SUBAREA.AREA_STATE_ID = #{areaStateId}
+        ORDER BY SUBAREA.AREA_NAME ASC
+    </select>
+
+    <select id="selectZRLocationList" parameterType="Map" resultType="egovMap">
+        SELECT
+             EXTENT1.ZR_LOC_ID
+            ,EXTENT1.ZR_LOC_STATE_ID
+            ,EXTENT1.ZR_LOC_STUS_ID
+            ,EXTENT1.ZR_LOC_REM
+            ,EXTENT1.ZR_LOC_CRT_DT
+            ,EXTENT1.ZR_LOC_CRT_USER_ID
+            ,EXTENT2.CODE
+            ,EXTENT2.NAME
+            ,EXTENT3.AREA_ID
+            ,EXTENT3.AREA_NAME
+            ,EXTENT4.POST_CODE_ID
+            ,EXTENT4.POST_CODE
+            ,EXTENT5.NAME  AS STUS_CODE_NAME
+        FROM SAL0044D EXTENT1 LEFT JOIN SYS0035M EXTENT2 ON EXTENT2.STATE_ID = EXTENT1.ZR_LOC_STATE_ID
+            LEFT JOIN SYS0039M EXTENT3 ON EXTENT3.AREA_ID = EXTENT1.ZR_LOC_AREA_ID
+            LEFT JOIN SYS0030C EXTENT4 ON EXTENT4.POST_CODE_ID = EXTENT1.ZR_LOC_POST_CODE_ID
+            LEFT JOIN SYS0038M EXTENT5 ON EXTENT5.STUS_CODE_ID = EXTENT1.ZR_LOC_STUS_ID
+        WHERE 'T' = CASE
+                                 WHEN #{zrLocId} IS NULL OR EXTENT1.ZR_LOC_ID = #{zrLocId}
+                                    THEN 'T'
+                                 ELSE 'F'
+                              END
+            AND 'T' = CASE
+                                 WHEN #{zrLocStateId} IS NULL OR EXTENT1.ZR_LOC_STATE_ID = #{zrLocStateId}
+                                    THEN 'T'
+                                 ELSE 'F'
+                              END
+            AND 'T' = CASE
+                                 WHEN #{areaId} IS NULL OR EXTENT3.AREA_ID = #{areaId}
+                                    THEN 'T'
+                                 ELSE 'F'
+                              END
+        <if test="zrLocStusIds != null and zrLocStusIds != ''">
+            AND EXTENT1.ZR_LOC_STUS_ID  IN
+            <foreach item="item" collection="zrLocStusIds" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+            AND EXTENT4.POST_CODE LIKE '%' || #{postCode} || '%'
+        ORDER BY EXTENT1.ZR_LOC_ID ASC
+    </select>
+
+    <select id="selectPostCodeList" parameterType="Map" resultType="egovMap">
+        SELECT POST.POST_CODE_ID
+              ,POST.POST_CODE
+          FROM SYS0030C POST
+         WHERE POST.AREA_ID = #{areaId}
+           AND POST.STUS_CODE_ID = '1'
+    </select>
+
+    <insert id="insertZrLocStusId" parameterType="Map">
+
+        INSERT INTO SAL0044D (
+           ZR_LOC_ID,
+           ZR_LOC_STATE_ID,
+           ZR_LOC_AREA_ID,
+           ZR_LOC_POST_CODE_ID,
+           ZR_LOC_STUS_ID,
+           ZR_LOC_REM,
+           ZR_LOC_CRT_DT,
+           ZR_LOC_CRT_USER_ID)
+        VALUES (
+            (SELECT NVL(MAX(ZR_LOC_ID),0) + 1 from SAL0044D)
+           ,#{zrLocStateId}
+           ,#{areaId}
+           ,#{postCodeId}
+           ,nvl(#{zrLocStusId}, 1)
+           ,''
+           ,SYSDATE
+           ,#{userId}
+        )
+
+    </insert>
+
+    <update id="updateZrLocStusId" parameterType="Map">
+        UPDATE SAL0044D
+        SET
+            ZR_LOC_STATE_ID = #{zrLocStateId},
+            ZR_LOC_AREA_ID = #{areaId},
+            ZR_LOC_POST_CODE_ID = #{postCodeId},
+            ZR_LOC_STUS_ID = #{zrLocStusId}
+        WHERE ZR_LOC_ID        = #{zrLocId}
+    </update>
+
+</mapper>

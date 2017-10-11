@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.totalstock.impl.TotalStockMapper">
+
+
+<select id="totStockSearchList" parameterType="Map" resultType="egovMap">
+SELECT S28.WH_LOC_CODE   LOC_CODE,
+       S28.WH_LOC_DESC   LOC_DESC,
+       S26.STK_CODE STK_CODE,
+       S26.STK_DESC STK_DESC,
+       S26.STK_TYPE_ID TYPE_ID,
+       STYPE.CODE_NAME TYPE_NAME,
+       S26.STK_CTGRY_ID CTGRY_ID,
+       SCATE.CODE_NAME CTGRY_NAME,
+       L56.QTY QTY,
+       NVL(L56.MOV_QTY , 0) MOV_QTY ,
+       NVL(L75.BOOKING_QTY , 0) BOOKING_QTY,
+       QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY  
+  FROM LOG0056M L56                                                      <!-- 재고 -->
+     , SYS0028M S28                                                      <!--  창고 -->
+     , SYS0026M S26                                                    <!-- ITEM -->
+     , (SELECT *
+          FROM SYS0013M
+         WHERE CODE_MASTER_ID = 15) STYPE
+     , (SELECT *
+          FROM SYS0013M
+         WHERE CODE_MASTER_ID = 11) SCATE
+     , (SELECT l75.loc_id,
+                 l75.itm_code,
+                 SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+            FROM log0075m l75
+           WHERE     NVL (l75.final_cmplt, 'N') <![CDATA[<>]]>'Y'
+                 AND l75.reqst_no IN (SELECT reqst_no
+                                        FROM log0047m
+                                       WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+        GROUP BY l75.loc_id, l75.itm_code) L75
+ WHERE     1 = 1
+       AND L56.STK_CODE = L75.ITM_CODE(+)
+       AND L56.LOC_ID   = L75.LOC_ID(+)
+       AND L56.STK_CTGRY_ID = SCATE.CODE_ID
+       AND L56.STK_TYPE_ID = STYPE.CODE_ID
+       AND L56.STK_CODE = S26.STK_CODE
+       AND L56.LOC_ID = S28.WH_LOC_ID
+    <if test="searchMatCode != null and searchMatCode !=''">
+      AND S26.STK_CODE = #{searchMatCode}
+    </if>
+    <if test="searchLoc != null and searchLoc !=''">
+      AND L56.LOC_ID = #{searchLoc}
+    </if>
+    <if test="svalue != null and svalue !=''">
+      AND (UPPER(S28.WH_LOC_DESC) LIKE '%' || UPPER(#{svalue}) || '%' OR UPPER(S28.WH_LOC_CODE) LIKE UPPER(#{svalue}) || '%')
+    </if>
+     <if test="searchType != null and searchType !=''">
+      and S26.STK_TYPE_ID in
+      <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+       #{item}
+       </foreach>
+     </if>
+     <if test="searchCtgry != null and searchCtgry !=''">
+        and S26.STK_CTGRY_ID in
+        <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+         #{item}
+         </foreach>
+     </if>
+    <!-- AND L56.LOC_ID = #{LocCode} -->
+</select> 
+
+     
+
+</mapper>

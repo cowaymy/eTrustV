@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.reconciliation.service.impl.ReconciliationMapper">
+
+    <!-- Reconciliation 리스트 조회 -->
+	<select id="selectReconciliationList" parameterType="reconciliationSearchVO" resultType="reconciliationListVO">
+	   <![CDATA[
+	   SELECT RC.* , rownum as r
+	    FROM (SELECT 
+		    R.F_DEP_RECON_ID AS ReconciliationID, 
+		    R.F_DEPOST_ID AS DepositID, 
+		    R.F_DEP_RECON_REF_NO AS ReconciliationNo, 
+		    R.F_DEP_RECON_STUS_ID AS ReconciliationStatusID, 
+		    R.F_DEP_RECON_CRT_USER_ID AS ReconciliationCreatorID, 
+		    R.F_DEP_RECON_UPD_USER_ID AS ReconciliationApproverID, 
+		    CASE WHEN ('RJT' = SC.CODE) THEN R.F_DEP_RECON_RESN ELSE R.F_DEP_RECON_REM END AS ReconciliationRemark, 
+		    TO_CHAR( R.F_DEP_RECON_CRT_DT, 'YYYY-MM-DD AM HH24:MI:SS')  AS ReconciliationCreated, /* CAST( [R].[F_DEP_RECON_CRT_DT] AS datetime2) AS [ReconciliationCreated], */
+		    TO_CHAR( R.F_DEP_RECON_CRT_DT, 'YYYY-MM-DD AM HH24:MI:SS')  AS ReconciliationApproveAt, /* CAST( [R].[F_DEP_RECON_CRT_DT] AS datetime2) AS [ReconciliationApproveAt], */
+		    RD.F_DEPOST_PAY_DT AS DepositPaymentDate, 
+		    RD.F_DEPOST_ACC_ID AS DepositAccountID, 
+		    RD.F_DEPOST_BRNCH_ID AS DepositBranchID, 
+		    B.CODE AS DepositBranchCode, 
+		    SC.CODE AS ReconciliationStatus, 
+		    A.ACC_CODE AS DepositAccountCode, 
+		    A.ACC_DESC AS DepositAccountDesc, 
+		    U1.USER_NAME AS ReconciliationCreatorName, 
+		    U2.USER_NAME AS ReconciliationApproverName
+	   FROM       
+		    PAY0073D R
+		    LEFT OUTER JOIN PAY0077D RD ON R.F_DEPOST_ID = RD.F_DEPOST_ID
+		    LEFT OUTER JOIN SYS0005M B ON RD.F_DEPOST_BRNCH_ID = B.BRNCH_ID
+		    LEFT OUTER JOIN SYS0038M SC ON R.F_DEP_RECON_STUS_ID = SC.STUS_CODE_ID
+		    LEFT OUTER JOIN SYS0001M A ON RD.F_DEPOST_ACC_ID = A.ACC_ID
+		    LEFT OUTER JOIN SYS0047M U1 ON R.F_DEP_RECON_CRT_USER_ID = U1.USER_ID
+		    LEFT OUTER JOIN SYS0047M U2 ON R.F_DEP_RECON_UPD_USER_ID = U2.USER_ID
+	   WHERE 1=1
+	    ]]>
+       <if test="tranNo != '' ">
+           AND R.F_DEP_RECON_REF_NO = #{tranNo} 
+       </if>
+       <if test="bankAccount != '' ">
+           AND A.ACC_ID = #{bankAccount} 
+       </if>
+       <if test="branchList != '' ">
+           AND B.BRNCH_ID = #{branchList} 
+       </if>
+       <if test="paymentDate1 != '' and paymentDate2 != '' ">
+           AND  F_DEPOST_PAY_DT &gt;= TO_DATE(#{paymentDate1}, 'DD-MM-YYYY')
+                AND F_DEPOST_PAY_DT &lt;= TO_DATE(#{paymentDate2}, 'DD-MM-YYYY')
+       </if>
+       <if test="status != '' and status != null">
+           AND STUS_CODE_ID IN (
+           <foreach collection="status" index="index" separator=",">
+                '${status[index]}'
+           </foreach>
+           )
+       </if>
+       <![CDATA[
+	   ORDER BY R.F_DEP_RECON_ID DESC) RC
+	     ]]>
+	  
+	</select>
+</mapper>

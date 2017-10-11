@@ -1,0 +1,314 @@
+package com.coway.trust.web.services.bs;
+
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.bs.HsManualService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.web.organization.organization.MemberListController;
+import com.google.gson.Gson;
+import com.ibm.icu.util.StringTokenizer;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Controller 
+@RequestMapping(value = "/bs")
+public class HsManualController {
+	private static final Logger logger = LoggerFactory.getLogger(MemberListController.class);
+	@Resource(name = "hsManualService")
+	private HsManualService hsManualService;
+	
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
+	
+    	@RequestMapping(value = "/initHsManualList.do")
+    	public String initBsManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
+    		
+    		List<EgovMap> branchList = hsManualService.selectBranchList(params);
+    		model.addAttribute("branchList", branchList);
+    		
+    		
+    		return "services/bs/hsManual";
+    	}
+	
+	
+	
+	
+		@RequestMapping(value = "/selectHSConfigListPop.do")
+		public String selectHSConfigListPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+
+			model.addAttribute("brnchCdList",  params.get("BrnchId"));	
+			model.addAttribute("ordCdList",  params.get("CheckedItems"));
+			model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
+			
+			return "services/bs/hSConfigPop";
+		}
+		
+		
+		
+
+		@RequestMapping(value = "/selectPopUpCdList.do")
+		public ResponseEntity<List<EgovMap>> selectPopUpCdList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+
+			Map parameterMap = request.getParameterMap();
+			String[] nameParam = (String[])parameterMap.get("name");
+			
+			logger.debug(" selectPopUpList in  ");
+			logger.debug(" 			: "+params.toString());
+			logger.debug(" selectPopUpList in  ");
+			
+			if(null != params.get("SaleOrdList")){
+				
+    			String olist = (String)params.get("SaleOrdList");
+    			
+    			String[] spl = olist.split(",");
+    			
+    			params.put("saleOrdListSp", spl);
+			}
+			
+			//brnch to CodyList
+			List<EgovMap> resultList = hsManualService.getCdList_1(params);
+			//model.addAttribute("brnchCdList1", resultList);	
+
+			List<EgovMap> resultList1 = hsManualService.selectHsManualListPop(params);
+			//model.addAttribute("ordCdList1", resultList1);
+			
+			return ResponseEntity.ok(resultList);
+		}
+		
+		
+		
+		@RequestMapping(value = "/selectPopUpCustList.do")
+		public ResponseEntity<List<EgovMap>> selectPopUpCustList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+
+			Map parameterMap = request.getParameterMap();
+			String[] nameParam = (String[])parameterMap.get("name");
+			
+			logger.debug(" selectPopUpList in  ");
+			logger.debug(" 			: "+params.toString());
+			logger.debug(" selectPopUpList in  ");
+			
+			if(null != params.get("SaleOrdList")){
+				
+    			String olist = (String)params.get("SaleOrdList");
+    			
+    			String[] spl = olist.split(",");
+    			
+    			params.put("saleOrdListSp", spl);
+			}
+
+			List<EgovMap> resultList1 = hsManualService.selectHsManualListPop(params);
+			//model.addAttribute("ordCdList1", resultList1);
+			
+			return ResponseEntity.ok(resultList1);
+		}
+
+		
+		
+	
+	@RequestMapping(value = "/selectHsManualList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHsManualList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+		
+		params.put("user_id", sessionVO.getUserId());
+		
+        // 조회.
+		List<EgovMap> bsManagementList = hsManualService.selectHsManualList(params);        
+		
+		//brnch 임시 셋팅
+		for (int i=0 ; i < bsManagementList.size() ; i++){
+			
+			EgovMap record = (EgovMap) bsManagementList.get(i);//EgovMap으로 형변환하여 담는다.
+			
+//			("brnchId", sessionVO.getUserBranchId());
+		}
+
+		
+		return ResponseEntity.ok(bsManagementList);
+	}
+	
+	
+	
+	
+	@RequestMapping(value = "/selectHsAssiinlList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHsAssiinlList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+		
+		params.put("user_id", sessionVO.getUserId());
+		
+        // 조회.
+		List<EgovMap> hsAssiintList = hsManualService.selectHsAssiinlList(params);        
+		
+		return ResponseEntity.ok(hsAssiintList);
+	}
+	
+	
+	@RequestMapping(value = "/getCdUpMemList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getCdUpMemList(@RequestParam Map<String, Object>params) {
+        // Member Type 에 따른 Organization 조회.
+		List<EgovMap> resultList = hsManualService.getCdUpMemList(params);        
+
+		return ResponseEntity.ok(resultList);
+	}
+	
+	
+	
+	@RequestMapping(value = "/getCdList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getCdList(@RequestParam Map<String, Object>params) {
+        // Member Type 에 따른 Organization 조회.
+		List<EgovMap> resultList = hsManualService.getCdList(params);        
+
+		return ResponseEntity.ok(resultList);
+	}
+	
+	
+	
+	
+	@RequestMapping(value = "/hsOrderSave.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertHsResult(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
+		Boolean success = false;
+		String msg = "";
+		
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+
+		ReturnMessage message = new ReturnMessage();
+		success = hsManualService.insertHsResult(formMap, updList);
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	@RequestMapping(value = "/selectHsInitDetailPop.do")
+	public String selectHsInitDetailPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {		
+		
+		params.put("schdulId", params.get("schdulId"));
+		params.put("salesOrderId", params.get("salesOrdId"));
+
+		EgovMap  hsDefaultInfo = hsManualService.selectHsInitDetailPop(params);
+		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
+		List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);//
+		
+		logger.debug(" params : " , params);
+		logger.debug("hsDefaultInfo : {}", hsDefaultInfo);
+		
+		model.addAttribute("hsDefaultInfo", hsDefaultInfo);
+		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
+		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
+		
+		model.addAttribute("orderDetail", orderDetail);
+		
+		return "services/bs/hsDetailPop";
+		
+	}
+	
+
+	
+	
+	
+	@RequestMapping(value = "/hsBasicInfoPop.do")
+	public String selecthsBasicInfoPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {		
+		
+		EgovMap basicinfo = null;
+		EgovMap addresinfo = null;
+		EgovMap contactinfo = null;
+		EgovMap orderDetail = null;
+		
+		params.put("salesOrderId", params.get("salesOrdId"));
+		
+		basicinfo = hsManualService.selectHsViewBasicInfo(params);
+		orderDetail = orderDetailService.selectOrderBasicInfo(params);
+		
+//		addresinfo = hsManualService.selectCustomerViewMainAddress(params);
+//		contactinfo = hsManualService.selectCustomerViewMainContact(params);
+
+		
+		model.addAttribute("basicinfo", basicinfo);
+		model.addAttribute("orderDetail", orderDetail);
+		
+//		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
+//		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
+//		model.addAttribute("orderDetail", orderDetail);
+		
+		return "services/bs/hsEditPop";
+
+		
+	}
+	
+	
+	
+	@RequestMapping(value = "/SelectHsFilterList.do")
+	public ResponseEntity<List<EgovMap>> SelectHsFilterList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {		
+		
+		//params.put("salesOrdId", params.get("salesOrdId"));
+
+		List<EgovMap> hsFilterList = hsManualService.selectHsFilterList(params);
+//		model.addAttribute("hsFilterList", hsFilterList);
+		
+		return ResponseEntity.ok(hsFilterList);
+		
+	}
+	
+	
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws ParseException 
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/addIHsResult.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> addIHsResult(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params : {}", params);
+		
+		boolean success = false;
+		
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD); 
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		
+		success = hsManualService.addIHsResult(formMap, updList, sessionVO);
+
+		if(success){
+			message.setMessage("저장성공");
+		}else{
+			message.setMessage("저장실패");
+		}
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+
+	
+	
+	
+	
+}
