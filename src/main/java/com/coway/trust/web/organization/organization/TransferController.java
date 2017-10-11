@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.organization.organization.TransferService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -111,12 +114,18 @@ public class TransferController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/insertTransfer.do" ,method = RequestMethod.POST)
-	public  ResponseEntity<List<EgovMap>> insertTransfer(@RequestBody Map<String, Object> params, ModelMap model) {
+	public  ResponseEntity<ReturnMessage> insertTransfer(@RequestBody Map<String, Object> params, ModelMap model, HttpServletRequest request,SessionVO sessionVo){
+		boolean success = false;
+		ReturnMessage message = new ReturnMessage();
 		logger.debug(" insertTransfer params : {}", params);
+		success = transferService.insertTransferMember(params,sessionVo);
 		
-		List<EgovMap> selectTransferList  = null;
-		logger.debug("selectTransferList : {}", selectTransferList);
+		if(success){
+			message.setMessage("Complete to Transfer Member Code : <br/> " + params.get("selectText"));
+		}else{
+			message.setMessage("Fail to Transfer Member Code : <br/> " + params.get("selectText"));
+		}
 		// 호출될 화면
-		return ResponseEntity.ok(selectTransferList);
+		return ResponseEntity.ok(message);
 	}
 }
