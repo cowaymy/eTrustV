@@ -1,0 +1,230 @@
+package com.coway.trust.web.payment.payment.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.application.SampleApplication;
+import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.payment.payment.service.CommDeductionService;
+import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
+import com.coway.trust.biz.payment.payment.service.PayDVO;
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
+import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
+import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
+import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
+import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.biz.sample.SampleDefaultVO;
+import com.coway.trust.biz.sample.SampleService;
+import com.coway.trust.biz.sample.SampleVO;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.util.Precondition;
+import com.coway.trust.web.commission.csv.CsvDataVO;
+import com.ibm.icu.text.SimpleDateFormat;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Controller
+@RequestMapping(value = "/payment")
+public class CommDeductionController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommDeductionController.class);
+	
+	@Resource(name = "commDeductionService")
+	private CommDeductionService commDeductionService;
+	
+	@Autowired
+	private CsvReadComponent csvReadComponent;
+	
+	
+	/******************************************************
+	 * Commission Deduction  
+	 *****************************************************/	
+	/**
+	 * Commission Deduction초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initCommissionDeduction.do")
+	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/payment/commissionDeduction";
+	}
+	
+	/**
+	 * Commission Deduction 조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectCommDeduction.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCommDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		//검색 파라미터 확인.(화면 Form객체 입력값)
+        LOGGER.debug("params : {}", params);
+        
+        
+        // 조회.
+        List<EgovMap> resultList = commDeductionService.selectCommitionDeduction(params);
+        
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+        }
+	
+	/**
+	 * CSV 파일 저장
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/csvUpload.do", method = RequestMethod.POST)
+	public ResponseEntity csvUpload(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
+		String message = "";
+		
+		if(sessionVO.getUserId() > 0){
+    		Map<String, MultipartFile> fileMap = request.getFileMap();
+    		MultipartFile multipartFile = fileMap.get("csvFile");
+    
+    		List<CommDeductionVO> vos = csvReadComponent.readCsvToList(multipartFile, true, CommDeductionVO::create);
+    
+    		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    		for (CommDeductionVO vo : vos) {
+    			LOGGER.debug("getOrderNo : {}, getmCode : {}, getAmount : {}, getPaidMonth : {} ", vo.getOrderNo(), vo.getmCode(), vo.getAmount(), vo.getPaidMonth());
+    			HashMap<String, Object> hm = new HashMap<String, Object>();
+    			hm.put("itemId", 0);
+    			hm.put("fileId", 0);
+    			hm.put("orderNo", vo.getOrderNo());
+    			hm.put("memberCode", vo.getmCode());
+    			hm.put("amount", vo.getAmount());
+    			hm.put("syncCompleted", false);
+    			hm.put("paidMonth", vo.getPaidMonth());
+    			list.add(hm);
+    		}
+    
+    		Calendar oCalendar = Calendar.getInstance( );
+    		Date curdate = new Date();
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    		String today = sdf.format(curdate);
+    		
+    		int yyyy = oCalendar.get(oCalendar.YEAR);
+    		String yy = String.valueOf(yyyy).substring(2, 3);
+    		int mm = oCalendar.get(oCalendar.MONTH) + 1;
+    		int dd = oCalendar.get(oCalendar.DATE);
+    
+    		Map<String, Object> m = new HashMap<String, Object>();
+    		
+    		m.put("fileName", multipartFile.getOriginalFilename());
+    		m.put("fileDate", today);
+    		m.put("fileRefNo", "COM" + yy + mm + dd);
+    		m.put("totalRecords", list.size());
+    		m.put("totalAmount", sumAmount(vos));
+    		m.put("fileStatus", 1); 
+    		
+    		System.out.println("master : " + m);
+    		
+    		int result = this.commDeductionService.addBulkData(m, list);
+    		if(result > 0){
+        		File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
+        		multipartFile.transferTo(file);
+        		
+        		message = "Saved Successfully";
+    		}else{
+    			message = "Failed to save : Only one upload is allowed a day";
+    		}
+		}else{
+			message = "Your login session has expired. Please relogin to our system.";
+		}
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
+	
+	private int sumAmount(List<CommDeductionVO> list){
+		int sum = 0;
+		for(int i=0; i<list.size(); i++)
+			sum += list.get(i).getAmount();
+		return sum;
+	}
+	
+	/**
+	 * PaymentResult 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/loadPaymentResult.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> loadPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		//검색 파라미터 확인.(화면 Form객체 입력값)
+        LOGGER.debug("params : {}", params);
+        
+        List<EgovMap> logList = commDeductionService.selectCommitionDeduction(params);
+        System.out.println(logList.get(0));
+        
+        List<EgovMap> resultList = commDeductionService.selectMasterView(logList.get(0));
+        for(int i=0; i<resultList.size(); i++){
+        	System.out.println(resultList.get(i));
+        }
+        
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * RawItemsStatus 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/loadRawItemsStatus.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> loadRawItemsStatus(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		//검색 파라미터 확인.(화면 Form객체 입력값)
+        LOGGER.debug("params : {}", params);
+        
+        List<EgovMap> logList = commDeductionService.selectLogDetail(params);
+
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(logList);
+	}
+	
+}
