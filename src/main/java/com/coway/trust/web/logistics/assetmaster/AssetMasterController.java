@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.asset.AssetMngService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
@@ -57,36 +58,35 @@ public class AssetMasterController {
 	@RequestMapping(value = "/assetList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> assetList(ModelMap model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
-//		logger.debug("searchassetid 값 : {}", request.getParameter("searchassetid"));
-//		logger.debug("searchstatus 값 : {}", request.getParameterValues("searchstatus"));
-//		logger.debug("searchbrand 값 : {}", request.getParameter("searchbrand"));
-//		logger.debug("searchcategory 값 : {}", request.getParameter("searchcategory"));
-//		logger.debug("searchtype 값 : {}", request.getParameterValues("searchtype"));	
-//		logger.debug("searchcolor 값 : {}", request.getParameter("searchcolor"));
-//		logger.debug("searchmodelname 값 : {}", request.getParameter("searchmodelname"));
-//		logger.debug("searchpurchasedate1 값 : {}", request.getParameter("searchpurchasedate1"));
-//		logger.debug("searchpurchasedate2 값 : {}", request.getParameter("searchpurchasedate2"));
-//		logger.debug("searchrefno 값 : {}", request.getParameter("searchrefno"));
-//		logger.debug("searchbranchid 값 : {}", request.getParameter("searchbranchid"));
-//		logger.debug("searchdepartment 값 : {}", request.getParameterValues("searchdepartment"));
-//		logger.debug("searchinvoiceno 값 : {}", request.getParameter("searchinvoiceno"));
-//		logger.debug("searchdealer 값 : {}", request.getParameter("searchdealer"));
-//		logger.debug("searchserialno 값 : {}", request.getParameter("searchserialno"));	
-//		logger.debug("searchwarrantyno 값 : {}", request.getParameter("searchwarrantyno"));
-//		logger.debug("searchimeino 값 : {}", request.getParameter("searchimeino"));
-//		logger.debug("searchmacaddress 값 : {}", request.getParameter("searchmacaddress"));		
-//		logger.debug("searchcreator 값 : {}", request.getParameter("searchcreator"));
-//		logger.debug("searchcreatedate1 값 : {}", request.getParameter("searchcreatedate1"));
-//		logger.debug("searchcreatedate2 값 : {}", request.getParameter("searchcreatedate2"));
-		
-		
+
+		// logger.debug("searchassetid 값 : {}", request.getParameter("searchassetid"));
+		// logger.debug("searchstatus 값 : {}", request.getParameterValues("searchstatus"));
+		// logger.debug("searchbrand 값 : {}", request.getParameter("searchbrand"));
+		// logger.debug("searchcategory 값 : {}", request.getParameter("searchcategory"));
+		// logger.debug("searchtype 값 : {}", request.getParameterValues("searchtype"));
+		// logger.debug("searchcolor 값 : {}", request.getParameter("searchcolor"));
+		// logger.debug("searchmodelname 값 : {}", request.getParameter("searchmodelname"));
+		// logger.debug("searchpurchasedate1 값 : {}", request.getParameter("searchpurchasedate1"));
+		// logger.debug("searchpurchasedate2 값 : {}", request.getParameter("searchpurchasedate2"));
+		// logger.debug("searchrefno 값 : {}", request.getParameter("searchrefno"));
+		// logger.debug("searchbranchid 값 : {}", request.getParameter("searchbranchid"));
+		// logger.debug("searchdepartment 값 : {}", request.getParameterValues("searchdepartment"));
+		// logger.debug("searchinvoiceno 값 : {}", request.getParameter("searchinvoiceno"));
+		// logger.debug("searchdealer 값 : {}", request.getParameter("searchdealer"));
+		// logger.debug("searchserialno 값 : {}", request.getParameter("searchserialno"));
+		// logger.debug("searchwarrantyno 값 : {}", request.getParameter("searchwarrantyno"));
+		// logger.debug("searchimeino 값 : {}", request.getParameter("searchimeino"));
+		// logger.debug("searchmacaddress 값 : {}", request.getParameter("searchmacaddress"));
+		// logger.debug("searchcreator 값 : {}", request.getParameter("searchcreator"));
+		// logger.debug("searchcreatedate1 값 : {}", request.getParameter("searchcreatedate1"));
+		// logger.debug("searchcreatedate2 값 : {}", request.getParameter("searchcreatedate2"));
+
 		String searchassetid = request.getParameter("searchassetid");
 		String[] searchstatus = request.getParameterValues("searchstatus");
 		String[] searchtype = request.getParameterValues("searchtype");
 		String[] searchdepartment = request.getParameterValues("searchdepartment");
-		String searchbrand = request.getParameter("searchbrand");	
-		String searchcolor = request.getParameter("searchcolor");	
+		String searchbrand = request.getParameter("searchbrand");
+		String searchcolor = request.getParameter("searchcolor");
 		String searchmodelname = request.getParameter("searchmodelname");
 		String searchpurchasedate1 = request.getParameter("searchpurchasedate1");
 		String searchpurchasedate2 = request.getParameter("searchpurchasedate2");
@@ -104,14 +104,14 @@ public class AssetMasterController {
 
 		Map<String, Object> assetmap = new HashMap();
 		assetmap.put("searchassetid", searchassetid);
-		assetmap.put("searchstatus", searchstatus);		
+		assetmap.put("searchstatus", searchstatus);
 		assetmap.put("searchtype", searchtype);
 		assetmap.put("searchdepartment", searchdepartment);
 		assetmap.put("searchbrand", searchbrand);
-		assetmap.put("searchcolor", searchcolor);		
+		assetmap.put("searchcolor", searchcolor);
 		assetmap.put("searchmodelname", searchmodelname);
 		assetmap.put("searchpurchasedate1", searchpurchasedate1);
-		assetmap.put("searchpurchasedate2", searchpurchasedate2);						
+		assetmap.put("searchpurchasedate2", searchpurchasedate2);
 		assetmap.put("searchrefno", searchrefno);
 		assetmap.put("searchbranchid", searchbranchid);
 		assetmap.put("searchinvoiceno", searchinvoiceno);
@@ -120,10 +120,10 @@ public class AssetMasterController {
 		assetmap.put("searchwarrantyno", searchwarrantyno);
 		assetmap.put("searchimeino", searchimeino);
 		assetmap.put("searchmacaddress", searchmacaddress);
-		assetmap.put("searchcreator", searchcreator);	
+		assetmap.put("searchcreator", searchcreator);
 		assetmap.put("searchcreatedate1", searchcreatedate1);
 		assetmap.put("searchcreatedate2", searchcreatedate2);
-		
+
 		List<EgovMap> list = ams.selectAssetList(assetmap);
 
 		Map<String, Object> map = new HashMap();
@@ -137,16 +137,16 @@ public class AssetMasterController {
 			HttpServletResponse response) throws Exception {
 
 		String assetid = request.getParameter("assetid");
-		//logger.debug("assetid 키값 : {}", assetid);
+		// logger.debug("assetid 키값 : {}", assetid);
 
 		Map<String, Object> assetdetailmap = new HashMap();
 		assetdetailmap.put("assetid", assetid);
 
 		List<EgovMap> list = ams.selectDetailList(assetdetailmap);
-		/*logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.size());
-		for (int i = 0; i < list.size(); i++) {
-			logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.get(i));
-		}*/
+		/*
+		 * logger.debug("디테일 리스트!!!!!!!!!!!!! : {}", list.size()); for (int i = 0; i < list.size(); i++) { logger.debug(
+		 * "디테일 리스트!!!!!!!!!!!!! : {}", list.get(i)); }
+		 */
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -173,33 +173,32 @@ public class AssetMasterController {
 		for (int i = 0; i < BrandList.size(); i++) {
 			logger.debug("%%%%%%%%BrandList%%%%%%%: {}", BrandList.get(i));
 		}
-		
+
 		return ResponseEntity.ok(BrandList);
 	}
 
 	@RequestMapping(value = "/selectTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
-		
+
 		params.put("hrchytypeid", "1198");
 
 		List<EgovMap> TypeList = ams.selectTypeList(params);
-		/*for (int i = 0; i < TypeList.size(); i++) {
-			logger.debug("%%%%%%%%TypeList%%%%%%%: {}", TypeList.get(i));
-		}*/
+		/*
+		 * for (int i = 0; i < TypeList.size(); i++) { logger.debug("%%%%%%%%TypeList%%%%%%%: {}", TypeList.get(i)); }
+		 */
 		return ResponseEntity.ok(TypeList);
 	}
-	
+
 	@RequestMapping(value = "/selectDepartmentList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDepartmentList(@RequestParam Map<String, Object> params) {
 
 		List<EgovMap> DepartmentList = ams.selectDepartmentList(params);
-//		for (int i = 0; i < DepartmentList.size(); i++) {
-//			logger.debug("%%%%%%%%DepartmentList%%%%%%%: {}", DepartmentList.get(i));
-//		}
+		// for (int i = 0; i < DepartmentList.size(); i++) {
+		// logger.debug("%%%%%%%%DepartmentList%%%%%%%: {}", DepartmentList.get(i));
+		// }
 
 		return ResponseEntity.ok(DepartmentList);
 	}
-	
 
 	@RequestMapping(value = "/insertAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
@@ -238,7 +237,7 @@ public class AssetMasterController {
 		Map<String, Object> map = new HashMap();
 
 		try {
-			ams.insertAssetMng(masterMap, detailAddList,loginId);
+			ams.insertAssetMng(masterMap, detailAddList, loginId);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -300,13 +299,12 @@ public class AssetMasterController {
 		return ResponseEntity.ok(map);
 	}
 
-
 	@RequestMapping(value = "/addItemAssetMng.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> addItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
-		
-		//logger.debug("아이템 추가 통과" );
-		
+
+		// logger.debug("아이템 추가 통과" );
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -314,19 +312,18 @@ public class AssetMasterController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-		
+
 		List<EgovMap> itemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
 		for (int i = 0; i < itemAddList.size(); i++) {
-			//itemAddList.get(i).put("loginId", loginId);
-			//logger.debug("%%%%%@@@@@@@@@@@@@%%%itemAddList%%%%%%%: {}", itemAddList.get(i));
+			// itemAddList.get(i).put("loginId", loginId);
+			// logger.debug("%%%%%@@@@@@@@@@@@@%%%itemAddList%%%%%%%: {}", itemAddList.get(i));
 		}
-		
-		
+
 		String retMsg = AppConstants.MSG_SUCCESS;
 		Map<String, Object> map = new HashMap();
 
-		try {			
-			ams.addItemAssetMng(itemAddList,loginId);			
+		try {
+			ams.addItemAssetMng(itemAddList, loginId);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -336,13 +333,12 @@ public class AssetMasterController {
 		return ResponseEntity.ok(map);
 	}
 
-	
 	@RequestMapping(value = "/updateItemAssetMng.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> updateItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
-			throws Exception {
-		
-		//logger.debug("업데이트 아이템 통과!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
-		
+	public ResponseEntity<Map<String, Object>> updateItemAssetMng(@RequestBody Map<String, Object> params,
+			ModelMap mode) throws Exception {
+
+		// logger.debug("업데이트 아이템 통과!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -350,33 +346,31 @@ public class AssetMasterController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-		
+
 		List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
 		for (int i = 0; i < updateItemList.size(); i++) {
-			//logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
+			// logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
 		}
 		List<EgovMap> ItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
 		for (int i = 0; i < ItemAddList.size(); i++) {
-			//logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
+			// logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
 		}
-		
-		
-//		logger.debug("addassetid  : {}", params.get("addassetid"));
-//		logger.debug("additemtype  : {}", params.get("additemtype"));
-//		logger.debug("additemBrand  : {}", params.get("additemBrand"));
-//		logger.debug("additemmodel  : {}", params.get("additemmodel"));
-//		logger.debug("addremark  : {}", params.get("addremark"));
-//		logger.debug("additemname  : {}", params.get("additemname"));
-//		logger.debug("additemvalue  : {}", params.get("additemvalue"));
-//		logger.debug("additemremark  : {}", params.get("additemremark"));
+
+		// logger.debug("addassetid : {}", params.get("addassetid"));
+		// logger.debug("additemtype : {}", params.get("additemtype"));
+		// logger.debug("additemBrand : {}", params.get("additemBrand"));
+		// logger.debug("additemmodel : {}", params.get("additemmodel"));
+		// logger.debug("addremark : {}", params.get("addremark"));
+		// logger.debug("additemname : {}", params.get("additemname"));
+		// logger.debug("additemvalue : {}", params.get("additemvalue"));
+		// logger.debug("additemremark : {}", params.get("additemremark"));
 
 		String retMsg = AppConstants.MSG_SUCCESS;
 
-
 		Map<String, Object> map = new HashMap();
 
-		try {			
-			ams.updateItemAssetMng(params,loginId);			
+		try {
+			ams.updateItemAssetMng(params, loginId);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -385,12 +379,11 @@ public class AssetMasterController {
 
 		return ResponseEntity.ok(map);
 	}
-	
-	
+
 	@RequestMapping(value = "/RemoveItemAssetMng.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> RemoveItemAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
-			throws Exception {
-		
+	public ResponseEntity<Map<String, Object>> RemoveItemAssetMng(@RequestBody Map<String, Object> params,
+			ModelMap mode) throws Exception {
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -399,16 +392,16 @@ public class AssetMasterController {
 			loginId = sessionVO.getUserId();
 		}
 		params.put("upd_user_id", loginId);
-		
+
 		logger.debug("multyassetid  : {}", params.get("multyassetid"));
 		logger.debug("itemassetdid  : {}", params.get("itemassetdid"));
-		
+
 		String retMsg = AppConstants.MSG_SUCCESS;
 
 		Map<String, Object> map = new HashMap();
 
-		try {			
-			ams.RemoveItemAssetMng(params);			
+		try {
+			ams.RemoveItemAssetMng(params);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -417,8 +410,6 @@ public class AssetMasterController {
 
 		return ResponseEntity.ok(map);
 	}
-	
-	
 
 	@RequestMapping(value = "/copyAsset.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertCopyAsset(ModelMap model, HttpServletRequest request,
@@ -450,6 +441,42 @@ public class AssetMasterController {
 		map.put("msg", retMsg);
 
 		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/assetCard.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> assetCard(@RequestBody Map<String, Object> params) throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+
+		logger.debug("masterassetid  : {}", params.get("masterassetid"));
+		List<EgovMap> list = ams.assetCardList(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveAssetCard.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAssetCard(@RequestBody Map<String, Object> params) throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		logger.debug("masterassetid  : {}", params.get("masterassetid"));
+		params.put("loginId", loginId);
+		ams.saveAssetCard(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setDataList(list);
+		return ResponseEntity.ok(message);
 	}
 
 }

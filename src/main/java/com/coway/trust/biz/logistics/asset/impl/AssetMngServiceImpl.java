@@ -57,18 +57,18 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	public List<EgovMap> selectTypeList(Map<String, Object> params) {
 		return AssetMngMapper.selectTypeList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectDepartmentList(Map<String, Object> params) {
 		return AssetMngMapper.selectDepartmentList(params);
 	}
 
 	@Override
-	public void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList,int loginId ) {
+	public void insertAssetMng(Map<String, Object> params, List<EgovMap> detailAddList, int loginId) {
 
 		int inassetid = AssetMngMapper.AssetCreateSeq();
 		int newAssetCardId = AssetMngMapper.AssetCardIdSeq();
-		
+
 		params.put("inassetid", inassetid);
 		params.put("masterstatus", 1);
 		params.put("masterbreanch", 42);
@@ -76,13 +76,13 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		params.put("curr_user_id", 0);
 
 		AssetMngMapper.insertMasterAsset(params);
-		
+
 		Map<String, Object> cardmap = new HashMap<String, Object>();
-		
+
 		cardmap.put("newAssetCardId", newAssetCardId);
 		cardmap.put("newAssetId", inassetid);
 		cardmap.put("loginId", loginId);
-		
+
 		AssetMngMapper.insertCopyAssetCard(cardmap);
 
 		int detailsize = detailAddList.size();
@@ -95,7 +95,7 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 				map.put("detailassetid", detailassetid);
 				map.put("detailstatus", 1);
 				map.put("inassetid", inassetid);
-				setUserId(map,loginId);
+				setUserId(map, loginId);
 				map.put("typeid", Integer.parseInt((String) map.get("typeid")));//
 				map.put("brandid", Integer.parseInt((String) map.get("brandid")));//
 				Logger.debug("insdetailtype     : {}", map.get("typeid"));
@@ -124,71 +124,68 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 	}
 
 	@Override
-	public void addItemAssetMng(List<EgovMap> itemAddList,int loginId) {		
-		
+	public void addItemAssetMng(List<EgovMap> itemAddList, int loginId) {
+
 		for (int i = 0; i < itemAddList.size(); i++) {
-		int insdetailAssetDid = AssetMngMapper.AssetdetailCreateSeq();
-		int insAseetItemDid = AssetMngMapper.AssetItemCreateSeq();
-		
-		Logger.debug("itemAddList   : {}", itemAddList.get(i));
-		
-		Map<String, Object> map = itemAddList.get(i);
-		Map<String, Object> resultmap = new HashMap<String, Object>();
-		
-		setUserId(resultmap,loginId);
-			
-		resultmap.put("detailassetid", insdetailAssetDid);
-		resultmap.put("insAseetItemDid", insAseetItemDid);
-		resultmap.put("detailstatus", 1);
-		resultmap.put("inassetid", map.get("assetid"));
-		resultmap.put("typeid", map.get("typeid"));
-		resultmap.put("brandid", map.get("brandid"));	
-		resultmap.put("name1", map.get("name1"));
-		resultmap.put("assetDRem", map.get("assetDRem"));
-		resultmap.put("additemname", map.get("name3"));
-		resultmap.put("additemvalue", map.get("valu"));
-		resultmap.put("additemremark", map.get("assetDItmRem"));
-			
-		AssetMngMapper.insertDetailAsset(resultmap);
-		AssetMngMapper.addAssetItm(resultmap);
-		
+			int insdetailAssetDid = AssetMngMapper.AssetdetailCreateSeq();
+			int insAseetItemDid = AssetMngMapper.AssetItemCreateSeq();
+
+			Logger.debug("itemAddList   : {}", itemAddList.get(i));
+
+			Map<String, Object> map = itemAddList.get(i);
+			Map<String, Object> resultmap = new HashMap<String, Object>();
+
+			setUserId(resultmap, loginId);
+
+			resultmap.put("detailassetid", insdetailAssetDid);
+			resultmap.put("insAseetItemDid", insAseetItemDid);
+			resultmap.put("detailstatus", 1);
+			resultmap.put("inassetid", map.get("assetid"));
+			resultmap.put("typeid", map.get("typeid"));
+			resultmap.put("brandid", map.get("brandid"));
+			resultmap.put("name1", map.get("name1"));
+			resultmap.put("assetDRem", map.get("assetDRem"));
+			resultmap.put("additemname", map.get("name3"));
+			resultmap.put("additemvalue", map.get("valu"));
+			resultmap.put("additemremark", map.get("assetDItmRem"));
+
+			AssetMngMapper.insertDetailAsset(resultmap);
+			AssetMngMapper.addAssetItm(resultmap);
+
 		}
-		
+
 	}
-	
-@Override
-	public void updateItemAssetMng(Map<String, Object> params,int loginId) {		
-		
-	
-    	List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
-    	for (int i = 0; i < updateItemList.size(); i++) {
-    		//Logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
-    	}
-    	List<EgovMap> ItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
-    	for (int i = 0; i < ItemAddList.size(); i++) {
-    		//Logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
-    	}
-	
-	
-    	if (updateItemList.size() > 0) {
+
+	@Override
+	public void updateItemAssetMng(Map<String, Object> params, int loginId) {
+
+		List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+		for (int i = 0; i < updateItemList.size(); i++) {
+			// Logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
+		}
+		List<EgovMap> ItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		for (int i = 0; i < ItemAddList.size(); i++) {
+			// Logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
+		}
+
+		if (updateItemList.size() > 0) {
 			for (int i = 0; i < updateItemList.size(); i++) {
-				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
-				
+				Map<String, Object> updateMap = updateItemList.get(i);
+
 				updateMap.put("upuser_id", loginId);
-				
+
 				AssetMngMapper.updateItm(updateMap);
 				AssetMngMapper.updateAssetDetail(updateMap);
 			}
 		}
-    	
-    	
-    	if (ItemAddList.size() > 0) {
+
+		if (ItemAddList.size() > 0) {
 			for (int i = 0; i < ItemAddList.size(); i++) {
-				Map<String, Object> insMap = (Map<String, Object>) ItemAddList.get(i);
-					
+				Map<String, Object> insMap = ItemAddList.get(i);
+
 				int ItemCreateSeq = AssetMngMapper.AssetItemCreateSeq();
 				int detailassetid = AssetMngMapper.AssetdetailCreateSeq();
-		
+
 				insMap.put("insAseetItemDid", ItemCreateSeq);
 				insMap.put("detailassetid", insMap.get("assetdid"));
 				insMap.put("additemname", insMap.get("name3"));
@@ -205,27 +202,26 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 				insMap.put("upuser_id", loginId);
 				insMap.put("name1", insMap.get("name1"));
 				insMap.put("assetDRem", insMap.get("assetDRem"));
-				
+
 				AssetMngMapper.insertDetailAsset(insMap);
 				AssetMngMapper.addAssetItm(insMap);
-				
+
 			}
 		}
-		
+
 	}
-	
+
 	@Override
-	public void RemoveItemAssetMng(Map<String, Object> params) {		
-			
-//		Logger.info("multyassetid @@@@@@: {}", params.get("multyassetid"));
-//		Logger.info("itemassetdid $$$$$$$$$$: {}", params.get("itemassetdid"));
-		
+	public void RemoveItemAssetMng(Map<String, Object> params) {
+
+		// Logger.info("multyassetid @@@@@@: {}", params.get("multyassetid"));
+		// Logger.info("itemassetdid $$$$$$$$$$: {}", params.get("itemassetdid"));
+
 		AssetMngMapper.RemoveAssetDetail(params);
 		AssetMngMapper.RemoveAssetItem(params);
-		
+
 	}
-		
-	
+
 	@Override
 	public int insertCopyAsset(int assetid, int copyquantity, int loginId) {
 		int cnt = 0;
@@ -322,11 +318,24 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		List<EgovMap> list = AssetMngMapper.selectAssetDItem(assetid);
 		return list;
 	}
-	
-	
-	private void setUserId(Map<String, Object> params, int loginId){
+
+	private void setUserId(Map<String, Object> params, int loginId) {
 		params.put("crtuser_id", loginId);
 		params.put("upuser_id", loginId);
 	}
-	
+
+	@Override
+	public List<EgovMap> assetCardList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return AssetMngMapper.assetCardList(params);
+	}
+
+	@Override
+	public void saveAssetCard(Map<String, Object> params) {
+		AssetMngMapper.insertAssetCardFrom(params);
+		AssetMngMapper.insertAssetCardTo(params);
+		AssetMngMapper.updateAssetCard(params);
+
+	}
+
 }
