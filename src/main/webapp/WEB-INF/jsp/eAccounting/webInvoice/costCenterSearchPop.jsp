@@ -16,7 +16,8 @@ var costCenterGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20
+    pageRowCount : 20,
+    showStateColumn : true
 };
 
 var costCenterGridID;

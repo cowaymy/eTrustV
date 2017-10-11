@@ -90,7 +90,8 @@ var myGridPros = {
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    editable : true
+    editable : true,
+    showStateColumn : true
 };
 
 $(document).ready(function () {

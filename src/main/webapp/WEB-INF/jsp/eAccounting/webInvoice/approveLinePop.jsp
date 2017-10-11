@@ -7,7 +7,19 @@ var approveLineColumnLayout = [ {
     headerText : "Approve No"
 }, {
     dataField : "userId",
-    headerText : "User ID"
+    headerText : "User ID",
+    renderer : {
+        type : "IconRenderer",
+        iconTableRef :  {
+            "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
+        },         
+        iconWidth : 24,
+        iconHeight : 24,
+        iconPosition : "aisleRight",
+        onclick : function(rowIndex, columnIndex, value, item) {
+            fn_expenseTypeSearchPop();
+            }
+        }
 
 }, {
     dataField : "name",
@@ -23,7 +35,8 @@ var approveLineGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20
+    pageRowCount : 20,
+    showStateColumn : true
 };
 
 var approveLineGridID;
@@ -45,7 +58,13 @@ $(document).ready(function () {
         
         $("#supplierSearchPop").remove();
   });
+    
+    fn_addRow();
 });
+
+function fn_addRow() {
+    AUIGrid.addRow(approveLineGridID, {}, "last");
+}
 
 function fn_selectApproveLine() {
     AUIGrid.showAjaxLoader(approveLineGridID);

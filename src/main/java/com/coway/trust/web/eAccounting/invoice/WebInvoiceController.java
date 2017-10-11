@@ -72,6 +72,11 @@ public class WebInvoiceController {
 	public String webInvoice(ModelMap model) {
 		return "eAccounting/webInvoice/webInvoice";
 	}
+	
+	@RequestMapping(value = "/approve.do")
+	public String approve(ModelMap model) {
+		return "eAccounting/webInvoice/webInvoiceApprove";
+	}
 
 	@RequestMapping(value = "/supplierSearchPop.do")
 	public String supplierSearchPop(ModelMap model) {
@@ -154,7 +159,7 @@ public class WebInvoiceController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		// serivce 에서 파일정보를 가지고, DB 처리.
-		fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
+		//fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
 		
 		params.put("attachment", list);
 		
@@ -175,7 +180,7 @@ public class WebInvoiceController {
 		String clmNo = webInvoiceService.selectNextClmNo();
 		params.put("clmNo", clmNo);
 		
-		webInvoiceService.insertWebInvoiceInfo(params);
+		//webInvoiceService.insertWebInvoiceInfo(params);
 		
 		return ResponseEntity.ok(params);
 	}
@@ -205,7 +210,7 @@ public class WebInvoiceController {
 				int clmSeq = webInvoiceService.selectNextClmSeq();
 				hm.put("clmSeq", clmSeq);
 				hm.put("userId", sessionVO.getUserId());
-				webInvoiceService.insertWebInvoiceDetail(hm);
+				//webInvoiceService.insertWebInvoiceDetail(hm);
 			}
 		}
 		if (updateList.size() > 0) {
