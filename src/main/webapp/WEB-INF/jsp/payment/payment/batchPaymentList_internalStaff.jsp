@@ -27,16 +27,19 @@ var gridPros = {
 $(document).ready(function(){
     
     
-	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	
-	// Master Grid 셀 클릭시 이벤트
+    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    
+    // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){ 
         selectedGridValue = event.rowIndex;
     });  
-	
-	$("#payMode").multipleSelect("checkAll");
-	$("#confirmStatus").multipleSelect("setSelects", [44]);
-	$("#batchStatus").multipleSelect("setSelects", [1]);
+    
+    $("#payMode").multipleSelect("checkAll");
+    $("#confirmStatus").multipleSelect("setSelects", [44]);
+    $("#batchStatus").multipleSelect("setSelects", [1]);
+    
+    //upload Popup selected
+    $('#paymentMode option[value="105"]').attr('selected', 'selected');
     
 });
 
@@ -67,7 +70,7 @@ var columnLayout = [
         headerText : "Upload By",
         editable : false
     }, {
-        dataField : "",
+        dataField : "cnfmDt",
         headerText : "Upload Date",
         editable : false
     }, {
@@ -75,7 +78,7 @@ var columnLayout = [
         headerText : "Confirm By",
         editable : false
     }, {
-        dataField : "",
+        dataField : "crtDt",
         headerText : "Upload Date",
         editable : false
     },{
@@ -110,14 +113,6 @@ var batchInfoLayout = [
         headerText : "Order No",
         editable : false
     }, {
-        dataField : "name1",
-        headerText : "TR No",
-        editable : false
-    }, {
-        dataField : "userRefNo",
-        headerText : "Ref No",
-        editable : false
-    }, {
         dataField : "userAmt",
         headerText : "Amount",
         editable : false
@@ -126,22 +121,6 @@ var batchInfoLayout = [
         headerText : "Bank Acc",
         editable : false
     }, {
-        dataField : "",
-        headerText : "Chq No",
-        editable : false
-    }, {
-        dataField : "userIssBank",
-        headerText : "Issue Bank",
-        editable : false
-    }, {
-        dataField : "userRunNo",
-        headerText : "Running No",
-        editable : false
-    },{
-        dataField : "",
-        headerText : "EFT No",
-        editable : false
-    },{
         dataField : "userRefDtMonth",
         headerText : "Ref Date(Month)",
         editable : false
@@ -152,14 +131,6 @@ var batchInfoLayout = [
     },{
         dataField : "userRefDtYear",
         headerText : "Ref Date(Year)",
-        editable : false
-    },{
-        dataField : "c2",
-        headerText : "Bank Charge Amt",
-        editable : false
-    },{
-        dataField : "c2",
-        headerText : "Bank Charge Acc",
         editable : false
     }];
     
@@ -177,11 +148,11 @@ var batchInfoLayout = [
               iconWidth : 16,
               iconHeight : 16,
               onclick : function(rowIndex, columnIndex, value, item) {
-            	  
-            	  if(item.detId == "1"){
-            		  fn_removeItem(item.detId);
-            	  }
-            	  
+                  
+                  if(item.detId == "1"){
+                      fn_removeItem(item.detId);
+                  }
+                  
               }
            }
         },{
@@ -197,36 +168,12 @@ var batchInfoLayout = [
             headerText : "Order No",
             editable : false
         }, {
-            dataField : "name1",
-            headerText : "TR No",
-            editable : false
-        }, {
-            dataField : "userRefNo",
-            headerText : "Ref No",
-            editable : false
-        }, {
             dataField : "userAmt",
             headerText : "Amount",
             editable : false
         }, {
             dataField : "userBankAcc",
             headerText : "Bank Acc",
-            editable : false
-        }, {
-            dataField : "",
-            headerText : "Chq No",
-            editable : false
-        }, {
-            dataField : "userIssBank",
-            headerText : "Issue Bank",
-            editable : false
-        }, {
-            dataField : "userRunNo",
-            headerText : "Running No",
-            editable : false
-        },{
-            dataField : "",
-            headerText : "EFT No",
             editable : false
         },{
             dataField : "userRefDtMonth",
@@ -240,34 +187,26 @@ var batchInfoLayout = [
             dataField : "userRefDtYear",
             headerText : "Ref Date(Year)",
             editable : false
-        },{
-            dataField : "c2",
-            headerText : "Bank Charge Amt",
-            editable : false
-        },{
-            dataField : "c2",
-            headerText : "Bank Charge Acc",
-            editable : false
         }];
     
 
     // ajax list 조회.
     function searchList(){
-    	Common.ajax("GET","/payment/selectBatchPaymentList.do",$("#searchForm").serialize(), function(result){
-    		console.log(result);
-    		AUIGrid.setGridData(myGridID, result);
-    	});
+        Common.ajax("GET","/payment/selectBatchPaymentList.do",$("#searchForm").serialize(), function(result){
+            console.log(result);
+            AUIGrid.setGridData(myGridID, result);
+        });
     }
     
     function fn_viewBatchPopup(){
-    	
-    	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+        
+        var selectedItem = AUIGrid.getSelectedIndex(myGridID);
         
         if (selectedItem[0] > -1){
-        	$('#view_popup_wrap').show();
-        	var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
-        	
-        	Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
+            $('#view_popup_wrap').show();
+            var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
+            
+            Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
                 console.log(result);
                 
                 $('#txtBatchId').text(result.batchPaymentView.batchId);
@@ -292,30 +231,30 @@ var batchInfoLayout = [
                 AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
                 AUIGrid.resize(batchInfoGridID,942, 280);
             });
-        	
+            
         }else{
             Common.alert('No batch selected. ');
         }
     }
     
     function fn_batchPayItemList(validStatusId){
-    	var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
+        var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
         
-    	Common.ajax("GET","/payment/selectBatchPayItemList.do",{"batchId":batchId, "validStatusId" : validStatusId}, function(result){
-    		
-    		if(validStatusId == "4"){
+        Common.ajax("GET","/payment/selectBatchPayItemList.do",{"batchId":batchId, "validStatusId" : validStatusId}, function(result){
+            
+            if(validStatusId == "4"){
                 $('#itemGubun').text("Valid Items");
             }else if(validStatusId == "21"){
                 $('#itemGubun').text("Invalid Items");
             }else{
                 $('#itemGubun').text("All Items");
             }
-    		
-    		AUIGrid.destroy(batchInfoGridID);
+            
+            AUIGrid.destroy(batchInfoGridID);
             batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros);
             AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
             AUIGrid.resize(batchInfoGridID,942, 280);
-    	});
+        });
     }
     
     function fn_batchPayItemList2(validStatusId){
@@ -349,7 +288,7 @@ var batchInfoLayout = [
             var batchStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchStusId");
             
             if(batchStusId == "1"){
-            	$('#conf_popup_wrap').show();
+                $('#conf_popup_wrap').show();
                 Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
                     console.log(result);
                     
@@ -375,9 +314,9 @@ var batchInfoLayout = [
                     AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
                     AUIGrid.resize(batchConfGridID,942, 280);
                 });
-            	
+                
             }else{
-            	Common.alert("Batch [" + batchId + "] is not active. Batch confirm is disallowed.");
+                Common.alert("Batch [" + batchId + "] is not active. Batch confirm is disallowed.");
             }
             
         }else{
@@ -386,42 +325,42 @@ var batchInfoLayout = [
     }
     
     function fn_removeItem(detId){
-    	Common.ajax("GET","/payment/updRemoveItem.do",{"detId":detId}, function(result){
-    		fn_confirmBatchPopup();
-    		Common.alert(result.message);
-    	});
+        Common.ajax("GET","/payment/updRemoveItem.do",{"detId":detId}, function(result){
+            fn_confirmBatchPopup();
+            Common.alert(result.message);
+        });
     }
     
     function fn_confirmBatch(){
-    	
-    	Common.confirm('Are you sure want to confirm this payment batch ?',function (){
-    		var totalInvalid = $('#totalInvalid_conf').text();
-    		var totalValid = $('#totalValid_conf').text();
-    		var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
-    		
-    		if(totalInvalid > 0){
-    			Common.alert("There is some invalid item exist.<br />Batch confirm is disallowed.");
-    			return;
-    		}else{
-    			if(totalValid > 0){
-    				
-    				Common.ajax("GET","/payment/saveConfirmBatch.do", {"batchId" : batchId}, function(result){
-    	                console.log(result);
-    	                
-    	                Common.alert(result.message);
-    	            });
-    				
-    			}else{
-    				Common.alert("No valid item found.<br />Batch confirm is disallowed.");
+        
+        Common.confirm('Are you sure want to confirm this payment batch ?',function (){
+            var totalInvalid = $('#totalInvalid_conf').text();
+            var totalValid = $('#totalValid_conf').text();
+            var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
+            
+            if(totalInvalid > 0){
+                Common.alert("There is some invalid item exist.<br />Batch confirm is disallowed.");
+                return;
+            }else{
+                if(totalValid > 0){
+                    
+                    Common.ajax("GET","/payment/saveConfirmBatch.do", {"batchId" : batchId}, function(result){
+                        console.log(result);
+                        
+                        Common.alert(result.message);
+                    });
+                    
+                }else{
+                    Common.alert("No valid item found.<br />Batch confirm is disallowed.");
                     return;
-    			}
-    		}
+                }
+            }
         });
     }
     
     function fn_deactivateBatch(){
         Common.confirm('Are you sure want to deactivate this payment batch ?',function (){
-        	var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
+            var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
             Common.ajax("GET","/payment/saveDeactivateBatch.do", {"batchId" : batchId}, function(result){
                 console.log(result);
                 
@@ -431,25 +370,23 @@ var batchInfoLayout = [
     }
     
     function fn_uploadPopup(){
-    	$('#upload_popup_wrap').show();
+        $('#upload_popup_wrap').show();
     }
     
     function fn_uploadFile(){
-    	
+        
         var formData = new FormData();
         var payModeId = $("#paymentMode option:selected").val();
         
         if(payModeId == ""){
-        	Common.alert("Please select the payment mode.");
-        	return;
+            Common.alert("Please select the payment mode.");
+            return;
         }
         
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
         formData.append("payModeId", payModeId);
         
-        Common.ajaxFile("/payment/csvFileUpload.do", formData, function(result){
-            $('#paymentMode option[value=""]').attr('selected', 'selected');
-
+        Common.ajaxFile("/payment/csvOutrightFileUpload.do", formData, function(result){
             Common.alert(result.message);
         });
     }
@@ -466,104 +403,104 @@ var batchInfoLayout = [
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
-        <li> Batch Payment List</li>
+        <li>Batch Payment List(Internal Staff)</li>
     </ul>
     <!-- title_line start -->
     <aside class="title_line">
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Batch Payment List</h2>
-		<ul class="right_btns">
-		    <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
-		    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
-		</ul>
-	</aside><!-- title_line end -->
+        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <h2>Batch Payment List(Internal Staff)</h2>
+        <ul class="right_btns">
+            <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+        </ul>
+    </aside><!-- title_line end -->
     
     <!-- search_table start -->
     <section class="search_table"><!-- search_table start -->
-	<form id="searchForm" action="#" method="post">
-	<input type="hidden" id="validStatusId" name="validStatusId">
-	<input type="hidden" id="payType" name="payType" value="97">
-	<input type="hidden" id="payCustType" name="payCustType" value="1368">
-	<table class="type1"><!-- table start -->
-	<caption>table</caption>
-	<colgroup>
-	    <col style="width:170px" />
-	    <col style="width:*" />
-	    <col style="width:230px" />
-	    <col style="width:*" />
-	    <col style="width:160px" />
-	    <col style="width:*" />
-	</colgroup>
-	<tbody>
-	<tr>
-	    <th scope="row">Batch ID</th>
-	    <td><input type="text" id="batchId" name="batchId" title="" placeholder="Batch ID (Number Only)" class="w100p" onkeydown="onlyNumber(this)" /></td>
-	    <th scope="row">Paymode</th>
-	    <td>
-	    <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
-	        <option value="105">Cash (CSH)</option>
-	        <option value="106">Cheque (CHQ)</option>
-	        <option value="108">Online Payment(ONL)</option>
-	    </select>
-	    </td>
-	    <th scope="row">Create Date</th>
-	    <td>
-	    <div class="date_set w100p"><!-- date_set start -->
-	    <p><input type="text" id="createDateFr" name="createDateFr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	    <span>To</span>
-	    <p><input type="text" id="createDateTo" name="createDateTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	    </div><!-- date_set end -->
-	    </td>
-	</tr>
-	<tr>
-	    <th scope="row">Confirm Status</th>
-	    <td>
-	    <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
-	        <option value="44">Pending</option>
-	        <option value="77">Confirm</option>
-	    </select>
-	    </td>
-	    <th scope="row">Batch Status</th>
-	    <td>
-	    <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
-	        <option value="1">Active</option>
-	        <option value="4">Completed</option>
-	        <option value="8">Inactive</option>
-	    </select>
-	    </td>
-	    <th scope="row">Creator</th>
-	    <td><input type="text" id="creator" name="creator" title="" placeholder="OR No." class="w100p" /></td>
-	</tr>
-	</tbody>
-	</table><!-- table end -->
-	
-	<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-	<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-	<dl class="link_list">
-	    <dt>Link</dt>
-	    <dd>
-	    <!-- <ul class="btns">
-	        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-	        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-	        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-	    </ul> -->
-	    <ul class="btns">
-	        <li><p class="link_btn type2"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
-	        <li><p class="link_btn type2"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
-	        <li><p class="link_btn type2"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
-	    </ul>
-	    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	    </dd>
-	</dl>
-	</aside><!-- link_btns_wrap end -->
-	
-	</form>
-	</section><!-- search_table end -->
+    <form id="searchForm" action="#" method="post">
+    <input type="hidden" id="validStatusId" name="validStatusId">
+    <input type="hidden" id="payType" name="payType" value="96">
+    <input type="hidden" id="payCustType" name="payCustType" value="1369">
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:170px" />
+        <col style="width:*" />
+        <col style="width:230px" />
+        <col style="width:*" />
+        <col style="width:160px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Batch ID</th>
+        <td><input type="text" id="batchId" name="batchId" title="" placeholder="Batch ID (Number Only)" class="w100p" onkeydown="onlyNumber(this)"/></td>
+        <th scope="row">Paymode</th>
+        <td>
+        <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
+            <option value="105">Cash (CSH)</option>
+            <option value="106">Cheque (CHQ)</option>
+            <option value="108">Online Payment(ONL)</option>
+        </select>
+        </td>
+        <th scope="row">Create Date</th>
+        <td>
+        <div class="date_set w100p"><!-- date_set start -->
+        <p><input type="text" id="createDateFr" name="createDateFr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        <span>To</span>
+        <p><input type="text" id="createDateTo" name="createDateTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        </div><!-- date_set end -->
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Confirm Status</th>
+        <td>
+        <select id="confirmStatus" name="confirmStatus" class="multy_select w100p" multiple="multiple">
+            <option value="44">Pending</option>
+            <option value="77">Confirm</option>
+        </select>
+        </td>
+        <th scope="row">Batch Status</th>
+        <td>
+        <select id="batchStatus" name="batchStatus" class="multy_select w100p" multiple="multiple">
+            <option value="1">Active</option>
+            <option value="4">Completed</option>
+            <option value="8">Inactive</option>
+        </select>
+        </td>
+        <th scope="row">Creator</th>
+        <td><input type="text" id="creator" name="creator" title="" placeholder="OR No." class="w100p" /></td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+    
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <!-- <ul class="btns">
+            <li><p class="link_btn"><a href="#">menu1</a></p></li>
+            <li><p class="link_btn"><a href="#">menu2</a></p></li>
+            <li><p class="link_btn"><a href="#">menu3</a></p></li>
+            <li><p class="link_btn"><a href="#">menu4</a></p></li>
+            <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+            <li><p class="link_btn"><a href="#">menu6</a></p></li>
+            <li><p class="link_btn"><a href="#">menu7</a></p></li>
+            <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        </ul> -->
+        <ul class="btns">
+            <li><p class="link_btn type2"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
+            <li><p class="link_btn type2"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
+            <li><p class="link_btn type2"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
+    
+    </form>
+    </section><!-- search_table end -->
 
     <!-- search_result start -->
     <section class="search_result">
@@ -586,110 +523,110 @@ var batchInfoLayout = [
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-	<section class="tap_wrap"><!-- tap_wrap start -->
-	<ul class="tap_type1">
-	    <li><a href="#" class="on">Batch Payment Info</a></li>
-	    <li><a href="#">Batch Payment Item</a></li>
-	</ul>
-	<article class="tap_area"><!-- tap_area start -->
-	<table class="type1"><!-- table start -->
-	<caption>table</caption>
-	<colgroup>
-	    <col style="width:130px" />
-	    <col style="width:*" />
-	    <col style="width:130px" />
-	    <col style="width:*" />
-	    <col style="width:130px" />
-	    <col style="width:*" />
-	</colgroup>
-	<tbody>
-	<tr>
-	    <th scope="row">Batch ID</th>
-	    <td>
-	        <span id="txtBatchId"></span>
-	    </td>
-	    <th scope="row">Batch Status</th>
-	    <td id="txtBatchStatus">
-	    </td>
-	    <th scope="row">Confirm Status</th>
-	    <td>
-	        <span id="txtConfirmStatus"></span>
-	    </td>
-	</tr>
-	<tr>
-	    <th scope="row">Paymode</th>
-	    <td>
-	        <span id="txtPayMode"></span>
-	    </td>
-	    <th scope="row">Upload By</th>
-	    <td>
-	        <span id="txtUploadBy"></span>
-	    </td>
-	    <th scope="row">Upload At</th>
-	    <td>
-	        <span id="txtUploadAt"></span>
-	    </td>
-	</tr>
-	<tr>
-	    <th scope="row">Confirm By</th>
-	    <td>
-	        <span id="txtConfirmBy"></span>
-	    </td>
-	    <th scope="row">Confirm At</th>
-	    <td colspan="3">
-	        <span id="txtConfirmAt"></span>
-	    </td>
-	</tr>
-	<tr>
-	    <th scope="row">Convert By</th>
-	    <td>
-	        <span id="txtConvertBy"></span>
-	    </td>
-	    <th scope="row">Convert At</th>
-	    <td>
-	        <span id="txtConvertAt"></span>
-	    </td>
-	    <th scope="row">Total Amount (Valid)</th>
-	    <td>
-	        <span id="totalAmount"></span>
-	    </td>
-	</tr>
-	<tr>
-	    <th scope="row">Total Item</th>
-	    <td>
-	        <span id="totalItem"></span>
-	    </td>
-	    <th scope="row">Total Valid</th>
-	    <td>
-	        <span id="totalValid"></span>
-	    </td>
-	    <th scope="row">Total Invalid</th>
-	    <td>
-	        <span id="totalInvalid"></span>
-	    </td>
-	</tr>
-	</tbody>
-	</table><!-- table end -->
-	</article><!-- tap_area end -->
-	<!-- tap_area start -->
-	<article class="tap_area">
-	<!-- title_line start -->
-	<aside class="title_line">
-	<h2 id="itemGubun">All Items</h2>
-	<ul class="right_btns">
-	    <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('' , '');">All Items</a></p></li>
-	    <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4' , '');">Valid Items</a></p></li>
-	    <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , '');">Invalid Items</a></p></li>
-	</ul>
-	</aside>
-	<!-- title_line end -->
-	<!-- grid_wrap start -->
-	<article id="view_grid_wrap" class="grid_wrap">
-	
-	</article>
-	<!-- grid_wrap end -->
-	</article><!-- tap_area end -->
-	</section><!-- tap_wrap end -->
+    <section class="tap_wrap"><!-- tap_wrap start -->
+    <ul class="tap_type1">
+        <li><a href="#" class="on">Batch Payment Info</a></li>
+        <li><a href="#">Batch Payment Item</a></li>
+    </ul>
+    <article class="tap_area"><!-- tap_area start -->
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:130px" />
+        <col style="width:*" />
+        <col style="width:130px" />
+        <col style="width:*" />
+        <col style="width:130px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Batch ID</th>
+        <td>
+            <span id="txtBatchId"></span>
+        </td>
+        <th scope="row">Batch Status</th>
+        <td id="txtBatchStatus">
+        </td>
+        <th scope="row">Confirm Status</th>
+        <td>
+            <span id="txtConfirmStatus"></span>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Paymode</th>
+        <td>
+            <span id="txtPayMode"></span>
+        </td>
+        <th scope="row">Upload By</th>
+        <td>
+            <span id="txtUploadBy"></span>
+        </td>
+        <th scope="row">Upload At</th>
+        <td>
+            <span id="txtUploadAt"></span>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Confirm By</th>
+        <td>
+            <span id="txtConfirmBy"></span>
+        </td>
+        <th scope="row">Confirm At</th>
+        <td colspan="3">
+            <span id="txtConfirmAt"></span>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Convert By</th>
+        <td>
+            <span id="txtConvertBy"></span>
+        </td>
+        <th scope="row">Convert At</th>
+        <td>
+            <span id="txtConvertAt"></span>
+        </td>
+        <th scope="row">Total Amount (Valid)</th>
+        <td>
+            <span id="totalAmount"></span>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Total Item</th>
+        <td>
+            <span id="totalItem"></span>
+        </td>
+        <th scope="row">Total Valid</th>
+        <td>
+            <span id="totalValid"></span>
+        </td>
+        <th scope="row">Total Invalid</th>
+        <td>
+            <span id="totalInvalid"></span>
+        </td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+    </article><!-- tap_area end -->
+    <!-- tap_area start -->
+    <article class="tap_area">
+    <!-- title_line start -->
+    <aside class="title_line">
+    <h2 id="itemGubun">All Items</h2>
+    <ul class="right_btns">
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('' , '');">All Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4' , '');">Valid Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , '');">Invalid Items</a></p></li>
+    </ul>
+    </aside>
+    <!-- title_line end -->
+    <!-- grid_wrap start -->
+    <article id="view_grid_wrap" class="grid_wrap">
+    
+    </article>
+    <!-- grid_wrap end -->
+    </article><!-- tap_area end -->
+    </section><!-- tap_wrap end -->
 </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
 
@@ -836,7 +773,7 @@ var batchInfoLayout = [
 <tr>
     <th scope="row">Payment Mode</th>
     <td>
-    <select class="" id="paymentMode" name="paymentMode">
+    <select class="" id="paymentMode" name="paymentMode" disabled="disabled">
         <option value=""></option>
         <option value="105">Cash (CSH)</option>
         <option value="106">Cheque (CHQ)</option>

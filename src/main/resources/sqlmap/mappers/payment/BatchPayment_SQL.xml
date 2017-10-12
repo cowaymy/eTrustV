@@ -9,13 +9,13 @@
 		       Project1.NAME NAME  ,
 		       Project1.CNFM_USER_ID CNFM_USER_ID  ,
 		       Project1.C1 C1  ,
-		       Project1.CNFM_DT CNFM_DT  ,
+		       TO_CHAR(Project1.CNFM_DT,'DD-MM-YYYY') CNFM_DT ,
 		       Project1.CNFM_STUS_ID CNFM_STUS_ID  ,
 		       Project1.NAME1 NAME1  ,
 		       Project1.CNVR_USER_ID CNVR_USER_ID  ,
 		       Project1.C2 C2  ,
-		       Project1.CNVR_DT CNVR_DT  ,
-		       Project1.CRT_DT CRT_DT  ,
+		       TO_CHAR(Project1.CNVR_DT,'DD-MM-YYYY') CNVR_DT ,
+		       TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT ,
 		       Project1.CRT_USER_ID CRT_USER_ID  ,
 		       Project1.USER_NAME USER_NAME  ,
 		       Project1.PAY_MODE_ID PAY_MODE_ID  ,
@@ -123,8 +123,8 @@
                                         </if>
 		                                 ) Filter1
 		                       LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.CNVR_USER_ID
-		                 WHERE  Filter1.BATCH_PAY_TYPE = '97' 
-		                          AND Filter1.BATCH_PAY_CUST_TYPE = '1368'
+		                 WHERE  Filter1.BATCH_PAY_TYPE = #{payType} 
+		                          AND Filter1.BATCH_PAY_CUST_TYPE = #{payCustType}
 		                          <if test="batchId != ''"> 
                                         AND Filter1.BATCH_ID = #{batchId}
                                   </if>
