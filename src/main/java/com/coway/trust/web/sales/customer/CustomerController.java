@@ -490,7 +490,7 @@ public class CustomerController {
 	 * @author 
 	 * */
 	@RequestMapping(value = "/insCustBasicInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insCustBasicInfo(@RequestBody CustomerForm customerForm, Model model) {
+	public ResponseEntity<Integer> insCustBasicInfo(@RequestBody CustomerForm customerForm, Model model) throws Exception{
 		
 		int getCustCareCntId = 0;
 		String defaultDate = "01/01/1900";
@@ -514,6 +514,10 @@ public class CustomerController {
 		
 		Map<String, Object> insmap = new HashMap();	
 		// Basic Info
+		int tempCustSeq = 0 ; 
+		tempCustSeq = customerService.getCustIdSeq();
+		
+		insmap.put("custSeq", tempCustSeq);
 		insmap.put("custName", vo.getCustName());
 		insmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
 		if(vo.getDob() != null && !"".equals(vo.getDob())){
@@ -656,11 +660,12 @@ public class CustomerController {
 		}
 		
 		
-		ReturnMessage message = new ReturnMessage();
+		/*ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));*/
 		
-		return ResponseEntity.ok(message);
+		
+		return ResponseEntity.ok(tempCustSeq);
 	}
 		
 	/**

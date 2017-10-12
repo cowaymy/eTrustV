@@ -283,8 +283,7 @@ public class CcpRentMemShipController {
 		//params Setting
 		SessionVO session = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", session.getUserId());
-		//TODO 세션 임시 설정 (추후 삭제)
-		params.put("userId", "52366");
+		
 		//Service Call
 		ccpRentMemShipService.insUpdConfrimResult(params);
 		

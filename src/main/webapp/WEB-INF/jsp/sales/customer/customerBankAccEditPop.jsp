@@ -196,7 +196,7 @@ $(document).ready(function(){
     <th scope="row">Create By</th>
     <td>
         <c:if test="${result.crtUserId ne 0}">
-                ${result.crtUserId}
+                ${result.userName}
             </c:if>
     </td>
 </tr>

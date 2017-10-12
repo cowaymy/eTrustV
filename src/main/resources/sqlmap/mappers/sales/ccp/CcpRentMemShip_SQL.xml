@@ -1112,8 +1112,8 @@
 				       Extent1.ITM_STK_ID   , 
 				       Extent1.ITM_PRC_ID   ,
 				       Extent1.ITM_QTY   ,
-				       Extent1.ITM_TAX   ,
-				       Extent1.ITM_DSCNT   ,
+				      <!--  Extent1.ITM_TAX   ,
+				       Extent1.ITM_DSCNT   , -->
 				       Extent1.ITM_PRC   ,
 				       Extent1.ITM_PV   ,
 				       Extent1.STUS_CODE_ID   ,

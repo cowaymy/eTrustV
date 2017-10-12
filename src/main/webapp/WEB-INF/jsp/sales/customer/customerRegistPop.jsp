@@ -370,7 +370,8 @@
 	        };
 			
 			Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
-				Common.alert(result.message);
+				
+				Common.alert("<spring:message code='sys.msg.success'/><br/>" + " Customer ID : " + result , fn_winClose);
 
 			}, function(jqXHR, textStatus, errorThrown) {
                 Common.alert("실패하였습니다.");
@@ -382,6 +383,11 @@
 				
 			});
 		
+	}
+	
+	function fn_winClose(){
+		
+		window.close();
 	}
 	
 	// Validation Check

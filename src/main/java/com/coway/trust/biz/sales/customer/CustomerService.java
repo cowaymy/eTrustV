@@ -513,4 +513,6 @@ public interface CustomerService {
 	void insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO);
 	
 	void updateLimitBasicInfo(Map<String, Object> params) throws Exception;
+	
+	int getCustIdSeq() throws Exception;
 }

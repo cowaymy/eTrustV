@@ -776,4 +776,14 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		customerMapper.updateLimitBasicInfo(params);
 		
 	}
+
+
+	@Override
+	public int getCustIdSeq() throws Exception {
+		
+		return customerMapper.getCustIdSeq();
+	}
+	
+	
+	
 }

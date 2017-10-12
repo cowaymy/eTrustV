@@ -86,7 +86,7 @@
         $("#_close").click();
         $("#_selectParam").val('4');
         Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
-        Common.popupDiv("/sales/customer/updateCustomerBankAccEditInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv4Pop');
+        Common.popupDiv('/sales/customer/updateCustomerNewBankPop.do', $("#popForm").serializeJSON(), null , true ,'_editDiv4New');
     }
     
     /* ########## length Check Start ##########*/

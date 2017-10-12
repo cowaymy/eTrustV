@@ -1303,6 +1303,10 @@
       SELECT SAL0026D_CUST_CARE_CNT_ID_SEQ.NEXTVAL FROM DUAL
     </select>
     
+    <select id="getCustIdSeq" resultType="Integer">
+        SELECT SAL0029D_CUST_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
     <insert id="insertCustomerInfo" parameterType="Map">
         INSERT INTO SAL0029D (CUST_ID,
                                           NAME,
@@ -1327,7 +1331,7 @@
 					                      CUST_VA_NO,
 					                      CORP_TYPE_ID,
 					                      GST_RGIST_NO)
-					  VALUES   (SAL0029D_CUST_ID_SEQ.NEXTVAL,
+					  VALUES   (#{custSeq},
 						            #{custName},
 						            #{nric},
 						            #{cmbNation},

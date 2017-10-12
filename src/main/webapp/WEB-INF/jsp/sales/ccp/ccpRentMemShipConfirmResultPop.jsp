@@ -60,6 +60,7 @@
     	Common.ajax("GET", "/sales/ccp/insUpdConfrimResult.do", $("#_cfSaveForm").serialize(), function(result){
     		
     		  Common.alert(result.message);
+    		  $("#_btnSearch").click();
     		  $("#_confirmSave").css("display" , "none");
     		
     	});
