@@ -58,16 +58,6 @@ public class BatchPaymentOutServiceImpl extends EgovAbstractServiceImpl implemen
 	private BatchPaymentMapper batchPaymentMapper;
 	
 	private static final Logger logger = LoggerFactory.getLogger(BatchPaymentOutServiceImpl.class);
-
-	/**
-	 * selectBatchOutList(Master Grid) 조회
-	 * @param params
-	 * @return
-	 */
-	@Override
-	public List<EgovMap> selectBatchPaymentOutList(Map<String, Object> params) {
-		return batchPaymentOutMapper.selectBatchPaymentOutList(params);
-	}
 	
 	@Override
 	public int saveBatchPaymentOutUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
