@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.common.LargeExcelQuery;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 
@@ -38,8 +37,14 @@ public class ExcelDownloadController {
 			fileName = "test22222222222222222.xlsx";
 			// 임시로 세팅...
 
-			ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-					LargeExcelQuery.CMM0013T);
+			String[] columns = new String[] { "clctrId", "ordId", "strtgOs", "closOs", "isDrop",
+					"isExclude", "runId", "taskId" };
+
+			String[]  titles = new String[] { "clctrId", "ordId", "strtgOs", "closOs", "isDrop",
+					"isExclude", "runId", "taskId" };
+
+			ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(fileName, columns,
+					titles);
 			excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
 
 			Map map = new HashMap();

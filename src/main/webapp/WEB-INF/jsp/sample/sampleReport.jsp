@@ -26,7 +26,7 @@
 
 	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 		var option = {
-            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+            isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
 		};
 
         Common.report("dataForm", option);
@@ -77,8 +77,11 @@
 			리포트 파일명(필수 : reportFileName) :
 			<!-- 	<input type="text" id="reportFileName" name="reportFileName" value="/sample/PaymentListing_Excel.rpt" /><br /><br />-->
 			<!-- <input type="" id="reportFileName" name="reportFileName" value="/membership/MembershipInvoice.rpt" />-->
-			<input type="" id="reportFileName" name="reportFileName" value="/sales/POSReceipt_New.rpt" />
+			<!-- <input type="" id="reportFileName" name="reportFileName" value="/sales/POSReceipt_New.rpt" />-->
 			<!-- <input type="text" id="reportFileName" name="reportFileName" value="/sample/CustOwnOrderList.rpt" /><br /> -->
+
+
+			<input type="text" id="reportFileName" name="reportFileName" value="/sample/GovAgreementPDF_OracleServer.rpt" /><br />
 
 
 			<!-- view type
@@ -101,14 +104,17 @@
 
 			<!-- 리포트에서 사용할 파라미터 start-->
 			리포트 파일에 전달될 파라미터 설정 : <br/>
+
+			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="AND ArgM.GOV_AG_BATCH_NO = 'AGM0001691'" /><br />
+			<input type="text" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" /><br />
+
 			<!--
-			<input type="text" id="V_WHERESQL" name="V_WHERESQL" value="and pm.OR_NO = 'OR312430'" /><br />
 			<input type="text" id="V_REFNO" name="V_REFNO" value="1111111" /><br />
 			<input type="text" id="@WhereSQL" name="@WhereSQL" value="and pm.OR_NO = 'OR312430'" /><br /><!-- AS-IS 파라미터로 설정된 값 -->
-			-->
+			<!--
 			<input type="text" id="V_POSREFNO" name="V_POSREFNO" value="PSN0005181" /><br />
 			<input type="text" id="V_POSMODULETYPEID" name="V_POSMODULETYPEID" value="1343" /><br />
-
+			-->
 
 			<!-- 리포트에서 사용할 파라미터 end-->
 		</form>

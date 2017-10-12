@@ -13,12 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.common.LargeExcelQuery;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.web.commission.CommissionConstants;
+import com.coway.trust.web.common.excel.download.ExcelDownloadFormDef;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
-import com.coway.trust.web.common.excel.download.ExcelDownloadJobFactory;
 import com.coway.trust.web.common.excel.download.ExcelDownloadVO;
 
 /**
@@ -34,352 +33,438 @@ public class commissionExcelDownloadController {
 
 	@RequestMapping("/commExcelFile.do")
 	public void excelFile(HttpServletRequest request, HttpServletResponse response) {
-		ExcelDownloadHandler excelDownloadHandler = null;
+		ExcelDownloadHandler downloadHandler = null;
 		try {
 			String fileName = request.getParameter("fileName");
 			String codeNm = request.getParameter("code");
 
-			// 임시로 세팅...
-			//fileName = "test22222222222222222.xlsx";
-			// 임시로 세팅...
+			String[] columns;
+			String[] titles;
 
 			int pvMonth = Integer.parseInt(request.getParameter("month").toString());
 			int pvYear = Integer.parseInt(request.getParameter("year").toString());
 			int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
-			
+
 			Map map = new HashMap();
 			map.put("taskId", sTaskID);
-			
-			if(codeNm.equals(CommissionConstants.COMIS_CTL_P01) || codeNm.equals(CommissionConstants.COMIS_CTM_P01) 
-					|| codeNm.equals(CommissionConstants.COMIS_CTW_P01)){
+
+			if (codeNm.equals(CommissionConstants.COMIS_CTL_P01) || codeNm.equals(CommissionConstants.COMIS_CTM_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_CTW_P01)) {
 				map.put("codeGruop", CommissionConstants.COMIS_CT);
-				if(codeNm.equals(CommissionConstants.COMIS_CTW_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CTW_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CTL_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CTL_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CTM_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CTM_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
 				map.put("memberId", request.getParameter("memberId"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0028CT);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad28CT(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_CDC_P01) || codeNm.equals(CommissionConstants.COMIS_CDG_P01) 
-					|| codeNm.equals(CommissionConstants.COMIS_CDM_P01)|| codeNm.equals(CommissionConstants.COMIS_CDN_P01)
-					|| codeNm.equals(CommissionConstants.COMIS_CDS_P01)){
+
+				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "v1", "v2", "v3", "v4",
+						"v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
+				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "V1", "V2", "V3", "V4",
+						"V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad28CT(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_CDG_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_CDM_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_CDN_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_CDS_P01)) {
 				map.put("codeGruop", CommissionConstants.COMIS_CD);
-				if(codeNm.equals(CommissionConstants.COMIS_CDC_P01) || codeNm.equals(CommissionConstants.COMIS_CDN_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)
+						|| codeNm.equals(CommissionConstants.COMIS_CDN_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CDM_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CDM_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CDS_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CDS_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
 				map.put("memberId", request.getParameter("memberId"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0028CD);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad28CD(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_HPF_P01) || codeNm.equals(CommissionConstants.COMIS_HPG_P01) 
-					|| codeNm.equals(CommissionConstants.COMIS_HPM_P01)|| codeNm.equals(CommissionConstants.COMIS_HPS_P01)
-					|| codeNm.equals(CommissionConstants.COMIS_HPT_P01)){
+
+				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "v1", "v2", "v3", "v4",
+						"v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
+						"v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31", "v32",
+						"v33" };
+				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "V1", "V2", "V3", "V4",
+						"V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14", "V15", "V16", "V17", "V18",
+						"V19", "V20", "V21", "V22", "V23", "V24", "V25", "V26", "V27", "V29", "V30", "V31", "V32",
+						"V33" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad28CD(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_HPF_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_HPG_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_HPM_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_HPS_P01)
+					|| codeNm.equals(CommissionConstants.COMIS_HPT_P01)) {
 				map.put("codeGruop", CommissionConstants.COMIS_HP);
-				if(codeNm.equals(CommissionConstants.COMIS_HPF_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_HPF_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPG_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_HPG_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPM_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_HPM_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPS_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_HPS_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPT_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_HPT_P01))
 					map.put("emplyLev", CommissionConstants.COMIS_S_G_MANAGER_MEM_LEV);
 				map.put("memberId", request.getParameter("memberId"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0028HP);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad28HP(map, excelDownloadHandler);
-				
+
+				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "v1", "v8", "v9", "v13",
+						"v14", "v15", "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v24", "v25", "v26", "v27",
+						"v28" };
+				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "V1", "V8", "V9",
+						"V13", "V14", "V15", "V16", "V17", "V18", "V19", "V20", "V21", "V22", "V24", "V25", "V26",
+						"V27", "V28" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad28HP(map, downloadHandler);
+
 			}
-			if(codeNm.equals(CommissionConstants.COMIS_CTL_P02) || codeNm.equals(CommissionConstants.COMIS_CTM_P02) 
-					|| codeNm.equals(CommissionConstants.COMIS_CTW_P02)){
+			if (codeNm.equals(CommissionConstants.COMIS_CTL_P02) || codeNm.equals(CommissionConstants.COMIS_CTM_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_CTW_P02)) {
 				map.put("codeGruop", CommissionConstants.COMIS_CT);
-				if(codeNm.equals(CommissionConstants.COMIS_CTW_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CTW_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CTL_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CTL_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CTM_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CTM_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
 				map.put("memberId", request.getParameter("memberId"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0029CT);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad29CT(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_CDC_P02) || codeNm.equals(CommissionConstants.COMIS_CDG_P02) 
-					|| codeNm.equals(CommissionConstants.COMIS_CDM_P02)|| codeNm.equals(CommissionConstants.COMIS_CDN_P02)
-					|| codeNm.equals(CommissionConstants.COMIS_CDS_P02)){
+
+				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "r1", "r2", "r3", "r4",
+						"r5", "r6", "r7", "r8" };
+				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "R1", "R2", "R3", "R4",
+						"R5", "R6", "R7", "R8" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad29CT(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_CDG_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_CDM_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_CDN_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_CDS_P02)) {
 				map.put("codeGruop", CommissionConstants.COMIS_CD);
-				if(codeNm.equals(CommissionConstants.COMIS_CDC_P02) || codeNm.equals(CommissionConstants.COMIS_CDN_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)
+						|| codeNm.equals(CommissionConstants.COMIS_CDN_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CDM_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CDM_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_CDS_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CDS_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
 				map.put("memberId", request.getParameter("memberId"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0029CD);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad29CD(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_HPF_P02) || codeNm.equals(CommissionConstants.COMIS_HPG_P02) 
-					|| codeNm.equals(CommissionConstants.COMIS_HPM_P02)|| codeNm.equals(CommissionConstants.COMIS_HPS_P02)
-					|| codeNm.equals(CommissionConstants.COMIS_HPT_P02) || codeNm.equals(CommissionConstants.COMIS_HPB_P02)){
+
+				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "r1", "r2", "r3", "r4",
+						"r5", "r6", "r7", "r8", "r10", "r11", "r13", "r18", "r19", "r20", "r21", "r22", "r23", "r24",
+						"r26", "r27", "r28", "r29", "r30", "r31", "r32", "r33", "r34", "r35", "r36", "r38", "r39",
+						"r40", "r41", "r42", "r99" };
+				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "R1", "R2", "R3", "R4",
+						"R5", "R6", "R7", "R8", "R10", "R11", "R13", "R18", "R19", "R20", "R21", "R22", "R23", "R24",
+						"R26", "R27", "R28", "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R38", "R39",
+						"R40", "R41", "R42", "R99" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad29CD(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_HPF_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_HPG_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_HPM_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_HPS_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_HPT_P02)
+					|| codeNm.equals(CommissionConstants.COMIS_HPB_P02)) {
 				map.put("codeGruop", CommissionConstants.COMIS_HP);
-				if(codeNm.equals(CommissionConstants.COMIS_HPF_P02) || codeNm.equals(CommissionConstants.COMIS_HPB_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_HPF_P02)
+						|| codeNm.equals(CommissionConstants.COMIS_HPB_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPG_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_HPG_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPM_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_HPM_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPS_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_HPS_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if(codeNm.equals(CommissionConstants.COMIS_HPT_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_HPT_P02))
 					map.put("emplyLev", CommissionConstants.COMIS_S_G_MANAGER_MEM_LEV);
 				map.put("memberId", request.getParameter("memberId"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0029HP);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad29HP(map, excelDownloadHandler);
-			}else
-			if(codeNm.equals(CommissionConstants.COMIS_BSD_P01)){
+
+				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "r1", "r2", "r3", "r4",
+						"r5", "r13", "r18", "r19", "r20", "r21", "r22", "r25", "r28", "r29", "r30", "r31", "r32", "r33",
+						"r34", "r35", "r36", "r39", "r40", "r41", "r42", "r99" };
+				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "R1", "R2", "R3", "R4",
+						"R5", "R13", "R18", "R19", "R20", "R21", "R22", "R25", "R28", "R29", "R30", "R31", "R32", "R33",
+						"R34", "R35", "R36", "R39", "R40", "R41", "R42", "R99" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad29HP(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P01)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("memberId", request.getParameter("memberId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0006T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad06T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P02)){
+
+				columns = new String[] { "deptCode", "mangrid", "memId", "emplyTypeCode", "joindt", "emplyLev",
+						"emplyLevAge", "workingMonth", "sponsCode", "emplyStusId", "emplyStusCode", "emplyLevRank",
+						"emplyveh", "emplyBizTypeId", "mangrcode", "emplycode", "paystus", "ishsptlz", "runId",
+						"taskid", "isExclude" };
+				titles = new String[] { "DEPT CODE", "MANGR ID", "MEM ID", "EMPLY TYPE CODE", "JOIN DT", "EMPLY LEV",
+						"EMPLY LEV AGE", "WORKING MONTH", "SPONS CODE", "EMPLY STUS ID", "EMPLY STUS CODE",
+						"EMPLY LEV RANK", "EMPLY VEH", "EMPLY BIZ TYPE ID", "MANGR CODE", "EMPLY CODE", "PAY STUS",
+						"IS HSPTLZ", "RUN ID", "TASK ID", "IS EXCLUDE" };
+
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad06T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P02)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("memberId", request.getParameter("memberId"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0007T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad07T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P03)){
+
+				columns = new String[] { "ordId", "memId", "code", "ordTypeId", "productId", "unitValu", "prc",
+						"pvValu", "runId", "taskId", "isExclude" };
+				titles = new String[] { "ORD ID", "MEM ID", "CODE", "ORD TYPE ID", "PRODUCT ID", "UNIT VALU", "PRC",
+						"PV VALU", "RUN ID", "TASK ID", "IS EXCLUDE" };
+
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad07T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P03)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("svcPersonCd", request.getParameter("svcPersonCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0008T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad08T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P04)){
+
+				columns = new String[] { "bsSchdulId", "svcPersonId", "emplyCode", "bsStusId", "crditPoint", "runId",
+						"taskId", "isExclude" };
+				titles = new String[] { "BS SCHDUL ID", "SVC PERSON ID", "EMPLY CODE", "BS STUS ID", "CRDIT POINT",
+						"RUN ID", "TASK ID", "IS EXCLUDE" };
+
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad08T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P04)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("svcPersonCd", request.getParameter("svcPersonCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0009T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad09T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P05)){
+
+				columns = new String[] { "svcPersonId", "hapyCallId", "ordId", "custRespnsId", "emplyCode", "pnctult",
+						"appran", "xplnt", "qly", "overal", "runId", "taskId", "isExclude" };
+				titles = new String[] { "SVC PERSON ID", "HAPY CALL ID", "ORD ID", "CUST RESPNS ID", "EMPLY CODE",
+						"PNCTULT", "APPRAN", "XPLNT", "QLY", "OVERAL", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad09T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P05)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("salesPersonCd", request.getParameter("salesPersonCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0010T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad10T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P06)){
+
+				columns = new String[] { "salesPersonId", "emplyCode", "mbrshId", "ordId", "mbrshAmt", "runId",
+						"taskId", "isExclude" };
+				titles = new String[] { "SALES PERSON ID", "EMPLY CODE", "MBRSH ID", "ORD ID", "MBRSH AMT", "RUN ID",
+						"TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad10T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P06)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("salesPersonCd", request.getParameter("salesPersonCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0011T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad11T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P07)){
+
+				columns = new String[] { "rcordId", "ordId", "salesPersonId", "emplyCode", "instlmt", "pv", "prc",
+						"ordTypeId", "runid", "taskId", "isExclude" };
+				titles = new String[] { "RCORD ID", "ORD ID", "SALES PERSON ID", "EMPLY CODE", "INSTLMT", "PV", "PRC",
+						"ORD TYPE ID", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad11T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P07)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("clctrCd", request.getParameter("clctrCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0012T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad12T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P08)){
+
+				columns = new String[] { "clctrId", "ordId", "trgetAmt", "colctAmt", "custRaceId", "rentPayModeId",
+						"custId", "emplyCode", "runId", "taskId", "isExclude" };
+				titles = new String[] { "CLCTR ID", "ORD ID", "TRGET AMT", "COLCT AMT", "CUST RACE ID",
+						"RENT PAY MODE ID", "CUST ID", "EMPLY CODE", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad12T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P08)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("clctrCd", request.getParameter("clctrCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0013T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad13T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P09)){
+
+				columns = new String[] { "clctrId", "emplyCode", "ordId", "strtgOs", "closOs", "isDrop", "runId",
+						"taskId", "isExclude" };
+				titles = new String[] { "CLCTR ID", "EMPLY CODE", "ORD ID", "STRTG OS", "CLOS OS", "IS DROP", "RUN ID",
+						"TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad13T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P09)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("coemplyCddeId", request.getParameter("emplyCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0014T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad14T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P010)){
+
+				columns = new String[] { "emplyId", "emplyCode", "sponsId", "instlmt", "runId", "runId", "taskId",
+						"isExclude" };
+				titles = new String[] { "EMPLY ID", "EMPLY CODE", "SPONS ID", "INSTLMT", "RUN ID", "RUN ID", "TASK ID",
+						"IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad14T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P010)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("emplyCd", request.getParameter("emplyCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0015T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad15T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_HPB_P01)){
+
+				columns = new String[] { "payId", "ordId", "clctrId", "emplyCode", "amt", "runId", "taskId",
+						"isExclude" };
+				titles = new String[] { "PAY ID", "ORD ID", "CLCTR ID", "EMPLY CODE", "AMT", "RUN ID", "TASK ID",
+						"IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad15T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_HPB_P01)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("pMemCd", request.getParameter("pMemCd"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0016T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad16T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P011)){
+
+				columns = new String[] { "taskId", "cmmsDt", "cMemId", "cMemLev", "pMemId", "pMemLev", "tbbLev",
+						"cnsUnit", "cnspvTot", "pnsUnit", "tbbTot", "runId", "emplyCode" };
+				titles = new String[] { "TASK ID", "CMMS DT", "C MEM ID", "C MEM LEV", "P MEM ID", "P MEM LEV",
+						"TBB LEV", "CNS UNIT", "CNSPV TOT", "PNS UNIT", "TBB TOT", "RUN ID", "EMPLY CODE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad16T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P011)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("memCd", request.getParameter("memCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0017T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad17T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P012)){
+
+				columns = new String[] { "ordId", "trgetAmt", "colctAmt", "memCode", "hmCode", "smCode", "gmCode",
+						"rcmYear", "rcmMonth", "runId", "taskId", "isExclude" };
+				titles = new String[] { "ORD ID", "TRGET AMT", "COLCT AMT", "MEM CODE", "HM CODE", "SM CODE", "GM CODE",
+						"RCM YEAR", "RCM MONTH", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad17T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P012)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("salesPersonCd", request.getParameter("salesPersonCd"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0022T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad22T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P013)){
+
+				columns = new String[] { "ordId", "srvCntrctId", "srvCntrctNo", "salesPersonId", "emplyCode", "instlmt",
+						"pv", "prc", "ordTypeId", "runid", "taskId", "isExclude" };
+				titles = new String[] { "CLCTR ID", "ORD ID", "STRTG OS", "CLOS OS", "IS DROP", "IS EXCLUDE", "RUN ID",
+						"TASK ID" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad22T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P013)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("memCode", request.getParameter("memCode"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0023T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad23T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P014)){
+
+				columns = new String[] { "ordId", "trgetAmt", "colctAmt", "memCode", "hmCode", "smCode", "gmCode",
+						"rcmYear", "rcmMonth", "srvCntrctId", "runId", "taskId", "isExclude" };
+				titles = new String[] { "ORD ID", "TRGET AMT", "COLCT AMT", "MEM CODE", "HM CODE", "SM CODE", "GM CODE",
+						"RCM YEAR", "RCM MONTH", "SRV CNTRCT ID", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad23T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P014)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("emplyCd", request.getParameter("emplyCd"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0025T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad25T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_BSD_P015)){
+
+				columns = new String[] { "emplyId", "emplyCode", "ordId", "stockId", "promtId", "paidMonth", "paidAmt",
+						"runId", "taskId" };
+				titles = new String[] { "EMPLY ID", "EMPLY CODE", "ORD ID", "STOCK ID", "PROMT ID", "PAID MONTH",
+						"PAID AMT", "RUN ID", "TASK ID" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad25T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P015)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("emplyCd", request.getParameter("emplyCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0026T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad11T(map, excelDownloadHandler);
-			}else if(codeNm.equals(CommissionConstants.COMIS_CTB_P01)){
+
+				columns = new String[] { "emplyId", "emplyCode", "week1", "week2", "week3", "week4", "week5", "totLv",
+						"weeklyLv", "monthLv", "weeklylvr", "monthLvR", "runId", "taskId", "isExclude" };
+				titles = new String[] { "EMPLY ID", "EMPLY CODE", "WEEK1", "WEEK2", "WEEK3", "WEEK4", "WEEK5", "TOT LV",
+						"WEEKLY LV", "MONTH LV", "WEEKLY LV R", "MONTH LV R", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad11T(map, downloadHandler);
+			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P01)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("instPersonCd", request.getParameter("instPersonCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0018T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad18T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_CTB_P02)){
+
+				columns = new String[] { "taskId", "ordId", "instId", "stockId", "appTypeId", "instPersonId",
+						"emplyCode", "prc", "runId", "isExclude" };
+				titles = new String[] { "TASK ID", "ORD ID", "INST ID", "STOCK ID", "APP TYPE ID", "INST PERSON ID",
+						"EMPLY CODE", "PRC", "RUN ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad18T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P02)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("bsPersonCd", request.getParameter("bsPersonCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0019T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad19T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_CTB_P03)){
+
+				columns = new String[] { "ordId", "bsrId", "stockId", "appTypeId", "bsPersonId", "emplyCode", "prc",
+						"runId", "taskId", "isExclude" };
+				titles = new String[] { "ORD ID", "BSR ID", "STOCK ID", "APP TYPE ID", "BS PERSON ID", "EMPLY CODE",
+						"PRC", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad19T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P03)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("asEntryCd", request.getParameter("asEntryCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0020T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad20T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_CTB_P04)){
+
+				columns = new String[] { "ordId", "asEntryId", "asrId", "stockId", "appTypeId", "asPersonId",
+						"emplyCode", "prc", "runId", "taskId", "isExclude" };
+				titles = new String[] { "ORD ID", "AS ENTRY ID", "ASR ID", "STOCK ID", "APP TYPE ID", "AS PERSON ID",
+						"EMPLY CODE", "PRC", "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad20T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P04)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("retPCd", request.getParameter("retPCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0021T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad21T(map, excelDownloadHandler);
-				
-			}else if(codeNm.equals(CommissionConstants.COMIS_CTB_P05)){
+
+				columns = new String[] { "ordId", "retId", "emplyCode", "stockId", "appTypeId", "retPersonId", "prc",
+						"taskId", "runId", "isExclude" };
+				titles = new String[] { "ORD ID", "RET ID", "EMPLY CODE", "STOCK ID", "APP TYPE ID", "RET PERSON ID",
+						"PRC", "TASK ID", "RUN ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad21T(map, downloadHandler);
+
+			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P05)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("emplyCd", request.getParameter("emplyCd"));
-				
-				ExcelDownloadVO excelDownloadVO = ExcelDownloadJobFactory.getExcelDownloadVO(fileName,
-						LargeExcelQuery.CMM0024T);
-				excelDownloadHandler = new ExcelDownloadHandler(excelDownloadVO, response);
-				largeExcelService.downLoad24T(map, excelDownloadHandler);
+
+				columns = new String[] { "emplyId", "emplyCode", "prfomPrcnt", "prfomncRank", "totEmply", "cumltDstrib",
+						"payoutPrcnt", "payoutAmt", "taskId" };
+				titles = new String[] { "EMPLY ID", "EMPLY CODE", "PRFOM PRCNT", "PRFOMNC RANK", "TO TEMPLY",
+						"CUMLT DSTRIB", "PAYOUT PRCNT", "PAYOUT AMT", "TASK ID" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad24T(map, downloadHandler);
+			} else {
+				throw new ApplicationException(AppConstants.FAIL, "Invalid codeNm......");
 			}
-			
-			
-			
-			
-			
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
 		} finally {
-			if (excelDownloadHandler != null) {
+			if (downloadHandler != null) {
 				try {
-					excelDownloadHandler.close();
+					downloadHandler.close();
 				} catch (Exception ex) {
 					LOGGER.info(ex.getMessage());
 				}
 			}
 		}
+	}
+
+	private ExcelDownloadHandler getExcelDownloadHandler(HttpServletResponse response, String fileName,
+			String[] columns, String[] titles) {
+		ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(fileName, columns, titles);
+		return new ExcelDownloadHandler(excelDownloadVO, response);
 	}
 }

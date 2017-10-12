@@ -5,6 +5,18 @@
         http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
         
     <!-- jndi -->
+
+	<!-- jndi -->
+	<beans profile="qa">
+		<bean id="normal-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+			<property name="jndiName" value="eTRUST_QA"/>
+		</bean>
+
+		<bean id="long-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+			<property name="jndiName" value="eTRUST_QA"/>
+		</bean>
+	</beans>
+
 	<beans profile="dev">
 		<bean id="normal-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 			<property name="jndiName" value="eTRUST_DEV"/>
