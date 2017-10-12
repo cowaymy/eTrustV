@@ -46,7 +46,10 @@ var approveLineGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20
+    pageRowCount : 20,
+    showStateColumn : true,
+    // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
+    enableRestore : true,
 };
 
 var approveLineGridID;
@@ -54,13 +57,27 @@ var approveLineGridID;
 $(document).ready(function () {
     approveLineGridID = AUIGrid.create("#approveLine_grid_wrap", approveLineColumnLayout, approveLineGridPros);
     
+    $("#delete_btn").click(fn_deleteRow);
     $("#submit").click(fn_approveLineSubmit);
+    
+    AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
+    	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+    	        selectRowIdx = event.rowIndex;
+    	    });
     
     fn_addRow();
 });
 
 function fn_addRow() {
     AUIGrid.addRow(approveLineGridID, {}, "last");
+}
+
+function fn_deleteRow() {
+    AUIGrid.removeRow(approveLineGridID, selectRowIdx);
+    // remove한 row를 화면상에서도 지우도록 구현 필요
+    // totalAmount를 할때 값이 포함된다
+    // TO DO
+    AUIGrid.update(); // update 해본 결과 : 실패
 }
 
 function fn_selectApproveLine() {
@@ -106,7 +123,7 @@ function fn_approveLineSubmit() {
 
 <ul class="right_btns">
 	<!--li><p class="btn_grid"><a href="#">Add</a></p></li-->
-	<li><p class="btn_grid"><a href="#"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="approveLine_grid_wrap"><!-- grid_wrap start -->

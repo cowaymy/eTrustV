@@ -129,7 +129,7 @@ $(document).ready(function () {
     $("#tempSave").click(fn_attachmentUpload);
     $("#submitPop").click(fn_approveLinePop);
     $("#add_btn").click(fn_addRow);
-    $("#delete_btn").click(fn_removeRow);
+    $("#remove_btn").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_supplierSearchPop);
     $("#costCenter_search_btn").click(fn_costCenterSearchPop);
     
@@ -456,8 +456,8 @@ function fn_setSupplier() {
     <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
     <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
     </label>
-    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.add" /></a></span>
-    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.delete" /></a></span>
+    <span class='label_text'><a href='#' id="add_btn"><spring:message code="viewEditWebInvoice.add" /></a></span>
+    <span class='label_text'><a href='#' id="remove_btn"><spring:message code="viewEditWebInvoice.delete" /></a></span>
     </div><!-- auto_file end -->
 	</c:forEach>
 	<c:if test="${fn:length(attachmentList) <= 0}">

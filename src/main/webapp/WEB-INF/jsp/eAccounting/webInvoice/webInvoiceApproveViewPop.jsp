@@ -11,16 +11,16 @@ var myColumnLayout = [ {
     headerText : '<spring:message code="newWebInvoice.glAccountName" />'
 }, {
     dataField : "costCentr",
-    headerText : 'Cost Center'
+    headerText : '<spring:message code="webInvoice.costCenter" />'
 }, {
     dataField : "costCentrName",
-    headerText : 'C/C Name'
+    headerText : '<spring:message code="webInvoice.ccName" />'
 }, {
     dataField : "fund",
-    headerText : 'Fund'
+    headerText : '<spring:message code="approveView.fund" />'
 }, {
     dataField : "fundName",
-    headerText : 'Fund Name'
+    headerText : '<spring:message code="approveView.fundName" />'
 },{
     dataField : "taxCode",
     headerText : '<spring:message code="newWebInvoice.taxCode" />'
@@ -68,9 +68,9 @@ $(document).ready(function () {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View Approve</h1>
+<h1><spring:message code="approveView.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -80,7 +80,7 @@ $(document).ready(function () {
 <form action="#" method="post" id="form_approveView">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code="webInvoice.table" /></caption>
 <colgroup>
 	<col style="width:130px" />
 	<col style="width:*" />
@@ -89,45 +89,45 @@ $(document).ready(function () {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Invoice date</th>
-	<td><span>text</span></td>
-	<th scope="row">Key In date</th>
-	<td><span>text</span></td>
+	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
+	<td><span></span></td>
+	<th scope="row"><spring:message code="newWebInvoice.keyInDate" /></th>
+	<td><span></span></td>
 </tr>
 <tr>
-	<th scope="row">Cost Center</th>
+	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td></td>
-	<th scope="row">Create User ID</th>
-	<td></td>
-</tr>
-<tr>
-	<th scope="row">Supplier</th>
-	<td></td>
-	<th scope="row">GST Registration No.</th>
+	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
 	<td></td>
 </tr>
 <tr>
-	<th scope="row">Bank</th>
+	<th scope="row"><spring:message code="newWebInvoice.supplier" /></th>
 	<td></td>
-	<th scope="row">Payment Due Date</th>
+	<th scope="row"><spring:message code="newWebInvoice.gstRegistNo" /></th>
 	<td></td>
 </tr>
 <tr>
-	<th scope="row">Bank Account</th>
+	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
+	<td></td>
+	<th scope="row"><spring:message code="newWebInvoice.PayDueDate" /></th>
+	<td></td>
+</tr>
+<tr>
+	<th scope="row"><spring:message code="newWebInvoice.bankAccount" /></th>
 	<td></td>
 	<th scope="row"></th>
 	<td></td>
 </tr>
 <tr>
-	<th scope="row">Attachment</th>
+	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3"></td>
 </tr>
 <tr>
-	<th scope="row">Remark</th>
+	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
 	<td colspan="3"></td>
 </tr>
 <tr>
-	<th scope="row">Approve Status</th>
+	<th scope="row"><spring:message code="approveView.approveStatus" /></th>
 	<td colspan="3" style="height:60px"></td>
 </tr>
 </tbody>
@@ -137,7 +137,7 @@ $(document).ready(function () {
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2 class="total_text">Total Amount:<span id="totalAmount"></span></h2>
+<h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totalAmount"></span></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->

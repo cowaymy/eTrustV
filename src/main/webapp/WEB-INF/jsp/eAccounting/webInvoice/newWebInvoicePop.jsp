@@ -103,7 +103,7 @@ $(document).ready(function () {
     $("#tempSave").click(fn_attachmentUpload);
     $("#submitPop").click(fn_approveLinePop);
     $("#add_btn").click(fn_addRow);
-    $("#delete_btn").click(fn_removeRow);
+    $("#remove_btn").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_supplierSearchPop);
     $("#costCenter_search_btn").click(fn_costCenterSearchPop);
     
@@ -402,7 +402,7 @@ function fn_setSupplier() {
 <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totalAmount"></span></h2>
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
-	<li><p class="btn_grid"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="remove_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
