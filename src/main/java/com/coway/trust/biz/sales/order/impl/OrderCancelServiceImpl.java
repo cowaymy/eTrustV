@@ -337,4 +337,20 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	@Override
+	public void saveCtAssignment(Map<String, Object> params) {
+		
+//		Map<String, Object> saveParam = new HashMap<String, Object>();
+		
+		String crtSeqLOG0037D = orderCancelMapper.crtSeqLOG0037D();
+		params.put("crtSeqLOG0037D", crtSeqLOG0037D);
+		orderCancelMapper.insertCancelLOG0037D(params);
+		
+		orderCancelMapper.cancelCtLOG0038D(params);
+		
+		orderCancelMapper.updateCancelLOG0038D(params);
+		
+	}
 }

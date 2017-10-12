@@ -173,5 +173,21 @@ public interface OrderCancelMapper {
 	 * @exception Exception
 	 */
 	EgovMap newSearchCancelSAL0020D(Map<String, Object> params);
+	
+	
+	String crtSeqLOG0037D();
+	
+	void insertCancelLOG0037D(Map<String, Object> params);
+	
+	void updateCancelLOG0038D(Map<String, Object> params);
+	
 
+	/**
+	 * Cancellation Sales master info.
+	 * 
+	 * @param REQ_ID
+	 * @return 글 상세
+	 * @exception Exception
+	 */
+	EgovMap cancelCtLOG0038D(Map<String, Object> params);
 }
