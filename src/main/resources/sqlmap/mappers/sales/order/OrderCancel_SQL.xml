@@ -251,14 +251,14 @@
 			       A.ACC_NAME ,
 			       A.ATTACH ,
 			       CASE 
-			             WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN A.ACTUAL_CANCL_DT
-			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
-			       CASE 
-			             WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN A.APP_RETN_DT
-			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_RETN_DT  ,
-			       CASE 
-			             WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN A.CALL_RECALL_DT
-			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CALL_RECALL_DT  ,
+                         WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN TO_CHAR(A.ACTUAL_CANCL_DT, 'DD-MM-YYYY')
+                   ELSE TO_CHAR('1900-01-01', 'DD-MM-YYYY') END ACTUAL_CANCL_DT  ,
+                   CASE 
+                         WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN TO_CHAR(A.APP_RETN_DT, 'DD-MM-YYYY')
+                   ELSE TO_CHAR('1900-01-01', 'DD-MM-YYYY') END APP_RETN_DT  ,
+                   CASE 
+                         WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN TO_CHAR(A.CALL_RECALL_DT, 'DD-MM-YYYY')
+                   ELSE TO_CHAR('1900-01-01', 'DD-MM-YYYY') END CALL_RECALL_DT  ,
 			       CASE 
 			             WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT  ,
@@ -534,6 +534,7 @@
 			       Filter1.STK_CODE ,
 			       Filter1.STK_DESC ,
 			       Filter1.CODE_DESC ,
+			       Filter1.MEM_ID,
 			       CASE 
 			            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE
 			       ELSE ''
@@ -907,4 +908,49 @@
                   , #{hapyCallerId}, SYSDATE, #{callCrtUserId}, TO_DATE(#{callDt}, 'DD/MM/YYYY') )
     </insert>
     
+    <select id="crtSeqLOG0037D"  resultType="java.lang.String">
+        SELECT LOG0037D_STK_RETN_CT_SEQ_ID.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertCancelLOG0037D" parameterType="Map">
+        INSERT INTO LOG0037D
+			  ( STK_RETN_CT_EXCHG_SEQ_ID, STK_RETN_ID, STK_RETN_CT_FROM, STK_RETN_CT_TO, STK_RETN_CT_EXCHG_CRT_DT
+			  , STK_RETN_CT_EXCHG_CRT_USER_ID, STK_RETN_CT_GRP_TO, STK_RETN_CT_GRP_FROM )
+	    VALUES ( #{crtSeqLOG0037D}, #{stkRetnId}, #{stkRetnCtFrom}, #{salesmanId}, SYSDATE, #{userId}, #{saveCtGroup}, #{stkRetnCtGrpFrom} )
+    </insert>
+    
+    <update id="updateCancelLOG0038D" parameterType="Map">
+        UPDATE LOG0038D
+			 SET UPD_DT = SYSDATE,
+			       UPD_USER_ID = #{userId},
+			       CT_ID = #{salesmanId},
+			       CT_GRP = #{saveCtGroup}
+		 WHERE STK_RETN_ID = #{stkRetnId}
+    </update>
+    
+    <select id="cancelCtLOG0038D" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.STK_RETN_ID   ,
+			         Extent1.STUS_CODE_ID   ,
+			         Extent1.TYPE_ID   ,
+			         Extent1.SALES_ORD_ID   ,
+			         Extent1.MOV_ID   ,
+			         Extent1.REQST_DT   ,
+			         Extent1.CRT_DT   ,
+			         Extent1.CRT_USER_ID   ,
+			         Extent1.UPD_DT   ,
+			         Extent1.UPD_USER_ID   ,
+			         Extent1.REF_ID   ,
+			         Extent1.STOCK_ID   ,
+			         Extent1.IS_SYNCH   ,
+			         Extent1.RETN_NO   ,
+			         Extent1.APP_DT   ,
+			         Extent1.CT_ID   ,
+			         Extent1.CT_GRP   ,
+			         Extent1.CALL_ENTRY_ID   
+			 FROM LOG0038D Extent1
+		   WHERE Extent1.STK_RETN_ID = #{stkRetnId}
+		      <![CDATA[
+               AND ROWNUM <= 1
+               ]]>
+    </select>
 </mapper>
