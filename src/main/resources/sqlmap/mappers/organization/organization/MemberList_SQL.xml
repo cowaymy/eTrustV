@@ -933,7 +933,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{fulllName}
             , #{password}
             , #{nric}
-            , TO_CHAR(TO_DATE(#{Birth},'dd-mm-yyyy'),'yyyy-mm-dd')
+            , TO_DATE(#{Birth},'dd-mm-yyyy')
             , #{gender}
             , #{race}
             , #{marrital}
@@ -947,28 +947,28 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{spouseNric}
             , #{spouseOcc}
             , #{spouseContat}
-            <if test="spouseDob != null and spouseDob != '' and spouseDob != '1900-01-01'" >
-            , TO_CHAR(TO_DATE(#{spouseDob},'dd-mm-yyyy'),'yyyy-mm-dd')
+            <if test="spouseDob != null and spouseDob != '' and spouseDob != '01/01/1900'" >
+            , TO_DATE(#{spouseDob},'dd-mm-yyyy')
             </if>
-             <if test="spouseDob != null and spouseDob != '' and spouseDob == '1900-01-01'" >
-            , #{spouseDob}
+             <if test="spouseDob != null and spouseDob != '' and spouseDob == '01/01/1900'" >
+            , TO_DATE(#{spouseDob},'dd-mm-yyyy')
             </if>
             , #{educationLvl}
             , #{language}
             , #{issuedBank}
             , #{bankAccNo}
             , #{sponsorCd}
-            , TO_CHAR(TO_DATE(#{joinDate},'dd-mm-yyyy'),'yyyy-mm-dd')
-            , #{reSignDate}
-            , #{termDate}
-            , TO_CHAR(TO_DATE(#{RenewDate},'dd-mm-yyyy'),'yyyy-mm-dd')
+            , TO_DATE(#{joinDate},'dd-mm-yyyy')
+            , TO_DATE(#{reSignDate},'dd-mm-yyyy')
+            , TO_DATE(#{termDate},'dd-mm-yyyy')
+            , TO_DATE(#{RenewDate},'dd-mm-yyyy')
             , #{AgrmntNo}
             , #{branch}
             , #{status}
             , #{SyncCheck}
             , #{rank}
             , #{transportCd}
-            , TO_DATE(#{promoteDate},'yyyy-mm-dd')
+            , TO_DATE(#{promoteDate},'dd-mm-yyyy')
             , #{trNo}
             , SYSDATE
             , #{creator}
@@ -1399,12 +1399,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           , SYSDATE
           , #{userSyncCheck}
           , #{userNRIC}
-          , TO_CHAR(TO_DATE(#{userDateJoin},'dd-mm-yyyy'),'yyyy-mm-dd')
+          , TO_DATE(#{userDateJoin},'dd-mm-yyyy')
           , #{userGsecSynCheck}
           , SYSDATE
           , #{userTypeID}
           , #{userDefaultPasswd}
-          , TO_CHAR(TO_DATE(#{userValidFrom},'dd-mm-yyyy'),'yyyy-mm-dd')
+          , TO_DATE(#{userValidFrom},'dd-mm-yyyy')
           , #{userValidTo}
           , #{userSecQuesID}
           , #{userSecQuesAns}
@@ -1515,7 +1515,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , SYSDATE
 	  , 52366
 	  , #{confirmation}
-	  , #{confirmDate}
+	  , TO_DATE(#{confirmDate},'DD-MM-YYYY')
 	  , #{deptCode}
 	  , #{areaId}
 	  , #{streetDtl}
@@ -1623,7 +1623,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{docTypeID}
 	  , #{docSOID}
 	  , #{docMemId}
-	  ,  TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	  , SYSDATE
 	  , #{docCopyQty}
 	  , #{statusID}
 	  , #{creator}
