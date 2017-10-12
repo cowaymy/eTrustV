@@ -15,9 +15,10 @@
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
-        	alert(event.item.soExchgId);
             $("#soExchgId").val(event.item.soExchgId);
             $("#exchgType").val(event.item.soExchgTypeId);
+            $("#exchgStus").val(event.item.soExchgStusId);
+            $("#exchgCurStusId").val(event.item.soCurStusId);
             $("#salesOrderNo").val(event.item.salesOrdNo);
             $("#salesOrderId").val(event.item.soId);
             Common.popupDiv("/sales/order/orderExchangeDetailPop.do", $("#detailForm").serializeJSON());
@@ -75,6 +76,12 @@
                visible : false
            },{
                dataField : "soExchgTypeId",
+               visible : false
+           },{
+               dataField : "soExchgStusId",
+               visible : false
+           },{
+               dataField : "soCurStusId",
                visible : false
            },{
                dataField : "soId",
@@ -175,7 +182,9 @@
 <form id="detailForm" name="detailForm" method="post">
     <input type="hidden" id="soExchgId" name="soExchgId">
     <input type="hidden" id="exchgType" name="exchgType">
-    <input type="hidden" id="salesOrdNo" name="salesOrdNo">
+    <input type="hidden" id="exchgStus" name="exchgStus">
+    <input type="hidden" id="exchgCurStusId" name="exchgCurStusId">
+<!--     <input type="hidden" id="salesOrdNo" name="salesOrdNo"> -->
     <input type="hidden" id="salesOrderId" name="salesOrderId">
 </form>
 <form id="searchForm" name="searchForm" method="post">
@@ -200,7 +209,7 @@
     <th scope="row">Exchange Status</th>
     <td>
     <select id="cmbExcStatus" name="cmbExcStatus" class="multy_select w100p" multiple="multiple">
-        <option value="1">Active</option>
+        <option value="1" selected>Active</option>
         <option value="4">Complete</option>
         <option value="10">Cancel</option>
     </select>
