@@ -180,7 +180,9 @@
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true
+        showRowNumColumn : true,
+        
+        headerHeight : 40
 
     };
 	myGridID_7002CDG = AUIGrid.create("#grid_wrap_7002CDG", columnLayout_7002CD,gridPros);
