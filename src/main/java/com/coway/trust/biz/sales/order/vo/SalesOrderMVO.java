@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 /**
  * The persistent class for the SAL0001D database table.
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesOrderMVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -114,6 +117,24 @@ public class SalesOrderMVO implements Serializable {
 	private int updUserId;
 	
 	private String billGroup;
+
+	private int empChk;
+	
+	private int exTrade;
+	
+	private int ecash;
+	
+	private int promoDiscPeriodTp;
+	
+	private int promoDiscPeriod;
+	
+	private BigDecimal norAmt;
+	
+	private BigDecimal norRntFee;
+	
+	private BigDecimal discRntFee;
+	
+	private int gstChk;
 
 	public long getSalesOrdId() {
 		return salesOrdId;
@@ -522,4 +543,77 @@ public class SalesOrderMVO implements Serializable {
 	public void setBillGroup(String billGroup) {
 		this.billGroup = billGroup;
 	}
+
+	public int getEmpChk() {
+		return empChk;
+	}
+
+	public void setEmpChk(int empChk) {
+		this.empChk = empChk;
+	}
+
+	public int getExTrade() {
+		return exTrade;
+	}
+
+	public void setExTrade(int exTrade) {
+		this.exTrade = exTrade;
+	}
+
+	public int getEcash() {
+		return ecash;
+	}
+
+	public void setEcash(int ecash) {
+		this.ecash = ecash;
+	}
+
+	public int getPromoDiscPeriodTp() {
+		return promoDiscPeriodTp;
+	}
+
+	public void setPromoDiscPeriodTp(int promoDiscPeriodTp) {
+		this.promoDiscPeriodTp = promoDiscPeriodTp;
+	}
+
+	public int getPromoDiscPeriod() {
+		return promoDiscPeriod;
+	}
+
+	public void setPromoDiscPeriod(int promoDiscPeriod) {
+		this.promoDiscPeriod = promoDiscPeriod;
+	}
+
+	public BigDecimal getNorAmt() {
+		return norAmt;
+	}
+
+	public void setNorAmt(BigDecimal norAmt) {
+		this.norAmt = norAmt;
+	}
+
+	public BigDecimal getNorRntFee() {
+		return norRntFee;
+	}
+
+	public void setNorRntFee(BigDecimal norRntFee) {
+		this.norRntFee = norRntFee;
+	}
+
+	public BigDecimal getDiscRntFee() {
+		return discRntFee;
+	}
+
+	public void setDiscRntFee(BigDecimal discRntFee) {
+		this.discRntFee = discRntFee;
+	}
+
+	public int getGstChk() {
+		return gstChk;
+	}
+
+	public void setGstChk(int gstChk) {
+		this.gstChk = gstChk;
+	}
+	
 }

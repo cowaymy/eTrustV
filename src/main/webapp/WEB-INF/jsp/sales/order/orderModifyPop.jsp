@@ -425,7 +425,28 @@
         $('#btnSaveReferral').click(function() {
             fn_doSaveReferral();
         });
-        
+        $('#ordPromo').change(function() {
+
+            $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+
+            var stkIdVal   = $("#stkId").val();
+            var promoIdIdx = $("#ordPromo option:selected").index();
+            var promoIdVal = $("#ordPromo").val();
+
+            if(promoIdIdx > 0 && promoIdVal != '0') {
+
+                $('#relatedNo').removeAttr("readonly").removeClass("readonly");
+
+                fn_loadPromotionPrice(promoIdVal, stkIdVal);
+            }
+            else {
+                fn_loadPromotionInfo(ORD_ID);
+            }
+        });
+        $('#btnSavePromo').click(function() {
+            if(!fn_validPromoPriceInfo()) return false;
+            fn_doSavePromoPriceInfo();
+        });
     });
     
     function fn_clearOrderSalesman() {
@@ -671,14 +692,60 @@
         }
         if(tabNm == 'PRM') {
             $('#scPR').removeClass("blind");
-            $('#aTabDS').click();
-          //AUIGrid.resize(modRfrGridID, 960, 380);
-          //fn_selectReferralList(ORD_NO);
+            $('#aTabMI').click();
+          fn_loadPromotionInfo(ORD_ID);
         } else {
             $('#scPR').addClass("blind");
         }
     }
 
+    function fn_loadPromotionPrice(promoId, stkId) {
+
+        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
+
+            if(promoPriceInfo != null) {
+
+                console.log("성공.");
+/*
+                $("#ordPrice").removeClass("readonly");
+                $("#ordPv").removeClass("readonly");
+                $("#ordRentalFees").removeClass("readonly");
+*/
+                $("#ordPrice").val(promoPriceInfo.orderPricePromo);
+                $("#ordPv").val(promoPriceInfo.orderPVPromo);
+                $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+
+                $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
+                $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+            }
+        });
+    }
+    
+    function fn_loadPromotionInfo(ordId) {
+        Common.ajax("GET", "/sales/order/selectBasicInfoJson.do", {salesOrderId : ordId}, function(basicInfo) {
+
+            if(basicInfo != null) {
+                var promoId = basicInfo.ordPromoId;
+                var stkId = basicInfo.stockId;
+
+                $('#prdName').text('('+basicInfo.stockCode+') '+basicInfo.stockDesc);
+                $('#ordPrice').val(basicInfo.ordAmt);
+                $('#ordRentalFees').val(basicInfo.ordMthRental);
+                $('#ordPv').val(basicInfo.ordPv);
+                
+                $("#promoDiscPeriodTp").val(basicInfo.promoDiscPeriodTp);
+                $("#promoDiscPeriod").val(basicInfo.promoDiscPeriod);
+                
+                $('#relatedNo').val(basicInfo.ordPromoRelatedNo);
+                
+                $('#promoId').val(promoId);
+                $('#stkId').val(stkId);
+                
+                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:APP_TYPE_ID,stkId:stkId}, promoId, 'ordPromo', 'S', ''); //Common Code
+            }
+        });
+    }
+    
     function fn_loadRentPaySetInfo(ordId){
         console.log("fn_loadRentPaySetInfo START");
 
@@ -1379,6 +1446,24 @@
         return isValid;
     }
     
+    function fn_validPromoPriceInfo() {
+        var isValid = true, msg = "";
+
+        if($("#ordPromo option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select the promotion option<br/>";
+        }
+        if($('#promoId').val().trim() == $('#ordPromo').val().trim()) {
+            isValid = false;
+            msg += "* Please select the other promotion option.<br/>";
+        }
+
+
+        if(!isValid) Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+    }
+    
     function fn_validMailingAddress() {
         var isValid = true, msg = "";
 
@@ -1589,7 +1674,7 @@
 
         Common.ajax("POST", "/sales/order/saveReferral.do", orderModifyVO, function(result) {
             
-            Common.alert("New Member Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            Common.alert("New Member Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -1599,6 +1684,40 @@
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
                 Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save new member. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+            }
+            catch (e) {
+                console.log(e);
+            }
+        });
+    }
+    
+    function fn_doSavePromoPriceInfo() {
+        console.log('!@# fn_doSavePromoPriceInfo START');
+        
+        var salesOrderMVO = {
+            salesOrdId        : ORD_ID,
+            promoId           : $('#ordPromo').val().trim(),
+            totAmt            : $('#ordPrice').val().trim(),
+            mthRentAmt        : $('#ordRentalFees').val().trim(),
+            totPv             : $('#ordPv').val().trim(),
+            discRntFee        : $('#ordRentalFees').val().trim(),
+            promoDiscPeriodTp : $('#promoDiscPeriodTp').val().trim(),
+            promoDiscPeriod   : $('#promoDiscPeriod').val().trim(),
+            salesOrdNo        : ORD_NO
+        };
+
+        Common.ajax("POST", "/sales/order/updatePromoPriceInfo.do", salesOrderMVO, function(result) {
+            
+            Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
             }
             catch (e) {
                 console.log(e);
@@ -2462,7 +2581,7 @@
     Referrals Info Edit END
 ------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------
-    Referrals Info Edit START
+    Promotion Info Edit START
 ------------------------------------------------------------------------------->
 <section id="scPR" class="blind">
 <aside class="title_line"><!-- title_line start -->
@@ -2485,27 +2604,27 @@
 <tbody>
 <tr>
 	<th scope="row">Product</th>
-	<td><span>text</span></td>
+	<td><span id="prdName"></span></td>
 	<th scope="row">Price/RPF (RM)</th>
-	<td><span>text</span></td>
+    <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+        <input id="promoDiscPeriodTp" name="promoDiscPeriodTp" type="hidden" />
+        <input id="promoDiscPeriod"   name="promoDiscPeriod"   type="hidden" />
+        <input id="promoId"           name="promoId"           type="hidden" /></td>
+        <input id="stkId"             name="stkId"             type="hidden" /></td>
 </tr>
 <tr>
 	<th scope="row">Promotion<span class="must">*</span></th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
+	<select id="ordPromo" name="ordPromo" class="w100p"></select>
 	</td>
 	<th scope="row">Rental Fees (RM)</th>
-	<td><span>text</span></td>
+    <td><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
 	<th scope="row">Related No</th>
-	<td><input type="text" title="" placeholder="Related Number" class="w100p" /></td>
+	<td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly/></td>
 	<th scope="row">PV</th>
-	<td><span>text</span></td>
+	<td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2517,7 +2636,7 @@
 
 </section>
 <!------------------------------------------------------------------------------
-    Referrals Info Edit END
+    Promotion Info Edit END
 ------------------------------------------------------------------------------->
 </section><!-- pop_body end -->
 

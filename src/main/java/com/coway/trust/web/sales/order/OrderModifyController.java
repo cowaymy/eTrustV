@@ -32,7 +32,7 @@ import com.coway.trust.biz.sales.order.OrderModifyService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
-import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -403,7 +403,7 @@ public class OrderModifyController {
     }
     
 	@RequestMapping(value = "/saveReferral.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePromotion(@RequestBody OrderModifyVO orderModifyVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+	public ResponseEntity<ReturnMessage> saveReferral(@RequestBody OrderModifyVO orderModifyVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 		
 		orderModifyService.saveReferral(orderModifyVO, sessionVO);
 
@@ -412,6 +412,20 @@ public class OrderModifyController {
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setMessage(messageAccessor.getMessage("Inactive Referral successfully saved."));
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/updatePromoPriceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updatePromoPriceInfo(@RequestBody SalesOrderMVO salesOrderMVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+		
+		orderModifyService.updatePromoPriceInfo(salesOrderMVO, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Order Number : " + salesOrderMVO.getSalesOrdNo() + "<br />Information successfully updated.");
 
 		return ResponseEntity.ok(message);
 	}

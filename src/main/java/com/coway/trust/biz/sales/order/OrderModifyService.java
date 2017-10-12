@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.coway.trust.biz.sales.order.vo.OrderModifyVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -55,5 +56,7 @@ public interface OrderModifyService {
 	List<EgovMap> selectStateCodeList(Map<String, Object> params);
 
 	void saveReferral(OrderModifyVO orderModifyVO, SessionVO sessionVO) throws Exception;
+
+	void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) throws Exception;
 
 }

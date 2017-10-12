@@ -2167,11 +2167,11 @@
     <th scope="row">Price/RPF (RM)</th>
     <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId"        name="ordPriceId"        type="hidden" />
-        <input id="orgOrdPrice"       name="orgOrdPrice"       type="text" />
-        <input id="orgOrdPv"          name="orgOrdPv"          type="text" />
-        <input id="orgOrdRentalFees"  name="orgOrdRentalFees"  type="text" />
-        <input id="promoDiscPeriodTp" name="promoDiscPeriodTp" type="text" />
-        <input id="promoDiscPeriod"   name="promoDiscPeriod"   type="text" /></td>
+        <input id="orgOrdPrice"       name="orgOrdPrice"       type="hidden" />
+        <input id="orgOrdPv"          name="orgOrdPv"          type="hidden" />
+        <input id="orgOrdRentalFees"  name="orgOrdRentalFees"  type="hidden" />
+        <input id="promoDiscPeriodTp" name="promoDiscPeriodTp" type="hidden" />
+        <input id="promoDiscPeriod"   name="promoDiscPeriod"   type="hidden" /></td>
     <th scope="row">Group Code</th>
     <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
         <input id="grpMemId" name="grpMemId" type="hidden" /></td>

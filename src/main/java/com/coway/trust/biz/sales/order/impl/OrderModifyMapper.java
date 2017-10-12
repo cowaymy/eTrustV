@@ -10,6 +10,7 @@ import com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO;
 import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
 import com.coway.trust.biz.sales.order.vo.ReferralVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -67,4 +68,5 @@ public interface OrderModifyMapper {
 	
 	void updateReferral(ReferralVO referralVO);
 	
+	void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO);
 }

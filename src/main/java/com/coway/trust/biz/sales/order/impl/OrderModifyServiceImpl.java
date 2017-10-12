@@ -528,4 +528,11 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 	}
 
+	@Override
+	public void updatePromoPriceInfo(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) throws Exception {
+
+		logger.info("!@###### OrderModifyServiceImpl.updatePromoPriceInfo");
+
+		orderModifyMapper.updatePromoPriceInfo(salesOrderMVO);
+	}
 }
