@@ -9,17 +9,21 @@ var optionArea = {chooseMessage: "4. Area"};
 
 
 function fn_memberSave(){
-            
-            $("#streetDtl").val(insAddressForm.streetDtl.value);
-            $("#addrDtl").val(insAddressForm.addrDtl.value);
-		    var jsonObj =  GridCommon.getEditData(myGridID);
-		    jsonObj.form = $("#memberAddForm").serializeJSON();
-		    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
-			console.log("message : " + result.message );
-			Common.alert(result.message);
+	            $("#streetDtl").val(insAddressForm.streetDtl.value);
+	            $("#addrDtl").val(insAddressForm.addrDtl.value);
+			    var jsonObj =  GridCommon.getEditData(myGridID);
+			    jsonObj.form = $("#memberAddForm").serializeJSON();
+			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
+				console.log("message : " + result.message );
+				Common.alert(result.message);
 		});
 }
 
+function fn_saveConfirm(){
+	if(fn_saveValidation()){
+        Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
+    }
+}
 function fn_docSubmission(){
 	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memberType").serialize(), function(result) {
 		console.log("성공.");
@@ -267,7 +271,7 @@ function fn_saveValidation(){
         Common.alert("Please select the department code");
         return false;
     }
-	return true
+	return true;
 }
 
 function fn_addrSearch(){
@@ -410,8 +414,6 @@ function fn_selectState(selVal){
     
 }
 </script>
-</head>
-<body>
 
 <div id="popup_wrap"><!-- popup_wrap start -->
 
@@ -718,7 +720,7 @@ function fn_selectState(selVal){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_memberSave()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
 </ul>
 
@@ -854,5 +856,3 @@ function fn_selectState(selVal){
 
 
 </div><!-- popup_wrap end -->
-</body>
-</html>
