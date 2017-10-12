@@ -230,7 +230,7 @@ public class HsManualController {
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 		model.addAttribute("cmbServiceMemList", cmbServiceMemList);
 		model.addAttribute("orderDetail", orderDetail);
-		model.addAttribute("failReasonList", cmbCollectTypeComboList);
+		model.addAttribute("failReasonList", failReasonList);
 		model.addAttribute("serMemList", serMemList);
 
 		
