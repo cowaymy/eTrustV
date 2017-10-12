@@ -309,7 +309,8 @@
                                     AND A.MENU_CODE = T.MENU_CODE) H) T
                                     ,CURRENT_MENU W
          WHERE W.MENU_CODE = T.MENU_CODE(+)
-            AND T.RNK(+) = 1
+            AND T.RNK = 1
+            AND (T.FUNC_YN = 'Y' OR T.EXIST_YN = 'Y')
             AND SYSDATE BETWEEN TO_DATE (NVL (T.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
                            AND TO_DATE (NVL (T.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
     </select>
