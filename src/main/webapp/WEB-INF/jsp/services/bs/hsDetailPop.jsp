@@ -129,14 +129,14 @@
             }); */
 
 
+
+
                      var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
               Common.ajax("POST", "/bs/addIHsResult.do", jsonObj, function(result) {
               Common.alert(result.message.message);
               
               Common.alert(result.message, fn_parentReload);
-              
-              
             });
         }
     
@@ -160,7 +160,10 @@
 <header class="pop_header"><!-- pop_header start -->
 
 <h1>HS - New HS Result</h1>
-
+<ul class="right_opt">
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">Close</a></p></li>
+</ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
@@ -227,7 +230,7 @@
     <td>
     <select class="w100p" id ="failReason"  name ="failReason">
         <option value="" selected>Choose One</option>
-            <c:forEach var="list" items="${ failReasonList}" varStatus="status">
+            <c:forEach var="list" items="${failReasonList}" varStatus="status">
                  <option value="${list.codeId}">${list.codeName } </option>
             </c:forEach>
     </select>
@@ -284,10 +287,7 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
 	 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">Close</a></p></li>
-</ul>
+
 
 </section><!-- pop_body end -->
 </form>

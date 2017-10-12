@@ -198,7 +198,7 @@
                                    
                                   $("#_schdulId").val(item.schdulId);
                                   $("#_salesOrdId").val(item.salesOrdId);
-
+                                   $("#_openGb").val("edit");
                                   Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                   }
            }                            
@@ -518,7 +518,9 @@
 
 <form id="popEditForm" method="post">
     <input type="hidden" name="schdulId"  id="_schdulId"/>  <!-- schdulId  -->
-     <input type="hidden" name="salesOrdId"  id="_salesOrdId"/>  <!-- salesOrdId  -->
+    <input type="hidden" name="salesOrdId"  id="_salesOrdId"/>  <!-- salesOrdId  -->
+    <input type="hidden" name="openGb"  id="_openGb"/>  <!-- salesOrdId  -->
+     
 </form>
 
 <form id="searchForm" name="searchForm">    

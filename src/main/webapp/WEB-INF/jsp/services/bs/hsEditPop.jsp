@@ -17,7 +17,7 @@
     
         //close Func
     function fn_closeFunc(){
-        $("#_selectParam").val(1);
+        alert(1111111);
     }
     
     var option = {
@@ -89,6 +89,7 @@
  
            selSchdulId = $("#hidschdulId").val(); // TypeId 
            selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId 
+           openGb = $("#openGb").val(); // TypeId 
 
             //order detail
 //           fn_getOrderDetailListAjax();
@@ -159,20 +160,24 @@
     
     
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_Editwrap" class="popup_wrap"><!-- popup_wrap start -->
 
-<form action="#" id="addHsForm" method="post">   
- <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
- <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
+
  
 <header class="pop_header"><!-- pop_header start -->
 
 <h1>HS - Result Edit</h1>
-
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-
+<form action="#" id="addHsForm" method="post">   
+ <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
+ <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
+ 
 <aside class="title_line"><!-- title_line start -->
 <h2>HS Information</h2>
 </aside><!-- title_line end -->
@@ -302,8 +307,9 @@
 	 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">Close</a></p></li>
+    
+<!--     <li><p class="btn_blue2 big"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">Close</a></p></li> -->
+<!--     <li><p class="btn_blue2 big"><a href="#">Close</a></p></li> -->
 </ul>
 
 </section><!-- pop_body end -->
