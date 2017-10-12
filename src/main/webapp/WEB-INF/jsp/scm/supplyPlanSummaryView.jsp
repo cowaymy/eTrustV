@@ -115,7 +115,8 @@ function fnSetStockComboBox()
 function fnExcelExport()
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary");
+    // 3. exprot ExcelFileName
+    GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", "SupplyPlanSummary_W" +$('#scmPeriodCbBox').val() );
 }
 
 // search
@@ -173,15 +174,6 @@ function fnSettiingHeader()
           , $("#MainForm").serialize()
           , function(result) 
           {     
-/*             if(result.planInfo != null && result.planInfo.length > 0)
-            {
-               $("#planYear").text(result.planInfo[0].planYear);
-               $("#planMonth").text(result.planInfo[0].planMonth);
-               $("#planWeek").text(result.planInfo[0].planWeek);
-               $("#planTeam").text(result.planInfo[0].team);
-               $("#planStatus").text(result.planInfo[0].planStusNm);
-               $("#planCreatedAt").text(result.planInfo[0].crtDt);
-            } */
 
             if( (result.seperaionInfo == null || result.seperaionInfo.length < 1) 
                || (result.getChildField == null || result.getChildField.length < 1))
@@ -194,14 +186,7 @@ function fnSettiingHeader()
               if(AUIGrid.isCreated(summaryGridID)){
                  AUIGrid.destroy(summaryGridID);
               }
-/* 
-              $("#planYear").text("");
-              $("#planMonth").text("");
-              $("#planWeek").text("");
-              $("#planTeam").text("");
-              $("#planStatus").text("");
-              $("#planCreatedAt").text(""); 
- */
+
               return false;  
             }
                             
@@ -211,7 +196,8 @@ function fnSettiingHeader()
                    dynamicLayout.push( 
                                         { 
                                           headerText : "Stock"
-                                        , style : "my-header"  
+                                        , style : "my-header" 
+                                       // , width : 13 
                                         , children : [
                                                           
                                                           {                            
@@ -219,28 +205,28 @@ function fnSettiingHeader()
                                                              ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
                                                              ,editable : true
                                                              ,style : "my-backColumn1"  
-                                                             ,width : "5%"
+                                                             //,width : "5%"
                                                            }
                                                          , {                            
                                                              dataField : result.header[0].codeH1
                                                              ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
                                                              ,editable : true
                                                              ,style : "my-backColumn1"
-                                                             ,width : "5%"
+                                                             //,width : "5%"
                                                            }
                                                          , {                            
                                                              dataField : result.header[0].nameH1
                                                              ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
                                                              ,editable : true
                                                              ,style : "my-backColumn1"
-                                                             ,width : "5%"
+                                                             //,width : "5%"
                                                            }
                                                          , { 
                                                              dataField : result.header[0].supplyCorpHPsi
                                                             ,headerText : "<spring:message code='sys.scm.supplyCorp.psi' />"
                                                             ,editable : true
                                                             ,style : "my-backColumn1"
-                                                            ,width : "5%"
+                                                            //,width : "5%"
                                                            } 
    
                                                      ]
@@ -250,42 +236,43 @@ function fnSettiingHeader()
                                        ,{                            
                                             headerText : "Monthly"
                                           , style : "my-header" 
+                                        //	, width : 7
                                           , children : [
 																												  {                            
 																												    dataField : result.header[0].todayH2  // m0
 																												    ,headerText : "<spring:message code='sys.scm.salesplan.M0' />"
 																												    ,style : "my-backColumn1"
-																												    ,width : "5%"
+																												    //,width : "5%"
 																												  }
                                                         , {                            
                                                             dataField : result.header[0].m1H2
                                                             ,headerText : "<spring:message code='sys.scm.salesplan.M1' />"
                                                             ,style : "my-backColumn1"
-                                                            ,width : "5%"
+                                                            //,width : "5%"
                                                           }
                                                         , {                            
                                                             dataField : result.header[0].m2H2
                                                             ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
                                                             ,style : "my-backColumn1"
-                                                            ,width : "5%"
+                                                            //,width : "5%"
                                                           }
                                                         , {                            
                                                             dataField : result.header[0].m3H3
                                                             ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
                                                             ,style : "my-backColumn1"
-                                                            ,width : "5%"
+                                                            //,width : "5%"
                                                           }
                                                         , {                            
                                                             dataField : result.header[0].m4H4
                                                             ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
                                                             ,style : "my-backColumn1"
-                                                            ,width : "5%"
+                                                            //,width : "5%"
                                                           }
                                                         , {                            
                                                             dataField : result.header[0].supplyCorpHOverdue
                                                             ,headerText : "<spring:message code='sys.scm.supplyCorp.Overdue' />"
                                                             ,style : "my-backColumn1"
-                                                            ,width : "5%"
+                                                            //,width : "5%"
                                                           }
                                                         ] // child                     
                                        } 
@@ -309,6 +296,7 @@ function fnSettiingHeader()
                    var groupM_0 = {
                       headerText : "<spring:message code='sys.scm.salesplan.M0' />",
                       style : "my-header", 
+                     // width : 20, 
                       children : []
                    }
                    
@@ -383,6 +371,7 @@ function fnSettiingHeader()
                   var groupM_1 = {
                       headerText : "M+1",
                       style : "my-header", 
+                    //  width : 20,
                       children : []
                   }
    
@@ -414,6 +403,7 @@ function fnSettiingHeader()
                    var groupM_2 = {
                       headerText : "M+2",
                       style : "my-header", 
+                  //    width : 20,
                       children : []
                    }
                    
@@ -445,6 +435,7 @@ function fnSettiingHeader()
                   var groupM_3 = {
                      headerText : "M+3",
                      style : "my-header",
+                  //   width : 20,
                      children : []
                   }
                   

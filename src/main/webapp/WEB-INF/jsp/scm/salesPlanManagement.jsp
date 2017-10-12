@@ -22,6 +22,11 @@
   color:#000;
 }
 
+.Atag-Disabled {
+   pointer-events: none;
+   cursor: default;
+}
+
 </style>
 
 <script type="text/javaScript">
@@ -418,25 +423,25 @@ function fnSelectSummaryHeadList(summaryHeadList)
 	                                    dataField : dynamicSummaryHeadList.categoryH1  // category
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
 	                                    ,editable : true
-	                                    ,width : "5%"
+	                                    //,width : "5%"
 	                                  }
 	                                 ,{                            
 	                                     dataField : dynamicSummaryHeadList.isuueorderH
 	                                     ,headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />"
 	                                     ,editable : true
-	                                     ,width : "8%"
+	                                     //,width : "8%"
 	                                  }
 	                                , {     //m1_Issue_Order   
 	                                    dataField : dynamicSummaryHeadList.beforeDayH2
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder_summery' />"   
 	                                    ,editable : true
-	                                    ,width : "5%"
+	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.todayH2
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />"
 	                                    ,editable : true
-	                                    ,width : "5%"
+	                                    //,width : "5%"
 	                                  }
 	
 	                                , {                            
@@ -445,7 +450,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
 	                                    ,editable : true
-	                                    ,width : "5%"
+	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.m2H2
@@ -453,7 +458,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
 	                                    ,editable : true
-	                                    ,width : "5%"
+	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.m3H3
@@ -461,7 +466,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"                                        
 	                                    ,editable : true
-	                                    ,width : "5%"
+	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.m4H4
@@ -469,7 +474,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"                                        
 	                                    ,editable : true
-	                                    ,width : "5%"
+	                                    //,width : "5%"
 	                                  }
                                 ) //push
                                 
@@ -590,90 +595,92 @@ function fnSettiingHeader()
 		            	  dynamicLayout.push( 
 		            			                   { 
 		                			                 headerText : "Stock"
+		                			              // , width : 10 
 		                			               , children : [
 																													{ 
 																													    dataField : "planMasterId"
 																													   ,headerText :"<spring:message code='sys.scm.salesplan.PlanMasterId' />"
 																													   ,editable : true
 																													   ,visible : false
-																													   ,width : "5%"
+																													   //,width : "5%"
 																													  } 
 																													, { 
 																													    dataField : result.header[0].teamH1
 																													   ,headerText : "<spring:message code='sys.scm.salesplan.Team' />"
 																													   ,editable : true
-																													   ,width : "5%"
+																													   //,width : "5%"
 																													  } 
 																													, {                            
 																													    dataField : result.header[0].categoryH1
 																													    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
 																													    ,editable : true
-																													    ,width : "5%"
+																													    //,width : "5%"
 																													      ,idx:1
 																													  }
 																													, {                            
 																													    dataField : result.header[0].codeH1
 																													    ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
 																													    ,editable : true
-																													    ,width : "5%"
+																													    //,width : "5%"
 																													  }
 																													, {                            
 																													    dataField : result.header[0].nameH1
 																													    ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
 																													    ,editable : true
-																													    ,width : "5%"
+																													    //,width : "5%"
 																													  }
 		
 		                              			              ]
 		                        			       }
-		                        			       
+		                        			       // M-3 AVG Issue/Order
 		       			                        ,{                            
 		                                          dataField : result.header[0].isuueorderH
 		                                          ,headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />"
+		                                        	//,width : 15
 		                                          ,editable : true
-		                                          ,width : "8%"
 		                                     }
 		                                            
 		                                  // Monthly
 		                                   , { 
 		                                       headerText : "Monthly"
-		                                       , children : [
+			                                  // , width : 15
+		                                     , children : [
 		                                                      {                            
 		                                                         dataField : result.header[0].beforeDayH2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder' />"   
 		                                                         ,editable : true
-		                                                         ,width : "5%"
+		                                                         //,width : "5%"
 		                                                         //,visible: false
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].todayH2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />"
 		                                                         ,editable : true
-		                                                         ,width : "5%"
+		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m1H2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1' />" 
 		                                                         ,editable : true
-		                                                         ,width : "5%"
+		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m2H2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
 		                                                         ,editable : true
-		                                                         ,width : "5%"
+		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m3H3
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
 		                                                         ,editable : true
-		                                                         ,width : "5%"
+		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m4H4
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
 		                                                         ,editable : true
-		                                                         ,width : "5%"
+		                                                         //,width : "5%"
 		                                                       }
 		                                                     ] // child                  	  
 		                                    }
@@ -696,6 +703,7 @@ function fnSettiingHeader()
 				            // M+0   : 당월    remainCnt
 		                var groupM_0 = {
 		                   headerText : "<spring:message code='sys.scm.salesplan.M0' />",
+		                  // width : 15 ,
 		                   children : []
 		                }
 		                
@@ -772,7 +780,7 @@ function fnSettiingHeader()
 		                                     dataField : "salesCnt"//result.add[i].month
 		                                    ,headerText : "w"+(i+1) //+ result.add[i].month
 		                                    ,editable : true
-		                                  //  ,width : "5%"
+		                                    //,width : "5%"
 		                                   }); 
 		                
 		               } */
@@ -780,6 +788,7 @@ function fnSettiingHeader()
 		                // M+1
 		               var groupM_1 = {
 		                   headerText : "M+1",
+		                  // width : 15 ,
 		                   children : []
 		               }
 		
@@ -809,6 +818,7 @@ function fnSettiingHeader()
 		                // M+2
 		                var groupM_2 = {
 		                   headerText : "M+2",
+		                  // width : 15 ,
 		                   children : []
 		                }
 		                
@@ -838,6 +848,7 @@ function fnSettiingHeader()
 		               // M+3
 		               var groupM_3 = {
 		                  headerText : "M+3",
+		                //  width : 15 ,
 		                  children : []
 		               }
 		               
@@ -1253,10 +1264,22 @@ $(document).ready(function()
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="javascript:void(0);">Create Plan</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:void(0);">Confirm</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:void(0);">UnConfirm</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:void(0);">Update M0 Data</a></p></li>
+	<li><p class="btn_grid">
+	<!-- <a href="javascript:void(0);">Create Plan</a> -->
+	<input type='button' id='CreatePlanBtn' value='Create Plan' disabled />
+	</p></li>
+	<li><p class="btn_grid">
+	<!-- <a href="javascript:void(0);">Confirm</a> -->
+	<input type='button' id='ConfirmBtn' value='Confirm' disabled />
+	</p></li>
+	<li><p class="btn_grid">
+	<!-- <a href="javascript:void(0);">UnConfirm</a> -->
+	<input type='button' id='UnConfirmBtn' value='UnConfirm' disabled />
+	</p></li>
+	<li><p class="btn_grid">
+	<!-- <a href="javascript:void(0);">Update M0 Data</a> -->
+	<input type='button' id='UpdateBtn' value='Update M0 Data' disabled />
+	</p></li>
 </ul>
 
 <table class="type1 mt10"><!-- table start -->
@@ -1310,11 +1333,27 @@ $(document).ready(function()
 <div class="side_btns">
   <ul class="left_btns">
     <li><p class="btn_blue2"><a onclick="fnSaveScmSalesPlan();">Save</a></p></li>
-    <li><p class="btn_blue2"><a>Cancel</a></p></li>
+    <li>
+      <p class="btn_blue2">
+        <!-- <a>Cancel</a> -->
+         <input type='button' id='CancelBtn' value='Cancel' disabled />
+      </p>
+    </li>
+   
   </ul>
   <ul class="right_btns">
-    <li><p class="btn_blue2"><a>Refresh</a></p></li>
-    <li><p class="btn_blue2"><a>Excel download</a></p></li>
+    <li>
+      <p class="btn_blue2">
+      <!-- <a>Refresh</a> -->
+       <input type='button' id='RefreshBtn' value='Refresh' disabled />
+      </p>
+    </li>
+    <li>
+      <p class="btn_blue2">
+      <!-- <a>Excel download</a> -->
+      <input type='button' id='downloadBtn' value='download' disabled />
+      </p>
+    </li>
   </ul>
 </div>
 
