@@ -12,6 +12,10 @@ var expPopGridID;
 
 $(document).ready(function(){
 	
+	$("#btnAdd").click(function() {   
+		  fn_AddRow();
+	});
+	
 	 var expPopColumnLayout = [ {     /* PK , rowid 용 칼럼*/
          dataField : "rowId",
          dataType : "string",
@@ -94,7 +98,8 @@ $(document).ready(function(){
  
  var options = {
      softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-     selectionMode : "multipleRows"
+     selectionMode : "multipleRows",
+     autoEditCompleteMode : true
    };
 
     
@@ -368,7 +373,7 @@ function  fn_setBudgetData(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" onclick="fn_AddRow();"><spring:message code="expense.Add" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="btnAdd"><spring:message code="expense.Add" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
