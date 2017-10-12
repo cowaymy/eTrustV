@@ -453,6 +453,12 @@ var batchInfoLayout = [
             Common.alert(result.message);
         });
     }
+    
+    function onlyNumber(obj) {
+        $(obj).keyup(function(){
+             $(this).val($(this).val().replace(/[^0-9]/g,""));
+        }); 
+    }
 </script>
 
 <!-- content start -->
@@ -489,7 +495,7 @@ var batchInfoLayout = [
 	<tbody>
 	<tr>
 	    <th scope="row">Batch ID</th>
-	    <td><input type="text" id="batchId" name="batchId" title="" placeholder="Batch ID (Number Only)" class="w100p" /></td>
+	    <td><input type="text" id="batchId" name="batchId" title="" placeholder="Batch ID (Number Only)" class="w100p" onkeydown="onlyNumber(this)" /></td>
 	    <th scope="row">Paymode</th>
 	    <td>
 	    <select id="payMode" name="payMode" class="multy_select w100p" multiple="multiple">
