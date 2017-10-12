@@ -790,7 +790,7 @@ function fn_searchOrderNo(){
     <tr>
         <th scope="row">BS Availability</th>
         <td>
-        <span>1111</span>
+        <span></span>
         </td>
         <th scope="row">BS Frequency</th>
         <td></td>
@@ -998,17 +998,11 @@ function fn_searchOrderNo(){
     <th scope="row">Error Code<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="errorCode" name="errorCode">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Error Description<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="errorDesc" name="errorDesc">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
 </tr>
@@ -1016,17 +1010,11 @@ function fn_searchOrderNo(){
     <th scope="row">DSC Branch<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="branchDSC" name="branchDSC">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">CT Group<span class="must">*</span></th>
     <td>
     <select class="w100p" id="CTGroup" name="CTGroup">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">BS Within 30 Days</th>
@@ -1038,9 +1026,6 @@ function fn_searchOrderNo(){
     <th scope="row">Assign CT<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="assignCT" name="assignCT">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Mobile No</th>
@@ -1066,9 +1051,6 @@ function fn_searchOrderNo(){
     <th scope="row" rowspan="3">Requestor<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="requestor" name="requestor">
-        <option value="">11</option>
-        <option value="">22</option>
-        <option value="">33</option>
     </select>
     </td>
     <th scope="row">Requestor Contact</th>

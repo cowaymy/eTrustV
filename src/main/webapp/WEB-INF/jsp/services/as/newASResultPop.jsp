@@ -107,7 +107,7 @@
 <tr>
     <th scope="row">Product Code</th>
     <td>
-    <span>111</span>
+    <span></span>
     </td>
     <th scope="row">Product Name</th>
     <td colspan="3">
