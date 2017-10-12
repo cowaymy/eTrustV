@@ -37,7 +37,7 @@
 	});
 	
 	function fn_loadOrderSalesman(memId, memCode) {
-        $("#memberId_7002CD").val(memId);
+        $("#memberCd_7002CD").val(memCode);
         console.log(' memId:'+memId);
         console.log(' memCd:'+memCode);
     }
@@ -54,8 +54,13 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "emplyCode",
+        headerText : " MEMBER CODE",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "r1",
-        headerText : "R1",
+        headerText : "Per_Amt",
         style : "my-column",
         editable : false
     },{
@@ -70,7 +75,7 @@
         editable : false
     },{
         dataField : "r4",
-        headerText : "R4",
+        headerText : "Bonus_Amt",
         style : "my-column",
         editable : false
     },{
@@ -80,32 +85,32 @@
         editable : false
     },{
         dataField : "r6",
-        headerText : "R6",
+        headerText : "Collect_Amt",
         style : "my-column",
         editable : false
     },{
         dataField : "r7",
-        headerText : "R7",
+        headerText : "HP_Amt",
         style : "my-column",
         editable : false
     },{
         dataField : "r8",
-        headerText : "R8",
+        headerText : "Transport_Amt",
         style : "my-column",
         editable : false
     },{
         dataField : "r10",
-        headerText : "R10",
+        headerText : "NewCody_Amt",
         style : "my-column",
         editable : false
     },{
         dataField : "r11",
-        headerText : "R11",
+        headerText : "Introduction_Fees",
         style : "my-column",
         editable : false
     },{
         dataField : "r13",
-        headerText : "R13",
+        headerText : "Membership_Amt",
         style : "my-column",
         editable : false
     },{
@@ -150,12 +155,12 @@
         editable : false
     },{
         dataField : "r26",
-        headerText : "R26",
+        headerText : "Telephone_Deduct",
         style : "my-column",
         editable : false
     },{
         dataField : "r27",
-        headerText : "R27",
+        headerText : "Staff_Purchase",
         style : "my-column",
         editable : false
     },{
@@ -165,7 +170,7 @@
         editable : false
     },{
         dataField : "r29",
-        headerText : "R29",
+        headerText : "SHI_Amt",
         style : "my-column",
         editable : false
     },{
@@ -190,12 +195,12 @@
         editable : false
     },{
         dataField : "r34",
-        headerText : "R34",
+        headerText : "RentalMembership_Amt",
         style : "my-column",
         editable : false
     },{
         dataField : "r35",
-        headerText : "R35",
+        headerText : "RentalMembership_SHI_Amt",
         style : "my-column",
         editable : false
     },{
@@ -230,7 +235,7 @@
         editable : false
     },{
         dataField : "r99",
-        headerText : "R99",
+        headerText : "Adjustment",
         style : "my-column",
         editable : false
     }];
@@ -257,23 +262,32 @@
    }
    
    function fn_downFile() {
-	   Common.ajax("GET", "/commission/calculation/cntData7002CD", $("#form7002CD").serialize(), function(result) {
+       Common.ajax("GET", "/commission/calculation/cntData7002CD", $("#form7002CD").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
-			   //excel down load name 형식 어떻게 할지?
-		       var fileName = $("#fileName").val();
-		       var searchDt = $("#7002CD_Dt").val();
-		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-		       var month = searchDt.substr(0,searchDt.indexOf("/"));
-		       var code = $("#code").val();
-		       var memberId = $("#memberId_7002CD").val();
-		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
-		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberId="+memberId+"'/>";
+               //excel down load name 형식 어떻게 할지?
+               var fileName = $("#fileName").val();
+               var searchDt = $("#7002CD_Dt").val();
+               var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+               var month = searchDt.substr(0,searchDt.indexOf("/"));
+               var code = $("#code").val();
+               var memberCd = $("#memberCd_7002CD").val();
+               //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
+               //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
+               window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"'/>";
            }else{
                Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
            }
-	   });
+       });
+   }
+   
+   function fn_AlldownFile() {
+       var fileName = $("#fileName").val();
+       var searchDt = $("#7002CD_Dt").val();
+       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+       var month = searchDt.substr(0,searchDt.indexOf("/"));
+       var code = $("#code").val();
+       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
    }
 </script>
 
@@ -312,9 +326,9 @@
 						<td>
 						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7002CD_Dt" class="j_date2" value="${searchDt_pop }" />
 						</td>
-						<th scope="row">Member Id</th>
+						<th scope="row">Member Code</th>
 						<td>
-						      <input type="text" id="memberId_7002CD" name="memberId" style="width: 100px;">
+						      <input type="text" id="memberCd_7002CD" name="memberCd" style="width: 100px;">
 						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 					</tr>
@@ -325,6 +339,9 @@
 		<article class="grid_wrap3"><!-- grid_wrap start -->
 			<!-- search_result start -->
 			<ul class="right_btns">
+			    <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
 				<li><p class="btn_grid">
 				    <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
 				</p></li>

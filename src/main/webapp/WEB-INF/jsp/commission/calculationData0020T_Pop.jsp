@@ -13,21 +13,40 @@
 
 <script type="text/javaScript">
     var myGridID_20T;
+    var gridDataLength = 0;
     
     $(document).ready(function() {
         createAUIGrid();
+        
+        // ready 이벤트 바인딩
+        AUIGrid.bind(myGridID_20T, "ready", function(event) {
+            gridDataLength = AUIGrid.getGridData(myGridID_20T).length; // 그리드 전체 행수 보관
+        });
+        
         // cellClick event.
         AUIGrid.bind(myGridID_20T, "cellClick", function(event) {
               console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
         });
          
+        // 헤더 클릭 핸들러 바인딩
+        AUIGrid.bind(myGridID_20T, "headerClick", function(event) {
+            // isExclude 칼럼 클릭 한 경우
+            if(event.dataField == "isExclude") {
+                if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+                    var  isChecked = document.getElementById("allCheckbox").checked;
+                    checkAll(isChecked);
+                }
+                return false;
+            }
+        });
+        
         //Rule Book Item search
         $("#search_20T").click(function(){  
             Common.ajax("GET", "/commission/calculation/selectDataCMM020T", $("#form_20T").serialize(), function(result) {
                 console.log("성공.");
                 console.log("data : " + result);
                 AUIGrid.setGridData(myGridID_20T, result);
-                AUIGrid.addCheckedRowsByValue(myGridID_20T, "isExclude", "1");
+                //AUIGrid.addCheckedRowsByValue(myGridID_20T, "isExclude", "1");
             });
         });
         
@@ -44,31 +63,31 @@
     });
     
     function fn_loadOrderSalesman(memId, memCode) {
-        $("#asEntryId_20T").val(memId);
-        console.log('fn_loadOrderSalesman memId:'+memId);
-        console.log('fn_loadOrderSalesman memCd:'+memCode);
+        $("#asEntryCd_20T").val(memCode);
+        console.log(' memId:'+memId);
+        console.log(' memCd:'+memCode);
     }
     
     function fn_saveExculde(){
-    	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_20T);
-        var check     = AUIGrid.getCheckedRowItems(myGridID_20T);
-        var formList = $("#form_20T").serializeJSON();       //폼 데이터
-        
-        //param data array
-        var data = {};
-        
-        data.check   = check;
-        data.checked = check;
-        data.form = formList;
-        
-        Common.ajax("POST", "/commission/calculation/updatePrdData_20T.do", data , function(result) {
+        Common.ajax("POST", "/commission/calculation/updatePrdData_20T.do", GridCommon.getEditData(myGridID_20T) , function(result) {
             // 공통 메세지 영역에 메세지 표시.
             Common.setMsg("<spring:message code='sys.msg.success'/>");
             $("#search_20T").trigger("click");
         });
     }
    function createAUIGrid() {
-    var columnLayout3 = [ {
+    var columnLayout3 = [{
+        dataField : "isExclude",
+        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        width: 65,
+        renderer : {
+            type : "CheckBoxEditRenderer",
+            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+            checkValue : "1", // true, false 인 경우가 기본
+            unCheckValue : "0"
+        }
+    }, {
         dataField : "ordId",
         headerText : "ORD ID",
         style : "my-column",
@@ -76,6 +95,11 @@
     },{
         dataField : "asEntryId",
         headerText : " AS ENTRY ID",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "emplyCode",
+        headerText : "AS ENTRY CODE",
         style : "my-column",
         editable : false
     },{
@@ -115,12 +139,6 @@
         style : "my-column",
         visible : false,
         editable : false
-    },{
-        dataField : "isExclude",
-        headerText : "IS EXCLUDE",
-        style : "my-column",
-        visible : false,
-        editable : false
     }];
     // 그리드 속성 설정
     var gridPros = {
@@ -140,35 +158,60 @@
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true,
         
-        // 체크박스 표시 설정
-        showRowCheckColumn : true,
-        
-        showRowAllCheckBox : true
+        headerHeight : 40
 
     };
     myGridID_20T = AUIGrid.create("#grid_wrap_20", columnLayout3,gridPros);
    }
    
+   // 전체 체크 설정, 전체 체크 해제 하기
+   function checkAll(isChecked) {
+       var rowCount = AUIGrid.getRowCount(myGridID_20T);
+       
+       if(isChecked){   // checked == true == 1
+         for(var i=0; i<rowCount; i++){
+            AUIGrid.updateRow(myGridID_20T, { "isExclude" : 1 }, i);
+         }
+       }else{   // unchecked == false == 0
+         for(var i=0; i<rowCount; i++){
+            AUIGrid.updateRow(myGridID_20T, { "isExclude" : 0 }, i);
+         }
+       }
+       
+       // 헤더 체크 박스 일치시킴.
+       document.getElementById("allCheckbox").checked = isChecked;
+   };
+   
    function fn_downFile() {
-	   Common.ajax("GET", "/commission/calculation/cntCMM0020T", $("#form_20T").serialize(), function(result) {
+       Common.ajax("GET", "/commission/calculation/cntCMM0020T", $("#form_20T").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
-		       //excel down load name 형식 어떻게 할지?
-		       var fileName = $("#fileName").val();
-		       var searchDt = $("#CMM0020T_Dt").val();
-		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-		       var month = searchDt.substr(0,searchDt.indexOf("/"));
-		       var code = $("#code_20T").val();
-		       var ordId = $("#ordId_20T").val();
-		       var asEntryId = $("#asEntryId_20T").val();
-		       var useYnCombo = $("#useYnCombo_20T").val();
-		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
-		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&asEntryId="+asEntryId+"&useYnCombo="+useYnCombo+"'/>";
-	       }else{
-	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
-	       }
-	   });
+               //excel down load name 형식 어떻게 할지?
+               var fileName = $("#fileName").val();
+               var searchDt = $("#CMM0020T_Dt").val();
+               var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+               var month = searchDt.substr(0,searchDt.indexOf("/"));
+               var code = $("#code_20T").val();
+               
+               var ordId = $("#ordId_20T").val();
+               var asEntryCd = $("#asEntryCd_20T").val();
+               var useYnCombo = $("#useYnCombo_20T").val();
+               //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
+               //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
+               window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&asEntryCd="+asEntryCd+"&useYnCombo="+useYnCombo+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+           }
+       });
+   }
+   
+   function fn_AlldownFile() {
+        var fileName = $("#fileName").val();
+        var searchDt = $("#CMM0020T_Dt").val();
+        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+        var month = searchDt.substr(0,searchDt.indexOf("/"));
+        var code = $("#code_20T").val();
+        window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
    }
    
    function onlyNumber(obj) {
@@ -218,9 +261,9 @@
                         <td>
                               <input type="text" id="ordId_20T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
-                        <th scope="row">AS ENTRY ID</th>
+                        <th scope="row">AS ENTRY CODE</th>
                         <td>
-                              <input type="text" id="asEntryId_20T" name="asEntryId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="asEntryCd_20T" name="asEntryCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
@@ -241,6 +284,9 @@
         <article class="grid_wrap3"><!-- grid_wrap start -->
             <!-- search_result start -->
             <ul class="right_btns">
+                <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
                 </p></li>

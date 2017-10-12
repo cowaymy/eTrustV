@@ -37,7 +37,7 @@
 	});
 	
 	function fn_loadOrderSalesman(memId, memCode) {
-        $("#memberId_7002CT").val(memId);
+        $("#memberCd_7002CT").val(memCode);
         console.log(' memId:'+memId);
         console.log(' memCd:'+memCode);
     }
@@ -54,43 +54,48 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "emplyCode",
+        headerText : " MEMBER CODE",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "r1",
-        headerText : "R1",
+        headerText : "Gross Comm",
         style : "my-column",
         editable : false
     },{
         dataField : "r2",
-        headerText : "R2",
+        headerText : "Rental Comm",
         style : "my-column",
         editable : false
     },{
         dataField : "r3",
-        headerText : "R3",
+        headerText : "Srv Mem Comm",
         style : "my-column",
         editable : false
     },{
         dataField : "r4",
-        headerText : "R4",
+        headerText : "Basic and Allowance",
         style : "my-column",
         editable : false
     },{
         dataField : "r5",
-        headerText : "R5",
+        headerText : "Performance Incentive",
         style : "my-column",
         editable : false
     },{
         dataField : "r6",
-        headerText : "R6",
+        headerText : "Adjustment",
         style : "my-column",
         editable : false
     },{
         dataField : "r7",
-        headerText : "R7",
+        headerText : "CFF + Reward",
         style : "my-column",
         editable : false
     },{
         dataField : "r8",
-        headerText : "R8",
+        headerText : "Seniority",
         style : "my-column",
         editable : false
     }];
@@ -126,14 +131,23 @@
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
-		       var memberId = $("#memberId_7002CT").val();
+		       var memberCd = $("#memberCd_7002CT").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberId="+memberId+"'/>";
+		       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"'/>";
            }else{
                Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
            }
 	   });
+   }
+   
+   function fn_downFile() {
+       var fileName = $("#fileName").val();
+       var searchDt = $("#7002CT_Dt").val();
+       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+       var month = searchDt.substr(0,searchDt.indexOf("/"));
+       var code = $("#code").val();
+       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
    }
 </script>
 
@@ -172,9 +186,9 @@
 						<td>
 						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7002CT_Dt" class="j_date2" value="${searchDt_pop }" />
 						</td>
-						<th scope="row">Member Id</th>
+						<th scope="row">Member Code</th>
 						<td>
-						      <input type="text" id="memberId_7002CT" name="memberId" style="width: 100px;">
+						      <input type="text" id="memberCd_7002CT" name="memberCd" style="width: 100px;">
 						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 					</tr>
@@ -185,6 +199,9 @@
 		<article class="grid_wrap3"><!-- grid_wrap start -->
 			<!-- search_result start -->
 			<ul class="right_btns">
+			    <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
 				<li><p class="btn_grid">
 				    <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
 				</p></li>

@@ -10,19 +10,42 @@
 			Common.ajax("GET", "/commission/calculation/memberInfoSearch", $("#searchForm").serialize(), function(result) {
 				if(result != null){
 					$("#memId").val(result.MEMID);
-					Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveAdjustment);
+					if(validation()){
+						   Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveAdjustment);
+					}
 				}else{
-				    Common.alert("멤버코드없음");
+				    Common.alert("non member");
 				} 
 			});
 		});
 	
 	});
 	
+	function validation(){
+		if( $("#memCode").val() == null || $("#memCode").val() == "" ){
+			Common.alert("<spring:message code='sys.common.alert.validation' arguments='memCode' htmlEscape='false'/>"); return false;
+		}else	 if( $("#ordNo").val() == null || $("#ordNo").val() == "" ){
+			Common.alert("<spring:message code='sys.common.alert.validation' arguments='ordNo' htmlEscape='false'/>"); return false;
+        }else if( $("#adjustmentAmt").val() == null || $("#adjustmentAmt").val() == "" ){
+			Common.alert("<spring:message code='sys.common.alert.validation' arguments='adjustmentAmt' htmlEscape='false'/>"); return false;
+        }else if( $("#adjustmentDesc").val() == null || $("#adjustmentDesc").val() == "" ){
+			Common.alert("<spring:message code='sys.common.alert.validation' arguments='adjustmentDesc' htmlEscape='false'/>"); return false;
+        }else{
+			return true;
+        }
+	}
+	
 	function fn_saveAdjustment(){
 		Common.ajax("GET", "/commission/calculation/saveAdjustment", $("#searchForm").serialize(), function(result) {
-			Common.setMsg("<spring:message code='sys.msg.success'/>");
-		});
+           Common.setMsg("<spring:message code='sys.msg.success'/>");
+       });
+	}
+	
+	function clearForm(){
+		$("#memCode").val("");
+		$("#ordNo").val("");
+		$("#adjustmentAmt").val("");
+		$("#adjustmentDesc").val("");
 	}
 </script>
 
@@ -218,7 +241,7 @@
 
 <ul class="center_btns">
 	<li><p class="btn_blue2 big"><a href="#" id="save"><spring:message code='sys.btn.save'/></a></p></li>
-	<li><p class="btn_blue2 big"><a href="#"><spring:message code='sys.btn.clear'/></a></p></li>
+	<li><p class="btn_blue2 big"><a href="javascript:clearForm();"><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->

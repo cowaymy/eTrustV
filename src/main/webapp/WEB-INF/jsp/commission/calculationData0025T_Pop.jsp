@@ -49,15 +49,20 @@
     });
     
     function fn_loadOrderSalesman(memId, memCode) {
-        $("#emplyId_25T").val(memId);
-        console.log('fn_loadOrderSalesman memId:'+memId);
-        console.log('fn_loadOrderSalesman memCd:'+memCode);
+        $("#emplyCd_25T").val(memCode);
+        console.log(' memId:'+memId);
+        console.log(' memCd:'+memCode);
     }
     
    function createAUIGrid() {
     var columnLayout3 = [ {
         dataField : "emplyId",
         headerText : "EMPLY ID",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "emplyCode",
+        headerText : "EMPLY CODE",
         style : "my-column",
         editable : false
     },{
@@ -140,16 +145,28 @@
 			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
 			       var code = $("#code_25T").val();
+			       
+			       var codeId= $("#orgGroup_25").val();
 			       var ordId = $("#ordId_25T").val();
-			       var emplyId = $("#emplyId_25T").val();
+			       var emplyCd = $("#emplyCd_25T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyId="+emplyId+"'/>";
+			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd+"&codeId="+codeId+"'/>";
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
 	   });
+   }
+   
+   function fn_AlldownFile() {
+       var fileName = $("#fileName").val();
+       var searchDt = $("#CMM0025T_Dt").val();
+       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+       var month = searchDt.substr(0,searchDt.indexOf("/"));
+       var code = $("#code_25T").val();
+       var codeId= $("#orgGroup_25").val();
+       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
    }
    
    function onlyNumber(obj) {
@@ -195,13 +212,21 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0025T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
+                        <th scope="row">ORG Group<span class="must">*</span></th>
+                        <td><select id="orgGroup_25" name="codeId" style="width: 100px;">
+                                <c:forEach var="list" items="${orgGrList }">
+                                    <option value="${list.cdid}">${list.cd}</option>
+                                </c:forEach>
+                        </select></td>
                         <th scope="row">Order ID<span class="must">*</span></th>
                         <td>
                               <input type="text" id="ordId_25T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
-                        <th scope="row">Employed ID<span class="must">*</span></th>
-                        <td>
-                              <input type="text" id="emplyId_25T" name="emplyId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                     </tr>
+                     <tr>
+                        <th scope="row">Employed Code<span class="must">*</span></th>
+                        <td colspan=5>
+                              <input type="text" id="emplyCd_25T" name="emplyCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
@@ -212,6 +237,9 @@
         <article class="grid_wrap3"><!-- grid_wrap start -->
             <!-- search_result start -->
             <ul class="right_btns">
+                <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
                 </p></li>

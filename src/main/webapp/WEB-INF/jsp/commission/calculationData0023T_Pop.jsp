@@ -13,14 +13,33 @@
 
 <script type="text/javaScript">
     var myGridID_23T;
+    var gridDataLength = 0;
     
     $(document).ready(function() {
         createAUIGrid();
+        
+        // ready 이벤트 바인딩
+        AUIGrid.bind(myGridID_23T, "ready", function(event) {
+            gridDataLength = AUIGrid.getGridData(myGridID_23T).length; // 그리드 전체 행수 보관
+        });
+        
         // cellClick event.
         AUIGrid.bind(myGridID_23T, "cellClick", function(event) {
               console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
         });
          
+        // 헤더 클릭 핸들러 바인딩
+        AUIGrid.bind(myGridID_23T, "headerClick", function(event) {
+            // isExclude 칼럼 클릭 한 경우
+            if(event.dataField == "isExclude") {
+                if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+                    var  isChecked = document.getElementById("allCheckbox").checked;
+                    checkAll(isChecked);
+                }
+                return false;
+            }
+        }); 
+        
         //Rule Book Item search
         $("#search_23T").click(function(){
         	/* var ordId = $("#ordId_23T").val();
@@ -37,7 +56,7 @@
 	                console.log("성공.");
 	                console.log("data : " + result);
 	                AUIGrid.setGridData(myGridID_23T, result);
-	                AUIGrid.addCheckedRowsByValue(myGridID_23T, "isExclude", "1");
+	                //AUIGrid.addCheckedRowsByValue(myGridID_23T, "isExclude", "1");
 	            });
             //}
         });
@@ -64,30 +83,31 @@
     
     function fn_loadOrderSalesman(memId, memCode) {
         $("#memCode_23T").val(memCode);
-        console.log('fn_loadOrderSalesman memId:'+memId);
-        console.log('fn_loadOrderSalesman memCd:'+memCode);
+        console.log(' memId:'+memId);
+        console.log(' memCd:'+memCode);
     }
     
     function fn_saveExculde(){
-    	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_23T);
-        var check     = AUIGrid.getCheckedRowItems(myGridID_23T);
-        var formList = $("#form_23").serializeJSON();       //폼 데이터
-        
-        //param data array
-        var data = {};
-        
-        data.check   = check;
-        data.checked = check;
-        data.form = formList;
-        
-        Common.ajax("POST", "/commission/calculation/updatePrdDataCMM0023T.do", data , function(result) {
+        Common.ajax("POST", "/commission/calculation/updatePrdDataCMM0023T.do", GridCommon.getEditData(myGridID_23T) , function(result) {
             // 공통 메세지 영역에 메세지 표시.
-            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            Common.setMsg(result.message);
             $("#search_23T").trigger("click");
         });
     }
+    
    function createAUIGrid() {
-    var columnLayout3 = [ {
+    var columnLayout3 = [  {
+        dataField : "isExclude",
+        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        width: 65,
+        renderer : {
+            type : "CheckBoxEditRenderer",
+            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+            checkValue : "1", // true, false 인 경우가 기본
+            unCheckValue : "0"
+        }
+    }, {
         dataField : "ordId",
         headerText : "ORD ID",
         style : "my-column",
@@ -149,12 +169,6 @@
         style : "my-column",
         visible : false,
         editable : false
-    },{
-        dataField : "isExclude",
-        headerText : "IS EXCLUDE",
-        style : "my-column",
-        visible : false,
-        editable : false
     }];
     // 그리드 속성 설정
     var gridPros = {
@@ -174,10 +188,7 @@
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true,
         
-        // 체크박스 표시 설정
-        showRowCheckColumn : true,
-        
-        showRowAllCheckBox : true
+        headerHeight : 40
 
     };
     myGridID_23T = AUIGrid.create("#grid_wrap_23T", columnLayout3,gridPros);
@@ -200,17 +211,29 @@
 			       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 			       var month = searchDt.substr(0,searchDt.indexOf("/"));
 			       var code = $("#code_23T").val();
-			       var ordId = $("#ordId_23T").val();
+			       
+			       var codeId= $("#orgGroup_23").val();
 			       var memCode = $("#memCode_23T").val();
+			       var ordId = $("#ordId_23T").val();
 			       var useYnCombo = $("#useYnCombo_23T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"'/>";
+			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&memCode="+memCode+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
 	   });
+   } 
+   
+   function fn_AlldownFile() {
+      var fileName = $("#fileName").val();
+      var searchDt = $("#CMM0023T_Dt").val();
+      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+      var month = searchDt.substr(0,searchDt.indexOf("/"));
+      var code = $("#code_23T").val();
+      var codeId= $("#orgGroup_23").val();
+      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
    } 
    
    function onlyNumber(obj) {
@@ -256,10 +279,12 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0023T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">Order ID<span class="must">*</span></th>
-                        <td>
-                              <input type="text" id="ordId_23T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
-                        </td>
+                        <th scope="row">ORG Group<span class="must">*</span></th>
+                        <td><select id="orgGroup_23" name="codeId" style="width: 100px;">
+                                <c:forEach var="list" items="${orgGrList }">
+                                    <option value="${list.cdid}">${list.cd}</option>
+                                </c:forEach>
+                        </select></td>
                         <th scope="row">Member CODE<span class="must">*</span></th>
                         <td>
                               <input type="text" id="memCode_23T" name="memCode" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
@@ -267,8 +292,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row">Order ID<span class="must">*</span></th>
+                        <td>
+                              <input type="text" id="ordId_23T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                        </td>
                         <th scope="row">is Exclude</th>
-                        <td colspan=5>
+                        <td colspan=3>
                           <select id="useYnCombo_23T" name="useYnCombo" style="width:100px;">
                             <option value=""selected></option>
                             <option value="1">Y</option>
@@ -283,6 +312,9 @@
         <article class="grid_wrap3"><!-- grid_wrap start -->
             <!-- search_result start -->
             <ul class="right_btns">
+                <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
                 </p></li>

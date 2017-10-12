@@ -55,6 +55,11 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "emplyCode",
+        headerText : "P MEM CODE",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "pMemLev",
         headerText : "P_MEM_LEV",
         style : "my-column",
@@ -113,36 +118,42 @@
         wrapSelectionMove : true,
         
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true,
-        
-        // 체크박스 표시 설정
-        showRowCheckColumn : true,
-        
-        showRowAllCheckBox : true
+        showRowNumColumn : true
 
     };
     myGridID_16T = AUIGrid.create("#grid_wrap_16T", columnLayout3,gridPros);
    }
    
    function fn_downFile_16T() {
-	   Common.ajax("GET", "/commission/calculation/cntCMM0016T", $("#form_16T").serialize(), function(result) {
+       Common.ajax("GET", "/commission/calculation/cntCMM0016T", $("#form_16T").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
-		       //excel down load name 형식 어떻게 할지?
-		       var fileName = $("#fileName").val();
-		       var searchDt = $("#CMM0016T_Dt").val();
-		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-		       var month = searchDt.substr(0,searchDt.indexOf("/"));
-		       var code = $("#code_16T").val();
-		       var payId = $("#payId_16T").val();
-		       var ordId = $("#ordId_16T").val();
-		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
-		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&payId="+payId+"&ordId="+ordId+"'/>";
-		   }else{
-	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
-	       }
-	   });
+               //excel down load name 형식 어떻게 할지?
+               var fileName = $("#fileName").val();
+               var searchDt = $("#CMM0016T_Dt").val();
+               var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+               var month = searchDt.substr(0,searchDt.indexOf("/"));
+               var code = $("#code_16T").val();
+               
+               var codeId= $("#orgGroup_16").val();
+               var pMemCd = $("#pMemCd_16T").val();
+               //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
+               //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
+               window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&pMemCd="+pMemCd+"&codeId="+codeId+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+           }
+       });
+   }
+   
+   function fn_AlldownFile() {
+       var fileName = $("#fileName").val();
+       var searchDt = $("#CMM0016T_Dt").val();
+       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+       var month = searchDt.substr(0,searchDt.indexOf("/"));
+       var code = $("#code_16T").val();
+       var codeId= $("#orgGroup_16").val();
+       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
    }
    
    function onlyNumber(obj) {
@@ -188,13 +199,10 @@
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0016T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">C Member ID</th>
-                        <td>
-                              <input type="text" id="cMemId_16T" name="cMemId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
-                        </td>
-                        <th scope="row">P Member ID</th>
-                        <td>
-                              <input type="text" id="pMemId_16T" name="pMemId" style="width: 100px;" onkeydown="onlyNumber(this)">
+                        <th scope="row">P Member Code</th>
+                        <td colspan=3>
+                            <input type="text" id="pMemCd_16T" name="pMemCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                 </tbody>
@@ -204,6 +212,9 @@
         <article class="grid_wrap3"><!-- grid_wrap start -->
             <!-- search_result start -->
             <ul class="right_btns">
+                <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile_16T()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
                 </p></li>

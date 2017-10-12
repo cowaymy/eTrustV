@@ -13,14 +13,51 @@
 
 <script type="text/javaScript">
     var myGridID_06T;
+    var gridDataLength = 0;
     
     $(document).ready(function() {
         createAUIGrid();
+        
+        // ready 이벤트 바인딩
+        AUIGrid.bind(myGridID_06T, "ready", function(event) {
+            gridDataLength = AUIGrid.getGridData(myGridID_06T).length; // 그리드 전체 행수 보관
+        });
+     
         // cellClick event.
         AUIGrid.bind(myGridID_06T, "cellClick", function(event) {
               console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
         });
-         
+        
+        // 헤더 클릭 핸들러 바인딩
+        AUIGrid.bind(myGridID_06T, "headerClick", function(event) {
+        	// isExclude 칼럼 클릭 한 경우
+            if(event.dataField == "isExclude") {
+                if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+                    var  isChecked = document.getElementById("allCheckbox").checked;
+                    checkAll(isChecked);
+                }
+                return false;
+            }
+        });
+        
+        // 셀 수정 완료 이벤트 바인딩
+        AUIGrid.bind(myGridID_06T, "cellEditEnd", function(event) {
+            
+            // isActive 칼럼 수정 완료 한 경우
+            if(event.dataField == "isExclude") {
+                
+                // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환 
+                var activeItems = AUIGrid.getItemsByValue(myGridID_06T, "isExclude", "1");
+                
+                // 헤더 체크 박스 전체 체크 일치시킴.
+                if(activeItems.length != gridDataLength) {
+                    document.getElementById("allCheckbox").checked = false;
+                } else if(activeItems.length == gridDataLength) {
+                     document.getElementById("allCheckbox").checked = true;
+                }
+            }
+        });
+     
         //Rule Book Item search
         $("#search_06T").click(function(){
         	/* var codeGroupId = $("#codeGroupId").val();
@@ -35,9 +72,9 @@
             }else{ */
 	            Common.ajax("GET", "/commission/calculation/selectDataCMM006T", $("#form_06T").serialize(), function(result) {
 	                console.log("성공.");
-	                console.log("data : " + result);
+	                //console.log("data : " + result);
 	                AUIGrid.setGridData(myGridID_06T, result);
-	                AUIGrid.addCheckedRowsByValue(myGridID_06T, "isExclude", "1");
+	                //AUIGrid.addCheckedRowsByValue(myGridID_06T, "isExclude", "1");
 	            });
 	        //}
         });
@@ -71,18 +108,7 @@
     }
     
     function fn_saveExculde(){
-    	var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID_06T);
-        var check     = AUIGrid.getCheckedRowItems(myGridID_06T);
-        var formList = $("#form_06T").serializeJSON();       //폼 데이터
-        
-        //param data array
-        var data = {};
-        
-        data.check   = check;
-        data.checked = check;
-        data.form = formList;
-        
-        Common.ajax("POST", "/commission/calculation/updatePrdData_06T.do", data , function(result) {
+        Common.ajax("POST", "/commission/calculation/updatePrdData_06T.do", GridCommon.getEditData(myGridID_06T) , function(result) {
             // 공통 메세지 영역에 메세지 표시.
             Common.setMsg("<spring:message code='sys.msg.success'/>");
             $("#search_06T").trigger("click");
@@ -91,6 +117,17 @@
     
    function createAUIGrid() {
     var columnLayout3 = [ {
+        dataField : "isExclude",
+        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        width: 65,
+        renderer : {
+            type : "CheckBoxEditRenderer",
+            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+            checkValue : "1", // true, false 인 경우가 기본
+            unCheckValue : "0"
+        }
+    }, {
         dataField : "deptCode",
         headerText : "DEPT CODE",
         style : "my-column",
@@ -167,13 +204,13 @@
         style : "my-column",
         visible : false,
         editable : false
-    },{
+    }/* ,{
         dataField : "isExclude",
         headerText : "IS EXCLUDE",
         style : "my-column",
         visible : false,
         editable : false
-    }];
+    }*/] ;
     // 그리드 속성 설정
     var gridPros = {
         
@@ -192,14 +229,30 @@
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true,
         
-        // 체크박스 표시 설정
-        showRowCheckColumn : true,
-        
-        showRowAllCheckBox : true
-
+        headerHeight : 40
     };
+    
     myGridID_06T = AUIGrid.create("#grid_wrap_06T", columnLayout3,gridPros);
    }
+   
+   // 전체 체크 설정, 전체 체크 해제 하기
+   function checkAll(isChecked) {
+	   
+       var rowCount = AUIGrid.getRowCount(myGridID_06T);
+       
+       if(isChecked){   // checked == true == 1
+         for(var i=0; i<rowCount; i++){
+            AUIGrid.updateRow(myGridID_06T, { "isExclude" : 1 }, i);
+         }
+       }else{   // unchecked == false == 0
+         for(var i=0; i<rowCount; i++){
+            AUIGrid.updateRow(myGridID_06T, { "isExclude" : 0 }, i);
+         }
+       }
+       
+       // 헤더 체크 박스 일치시킴.
+       document.getElementById("allCheckbox").checked = isChecked;
+   };
    
    function fn_downFile() {
 	   var codeGroupId = $("#codeGroupId").val();
@@ -226,12 +279,22 @@
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&useYnCombo="+useYnCombo+"'/>");
-			       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&useYnCombo="+useYnCombo+"'/>";
+			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&useYnCombo="+useYnCombo+"'/>";
 		       //}
 	       }else{
 	    	   Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
 	       }
        });
+   }
+   
+   function fn_AlldownFile() {
+	   var fileName = $("#fileName").val();
+	   var searchDt = $("#CMM0006T_Dt").val();
+	   var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+	   var month = searchDt.substr(0,searchDt.indexOf("/"));
+	   var code = $("#code_06T").val();
+	   var codeId = $("#codeGroupId").val();
+	   window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
    }
    
    function onlyNumber(obj) {
@@ -281,7 +344,6 @@
                         </td>
                         <th scope="row">ORG Group<span class="must">*</span></th>
                         <td><select id="codeGroupId" name="codeId" style="width: 100px;">
-                                <option value=""></option>
                                 <c:forEach var="list" items="${orgGrList }">
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
@@ -309,6 +371,9 @@
         <article class="grid_wrap3"><!-- grid_wrap start -->
             <!-- search_result start -->
             <ul class="right_btns">
+                <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
                 </p></li>

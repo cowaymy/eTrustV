@@ -37,7 +37,7 @@
 	});
 	
 	function fn_loadOrderSalesman(memId, memCode) {
-        $("#memberId_7001CT").val(memId);
+        $("#memberCd_7001CT").val(memCode);
         console.log(' memId:'+memId);
         console.log(' memCd:'+memCode);
     }
@@ -54,73 +54,78 @@
         style : "my-column",
         editable : false
     },{
+        dataField : "emplyCode",
+        headerText : " MEMBER CODE",
+        style : "my-column",
+        editable : false
+    },{
         dataField : "v1",
-        headerText : "V1",
+        headerText : "AS Count",
         style : "my-column",
         editable : false
     },{
         dataField : "v2",
-        headerText : "V2",
+        headerText : "AS Sum CP",
         style : "my-column",
         editable : false
     },{
         dataField : "v3",
-        headerText : "V3",
+        headerText : "BS Count",
         style : "my-column",
         editable : false
     },{
         dataField : "v4",
-        headerText : "V4",
+        headerText : "BS Sum CP",
         style : "my-column",
         editable : false
     },{
         dataField : "v5",
-        headerText : "V5",
+        headerText : "Ins Count",
         style : "my-column",
         editable : false
     },{
         dataField : "v6",
-        headerText : "V6",
+        headerText : "Ins Sum CP",
         style : "my-column",
         editable : false
     },{
         dataField : "v7",
-        headerText : "V7",
+        headerText : "PR Count",
         style : "my-column",
         editable : false
     },{
         dataField : "v8",
-        headerText : "V8",
+        headerText : "PR Sum CP",
         style : "my-column",
         editable : false
     },{
         dataField : "v9",
-        headerText : "V9",
+        headerText : "Total Point",
         style : "my-column",
         editable : false
     },{
         dataField : "v10",
-        headerText : "V10",
+        headerText : "Pro Percent",
         style : "my-column",
         editable : false
     },{
         dataField : "v11",
-        headerText : "V11",
+        headerText : "Per Percent",
         style : "my-column",
         editable : false
     },{
         dataField : "v12",
-        headerText : "V12",
+        headerText : "Pro Factor (30%)",
         style : "my-column",
         editable : false
     },{
         dataField : "v13",
-        headerText : "V13",
+        headerText : "Per Factor (70%)",
         style : "my-column",
         editable : false
     },{
         dataField : "v14",
-        headerText : "v14",
+        headerText : "Sum Factor",
         style : "my-column",
         editable : false
     }];
@@ -156,14 +161,24 @@
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
-		       var memberId = $("#memberId_7001CT").val();
+		       
+		       var memberCd = $("#memberCd_7001CT").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberId="+memberId+"'/>";
+		       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"'/>";
            }else{
                Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
            }
 	   });
+   }
+   
+   function fn_AlldownFile() {
+	    var fileName = $("#fileName").val();
+	    var searchDt = $("#7001CT_Dt").val();
+	    var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+	    var month = searchDt.substr(0,searchDt.indexOf("/"));
+	    var code = $("#code").val();
+	    window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
    }
 </script>
 
@@ -204,7 +219,7 @@
 						</td>
 						<th scope="row">Member Id</th>
 						<td>
-						      <input type="text" id="memberId_7001CT" name="memberId" style="width: 100px;">
+						      <input type="text" id="memberCd_7001CT" name="memberCd" style="width: 100px;">
 						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 					</tr>
@@ -215,6 +230,9 @@
 		<article class="grid_wrap3"><!-- grid_wrap start -->
 			<!-- search_result start -->
 			<ul class="right_btns">
+			    <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
 				<li><p class="btn_grid">
 				    <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
 				</p></li>

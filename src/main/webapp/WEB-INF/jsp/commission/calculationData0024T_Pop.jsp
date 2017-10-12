@@ -38,9 +38,9 @@
     });
     
     function fn_loadOrderSalesman(memId, memCode) {
-        $("#emplyId_24T").val(memId);
-        console.log('fn_loadOrderSalesman memId:'+memId);
-        console.log('fn_loadOrderSalesman memCd:'+memCode);
+        $("#emplyCd_24T").val(memCode);
+        console.log(' memId:'+memId);
+        console.log(' memCd:'+memCode);
     }
     
    function createAUIGrid() {
@@ -51,37 +51,37 @@
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "EMPLY_CODE",
+	        headerText : "EMPLY CODE",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "prfomPrcnt",
-	        headerText : "PRFOM_PRCNT",
+	        headerText : "PRFOM PRCNT",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "prfomncRank",
-	        headerText : "PRFOMNC_RANK",
+	        headerText : "PRFOMNC RANK",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "totEmply",
-	        headerText : "TOT_EMPLY",
+	        headerText : "TOT EMPLY",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "cumltDstrib",
-	        headerText : "CUMLT_DSTRIB",
+	        headerText : "CUMLT DSTRIB",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "payoutPrcnt",
-	        headerText : "PAYOUT_PRCNT",
+	        headerText : "PAYOUT PRCNT",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "payoutAmt",
-	        headerText : "PAYOUT_AMT",
+	        headerText : "PAYOUT AMT",
 	        style : "my-column",
 	        editable : false
 	    },{
@@ -106,7 +106,7 @@
 	        wrapSelectionMove : true,
 	        
 	        // 줄번호 칼럼 렌더러 출력
-	        showRowNumColumn : true,
+	        showRowNumColumn : true
 	        
 	    };
 	    myGridID_24T = AUIGrid.create("#grid_wrap_24T", columnLayout3,gridPros);
@@ -122,15 +122,25 @@
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code_24T").val();
+		       
 		       var ordId = $("#ordId_24T").val();
-		       var emplyId = $("#emplyId_24T").val();
+		       var emplyCd = $("#emplyCd_24T").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-		       window.location.href="<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyId="+emplyId+"'/>";
+		       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&emplyCd="+emplyCd+"'/>";
 	       }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
 	   });
+   }
+   
+   function fn_AlldownFile() {
+      var fileName = $("#fileName").val();
+      var searchDt = $("#CMM0024T_Dt").val();
+      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+      var month = searchDt.substr(0,searchDt.indexOf("/"));
+      var code = $("#code_24T").val();
+      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
    }
    
    function onlyNumber(obj) {
@@ -176,7 +186,7 @@
                         </td>
                         <th scope="row">Employed ID</th>
                         <td>
-                              <input type="text" id="emplyId_24T" name="emplyId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="emplyCd_24T" name="emplyCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
@@ -187,6 +197,9 @@
         <article class="grid_wrap3"><!-- grid_wrap start -->
             <!-- search_result start -->
             <ul class="right_btns">
+                <li><p class="btn_grid">
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><span class="search"></span>ALL Excel</a>
+                </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile()" id="addRow"><span class="search"></span><spring:message code='sys.btn.excel.dw' /></a>
                 </p></li>
