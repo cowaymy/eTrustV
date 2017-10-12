@@ -1,5 +1,6 @@
 package com.coway.trust.web.eAccounting.budget;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,47 @@ public class BudgetController {
 		
 	}	
 	
-	
+	@RequestMapping(value = "/availableBudgetDisplayPop.do")
+	public String availableBudgetDisplay (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		LOGGER.debug("params =====================================>>  " + params);
+						
+		params.put("budgetPlanYear",  params.get("item[budgetPlanYear]"));
+		params.put("budgetPlanMonth",  params.get("month"));
+		
+		if(params.get("month").toString().length() == 1){
+
+			params.put("month", "0"+ params.get("month"));
+		}
+		
+		params.put("costCentr",  params.get("item[costCentr]"));
+		
+		if( !CommonUtils.isEmpty(params.get("item[costCenterText]")) ){
+			params.put("costCenterText", params.get("item[costCenterText]"));
+		}
+		
+		params.put("glAccCode",  params.get("item[glAccCode]"));
+		
+		if( !CommonUtils.isEmpty(params.get("item[glAccDesc]")) ){
+			params.put("glAccDesc", params.get("item[glAccDesc]"));
+		}
+		
+		params.put("budgetCode",  params.get("item[budgetCode]"));
+		
+		if( !CommonUtils.isEmpty(params.get("item[budgetCodeText]")) ){
+			params.put("glAccDesc", params.get("item[budgetCodeText]"));
+		}
+		
+		LOGGER.debug("item =====================================>>  " + params);
+		
+		Map result = budgetService.selectAvailableBudgetAmt(params);
+		
+		 
+		model.addAttribute("result", result);
+		model.addAttribute("item", params);
+		return "eAccounting/budget/availableBudgetDisplayPop";
+	}
+		
 		
 /*	@RequestMapping(value = "/insertExpenseInfo", method = RequestMethod.POST) 
 	public ResponseEntity<ReturnMessage> insertExpenseInfo (@RequestBody Map<String, ArrayList<Object>> params, ModelMap model,	SessionVO sessionVO) throws Exception{		

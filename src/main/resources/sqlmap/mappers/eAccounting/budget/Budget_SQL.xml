@@ -38,6 +38,60 @@
          ORDER BY COST_CENTR
   </select>
   
+  
+  <select id="selectAvailableBudgetAmt" parameterType="Map" resultType="egovMap">
+  <![CDATA[
+      SELECT A.PLAN_AMT
+                ,A.CHNG_AMT
+                ,NVL(B.TOTAL,0) AS ADJUST_AMT
+                ,NVL(A.PLAN_AMT,0) + NVL(A.CHNG_AMT,0) + (NVL(B.PLUS_ADJ_AMT,0) - NVL(B.MINUS_ADJ_AMT,0)) AS TOTAL
+                ,NVL(PEND_APPV_AMT,0)  PEND_APPV_AMT
+                ,NVL(CONSUM_APPV_AMT,0) CONSUM_APPV_AMT
+                ,NVL(A.PLAN_AMT,0) + NVL(A.CHNG_AMT,0) + NVL(B.TOTAL,0) -NVL(C.APP_AMT_TOTAL ,0) AS AVAILABLE_AMT
+       FROM FCM0101M A
+               LEFT OUTER JOIN ( SELECT SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT 
+                              ,SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) AS MINUS_ADJ_AMT
+                              ,SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL
+                              ,A.COST_CENTR
+                              ,A.BUDGET_CODE
+                              ,A.GL_ACC_CODE
+                              ,A.BUDGET_ADJ_YEAR 
+                              ,A.BUDGET_ADJ_MONTH
+                       FROM FCM0103D A, FCM0102M B
+                      WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
+                        AND B.APPV_STUS = 'C' 
+                        GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE 
+                  ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR 
+                        AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH 
+                        AND A.COST_CENTR         = B.COST_CENTR 
+                        AND A.BUDGET_CODE       = B.BUDGET_CODE 
+                        AND A.GL_ACC_CODE       = B.GL_ACC_CODE
+                 LEFT OUTER JOIN (SELECT A.COST_CENTR 
+                               ,A.BUDGET_CODE
+                               ,A.GL_ACC_CODE
+                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT 
+                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT  
+                               ,SUM(A.APPV_AMT ) APP_AMT_TOTAL
+                               ,A.INVC_DT
+                       FROM FCM0015D A, FCM0004M B
+                     WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
+                         AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A') 
+                     GROUP BY A.INVC_DT, A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
+                 )   C          
+                        ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY') 
+                        AND A.BUDGET_PLAN_MONTH = TO_CHAR(C.INVC_DT, 'MM') 
+                        AND A.COST_CENTR     = C.COST_CENTR 
+                        AND A.BUDGET_CODE  = C.BUDGET_CODE 
+                        AND A.GL_ACC_CODE  = C.GL_ACC_CODE
+                        ]]>
+      WHERE BUDGET_PLAN_YEAR   = #{budgetPlanYear}
+        AND BUDGET_PLAN_MONTH  =#{budgetPlanMonth}
+        AND A.COST_CENTR         = #{costCentr}
+        AND A.BUDGET_CODE        = #{budgetCode}
+        AND A.GL_ACC_CODE        = #{glAccCode}
+  </select>
+  
+  
 <!--   <select id="selectMaxExpType" parameterType="Map" resultType="String">
      SELECT #{clmType} || NVL(TO_CHAR(MAX(REPLACE(EXP_TYPE, #{clmType}, '')) + 1, 'FM000'), '001') EXP_TYPE 
       FROM FCM0001M
@@ -99,23 +153,7 @@
         </if>
   </select>
   
-  <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
-	  SELECT GL_ACC_CODE
-	            ,GL_ACC_DESC
-	            ,GL_ACC_CRT_DT
-	            ,CRT_USER_ID
-	            ,CRT_DT
-	            ,UPD_USER_ID
-	            ,UPD_DT
-	    FROM FCM0009M
-		 WHERE 1=1
-        <if test="glAccCode != null and glAccCode != ''">
-	       AND GL_ACC_COD LIKE '%'|| #{glAccCode} || '%'
-        </if>  
-        <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
-           AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
-        </if>
-  </select>
+  
   
   <update id="updateExpenseInfo" parameterType="Map">
    UPDATE FCM0001M

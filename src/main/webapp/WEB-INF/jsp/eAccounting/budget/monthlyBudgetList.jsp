@@ -29,127 +29,14 @@ var budgetMGrid;
 
 $(document).ready(function(){
     
-	
-	$('#excelDown').click(function() {
-        // 그리드의 숨겨진 칼럼이 있는 경우, 내보내기 하면 엑셀에 아예 포함시키지 않습니다.
-        // 다음처럼 excelProps 에서 exceptColumnFields 을 지정하십시오.
-        
+	//엑셀 다운
+	$('#excelDown').click(function() {        
        GridCommon.exportTo("budgetMGrid", 'xlsx', "<spring:message code='budget.MonthlyBudgetInterchange' />");
     });
 	
-    
-  var expPopColumnLayout = [ {
-        dataField : "costCentr",
-        headerText : '<spring:message code="budget.CostCenter" />',
-        width : 100,
-        editable : false,
-        cellMerge : true 
-    },{
-        dataField : "costCenterText",
-        headerText : '<spring:message code="budget.Description" />',
-        width : 100,
-        editable : false,
-        cellMerge : true 
-    },{
-        dataField : "budgetCode",
-        headerText : '<spring:message code="budget.BudgetCode" />',
-        width : 100,
-        editable : false
-    },{
-        dataField : "budgetCodeText",
-        headerText :  '<spring:message code="budget.Description" />',
-        width : 100,
-        editable : false
-    },{
-        dataField : "glAccCode",
-        headerText : '<spring:message code="expense.GLAccount" />',
-        width : 100,
-        editable : false
-    },{
-        dataField : "glAccDesc",
-        headerText : '<spring:message code="budget.GLDescription" />',
-        width : 100,
-        editable : false
-    } ,{
-        dataField : "m1",
-        headerText : '<spring:message code="budget.1" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m2",
-        headerText : '<spring:message code="budget.2" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m3",
-        headerText : '<spring:message code="budget.3" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m4",
-        headerText : '<spring:message code="budget.4" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m5",
-        headerText : '<spring:message code="budget.5" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m6",
-        headerText : '<spring:message code="budget.6" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m7",
-        headerText : '<spring:message code="budget.7" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m8",
-        headerText : '<spring:message code="budget.8" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m9",
-        headerText : '<spring:message code="budget.9" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m10",
-        headerText : '<spring:message code="budget.10" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m11",
-        headerText : '<spring:message code="budget.11" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "m12",
-        headerText : '<spring:message code="budget.12" />' ,
-        width : 80,
-        editable : false
-    },{
-        dataField : "total",
-        headerText : '<spring:message code="budget.Total" />',
-        width : 100,
-        editable : false
-    }]; 
-  
-  
-  
-  var options = {
-          enableCellMerge : true,
-          showStateColumn:false,
-          showRowNumColumn    : false ,
-          usePaging : false
-    };
-
+	//그리드 생성
+	fn_makeGrid();
      
-    budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", expPopColumnLayout,"", options);
-    
-    
 });
 
 
@@ -297,36 +184,35 @@ function fn_makeGrid(){
     expPop[0] = {dataField : "costCentr",
             headerText : '<spring:message code="budget.CostCenter" />',
             width : 100,
-            editable : false,
             cellMerge : true 
     }
     
     expPop.push({
+			        dataField : "budgetPlanYear",
+			        headerText : '',
+			        width : 100,
+			        visible : false
+			    },{
                     dataField : "costCenterText",
                     headerText : '<spring:message code="budget.Description" />',
                     width : 100,
-                    editable : false,
                     cellMerge : true 
                 },{
                     dataField : "budgetCode",
                     headerText : '<spring:message code="budget.BudgetCode" />',
-                    width : 100,
-                    editable : false
+                    width : 100
                 },{
                     dataField : "budgetCodeText",
                     headerText : '<spring:message code="budget.Description" />',
-                    width : 100,
-                    editable : false
+                    width : 100
                 },{
                     dataField : "glAccCode",
                     headerText : '<spring:message code="expense.GLAccount" />',
-                    width : 100,
-                    editable : false
+                    width : 100
                 },{
                     dataField : "glAccDesc",
                     headerText : '<spring:message code="budget.GLDescription" />',
-                    width : 100,
-                    editable : false
+                    width : 100
                 });
     
     
@@ -390,15 +276,26 @@ function fn_makeGrid(){
      var expOptions = {
             enableCellMerge : true,
             showStateColumn:false,
-            fixedColumnCount    : 6,
+            fixedColumnCount    : 7,
             showRowNumColumn    : false,
             usePaging : false
       }; 
     
     budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", expPop, "", expOptions);
     
+    AUIGrid.bind(budgetMGrid, "cellClick", auiCellClikcHandler);
 }
       
+function auiCellClikcHandler(event){
+    console.log("dataField : " +event.dataField + " rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked"); 
+    
+    var month = event.dataField.replace("m", "");   
+    
+    if(event.columnIndex > 6){
+        Common.popupDiv("/eAccounting/budget/availableBudgetDisplayPop.do",{item : event.item, month:month}, null, true, "availableBudgetDisplayPop");
+    }    
+    
+}      
       
 var budgetStr ;
 //Budget Code Pop 호출
@@ -448,11 +345,11 @@ function fn_costCenterSearchPop(str) {
 function fn_setCostCenter (str){
     
     if(costStr =="st"){
-        $("#stCostCentr").val($("#newCostCenter").val());
-        $("#stCostCentrName").val( $("#newCostCenterText").val());
+        $("#stCostCentr").val($("#search_costCentr").val());
+        $("#stCostCentrName").val( $("#search_costCentrName").val());
     }else{
-        $("#edCostCentr").val($("#newCostCenter").val());
-        $("#edCostCentrName").val( $("#newCostCenterText").val());
+        $("#edCostCentr").val($("#search_costCentr").val());
+        $("#edCostCentrName").val( $("#search_costCentrName").val());
     }
         
 }
@@ -487,8 +384,8 @@ function fn_excelDown(){
     <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
     <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
     
-    <input type="hidden" id = "newCostCenter" name="newCostCenter" />
-    <input type="hidden" id = "newCostCenterText" name="newCostCenterText" />
+    <input type="hidden" id = "search_costCentr" name="search_costCentr" />
+    <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

@@ -7,7 +7,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface BudgetService {
 
-	List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception;
+	List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception; 
+	
+	EgovMap selectAvailableBudgetAmt ( Map<String, Object> params) throws Exception; 
+	
 	/*
 	int insertExpenseInfo(List<Object> addList, Integer crtUserId) throws Exception;
 	
