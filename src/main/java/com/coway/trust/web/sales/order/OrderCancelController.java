@@ -191,8 +191,9 @@ public class OrderCancelController {
 	@RequestMapping(value = "/ctAssignmentInfoPop.do")
 	public String ctAssignmentInfoPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		
-		params.put("typeId", "296");	//임시 CT Assignment
-		params.put("refId", "8725");	//임시 CT Assignment
+		String paramTypeId = (String)params.get("typeId");
+		String paramDocId = (String)params.get("docId");
+		String paramRefId = (String)params.get("refId");
 		
 		List<EgovMap> selectAssignCTList = orderCancelService.selectAssignCT(params);
 		
@@ -200,6 +201,9 @@ public class OrderCancelController {
 		EgovMap ctAssignmentInfo = orderCancelService.ctAssignmentInfo(params);
 		
 		model.addAttribute("cancelReqInfo", cancelReqInfo);
+		model.addAttribute("paramTypeId", paramTypeId);
+		model.addAttribute("paramDocId", paramDocId);
+		model.addAttribute("paramRefId", paramRefId);
 		model.addAttribute("selectAssignCTList", selectAssignCTList);
 		model.addAttribute("ctAssignmentInfo", ctAssignmentInfo);
 		
@@ -235,5 +239,34 @@ public class OrderCancelController {
 		
 		return "sales/order/orderCancelDetailAddPop";
 		
+	}
+	
+	
+	@RequestMapping(value = "/saveCtAssignment.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> saveCtAssignment(@RequestParam Map<String, Object> params, ModelMap mode)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		logger.info("##### sessionVO.getUserId() #####" +sessionVO.getUserId());
+		logger.info("##### params ###############" +params.toString());
+		//String retMsg = AppConstants.MSG_SUCCESS;
+		String retMsg = "SUCCESS";
+		
+		Map<String, Object> map = new HashMap();
+
+			orderCancelService.saveCtAssignment(params);
+
+			map.put("msg", retMsg);
+
+		return ResponseEntity.ok(map);
+	}
+	
+	
+	@RequestMapping(value = "/ctSearchPop.do")
+	public String memberPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		return "sales/order/orderCancelCTSearchPop";
 	}
 }
