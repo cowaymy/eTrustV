@@ -12,38 +12,38 @@
 </style>
 
 <script type="text/javaScript">
-	var myGridID_7001CT;
+	var myGridID_7002HPT;
 	
 	$(document).ready(function() {
 		createAUIGrid();
 		// cellClick event.
-		AUIGrid.bind(myGridID_7001CT, "cellClick", function(event) {
+		AUIGrid.bind(myGridID_7002HPT, "cellClick", function(event) {
 			  console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
 		});
 		 
 		//Rule Book Item search
-		$("#search_7001CT").click(function(){  
-			Common.ajax("GET", "/commission/calculation/selectData7001CT", $("#form7001CT").serialize(), function(result) {
+		$("#search_7002HP").click(function(){  
+			Common.ajax("GET", "/commission/calculation/selectData7002HP", $("#form7002HP").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
-				AUIGrid.setGridData(myGridID_7001CT, result);
+				AUIGrid.setGridData(myGridID_7002HPT, result);
 			});
 		});
 		
 		$('#memBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
-            Common.popupDiv("/common/memberPop.do", $("#form7001CT").serializeJSON(), null, true);
+            Common.popupDiv("/common/memberPop.do", $("#form7002HP").serializeJSON(), null, true);
         });
 	});
 	
 	function fn_loadOrderSalesman(memId, memCode) {
-        $("#memberCd_7001CT").val(memCode);
+        $("#memberCd_7002HP").val(memCode);
         console.log(' memId:'+memId);
         console.log(' memCd:'+memCode);
     }
 	
    function createAUIGrid() {
-	var columnLayout_7001CT = [ {
+	var columnLayout_7002HP = [ {
         dataField : "runId",
         headerText : "RUN ID",
         style : "my-column",
@@ -59,73 +59,133 @@
         style : "my-column",
         editable : false
     },{
-        dataField : "v1",
-        headerText : "AS Count",
+        dataField : "r1",
+        headerText : "R1",
         style : "my-column",
         editable : false
     },{
-        dataField : "v2",
-        headerText : "AS Sum CP",
+        dataField : "r2",
+        headerText : "R2",
         style : "my-column",
         editable : false
     },{
-        dataField : "v3",
-        headerText : "BS Count",
+        dataField : "r3",
+        headerText : "R3",
         style : "my-column",
         editable : false
     },{
-        dataField : "v4",
-        headerText : "BS Sum CP",
+        dataField : "r4",
+        headerText : "Bonus",
         style : "my-column",
         editable : false
     },{
-        dataField : "v5",
-        headerText : "Ins Count",
+        dataField : "r5",
+        headerText : "PA",
         style : "my-column",
         editable : false
     },{
-        dataField : "v6",
-        headerText : "Ins Sum CP",
+        dataField : "r13",
+        headerText : "Membership_Amt",
         style : "my-column",
         editable : false
     },{
-        dataField : "v7",
-        headerText : "PR Count",
+        dataField : "r18",
+        headerText : "R18",
         style : "my-column",
         editable : false
     },{
-        dataField : "v8",
-        headerText : "PR Sum CP",
+        dataField : "r19",
+        headerText : "R19",
         style : "my-column",
         editable : false
     },{
-        dataField : "v9",
-        headerText : "Total Point",
+        dataField : "r20",
+        headerText : "R20",
         style : "my-column",
         editable : false
     },{
-        dataField : "v10",
-        headerText : "Pro Percent",
+        dataField : "r21",
+        headerText : "R21",
         style : "my-column",
         editable : false
     },{
-        dataField : "v11",
-        headerText : "Per Percent",
+        dataField : "r22",
+        headerText : "R22",
         style : "my-column",
         editable : false
     },{
-        dataField : "v12",
-        headerText : "Pro Factor (30%)",
+        dataField : "r25",
+        headerText : "TBB_Amt",
         style : "my-column",
         editable : false
     },{
-        dataField : "v13",
-        headerText : "Per Factor (70%)",
+        dataField : "r28",
+        headerText : "Incentive",
         style : "my-column",
         editable : false
     },{
-        dataField : "v14",
-        headerText : "Sum Factor",
+        dataField : "r29",
+        headerText : "SHI_Amt",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r30",
+        headerText : "R30",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r31",
+        headerText : "R31",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r32",
+        headerText : "R32",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r33",
+        headerText : "R33",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r34",
+        headerText : "RentalMembership_Amt",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r35",
+        headerText : "RentalMembership_SHI_Amt",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r36",
+        headerText : "R36",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r39",
+        headerText : "R39",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r40",
+        headerText : "R40",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r41",
+        headerText : "R41",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r42",
+        headerText : "R42",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "r99",
+        headerText : "Adjust_Amt",
         style : "my-column",
         editable : false
     }];
@@ -148,21 +208,20 @@
         showRowNumColumn : true
 
     };
-	myGridID_7001CT = AUIGrid.create("#grid_wrap_7001CT", columnLayout_7001CT,gridPros);
+	myGridID_7002HPT = AUIGrid.create("#grid_wrap_7002HPT", columnLayout_7002HP,gridPros);
    }
    
    function fn_downFile() {
-	   Common.ajax("GET", "/commission/calculation/cntData7001CT", $("#form7001CT").serialize(), function(result) {
+	   Common.ajax("GET", "/commission/calculation/cntData7002HP", $("#form7002HP").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
 			   //excel down load name 형식 어떻게 할지?
 		       var fileName = $("#fileName").val();
-		       var searchDt = $("#7001CT_Dt").val();
+		       var searchDt = $("#7002HP_Dt").val();
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
-		       
-		       var memberCd = $("#memberCd_7001CT").val();
+		       var memberCd = $("#memberCd_7002HP").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 		       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"'/>";
@@ -173,12 +232,12 @@
    }
    
    function fn_AlldownFile() {
-	    var fileName = $("#fileName").val();
-	    var searchDt = $("#7001CT_Dt").val();
-	    var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-	    var month = searchDt.substr(0,searchDt.indexOf("/"));
-	    var code = $("#code").val();
-	    window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+        var fileName = $("#fileName").val();
+        var searchDt = $("#7002HP_Dt").val();
+        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+        var month = searchDt.substr(0,searchDt.indexOf("/"));
+        var code = $("#code").val();
+        window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
    }
 </script>
 
@@ -195,12 +254,12 @@
 	   <aside class="title_line"><!-- title_line start -->
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
-		<form id="form7001CT">
+		<form id="form7002HP">
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>
 		   <input type="hidden" name="code" id="code" value="${code}"/>
 		   <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
 		   <ul class="right_btns">
-			  <li><p class="btn_blue"><a href="#" id="search_7001CT"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+			  <li><p class="btn_blue"><a href="#" id="search_7002HP"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 			</ul>
 	
 			<table class="type1 mt10"><!-- table start -->
@@ -215,11 +274,11 @@
 					<tr>
 						<th scope="row">Month/Year</th>
 						<td>
-						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7001CT_Dt" class="j_date2" value="${searchDt_pop }" />
+						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7002HP_Dt" class="j_date2" value="${searchDt_pop }" />
 						</td>
-						<th scope="row">Member Id</th>
+						<th scope="row">Member CODE</th>
 						<td>
-						      <input type="text" id="memberCd_7001CT" name="memberCd" style="width: 100px;">
+						      <input type="text" id="memberCd_7002HP" name="memberCd" style="width: 100px;">
 						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 					</tr>
@@ -238,7 +297,7 @@
 				</p></li>
 			</ul>
 			<!-- grid_wrap start -->
-			<div id="grid_wrap_7001CT" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+			<div id="grid_wrap_7002HPT" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 		</article><!-- grid_wrap end -->
 	</section>
 	

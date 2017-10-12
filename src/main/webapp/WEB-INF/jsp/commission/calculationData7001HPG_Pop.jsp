@@ -12,38 +12,38 @@
 </style>
 
 <script type="text/javaScript">
-	var myGridID_7002CT;
+	var myGridID_7001HPG;
 	
 	$(document).ready(function() {
 		createAUIGrid();
 		// cellClick event.
-		AUIGrid.bind(myGridID_7002CT, "cellClick", function(event) {
+		AUIGrid.bind(myGridID_7001HPG, "cellClick", function(event) {
 			  console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
 		});
 		 
 		//Rule Book Item search
-		$("#search_7002CT").click(function(){  
-			Common.ajax("GET", "/commission/calculation/selectData7002CT", $("#form7002CT").serialize(), function(result) {
+		$("#search_7001HP").click(function(){  
+			Common.ajax("GET", "/commission/calculation/selectData7001HP", $("#form7001HP").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
-				AUIGrid.setGridData(myGridID_7002CT, result);
+				AUIGrid.setGridData(myGridID_7001HPG, result);
 			});
 		});
 		
 		$('#memBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
-            Common.popupDiv("/common/memberPop.do", $("#form7002CT").serializeJSON(), null, true);
+            Common.popupDiv("/common/memberPop.do", $("#form7001HP").serializeJSON(), null, true);
         });
 	});
 	
 	function fn_loadOrderSalesman(memId, memCode) {
-        $("#memberCd_7002CT").val(memCode);
+        $("#memberCd_7001HP").val(memCode);
         console.log(' memId:'+memId);
         console.log(' memCd:'+memCode);
     }
 	
    function createAUIGrid() {
-	var columnLayout_7002CT = [ {
+	var columnLayout_7001HP = [ {
         dataField : "runId",
         headerText : "RUN ID",
         style : "my-column",
@@ -59,43 +59,88 @@
         style : "my-column",
         editable : false
     },{
-        dataField : "r1",
-        headerText : "Gross Comm",
+        dataField : "v1",
+        headerText : "membership amount",
         style : "my-column",
         editable : false
     },{
-        dataField : "r2",
-        headerText : "Rental Comm",
+        dataField : "v8",
+        headerText : "net sales unit<br>pv total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r3",
-        headerText : "Srv Mem Comm",
+        dataField : "v9",
+        headerText : "net sales unit<br>pv total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r4",
-        headerText : "Basic and Allowance",
+        dataField : "v13",
+        headerText : "net sales unit<br>pv total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r5",
-        headerText : "Performance Incentive",
+        dataField : "v14",
+        headerText : "net sales unit<br>pv total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r6",
-        headerText : "Adjustment",
+        dataField : "v15",
+        headerText : "Bonus Rate",
         style : "my-column",
         editable : false
     },{
-        dataField : "r7",
-        headerText : "CFF + Reward",
+        dataField : "v16",
+        headerText : "pv total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r8",
-        headerText : "Seniority",
+        dataField : "v17",
+        headerText : "price total",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v18",
+        headerText : "net sales pv total",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v19",
+        headerText : "pv total",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v20",
+        headerText : "price total",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v21",
+        headerText : "net sales pv total",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v22",
+        headerText : "neo pro hp's number",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v24",
+        headerText : "SHI rental collection rate",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v25",
+        headerText : "SHI Index",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v26",
+        headerText : "SHI rental collection rate",
+        style : "my-column",
+        editable : false
+    },{
+        dataField : "v27",
+        headerText : "SHI Index",
         style : "my-column",
         editable : false
     }];
@@ -118,20 +163,20 @@
         showRowNumColumn : true
 
     };
-	myGridID_7002CT = AUIGrid.create("#grid_wrap_7002CT", columnLayout_7002CT,gridPros);
+	myGridID_7001HPG = AUIGrid.create("#grid_wrap_7001HPG", columnLayout_7001HP,gridPros);
    }
    
    function fn_downFile() {
-	   Common.ajax("GET", "/commission/calculation/cntData7002CT", $("#form7002CT").serialize(), function(result) {
+	   Common.ajax("GET", "/commission/calculation/cntData7001HP", $("#form7001HP").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
 			   //excel down load name 형식 어떻게 할지?
 		       var fileName = $("#fileName").val();
-		       var searchDt = $("#7002CT_Dt").val();
+		       var searchDt = $("#7001HP_Dt").val();
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
-		       var memberCd = $("#memberCd_7002CT").val();
+		       var memberCd = $("#memberCd_7001HP").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 		       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"'/>";
@@ -141,9 +186,9 @@
 	   });
    }
    
-   function fn_downFile() {
+   function fn_AlldownFile() {
        var fileName = $("#fileName").val();
-       var searchDt = $("#7002CT_Dt").val();
+       var searchDt = $("#7001HP_Dt").val();
        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
        var month = searchDt.substr(0,searchDt.indexOf("/"));
        var code = $("#code").val();
@@ -164,12 +209,12 @@
 	   <aside class="title_line"><!-- title_line start -->
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
-		<form id="form7002CT">
+		<form id="form7001HP">
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>
 		   <input type="hidden" name="code" id="code" value="${code}"/>
 		   <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
 		   <ul class="right_btns">
-			  <li><p class="btn_blue"><a href="#" id="search_7002CT"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+			  <li><p class="btn_blue"><a href="#" id="search_7001HP"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 			</ul>
 	
 			<table class="type1 mt10"><!-- table start -->
@@ -184,11 +229,11 @@
 					<tr>
 						<th scope="row">Month/Year</th>
 						<td>
-						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7002CT_Dt" class="j_date2" value="${searchDt_pop }" />
+						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7001HP_Dt" class="j_date2" value="${searchDt_pop }" />
 						</td>
-						<th scope="row">Member Code</th>
+						<th scope="row">Member CODE</th>
 						<td>
-						      <input type="text" id="memberCd_7002CT" name="memberCd" style="width: 100px;">
+						      <input type="text" id="memberCd_7001HP" name="memberCd" style="width: 100px;">
 						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 					</tr>
@@ -207,7 +252,7 @@
 				</p></li>
 			</ul>
 			<!-- grid_wrap start -->
-			<div id="grid_wrap_7002CT" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+			<div id="grid_wrap_7001HPG" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 		</article><!-- grid_wrap end -->
 	</section>
 	

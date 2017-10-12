@@ -94,7 +94,27 @@
         style : "my-column",
         editable : false
     }];
-	myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout2);
+	
+	var gridPros = {
+	        
+	        // 페이징 사용       
+	        usePaging : true,
+	        
+	        // 한 화면에 출력되는 행 개수 20(기본값:20)
+	        pageRowCount : 20,
+	        
+	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        skipReadonlyColumns : true,
+	        
+	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        wrapSelectionMove : true,
+	        
+	        // 줄번호 칼럼 렌더러 출력
+	        showRowNumColumn : true,
+	        
+	        headerHeight : 40
+	    };
+	myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout2,gridPros);
    }
 </script>
 

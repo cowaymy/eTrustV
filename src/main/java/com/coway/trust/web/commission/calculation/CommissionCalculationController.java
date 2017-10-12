@@ -456,30 +456,64 @@ public class CommissionCalculationController {
 		model.addAttribute("searchDt_pop", params.get("searchDt"));
 		
 		String popName= "";
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01) || (params.get("code")).equals(CommissionConstants.COMIS_CTM_P01) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CTW_P01)){
-			popName = "calculationData7001CT_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P01) || (params.get("code")).equals(CommissionConstants.COMIS_CDG_P01) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CDM_P01)|| (params.get("code")).equals(CommissionConstants.COMIS_CDN_P01)
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CDS_P01)){
-			popName = "calculationData7001CD_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P01) || (params.get("code")).equals(CommissionConstants.COMIS_HPG_P01) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_HPM_P01)|| (params.get("code")).equals(CommissionConstants.COMIS_HPS_P01)
-				|| (params.get("code")).equals(CommissionConstants.COMIS_HPT_P01)){
-			popName = "calculationData7001HP_Pop";
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01)){
+			popName = "calculationData7001CTL_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P01)) {
+			popName = "calculationData7001CTM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P01)){
+			popName = "calculationData7001CTW_Pop";
+		}
+		else if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P01)) {
+			popName = "calculationData7001CDC_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P01)) {
+			popName = "calculationData7001CDG_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDM_P01)) {
+			popName = "calculationData7001CDM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDN_P01)) {
+			popName = "calculationData7001CDN_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDS_P01)){
+			popName = "calculationData7001CDS_Pop";
+		}
+		else if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P01)){
+			popName = "calculationData7001HPF_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPG_P01)){
+			popName = "calculationData7001HPG_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPM_P01)){
+			popName = "calculationData7001HPM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPS_P01)){
+			popName = "calculationData7001HPS_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPT_P01)){
+			popName = "calculationData7001HPT_Pop";
 		}
 		
-		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02) || (params.get("code")).equals(CommissionConstants.COMIS_CTM_P02) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CTW_P02)){
-			popName = "calculationData7002CT_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P02) || (params.get("code")).equals(CommissionConstants.COMIS_CDG_P02) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CDM_P02)|| (params.get("code")).equals(CommissionConstants.COMIS_CDN_P02)
-				|| (params.get("code")).equals(CommissionConstants.COMIS_CDS_P02)){
-			popName = "calculationData7002CD_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P02) || (params.get("code")).equals(CommissionConstants.COMIS_HPG_P02) 
-				|| (params.get("code")).equals(CommissionConstants.COMIS_HPM_P02)|| (params.get("code")).equals(CommissionConstants.COMIS_HPS_P02)
-				|| (params.get("code")).equals(CommissionConstants.COMIS_HPT_P02) || (params.get("code")).equals(CommissionConstants.COMIS_HPB_P02)){
-			popName = "calculationData7002HP_Pop";
+		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02)){
+			popName = "calculationData7002CTL_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P02)) {
+			popName = "calculationData7002CTM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTW_P02)){
+			popName = "calculationData7002CTW_Pop";
+		}
+		else if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P02)){
+			popName = "calculationData7002CDC_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P02)){
+			popName = "calculationData7002CDG_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDM_P02)){
+			popName = "calculationData7002CDM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDN_P02)){
+			popName = "calculationData7002CDN_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CDS_P02)){
+			popName = "calculationData7002CDS_Pop";
+		}
+		else if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P02)){
+			popName = "calculationData7002HPF_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPG_P02)){
+			popName = "calculationData7002HPG_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPM_P02)){
+			popName = "calculationData7002HPM_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPS_P02)){
+			popName = "calculationData7002HPS_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPT_P02)){
+			popName = "calculationData7002HPT_Pop";
 		}
 		
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P01)){

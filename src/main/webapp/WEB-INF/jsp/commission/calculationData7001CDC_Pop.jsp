@@ -12,38 +12,38 @@
 </style>
 
 <script type="text/javaScript">
-	var myGridID_7002HP;
+	var myGridID_7001CDC;
 	
 	$(document).ready(function() {
 		createAUIGrid();
 		// cellClick event.
-		AUIGrid.bind(myGridID_7002HP, "cellClick", function(event) {
+		AUIGrid.bind(myGridID_7001CDC, "cellClick", function(event) {
 			  console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
 		});
 		 
 		//Rule Book Item search
-		$("#search_7002HP").click(function(){  
-			Common.ajax("GET", "/commission/calculation/selectData7002HP", $("#form7002HP").serialize(), function(result) {
+		$("#search_7001CD").click(function(){  
+			Common.ajax("GET", "/commission/calculation/selectData7001CD", $("#form7001CD").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
-				AUIGrid.setGridData(myGridID_7002HP, result);
+				AUIGrid.setGridData(myGridID_7001CDC, result);
 			});
 		});
 		
 		$('#memBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
-            Common.popupDiv("/common/memberPop.do", $("#form7002HP").serializeJSON(), null, true);
+            Common.popupDiv("/common/memberPop.do", $("#form7001CD").serializeJSON(), null, true);
         });
 	});
 	
 	function fn_loadOrderSalesman(memId, memCode) {
-        $("#memberCd_7002HP").val(memCode);
+        $("#memberCd_7001CD").val(memCode);
         console.log(' memId:'+memId);
         console.log(' memCd:'+memCode);
     }
 	
    function createAUIGrid() {
-	var columnLayout_7002HP = [ {
+	var columnLayout_7001CD = [ {
         dataField : "runId",
         headerText : "RUN ID",
         style : "my-column",
@@ -59,133 +59,133 @@
         style : "my-column",
         editable : false
     },{
-        dataField : "r1",
-        headerText : "R1",
+        dataField : "v1",
+        headerText : "Credit Point",
         style : "my-column",
         editable : false
     },{
-        dataField : "r2",
-        headerText : "R2",
+        dataField : "v2",
+        headerText : "HappyCall<br>Performance",
         style : "my-column",
         editable : false
     },{
-        dataField : "r3",
-        headerText : "R3",
+        dataField : "v3",
+        headerText : "HappyCall Marks",
         style : "my-column",
         editable : false
     },{
-        dataField : "r4",
-        headerText : "Bonus",
+        dataField : "v4",
+        headerText : "B/S Success Rate",
         style : "my-column",
         editable : false
     },{
-        dataField : "r5",
-        headerText : "PA",
+        dataField : "v5",
+        headerText : "B/S Marks",
         style : "my-column",
         editable : false
     },{
-        dataField : "r13",
-        headerText : "Membership_Amt",
+        dataField : "v6",
+        headerText : "Rental Collection Rate",
         style : "my-column",
         editable : false
     },{
-        dataField : "r18",
-        headerText : "R18",
+        dataField : "v7",
+        headerText : "Rental Collection Marks",
         style : "my-column",
         editable : false
     },{
-        dataField : "r19",
-        headerText : "R19",
+        dataField : "v8",
+        headerText : "Net Sales Unit",
         style : "my-column",
         editable : false
     },{
-        dataField : "r20",
-        headerText : "R20",
+        dataField : "v9",
+        headerText : "Net Sales Marks",
         style : "my-column",
         editable : false
     },{
-        dataField : "r21",
-        headerText : "R21",
+        dataField : "v10",
+        headerText : "Rental Collection Amount",
         style : "my-column",
         editable : false
     },{
-        dataField : "r22",
-        headerText : "R22",
+        dataField : "v12",
+        headerText : "Dropped Rate",
         style : "my-column",
         editable : false
     },{
-        dataField : "r25",
-        headerText : "TBB_Amt",
+        dataField : "v13",
+        headerText : "Dropped Rate <br>Penalty Marks",
         style : "my-column",
         editable : false
     },{
-        dataField : "r28",
-        headerText : "Incentive",
+        dataField : "v14",
+        headerText : "Net Sales <br>Pv Total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r29",
-        headerText : "SHI_Amt",
+        dataField : "v15",
+        headerText : "App Rate <br>By Total Pv",
         style : "my-column",
         editable : false
     },{
-        dataField : "r30",
-        headerText : "R30",
+        dataField : "v16",
+        headerText : "sales price total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r31",
-        headerText : "R31",
+        dataField : "v17",
+        headerText : "Mem amount",
         style : "my-column",
         editable : false
     },{
-        dataField : "r32",
-        headerText : "R32",
+        dataField : "v18",
+        headerText : "completed BS count",
         style : "my-column",
         editable : false
     },{
-        dataField : "r33",
-        headerText : "R33",
+        dataField : "v19",
+        headerText : "pv total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r34",
-        headerText : "RentalMembership_Amt",
+        dataField : "v20",
+        headerText : "price total",
         style : "my-column",
         editable : false
     },{
-        dataField : "r35",
-        headerText : "RentalMembership_SHI_Amt",
+        dataField : "v21",
+        headerText : "collection Cmm <br>applicable rate",
         style : "my-column",
         editable : false
     },{
-        dataField : "r36",
-        headerText : "R36",
+        dataField : "v24",
+        headerText : "SHI rental Cmm rate",
         style : "my-column",
         editable : false
     },{
-        dataField : "r39",
-        headerText : "R39",
+        dataField : "v25",
+        headerText : "SHI Index",
         style : "my-column",
         editable : false
     },{
-        dataField : "r40",
-        headerText : "R40",
+        dataField : "v26",
+        headerText : "SHI rental Mem<br> collection rate",
         style : "my-column",
         editable : false
     },{
-        dataField : "r41",
-        headerText : "R41",
+        dataField : "v27",
+        headerText : "SHI rental Mem Index",
         style : "my-column",
         editable : false
     },{
-        dataField : "r42",
-        headerText : "R42",
+        dataField : "v32",
+        headerText : "CFF CFFCompliment",
         style : "my-column",
         editable : false
     },{
-        dataField : "r99",
-        headerText : "Adjust_Amt",
+        dataField : "v33",
+        headerText : "CFF S.CFFMark",
         style : "my-column",
         editable : false
     }];
@@ -206,38 +206,38 @@
         
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
-
     };
-	myGridID_7002HP = AUIGrid.create("#grid_wrap_7002HP", columnLayout_7002HP,gridPros);
+	myGridID_7001CDC = AUIGrid.create("#grid_wrap_7001CDC", columnLayout_7001CD,gridPros);
    }
    
    function fn_downFile() {
-	   Common.ajax("GET", "/commission/calculation/cntData7002HP", $("#form7002HP").serialize(), function(result) {
+	   Common.ajax("GET", "/commission/calculation/cntData7001CD", $("#form7001CD").serialize(), function(result) {
            var cnt = result;
            if(cnt > 0){
 			   //excel down load name 형식 어떻게 할지?
 		       var fileName = $("#fileName").val();
-		       var searchDt = $("#7002HP_Dt").val();
+		       var searchDt = $("#7001CD_Dt").val();
 		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
 		       var month = searchDt.substr(0,searchDt.indexOf("/"));
 		       var code = $("#code").val();
-		       var memberCd = $("#memberCd_7002HP").val();
+		       
+		       var memberCd = $("#memberCd_7001CD").val();
 		       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 		       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 		       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&memberCd="+memberCd+"'/>";
-           }else{
+		   }else{
                Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
            }
 	   });
    }
    
    function fn_AlldownFile() {
-        var fileName = $("#fileName").val();
-        var searchDt = $("#7002HP_Dt").val();
-        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-        var month = searchDt.substr(0,searchDt.indexOf("/"));
-        var code = $("#code").val();
-        window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+      var fileName = $("#fileName").val();
+      var searchDt = $("#7001CD_Dt").val();
+      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+      var month = searchDt.substr(0,searchDt.indexOf("/"));
+      var code = $("#code").val();
+      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
    }
 </script>
 
@@ -254,12 +254,12 @@
 	   <aside class="title_line"><!-- title_line start -->
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
-		<form id="form7002HP">
+		<form id="form7001CD">
 		   <input type="hidden" name="codeId" id="codeId" value="${codeId}"/>
 		   <input type="hidden" name="code" id="code" value="${code}"/>
-		   <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
+		   <input type="hidden" id="fileName" name="fileName" value="7001CD"/>
 		   <ul class="right_btns">
-			  <li><p class="btn_blue"><a href="#" id="search_7002HP"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+			  <li><p class="btn_blue"><a href="#" id="search_7001CD"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 			</ul>
 	
 			<table class="type1 mt10"><!-- table start -->
@@ -274,11 +274,11 @@
 					<tr>
 						<th scope="row">Month/Year</th>
 						<td>
-						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7002HP_Dt" class="j_date2" value="${searchDt_pop }" />
+						<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="7001CD_Dt" class="j_date2" value="${searchDt_pop }" />
 						</td>
-						<th scope="row">Member CODE</th>
+						<th scope="row">Member Id</th>
 						<td>
-						      <input type="text" id="memberCd_7002HP" name="memberCd" style="width: 100px;">
+						      <input type="text" id="memberCd_7001CD" name="memberCd" style="width: 100px;">
 						      <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
 					</tr>
@@ -297,7 +297,7 @@
 				</p></li>
 			</ul>
 			<!-- grid_wrap start -->
-			<div id="grid_wrap_7002HP" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+			<div id="grid_wrap_7001CDC" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 		</article><!-- grid_wrap end -->
 	</section>
 	

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
@@ -104,137 +104,8 @@ var gridPros = {
 		
 	}
 	
-	
-	
-	
 </script>
 
-<div id="wrap"><!-- wrap start -->
-
-<header id="header"><!-- header start -->
-<ul class="left_opt">
-	<li>Neo(Mega Deal): <span>2394</span></li> 
-	<li>Sales(Key In): <span>9304</span></li> 
-	<li>Net Qty: <span>310</span></li>
-	<li>Outright : <span>138</span></li>
-	<li>Installment: <span>4254</span></li>
-	<li>Rental: <span>4702</span></li>
-	<li>Total: <span>45080</span></li>
-</ul>
-<ul class="right_opt">
-	<li>Login as <span>KRHQ9001-HQ</span></li>
-	<li><a href="#" class="logout">Logout</a></li>
-	<li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
-	<li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
-</ul>
-</header><!-- header end -->
-<hr />
-		
-<section id="container"><!-- container start -->
-
-<aside class="lnb_wrap"><!-- lnb_wrap start -->
-
-<header class="lnb_header"><!-- lnb_header start -->
-<form action="#" method="post">
-<h1><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/logo.gif" alt="eTrust system" /></a></h1>
-<p class="search">
-<input type="text" title="검색어 입력" />
-<input type="image" src="${pageContext.request.contextPath}/resources/images/common/icon_lnb_search.gif" alt="검색" />
-</p>
-
-</form>
-</header><!-- lnb_header end -->
-
-<section class="lnb_con"><!-- lnb_con start -->
-<p class="click_add_on_solo on"><a href="#">All menu</a></p>
-<ul class="inb_menu">
-	<li class="active">
-	<a href="#" class="on">menu 1depth</a>
-
-	<ul>
-		<li class="active">
-		<a href="#" class="on">menu 2depth</a>
-
-		<ul>
-			<li class="active">
-			<a href="#" class="on">menu 3depth</a>
-			</li>
-			<li>
-			<a href="#">menu 3depth</a>
-			</li>
-			<li>
-			<a href="#">menu 3depth</a>
-			</li>
-			<li>
-			<a href="#">menu 3depth</a>
-			</li>
-			<li>
-			<a href="#">menu 3depth</a>
-			</li>
-			<li>
-			<a href="#">menu 3depth</a>
-			</li>
-		</ul>
-
-		</li>
-		<li>
-		<a href="#">menu 2depth</a>
-		</li>
-		<li>
-		<a href="#">menu 2depth</a>
-		</li>
-		<li>
-		<a href="#">menu 2depth</a>
-		</li>
-		<li>
-		<a href="#">menu 2depth</a>
-		</li>
-		<li>
-		<a href="#">menu 2depth</a>
-		</li>
-	</ul>
-
-	</li>
-	<li>
-	<a href="#">menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">menu 1depth</a>
-	</li>
-</ul>
-<p class="click_add_on_solo"><a href="#"><span></span>My menu</a></p>
-<ul class="inb_menu">
-	<li>
-	<a href="#">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">My menu 1depth</a>
-	</li>
-	<li>
-	<a href="#">My menu 1depth</a>
-	</li>
-</ul>
-</section><!-- lnb_con end -->
-
-</aside><!-- lnb_wrap end -->
 
 	<section id="content"><!-- content start -->
 		<ul class="path">
@@ -269,7 +140,6 @@ var gridPros = {
 					</tbody>
 				</table><!-- table end -->
 			</form>
-		</section><!-- search_table end -->
 		
 		<ul class="center_btns">
 		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
@@ -278,10 +148,11 @@ var gridPros = {
 		<!-- grid_wrap start -->
 	    <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>
 	    <!-- grid_wrap end -->
+		</section><!-- search_table end -->
 	
 	</section><!-- content end -->
 
-</section><!-- container end -->
 <hr />
 
-</div><!-- wrap end -->
+</body>
+</html>

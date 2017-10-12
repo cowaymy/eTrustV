@@ -27,8 +27,6 @@
 	}
 	
 	
-	
-	  
 	// Make AUIGrid 
 	var myGridID;
 	var myGridID2;
@@ -55,7 +53,7 @@
 		$("#popup_wrap2, .popup_wrap2").draggable({handle: '.pop_header'});
 		
 		// AUIGrid 그리드를 생성합니다.
-		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"itemSeq");
+		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"itemSeq",gridPros );
 
 		// cellClick event.
 		AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -291,6 +289,7 @@
                }
                $("#insertFormRule [name=orgDs]").val($("#searchFormRule [name=orgNm]").val());
                $("#insertFormRule [name=codeName]").val($("#searchFormRule [name=itemNm]").val());
+               $("#insertFormRule [name=ruleNm]").val($("#searchFormRule [name=itemNm]").val());
                $("#insertFormRule [name=itemCd]").val($("#searchFormRule [name=itemCd]").val());
                $("#insertFormRule [name=itemSeq]").val($("#searchFormRule [name=itemSeq]").val());
            });
@@ -460,7 +459,9 @@
 		});
 		return retStr;
 	}
-
+	var gridPros = {
+			headerHeight : 40
+	}
 	// 아이템 AUIGrid 칼럼 설정
 	var columnLayout = [ {
 		dataField : "orgSeq",

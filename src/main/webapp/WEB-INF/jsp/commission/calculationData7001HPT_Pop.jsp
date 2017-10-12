@@ -12,12 +12,12 @@
 </style>
 
 <script type="text/javaScript">
-	var myGridID_7001HP;
+	var myGridID_7001HPT;
 	
 	$(document).ready(function() {
 		createAUIGrid();
 		// cellClick event.
-		AUIGrid.bind(myGridID_7001HP, "cellClick", function(event) {
+		AUIGrid.bind(myGridID_7001HPT, "cellClick", function(event) {
 			  console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
 		});
 		 
@@ -26,7 +26,7 @@
 			Common.ajax("GET", "/commission/calculation/selectData7001HP", $("#form7001HP").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
-				AUIGrid.setGridData(myGridID_7001HP, result);
+				AUIGrid.setGridData(myGridID_7001HPT, result);
 			});
 		});
 		
@@ -59,93 +59,23 @@
         style : "my-column",
         editable : false
     },{
-        dataField : "v1",
-        headerText : "V1",
-        style : "my-column",
-        editable : false
-    },{
         dataField : "v8",
-        headerText : "V8",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v9",
-        headerText : "V9",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v13",
-        headerText : "V13",
+        headerText : "net sales unit<br>pv total",
         style : "my-column",
         editable : false
     },{
         dataField : "v14",
-        headerText : "v14",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v15",
-        headerText : "v15",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v16",
-        headerText : "v16",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v17",
-        headerText : "v17",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v18",
-        headerText : "v18",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v19",
-        headerText : "v19",
+        headerText : "net sales unit<br>pv total",
         style : "my-column",
         editable : false
     },{
         dataField : "v20",
-        headerText : "v20",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v21",
-        headerText : "v21",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v22",
-        headerText : "v22",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v24",
-        headerText : "v24",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v25",
-        headerText : "v25",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v26",
-        headerText : "v26",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v27",
-        headerText : "v27",
+        headerText : "price tota",
         style : "my-column",
         editable : false
     },{
         dataField : "v28",
-        headerText : "v28",
+        headerText : "Only Wallace",
         style : "my-column",
         editable : false
     }];
@@ -168,7 +98,7 @@
         showRowNumColumn : true
 
     };
-	myGridID_7001HP = AUIGrid.create("#grid_wrap_7001HP", columnLayout_7001HP,gridPros);
+	myGridID_7001HPT = AUIGrid.create("#grid_wrap_7001HPT", columnLayout_7001HP,gridPros);
    }
    
    function fn_downFile() {
@@ -257,7 +187,7 @@
 				</p></li>
 			</ul>
 			<!-- grid_wrap start -->
-			<div id="grid_wrap_7001HP" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+			<div id="grid_wrap_7001HPT" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 		</article><!-- grid_wrap end -->
 	</section>
 	

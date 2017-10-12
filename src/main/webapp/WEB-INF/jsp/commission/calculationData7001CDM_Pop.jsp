@@ -12,12 +12,12 @@
 </style>
 
 <script type="text/javaScript">
-	var myGridID_7001CD;
+	var myGridID_7001CDM;
 	
 	$(document).ready(function() {
 		createAUIGrid();
 		// cellClick event.
-		AUIGrid.bind(myGridID_7001CD, "cellClick", function(event) {
+		AUIGrid.bind(myGridID_7001CDM, "cellClick", function(event) {
 			  console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
 		});
 		 
@@ -26,7 +26,7 @@
 			Common.ajax("GET", "/commission/calculation/selectData7001CD", $("#form7001CD").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
-				AUIGrid.setGridData(myGridID_7001CD, result);
+				AUIGrid.setGridData(myGridID_7001CDM, result);
 			});
 		});
 		
@@ -60,7 +60,7 @@
         editable : false
     },{
         dataField : "v1",
-        headerText : "V1",
+        headerText : "performance<br>index",
         style : "my-column",
         editable : false
     },{
@@ -100,12 +100,12 @@
         editable : false
     },{
         dataField : "v9",
-        headerText : "V9",
+        headerText : "net sales marks",
         style : "my-column",
         editable : false
     },{
         dataField : "v10",
-        headerText : "V10",
+        headerText : "rental collection<br>amount",
         style : "my-column",
         editable : false
     },{
@@ -129,13 +129,8 @@
         style : "my-column",
         editable : false
     },{
-        dataField : "v15",
-        headerText : "v15",
-        style : "my-column",
-        editable : false
-    },{
         dataField : "v16",
-        headerText : "v16",
+        headerText : "rental collection<br>amount",
         style : "my-column",
         editable : false
     },{
@@ -145,7 +140,7 @@
         editable : false
     },{
         dataField : "v18",
-        headerText : "v18",
+        headerText : "completed<br>BS count",
         style : "my-column",
         editable : false
     },{
@@ -155,7 +150,7 @@
         editable : false
     },{
         dataField : "v20",
-        headerText : "v20",
+        headerText : "price total",
         style : "my-column",
         editable : false
     },{
@@ -165,17 +160,17 @@
         editable : false
     },{
         dataField : "v22",
-        headerText : "v22",
+        headerText : "credit point",
         style : "my-column",
         editable : false
     },{
         dataField : "v23",
-        headerText : "v23",
+        headerText : "credit point",
         style : "my-column",
         editable : false
     },{
         dataField : "v24",
-        headerText : "v24",
+        headerText : "SHI rental<br>collection rate",
         style : "my-column",
         editable : false
     },{
@@ -185,7 +180,7 @@
         editable : false
     },{
         dataField : "v26",
-        headerText : "v26",
+        headerText : "SHI rental Mem<br>collection rate",
         style : "my-column",
         editable : false
     },{
@@ -195,27 +190,17 @@
         editable : false
     },{
         dataField : "v29",
-        headerText : "v29",
+        headerText : "group BS<br> productivity",
         style : "my-column",
         editable : false
     },{
         dataField : "v30",
-        headerText : "v30",
+        headerText : "group sales<br>productivity marks",
         style : "my-column",
         editable : false
     },{
         dataField : "v31",
         headerText : "v31",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v32",
-        headerText : "v32",
-        style : "my-column",
-        editable : false
-    },{
-        dataField : "v33",
-        headerText : "v33",
         style : "my-column",
         editable : false
     }];
@@ -237,7 +222,7 @@
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
     };
-	myGridID_7001CD = AUIGrid.create("#grid_wrap_7001CD", columnLayout_7001CD,gridPros);
+	myGridID_7001CDM = AUIGrid.create("#grid_wrap_7001CDM", columnLayout_7001CD,gridPros);
    }
    
    function fn_downFile() {
@@ -327,7 +312,7 @@
 				</p></li>
 			</ul>
 			<!-- grid_wrap start -->
-			<div id="grid_wrap_7001CD" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+			<div id="grid_wrap_7001CDM" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 		</article><!-- grid_wrap end -->
 	</section>
 	
