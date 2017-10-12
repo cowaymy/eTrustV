@@ -40,6 +40,7 @@
             $("#paramReqNo").val(event.item.reqNo);
             $("#paramReqStusId").val(event.item.reqStusId);
             $("#paramReqStusCode").val(event.item.reqStusCode);
+            $("#paramReqStusName").val(event.item.reqStusName);
             $("#paramReqStageId").val(event.item.reqStageId);
             
             gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
@@ -115,6 +116,9 @@
                 visible : false
             },{
                 dataField : "callStusCode",
+                visible : false
+            },{
+                dataField : "callStusName",
                 visible : false
             },{
                 dataField : "reqStageId",
@@ -226,8 +230,12 @@
             Common.alert("No cancellation request selected.");
             return false;
         }else{
-        	if(detailForm.paramCallStusId.value == '24'){
+        	if(detailForm.paramReqStageId.value == '24'){
                 Common.alert("[" +detailForm.paramReqNo.value+ "] is requested on stage [Before Install] </br> Only request after install is allow to re-assign CT.");
+                return false;
+            }
+        	if(detailForm.paramCallStusId.value == '1' || detailForm.paramCallStusId.value == '19'){
+                Common.alert("[" +detailForm.paramReqNo.value+ "] is under status ["+detailForm.paramReqStusName.value+"] </br> Re-assign CT is disallowed.");
                 return false;
             }
         	Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null , true, '_CTDiv');
@@ -269,6 +277,7 @@
     <input type="hidden" id="paramReqNo" name="paramReqNo">
     <input type="hidden" id="paramReqStusId" name="paramReqStusId">
     <input type="hidden" id="paramReqStusCode" name="paramReqStusCode">
+    <input type="hidden" id="paramReqStusName" name="paramReqStusName">
     <input type="hidden" id="paramReqStageId" name="paramReqStageId">
 </form>
 <form id="searchForm" name="searchForm" method="post">
