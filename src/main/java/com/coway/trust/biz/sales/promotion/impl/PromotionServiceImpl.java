@@ -157,7 +157,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		}
 		
 		for(SalesPromoDVO delVO : delSalesPromoDVOList) {
-			delVO.setPromoItmStusId(8);
+			delVO.setPromoItmStusId(SalesConstants.STATUS_INACTIVE);
 			promotionMapper.updateSalesPromoD(delVO);
 		}
 		
@@ -174,7 +174,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		}
 
 		for(SalesPromoFreeGiftVO delVO : delSalesPromoFreeGiftVOList) {
-			delVO.setPromoFreeGiftStusId(8);
+			delVO.setPromoFreeGiftStusId(SalesConstants.STATUS_INACTIVE);
 			promotionMapper.updateSalesPromoFreeGift(delVO);
 		}
 	}
@@ -187,7 +187,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		salesPromoMVO.setPromoMtchId(0);
 		salesPromoMVO.setPromoDtFrom(CommonUtils.changeFormat(promoDtFrom, SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
 		salesPromoMVO.setPromoDtEnd(CommonUtils.changeFormat(promoDtEnd,  SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
-		salesPromoMVO.setPromoStusId(1);
+		salesPromoMVO.setPromoStusId(SalesConstants.STATUS_ACTIVE);
 		salesPromoMVO.setPromoUpdUserId(sessionVO.getUserId());
 		salesPromoMVO.setPromoIsTrialCnvr(0);
 	}
@@ -198,7 +198,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			for(SalesPromoDVO addVo : salesPromoDVOList) {
 				addVo.setPromoId(promoId);
 				addVo.setPromoItmCurId(0);
-				addVo.setPromoItmStusId(1);
+				addVo.setPromoItmStusId(SalesConstants.STATUS_ACTIVE);
 				addVo.setPromoItmUpdUserId(sessionVO.getUserId());
 				addVo.setCrtUserId(sessionVO.getUserId());
 				addVo.setUpdUserId(sessionVO.getUserId());
@@ -212,7 +212,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			for(SalesPromoFreeGiftVO addVo : salesPromoFreeGiftVOList) {
 				addVo.setPromoFreeGiftPromoId(promoId);
 				addVo.setPromoFreeGiftCrtUserId(sessionVO.getUserId());
-				addVo.setPromoFreeGiftStusId(1);
+				addVo.setPromoFreeGiftStusId(SalesConstants.STATUS_ACTIVE);
 			}
 		}
 	}

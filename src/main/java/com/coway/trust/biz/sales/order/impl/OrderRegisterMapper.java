@@ -52,6 +52,8 @@ public interface OrderRegisterMapper {
 
 	EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params);
 	
+	EgovMap selectProductPromotionPriceByPromoStockIDNew(Map<String, Object> params);
+	
 	EgovMap selectTrialNo(Map<String, Object> params);
 	
 	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);

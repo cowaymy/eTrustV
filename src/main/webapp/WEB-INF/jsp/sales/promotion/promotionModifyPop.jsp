@@ -129,7 +129,11 @@
 
             Common.alert("Promotion Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
-            fn_chgPageMode('VIEW');
+//          fn_chgPageMode('VIEW');
+           
+            fn_selectPromoListAjax();
+
+            $('#btnClosePop').click();
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {

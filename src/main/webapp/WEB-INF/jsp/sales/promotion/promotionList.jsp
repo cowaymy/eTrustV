@@ -3,11 +3,13 @@
 
 <script type="text/javaScript" language="javascript">
 
-	//AUIGrid 생성 후 반환 ID
-	var listGridID;
-	var listStckGridID, listGiftGridID;
+    //AUIGrid 생성 후 반환 ID
+    var listGridID;
+    var listStckGridID, listGiftGridID;
     
     var keyValueList = [{"code":"1", "value":"Active"}, {"code":"8", "value":"Inactive"}];
+
+    var timerId = null;
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
@@ -16,19 +18,38 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
-            fn_setDetail(listGridID, event.rowIndex);
+            Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(listGridID, event.rowIndex, "promoId") });
         });
         
         // 셀 클릭 이벤트 바인딩
-        AUIGrid.bind(listGridID, "cellClick", function(event) {
-            fn_setDetail2(listGridID, event.rowIndex);
-        });
+        AUIGrid.bind(listGridID, "selectionChange", auiGridSelectionChangeHandler);
         
         doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Common Code
         doGetCombo('/common/selectCodeList.do',  '76', '', 'list_promoTypeId',    'M', 'fn_multiCombo'); //Promo Type
     });
 
+    function auiGridSelectionChangeHandler(event) { 
     
+        // 200ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
+        if(timerId) {
+            clearTimeout(timerId);
+        }
+        
+        timerId = setTimeout(function() {
+            var selectedItems = event.selectedItems;
+            if(selectedItems.length <= 0)
+                return;
+            
+            var rowItem = selectedItems[0].item; // 행 아이템들
+            var promoId = rowItem.promoId; // 선택한 행의 고객 ID 값
+            var promoAppTypeId = rowItem.promoAppTypeId; // 선택한 행의 고객 ID 값
+            
+            fn_selectPromotionPrdListForList2(promoId, promoAppTypeId);
+            fn_selectPromotionFreeGiftListForList2(promoId);
+            
+        }, 200);  // 현재 200ms 민감도....환경에 맞게 조절하세요.
+    };
+
     function fn_delApptype() {
         $("#promoAppTypeId").find("option").each(function() {
             if(this.value == '2286') {
@@ -39,7 +60,7 @@
     
     function createAUIGrid() {
         
-    	//AUIGrid 칼럼 설정
+        //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "Application<br>Type",  dataField : "promoAppTypeName", editable : false,   width : 100 }
           , { headerText : "Promotion<br>Type",    dataField : "promoTypeName",    editable : false,   width : 100 }
@@ -50,20 +71,20 @@
           , { headerText : "Status",            dataField : "promoStusId",      editable : true,    width : 80
             , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                   var retStr = "";
-                        		  for(var i=0,len=keyValueList.length; i<len; i++) {
-                        			  if(keyValueList[i]["code"] == value) {
-                        				  retStr = keyValueList[i]["value"];
-                        			      break;
-                        		      }
-                        		  }
-                        	      return retStr == "" ? value : retStr;
+                                  for(var i=0,len=keyValueList.length; i<len; i++) {
+                                      if(keyValueList[i]["code"] == value) {
+                                          retStr = keyValueList[i]["value"];
+                                          break;
+                                      }
+                                  }
+                                  return retStr == "" ? value : retStr;
                               }
             , editRenderer : {
-    		      type       : "ComboBoxRenderer",
-    			  list       : keyValueList, //key-value Object 로 구성된 리스트
-    			  keyField   : "code", // key 에 해당되는 필드명
-    			  valueField : "value" // value 에 해당되는 필드명
-    		  }}
+                  type       : "ComboBoxRenderer",
+                  list       : keyValueList, //key-value Object 로 구성된 리스트
+                  keyField   : "code", // key 에 해당되는 필드명
+                  valueField : "value" // value 에 해당되는 필드명
+              }}
           , { headerText : "promoId",        dataField : "promoId",        visible : false}
           , { headerText : "promoAppTypeId", dataField : "promoAppTypeId", visible : false}
           ];
@@ -91,7 +112,7 @@
 
     function createAUIGridStk() {
         
-    	//AUIGrid 칼럼 설정
+        //AUIGrid 칼럼 설정
         var columnLayoutPrd = [
             { headerText : "Product CD",    dataField  : "itmcd",   width : 100 }
           , { headerText : "Product Name",  dataField  : "itmname"              }
@@ -107,7 +128,7 @@
           , { headerText : "promoItmId",    dataField   : "promoItmId",       visible : false, width : 80 }
           ];
 
-    	//AUIGrid 칼럼 설정
+        //AUIGrid 칼럼 설정
         var columnLayoutGft = [
             { headerText : "Product CD",    dataField : "itmcd",              width : 100 }
           , { headerText : "Product Name",  dataField : "itmname",                        }
@@ -140,11 +161,13 @@
     
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
+        console.log('cellDoubleClick');
         Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(gridID, rowIdx, "promoId") });
     }
     
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail2(gridID, rowIdx){
+        console.log('cellClick');
         fn_selectPromotionPrdListForList2(AUIGrid.getCellValue(gridID, rowIdx, "promoId"), AUIGrid.getCellValue(gridID, rowIdx, "promoAppTypeId"));
         fn_selectPromotionFreeGiftListForList2(AUIGrid.getCellValue(gridID, rowIdx, "promoId"));
     }
@@ -196,10 +219,10 @@
             fn_doSaveStatus();
         });
         $('#btnSrch').click(function() {
-        	fn_selectPromoListAjax();
+            fn_selectPromoListAjax();
         });
         $('#btnClear').click(function() {
-        	$('#listSearchForm').clearForm();
+            $('#listSearchForm').clearForm();
         });
     });
 
@@ -250,15 +273,15 @@
         });
     };
 </script>
-		
+        
 <!--****************************************************************************
     CONTENT START
 *****************************************************************************-->
 <section id="content">
 <ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Sales</li>
+    <li>Order list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -267,8 +290,8 @@
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
     <li><p class="btn_blue"><a id="btnSaveStatus" href="#">Save</a></p></li>
-	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -279,41 +302,41 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:180px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Promotion Application</th>
-	<td>
-	<select id="list_promoAppTypeId" name="promoAppTypeId" class="multy_select w100p" multiple="multiple"></select>
-	</td>
-	<th scope="row">Promotion Type</th>
-	<td>
-	<select id="list_promoTypeId" name="promoTypeId" class="multy_select w100p" multiple="multiple"></select>
-	</td>
-	<th scope="row">Effective Date</th>
-	<td>
-	<input id="list_promoDt" name="promoDt" type="text" title="Create Promotion Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
-	</td>
+    <th scope="row">Promotion Application</th>
+    <td>
+    <select id="list_promoAppTypeId" name="promoAppTypeId" class="multy_select w100p" multiple="multiple"></select>
+    </td>
+    <th scope="row">Promotion Type</th>
+    <td>
+    <select id="list_promoTypeId" name="promoTypeId" class="multy_select w100p" multiple="multiple"></select>
+    </td>
+    <th scope="row">Effective Date</th>
+    <td>
+    <input id="list_promoDt" name="promoDt" type="text" title="Create Promotion Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
+    </td>
 </tr>
 <tr>
-	<th scope="row">Status</th>
-	<td>
-	<select id="list_promoStusId" name="promoStusId" class="w100p">
-		<option value="">Choose One</option>
-		<option value="1">Active</option>
-		<option value="8">Inactive</option>
-	</select>
-	</td>
-	<th scope="row">Promotion Code</th>
-	<td><input id="list_promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Promotion Name</th>
-	<td><input id="list_promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Status</th>
+    <td>
+    <select id="list_promoStusId" name="promoStusId" class="w100p">
+        <option value="">Choose One</option>
+        <option value="1">Active</option>
+        <option value="8">Inactive</option>
+    </select>
+    </td>
+    <th scope="row">Promotion Code</th>
+    <td><input id="list_promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Promotion Name</th>
+    <td><input id="list_promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -321,30 +344,30 @@
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn"><a href="#">menu2</a></p></li>
-		<li><p class="link_btn"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn"><a href="#">menu8</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-	</ul>
-	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn"><a href="#">menu2</a></p></li>
+        <li><p class="link_btn"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+    </ul>
+    <ul class="btns">
+        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
+        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
+        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
 
@@ -354,9 +377,9 @@
 <section class="search_result"><!-- search_result start -->
 <!--
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">CANCEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
-	<li><p class="btn_grid"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_grid"><a href="#">CANCEL</a></p></li>
+    <li><p class="btn_grid"><a href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a href="#">SAVE</a></p></li>
 </ul>
 -->
 <article class="grid_wrap"><!-- grid_wrap start -->

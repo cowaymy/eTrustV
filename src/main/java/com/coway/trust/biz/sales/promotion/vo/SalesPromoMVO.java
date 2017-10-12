@@ -62,6 +62,8 @@ public class SalesPromoMVO implements Serializable {
 	private int empChk;
 	
 	private int exTrade;
+	
+	private int isNew;
 
 	public int getPromoId() {
 		return promoId;
@@ -253,6 +255,14 @@ public class SalesPromoMVO implements Serializable {
 
 	public void setExTrade(int exTrade) {
 		this.exTrade = exTrade;
+	}
+
+	public int getIsNew() {
+		return isNew;
+	}
+
+	public void setIsNew(int isNew) {
+		this.isNew = isNew;
 	}
 	
 }

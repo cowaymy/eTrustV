@@ -1052,7 +1052,7 @@
                 grpCode                 : $('#grpCd').val().trim(),
                 instPriod               : $('#installDur').val().trim(),
                 memId                   : $('#hiddenSalesmanId').val().trim(),
-                mthRentAmt              : $('#ordRentalFees').val().trim(),
+                mthRentAmt              : $('#ordRentalFees').val().trim(), //2017.10.12 ordRentalFees 또는 orgOrdRentalFees 아직 미결정
                 orgCode                 : $('#orgCd').val().trim(),
                 promoId                 : $('#ordPromo').val(),
                 refNo                   : $('#refereNo').val().trim(),
@@ -1062,7 +1062,12 @@
                 salesOrdIdOld           : $('#txtOldOrderID').val(),
                 salesSmId               : $('#grpMemId').val().trim(),
                 totAmt                  : $('#ordPrice').val().trim(),
-                totPv                   : $('#ordPv').val().trim()
+                totPv                   : $('#ordPv').val().trim(),
+                discRntFee              : $('#ordRentalFees').val().trim(),
+                norAmt                  : $('#orgOrdPrice').val().trim(),
+                norRntFee               : $('#orgOrdRentalFees').val().trim(),
+                promoDiscPeriodTp       : $('#promoDiscPeriodTp').val().trim(),
+                promoDiscPeriod         : $('#promoDiscPeriod').val().trim()
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
@@ -1652,9 +1657,12 @@
                 $("#ordPv").removeClass("readonly");
                 $("#ordRentalFees").removeClass("readonly");
 
-                $("#ordPrice").val(promoPriceInfo.orderPrice);
-                $("#ordPv").val(promoPriceInfo.orderPV);
-                $("#ordRentalFees").val(promoPriceInfo.orderRentalFees);
+                $("#ordPrice").val(promoPriceInfo.orderPricePromo);
+                $("#ordPv").val(promoPriceInfo.orderPVPromo);
+                $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+
+                $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
+                $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
             }
         });
     }
@@ -1695,6 +1703,14 @@
                 $("#ordPv").val(stkPriceInfo.orderPV);
                 $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#ordPriceId").val(stkPriceInfo.priceId);
+
+                $("#orgOrdPrice").val(stkPriceInfo.orderPrice);
+                $("#orgOrdPv").val(stkPriceInfo.orderPV);
+                $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
+                $("#orgOrdPriceId").val(stkPriceInfo.priceId);
+                
+                $("#promoDiscPeriodTp").val('');
+                $("#promoDiscPeriod").val('');
             }
         });
     }
@@ -2150,7 +2166,12 @@
 <tr>
     <th scope="row">Price/RPF (RM)</th>
     <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
-        <input id="ordPriceId" name="ordPriceId" type="hidden" /></td>
+        <input id="ordPriceId"        name="ordPriceId"        type="hidden" />
+        <input id="orgOrdPrice"       name="orgOrdPrice"       type="text" />
+        <input id="orgOrdPv"          name="orgOrdPv"          type="text" />
+        <input id="orgOrdRentalFees"  name="orgOrdRentalFees"  type="text" />
+        <input id="promoDiscPeriodTp" name="promoDiscPeriodTp" type="text" />
+        <input id="promoDiscPeriod"   name="promoDiscPeriod"   type="text" /></td>
     <th scope="row">Group Code</th>
     <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
         <input id="grpMemId" name="grpMemId" type="hidden" /></td>

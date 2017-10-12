@@ -124,23 +124,50 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<EgovMap> selectPromotionByAppTypeStock(Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		
+		params.put("appTypeId", CommonUtils.changePromoAppTypeId(Integer.parseInt((String) params.get("appTypeId"))));
+		
 		return orderRegisterMapper.selectPromotionByAppTypeStock(params);
 	}
 	
 	@Override
 	public EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params) {
 
-		EgovMap priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params);
+		BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderRentalFeesPromo = BigDecimal.ZERO;
 		
-		BigDecimal orderPrice, orderPV, orderRentalFees;
+		EgovMap priceInfo = null;
 		
-		orderPrice      = (BigDecimal)priceInfo.get("promoItmPrc");
-		orderPV         = (BigDecimal)priceInfo.get("promoItmPv");
-		orderRentalFees = ((BigDecimal)priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal)priceInfo.get("promoItmRental") : BigDecimal.ZERO;
+		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String)params.get("promoId")));
 		
-		priceInfo.put("orderPrice", new DecimalFormat("0.00").format(orderPrice));
-		priceInfo.put("orderPV", new DecimalFormat("0.00").format(orderPV));
-		priceInfo.put("orderRentalFees", new DecimalFormat("0.00").format(orderRentalFees));
+		int isNew = CommonUtils.intNvl(promoMap.get("isNew"));
+		
+		if(isNew == 1) {
+			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNew(params); //New Data(2018.01.01~)
+			
+			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal)priceInfo.get("promoAppTypeId")))) { //Rental
+				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
+				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
+			}
+			else {
+				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
+				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+				orderRentalFeesPromo = BigDecimal.ZERO;
+			}
+		}
+		else {
+			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params); //AS-IS Data(~2017.12.31)
+			
+			orderPricePromo      = (BigDecimal)priceInfo.get("amt");
+			orderPVPromo         = (BigDecimal)priceInfo.get("prcPv");
+			orderRentalFeesPromo = ((BigDecimal)priceInfo.get("prcRpf")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal)priceInfo.get("promoItmRental") : BigDecimal.ZERO;
+		}
+		
+		priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
+		priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
+		priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
+		priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
+		priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
 		
 		return priceInfo;
 	}

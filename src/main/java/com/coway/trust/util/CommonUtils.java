@@ -26,6 +26,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.web.common.CommonController;
+import com.coway.trust.web.sales.SalesConstants;
 
 /**
  * <pre>
@@ -944,5 +945,43 @@ public final class CommonUtils {
 		return clientIp;
 	}
 	
+/*
+66	 --> 2284 REN	: Rental
+67	 --> 2285 OUT	: Outright
+68	 --> 2286 INS	: Installment
+1412 --> 2287 OUTPLS: Outright Plus
+1036 --> 2288 OSVM	: Outright SVM(X)
+1330 --> 2289 RSVM	: Rental SVM(X)
+1035 --> 2290 FIL	: Expired Filter(X)
+ */
+	public static int changePromoAppTypeId(int iAppTypeId) {
+		int iPromoAppTypeId = 0;
+		
+		if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_REN;
+		}
+		else if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT) {
+			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT;
+		}
+		else if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
+			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_INS;
+		}
+		else if(iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS) {
+			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS;
+		}		
+		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN) {
+			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_RENTAL;
+		}
+		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT) {
+			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT;
+		}
+		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_INS) {
+			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT;
+		}
+		else if(iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS) {
+			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS;
+		}
 
+		return iPromoAppTypeId;
+	}
 }

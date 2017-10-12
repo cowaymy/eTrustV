@@ -5,6 +5,9 @@ public class SalesConstants {
 	public static final int IS_FALSE = 0;
 	public static final int IS_TRUE  = 1;
 	
+	public static final int STATUS_ACTIVE = 1;
+	public static final int STATUS_INACTIVE  = 8;
+	
 	public static final String DEFAULT_DATE = "01/01/1900";	
 	public static final String DEFAULT_DATE2 = "1900-01-01";	
 	public static final String DEFAULT_DATE3 = "19000101";	
