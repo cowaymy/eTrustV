@@ -68,4 +68,18 @@ public interface CommDeductionMapper {
 	 * @return
 	 */
 	List<EgovMap> selectLogDetail(Map<String, Object> params);
+	
+	/**
+	 * paymentResult에 대한 Detail
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectDetailForPaymentResult(Map<String, Object> params);
+	
+	/**
+	 * createPaymentProcedure
+	 * @param params
+	 * @return
+	 */
+	void createPaymentProcedure(Map<String, Object> params);
 }

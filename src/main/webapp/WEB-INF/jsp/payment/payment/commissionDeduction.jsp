@@ -5,11 +5,15 @@
 var mainGrid;
 var subGrid1;
 var subGrid2;
+var subGrid3;
 var selectedGridValue;
 
 $(document).ready(function(){
     
     mainGrid = GridCommon.createAUIGrid("#grid_wrap_main", columnLayout, null, gridPros);
+    subGrid1 = GridCommon.createAUIGrid("#grid_wrap_sub1", columnLayoutForSub1, null, gridProsForSub);
+    subGrid2 = GridCommon.createAUIGrid("#grid_wrap_sub2", columnLayoutForSub2, null, gridProsForSub);
+    subGrid3 = GridCommon.createAUIGrid("#grid_wrap_sub3", columnLayoutForSub3, null, gridPros);
     
     Common.ajax("GET", "/payment/selectCommDeduction.do", {}, function(result){
         AUIGrid.setGridData(mainGrid, result);
@@ -19,6 +23,19 @@ $(document).ready(function(){
     AUIGrid.bind(mainGrid, "cellClick", function( event ){ 
     	selectedGridValue = event.rowIndex;
     });  
+    
+    AUIGrid.bind(subGrid2, "cellClick", function(event){
+    	$("#grid_wrap_sub3").show();
+    	var payId = AUIGrid.getCellValue(subGrid2, event.rowIndex, "payId");
+    	Common.ajax("GET", "/payment/selectDetailForPaymentResult.do", {"payId" : payId}, function(result){
+            AUIGrid.setGridData(subGrid3, result);
+            AUIGrid.resize(subGrid3,1200, 280);
+        });
+    });
+    
+    $("#grid_wrap_sub1").hide();
+    $("#grid_wrap_sub2").hide();
+    $("#grid_wrap_sub3").hide();
 });
 
 var gridPros = {
@@ -28,7 +45,7 @@ var gridPros = {
         height:200
 };
 
-var girdProsForSub = {
+var gridProsForSub = {
         editable: false,
         showStateColumn: false,
         pageRowCount : 10
@@ -37,7 +54,7 @@ var girdProsForSub = {
 var columnLayout=[
        {dataField:"fileId", headerText:"File No"},
        {dataField:"fileName", headerText:"File Name"},
-       {dataField:"fileDt", headerText:"Upload date"},
+       {dataField:"fileDt", headerText:"Upload date",dataType:"date",formatString:"dd-mm-yyyy"},
        {dataField:"fileRefNo", headerText:"File Type"},
        {dataField:"totRcord", headerText:"Total Records"},
        {dataField:"totAmt", headerText:"Total Amount"},
@@ -70,34 +87,73 @@ var columnLayoutForSub2=[
        {dataField:"keyinUserName", headerText:"UserName"}
 ];
 
+var columnLayoutForSub3=[
+	   {dataField:"payId", headerText:"PayID", visible:false},
+	   {dataField:"payItmId", headerText:"ItemID", visible:false},
+       {dataField:"codeName", headerText:"Mode"},
+       {dataField:"payItmRefNo", headerText:"RefNo"},
+       {dataField:"payItmCCTypeId", headerText:"CCType"},
+       {dataField:"payItmCcHolderName", headerText:"CCHolder"},
+       {dataField:"payItmCcExprDt", headerText:"CCExpiryDate"},
+       {dataField:"payItmChqNo", headerText:"ChequeNo"},
+       {dataField:"bank", headerText:"IssueBank"},
+       {dataField:"payItmAmt", headerText:"Amount"},
+       {dataField:"payItmIsOnline", headerText:"On-Line"},
+       {dataField:"accDesc", headerText:"BankAccount"},
+       {dataField:"payItmRefDt", headerText:"RefDate", dataType:"date", formatString:"dd-mm-yyyy"},
+       {dataField:"payItmAppvNo", headerText:"ApprNo"},
+       {dataField:"payItmRem", headerText:"Remark"},
+       {dataField:"name1", headerText:"Status"},
+       {dataField:"payItmIsLok", headerText:"Locked"},
+       {dataField:"payItmBankChrgAmt", headerText:"BankChange"}
+];
+
 function fn_uploadFile(){
 	var formData = new FormData();
 	
 	formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
 	
 	Common.ajaxFile("/payment/csvUpload.do", formData, function(result){
-		Common.alert("완료!");
+		Common.alert(result);
 	});
 }
 
 function fn_viewResult(){
-    subGrid1 = GridCommon.createAUIGrid("#grid_wrap_sub1", columnLayoutForSub1, null, girdProsForSub);
-    subGrid2 = GridCommon.createAUIGrid("#grid_wrap_sub2", columnLayoutForSub2, null, girdProsForSub);
-    
+	
     if(selectedGridValue != undefined){
+    	$("#grid_wrap_sub1").show();
+        $("#grid_wrap_sub2").show();
+        $("#grid_wrap_sub3").hide();
+        
     	var fileNo = AUIGrid.getCellValue(mainGrid, selectedGridValue, "fileId");
     	Common.ajax("GET", "/payment/loadPaymentResult.do", {"fileId" : fileNo}, function(result){
     		AUIGrid.setGridData(subGrid2, result);
+    		AUIGrid.resize(subGrid2,1200, 280);
         });
     	
     	Common.ajax("GET", "/payment/loadRawItemsStatus.do", {"fileId" : fileNo}, function(result){
             AUIGrid.setGridData(subGrid1, result);
+            AUIGrid.resize(subGrid1,1200, 280);
         });
     }else{
     	Common.alert("Select a file.");
     }
 }
 
+function fn_createPayment(){
+	if(selectedGridValue != undefined){
+		var fileNo = AUIGrid.getCellValue(mainGrid, selectedGridValue, "fileId");
+		Common.ajax("GET", "/payment/createPayment.do", {"fileId" : fileNo}, function(result){
+			Common.alert(result);
+        });
+	}else{
+		return;
+	}
+}
+
+function fn_clickArea1(){
+	$("#grid_wrap_sub3").hide();
+}
 </script>
 
 
@@ -136,21 +192,23 @@ function fn_viewResult(){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Raw File Items Status</a></li>
+    <li><a href="#" class="on" onclick="fn_clickArea1()">Raw File Items Status</a></li>
     <li><a href="#">Payment Results</a></li>
 </ul>
 
-<article class="tap_area"><!-- tap_area start -->
+<article class="tap_area" id="tap_area1"><!-- tap_area start -->
 	<article class="grid_wrap" id="grid_wrap_sub1"><!-- grid_wrap start -->
 	</article><!-- grid_wrap end -->
 </article><!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start -->
+<article class="tap_area" id="tap_area2"><!-- tap_area start -->
 	<article class="grid_wrap " id="grid_wrap_sub2"><!-- grid_wrap start -->
 	</article><!-- grid_wrap end -->
+	
+	<article class="grid_wrap " id="grid_wrap_sub3"><!-- grid_wrap start -->
+    </article><!-- grid_wrap end -->
 </article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
-
 </section><!-- content end -->
 

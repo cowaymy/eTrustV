@@ -119,7 +119,8 @@ public class CommDeductionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/csvUpload.do", method = RequestMethod.POST)
-	public ResponseEntity csvUpload(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
+	public ResponseEntity<ReturnMessage> csvUpload(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
+		ReturnMessage mes = new ReturnMessage();
 		String message = "";
 		
 		if(sessionVO.getUserId() > 0){
@@ -175,7 +176,10 @@ public class CommDeductionController {
 		}else{
 			message = "Your login session has expired. Please relogin to our system.";
 		}
-		return ResponseEntity.ok(HttpStatus.OK);
+		mes.setCode(AppConstants.SUCCESS);
+    	mes.setMessage(message);
+    	
+		return ResponseEntity.ok(mes);
 	}
 	
 	private int sumAmount(List<CommDeductionVO> list){
@@ -227,4 +231,60 @@ public class CommDeductionController {
         return ResponseEntity.ok(logList);
 	}
 	
+	/**
+	 * PaymentResult에 대한 Detail 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectDetailForPaymentResult.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectDetailForPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		//검색 파라미터 확인.(화면 Form객체 입력값)
+        LOGGER.debug("params : {}", params);
+        
+        List<EgovMap> list = commDeductionService.selectDetailForPaymentResult(params);
+
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(list.get(0));
+	}
+	
+	
+	/**
+	 * PaymentResult에 대한 Detail 조회
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/createPayment.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> createPayment(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		ReturnMessage mes = new ReturnMessage();
+		//검색 파라미터 확인.(화면 Form객체 입력값)
+        LOGGER.debug("params : {}", params);
+        String message = "";
+        int userId = sessionVO.getUserId();
+        
+        if(userId > 0){
+        
+        	EgovMap master = commDeductionService.selectCommitionDeduction(params).get(0);
+        	if("1".equals(String.valueOf(master.get("fileStus")))){
+        		master.put("userId", userId);
+//        		commDeductionService.createPaymentProcedure(master);
+//        		String reValue = String.valueOf(master.get("p1"));
+//        		if(reValue.equals("1")){
+//        			message = "Payment Items Created Successfully.";
+//        		}else{
+//        			message = "Failed to save.  Please try again later.";
+//        		}
+        	}else{
+        		message = "Already Completed.";
+        	}
+        }else{
+        	message = "Your login session has expired. Please relogin to our system.";
+        }
+        mes.setCode(AppConstants.SUCCESS);
+    	mes.setMessage(message);
+        // 조회 결과 리턴.
+    	return ResponseEntity.ok(mes);
+	}
 }

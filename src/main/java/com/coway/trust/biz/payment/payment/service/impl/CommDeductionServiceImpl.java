@@ -62,7 +62,8 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectExistLogMList(Map<String, Object> params) {
 		return commDeductionMapper.selectExistLogMList(params);
 	}
-	
+	@Override
+	@Transactional
 	public int addBulkData(Map<String, Object> master, List<Map<String, Object>> detail){
 		
 		List list = this.selectExistLogMList(master);
@@ -76,14 +77,13 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 			master.put("fileRefNo", refNo + "1");
 		}
 		
-		//this.insertMaster(master);
-		master.put("fileId", 0); //tmp
+		this.insertMaster(master);
 		System.out.println("master : " + master);
 		
 		for(int i=0; i<detail.size(); i++){
 			detail.get(i).put("fileId", master.get("fileId"));
 			detail.get(i).put("syncCompleted", false);
-			//this.insertDetail(detail.get(i));
+			this.insertDetail(detail.get(i));
 			System.out.println(detail.get(i));
 		}
 		
@@ -108,6 +108,17 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<EgovMap> selectLogDetail(Map<String, Object> params) {
 		return commDeductionMapper.selectLogDetail(params);
+	}
+
+	@Override
+	public List<EgovMap> selectDetailForPaymentResult(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return commDeductionMapper.selectDetailForPaymentResult(params);
+	}
+
+	@Override
+	public void createPaymentProcedure(Map<String, Object> params) {
+		commDeductionMapper.createPaymentProcedure(params);
 	}
 
 }
