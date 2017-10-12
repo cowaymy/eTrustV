@@ -221,6 +221,19 @@
             });
         };
     
+    function fn_ctAssignment(){
+    	if(detailForm.reqId.value == ""){
+            Common.alert("No cancellation request selected.");
+            return false;
+        }else{
+        	if(detailForm.paramCallStusId.value == '24'){
+                Common.alert("[" +detailForm.paramReqNo.value+ "] is requested on stage [Before Install] </br> Only request after install is allow to re-assign CT.");
+                return false;
+            }
+        	Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null , true, '_CTDiv');
+        }
+    	
+    }
 </script>
 
 
@@ -236,7 +249,7 @@
 <h2>Order Cancellation</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()">New Log Result</a></p></li>
-<!--     <li><p class="btn_blue"><a href="#">CT Assignment</a></p></li> -->
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_ctAssignment()">CT Assignment</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"  onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
