@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.mambership.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,56 @@ public class MembershipPackageMServiceImpl extends EgovAbstractServiceImpl imple
 	}
 	
 
+	@Override
+	public List<EgovMap> IsExistSVMPackage(Map<String, Object> params) {
+		return membershipPackageMMapper.IsExistSVMPackage(params); 
+	} 
+	
+	
+	
+
+	@Override
+	public EgovMap getSAL0081D_SEQ(Map<String, Object> params) {
+		return membershipPackageMMapper.getSAL0081D_SEQ(params);
+	}
+	
+	 
+	@Override 
+	public int  SAL0081D_insert(Map<String, Object> params) {  
+		
+		 //채번 
+		 String  SEQ = String.valueOf(membershipPackageMMapper.getSAL0081D_SEQ(params).get("seq"));  
+		 params.put("SRV_CNTRCT_PAC_ID", SEQ);
+		 
+		 //master 
+		 int o = membershipPackageMMapper.SAL0081D_insert(params) ;
+		 
+		 if(o > 0){
+			 
+			    List<EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		    	
+				int r=0;
+		    	if (addItemList.size() > 0) {  
+					for (int i = 0; i < addItemList.size(); i++) {
+						
+						Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
+						Map<String, Object> iMap = new HashMap();
+					    
+						iMap.put("srvContractPacID", SEQ);
+				        iMap.put("srvPacItemProductID", updateMap.get("stockID"));
+				        iMap.put("srvPacItemServiceFreq", updateMap.get("serviceFreq"));  
+				        iMap.put("srvPacItemRental", updateMap.get("rentalFee") );
+				        iMap.put("srvPacItemRemark", updateMap.get("remark"));
+				        iMap.put("srvPacItemStatusID", updateMap.get("code"));
+				        iMap.put("updator",params.get("updator") );
+				        
+						r = membershipPackageMMapper.SAL0082D_insert(iMap) ;
+					}
+				}
+		 }
+    	
+		return o ;
+	}
 	
 	
 	

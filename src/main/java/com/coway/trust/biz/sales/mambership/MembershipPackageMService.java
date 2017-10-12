@@ -17,7 +17,9 @@ public interface MembershipPackageMService {
 	List<EgovMap> selectList(Map<String, Object> params);
 	
 	List<EgovMap> selectPopDetail(Map<String, Object> params);
-	
+
+	int  SAL0081D_insert(Map<String, Object> params);
+
 	int  SAL0081D_update(Map<String, Object> params);
 	
 	List<EgovMap> selectPopUpList(Map<String, Object> params);
@@ -32,6 +34,13 @@ public interface MembershipPackageMService {
 	List<EgovMap> selectGroupCode(Map<String, Object> params);
 
 	List<EgovMap> selectGroupCodeGroupby(Map<String, Object> params);
+	
+	List<EgovMap> IsExistSVMPackage(Map<String, Object> params);
+	EgovMap  getSAL0081D_SEQ(Map<String, Object> params);
 
+	
+	
+
+	
 }
    

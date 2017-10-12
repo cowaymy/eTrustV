@@ -158,6 +158,52 @@ public class  MembershipRentalController {
 	
 	
 
+
+	@RequestMapping(value = "/inc_mRQuotInfo.do")
+	public String inc_mRQuotInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  inc_mRQuotInfo.do ");  
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		
+		return "sales/membership/inc_mRentalQuoInfoPop";  
+		
+	}
+	
+
+	@RequestMapping(value = "/inc_mRQFilterInfo.do")
+	public String inc_mRQFilterInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  inc_mRQFilterInfo.do ");  
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		
+		return "sales/membership/inc_mRQuotFilterInfoPop";  
+		
+	}
+	
+
+	@RequestMapping(value = "/inc_mRConPerInfo.do")
+	public String inc_mRConPerInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  inc_mRConPerInfo.do ");  
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		
+		return "sales/membership/inc_mRContactPersonPop";  
+		
+	}
+	
+
 	@RequestMapping(value = "/mRLedgerPop.do")
 	public String mRLedgerPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		
@@ -216,6 +262,29 @@ public class  MembershipRentalController {
 		
 		Map<String, Object> map = new HashMap();
 		map.put("cSalesInfo", cSalesInfo);
+		
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	
+	
+
+	@RequestMapping(value = "/inc_mRQuotInfoData", method = RequestMethod.GET)
+	public ResponseEntity<Map>  inc_mRQuotInfoData(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+		logger.debug("in  inc_mRQuotInfoData ");
+		
+		EgovMap quotInfo = null;
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		quotInfo = membershipRentalService.selectQuotInfoInfo(params);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("quotInfo", quotInfo);
 		
 		return ResponseEntity.ok(map);
 		

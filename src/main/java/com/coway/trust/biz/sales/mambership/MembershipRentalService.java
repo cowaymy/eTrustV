@@ -39,7 +39,8 @@ public interface MembershipRentalService {
 	EgovMap selectOrderMailingInfo(Map<String, Object> params);
 	EgovMap usp_SELECT_ServiceContract_LedgerOutstanding(Map<String, Object> params);
 	EgovMap usp_SELECT_ServiceContract_Ledger(Map<String, Object> params);
-	
+	EgovMap selectQuotInfoInfo(Map<String, Object> params);
+
 	
 	
 	

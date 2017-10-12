@@ -64,7 +64,7 @@
 var vmrOrderResultObj;
 
 
-function fn_setMRentalOrderInfoData(_pram){
+function fn_setMRentalOrderInfoData(_pram ,V){
 
 	Common.ajax("GET", "/sales/membershipRental/inc_mROrderInfoData",{ORD_ID:_pram }, function(result) {
         console.log(result);
@@ -72,6 +72,11 @@ function fn_setMRentalOrderInfoData(_pram){
         if(result.orderInfo !="" ){
         	vmrOrderResultObj = result;
             fn_setMRentalOrderInfoSet();
+            
+            if(V=="B"){
+                
+            	fn_getDataCPerson(vmrOrderResultObj.orderInfo.custId);   // custId inc_mRContactPersonPop.jsp 조회 호출 
+            }
         }
  });
     

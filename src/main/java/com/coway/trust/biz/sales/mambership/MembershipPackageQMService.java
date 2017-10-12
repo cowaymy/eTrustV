@@ -32,6 +32,12 @@ public interface MembershipPackageQMService {
 	List<EgovMap> selectGroupCode(Map<String, Object> params);
 
 	List<EgovMap> selectGroupCodeGroupby(Map<String, Object> params);
+	
+	EgovMap  getSAL0091M_SEQ(Map<String, Object> params);
+	
+	int  SAL0091M_insert(Map<String, Object> params);
+	List<EgovMap> IsExistSVMPackage(Map<String, Object> params);
 
+	
 }
    

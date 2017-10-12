@@ -45,7 +45,21 @@ function createAUIGrid() {
         
         var columnLayout = [
                             {dataField : "srvMemPacId",     headerText  : "" ,editable       : false ,visible : false } ,
-                            { dataField : "srvMemCode", headerText  : "Package Code",    width : 200 ,editable : true},
+                            { dataField : "srvMemCode", headerText  : "Package Code",    width : 200 ,editable : true,
+								
+                                editRenderer : { 
+								      type : "InputEditRenderer", 
+								      // 에디팅 유효성 검사 
+								      validator : function(oldValue, newValue, rowItem) { 
+								          var isValid = true; 
+								          if(newValue.length > 12) { 
+								                isValid  = false; 
+								          } 
+								          // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움 
+								          return { "validate" : isValid, "message"  : "maxLength 12" }; 
+								      } 
+								} 
+                             },
                             { dataField : "srvMemDesc", headerText  : "Package Description",width : 200 ,editable       : true},
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
                                             , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
@@ -112,10 +126,10 @@ function createDetailAUIGrid() {
                             { dataField : "stkDesc", headerText  : "Product Name",width : 150,  editable: false },
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : false},
                             { dataField : "c1", headerText  : "price ",  width          : 100, editable       : false   ,dataType:"numeric", formatString : "#,##0.00"},
-                            { dataField : "srvMemItemPriod",headerText  : "Period",  width          : 100,   editable       : false },
+                            { dataField : "srvMemItmPriod",headerText  : "Period",  width          : 100,   editable       : false },
                             { dataField : "srvMemItmRem",         headerText  : "Remark",   width          : 300,     editable       : false  }
        ];
-
+        
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
         
         detailGridID = GridCommon.createAUIGrid("detail_list_grid_wrap", columnLayout  ,"" ,gridPros);
@@ -208,6 +222,8 @@ function fn_new(){
 
 //리스트 조회.
 function fn_selectListAjax() {        
+	
+	
 Common.ajax("GET", "/sales/mQPackages/selectList", $("#sForm").serialize(), function(result) {
 	       
 	    console.log(result);

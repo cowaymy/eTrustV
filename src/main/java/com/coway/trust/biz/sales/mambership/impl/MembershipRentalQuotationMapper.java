@@ -36,30 +36,42 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *  ----------------    ------------    ---------------------------
  *   2014.01.24        표준프레임워크센터          최초 생성
  *
- *      </pre>
+ *      </pre> 
  */
-@Mapper("membershipPackageQMMapper")
-public interface MembershipPackageQMMapper { 
+@Mapper("membershipRentalQuotationMapper")
+public interface MembershipRentalQuotationMapper {
 	
-	List<EgovMap>   selectList(Map<String, Object> params);
-	List<EgovMap>   selectPopDetail(Map<String, Object> params);
-	
-	int  SAL0091M_update(Map<String, Object> params);
-	
-	List<EgovMap>   selectPopUpList(Map<String, Object> params);
+	List<EgovMap>   quotationList(Map<String, Object> params);
+	List<EgovMap>   newConfirm(Map<String, Object> params);
+	List<EgovMap>   selCheckExpService(Map<String, Object> params);
 	
 	
-	int  SAL0092M_insert(Map<String, Object> params);
-	int  SAL0092M_update(Map<String, Object> params);
-	int  SAL0092M_delete(Map<String, Object> params);
-
-	List<EgovMap> selectGroupCode(Map<String, Object> params);
-	List<EgovMap> selectGroupCodeGroupby(Map<String, Object> params);
-	
-	EgovMap  getSAL0091M_SEQ(Map<String, Object> params);
-	int  SAL0091M_insert(Map<String, Object> params);
-	List<EgovMap>   IsExistSVMPackage(Map<String, Object> params);
 
 	
+	List<EgovMap>   newOListuotationList(Map<String, Object> params);
+	EgovMap    newGetExpDate(Map<String, Object> params);
+	List<EgovMap>   getSrvMemCode(Map<String, Object> params);
+	EgovMap    mPackageInfo(Map<String, Object> params);
+	List<EgovMap>   getPromotionCode(Map<String, Object> params);
+	EgovMap 	  getFilterCharge(Map<String, Object> params);
+	
+	List<EgovMap>   getFilterPromotionCode(Map<String, Object> params);
+	List<EgovMap>   getPromoPricePercent(Map<String, Object> params);
+	
+	List<EgovMap>   getOrderCurrentBillMonth(Map<String, Object> params);
+	
+	EgovMap  getOderOutsInfo(Map<String, Object> params);
+	
+	void  insertQuotationInfo(Map<String, Object> params);
+	 
+	EgovMap  getMembershipFilterChargeList(Map<String, Object> params);
+	
+	void  insertSrvMembershipQuot_Filter(Map<String, Object> params);
+
+	EgovMap   getSAL0093D_SEQ(Map<String, Object> params);
+
+	List<EgovMap>   mActiveQuoOrder(Map<String, Object> params);
+	
+	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);
 	
 }

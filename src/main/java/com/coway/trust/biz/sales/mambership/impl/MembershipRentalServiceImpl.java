@@ -90,7 +90,7 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 	public EgovMap selectPayBillingInfo(Map<String, Object> params) {
 		return membershipRentalMapper.selectPayBillingInfo(params);
 	}
-	
+	 
 	@Override
 	public EgovMap selectPayUnbillInfo(Map<String, Object> params) {
 		return membershipRentalMapper.selectPayUnbillInfo(params);
@@ -103,5 +103,10 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	
-
+	@Override
+	public EgovMap selectQuotInfoInfo(Map<String, Object> params) {
+		return membershipRentalMapper.selectQuotInfoInfo(params);
+	}
+	
+	
 }

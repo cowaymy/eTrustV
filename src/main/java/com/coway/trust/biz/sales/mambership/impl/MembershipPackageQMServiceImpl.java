@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.mambership.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,10 +43,7 @@ public class MembershipPackageQMServiceImpl extends EgovAbstractServiceImpl impl
 	public List<EgovMap> selectPopUpList(Map<String, Object> params) {
 		return membershipPackageQMMapper.selectPopUpList(params);
 	}
-	
-
-	
-	
+		
 	
 	
 	@Override 
@@ -88,4 +86,60 @@ public class MembershipPackageQMServiceImpl extends EgovAbstractServiceImpl impl
 		return membershipPackageQMMapper.selectGroupCodeGroupby(params);
 	}
 	
+	
+	@Override
+	public EgovMap getSAL0091M_SEQ(Map<String, Object> params) {
+		return membershipPackageQMMapper.getSAL0091M_SEQ(params);
+	}
+	
+	
+	@Override
+	public List<EgovMap> IsExistSVMPackage(Map<String, Object> params) {
+		return membershipPackageQMMapper.IsExistSVMPackage(params); 
+	}
+	 
+	
+	
+	
+	@Override 
+	public int  SAL0091M_insert(Map<String, Object> params) {  
+		
+		 //채번 
+		 String  SEQ = String.valueOf(membershipPackageQMMapper.getSAL0091M_SEQ(params).get("seq"));  
+		 params.put("SRV_MEM_PAC_ID", SEQ);
+		 
+		 //master 
+		 int o = membershipPackageQMMapper.SAL0091M_insert(params) ;
+		 
+		 if(o > 0){
+			 
+			    List<EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+		    	
+				int r=0;
+		    	if (addItemList.size() > 0) {  
+					for (int i = 0; i < addItemList.size(); i++) {
+						
+						Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
+						Map<String, Object> iMap = new HashMap();
+						
+				        iMap.put("SRV_MEM_PAC_ID", SEQ);
+				        iMap.put("SRV_MEM_ITM_STK_ID", updateMap.get("stkId"));
+				        iMap.put("SRV_MEM_ITM_PRC", updateMap.get("srvItemPrice"));  
+				        iMap.put("SRV_MEM_ITM_PV", "0");
+				        iMap.put("SRV_MEM_ITM_PRIOD", updateMap.get("srvItemPeriod"));
+				        iMap.put("SRV_MEM_ITM_REM", updateMap.get("srvRemark"));
+				        iMap.put("SRV_MEM_ITM_STUS_ID", updateMap.get("code")  );
+				        iMap.put("updator",params.get("updator") );
+				        
+						r = membershipPackageQMMapper.SAL0092M_insert(iMap) ;
+					}
+				}
+		 }
+    	
+		return o ;
+	}
+	
+	
+	
+
 }

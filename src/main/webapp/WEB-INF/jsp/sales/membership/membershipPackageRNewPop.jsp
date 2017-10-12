@@ -16,21 +16,6 @@ $(document).ready(function(){
     // 행 추가 이벤트 바인딩 
     AUIGrid.bind(newGridID, "addRow", auiAddRowHandler);
     
-    // 에디팅 시작 이벤트 바인딩
-    AUIGrid.bind(newGridID, "cellEditBegin", auiCellEditignHandler);
-
-    // 에디팅 정상 종료 이벤트 바인딩
-    AUIGrid.bind(newGridID, "cellEditEnd", auiCellEditignHandler);
-
-    // 에디팅 취소 이벤트 바인딩
-    AUIGrid.bind(newGridID, "cellEditCancel", auiCellEditignHandler);
-
-
-    // 행 삭제 이벤트 바인딩
-    AUIGrid.bind(newGridID, "removeRow", auiRemoveRowHandler);
-
-    
-    
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(newGridID, "removeRow", auiRemoveRowHandler);
     
@@ -107,7 +92,7 @@ function auiAddRowHandler(event) {}
 
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) {}
-function auiCellEditignHandler (event) {}
+
 
 function fn_addRow() {
 	 
@@ -118,11 +103,12 @@ function fn_addRow() {
 	 
 	 var item = new Object();
 	 
-	 item.stkId =$('select[name="packcode"]').val() ;
-	 item.stkDesc =$('select[name="packcode"] :selected').text();
+	 item.stockID =$('select[name="packcode"]').val() ;
+	 item.stockDesc =$('select[name="packcode"] :selected').text();
 	 item.code =1;
 	 
-     if( AUIGrid.isUniqueValue (newGridID,"stkId" ,$('select[name="packcode"]').val())){
+	 
+     if( AUIGrid.isUniqueValue (newGridID,"stockID" ,$('select[name="packcode"]').val())){
           AUIGrid.addRow(newGridID, item, "first");
     }else{
         Common.alert("<b>This product item is exist in list. </b>");
@@ -138,13 +124,15 @@ function fn_removeRow() {
 }
 
 
+
+
 function createAUIGrid() {
     
        var keyValueList = [{"code":"1", "value":"ACT"}, {"code":"8", "value":"IACT"}];
         
         var columnLayout = [
-                            {dataField : "stkId",     headerText  : "ID" ,editable       : false ,visible : true, editable : false } ,
-                            { dataField : "stkDesc", headerText  : "Product Name",    width : 200 ,editable : false},
+                            {dataField : "stockID",     headerText  : "ID" ,editable       : false ,visible : true, editable : false } ,
+                            { dataField : "stockDesc", headerText  : "Product Name",    width : 200 ,editable : false},
                             { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
 			                                , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
 			                                 var retStr = "";
@@ -164,9 +152,9 @@ function createAUIGrid() {
 			                         }
 			                },
                             
-                            { dataField : "srvItemPrice", headerText  : "Item Price",width : 100 ,editable       : true ,dataType:"numeric", formatString : "#,##0.00"},
-                            { dataField : "srvItemPeriod",       headerText  : "Service Frequency",  width  : 150  ,editable       : true ,dataType:"numeric", formatString : "#,##0.00"},
-                            { dataField : "srvRemark",     headerText  : "Remark",  width          :300,    editable       : true}
+                            { dataField : "rentalFee", headerText  : "Monthly Rental",width : 100 ,editable       : true ,dataType:"numeric", formatString : "#,##0.00"},
+                            { dataField : "serviceFreq",       headerText  : "Service Frequency",  width  : 150  ,editable       : true ,dataType:"numeric", formatString : "#,##0.00"},
+                            { dataField : "remark",     headerText  : "Remark",  width          :300,    editable       : true}
        ];
 
         var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
@@ -197,12 +185,14 @@ function fn_Save(){
        "add" : addedRowItems,
        "update" : editedRowItems,
        "remove" : removedRowItems,
-       "txtServCode" : $("#txtServCode").val()  ,
-       "txtServDesc" : $("#txtServDesc").val() ,
-       "txtDuration" :  $("#txtDuration").val() 
+       "SRV_CNTRCT_PAC_CODE" : $("#SRV_CNTRCT_PAC_CODE_POP").val()  ,
+       "SRV_CNTRCT_PAC_DUR" : $("#SRV_CNTRCT_PAC_DUR_POP").val() ,
+       "SRV_CNTRCT_PAC_DESC" :  $("#SRV_CNTRCT_PAC_DESC_POP").val() ,
+       "SRV_CNTRCT_PAC_START_DT" :  $("#SRV_CNTRCT_PAC_START_DT_POP").val() ,
+       "SRV_CNTRCT_PAC_END_DT" :  $("#SRV_CNTRCT_PAC_END_DT_POP").val() 
     };
     
-    Common.ajaxSync("POST", "/sales/mQPackages/newQPackageAdd.do", saveForm , function(result) {
+    Common.ajaxSync("POST", "/sales/mPackages/newRPackageAdd.do", saveForm , function(result) {
         
         console.log(result);
         
@@ -228,7 +218,7 @@ function fn_ValidRequiredField_Master(){
 	var  valid = true;
     var  message = "";
     
-    if($('#txtServCode').val() ==""){
+    if($('#SRV_CNTRCT_PAC_CODE_POP').val() ==""){
     	  valid = false;
           message += "* Please key in the package code. <br />";
           
@@ -241,16 +231,28 @@ function fn_ValidRequiredField_Master(){
     }
     
     
-   if($('#txtServDesc').val() ==""){
+   if($('#SRV_CNTRCT_PAC_DESC_POP').val() ==""){
         valid = false;
         message += "* Please key in the package description.  <br />";
   }
   
-  if($('#txtDuration').val() ==""){
+   
+  if($('#SRV_CNTRCT_PAC_DUR_POP').val() ==""){
        valid = false;
        message += "* Please key in the package duration. <br />";
   }
    
+
+  if($('#SRV_CNTRCT_PAC_START_DT_POP').val() ==""){
+       valid = false;
+       message += "* Please key in the package start date . <br />";
+  }
+  
+
+  if($('#SRV_CNTRCT_PAC_END_DT_POP').val() ==""){
+       valid = false;
+       message += "* Please key in the package end date . <br />";
+  }
   var addedRowItems = AUIGrid.getAddedRowItems(newGridID);
   var editedRowItems = AUIGrid.getEditedRowColumnItems(newGridID); 
   var removedRowItems = AUIGrid.getRemovedItems(newGridID);
@@ -271,14 +273,14 @@ function fn_ValidRequiredField_Master(){
 
 function fn_IsExistSVMContractPackCode(){
 	
-	
-    Common.ajaxSync("GET", "/sales/mQPackages/IsExistSVMPackage", {SRV_MEM_CODE: $("#txtServCode").val()  }, function(result) {
+    Common.ajaxSync("GET", "/sales/mPackages/IsExistSVMPackage", {SRV_CNTRCT_PAC_CODE: $("#SRV_CNTRCT_PAC_CODE_POP").val()  }, function(result) {
         
     	 console.log("============>");
     	console.log(result);
         
-        if(result !=""  && null !=result   && result.length > 0){
+        if( result.length > 0 ){
             return true;
+            
         }else{
             return false;
         }
@@ -318,14 +320,22 @@ function fn_IsExistSVMContractPackCode(){
 <tbody>
 <tr>
 	<th scope="row">Package Code<span class="must">*</span></th>
-	<td><input type="text" title="" id='txtServCode' maxlength="12"   name='txtServCode'  placeholder="Package Code" class="w100p" /></td>
+	<td><input type="text" title="" id='SRV_CNTRCT_PAC_CODE_POP'  name='SRV_CNTRCT_PAC_CODE_POP'  placeholder="Package Code" class="w100p" /></td>
 	<th scope="row">Package Duration<span class="must">*</span></th>
-	<td><input type="text" title="" placeholder="Package Duration" id='txtDuration' name='txtDuration'   class="w100p" /></td>
+	<td><input type="text" title="" placeholder="Package Duration" id='SRV_CNTRCT_PAC_DUR_POP' name='SRV_CNTRCT_PAC_DUR_POP'   class="w100p" /></td>
 </tr>
 <tr>
 	<th scope="row">Package Description<span class="must">*</span></th>
-	<td colspan="3"><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc'  class="" /></td>
+	<td colspan="3"><input type="text" title="" placeholder="Package Description" id='SRV_CNTRCT_PAC_DESC_POP' name='SRV_CNTRCT_PAC_DESC_POP'  class="" /></td>
 </tr>
+
+<tr>
+    <th scope="row">Start Date  <span class="must">*</span></th>
+    <td><input type="text" title="Create start Date"   id="SRV_CNTRCT_PAC_START_DT_POP" name="SRV_CNTRCT_PAC_START_DT_POP" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <th scope="row">End Date<span class="must">*</span></th>
+    <td><input type="text" title="Create end Date"   id="SRV_CNTRCT_PAC_END_DT_POP" name="SRV_CNTRCT_PAC_END_DT_POP" placeholder="DD/MM/YYYY" class="j_date w100p" /> </td>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 

@@ -74,5 +74,8 @@ public interface MembershipRentalMapper {
 	
 	EgovMap  usp_SELECT_ServiceContract_Ledger(Map<String, Object> params);
 	
+	EgovMap   selectQuotInfoInfo(Map<String, Object> params);
+
+	
 	
 }

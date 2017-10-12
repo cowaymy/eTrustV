@@ -189,10 +189,11 @@ public class  MembershipPackageQMController {
 		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
 		
 		
+		int rtnValue = membershipPackageQMService.SAL0091M_insert(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData("");
+		message.setData(rtnValue);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 				
@@ -278,6 +279,26 @@ public class  MembershipPackageQMController {
 		
 		return ResponseEntity.ok(map);
 	}
+	
+	
+	
+
+	
+	@RequestMapping(value = "/IsExistSVMPackage" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  IsExistSVMPackage(@RequestParam Map<String, Object> params, Model model)	throws Exception {
+
+		logger.debug("in  IsExistSVMPackage ");
+		logger.debug("			pram set  log");  
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipPackageQMService.IsExistSVMPackage(params); 
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
 	
 	
 	

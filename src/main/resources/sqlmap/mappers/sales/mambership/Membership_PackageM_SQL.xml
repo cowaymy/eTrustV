@@ -52,15 +52,15 @@
                       WHERE    1=1 
                       
                           <if test="SRV_CNTRCT_PAC_CODE != null and SRV_CNTRCT_PAC_CODE != ''">
-                                                AND (F.SRV_CNTRCT_PAC_CODE =  LIKE '%'|| #{SRV_CNTRCT_PAC_CODE} ||'%') 
+                                                AND (F.SRV_CNTRCT_PAC_CODE    LIKE '%'|| #{SRV_CNTRCT_PAC_CODE} ||'%') 
                           </if>
                                                    
                           <if test="SRV_CNTRCT_PAC_DESC != null and SRV_CNTRCT_PAC_DESC != ''">
-                                                AND (F.SRV_CNTRCT_PAC_DESC =  LIKE '%'|| #{SRV_CNTRCT_PAC_DESC} ||'%') 
+                                                AND (F.SRV_CNTRCT_PAC_DESC    LIKE '%'|| #{SRV_CNTRCT_PAC_DESC} ||'%') 
                           </if>
                           
                           <if test="SRV_CNTRCT_PAC_DUR != null and SRV_CNTRCT_PAC_DUR != ''">
-                                                AND (F.SRV_CNTRCT_PAC_DUR =  #{SRV_CNTRCT_PAC_DUR}) 
+                                                AND (F.SRV_CNTRCT_PAC_DUR  = #{SRV_CNTRCT_PAC_DUR}) 
                           </if>
                         ) S
               ORDER BY S.SRV_CNTRCT_PAC_ID ASC
@@ -189,14 +189,45 @@
                SRV_CNTRCT_PAC_CODE        = #{srvCntrctPacCode},
                SRV_CNTRCT_PAC_DESC        = #{srvCntrctPacDesc},
                SRV_CNTRCT_PAC_DUR          = #{srvCntrctPacDur}, 
-               SRV_CNTRCT_PAC_STUS_ID   = #{code},
-               SRV_CNTRCT_PAC_START_DT = to_date(#{srvCntrctPacStartDt},'yyyy/mm/dd'),
-               SRV_CNTRCT_PAC_END_DT     = to_date(#{srvCntrctPacEndDt},'yyyy/mm/dd')
+               SRV_CNTRCT_PAC_STUS_ID   =  decode(#{code},'ACT',1,'8') ,
+               SRV_CNTRCT_PAC_START_DT = decode (INSTR(#{srvCntrctPacStartDt} , '/') ,5 , to_date(#{srvCntrctPacStartDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacStartDt},'dd/mm/yyyy')) , 
+               SRV_CNTRCT_PAC_END_DT     = decode (INSTR(#{srvCntrctPacEndDt} , '/') ,5 , to_date(#{srvCntrctPacEndDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacEndDt},'dd/mm/yyyy')  )
         WHERE  SRV_CNTRCT_PAC_ID        = #{srvCntrctPacId}
    </insert>
    
    
    
+   
+   
+   <insert id="SAL0081D_insert" parameterType="Map">
+   
+			INSERT INTO SAL0081D ( SRV_CNTRCT_PAC_ID,
+                                               SRV_CNTRCT_PAC_CODE, 
+                                               SRV_CNTRCT_PAC_DESC, 
+											   SRV_CNTRCT_PAC_DUR, 
+											   SRV_CNTRCT_PAC_STUS_ID, 
+											   SRV_CNTRCT_PAC_CRT_DT, 
+											   SRV_CNTRCT_PAC_CRT_USER_ID, 
+											   SRV_CNTRCT_PAC_START_DT, 
+											   SRV_CNTRCT_PAC_END_DT
+											) 
+			VALUES ( 
+				             #{SRV_CNTRCT_PAC_ID} , 
+	                         #{SRV_CNTRCT_PAC_CODE}, 
+	                         #{SRV_CNTRCT_PAC_DESC} ,
+							 #{SRV_CNTRCT_PAC_DUR},
+							 1 ,  
+							 sysdate,
+							 #{updator},  
+							 to_date(#{SRV_CNTRCT_PAC_START_DT},'dd/mm/yyyy')  , 
+							 to_date(#{SRV_CNTRCT_PAC_END_DT},'dd/mm/yyyy')  
+						 )
+        
+   </insert>
+   
+   
+    
+    
    
    <insert id="SAL0082D_insert" parameterType="Map" >
             INSERT INTO SAL0082D (
@@ -205,7 +236,7 @@
                                SRV_PAC_ITM_REM, SRV_PAC_ITM_STUS_ID, SRV_PAC_ITM_UPD_DT, 
                                SRV_PAC_ITM_UPD_USER_ID) 
             VALUES (   SAL0082D_SRV_PAC_ITM_ID_SEQ.NEXTVAL , #{srvContractPacID} ,  #{srvPacItemProductID},
-                           #{srvPacItemServiceFreq} , #{srvPacItemRental} ,  #{srvPacItemPV},
+                           #{srvPacItemServiceFreq} , #{srvPacItemRental} , 0,
                            #{srvPacItemRemark} , #{srvPacItemStatusID} ,sysdate, #{updator}
                        )
    </insert>
@@ -282,6 +313,23 @@
      </insert>
  
       
+      
+     
+    <select id="getSAL0081D_SEQ" parameterType="Map" resultType="egovMap">
+                 <![CDATA[     
+                          SELECT SAL0081D_SRV_CNTRCT_PAC_ID_SEQ.NEXTVAL   seq  FROM DUAL
+                 ]]>
+    </select>
+    
+    
+    
+     <select id="IsExistSVMPackage" parameterType="Map" resultType="egovMap">
+                   SELECT Extent1.SRV_CNTRCT_PAC_ID 
+                  FROM SAL0081D Extent1
+                 WHERE   upper(Extent1.SRV_CNTRCT_PAC_CODE)  =  upper(#{SRV_CNTRCT_PAC_CODE}) AND ROWNUM <![CDATA[<  ]]> = 1
+      </select>
+      
+    
      
    
    

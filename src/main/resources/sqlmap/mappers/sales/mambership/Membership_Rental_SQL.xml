@@ -327,7 +327,7 @@
 									                END C1  
 									         FROM SAL0090D E
 									                JOIN SAL0088D E2   ON ( E2.SRV_CONFIG_ID = E.SRV_CONFIG_ID )
-									                AND ( E2.SRV_PRD_EXPR_DT > '1900-01-01')
+									                AND ( E2.SRV_PRD_EXPR_DT > to_date('1900-01-01','yyyy-mm-dd' ) )
 									                AND ( 1 = E2.SRV_PRD_STUS_ID )
 									                LEFT JOIN SAL0095D E3   ON ( E3.SRV_MEM_ID = E2.SRV_MBRSH_ID )
 									                AND ( 4 = E3.SRV_STUS_CODE_ID )
@@ -1053,7 +1053,90 @@
   </select>
   
   
-   
-      
+      <select id="selectQuotInfoInfo" parameterType="Map" resultType="egovMap">
+            <![CDATA[  
+            
+                     SELECT S.QOTAT_ID   ,
+							       S.QOTAT_REF_NO   ,
+							       S.QOTAT_ORD_ID   ,
+							       S.QOTAT_CRT_DT   ,
+							       S.USER_NAME   ,
+							       S.QOTAT_VAL_ID_DT   ,
+							       S.QOTAT_CNTRCT_DUR   ,
+							       S.QOTAT_PCKG_ID   ,
+							       S.SRV_CNTRCT_PAC_DESC   ,
+							       S.QOTAT_RENTAL_AMT   ,
+							       S.QOTAT_EXP_FILTER_AMT   ,
+							       S.QOTAT_PAC_PROMO_ID   ,
+							       CASE 
+							            WHEN ( S.PROMO_ID IS NOT NULL ) THEN S.PROMO_DESC
+							       ELSE '-'
+							          END C1  ,
+							       S.QOTAT_FIL_PROMO_ID QOTAT_FIL_PROMO_ID  ,
+							       CASE 
+							            WHEN ( S.PROMOID1 IS NOT NULL ) THEN S.PROMODESC1
+							       ELSE '-'
+							          END C2  ,
+							       S.QOTAT_SALESMAN_ID QOTAT_SALESMAN_ID  ,
+							       CASE 
+							            WHEN ( S.MEM_ID IS NOT NULL ) THEN S.MEM_CODE
+							       ELSE ' '
+							          END C3  ,
+							       CASE 
+							            WHEN ( S.MEM_ID IS NOT NULL ) THEN S.NAME
+							       ELSE ' '
+							          END C4  ,
+							       S.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+							       CASE 
+							            WHEN ( S.QOTAT_VAL_ID_DT < to_date( SYSDATE ) ) THEN 82
+							            WHEN ( 4 = S.QOTAT_STUS_ID ) THEN 81
+							       ELSE S.QOTAT_STUS_ID
+							          END C5  ,
+							       CASE 
+							            WHEN ( S.QOTAT_VAL_ID_DT < to_date( SYSDATE ) ) THEN 'EXP'
+							            WHEN ( 4 = S.QOTAT_STUS_ID ) THEN 'CON'
+							            WHEN ( 1 = S.QOTAT_STUS_ID ) THEN 'ACT'
+							            WHEN ( 8 = S.QOTAT_STUS_ID ) THEN 'DEA'
+							       ELSE ' '
+							          END C6  ,
+							       CASE 
+							            WHEN ( S.SRV_CNTRCT_FORM_NO IS NOT NULL ) THEN S.SRV_CNTRCT_FORM_NO
+							       ELSE '-'
+							          END C7  
+						  FROM ( SELECT E1.QOTAT_ID QOTAT_ID  ,
+								                E1.QOTAT_REF_NO QOTAT_REF_NO  ,
+								                E1.QOTAT_ORD_ID QOTAT_ORD_ID  ,
+								                E1.QOTAT_STUS_ID QOTAT_STUS_ID  ,
+								                E1.QOTAT_PAC_PROMO_ID QOTAT_PAC_PROMO_ID  ,
+								                E1.QOTAT_FIL_PROMO_ID QOTAT_FIL_PROMO_ID  ,
+								                E1.QOTAT_PCKG_ID QOTAT_PCKG_ID  ,
+								                E1.QOTAT_RENTAL_AMT QOTAT_RENTAL_AMT  ,
+								                E1.QOTAT_EXP_FILTER_AMT QOTAT_EXP_FILTER_AMT  ,
+								                E1.QOTAT_CNTRCT_DUR QOTAT_CNTRCT_DUR  ,
+								                E1.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+								                E1.QOTAT_VAL_ID_DT QOTAT_VAL_ID_DT  ,
+								                E1.QOTAT_SALESMAN_ID QOTAT_SALESMAN_ID  ,
+								                E1.QOTAT_CRT_DT QOTAT_CRT_DT  ,
+								                E2.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+								                E3.USER_NAME USER_NAME  ,
+								                E4.MEM_ID MEM_ID  ,
+								                E4.MEM_CODE MEM_CODE  ,
+								                E4.NAME NAME  ,
+								                E5.PROMO_ID PROMO_ID  ,
+								                E5.PROMO_DESC PROMO_DESC  ,
+								                E6.PROMO_ID PROMOID1  ,
+								                E6.PROMO_DESC PROMODESC1  ,
+								                E7.SRV_CNTRCT_FORM_NO SRV_CNTRCT_FORM_NO  
+								         FROM SAL0083D E1
+								                JOIN SAL0081D E2   ON E2.SRV_CNTRCT_PAC_ID = E1.QOTAT_PCKG_ID
+								                JOIN SYS0047M  E3   ON E3.USER_ID = E1.QOTAT_CRT_USER_ID
+								                LEFT JOIN ORG0001D E4   ON E4.MEM_ID = E1.QOTAT_SALESMAN_ID
+								                LEFT JOIN SAL0017D E5   ON E5.PROMO_ID = E1.QOTAT_PAC_PROMO_ID
+								                LEFT JOIN SAL0017D E6   ON E6.PROMO_ID = E1.QOTAT_FIL_PROMO_ID
+								                LEFT JOIN SAL0077D E7   ON E7.SRV_CNTRCT_QUOT_ID = E1.QOTAT_ID
+								          WHERE  E1.QOTAT_ID = #{QOTAT_ID} AND ROWNUM <= 1 ) S
+								            
+            ]]>
+  </select>
 
 </mapper>

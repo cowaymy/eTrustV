@@ -76,7 +76,8 @@ function fn_save(){
 
 	var saveForm ={
 			 mod :modType,
-             SRV_MEM_PAC_ID         : PACID,  
+             SRV_MEM_PAC_ID          :  PACID,  
+             SRV_MEM_ITM_STK_ID   :  STKID == "" ? $("#packcode").val() :  STKID,
     	     SRV_MEM_ITM_PRIOD     : $("#srvPacItmSvcFreq").val(),
     	     SRV_MEM_ITM_PRC        : $("#srvPacItmRental").val(),
     	     SRV_MEM_ITM_PV          : 0,
@@ -102,6 +103,7 @@ function fn_save(){
        }); 
 	
 }
+
 
 
 

@@ -84,6 +84,21 @@ public class  MembershipPackageMController {
 
 	
 
+	@RequestMapping(value = "/membershipPackageRNew.do")
+	public String membershipPackageRNew(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("in  membershipPackageRNew.do ");  
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");   
+		
+		
+		return "sales/membership/membershipPackageRNewPop";  
+	}
+	
+	
+
 	@RequestMapping(value = "/selectList" ,method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>>  selectList(@RequestParam Map<String, Object> params, HttpServletRequest request,Model model)	throws Exception {
 
@@ -234,6 +249,54 @@ public class  MembershipPackageMController {
 		map.put("groupCodeList",groupCodeList); 
 		
 		return ResponseEntity.ok(map);
+	}
+	
+	
+
+	
+	
+
+	@RequestMapping(value = "/newRPackageAdd.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> newQPackageAdd(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
+		
+		logger.debug("in  newRPackageAdd ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		params.put("updator", sessionVO.getUserId());
+		
+		List<EgovMap>  add			= (List<EgovMap>)  params.get("add");
+		List<EgovMap>  remove	= (List<EgovMap>)  params.get("remove");
+		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
+		
+		
+		int rtnValue = membershipPackageMService.SAL0081D_insert(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(rtnValue);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+				
+		return ResponseEntity.ok(message);  
+		
+	}
+	
+	
+	
+	
+	@RequestMapping(value = "/IsExistSVMPackage" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  IsExistSVMPackage(@RequestParam Map<String, Object> params, Model model)	throws Exception {
+
+		logger.debug("in  IsExistSVMPackage ");
+		logger.debug("			pram set  log");  
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap>  list = membershipPackageMService.IsExistSVMPackage(params); 
+		
+		return ResponseEntity.ok(list);
 	}
 	
 	

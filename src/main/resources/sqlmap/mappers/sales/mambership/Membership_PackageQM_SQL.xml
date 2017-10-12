@@ -30,11 +30,11 @@
                      FROM SAL0091M X
                             JOIN SYS0038M E   ON E.STUS_CODE_ID = X.SRV_MEM_STUS_ID
                       WHERE  1=1 
-                         <if test="SRV_MEM_CODE != null and SRV_MEM_CODE != ''">
-                               AND ( X.SRV_MEM_CODE =  LIKE '%'|| #{SRV_MEM_CODE} ||'%'  )
+                         <if test="SRV_CNTRCT_PAC_CODE != null and SRV_CNTRCT_PAC_CODE != ''">
+                               AND ( X.SRV_MEM_CODE    LIKE '%'|| #{SRV_CNTRCT_PAC_CODE} ||'%'  )
                         </if>       
-                         <if test="SRV_MEM_DESC != null and SRV_MEM_DESC != ''">
-                               AND ( X.SRV_MEM_DESC = LIKE '%'|| #{SRV_MEM_DESC} ||'%'  )
+                         <if test="SRV_CNTRCT_PAC_DESC != null and SRV_CNTRCT_PAC_DESC != ''">
+                               AND ( X.SRV_MEM_DESC   LIKE '%'|| #{SRV_CNTRCT_PAC_DESC} ||'%'  )
                          </if>
                          
                          <if test="SRV_MEM_STUS_ID != null and SRV_MEM_STUS_ID != ''">
@@ -160,7 +160,7 @@
                    SRV_MEM_DESC               = #{srvMemDesc},
                    SRV_MEM_DUR                 = #{srvMemDur},
                    SRV_MEM_LAB_CHRG         = #{srvMemLabChrg},
-                   SRV_MEM_STUS_ID           = #{code}
+                   SRV_MEM_STUS_ID           = decode(#{code} ,'ACT' ,'1' ,'8')
             WHERE  SRV_MEM_PAC_ID         = #{srvMemPacId}
    
    </insert>
@@ -175,7 +175,7 @@
 								   SRV_MEM_ITM_PV, SRV_MEM_ITM_PRIOD, SRV_MEM_ITM_STUS_ID, 
 								   SRV_MEM_ITM_REM, SRV_MEM_ITM_CRT_DT, SRV_MEM_ITM_CRT_USER_ID, 
 								   SRV_MEM_ITM_UPD_DT, SRV_MEM_ITM_UPD_USER_ID) 
-				VALUES (  #{SRV_MEM_PAC_ID},  SAL0092M_SRV_MEM_ITM_STK_ID.NEXTVAL , #{SRV_MEM_ITM_PRC},
+				VALUES (  #{SRV_MEM_PAC_ID},  #{SRV_MEM_ITM_STK_ID} , #{SRV_MEM_ITM_PRC},
 							        #{SRV_MEM_ITM_PV},${SRV_MEM_ITM_PRIOD} , #{SRV_MEM_ITM_STUS_ID},
 							        #{SRV_MEM_ITM_REM},SYSDATE , #{updator},
 							        SYSDATE  ,#{updator} )
@@ -259,17 +259,25 @@
       
       
       <insert id="SAL0091M_insert" parameterType="Map" >
-                 INSERT INTO SAL0091M
+              INSERT INTO SAL0091M
 					  ( SRV_MEM_PAC_ID , SRV_MEM_CODE, SRV_MEM_DESC, SRV_MEM_DUR, 
 					    SRV_MEM_PART_CHRG_TYPE_ID, SRV_MEM_LAB_CHRG, 
 					    SRV_MEM_STUS_ID, SRV_MEM_CRT_DT, SRV_MEM_CRT_USER_ID
 					  )
-		      VALUES (SAL0091M_SRV_MEM_PAC_ID.NEXTVAL ,#{txtServCode}, #{txtServDesc}, #{txtDuration},
+		      VALUES ( #{SRV_MEM_PAC_ID} ,#{txtServCode}, #{txtServDesc}, #{txtDuration},
 					   1, 0, 1, 
 					   sysdate, #{updator}
 			   )
      </insert>
      
+     
+    <select id="getSAL0091M_SEQ" parameterType="Map" resultType="egovMap">
+                 <![CDATA[     
+                          SELECT SAL0091M_SRV_MEM_PAC_ID_SEQ.NEXTVAL   SEQ  FROM DUAL
+                 ]]>
+    </select>
+    
+    
      
       
 </mapper>

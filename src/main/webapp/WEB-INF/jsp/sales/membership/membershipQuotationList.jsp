@@ -32,13 +32,13 @@
    function createAUIGrid() {
            var columnLayout = [ 
                      {dataField :"quotNo",  headerText : "Quotation No",      width: 150 ,editable : false },
-                     {dataField :"ordNo",  headerText : "Order No",    width: 150, editable : false },
+                     {dataField :"ordNo",  headerText : "Order No",    width: 100, editable : false },
                      {dataField :"custName", headerText : "Customer Name",   width: 150, editable : false },
-                     {dataField :"validStus", headerText : "Status",  width: 150, editable : false },
+                     {dataField :"validStus", headerText : "Status",  width: 80, editable : false },
                      {dataField :"validDt", headerText : "Valid Date",width: 150, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
-                     {dataField :"pacDesc", headerText : "Package", width: 150, editable : false },
-                     {dataField :"dur", headerText : "Duration (Mth)",width: 150, editable : false },
-                     {dataField :"crtDt", headerText : "Create Date", width: 150,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
+                     {dataField :"pacDesc", headerText : "Package", width: 100, editable : false },
+                     {dataField :"dur", headerText : "Duration (Mth)",width: 80, editable : false },
+                     {dataField :"crtDt", headerText : "Create Date", width: 100,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
                      {dataField :"crtUserId", headerText : "Package" , width: 150, editable : false }
           ];
 

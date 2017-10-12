@@ -154,7 +154,7 @@ function fn_gSave(){
        
          // Common.alert(result.message);
           Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
-          fn_selectListAjax();
+          fn_mainSelectListAjax();
           
       }, function(jqXHR, textStatus, errorThrown) {
           Common.alert("실패하였습니다.");
@@ -173,7 +173,11 @@ function fn_gSave(){
 
 
 function fn_New(){
-    alert('fn_New');
+
+    Common.popupDiv("/sales/mPackages/membershipPackageRNew.do" ,null, null , true , '_NewAddDiv1');
+    
+    
+    
 }
 
 
@@ -217,7 +221,7 @@ function  fn_goSelectAdd(){
 }
 
 //리스트 조회.
-function fn_selectListAjax() {        
+function fn_mainSelectListAjax() {        
 Common.ajax("GET", "/sales/mPackages/selectList", $("#sForm").serialize(), function(result) {
 	       
 	    console.log(result);
@@ -308,7 +312,7 @@ function fn_delete(){
 
 
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_New()" >New</a></p></li>
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"  ><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_mainSelectListAjax()"  ><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()" ><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
