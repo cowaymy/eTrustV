@@ -2,13 +2,6 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <style type="text/css">
 /* 커스텀 칼럼 스타일 정의 */
-.aui-grid-user-custom-left {
-    text-align:left;
-    
-}
-.my-right-style {
-    text-align:right;
-}
 </style>
 <script  type="text/javascript">
 $(document).ready(function(){
@@ -32,6 +25,11 @@ $(document).ready(function(){
 	}
 	
 	
+	$("#adjustAmt").click(function() { 
+		 Common.popupDiv("/eAccounting/budget/adjustmentAmountPop.do",$("#pForm").serializeJSON(), null, true, "adjustmentAmountPop"); 
+	});
+	
+	
 });
 
 function comma(str) {
@@ -52,7 +50,9 @@ function comma(str) {
 <section class="pop_body" style="min-height:200px"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form action="#" method="post" id="pForm" name="pForm">
+<input type="hidden" id="budgetPlanYear" name="budgetPlanYear"  value="${item.budgetPlanYear }"/>
+<input type="hidden" id="budgetPlanMonth" name="budgetPlanMonth"  value="${item.budgetPlanMonth }"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -69,21 +69,21 @@ function comma(str) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.costCentr }"/></td>
+	<td><input type="text" id="costCentr" name ="costCentr" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.costCentr }"/></td>
 	<th scope="row"><spring:message code="budget.CostCenter" /> <spring:message code="budget.Description" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.costCenterText }"/></td>
+	<td><input type="text"  id="costCenterText" name ="costCenterText" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.costCenterText }"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="budget.BudgetCode" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.glAccCode }" /></td>
+	<td><input type="text"  id="glAccCode" name ="glAccCode" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.glAccCode }" /></td>
 	<th scope="row"><spring:message code="budget.BudgetCode" /> <spring:message code="budget.Description" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.glAccDesc }"/></td>
+	<td><input type="text"  id="glAccDesc" name ="glAccDesc" title="" placeholder="" class="readonly w100p" readonly="readonly"  value="${item.glAccDesc }"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="expense.GLAccount" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCode }"/></td>
+	<td><input type="text"  id="budgetCode" name ="budgetCode" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCode }"/></td>
 	<th scope="row"><spring:message code="expense.GLAccount" /> <spring:message code="budget.Description" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCodeText }" /></td>
+	<td><input type="text"  id="budgetCodeText" name ="budgetCodeText" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${item.budgetCodeText }" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -7,6 +7,7 @@
 }
 .my-right-style {
     text-align:right;
+    cursor:pointer;
 }
 .my-custom-style1 {
     text-align:right;
@@ -179,15 +180,15 @@ function fn_total(){
 
 function fn_makeGrid(){
 
-    var expPop = [];
+    var monPop = [];
     
-    expPop[0] = {dataField : "costCentr",
+    monPop[0] = {dataField : "costCentr",
             headerText : '<spring:message code="budget.CostCenter" />',
             width : 100,
             cellMerge : true 
     }
     
-    expPop.push({
+    monPop.push({
 			        dataField : "budgetPlanYear",
 			        headerText : '',
 			        width : 100,
@@ -250,7 +251,7 @@ function fn_makeGrid(){
             }
         	
         	
-            expPop.push( {
+        	monPop.push( {
                  dataField : "m"+i,
                  headerText :msg,
                  width : 80,
@@ -262,7 +263,7 @@ function fn_makeGrid(){
         }
     } 
     
-    expPop.push( {
+    monPop.push( {
         editable : false,
         headerText : "<spring:message code='budget.Total' />",
         dataField : "total", // 임의로 지정하십시오. expFunction 에서 반환된 값이 여기에 보관됩니다.
@@ -273,7 +274,7 @@ function fn_makeGrid(){
         width:120
     });
 
-     var expOptions = {
+     var monOptions = {
             enableCellMerge : true,
             showStateColumn:false,
             fixedColumnCount    : 7,
@@ -281,7 +282,7 @@ function fn_makeGrid(){
             usePaging : false
       }; 
     
-    budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", expPop, "", expOptions);
+    budgetMGrid = GridCommon.createAUIGrid("#budgetMGrid", monPop, "", monOptions);
     
     AUIGrid.bind(budgetMGrid, "cellClick", auiCellClikcHandler);
 }

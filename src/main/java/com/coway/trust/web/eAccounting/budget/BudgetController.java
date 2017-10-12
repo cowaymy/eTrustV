@@ -101,52 +101,26 @@ public class BudgetController {
 		return "eAccounting/budget/availableBudgetDisplayPop";
 	}
 		
-		
-/*	@RequestMapping(value = "/insertExpenseInfo", method = RequestMethod.POST) 
-	public ResponseEntity<ReturnMessage> insertExpenseInfo (@RequestBody Map<String, ArrayList<Object>> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
-		
-		LOGGER.debug("params =====================================>>  " + params);
-		
-		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
 
-		int tmpCnt = 0;
-		int totCnt = 0;
+	@RequestMapping(value = "/adjustmentAmountPop.do")
+	public String adjustmentAmountPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
-		if (addList.size() > 0) {
-			tmpCnt = expenseService.insertExpenseInfo(addList, sessionVO.getUserId());
-			totCnt = totCnt + tmpCnt;
-		}
-		
-		// 결과 만들기 예.
-    	ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setData(totCnt);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    
-    	return ResponseEntity.ok(message);
-		
-	}	
+		LOGGER.debug("params =====================================>>  " + params);
+
+		model.addAttribute("item", params);
+		return "eAccounting/budget/adjustmentAmountPop";
+	}
 	
-	
-	@RequestMapping(value = "/updateExpenseInfo", method = RequestMethod.POST) 
-	public ResponseEntity<ReturnMessage> updateExpenseInfo (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+	@RequestMapping(value = "/selectAdjustmentAmountList")
+	public ResponseEntity<List<EgovMap>>  selectAdjustmentAmountList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		params.put("userId", sessionVO.getUserId());
-		params.put("clmType", params.get("pClmType"));
-		params.put("expType", params.get("pExpType"));
+		List<EgovMap> adjustmentList = null; 
 		
-		int totCnt = expenseService.updateExpenseInfo(params);
+		adjustmentList= budgetService.selectAdjustmentAmount(params);
 		
-		// 결과 만들기 예.
-    	ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-    	message.setData(totCnt);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    
-    	return ResponseEntity.ok(message);
-		
-	}		*/
+		return ResponseEntity.ok(adjustmentList);
+	}
 }
 

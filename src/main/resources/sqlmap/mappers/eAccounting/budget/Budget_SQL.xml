@@ -38,7 +38,6 @@
          ORDER BY COST_CENTR
   </select>
   
-  
   <select id="selectAvailableBudgetAmt" parameterType="Map" resultType="egovMap">
   <![CDATA[
       SELECT A.PLAN_AMT
@@ -90,6 +89,32 @@
         AND A.BUDGET_CODE        = #{budgetCode}
         AND A.GL_ACC_CODE        = #{glAccCode}
   </select>
+  
+  <select id="selectAdjustmentAmount" parameterType="Map" resultType="egovMap">
+  <![CDATA[
+      SELECT TO_CHAR(A.UPD_DT, 'yyyy-mm-dd hh24:mi') AS CONFIRM_DATE 
+		          ,B.BUDGET_ADJ_TYPE
+		          ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
+		          ,CASE WHEN B.SIGNAL ='+' THEN 'Receiver(+)' ELSE 'Sender(-)' END SIGNAL_TEXT
+		          ,B.BUDGET_ADJ_YEAR || '/' ||TO_CHAR(B.BUDGET_ADJ_MONTH, 'FM00') BUDGET_ADJ_MONTH
+		          ,B.COST_CENTR
+		          ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
+		          ,B.GL_ACC_CODE
+		          ,(SELECT GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
+		          ,B.SIGNAL 
+		          ,ADJ_AMT
+		          ,A.ADJ_REM    
+		 FROM FCM0102M  A,  FCM0103D B
+		WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
+		    AND A.APPV_STUS = 'C' 
+                        ]]>
+            AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
+            AND B.BUDGET_ADJ_MONTH  = #{budgetPlanMonth}            
+            AND B.COST_CENTR         = #{costCentr}
+            AND B.BUDGET_CODE        = #{budgetCode}
+            AND B.GL_ACC_CODE        = #{glAccCode}
+  </select>
+  
   
   
 <!--   <select id="selectMaxExpType" parameterType="Map" resultType="String">
