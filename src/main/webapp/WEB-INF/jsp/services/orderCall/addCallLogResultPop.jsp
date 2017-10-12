@@ -987,8 +987,8 @@ function fn_addCallSave(){
 
     <div class="search_100p"><!-- search_100p start -->
     <input type="text" title="" placeholder="" class="w100p" id="CTCode" name="CTCode"/>
-    <input type="text" value="16495" placeholder="" class="w100p" id="CTID" name="CTID"/>
-    <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a>
+    <input type="hidden" value="16495" placeholder="" class="w100p" id="CTID" name="CTID"/>
+    <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </div><!-- search_100p end -->
 
     </td>
