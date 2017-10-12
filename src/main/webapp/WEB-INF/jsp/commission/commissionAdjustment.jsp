@@ -38,6 +38,7 @@
 	function fn_saveAdjustment(){
 		Common.ajax("GET", "/commission/calculation/saveAdjustment", $("#searchForm").serialize(), function(result) {
            Common.setMsg("<spring:message code='sys.msg.success'/>");
+           $("#memCode").val("");
        });
 	}
 	

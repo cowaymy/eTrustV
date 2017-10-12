@@ -1548,8 +1548,13 @@ public class CommissionCalculationController {
 		}
 		params.put("loginId", loginId);
 		
-		Map<String, Object> ordNoInfo = commissionCalculationService.ordNoInfoSearch(params);
-		String ordId = ordNoInfo.get("ORDID") != null?ordNoInfo.get("ORDID").toString():"0";
+		String ordId ="0";
+		try{
+			Map<String, Object> ordNoInfo = commissionCalculationService.ordNoInfoSearch(params);
+			 ordId = ordNoInfo.get("ORDID") != null?ordNoInfo.get("ORDID").toString():"0";
+		}catch(Exception e){
+			 ordId = "0";
+		}
 		
 		params.put("ordId",ordId);
 		

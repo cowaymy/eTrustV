@@ -50,20 +50,35 @@ public class CommissionExcelDownloadController {
 
 			if (codeNm.equals(CommissionConstants.COMIS_CTL_P01) || codeNm.equals(CommissionConstants.COMIS_CTM_P01)
 					|| codeNm.equals(CommissionConstants.COMIS_CTW_P01)) {
+				
 				map.put("codeGruop", CommissionConstants.COMIS_CT);
-				if (codeNm.equals(CommissionConstants.COMIS_CTW_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CTW_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CTL_P01))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3", "v4",
+							"v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "AS Count", "AS Sum CP", "BS Count", "BS Sum CP",
+							"Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP", "Total Point", "Pro Percent", "Per Percent", "Pro Factor (30%)", "Per Factor (70%)", "Sum Facto" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+
+				}else if (codeNm.equals(CommissionConstants.COMIS_CTL_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CTM_P01))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3", "v4",
+							"v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "AS Count", "AS Sum CP", "BS Count", "BS Sum CP",
+							"Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP", "Total Point", "Pro Percent", "Per Percent", "Pro Factor (30%)", "Per Factor (70%)", "Sum Facto" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_CTM_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType", "v1", "v2", "v3", "v4",
+							"v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEMBER CODE", "MEM TYPE", "AS Count", "AS Sum CP", "BS Count", "BS Sum CP",
+							"Ins Count", "Ins Sum CP", "PR Count", "PR Sum CP", "Total Point", "Pro Percent", "Per Percent", "Pro Factor (30%)", "Per Factor (70%)", "Sum Facto" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}
 				map.put("memberId", request.getParameter("memberId"));
 
-				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "v1", "v2", "v3", "v4",
-						"v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14" };
-				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "V1", "V2", "V3", "V4",
-						"V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14" };
-				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad28CT(map, downloadHandler);
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)
@@ -71,25 +86,60 @@ public class CommissionExcelDownloadController {
 					|| codeNm.equals(CommissionConstants.COMIS_CDM_P01)
 					|| codeNm.equals(CommissionConstants.COMIS_CDN_P01)
 					|| codeNm.equals(CommissionConstants.COMIS_CDS_P01)) {
+				
 				map.put("codeGruop", CommissionConstants.COMIS_CD);
-				if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)
-						|| codeNm.equals(CommissionConstants.COMIS_CDN_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CDM_P01))
+					columns = new String[] { "taskId", "runId", "emplyId","emplyCode", "memType"
+							, "v1", "v2", "v3", "v4","v5", "v6", "v7", "v8", "v9", "v10"
+							, "v12", "v13", "v14", "v15", "v16", "v17", "v18","v19", "v20", "v21"
+							, "v24", "v25", "v26", "v27", "v32","v33" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID","MEMBER CODE", "MEM TYPE"
+							, "Credit Point", "HappyCall Performance", "HappyCall Marks", "B/S Success Rate", "B/S Marks", "Rental Collection Rate", "Rental Collection Marks", "Net Sales Unit", "Net Sales Marks", "Rental Collection Amount"
+							,"Dropped Rate", "Dropped Rate  Penalty Marks", "Net Sales  Pv Total", "App Rate  By Total Pv", "sales price total", "Mem amount", "completed BS count", "pv total", "price total", "collection Cmm  applicable rate"
+							, "SHI rental Cmm rate", "SHI Index", "SHI rental Mem  collection rate", "SHI rental Mem Index", "CFF CFFCompliment", "CFF S.CFFMark"};
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if(codeNm.equals(CommissionConstants.COMIS_CDN_P01)){
+					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId","emplyCode", "memType"
+							, "v1", "v2", "v3", "v4","v5", "v6", "v7", "v8", "v9", "v10"
+							, "v12", "v13", "v14", "v15", "v16", "v17", "v18","v19", "v20", "v21"
+							, "v24", "v25", "v26", "v27"};
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID","MEMBER CODE", "MEM TYPE"
+							, "Credit Point", "HappyCall Performance", "HappyCall Marks", "B/S Success Rate", "B/S Marks", "Rental Collection Rate", "Rental Collection Marks", "Net Sales Unit", "Net Sales Marks", "Rental Collection Amount"
+							,"Dropped Rate", "Dropped Rate  Penalty Marks", "Net Sales  Pv Total", "App Rate  By Total Pv", "sales price total", "Mem amount", "completed BS count", "pv total", "price total", "collection Cmm  applicable rate"
+							, "SHI rental Cmm rate", "SHI Index", "SHI rental Mem  collection rate", "SHI rental Mem Index"};
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_CDM_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CDS_P01))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "v1", "v2", "v3", "v4","v5", "v6", "v7", "v8", "v9", "v10"
+							, "v11", "v12", "v13", "v14", "v16", "v17", "v18","v19", "v20", "v21"
+							, "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31"};
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE"
+							, "performance index", "v2", "v3", "v4","v5", "v6", "v7", "v8", "net sales marks", "rental collection amount"
+							, "v11", "v12", "v13", "v14", "rental collection amount", "v17", "completed BS count","v19", "price total", "v21"
+							, "credit point", "credit point", "SHI rental collection rate", "v25", "SHI rental Mem collection rate", "v27", "group BS  productivity", "group sales productivity marks", "v31"};
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_CDS_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "v1", "v2", "v3", "v4","v5", "v6", "v7", "v8", "v9", "v10"
+							, "v11", "v12", "v13", "v14", "v16", "v17", "v18","v19", "v20", "v21"
+							, "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31"};
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE"
+							, "performance index", "v2", "v3", "v4","v5", "v6", "v7", "v8", "net sales marks", "group sales productivity"
+							, "v11", "dropped rate", "v13", "v14", "rental collection rate", "Membership Sales Amount total", "v18","v19", "v20", "v21"
+							, "v22", "v23", "SHI rental collection rate", "v25", "SHI rental membership collection rate", "v27", "v29", "v30", "v31"};
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}
 				map.put("memberId", request.getParameter("memberId"));
 
-				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "v1", "v2", "v3", "v4",
-						"v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15", "v16", "v17", "v18",
-						"v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v29", "v30", "v31", "v32",
-						"v33" };
-				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "V1", "V2", "V3", "V4",
-						"V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14", "V15", "V16", "V17", "V18",
-						"V19", "V20", "V21", "V22", "V23", "V24", "V25", "V26", "V27", "V29", "V30", "V31", "V32",
-						"V33" };
-				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				
 				largeExcelService.downLoad28CD(map, downloadHandler);
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_HPF_P01)
@@ -97,45 +147,94 @@ public class CommissionExcelDownloadController {
 					|| codeNm.equals(CommissionConstants.COMIS_HPM_P01)
 					|| codeNm.equals(CommissionConstants.COMIS_HPS_P01)
 					|| codeNm.equals(CommissionConstants.COMIS_HPT_P01)) {
+				
 				map.put("codeGruop", CommissionConstants.COMIS_HP);
-				if (codeNm.equals(CommissionConstants.COMIS_HPF_P01))
+				if (codeNm.equals(CommissionConstants.COMIS_HPF_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPG_P01))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "v1", "v8","v14", "v15", "v19", "v20", "v21", "v24", "v25", "v26", "v27" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE"
+							, "membership amount", "net sales unit pv total","net sales unit pv tota", "applicable rate by totalpv", "pv total", "price total", "net sales pv total", "SHI rental collection rate", "SHI Index", "SHI rental collection rate", "SHI Index" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPG_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPM_P01))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "v1", "v8", "v9", "v13", "v14", "v15", "v16", "v17", "v18", "v19"
+							, "v20", "v21", "v22", "v24", "v25", "v26", "v27"};
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE"
+							, "membership amount", "net sales unit pv tota", "net sales unit pv total", "net sales unit pv total", "net sales unit pv total", "Bonus Rate", "pv total", "price total", "net sales pv total", "pv total"
+							, "price total", "net sales pv total", "neo pro hp's number", "SHI rental collection rate", "SHI Index", "SHI rental collection rate", "SHI Index"};
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPM_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPS_P01))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "v1", "v8", "v9", "v13", "v14", "v15", "v16", "v17", "v18", "v19"
+							, "v20", "v21", "v22", "v24", "v25", "v26", "v27" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE"
+							, "membership amount", "net sales unit pv total", "net sales unit pv total", "net sales unit pv total", "net sales unit pv total", "Bonus Rate", "pv tota", "price total", "net sales pv total", "pv total"
+							, "price total", "net sales pv total", "neo pro hp's number", "SHI rental collection rate", "SHI Index", "SHI rental collection rate", "SHI Index" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPS_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPT_P01))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "v1", "v8", "v9", "v13", "v14", "v15", "v16", "v17", "v18", "v19"
+							, "v20", "v21", "v22", "v24", "v25", "v26", "v27"};
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "membership amount", "net sales unit pv total", "net sales unit pv total", "net sales unit pv total", "net sales unit pv total", "Bonus Rate", "pv total", "price total", "net sales pv total", "pv total"
+							, "price total", "net sales pv total", "neo pro hp's numbe", "SHI rental collection rate", "SHI Index", "SHI rental collection rate", "SHI Index"};
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPT_P01)){
 					map.put("emplyLev", CommissionConstants.COMIS_S_G_MANAGER_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "v8", "v14", "v20", "v28"};
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "EMPLY CODE", "MEM TYPE"
+							, "net sales unit pv total", "net sales unit pv total", "price tota", "Only Wallace"};
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}
 				map.put("memberId", request.getParameter("memberId"));
 
-				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "v1", "v8", "v9", "v13",
-						"v14", "v15", "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v24", "v25", "v26", "v27",
-						"v28" };
-				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "V1", "V8", "V9",
-						"V13", "V14", "V15", "V16", "V17", "V18", "V19", "V20", "V21", "V22", "V24", "V25", "V26",
-						"V27", "V28" };
-				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad28HP(map, downloadHandler);
 
 			}
+			
+			
 			if (codeNm.equals(CommissionConstants.COMIS_CTL_P02) || codeNm.equals(CommissionConstants.COMIS_CTM_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_CTW_P02)) {
+				
 				map.put("codeGruop", CommissionConstants.COMIS_CT);
-				if (codeNm.equals(CommissionConstants.COMIS_CTW_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CTW_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CTL_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "Gross Comm", "Rental Comm", "Srv Mem Comm", "Basic   Allowance","Performance Incentive", "Adjustment", "CFF + Reward", "Seniority" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "Gross Comm", "Rental Comm", "Srv Mem Comm", "Basic   Allowance","Performance Incentive", "Adjustment", "CFF + Reward", "Seniority" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_CTL_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CTM_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "Gross Comm", "Rental Comm", "Srv Mem Comm", "Basic   Allowance","Performance Incentive", "Adjustment", "CFF + Reward", "Seniority" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "Gross Comm", "Rental Comm", "Srv Mem Comm", "Basic   Allowance","Performance Incentive", "Adjustment", "CFF + Reward", "Seniority" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_CTM_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "Gross Comm", "Rental Comm", "Srv Mem Comm", "Basic   Allowance","Performance Incentive", "Adjustment", "CFF + Reward", "Seniority" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "Gross Comm", "Rental Comm", "Srv Mem Comm", "Basic   Allowance","Performance Incentive", "Adjustment", "CFF + Reward", "Seniority" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}
+				
 				map.put("memberId", request.getParameter("memberId"));
 
-				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "r1", "r2", "r3", "r4",
-						"r5", "r6", "r7", "r8" };
-				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "R1", "R2", "R3", "R4",
-						"R5", "R6", "R7", "R8" };
-				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad29CT(map, downloadHandler);
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)
@@ -143,25 +242,51 @@ public class CommissionExcelDownloadController {
 					|| codeNm.equals(CommissionConstants.COMIS_CDM_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_CDN_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_CDS_P02)) {
+				
 				map.put("codeGruop", CommissionConstants.COMIS_CD);
-				if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)
-						|| codeNm.equals(CommissionConstants.COMIS_CDN_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_CDC_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CDM_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r1", "r2", "r3", "r4","r5", "r6", "r7", "r8", "r10", "r11"
+							, "r27", "r28", "r29", "r30", "r34", "r35", "r36", "r38", "r39", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm","sales encouragement allowance", "rental collection Cmm", "Remove Phone Allowance", "Healthy Family Fund", "newely entering allowance", "introduction fees"
+							, "Incentive", "Incentive", "SHI_Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36", "COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if(codeNm.equals(CommissionConstants.COMIS_CDN_P02)){
+					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r1", "r2", "r3", "r4","r5", "r6", "r7", "r8", "r10", "r11"
+							, "r27", "r28", "r29", "r30", "r34", "r35", "r36", "r38", "r39", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm","sales encouragement allowance", "rental collection Cmm", "Remove Phone Allowance", "Healthy Family Fund", "newely entering allowance", "introduction fees"
+							, "Incentive", "Incentive", "SHI_Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36", "COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_CDM_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_CDS_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplycode", "memType"
+							, "r1", "r2", "r3", "r4", "r20", "r21", "r22", "r23", "r24","r26"
+							, "r27", "r28", "r29", "r31", "r34", "r39", "r42", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "Per_Amt", "Personal sales Cmm", "Personal Rental Cmm", "Bonus Cmm", "performance incentive basic salary", "sales commission Overiding", "sales Cmm Overiding", "monthly allowance", "mobile phone allowance","Telephone_Deduct"
+							, "Staff_Purchase", "Others", "SHI_Amt", "r31", "Personal Rental Mem Cmm", "Outright Plus Personal Rental Cmm", "Outright Plus Overidding", "Adjustment" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_CDS_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_S_MANAGER_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplycode", "memType"
+							, "r1", "r2", "r3", "r4", "r19", "r20", "r21", "r22", "r23", "r24"
+							, "r27", "r28", "r29", "r32", "r34", "r39","r41", "r42", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "Per_Amt", "Personal sales Cmm", "Personal Rental Cmm", "Bonus Amt", "sales Cmm", "performance incentive basic salary", "sales Cmm Overiding", "sales Cmm Overiding", "monthly allowance", "mobile phone allowance"
+							, "Staff_Purchase", "Others", "SHI_Amt", "r32", "RentalMembership Amt", "Outright Plus Personal Rental Cmm","Outright Plus Overidding", "r42", "Adjustment" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}
 				map.put("memberId", request.getParameter("memberId"));
 
-				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "r1", "r2", "r3", "r4",
-						"r5", "r6", "r7", "r8", "r10", "r11", "r13", "r18", "r19", "r20", "r21", "r22", "r23", "r24",
-						"r26", "r27", "r28", "r29", "r30", "r31", "r32", "r33", "r34", "r35", "r36", "r38", "r39",
-						"r40", "r41", "r42", "r99" };
-				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "R1", "R2", "R3", "R4",
-						"R5", "R6", "R7", "R8", "R10", "R11", "R13", "R18", "R19", "R20", "R21", "R22", "R23", "R24",
-						"R26", "R27", "R28", "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R38", "R39",
-						"R40", "R41", "R42", "R99" };
-				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad29CD(map, downloadHandler);
 
 			} else if (codeNm.equals(CommissionConstants.COMIS_HPF_P02)
@@ -170,28 +295,77 @@ public class CommissionExcelDownloadController {
 					|| codeNm.equals(CommissionConstants.COMIS_HPS_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_HPT_P02)
 					|| codeNm.equals(CommissionConstants.COMIS_HPB_P02)) {
+				
 				map.put("codeGruop", CommissionConstants.COMIS_HP);
-				if (codeNm.equals(CommissionConstants.COMIS_HPF_P02)
-						|| codeNm.equals(CommissionConstants.COMIS_HPB_P02))
+				if (codeNm.equals(CommissionConstants.COMIS_HPF_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPG_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r1", "r2", "r3", "r4","r5", "r13", "r18", "r19", "r22", "r25"
+							, "r28", "r29", "r30", "r34", "r35", "r36", "r39", "r40","r41", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "performance incentives neopro", "sales Cmm", "Personal Rental Cmm", "Bonus Cmm","performance allowance", "Membership_Amt", "Sales Cmm overidding", "SM Overidding", "HM Overidding", "TBB_Amt"
+							, "Incentive", "SHI_Amt", "r30", "RentalMembership_Amt", "RentalMembership SHI_Amt", "r36", "Personal Outright Plus Cmm", "r40","SM Overidding", "Adjust_Amt" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if(codeNm.equals(CommissionConstants.COMIS_HPB_P02)){
+					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r1", "r2", "r3", "r4","r5", "r13", "r18", "r19", "r22", "r25"
+							, "r28", "r29", "r30", "r34", "r35", "r36", "r39", "r40","r41", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "performance incentives neopro", "sales Cmm", "Personal Rental Cmm", "Bonus Cmm","performance allowance", "Membership_Amt", "Sales Cmm overidding", "SM Overidding", "HM Overidding", "TBB_Amt"
+							, "Incentive", "SHI_Amt", "r30", "RentalMembership_Amt", "RentalMembership SHI_Amt", "r36", "Personal Outright Plus Cmm", "r40","SM Overidding", "Adjust_Amt" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPG_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPM_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r2", "r3", "r4", "r13", "r18", "r19", "r20", "r21", "r22", "r25"
+							, "r28", "r29", "r30", "r32", "r33", "r34", "r39", "r40", "r41", "r42"
+							, "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "sales Cmm", "Personal Rental Cmm", "Bonus", "Mem Amt", "Sales Cmm overidding", "SM Overidding", "performance incentives neopro", "sales Cmm", "HM Overidding", "TBB_Amt"
+							, "Incentive", "SHI_Amt", "r30", "r32", "r33", "RentalMembership Amt", "Personal Outright Plus Cmm", "Outright Plus Overidding", "SM Overidding", "r42"
+							, "Adjust_Amt" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPM_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPS_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r2", "r3", "r4", "r13", "r18", "r19", "r21", "r22", "r25", "r28"
+							, "r29", "r30", "r31", "r34", "r39", "r40", "r41", "r42", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "sales Cmm", "Personal Rental Cmm", "Bonus", "Mem Amt", "Sales Cmm overidding", "SM Overidding", "sales commission Overiding", "HM Overidding", "TBB_Amt", "Incentive"
+							, "SHI_Amt", "r30", "r31", "RentalMembership Amt", "Personal Outright Plus Cmm", "Outright Plus Overidding", "SM Overidding", "r42", "Adjust_Amt" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPS_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_G_MANAGER_MEM_LEV);
-				if (codeNm.equals(CommissionConstants.COMIS_HPT_P02))
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r2", "r33", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "sales Cmm", "Rental before", "Adjust_Amt" };
+							
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}else if (codeNm.equals(CommissionConstants.COMIS_HPT_P02)){
 					map.put("emplyLev", CommissionConstants.COMIS_S_G_MANAGER_MEM_LEV);
+					columns = new String[] { "taskId", "runId", "emplyId", "emplyCode", "memType"
+							, "r1", "r2", "r3", "r4","r5", "r13", "r18", "r19", "r20", "r21"
+							, "r22", "r25", "r28", "r29", "r30", "r31", "r32", "r33",
+							"r34", "r35", "r36", "r39", "r40", "r41", "r42", "r99" };
+					titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM CODE", "MEM TYPE"
+							, "r1", "r2", "r3", "Bonus","PA", "Membership_Amt", "r18", "r19", "r20", "r21"
+							, "r22", "TBB_Amt", "Incentive", "SHI_Amt", "r30", "r31", "r32", "r33",
+							"RentalMembership_Amt", "RentalMembership_SHI_Amt", "r36", "r39", "r40", "r41", "r42", "Adjust_Amt" };
+					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					
+				}
 				map.put("memberId", request.getParameter("memberId"));
 
-				columns = new String[] { "taskId", "runId", "emplyId", "memType", "memType", "r1", "r2", "r3", "r4",
-						"r5", "r13", "r18", "r19", "r20", "r21", "r22", "r25", "r28", "r29", "r30", "r31", "r32", "r33",
-						"r34", "r35", "r36", "r39", "r40", "r41", "r42", "r99" };
-				titles = new String[] { "TASK ID", "RUN ID", "EMPLY ID", "MEM TYPE", "MEM TYPE", "R1", "R2", "R3", "R4",
-						"R5", "R13", "R18", "R19", "R20", "R21", "R22", "R25", "R28", "R29", "R30", "R31", "R32", "R33",
-						"R34", "R35", "R36", "R39", "R40", "R41", "R42", "R99" };
-				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad29HP(map, downloadHandler);
+				
+				
 			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P01)) {
 				map.put("codeId", request.getParameter("codeId"));
 				map.put("memberId", request.getParameter("memberId"));

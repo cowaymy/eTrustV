@@ -115,12 +115,12 @@
         editable : false
     },{
         dataField : "v12",
-        headerText : "Pro Factor (30%)",
+        headerText : "Pro Facto<br>(30%)",
         style : "my-column",
         editable : false
     },{
         dataField : "v13",
-        headerText : "Per Factor (70%)",
+        headerText : "Per Factor<br>(70%)",
         style : "my-column",
         editable : false
     },{

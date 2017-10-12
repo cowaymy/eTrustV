@@ -75,12 +75,12 @@
         editable : false
     },{
         dataField : "r4",
-        headerText : "Basic and Allowance",
+        headerText : "Basic <br> Allowance",
         style : "my-column",
         editable : false
     },{
         dataField : "r5",
-        headerText : "Performance Incentive",
+        headerText : "Performance<br>Incentive",
         style : "my-column",
         editable : false
     },{
