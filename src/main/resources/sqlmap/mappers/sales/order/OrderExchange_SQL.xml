@@ -198,16 +198,16 @@
 			       WHERE 1=1
 			       <if test="startCrtDt != null and startCrtDt != ''">
                          <![CDATA[
-                         AND Filter1.SO_EXCHG_CRT_DT >= TO_CHAR(TO_DATE( #{startCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                         AND Filter1.SO_EXCHG_CRT_DT >= TO_DATE( #{startCrtDt} , 'DD/MM/YYYY')
                          ]]>
                     </if>
                     <if test="endCrtDt != null and endCrtDt != ''">
                          <![CDATA[
-                         AND Filter1.SO_EXCHG_CRT_DT <= TO_CHAR(TO_DATE( #{endCrtDt} , 'DD-MM-YYYY'), 'YYYY-MM-DD')
+                         AND Filter1.SO_EXCHG_CRT_DT <= TO_DATE( #{endCrtDt} , 'DD/MM/YYYY')
                          ]]>
                     </if>
                     <if test="salesOrdNo != null and salesOrdNo != ''">
-                         AND Filter1.SO_ID = #{salesOrderNo}
+                         AND Filter1.SALES_ORD_NO = #{salesOrdNo}
                     </if>
                     <if test="crtUserName != null and crtUserName != ''">
                          AND Filter1.USERNAME1 = #{crtUserName}
@@ -814,4 +814,71 @@
         VALUES 
             ( #{getLogIdMaxSeq}, #{salesOrdId}, #{prgrsId}, SYSDATE, #{refId}, #{isLok}, #{logCrtUserId}, SYSDATE )
     </insert>
+    
+    <select id="invStkMovLOG0013D" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.MOV_ID   ,
+			       Extent1.INSTALL_ENTRY_ID   ,
+			       Extent1.MOV_FROM_LOC_ID   ,
+			       Extent1.MOV_TO_LOC_ID   ,
+			       Extent1.MOV_TYPE_ID   ,
+			       Extent1.MOV_STUS_ID   ,
+			       Extent1.MOV_CNFM   ,
+			       Extent1.MOV_CRT_DT   ,
+			       Extent1.MOV_UPD_DT   ,
+			       Extent1.MOV_CRT_USER_ID   ,
+			       Extent1.MOV_UPD_USER_ID   ,
+			       Extent1.STK_CRD_POST   ,
+			       Extent1.STK_CRD_POST_DT   ,
+			       Extent1.STK_CRD_POST_TO_WEB_ON_TM   
+		   FROM LOG0013D Extent1
+		 WHERE Extent1.MOV_ID = #{movId}
+            <![CDATA[
+             AND ROWNUM <= 1
+            ]]>
+    </select>
+    
+    <update id="updateExchgLOG0013D" parameterType="Map">
+        UPDATE LOG0013D
+			  SET MOV_STUS_ID = #{movStusId},
+			        MOV_UPD_DT = SYSDATE,
+			        MOV_UPD_USER_ID = #{userId}
+		  WHERE MOV_ID = #{movId}
+    </update>
+    
+    <select id="exchangeLOG0038D" parameterType="Map" resultType="egovMap">
+          SELECT Extent1.STK_RETN_ID   ,
+                     Extent1.STUS_CODE_ID   ,
+                     Extent1.TYPE_ID   ,
+                     Extent1.SALES_ORD_ID   ,
+                     Extent1.MOV_ID   ,
+                     Extent1.REQST_DT   ,
+                     Extent1.CRT_DT   ,
+                     Extent1.CRT_USER_ID   ,
+                     Extent1.UPD_DT   ,
+                     Extent1.UPD_USER_ID   ,
+                     Extent1.REF_ID   ,
+                     Extent1.STOCK_ID   ,
+                     Extent1.IS_SYNCH   ,
+                     Extent1.RETN_NO   ,
+                     Extent1.APP_DT   ,
+                     Extent1.CT_ID   ,
+                     Extent1.CT_GRP   ,
+                     Extent1.CALL_ENTRY_ID   
+             FROM LOG0038D Extent1
+           WHERE Extent1.REF_ID = #{refId}
+               AND 297 = Extent1.TYPE_ID
+               AND Extent1.SALES_ORD_ID = #{salesOrdId}
+              <![CDATA[
+               AND ROWNUM <= 1
+               ]]>
+    </select>
+    
+    <update id="updateExchangeLOG0038D" parameterType="Map">
+        UPDATE LOG0038D
+             SET UPD_DT = SYSDATE,
+                   UPD_USER_ID = #{userId},
+                   STUS_CODE_ID #{stusCodeId} 
+         WHERE STK_RETN_ID = #{stkRetnId}
+    </update>
+    
 </mapper>

@@ -107,6 +107,24 @@ public class OrderExchangeController {
 	}
 	
 	
+	/**
+	 * Exchange Information. - Product Exchange Type
+	 */
+	@RequestMapping(value = "/orderExchangeRemPop.do")
+	public String orderExchangeRemPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+				
+		model.addAttribute("initType", params.get("initType"));
+		model.addAttribute("exchgStus", params.get("exchgStus"));
+		model.addAttribute("exchgCurStusId", params.get("exchgCurStusId"));
+		model.addAttribute("salesOrderId", params.get("exchgCurStusId"));
+		model.addAttribute("soExchgIdDetail", params.get("soExchgIdDetail"));
+
+		
+		return "sales/order/orderExchangeRemPop";
+		
+	}
+	
+	
 	@RequestMapping(value = "/saveCancelReq.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> saveCancelReq(@RequestParam Map<String, Object> params, ModelMap mode)
 			throws Exception {

@@ -64,6 +64,9 @@ public interface OrderExchangeMapper {
 	int updateResultIdCCR0006D(Map<String, Object> params);
 	int getLogIdMaxSeq();
 	int insertLogSAL0009D(Map<String, Object> params);
-	
+	EgovMap invStkMovLOG0013D(Map<String, Object> params);
+	EgovMap exchangeLOG0038D(Map<String, Object> params);
+	void updateExchangeLOG0038D(Map<String, Object> params);
+	void updateExchgLOG0013D(Map<String, Object> params);
 	
 }
