@@ -153,13 +153,21 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 			
 			String billAddrFull = "";
 			String billType = "";
-
+/*
 			if(CommonUtils.isNotEmpty(eMap.get("addrDtl")))  billAddrFull += eMap.get("addrDtl") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("street")))   billAddrFull += eMap.get("street") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("postcode"))) billAddrFull += eMap.get("postcode") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("locality"))) billAddrFull += eMap.get("locality") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("region2")))  billAddrFull += eMap.get("region2") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("region1")))  billAddrFull += eMap.get("region1") + " ";
+*/
+			if(CommonUtils.isNotEmpty(eMap.get("addrDtl")))  billAddrFull += eMap.get("addrDtl") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("street")))   billAddrFull += eMap.get("street") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("area")))     billAddrFull += eMap.get("area") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("postcode"))) billAddrFull += eMap.get("postcode") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("city")))     billAddrFull += eMap.get("city") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("state")))    billAddrFull += eMap.get("state") + " ";
+			if(CommonUtils.isNotEmpty(eMap.get("country")))  billAddrFull += eMap.get("country") + " ";
 			
 			if(((BigDecimal)eMap.get("custBillIsPost")).compareTo(BigDecimal.ONE) == 0) {
 				billType += "Post";
