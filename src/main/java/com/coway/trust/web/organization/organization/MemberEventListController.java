@@ -107,6 +107,7 @@ public class MemberEventListController {
 		
 		params.put("promoId", params.get("promoId"));
 		EgovMap promoInfo = memberEventService.getMemberEventDetailPop(params);
+		logger.debug("promoInfo : {}", promoInfo);
 		model.addAttribute("promoInfo", promoInfo);
 
 		return "organization/organization/memberEventDetailPop";
@@ -146,7 +147,7 @@ public class MemberEventListController {
 //
 //		model.put("promoEntries", promoEntries);
 		if(success){
-			if(params.get("confirmStatus").toString() == "04"){
+			if(params.get("confirmStatus").toString().equals("04")){
 				message.setMessage("Complete this event Success " + params.get("memCode"));
 			}
     		else{
