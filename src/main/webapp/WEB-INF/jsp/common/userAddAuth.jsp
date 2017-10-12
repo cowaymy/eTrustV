@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 /********************************Global Variable Start***********************************/
 // 행 추가, 삽입
@@ -40,7 +40,7 @@ function addDetailRow() {
     item.userId = AUIGrid.getCellValue(grdUser, selectedRow, "userId");
 
     if(item.userId == "" || item.userId == null) {
-        alert("User ID is empty.");
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='User ID' htmlEscape='false'/>");
         return;
     }
 
@@ -130,7 +130,7 @@ function fn_checkChangeRows(gridId,mandatoryItems){
     totalLength = addList.length + updateList.length + removeList.length;
 
 	if(totalLength == 0){
-		alert("No Change Data.");
+		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
 		return true; /* Failed */
 	}
 
@@ -156,7 +156,7 @@ function fn_search(){
 		    	AUIGrid.setGridData(grdUser, data);
 		    },
 		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
+		    	Common.alert("Fail : " + jqXHR.responseJSON.message);
 		    }
 	)
 };
@@ -171,7 +171,7 @@ function fn_detailSearch(userId){
                 AUIGrid.setGridData(grdAddAuth, data);
             },
             function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
+            	Common.alert("Fail : " + jqXHR.responseJSON.message);
             }
     )
 };
@@ -186,22 +186,23 @@ function fn_detailSave(){
         for(var idx = 0 ; idx < addList.length ; idx++){
         	if(addList[idx].authDivCode == "" || typeof(addList[idx].authDivCode) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdAddAuth, addList[idx].rowId);
-                alert("Auth Div Code is essential field.");
+                Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Div Code' htmlEscape='false'/>");
+                sys.msg.necessary
                 return;
             }
         	if(addList[idx].authCode == "" || typeof(addList[idx].authCode) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdAddAuth, addList[idx].rowId);
-                alert("Auth Code is essential field.");
+                Common.alert("<spring:message code='sys.msg.necessary' arguments='Auth Code' htmlEscape='false'/>");
                 return;
             }
         	if(addList[idx].validDtFrom == "" || typeof(addList[idx].validDtFrom) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdAddAuth, addList[idx].rowId);
-                alert("From Date is essential field.");
+                Common.alert("<spring:message code='sys.msg.necessary' arguments='From Date' htmlEscape='false'/>");
                 return;
             }
             if(addList[idx].validDtTo == "" || typeof(addList[idx].validDtTo) == "undefined"){
                 AUIGrid.selectRowsByRowId(grdAddAuth, addList[idx].rowId);
-                alert("To Date is essential field.");
+                Common.alert("<spring:message code='sys.msg.necessary' arguments='From Date' htmlEscape='false'/>");
                 return;
             }
         }
@@ -213,11 +214,11 @@ function fn_detailSave(){
                 "/common/saveUserAddAuthList.do",
                 GridCommon.getEditData(grdAddAuth),
                 function(data, textStatus, jqXHR){ // Success
-                    alert("Saved.");
+                	Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>");
                     fn_search();
                 },
                 function(jqXHR, textStatus, errorThrown){ // Error
-                    alert("Fail : " + jqXHR.responseJSON.message);
+                	Common.alert("Fail : " + jqXHR.responseJSON.message);
                 }
         )
     }
@@ -232,7 +233,7 @@ function fn_commCodesearch(){
             	keyValueList = data;
             },
             function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
             },
             {async: false}
     )
@@ -607,7 +608,7 @@ $(document).ready(function(){
         	var numDtTo = Number(dtTo.toString().replace(/\//g,""));
 
         	if(numDtFrom != 0 && numDtTo != 0 && numDtFrom > numDtTo){
-        		alert("Start date can not be greater than End date.");
+        		Common.alert("Start date can not be greater than End date.");
         		AUIGrid.setCellValue(grdAddAuth, event.rowIndex, event.dataField, event.oldValue);
         	}else{
         		if(event.dataField == "validDtFrom"){

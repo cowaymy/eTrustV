@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 /********************************Global Variable Start***********************************/
 // 행 추가, 삽입
@@ -39,7 +40,7 @@ function addDetailRow() {
     item.mymenuName = AUIGrid.getCellValue(myGridID, selectedRow, "mymenuName");
 
     if(item.mymenuCode == "" || item.mymenuCode == null) {
-    	alert("My Menu Code is Null or not saved.");
+    	Common.alert("My Menu Code is Null or not saved.");
     	return;
     }
 
@@ -127,7 +128,7 @@ function fn_search(){
 		        Common.setMsg("Menu Group Search Success.");
 		    },
 		    function(jqXHR, textStatus, errorThrown){ // Error
-		    	alert("Fail : " + jqXHR.responseJSON.message);
+		    	Common.alert("Fail : " + jqXHR.responseJSON.message);
 		    	Common.setMsg("Failed.");
 		    }
 	)
@@ -135,6 +136,7 @@ function fn_search(){
 
 function fn_save(){
 	if(fn_checkChangeRows(myGridID)){
+		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
         return;
     }
 	var addList = AUIGrid.getAddedRowItems(myGridID);
@@ -142,27 +144,28 @@ function fn_save(){
         for(var idx = 0 ; idx < addList.length ; idx++){
             if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
                 AUIGrid.selectRowsByRowId(myGridID, addList[idx].rowId);
-                alert("My Menu Code is essential field.");
+                Common.alert("<spring:message code='sys.msg.necessary' arguments='MyMenuCode' htmlEscape='false'/>");
                 return;
             }
         }
     }
 
-	if(confirm("Do you want to save it?")){
-		Common.ajax(
-	            "POST",
-	            "/common/saveMyMenuList.do",
-	            GridCommon.getEditData(myGridID),
-	            function(data, textStatus, jqXHR){ // Success
-	            	alert("Saved.");
-	                fn_search();
-	            },
-	            function(jqXHR, textStatus, errorThrown){ // Error
-	                alert("Fail : " + jqXHR.responseJSON.message);
-	                Common.setMsg("Failed.");
-	            }
-	    )
-	}
+    Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
+    	Common.ajax(
+                "POST",
+                "/common/saveMyMenuList.do",
+                GridCommon.getEditData(myGridID),
+                function(data, textStatus, jqXHR){ // Success
+                    Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>");
+                    fn_search();
+                },
+                function(jqXHR, textStatus, errorThrown){ // Error
+                    alert("Fail : " + jqXHR.responseJSON.message);
+                    Common.setMsg("Failed.");
+                }
+        )
+    });
+
 };
 
 function fn_detailSearch(mymenuCode){
@@ -172,18 +175,18 @@ function fn_detailSearch(mymenuCode){
             "mymenuCode="+mymenuCode,
             function(data, textStatus, jqXHR){ // Success
                 AUIGrid.setGridData(myGridDetailID, data);
-                Common.setMsg("Menu Search Success.");
+                Common.setMsg("<spring:message code='sys.msg.success'/>");
             },
             function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
-                Common.setMsg("Menu Search Failed.");
+            	Common.alert("Fail : " + jqXHR.responseJSON.message);
+                Common.setMsg("<spring:message code='sys.msg.fail'/>");
             }
     )
 };
 
 function fn_detailSave(){
 	if(fn_checkChangeRows(myGridDetailID)){
-		alert("No changed Data.");
+		Common.alert("<spring:message code='sys.common.alert.noChange'/>");
 		return;
 	}
 
@@ -192,32 +195,34 @@ function fn_detailSave(){
 		for(var idx = 0 ; idx < addList.length ; idx++){
 			if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
 				AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
-				alert("My Menu Code is essential field.");
+				Common.alert("<spring:message code='sys.msg.necessary' arguments='My Menu Code' htmlEscape='false'/>");
                 return;
             }
 			if(addList[idx].menuCode == "" || typeof(addList[idx].menuCode) == "undefined"){
 				AUIGrid.selectRowsByRowId(myGridDetailID, addList[idx].rowId);
-				alert("Menu Code is essential field.");
+				Common.alert("<spring:message code='sys.msg.necessary' arguments='Menu Code' htmlEscape='false'/>");
 				return;
 			}
 		}
 	}
 
 
-    if(confirm("Do you want to save it?")){
-        Common.ajax(
-                "POST",
-                "/common/savetMyMenuProgrmList.do",
-                GridCommon.getEditData(myGridDetailID),
-                function(data, textStatus, jqXHR){ // Success
-                    alert("Saved.");
-                    fn_search();
-                },
-                function(jqXHR, textStatus, errorThrown){ // Error
-                    alert("Fail : " + jqXHR.responseJSON.message);
-                }
-        )
-    }
+    Common.confirm("<spring:message code='sys.common.alert.save'/>",
+    		function(){
+            Common.ajax(
+	                "POST",
+	                "/common/savetMyMenuProgrmList.do",
+	                GridCommon.getEditData(myGridDetailID),
+	                function(data, textStatus, jqXHR){ // Success
+	                	Common.alert("<spring:message code='sys.msg.success'/>");
+	                    fn_search();
+	                },
+	                function(jqXHR, textStatus, errorThrown){ // Error
+	                    Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                }
+	        )
+        }
+    );
 };
 
 /****************************Transaction End**********************************/
