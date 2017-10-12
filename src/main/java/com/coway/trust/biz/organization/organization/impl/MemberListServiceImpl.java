@@ -153,8 +153,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("applicantSpouseOccupation",params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
 			MemApp.put("applicantSpouseTelContact",params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
 			MemApp.put("applicantSpouseDOB",params.get("spouseDOB").toString().trim()!=null ? params.get("spouseDOB").toString().trim() :"01/01/1900");
-			MemApp.put("applicantEduLevel",params.get("educationLvl")!=null ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
-			MemApp.put("applicantLanguage",params.get("language")!=null ? Integer.parseInt(params.get("language").toString().trim()) : 0);
+			MemApp.put("applicantEduLevel",params.get("educationLvl")!=null && params.get("educationLvl")!="" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
+			MemApp.put("applicantLanguage",params.get("language")!="" && params.get("language")!=null ? Integer.parseInt(params.get("language").toString().trim()) : 0);
 			MemApp.put("applicantBankID",Integer.parseInt(params.get("issuedBank").toString()));
 			MemApp.put("applicantBankAccNo",params.get("bankAccNo").toString().trim());
 			MemApp.put("applicantSponsorCode",params.get("sponsorCd").toString().trim()!=null ? params.get("sponsorCd").toString().trim() : "");
@@ -219,8 +219,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("officeNo", params.get("officeNo").toString().trim()!=null ? params.get("officeNo").toString().trim() : "");
 		params.put("residenceNo", params.get("residenceNo").toString().trim()!=null ? params.get("residenceNo").toString().trim() : "");
 		params.put("email", params.get("email").toString().trim()!=null ? params.get("email").toString().trim() : "");
-		params.put("educationLvl", params.get("educationLvl")!=null ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
-		params.put("language", params.get("language")!=null ? Integer.parseInt(params.get("language").toString().trim()) : 0);
+		params.put("educationLvl", params.get("educationLvl")!=null &&  params.get("educationLvl")!="" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
+		params.put("language", params.get("language")!=null && params.get("language")!=""? Integer.parseInt(params.get("language").toString().trim()) : 0);
 		params.put("issuedBank", params.get("issuedBank")!=null ? params.get("issuedBank").toString().trim() : "");
 		params.put("bankAccNo", params.get("bankAccNo").toString().trim()!=null ? params.get("bankAccNo").toString().trim() : "");
 		params.put("sponsorCd", params.get("sponsorCd").toString().trim()!=null ? params.get("sponsorCd").toString().trim() : "");
