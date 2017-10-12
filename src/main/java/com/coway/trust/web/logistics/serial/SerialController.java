@@ -62,6 +62,11 @@ public class SerialController {
 			List<Object> tmp = (List<Object>) params.get("srchcatagorytype");
 			params.put("cateList", tmp);
 		}
+		if (!"".equals(params.get("materialtype")) || null != params.get("materialtype")) {
+			logger.debug("materialtype : {}", params.get("materialtype"));
+			List<Object> tmp = (List<Object>) params.get("materialtype");
+			params.put("typeList", tmp);
+		}
 		List<EgovMap> list = serialService.searchSeialList(params);
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();

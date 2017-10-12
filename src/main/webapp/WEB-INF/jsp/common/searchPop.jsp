@@ -38,7 +38,7 @@ $(document).ready(function(){
 	var surl = "${url.sUrl }";
     var col;
     var gb = "${url.isgubun }";
-    console.log("${url}")
+    
     if (gb == "item"){
         col  = itemLayout;
         $("#material").hide();
@@ -64,7 +64,9 @@ $(document).ready(function(){
     	$("#srchNmTh").text("Search WH_Description");
     	col= locLayout;
     	
-    	$("#material").hide();
+    	$("#material").empty();
+    	$("#material").html("<th scope='row'>Location Grade</th><td colspan=5><select class='w100p' id='locgb' name='locgb[]'></select></td>");
+    	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'locgb', 'M','f_multuComboLoc');
     }else{
         gb="item";
         col  = itemLayout;
@@ -75,7 +77,10 @@ $(document).ready(function(){
     
     myGridID = GridCommon.createAUIGrid("grid_wrap", col, null, gridoptions);
     
-    fn_SearchList(surl);
+    if ($("#scode").val() != ""){
+        fn_SearchList(surl);
+    }
+    
     //fn_getSampleListAjax();
     
     // 셀 더블클릭 이벤트 바인딩
@@ -169,7 +174,7 @@ var locLayout = [
 function fn_SearchList(url) {
    // f_showModal();
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
+    
     Common.ajax("POST" , url , param , function(data){
     	
     	AUIGrid.setGridData(myGridID, data.data);
@@ -196,6 +201,15 @@ function f_multiCombo() {
             selectAll : true,
             width : '80%'
         });
+    });
+}
+
+function f_multuComboLoc(){
+	$('#locgb').change(function() {
+
+    }).multipleSelect({
+        selectAll : true,
+        width : '80%'
     });
 }
 

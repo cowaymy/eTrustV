@@ -68,14 +68,20 @@ public class LocationController {
 			HttpServletResponse response) throws Exception {
 		String statusCd = request.getParameter("status");
 		String branchId = request.getParameter("branchid");
-		String locdesc = request.getParameter("locdesc");
-		String loccd = request.getParameter("loccd");
+		String locdesc  = request.getParameter("locdesc");
+		String loccd    = request.getParameter("loccd");
+		
+		String[] loctype    = request.getParameterValues("loctype");
+		String locgrad    = request.getParameter("locgrad");
 
 		Map<String, Object> smap = new HashMap();
-		smap.put("branch", branchId);
-		smap.put("status", statusCd);
-		smap.put("locdesc", locdesc);
-		smap.put("loccd", loccd);
+		smap.put("branch"  , branchId);
+		smap.put("status"  , statusCd);
+		smap.put("locdesc" , locdesc);
+		smap.put("loccd"   , loccd);
+		                   
+		smap.put("loctype" , loctype);
+		smap.put("locgrad" , locgrad);
 
 		List<EgovMap> list = loc.selectLocationList(smap);
 
@@ -155,15 +161,6 @@ public class LocationController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-//		if (loc_Sync == true) {
-//			inis_sync = 1;
-//		}
-//
-//		if (loc_Mobile == true) {
-//			inmobile = 1;
-//		}
-		
-		logger.debug(":: {}", params);
 		
 		String inwarecd      = (String) params.get("inwarecd");
 		String inwarenm      = (String) params.get("inwarenm");
@@ -259,6 +256,17 @@ public class LocationController {
 	@RequestMapping(value = "/locationCdSearch.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> selectLocationCodeList(@RequestBody Map<String, Object> params, Model model)
 			throws Exception {
+		
+		if (params.get("locgb") != null ){
+    		List<String> list = (List)params.get("locgb");
+    		if (!list.isEmpty()){
+    			String[] locgb = new String[list.size()];
+    			for (int i = 0 ; i < list.size(); i++){
+    				locgb[i] = list.get(i);
+        		}
+        		params.put("locgb" , locgb);
+    		}
+		}
 
 		List<EgovMap> codeList = loc.selectLocationCodeList(params);
 

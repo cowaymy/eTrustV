@@ -32,18 +32,19 @@ var subGrid;
 var userCode;
 
                       
- var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"stkCode"       ,headerText:"Material Code"                      ,width:120    ,height:30 },
-                      {dataField:"stkDesc"      ,headerText:"Material Name"      ,width:120    ,height:30                },
-                      {dataField:"ctgryId"        ,headerText:"CategoryID"               ,width:120    ,height:30,visible:false  },
-                      {dataField:"ctgryName"      ,headerText:"Category"                      ,width:120    ,height:30                },
-                      {dataField:"typeId"     ,headerText:"TypeID" ,width:120    ,height:30,visible:false },
-                      {dataField:"typeName"        ,headerText:"Type"            ,width:120    ,height:30 },
-                      {dataField:"locDesc"        ,headerText:"Location"               ,width:120    ,height:30 },
-                      {dataField:"qty"       ,headerText:"QTY"               ,width:120    ,height:30},
-                      {dataField:"movQty"      ,headerText:"In-Transit QTY"       ,width:120    ,height:30                },
-                      {dataField:"bookingQty"        ,headerText:"Booking QTY"         ,width:120    ,height:30                },
-                      {dataField:"availableQty"        ,headerText:"Available Qty"         ,width:120    ,height:30                }
+ var rescolumnLayout=[{dataField:"rnum"           ,headerText:"RowNum"            ,width:120    ,height:30 , visible:false},
+                      {dataField:"stkCode"        ,headerText:"Material Code"     ,width:120    ,height:30 },
+                      {dataField:"stkDesc"        ,headerText:"Material Name"     ,width:120    ,height:30                },
+                      {dataField:"ctgryId"        ,headerText:"CategoryID"        ,width:120    ,height:30,visible:false  },
+                      {dataField:"ctgryName"      ,headerText:"Category"          ,width:120    ,height:30                },
+                      {dataField:"typeId"         ,headerText:"TypeID"            ,width:120    ,height:30,visible:false },
+                      {dataField:"typeName"       ,headerText:"Type"              ,width:120    ,height:30 },
+                      {dataField:"locDesc"        ,headerText:"Location"          ,width:120    ,height:30 },
+                      {dataField:"whlocgb"        ,headerText:"Location Grade"    ,width:120    ,height:30 },
+                      {dataField:"qty"            ,headerText:"QTY"               ,width:120    ,height:30},
+                      {dataField:"movQty"         ,headerText:"In-Transit QTY"    ,width:120    ,height:30                },
+                      {dataField:"bookingQty"     ,headerText:"Booking QTY"       ,width:120    ,height:30                },
+                      {dataField:"availableQty"   ,headerText:"Available Qty"     ,width:120    ,height:30                }
                       ];                     
                                     
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
@@ -98,8 +99,7 @@ $(document).ready(function(){
     //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
-       
-    
+    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
     /**********************************
      * Header Setting End
      ***********************************/
@@ -133,12 +133,23 @@ $(function(){
             SearchListAjax();
         }
     });
-    $('#svalue').keypress(function(event) {
+    $('#searchLocNm').keypress(function(event) {
     	$('#searchLoc').val('');
         if (event.which == '13') {
+        	$("#stype").val('location');
+        	$("#svalue").val($('#searchLocNm').val());
             $("#sUrl").val("/logistics/organization/locationCdSearch.do");
 
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
+    $('#searchMatName').keypress(function(event) {
+    	$('#searchMatCode').val('');
+        if (event.which == '13') {
+        	$("#stype").val('stock');
+        	$("#svalue").val($('#searchMatName').val());
+        	$("#sUrl").val("/logistics/material/materialcdsearch.do");
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
         }
     });
 
@@ -165,29 +176,23 @@ function SearchListAjax() {
 
 function f_validatation(v){
              
-            if ($("#svalue").val() == null || $("#svalue").val() == undefined || $("#svalue").val() == ""){
+            if ($("#searchLocNm").val() == null || $("#searchLocNm").val() == undefined || $("#searchLocNm").val() == ""){
                 Common.alert("Please Select Location.");
                 return false;
             }
             return true;
 }
 
-function f_LocMultiCombo() {
-    $(function() {
-        $('#svalue').change(function() {
-            
-            $("#svalue").val(userCode);
-        });
-    });
-}
-
-
 function f_multiCombo() {
     $(function() {
         $('#searchType').change(function() {
         }).multipleSelect({
             selectAll : true
-        });  /* .multipleSelect("checkAll"); */        
+        });  /* .multipleSelect("checkAll"); */
+        $('#searchlocgb').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        });
     });
 }
 function f_multiCombos() {
@@ -203,9 +208,16 @@ function fn_itempopList(data){
     
     var rtnVal = data[0].item;
     console.log(rtnVal);
-    $("#searchLoc").val(rtnVal.locid);
-    $("#svalue").val(rtnVal.locdesc);
-   } 
+    if ($("#stype").val() == "stock" ){
+    	$("#searchMatCode").val(rtnVal.itemcode);
+        $("#searchMatName").val(rtnVal.itemname);
+    }else{
+    	$("#searchLoc").val(rtnVal.locid);
+        $("#searchLocNm").val(rtnVal.locdesc);
+    }
+    
+    $("#svalue").val();
+} 
 
 
 </script>
@@ -219,7 +231,7 @@ function fn_itempopList(data){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Total Stock List</h2>
+<h2>Total Stock List</h2>
 </aside><!-- title_line end -->
 
 
@@ -235,7 +247,8 @@ function fn_itempopList(data){
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
         <input type="hidden" id="sUrl" name="sUrl">
-        
+        <INPUT type="hidden" id="svalue" name="svalue">
+        <INPUT type="hidden" id="stype" name="stype">
         <input type="hidden" name="LocCode" id="LocCode" />    
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
@@ -244,28 +257,36 @@ function fn_itempopList(data){
                 <col style="width:*" />
                 <col style="width:140px" />
                 <col style="width:*" />
+                <col style="width:140px" />
+                <col style="width:*" />
             </colgroup>
             <tbody>
                 <tr>
-                <th scope="row">Material Code</th>
-                   <td >
-                      <input type="text" title="" placeholder=""  class="w100p" id="searchMatCode" name="searchMatCode"/>
-                    </td> 
-                    <th scope="row">Location</th>
-                    <td>
+                   <th scope="row">Location</th>
+                   <td>
                         <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc">
-                        <INPUT type="text" class="w100p" id="svalue" name="svalue">
-                    </td> 
+                        <INPUT type="text"   class="w100p" id="searchLocNm" name="searchLocNm">
+                   </td> 
+                   <th scope="row">Location Grade</th>
+                   <td>
+                        <select class="w100p" id="searchlocgb" name="searchlocgb"></select>
+                   </td>
+                   <td colspan='2'></td> 
                 </tr>
                 <tr>
-                    <th scope="row">Category</th>
-                    <td>
-                        <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
-                    </td>
-                    <th scope="row">Type</th>
-                    <td>
-                        <select class="w100p" id="searchType" name="searchType"></select>
-                    </td>         
+                   <th scope="row">Material Code</th>
+                   <td >
+                      <input type="hidden" title="" placeholder=""  class="w100p" id="searchMatCode" name="searchMatCode"/>
+                      <input type="text"   title="" placeholder=""  class="w100p" id="searchMatName" name="searchMatName"/>
+                   </td> 
+                   <th scope="row">Category</th>
+                   <td>
+                       <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
+                   </td>
+                   <th scope="row">Type</th>
+                   <td>
+                       <select class="w100p" id="searchType" name="searchType"></select>
+                   </td>    
                 </tr>
                              
             </tbody>

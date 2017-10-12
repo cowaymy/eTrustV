@@ -109,7 +109,9 @@
        T1.IS_PROMO_ITM,
        T1.PROMO_NORMAL_PRC,
        T1.CURRENCY,
+       S94.CODE_DESC CURRENCYNM,
        T1.UOM,
+       S42.CODE_DESC UOMNAME,
        T1.ITEM_TYPE,
        T1.OLD_STK_ID,
        S63.CODE_ID,
@@ -151,8 +153,12 @@
        ) T1,
        (SELECT *
           FROM SYS0013M
-         WHERE CODE_MASTER_ID = 63) S63
+         WHERE CODE_MASTER_ID = 63) S63,
+       (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 42) S42,
+       (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 94) S94
  WHERE T1.CTGRY_ID = S63.CODE_ID(+)             
+   AND T1.UOM       = S42.CODE_ID(+)
+   AND T1.CURRENCY  = S94.CODE_ID(+)
     </select>
     <select id="selectNonItemType" resultType="egovMap">
         select * from 

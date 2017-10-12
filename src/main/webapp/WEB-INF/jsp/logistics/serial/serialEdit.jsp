@@ -47,6 +47,8 @@ var popGridId;
 var myGridIDExcel;
 var myGridIDExcelHide;
 
+var decedata = [{"code":"Y","codeName":"Y"},{"code":"N","codeName":"N"}];
+
 var selectedItem; 
 var columnLayout = [
 							{dataField:"serialNo" ,headerText:"Serial Number",width:500 ,height:30},
@@ -164,10 +166,10 @@ var detailLayout = [
 
                             ];
 var popLayout = [
-							{dataField:"serialNoPop" ,headerText:"Serial Number",width:120 ,height:30, editable:true},
-							{dataField:"matnrPop" ,headerText:"Material Number",width:120 ,height:30 , editable:true},
-							{dataField:"latransitPop" ,headerText:"Location",width:120 ,height:30 , editable:true},
-							{dataField:"gltriPop" ,headerText:"Product Finished Date in HQ",width:120 ,height:30 , editable:true,
+							{dataField:"serialNoPop"  ,headerText:"Serial Number",width:200 ,height:30, editable:true},
+							{dataField:"matnrPop"     ,headerText:"Material Number",width:200 ,height:30 , editable:true},
+							{dataField:"latransitPop" ,headerText:"Location",width:120 ,height:30 , editable:true, visible:false},
+							{dataField:"gltriPop"     ,headerText:"Product Finished Date in HQ",width:200 ,height:30 , editable:true,
 								dataType : "date",
 							    formatString : "dd/mm/yyyy",
 							    editRenderer : {
@@ -177,7 +179,25 @@ var popLayout = [
 							        showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
 							    }
 							},
-							{dataField:"lvormPop" ,headerText:"Deletion Flag for Serial",width:120 ,height:30 , editable:true},
+							{dataField:"lvormPop" ,headerText:"Deletion Flag for Serial",width:200 ,height:30 , editable:true
+								,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
+		                            var retStr = "";
+		                            for(var i=0,len=decedata.length; i<len; i++) {
+		                                if(decedata[i]["code"] == value) {
+		                                    retStr = decedata[i]["code"];
+		                                    break;
+		                                }
+		                            }
+		                            return retStr == "" ? value : retStr;
+		                        },editRenderer : 
+		                        {
+		                           type : "ComboBoxRenderer",
+		                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+		                           list : decedata,
+		                           keyField : "code",
+		                           valueField : "code"
+		                        }
+						    },
 							{dataField:"crtDtPop" ,headerText:"Create Date",width:120 ,height:30 , editable:true, visible:false, 
 							    dataType : "date",
                                 formatString : "dd/mm/yyyy",
@@ -235,31 +255,10 @@ var gridPros = {
 var subgridPros = {
 	    // 페이지 설정
 	    usePaging : false,               
-	   // pageRowCount : 1,              
-	    //fixedColumnCount : 1,
-	    // 편집 가능 여부 (기본값 : false)
 	    editable : true,                
-	    // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-	    //enterKeyColumnBase : true,                
-	    // 셀 선택모드 (기본값: singleCell)
-	    // 컨텍스트 메뉴 사용 여부 (기본값 : false)
-	    //useContextMenu : true,                
-	    // 필터 사용 여부 (기본값 : false)
-	   // enableFilter : true,            
-	    // 그룹핑 패널 사용
-	    //useGroupingPanel : true,                
-	    // 상태 칼럼 사용
-	   // showStateColumn : true,                
-	    // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
-	   // displayTreeOpen : true,                
 	    noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",                
 	    groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />" ,             
-	    //selectionMode : "multipleCells",
-	    //rowIdField : "stkid",
-	    //enableSorting : true,
-	    //showRowCheckColumn : true,'
-	    	softRemoveRowMode:false
-
+	    softRemoveRowMode:false
 	};
 
 $(document).ready(function(){
@@ -279,37 +278,40 @@ $(document).ready(function(){
 	
 	   myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridPros);
 	   myGridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout ,"", gridPros);
-	   detailGridID = GridCommon.createAUIGrid("grid_wrap_2nd", detailLayout,"", gridPros);
+	   //detailGridID = GridCommon.createAUIGrid("grid_wrap_2nd", detailLayout,"", gridPros);
 	   popGridId  = GridCommon.createAUIGrid("popup_wrap_div", popLayout,"", subgridPros);
 	   $("#popup_wrap").hide();
-	   $("#grid_wrap_2nd_art").hide();
+// 	   $("#grid_wrap_2nd_art").hide();
 	
 	   AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
-		   //TODO 상세그리드 함수 호출
-	        if (event.dataField == "serialNo"){
-			   fn_detailSerialInfo(event.value);
-	        }
-        });
+		   console.log(event);
+	   });
+	   
+	   AUIGrid.bind(popGridId, "cellEditBegin", function (event){
+		   if(event.dataField == "matnrPop" && event.value == ""){
+               $("#svalue").val(AUIGrid.getCellValue(popGridId, event.rowIndex, "matnrPop"));
+               $("#sUrl").val("/logistics/material/materialcdsearch.do");
+               Common.searchpopupWin("popupForm", "/common/searchPopList.do","stock");
+           }
+	   });
+	   
 	   AUIGrid.bind(popGridId, "cellEditEnd", function (event){
 		   var serialNo = AUIGrid.getCellValue(popGridId, event.rowIndex, "serialNoPop");
-		   //serial=serialNo.trim();
-		   if(""==serialNo || null ==serialNo){
-		          Common.alert('Please input Serial Number.');
-		           return false;
-		   }else{
-			   fn_serialChck(serialNo);
-		   }  
-		   
-	        if(event.dataField == "matnrPop"){
-	            $("#svalue").val(AUIGrid.getCellValue(popGridId, event.rowIndex, "itmcd"));
-	            $("#sUrl").val("/logistics/material/materialcdsearch.do");
-	            Common.searchpopupWin("popupForm", "/common/searchPopList.do","stock");
-	        }
+		   if(event.dataField == "serialNoPop" ){
+			   if(event.value == ""){
+			      Common.alert('Please input Serial Number.');
+			      return false;
+			   }else{
+				   fn_serialChck(serialNo);
+			   }
+		   }
 	   });
 	   
 	
 	$(function(){
 		doGetCombo('/common/selectCodeList.do', '11', '','srchcatagorytype', 'M' , 'f_multiCombo'); 
+		doGetCombo('/common/selectCodeList.do', '15', '','materialtype', 'M' , 'f_multiCombo');
+		doDefCombo([{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}], '' ,'delfg', 'S', '');
 		$("#create").click(function(){
 	        AUIGrid.clearGridData(popGridId);
 	         //popGridId  = GridCommon.createAUIGrid("popup_wrap_div", popLayout,"", subgridPros);
@@ -357,7 +359,13 @@ $(document).ready(function(){
 				}
 				
 			}
-			searchAjax();
+			
+			if ($("#srchmaterial").val() == "" && $("#srchserial").val() == "" && $("#srchcrtdtfrom").val() == "" && $("#srchcrtdtto").val() == ""
+				&& $("#srchcatagorytype").val() == "" && $("#materialtype").val() == ""	&& $("#delfg").val() == ""   ){
+				Common.alert('Please select at least one search condition.');
+			}else{
+			    searchAjax();
+			}
 		});
 		$("#cancel").click(function(){
 			$("#popup_wrap").hide();
@@ -365,6 +373,9 @@ $(document).ready(function(){
 		$("#add").click(function(){
 			  fn_newSerial();
 		});
+		$("#copy").click(function(){
+            fn_newSerialCopy();
+      });
 	    $('#excelUp').click(function() {
 	        $('input[type=file]').val('');
 	        AUIGrid.clearGridData(myGridIDExcel);
@@ -435,7 +446,14 @@ $(document).ready(function(){
 	            
 	        }
 	    });
-		
+	    $("#srchmaterial").keypress(function(event) {
+            if (event.which == '13') {
+            	$("#svalue").val($("#srchmaterial").val());
+                $("#sUrl").val("/logistics/material/materialcdsearch.do");
+                $("#searchtype").val("search");
+                Common.searchpopupWin("popupForm", "/common/searchPopList.do","stock");
+            }
+        });
 		
 	});
 	
@@ -444,7 +462,7 @@ $(document).ready(function(){
 function searchAjax() {
     var url = "/logistics/serial/searchSeialList.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
+    
     Common.ajax("POST" , url , param , function(data){
         
         AUIGrid.setGridData(myGridID, data.dataList);
@@ -458,7 +476,7 @@ function fn_detailSerialInfo(serialNo){
     	
         AUIGrid.setGridData(detailGridID, data.dataList);
     });
-	   $("#grid_wrap_2nd_art").show();
+// 	   $("#grid_wrap_2nd_art").show();
 };
 
 function fn_editSerial(index){
@@ -478,21 +496,76 @@ function fn_popSave(index){
 	//var serialNo =AUIGrid.getCellValue(myGridID ,index,'serialNo');
     var url = "/logistics/serial/modifySerialOne.do";
     var param = GridCommon.getEditData(popGridId) ;
+    var bool = true;
+    for (var i = 0 ; i < param.add.length ; i++){
+    	var p = param.add[i];
+    	if (selialValidationchk(p)){
+    		return false;
+    		break;
+    	}
+    }
+    for (var i = 0 ; i < param.update.length ; i++){
+    	var p = param.update[i];
+        if (selialValidationchk(p)){
+            return false;
+            break;
+        }
+    }
     
     Common.ajax("POST" , url , param , function(data){
 		$("#popup_wrap").hide();
-		
-		
-        searchAjax();
+// 	    searchAjax();
     });
 	
 };
 
+function selialValidationchk(pm){
+	if (pm.serialNoPop == ""){
+        Common.alert('Please enter the serial number.');
+        return true;
+    }else if (pm.serialNoPop.length > 18){
+    	Common.alert('The serial number is up to 18 digits.');
+        return true;
+    }
+    if (pm.matnrPop == ""){
+    	Common.alert('Please enter the Material Code.');
+        return true;
+    }
+    if (pm.gltriPop ==""){
+    	Common.alert('Please enter the Product Finished Date in HQ.');
+        return true;
+    }
+}
+
 function fn_newSerial(){
 	//AUIGrid.resize(popGridId,980,150); 
-    var item = new Object();
-    AUIGrid.addRow(popGridId, item, "last");
+//     var item = { serialNoPop : "", matnrPop : ""};
+//     AUIGrid.addRow(popGridId, item, "last");
+
+	$("#svalue").val('');
+    $("#sUrl").val("/logistics/material/materialcdsearch.do");
+    Common.searchpopupWin("popupForm", "/common/searchPopList.do","stock");
 };
+
+function fn_newSerialCopy(){
+	var selectedItem = AUIGrid.getSelectedItems(popGridId);
+	console.log(selectedItem);
+	
+	if (selectedItem == undefined){
+		Common.alert('Please select the data to be copied.');
+		return false;
+	}
+	
+	var rowPos = "first";
+    var rowList = {
+            serialNoPop : '' ,
+            matnrPop : selectedItem[0].item.matnrPop,
+            gltriPop : selectedItem[0].item.gltriPop
+    };
+    
+    AUIGrid.addRow(popGridId, rowList, rowPos);
+    
+}
 
 function fn_serialChck(str){
     var url = "/logistics/serial/newSerialCheck.do";
@@ -508,12 +581,28 @@ function fn_serialChck(str){
 
 function fn_itempopList(data){
     
-    var rtnVal = data[0].item.itemcode;
-    selectedItem = AUIGrid.getSelectedIndex(popGridId);
-    var rowIndex=selectedItem[0];
-    var columnIndex=selectedItem[1];
-    AUIGrid.setCellValue(popGridId, rowIndex ,columnIndex-1, rtnVal);
-   } 
+    var rtnVal = data[0].item;
+    
+    if ($("#searchtype").val() == "search"){
+    	$("#srchmaterial").val(rtnVal.itemcode);
+    	
+    }else{
+// 	    selectedItem = AUIGrid.getSelectedItems(popGridId);
+// 	    console.log(AUIGrid.getCellValue(popGridId, selectedItem.rowIndex ,"matnrPop"));
+// 	    AUIGrid.setCellValue(popGridId, selectedItem.rowIndex ,"matnrPop", rtnVal.itemcode);
+// 	    //AUIGrid.updateRow(popGridId, { "matnrPop" : rtnVal.itemcode }, selectedItem.rowIndex);
+        
+    	var rowPos = "first";
+        var rowList = {
+        		serialNoPop : '' ,
+        		matnrPop : rtnVal.itemcode
+        };
+        
+        AUIGrid.addRow(popGridId, rowList, rowPos);
+        
+    }
+    $("#searchtype").val('');
+} 
    
    
    
@@ -657,6 +746,11 @@ function f_multiCombo() {
             selectAll : true, // 전체선택 
             width : '80%'
         });
+        $('#materialtype').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        });
     });
 }
 </script>
@@ -686,9 +780,12 @@ function f_multiCombo() {
 </aside><!-- title_line end -->
 
 <form id="searchForm" name="searchForm">
+<input type="hidden" id="searchtype" name="searchtype"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
+    <col style="width:140px" />
+    <col style="width:*" />
     <col style="width:140px" />
     <col style="width:*" />
     <col style="width:140px" />
@@ -698,34 +795,38 @@ function f_multiCombo() {
 <tr>
     <th scope="row">Material Code</th>
     <td>
-    <input type="text" id="srchmaterial" name="srchmaterial"  class="w100p" />
-
+        <input type="text" id="srchmaterial" name="srchmaterial"  class="w100p" />
     </td>
     <th scope="row">Serial Number</th>
     <td>
-    <input type="text" id="srchserial" name="srchserial"  class="w100p" />
-
+        <input type="text" id="srchserial" name="srchserial"  class="w100p" />
+    </td>
+        <th scope="row">Create Date</th>
+    <td>
+	    <div class="date_set"><!-- date_set start -->
+		    <p>
+		      <input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
+		    </p>
+	            <span>~</span>
+		    <p>
+		       <input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
+		    </p>
+	    </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
     <th scope="row">Category Type</th>
     <td>
-    <select class="multy_select" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" /></select>
+        <select class="multy_select" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" /></select>
     </td>
-    <th scope="row">Create Date</th>
+    <th scope="row">Material Type</th>
     <td>
-
-    <div class="date_set"><!-- date_set start -->
-    <p>
-  <input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
-    </p>
-    <span>~</span>
-    <p>
-    <input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
-    </p>
-    </div><!-- date_set end -->
-
+        <select class="multy_select" multiple="multiple" id="materialtype" name="materialtype[]" /></select>
     </td>
+    <th scope="row">Deletion Flag</th>
+    <td>
+        <select class="w100p" id="delfg" name="delfg" /></select>
+    </td>    
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -735,26 +836,6 @@ function f_multiCombo() {
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
-    <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
@@ -774,17 +855,18 @@ function f_multiCombo() {
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="grid_wrap"></div>
+        <div id="grid_wrap" style="height:430px"></div>
         <div id="grid_wrap_hide" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 
-<article class="grid_wrap" id="grid_wrap_2nd_art"><!-- grid_wrap start -->
-<aside class="title_line"><!-- title_line start -->
-<h3>Material Document Info</h3>
-</aside><!-- title_line end -->
-	<div id="grid_wrap_2nd"></div>
-</article><!-- grid_wrap end -->
+<!-- <article class="grid_wrap" id="grid_wrap_2nd_art">grid_wrap start -->
+<!-- <aside class="title_line">title_line start -->
+<!-- <h3>Material Document Info</h3> -->
+<!-- </aside>title_line end -->
+<!-- 	<div id="grid_wrap_2nd"></div> -->
+<!-- </article>grid_wrap end -->
+
 </section><!-- search_result end -->
 
 </section><!-- content end -->
@@ -802,6 +884,7 @@ function f_multiCombo() {
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 <ul class="right_btns">
+    <li><p class="btn_blue"><a id="copy">Copy</a></p></li>
     <li><p class="btn_blue"><a id="add">Add</a></p></li>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->

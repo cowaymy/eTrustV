@@ -38,7 +38,8 @@
 		         s05m.name branchnm,
 		         s05m.dcode,
 		         s05m.descr,
-		         s28m.WH_LOC_GB whlocgb,
+		         s28m.WH_LOC_GB whlocgb,		         
+                 crdc.CODE_NAME whlocgbnm,
 		         s28m.SERIAL_FT_CHK serialftchk,
 		         s28m.SERIAL_PT_CHK serialptchk,
 		         s28m.SERIAL_PD_CHK serialpdchk,
@@ -60,13 +61,16 @@
 		            FROM SYS0005M s05m, SYS0013M s13m
 		           WHERE s05m.type_id = s13m.code_id(+)) s05m,
 		         SYS0038M s38m,
-		         SYS0047M s47m
+		         SYS0047M s47m,
+		         (SELECT *
+		            FROM SYS0013M
+		           WHERE code_master_id = 339) crdc 
 		         ]]>
-		   WHERE     s28m.WH_LOC_TYPE_ID = 277
-		         AND s28m.AREA_ID        = s64m.AREA_ID(+)
+		   WHERE     s28m.AREA_ID        = s64m.AREA_ID(+)
 		         AND s28m.WH_LOC_BRNCH_ID = s05m.BRNCH_ID(+)
 		         AND s28m.WH_LOC_STUS_ID = s38m.STUS_CODE_ID(+)
 		         AND s28m.WH_LOC_UPD_USER_ID = s47m.USER_ID(+)
+		         AND s28m.WH_LOC_GB = crdc.code(+)
 		         <if test="loccd != null and loccd !=''">
 		              AND s28m.WH_LOC_CODE = #{loccd}
 		         </if>
@@ -81,6 +85,15 @@
                 </if>
                 <if test="warelocid != null and warelocid != ''">
                     AND s28m.WH_LOC_ID  = #{warelocid}
+                </if>
+                <if test="loctype != null and loctype != ''">
+                    AND WH_LOC_GB IN
+                    <foreach item="item" collection="loctype" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                </if>
+                <if test="locgrad != null and locgrad != ''">
+                    AND s28m.WH_LOC_STK_GRAD  = #{locgrad}
                 </if>
 		ORDER BY WH_LOC_CODE    			
 	</select>
@@ -204,6 +217,12 @@
                       or UPPER(s28m.WH_LOC_DESC)  like '%'||UPPER(#{sname})||'%'
                       )
                  </if>
+                 <if test="locgb != null and locgb != ''">
+		            AND s28m.WH_LOC_GB in 
+		            <foreach item="item" collection="locgb" index="index" open="(" separator="," close=")">
+		            #{item}
+		            </foreach>
+		       </if>
         ORDER BY WH_LOC_CODE        
     </select>
 </mapper>

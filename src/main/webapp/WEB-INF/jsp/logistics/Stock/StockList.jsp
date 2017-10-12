@@ -65,8 +65,8 @@
     // AUIGrid 칼럼 설정
     
     var columnLayout = [{dataField:"stkid"             ,headerText:"StockID"           ,width:120 ,height:30, visible : false},
-                        {dataField:"stkcode"           ,headerText:"StockCode"         ,width:100 ,height:30},
-                        {dataField:"stkdesc"           ,headerText:"StockName"         ,width:350 ,height:30,style :"aui-grid-user-custom-left"},
+                        {dataField:"stkcode"           ,headerText:"MaterialCode"         ,width:100 ,height:30},
+                        {dataField:"stkdesc"           ,headerText:"MaterialName"         ,width:350 ,height:30,style :"aui-grid-user-custom-left"},
                         {dataField:"stkcategoryid"     ,headerText:"CategoryID"      ,width:120,height:30 , visible : false},
                         {dataField:"codename"          ,headerText:"Category"      ,width:140 ,height:30},
                         {dataField:"stktypeid"         ,headerText:"TypeID"          ,width:120 ,height:30, visible : false},
@@ -84,7 +84,7 @@
 
     var filtercolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
                         {dataField:"stockname"           ,headerText:"Description"   ,width:"50%", editable : false,style :"aui-grid-user-custom-left"},
-                        {dataField:"stock"           ,headerText:"Desc"   ,width:"20%" , visible : false},
+                        {dataField:"stock"               ,headerText:"Desc"   ,width:"20%" , visible : false},
                         {dataField:"typeid"              ,headerText:"Type"          ,width:120 , visible : false},
                         {dataField:"typenm"              ,headerText:"TypeName"      ,width:"10%", editable : false,style :"aui-grid-user-custom-left"},
                         {dataField:"period"              ,headerText:"Period"        ,width:"10%", editable : false},
@@ -789,6 +789,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                             "<input type='hidden' name='stock_type' id='stock_type' value=''/>");
             $("#stock_type").val(data[0].typeid);
             $("#txtStatus").text(data[0].statusname);
+            $("#txtStatus").html("<select id='statusselect' name='statusselect' class='w100'></select>");
+            doDefCombo(comboData,  data[0].statusname,'statusselect', 'S'); 
             $("#txtStockCode")
                     .html(
                             "<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
@@ -799,7 +801,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     'stock_uom', 'S'); //청구처 리스트 조회
             $("#txtStockName")
                     .html(
-                            "<input type='text' name='stock_name' id='stock_name' value=''/>");
+                            "<input type='text' name='stock_name' id='stock_name' class='w100' value=''/>");
             $("#stock_name").val(data[0].stockname);
             $("#txtCategory")
                     .html(
@@ -973,22 +975,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     }
 
     function decimalSetting(str){
-/*        var nf = new Intl.NumberFormat(["en-US"], {
-                //style: "currency",
-                //currency: "CNY",
-                //currencyDisplay: "symbol",
-                //maximumFractionDigits:2,
-                minimumIntegerDigits:3,
-                minimumFractionDigits:3,
-                maximumFractionDigits:3,
-                minimumSignificantDigits:3,
-                maximumSignificantDigits:3
-            });
-        //var num=nf.format(Number(str));
-        //alert(num); */
         var num=Number(str).toFixed(2);
-        
-         
         return num;
     }
     
@@ -997,10 +984,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
     //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
     // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-    doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M',
-            'f_multiCombo'); //청구처 리스트 조회
-    doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M',
-            'f_multiCombo'); //청구처 리스트 조회
+    doGetCombo('/common/selectCodeList.do', '11', '', 'cmbCategory', 'M', 'f_multiCombo');
+    doGetCombo('/common/selectCodeList.do', '15', '', 'cmbType', 'M','f_multiCombo');
     //doDefCombo(comboData, '' ,'cmbStatus', 'M', 'f_multiCombo');
 
     function f_multiCombo() {
@@ -1053,25 +1038,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
         // 좌우 trim(공백제거)을 해준다.
         num = String(num).replace(/^\s+|\s+$/g, "");
-
-        /*if(typeof opt == "undefined" || opt == "1"){
-          // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
-          var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
-        }else if(opt == "2"){
-          // 부호 미사용, 자릿수구분기호 선택, 소수점 선택
-          var regex = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
-        }else if(opt == "3"){*/
-        // 부호 미사용, 자릿수구분기호 미사용, 소수점 선택
         var regex = /^[0-9]+(\.[0-9]+)?$/g;
-        /*}else{
-          // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
-          var regex = /^[0-9]$/g;
-        }*/
-        
-        /*  var re = /[~!@\#$%^&*\()\-=+_']/gi; 
-         if(re.test(num)){ //특수문자가 포함되면 삭제하여 값으로 다시셋팅
-         $(this).val(num.replace(re,"")); }  */
-
 
         if (regex.test(num)) {
             num = num.replace(/,/g, "").toFixed(2);
@@ -1211,7 +1178,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
                 alt="Home" /></li>
         <li>Logistics</li>
-        <li>Stocks</li>
+        <li>Material Code</li>
     </ul>
     
     <aside class="title_line"><!-- title_line start -->
@@ -1254,11 +1221,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Stock Code</th>
+                    <th scope="row">Material Code</th>
                     <td>
                         <input type=text name="stkCd" id="stkCd" class="w100p numberAmt" value=""/>
                     </td>
-                    <th scope="row">Stock Name</th>
+                    <th scope="row">Material Name</th>
                     <td colspan='3'>
                         <input type=text name="stkNm" id="stkNm" class="w100p" value=""/>
                     </td>                
@@ -1313,7 +1280,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     </colgroup>
                     <tbody>
                     <tr>
-                        <th scope="row">Stock Type</th>
+                        <th scope="row">Material Type</th>
                         <td ID="txtStockType"></td>
                         <th scope="row">Status</th>
                         <td ID="txtStatus"></td>
@@ -1323,13 +1290,13 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Stock Code</th>
+                        <th scope="row">Material Code</th>
                         <td ID="txtStockCode"></td>
                         <th scope="row">UOM</th>
                         <td colspan="3" id="txtUOM"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Stock Name</th>
+                        <th scope="row">Material Name</th>
                         <td colspan="3" id="txtStockName"></td>
                         <th scope="row">Category</th>
                         <td ID="txtCategory"></td>

@@ -51,20 +51,22 @@
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
-    var columnLayout = [{dataField:"itmCode"         ,headerText:"Itm Code"        ,width:120    ,height:30 , visible:true},
-                        {dataField:"itmName"         ,headerText:"Itm Name"        ,width:250    ,height:30 , visible:true},
-                        {dataField:"itmDesc"         ,headerText:"Itm Desc"        ,width:350    ,height:30 , visible:true},
+    var columnLayout = [{dataField:"itmCode"         ,headerText:"Material Code"   ,width:120    ,height:30 , visible:true},
+                        {dataField:"itmName"         ,headerText:"Material Name"   ,width:250    ,height:30 , visible:true},
+                        {dataField:"itmDesc"         ,headerText:"Material Detail Desc" ,width:350    ,height:30 , visible:true},
                         {dataField:"itmId"           ,headerText:"Itm Id"          ,width:140    ,height:30 , visible:false},
-                        {dataField:"codeName"        ,headerText:"Code Name"       ,width:"12%"  ,height:30 , visible:true},
+                        {dataField:"codeName"        ,headerText:"Key Prod Group"  ,width:"12%"  ,height:30 , visible:true},
                         {dataField:"attachImgLoc"    ,headerText:"Attach Img Loc"  ,width:120    ,height:30 , visible:false},
                         {dataField:"ctgryId"         ,headerText:"Ctgry Id"        ,width:120    ,height:30 , visible:true},
                         {dataField:"isAttachImg"     ,headerText:"IsAttach Img"    ,width:120    ,height:30 , visible:false},
-                        {dataField:"isHotItm"        ,headerText:"Hot Itm"         ,width:90     ,height:30 , visible:true},
-                        {dataField:"isNwItm"         ,headerText:"New Itm"         ,width:90     ,height:30 , visible:true},
-                        {dataField:"isPromoItm"      ,headerText:"Promo Itm"       ,width:120    ,height:30 , visible:true},
-                        {dataField:"itemType"        ,headerText:"Item Type"       ,width:100    ,height:30 , visible:true},
-                        {dataField:"uom"             ,headerText:"Unit of Measure" ,width:100    ,height:30 , visible:true},
-                        {dataField:"currency"        ,headerText:"Currency"        ,width:100    ,height:30 , visible:true},
+                        {dataField:"isHotItm"        ,headerText:"Hot Itm"         ,width:90     ,height:30 , visible:false},
+                        {dataField:"isNwItm"         ,headerText:"New Itm"         ,width:90     ,height:30 , visible:false},
+                        {dataField:"isPromoItm"      ,headerText:"Promo Itm"       ,width:120    ,height:30 , visible:false},
+                        {dataField:"itemType"        ,headerText:"Item Type"       ,width:100    ,height:30 , visible:false},
+                        {dataField:"uom"             ,headerText:"Unit of Measure" ,width:100    ,height:30 , visible:false},
+                        {dataField:"uomname"         ,headerText:"Unit of Measure" ,width:100    ,height:30 , visible:true},
+                        {dataField:"currency"        ,headerText:"Currency"        ,width:100    ,height:30 , visible:false},
+                        {dataField:"currencynm"      ,headerText:"Currency"        ,width:100    ,height:30 , visible:true},
                         {dataField:"prc"             ,headerText:"Prc"             ,width:100    ,height:30 , visible:true , dataType:"numeric", formatString : "#.00"},
                         {dataField:"prcRem"          ,headerText:"PrcRem"          ,width:100    ,height:30 , visible:false},
                         {dataField:"promoNormalPrc"  ,headerText:"PromoNormalPrc"  ,width:100    ,height:30 , visible:false},
@@ -75,7 +77,8 @@
                         {dataField:"updDt"           ,headerText:"UpdDt"           ,width:100    ,height:30 , visible:false},
                         {dataField:"updUserId"       ,headerText:"UpdUserId"       ,width:100    ,height:30 , visible:false},
                         {dataField:"codeId"          ,headerText:"CodeId"          ,width:"8%"   ,height:30 , visible:false},
-                        {dataField:"oldStkId"        ,headerText:"CodeId"          ,width:"8%"   ,height:30 , visible:true},
+                        {dataField:"codeName"        ,headerText:"Code Name"       ,width:"8%"   ,height:30 , visible:true},
+                        {dataField:"oldStkId"        ,headerText:"CodeId"          ,width:"8%"   ,height:30 , visible:false},
                         {dataField:"PRD"             ,headerText:"ProductDisplayDummySet"   ,width:"8%"   ,height:30 , visible:true
                         	, renderer : 
                             {
@@ -526,7 +529,7 @@
     }
     
     function getMaterialListAjax(rid) {
-        f_showModal();
+        
         var url = "/logistics/material/materialitemList.do";
         var param = $('#searchForm').serializeJSON();
         $.ajax({
@@ -547,7 +550,7 @@
         	
             
             AUIGrid.setGridData(myGridID, data.data);
-            hideModal();
+        
             if (rid != ""){
             	AUIGrid.setSelectionByIndex(myGridID, rid, 3);
             	f_detailView(rid);
@@ -627,12 +630,12 @@
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Material Master</li>
-    <li>Non-Valued Item</li>
+    <li>Non-Valued Material Code</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Non-Valued Item</h2>
+<h2>Non-Valued Material Code</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
@@ -675,26 +678,6 @@
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
-    <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-    </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>

@@ -446,6 +446,7 @@
                  , IS_NCV       = #{cbNCV}
                  , NET_WT       = #{netweight}
                  , GROS_WT      = #{grossweight}
+                 , STUS_CODE_ID = #{statusselect}
                  , MEASURE_CBM  = #{measurement}
                  , UPD_DT       = SYSDATE
                  , UPD_USER_ID  = #{upd_user}

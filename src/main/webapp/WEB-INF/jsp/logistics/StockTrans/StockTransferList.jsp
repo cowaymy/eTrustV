@@ -33,7 +33,7 @@ var mdcGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30                },
+                     {dataField:"reqstno"      ,headerText:"Stock Transfer Order"      ,width:120    ,height:30                },
                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
                      {dataField:"reqitmno"     ,headerText:"Stock Transfer Request Item" ,width:120    ,height:30 , visible:false},
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
@@ -49,12 +49,13 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"             
                      {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30                },
-                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
+                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:true },
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"reqstqty"     ,headerText:"Requested Qty"                 ,width:120    ,height:30                },
+                     {dataField:"reqstqty"     ,headerText:"Requested Qty"               ,width:120    ,height:30                },
                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
-                     {dataField:"rciptqty"     ,headerText:"Good Receipted"                ,width:120    ,height:30                },
+                     {dataField:"delyqty"      ,headerText:"Delivered Qty"               ,width:120    ,height:30 },
+                     {dataField:"rciptqty"     ,headerText:"Good Issued Qty"             ,width:120    ,height:30 },
+                     {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"          ,width:120    ,height:30                },
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
                      
@@ -125,8 +126,7 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:'US'};
-    doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
+    
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'=='')?'US':'${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
@@ -175,8 +175,7 @@ $(function(){
         SearchListAjax();
     });
     $("#sttype").change(function(){
-    	console.log('11111');
-        paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
+    	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
     $('#insert').click(function(){
@@ -186,10 +185,61 @@ $(function(){
 /*     $('#com_rmk_info').click(function(){
         mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
     }); */
+    $("#tlocationnm").keypress(function(event) {
+    	$('#tlocation').val('');
+        if (event.which == '13') {
+            $("#stype").val('tlocation');
+            $("#svalue").val($('#tlocationnm').val());
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
+    $("#flocationnm").keypress(function(event) {
+    	$('#flocation').val('');
+        if (event.which == '13') {
+            $("#stype").val('flocation');
+            $("#svalue").val($('#flocationnm').val());
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
+    
 });
 
-function SearchListAjax() {
+function fn_itempopList(data){
+    
+    var rtnVal = data[0].item;
    
+    if ($("#stype").val() == "flocation" ){
+        $("#flocation").val(rtnVal.locid);
+        $("#flocationnm").val(rtnVal.locdesc);
+    }else{
+        $("#tlocation").val(rtnVal.locid);
+        $("#tlocationnm").val(rtnVal.locdesc);
+    }
+    
+    $("#svalue").val();
+} 
+
+function SearchListAjax() {
+    
+	if ($("#flocationnm").val() == ""){
+		$("#flocation").val('');
+	}
+	if ($("#tlocationnm").val() == ""){
+        $("#tlocation").val('');
+    }
+	
+	if ($("#flocation").val() == ""){
+        $("#flocation").val($("#flocationnm").val());
+    }
+    if ($("#tlocation").val() == ""){
+        $("#tlocation").val($("#tlocationnm").val());
+    }
+    
+    
     var url = "/logistics/stocktransfer/StocktransferSearchList.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
@@ -251,7 +301,7 @@ function f_getTtype(g , v){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Transfer Request List</h2>
+<h2>Stock Transfer Order List</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -269,6 +319,10 @@ function f_getTtype(g , v){
         <input type="hidden" name="CURRENT_MENU_CODE" value="${param.CURRENT_MENU_CODE}"/>
         <input type="hidden" name="CURRENT_MENU_FULL_PATH_NAME" value="${param.CURRENT_MENU_FULL_PATH_NAME}"/>
         <!-- menu setting -->
+        
+        <input type="hidden" id="svalue" name="svalue"/>
+        <input type="hidden" id="sUrl"   name="sUrl"  />
+        <input type="hidden" id="stype"  name="stype" />
 
         <input type="hidden" name="rStcode" id="rStcode" />    
         <table summary="search table" class="type1"><!-- table start -->
@@ -283,7 +337,7 @@ function f_getTtype(g , v){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">Stock Transfer Request</th>
+                    <th scope="row">STO</th>
                     <td>
                         <select class="w100p" id="streq" name="streq"></select>
                     </td>
@@ -299,11 +353,13 @@ function f_getTtype(g , v){
                 <tr>
                     <th scope="row">From Location</th>
                     <td>
-                        <select class="w100p" id="tlocation" name="tlocation"></select>
+                        <input type="hidden"  id="tlocation" name="tlocation">
+                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                     <th scope="row">To Location</th>
                     <td >
-                        <select class="w100p" id="flocation" name="flocation"></select>
+                        <input type="hidden"  id="flocation" name="flocation">
+                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
                     <td colspan="2">&nbsp;</td>                
                 </tr>

@@ -68,11 +68,11 @@
                         {dataField:"locbranch2"  ,headerText:"loc_branch"     ,width:100   ,height:30 , visible:false},
                         {dataField:"locbranch3"  ,headerText:"loc_branch"     ,width:100   ,height:30 , visible:false},
                         {dataField:"whlocgb"     ,headerText:"Location Type"  ,width:100   ,height:30 , visible:false},
+                        {dataField:"whlocgbnm"   ,headerText:"Location Type"  ,width:"15%" ,height:30 , visible:true},
                         {dataField:"serialftchk" ,headerText:"Serial Check"   ,width:100   ,height:30 , visible:false},
                         {dataField:"serialptchk" ,headerText:"Serial Check"   ,width:100   ,height:30 , visible:false},
                         {dataField:"serialpdchk" ,headerText:"Serial Check"   ,width:100   ,height:30 , visible:false},
                         {dataField:"loctype"     ,headerText:"loctype"        ,width:100   ,height:30 , visible:false},
-                        {dataField:"locgrad"     ,headerText:"locgrad"        ,width:100   ,height:30 , visible:false},
                         {dataField:"locuserid"   ,headerText:"locuserid"      ,width:100   ,height:30 , visible:false},
                         {dataField:"locupddt"    ,headerText:"locupddt"       ,width:100   ,height:30 , visible:false},
                         {dataField:"code2"       ,headerText:"code2"          ,width:100   ,height:30 , visible:false},
@@ -86,8 +86,9 @@
                         {dataField:"branchnm"    ,headerText:"Branch"         ,width:"15%" ,height:30 , visible:true},
                         {dataField:"dcode"       ,headerText:"dcode"          ,width:100   ,height:30 , visible:false},
                         {dataField:"descr"       ,headerText:"descr"          ,width:100   ,height:30 , visible:false},
-                        {dataField:"codenm"      ,headerText:"Type"           ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"codenm"      ,headerText:"Type"           ,width:"15%" ,height:30 , visible:false},
                         {dataField:"statnm"      ,headerText:"Status"         ,width:"10%" ,height:30 , visible:true},
+                        {dataField:"locgrad"     ,headerText:"Location Grade" ,width:100   ,height:30 , visible:true},
                         {dataField:"locstus"     ,headerText:"locstus"        ,width:100   ,height:30 , visible:false},
                         {dataField:"user_name"   ,headerText:"nser_name"      ,width:100   ,height:30 , visible:false},
                         {dataField:"cdccode"     ,headerText:"CDC_CODE"       ,width:100   ,height:30 , visible:false},
@@ -130,12 +131,17 @@
         // masterGrid 그리드를 생성합니다.
         
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
-        detailGrid  = GridCommon.createAUIGrid("stockBalanceGrid", detailLayout,"", gridoptions);
+        //detailGrid  = GridCommon.createAUIGrid("stockBalanceGrid", detailLayout,"", gridoptions);
 		
-		$("#detailView").hide();
+		//$("#detailView").hide();
 		
 		doDefCombo(comboData, '' ,'status', 'S', '');
 		doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
+		
+		doDefCombo(stockgradecomboData, '' ,'locgrad', 'S', '');
+		
+		doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
+		
 		AUIGrid.bind(myGridID, "cellClick", function( event ) 
 	    {
 			
@@ -146,9 +152,13 @@
 		// 셀 더블클릭 이벤트 바인딩
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 	    {
-	    	$("#detailView").show();
 	    	pagestate = "m";
-            fn_locDetail(AUIGrid.getCellValue(myGridID , event.rowIndex , "locid"));
+            
+            if (event.rowIndex > -1){
+                fn_modyWare(event.rowIndex);
+            }else{
+                Common.alert('Choice Data please..');
+            }
         });
 		
 	    AUIGrid.bind(myGridID, "updateRow", function(event) {
@@ -187,7 +197,7 @@
     	});
         $("#search").click(function(){
         	getLocationListAjax();
-        	$("#detailView").hide();
+        	
         });
         $("#clear").click(function(){
         	doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','branchid', 'S' , ''); //청구처 리스트 조회
@@ -196,9 +206,10 @@
         	$("#locdesc").val('');
         });
         $("#update").click(function(){
-        	$("#detailView").hide();
+        	
         	pagestate = "m";
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+            console.log(selectedItem);
             if (selectedItem[0] > -1){
                 fn_modyWare(selectedItem[0]);
             }else{
@@ -222,12 +233,11 @@
         	 pagestate = "i";
         	 fn_insertWare();
         	 
-        	$("#detailView").hide();
         	$("#registWindow").show();
 	     });     
         
         $("#delete").click(function(){
-            $("#detailView").hide();
+            
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
             if (selectedItem[0] > -1){
         
@@ -446,48 +456,9 @@
         });
     }
     
-    function fn_detailView(data){
-    	var detail = data.data;
-    	var stock = data.stock;
-    	
-    	$("#txtwarecode").text(detail[0].loccd);
-        $("#txtstockgrade").text(detail[0].locgrad);
-        $("#txtwarename").text(detail[0].locdesc);
-        $("#txtstatus").text(detail[0].statnm);
-        $("#txtbranch").text(detail[0].branchnm +" - "+detail[0].branchnm);
-        $("#txtcontact1").text(detail[0].loctel1);
-        
-        
-        var fullAddr = "";
-        if (detail[0].countrynm != ""&& detail[0].countrynm != undefined){
-        	fullAddr = detail[0].countrynm; 
-        }
-        if (fullAddr != "" && detail[0].state != "" && detail[0].state != undefined){
-        	fullAddr += " " + detail[0].state
-        }
-        if (fullAddr != "" && detail[0].locdt2 != ""&& detail[0].locdt2 != undefined){
-            fullAddr += " " + detail[0].locdt2
-        }
-        if (fullAddr != "" && detail[0].areanm != "" && detail[0].areanm != undefined){
-            fullAddr += " " + detail[0].areanm
-        }
-        if (fullAddr != "" && detail[0].postcd != ""&& detail[0].postcd != undefined){
-            fullAddr += " " + detail[0].postcd
-        }
-        if (fullAddr != "" && detail[0].locdtl != ""&& detail[0].locdtl != undefined){
-            fullAddr += " " + detail[0].locdtl
-        }
-        if (fullAddr != "" && detail[0].countrynm != ""&& detail[0].countrynm != undefined){
-            fullAddr += " " + detail[0].countrynm
-        }
-        $("#txtaddress").text(fullAddr);
-        $("#txtcontact2").text(detail[0].loctel2);
-        
-        AUIGrid.setGridData(detailGrid, stock);
-    }
-    
     function getLocationListAjax() {
         var param = $('#searchForm').serialize();
+        console.log(param);
         Common.showLoader();
         $.ajax({
             type : "POST",
@@ -510,14 +481,14 @@
      
     
     function f_multiCombo(){
-        /*$(function() {
-            $('#cmbCategory').change(function() {
+        $(function() {
+            $('#loctype').change(function() {
             
             }).multipleSelect({
                 selectAll: true, // 전체선택 
                 width: '80%'
             });
-        });*/
+        });
     }        
      function fn_updateCancel(){
     	 $( "#editWindow" ).hide();
@@ -609,6 +580,17 @@
     <input type="text" id="locdesc" name="locdesc" title="Name" placeholder="" class="w100p" />
     </td>
 </tr>
+<tr>
+    <th scope="row">Location Type</th>
+    <td>
+        <select class="w100p" id="loctype" name="loctype"></select>
+    </td>
+    <th scope="row">Location Grade</th>
+    <td>
+        <select class="w100p" id="locgrad" name="locgrad"></select>
+    </td>
+    <td colspan='2'></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -658,72 +640,14 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap"></div>
+    <div id="grid_wrap" style="height:500px"></div>
 </article><!-- grid_wrap end -->
-
-<article id="detailView">
-<div class="divine_auto"><!-- divine_auto start -->
-
-<div style="width:55%;">
-
-<aside class="title_line"><!-- title_line start -->
-<h3>Warehouse Information</h3>
-</aside><!-- title_line end -->
-
-<table class="type1">
-        <caption>search table</caption>
-        <colgroup>
-            <col style="width:130px" />
-            <col style="width:*" />
-            <col style="width:130px" />
-            <col style="width:200px" />
-        </colgroup>
-        <tbody>
-        <tr>
-            <th scope="row">Warehouse Code</td>
-            <td ID="txtwarecode"></td>
-            <th scope="row">Stock Grade</td>
-            <td ID="txtstockgrade"></td>
-        </tr>
-        <tr>
-            <th scope="row">Warehouse Name</td>
-            <td ID="txtwarename"></td>
-            <th scope="row">Status</td>
-            <td ID="txtstatus"></td>            
-        </tr>
-        <tr>
-            <th scope="row">Branch</td>
-            <td ID="txtbranch"></td>
-            <th scope="row">Contact (1)</td>
-            <td ID="txtcontact1"></td>
-        </tr>
-        <tr>
-            <th scope="row">Address</td>
-            <td ID="txtaddress"></td>
-            <th scope="row">Contact (2)</td>
-            <td ID="txtcontact2"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<div style="width:43%;">
-
-<aside class="title_line"><!-- title_line start -->
-<h3>Warehouse Information</h3>
-</aside><!-- title_line end -->
-
-<div id="stockBalanceGrid"></div>
-</div>
-
-</div><!-- divine_auto end -->
-</article>
 
 </section><!-- search_result end -->
 
 <div class="popup_wrap" id="editWindow" style="display:none"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Warehouse Information</h1>
+<h1>Location Information</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -746,7 +670,7 @@
     <td colspan="3"><span  id="mstatus"></span></td>
 </tr>
 <tr>
-    <th scope="row">Warehouse Code</th>
+    <th scope="row">Location Code</th>
     <td><input type="text" name="mwarecd" id="mwarecd"/></td>    
     <th scope="row">Serial Check</th>
     <td>
@@ -756,20 +680,20 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Warehouse Name</th>
+    <th scope="row">Location Name</th>
     <td colspan="3"><input type="text" name="mwarenm" id="mwarenm" class="w100p"/></td>
 </tr>
 <tr>
     <th scope="row">CDC CODE</th>
-    <td><select id="mcdccode"></select></td>
+    <td><select id="mcdccode" class="w100p"></select></td>
     <th scope="row">RDC CODE</th>
-    <td><select id="mrdccode"></select></td>
+    <td><select id="mrdccode" class="w100p"></select></td>
 </tr>
 <tr>
     <th scope="row">Location Type</th>
-    <td><select id="locationtype"></select></td>
-    <th scope="row">Stock Grade</th>
-    <td><select id="mstockgrade"></select></td>
+    <td><select id="locationtype" class="w100p"></select></td>
+    <th scope="row">Location Grade</th>
+    <td><select id="mstockgrade" class="w100p"></select></td>
 </tr>
 <tr>
     <th scope="row">Branch</th>
@@ -837,7 +761,7 @@
 <div class="popup_wrap" id="registWindow" style="display:none"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Warehouse Information</h1>
+<h1>Location Information</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -857,11 +781,11 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Warehouse Code</th>
+    <th scope="row">Location Code</th>
     <td colspan="3"><input type="text" name="inwarecd" id="inwarecd" maxlength="10"/></td>    
 </tr>
 <tr>
-    <th scope="row">Warehouse Name</th>
+    <th scope="row">Location Name</th>
     <td colspan="3"><input type="text" name="inwarenm" id="inwarenm" class="w100p"/></td>
 </tr>
 <tr>
@@ -871,7 +795,7 @@
     <td><select id="irdccode" name="irdccode"></select></td>
 </tr>
 <tr>
-    <th scope="row">Stock Grade</th>
+    <th scope="row">Location Grade</th>
     <td><select id="instockgrade" name="instockgrade" ></select></td>
     <th scope="row">Location Type</th>
     <td><select id="ilocationtype" name="ilocationtype"></select></td>
