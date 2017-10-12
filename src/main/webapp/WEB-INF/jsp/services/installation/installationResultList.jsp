@@ -10,13 +10,13 @@ $(document).ready(function() {
 	
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-          alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId"));
+          //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId"));
           var statusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
           if(statusCode == "ACT"){
-        	  alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
+        	 // alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
         	  Common.alert("Installation is under status [active]. No result to view.");
           }else{
-        	  alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
+        	 // alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
         	  Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId")+"&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
           }
       });
