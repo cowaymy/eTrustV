@@ -93,4 +93,6 @@ public interface OrderCancelService {
 	 * @exception Exception
 	 */
 	List<EgovMap> selectFeedback(Map<String, Object> params);
+	
+	void saveCtAssignment(Map<String, Object> params);
 }
