@@ -187,7 +187,7 @@ function f_info(data , v){
 
 //    doGetCombo('/common/selectCodeList.do', '165', '','requestStatus', 'M' , 'f_multiCombo'); // Request Status
 //    doGetCombo('/common/selectCodeList.do', '18', '','requestPerson', 'M' , 'f_multiCombo'); //Request Person
-    doGetCombo('/common/selectCodeList.do', '18', '','requestType', 'M' , 'f_multiCombo'); //Request Type
+    //doGetCombo('/common/selectCodeList.do', '18', '','requestType', 'M' , 'f_multiCombo'); //Request Type
     //doGetCombo('/common/selectCodeList.do', '1', '','memberType', 'M' , 'f_multiCombo'); //MemberType
     
 </script>
@@ -253,7 +253,13 @@ function f_info(data , v){
     </td>
     <th scope="row">Request Type</th>
     <td>
-    <select  id="requestType" name="requestType" class="multy_select w100p" multiple="multiple">    </select>
+    <select  id="requestType" name="requestType" class="multy_select w100p" multiple="multiple">   
+        <option value="747">Promote</option>
+        <option value="748">Demote</option>
+        <option value="749">Group Transfer</option>
+        <option value="757">Terminate</option>
+        <option value="758">Resign</option>
+     </select>
     </td>
     <th scope="row">Request Person</th>
     <td>

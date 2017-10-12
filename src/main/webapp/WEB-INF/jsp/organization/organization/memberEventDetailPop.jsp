@@ -35,8 +35,8 @@
     };
 
 
-	//Start AUIGrid
-	$(document).ready(function() {
+    //Start AUIGrid
+    $(document).ready(function() {
         //createAUIGrid();
         fn_confirm();
 
@@ -44,9 +44,9 @@
 
 
 
-	function fn_close(){
-	    window.close();
-	}
+    function fn_close(){
+        window.close();
+    }
 
 
     function fn_confirm(){
@@ -58,9 +58,9 @@
         
         //그리드 활성화
         //조회결과 리턴
-   	            
+                
         Common.ajax("GET", "/organization/selectPromteDemoteList", $("#myForm").serialize(), function(result) {        
-	        AUIGrid.setGridData(myGridID, result);
+            AUIGrid.setGridData(myGridID, result);
         });               
     }
  
@@ -70,7 +70,7 @@
      function fn_confirmMemberEventPromote(val){
         
         var jsonObj = {
- 		  PromoID : $("#promoId").val(),
+          PromoID : $("#promoId").val(),
          memCode : $("#memCode").val()
        
         };
@@ -102,19 +102,19 @@
 
                 //as-is logic
            /*   if (oo.DoCancelMemberEvent(promoEntry))
-			            {
-			                MemberEventView view = new MemberEventView();
-			                view = ucMemberEventView.LoadMemberEventInfo(promoEntry.PromoID);
-			                Panel_Action.Enabled = false;
-			                btnSave.Visible = false;
-			                RadWindowManager1.RadAlert("<b>This event has been cancelled.</b>", 450, 160, "Event Cancelled", "callBackFn", null);
-			            }
-			            else
-			            {
-			                RadWindowManager1.RadAlert("<b>Failed to cancel this event. Please try again later.</b>", 450, 160, "Failed To Cancel", "callBackFn", null);
-			            }  */
-			            
-			             return false;
+                        {
+                            MemberEventView view = new MemberEventView();
+                            view = ucMemberEventView.LoadMemberEventInfo(promoEntry.PromoID);
+                            Panel_Action.Enabled = false;
+                            btnSave.Visible = false;
+                            RadWindowManager1.RadAlert("<b>This event has been cancelled.</b>", 450, 160, "Event Cancelled", "callBackFn", null);
+                        }
+                        else
+                        {
+                            RadWindowManager1.RadAlert("<b>Failed to cancel this event. Please try again later.</b>", 450, 160, "Failed To Cancel", "callBackFn", null);
+                        }  */
+                        
+                         return false;
         
         } else {
              //Complete
@@ -134,7 +134,14 @@
                     }else {
                           alert("Failed to confirm this event. Please try again later.");                    
                     } */
-             } 
+             }else if(vPromoTypeId == 749){
+            	 if (fn_confirmMemberEventPromote(vPromoId))  {
+
+                 }  else  {
+
+
+                 }
+             }
         }
 
         //vaildate
@@ -145,15 +152,15 @@
             promoId : myForm.promoId.value        
         };
 
-  	    Common.ajax("POST", "/organization/updateMemberPromoEntry.do", jsonObj ,fn_success, fn_fail);
+        Common.ajax("POST", "/organization/updateMemberPromoEntry.do", jsonObj ,fn_success, fn_fail);
  
     } 
    
    
     
-		function fn_tabSize(){
-		    AUIGrid.resize(myGridID,1000,400); 
-		}
+        function fn_tabSize(){
+            AUIGrid.resize(myGridID,1000,400); 
+        }
 
     
         function createAUIGrid(){
@@ -188,39 +195,39 @@
                     width : 20,
                     colSpan : 2,
                     renderer : {
-				            type : "CheckBoxEditRenderer",
-				            editable : true
-				      }
+                            type : "CheckBoxEditRenderer",
+                            editable : true
+                      }
                 }, {
                     dataField : "",
                     width : 120,
                     colSpan : -1,
-        		    editRenderer : {// 셀 자체에 드랍다운리스트 출력하고자 할 때
-			            type : "DropDownListRenderer",
-			            list : ["IPhone 5S", "Galaxy S5", "IPad Air", "Galaxy Note3", "LG G3", "Nexus 10"]
-			         }
+                    editRenderer : {// 셀 자체에 드랍다운리스트 출력하고자 할 때
+                        type : "DropDownListRenderer",
+                        list : ["IPhone 5S", "Galaxy S5", "IPad Air", "Galaxy Note3", "LG G3", "Nexus 10"]
+                     }
                 }, {
                     dataField : "status",
                     headerText : "",
                     width : 120,
                     renderer : {
-				            type : "ButtonRenderer",
-				            labelText : "Transfer",
-				            onclick : function(rowIndex, columnIndex, value, item) {
-				                alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
-				            }
-				     }
+                            type : "ButtonRenderer",
+                            labelText : "Transfer",
+                            onclick : function(rowIndex, columnIndex, value, item) {
+                                alert("( " + rowIndex + ", " + columnIndex + " ) " + item.name + " 상세보기 클릭");
+                            }
+                     }
             
             }];
             
             
             var newColumn=[
-			      {dataField:"0", headerText:"OrderNo"},
-			      {dataField:"1", headerText:"Month"},
-			      {dataField:"2", headerText:"Day"},
-			      {dataField:"3", headerText:"Year"},
-			      {dataField:"4", headerText:"RejectCode"}
-			];
+                  {dataField:"0", headerText:"OrderNo"},
+                  {dataField:"1", headerText:"Month"},
+                  {dataField:"2", headerText:"Day"},
+                  {dataField:"3", headerText:"Year"},
+                  {dataField:"4", headerText:"RejectCode"}
+            ];
 
             // 그리드 속성 설정
             var gridPros = {
