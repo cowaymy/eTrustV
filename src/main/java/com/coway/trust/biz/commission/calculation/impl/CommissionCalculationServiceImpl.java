@@ -452,161 +452,72 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 * @exception Exception
 	 */
 	@Override
-	public void udtExcludeDataCMM0006T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0006T(params);
-	}
-	@Override
 	public void udtDataCMM0006T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0006T(params);
-	}
-
-	@Override
-	public void udtExcludeDataCMM0007T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0007T(params);
 	}
 	@Override
 	public void udtDataCMM0007T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0007T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0008T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0008T(params);
-	}
 	@Override
 	public void udtDataCMM0008T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0008T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0009T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0009T(params);
 	}
 	@Override
 	public void udtDataCMM0009T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0009T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0010T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0010T(params);
-	}
 	@Override
 	public void udtDataCMM0010T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0010T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0011T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0011T(params);
 	}
 	@Override
 	public void udtDataCMM0011T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0011T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0012T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0012T(params);
-	}
 	@Override
 	public void udtDataCMM0012T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0012T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0013T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0013T(params);
 	}
 	@Override
 	public void udtDataCMM0013T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0013T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0014T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0014T(params);
-	}
 	@Override
 	public void udtDataCMM0014T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0014T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0015T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0015T(params);
 	}
 	@Override
 	public void udtDataCMM0015T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0015T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0017T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0017T(params);
-	}
 	@Override
 	public void udtDataCMM0017T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0017T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0018T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0018T(params);
 	}
 	@Override
 	public void udtDataCMM0018T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0018T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0019T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0019T(params);
-	}
 	@Override
 	public void udtDataCMM0019T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0019T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0020T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0020T(params);
 	}
 	@Override
 	public void udtDataCMM0020T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0020T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0021T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0021T(params);
-	}
 	@Override
 	public void udtDataCMM0021T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0021T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0022T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0022T(params);
 	}
 	@Override
 	public void udtDataCMM0022T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0022T(params);
 	}
-	
-	@Override
-	public void udtExcludeDataCMM0023T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0023T(params);
-	}
 	@Override
 	public void udtDataCMM0023T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0023T(params);
-	}
-	
-	@Override
-	public void udtExcludeDataCMM0026T(Map<String, Object> params) {
-		commissionCalculationMapper.udtExcludeDataCMM0026T(params);
 	}
 	@Override
 	public void udtDataCMM0026T(Map<String, Object> params) {

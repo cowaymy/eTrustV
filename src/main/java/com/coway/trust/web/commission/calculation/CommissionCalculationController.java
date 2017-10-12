@@ -1154,27 +1154,15 @@ public class CommissionCalculationController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/updatePrdData_06T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_06T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_06T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0006T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0006T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0006T(cMap);
 		}
-		
-		
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -1185,24 +1173,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_07T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_07T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_07T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0007T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0007T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0007T(cMap);
 		}
 		
 		// 결과 만들기 예.
@@ -1214,24 +1192,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_08T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_08T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_08T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0008T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0008T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0008T(cMap);
 		}
 		
 		// 결과 만들기 예.
@@ -1243,24 +1211,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_09T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_09T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_09T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0009T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0009T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0009T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1272,24 +1230,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_10T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_10T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_10T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0010T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0010T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0010T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1301,24 +1249,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_11T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_11T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_11T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0011T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0011T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0011T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1329,24 +1267,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_12T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_12T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_12T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0012T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0012T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0012T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1357,25 +1285,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_13T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_13T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_13T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		Map<String, Object> udtMap = null;
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0013T(formMap);
-		
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0013T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0013T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1386,25 +1303,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_14T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_14T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_14T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		Map<String, Object> udtMap = null;
-
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0014T(formMap);
-		
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0014T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0014T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1415,25 +1321,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_15T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_15T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_15T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		Map<String, Object> udtMap = null;
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0015T(formMap);
-		
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0015T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0015T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1444,25 +1339,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_17T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_17T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_17T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		Map<String, Object> udtMap = null;
-
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0017T(formMap);
-		
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0017T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0017T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1474,24 +1358,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_18T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_18T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_18T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0018T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0018T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0018T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1503,24 +1377,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_19T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_19T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_19T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0019T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0019T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0019T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1532,24 +1396,14 @@ public class CommissionCalculationController {
 	}
 	
 	@RequestMapping(value = "/updatePrdData_20T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_20T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_20T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0020T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0020T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0020T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1560,24 +1414,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_21T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_21T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_21T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0021T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0021T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0021T(cMap);
 		}
 
 		// 결과 만들기 예.
@@ -1588,24 +1432,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_22T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_22T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_22T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0022T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0022T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0022T(cMap);
 		}
 		
 		// 결과 만들기 예.
@@ -1616,24 +1450,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_23T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_23T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_23T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0023T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0023T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0023T(cMap);
 		}
 		
 		// 결과 만들기 예.
@@ -1644,24 +1468,14 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 	@RequestMapping(value = "/updatePrdData_26T.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updatePrdData_25T(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> updatePrdData_25T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map cMap = null;
 		
-		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
-		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
-		//task id
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
-		formMap.put("taskId", sTaskID);
-		
-		commissionCalculationService.udtExcludeDataCMM0026T(formMap);
-		
-		Map<String, Object> udtMap = null;
-		if (checkList.size() > 0) {
-			for (int i = 0; i < checkList.size(); i++) {
-				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
-				udtMap = (Map<String, Object>) tmpMap.get("item");
-				commissionCalculationService.udtDataCMM0026T(udtMap);
-			}
+		for (Object map : checkList) {
+			cMap = (HashMap<String, Object>) map;
+			System.out.println(" isExclude : "+cMap.get("isExclude"));
+			commissionCalculationService.udtDataCMM0026T(cMap);
 		}
 		
 		// 결과 만들기 예.

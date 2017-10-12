@@ -159,58 +159,23 @@ public interface CommissionCalculationService
      * @return
      *********************************************************/
     void udtDataCMM0006T(Map<String, Object> param);
-    void udtExcludeDataCMM0006T(Map<String, Object> param);
-    
     void udtDataCMM0007T(Map<String, Object> param);
-    void udtExcludeDataCMM0007T(Map<String, Object> param);
-    
     void udtDataCMM0008T(Map<String, Object> param);
-    void udtExcludeDataCMM0008T(Map<String, Object> param);
-    
     void udtDataCMM0009T(Map<String, Object> param);
-    void udtExcludeDataCMM0009T(Map<String, Object> param);
-    
     void udtDataCMM0010T(Map<String, Object> param);
-    void udtExcludeDataCMM0010T(Map<String, Object> param);
-    
     void udtDataCMM0011T(Map<String, Object> param);
-    void udtExcludeDataCMM0011T(Map<String, Object> param);
-    
     void udtDataCMM0012T(Map<String, Object> param);
-    void udtExcludeDataCMM0012T(Map<String, Object> param);
-    
     void udtDataCMM0013T(Map<String, Object> param);
-    void udtExcludeDataCMM0013T(Map<String, Object> param);
-    
     void udtDataCMM0014T(Map<String, Object> param);
-    void udtExcludeDataCMM0014T(Map<String, Object> param);
-    
     void udtDataCMM0015T(Map<String, Object> param);
-    void udtExcludeDataCMM0015T(Map<String, Object> param);
-    
     void udtDataCMM0017T(Map<String, Object> param);
-    void udtExcludeDataCMM0017T(Map<String, Object> param);
-    
     void udtDataCMM0018T(Map<String, Object> param);
-    void udtExcludeDataCMM0018T(Map<String, Object> param);
-    
     void udtDataCMM0019T(Map<String, Object> param);
-    void udtExcludeDataCMM0019T(Map<String, Object> param);
-    
     void udtDataCMM0020T(Map<String, Object> param);
-    void udtExcludeDataCMM0020T(Map<String, Object> param);
-    
     void udtDataCMM0021T(Map<String, Object> param);
-    void udtExcludeDataCMM0021T(Map<String, Object> param);
-    
     void udtDataCMM0022T(Map<String, Object> param);
-    void udtExcludeDataCMM0022T(Map<String, Object> param);
-    
     void udtDataCMM0023T(Map<String, Object> param);
-    void udtExcludeDataCMM0023T(Map<String, Object> param);
-    
     void udtDataCMM0026T(Map<String, Object> param);
-    void udtExcludeDataCMM0026T(Map<String, Object> param);
     
     /**
      * Adjustment Code List
