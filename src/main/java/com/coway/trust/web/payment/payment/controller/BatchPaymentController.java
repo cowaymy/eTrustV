@@ -250,7 +250,6 @@ public class BatchPaymentController {
 			
 			HashMap<String, Object> hm = new HashMap<String, Object>();
 			
-			hm.put("detId", 0);
 			hm.put("disabled", 0);
 			hm.put("creator", sessionVO.getUserId());
 			hm.put("updator", sessionVO.getUserId());
