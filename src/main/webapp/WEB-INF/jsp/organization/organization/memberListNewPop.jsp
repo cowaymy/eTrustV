@@ -218,47 +218,50 @@ var gridPros = {
 //Validation Check
 function fn_saveValidation(){
 	if($("#memberNm").val() == ''){
-        Common.alert("Please key  in member name");
+        Common.alert("Please key  in Member Name");
         return false;
     }
-	if($("#nric").val() == ''){
-        Common.alert("Please key  in NRIC");
+	
+	if($("#joinDate").val() == ''){
+        Common.alert("Please select Joined Date");
         return false;
     }
-	if($("#gender").val() == ''){
-        Common.alert("Please select gender");
+
+	if($('input[name=gender]:checked', '#memberAddForm').val() == null){
+		  Common.alert("Please select Gender");
+	        return false;
+	}
+	
+    /* if(!$("#gender").is(":radio")){
+      
+    } */
+    
+	if($("#Birth").val() == ''){
+        Common.alert("Please select Date of Birth");
         return false;
     }
+	
 	if($("#cmbRace").val() == ''){
         Common.alert("Please select race");
         return false;
     }
+	
+	if($("#national").val() == ''){
+        Common.alert("Please select Nationality");
+        return false;
+    }
+	
+	if($("#nric").val() == ''){
+        Common.alert("Please key  in NRIC");
+        return false;
+    }
+	
+	
 	if($("#marrital").val() == ''){
         Common.alert("Please select marrital");
         return false;
     }
-	if($("#Birth").val() == ''){
-        Common.alert("Please select DOB");
-        return false;
-    }
-	// 주소 validation 추가해야된다
 	
-	if($("#state").val() == ''){
-        Common.alert("Please select the state");
-        return false;
-    }
-	if($("#area").val() == ''){
-        Common.alert("Please select the area");
-        return false;
-    }
-	if($("#postCode").val() == ''){
-        Common.alert("Please select the postcode");
-        return false;
-    }
-	if($("#postCode").val() == ''){
-        Common.alert("Please select the postcode");
-        return false;
-    }
 	if($("#issuedBank").val() == ''){
         Common.alert("Please select the issued bank");
         return false;
@@ -267,10 +270,37 @@ function fn_saveValidation(){
         Common.alert("Please key in the bank account no");
         return false;
     }
+	//type 별로 다르게 해야됨
 	if($("#deptCd").val() == ''){
         Common.alert("Please select the department code");
         return false;
     }
+	
+	if($("#addrDtl").val() == ''){
+        Common.alert("Please key in the address.");
+        return false;
+    }
+    
+    if($("#mArea").val() == ''){
+            Common.alert("Please key in the area.");
+            return false;
+    }
+    
+    if($("#mCity").val() == ''){
+        Common.alert("Please key in the city.");
+        return false;
+    }
+    
+    if($("#mPostCd").val() == ''){
+        Common.alert("Please key in the postcode.");
+        return false;
+    }
+    
+    if($("#mState").val() == ''){
+        Common.alert("Please key in the state.");
+        return false;
+    }
+    
 	return true;
 }
 
@@ -427,8 +457,8 @@ function fn_selectState(selVal){
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="memberAddForm" method="post">
 <input type="hidden" id="areaId" name="areaId">
-<input type="hidden" id="streetDtl" name="streetDtl">
-<input type="hidden" id="addrDtl" name="addrDtl">
+<input type="hidden" id="streetDtl1" name="streetDtl">
+<input type="hidden" id="addrDtl1" name="addrDtl">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -771,15 +801,22 @@ function fn_selectState(selVal){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
-<div id="grid_wrap_doc" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+<div id="grid_wrap_doc" style="width: 100%; height:430px; margin: 0 auto;"></div>
+
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+</ul>
 </article><!-- tap_area end -->
+
+
 </form>
 <article class="tap_area"><!-- tap_area start -->
 
@@ -846,7 +883,7 @@ function fn_selectState(selVal){
     </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
 </ul>
 
