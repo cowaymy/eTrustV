@@ -166,7 +166,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("updated",new Date());
 			MemApp.put("updator",52366);
 			MemApp.put("confirmation",false);
-			MemApp.put("confirmDate","1900-01-01");
+			MemApp.put("confirmDate","01/01/1900");
 			MemApp.put("deptCode",params.get("deptCd").toString());
 			//addr 주소 가져오기
 			MemApp.put("areaId",params.get("areaId").toString());
@@ -224,8 +224,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("issuedBank", params.get("issuedBank")!=null ? params.get("issuedBank").toString().trim() : "");
 		params.put("bankAccNo", params.get("bankAccNo").toString().trim()!=null ? params.get("bankAccNo").toString().trim() : "");
 		params.put("sponsorCd", params.get("sponsorCd").toString().trim()!=null ? params.get("sponsorCd").toString().trim() : "");
-		params.put("reSignDate","1900-01-01");
-		params.put("termDate","1900-01-01");
+		params.put("reSignDate","01/01/1900");
+		params.put("termDate","01/01/1900");
 		params.put("RenewDate",params.get("joinDate"));
 		params.put("AgrmntNo","");
 		params.put("branch", params.get("branch")!=null &&  params.get("branch")!=""? Integer.parseInt(params.get("branch").toString().trim()) : 0);
@@ -233,7 +233,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("SyncCheck",false);
 		params.put("rank",rank);
 		params.put("transportCd", params.get("transportCd")!=null &&  params.get("transportCd")!=""? Integer.parseInt(params.get("transportCd").toString().trim()) : 0);
-		params.put("promoteDate","1900-01-01");
+		params.put("promoteDate","01/01/1900");
 		params.put("trNo", params.get("trNo")!=null ? params.get("trNo").toString().trim() : "");
 		params.put("created",new Date());
 		params.put("creator",52366);
@@ -257,7 +257,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("spouseName", params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
 		params.put("spouseNric", params.get("spouseNRIC").toString().trim()!=null ? params.get("spouseNRIC").toString().trim() : "");
 		params.put("spouseOcc", params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
-		params.put("spouseDob", params.get("spouseDOB").toString().equals("") ? "1900-01-01":params.get("spouseDOB").toString().trim() );
+		params.put("spouseDob", params.get("spouseDOB").toString().equals("") ? "01/01/1900":params.get("spouseDOB").toString().trim() );
 		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
 		
 		Boolean success = false;
