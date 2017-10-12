@@ -43,6 +43,42 @@ public class SupplyCorpController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
+	// Supply Plan Summary By CDC
+	@RequestMapping(value = "/supplyPlanByCDC.do")
+	public String supplyPlanByCdcMain(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		//model.addAttribute("languages", loginService.getLanguages());
+		return "/scm/supplyPlanByCDC";  
+	}  
+	
+	@RequestMapping(value = "/selectSupplyCDC.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSupplyCDC(@RequestParam Map<String, Object> params) {
+	
+		LOGGER.debug("selectSupplyCDC_ComboList : {}", params.toString());
+		
+		List<EgovMap> selectSupplyCDCCodeList = salesPlanMngementService.selectSupplyCDC(params);
+		return ResponseEntity.ok(selectSupplyCDCCodeList);
+	}
+
+	@RequestMapping(value = "/selectSupplyPlanCDCSearch.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanCDCSearch(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectSupplyPlanCDC_Input : {}", params.toString());
+		
+		List<EgovMap> selectSupplyPlanCDCList = salesPlanMngementService.selectSupplyCdcMainList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectSupplyPlanCDCList", selectSupplyPlanCDCList);
+
+		return ResponseEntity.ok(map);
+		
+	}	
+	
+	
+	
+	// Supply Plan Summary View
 	@RequestMapping(value = "/supplyPlanSummary.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		//model.addAttribute("languages", loginService.getLanguages());

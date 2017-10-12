@@ -8,6 +8,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("salesPlanMngementMapper")
 public interface SalesPlanMngementMapper {
+	/*Supply_CDC */
+	List<EgovMap> selectSupplyCDC(Map<String, Object> params);
+	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);
+	
     /*Supply_CORP */
 	List<EgovMap> selectSupplyCorpList(Map<String, Object> params);
 	

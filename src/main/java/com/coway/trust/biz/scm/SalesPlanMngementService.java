@@ -7,6 +7,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface SalesPlanMngementService 
 {
+	//Supply-CDC
+	List<EgovMap> selectSupplyCDC(Map<String, Object> params);
+	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);
+	
+	
 	//Supply-Corp
 	List<EgovMap> selectSupplyCorpList(Map<String, Object> params);
 	
