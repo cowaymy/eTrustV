@@ -117,7 +117,7 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public void createPaymentProcedure(Map<String, Object> params) {
+	public void createPaymentProcedure(EgovMap params) {
 		commDeductionMapper.createPaymentProcedure(params);
 	}
 

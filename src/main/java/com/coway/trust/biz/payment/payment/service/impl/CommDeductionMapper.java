@@ -81,5 +81,5 @@ public interface CommDeductionMapper {
 	 * @param params
 	 * @return
 	 */
-	void createPaymentProcedure(Map<String, Object> params);
+	void createPaymentProcedure(EgovMap params);
 }
