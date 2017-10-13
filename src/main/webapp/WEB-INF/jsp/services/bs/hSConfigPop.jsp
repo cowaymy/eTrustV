@@ -27,6 +27,8 @@
 
       // 체크된 아이템 얻기
 	function fn_getCheckedRowItems() {
+	
+	   alert(AUIGrid.getCheckedRowItems(myCdGridID));
 	    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
 
 	    var str = "";
@@ -36,6 +38,28 @@
 	   return str;
 	}
                 
+    
+    
+    
+		// 체크된 아이템 얻기
+	function fn_getCheckedCdRowItems() {
+		    var checkedItems = AUIGrid.getCheckedRowItems(myCdGridID);
+		    var str = "";
+		    var rowItem;
+		    var len = checkedItems.length;
+		    
+		    if(len <= 0) {
+		        alert("체크된 행 없음!!");
+		        return;
+		    }
+		    
+		    for(var i=0; i<len; i++) {
+		        rowItem = checkedItems[i];
+		        str += "row : " + rowItem.rowIndex + ", id :" + rowItem.item.id + ", name : " + rowItem.item.name  + "\n";
+		    }
+		    alert(str);
+		}
+    
                 
     
     function createAUIGridCust(){
