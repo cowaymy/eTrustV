@@ -399,6 +399,46 @@ var batchInfoLayout = [
     
     function fn_hideViewPop(val){
         $(val).hide();
+        
+        if("#conf_popup_wrap" == val){
+            
+            $('#txtBatchId_conf').text("");
+            $('#txtBatchStatus_conf').text("");
+            $('#txtConfirmStatus_conf').text("");
+            $('#txtPayMode_conf').text("");
+            $('#txtUploadBy_conf').text("");
+            $('#txtUploadAt_conf').text("");
+            $('#txtConfirmBy_conf').text("");
+            $('#txtConfirmAt_conf').text("");
+            $('#txtConvertBy_conf').text("");
+            $('#txtConvertAt_conf').text("");
+            $('#totalAmount_conf').text("");
+            $('#totalItem_conf').text("");
+            $('#totalValid_conf').text("");
+            $('#totalInvalid_conf').text("");
+            
+            $("#paymentInfo_conf").trigger("click");
+            
+        }else if("#view_popup_wrap" == val){
+            
+            $('#txtBatchId').text("");
+            $('#txtBatchStatus').text("");
+            $('#txtConfirmStatus').text("");
+            $('#txtPayMode').text("");
+            $('#txtUploadBy').text("");
+            $('#txtUploadAt').text("");
+            $('#txtConfirmBy').text("");
+            $('#txtConfirmAt').text("");
+            $('#txtConvertBy').text("");
+            $('#txtConvertAt').text("");
+            $('#totalAmount').text("");
+            $('#totalItem').text("");
+            $('#totalValid').text("");
+            $('#totalInvalid').text("");
+            
+            $("#panymentInfo").trigger("click");
+        }
+        
         searchList();
     }
 </script>
@@ -530,7 +570,7 @@ var batchInfoLayout = [
 <section class="pop_body"><!-- pop_body start -->
     <section class="tap_wrap"><!-- tap_wrap start -->
     <ul class="tap_type1">
-        <li><a href="#" class="on">Batch Payment Info</a></li>
+        <li><a href="#" class="on" id="panymentInfo">Batch Payment Info</a></li>
         <li><a href="#">Batch Payment Item</a></li>
     </ul>
     <article class="tap_area"><!-- tap_area start -->
@@ -647,7 +687,7 @@ var batchInfoLayout = [
 <section class="pop_body"><!-- pop_body start -->
     <section class="tap_wrap"><!-- tap_wrap start -->
     <ul class="tap_type1">
-        <li><a href="#" class="on">Batch Payment Info</a></li>
+        <li><a href="#" class="on" id="paymentInfo_conf">Batch Payment Info</a></li>
         <li><a href="#">Batch Payment Item</a></li>
     </ul>
     <article class="tap_area"><!-- tap_area start -->
