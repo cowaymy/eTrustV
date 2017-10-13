@@ -480,7 +480,8 @@
                                     Project2.NRIC NRIC  ,
                                     Project2.CODY_STATUS,
                                     Project2.BRNCH_ID,
-                                    Project2.cust_id
+                                    Project2.cust_id,
+                                    Project2.actn_mem_id
                       FROM ( SELECT Project2.SCHDUL_ID SCHDUL_ID  ,
                                     Project2.No No  ,
                                     Project2.HS_DATE HS_DATE   ,
@@ -505,6 +506,7 @@
                                     Project2.CODY_STATUS as CODY_STATUS,
                                     Project2.BRNCH_ID as BRNCH_ID,
                                     Project2.cust_id as cust_id,
+                                    Project2.actn_mem_id AS actn_mem_id,
                                     ROW_NUMBER() OVER ( ORDER BY Project2.SCHDUL_ID ASC  ) row_number  
                              FROM ( SELECT Distinct1.SCHDUL_ID SCHDUL_ID  ,
                                            Distinct1.No No  ,
@@ -529,7 +531,8 @@
                                            Distinct1.C8 C8  ,
                                            Distinct1.CODY_STATUS as CODY_STATUS,
                                            Distinct1.BRNCH_ID as BRNCH_ID,
-                                           Distinct1.cust_id cust_id
+                                           Distinct1.cust_id cust_id,
+                                           Distinct1.actn_mem_id
                                     FROM (    
                                                     SELECT DISTINCT
                                                                  Extent1.SCHDUL_ID SCHDUL_ID,
@@ -583,7 +586,8 @@
                                                                  END C8,
                                                                  Extent4.STUS_CODE_ID as CODY_STATUS,
                                                                  Extent3.BRNCH_ID as BRNCH_ID,
-                                                                 Extent3.cust_id cust_id
+                                                                 Extent3.cust_id cust_id,
+                                                                 extent1.actn_mem_id as actn_mem_id
                                                     from SVC0008D Extent1
                                                             ,SYS0038M Extent2
                                                             ,SAL0001D Extent3
@@ -1021,6 +1025,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 						UPDATE SVC0008D
 						   SET STUS_CODE_ID = #{resultStusCodeId}
 						        ,ACTN_MEM_ID = #{actnMemId}
+						        ,CODY_ID = #{actnMemId}
 						 WHERE   SCHDUL_ID = #{hidschdulId}
 						 
                     </update>
