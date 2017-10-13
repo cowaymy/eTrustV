@@ -103,8 +103,8 @@ $(document).ready(function(){
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
     doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
+//     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
+//     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '' ,'sam', 'S', '');
     
     /**********************************
