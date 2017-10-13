@@ -7,14 +7,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface BatchPaymentOutService
 {
-
-	
-	/**
-	 * Batch Payment List(Internal Staff)조회
-	 * @param params
-	 * @return
-	 */
-    List<EgovMap> selectBatchPaymentOutList(Map<String, Object> params);
     
     /**
 	 * saveBatchPaymentOutUpload
