@@ -104,27 +104,18 @@
            
            fn_getHsViewfilterInfoAjax();
            
+           var statusCd = ${basicinfo.stusCodeId};
+           $("#cmbStatusType2 option[value="+ statusCd +"]").attr("selected", true); 
 
-           
-               
-                  var statusCd = ${basicinfo.stusCodeId};
-                $("#cmbStatusType2 option[value="+ statusCd +"]").attr("selected", true); 
+           var failResnCd = ${basicinfo.failResnId}
+           $("#failReason option[value="+failResnCd +"]").attr("selected", true);   
+      
+           var codyIdCd = ${basicinfo.codyId}
+           $("#cmbServiceMem option[value="+codyIdCd +"]").attr("selected", true);   
 
-                var failResnCd = ${basicinfo.failResnId}
-                $("#failReason option[value="+failResnCd +"]").attr("selected", true);   
+           var renColctCd = ${basicinfo.renColctId}
+           $("#cmbCollectType option[value="+renColctCd +"]").attr("selected", true);                       
 
-            
-                var renColctCd = ${basicinfo.renColctid}
-                $("#cmbCollectType option[value="+renColctCd +"]").attr("selected", true);   
-           
-                var codyIdCd = ${basicinfo.codyId}
-                $("#serMemList option[value="+codyIdCd +"]").attr("selected", true);   
-                    
-
-
-
-             /* alert($("#_openGb").val()); */
-             
              if($("#_openGb").val() == "view"){
                     $("#btnSave").hide();
             }                 
@@ -159,13 +150,16 @@
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
               Common.ajax("POST", "/bs/UpdateHsResult.do", jsonObj, function(result) {
-              Common.alert(result.message);
+              Common.alert(result.message, fn_parentReload);
 
             });
         }
     
     
-    
+    function fn_parentReload() {
+        fn_getBSListAjax(); //parent Method (Reload)
+    }    
+        
     </script>
     
     
@@ -258,7 +252,7 @@
 <tr>
     <th scope="row">HS Status<span class="must">*</span></th>
     <td>
-    <select class="w100p"  id ="cmbStatusType2" name = "cmbStatusType"></select>
+    <select class="w100p"  id ="cmbStatusType2" name = "cmbStatusType2"></select>
     </td>
     <th scope="row">Settle Date</th>
     <td><span><c:out value="${basicinfo.setlDt}"/></span> </td>
@@ -286,7 +280,7 @@
     <td>
     <select class="w100p" id ="cmbServiceMem" name = "cmbServiceMem">
        <c:forEach var="list" items="${ serMemList}" varStatus="status">
-            <option value="${list.CodeId}">${list.codeName } </option>
+            <option value="${list.codeId}">${list.codeName } </option>
        </c:forEach>
     </select>
     </td>

@@ -167,7 +167,7 @@
                         width : 120 ,                             
                         visible:false                                
                     }, {
-                        dataField : "month",
+                        dataField : "actnMemId",
                         headerText : "Complete Cody",
                         width : 120
                     }, {
@@ -550,7 +550,7 @@
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src=""${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
