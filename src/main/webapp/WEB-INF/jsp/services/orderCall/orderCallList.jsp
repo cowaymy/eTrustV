@@ -270,7 +270,7 @@ function fn_excelDown(){
     <td>
     <select class="multy_select w100p" multiple="multiple" id="callLogType" name="callLogType">
         <option value="257" selected>New Installation Order</option>
-        <option value="258" selected>Product Exchange</option>
+        <option value="258">Product Exchange</option>
 
     </select>
     </td>
