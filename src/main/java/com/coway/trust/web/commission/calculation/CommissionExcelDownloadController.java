@@ -37,7 +37,7 @@ public class CommissionExcelDownloadController {
 		try {
 			String fileName = request.getParameter("fileName");
 			String codeNm = request.getParameter("code");
-
+			System.out.println(" ** Excel Code Name : " + codeNm);
 			String[] columns;
 			String[] titles;
 
@@ -89,6 +89,7 @@ public class CommissionExcelDownloadController {
 				
 				map.put("codeGruop", CommissionConstants.COMIS_CD);
 				if (codeNm.equals(CommissionConstants.COMIS_CDC_P01)){
+					System.out.println(" ******CDC-P01******");
 					map.put("emplyLev", CommissionConstants.COMIS_NORMAL_MEM_LEV);
 					columns = new String[] { "taskId", "runId", "emplyId","emplyCode", "memType"
 							, "v1", "v2", "v3", "v4","v5", "v6", "v7", "v8", "v9", "v10"

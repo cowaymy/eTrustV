@@ -236,7 +236,7 @@
         </aside><!-- title_line end -->
         <form id="form_20T">
            <input type="hidden" name="code" id="code_20T" value="${code}"/>
-           <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
+           <input type="hidden" id="fileName" name="fileName" value="ASsalse.xlsx"/>
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="search_20T"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>

@@ -261,11 +261,11 @@
     
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2>Commission Basic Data Collection - ${prdNm }</h2>
+          <h2>${prdNm }-${prdDec }</h2>
         </aside><!-- title_line end -->
         <form id="form_10T">
            <input type="hidden" name="code" id="code_10T" value="${code}"/>
-           <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
+           <input type="hidden" id="fileName" name="fileName" value="outrightMembership.xlsx"/>
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="search_10T"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>

@@ -220,7 +220,7 @@
         </aside><!-- title_line end -->
         <form id="form_14T">
            <input type="hidden" name="code" id="code_14T" value="${code}"/>
-           <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
+           <input type="hidden" id="fileName" name="fileName" value="gatherNcompileIntroduction.xlsx"/>
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="search_14T"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>

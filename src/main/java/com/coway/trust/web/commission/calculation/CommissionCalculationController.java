@@ -1607,13 +1607,8 @@ public class CommissionCalculationController {
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
 		
-		try{
-			commissionCalculationService.neoProInsert(params,sessionVO);
-	    	message = AppConstants.MSG_SUCCESS;
-		}catch(Exception e){
-			message = AppConstants.MSG_FAIL;
-		}
-    	
+		commissionCalculationService.neoProInsert(params,sessionVO);
+		
 		msg.setMessage(message);
         return ResponseEntity.ok(msg);
 	}
@@ -1640,12 +1635,8 @@ public class CommissionCalculationController {
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
 		
-		try{
-			commissionCalculationService.ctUploadInsert(params, sessionVO);
-	    	message = AppConstants.MSG_SUCCESS;
-		}catch(Exception e){
-			message = AppConstants.MSG_FAIL;
-		}
+		commissionCalculationService.ctUploadInsert(params, sessionVO);
+    	message = AppConstants.MSG_SUCCESS;
     	
 		msg.setMessage(message);
         return ResponseEntity.ok(msg);

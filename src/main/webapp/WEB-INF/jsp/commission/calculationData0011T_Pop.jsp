@@ -259,7 +259,7 @@
         </aside><!-- title_line end -->
         <form id="form_11T">
            <input type="hidden" name="code" id="code_11T" value="${code}"/>
-           <input type="hidden" id="fileName" name="fileName" value="excelDownName"/>
+           <input type="hidden" id="fileName" name="fileName" value="rentalNoutrightSales.xlsx"/>
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="search_11T"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
