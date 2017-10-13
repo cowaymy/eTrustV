@@ -43,6 +43,12 @@ public interface HsManualService {
 	List<EgovMap> failReasonList(Map<String, Object> params);
 
 	List<EgovMap> serMemList(Map<String, Object> params);
+
+	List<EgovMap> selectHsViewfilterInfo(Map<String, Object> params);
+
+	EgovMap selectSettleInfo(Map<String, Object> params);
+
+	Map<String, Object> UpdateHsResult(Map<String, Object> formMap, List<Object> docType, SessionVO sessionVO) throws ParseException;;
 	
 	
 	

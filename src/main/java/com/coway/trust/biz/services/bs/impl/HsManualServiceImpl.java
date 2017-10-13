@@ -439,7 +439,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 				insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
 				insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
 
-				hsManualMapper.updateHsSrvConfigM(insertHsSrvConfigM);
+//				hsManualMapper.updateHsSrvConfigM(insertHsSrvConfigM);
 				
 //                    HappyCallM callMas = new HappyCallM();
 //                    callMas.HCID = 0;
@@ -566,8 +566,69 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public List<EgovMap> serMemList(Map<String, Object> params) {
 		return hsManualMapper.serMemList(params);
 	}
-	
-	
+
+
+
+	@Override
+	public List<EgovMap> selectHsViewfilterInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectHsViewfilterInfo(params);
+	}
+
+
+
+	@Override
+	public EgovMap selectSettleInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectSettleInfo(params);
+	}
+
+
+
+	@Override
+	@Transactional
+	public Map<String, Object> UpdateHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
+		
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		
+		EgovMap UpdateHsResult = new EgovMap();
+		
+        //BSResultD
+		for(int i=0; i< docType.size(); i++) {
+			Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
+			docSub.put("bsResultId", params.get("hidschdulId"));				
+			docSub.put("bsResultPartId", docSub.get("stkId"));
+            docSub.put("bsResultPartDesc", docSub.get("stkDesc"));
+            docSub.put("bsResultPartQty", docSub.get("name"));
+//            docSub.put("bsResultCrtDt");
+            docSub.put("bsResultCrtUserId",sessionVO.getUserId());
+            docSub.put("bsResultFilterClm",docSub.get("name"));
+            
+            hsManualMapper.updateHsResultD(docSub);
+		}
+		
+		//BSResultM
+		EgovMap HsResultUdateEdit = new EgovMap();
+		HsResultUdateEdit.put("hidschdulId", params.get("hidschdulId"));
+		HsResultUdateEdit.put("srvRem", params.get("instruction"));
+		HsResultUdateEdit.put("codyId", params.get("cmbServiceMem"));
+		HsResultUdateEdit.put("failReason", params.get("failReason"));
+		HsResultUdateEdit.put("renColctId", params.get("cmbCollectType"));
+		HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
+		
+	     hsManualMapper.updateHsResultM(HsResultUdateEdit);	//m
+		
+	     
+	     
+			EgovMap updateHsSrvConfigM = new EgovMap();
+			
+			updateHsSrvConfigM.put("salesOrdId", params.get("hidschdulId"));
+			updateHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
+			
+//			hsManualMapper.updateHsSrvConfigM(updateHsSrvConfigM);	
+		
+		return resultValue;
+	}
 	
 	
 	

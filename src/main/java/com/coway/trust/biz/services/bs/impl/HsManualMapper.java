@@ -3,6 +3,8 @@ package com.coway.trust.biz.services.bs.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -70,7 +72,15 @@ public interface HsManualMapper {
 	List<EgovMap> failReasonList(Map<String, Object> params);
 
 	List<EgovMap> serMemList(Map<String, Object> params);
-	
+
+	List<EgovMap> selectHsViewfilterInfo(Map<String, Object> params);
+
+	EgovMap selectSettleInfo(Map<String, Object> params);
+
+	void updateHsResultM(EgovMap params);
+
+	void updateHsResultD(Map<String, Object> params);
+
 
 
 	
