@@ -386,17 +386,19 @@
                    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
                    
                     if(radioVal == 1 ){
-                          _schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
+/*                           _schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
 		                  _salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-		                  _brnchId = AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId");
-		                  $("#_openGb").val("view");
+		                  _brnchId = AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"); */
+
+
+                        $("#_schdulId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId"));
+                        $("#_salesOrdId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
+                        $("#_brnchId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"));
+		                $("#_openGb").val("view");
                          
-                         alert("_schdulId::"+  $("#_schdulId").val() );
-/*                          $("#_schdulId").val(item.schdulId);
-                         $("#_salesOrdId").val(item.salesOrdId);
-                         $("#_openGb").val("view");
- */
-                         Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditViewForm").serializeJSON(), null , true , '');
+/*                          alert("_schdulId::"+  $("#_schdulId").val() +  $("#_salesOrdId").val()+  $("#_brnchId").val()); */
+
+                         Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                     }                   
                 });
         
@@ -533,14 +535,15 @@
     <input type="hidden" name="salesOrdId"  id="_salesOrdId"/>  <!-- salesOrdId  -->
     <input type="hidden" name="openGb"  id="_openGb"/>  <!--   salesOrdId  -->
     <input type="hidden" name="brnchId"  id="_brnchId"/>  <!-- salesOrdId  -->
+
 </form>
 
-<form id="popEditViewForm" method="post">
+<%-- <form id="popEditViewForm" method="post">
     <input type="hidden" name="schdulId"  id="_schdulIdView"/>  <!-- schdulId  -->
     <input type="hidden" name="salesOrdId"  id="_salesOrdIdView"/>  <!-- salesOrdId  -->
-    <input type="hidden" name="openGb"  id="_openGb"/>  <!--   salesOrdId  -->
+    <input type="hidden" name="openGb"  id="_openGbView"/>  <!--   salesOrdId  -->
     <input type="hidden" name="brnchId"  id="_brnchIdView"/>  <!-- salesOrdId  -->
-</form>
+</form> --%>
 
 <form id="searchForm" name="searchForm">    
 

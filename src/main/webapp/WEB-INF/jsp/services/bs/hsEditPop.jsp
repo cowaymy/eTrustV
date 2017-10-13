@@ -90,14 +90,16 @@
     $(document).ready(function() {
 
     	   doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
- 
+            
+            
+            
            selSchdulId = $("#hidschdulId").val(); // TypeId 
            selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId 
            openGb = $("#openGb").val(); // TypeId 
            brnchId = $("#brnchId").val(); // TypeId  
            hidHsno = $("#hidHsno").val(); // TypeId  
            
-
+             
            createAUIGrid();
            
            fn_getHsViewfilterInfoAjax();
@@ -120,9 +122,11 @@
                     
 
 
-            
-             if(openGb == "view"){
-                    $("btnSave").hide();
+
+             /* alert($("#_openGb").val()); */
+             
+             if($("#_openGb").val() == "view"){
+                    $("#btnSave").hide();
             }                 
     
     
