@@ -237,27 +237,47 @@ var batchInfoLayout = [
         }
     }
     
-    function fn_batchPayItemList(validStatusId){
+    function fn_batchPayItemList(validStatusId, gubun){
         var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
         
         Common.ajax("GET","/payment/selectBatchPayItemList.do",{"batchId":batchId, "validStatusId" : validStatusId}, function(result){
             
-            if(validStatusId == "4"){
-                $('#itemGubun').text("Valid Items");
-            }else if(validStatusId == "21"){
-                $('#itemGubun').text("Invalid Items");
-            }else{
-                $('#itemGubun').text("All Items");
+            if(gubun == "V"){//VIEW
+            	
+            	if(validStatusId == "4"){
+                    $('#itemGubun').text("Valid Items");
+                }else if(validStatusId == "21"){
+                    $('#itemGubun').text("Invalid Items");
+                }else{
+                    $('#itemGubun').text("All Items");
+                }
+            	
+            	AUIGrid.destroy(batchInfoGridID);
+                batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros);
+                AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
+                AUIGrid.resize(batchInfoGridID,942, 280);
+            	
+            }else if(gubun == "C"){//CONFIRM
+            	
+            	if(validStatusId == "4"){
+                    $('#itemGubun_conf').text("Valid Items");
+                }else if(validStatusId == "21"){
+                    $('#itemGubun_conf').text("Invalid Items");
+                }else{
+                    $('#itemGubun_conf').text("All Items");
+                }
+            	
+            	AUIGrid.destroy(batchConfGridID);
+                batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros);
+                AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
+                AUIGrid.resize(batchConfGridID,942, 280);
             }
             
-            AUIGrid.destroy(batchInfoGridID);
-            batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros);
-            AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
-            AUIGrid.resize(batchInfoGridID,942, 280);
+            
         });
     }
     
-    function fn_batchPayItemList2(validStatusId){
+    /* function fn_batchPayItemList2(validStatusId){
         var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
         
         Common.ajax("GET","/payment/selectBatchPayItemList.do",{"batchId":batchId, "validStatusId" : validStatusId}, function(result){
@@ -276,7 +296,7 @@ var batchInfoLayout = [
             AUIGrid.resize(batchConfGridID,942, 280);
             
         });
-    }
+    } */
     
     function fn_confirmBatchPopup(){
         
@@ -659,9 +679,9 @@ var batchInfoLayout = [
     <aside class="title_line">
     <h2 id="itemGubun">All Items</h2>
     <ul class="right_btns">
-        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('' , '');">All Items</a></p></li>
-        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4' , '');">Valid Items</a></p></li>
-        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , '');">Invalid Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('' , 'V');">All Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4' , 'V');">Valid Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , 'V');">Invalid Items</a></p></li>
     </ul>
     </aside>
     <!-- title_line end -->
@@ -776,9 +796,9 @@ var batchInfoLayout = [
     <aside class="title_line">
     <h2 id="itemGubun_conf">All Items</h2>
     <ul class="right_btns">
-        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList2();">All Items</a></p></li>
-        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList2('4');">Valid Items</a></p></li>
-        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList2('21');">Invalid Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('','C');">All Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4', 'C');">Valid Items</a></p></li>
+        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , 'C');">Invalid Items</a></p></li>
     </ul>
     </aside>
     <!-- title_line end -->
