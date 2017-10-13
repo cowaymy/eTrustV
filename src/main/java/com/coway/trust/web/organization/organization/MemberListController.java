@@ -382,7 +382,7 @@ public class MemberListController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/terminateResignSave", method = RequestMethod.POST)
+	@RequestMapping(value = "/terminateResignSave.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertTerminateResign(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
@@ -402,8 +402,6 @@ public class MemberListController {
 	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
 	    		message.setMessage(resultValue.get("message").toString());
 			}
-		}else{
-			message.setMessage("<b>Your login session has expired. Please relogin to our system.</b>");
 		}
 		return ResponseEntity.ok(message);
 	}
