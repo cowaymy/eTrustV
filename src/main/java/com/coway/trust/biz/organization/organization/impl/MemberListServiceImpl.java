@@ -791,7 +791,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				user.put("userTypeID",Integer.parseInt(params.get("memberType").toString()));
 				user.put("userDefaultPasswd", params.get("password"));
 				user.put("userValidFrom", params.get("joinDate"));
-				user.put("userValidTo", "2099-12-31");
+				user.put("userValidTo", "31/12/2099");
 				user.put("userSecQuesID", 0);
 				user.put("userSecQuesAns", "");
 				user.put("userWorkNo", "");
