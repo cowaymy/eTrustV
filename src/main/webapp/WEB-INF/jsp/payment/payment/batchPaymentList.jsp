@@ -178,9 +178,9 @@ var batchInfoLayout = [
               iconHeight : 16,
               onclick : function(rowIndex, columnIndex, value, item) {
             	  
-            	  if(item.detId == "1"){
-            		  fn_removeItem(item.detId);
-            	  }
+            	  if(item.validStusId == "1" && item.cnfmStusId == "44"){
+                      fn_removeItem(item.detId);
+                  }
             	  
               }
            }
@@ -347,6 +347,13 @@ var batchInfoLayout = [
             
             if(batchStusId == "1"){
             	$('#conf_popup_wrap').show();
+            	
+            	if(cnfmStusId == "77"){
+            		$('#btnConf').hide();
+            	}else{
+            		$('#btnConf').show();
+            	}
+            	
                 Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
                     console.log(result);
                     
@@ -849,7 +856,7 @@ var batchInfoLayout = [
     <!-- grid_wrap end -->
     </article><!-- tap_area end -->
     <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmBatch();">Confirm</a></p></li>
+    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmBatch();" id="btnConf">Confirm</a></p></li>
     <li><p class="btn_blue2 big"><a href="javascript:fn_deactivateBatch();">Deactivate</a></p></li>
     </ul>
     </section><!-- tap_wrap end -->
