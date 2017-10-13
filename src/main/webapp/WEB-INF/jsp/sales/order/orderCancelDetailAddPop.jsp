@@ -325,7 +325,8 @@
     }
     
     function fn_success(){
-    	fn_cancelReload();
+//    	fn_cancelReload();
+    	$("#_close").click();
     }
 </script>
 
