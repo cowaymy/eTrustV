@@ -163,6 +163,8 @@ $(document).ready(function(){
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
     
+    SearchListAjax();
+    
 });
 
 function f_change(){
@@ -433,9 +435,5 @@ function f_getTtype(g , v){
         </article><!-- tap_area end -->
         
     </section><!-- tap_wrap end -->
-<form id='popupForm'>
-    <input type="hidden" id="sUrl" name="sUrl">
-    <input type="hidden" id="svalue" name="svalue">
-</form>
 </section>
 

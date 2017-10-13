@@ -76,8 +76,8 @@ $(document).ready(function(){
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
     doGetCombo('/logistics/stocktransfer/selectStockTransferNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
+//     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
+//     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '' ,'sam', 'S', '');
     
     /**********************************
@@ -160,7 +160,7 @@ $(document).ready(function(){
         	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }
     });
-    
+    SearchListAjax();
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
@@ -233,11 +233,58 @@ $(function(){
             $("#gropenwindow").show();
         }
     });
-    
+    $("#tlocationnm").keypress(function(event) {
+        $('#tlocation').val('');
+        if (event.which == '13') {
+            $("#stype").val('tlocation');
+            $("#svalue").val($('#tlocationnm').val());
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
+    $("#flocationnm").keypress(function(event) {
+        $('#flocation').val('');
+        if (event.which == '13') {
+            $("#stype").val('flocation');
+            $("#svalue").val($('#flocationnm').val());
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
 });
 
-function SearchListAjax() {
+function fn_itempopList(data){
+    
+    var rtnVal = data[0].item;
    
+    if ($("#stype").val() == "flocation" ){
+        $("#flocation").val(rtnVal.locid);
+        $("#flocationnm").val(rtnVal.locdesc);
+    }else{
+        $("#tlocation").val(rtnVal.locid);
+        $("#tlocationnm").val(rtnVal.locdesc);
+    }
+    
+    $("#svalue").val();
+} 
+
+function SearchListAjax() {
+	if ($("#flocationnm").val() == ""){
+        $("#flocation").val('');
+    }
+    if ($("#tlocationnm").val() == ""){
+        $("#tlocation").val('');
+    }
+    
+    if ($("#flocation").val() == ""){
+        $("#flocation").val($("#flocationnm").val());
+    }
+    if ($("#tlocation").val() == ""){
+        $("#tlocation").val($("#tlocationnm").val());
+    }
+    
     var url = "/logistics/stocktransfer/StocktransferSearchDeliveryList.do";
     var param = $('#searchForm').serializeJSON();
     
@@ -324,7 +371,12 @@ function grFunc(){
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
         <input type="hidden" name="gtype"   id="gtype"  value="receipt" /> 
-        <input type="hidden" name="rStcode" id="rStcode" />    
+        <input type="hidden" name="rStcode" id="rStcode" /> 
+        
+        <input type="hidden" id="svalue" name="svalue"/>
+        <input type="hidden" id="sUrl"   name="sUrl"  />
+        <input type="hidden" id="stype"  name="stype" />
+           
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -353,16 +405,15 @@ function grFunc(){
                 <tr>
                     <th scope="row">From Location</th>
                     <td>
-                        <select class="w100p" id="tlocation" name="tlocation"></select>
+                        <input type="hidden"  id="tlocation" name="tlocation">
+                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                     <th scope="row">To Location</th>
                     <td >
-                        <select class="w100p" id="flocation" name="flocation"></select>
+                        <input type="hidden"  id="flocation" name="flocation">
+                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
-                    <th scope="row">Auto / Manual</th>
-                    <td>
-                        <select class="w100p" id="sam" name="sam"></select>
-                    </td>                
+                    <td colspan="2">&nbsp;</td>                
                 </tr>
                 
                 <tr>
@@ -443,9 +494,6 @@ function grFunc(){
 		</section>
     </div>
     
-<form id='popupForm'>
-    <input type="hidden" id="sUrl" name="sUrl">
-    <input type="hidden" id="svalue" name="svalue">
-</form>
+
 </section>
 

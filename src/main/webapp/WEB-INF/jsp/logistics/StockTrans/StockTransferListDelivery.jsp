@@ -92,8 +92,8 @@ $(document).ready(function(){
 	doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'=='')?'US':'${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
+//     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
+//     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
     $("#crtsdt").val('${searchVal.crtsdt}');
     $("#crtedt").val('${searchVal.crtedt}');
@@ -212,10 +212,61 @@ $(function(){
 	    	}
     	}
     });
+    
+    $("#tlocationnm").keypress(function(event) {
+        $('#tlocation').val('');
+        if (event.which == '13') {
+            $("#stype").val('tlocation');
+            $("#svalue").val($('#tlocationnm').val());
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
+    $("#flocationnm").keypress(function(event) {
+        $('#flocation').val('');
+        if (event.which == '13') {
+            $("#stype").val('flocation');
+            $("#svalue").val($('#flocationnm').val());
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
+        }
+    });
 });
 
-function SearchListAjax() {
+
+function fn_itempopList(data){
+    
+    var rtnVal = data[0].item;
    
+    if ($("#stype").val() == "flocation" ){
+        $("#flocation").val(rtnVal.locid);
+        $("#flocationnm").val(rtnVal.locdesc);
+    }else{
+        $("#tlocation").val(rtnVal.locid);
+        $("#tlocationnm").val(rtnVal.locdesc);
+    }
+    
+    $("#svalue").val();
+} 
+
+
+function SearchListAjax() {
+	if ($("#flocationnm").val() == ""){
+        $("#flocation").val('');
+    }
+    if ($("#tlocationnm").val() == ""){
+        $("#tlocation").val('');
+    }
+    
+    if ($("#flocation").val() == ""){
+        $("#flocation").val($("#flocationnm").val());
+    }
+    if ($("#tlocation").val() == ""){
+        $("#tlocation").val($("#tlocationnm").val());
+    }
+    
     var url = "/logistics/stocktransfer/StocktransferSearchList.do";
     var param = $('#searchForm').serializeJSON();
     
@@ -275,6 +326,11 @@ function f_getTtype(g , v){
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
+        
+        <input type="hidden" id="svalue" name="svalue"/>
+        <input type="hidden" id="sUrl"   name="sUrl"  />
+        <input type="hidden" id="stype"  name="stype" />
+        
         <input type="hidden" name="rStcode" id="rStcode" />    
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
@@ -304,11 +360,13 @@ function f_getTtype(g , v){
                 <tr>
                     <th scope="row">From Location</th>
                     <td>
-                        <select class="w100p" id="tlocation" name="tlocation"></select>
+                        <input type="hidden"  id="tlocation" name="tlocation">
+                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
                     <th scope="row">To Location</th>
                     <td >
-                        <select class="w100p" id="flocation" name="flocation"></select>
+                        <input type="hidden"  id="flocation" name="flocation">
+                        <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
                     <td colspan="2">&nbsp;</td>                
                 </tr>
@@ -359,9 +417,6 @@ function f_getTtype(g , v){
         <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
 
     </section><!-- search_result end -->
-<form id='popupForm'>
-    <input type="hidden" id="sUrl" name="sUrl">
-    <input type="hidden" id="svalue" name="svalue">
-</form>
+
 </section>
 
