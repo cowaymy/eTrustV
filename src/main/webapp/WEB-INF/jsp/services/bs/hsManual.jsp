@@ -550,7 +550,7 @@
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src=""${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order list</li>
 </ul>
