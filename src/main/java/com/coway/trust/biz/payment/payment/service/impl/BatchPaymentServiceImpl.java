@@ -92,7 +92,7 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 		int result = 0;
 		
 		if(paymentMs != null){
-			if(String.valueOf(paymentMs.get("batchStusId")).equals("1") && String.valueOf(paymentMs.get("batchStusId")).equals("44")){
+			if(String.valueOf(paymentMs.get("batchStusId")).equals("1") && String.valueOf(paymentMs.get("cnfmStusId")).equals("44")){
 				
 				result = batchPaymentMapper.saveConfirmBatch(params);
 				
