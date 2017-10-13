@@ -578,6 +578,7 @@ function fn_requestTermiReSave(val){
 	    Common.ajax("POST", "/organization/terminateResignSave",  $("#requestTermiReForm").serializeJSON(), function(result) {
 		console.log("성공.");
 		console.log("data : " + result);
+		Common.alert(result.message);
 		
 	});
 	
@@ -1149,7 +1150,7 @@ function fn_requestTermiReSave(val){
 <input type="hidden" value="<c:out value="${memberView.c44}"/>" id="memberLvl" name="memberLvl"/>
 <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype" name="memtype"/>
 <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue" name="codeValue"/>
-<input type="text" value="<c:out value="${memberView.memCode}"/>" id="memCode" name="memCode"/>
+<input type="hidden" value="<c:out value="${memberView.memCode}"/>" id="memCode" name="memCode"/>
 <input type="hidden" value="" id="lvlTo" name="lvlTo"/>
 <aside class="title_line"><!-- title_line start -->
 <h2>Promote/Demote Information</h2>
