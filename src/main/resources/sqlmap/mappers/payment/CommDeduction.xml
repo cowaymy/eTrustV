@@ -210,6 +210,6 @@
     </select>
     <resultMap id="createPayment" type="egovMap"></resultMap>
     <select id="createPaymentProcedure" statementType="CALLABLE" parameterType="Map">
-        {call SP_INITIIZE_BILL_GST_EARY_RENT(#{fileId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillMap})}
+        {call SP_INST_PAY_CMMS_DEDUCT(#{fileId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillMap})}
     </select>
 </mapper>

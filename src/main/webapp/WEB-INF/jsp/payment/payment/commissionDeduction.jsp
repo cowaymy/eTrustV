@@ -114,7 +114,7 @@ function fn_uploadFile(){
 	formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
 	
 	Common.ajaxFile("/payment/csvUpload.do", formData, function(result){
-		Common.alert(result);
+		Common.alert(result.message);
 	});
 }
 
@@ -144,7 +144,7 @@ function fn_createPayment(){
 	if(selectedGridValue != undefined){
 		var fileNo = AUIGrid.getCellValue(mainGrid, selectedGridValue, "fileId");
 		Common.ajax("GET", "/payment/createPayment.do", {"fileId" : fileNo}, function(result){
-			Common.alert(result);
+			Common.alert(result.message);
         });
 	}else{
 		return;
@@ -170,7 +170,7 @@ function fn_clickArea1(){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-     <li><p class="btn_blue"><a href="javascript:fn_generateStatement();">Create Payment</a></p></li>
+     <li><p class="btn_blue"><a href="javascript:fn_createPayment();">Create Payment</a></p></li>
      <li><p class="btn_blue"><a href="javascript:fn_viewResult();">View Result</a></p></li>
 </ul>         
 <ul class="left_btns mt20">
@@ -180,7 +180,7 @@ function fn_clickArea1(){
     </div><!-- auto_file end -->
     </li>
     <li><p class="btn_sky"><a href="javascript:fn_uploadFile();">Upload</a></p></li>
-    <li><p class="btn_sky"><a href="#">Download CSV Format</a></p></li>
+    <!-- <li><p class="btn_sky"><a href="#">Download CSV Format</a></p></li> -->
 </ul>
 
 <section class="search_result mt20"><!-- search_result start -->
