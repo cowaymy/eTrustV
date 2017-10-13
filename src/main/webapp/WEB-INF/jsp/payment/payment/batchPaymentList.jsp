@@ -336,27 +336,6 @@ var batchInfoLayout = [
     	});
     }
     
-    /* function fn_batchPayItemList2(validStatusId){
-        var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
-        
-        Common.ajax("GET","/payment/selectBatchPayItemList.do",{"batchId":batchId, "validStatusId" : validStatusId}, function(result){
-            
-            if(validStatusId == "4"){
-                $('#itemGubun_conf').text("Valid Items");
-            }else if(validStatusId == "21"){
-                $('#itemGubun_conf').text("Invalid Items");
-            }else{
-                $('#itemGubun_conf').text("All Items");
-            }
-            
-            AUIGrid.destroy(batchConfGridID);
-            batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros);
-            AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
-            AUIGrid.resize(batchConfGridID,942, 280);
-            
-        });
-    } */
-    
     function fn_confirmBatchPopup(){
         
         var selectedItem = AUIGrid.getSelectedIndex(myGridID);
