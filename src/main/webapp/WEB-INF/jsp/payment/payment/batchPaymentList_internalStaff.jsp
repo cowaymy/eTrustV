@@ -760,7 +760,7 @@ var batchInfoLayout = [
 <header class="pop_header"><!-- pop_header start -->
 <h1>Batch Payment Upload</h1>
 <ul class="right_opt">
-    <<li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#upload_popup_wrap')">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#upload_popup_wrap')">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
