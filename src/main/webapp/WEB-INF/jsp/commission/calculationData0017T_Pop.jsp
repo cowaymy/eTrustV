@@ -214,12 +214,20 @@
    }
    
    function fn_AlldownFile() {
-      var fileName = $("#fileName").val();
-      var searchDt = $("#CMM0017T_Dt").val();
-      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-      var month = searchDt.substr(0,searchDt.indexOf("/"));
-      var code = $("#code_17T").val();
-      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+	   var data = { "searchDt" : $("#CMM0017T_Dt").val() , "code": $("#code_17T").val()};
+	   Common.ajax("GET", "/commission/calculation/cntCMM0017T", $("#form_17T").serialize(), function(result) {
+           var cnt = result;
+           if(cnt > 0){
+		      var fileName = $("#fileName").val();
+		      var searchDt = $("#CMM0017T_Dt").val();
+		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		      var month = searchDt.substr(0,searchDt.indexOf("/"));
+		      var code = $("#code_17T").val();
+		      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+           }
+       });
    }
    
    function onlyNumber(obj) {

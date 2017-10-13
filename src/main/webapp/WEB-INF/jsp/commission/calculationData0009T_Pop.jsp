@@ -253,13 +253,21 @@
    }
    
    function fn_AlldownFile() {
-      var fileName = $("#fileName").val();
-      var searchDt = $("#CMM0009T_Dt").val();
-      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-      var month = searchDt.substr(0,searchDt.indexOf("/"));
-      var code = $("#code_09T").val();
-      var codeId = $("#orgGroup_09").val();
-      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+	   var data = { "searchDt" : $("#CMM0009T_Dt").val() , "code": $("#code_09T").val(), "codeId": $("#orgGroup_09").val() };
+	   Common.ajax("GET", "/commission/calculation/cntCMM0009T", data, function(result) {
+           var cnt = result;
+           if(cnt > 0){
+		      var fileName = $("#fileName").val();
+		      var searchDt = $("#CMM0009T_Dt").val();
+		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		      var month = searchDt.substr(0,searchDt.indexOf("/"));
+		      var code = $("#code_09T").val();
+		      var codeId = $("#orgGroup_09").val();
+		      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+           }
+	   });
    }
    
    function onlyNumber(obj) {

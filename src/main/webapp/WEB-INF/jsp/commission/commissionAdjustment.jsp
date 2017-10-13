@@ -48,6 +48,12 @@
 		$("#adjustmentAmt").val("");
 		$("#adjustmentDesc").val("");
 	}
+	
+	function floatCh(obj){
+        $(obj).change(function(){
+            $(this).val($(this).val().replace(/[^-\.0-9]/g,'')  );  //소수점입력가능
+       }); 
+     }
 </script>
 
 <section id="content">
@@ -98,7 +104,7 @@
 			<tr>
 				<th scope="row">Adjustment Amt</th>
 				<td>
-				<input type="text" name="adjustmentAmt" id="adjustmentAmt"  title="" placeholder="Amont" class="" />
+				<input type="text" name="adjustmentAmt" id="adjustmentAmt"  title="" placeholder="Amont" class="" onchange="floatCh(this);"/>
 				</td>
 			</tr>
 			<tr>

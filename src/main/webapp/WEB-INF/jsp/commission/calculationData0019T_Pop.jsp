@@ -203,12 +203,20 @@
    }
    
    function fn_AlldownFile() {
+	   var data = { "searchDt" : $("#CMM0019T_Dt").val() , "code": $("#code_19T").val()};
+	   Common.ajax("GET", "/commission/calculation/cntCMM0019T", data, function(result) {
+           var cnt = result;
+           if(cnt > 0){
                var fileName = $("#fileName").val();
                var searchDt = $("#CMM0019T_Dt").val();
                var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
                var month = searchDt.substr(0,searchDt.indexOf("/"));
                var code = $("#code_19T").val();
                window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+           }
+       });
    }
    
    function onlyNumber(obj) {
@@ -231,6 +239,7 @@
 	   <aside class="title_line"><!-- title_line start -->
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
+        
 		<form id="form_19T">
 		   <input type="hidden" name="code" id="code_19T" value="${code}"/>
 		   <input type="hidden" id="fileName" name="fileName" value="BSsalse.xlsx"/>

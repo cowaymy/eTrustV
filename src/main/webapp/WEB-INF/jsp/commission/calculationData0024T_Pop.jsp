@@ -135,12 +135,20 @@
    }
    
    function fn_AlldownFile() {
-      var fileName = $("#fileName").val();
-      var searchDt = $("#CMM0024T_Dt").val();
-      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-      var month = searchDt.substr(0,searchDt.indexOf("/"));
-      var code = $("#code_24T").val();
-      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+	   var data = { "searchDt" : $("#CMM0024T_Dt").val() , "code": $("#code_24T").val()};
+	   Common.ajax("GET", "/commission/calculation/cntCMM0024T", data, function(result) {
+           var cnt = result;
+           if(cnt > 0){
+		      var fileName = $("#fileName").val();
+		      var searchDt = $("#CMM0024T_Dt").val();
+		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		      var month = searchDt.substr(0,searchDt.indexOf("/"));
+		      var code = $("#code_24T").val();
+		      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+           }
+       });
    }
    
    function onlyNumber(obj) {
@@ -163,6 +171,7 @@
        <aside class="title_line"><!-- title_line start -->
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
+        
         <form id="form_24">
            <input type="hidden" name="code" id="code_24T" value="${code}"/>
            <input type="hidden" id="fileName" name="fileName" value="CTMIncentivePerformance.xlsx"/>

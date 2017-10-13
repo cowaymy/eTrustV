@@ -257,6 +257,7 @@
    function fn_downFile() {
 	   var codeGroupId = $("#codeGroupId").val();
        var memberCd = $("#memberCd_06T").val();
+       
        Common.ajax("GET", "/commission/calculation/cntCMM0006T", $("#form_06T").serialize(), function(result) {
 	       var cnt = result;
 	       if(cnt > 0){
@@ -276,9 +277,6 @@
 			       var codeId = $("#codeGroupId").val();
 			       var memberCd = $("#memberCd_06T").val();
 			       var useYnCombo = $("#useYnCombo_06T").val();
-			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
-			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       //window.open("<c:url value='/commission/down/excel-xlsx-streaming.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&useYnCombo="+useYnCombo+"'/>");
 			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberCd="+memberCd+"&useYnCombo="+useYnCombo+"'/>";
 		       //}
 	       }else{
@@ -288,13 +286,19 @@
    }
    
    function fn_AlldownFile() {
-	   var fileName = $("#fileName").val();
-	   var searchDt = $("#CMM0006T_Dt").val();
-	   var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-	   var month = searchDt.substr(0,searchDt.indexOf("/"));
-	   var code = $("#code_06T").val();
-	   var codeId = $("#codeGroupId").val();
-	   window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+	   var data = { "searchDt" : $("#CMM0006T_Dt").val() , "code": $("#code_06T").val(), "codeId": $("#codeGroupId").val() };
+	   Common.ajax("GET", "/commission/calculation/cntCMM0006T", data, function(result) {
+           var cnt = result;
+           if(cnt > 0){
+			   var fileName = $("#fileName").val();
+			   var searchDt = $("#CMM0006T_Dt").val();
+			   var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+			   var month = searchDt.substr(0,searchDt.indexOf("/"));
+			   var code = $("#code_06T").val();
+			   var codeId = $("#codeGroupId").val();
+			   window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+           }
+	   });
    }
    
    function onlyNumber(obj) {

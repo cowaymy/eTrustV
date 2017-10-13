@@ -144,12 +144,19 @@
    }
    
    function fn_downFile() {
-       var fileName = $("#fileName").val();
-       var searchDt = $("#7002CT_Dt").val();
-       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-       var month = searchDt.substr(0,searchDt.indexOf("/"));
-       var code = $("#code").val();
-       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+	   Common.ajax("GET", "/commission/calculation/cntData7002CT", $("#form7002CT").serialize(), function(result) {
+           var cnt = result;
+           if(cnt > 0){
+		       var fileName = $("#fileName").val();
+		       var searchDt = $("#7002CT_Dt").val();
+		       var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		       var month = searchDt.substr(0,searchDt.indexOf("/"));
+		       var code = $("#code").val();
+		       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
+           }
+       });
    }
 </script>
 

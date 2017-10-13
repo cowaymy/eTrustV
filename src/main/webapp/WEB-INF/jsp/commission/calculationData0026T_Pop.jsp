@@ -252,13 +252,21 @@
    } 
    
    function fn_AlldownFile() {
-      var fileName = $("#fileName").val();
-      var searchDt = $("#CMM0026T_Dt").val();
-      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-      var month = searchDt.substr(0,searchDt.indexOf("/"));
-      var code = $("#code_26T").val();
-      var codeId= $("#orgGroup_26").val();
-      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+	   var data = { "searchDt" : $("#CMM0026T_Dt").val() , "code": $("#code_26T").val(), "codeId": $("#orgGroup_26").val() };
+	   Common.ajax("GET", "/commission/calculation/cntCMM0026T", data, function(result) {
+           var cnt = result;
+           if(cnt > 0){
+		      var fileName = $("#fileName").val();
+		      var searchDt = $("#CMM0026T_Dt").val();
+		      var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		      var month = searchDt.substr(0,searchDt.indexOf("/"));
+		      var code = $("#code_26T").val();
+		      var codeId= $("#orgGroup_26").val();
+		      window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+           }else{
+               Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+           }
+       });
    } 
    
    function onlyNumber(obj) {
@@ -281,6 +289,7 @@
        <aside class="title_line"><!-- title_line start -->
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
+        
         <form id="form_26">
            <input type="hidden" name="code" id="code_26T" value="${code}"/>
            <input type="hidden" id="fileName" name="fileName" value="Award.xlsx"/>

@@ -109,8 +109,30 @@
 	
 		    var gridList = AUIGrid.getGridData(newGridID);       //그리드 데이터
 		    
+		    var num_check=/^[0-9]*$/;
 		    //array에 담기        
 		    if(gridList.length > 0) {
+		    	for (var i = 1; i < gridList.length-1; i++) {
+	                var hpCode = (gridList[i])[0];
+	                var joinYear = (gridList[i])[1];
+	                var joinMonth = (gridList[i])[2];
+	                var joinDays = (gridList[i])[3];
+	                var isNw = (gridList[i])[4];
+	                
+	                if(hpCode == null || hpCode == ""){
+	                	Common.alert("<spring:message code='sys.common.alert.validation' arguments='HPCODE' htmlEscape='false'/>");return;
+	                }else if(joinYear == null || joinYear == "" ||!(num_check.test(joinYear))){
+	                	Common.alert("<spring:message code='sys.common.alert.validation' arguments='JoinYear' htmlEscape='false'/>");return;
+	                }else if(joinMonth == null || joinMonth == "" || !(num_check.test(joinMonth))){
+	                	Common.alert("<spring:message code='sys.common.alert.validation' arguments='JoinMonth' htmlEscape='false'/>");return;
+                    }else if(joinDays == null || joinDays == "" || !(num_check.test(joinDays))){
+                    	Common.alert("<spring:message code='sys.common.alert.validation' arguments='JoinDays' htmlEscape='false'/>");return;
+                    }else if(isNw == null || isNw == "" || !(num_check.test(isNw))){
+                    	Common.alert("<spring:message code='sys.common.alert.validation' arguments='IsNew' htmlEscape='false'/>");return;
+                    }
+	                    
+	            }
+		    	
 		        data.all = gridList;
 		    }  else {
 		        Common.alert('Select the CSV file on the loca PC');
@@ -118,7 +140,7 @@
 		    }
 		    
 		    //Ajax 호출
-		    Common.ajax("POST", "/commission/calculation/neoUploadFile", data, function(result) {
+		     Common.ajax("POST", "/commission/calculation/neoUploadFile", data, function(result) {
 		        Common.alert(result.message);
 		        
 		        document.myForm.reset();
@@ -133,10 +155,9 @@
 		            console.log(e);
 		        }
 		        alert("Fail : " + jqXHR.responseJSON.message);        
-		    });
+		    }); 
         }
 	}
-	
 </script>
 
 <section id="content"><!-- content start -->

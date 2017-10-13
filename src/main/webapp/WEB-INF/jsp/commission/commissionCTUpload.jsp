@@ -76,6 +76,29 @@ var gridPros = {
 	        
 	        //array에 담기        
 	        if(gridList.length > 0) {
+	        	var num_check=/^[-\.0-9]*$/;
+	        	
+	        	for (var i = 1; i < gridList.length-1; i++) {
+	        		var CTCode = (gridList[i])[0];
+	        		var Perfac = (gridList[i])[1];
+	        		var BasicAllowance = (gridList[i])[2];
+	        		var Adjust = (gridList[i])[3];
+	        		var PhoneSubsidy = (gridList[i])[4];
+	        	    
+	        		if(CTCode == null || CTCode == ""){
+                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='CTCode' htmlEscape='false'/>");return;
+                    }else if(Perfac == null || Perfac == "" ||!(num_check.test(Perfac))){
+                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Perfac' htmlEscape='false'/>");return;
+                    }else if(BasicAllowance == null || BasicAllowance == "" ||!(num_check.test(BasicAllowance))){
+                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='BasicAllowance' htmlEscape='false'/>");return;
+                    }else if(Adjust == null || Adjust == "" ||!(num_check.test(Adjust))){
+                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Adjust' htmlEscape='false'/>");return;
+                    }else if(PhoneSubsidy == null || PhoneSubsidy == "" ||!(num_check.test(PhoneSubsidy))){
+                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='PhoneSubsidy' htmlEscape='false'/>");return;
+                    }
+	        	
+	        	}
+	        	
 	            data.all = gridList;
 	        }  else {
 	            Common.alert('Select the CSV file on the loca PC');

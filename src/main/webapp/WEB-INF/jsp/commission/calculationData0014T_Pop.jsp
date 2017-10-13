@@ -160,9 +160,9 @@
    
    function fn_downFile() {
 	   Common.ajax("GET", "/commission/calculation/cntCMM0014T", $("#form_14T").serialize(), function(result) {
-           /* var cnt = result;
+            var cnt = result;
            if(cnt > 0){
-			   var emplyId = $("#emplyId_14T").val();
+        	   /*   var emplyId = $("#emplyId_14T").val();
 		       
 		       if(emplyId == "" || emplyId == null){
 		    	   Common.alert("<spring:message code='sys.msg.necessary' arguments='emplyment Id' htmlEscape='false'/>");
@@ -181,21 +181,29 @@
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
 			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&emplyCd="+emplyCd+"&useYnCombo="+useYnCombo+"&codeId="+codeId+"'/>";
-		     /*   }
+		        //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
-	       } */
+	       } 
 	   });
    }
    
    function fn_downFile() {
-        var fileName = $("#fileName").val();
-        var searchDt = $("#CMM0014T_Dt").val();
-        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-        var month = searchDt.substr(0,searchDt.indexOf("/"));
-        var code = $("#code_14T").val();
-        var codeId= $("#orgGroup_14").val();
-        window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+	   var data = { "searchDt" : $("#CMM0014T_Dt").val() , "code": $("#code_14T").val(), "codeId": $("#orgGroup_14").val() };
+	   Common.ajax("GET", "/commission/calculation/cntCMM0014T", data, function(result) {
+           var cnt = result;
+          if(cnt > 0){
+		        var fileName = $("#fileName").val();
+		        var searchDt = $("#CMM0014T_Dt").val();
+		        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+		        var month = searchDt.substr(0,searchDt.indexOf("/"));
+		        var code = $("#code_14T").val();
+		        var codeId= $("#orgGroup_14").val();
+		        window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
+          }else{
+              Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
+          } 
+      });
    }
    
    function onlyNumber(obj) {
@@ -218,6 +226,7 @@
        <aside class="title_line"><!-- title_line start -->
           <h2>${prdNm } - ${prdDec }</h2>
         </aside><!-- title_line end -->
+        
         <form id="form_14T">
            <input type="hidden" name="code" id="code_14T" value="${code}"/>
            <input type="hidden" id="fileName" name="fileName" value="gatherNcompileIntroduction.xlsx"/>
