@@ -33,9 +33,9 @@ var mdcGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqstno"      ,headerText:"Stock Transfer Order"      ,width:120    ,height:30                },
+                     {dataField:"reqstno"      ,headerText:"Stock Transfer Order"        ,width:120    ,height:30                },
                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
-                     {dataField:"reqitmno"     ,headerText:"Stock Transfer Request Item" ,width:120    ,height:30 , visible:false},
+                     {dataField:"reqitmno"     ,headerText:"STO Item"                    ,width:120    ,height:30 , visible:false},
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
@@ -75,9 +75,9 @@ var reqcolumnLayout = [{dataField:"delyno"     ,headerText:"Delivery No"        
                        {dataField:"grdt"         ,headerText:"GR Date"                     ,width:120    ,height:30 },
                        {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                        {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                       {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
-                       {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"             ,width:120    ,height:30                },
-                       {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30},
+                       {dataField:"delyqty"      ,headerText:"Delivered Qty"               ,width:120    ,height:30 },
+                       {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"          ,width:120    ,height:30                },
+                       {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30},
                        {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                        {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];
 
@@ -298,7 +298,7 @@ function f_getTtype(g , v){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Transfer Request List</li>
+    <li>STO List</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->

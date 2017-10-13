@@ -32,9 +32,9 @@ var reqGrid;
 
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30                },
+                     {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30                },
                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
-                     {dataField:"reqitmno"     ,headerText:"Stock Transfer Request Item" ,width:120    ,height:30 , visible:false},
+                     {dataField:"reqitmno"     ,headerText:"STO Item"                    ,width:120    ,height:30 , visible:false},
                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30                },
                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
@@ -308,12 +308,12 @@ function f_getTtype(g , v){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Transfer Request List</li>
+    <li>STO List</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Transfer Request List</h2>
+<h2>STO List</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -344,7 +344,7 @@ function f_getTtype(g , v){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">Stock Transfer Request</th>
+                    <th scope="row">STO</th>
                     <td>
                         <select class="w100p" id="streq" name="streq"></select>
                     </td>

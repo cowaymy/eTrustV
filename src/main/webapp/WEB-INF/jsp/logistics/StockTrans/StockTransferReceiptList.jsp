@@ -45,11 +45,11 @@ var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"             
                      {dataField:"gidt"         ,headerText:"GI Date"                     ,width:120    ,height:30 },
                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , visible:false},
                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:120    ,height:30                },
-                     {dataField:"delyqty"      ,headerText:"Delivered Qty"                ,width:120    ,height:30 },
-                     {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"             ,width:120    ,height:30 , editalble:true},
+                     {dataField:"delyqty"      ,headerText:"Delivered Qty"               ,width:120    ,height:30 },
+                     {dataField:"rciptqty"     ,headerText:"Good Receipted Qty"          ,width:120    ,height:30 , editalble:true},
                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                },
-                     {dataField:"reqstno"      ,headerText:"Stock Transfer Request"      ,width:120    ,height:30},
+                     {dataField:"reqstno"      ,headerText:"STO"                         ,width:120    ,height:30},
                      {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 , visible:false}
                      ];
                      
