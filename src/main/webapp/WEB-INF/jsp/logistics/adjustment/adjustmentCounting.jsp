@@ -566,7 +566,6 @@ function fn_serialChck(rowindex , rowitem , str){
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
-            AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" , 0 );
             
             schk = false;
@@ -579,18 +578,19 @@ function fn_serialChck(rowindex , rowitem , str){
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" ,data[0].l62cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" ,data[0].l63cnt );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt74" ,data[0].l74cnt );
-             
+           /*   
              if (data[0].l74cnt > 0){
                  schk = false;
              }else{
                  schk = true;
-             } 
+             }  */
+                 schk = true;
         } 
          
          if (schk){
-             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );//Matching serial
          }else{
-             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );//No matching serial
          }
           
           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
