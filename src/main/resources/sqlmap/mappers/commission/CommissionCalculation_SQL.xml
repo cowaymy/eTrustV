@@ -403,9 +403,9 @@
 	            <if test="codeId != null and codeId != ''">
 	              AND T3.CODE_ID= #{codeId}
 	            </if>
-	            <if test="memberId != null and memberId != ''">
-	              AND T1.EMPLY_ID LIKE '%'|| #{memberId} ||'%'
-	            </if>
+	            <if test="memberCd != null and memberCd != ''">
+                  AND T1.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+                </if>
             ) scr
             WHERE scr.COMM_TASK_ID = #{taskId}
             <if test="useYnCombo != null and useYnCombo != ''">
@@ -450,8 +450,8 @@
 	            <if test="codeId != null and codeId != ''">
 	              AND T3.CODE_ID= #{codeId}
 	            </if>
-	            <if test="memberId != null and memberId != ''">
-	              AND T1.EMPLY_ID LIKE '%'|| #{memberId} ||'%'
+	            <if test="memberCd != null and memberCd != ''">
+	              AND T1.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
 	            </if>
             ) scr
             WHERE scr.COMM_TASK_ID = #{taskId}
@@ -472,8 +472,8 @@
 	             <if test="codeId != null and codeId != ''">
 	              AND T3.CODE_ID= #{codeId}
 	            </if>
-	            <if test="memberId != null and memberId != ''">
-	              AND T1.SALES_EMPLY_ID LIKE '%'|| #{memberId} ||'%' 
+	            <if test="memberCd != null and memberCd != ''">
+	              AND T2.MEM_CODE LIKE '%'|| #{memberCd} ||'%' 
 	            </if>
 	            <if test="ordId != null and ordId != ''">
 	              AND T1.ORD_ID LIKE '%'|| #{ordId} ||'%' 
@@ -509,8 +509,8 @@
 			     <if test="codeId != null and codeId != ''">
 	              AND T3.CODE_ID= #{codeId}
 	            </if>
-			    <if test="memberId != null and memberId != ''">
-			      AND T1.SALES_EMPLY_ID LIKE '%'|| #{memberId} ||'%' 
+			    <if test="memberCd != null and memberCd != ''">
+			      AND T2.MEM_CODE LIKE '%'|| #{memberCd} ||'%' 
 			    </if>
 			    <if test="ordId != null and ordId != ''">
 			      AND T1.ORD_ID LIKE '%'|| #{ordId} ||'%' 

@@ -61,12 +61,12 @@
         //Rule Book Item search
         $("#search_07T").click(function(){  
         	/* var ordId = $("#ordId_07T").val();
-        	var memberId = $("#memberId_07T").val();
+        	var memberCd = $("#memberCd_07T").val();
         	var codeId = $("#codeId_07T").val();
         	if(ordId == "" || ordId == null){
         		Common.alert("<spring:message code='sys.msg.necessary' arguments='ORDER ID' htmlEscape='false'/>");
                 return false;
-        	}else if(memberId == "" || memberId == null){
+        	}else if(memberCd == "" || memberCd == null){
         		Common.alert("<spring:message code='sys.msg.necessary' arguments='MEMBER ID' htmlEscape='false'/>");
                 return false;
             }else if(codeId == "" || codeId == null){
@@ -84,12 +84,12 @@
         
         $("#save_07T").click(function(){  
         	/* var ordId = $("#ordId_07T").val();
-            var memberId = $("#memberId_07T").val();
+            var memberCd = $("#memberCd_07T").val();
             var codeId = $("#codeId_07T").val();
             if(ordId == "" || ordId == null){
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='ORDER ID' htmlEscape='false'/>");
                 return false;
-            }else if(memberId == "" || memberId == null){
+            }else if(memberCd == "" || memberCd == null){
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='MEMBER ID' htmlEscape='false'/>");
                 return false;
             }else if(codeId == "" || codeId == null){
@@ -108,7 +108,7 @@
     });
     
     function fn_loadOrderSalesman(memId, memCode) {
-        $("#memberId_07T").val(memId);
+        $("#memberCd_07T").val(memCode);
         console.log('fn_loadOrderSalesman memId:'+memId);
         console.log('fn_loadOrderSalesman memCd:'+memCode);
     }
@@ -240,12 +240,12 @@
            var cnt = result;
            if(cnt > 0){
 			   /* var ordId = $("#ordId_07T").val();
-		       var memberId = $("#memberId_07T").val();
+		       var memberCd = $("#memberCd_07T").val();
 		       var codeId = $("#codeId_07T").val();
 		       if(ordId == "" || ordId == null){
 		           Common.alert("<spring:message code='sys.msg.necessary' arguments='ORDER ID' htmlEscape='false'/>");
 		           return false;
-		       }else if(memberId == "" || memberId == null){
+		       }else if(memberCd == "" || memberCd == null){
 		           Common.alert("<spring:message code='sys.msg.necessary' arguments='MEMBER ID' htmlEscape='false'/>");
 		           return false;
 		       }else if(codeId == "" || codeId == null){
@@ -260,12 +260,12 @@
 			       var code = $("#code_07T").val();
 			       
 			       var codeId = $("#codeId_07T").val();
-			       var memberId = $("#memberId_07T").val();
+			       var memberCd = $("#memberCd_07T").val();
 			       var ordId = $("#ordId_07T").val();
 			       var useYnCombo = $("#useYnCombo_07T").val();
 			       //window.open("<c:url value='/sample/down/excel-xls.do?aaa=" + fileName + "'/>");
 			       //window.open("<c:url value='/sample/down/excel-xlsx.do?aaa=" + fileName + "'/>");
-			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberId="+memberId+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"'/>";
+			       window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"&memberCd="+memberCd+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"'/>";
 		       //}
 		   }else{
 	           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
@@ -332,9 +332,9 @@
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
                         </select></td>
-                        <th scope="row">Member ID<span class="must">*</span></th>
+                        <th scope="row">Member Code<span class="must">*</span></th>
                         <td>
-                              <input type="text" id="memberId_07T" name="memberId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
+                              <input type="text" id="memberCd_07T" name="memberCd" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                         </tr>
