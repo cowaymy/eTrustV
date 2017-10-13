@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.payment.service.BatchPaymentService;
+import com.coway.trust.biz.payment.payment.service.BatchPaymentVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 

@@ -27,12 +27,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.payment.service.BatchPaymentOutService;
+import com.coway.trust.biz.payment.payment.service.BatchPaymentOutVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
-import com.ibm.icu.text.SimpleDateFormat;
-
-import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/payment")

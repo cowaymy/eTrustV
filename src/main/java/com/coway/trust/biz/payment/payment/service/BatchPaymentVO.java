@@ -1,4 +1,4 @@
-package com.coway.trust.web.payment.payment.controller;
+package com.coway.trust.biz.payment.payment.service;
 
 import org.apache.commons.csv.CSVRecord;
 
