@@ -56,9 +56,12 @@ public class BatchPaymentOutServiceImpl extends EgovAbstractServiceImpl implemen
 				detailList.get(i).put("detId", detailSeq);
 				detailList.get(i).put("batchId", mastetSeq);
 				batchPaymentMapper.saveBatchPayDetailList(detailList.get(i));
-				
-				logger.debug("detailList=== "+ (i+1) +"번째"+detailList.get(i));
+				logger.debug("detailList=== "+ (i+1) +"번째 === "+detailList.get(i));
 			}
+			
+			//CALL PROCEDURE
+			batchPaymentOutMapper.callBatchPayVerifyDetInStf(master);
+			
 		}
 		
 		return mastetSeq;

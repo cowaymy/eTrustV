@@ -93,10 +93,12 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		if(paymentMs != null){
 			if(String.valueOf(paymentMs.get("batchStusId")).equals("1") && String.valueOf(paymentMs.get("batchStusId")).equals("44")){
+				
 				result = batchPaymentMapper.saveConfirmBatch(params);
 				
 				if(String.valueOf(paymentMs.get("batchPayType")).equals("96") || String.valueOf(paymentMs.get("batchPayType")).equals("97")){
-					//프로시저호출
+					//CALL PROCEDURE
+					batchPaymentMapper.callCnvrBatchPay(params);
 				}
 			}
 		}
@@ -131,9 +133,11 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 				detailList.get(i).put("detId", detailSeq);
 				detailList.get(i).put("batchId", mastetSeq);
 				batchPaymentMapper.saveBatchPayDetailList(detailList.get(i));
-				
 				logger.debug("detailList=== "+ (i+1) +"번째"+detailList.get(i));
 			}
+			
+			//CALL PROCEDURE
+			batchPaymentMapper.callBatchPayVerifyDet(master);
 		}
 		
 		return mastetSeq;

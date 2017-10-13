@@ -459,6 +459,11 @@ var batchInfoLayout = [
              $(this).val($(this).val().replace(/[^0-9]/g,""));
         }); 
     }
+    
+    function fn_hideViewPop(val){
+    	$(val).hide();
+    	searchList();
+    }
 </script>
 
 <!-- content start -->
@@ -581,7 +586,7 @@ var batchInfoLayout = [
 <header class="pop_header"><!-- pop_header start -->
 <h1>Batch Payment View</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#view_popup_wrap');">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -696,9 +701,9 @@ var batchInfoLayout = [
 <div id="conf_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Batch Payment View</h1>
+<h1>Batch Payment Confirmation</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#conf_popup_wrap');">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -816,9 +821,9 @@ var batchInfoLayout = [
 <div id="upload_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>BATCH PAYMENT UPLOAD</h1>
+<h1>Batch Payment Upload</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#upload_popup_wrap')">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

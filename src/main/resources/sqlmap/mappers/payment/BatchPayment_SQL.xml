@@ -129,8 +129,8 @@
                                         AND Filter1.BATCH_ID = #{batchId}
                                   </if>
 		                          <if test="createDateFr != null and createDateTo != null and createDateFr != '' and createDateTo != ''" > 
-                                      AND Filter1.CREATED1 <![CDATA[   >= ]]> TO_CHAR(TO_DATE(#{createDateFr},'DD/MM/YYYY'),'YYYY-MM-DD')
-                                      AND Filter1.CREATED1 <![CDATA[   <= ]]> TO_CHAR(TO_DATE(#{createDateTo},'DD/MM/YYYY'),'YYYY-MM-DD')
+                                      AND Filter1.CREATED1 <![CDATA[   >= ]]> TO_DATE(#{createDateFr},'DD/MM/YYYY')
+                                      AND Filter1.CREATED1 <![CDATA[   < ]]> TO_DATE(#{createDateTo},'DD/MM/YYYY') +1
                                   </if>
 		                          <if test="creator != ''"> 
                                         AND Filter1.USERNAME2 = #{creator}
@@ -516,5 +516,14 @@
 		#{advanceMonth}
 		)
     </insert>
+    
+    <update id="callCnvrBatchPay" statementType="CALLABLE" parameterType="Map">
+        {call SP_UPD_CNVR_BATCH_PAY(#{batchId},
+                                                        #{userId} )}
+    </update>
+    
+    <update id="callBatchPayVerifyDet" statementType="CALLABLE" parameterType="Map">
+        {call SP_BATCH_PAY_VERIFY_DET(#{batchId})}
+    </update>
 
 </mapper>

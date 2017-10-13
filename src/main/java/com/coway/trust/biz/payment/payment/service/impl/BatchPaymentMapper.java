@@ -17,10 +17,6 @@ package com.coway.trust.biz.payment.payment.service.impl;
 
 import java.util.List;
 import java.util.Map;
-
-import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
-import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -120,5 +116,19 @@ public interface BatchPaymentMapper {
 	 * @return
 	 */
 	int saveBatchPayDetailList(Map<String, Object> params);
+	
+	/**
+	 * callCnvrBatchPay
+	 * @param params
+	 * @return
+	 */
+	void callCnvrBatchPay(Map<String, Object> params);
+	
+	/**
+	 * callBatchPayVerifyDet
+	 * @param params
+	 * @return
+	 */
+	void callBatchPayVerifyDet(Map<String, Object> params);
 	
 }

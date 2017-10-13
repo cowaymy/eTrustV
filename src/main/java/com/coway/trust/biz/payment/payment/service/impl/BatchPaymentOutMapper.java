@@ -15,24 +15,17 @@
  */
 package com.coway.trust.biz.payment.payment.service.impl;
 
-import java.util.List;
 import java.util.Map;
-
-import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
-import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
-import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("batchPaymentOutMapper")
 public interface BatchPaymentOutMapper {
 
-	
 	/**
-	 * selectBatchOutList(Master Grid) 조회
+	 * callBatchPayVerifyDetInStf
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectBatchPaymentOutList(Map<String, Object> params);
+	void callBatchPayVerifyDetInStf(Map<String, Object> params);
 	
 }
