@@ -6,7 +6,7 @@
 	<artifactId>etrust</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
-	<name>etrust</name> 
+	<name>etrust</name>
 	<url>http://www.coway.com</url>
 
 	<properties>
@@ -18,9 +18,9 @@
 		<jackson.library>2.7.5</jackson.library>
 		<swagger.version>2.2.2</swagger.version>
 		<webinf-lib>${project.basedir}/src/main/webapp/WEB-INF/lib</webinf-lib>
-	</properties> 
+	</properties>
 
-	<repositories>
+	<repositories> 
 		<repository>
 			<id>mvn</id>
 			<url>https://mvnrepository.com/</url>
@@ -426,7 +426,15 @@
 			<version>3.16</version>
 		</dependency>
 
-    </dependencies>
+		<!-- csv -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.5</version>
+		</dependency>
+
+
+	</dependencies>
 
 	<build>
 		<defaultGoal>install</defaultGoal>
