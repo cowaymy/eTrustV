@@ -933,8 +933,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("promoEntry : {}",promoEntry);
 				
 				memberListMapper.insertPromoEntry(promoEntry);
-				resultValue.put("message", params.get("action1").toString() + " request successfully saved.<br />"  
-				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+				if(params.get("action1").toString() == "747"){
+    				resultValue.put("message", "Promote request successfully saved.<br />"  
+    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+				}else{
+					resultValue.put("message", " Demote request successfully saved.<br />"  
+		    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+				}
 			}else{
 				resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
 				
@@ -1050,10 +1055,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         				success=true;
         			}
         		}
+        		if(Integer.parseInt(params.get("action").toString()) == 757){
+    				resultValue.put("message", "Terminate request successfully saved.<br />"  
+    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+				}else{
+					resultValue.put("message", " Resign request successfully saved.<br />"  
+		    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
+				}
+        		
 		}
-		/*resultValue.put("message", params.get("action1").toString() + " request successfully saved.<br />"  
-				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
-		*/
+		
 		return resultValue;
 	}
 	
