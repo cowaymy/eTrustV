@@ -266,6 +266,10 @@ table+.center_btns{padding-top:5px;}
 .w23_5p{width:23.5%!important;}
 .ms-parent.multy_select{width:237px!important;}
 .ms-parent.multy_select.w100p{width:100%!important;}
+.search_result_set{position:relative; }
+.search_result_set > p{display: inline-block!important;}
+.search_result_set > p input[type=text]{width:140px!important;}
+.search_result_set > p a{display: inline-block!important;vertical-align: middle;margin-left: 4px}
 
 /* 테이블 */
 table.type1{margin-bottom:5px; border-top:1px solid #d3d9dd;}
