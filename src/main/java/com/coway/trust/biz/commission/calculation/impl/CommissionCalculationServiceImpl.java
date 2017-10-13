@@ -1,12 +1,12 @@
 package com.coway.trust.biz.commission.calculation.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.coway.trust.config.datasource.DataSource;
-import com.coway.trust.config.datasource.DataSourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.commission.calculation.CommissionCalculationService;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.datasource.DataSource;
+import com.coway.trust.config.datasource.DataSourceType;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.commission.CommissionConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -559,35 +564,101 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	}
 	
 	/**
-     * HP NeoPro Delete
-     */
-	@Override
-	public void neoProDel(Map<String, Object> params) {
-		commissionCalculationMapper.neoProDel(params);
-	}
-	
-	/**
      * HP NeoPro insert
      */
 	@Override
-	public void neoProInsert(Map<String, Object> params) {
-		commissionCalculationMapper.neoProInsert(params);
+	public void neoProInsert(Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int loginId = sessionVO.getUserId();
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	
+    	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
+		
+		String pvMonth = dt.substring(0,2);
+		int pvYear = Integer.parseInt(dt.substring(3));
+		Map<String, Object> delMap = new HashMap<String, Object>();
+		delMap.put("pvYear", pvYear);
+		delMap.put("pvMonth", pvMonth);
+		commissionCalculationMapper.neoProDel(delMap);
+		
+    	Map<String, Object> dataMap = null;
+    	if(gridList.size() > 1){
+    		for(int i=1; i<gridList.size(); i++){
+    			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
+    			dataMap = new HashMap<String, Object>();
+    			
+    			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
+        			String month= csvMap.get("2").toString();
+        			month=month.length()<2?"0"+month:month;
+        			String days= csvMap.get("3").toString();
+        			days=days.length()<2?"0"+days:days;
+        			String joinDt = csvMap.get("1")+""+month+""+days;
+        			
+        			dataMap.put("hpCode", csvMap.get("0"));
+        			dataMap.put("hpType", CommissionConstants.COMIS_NEO_TYPE);
+        			dataMap.put("pvMonth", pvMonth);
+        			dataMap.put("pvYear", pvYear);
+        			dataMap.put("loginId", loginId);
+        			dataMap.put("joinDt", joinDt);
+        			dataMap.put("isNw", csvMap.get("4"));
+        			
+        			commissionCalculationMapper.neoProInsert(dataMap);
+    			}
+    		}
+    	}
+		
 	}
 	
-	/**
-     * CT Data Delete
-     */
-	@Override
-	public void ctUploadDel(Map<String, Object> params) {
-		commissionCalculationMapper.ctUploadDel(params);
-	}
 	
 	/**
      * CT Upload insert
      */
 	@Override
-	public void ctUploadInsert(Map<String, Object> params) {
-		commissionCalculationMapper.ctUploadInsert(params);
+	public void ctUploadInsert(Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		
+		
+		int loginId = sessionVO.getUserId();
+    	
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+    	
+    	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
+		
+		int pvMonth = Integer.parseInt(dt.substring(0,2))-1;
+		int pvYear = Integer.parseInt(dt.substring(3));
+		
+		Map<String, Object> delMap = new HashMap<String, Object>();
+		delMap.put("fYear", pvYear);
+		delMap.put("fMonth", pvMonth);
+		commissionCalculationMapper.ctUploadDel(delMap);
+		
+    	Map<String, Object> dataMap = null;
+    	if(gridList.size() > 1){
+    		for(int i=1; i<gridList.size(); i++){
+    			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
+    			dataMap = new HashMap<String, Object>();
+    			
+    			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
+    				dataMap.put("fBatchId", pvMonth+""+pvYear);
+    				dataMap.put("fCtCode", csvMap.get("0"));
+    				dataMap.put("fCtRank", "0");
+    				dataMap.put("fCtPerFac", csvMap.get("1"));
+    				dataMap.put("fCffCmplmt", "0");
+    				dataMap.put("fCffCmplnt", "0");
+    				dataMap.put("f3c", "0");
+    				dataMap.put("fAttLat", "0");
+    				dataMap.put("fAttEl", "0");
+    				dataMap.put("fCffCmplnt", "0");
+    				dataMap.put("fAttMc", "0");
+    				dataMap.put("fDtAllow", csvMap.get("2"));
+    				dataMap.put("fAdj", csvMap.get("3"));
+    				dataMap.put("fCffRewrd", csvMap.get("4"));
+    				dataMap.put("fYear", pvYear);
+    				dataMap.put("fMonth", pvMonth);
+    				
+    				commissionCalculationMapper.ctUploadInsert(dataMap);
+    			}
+    		}
+    	}
+		
 	}
 	
 }

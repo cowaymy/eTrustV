@@ -1,7 +1,10 @@
 package com.coway.trust.biz.commission.calculation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -197,23 +200,15 @@ public interface CommissionCalculationService
      */
     void adjustmentInsert(Map<String, Object> params);
     
-    /**
-     * HP NeoPro Delete
-     */
-    void neoProDel(Map<String, Object> params);
     
     /**
      * HP NeoPro insert
      */
-    void neoProInsert(Map<String, Object> params);
+    void neoProInsert(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
     
-    /**
-     * CT Delete
-     */
-    void ctUploadDel(Map<String, Object> params);
     
     /**
      * CT Upload insert
      */
-    void ctUploadInsert(Map<String, Object> params);
+    void ctUploadInsert(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
 }

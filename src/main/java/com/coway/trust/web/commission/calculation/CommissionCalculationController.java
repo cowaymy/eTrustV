@@ -1539,6 +1539,7 @@ public class CommissionCalculationController {
 	
 	@RequestMapping(value = "/saveAdjustment")
 	public ResponseEntity<ReturnMessage> saveAdjustment(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		String loginId = "";
 		if (sessionVO == null) {
@@ -1571,11 +1572,15 @@ public class CommissionCalculationController {
 		params.put("taskId",sTaskID);
 		
 		//params : {memId=8393, adjustmentType=900, memCode=508023, ordNo=0410694, adjustmentAmt=, adjustmentDesc=, ordId=64244, aMonth=8, aYear=2017, taskId=55}
-		commissionCalculationService.adjustmentInsert(params);
 		
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		try{
+			commissionCalculationService.adjustmentInsert(params);
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}catch(Exception e){
+			message.setMessage("Error Insert!");
+		}
+		
 
 		return ResponseEntity.ok(message);
 	}
@@ -1601,48 +1606,13 @@ public class CommissionCalculationController {
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-    	msg.setMessage(message );
-    	
-    	int loginId = sessionVO.getUserId();
-    	
-		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
-    	
-    	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
 		
-		String pvMonth = dt.substring(0,2);
-		int pvYear = Integer.parseInt(dt.substring(3));
-		
-		Map<String, Object> delMap = new HashMap<String, Object>();
-		delMap.put("pvYear", pvYear);
-		delMap.put("pvMonth", pvMonth);
-		commissionCalculationService.neoProDel(delMap);
-		
-    	Map<String, Object> dataMap = null;
-    	if(gridList.size() > 1){
-    		for(int i=1; i<gridList.size(); i++){
-    			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
-    			dataMap = new HashMap<String, Object>();
-    			
-    			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
-        			String month= csvMap.get("2").toString();
-        			month=month.length()<2?"0"+month:month;
-        			String days= csvMap.get("3").toString();
-        			days=days.length()<2?"0"+days:days;
-        			String joinDt = csvMap.get("1")+""+month+""+days;
-        			
-        			dataMap.put("hpCode", csvMap.get("0"));
-        			dataMap.put("hpType", CommissionConstants.COMIS_NEO_TYPE);
-        			dataMap.put("pvMonth", pvMonth);
-        			dataMap.put("pvYear", pvYear);
-        			dataMap.put("loginId", loginId);
-        			dataMap.put("joinDt", joinDt);
-        			dataMap.put("isNw", csvMap.get("4"));
-        			
-    				commissionCalculationService.neoProInsert(dataMap);
-    			}
-    		}
-    	}
-    	
+		try{
+			commissionCalculationService.neoProInsert(params,sessionVO);
+	    	message = AppConstants.MSG_SUCCESS;
+		}catch(Exception e){
+			message = AppConstants.MSG_FAIL;
+		}
     	
 		msg.setMessage(message);
         return ResponseEntity.ok(msg);
@@ -1669,51 +1639,13 @@ public class CommissionCalculationController {
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-    	msg.setMessage(message );
-    	
-    	int loginId = sessionVO.getUserId();
-    	
-		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
-    	
-    	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
 		
-		int pvMonth = Integer.parseInt(dt.substring(0,2))-1;
-		int pvYear = Integer.parseInt(dt.substring(3));
-		
-		Map<String, Object> delMap = new HashMap<String, Object>();
-		delMap.put("fYear", pvYear);
-		delMap.put("fMonth", pvMonth);
-		commissionCalculationService.ctUploadDel(delMap);
-		
-    	Map<String, Object> dataMap = null;
-    	if(gridList.size() > 1){
-    		for(int i=1; i<gridList.size(); i++){
-    			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
-    			dataMap = new HashMap<String, Object>();
-    			
-    			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
-    				dataMap.put("fBatchId", pvMonth+""+pvYear);
-    				dataMap.put("fCtCode", csvMap.get("0"));
-    				dataMap.put("fCtRank", "0");
-    				dataMap.put("fCtPerFac", csvMap.get("1"));
-    				dataMap.put("fCffCmplmt", "0");
-    				dataMap.put("fCffCmplnt", "0");
-    				dataMap.put("f3c", "0");
-    				dataMap.put("fAttLat", "0");
-    				dataMap.put("fAttEl", "0");
-    				dataMap.put("fCffCmplnt", "0");
-    				dataMap.put("fAttMc", "0");
-    				dataMap.put("fDtAllow", csvMap.get("2"));
-    				dataMap.put("fAdj", csvMap.get("3"));
-    				dataMap.put("fCffRewrd", csvMap.get("4"));
-    				dataMap.put("fYear", pvYear);
-    				dataMap.put("fMonth", pvMonth);
-    				
-    				commissionCalculationService.ctUploadInsert(dataMap);
-    			}
-    		}
-    	}
-    	
+		try{
+			commissionCalculationService.ctUploadInsert(params, sessionVO);
+	    	message = AppConstants.MSG_SUCCESS;
+		}catch(Exception e){
+			message = AppConstants.MSG_FAIL;
+		}
     	
 		msg.setMessage(message);
         return ResponseEntity.ok(msg);
