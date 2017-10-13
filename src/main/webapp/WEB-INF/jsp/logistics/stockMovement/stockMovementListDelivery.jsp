@@ -314,7 +314,7 @@ $(document).ready(function(){
     	}
     	AUIGrid.resetUpdatedItems(listGrid, "all");
     });
-    
+    SearchListAjax();
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
