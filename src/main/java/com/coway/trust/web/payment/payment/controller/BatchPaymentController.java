@@ -274,25 +274,27 @@ public class BatchPaymentController {
 			hm.put("sysAmount", 0);
 			hm.put("sysBankAccId", 0);
 			hm.put("sysIssBankId", 0);
-			hm.put("sysRefDate", "1900/01/01");
+			hm.put("sysRefDate", "01/01/1900");
 			hm.put("sysBCAmt", 0);
 			hm.put("sysBCAccId", 0);
 			
-			if(vo.getTrDate() != null || !vo.getTrDate().equals("")){
-				hm.put("userTrDate", "1900/01/01");
+			if(!vo.getTrDate().trim().equals("")){
+				hm.put("userTrDate", vo.getTrDate().trim());
+			}else{
+				hm.put("userTrDate", "01/01/1900");
 			}
 			
 			hm.put("userCollectorCode", vo.getCollectorCode().trim());
 			hm.put("sysCollectorId", 0);
 			
-			if(vo.getPaymentType() != null || !vo.getPaymentType().trim().equals("")){
+			if(!vo.getPaymentType().trim().equals("")){
 				hm.put("paymentType", vo.getPaymentType().trim());
 			}else{
 				hm.put("paymentType", "");
 			}
 			
 			hm.put("PaymentTypeId", 0);
-			if(vo.getAdvanceMonth() != null || !vo.getAdvanceMonth().trim().equals("")){
+			if(!vo.getAdvanceMonth().trim().equals("")){
 				hm.put("advanceMonth", vo.getAdvanceMonth().trim());
 			}else{
 				hm.put("advanceMonth", 0);
