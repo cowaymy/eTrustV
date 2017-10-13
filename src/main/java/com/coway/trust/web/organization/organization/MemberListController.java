@@ -394,6 +394,7 @@ public class MemberListController {
 	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
 	    		params.put("MemberID", memberId);
 	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
+	    		message.setMessage(resultValue.get("message").toString());
 	    		
 			}else{
 				int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
