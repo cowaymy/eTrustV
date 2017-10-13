@@ -78,7 +78,7 @@ $(document).ready(function(){
     doGetCombo('/logistics/stocktransfer/selectStockTransferNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
-    doDefCombo(amdata, '' ,'sam', 'S', '');
+    //doDefCombo(amdata, '' ,'sam', 'S', '');
     
     /**********************************
      * Header Setting End
