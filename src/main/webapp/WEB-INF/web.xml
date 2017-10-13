@@ -84,17 +84,17 @@
     
 	<error-page>
 		<error-code>404</error-code>
-		<location>/resources/common/error.jsp</location>
+		<location>/resources/common/404.html</location>
 	</error-page>
 <!-- 	
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/common/error.jsp</location>
+        <location>/resources/common/error.html</location>
     </error-page>
     
 	<error-page>
 		<error-code>500</error-code>
-		<location>/common/error.jsp</location>
+		<location>/resources/common/500.html</location>
 	</error-page>
 -->
 </web-app>
