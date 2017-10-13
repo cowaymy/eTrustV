@@ -30,6 +30,8 @@
 var resGrid;
 var reqGrid;
 
+var movpathdata = [{"codeId": "02","codeName": "RDC to CT/Cody"},{"codeId": "CT","codeName": "CT/Cody to CT/Cody"}];
+
 var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
                      {dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
                      {dataField:"stkid"     ,headerText:"ITEM CD"           ,width:120    ,height:30 ,visible:false},
@@ -60,8 +62,9 @@ $(document).ready(function(){
 	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , '');
     doGetComboData('/common/selectCodeList.do', paramdata, 'UM','sttype', 'S' , 'transferTypeFunc');
-    doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
-    doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , '');
+//     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
+//     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , '');
+    doDefCombo(movpathdata, '1' ,'movpath', 'S', '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); //청구처 리스트 조회
     doSysdate(0 , 'docdate');
@@ -182,6 +185,25 @@ $(function(){
     });
     $("#smtype").change(function(){
         
+    });
+    $("#movpath").change(function(){
+    	if($("#movpath").val() == ""){
+    		doDefCombo([], '' ,'tlocation', 'S', '');
+    		doDefCombo([], '' ,'flocation', 'S', '');
+    	}else{
+	    	var paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:$("#movpath").val()}; // session 정보 등록 
+	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+	        doDefCombo([], '' ,'flocation', 'S', '');
+    	}
+    });
+    $("#tlocation").change(function(){
+    	if ($("#movpath").val() == "CT"){
+    		var paramdata = { ctloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록 
+            doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
+    	}else{
+	        var paramdata = { rdcloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록 
+	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
+    	}
     });
     $("#rightbtn").click(function(){
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
@@ -388,11 +410,7 @@ function f_multiCombo() {
     <td><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Movement Path</th>
     <td> 
-        <select class="w100p">
-            <option value=" "></option>
-            <option value="1">RDC to CT/Cody</option>
-            <option value="2">CT/Cody to CT/Cody</option>
-        </select>
+        <select class="w100p" id="movpath" name="movpath"></select>
     </td>
 </tr>
 <tr>
@@ -414,13 +432,13 @@ function f_multiCombo() {
 <tr>
     <th scope="row">From Location</th>
     <td colspan="3">
-    <select class="w100p" id="tlocation" name="tlocation"></select>
+    <select class="w100p" id="tlocation" name="tlocation"><option>Movement Path Choose</option></select>
     </td>
 </tr>
 <tr>
     <th scope="row">To Location</th>
     <td colspan="3">
-    <select class="w100p" id="flocation" name="flocation"></select>
+    <select class="w100p" id="flocation" name="flocation"><option>Choose One</option></select>
     </td>
 </tr>
 <tr>

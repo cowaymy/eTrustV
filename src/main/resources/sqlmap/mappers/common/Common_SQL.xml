@@ -1163,6 +1163,9 @@
                   <when test='locgb !=null and locgb == "01"'>
                       AND S28M.WH_LOC_GB in ('01','05')
                   </when>
+                  <when test='locgb !=null and locgb == "CT"'>
+                      AND S28M.WH_LOC_GB in ('03','04')
+                  </when>
                   <otherwise>
                       AND S28M.WH_LOC_GB = #{locgb}
                   </otherwise>
@@ -1173,6 +1176,9 @@
            </if>
            <if test="rdcloc != null and rdcloc != ''">
               AND S28M.RDC_CODE = (SELECT WH_LOC_CODE FROM SYS0028M WHERE WH_LOC_ID =#{rdcloc})
+           </if>
+           <if test="ctloc != null and ctloc != ''">
+              AND S28M.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_ID =#{ctloc})
            </if>
            <if test="groupCode != null and groupCode == 'CODY'">
               AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)
