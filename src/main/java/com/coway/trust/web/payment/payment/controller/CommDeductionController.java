@@ -100,14 +100,10 @@ public class CommDeductionController {
 	@RequestMapping(value = "/selectCommDeduction.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCommDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		//검색 파라미터 확인.(화면 Form객체 입력값)
         LOGGER.debug("params : {}", params);
         
-        
-        // 조회.
         List<EgovMap> resultList = commDeductionService.selectCommitionDeduction(params);
-        
-        // 조회 결과 리턴.
+
         return ResponseEntity.ok(resultList);
         }
 	
@@ -198,7 +194,6 @@ public class CommDeductionController {
 	@RequestMapping(value = "/loadPaymentResult.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> loadPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		//검색 파라미터 확인.(화면 Form객체 입력값)
         LOGGER.debug("params : {}", params);
         
         List<EgovMap> logList = commDeductionService.selectCommitionDeduction(params);
@@ -209,7 +204,6 @@ public class CommDeductionController {
         	System.out.println(resultList.get(i));
         }
         
-        // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
 	
@@ -222,12 +216,10 @@ public class CommDeductionController {
 	@RequestMapping(value = "/loadRawItemsStatus.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> loadRawItemsStatus(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		//검색 파라미터 확인.(화면 Form객체 입력값)
         LOGGER.debug("params : {}", params);
         
         List<EgovMap> logList = commDeductionService.selectLogDetail(params);
 
-        // 조회 결과 리턴.
         return ResponseEntity.ok(logList);
 	}
 	
@@ -240,12 +232,10 @@ public class CommDeductionController {
 	@RequestMapping(value = "/selectDetailForPaymentResult.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> selectDetailForPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		//검색 파라미터 확인.(화면 Form객체 입력값)
         LOGGER.debug("params : {}", params);
         
         List<EgovMap> list = commDeductionService.selectDetailForPaymentResult(params);
 
-        // 조회 결과 리턴.
         return ResponseEntity.ok(list.get(0));
 	}
 	
@@ -259,32 +249,31 @@ public class CommDeductionController {
 	@RequestMapping(value = "/createPayment.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> createPayment(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		ReturnMessage mes = new ReturnMessage();
-		//검색 파라미터 확인.(화면 Form객체 입력값)
+		String message = "";
         LOGGER.debug("params : {}", params);
-        String message = "";
         int userId = sessionVO.getUserId();
         
         if(userId > 0){
-        
         	EgovMap master = commDeductionService.selectCommitionDeduction(params).get(0);
         	if("1".equals(String.valueOf(master.get("fileStus")))){
         		master.put("userId", userId);
-//        		commDeductionService.createPaymentProcedure(master);
-//        		String reValue = String.valueOf(master.get("p1"));
-//        		if(reValue.equals("1")){
-//        			message = "Payment Items Created Successfully.";
-//        		}else{
-//        			message = "Failed to save.  Please try again later.";
-//        		}
+        		commDeductionService.createPaymentProcedure(master);
+        		String reValue = String.valueOf(master.get("p1"));
+        		if(reValue.equals("1")){
+        			message = "Payment Items Created Successfully.";
+        		}else{
+        			message = "Failed to save.  Please try again later.";
+        		}
         	}else{
         		message = "Already Completed.";
         	}
         }else{
         	message = "Your login session has expired. Please relogin to our system.";
         }
+        
         mes.setCode(AppConstants.SUCCESS);
     	mes.setMessage(message);
-        // 조회 결과 리턴.
+
     	return ResponseEntity.ok(mes);
 	}
 }
