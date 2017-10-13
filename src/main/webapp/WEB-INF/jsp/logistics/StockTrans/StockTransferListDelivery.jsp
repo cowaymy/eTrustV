@@ -414,7 +414,7 @@ function f_getTtype(g , v){
             <li><p class="btn_grid"><a id="delivery"><span class="search"></span>DELIVERY</a></p></li>                        
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
 
     </section><!-- search_result end -->
 

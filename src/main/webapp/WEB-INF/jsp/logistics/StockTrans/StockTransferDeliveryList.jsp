@@ -81,7 +81,7 @@ $(document).ready(function(){
     doGetComboData('/logistics/stocktransfer/selectStockTransferNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
-    doDefCombo(amdata, '' ,'sam', 'S', '');
+    //doDefCombo(amdata, '' ,'sam', 'S', '');
     /**********************************
      * Header Setting End
      ***********************************/
@@ -456,7 +456,7 @@ function giFunc(){
             <li><p class="btn_grid"><a id="gcissue"><span class="search"></span>Issue Cancel</a></p></li>
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:350px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
 
     </section><!-- search_result end -->
     
