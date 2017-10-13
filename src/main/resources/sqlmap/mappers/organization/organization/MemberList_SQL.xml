@@ -1405,7 +1405,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           , #{userTypeID}
           , #{userDefaultPasswd}
           , TO_DATE(#{userValidFrom},'dd-mm-yyyy')
-          , #{userValidTo}
+          ,  TO_DATE(#{userValidTo},'dd-mm-yyyy')
           , #{userSecQuesID}
           , #{userSecQuesAns}
           , #{userWorkNo}
