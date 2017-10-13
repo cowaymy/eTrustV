@@ -620,6 +620,20 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		
 	     
 	     
+		 //BSScheduleM		
+		int scheduleCnt = hsManualMapper.selectHSScheduleMCnt(params);
+
+		if(scheduleCnt > 0 ) {
+			EgovMap insertHsScheduleM = new EgovMap();
+			insertHsScheduleM.put("hidschdulId", params.get("hidschdulId"));
+			insertHsScheduleM.put("resultStusCodeId", params.get("cmbStatusType2"));
+			insertHsScheduleM.put("actnMemId", params.get("cmbServiceMem"));
+			
+			
+            hsManualMapper.updateHsScheduleM(insertHsScheduleM);
+		}
+		
+	     
 			EgovMap updateHsSrvConfigM = new EgovMap();
 			
 			updateHsSrvConfigM.put("salesOrdId", params.get("hidschdulId"));
