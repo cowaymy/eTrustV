@@ -62,7 +62,7 @@
     <input type="hidden" id="exchgStus" name="exchgStus" value="${exchgStus }">
     <input type="hidden" id="exchgCurStusId" name="exchgCurStusId" value="${exchgCurStusId }">
     <input type="hidden" id="salesOrderId" name="salesOrderId" value="${exchangeDetailInfo.soId }">
-    <input type="text" id="soExchgIdDetail" name="soExchgIdDetail" value="${soExchgIdDetail }">
+    <input type="hidden" id="soExchgIdDetail" name="soExchgIdDetail" value="${soExchgIdDetail }">
 </form>
 
 <aside class="title_line"><!-- title_line start -->

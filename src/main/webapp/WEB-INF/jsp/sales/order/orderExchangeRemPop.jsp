@@ -52,7 +52,7 @@
     <input type="hidden" id="exchgStus" name="exchgStus" value="${exchgStus }">
     <input type="hidden" id="exchgCurStusId" name="exchgCurStusId" value="${exchgCurStusId }">
     <input type="hidden" id="salesOrderId" name="salesOrderId" value="${salesOrderId }">
-    <input type="text" id="soExchgIdDetail" name="soExchgIdDetail" value="${soExchgIdDetail }">
+    <input type="hidden" id="soExchgIdDetail" name="soExchgIdDetail" value="${soExchgIdDetail }">
 
 
 <table class="type1"><!-- table start -->
