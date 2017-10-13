@@ -42,7 +42,7 @@
                 ELSE 0
                    END C2  ,
                 CASE 
-                     WHEN ( Extent1.SALES_ORD_DT IS NOT NULL ) THEN TO_DATE(Extent1.SALES_ORD_DT)
+                     WHEN ( Extent1.SALES_ORD_DT IS NOT NULL ) THEN Extent1.SALES_ORD_DT
                 ELSE TO_DATE('1900-01-01','YYYY-MM-DD')
                    END C3  ,
                 CASE 
@@ -171,13 +171,13 @@
                             <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    between TO_DATE(#{createDate},  'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                    </if>
                     <if test="callStrDate != '' and callEndDate == '' ">
-                            <![CDATA[ AND  TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')  >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[ AND  TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')  >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <if test="callEndDate != '' and callStrDate == '' ">
-                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    <=  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')    <=  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <if test="callStrDate != '' and callEndDate != '' ">
-                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <![CDATA[
                 AND ROWNUM < 1000
