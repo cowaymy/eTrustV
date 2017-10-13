@@ -15,7 +15,7 @@
         // AUIGrid 생성 후 반환 ID
         var myGridID;
         var gridValue;
-    
+        
         var option = {
                 width : "1000px", // 창 가로 크기
                 height : "600px" // 창 세로 크기
@@ -198,7 +198,9 @@
                                    
                                   $("#_schdulId").val(item.schdulId);
                                   $("#_salesOrdId").val(item.salesOrdId);
-                                   $("#_openGb").val("edit");
+                                  $("#_openGb").val("edit");
+                                  $("#_brnchId").val(item.brnchId);
+                                  
                                   Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditForm").serializeJSON(), null , true , '');
                   }
            }                            
@@ -377,16 +379,26 @@
 			      
                     //Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
 			  }); 
-			  
+
                 
-/*                          // 셀 더블클릭 이벤트 바인딩
+                 // 셀 더블클릭 이벤트 바인딩
                 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
                    var radioVal = $("input:radio[name='searchDivCd']:checked").val();
                    
                     if(radioVal == 1 ){
-                        Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
+                          _schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
+		                  _salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+		                  _brnchId = AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId");
+		                  $("#_openGb").val("view");
+                         
+                         alert("_schdulId::"+  $("#_schdulId").val() );
+/*                          $("#_schdulId").val(item.schdulId);
+                         $("#_salesOrdId").val(item.salesOrdId);
+                         $("#_openGb").val("view");
+ */
+                         Common.popupDiv("/bs/hsBasicInfoPop.do", $("#popEditViewForm").serializeJSON(), null , true , '');
                     }                   
-                }); */
+                });
         
         });
     
@@ -519,8 +531,15 @@
 <form id="popEditForm" method="post">
     <input type="hidden" name="schdulId"  id="_schdulId"/>  <!-- schdulId  -->
     <input type="hidden" name="salesOrdId"  id="_salesOrdId"/>  <!-- salesOrdId  -->
-    <input type="hidden" name="openGb"  id="_openGb"/>  <!-- salesOrdId  -->
-     
+    <input type="hidden" name="openGb"  id="_openGb"/>  <!--   salesOrdId  -->
+    <input type="hidden" name="brnchId"  id="_brnchId"/>  <!-- salesOrdId  -->
+</form>
+
+<form id="popEditViewForm" method="post">
+    <input type="hidden" name="schdulId"  id="_schdulIdView"/>  <!-- schdulId  -->
+    <input type="hidden" name="salesOrdId"  id="_salesOrdIdView"/>  <!-- salesOrdId  -->
+    <input type="hidden" name="openGb"  id="_openGb"/>  <!--   salesOrdId  -->
+    <input type="hidden" name="brnchId"  id="_brnchIdView"/>  <!-- salesOrdId  -->
 </form>
 
 <form id="searchForm" name="searchForm">    

@@ -6,7 +6,7 @@
 <script type="text/javaScript">
 
         //Combo Data
-    var StatusTypeData = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
+    var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
 /*     cmbCollectType
     Collection Code */
 
@@ -15,43 +15,47 @@
     var myDetailGridID;   
 
     
-        //close Func
-    function fn_closeFunc(){
-        alert(1111111);
-    }
+
     
     var option = {
         width : "1000px", // 창 가로 크기
         height : "600px" // 창 세로 크기
     };
     
+    
+
     function createAUIGrid(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
                     dataField:"stkCode",
                     headerText:"Filter Code",
-                    width:240,
+                    width:200,
                     height:30
                 }, {                        
                     dataField : "stkId",
                     headerText : "Filter id",
-                    width : 440
+                    width : 140
                 }, {                        
                     dataField : "stkDesc",
                     headerText : "Filter Name",
-                    width : 440
+                    width : 440              
+                    }, {
+                    dataField : "bsResultItmId",
+                    headerText : "Filter Name",
+                    width : 240    ,
+                    visible:false                       
                 }, {
                     dataField : "name",
                     headerText : "Filter Quantity",
                     width : 120,
                     dataType : "numeric",
-			        renderer : {
-			            type : "NumberStepRenderer",
-			            min : 0,
-			            max : 50,
-			            step : 1,
-			            textEditable : false
-			        }                            
+                    renderer : {
+                        type : "NumberStepRenderer",
+                        min : 0,
+                        max : 50,
+                        step : 1,
+                        textEditable : false
+                    }
             }];
             // 그리드 속성 설정
             var gridPros = {
@@ -85,42 +89,58 @@
     
     $(document).ready(function() {
 
-    	   doDefCombo(StatusTypeData, '' ,'cmbStatusType', 'S', '');
+    	   doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
  
            selSchdulId = $("#hidschdulId").val(); // TypeId 
            selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId 
            openGb = $("#openGb").val(); // TypeId 
+           brnchId = $("#brnchId").val(); // TypeId  
+           hidHsno = $("#hidHsno").val(); // TypeId  
+           
 
-            //order detail
-//           fn_getOrderDetailListAjax();
-           
            createAUIGrid();
-           fn_getHsFilterListAjax();
            
+           fn_getHsViewfilterInfoAjax();
            
-//           AUIGrid.setGridData(myGridID, "hsFilterList");                       
-        //createAUIGridCust();
-        //fn_getselectPopUpListAjax();
-		
-		
-		
+
+           
+               
+                  var statusCd = ${basicinfo.stusCodeId};
+                $("#cmbStatusType2 option[value="+ statusCd +"]").attr("selected", true); 
+
+                var failResnCd = ${basicinfo.failResnId}
+                $("#failReason option[value="+failResnCd +"]").attr("selected", true);   
+
+            
+                var renColctCd = ${basicinfo.renColctid}
+                $("#cmbCollectType option[value="+renColctCd +"]").attr("selected", true);   
+           
+                var codyIdCd = ${basicinfo.codyId}
+                $("#serMemList option[value="+codyIdCd +"]").attr("selected", true);   
+                    
+
+
+            
+             if(openGb == "view"){
+                    $("btnSave").hide();
+            }                 
+    
+    
     });
 
 
-    function fn_getHsFilterListAjax(){
-         Common.ajax("GET", "/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
-            console.log("성공.");
+    function fn_getHsViewfilterInfoAjax(){
+         Common.ajax("GET", "/bs/selectHsViewfilterPop.do",{salesOrdId : selSalesOrdId}, function(result) {
+            console.log("성공 fn_getHsViewfilterInfoAjax.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID, result);            
         }); 
     }   
     
     
+    
     function fn_getOrderDetailListAjax(){
                    
-           alert("selSalesOrdId:"+selSalesOrdId);
-           
-         //Common.ajax("GET", "/sales/order/orderDetailPop.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
          Common.ajax("GET", "/sales/order/orderDetailPop.do",{salesOrderId : 'selSalesOrdId'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
@@ -130,26 +150,13 @@
         
 
     
-    function fn_saveHsResult(){
-        
+     function fn_UpdateHsResult(){
 
-/*              var dat =  GridCommon.getEditData(myGridID);
-                  dat.form = $("#addHsForm").serializeJSON();
-                
-                 Common.ajax("POST", "/bs/addIHsResult.do",  dat.form, function(result) {
-                    Common.alert(result.message.message);
-                    console.log("성공.");
-                    console.log("data : " + result);
-            }); */
-
-
-                     var jsonObj =  GridCommon.getEditData(myDetailGridID);
+              var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
-              Common.ajax("POST", "/bs/addIHsResult.do", jsonObj, function(result) {
+              Common.ajax("POST", "/bs/UpdateHsResult.do", jsonObj, function(result) {
+              Common.alert(result.message);
 
-                console.log("성공.");
-                console.log("data : " + result);
-                Common.alert(result.message);
             });
         }
     
@@ -168,15 +175,23 @@
 
 <h1>HS - Result Edit</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
+    <li><p class="btn_blue2"><a href="#"  id="btnSave" name="btnSave" onclick="fn_UpdateHsResult()">SAVE</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="addHsForm" method="post">   
+ 
  <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
  <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
+ <input type="hidden" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
+
+   
+ <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode"/>
+ <input type="hidden" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn"/>
+ <input type="hidden" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct"/>
+ <input type="hidden" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId"/>
  
 <aside class="title_line"><!-- title_line start -->
 <h2>HS Information</h2>
@@ -199,7 +214,7 @@
     <th scope="row">HS Month</th>
     <td><span><c:out value="${basicinfo.monthy}"/></span></td>
     <th scope="row">HS Type</th>
-    <td><span><c:out value="${basicinfo.code}"/></span></td>    
+    <td><span><c:out value="${basicinfo.setlDt}"/></span></td>    
 </tr>
 <tr>
     <th scope="row">Current BSR No</th>
@@ -239,23 +254,23 @@
 <tr>
     <th scope="row">HS Status<span class="must">*</span></th>
     <td>
-    <select class="w100p"  id ="cmbStatusType" name = "cmbStatusType">
-    </select>
+    <select class="w100p"  id ="cmbStatusType2" name = "cmbStatusType"></select>
     </td>
     <th scope="row">Settle Date</th>
-    <td><input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" value="${promoInfo.codeName}"/></td>
+    <td><span><c:out value="${basicinfo.setlDt}"/></span> </td>
 </tr>
 <tr>
     <th scope="row">Fail Reason</th>
     <td>
     <select class="w100p" id ="failReason"  name ="failReason">
-
+       <c:forEach var="list" items="${failReasonList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>
     </select>
     </td>
     <th scope="row">Collection Code<span class="must">*</span></th>
     <td>
     <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
-        <option value="" selected>Collection Code</option>
             <c:forEach var="list" items="${ cmbCollectTypeComboList}" varStatus="status">
                  <option value="${list.code}">${list.c1 } </option>
             </c:forEach>
@@ -266,12 +281,9 @@
     <th scope="row">Service Member</th>
     <td>
     <select class="w100p" id ="cmbServiceMem" name = "cmbServiceMem">
-<!--         <option value="" selected>Service Member</option> 
-            <c:forEach var="list" items="${ cmbServiceMemList}" varStatus="status">
-                 <option value="${list.memCode}">${list.name } </option>
-            </c:forEach>
-            -->
-            
+       <c:forEach var="list" items="${ serMemList}" varStatus="status">
+            <option value="${list.CodeId}">${list.codeName } </option>
+       </c:forEach>
     </select>
     </td>
     <th scope="row">Warehouse</th>
@@ -283,18 +295,20 @@
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td><textarea cols="20" rows="5" id ="remark" name = "remark"></textarea></td>
+    <td><span>${settleInfo.configBsRem}</span></td>
     <th scope="row">Instruction</th>
-    <td><textarea cols="20" rows="5"id ="instruction" name = "instruction"></textarea></td>
+    <td><span>${settleInfo.configBsRem}</span></td>
 </tr>
 <tr>
     <th scope="row">Prefer Service Week</th>
     <td colspan="3">
-    <label><input type="radio" name="srvBsWeek"  value="0"/><span>None</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="1"/><span>Week 1</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="2"/><span>Week 2</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="3"/><span>Week 3</span></label>
-    <label><input type="radio" name="srvBsWeek"  value="4"/><span>Week 4</span></label>
+    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 0 || orderDetail.orderCfgInfo.configBsWeek > 4}">checked</c:if> disabled/><span>None</span></label>
+    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 1}">checked</c:if> /><span>Week1</span></label>
+    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 2}">checked</c:if> /><span>Week2</span></label>
+    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 3}">checked</c:if> /><span>Week3</span></label>
+    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> /><span>Week4</span></label>
+
+ <%--    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> disabled/><span>Week4</span></label> --%>
     </td>
 </tr>
 </tbody>
