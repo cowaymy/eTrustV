@@ -1202,7 +1202,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 					       Limit1.fail_resn_id fail_resn_id  ,
 					       Limit1.ren_colct_id ren_colct_id  ,
 					       Limit1.result_rem result_rem  ,
-					       trunc(Limit1.setl_dt) as setl_dt
+					       to_char (Limit1.setl_dt,'YYYYMMDD') AS setl_dt
 					  FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
 					                Extent1.NO NO  ,
 					                Extent1.MONTH MONTH  ,
