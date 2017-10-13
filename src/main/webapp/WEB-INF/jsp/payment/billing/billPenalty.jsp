@@ -40,7 +40,9 @@ function fn_validRequiredField(orderId){
 	var message = "";
 	Common.ajax("GET", "/payment/checkExistOrderCancellationList.do", {"orderId" : orderId}, function(canResult) {
 		Common.ajax("GET", "/payment/checkExistPenaltyBill.do", {"orderId" : orderId}, function(penResult) {
+			console.log("canResult :" +canResult + ", penResult : " + penResult);
 			  if(canResult == false){
+				  
 				  valid = false;
 				  message += "* Please register for order cancellation before bill generate.<br />";
 			  }else{
