@@ -1,137 +1,18 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<script type="text/javaScript">
 
+<script type="text/javaScript">
  // AUIGrid 생성 후 반환 ID
     var myGridID;   
     var gridValue;
     var newGridID;
-    
-    var option = {
-        width : "1000px", // 창 가로 크기
-        height : "600px" // 창 세로 크기
-    };
-
-
-    //Start AUIGrid
-    $(document).ready(function() {
-        //createAUIGrid1();
-        //fn_confirm();
-
-    });
-
-
-
-    function fn_close(){
-        window.close();
-    }
-
-
-    function fn_confirm(){
-        //체크로직
-
-        //버튼 활성화
-        
-       
-        
-        //그리드 활성화
-        //조회결과 리턴
-                
-        Common.ajax("GET", "/organization/selectPromteDemoteList", $("#myForm").serialize(), function(result) {        
-            AUIGrid.setGridData(myGridID, result);
-        });               
-    }
- 
-
-
-
-     function fn_confirmMemberEventPromote(val){
-        
-        var jsonObj = {
-          PromoID : $("#promoId").val(),
-         memCode : $("#memCode").val()
-       
-        };
-    
-        Common.ajax("GET", "/organization/selectMemberPromoEntries" ,  $("#myForm").serialize() , function(result) {
-            AUIGrid.setGridData(newGridID, result);
-            Common.alert(result.message);
-        });
-    }
-
-
-
-
-/*     function fn_getNewDeptCodeDocNoID() {//
-    
-    
-    } */
-
-
-     function fn_saveEventMap(){
-        
-        //저장
-        var vPromoId = ${promoInfo.promoId}; //promoId
-        var vStatusId = ${promoInfo.stusId}; //statusId 
-        var vPromoTypeId = ${promoInfo.promoTypeId};
-         
-        if (vStatusId == 10) {
-                //Cancel */
-
-                //as-is logic
-           /*   if (oo.DoCancelMemberEvent(promoEntry))
-                        {
-                            MemberEventView view = new MemberEventView();
-                            view = ucMemberEventView.LoadMemberEventInfo(promoEntry.PromoID);
-                            Panel_Action.Enabled = false;
-                            btnSave.Visible = false;
-                            RadWindowManager1.RadAlert("<b>This event has been cancelled.</b>", 450, 160, "Event Cancelled", "callBackFn", null);
-                        }
-                        else
-                        {
-                            RadWindowManager1.RadAlert("<b>Failed to cancel this event. Please try again later.</b>", 450, 160, "Failed To Cancel", "callBackFn", null);
-                        }  */
-                        
-                         return false;
-        
-        } else {
-             //Complete
-             if (vPromoTypeId == 747) {
-      
-                   if (fn_confirmMemberEventPromote(vPromoId))  {
-
-                   }  else  {
-
-
-                   }
-             }else if (vPromoTypeId == 748){
-                    fn_confirmMemberEventPromote(vPromoId);
-                    
-/*                     if() {
-                    
-                    }else {
-                          alert("Failed to confirm this event. Please try again later.");                    
-                    } */
-             }else if(vPromoTypeId == 749){
-            	 if (fn_confirmMemberEventPromote(vPromoId))  {
-
-                 }  else  {
-
-
-                 }
-             }
-        }
-    } 
-   
-   
-    
         function fn_tabSize(){
             AUIGrid.resize(myGridID,1000,400); 
         }
 
     
-        function createAUIGrid1(){
+        function createAUIGrid(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
                     dataField : "memId",
@@ -188,7 +69,6 @@
             
             }];
             
-            
             var newColumn=[
                   {dataField:"0", headerText:"OrderNo"},
                   {dataField:"1", headerText:"Month"},
@@ -233,7 +113,7 @@
     
     
 
-</script>
+        </script>
 
 <div id="popup_wrap"><!-- popup_wrap start -->
 
@@ -316,59 +196,12 @@
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="5"><span><c:out value="${promoInfo.rem}"/></span></td>
+    <td colspan="5"><span><c:out value="${promoInfo.rem}"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 </section><!-- search_table end -->
-
-<section class="search_table"><!-- search_table start -->
- <form name="myForm" id="myForm">
-     <%-- <td>
-    <span><c:out value="${promoInfo.promoId}"/></span>
-    </td> --%>
-    <input type="hidden" id="promoId" name="promoId" value="${promoInfo.promoId}">
-     <input type="hidden" id="memCode" name="memCode" value="${promoInfo.memCode}">
-<aside class="title_line"><!-- title_line start -->
-<h2>Request Information</h2>
-</aside><!-- title_line end -->
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Confirm Status</th>
-    <td>
-    <select class="w100p" id="confirmStatus" name="confirmStatus" >
-         <option value="" selected></option>
-         <option value="04">Complete this event</option>
-         <option value="10">Cancel this event</option>
-    </select>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<!-- <aside class="title_line">
-<!-- title_line start 
-<h2>Current Downline</h2>
-</aside> --> <!-- title_line end --> 
-
-<!-- <article class="grid_wrap">grid_wrap start
-<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-<div id="grid_wrap_new"  style="width: 100%; height: 500px; margin: 0 auto;"></div>
-</article>grid_wrap end -->
-    </form>
-</section><!-- search_table end -->
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="javascript:fn_saveEventMap();">SAVE</a></p></li>
-</ul>
 
 </section><!-- pop_body end -->
 

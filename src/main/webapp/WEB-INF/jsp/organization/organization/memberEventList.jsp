@@ -1,8 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
     <script type="text/javaScript">
 
@@ -11,6 +8,14 @@
         GridCommon.exportTo("grid_wrap", "xlsx", "Member Event Search");
     }
 
+    function fn_confirmPopup(){
+    	 if(stusId == 60){//in progress 일때만 confirm event open
+//           fn_setDetail(myGridID, event.rowIndex);
+    		 Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + promoId, "");
+           }else{
+               Common.alert("Only event [In Progress] status is allowed.");
+           }  
+    }
     
  // AUIGrid 생성 후 반환 ID
     var myGridID;
@@ -31,26 +36,22 @@
 	    
 	    AUIGrid.setSelectionMode(myGridID, "singleRow");
         
-        // cellClick event.
-/*         AUIGrid.bind(myGridID, "cellClick", function( event ) {
-            console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-            fn_setDetail(myGridID, event.rowIndex);
-        }); */
+	    
+	    AUIGrid.bind(myGridID, "cellClick", function(event) {
+	        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+	        promoId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId");
+	        stusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusId");
+	        
+	        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+	    }); 
         
-        
-                // 셀 더블클릭 이벤트 바인딩
+	    // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-        	if(AUIGrid.getCellValue(myGridID, event.rowIndex, "stusId") == 60){//in progress 일때만 confirm event open
-//            fn_setDetail(myGridID, event.rowIndex);
-                Common.popupWin("searchForm", "/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"), option);
-        	}else{
-        		Common.alert("Only event [In Progress] status is allowed.");
-        	}
+        	 
+        	//alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"));
+        	Common.popupDiv("/organization/getMemberEventViewPop.do?isPop=true&promoId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "promoId"), "");
+        	
         });
-        
-
-        
-        //fn_getOrgEventListAjax();
 
     });
 
@@ -296,13 +297,13 @@ function f_info(data , v){
 </tbody>
 </table><!-- table end -->
 
-<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+ <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_confirmPopup();">Confirm Member Event</a></p></li>
         <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
@@ -324,7 +325,7 @@ function f_info(data , v){
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end --> --%>
+</aside><!-- link_btns_wrap end --> 
 
 </form>
 </section><!-- search_table end -->

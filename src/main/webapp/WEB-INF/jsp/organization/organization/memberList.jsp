@@ -168,7 +168,8 @@ var gridPros = {
     
 
 </script>
-<body>
+
+
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -363,8 +364,5 @@ var gridPros = {
 </aside><!-- bottom_msg_box end -->
         
 </section><!-- container end -->
-<hr />
 
 </div><!-- wrap end -->
-</body>
-</html>
