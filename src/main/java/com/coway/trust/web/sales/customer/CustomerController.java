@@ -29,6 +29,8 @@ import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.web.sales.SalesConstants;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -1433,7 +1435,7 @@ public class CustomerController {
 			params.put("asTelF", params.get("cntcTelf"));
 			params.put("asExt", params.get("cntcExtNo"));
 			params.put("asEmail", params.get("cntcEmail"));
-			params.put("stusCodeId", params.get("custId"));
+			params.put("stusCodeId", SalesConstants.STATUS_ACTIVE);
 			params.put("crtUserId", sessionVO.getUserId());
 			params.put("updUserId", sessionVO.getUserId());
 			

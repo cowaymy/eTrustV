@@ -16,6 +16,10 @@
         doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade', 'S'); //EX-TRADE
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
+
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
         fn_tabOnOffSet('BIL_DTL', 'HIDE');
@@ -143,6 +147,7 @@
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#email").val(custInfo.email); //Email
                 $("#custRem").val(custInfo.rem); //Remark
+                $("#empChk").val('0'); //Employee
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -471,7 +476,7 @@
             Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
         });
         $('#addCustBtn').click(function() {
-            Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "630x"});
+            Common.popupWin("searchForm", "/sales/customer/customerRegistPop.do", {width : "1200px", height : "580x"});
             //Common.popupDiv("/sales/customer/customerRegistPop.do", $("#searchForm").serializeJSON(), null, true);
         });
         $('#thrdPartyAddCustBtn').click(function() {
@@ -715,10 +720,11 @@
             var appTypeVal = $("#appType").val();
             var stkIdx     = $("#ordProudct option:selected").index();
             var stkIdVal   = $("#ordProudct").val();
+            var empChk     = $("#empChk").val();
 
             if(stkIdx > 0) {
                 fn_loadProductPrice(appTypeVal, stkIdVal);
-                fn_loadProductPromotion(appTypeVal, stkIdVal);
+                fn_loadProductPromotion(appTypeVal, stkIdVal, empChk);
             }
         });
         $('#rentPayMode').change(function() {
@@ -757,6 +763,14 @@
                 }
             }
         });
+        $('#exTrade').change(function() {
+            if($("#exTrade").val() == '1') {
+                $('#relatedNo').removeAttr("readonly").removeClass("readonly");
+            }
+            else {
+                $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+            }
+        });
         $('#ordPromo').change(function() {
 
             $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
@@ -771,9 +785,11 @@
             var promoIdVal = $("#ordPromo").val();
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
-
-                $('#relatedNo').removeAttr("readonly").removeClass("readonly");
-
+                
+                if($("#exTrade").val() == '1') {
+                    $('#relatedNo').removeAttr("readonly").removeClass("readonly");
+                }
+                
                 if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
                     $('#trialNoChk').removeAttr("disabled");
                 }
@@ -1059,7 +1075,7 @@
                 grpCode                 : $('#grpCd').val().trim(),
                 instPriod               : $('#installDur').val().trim(),
                 memId                   : $('#hiddenSalesmanId').val().trim(),
-                mthRentAmt              : $('#ordRentalFees').val().trim(), //2017.10.12 ordRentalFees 또는 orgOrdRentalFees 아직 미결정
+                mthRentAmt              : $('#ordRentalFees').val().trim(), //2017.10.12 ordRentalFees 또는 orgOrdRentalFees 아직 미결정 2017.10.14 ordRentalFees로 결정
                 orgCode                 : $('#orgCd').val().trim(),
                 promoId                 : $('#ordPromo').val(),
                 refNo                   : $('#refereNo').val().trim(),
@@ -1070,11 +1086,14 @@
                 salesSmId               : $('#grpMemId').val().trim(),
                 totAmt                  : $('#ordPrice').val().trim(),
                 totPv                   : $('#ordPv').val().trim(),
-                discRntFee              : $('#ordRentalFees').val().trim(),
+                empChk                  : $('#empChk').val(),
+                exTrade                 : $('#exTrade').val(),
+//              ecash                   : $('#ordPv').val(),
+                promoDiscPeriodTp       : $('#promoDiscPeriodTp').val(),
+                promoDiscPeriod         : $('#promoDiscPeriod').val().trim(),
                 norAmt                  : $('#orgOrdPrice').val().trim(),
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
-                promoDiscPeriodTp       : $('#promoDiscPeriodTp').val().trim(),
-                promoDiscPeriod         : $('#promoDiscPeriod').val().trim()
+                discRntFee              : $('#ordRentalFees').val().trim()
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
@@ -1217,6 +1236,11 @@
         if($('#appType').val() == '1412' && $('#typeId').val() == '965') {
             isValid = false;
             msg = "* Please select an individual customer<br>(Outright Plus).<br>";
+        }
+
+        if($("#empChk option:selected").index()) {
+            isValid = false;
+            msg = "* Please select an employee.<br>";
         }
 
         if(!isValid) Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -1660,9 +1684,9 @@
 
                 console.log("성공.");
 
-                $("#ordPrice").removeClass("readonly");
-                $("#ordPv").removeClass("readonly");
-                $("#ordRentalFees").removeClass("readonly");
+//              $("#ordPrice").removeClass("readonly");
+//              $("#ordPv").removeClass("readonly");
+//              $("#ordRentalFees").removeClass("readonly");
 
                 $("#ordPrice").val(promoPriceInfo.orderPricePromo);
                 $("#ordPv").val(promoPriceInfo.orderPVPromo);
@@ -1675,13 +1699,14 @@
     }
 
     //LoadProductPromotion
-    function fn_loadProductPromotion(appTypeVal, stkId) {
+    function fn_loadProductPromotion(appTypeVal, stkId, empChk) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
         console.log('fn_loadProductPromotion --> stkId:'+stkId);
+        console.log('fn_loadProductPromotion --> empChk:'+empChk);
 
         $('#ordPromo').removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId}, '', 'ordPromo', 'S', ''); //Common Code
+        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk}, '', 'ordPromo', 'S', ''); //Common Code
     }
 
     //LoadProductPrice
@@ -1702,9 +1727,9 @@
 
                 console.log("성공.");
 
-                $("#ordPrice").removeClass("readonly");
-                $("#ordPv").removeClass("readonly");
-                $("#ordRentalFees").removeClass("readonly");
+//              $("#ordPrice").removeClass("readonly");
+//              $("#ordPv").removeClass("readonly");
+//              $("#ordRentalFees").removeClass("readonly");
 
                 $("#ordPrice").val(stkPriceInfo.orderPrice);
                 $("#ordPv").val(stkPriceInfo.orderPV);
@@ -1971,6 +1996,10 @@
     <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="Industry Code" class="w100p" readonly/></td>
 </tr>
 <tr>
+    <th scope="row">Employee<span class="must">*</span></th>
+    <td colspan="3"><select id="empChk" name="empChk" class="w100p"></select></select></td>
+</tr>
+<tr>
     <th scope="row">Remark</th>
     <td colspan="3"><textarea  id="custRem" name="custRem" cols="20" rows="5" placeholder="Remark" readonly></textarea></td>
 </tr>
@@ -1993,7 +2022,7 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Owner &amp; Purchaser Contact</h2>
+<h3>Owner &amp; Purchaser Contact</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2053,7 +2082,7 @@
 ------------------------------------------------------------------------------->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Additional Service Contact</h2>
+<h3>Additional Service Contact</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
@@ -2130,35 +2159,35 @@
     <td>
     <select id="appType" name="appType" class="w100p"></select>
     </td>
-    <th scope="row">Order Date<span class="must">*</span></th>
-    <td>${toDay}</td>
+    <th scope="row">Ex-Trade/Related No</th>
+    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
 </tr>
 <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
     <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
+    <th scope="row">Order Date<span class="must">*</span></th>
+    <td>${toDay}</td>
+</tr>
+<tr>
+    <th scope="row">Reference No<span class="must">*</span></th>
+    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Salesman Code<span class="must">*</span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="" />
         <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-    <th scope="row">Reference No<span class="must">*</span></th>
-    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">PO No<span class="must">*</span></th>
+    <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row">Salesman Type</th>
     <td><input id="salesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="w100p readonly" readonly/>
         <input id="hiddenSalesmanTypeId" name="salesmanTypeId" type="hidden" /></td>
 </tr>
 <tr>
-    <th scope="row">PO No<span class="must">*</span></th>
-    <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Salesman Name</th>
-    <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
-</tr>
-<tr>
     <th scope="row">Product<span class="must">*</span></th>
     <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
-    <th scope="row">Salesman NRIC</th>
-    <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
+    <th scope="row">Salesman Name</th>
+    <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Promotion</th>
@@ -2166,26 +2195,31 @@
     <select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
     </td>
-    <th scope="row">Department Code</th>
-    <td><input id="departCd" name="departCd" type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
-        <input id="departMemId" name="departMemId" type="hidden" /></td>
+    <th scope="row">Salesman NRIC</th>
+    <td><input id="salesmanNric" name="salesmanNric" type="text" title="" placeholder="Salesman NRIC" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Price/RPF (RM)</th>
     <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId"        name="ordPriceId"        type="hidden" />
         <input id="orgOrdPrice"       name="orgOrdPrice"       type="hidden" />
-        <input id="orgOrdPv"          name="orgOrdPv"          type="hidden" />
-        <input id="orgOrdRentalFees"  name="orgOrdRentalFees"  type="hidden" />
-        <input id="promoDiscPeriodTp" name="promoDiscPeriodTp" type="hidden" />
-        <input id="promoDiscPeriod"   name="promoDiscPeriod"   type="hidden" /></td>
+        <input id="orgOrdPv"          name="orgOrdPv"          type="hidden" /></td>
+    <th scope="row">Department Code</th>
+    <td><input id="departCd" name="departCd" type="text" title="" placeholder="Department Code" class="w100p readonly" readonly />
+        <input id="departMemId" name="departMemId" type="hidden" /></td>
+</tr>
+<tr>
+    <th scope="row">Normal Rental Fees (RM)</th>
+    <td><input id="orgOrdRentalFees" name="orgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
     <th scope="row">Group Code</th>
     <td><input id="grpCd" name="grpCd" type="text" title="" placeholder="Group Code" class="w100p readonly" readonly />
         <input id="grpMemId" name="grpMemId" type="hidden" /></td>
 </tr>
 <tr>
-    <th scope="row">Rental Fees (RM)</th>
-    <td><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
+    <th scope="row">Discount Period/<br>Promotion Rental Fee</th>
+    <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select></p>
+        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder=""  class="w100p readonly" readonly/></p>
+        <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder=""  class="w100p readonly" readonly/></p></td>
     <th scope="row">Organization Code</th>
     <td><input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
         <input id="orgMemId" name="orgMemId" type="hidden" /></td>
@@ -2198,10 +2232,6 @@
                <input id="trialNo" name="trialNo" type="text" title="" placeholder="Trial No" class="readonly" readonly />
                <input id="trialId" name="trialId" type="hidden" />
                <a id="trialNoBtn" name="trialNoBtn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-</tr>
-<tr>
-    <th scope="row">Related No</th>
-    <td cospan="3"><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
     <th scope="row">Remark</th>

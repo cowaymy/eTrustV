@@ -54,14 +54,14 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "Status",          dataField : "name",       editable : false, width : 80  }
-          , { headerText : "Name",            dataField : "name1",      editable : false, width : 100 }
-          , { headerText : "NRIC",            dataField : "nric",       editable : false, width : 80  }
+          , { headerText : "Name",            dataField : "name1" }
+          , { headerText : "NRIC",            dataField : "nric",       editable : false, width : 100 }
           , { headerText : "Race",            dataField : "codeName",   editable : false, width : 80  }
-          , { headerText : "Gender",          dataField : "gender",     editable : false, width : 100 }
-          , { headerText : "Tel (Mobile)",    dataField : "telM1",      editable : false, width : 100 }
-          , { headerText : "Tel (Office)",    dataField : "telO",       editable : false, width : 100 }
-          , { headerText : "Tel (Residence)", dataField : "telR",       editable : false, width : 100 }
-          , { headerText : "Tel (Fax)",       dataField : "telf",       editable : false, width : 100 }
+          , { headerText : "Gender",          dataField : "gender",     editable : false, width : 80  }
+          , { headerText : "Tel (Mobile)",    dataField : "telM1",      editable : false, width : 120 }
+          , { headerText : "Tel (Office)",    dataField : "telO",       editable : false, width : 120 }
+          , { headerText : "Tel (Residence)", dataField : "telR",       editable : false, width : 120 }
+          , { headerText : "Tel (Fax)",       dataField : "telf",       editable : false, width : 120 }
           , { headerText : "custCntcId",      dataField : "custCntcId", visible  : false  }
           ];
 
@@ -90,13 +90,13 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Status",          dataField : "name",          width : 80  }
-          , { headerText : "Name",            dataField : "name1",         width : 100 }
-          , { headerText : "NRIC",            dataField : "nric",          width : 80  }
-          , { headerText : "Tel (Mobile)",    dataField : "telM1",         width : 100 }
-          , { headerText : "Tel (Office)",    dataField : "telO",          width : 100 }
-          , { headerText : "Tel (Residence)", dataField : "telR",          width : 100 }
-          , { headerText : "Tel (Fax)",       dataField : "telf",          width : 100 }
+            { headerText : "Status",          dataField : "name",          width : 100 }
+          , { headerText : "Name",            dataField : "name1"}
+          , { headerText : "NRIC",            dataField : "nric",          width : 120 }
+          , { headerText : "Tel (Mobile)",    dataField : "telM1",         width : 120 }
+          , { headerText : "Tel (Office)",    dataField : "telO",          width : 120 }
+          , { headerText : "Tel (Residence)", dataField : "telR",          width : 120 }
+          , { headerText : "Tel (Fax)",       dataField : "telf",          width : 120 }
           , { headerText : "custCareCntId",   dataField : "custCareCntId", visible : false }
           ];
 

@@ -51,6 +51,9 @@
         $('#btnEdit').click(function() {
             fn_orderModifyPop();
         });
+        $('#btnReq').click(function() {
+            fn_orderRequestPop();
+        });
         $('#btnSrch').click(function() {
         	fn_selectListAjax();
         });
@@ -63,6 +66,16 @@
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
             Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+        }
+        else {
+            Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+        }
+    }
+    
+    function fn_orderRequestPop() {
+        var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        if(selIdx > -1) {
+            Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
         }
         else {
             Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
@@ -170,6 +183,7 @@
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
     <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
+    <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
 	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
