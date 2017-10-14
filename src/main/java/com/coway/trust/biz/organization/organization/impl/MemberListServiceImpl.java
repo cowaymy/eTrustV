@@ -922,7 +922,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("selectOrganization_new : {}",selectOrganization_new);
 				promoEntry.put("requestNo", eventCode.get("docNo").toString());
 				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
-				promoEntry.put("parentIdFrom", selectOrganization.get("memUpId") != null ? Integer.parseInt(selectOrganization.get("memUpId").toString()) : 0);
+				promoEntry.put("parentIdFrom", selectMemberOrgs.get("memUpId") != null ? Integer.parseInt(selectMemberOrgs.get("memUpId").toString()) : 0);
 				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("deptCode").toString() != null ? selectOrganization.get("deptCode").toString() : "");
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
 				promoEntry.put("PRCode", promoEntry.get("promoTypeId").toString().equals("747") ? selectOrganization.get("deptCode") != null? selectOrganization.get("deptCode").toString() : "" : "");
@@ -1052,7 +1052,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         					
         					memberListMapper.updateUser(selectUserName);
         				}
-        				success=true;
         			}
         		}
         		if(Integer.parseInt(params.get("action").toString()) == 757){
@@ -1064,7 +1063,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				}
         		
 		}
-		
+		success=true;
 		return resultValue;
 	}
 	
