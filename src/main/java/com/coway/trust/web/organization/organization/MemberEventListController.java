@@ -132,15 +132,15 @@ public class MemberEventListController {
 		boolean success =false;
 //		int promoId = 0;
 //		List<EgovMap> promoEntries = null;
-		
-		Map<String, Object> param = null;
-		param = new HashMap<String, Object>();		
-		param.put("promoId", params.get("promoId"));
+		logger.debug("params : {}", params);
+		//Map<String, Object> param = null;
+		//param = new HashMap<String, Object>();		
+		//param.put("promoId", params.get("promoId"));
 		
 //		String promoId = request.getParameterValues("promoId");	
 //		params.put("promoId", promoId);
 
-		success = memberEventService.selectMemberPromoEntries(param);		
+		success = memberEventService.selectMemberPromoEntries(params);		
 		
 //		List<EgovMap> promoEntries = memberEventService.selectMemberPromoEntries(param);		
 //		logger.debug("promoEntries : {}", promoEntries);
@@ -148,10 +148,12 @@ public class MemberEventListController {
 //		model.put("promoEntries", promoEntries);
 		if(success){
 			if(params.get("confirmStatus").toString().equals("04")){
-				message.setMessage("Complete this event Success " + params.get("memCode"));
+				message.setMessage("Complete this event Completed " + params.get("memCode"));
 			}
-    		else{
-    			message.setMessage("Complete this event Fail " + params.get("memCode"));
+    		else if(params.get("confirmStatus").toString().equals("10")){ 
+    			message.setMessage("Complete this event Cancelled " + params.get("memCode"));
+    		}else{
+    			message.setMessage("Fail this event Fail " + params.get("memCode"));
     		}
 			
 			
@@ -163,16 +165,19 @@ public class MemberEventListController {
 	}
 	
 	
-//	@RequestMapping(value = "/updateStockList.do", method = RequestMethod.POST)
-//	public ResponseEntity<ReturnMessage> updateMemberPromoEntry(@RequestBody FormList formList,
-//			Model model) {
-//		
-//		
-//		
-//		
-//		
-//	}
+	
+	@RequestMapping(value = "/getMemberEventViewPop.do")
+	public String getMemberEventViewPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+		logger.debug("requestStatus : {}", params.get("promoId"));
+		
+		params.put("promoId", params.get("promoId"));
+		EgovMap promoInfo = memberEventService.getMemberEventDetailPop(params);
+		logger.debug("promoInfo : {}", promoInfo);
+		model.addAttribute("promoInfo", promoInfo);
 
+		return "organization/organization/memberEventViewPop";
+	}
 	
 	
 		
