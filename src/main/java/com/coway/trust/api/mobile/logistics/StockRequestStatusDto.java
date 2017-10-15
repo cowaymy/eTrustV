@@ -16,12 +16,14 @@ public class StockRequestStatusDto {
 	private String reqStatus;
 	@ApiModelProperty(value = "gi 요청자")
 	private String giCustName;
-	@ApiModelProperty(value = "gi locationCode")
-	private String giLocationCode;
-	@ApiModelProperty(value = "gi 날짜")
-	private String giDate;
-	@ApiModelProperty(value = "gr 날짜")
-	private String grDate;
+	@ApiModelProperty(value = "요청일 (YYYYMMDD)")
+	private String reqDate;
+//	@ApiModelProperty(value = "gi locationCode")
+//	private String giLocationCode;
+//	@ApiModelProperty(value = "gi 날짜")
+//	private String giDate;
+//	@ApiModelProperty(value = "gr 날짜")
+//	private String grDate;
 	@ApiModelProperty(value = "부룸 리스트")
 	// private String partsList;
 	private List<StockRequestStatusDto> partsList;
@@ -38,7 +40,11 @@ public class StockRequestStatusDto {
 	private String serialNo;
 	@ApiModelProperty(value = "선택 수량")
 	private String selectQty;
-
+	@ApiModelProperty(value = "부품 타입(필터(62) / 부품(63) / MISC(64))")
+	private int getPartsType;
+	
+	
+	
 	// public static StockRequestStatusDto create(StrockMovementVoForMobile tmp) {
 	// // TODO Auto-generated method stub
 	// StockRequestStatusDto dto = new StockRequestStatusDto();
@@ -51,6 +57,22 @@ public class StockRequestStatusDto {
 	// dto.setGrDate(tmp.getGrDate());
 	// return dto;
 	// }
+
+	public String getReqDate() {
+		return reqDate;
+	}
+
+	public void setReqDate(String reqDate) {
+		this.reqDate = reqDate;
+	}
+
+	public int getGetPartsType() {
+		return getPartsType;
+	}
+
+	public void setGetPartsType(int getPartsType) {
+		this.getPartsType = getPartsType;
+	}
 
 	public String getSmoNo() {
 		return smoNo;
@@ -84,29 +106,29 @@ public class StockRequestStatusDto {
 		this.giCustName = giCustName;
 	}
 
-	public String getGiLocationCode() {
-		return giLocationCode;
-	}
-
-	public void setGiLocationCode(String giLocationCode) {
-		this.giLocationCode = giLocationCode;
-	}
-
-	public String getGiDate() {
-		return giDate;
-	}
-
-	public void setGiDate(String giDate) {
-		this.giDate = giDate;
-	}
-
-	public String getGrDate() {
-		return grDate;
-	}
-
-	public void setGrDate(String grDate) {
-		this.grDate = grDate;
-	}
+//	public String getGiLocationCode() {
+//		return giLocationCode;
+//	}
+//
+//	public void setGiLocationCode(String giLocationCode) {
+//		this.giLocationCode = giLocationCode;
+//	}
+//
+//	public String getGiDate() {
+//		return giDate;
+//	}
+//
+//	public void setGiDate(String giDate) {
+//		this.giDate = giDate;
+//	}
+//
+//	public String getGrDate() {
+//		return grDate;
+//	}
+//
+//	public void setGrDate(String grDate) {
+//		this.grDate = grDate;
+//	}
 
 	// public String getPartsList() {
 	// return partsList;

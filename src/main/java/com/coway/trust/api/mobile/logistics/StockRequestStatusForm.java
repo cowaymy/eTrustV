@@ -4,11 +4,16 @@ import java.util.Map;
 
 import com.coway.trust.util.BeanConverter;
 
-public class StockRequestStatusForm {
+import io.swagger.annotations.ApiModelProperty;
 
+public class StockRequestStatusForm {
+	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) CT100337 ", example = "CT100337")
 	String userId;
+	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) 01/01/2017 ", example = "")
 	String searchFromDate;
+	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) 01/10/2017, ", example = "CD100205,CT100070")
 	String searchToDate;
+	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) requested / done, ", example = "requested / done")
 	String searchStatus;
 
 	public static Map<String, Object> createMap(StockRequestStatusForm stockRequestStatusForm) {
