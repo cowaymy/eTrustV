@@ -146,7 +146,40 @@
 	<!-- and cdc_code = (select cdc_code from sys0028m where wh_loc_code = 'CT100755') -->
 	<!-- </select> -->
 
-
+    <select id="getInventoryOverallStock" parameterType="Map" resultType="egovMap">
+		SELECT
+		O01.NAME CT_CODY_NAME,O01.MEM_CODE CT_CODY_ID,
+		T1.BOM_COMPNT PARTS_CODE,T1.stk_desc PARTS_NAME ,T1.QTY STOCK_QTY ,T1.serial_no
+		SERIAL_NO ,T1.STK_CTGRY_ID PARTS_ID
+		FROM ORG0001D O01, SYS0028M S28,
+		(SELECT l43.bom,
+		l43.matrl_no,
+		l44.BOM_COMPNT,
+		NVL (l56.qty, 0) qty,
+		l56.serial_no,
+		l56.STK_CTGRY_ID,l56.STK_TYPE_ID,
+		l56.LOC_ID,
+		s26.stk_desc
+		FROM log0043m l43,
+		log0044d l44,
+		(SELECT log0056m.*, log0063d.serial_no
+		FROM log0056m, log0063d
+		WHERE 1 = 1
+		AND log0056m.stk_code = log0063d.MATNR(+))l56,
+		sys0026m s26
+		WHERE 1 = 1
+		AND l44.BOM_COMPNT = l56.stk_code(+)
+		AND l44.BOM_COMPNT = s26.stk_code
+		AND l43.bom = l44.bom
+		AND l56.STK_CTGRY_ID=#{productCategoryId}
+		AND l56.STK_TYPE_ID in(62,63))T1
+		WHERE 1 = 1
+		AND O01.MEM_CODE=S28.WH_LOC_CODE(+)
+		AND S28.WH_LOC_ID=T1.LOC_ID(+)
+		AND O01.MEM_CODE=#{targetUserId}
+		GROUP BY
+		O01.NAME,O01.MEM_CODE,T1.BOM_COMPNT,T1.stk_desc,T1.QTY,T1.serial_no,T1.STK_CTGRY_ID
+    </select>
 
 	<select id="getAllStockList" parameterType="Map" resultType="egovMap">
 		SELECT
@@ -187,6 +220,15 @@
 		l43.matrl_no,l44.BOM_COMPNT,l56.qty,l56.serial_no,l56.STK_CTGRY_ID,l56.STK_TYPE_ID,s26.stk_desc,s28.WH_LOC_CODE,s28.WH_LOC_DESC
 		<!-- AND l43.MATRL_NO = '110181' -->
 	</select>
+
+
+
+
+
+
+
+
+
 
 	<select id="getInventoryStockByHolder" parameterType="Map"
 		resultType="egovMap">
@@ -344,9 +386,182 @@
 		AND L56.STK_CODE =S26.STK_CODE(+)
 		AND L56.LOC_ID = S28.WH_LOC_ID
 		AND S28.WH_LOC_ID = (SELECT WH_LOC_ID FROM sys0028m WHERE WH_LOC_CODE = #{userId})
-</select>
+    </select>
+
+	<select id="getReturnPartsSearch" parameterType="Map" resultType="egovMap">
+		SELECT s28m.WH_LOC_STK_GRAD STOCK_GRADE,
+		l56.STK_CODE PARTS_CODE,
+		l56.STK_DESC PARTS_NAME,
+		l56.STK_TYPE_ID,
+		l56.STK_CTGRY_ID,
+		l56.QTY STOCK_QTY,
+		S26.STK_ID PARTS_ID,
+		L63.SERIAL_NO
+		FROM sys0028m s28m, LOG0056M L56 , SYS0026M S26 , LOG0063D L63
+		WHERE 1 =1
+		AND L56.STK_CODE = L63.MATNR(+)
+		AND L56.LOC_ID = L63.LOC_ID(+)
+		AND L56.STK_CODE = S26.STK_CODE
+		AND L56.STK_TYPE_ID = 61
+		AND L56.QTY > 0
+		AND L56.LOC_ID=s28m.WH_LOC_ID
+		<if test="searchType == 'partCode' ">
+			AND l56.STK_CODE=#{searchKeyword}
+		</if> 
+		<if test="searchType == 'partName' ">
+			AND UPPER(l56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
+		</if>
+		AND s28m.WH_LOC_CODE= #{userId}
+	</select> 
+
+
+<!-- <select id="getAlternativeFilterList" parameterType="Map" resultType="egovMap"> -->
+<!-- 	SELECT -->
+<!-- 	MATRL_NO PRODUCT_CODE,S26.STK_ID PRODUCT_ID,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT, -->
+<!-- 	case when l44.use_probabiltiy = 100 and alter_itm_rank_ord = 1 then  -->
+<!-- 	'Main' -->
+<!-- 	else 'Alternative' -->
+<!-- 	end title -->
+<!-- 	FROM LOG0043M L43,LOG0044D L44,SYS0026M S26 -->
+<!-- 	WHERE 1=1 -->
+<!-- 	AND L43.BOM=L44.BOM -->
+<!-- 	AND L44.BOM_COMPNT = S26.STK_CODE -->
+<!-- 	AND S26.STK_TYPE_ID in(62,63) -->
+<!-- 	AND L44.ALTER_ITM_GRP IS NOT NULL -->
+<!-- </select>  -->
+
+
+	<select id="getAlternativeFilterMList" parameterType="Map" resultType="egovMap">
+	  SELECT
+	    MATRL_NO PRODUCT_CODE,S26.STK_ID PRODUCT_ID,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Main' AS DIVISION_CODE
+	    FROM LOG0043M L43,LOG0044D L44,SYS0026M S26
+	    WHERE 1=1
+	    AND L43.BOM=L44.BOM
+	    AND L44.BOM_COMPNT = S26.STK_CODE
+	    AND S26.STK_TYPE_ID in(62,63)
+	    AND L44.ALTER_ITM_GRP IS NOT NULL
+	    AND  l44.use_probabiltiy = 100 and alter_itm_rank_ord = 1
+	</select> 
+
+	<select id="getAlternativeFilterDList" parameterType="Map" resultType="egovMap">
+	    SELECT
+	    MATRL_NO PRODUCT_CODE,S26.STK_ID PRODUCT_ID,S26.STK_DESC FILTER_NAME,BOM_COMPNT FILTER_CODE,L44.ALTER_ITM_GRP FILTER_GROUP_CODE,L44.USE_PROBABILTIY,L44.ALTER_ITM_RANK_ORD,L44.VALID_FROM_DT,L44.VALID_TO_DT,'Alternative' AS DIVISION_CODE
+	    FROM LOG0043M L43,LOG0044D L44,SYS0026M S26
+	    WHERE 1=1
+	    AND L43.BOM=L44.BOM
+	    AND L44.BOM_COMPNT = S26.STK_CODE
+	    AND S26.STK_TYPE_ID in(62,63)
+	    AND L44.ALTER_ITM_GRP IS NOT NULL
+	    AND l44.use_probabiltiy != 100 and alter_itm_rank_ord != 1
+	</select> 
 	
 
+	<select id="getItemBankLocationList" parameterType="Map" resultType="egovMap">
+		WITH CRDC
+	         AS (SELECT WH_LOC_CODE , CDC_CODE , RDC_CODE
+	                       FROM SYS0028M S28
+	                      WHERE 1 = 1 AND S28.WH_LOC_CODE =#{userId}
+	             )     
+	            SELECT 
+	                   S28.WH_LOC_CODE LOCATION_CODE,
+	                   S28.WH_LOC_GB,
+	                   DECODE (S28.WH_LOC_GB,
+	                     '01', 'CDC',
+	                     '02', 'RDC',
+	                     '03', 'CT',
+	                     '04', 'CODY',
+	                     '05', 'CDC/RDC',
+	                     S28.WH_LOC_GB) LOCATION_TYPE,
+	                   S28.WH_LOC_DESC LOCATION_NAME,
+	                   S28.WH_LOC_ID
+	              FROM   SYS0028M S28,CRDC        
+	             WHERE     1 = 1
+	                   AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE)
+	</select> 
+	
+	<select id="getItemBankItemList" resultType="egovMap">
+	    SELECT
+	              CODE_ID  ITEM_CODE,
+	              CODE ,
+	              CODE_NAME ITEM_NAME,
+	              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+	        FROM SYS0013M
+	        WHERE DISAB = 0
+	        AND CODE_MASTER_ID = '63'
+	</select>
+
+	<select id="getCommonReqHeader" parameterType="Map" resultType="egovMap">
+		SELECT
+		LG47M.REQST_NO smo_No,
+		DECODE (LG47M.PRIDIC_FRQNCY,
+        'A', 'Auto',
+        'M', 'Manual',
+        LG47M.PRIDIC_FRQNCY)
+        REQ_TYPE,
+		DECODE (LG47M.REQST_STUS,
+        'O', 'CREATE',
+        'C', 'DONE',
+        LG47M.REQST_STUS)
+        REQ_STATUS,
+		LG47M.REQST_CDC_RDC GI_LOCATION_CODE,
+		SY28M.WH_LOC_DESC gi_Cust_Name,
+		LG54M.DELVRY_GI_DT GI_DATE,
+		LG54M.DELVRY_GR_DT GR_DATE
+		FROM SYS0028M SY28M ,LOG0047M LG47M ,LOG0054M LG54M
+		WHERE 1=1
+		AND LG47M.REQST_NO = LG54M.REQST_NO(+)
+        AND LG47M.TRNSC_TYPE=LG54M.TRNSC_TYPE(+)
+        AND LG47M.TRNSC_TYPE = 'UM'
+		<if test="reqStatus eq 'MRRL'.toString() ">
+        AND SY28M.WH_LOC_ID = LG47M.REQST_CDC_RDC
+        </if>
+		<if test="reqStatus eq 'MROL'.toString() ">
+		AND SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC
+		</if>
+		<if test="reqStatus eq 'MRRL'.toString() ">
+		AND LG47M.REQST_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
+		</if>
+		<if test="reqStatus eq 'MROL'.toString() ">
+	    AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId})
+	    </if>
+        <if test="searchStatus eq 'requested'.toString() ">
+		  AND LG47M.REQST_STUS IN ('O')
+		</if>
+        <if test="searchStatus eq 'done'.toString() ">
+           AND LG47M.REQST_STUS='C'
+        </if>	
+        <if test="searchType !=null and searchType !=''">
+           AND LG47M.PRIDIC_FRQNCY=#{searchType}
+        </if>
+	</select>
+
+    <select id="getCommonReqParts" parameterType="Map" resultType="egovMap">
+	SELECT
+	LG48D.REQST_NO SMO_NO,
+	LG48D.REQST_NO_ITM SMO_NO_ITEM,
+	SY26M.STK_ID PARTS_ID,
+	LG48D.ITM_CODE PARTS_CODE,
+	LG48D.ITM_NAME PARTS_NAME,
+	LG48D.REQST_QTY REQUEST_QTY,
+	SY26M.SERIAL_CHK ,
+	LG55D.DELVRY_QTY SELECT_QTY,
+	LG61D.SERIAL_NO SERIAL_NO
+	FROM
+	LOG0048D LG48D, LOG0055D LG55D, SYS0026M SY26M,LOG0061D LG61D
+	WHERE 1=1
+	AND LG48D.REQST_NO = LG55D.REQST_NO (+)
+	AND LG55D.DELVRY_NO = LG61D.DELVRY_NO(+)
+	AND LG55D.DELVRY_NO_ITM = LG61D.PDELVRY_NO_ITM(+)
+	AND LG48D.ITM_CODE=LG55D.ITM_CODE(+)
+	AND NVL(LG48D.REQST_DEL , 'N') = 'N'
+	AND LG48D.ITM_CODE=SY26M.STK_CODE
+	AND LG48D.REQST_NO =#{smoNo}
+	GROUP BY LG48D.REQST_NO, LG48D.REQST_NO_ITM, SY26M.STK_ID ,LG48D.ITM_CODE,
+	LG48D.ITM_NAME, LG48D.REQST_QTY,SY26M.SERIAL_CHK,
+	LG55D.DELVRY_QTY,LG61D.SERIAL_NO
+    </select>
+
+	
 	<!-- 현창배 작업 -->
 
 	<select id="getBarcodeList" parameterType="Map" resultType="EgovMap">
@@ -468,17 +683,16 @@
 		LG47M.REQST_STUS reqStatus,
 		LG47M.RCIV_CDC_RDC requestorId,<!-- 추후에 구분자로 분리예정 -->
 		SY28M.WH_LOC_DESC requestorName <!-- 추후에 구분자로 분리예정 -->
-
 		FROM SYS0028M SY28M ,LOG0047M LG47M
 		WHERE 1=1
 		AND SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC   <!-- 추후에 구분자로 분리예정 -->
 		AND LG47M.TRNSC_TYPE = 'UM'
 		AND LG47M.RCIV_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE
 		WH_LOC_CODE =#{userId})
-		<!-- 추후에 구분자로 분리예정 <choose> <when test=""> AND LG47M.RCIV_CDC_RDC = (SELECT 
+<!--          <choose> <when test=""> AND LG47M.RCIV_CDC_RDC = (SELECT 
 			WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId}) </when> <otherwise> 
 			AND LG47M.REQST_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE 
-			=#{userId}) </otherwise> </choose> -->
+			=#{userId}) </otherwise> </choose>  -->
 		AND TO_CHAR( LG47M.REQST_REQUIRE_DT,'YYYYMMDD')
 		BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'DD/MM/YYYY'), 'YYYYMMDD')
 		AND TO_CHAR(TO_DATE(#{searchToDate},'DD/MM/YYYY'), 'YYYYMMDD')
@@ -491,8 +705,8 @@
 		<if test="searchStatus eq 'rejected'.toString() ">
 			AND LG47M.REQST_DEL IS NOT NULL
 		</if>
-
 	</select>
+	
 	<select id="getRequestStatusParts" parameterType="Map"
 		resultMap="movement">
 		SELECT
@@ -513,4 +727,5 @@
 		AND LG48D.REQST_NO =#{reqstNo}
 		ORDER BY LG48D.REQST_NO_ITM
 	</select>
+	
 </mapper>
