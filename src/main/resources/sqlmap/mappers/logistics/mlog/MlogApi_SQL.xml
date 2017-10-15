@@ -682,7 +682,8 @@
 		LG47M. PRIDIC_FRQNCY reqType,
 		LG47M.REQST_STUS reqStatus,
 		LG47M.RCIV_CDC_RDC requestorId,<!-- 추후에 구분자로 분리예정 -->
-		SY28M.WH_LOC_DESC requestorName <!-- 추후에 구분자로 분리예정 -->
+		SY28M.WH_LOC_DESC requestorName, <!-- 추후에 구분자로 분리예정 -->
+		LG47M.REQST_REQUIRE_DT reqDate
 		FROM SYS0028M SY28M ,LOG0047M LG47M
 		WHERE 1=1
 		AND SY28M.WH_LOC_ID = LG47M.RCIV_CDC_RDC   <!-- 추후에 구분자로 분리예정 -->
@@ -693,9 +694,9 @@
 			WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE =#{userId}) </when> <otherwise> 
 			AND LG47M.REQST_CDC_RDC = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE 
 			=#{userId}) </otherwise> </choose>  -->
-		AND TO_CHAR( LG47M.REQST_REQUIRE_DT,'YYYYMMDD')
-		BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'DD/MM/YYYY'), 'YYYYMMDD')
-		AND TO_CHAR(TO_DATE(#{searchToDate},'DD/MM/YYYY'), 'YYYYMMDD')
+<!-- 		AND TO_CHAR( LG47M.REQST_REQUIRE_DT,'YYYYMMDD') -->
+<!-- 		BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'DD/MM/YYYY'), 'YYYYMMDD') -->
+<!-- 		AND TO_CHAR(TO_DATE(#{searchToDate},'DD/MM/YYYY'), 'YYYYMMDD') -->
 		<if test="searchStatus eq 'requested'.toString() ">
 			AND LG47M.REQST_STUS IN ('O','P')
 		</if>
@@ -717,7 +718,8 @@
 		LG48D.ITM_NAME partsName,
 		LG48D.REQST_QTY requestQty,
 		SY26M.SERIAL_CHK serialNo,
-		LG55D.DELVRY_QTY selectQty
+		LG55D.DELVRY_QTY selectQty,
+		SY26M.STK_TYPE_ID partsType
 		FROM
 		LOG0048D LG48D, LOG0055D LG55D, SYS0026M SY26M
 		WHERE 1=1
