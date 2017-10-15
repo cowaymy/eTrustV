@@ -12,13 +12,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface MlogApiMapper {
 
 	List<EgovMap> getRDCStockList(Map<String, Object> params);
-	
+
 	List<EgovMap> getStockbyHolderList(Map<String, Object> params);
-	
+
 	List<EgovMap> getCommonQty(Map<String, Object> params);
 
 	List<EgovMap> getCt_CodyList(Map<String, Object> params);
 
+	List<EgovMap> getInventoryOverallStock(Map<String, Object> params);
+	
 	List<EgovMap> getAllStockList(Map<String, Object> params);
 
 	List<EgovMap> getInventoryStockByHolder(Map<String, Object> params);
@@ -26,8 +28,22 @@ public interface MlogApiMapper {
 	List<EgovMap> StockReceiveList(Map<String, Object> params);
 
 	List<EgovMap> selectStockReceiveSerial(Map<String, Object> params);
-	
+
 	List<EgovMap> getMyStockList(Map<String, Object> params);
+
+	List<EgovMap> getReturnPartsSearch(Map<String, Object> params);
+
+	List<EgovMap> getAlternativeFilterMList();
+
+	List<EgovMap> getAlternativeFilterDList();
+
+	List<EgovMap> getItemBankLocationList(Map<String, Object> params);
+
+	List<EgovMap> getItemBankItemList();
+
+	List<EgovMap> getCommonReqHeader(Map<String, Object> params);
+	
+	List<EgovMap> getCommonReqParts(Map<String, Object> params);
 
 	/**
 	 * 현창배 추가
