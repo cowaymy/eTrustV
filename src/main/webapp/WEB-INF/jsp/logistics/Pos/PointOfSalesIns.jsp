@@ -62,40 +62,46 @@ var serialcolumn=[{dataField:"itmcd"        ,headerText:"Material Code"         
                     
 var reqcolumnLayout;
 
- //var resop = {rowIdField : "rnum", showRowCheckColumn : true,showRowAllCheckBox : true,usePaging : true,useGroupingPanel : false , Editable:false};
- var subgridpros = {
-		// rowIdField : "rnum", 
+ var resop = {
+		 rowIdField : "rnum", 
          // 페이지 설정
          usePaging : true,                
          pageRowCount : 20,                
          editable : false,                
          noDataMessage : "출력할 데이터가 없습니다.",
          //enableSorting : true,
-         selectionMode : "multipleRows",
+         //selectionMode : "multipleRows",
          //selectionMode : "multipleCells",
-       //  useGroupingPanel : true,
+        //  useGroupingPanel : true,
          // 체크박스 표시 설정
          showRowCheckColumn : true,
          // 전체 체크박스 표시 설정
          showRowAllCheckBox : true,
          softRemoveRowMode:false
          };
- var serialop = {
-	        rowIdField : "rnum",          
+ var reqop = {
+		    rowIdField : "itmrnum",
 	        editable : true,
+	        softRemoveRowMode : false,
 	         // 체크박스 표시 설정
 	         showRowCheckColumn : true,
 	         // 전체 체크박스 표시 설정
-	         showRowAllCheckBox : true,
+	         //showRowAllCheckBox : true,
 	        //displayTreeOpen : true,
 	        //showRowCheckColumn : true ,
 	        //enableCellMerge : true,
 	        //showStateColumn : false,
 	        //showBranchOnGrouping : false
 	        };
- 
- var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
-
+ var serialop = {
+	        //rowIdField : "rnum",          
+	        editable : true
+	        //displayTreeOpen : true,
+	        //showRowCheckColumn : true ,
+	        //enableCellMerge : true,
+	        //showStateColumn : false,
+	        //showBranchOnGrouping : false
+	        };
  
  var uomlist = f_getTtype('42' , '');
 // var paramdata;
@@ -122,7 +128,7 @@ var LocData = {sLoc : UserCode};
 //      * Header Setting End
 //      ***********************************/
     
-    reqcolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
+    reqcolumnLayout=[{dataField:"itmrnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
                       {dataField:"itmcode"     ,headerText:"Code"        ,width:120    ,height:30 , visible:true},
                       {dataField:"itmdesc"     ,headerText:"Text"        ,width:120    ,height:30 , editable:false},
                       {dataField:"itemqty"   ,headerText:"Available Qty"      ,width:120    ,height:30 , editable:false},
@@ -157,8 +163,8 @@ var LocData = {sLoc : UserCode};
                       }
                      ];
   
-     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", subgridpros);
-     reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout,"", serialop);
+     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
+     reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout,"", reqop);
      serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
 
     
@@ -192,7 +198,7 @@ var LocData = {sLoc : UserCode};
                     AUIGrid.restoreEditedRows(reqGrid, "selectedIndex");
                 }else{
 
-                       AUIGrid.addCheckedRowsByIds(reqGrid, event.item.rnum);         		   
+                       AUIGrid.addCheckedRowsByIds(reqGrid, event.item.itmrnum);         		   
            	 
                 }
             }else{
@@ -322,8 +328,9 @@ $(function(){
 
  
     $('#reqdel').click(function(){
-    	AUIGrid.removeRow(reqGrid, "selectedIndex");
-        AUIGrid.removeSoftRows(reqGrid);
+    	AUIGrid.removeCheckedRows(reqGrid);
+//     	AUIGrid.removeRow(reqGrid, "selectedIndex");
+//        AUIGrid.removeSoftRows(reqGrid);
     });
     $('#list').click(function(){
     	document.location.href = '/logistics/pos/PointOfSalesList.do';
@@ -343,7 +350,7 @@ $(function(){
 	        
 	        for (var i = 0 ; i < checkedItems.length ; i++){
 
-	        	rowList[i] = {
+	        	rowList[i] = {itmrnum : checkedItems[i].rnum,
                             itmtype : checkedItems[i].codeName,
                             itmcode : checkedItems[i].stkCode,
                             itmdesc : checkedItems[i].stkDesc,
@@ -354,7 +361,7 @@ $(function(){
                         }
 	        	
 	            AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
-	        	
+	     
 	        } 
 	        
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);
@@ -582,14 +589,14 @@ function fn_itempopList(data){
     var rowList = [];
     var reqQty;
     var item = new Object();
+    var itm_qty  = 0;
 
 	for (var i = 0 ; i < data.length ; i++){
 		
 		if (data[i].item.itemserialChk == 'Y'){
 			reqQty =data[i].item.rqty;
 	        itm_qty +=parseInt(reqQty)
-		}
-	    
+		}	    
 	}
 	$("#serialqty").val(itm_qty);
     
@@ -616,7 +623,7 @@ function f_getTtype(g , v){
                 });
            },
            error: function(jqXHR, textStatus, errorThrown){
-               alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        	   Common.alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
            },
            complete: function(){
            }
@@ -675,7 +682,7 @@ function insPosInfo(){
 			Common.alert("Fail : " + jqXHR.responseJSON.message);
 		});
 		for (var i = 0; i < checkdata.length; i++) {
-			AUIGrid.addUncheckedRowsByIds(reqGrid, checkdata[i].rnum);
+			AUIGrid.addUncheckedRowsByIds(reqGrid, checkdata[i].itmrnum);
 		}
 			
 			
