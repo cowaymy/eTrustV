@@ -79,14 +79,14 @@ public class LogisticsApiController {
 	}
 	
 	
-	@ApiOperation(value = "Stock by Holder Qty 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/stockbyHolderQty", method = RequestMethod.GET)
+	@ApiOperation(value = "Common StockList 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/stockCommonQty", method = RequestMethod.GET)
 	public ResponseEntity<List<StockByHolderQtyDto>> getStockbyHolderQty(
 			@ModelAttribute StockByHolderQtyForm StockByHolderQtyForm) throws Exception {
 
 		Map<String, Object> params = StockByHolderQtyForm.createMap(StockByHolderQtyForm);
 
-		List<EgovMap> StockbyHolderQty = MlogApiService.getStockbyHolderQty(params);
+		List<EgovMap> StockbyHolderQty = MlogApiService.getCommonQty(params);
 
 		for (int i = 0; i < StockbyHolderQty.size(); i++) {
 			LOGGER.debug("StockbyHolderQty    값 : {}", StockbyHolderQty.get(i));
@@ -98,11 +98,6 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 	
-	
-	
-	
-	
-
 	@ApiOperation(value = "DisplayCt_CodyList 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/displayCt_CodyList", method = RequestMethod.GET)
 	public ResponseEntity<List<DisplayCt_CodyListDto>> getCTStockList(
@@ -121,8 +116,26 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
-
 	
+	
+	@ApiOperation(value = "Inventory Status Display - Overall Stock 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/inventoryOverallStock", method = RequestMethod.GET)
+	public ResponseEntity<List<InventoryOverallStockDto>> getInventoryOverallStock(
+			@ModelAttribute InventoryOverallStockForm InventoryOverallStockForm) throws Exception {
+
+		Map<String, Object> params = InventoryOverallStockForm.createMap(InventoryOverallStockForm);
+
+		List<EgovMap> inventoryOverallStock = MlogApiService.getInventoryOverallStock(params);
+
+		for (int i = 0; i < inventoryOverallStock.size(); i++) {
+			LOGGER.debug("inventoryOverallStock    값 : {}", inventoryOverallStock.get(i));
+		}
+
+		List<InventoryOverallStockDto> list = inventoryOverallStock.stream().map(r -> InventoryOverallStockDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
 	
 	@ApiOperation(value = "Inventory Status Display - All List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryAllList", method = RequestMethod.GET)
@@ -219,7 +232,179 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 	
+	
+	@ApiOperation(value = "Return On-Hand Stock - Parts Search 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/returnPartsSearch", method = RequestMethod.GET)
+	public ResponseEntity<List<ReturnPartsSearchDto>> getReturnPartsSearch(
+			@ModelAttribute ReturnPartsSearchForm ReturnPartsSearchForm) throws Exception {
 
+		Map<String, Object> params = ReturnPartsSearchForm.createMap(ReturnPartsSearchForm);
+
+		List<EgovMap> ReturnPartsSearchList = MlogApiService.getReturnPartsSearch(params);
+
+		for (int i = 0; i < ReturnPartsSearchList.size(); i++) {
+			LOGGER.debug("ReturnPartsSearchList    값 : {}", ReturnPartsSearchList.get(i));
+
+		}
+
+		List<ReturnPartsSearchDto> list = ReturnPartsSearchList.stream().map(r -> ReturnPartsSearchDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	@ApiOperation(value = "Alternative Filter Master List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/alternativeFilterMList", method = RequestMethod.GET)
+	public ResponseEntity<List<AlternativeFilterMListDto>> getAlternativeFilterMList(
+			@ModelAttribute AlternativeFilterMListForm AlternativeFilterMListForm) throws Exception {
+
+		Map<String, Object> params = AlternativeFilterMListForm.createMap(AlternativeFilterMListForm);
+
+		List<EgovMap> alternativeFilterMList = MlogApiService.getAlternativeFilterMList();
+
+		for (int i = 0; i < alternativeFilterMList.size(); i++) {
+			LOGGER.debug("alternativeFilterMList    값 : {}", alternativeFilterMList.get(i));
+
+		}
+		
+		List<AlternativeFilterMListDto> list = alternativeFilterMList.stream().map(r -> AlternativeFilterMListDto.create(r))
+				.collect(Collectors.toList());		
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	@ApiOperation(value = "Alternative Filter Detail List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/alternativeFilterDList", method = RequestMethod.GET)
+	public ResponseEntity<List<AlternativeFilterDListDto>> getAlternativeFilterDList(
+			@ModelAttribute AlternativeFilterDListForm AlternativeFilterDListForm) throws Exception {
+
+		Map<String, Object> params = AlternativeFilterDListForm.createMap(AlternativeFilterDListForm);
+
+		List<EgovMap> alternativeFilterDList = MlogApiService.getAlternativeFilterDList();
+
+		for (int i = 0; i < alternativeFilterDList.size(); i++) {
+			LOGGER.debug("alternativeFilterDList    값 : {}", alternativeFilterDList.get(i));
+
+		}
+		
+		List<AlternativeFilterDListDto> list = alternativeFilterDList.stream().map(r -> AlternativeFilterDListDto.create(r))
+				.collect(Collectors.toList());		
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	@ApiOperation(value = "Item Bank & Cody Item - Location List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/itemBankLocationList", method = RequestMethod.GET)
+	public ResponseEntity<List<ItemBankLocationListDto>> getItemBankLocationList(
+			@ModelAttribute ItemBankLocationListForm ItemBankLocationListForm) throws Exception {
+
+		Map<String, Object> params = ItemBankLocationListForm.createMap(ItemBankLocationListForm);
+
+		List<EgovMap> itemBankLocationList = MlogApiService.getItemBankLocationList(params);
+
+		for (int i = 0; i < itemBankLocationList.size(); i++) {
+			LOGGER.debug("itemBankLocationList    값 : {}", itemBankLocationList.get(i));
+
+		}
+
+		List<ItemBankLocationListDto> list = itemBankLocationList.stream().map(r -> ItemBankLocationListDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	@ApiOperation(value = "Item Bank & Cody Item - Item List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/itemBankItemList", method = RequestMethod.GET)
+	public ResponseEntity<List<ItemBankItemListDto>> getItemBankItemList(
+			@ModelAttribute ItemBankItemListForm ItemBankItemListForm) throws Exception {
+
+		Map<String, Object> params = ItemBankItemListForm.createMap(ItemBankItemListForm);
+
+		List<EgovMap> itemBankItemList = MlogApiService.getItemBankItemList();
+
+		for (int i = 0; i < itemBankItemList.size(); i++) {
+			LOGGER.debug("itemBankItemList    값 : {}", itemBankItemList.get(i));
+
+		}
+
+		List<ItemBankItemListDto> list = itemBankItemList.stream().map(r -> ItemBankItemListDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	@ApiOperation(value = "Request Result - List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/requestResultList", method = RequestMethod.GET)
+	public ResponseEntity<List<RequestResultMListDto>> getRequestResultList(
+			@ModelAttribute RequestResultListForm RequestResultListForm) throws Exception {
+
+		Map<String, Object> params = RequestResultListForm.createMap(RequestResultListForm);
+
+		List<EgovMap> headerList = MlogApiService.getCommonReqHeader(params);
+
+		List<RequestResultMListDto> hList = null;
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("headerList 값 : {}", headerList.get(i));
+		}
+
+		for (int i = 0; i < headerList.size(); i++) {
+
+			hList = headerList.stream().map(r -> RequestResultMListDto.create(r)).collect(Collectors.toList());
+
+			for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				List<EgovMap> reqParts = MlogApiService.getCommonReqParts(tmpMap);
+
+				List<RequestResultDListDto> partsList = reqParts.stream()
+						.map(r -> RequestResultDListDto.create(r)).collect(Collectors.toList());
+				hList.get(i).setPartsList(partsList);
+			}
+
+		}
+
+		return ResponseEntity.ok(hList);
+
+	}
+		
+	
+	@ApiOperation(value = "Return On-Hand Stock - List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/returnOnHandStockList", method = RequestMethod.GET)
+	public ResponseEntity<List<ReturnOnHandStockMListDto>> getreturnOnHandStockList(
+			@ModelAttribute ReturnOnHandStockListForm ReturnOnHandStockListForm) throws Exception {
+
+		Map<String, Object> params = ReturnOnHandStockListForm.createMap(ReturnOnHandStockListForm);
+
+		List<EgovMap> headerList = MlogApiService.getCommonReqHeader(params);
+
+		List<ReturnOnHandStockMListDto> hList = null;
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("headerList 값 : {}", headerList.get(i));
+		}
+
+		for (int i = 0; i < headerList.size(); i++) {
+
+			hList = headerList.stream().map(r -> ReturnOnHandStockMListDto.create(r)).collect(Collectors.toList());
+
+			for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = (Map<String, Object>) headerList.get(j);
+				List<EgovMap> reqParts = MlogApiService.getCommonReqParts(tmpMap);
+
+				List<ReturnOnHandStockDListDto> partsList = reqParts.stream()
+						.map(r -> ReturnOnHandStockDListDto.create(r)).collect(Collectors.toList());
+				hList.get(i).setPartsList(partsList);
+			}
+
+		}
+
+		return ResponseEntity.ok(hList);
+
+	}
+	
 	
 	/**
 	 * 아래부분 현창배 추가
