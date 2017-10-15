@@ -175,7 +175,8 @@ WHERE 1 = 1
   
 
 <select id="PosItemList" parameterType="Map" resultType="egovMap">
-    SELECT S15.CODE_NAME AS CODE_NAME, 
+    SELECT rownum rnum,
+               S15.CODE_NAME AS CODE_NAME, 
                L56.STK_CODE  AS STK_CODE , 
                L56.STK_DESC AS STK_DESC, 
                <!-- L56.QTY AS QTY,  -->
