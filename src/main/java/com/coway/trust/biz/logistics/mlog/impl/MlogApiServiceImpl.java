@@ -35,7 +35,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	}
 
 	@Override
-	public List<EgovMap> getStockbyHolderQty(Map<String, Object> params) {
+	public List<EgovMap> getCommonQty(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getCommonQty(params);
 	}
@@ -46,6 +46,12 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		return MlogApiMapper.getCt_CodyList(params);
 	}
 
+	@Override
+	public List<EgovMap> getInventoryOverallStock(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getInventoryOverallStock(params);
+	}
+	
 	@Override
 	public List<EgovMap> getAllStockList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -69,13 +75,54 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.selectStockReceiveSerial(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getMyStockList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MlogApiMapper.getMyStockList(params);
 	}
+
+	@Override
+	public List<EgovMap> getReturnPartsSearch(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getReturnPartsSearch(params);
+	}
+
+	@Override
+	public List<EgovMap> getAlternativeFilterMList() {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getAlternativeFilterMList();
+	}
+
+	@Override
+	public List<EgovMap> getAlternativeFilterDList() {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getAlternativeFilterDList();
+	}
+
+	@Override
+	public List<EgovMap> getItemBankLocationList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getItemBankLocationList(params);
+	}
+
+	@Override
+	public List<EgovMap> getItemBankItemList() {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getItemBankItemList();
+	}
+
+	@Override
+	public List<EgovMap> getCommonReqHeader(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getCommonReqHeader(params);
+	}
 	
+	@Override
+	public List<EgovMap> getCommonReqParts(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getCommonReqParts(params);
+	}
 
 	// @Override
 	// public List<EgovMap> StockReceiveList(Map<String, Object> params) {
