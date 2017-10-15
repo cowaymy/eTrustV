@@ -12,10 +12,12 @@ public class StrockMovementVoForMobile implements Serializable {
 	private String reqStatus;
 	private String requestorId;
 	private String requestorName;
+	private String reqDate;
 	private List<StrockMovementVoForMobile> partsList;
 	private String smoNoD;
 	private String smoNoItem;
 	private int partsId;
+	private int partsType;
 	private String partsCode;
 	private String partsName;
 	private String requestQty;
@@ -133,6 +135,22 @@ public class StrockMovementVoForMobile implements Serializable {
 	public void setSelectQty(String selectQty) {
 		this.selectQty = selectQty;
 	}
+	public int getPartsType() {
+		return partsType;
+	}
+
+	public void setPartsType(int partsType) {
+		this.partsType = partsType;
+	}
+	public String getReqDate() {
+		return reqDate;
+	}
+
+	public void setReqDate(String reqDate) {
+		this.reqDate = reqDate;
+	}
+
+	
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
