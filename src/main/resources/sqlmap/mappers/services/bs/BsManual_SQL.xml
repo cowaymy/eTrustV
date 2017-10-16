@@ -258,7 +258,8 @@
                                     Project2.CODY_STATUS,
                                     Project2.cody_status_nm,
                                     Project2.BRNCH_ID,
-                                    Project2.cust_id
+                                    Project2.cust_id,
+                                    Project2.FIRST_INSTALL_DT
                       FROM ( SELECT Project2.SCHDUL_ID SCHDUL_ID  ,
                                     Project2.No No  ,
                                     Project2.HS_DATE HS_DATE   ,
@@ -284,6 +285,7 @@
                                     Project2.cody_status_nm as cody_status_nm,
                                     Project2.BRNCH_ID as BRNCH_ID,
                                     Project2.cust_id as cust_id,
+                                    Project2.FIRST_INSTALL_DT,
                                     ROW_NUMBER() OVER ( ORDER BY Project2.SCHDUL_ID ASC  ) row_number  
                              FROM ( SELECT Distinct1.SCHDUL_ID SCHDUL_ID  ,
                                            Distinct1.No No  ,
@@ -309,7 +311,8 @@
                                            Distinct1.CODY_STATUS as CODY_STATUS,
                                            Distinct1.cody_status_nm as cody_status_nm,
                                            Distinct1.BRNCH_ID as BRNCH_ID,
-                                           Distinct1.cust_id cust_id
+                                           Distinct1.cust_id cust_id,
+                                           Distinct1.FIRST_INSTALL_DT
                                     FROM (    
                                                     SELECT DISTINCT
                                                                  Extent1.SCHDUL_ID SCHDUL_ID,
@@ -367,7 +370,8 @@
                                                                  END C8,
                                                                  Extent4.STUS_CODE_ID as CODY_STATUS,
                                                                  Extent3.BRNCH_ID as BRNCH_ID,
-                                                                 Extent3.cust_id cust_id
+                                                                 Extent3.cust_id cust_id,
+                                                                 Extent6.FIRST_INSTALL_DT
                                                     from SVC0008D Extent1
                                                             ,SYS0038M Extent2
                                                             ,SAL0001D Extent3
@@ -445,6 +449,12 @@
                                                       </if>
                                                       <if test="cmbStatusType != null and cmbStatusType != ''">
                                                              AND Extent1.STUS_CODE_ID  = #{cmbStatusType}
+                                                      </if>
+                                                      <if test="txtCustomer != null and txtCustomer != ''">
+                                                             AND Extent3.cust_id  = #{txtCustomer}
+                                                      </if>
+                                                      <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+                                                             AND Extent1.NO  = #{txtHsOrderNo}
                                                       </if>
                                                       ) Distinct1 ) Project2 ) Project2
                      WHERE  Project2.row_number > 0
