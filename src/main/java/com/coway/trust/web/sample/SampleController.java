@@ -110,7 +110,7 @@ public class SampleController {
 		command.add("-Denv=local");
 		command.add("-Dspring.profiles.active=local");
 		command.add("batch-1.0.0-SNAPSHOT.jar");
-		command.add("org.springframework.batch.core.launch.support.CommandLineJobRunner");
+		command.add("-Dspring.batch.job.names=ctosJob");
 		command.add(" ctosJob");
 		command.add("aa=" + command);
 		// command.add("--spring.batch.job.names=ctosJob");
