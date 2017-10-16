@@ -91,10 +91,7 @@ var contPersonLayout = [
                            visible : false
                        }];
 
-	function fn_goBillGrp(){
-		location.href = "initBillGroupManagement.do";
-	}
-	
+
 	function fn_estmEvent(){
 	    
 		if($("#estm").is(":checked")){
@@ -450,32 +447,6 @@ var contPersonLayout = [
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Create New Group</h2>
 </aside><!-- title_line end -->
-<section class="search_table"><!-- search_table start -->
-<!-- link_btns_wrap start -->
-            <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-                <dl class="link_list">
-                    <dt>Link</dt>
-                    <dd>
-                    <ul class="btns">
-<!-- 				        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu5</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-				        <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
-			         </ul>
-                    <ul class="btns">
-				        <li><p class="link_btn type2"><a href="javascript:fn_goBillGrp();">Manage Existing Group</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                    </dd>
-                </dl>
-            </aside>
-            <!-- link_btns_wrap end -->
-</section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
 
@@ -608,7 +579,7 @@ var contPersonLayout = [
 </article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
-<ul class="center_btns">
+<ul class="center_btns mt10">
     <li><p class="btn_blue2 big"><a href="javascript:fn_createNewGroup();" id="_btnSave">SAVE</a></p></li>
 </ul>
 </section><!-- content end -->

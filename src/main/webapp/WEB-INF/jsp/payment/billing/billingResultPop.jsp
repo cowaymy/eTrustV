@@ -126,7 +126,7 @@ function fn_billList(){
             <input type="hidden" name="rowCount" id="rowCount" value="10" />
             <input type="hidden" name="pageNo" id="pageNo" />
             
-            <ul class="right_btns">
+            <ul class="right_btns mb10">
                 <li><p class="btn_blue"><a href="javascript:fn_billList();">Bill List</a></p></li>
                 <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span>Search</a></p></li>
             </ul>

@@ -388,25 +388,6 @@ function commitFormSubmit() {
             </table>
             <!-- table end -->
         </form>
-
-        <!-- link_btns_wrap start -->
-        <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside>
-        <!-- link_btns_wrap end -->
-
-
     </section>
     <!-- search_table end -->
 

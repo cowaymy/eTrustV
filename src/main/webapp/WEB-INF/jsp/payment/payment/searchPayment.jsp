@@ -751,9 +751,7 @@ function fn_goSalesConfirm(){
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Search Payment</h2>
-        <ul class="right_btns">                
-            <li><p class="btn_blue"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
+        <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>            
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
         </ul>
@@ -878,11 +876,8 @@ function fn_goSalesConfirm(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <!-- 
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">Veiw Details</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>
-                         -->                                              
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>                                                                      
                     </ul>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>                        
