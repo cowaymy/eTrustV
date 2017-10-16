@@ -179,10 +179,7 @@ public class CommissionCalculationController {
 		}
 		
 		int pvMonth = Integer.parseInt(dt.substring(0,2));
-		int pvYear = Integer.parseInt(dt.substring(3));
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(pvYear, pvMonth, 1);
-		calendar.add(calendar.MONTH, 0);	
+		int pvYear = Integer.parseInt(dt.substring(3));		
 		
 		sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
 		
