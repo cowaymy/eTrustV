@@ -163,6 +163,9 @@
     </insert>
 
      <insert id="insertInvoiceM" parameterType="Map">
+        <selectKey keyProperty="taxInvoiceId" resultType="int" order="BEFORE">
+            SELECT PAY0031D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
         INSERT INTO PAY0031D
 		( 
 		    TAX_INVC_ID,
@@ -189,7 +192,7 @@
 		)
 		VALUES 
 		( 
-		    PAY0031D_SEQ.NEXTVAL,
+		    #{taxInvoiceId},
 		    #{taxInvoiceRefNo}, 
 		    TO_DATE(#{taxInvoiceRefDate}, 'YYYY-MM-DD HH24:MI:SS'),
 		    #{taxInvoiceserviceNo}, 
