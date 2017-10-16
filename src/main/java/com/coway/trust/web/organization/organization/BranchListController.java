@@ -50,6 +50,12 @@ public class BranchListController {
 	@RequestMapping(value = "/selectBranchList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBranchList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
+		String[] branchTypeList = request.getParameterValues("branchType");
+		String[] regionList = request.getParameterValues("region");
+
+		params.put("branchTypeList", branchTypeList);
+		params.put("regionList", regionList);
+		
 		List<EgovMap> branchList = null;
 		
         // 조회.
