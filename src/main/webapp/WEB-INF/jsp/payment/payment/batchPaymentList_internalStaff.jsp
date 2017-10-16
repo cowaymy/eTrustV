@@ -148,10 +148,9 @@ var batchInfoLayout = [
               iconWidth : 16,
               iconHeight : 16,
               onclick : function(rowIndex, columnIndex, value, item) {
-            	  if(item.validStusId == "1" && item.cnfmStusId == "44"){
+            	  if(item.validStusId == "4" || item.validStusId == "21"){
                       fn_removeItem(item.detId);
                   }
-                  
               }
            }
         },{
@@ -351,7 +350,9 @@ var batchInfoLayout = [
                     
                     Common.ajax("GET","/payment/saveConfirmBatch.do", {"batchId" : batchId}, function(result){
                         console.log(result);
-                        
+                        fn_confirmBatchPopup();
+                        $('#btnConf').hide();
+                        $('#btnDeactivate').hide();
                         Common.alert(result.message);
                     });
                     
@@ -368,8 +369,10 @@ var batchInfoLayout = [
             var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
             Common.ajax("GET","/payment/saveDeactivateBatch.do", {"batchId" : batchId}, function(result){
                 console.log(result);
-                
+                $('#btnConf').hide();
+                $('#btnDeactivate').hide();
                 Common.alert(result.message);
+                
             });
         });
     }
@@ -795,7 +798,7 @@ var batchInfoLayout = [
     </article><!-- tap_area end -->
     <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="javascript:fn_confirmBatch();" id="btnConf">Confirm</a></p></li>
-    <li><p class="btn_blue2 big"><a href="javascript:fn_deactivateBatch();">Deactivate</a></p></li>
+    <li><p class="btn_blue2 big"><a href="javascript:fn_deactivateBatch();" id="btnDeactivate">Deactivate</a></p></li>
     </ul>
     </section><!-- tap_wrap end -->
 </section><!-- pop_body end -->
