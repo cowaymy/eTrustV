@@ -54,6 +54,83 @@
         </if>          
 </select>
 
+<select id="selectApproveList" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.selectApproveList */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+    SELECT T1.APPV_PRCSS_NO
+      ,T1.APPV_REQ_KEY_NO AS CLM_NO
+      ,TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
+      ,T4.CODE_NAME
+      ,T3.COST_CENTR
+      ,T3.COST_CENTR_NAME
+      , (CASE T3.INVC_TYPE
+            WHEN 'F'
+               THEN 'Full Tax invoice'
+            WHEN 'S'
+               THEN 'Simplified Tax invoice'
+         END) INVC_TYPE
+      ,T3.MEM_ACC_ID
+      ,T5.MEM_ACC_NAME
+      ,T3.APPV_AMT
+      , (CASE T1.APPV_PRCSS_STUS
+            WHEN 'R'
+               THEN 'Request'
+            WHEN 'P'
+               THEN 'Approve In-Progress'
+         END) APPV_PRCSS_STUS
+      ,T3.ATCH_FILE_GRP_ID
+      ,T6.ATCH_FILE_ID
+      ,T6.ATCH_FILE_NAME
+      ,T6.FILE_SUB_PATH
+      ,T6.PHYSICL_FILE_NAME
+      ,T6.FILE_EXTSN
+      ,T6.FILE_CNT
+      ,T1.APPV_PRCSS_DT
+  FROM FCM0004M T1 LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
+       LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+       LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
+       LEFT JOIN FCM0006M T5 ON T3.MEM_ACC_ID = T5.MEM_ACC_ID
+       LEFT JOIN
+       (SELECT *
+          FROM (SELECT ROW_NUMBER () OVER (PARTITION BY F1.ATCH_FILE_GRP_ID ORDER BY F1.ATCH_FILE_GRP_ID, F2.ATCH_FILE_ID) AS RNUM
+                      ,F1.ATCH_FILE_GRP_ID
+                      ,F2.ATCH_FILE_ID
+                      ,F2.ATCH_FILE_NAME
+                      ,F2.FILE_SUB_PATH
+                      ,F2.PHYSICL_FILE_NAME
+                      ,F2.FILE_EXTSN
+                      ,COUNT(F1.ATCH_FILE_ID) OVER (PARTITION BY F1.ATCH_FILE_GRP_ID) FILE_CNT
+                  FROM SYS0070M F1 LEFT JOIN SYS0071D F2 ON F1.ATCH_FILE_ID = F2.ATCH_FILE_ID) F
+         WHERE F.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
+ WHERE     1 = 1
+       AND T2.APPV_LINE_USER_ID = #{userName}
+       AND T1.APPV_PRCSS_STUS = 'R'
+       OR   T1.APPV_PRCSS_STUS = 'P'
+       AND T2.APPV_STUS = 'R'
+<!--         <if test="startDt != null and startDt != ''">
+        <![CDATA[ 
+             AND T1.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YY')
+        ]]>
+        </if>          
+        <if test="endDt != null and endDt != ''">
+        <![CDATA[ 
+             AND T1.INVC_DT <= TO_DATE(#{endDt} || ' 23:59:59', 'DD/MM/YY HH24:MI:SS')
+        ]]>
+        </if>          
+        <if test="memAccID != null and memAccID != ''">
+             AND T1.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
+        </if>          
+        <if test="costCenter != null and costCenter != ''">
+             AND T1.COST_CENTR LIKE '%' || #{costCenter} || '%'
+        </if>     
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+             AND T3.APPV_PRCSS_STUS IN
+         <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+        </if>       -->    
+</select>
+
 <select id="selectWebInvoiceInfo" parameterType="String" resultType="egovMap">
 /* webInvoiceMapper.selectWebInvoiceInfo */
             SELECT T1.CLM_NO
@@ -63,6 +140,7 @@
                    ,T1.COST_CENTR_NAME
                    ,T1.INVC_TYPE
                    ,T1.MEM_ACC_ID
+                   ,T2.MEM_ACC_NAME
                    ,T1.GST_RGIST_NO
                    ,T1.BANK_CODE
                    ,T2.BANK_NAME
@@ -98,8 +176,38 @@
           WHERE CLM_NO = #{clmNo}         
 </select>
 
-<select id="selectWebInvoiceAttachList" parameterType="int" resultType="egovMap">
-/* webInvoiceMapper.selectWebInvoiceAttachList */
+<select id="selectAppvInfoAndItems" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectAppvInfoAndItems */
+            SELECT T1.APPV_PRCSS_NO
+                      ,T1.APPV_REQ_KEY_NO AS CLM_NO
+                      ,T3.CODE_NAME AS CLM_TYPE
+                      ,TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
+                      ,T1.REQST_USER_ID
+                      ,T2.APPV_ITM_SEQ
+                      ,T2.INVC_NO
+                      ,TO_CHAR(T2.INVC_DT, 'DD/MM/YYYY') AS INVC_DT
+                      ,T2.MEM_ACC_ID
+                      ,TO_CHAR(T2.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT
+                      ,T2.EXP_TYPE
+                      ,T2.EXP_TYPE_NAME
+                      ,T2.COST_CENTR
+                      ,T2.COST_CENTR_NAME
+                      ,T2.GL_ACC_CODE
+                      ,T2.GL_ACC_CODE_NAME
+                      ,T2.BUDGET_CODE
+                      ,T2.BUDGET_CODE_NAME
+                      ,T2.TAX_CODE
+                      ,T2.NET_AMT
+                      ,T2.TAX_AMT
+                      ,T2.APPV_AMT
+                      ,T2.EXP_DESC
+          FROM FCM0004M T1 LEFT JOIN FCM0015D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
+          LEFT JOIN SYS0013M T3 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T3.CODE
+          WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}         
+</select>
+
+<select id="selectAttachList" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectAttachList */
             SELECT T1.ATCH_FILE_GRP_ID
                    ,T1.ATCH_FILE_ID
                    ,T2.ATCH_FILE_NAME
@@ -168,14 +276,14 @@
        ,#{invcNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
-       ,#{atchFileGrpId}
+       ,#{fileGroupKey}
        ,#{invcRem}
        ,#{totAmt}
        ,#{appvPrcssNo}
        ,SYSDATE
-       ,#{crtUserId}
+       ,#{userId}
        ,SYSDATE
-       ,#{crtUserId}
+       ,#{userId}
     )
 </insert>
 
@@ -224,6 +332,138 @@
     )
 </insert>
 
+<insert id="insertApproveManagement" parameterType="Map">
+/* webInvoiceMapper.insertApproveManagement */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0004M
+   (
+        APPV_PRCSS_NO
+       ,APPV_REQ_KEY_NO
+       ,REQST_DT
+       ,REQST_USER_ID
+       ,APPV_PRCSS_STUS
+       ,APPV_LINE_CNT
+       ,APPV_LINE_PRCSS_CNT
+       ,APPV_PRCSS_DESC
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{clmNo}
+       ,SYSDATE
+       ,#{userName}
+       ,'R'
+       ,#{appvLineCnt}
+       ,0
+       ,#{appvPrcssDesc}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<insert id="insertApproveLineDetail" parameterType="Map">
+/* webInvoiceMapper.insertApproveLineDetail */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0005D
+   (
+        APPV_PRCSS_NO
+       ,APPV_LINE_SEQ
+       ,APPV_LINE_USER_ID
+       ,APPV_DT
+       ,APPV_STUS
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{approveNo}
+       ,#{memCode}
+       ,#{appvDt}
+       <choose>
+       <when test="#{approveNo eq 1}">
+       ,'R'
+       </when>
+       <otherwise>
+       ,'T'
+       </otherwise>
+       </choose>
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<insert id="insertApproveItems" parameterType="Map">
+/* webInvoiceMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{appvItmSeq}
+       ,#{invcNo}
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,#{invcType}
+       ,#{memAccId}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{netAmt}
+       ,#{taxAmt}
+       ,#{totAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
 <update id="updateWebInvoiceInfo" parameterType="Map">
 /* webInvoiceMapper.updateWebInvoiceInfo */
    UPDATE FCM0002M
@@ -261,6 +501,15 @@
        ,UPD_USER_ID = #{userId}
     WHERE CLM_NO = #{clmNo}
     AND CLM_SEQ = #{clmSeq}
+</update>
+
+<update id="updateAppvPrcssNo" parameterType="Map">
+/* webInvoiceMapper.updateAppvPrcssNo */
+   UPDATE FCM0002M
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
 </update>
 
 <select id="selectSupplier" parameterType="Map" resultType="egovMap">
@@ -317,14 +566,27 @@
 /* webInvoiceMapper.selectNextClmNo */
     SELECT    'J1'
        || TO_CHAR (SYSDATE, 'yymm')
-       || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS clmNo
+       || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
     FROM FCM0002M
     WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
 </select>
 
-<select id="selectNextClmSeq" resultType="int">
+<select id="selectNextClmSeq" parameterType="String" resultType="int">
 /* webInvoiceMapper.selectNextClmNo */
-    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS clmSeq FROM FCM0003D
+    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS CLM_SEQ FROM FCM0003D WHERE CLM_NO = #{clmNo}
+</select>
+
+<select id="selectNextAppvPrcssNo" resultType="String">
+/* webInvoiceMapper.selectNextAppvPrcssNo */
+    SELECT    TO_CHAR (SYSDATE, 'yyyy')
+       || NVL (TO_CHAR (MAX (SUBSTR (APPV_PRCSS_NO, 5, 6) + 1), 'FM000000'), '000001') AS APPV_PRCSS_NO
+    FROM FCM0004M
+    WHERE SUBSTR (APPV_PRCSS_NO, 1, 4) = TO_CHAR (SYSDATE, 'yyyy')
+</select>
+
+<select id="selectNextAppvItmSeq" parameterType="String" resultType="int">
+/* webInvoiceMapper.selectNextAppvItmSeq */
+    SELECT NVL(MAX(APPV_ITM_SEQ) + 1, 1) AS APPV_ITM_SEQ FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo}
 </select>
 
 </mapper>

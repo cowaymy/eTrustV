@@ -9,11 +9,15 @@ public interface WebInvoiceService {
 	
 	List<EgovMap> selectWebInvoiceList(Map<String, Object> params);
 	
+	List<EgovMap> selectApproveList(Map<String, Object> params);
+	
 	EgovMap selectWebInvoiceInfo(String clmNo);
+	
+	List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo);
 	
 	List<EgovMap> selectWebInvoiceItems(String clmNo);
 	
-	List<EgovMap> selectWebInvoiceAttachList(int atchFileGrpId);
+	List<EgovMap> selectAttachList(String atchFileGrpId);
 	
 	EgovMap selectAttachmentInfo(Map<String, Object> params);
 	
@@ -25,6 +29,14 @@ public interface WebInvoiceService {
 	
 	void updateWebInvoiceDetail(Map<String, Object> params);
 	
+	void insertApproveManagement(Map<String, Object> params);
+	
+	void insertApproveLineDetail(Map<String, Object> params);
+	
+	void insertApproveItems(Map<String, Object> params);
+	
+	void updateAppvPrcssNo(Map<String, Object> params);
+	
 	List<EgovMap> selectSupplier(Map<String, Object> params);
 	
 	List<EgovMap> selectCostCenter(Map<String, Object> params);
@@ -33,6 +45,10 @@ public interface WebInvoiceService {
 	
 	String selectNextClmNo();
 	
-	int selectNextClmSeq();
+	int selectNextClmSeq(String clmNo);
+	
+	String selectNextAppvPrcssNo();
+	
+	int selectNextAppvItmSeq(String appvPrcssNo);
 	
 }

@@ -1,6 +1,9 @@
 package com.coway.trust.biz.eAccounting.webInvoice.impl;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -38,11 +41,23 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 	
 	@Override
+	public List<EgovMap> selectApproveList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectApproveList(params);
+	}
+
+	@Override
 	public EgovMap selectWebInvoiceInfo(String clmNo) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectWebInvoiceInfo(clmNo);
 	}
 	
+	@Override
+	public List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
+	}
+
 	@Override
 	public List<EgovMap> selectWebInvoiceItems(String clmNo) {
 		// TODO Auto-generated method stub
@@ -50,9 +65,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 	
 	@Override
-	public List<EgovMap> selectWebInvoiceAttachList(int atchFileGrpId) {
+	public List<EgovMap> selectAttachList(String atchFileGrpId) {
 		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectWebInvoiceAttachList(atchFileGrpId);
+		return webInvoiceMapper.selectAttachList(atchFileGrpId);
 	}
 	
 	@Override
@@ -84,6 +99,30 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		webInvoiceMapper.updateWebInvoiceDetail(params);
 	}
+	
+	@Override
+	public void insertApproveManagement(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.insertApproveManagement(params);
+	}
+
+	@Override
+	public void insertApproveLineDetail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.insertApproveLineDetail(params);
+	}
+
+	@Override
+	public void insertApproveItems(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.insertApproveItems(params);
+	}
+	
+	@Override
+	public void updateAppvPrcssNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.updateAppvPrcssNo(params);
+	}
 
 	@Override
 	public List<EgovMap> selectSupplier(Map<String, Object> params) {
@@ -110,9 +149,21 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
-	public int selectNextClmSeq() {
+	public int selectNextClmSeq(String clmNo) {
 		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectNextClmSeq();
+		return webInvoiceMapper.selectNextClmSeq(clmNo);
+	}
+
+	@Override
+	public String selectNextAppvPrcssNo() {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectNextAppvPrcssNo();
+	}
+
+	@Override
+	public int selectNextAppvItmSeq(String appvPrcssNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectNextAppvItmSeq(appvPrcssNo);
 	}
 	
 	
