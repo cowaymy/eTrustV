@@ -719,7 +719,7 @@
                        PR_MEM_ID = '0',
                        GRAND_PR_CODE = #{prCode},
                        GRAND_PR_MEM_ID = #{prMemId},
-                       BRNCH_ID = #{brnchId}
+                       BRNCH_ID = #{branchId}
                  WHERE  ( MEM_ID = #{memId} )                 
         </update>
         
@@ -729,7 +729,8 @@
 					   SET STUS_ID = #{stusId},
 					       UPD_DT = SYSDATE,
 					       UPD_USER_ID = #{updUserId},
-					       DEPT_CODE_TO = #{deptCode}
+					       DEPT_CODE_TO = #{deptCode},
+					       BRNCH_ID = #{branchId}
 					 WHERE  ( PROMO_ID = #{promoId} )           
         </update>
         
