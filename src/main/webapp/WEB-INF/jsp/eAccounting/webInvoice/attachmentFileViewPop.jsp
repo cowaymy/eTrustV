@@ -64,7 +64,8 @@ $(document).ready(function () {
                         var fileSubPath = result.fileSubPath;
                         fileSubPath = fileSubPath.replace('\', '/'');
                         console.log(result.fileViewPath + fileSubPath + '/' + result.physiclFileName + result.fileExtsn);
-                        window.open(result.fileViewPath + fileSubPath + '/' + result.physiclFileName + result.fileExtsn);
+                        window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                        //window.open(result.fileViewPath + fileSubPath + '/' + result.atchFileName);
                     });
                 } else {
                     console.log("view_btn click fileSubPath : " + event.item.fileSubPath + ", physiclFileName : " + event.item.physiclFileName + ", atchFileName : " + event.item.atchFileName);
