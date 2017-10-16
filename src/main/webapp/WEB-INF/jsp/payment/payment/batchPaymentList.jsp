@@ -268,6 +268,11 @@ var batchInfoLayout = [
         	Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
                 console.log(result);
                 
+                var confAt = result.batchPaymentView.cnfmDt;
+                var confAtArray = confAt.split('-');
+                var cnvrAt = result.batchPaymentView.cnvrDt;
+                var cnvrAtArray = cnvrAt.split('-');
+                
                 $('#txtBatchId').text(result.batchPaymentView.batchId);
                 $('#txtBatchStatus').text(result.batchPaymentView.name);
                 $('#txtConfirmStatus').text(result.batchPaymentView.name1);
@@ -275,9 +280,19 @@ var batchInfoLayout = [
                 $('#txtUploadBy').text(result.batchPaymentView.userName);
                 $('#txtUploadAt').text(result.batchPaymentView.crtDt);
                 $('#txtConfirmBy').text(result.batchPaymentView.c1);
-                $('#txtConfirmAt').text(result.batchPaymentView.cnfmDt);
-                $('#txtConvertBy').text(result.batchPaymentView.c2);
-                $('#txtConvertAt').text(result.batchPaymentView.cnvrDt);
+                
+                if(confAtArray[2].substr(0,4) > 1900){
+                	$('#txtConfirmAt').text(result.batchPaymentView.cnfmDt);
+                }else{
+                	$('#txtConfirmAt').text("");
+                }
+                
+                if(cnvrAtArray[2].substr(0,4) > 1900){
+                	$('#txtConvertAt').text(result.batchPaymentView.cnvrDt);
+                }else{
+                	$('#txtConvertAt').text("");
+                }
+                
                 
                 //TOTAL
                 $('#totalAmount').text(result.totalValidAmt.sysAmt);
@@ -355,6 +370,11 @@ var batchInfoLayout = [
                 Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
                     console.log(result);
                     
+                    var confAt = result.batchPaymentView.cnfmDt;
+                    var confAtArray = confAt.split('-');
+                    var cnvrAt = result.batchPaymentView.cnvrDt;
+                    var cnvrAtArray = cnvrAt.split('-');
+                    
                     $('#txtBatchId_conf').text(result.batchPaymentView.batchId);
                     $('#txtBatchStatus_conf').text(result.batchPaymentView.name);
                     $('#txtConfirmStatus_conf').text(result.batchPaymentView.name1);
@@ -362,9 +382,20 @@ var batchInfoLayout = [
                     $('#txtUploadBy_conf').text(result.batchPaymentView.userName);
                     $('#txtUploadAt_conf').text(result.batchPaymentView.crtDt);
                     $('#txtConfirmBy_conf').text(result.batchPaymentView.c1);
-                    $('#txtConfirmAt_conf').text(result.batchPaymentView.cnfmDt);
                     $('#txtConvertBy_conf').text(result.batchPaymentView.c2);
-                    $('#txtConvertAt_conf').text(result.batchPaymentView.cnvrDt);
+                    
+                    
+                    if(confAtArray[2].substr(0,4) > 1900){
+                    	$('#txtConfirmAt_conf').text(result.batchPaymentView.cnfmDt);
+                    }else{
+                    	$('#txtConfirmAt_conf').text("");
+                    }
+                    
+                    if(cnvrAtArray[2].substr(0,4) > 1900){
+                    	$('#txtConvertAt_conf').text(result.batchPaymentView.cnvrDt);
+                    }else{
+                    	$('#txtConvertAt_conf').text("");
+                    }
                     
                     //TOTAL
                     $('#totalAmount_conf').text(result.totalValidAmt.sysAmt);
