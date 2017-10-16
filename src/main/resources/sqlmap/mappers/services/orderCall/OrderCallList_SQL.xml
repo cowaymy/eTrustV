@@ -431,4 +431,111 @@
                     SELECT MAX(CALL_RESULT_ID) FROM CCR0007D
                  </if>
          </select>
+         
+        
+    
+          <select id="selectCallLogTransaction" parameterType="Map" resultType="egovMap">
+          <![CDATA[
+            SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
+			       Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+			       Project1.C1 C1  ,
+			       Project1.C2 C2  ,
+			       /* Project1.CALL_REM CALL_REM  , */
+			       Project1.CALL_SMS CALL_SMS  ,
+			       Project1.CALL_SMS_REM CALL_SMS_REM  ,
+			       Project1.CALL_STUS_ID CALL_STUS_ID  ,
+			       Project1.NAME NAME  ,
+			       Project1.CODE CODE  ,
+			       Project1.CALL_CRT_DT CALL_CRT_DT  ,
+			       Project1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
+			       Project1.C3 C3  ,
+			       Project1.C4 C4  ,
+			       Project1.C5 C5  ,
+			       Project1.C6 C6  ,
+			       Project1.C7 C7  ,
+			       Project1.C8 C8  ,
+			       Project1.C9 C9  ,
+			       Project1.CALL_HC_ID CALL_HC_ID  ,
+			       Project1.CALL_ROS_AMT CALL_ROS_AMT  
+			  FROM ( SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
+			                Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+			                Project1.CALL_STUS_ID CALL_STUS_ID  ,
+			              /*  Project1.CALL_REM CALL_REM  ,  */
+			                Project1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
+			                Project1.CALL_CRT_DT CALL_CRT_DT  ,
+			                Project1.CALL_HC_ID CALL_HC_ID  ,
+			                Project1.CALL_ROS_AMT CALL_ROS_AMT  ,
+			                Project1.CALL_SMS CALL_SMS  ,
+			                Project1.CALL_SMS_REM CALL_SMS_REM  ,
+			                Project1.CODE CODE  ,
+			                Project1.NAME NAME  ,
+			                Project1.C1 C1  ,
+			                Project1.C2 C2  ,
+			                Project1.C3 C3  ,
+			                Project1.C4 C4  ,
+			                Project1.C5 C5  ,
+			                Project1.C6 C6  ,
+			                Project1.C7 C7  ,
+			                Project1.C8 C8  ,
+			                Project1.C9 C9  ,
+			                ROW_NUMBER() OVER ( ORDER BY Project1.CALL_RESULT_ID ASC  ) ROW_NUMBER  
+			         FROM ( SELECT Extent1.CALL_RESULT_ID CALL_RESULT_ID  ,
+			                       Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+			                       Extent1.CALL_STUS_ID CALL_STUS_ID  ,
+			                      /*  Extent1.CALL_REM CALL_REM  , */
+			                       Extent1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
+			                       TO_CHAR(Extent1.CALL_CRT_DT,'DD-MM-YY') CALL_CRT_DT  ,
+			                       Extent1.CALL_HC_ID CALL_HC_ID  ,
+			                       Extent1.CALL_ROS_AMT CALL_ROS_AMT  ,
+			                       Extent1.CALL_SMS CALL_SMS  ,
+			                       Extent1.CALL_SMS_REM CALL_SMS_REM  ,
+			                       Extent2.CODE CODE  ,
+			                       Extent2.NAME NAME  ,
+			                      CASE 
+			                          WHEN ( Extent1.CALL_DT IS NOT NULL ) THEN TO_CHAR(Extent1.CALL_DT,'DD-MM-YY')
+			                     ELSE TO_CHAR('1900-01-01','DD-MM-YY')
+			                        END C1  ,
+			                       CASE 
+		                            WHEN ( Extent1.CALL_ACTN_DT IS NOT NULL ) THEN TO_CHAR(Extent1.CALL_ACTN_DT,'DD-MM-YY')
+		                       ELSE TO_CHAR('1900-01-01','DD-MM-YY')
+		                          END C2  ,
+			                       CASE 
+			                            WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
+			                       ELSE ''
+			                          END C3  ,
+			                       CASE 
+			                            WHEN ( Extent1.CALL_CT_ID IS NOT NULL ) THEN Extent1.CALL_CT_ID
+			                       ELSE 0
+			                          END C4  ,
+			                       CASE 
+			                            WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.MEM_CODE
+			                       ELSE ''
+			                          END C5  ,
+			                       CASE 
+			                            WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.NAME
+			                       ELSE ''
+			                          END C6  ,
+			                       CASE 
+			                            WHEN ( Extent1.CALL_FDBCK_ID IS NOT NULL ) THEN Extent1.CALL_FDBCK_ID
+			                       ELSE 0
+			                          END C7  ,
+			                       CASE 
+			                            WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.CODE
+			                       ELSE ''
+			                          END C8  ,
+			                       CASE 
+			                            WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN '('||Extent5.CODE||')' ||Extent5.RESN_DESC
+			                       ELSE ''
+			                          END C9  
+			                FROM CCR0007D Extent1
+			                       JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.CALL_STUS_ID
+			                       LEFT JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.CALL_CT_ID
+			                       LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CALL_CRT_USER_ID
+			                       LEFT JOIN SYS0032M Extent5   ON Extent5.RESN_ID = Extent1.CALL_FDBCK_ID
+			                 WHERE  ( 8 <> Extent1.CALL_STUS_ID )
+			                          AND ( Extent1.CALL_ENTRY_ID = #{callEntryId} ) ) Project1 ) Project1
+			 WHERE  Project1.ROW_NUMBER > 0
+			  ORDER BY Project1.CALL_RESULT_ID ASC
+             ]]>
+          </select>
  </mapper>
