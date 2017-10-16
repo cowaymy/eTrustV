@@ -7,9 +7,14 @@
 }
 
 /* 커스텀 칼럼 스타일 정의 */
-.my-column {
+.my-column {  
     text-align:right;
     margin-top:-20px;
+}
+
+.my-backColumn0 {
+  background:#73EAA8; 
+  color:#000;
 }
 
 .my-backColumn1 {
@@ -170,6 +175,49 @@ function fnSearchBtnList()
    
 }
 
+function auiCellEditignHandler(event) 
+{
+    if(event.type == "cellEditBegin") 
+    {
+        console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+    } 
+    else if(event.type == "cellEditEnd") 
+    {
+        console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+
+        if (event.columnIndex == 2 && event.headerText == "SEQ NO") // SEQ NO
+        {
+          if (parseInt(event.value) < 1)
+          {
+            //Common.alert("Menu Level is not more than 4. ");
+                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
+                AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
+                return false;
+          }  
+        }
+
+        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
+        {
+          if (parseInt(event.value) < 1)
+          {
+             Common.alert("<spring:message code='sys.msg.necessary' arguments='CATEGORY NAME' htmlEscape='false'/>");
+             AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "stusCtgryName"] );
+             return false;
+          }
+          else
+          {
+            AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
+          }  
+        }
+        
+    } 
+    else if(event.type == "cellEditCancel") 
+    {
+        console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+    }
+  
+}
+
 //그리드 헤더 클릭 핸들러
 function headerClickHandler(event) 
 {
@@ -208,8 +256,6 @@ function checkAll(isChecked)
   // 헤더 체크 박스 일치시킴.
   document.getElementById("allCheckbox").checked = isChecked;
 
-  //alert("checked items: " + str);
-  
   getItemsByCheckedField(myGridID);
   
 }
@@ -229,6 +275,25 @@ function getItemsByCheckedField(selectedGrid)
 
   //alert("checked items: " + str);
   
+}
+
+//특정 칼럼 값으로 체크하기 (기존 더하기)
+function addCheckedRowsByValue(selValue) 
+{
+  console.log("grouping Checked: " + selValue);
+  // rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
+  // 행아이템의 code 필드 중 데이타가 selValue 인 것 모두 체크.
+  AUIGrid.addCheckedRowsByValue(myGridID, "code", selValue);
+  
+  // 만약 복수 값(Emma, Steve) 체크 하고자 한다면 다음과 같이 배열로 삽입
+  //AUIGrid.addCheckedRowsByValue(myGridID, "name", ["Emma", "Steve"]);
+}
+//특정 칼럼 값으로 체크 해제 하기
+function addUncheckedRowsByValue(selValue) 
+{
+	console.log("grouping UnChecked: " + selValue);
+  // 행아이템의 code 필드 중 데이타가 selValue인 것 모두 체크 해제함
+  AUIGrid.addUncheckedRowsByValue(myGridID, "code", selValue);
 }
 
 function fnSettiingHeader()
@@ -268,7 +333,33 @@ function fnSettiingHeader()
                     showEditedCellMarker : true, // 셀 병합 실행
                     enableCellMerge : true,
                     // 고정칼럼 카운트 지정
-                    fixedColumnCount : 6               
+                    fixedColumnCount : 5  , 
+
+                    softRemoveRowMode : false,
+                    // 체크박스 표시 설정
+                    showRowCheckColumn : true,
+                    // 전체 체크박스 표시 설정
+                    showRowAllCheckBox : true,    
+
+                    // 엑스트라 체크박스 체커블 함수
+                    // 이 함수는 사용자가 체크박스를 클릭 할 때 1번 호출됩니다.
+                    rowCheckableFunction : function(rowIndex, isChecked, item) 
+                    {
+                    	console.log ("isChecked: " + isChecked + " /Checked value: " + AUIGrid.getCellValue(myGridID, rowIndex, "code"));
+                    	
+                    	if (isChecked == false) // for Checked 
+                      {
+                    	 addCheckedRowsByValue(AUIGrid.getCellValue(myGridID, rowIndex, "code"));
+                      }
+                    	else
+                      {
+                    	 addUncheckedRowsByValue(AUIGrid.getCellValue(myGridID, rowIndex, "code"));
+                      }
+                          
+                      return true;
+                    },
+
+                            
                   };
 
   console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /stock: " + $('#stockCodeCbBox').val()
@@ -297,367 +388,405 @@ function fnSettiingHeader()
            //  AUIGrid.setGridData(myGridID, result);
              if(result.header != null && result.header.length > 0)
              {
-                   dynamicLayout.push( 
-							                         {  // checked                            
-							                               dataField : result.header[0].checkFlag
-							                               ,headerText : '<input type="checkbox" id="allCheckbox" name="allCheckbox" style="width:15px;height:15px;">'
-							                               ,editable : false
-							                               ,renderer : 
-							                                {
-							                                   type : "CheckBoxEditRenderer",
-							                                   showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-							                                   editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-							                                   checkValue : 1, // true, false 인 경우가 기본
-							                                   unCheckValue : 0,
-							                                   // 체크박스 Visible 함수
-							                                   visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
-							                                   {
-							                                      if(item.checkFlag == 1)  // 1 이면
-							                                      {
-							                                       return true; // checkbox visible
-							                                      }
+               dynamicLayout.push( 
+                                   { 
+                                      headerText : "Stock"
+                                     ,style : "my-header" 
+                                    // , width : 13
+                                     ,children : [
+                                                    {                            
+                                                      dataField : result.header[0].isSaved
+                                                     ,headerText : "<spring:message code='sys.scm.salescdc.IsSaved' />"
+                                                     ,editable : false
+                                                     ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                      {
+                                                  	    if(item.divOdd == "0") 
+                                                          return "my-backColumn0";
+                                                        else 
+                                                          return "my-backColumn1";
+                                                      } 
+                                                       //,width : "5%"
+                                                     ,renderer : 
+																			              {
+                                                      type : "CheckBoxEditRenderer"
+																					            ,showLabel  : false // 참, 거짓 텍스트 출력여부( 기본값 false )
+																					            ,editable   : false // 체크박스 편집 활성화 여부(기본값 : false)
+																					            ,checkValue : true // true, false 인 경우가 기본
+																					            ,unCheckValue : false
+																					                
+																					               // 체크박스 Visible 함수
+																					            ,visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
+																			                 {
+																					               if(item.isSaved == true)  // if 1 then
+																			                     return true; // CheckBox is Checked
+																			                   																					
+																			                   return true;  // just CheckBox Visible But Not Checked.
+																			                 }
+																						        } // renderer
+                                                      }
+                                                    , {                            
+                                                         dataField : result.header[0].categoryH1
+                                                         ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
+                                                         ,editable : true
+                                                         ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                          {
+                                                            if(item.divOdd == "0") 
+                                                              return "my-backColumn0";
+                                                            else 
+                                                              return "my-backColumn1";
+                                                          }
+                                                      }
+                                                    , {                            
+                                                         dataField : result.header[0].codeH1
+                                                        ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
+                                                        ,editable : true
+                                                        ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                         {
+                                                           if(item.divOdd == "0") 
+                                                             return "my-backColumn0";
+                                                           else 
+                                                             return "my-backColumn1";
+                                                         }
+                                                      }
+                                                    , {                            
+                                                         dataField : result.header[0].nameH1
+                                                        ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
+                                                        ,editable : true
+                                                        ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                         {
+                                                           if(item.divOdd == "0") 
+                                                             return "my-backColumn0";
+                                                           else 
+                                                             return "my-backColumn1";
+                                                         }
+                                                      }
+                                                    , { 
+                                                        dataField : result.header[0].supplyCorpHPsi
+                                                       ,headerText : "<spring:message code='sys.scm.supplyCorp.psi' />"
+                                                       ,editable : true
+                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                        {
+                                                          if(item.divOdd == "0") 
+                                                            return "my-backColumn0";
+                                                          else 
+                                                            return "my-backColumn1";
+                                                        }
+                                                        //,width : "5%"
+                                                      }
+                                                     
+                                                  ]// children
+                                   } // Uppder Group   
 
-							                                      return true;
-							                                   }
-							                                }  //renderer
-							                          }
-                                       ,{ 
-                                           headerText : "Stock"
-                                         , style : "my-header" 
-                                        // , width : 13
-                                         , children : [
-                                                          
-                                                          {                            
-                                                             dataField : result.header[0].isSaved
-                                                             ,headerText : "<spring:message code='sys.scm.salescdc.IsSaved' />"
-                                                             ,editable : false
-                                                             ,style : "my-backColumn1"  
-                                                             //,width : "5%"
-                                                             ,renderer : 
-																									            {
-																									                type : "CheckBoxEditRenderer",
-																									                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-																									                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
-																									                checkValue : true, // true, false 인 경우가 기본
-																									                unCheckValue : false
-																									                
-																									                // 체크박스 Visible 함수
-																									               , visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) 
-																									                 {
-																									                   if(item.isSaved == true)  // if 1 then
-																									                   {
-																									                    return true; // CheckBox is Checked
-																									                   }
-																									
-																									                   return true;
-																									                 }
-																									  
-																									            }
-                                                           }
-                                                         , {                            
-                                                             dataField : result.header[0].categoryH1
-                                                             ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
-                                                             ,editable : true
-                                                             ,style : "my-backColumn1"  
-                                                             //,width : "5%"
-                                                           }
-                                                         , {                            
-                                                             dataField : result.header[0].codeH1
-                                                             ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
-                                                             ,editable : true
-                                                             ,style : "my-backColumn1"
-                                                             //,width : "5%"
-                                                           }
-                                                         , {                            
-                                                             dataField : result.header[0].nameH1
-                                                             ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
-                                                             ,editable : true
-                                                             ,style : "my-backColumn1"
-                                                             //,width : "5%"
-                                                           }
-                                                         , { 
-                                                             dataField : result.header[0].supplyCorpHPsi
-                                                            ,headerText : "<spring:message code='sys.scm.supplyCorp.psi' />"
-                                                            ,editable : true
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                           } 
-   
-                                                     ]
-                                        }   
-                                    
-                                       // Monthly
-                                       ,{                            
-                                            headerText : "Monthly"
-                                          , style : "my-header" 
-                                          //, width : 7
-                                          , children : [
-                                                          {                            
-                                                            dataField : result.header[0].todayH2  // m0 == M0_PLAN_ORDER
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M0' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].m1H2
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M1' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].m2H2
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].m3H3
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].m4H4
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].supplyCorpHOverdue
-                                                            ,headerText : "<spring:message code='sys.scm.supplyCorp.Overdue' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        ] // child                     
-                                       } 
-       
-                                     ) //push
-                                   ;
+                                   
+                                   /***** Monthly  *****/
+                                   ,{                            
+                                      headerText : "Monthly"
+                                     ,style : "my-header" 
+                                     //, width : 7
+                                     ,children : [
+                                                    {                            
+                                                       dataField : result.header[0].todayH2  // m0 == M0_PLAN_ORDER
+                                                      ,headerText : "<spring:message code='sys.scm.salesplan.M0' />"
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       } 
+                                                        //,width : "5%"
+                                                    }
+                                                  , {                            
+                                                       dataField : result.header[0].m1H2
+                                                      ,headerText : "<spring:message code='sys.scm.salesplan.M1' />"
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       } 
+                                                      //,width : "5%"
+                                                    }
+                                                  , {                            
+                                                       dataField : result.header[0].m2H2
+                                                      ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       } 
+                                                        //,width : "5%"
+                                                    }
+                                                  , {                            
+                                                       dataField : result.header[0].m3H3
+                                                      ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       } 
+                                                        //,width : "5%"
+                                                    }
+                                                  , {                            
+                                                       dataField : result.header[0].m4H4
+                                                      ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       } 
+                                                        //,width : "5%"
+                                                    }
+                                                  , {                            
+                                                       dataField : result.header[0].supplyCorpHOverdue
+                                                      ,headerText : "<spring:message code='sys.scm.supplyCorp.Overdue' />"
+                                                      ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                       {
+                                                         if(item.divOdd == "0") 
+                                                           return "my-backColumn0";
+                                                         else 
+                                                           return "my-backColumn1";
+                                                       } 
+                                                        //,width : "5%"
+                                                    }
+                                                 ] // child                     
+                                    } 
+                                 ) //push
+                               ;
 
+                  var iM0TotCnt =   parseInt(result.seperaionInfo[0].m0TotCnt);   
+                  var iM1TotCnt =   parseInt(result.seperaionInfo[0].m1TotCnt);   
+                  var iM2TotCnt =   parseInt(result.seperaionInfo[0].m2TotCnt);   
+                  var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);   
+                  
+                  var iLootCnt = 1;
+                  var iLootDataFieldCnt = 0;
+                  var intToStrFieldCnt ="";
+                  var fieldStr ="";
+                  var strWeekTh = "W"
+      
+                  // M+0   : 당월    remainCnt
+                  var groupM_0 = {
+                     headerText : "<spring:message code='sys.scm.salesplan.M0' />",
+                     style : "my-header", 
+                    // width : 20, 
+                     children : []
+                  }
+                  
+                 for(var i=0; i < 5; i++) 
+                 {
+                    fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
+                    // console.log("loop_i_value: " + i  +" M0_TotCnt: " + iM0TotCnt
+                    //           +" / fieldStr: " +  fieldStr  
+                    //           +" / field_Name_with: " +  result.header[0][fieldStr]  
+                    //           +" / field_name_sel: " + "w0"+result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn  // == result.header[0].w1WeekSeq
+                    //           +" / WEEK_TH: " + result.getChildField[i].weekTh);  // == result.header[0].w1WeekSeq
                     
-                   var iM0TotCnt =   parseInt(result.seperaionInfo[0].m0TotCnt);   
-                   var iM1TotCnt =   parseInt(result.seperaionInfo[0].m1TotCnt);   
-                   var iM2TotCnt =   parseInt(result.seperaionInfo[0].m2TotCnt);   
-                   var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);   
-                   
-                   var iLootCnt = 1;
-                   var iLootDataFieldCnt = 0;
-                   var intToStrFieldCnt ="";
-                   var fieldStr ="";
-                   var strWeekTh = "W"
-       
-                   // M+0   : 당월    remainCnt
-                   var groupM_0 = {
-                      headerText : "<spring:message code='sys.scm.salesplan.M0' />",
-                      style : "my-header", 
-                     // width : 20, 
-                      children : []
-                   }
-                   
-                  for(var i=0; i < 5; i++) 
-                  {
-                     fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
-                     // console.log("loop_i_value: " + i  +" M0_TotCnt: " + iM0TotCnt
-                     //           +" / fieldStr: " +  fieldStr  
-                     //           +" / field_Name_with: " +  result.header[0][fieldStr]  
-                     //           +" / field_name_sel: " + "w0"+result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn  // == result.header[0].w1WeekSeq
-                     //           +" / WEEK_TH: " + result.getChildField[i].weekTh);  // == result.header[0].w1WeekSeq
-                     
-                     intToStrFieldCnt = iLootDataFieldCnt.toString();
-                              
-                     if (intToStrFieldCnt.length == 1)
-                     {
-                      intToStrFieldCnt =  "0" + intToStrFieldCnt;
-                     }
-   
-                     if (parseInt(result.getChildField[i].weekTh) <  parseInt(gWeekThValue))
-                     {
-                       if (result.getChildField[i].weekTh.toString().length < 2)
-                       {
-                         strWeekTh = "W0"
-                       }
-                       else
-                       {
-                         strWeekTh = "W"
-                       }
-
-                       sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq 
-
-                       console.log("sumWeekThStr: " + sumWeekThStr);
-                            
-                       groupM_0.children.push(
-                       {
-                            dataField :  sumWeekThStr,   // bef1WeekTh
-                            headerText : strWeekTh + result.getChildField[i].weekTh,
-                            editable: false,
-                            style : "my-backColumn2"  
-                            // result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn // w1WeekSeq  == W02-1  
-                       }); 
-    
-                       continue;
-                     }
-                     else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
-                     {
-                       groupM_0.children.push(
-                                               {
-                                                  dataField : "w" + intToStrFieldCnt,   // "w00"
-                                                  headerText :result.header[0][fieldStr], 
-                                                  editable: false,
-                                                  style : "my-backColumn3"  
-                                               });
-                     }
-                     else 
-                     { 
-                       groupM_0.children.push(
-                                               {
-                                                  dataField : "w" + intToStrFieldCnt,   // "w00"
-                                                  headerText :result.header[0][fieldStr], 
-                                                  style : "my-backColumn3"
-                                               });
-                     }
-                     
-                     iLootCnt++;
-                     iLootDataFieldCnt++;
-                  }
-                  dynamicLayout.push(groupM_0);
-                
-                   // M+1
-                  var groupM_1 = {
-                      headerText : "M+1",
-                      style : "my-header", 
-                    //  width : 20,
-                      children : []
-                  }
-   
-                  for(var i=0; i<iM1TotCnt ; i++) 
-                  {
-                     fieldStr = "w" + iLootCnt + "WeekSeq";  
-                     
-                     intToStrFieldCnt = iLootDataFieldCnt.toString();
-                       
-                     if (intToStrFieldCnt.length == 1)
-                     {
-                       intToStrFieldCnt =  "0" + intToStrFieldCnt;
-                     }
-    
-                     groupM_1.children.push(
-                                             {
-                                              dataField : "w" + intToStrFieldCnt,
-                                              headerText :  result.header[0][fieldStr], 
-                                              style : "my-backColumn3"
-                                             }); 
-   
-                     iLootCnt ++;
-                     iLootDataFieldCnt++;
-                   }
-                   dynamicLayout.push(groupM_1);
-   
-                   
-                   // M+2
-                   var groupM_2 = {
-                      headerText : "M+2",
-                      style : "my-header", 
-                  //    width : 20,
-                      children : []
-                   }
-                   
-                  for(var i=0; i<iM2TotCnt ; i++) 
-                  {
-                    fieldStr = "w" + iLootCnt + "WeekSeq";  
-   
                     intToStrFieldCnt = iLootDataFieldCnt.toString();
-                       
+                             
+                    if (intToStrFieldCnt.length == 1)
+                    {
+                     intToStrFieldCnt =  "0" + intToStrFieldCnt;
+                    }
+  
+                    if (parseInt(result.getChildField[i].weekTh) <  parseInt(gWeekThValue))
+                    {
+                      if (result.getChildField[i].weekTh.toString().length < 2)
+                      {
+                        strWeekTh = "W0"
+                      }
+                      else
+                      {
+                        strWeekTh = "W"
+                      }
+
+                      sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq 
+
+                      console.log("sumWeekThStr: " + sumWeekThStr);
+                           
+                      groupM_0.children.push(
+                      {
+                           dataField :  sumWeekThStr,   // bef1WeekTh
+                           headerText : strWeekTh + result.getChildField[i].weekTh,
+                           editable: false,
+                           style : "my-backColumn2"  
+                           // result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn // w1WeekSeq  == W02-1  
+                      }); 
+   
+                      continue;
+                    }
+                    else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
+                    {
+                      groupM_0.children.push(
+                                              {
+                                                 dataField : "w" + intToStrFieldCnt,   // "w00"
+                                                 headerText :result.header[0][fieldStr], 
+                                                 editable: false,
+                                                 style : "my-backColumn3"  
+                                              });
+                    }
+                    else 
+                    { 
+                      groupM_0.children.push(
+                                              {
+                                                 dataField : "w" + intToStrFieldCnt,   // "w00"
+                                                 headerText :result.header[0][fieldStr], 
+                                                 style : "my-backColumn3"
+                                              });
+                    }
+                    
+                    iLootCnt++;
+                    iLootDataFieldCnt++;
+                 }
+                 dynamicLayout.push(groupM_0);
+               
+                  // M+1
+                 var groupM_1 = {
+                     headerText : "M+1",
+                     style : "my-header", 
+                   //  width : 20,
+                     children : []
+                 }
+  
+                 for(var i=0; i<iM1TotCnt ; i++) 
+                 {
+                    fieldStr = "w" + iLootCnt + "WeekSeq";  
+                    
+                    intToStrFieldCnt = iLootDataFieldCnt.toString();
+                      
                     if (intToStrFieldCnt.length == 1)
                     {
                       intToStrFieldCnt =  "0" + intToStrFieldCnt;
                     }
    
-                    groupM_2.children.push(
+                    groupM_1.children.push(
                                             {
-                                                     dataField : "w" + intToStrFieldCnt,
-                                                     headerText :  result.header[0][fieldStr],
-                                                     style : "my-backColumn1"
-                                            });
-   
+                                             dataField : "w" + intToStrFieldCnt,
+                                             headerText :  result.header[0][fieldStr], 
+                                             style : "my-backColumn3"
+                                            }); 
+  
                     iLootCnt ++;
                     iLootDataFieldCnt++;
-                 }
-                  dynamicLayout.push(groupM_2);
-                
-   
-                  // M+3
-                  var groupM_3 = {
-                     headerText : "M+3",
-                     style : "my-header",
-                  //   width : 20,
+                  }
+                  dynamicLayout.push(groupM_1);
+  
+                  
+                  // M+2
+                  var groupM_2 = {
+                     headerText : "M+2",
+                     style : "my-header", 
+                 //    width : 20,
                      children : []
                   }
                   
-                   for(var i=0; i< iM3TotCnt ; i++) 
-                  {
-                     fieldStr = "w" + iLootCnt + "WeekSeq";  
-                     
+                 for(var i=0; i<iM2TotCnt ; i++) 
+                 {
+                   fieldStr = "w" + iLootCnt + "WeekSeq";  
+  
                    intToStrFieldCnt = iLootDataFieldCnt.toString();
-                       
+                      
                    if (intToStrFieldCnt.length == 1)
                    {
                      intToStrFieldCnt =  "0" + intToStrFieldCnt;
                    }
-                    
-                   groupM_3.children.push(
+  
+                   groupM_2.children.push(
                                            {
-                                               dataField : "w" + intToStrFieldCnt,
-                                               headerText :  result.header[0][fieldStr],
-                                               style : "my-backColumn1"
+                                                    dataField : "w" + intToStrFieldCnt,
+                                                    headerText :  result.header[0][fieldStr],
+                                                    style : "my-backColumn1"
                                            });
-   
+  
                    iLootCnt ++;
-                   iLootDataFieldCnt++;                                   
-                  }
- 
-                  dynamicLayout.push(groupM_3);
-   
-                 //Dynamic Grid Event Biding
-                 myGridID = AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
-   
-                 // 에디팅 시작 이벤트 바인딩
-                 //AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-                 
-                 // 에디팅 정상 종료 이벤트 바인딩
-                 //AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-                 
-                 // 에디팅 취소 이벤트 바인딩
-                 //AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-                 
-                 // 행 추가 이벤트 바인딩 
-                 //AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-                 
-                 // 행 삭제 이벤트 바인딩 
-                 //AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
-   
-   
-                 // cellClick event.
-                 AUIGrid.bind(myGridID, "cellClick", function( event ) 
-                 {
-                     gSelMainRowIdx = event.rowIndex;
-                     
-                     console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedAuthId: " + $("#selAuthId").val() );        
-                 });
-   
-              // 셀 더블클릭 이벤트 바인딩
-                 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
-                 {
-                     console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-                 });   
-   
-
-               fnSearchBtnList();
-                // summaryHead Setting.
-                // fnSelectSummaryHeadList(result.header[0]);
-                // summary Data Select
-                // selectStockCtgrySummaryList();
+                   iLootDataFieldCnt++;
+                }
+                 dynamicLayout.push(groupM_2);
                
-             }
+  
+                 // M+3
+                 var groupM_3 = {
+                    headerText : "M+3",
+                    style : "my-header",
+                 //   width : 20,
+                    children : []
+                 }
+                 
+                  for(var i=0; i< iM3TotCnt ; i++) 
+                 {
+                    fieldStr = "w" + iLootCnt + "WeekSeq";  
+                    
+                  intToStrFieldCnt = iLootDataFieldCnt.toString();
+                      
+                  if (intToStrFieldCnt.length == 1)
+                  {
+                    intToStrFieldCnt =  "0" + intToStrFieldCnt;
+                  }
+                   
+                  groupM_3.children.push(
+                                          {
+                                              dataField : "w" + intToStrFieldCnt,
+                                              headerText :  result.header[0][fieldStr],
+                                              style : "my-backColumn1"
+                                          });
+  
+                  iLootCnt ++;
+                  iLootDataFieldCnt++;                                   
+                 }
+
+                 dynamicLayout.push(groupM_3);
+  
+                //Dynamic Grid Event Biding
+                myGridID = AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
+
+                // 헤더 클릭 핸들러 바인딩
+                AUIGrid.bind(myGridID, "headerClick", headerClickHandler);  
+  
+                // 에디팅 시작 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
+                
+                // 에디팅 정상 종료 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
+                
+                // 에디팅 취소 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
+                
+                // 행 추가 이벤트 바인딩 
+                //AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
+                
+                // 행 삭제 이벤트 바인딩 
+                //AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
+  
+                // cellClick event.
+                AUIGrid.bind(myGridID, "cellClick", function( event ) 
+                {
+                  var selGridCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
+               	                      
+                  console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " eventValue: " + event.value
+                          + " code: " + selGridCode + " headerText: " + event.headerText); 
+                });
+  
+             // 셀 더블클릭 이벤트 바인딩
+                AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+                {
+                  console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
+                });   
+  
+
+              fnSearchBtnList();
+               // summaryHead Setting.
+               // fnSelectSummaryHeadList(result.header[0]);
+               // summary Data Select
+               // selectStockCtgrySummaryList();
+              
+            }
           }
         ,function(jqXHR, textStatus, errorThrown) 
          {
@@ -726,17 +855,17 @@ $(document).ready(function()
 	</colgroup>
 	<tbody>
 	<tr>
-		<th scope="row">EST Year & Week</th>
+		<th scope="row">EST Year &amp; Week</th>
 		<td>
 	
 		<div class="date_set w100p"><!-- date_set start -->
 		<p>
-		  <select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
+		  <select class="w100p" id="scmYearCbBox" name="scmYearCbBox">
 		  </select>  
 		</p>
 	  <span>&nbsp;</span>
 		<p>
-		  <select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
+		  <select class="w100p" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
 		  </select>
 		</p>
 		</div><!-- date_set end -->

@@ -12,8 +12,13 @@
     margin-top:-20px;
 }
 
+.my-backColumn0 {
+  background:#73EAA8; 
+  color:#000;
+}
+
 .my-backColumn1 {
-  background:#1E9E9E;
+  background:#1E9E9E; 
   color:#000;
 }
 
@@ -162,7 +167,7 @@ function fnSettiingHeader()
                     useGroupingPanel : false,
                     showRowNumColumn : false, //순번 칼럼 숨김
                     editable : false,
-                    showStateColumn : true, // 행 상태 칼럼 보이기
+                    showStateColumn : false, // 행 상태 칼럼 보이기
                     showEditedCellMarker : true, // 셀 병합 실행
                     enableCellMerge : true,
                     // 고정칼럼 카운트 지정
@@ -203,79 +208,136 @@ function fnSettiingHeader()
                                                           {                            
                                                              dataField : result.header[0].categoryH1
                                                              ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
-                                                             ,editable : true
-                                                             ,style : "my-backColumn1"  
+                                                             ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                              {
+                                                                if(item.divOdd == "0") 
+                                                                  return "my-backColumn0";
+                                                                else 
+                                                                  return "my-backColumn1";
+                                                              } 
                                                              //,width : "5%"
                                                            }
                                                          , {                            
                                                              dataField : result.header[0].codeH1
                                                              ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
-                                                             ,editable : true
-                                                             ,style : "my-backColumn1"
+                                                             ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                              {
+                                                                if(item.divOdd == "0") 
+                                                                  return "my-backColumn0";
+                                                                else 
+                                                                  return "my-backColumn1";
+                                                              } 
                                                              //,width : "5%"
                                                            }
                                                          , {                            
                                                              dataField : result.header[0].nameH1
                                                              ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
-                                                             ,editable : true
-                                                             ,style : "my-backColumn1"
+                                                             ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                              {
+                                                                if(item.divOdd == "0") 
+                                                                  return "my-backColumn0";
+                                                                else 
+                                                                  return "my-backColumn1";
+                                                              } 
                                                              //,width : "5%"
                                                            }
                                                          , { 
                                                              dataField : result.header[0].supplyCorpHPsi
                                                             ,headerText : "<spring:message code='sys.scm.supplyCorp.psi' />"
-                                                            ,editable : true
-                                                            ,style : "my-backColumn1"
+                                                            ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                             {
+                                                               if(item.divOdd == "0") 
+                                                                 return "my-backColumn0";
+                                                               else 
+                                                                 return "my-backColumn1";
+                                                             } 
                                                             //,width : "5%"
                                                            } 
    
                                                      ]
                                         }   
+                                        
                                     
-                                       // Monthly
+                                /****** Monthly *****/
                                        ,{                            
                                             headerText : "Monthly"
                                           , style : "my-header" 
                                         //	, width : 7
                                           , children : [
 																												  {                            
-																												    dataField : result.header[0].todayH2  // m0
-																												    ,headerText : "<spring:message code='sys.scm.salesplan.M0' />"
-																												    ,style : "my-backColumn1"
-																												    //,width : "5%"
-																												  }
-                                                        , {                            
-                                                            dataField : result.header[0].m1H2
+																													   dataField : result.header[0].todayH2  // m0
+																													  ,headerText : "<spring:message code='sys.scm.salesplan.M0' />"
+	                                                          ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+	                                                           {
+	                                                             if(item.divOdd == "0") 
+	                                                               return "my-backColumn0";
+	                                                             else 
+	                                                               return "my-backColumn1";
+	                                                           } 
+																													    //,width : "5%"
+																													}
+	                                                      , {                            
+                                                             dataField : result.header[0].m1H2
                                                             ,headerText : "<spring:message code='sys.scm.salesplan.M1' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].m2H2
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].m3H3
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].m4H4
-                                                            ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        , {                            
-                                                            dataField : result.header[0].supplyCorpHOverdue
-                                                            ,headerText : "<spring:message code='sys.scm.supplyCorp.Overdue' />"
-                                                            ,style : "my-backColumn1"
-                                                            //,width : "5%"
-                                                          }
-                                                        ] // child                     
-                                       } 
+                                                            ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                             {
+                                                               if(item.divOdd == "0") 
+                                                                 return "my-backColumn0";
+                                                               else 
+                                                                 return "my-backColumn1";
+                                                             } 
+	                                                            //,width : "5%"
+	                                                        }
+	                                                      , {                            
+	                                                           dataField : result.header[0].m2H2
+	                                                          ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
+	                                                        	,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+	                                                           {
+	                                                             if(item.divOdd == "0") 
+	                                                               return "my-backColumn0";
+	                                                             else 
+	                                                               return "my-backColumn1";
+	                                                           }
+	                                                            //,width : "5%"
+	                                                        }
+	                                                      , {                            
+	                                                           dataField : result.header[0].m3H3
+	                                                          ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
+                                                        	  ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                             {
+                                                               if(item.divOdd == "0") 
+                                                                 return "my-backColumn0";
+                                                               else 
+                                                                 return "my-backColumn1";
+                                                             }
+	                                                            //,width : "5%"
+	                                                        }
+	                                                      , {                            
+	                                                           dataField : result.header[0].m4H4
+	                                                          ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
+                                                            ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                             {
+                                                               if(item.divOdd == "0") 
+                                                                 return "my-backColumn0";
+                                                               else 
+                                                                 return "my-backColumn1";
+                                                             }
+	                                                           //,width : "5%"
+	                                                        }
+	                                                      , {                            
+	                                                          dataField : result.header[0].supplyCorpHOverdue
+	                                                         ,headerText : "<spring:message code='sys.scm.supplyCorp.Overdue' />"
+                                                           ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                            {
+                                                              if(item.divOdd == "0") 
+                                                                return "my-backColumn0";
+                                                              else 
+                                                                return "my-backColumn1";
+                                                            }
+	                                                          //,width : "5%"
+	                                                        }
+                                                       ] // children                     
+                                        } 
        
                                      ) //push
                                    ;
@@ -336,7 +398,13 @@ function fnSettiingHeader()
                             dataField :  sumWeekThStr,   // bef1WeekTh
                             headerText : strWeekTh + result.getChildField[i].weekTh,
                             editable: false,
-                            style : "my-backColumn1"  
+                            styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                            {
+                              if(item.divOdd == "0") 
+                                return "my-backColumn0";
+                              else 
+                                return "my-backColumn1";
+                            } 
                             // result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn // w1WeekSeq  == W02-1  
                        }); 
     
@@ -349,7 +417,13 @@ function fnSettiingHeader()
                                                   dataField : "w" + intToStrFieldCnt,   // "w00"
                                                   headerText :result.header[0][fieldStr], 
                                                   editable: false,
-                                                  style : "my-backColumn1"  
+                                                  styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                  {
+                                                    if(item.divOdd == "0") 
+                                                      return "my-backColumn0";
+                                                    else 
+                                                      return "my-backColumn1";
+                                                  } 
                                                });
                      }
                      else 
@@ -358,7 +432,13 @@ function fnSettiingHeader()
                                                {
                                                   dataField : "w" + intToStrFieldCnt,   // "w00"
                                                   headerText :result.header[0][fieldStr], 
-                                                  style : "my-backColumn1"
+                                                  styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                                  {
+                                                    if(item.divOdd == "0") 
+                                                      return "my-backColumn0";
+                                                    else 
+                                                      return "my-backColumn1";
+                                                  } 
                                                });
                      }
                      
@@ -388,9 +468,15 @@ function fnSettiingHeader()
     
                      groupM_1.children.push(
                                              {
-                                              dataField : "w" + intToStrFieldCnt,
-                                              headerText :  result.header[0][fieldStr], 
-                                              style : "my-backColumn1"
+	                                             dataField : "w" + intToStrFieldCnt,
+	                                             headerText :  result.header[0][fieldStr], 
+	                                             styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+	                                             {
+	                                               if(item.divOdd == "0") 
+	                                                 return "my-backColumn0";
+	                                               else 
+	                                                 return "my-backColumn1";
+	                                             } 
                                              }); 
    
                      iLootCnt ++;
@@ -420,9 +506,15 @@ function fnSettiingHeader()
    
                     groupM_2.children.push(
                                             {
-                                                     dataField : "w" + intToStrFieldCnt,
-                                                     headerText :  result.header[0][fieldStr],
-                                                     style : "my-backColumn1"
+                                              dataField : "w" + intToStrFieldCnt,
+                                              headerText :  result.header[0][fieldStr],
+                                              styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                              {
+                                                if(item.divOdd == "0") 
+                                                  return "my-backColumn0";
+                                                else 
+                                                  return "my-backColumn1";
+                                              } 
                                             });
    
                     iLootCnt ++;
@@ -452,9 +544,15 @@ function fnSettiingHeader()
                     
                    groupM_3.children.push(
                                            {
-                                               dataField : "w" + intToStrFieldCnt,
-                                               headerText :  result.header[0][fieldStr],
-                                               style : "my-backColumn1"
+                                             dataField : "w" + intToStrFieldCnt,
+                                             headerText :  result.header[0][fieldStr],
+                                             styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
+                                             {
+                                               if(item.divOdd == "0") 
+                                                 return "my-backColumn0";
+                                               else 
+                                                 return "my-backColumn1";
+                                             } 
                                            });
    
                    iLootCnt ++;
