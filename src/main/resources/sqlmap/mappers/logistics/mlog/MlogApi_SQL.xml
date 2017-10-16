@@ -10,13 +10,13 @@
 		WH_LOC_DESC LOCATION_NAME,
 		WH_LOC_GB ,
 		CODE_NAME LOCATION_TYPE,
-		STK_CODE PARTS_CODE,
-		STK_DESC ,
+		T3.STK_CODE PARTS_CODE,
+		T3.STK_DESC ,
 		QTY TOT_QTY,
 		NVL(QTY - T5.bookqty,0) BOOKING_QTY,
 		MOV_QTY INTRANSIT_QTY,
-		STK_TYPE_ID,STK_CTGRY_ID PARTS_ID
-		FROM SYS0028M T1, LOG0056M T3 ,
+		T3.STK_TYPE_ID,S26.STK_ID PARTS_ID
+		FROM SYS0028M T1, LOG0056M T3 , SYS0026m S26,
 		(SELECT CDC_CODE, RDC_CODE
 		FROM SYS0028M A
 		WHERE WH_LOC_CODE = #{userId}) T2,
@@ -30,7 +30,8 @@
 		AND T3.STK_CODE = T5.itm_code
 		<!-- AND T3.LOC_ID=T5.LOC_ID -->
 		AND T1.WH_LOC_CODE IN (T2.CDC_CODE, T2.RDC_CODE)
-        AND T3.STK_CTGRY_ID= #{partsId}
+        AND T3.STK_CODE =S26.STK_CODE(+)
+        AND S26.STK_ID=#{partsId}
 	</select>
 
 
@@ -187,7 +188,9 @@
 		l44.BOM_COMPNT PARTS_CODE,
 		s26.stk_desc PARTS_NAME,
 		NVL (l56.qty, 0) STOCK_QTY,
-		l56.serial_no,
+		<!-- l56.serial_no, -->
+<!-- 		NVL (l56.serial_no,' ') serial_no, -->
+		 (LTRIM(RTRIM(NVL (l56.serial_no, ' ')))) serial_no,
 		l56.STK_CTGRY_ID,l56.STK_TYPE_ID,
 		s28.WH_LOC_CODE LOCATION_CODE,
 		s28.WH_LOC_DESC LOCATION_NAME
@@ -220,15 +223,6 @@
 		l43.matrl_no,l44.BOM_COMPNT,l56.qty,l56.serial_no,l56.STK_CTGRY_ID,l56.STK_TYPE_ID,s26.stk_desc,s28.WH_LOC_CODE,s28.WH_LOC_DESC
 		<!-- AND l43.MATRL_NO = '110181' -->
 	</select>
-
-
-
-
-
-
-
-
-
 
 	<select id="getInventoryStockByHolder" parameterType="Map"
 		resultType="egovMap">
@@ -263,10 +257,6 @@
 		AND S28.WH_LOC_ID=T1.LOC_ID
 		AND T1.BOM_COMPNT='3300513'
 	</select>
-
-
-
-
 
 	<select id="StockReceiveList" parameterType="Map" resultType="egovMap">
 		SELECT L47.REQST_NO SMO_NO,
@@ -453,6 +443,8 @@
 	    AND S26.STK_TYPE_ID in(62,63)
 	    AND L44.ALTER_ITM_GRP IS NOT NULL
 	    AND l44.use_probabiltiy != 100 and alter_itm_rank_ord != 1
+	    AND  L44.VALID_FROM_DT <![CDATA[<= ]]>  sysdate 
+        AND  L44.VALID_TO_DT <![CDATA[<= ]]> sysdate
 	</select> 
 	
 
@@ -560,6 +552,42 @@
 	LG48D.ITM_NAME, LG48D.REQST_QTY,SY26M.SERIAL_CHK,
 	LG55D.DELVRY_QTY,LG61D.SERIAL_NO
     </select>
+
+    <select id="getAuditStockResultDetail" parameterType="Map" resultType="egovMap">
+	SELECT
+	LG71M.INVNTRY_NO inven_Adjust_No
+	,LG72M.SAVE_YN adjust_Y_N
+	,TO_CHAR (LG71M.CRT_DATE, 'DD/MM/YYYY') CRT_DATE
+	,LG71M.BASE_DT
+	,LG72M.LOC_ID
+	,SY28M.WH_LOC_CODE
+	,LG73D.SYS_QTY sys_Qty
+	, (LG73D.SYS_QTY - LG73D.CNT_QTY) DIFF_QTY
+	,LG73D.CNT_QTY counted_Qty
+	,LG73D.ITM_ID inven_Adjust_No_Item
+	,SY26M.STK_CODE parts_Code
+	,LG73D.ITM_NM parts_Name
+	,LG73D.SERIAL_CHK
+	,LG62M.SERIAL_NO serial_No
+	,SY26M.STK_ID parts_Id
+	FROM LOG0071M LG71M, LOG0072M LG72M, LOG0073D LG73D,SYS0026M
+	SY26M,
+	LOG0062M LG62M , SYS0028M SY28M
+	WHERE 1 = 1
+	AND LG71M.INVNTRY_NO =
+	LG72M.INVNTRY_NO
+	AND LG72M.INVNTRY_LOC_ID = LG73D.INVNTRY_LOC_ID
+	AND
+	LG73D.ITM_ID=SY26M.STK_ID
+	AND SY26M.STK_CODE = LG62M.MATNR
+	AND
+	SY28M.WH_LOC_ID=LG72M.LOC_ID
+	AND LG71M.INVNTRY_NO=#{invenAdjustNo}
+<!-- 	AND LG72M.LOC_ID = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE -->
+<!-- 	=#{userId}) -->
+	AND SUBSTR (LG71M.BASE_DT, 0, 6) = TO_CHAR (TO_DATE (#{adjustBaseMonth},
+	'DD/MM/YYYY'), 'YYYYMM')
+</select>
 
 	
 	<!-- 현창배 작업 -->
