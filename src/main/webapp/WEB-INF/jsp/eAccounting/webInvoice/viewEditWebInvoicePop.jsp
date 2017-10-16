@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-var myGridID;
+var newGridID;
 var selectRowIdx;
 var keyValueList = $.parseJSON('${taxCodeList}');
 var gridDataList = new Array();
@@ -37,6 +37,13 @@ var myColumnLayout = [ {
 },{
     dataField : "expTypeName",
     headerText : '<spring:message code="expense.ExpenseType" />',
+    editable : false,
+    colSpan : 2
+}, {
+    dataField : "",
+    headerText : '',
+    width: 30,
+    editable : false,
     renderer : {
         type : "IconRenderer",
         iconTableRef :  {
@@ -44,12 +51,12 @@ var myColumnLayout = [ {
         },         
         iconWidth : 24,
         iconHeight : 24,
-        iconPosition : "aisleRight",
         onclick : function(rowIndex, columnIndex, value, item) {
             fn_expenseTypeSearchPop();
             }
-        }
-}, {
+        },
+    colSpan : -1
+},{
     dataField : "glAccCode",
     headerText : '<spring:message code="expense.GLAccount" />',
     editable : false
@@ -120,26 +127,28 @@ var myGridPros = {
     showStateColumn : true,
     // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
     enableRestore : true,
+    softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
 
 };
 
 $(document).ready(function () {
-    myGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
+    newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
     
     $("#tempSave").click(fn_attachmentUpload);
     $("#submitPop").click(fn_approveLinePop);
-    $("#add_btn").click(fn_addRow);
-    $("#remove_btn").click(fn_removeRow);
+    $("#add_row").click(fn_addRow);
+    $("#remove_row").click(fn_removeRow);
+    $("#remove_btn").click(fn_deleteFile);
     $("#supplier_search_btn").click(fn_supplierSearchPop);
     $("#costCenter_search_btn").click(fn_costCenterSearchPop);
     
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(newGridID, "cellClick", function( event ) 
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         selectRowIdx = event.rowIndex;
     });
     
-    AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
+    AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
         if(event.dataField == "netAmt" || event.dataField == "taxAmt") {
             var totAmt = fn_getTotalAmount();
             $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0"));
@@ -218,14 +227,14 @@ function fn_setKeyInDate() {
 }
 
 function fn_getValue(index) {
-    return AUIGrid.getCellFormatValue(myGridID, index, "totAmt");
+    return AUIGrid.getCellFormatValue(newGridID, index, "totAmt");
 }
 
 function fn_getTotalAmount() {
     // 수정할 때 netAmount와 taxAmount의 values를 각각 더하고 합하기
     sum = 0;
-    var netAmtList = AUIGrid.getColumnValues(myGridID, "netAmt");
-    var taxAmtList = AUIGrid.getColumnValues(myGridID, "taxAmt");
+    var netAmtList = AUIGrid.getColumnValues(newGridID, "netAmt");
+    var taxAmtList = AUIGrid.getColumnValues(newGridID, "taxAmt");
     if(netAmtList.length > 0) {
         for(var i in netAmtList) {
             sum += netAmtList[i];
@@ -264,12 +273,12 @@ function fn_approveLinePop() {
 }
 
 function fn_addRow() {
-    AUIGrid.addRow(myGridID, {netAmt:0,taxAmt:0,totAmt:0}, "last");
+    AUIGrid.addRow(newGridID, {netAmt:0,taxAmt:0,totAmt:0}, "last");
 }
 
 function fn_removeRow() {
     var total = Number($("#totalAmount").text().replace(',', ''));
-    AUIGrid.removeRow(myGridID, selectRowIdx);
+    AUIGrid.removeRow(newGridID, selectRowIdx);
     var value = fn_getValue(selectRowIdx);
     value = Number(value.replace(',', ''));
     total -= value;
@@ -336,22 +345,22 @@ function fn_updateWebInvoiceInfo() {
 
 function fn_saveGridInfo() {
 	// TODO update인 경우 clmSeq값 필요, 어떻게 처리할것인지
-    //var data = AUIGrid.exportToObject(myGridID);
-    var gridData = GridCommon.getEditData(myGridID);
+    //var data = AUIGrid.exportToObject(newGridID);
+    var gridData = GridCommon.getEditData(newGridID);
     var clmNo = $("#clmNo").val();
     
     console.log(gridData);
     
-    Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(myGridID), function(result) {
-        console.log(result);
-        Common.alert("Temporary save succeeded.");
+    //Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(newGridID), function(result) {
+     //   console.log(result);
+    //    Common.alert("Temporary save succeeded.");
         //fn_SelectMenuListAjax() ;
-    });
+  //  });
 }
 
 function fn_setGridData(data) {
 	console.log(data);
-	AUIGrid.setGridData(myGridID, data);
+	AUIGrid.setGridData(newGridID, data);
 }
 
 function fn_setCostCenter() {
@@ -366,6 +375,26 @@ function fn_setSupplier() {
     $("#bankCode").val($("#search_bankCode").val());
     $("#bankName").val($("#search_bankName").val());
     $("#bankAccNo").val($("#search_bankAccNo").val());
+}
+
+function fn_tempSave() {
+	// TODO 파일이 있는지 체크하고 있다면 업로드 처리
+}
+
+function fn_deleteFile() {
+	// 파일 다운
+    $(".input_text").click(function() {
+        var oriFileName = $(this).val();
+        var fileGrpId;
+        var fileId;
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                fileGrpId = attachmentList[i].atchFileGrpId;
+                fileId = attachmentList[i].atchFileId;
+            }
+        }
+        fn_attachmentDown(fileGrpId, fileId);
+    });
 }
 
 </script>
@@ -387,7 +416,7 @@ function fn_setSupplier() {
 </ul>
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="">
+<form action="#" method="post" id=form_newWebInvoice>
 <input type="hidden" id="clmNo" name="clmNo" value="${webInvoiceInfo.clmNo}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${webInvoiceInfo.atchFileGrpId}">
 <input type="hidden" id="newMemAccId" name="memAccId" value="${webInvoiceInfo.memAccId}">
@@ -421,7 +450,7 @@ function fn_setSupplier() {
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
-	<select class="w100p">
+	<select class="w100p" id="invcType" name="invcType">
 		<option value="F" <c:if test="${webInvoiceInfo.invcType eq 'F'}">selected</c:if>><spring:message code="newWebInvoice.select.fullTax" /></option>
 		<option value="S" <c:if test="${webInvoiceInfo.invcType eq 'S'}">selected</c:if>><spring:message code="newWebInvoice.select.simpleTax" /></option>
 	</select>
@@ -482,8 +511,8 @@ function fn_setSupplier() {
 <aside class="title_line"><!-- title_line start -->
 <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totalAmount"><fmt:formatNumber value="${webInvoiceInfo.totAmt}" type="number" pattern="#,##0"/></span></h2>
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
-	<li><p class="btn_grid"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="add_row"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="delete_row"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

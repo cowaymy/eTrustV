@@ -3,6 +3,7 @@
 
 <script type="text/javascript">
 var myGridID;
+var myGridData = $.parseJSON('${appvInfoAndItems}');
 var myColumnLayout = [ {
     dataField : "glAccCode",
     headerText : '<spring:message code="expense.GLAccount" />'
@@ -10,17 +11,11 @@ var myColumnLayout = [ {
     dataField : "glAccCodeName",
     headerText : '<spring:message code="newWebInvoice.glAccountName" />'
 }, {
-    dataField : "costCentr",
-    headerText : '<spring:message code="webInvoice.costCenter" />'
+    dataField : "budgetCode",
+    headerText : '<spring:message code="approveView.budget" />'
 }, {
-    dataField : "costCentrName",
-    headerText : '<spring:message code="webInvoice.ccName" />'
-}, {
-    dataField : "fund",
-    headerText : '<spring:message code="approveView.fund" />'
-}, {
-    dataField : "fundName",
-    headerText : '<spring:message code="approveView.fundName" />'
+    dataField : "budgetCodeName",
+    headerText : '<spring:message code="approveView.budgetName" />'
 },{
     dataField : "taxCode",
     headerText : '<spring:message code="newWebInvoice.taxCode" />'
@@ -56,13 +51,26 @@ var myGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20,
+    pageRowCount : 20
 };
 
 $(document).ready(function () {
     myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
     
-});
+    $("#fileListPop_btn").click(fn_fileListPop);
+    
+    $("#viewClmNo").text(myGridData[0].clmNo);
+    $("#viewClmType").text(myGridData[0].clmType);
+    $("#viewCostCentr").text(myGridData[0].costCentr + "/" + myGridData[0].costCentrName);
+    $("#viewInvcDt").text(myGridData[0].invcDt);
+    $("#viewReqstDt").text(myGridData[0].reqstDt);
+    $("#viewReqstUserId").text(myGridData[0].reqstUserId);
+    $("#viewMemAccId").text(myGridData[0].memAccId);
+    $("#viewPayDueDt").text(myGridData[0].payDueDt);
+    $("#viewTotAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0"));
+    
+    fn_setGridData(myGridID, myGridData);
+})
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -70,7 +78,7 @@ $(document).ready(function () {
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="approveView.title" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.close" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -89,46 +97,36 @@ $(document).ready(function () {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-	<td><span></span></td>
-	<th scope="row"><spring:message code="newWebInvoice.keyInDate" /></th>
-	<td><span></span></td>
+	<th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
+	<td><span id="viewClmNo"></span></td>
+	<th scope="row"><spring:message code="invoiceApprove.clmType" /></th>
+	<td><span id="viewClmType"></span></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td></td>
-	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
-	<td></td>
+	<td id="viewCostCentr"></td>
+	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
+	<td id="viewInvcDt"></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="newWebInvoice.supplier" /></th>
-	<td></td>
-	<th scope="row"><spring:message code="newWebInvoice.gstRegistNo" /></th>
-	<td></td>
+	<th scope="row"><spring:message code="webInvoice.requestDate" /></th>
+	<td id="viewReqstDt"></td>
+	<th scope="row"><spring:message code="approveView.requester" /></th>
+	<td id="viewReqstUserId"></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
-	<td></td>
-	<th scope="row"><spring:message code="newWebInvoice.PayDueDate" /></th>
-	<td></td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="newWebInvoice.bankAccount" /></th>
-	<td></td>
-	<th scope="row"></th>
-	<td></td>
+	<th scope="row"><spring:message code="invoiceApprove.supBrEnp" /></th>
+	<td id="viewMemAccId"></td>
+	<th scope="row"><spring:message code="newWebInvoice.payDueDate" /></th>
+	<td id="viewPayDueDt"></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-	<td colspan="3"></td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-	<td colspan="3"></td>
+	<td colspan="3"><p class="btn_grid"><a href="#" id="fileListPop_btn"><spring:message code="approveView.viewAttachFile" /></a></p></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="approveView.approveStatus" /></th>
-	<td colspan="3" style="height:60px"></td>
+	<td colspan="3" style="height:60px" id="viewAppvStus"></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -137,7 +135,7 @@ $(document).ready(function () {
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totalAmount"></span></h2>
+<h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totAmt"></span></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->

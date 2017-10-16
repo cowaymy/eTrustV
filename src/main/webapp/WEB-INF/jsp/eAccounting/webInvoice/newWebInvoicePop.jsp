@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-var myGridID;
+var newGridID;
 var selectRowIdx;
 var keyValueList = $.parseJSON('${taxCodeList}');
 var myColumnLayout = [ {
@@ -11,6 +11,13 @@ var myColumnLayout = [ {
 },{
     dataField : "expTypeName",
     headerText : '<spring:message code="expense.ExpenseType" />',
+    editable : false,
+    colSpan : 2
+}, {
+    dataField : "",
+    headerText : '',
+    width: 30,
+    editable : false,
     renderer : {
         type : "IconRenderer",
         iconTableRef :  {
@@ -18,12 +25,12 @@ var myColumnLayout = [ {
         },         
         iconWidth : 24,
         iconHeight : 24,
-        iconPosition : "aisleRight",
         onclick : function(rowIndex, columnIndex, value, item) {
             fn_expenseTypeSearchPop();
             }
-        }
-}, {
+        },
+    colSpan : -1
+},{
     dataField : "glAccCode",
     headerText : '<spring:message code="expense.GLAccount" />',
     editable : false
@@ -94,26 +101,27 @@ var myGridPros = {
     showStateColumn : true,
     // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
     enableRestore : true,
+    softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
 
 };
 
 $(document).ready(function () {
-    myGridID = AUIGrid.create("#newWebInvoice_grid_wrap", myColumnLayout, myGridPros);
+    newGridID = AUIGrid.create("#newWebInvoice_grid_wrap", myColumnLayout, myGridPros);
     
-    $("#tempSave").click(fn_attachmentUpload);
+    $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_approveLinePop);
-    $("#add_btn").click(fn_addRow);
-    $("#remove_btn").click(fn_removeRow);
+    $("#add_row").click(fn_addRow);
+    $("#remove_row").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_supplierSearchPop);
     $("#costCenter_search_btn").click(fn_costCenterSearchPop);
     
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(newGridID, "cellClick", function( event ) 
     {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         selectRowIdx = event.rowIndex;
     });
     
-    AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
+    AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
         if(event.dataField == "netAmt" || event.dataField == "taxAmt") {
             var totAmt = fn_getTotalAmount();
             $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0"));
@@ -170,14 +178,14 @@ function fn_setKeyInDate() {
 }
 
 function fn_getValue(index) {
-	return AUIGrid.getCellFormatValue(myGridID, index, "totAmt");
+	return AUIGrid.getCellFormatValue(newGridID, index, "totAmt");
 }
 
 function fn_getTotalAmount() {
 	// 수정할 때 netAmount와 taxAmount의 values를 각각 더하고 합하기
 	sum = 0;
-	var netAmtList = AUIGrid.getColumnValues(myGridID, "netAmt");
-	var taxAmtList = AUIGrid.getColumnValues(myGridID, "taxAmt");
+	var netAmtList = AUIGrid.getColumnValues(newGridID, "netAmt");
+	var taxAmtList = AUIGrid.getColumnValues(newGridID, "taxAmt");
 	if(netAmtList.length > 0) {
 		for(var i in netAmtList) {
 			sum += netAmtList[i];
@@ -216,12 +224,12 @@ function fn_approveLinePop() {
 }
 
 function fn_addRow() {
-	AUIGrid.addRow(myGridID, {netAmt:0,taxAmt:0,totAmt:0}, "last");
+	AUIGrid.addRow(newGridID, {netAmt:0,taxAmt:0,totAmt:0}, "last");
 }
 
 function fn_removeRow() {
 	var total = Number($("#totalAmount").text().replace(',', ''));
-	AUIGrid.removeRow(myGridID, selectRowIdx);
+	AUIGrid.removeRow(newGridID, selectRowIdx);
 	var value = fn_getValue(selectRowIdx);
 	value = Number(value.replace(',', ''));
 	total -= value;
@@ -231,53 +239,55 @@ function fn_removeRow() {
 	// totalAmount를 할때 값이 포함된다
 	// TO DO
 	AUIGrid.update(); // update 해본 결과 : 실패
+	// 삭제 행 표시 기능 없이 삭제와 동시에 그리드에서 제거하고자 한다면 softRemoveRowMode=false 설정하십시오.(기본값:true)
+ 	// 삭제 처리된 아이템 있는지 보기
+    //var removedRows = AUIGrid.getRemovedItems(myGridID, true);
+    
+   // if(removedRows.length <= 0) {
+     //   alert("삭제 처리되어 마크된 행이 없습니다.")
+    //    return;
+    //}
+    
+    // softRemoveRowMode 가 true 일 때 삭제를 하면 그리드 상에 마크가 되는데
+    // 이를 실제로 그리드에서 삭제 함.
+   // AUIGrid.removeSoftRows(myGridID);
 }
 
-function fn_attachmentUpload() {
+function fn_tempSave() {
+	fn_insertWebInvoiceInfo("new");
+}
+
+function fn_insertWebInvoiceInfo(st) {
 	var formData = Common.getFormData("form_newWebInvoice");
-	Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
-		console.log(result);
-		$("#atchFileGrpId").val(result.fileGroupKey);
-		fn_insertWebInvoiceInfo();
-	});
+    var obj = $("#form_newWebInvoice").serializeJSON();
+    console.log(obj);
+    $.each(obj, function(key, value) {
+        formData.append(key, value);
+    });
+    Common.ajaxFile("/eAccounting/webInvoice/insertWebInvoiceInfo.do", formData, function(result) {
+        console.log(result);
+        $("#clmNo").val(result.data.clmNo);
+        $("#atchFileGrpId").val(result.data.clmNo);
+        console.log(st);
+        
+        fn_saveGridInfo(st);
+    });
 }
 
-function fn_insertWebInvoiceInfo() {
-	var data = {
-			costCentr : $("#newCostCenter").val(),
-		    costCentrName : $("#newCostCenterText").val(),
-		    memAccId : $("#newMemAccId").val(),
-		    gstRgistNo : $("#gstRgistNo").val(),
-		    bankCode : $("#bankCode").val(),
-		    bankAccNo : $("#bankAccNo").val(),
-		    invcType : $("#invcType").val(),
-		    invcNo : $("#invcNo").val(),
-		    invcDt : $("#invcDt").val(),
-		    payDueDt : $("#payDueDt").val(),
-		    atchFileGrpId : $("#atchFileGrpId").val(),
-		    invcRem : $("#invcRem").val(),
-		    totAmt : $("#totAmt").val(),
-		    crtUserId : $("#crtUserId").val()
-	};
-	
-	Common.ajax("POST", "/eAccounting/webInvoice/insertWebInvoiceInfo.do", data, function(result) {
-	    console.log(result);
-	    $("#clmNo").val(result.clmNo);
-	    fn_saveGridInfo();
-	});
-	
-}
-
-function fn_saveGridInfo() {
-	//var data = AUIGrid.exportToObject(myGridID);
-    var gridData = GridCommon.getEditData(myGridID);
+function fn_saveGridInfo(st) {
+	//var data = AUIGrid.exportToObject(newGridID);
+    var gridData = GridCommon.getEditData(newGridID);
     var clmNo = $("#clmNo").val();
     
     console.log(gridData);
     
-	Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(myGridID), function(result) {
+	Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(newGridID), function(result) {
         console.log(result);
-        Common.alert("Temporary save succeeded.");
+        if(st == 'new') {
+        	Common.alert("Temporary save succeeded.");
+        	// TODO 그리드 리로딩 필요
+        	$("#newWebInvoicePop").remove();
+        }
         //fn_SelectMenuListAjax() ;
 
     });
@@ -322,7 +332,7 @@ function fn_setSupplier() {
 
 <form action="#" method="post" enctype="multipart/form-data" id="form_newWebInvoice">
 <input type="hidden" id="clmNo" name="clmNo">
-<input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
+<input type="hidden" id="atchFileGrpId" name="atchFileGrpID">
 <input type="hidden" id="newCostCenter" name="costCentr">
 <input type="hidden" id="newMemAccId" name="memAccId">
 <input type="hidden" id="bankCode" name="bankCode">
@@ -401,8 +411,8 @@ function fn_setSupplier() {
 <aside class="title_line"><!-- title_line start -->
 <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="totalAmount"></span></h2>
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" id="add_btn"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
-	<li><p class="btn_grid"><a href="#" id="remove_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="add_row"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="remove_row"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

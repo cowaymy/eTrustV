@@ -2,12 +2,23 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+var selectRowIdx;
 var approveLineColumnLayout = [ {
     dataField : "approveNo",
-    headerText : '<spring:message code="approveLine.approveNo" />'
+    headerText : '<spring:message code="approveLine.approveNo" />',
+    dataType: "numeric",
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+    	return rowIndex + 1;
+    }
 }, {
-    dataField : "userId",
+    dataField : "memCode",
     headerText : '<spring:message code="approveLine.userId" />',
+    colSpan : 2
+}, {
+    dataField : "",
+    headerText : '',
+    width: 30,
     renderer : {
         type : "IconRenderer",
         iconTableRef :  {
@@ -15,17 +26,18 @@ var approveLineColumnLayout = [ {
         },         
         iconWidth : 24,
         iconHeight : 24,
-        iconPosition : "aisleRight",
         onclick : function(rowIndex, columnIndex, value, item) {
-            fn_expenseTypeSearchPop();
+            console.log("selectRowIdx : " + selectRowIdx);
+        	selectRowIdx = rowIndex;
+            fn_searchUserIdPop();
             }
-        }
-
-}, {
+        },
+    colSpan : -1
+},{
     dataField : "name",
     headerText : '<spring:message code="approveLine.name" />'
 }, {
-    dataField : "addition",
+    dataField : "",
     headerText : '<spring:message code="approveLine.addition" />',
     renderer : {
         type : "IconRenderer",
@@ -35,9 +47,15 @@ var approveLineColumnLayout = [ {
         iconWidth : 12,
         iconHeight : 12,
         onclick : function(rowIndex, columnIndex, value, item) {
-        	fn_addRow();
-            }
+        	var rowCount = AUIGrid.getRowCount(approveLineGridID);
+        	if (rowCount > 3) {
+        		Common.alert("Approval lines can be up to 4 levels.");
+        	} else {
+        		fn_addRow();
+        	}
+        	
         }
+       }
 }
 ];
 
@@ -50,6 +68,8 @@ var approveLineGridPros = {
     showStateColumn : true,
     // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
     enableRestore : true,
+    showRowNumColumn : false,
+    softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
 };
 
 var approveLineGridID;
@@ -58,53 +78,61 @@ $(document).ready(function () {
     approveLineGridID = AUIGrid.create("#approveLine_grid_wrap", approveLineColumnLayout, approveLineGridPros);
     
     $("#delete_btn").click(fn_deleteRow);
-    $("#submit").click(fn_approveLineSubmit);
+    $("#submit").click(fn_registMsgPop);
     
     AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
     	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
     	        selectRowIdx = event.rowIndex;
     	    });
     
-    fn_addRow();
+    fn_setTemporaryData();
 });
 
+function fn_setTemporaryData() {
+	var data = new Array();
+	var obj = {
+			memCode : "100001"
+			,name : "JAMES PARK"
+	};
+	data.push(obj);
+    AUIGrid.setGridData(approveLineGridID, data);
+}
+
 function fn_addRow() {
-    AUIGrid.addRow(approveLineGridID, {}, "last");
+    AUIGrid.addRow(approveLineGridID, {}, "first");
 }
 
 function fn_deleteRow() {
-    AUIGrid.removeRow(approveLineGridID, selectRowIdx);
+    //AUIGrid.removeRow(approveLineGridID, selectRowIdx);
+    AUIGrid.removeSoftRows(approveLineGridID, selectRowIdx);
     // remove한 row를 화면상에서도 지우도록 구현 필요
     // totalAmount를 할때 값이 포함된다
     // TO DO
     AUIGrid.update(); // update 해본 결과 : 실패
 }
 
-function fn_selectApproveLine() {
-    AUIGrid.showAjaxLoader(approveLineGridID);
-    
-    Common.ajax("POST", "/eAccounting/webInvoice/selectApproveLine.do", null, function(result) {
-        
-        console.log(result);
-        
-        AUIGrid.removeAjaxLoader(approveLineGridID);
-        
-        AUIGrid.setGridData(approveLineGridID, result);
+function fn_searchUserIdPop() {
+	Common.popupDiv("/common/memberPop.do", null, null, true);
+}
+
+// 그리드에 set 하는 function
+function fn_loadOrderSalesman(memId, memCode) {
+
+    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+
+        if(memInfo == null) {
+            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+        }
+        else {
+        	console.log(memInfo);
+        	AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "memCode", memInfo.memCode);
+            AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "name", memInfo.name);
+        }
     });
 }
 
-function fn_approveLineSubmit() {
-	//var data = AUIGrid.exportToObject(approveLineGridID);
-    var gridData = GridCommon.getEditData(approveLineGridID);
-    
-    console.log(gridData);
-    
-    /* Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(myGridID), function(result) {
-        console.log(result);
-        Common.alert("Temporary save succeeded.");
-        //fn_SelectMenuListAjax() ;
-
-    }); */
+function fn_registMsgPop() {
+	Common.popupDiv("/eAccounting/webInvoice/newRegistMsgPop.do", null, null, true, "registMsgPop");
 }
 </script>
 
