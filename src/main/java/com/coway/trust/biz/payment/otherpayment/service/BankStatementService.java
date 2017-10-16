@@ -1,0 +1,39 @@
+package com.coway.trust.biz.payment.otherpayment.service;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+public interface BankStatementService
+{
+
+	
+	/**
+	 * Bank Statement Master List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+    List<EgovMap> selectBankStatementMasterList(Map<String, Object> params);
+    
+    /**
+	 * Bank Statement Detail List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+    List<EgovMap> selectBankStatementDetailList(Map<String, Object> params);
+    
+    /**
+	 * Bank Statement Upload
+	 * @param params
+	 * @return
+	 */
+    void uploadBankStatement(Map<String, Object> masterParamMap, List<Object> detailParamList);
+    
+   
+    
+}
