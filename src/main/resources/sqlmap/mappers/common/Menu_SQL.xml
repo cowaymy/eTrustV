@@ -9,6 +9,7 @@
                   ,MENU.MENU_NAME
                   ,MENU.PGM_CODE
                   ,MENU.PGM_PATH
+                  ,MENU.STATUS_CODE
                   ,MENU.FUNC_VIEW
                   ,MENU.MENU_ORDER
                   ,CONNECT_BY_ISLEAF AS IS_LEAF
