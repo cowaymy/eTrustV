@@ -43,6 +43,8 @@ public interface MlogApiService {
 	
 	List<EgovMap> getCommonReqParts(Map<String, Object> params);
 	
+	List<EgovMap> getAuditStockResultDetail(Map<String, Object> params);
+	
 
 	/**
 	 * 현창배 추가
