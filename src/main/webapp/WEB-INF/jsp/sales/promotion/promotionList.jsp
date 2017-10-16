@@ -114,8 +114,8 @@
         
         //AUIGrid 칼럼 설정
         var columnLayoutPrd = [
-            { headerText : "Product CD",    dataField  : "itmcd",   width : 100 }
-          , { headerText : "Product Name",  dataField  : "itmname"              }
+            { headerText : "Product CD",   dataField : "itmcd",   width : 100 }
+          , { headerText : "Product Name", dataField : "itmname"              }
           , { headerText : "Normal" 
             , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "amt",         width : 100 }
                           , { headerText : "RPF",                   dataField : "prcRpf",      width : 100 }
@@ -124,16 +124,17 @@
             , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "promoAmt",    width : 100 }
                           , { headerText : "RPF",                   dataField : "promoPrcRpf", width : 100 }
                           , { headerText : "PV",                    dataField : "promoItmPv",  width : 100 }]}
-          , { headerText : "itmid",         dataField   : "promoItmStkId",    visible : false, width : 80 }
-          , { headerText : "promoItmId",    dataField   : "promoItmId",       visible : false, width : 80 }
+          , { headerText : "itmid",      dataField   : "promoItmStkId", visible : false, width : 80 }
+          , { headerText : "promoItmId", dataField   : "promoItmId",    visible : false, width : 80 }
           ];
 
         //AUIGrid 칼럼 설정
         var columnLayoutGft = [
-            { headerText : "Product CD",    dataField : "itmcd",              width : 100 }
-          , { headerText : "Product Name",  dataField : "itmname",                        }
-          , { headerText : "itmid",         dataField : "promoFreeGiftStkId", visible : false,  width : 120 }
-          , { headerText : "promoItmId",    dataField : "promoItmId",         visible : false,  width : 80  }
+            { headerText : "Product CD",   dataField : "itmcd",              width : 180 }
+          , { headerText : "Product Name", dataField : "itmname" }
+          , { headerText : "Product QTY",  dataField : "promoFreeGiftQty",   width : 180 }
+          , { headerText : "itmid",        dataField : "promoFreeGiftStkId", visible : false}
+          , { headerText : "promoItmId",   dataField : "promoItmId",         visible : false}
           ];
 
         //그리드 속성 설정

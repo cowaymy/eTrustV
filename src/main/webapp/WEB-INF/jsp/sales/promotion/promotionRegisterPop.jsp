@@ -3,9 +3,9 @@
 
 <script type="text/javaScript" language="javascript">
 
-  	//AUIGrid 생성 후 반환 ID
-	var stckGridID, giftGridID;
-	
+    //AUIGrid 생성 후 반환 ID
+    var stckGridID, giftGridID;
+    
     $(document).ready(function(){
 
         //AUIGrid 그리드를 생성합니다.
@@ -25,7 +25,7 @@
 
     function createAUIGridStk() {
         
-    	//AUIGrid 칼럼 설정
+        //AUIGrid 칼럼 설정
         var columnLayout1 = [
             { headerText : "Product CD",    dataField  : "itmcd",   editable : false,   width : 100 }
           , { headerText : "Product Name",  dataField  : "itmname", editable : false                  }
@@ -40,11 +40,12 @@
           , { headerText : "itmid",         dataField   : "promoItmStkId",  visible  : false,     width : 80  }
           ];
 
-    	//AUIGrid 칼럼 설정
+        //AUIGrid 칼럼 설정
         var columnLayout2 = [
             { headerText : "Product CD",    dataField : "itmcd",    editable : false,   width : 100 }
           , { headerText : "Product Name",  dataField : "itmname",  editable : false                }
-          , { headerText : "itmid",         dataField : "promoFreeGiftStkId", visible  : false,   width : 120 }
+          , { headerText : "Product QTY",   dataField : "promoFreeGiftQty",   editable : true, width : 120 }
+          , { headerText : "itmid",         dataField : "promoFreeGiftStkId", visible  : false }
           ];
 
         //그리드 속성 설정
@@ -78,24 +79,24 @@
         var promotionVO = {
             
             salesPromoMVO : {
-	            promoCode               : $('#promoCode').val().trim(),
-	            promoDesc               : $('#promoDesc').val().trim(),
-	            promoTypeId             : $('#promoTypeId').val(),
-	            promoAppTypeId          : $('#promoAppTypeId').val(),
-	            promoSrvMemPacId        : $('#promoSrvMemPacId').val(),
-	            promoDtFrom             : $('#promoDtFrom').val().trim(),
-	            promoDtEnd              : $('#promoDtEnd').val().trim(),
-	            promoPrcPrcnt           : $('#promoDiscValue').val().trim(),
-	            promoCustType           : $('#promoCustType').val().trim(),
-	            promoDiscType           : $('#promoDiscType').val(),
-	            promoRpfDiscAmt         : $('#promoRpfDiscAmt').val(),
-	            promoDiscPeriodTp       : $('#promoDiscPeriodTp').val(),
-	            promoDiscPeriod         : $('#promoDiscPeriod').val().trim(),
-	            promoFreesvcPeriodTp    : $('#promoFreesvcPeriodTp').val(),
-	            promoAddDiscPrc         : $('#promoAddDiscPrc').val().trim(),
-	            promoAddDiscPv          : $('#promoAddDiscPv').val().trim(),
-	            exTrade                 : $('#exTrade').val(),
-	            empChk                  : $('#empChk').val()
+                promoCode               : $('#promoCode').val().trim(),
+                promoDesc               : $('#promoDesc').val().trim(),
+                promoTypeId             : $('#promoTypeId').val(),
+                promoAppTypeId          : $('#promoAppTypeId').val(),
+                promoSrvMemPacId        : $('#promoSrvMemPacId').val(),
+                promoDtFrom             : $('#promoDtFrom').val().trim(),
+                promoDtEnd              : $('#promoDtEnd').val().trim(),
+                promoPrcPrcnt           : $('#promoDiscValue').val().trim(),
+                promoCustType           : $('#promoCustType').val().trim(),
+                promoDiscType           : $('#promoDiscType').val(),
+                promoRpfDiscAmt         : $('#promoRpfDiscAmt').val(),
+                promoDiscPeriodTp       : $('#promoDiscPeriodTp').val(),
+                promoDiscPeriod         : $('#promoDiscPeriod').val().trim(),
+                promoFreesvcPeriodTp    : $('#promoFreesvcPeriodTp').val(),
+                promoAddDiscPrc         : $('#promoAddDiscPrc').val().trim(),
+                promoAddDiscPv          : $('#promoAddDiscPv').val().trim(),
+                exTrade                 : $('#exTrade').val(),
+                empChk                  : $('#empChk').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -199,7 +200,7 @@
          
         var promotionVO = {            
             salesPromoMVO : {
-	            promoAppTypeId         : $('#promoAppTypeId').val()
+                promoAppTypeId         : $('#promoAppTypeId').val()
             },
             salesPromoDGridDataSetList : GridCommon.getGridData(stckGridID)
         };
@@ -239,24 +240,24 @@
             fn_getPrdPriceInfo();
         });
         $('#btnFreeGiftAdd').click(function() {
-        	Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "item"});
+            Common.popupDiv("/sales/promotion/promotionProductPop.do", {gubun : "item"});
         });
         $('#promoAppTypeId').change(function() {
-        	fn_chgPromoDetail();
+            fn_chgPromoDetail();
         });
         $('#promoTypeId').change(function() {
-        	fn_chgPromoDetail();
+            fn_chgPromoDetail();
         });
         $('#promoDiscPeriodTp').change(function() {
-        	if($('#promoDiscPeriodTp').val() == '2293') {
-        	    $('#promoDiscPeriod').val('').prop("disabled", true);
-        	}
-        	else {
-        	    $('#promoDiscPeriod').removeAttr("disabled");
-        	}
+            if($('#promoDiscPeriodTp').val() == '2293') {
+                $('#promoDiscPeriod').val('').prop("disabled", true);
+            }
+            else {
+                $('#promoDiscPeriod').removeAttr("disabled");
+            }
         });
         $('#promoCustType').change(function() {
-        	fn_chgPromoDetail();
+            fn_chgPromoDetail();
         });
         $('#promoDiscType').change(function() {
             if($('#promoDiscType').val() == '') {
@@ -300,7 +301,7 @@
                 return;
             }
             
-        	fn_doSavePromtion();
+            fn_doSavePromtion();
         });
          $('#btnProductDel').click(function() {
             AUIGrid.removeCheckedRows(stckGridID);
@@ -370,30 +371,31 @@
     }
     
     function fn_addItems(data, gubun){
-    	
+        
         var rowList = [];
-       	var vGrid = gubun == "stocklist" ? stckGridID : giftGridID;
-       	
-       	var lastPos = AUIGrid.getRowCount(stckGridID);
-       	
-       	for (var i = 0 ; i < data.length ; i++){
-        	if(gubun == "stocklist") {
-        	    rowList[i] = {
-    	    	    promoItmStkId      : data[i].item.itemid,
-        	    	itmcd              : data[i].item.itemcode,
-        	    	itmname            : data[i].item.itemname,
-        	    	amt                : 0,
-        	    	prcRpf             : 0,
-        	    	prcPv              : 0
-        	    }
-        	} else {
-        	    rowList[i] = {
-    	    	    promoFreeGiftStkId : data[i].item.itemid,
-        	    	itmcd              : data[i].item.itemcode,
-        	    	itmname            : data[i].item.itemname
-        	    }
-        	}
-    	}
+        var vGrid = gubun == "stocklist" ? stckGridID : giftGridID;
+        
+        var lastPos = AUIGrid.getRowCount(stckGridID);
+        
+        for (var i = 0 ; i < data.length ; i++){
+            if(gubun == "stocklist") {
+                rowList[i] = {
+                    promoItmStkId      : data[i].item.itemid,
+                    itmcd              : data[i].item.itemcode,
+                    itmname            : data[i].item.itemname,
+                    amt                : 0,
+                    prcRpf             : 0,
+                    prcPv              : 0
+                }
+            } else {
+                rowList[i] = {
+                    promoFreeGiftStkId : data[i].item.itemid,
+                    itmcd              : data[i].item.itemcode,
+                    itmname            : data[i].item.itemname,
+                    promoFreeGiftQty   : 1
+                }
+            }
+        }
         
         AUIGrid.addRow(vGrid, rowList, lastPos);
         
@@ -525,7 +527,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Promotion Management – NEW promotion</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="btnClosePop" href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnClosePop" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -533,10 +535,10 @@
 
 <ul class="right_btns">
 <!--
-	<li><p class="btn_blue2"><a href="#">Product</a></p></li>
-	<li><p class="btn_blue2"><a href="#">From Gift</a></p></li>
+    <li><p class="btn_blue2"><a href="#">Product</a></p></li>
+    <li><p class="btn_blue2"><a href="#">From Gift</a></p></li>
 -->
-	<li><p class="btn_blue"><a id="btnPromoSave" href="#">Save</a></p></li>
+    <li><p class="btn_blue"><a id="btnPromoSave" href="#">Save</a></p></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -546,37 +548,37 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:160px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Promotion Application<span class="must">*</span></th>
-	<td>
-	<select id="promoAppTypeId" name="promoAppTypeId" class="w100p"></select>
-	</td>
-	<th scope="row">Promotion Type<span class="must">*</span></th>
-	<td>
-	<select id="promoTypeId" name="promoTypeId" class="w100p"></select>
-	</td>
+    <th scope="row">Promotion Application<span class="must">*</span></th>
+    <td>
+    <select id="promoAppTypeId" name="promoAppTypeId" class="w100p"></select>
+    </td>
+    <th scope="row">Promotion Type<span class="must">*</span></th>
+    <td>
+    <select id="promoTypeId" name="promoTypeId" class="w100p"></select>
+    </td>
 </tr>
 <tr>
-	<th scope="row">Promotion Period<span class="must">*</span></th>
-	<td colspan="3">
-	<div class="date_set w100p"><!-- date_set start -->
-	<p><input id="promoDtFrom" name="promoDtFrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	<span>To</span>
-	<p><input id="promoDtEnd" name="promoDtEnd" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	</div><!-- date_set end -->
-	</td>
+    <th scope="row">Promotion Period<span class="must">*</span></th>
+    <td colspan="3">
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input id="promoDtFrom" name="promoDtFrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <span>To</span>
+    <p><input id="promoDtEnd" name="promoDtEnd" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    </div><!-- date_set end -->
+    </td>
 </tr>
 <tr>
-	<th scope="row">Promotion Name</th>
-	<td><input id="promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Promotion Code<span class="must">*</span></th>
-	<td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" disabled /></td>
+    <th scope="row">Promotion Name</th>
+    <td><input id="promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Promotion Code<span class="must">*</span></th>
+    <td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" disabled /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -588,27 +590,27 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:150px" />
-	<col style="width:*" />
-	<col style="width:110px" />
-	<col style="width:*" />
-	<col style="width:120px" />
-	<col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:110px" />
+    <col style="width:*" />
+    <col style="width:120px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Customer Type<span class="must">*</span></th>
-	<td>
-	<select id="promoCustType" name="promoCustType" class="w100p"></select>
-	</td>
-	<th scope="row">Ex-Trade<span class="must">*</span></th>
-	<td>
-	<select id="exTrade" name="exTrade" class="w100p" disabled></select>
-	</td>
-	<th scope="row">Employee<span class="must">*</span></th>
-	<td>
-	<select id="empChk" name="empChk" class="w100p" disabled></select>
-	</td>
+    <th scope="row">Customer Type<span class="must">*</span></th>
+    <td>
+    <select id="promoCustType" name="promoCustType" class="w100p"></select>
+    </td>
+    <th scope="row">Ex-Trade<span class="must">*</span></th>
+    <td>
+    <select id="exTrade" name="exTrade" class="w100p" disabled></select>
+    </td>
+    <th scope="row">Employee<span class="must">*</span></th>
+    <td>
+    <select id="empChk" name="empChk" class="w100p" disabled></select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -621,60 +623,60 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:160px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Discount(Type/Value)<span class="must">*</span></th>
-	<td>
-	<div class="date_set w100p"><!-- date_set start -->
-	<p>
-	<select id="promoDiscType" name="promoDiscType" class="w100p"></select>
-	</p>
-	<p>
-	<input id="promoDiscValue" name="promoDiscValue" type="text" title="" placeholder="" class="w100p" disabled />   
-	</p>
-	</div>    
-	</td>
-	<th scope="row">RPF Discunt<span class="must">*</span></th>
-	<td>
-	<input id="promoRpfDiscAmt" name="promoRpfDiscAmt" type="text" title="" placeholder="" class="w100p" disabled />
-	</td>
+    <th scope="row">Discount(Type/Value)<span class="must">*</span></th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p>
+    <select id="promoDiscType" name="promoDiscType" class="w100p"></select>
+    </p>
+    <p>
+    <input id="promoDiscValue" name="promoDiscValue" type="text" title="" placeholder="" class="w100p" disabled />   
+    </p>
+    </div>    
+    </td>
+    <th scope="row">RPF Discunt<span class="must">*</span></th>
+    <td>
+    <input id="promoRpfDiscAmt" name="promoRpfDiscAmt" type="text" title="" placeholder="" class="w100p" disabled />
+    </td>
 </tr>
 <tr>
-	<th scope="row">Discount period<span class="must">*</span></th>
-	<td>
-	<div class="date_set w100p"><!-- date_set start -->
-	<p>
-	<select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select>
-	</p>
-	<p>
-	<input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder=""  class="w100p" />   
-	</p>
-	</div> 
-	
-	</td>
-	<th scope="row">Free SVC Period<span class="must">*</span></th>
-	<td>
-	<select id="promoFreesvcPeriodTp" name="promoFreesvcPeriodTp" class="w100p"></select>
-	</td>
+    <th scope="row">Discount period<span class="must">*</span></th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p>
+    <select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select>
+    </p>
+    <p>
+    <input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder=""  class="w100p" />   
+    </p>
+    </div> 
+    
+    </td>
+    <th scope="row">Free SVC Period<span class="must">*</span></th>
+    <td>
+    <select id="promoFreesvcPeriodTp" name="promoFreesvcPeriodTp" class="w100p"></select>
+    </td>
 </tr>
 <tr>
-	<th scope="row">Additional Discount (RM)</th>
-	<td><input id="promoAddDiscPrc" name="promoAddDiscPrc" type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Additional Discount (PV)</th>
-	<td><input id="promoAddDiscPv" name="promoAddDiscPv" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Additional Discount (RM)</th>
+    <td><input id="promoAddDiscPrc" name="promoAddDiscPrc" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Additional Discount (PV)</th>
+    <td><input id="promoAddDiscPv" name="promoAddDiscPv" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">Membership Package<span class="must">*</span></th>
-	<td>
-	<select id="promoSrvMemPacId" name="promoSrvMemPacId" class="w100p"></select>
-	</td>
-	<th scope="row"></th>
-	<td></td>
+    <th scope="row">Membership Package<span class="must">*</span></th>
+    <td>
+    <select id="promoSrvMemPacId" name="promoSrvMemPacId" class="w100p"></select>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -685,8 +687,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="btnProductDel" href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a id="btnProductAdd" href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a id="btnProductDel" href="#">DEL</a></p></li>
+    <li><p class="btn_grid"><a id="btnProductAdd" href="#">ADD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -698,8 +700,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="btnFreeGiftDel" href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a id="btnFreeGiftAdd" href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a id="btnFreeGiftDel" href="#">DEL</a></p></li>
+    <li><p class="btn_grid"><a id="btnFreeGiftAdd" href="#">ADD</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

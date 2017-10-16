@@ -35,6 +35,8 @@ public class SalesPromoFreeGiftVO implements Serializable {
 	
 	private String itmname;
 	
+	private int promoFreeGiftQty;
+
 	public int getPromoFreeGiftId() {
 		return promoFreeGiftId;
 	}
@@ -113,6 +115,14 @@ public class SalesPromoFreeGiftVO implements Serializable {
 
 	public void setItmname(String itmname) {
 		this.itmname = itmname;
+	}
+
+	public int getPromoFreeGiftQty() {
+		return promoFreeGiftQty;
+	}
+
+	public void setPromoFreeGiftQty(int promoFreeGiftQty) {
+		this.promoFreeGiftQty = promoFreeGiftQty;
 	}
 	
 }
