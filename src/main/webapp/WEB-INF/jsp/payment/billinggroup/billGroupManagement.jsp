@@ -446,14 +446,12 @@ var addOrderLayout = [
                         	$("#email").text("");
                         }
                         
-                        
                         //Mailling Addres
                         if(result.data.selectMaillingInfo != null){
                         	$("#maillingAddr").text(result.data.selectMaillingInfo.addr);
                         }else{
                         	$("#maillingAddr").text("");
                         }
-                        
                         
                         //ContractInfo
                         $("#contractPerson").text(result.data.selecContractInfo.name2);
@@ -660,8 +658,12 @@ var addOrderLayout = [
             
             $('#changeMail_grpNo').text(result.data.basicInfo.custBillGrpNo);
             $('#changeMail_ordGrp').text(result.data.grpOrder.orderGrp);$('#changeMail_ordGrp').css("color","red");
-            $('#changeMail_currAddr').text(result.data.mailInfo.addr);
-            
+            if(result.data.mailInfo !=null){
+            	$('#changeMail_currAddr').text(result.data.mailInfo.addr);
+            }else{
+            	$('#changeMail_currAddr').text("");
+            }
+            	
         });
     }
     

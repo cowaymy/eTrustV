@@ -235,7 +235,7 @@ var contPersonLayout = [
                     
                     $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
                     $('#custTypeId').val(result.data.orderInfo.custId);//히든값
-                    $('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
+                    
                     $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
 
                     //BASIC INFO
@@ -245,7 +245,14 @@ var contPersonLayout = [
                     $('#customerName').text(result.data.orderInfo.name);
                     
                     //MAIL INFO
-                    $('#maillingAddr').text(result.data.maillingInfo.addr);
+                    if(result.data.maillingInfo != null){
+                    	$('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
+                    	$('#maillingAddr').text(result.data.maillingInfo.addr);
+                    }else{
+                    	//$('#custAddId').val("");//히든값
+                        $('#maillingAddr').text("");
+                    }
+                    
                     
                     //CONTACT INFO
                     $('#contactPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
@@ -279,7 +286,7 @@ var contPersonLayout = [
                     
                     $('#salesOrdId').val(result.data.orderInfo.salesOrdId);//히든값
                     $('#custTypeId').val(result.data.orderInfo.custId);//히든값
-                    $('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
+                    
                     $('#custCntcId').val(result.data.contactInfo.custCntcId);//히든값
 
                     //BASIC INFO
@@ -289,7 +296,13 @@ var contPersonLayout = [
                     $('#customerName').text(result.data.orderInfo.name);
                     
                     //MAIL INFO
-                    $('#maillingAddr').text(result.data.maillingInfo.addr);
+                    if(result.data.maillingInfo != null){
+                    	$('#custAddId').val(result.data.maillingInfo.custAddId);//히든값
+                    	$('#maillingAddr').text(result.data.maillingInfo.addr);
+                    }else{
+                    	//$('#custAddId').val("");//히든값
+                        $('#maillingAddr').text("");
+                    }
                     
                     //CONTACT INFO
                     $('#contactPerson').text(result.data.contactInfo.code + " "+result.data.contactInfo.name2);
