@@ -101,17 +101,14 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 		int mastetSeq = batchPaymentMapper.getPAY0044DSEQ();
 		master.put("batchId", mastetSeq);
 		int mResult = batchPaymentMapper.saveBatchPayMaster(master);
-		logger.debug("insert ===="+mResult);
 		if(mResult > 0 && detailList.size() > 0){
 			for(int i=0 ; i < detailList.size() ; i++){
-				
 				int detailSeq = batchPaymentMapper.getPAY0043DSEQ();
 				detailList.get(i).put("detId", detailSeq);
 				detailList.get(i).put("batchId", mastetSeq);
 				batchPaymentMapper.saveBatchPayDetailList(detailList.get(i));
 				logger.debug("detailList=== "+ (i+1) +"번째"+detailList.get(i));
 			}
-			
 			//CALL PROCEDURE
 			batchPaymentMapper.callBatchPayVerifyDet(master);
 		}
