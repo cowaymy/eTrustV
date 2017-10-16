@@ -1,5 +1,8 @@
 package com.coway.trust.biz.common;
 
+import java.util.Map;
+
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.cmmn.model.BulkSmsVO;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SmsResult;
@@ -15,6 +18,8 @@ public interface AdaptorService {
 	 * @return 성공여부
 	 */
 	boolean sendEmail(EmailVO email, boolean isTransactional);
+
+	boolean sendEmail(EmailVO email, boolean isTransactional, EmailTemplateType templateType, Map<String, Object> params);
 
 	/**
 	 * The speed is slow. It is mainly used for single-item transmission.
@@ -36,4 +41,5 @@ public interface AdaptorService {
 	 * @return
 	 */
 	SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO);
+
 }

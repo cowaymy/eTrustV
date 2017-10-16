@@ -31,6 +31,7 @@ import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.application.SampleApplication;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
@@ -149,10 +150,25 @@ public class SampleController {
 
 		EmailVO email = new EmailVO();
 		email.setTo("t1706036@partner.coway.co.kr");
-		email.setHtml(false);
+		email.addTo("im7015@naver.com");
 		email.setSubject("subject");
-		email.setText("email text");
-		boolean isSuccess = adaptorService.sendEmail(email, false);
+
+		// 일반 텍스트....
+		// email.setHtml(false); // 본문 내용 html 여부
+		// email.setText("email text");
+		// boolean isSuccess = adaptorService.sendEmail(email, false);
+
+		// 메일 템플릿 파라미터 예시....
+		email.setHtml(true); // 본문 내용 html 여부
+		params.put("attentionTo", "==attentionTo");
+		params.put("orderNo", "==orderNo");
+		params.put("totalOverdueAmount", "==totalOverdueAmount");
+		params.put("product", "==product");
+		params.put("virtualAccount", "==virtualAccount");
+		params.put("billerCode", "==billerCode");
+		params.put("ref", "==ref");
+
+		boolean isSuccess = adaptorService.sendEmail(email, false, EmailTemplateType.OVERDUE_PAYMENT_4, params);
 
 		retMsg.setMessage("isSuccess : " + isSuccess);
 

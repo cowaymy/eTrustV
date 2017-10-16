@@ -1,4 +1,4 @@
-package com.coway.trust.biz.common;
+package com.coway.trust.biz.common.type;
 
 public enum SmsType {
 	SMALL("GenSuite"), BULK("MVGate");

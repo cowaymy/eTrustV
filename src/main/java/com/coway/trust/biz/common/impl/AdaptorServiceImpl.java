@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.BulkSmsVO;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -87,8 +90,17 @@ public class AdaptorServiceImpl implements AdaptorService {
 	@Autowired
 	private JavaMailSender mailSender;
 
+	@Autowired
+	private VelocityEngine velocityEngine;
+
 	@Override
 	public boolean sendEmail(EmailVO email, boolean isTransactional) {
+		return this.sendEmail(email, isTransactional, null, null);
+	}
+
+	@Override
+	public boolean sendEmail(EmailVO email, boolean isTransactional, EmailTemplateType templateType,
+			Map<String, Object> params) {
 		boolean isSuccess = true;
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
@@ -97,7 +109,12 @@ public class AdaptorServiceImpl implements AdaptorService {
 			messageHelper.setFrom(from);
 			messageHelper.setTo(email.getTo().toArray(new String[email.getTo().size()]));
 			messageHelper.setSubject(email.getSubject());
-			messageHelper.setText(email.getText());
+
+			if (templateType != null) {
+				messageHelper.setText(getMailTemplate(templateType, params), email.isHtml());
+			} else {
+				messageHelper.setText(email.getText(), email.isHtml());
+			}
 
 			if (isMultiPart) {
 				email.getFiles().forEach(file -> {
@@ -119,6 +136,11 @@ public class AdaptorServiceImpl implements AdaptorService {
 		}
 
 		return isSuccess;
+	}
+
+	private String getMailTemplate(EmailTemplateType templateType, Map<String, Object> params) {
+		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateType.getFileName(),
+				AppConstants.DEFAULT_CHARSET, params);
 	}
 
 	@Override
