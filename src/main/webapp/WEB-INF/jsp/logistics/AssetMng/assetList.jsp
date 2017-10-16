@@ -37,6 +37,7 @@
     var addItemGrid;
     var multyitemGrid;
     var assetMoveTrnsGrid;
+    var assetMoveTrnsBulkGrid;
     var srvMembershipList = new Array();
     var upBramdList = new Array();
     
@@ -74,8 +75,7 @@
                         {dataField:"purchsamt"   ,headerText:"purchsAmt"       ,width:100 ,height:30 , visible:false},                      
                         {dataField:"assetrem"   ,headerText:"assetRem"         ,width:"15%" ,height:30 , visible:false},                       
                         {dataField:"serialno"      ,headerText:"serialNo"          ,width:100 ,height:30 , visible:false},                        
-                        /* {dataField:"stusid"      ,headerText:"stusId"          ,width:100 ,height:30 , visible:false},  */                
-                        {dataField:"stusid"      ,headerText:"stusId"          ,width:100 ,height:30 },                 
+                         {dataField:"stusid"      ,headerText:"stusId"          ,width:100 ,height:30 , visible:false},                 
                         {dataField:"typeid"     ,headerText:"typeId"           ,width:"15%" ,height:30 , visible:false},                   
                         {dataField:"upddt"     ,headerText:"updDt"         ,width:"10%" ,height:30 , visible:false},                      
                         {dataField:"upduserid"    ,headerText:"upd_user_Id"        ,width:100 ,height:30 , visible:false},
@@ -237,7 +237,42 @@
                                {dataField:"qty" ,headerText:"Qty",width:"15%" ,height:30}
 ];
     
-   
+    var bulkLayout = [{dataField:"assetid"      ,headerText:"Asset ID"           ,width:80 ,height:30 , visible:true},
+                        {dataField:"name2"      ,headerText:"Status"           ,width:80 ,height:30 , visible:true},
+                        {dataField:"codename2"    ,headerText:"Type"    ,width:140 ,height:30 , visible:true},
+                        {dataField:"name"   ,headerText:"Brand"       ,width:120 ,height:30 , visible:true},
+                        {dataField:"name1"   ,headerText:"Model Name"       ,width:140 ,height:30 , visible:true},
+                        {dataField:"codename1"   ,headerText:"Color"       ,width:90 ,height:30 , visible:true},
+                        {dataField:"branch"    ,headerText:"Branch"        ,width:120 ,height:30 , visible:true},
+                        {dataField:"department"    ,headerText:"Department"        ,width:140 ,height:30 , visible:true},
+                        {dataField:"purchsdt"    ,headerText:"Purchase Date"        ,width:120 ,height:30 , visible:true},
+                        {dataField:"username2"    ,headerText:"Current User"        ,width:120  ,height:30 , visible:true},
+                        {dataField:"refno"    ,headerText:"Ref No"        ,width:150  ,height:30 , visible:true},
+                        {dataField:"dealername"    ,headerText:"Dealer"        ,width:120  ,height:30 , visible:false},
+                        {dataField:"invcno"    ,headerText:"Inv No"        ,width:120 ,height:30 , visible:false},                     
+                        {dataField:"brandid"  ,headerText:"brandId"     ,width:100 ,height:30 , visible:false},
+                        {dataField:"ctgryid"    ,headerText:"ctgryId"        ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"codename"    ,headerText:"codeName"        ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"colorId"  ,headerText:"codeName1"      ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"crtdt"   ,headerText:"crtDt"       ,width:100 ,height:30 , visible:false},                       
+                        {dataField:"crtuserid"      ,headerText:"crtUserId"          ,width:100 ,height:30 , visible:false},
+                        {dataField:"currbrnchid"      ,headerText:"currBrnchId"          ,width:100 ,height:30 , visible:false},                        
+                        {dataField:"currdeptid"     ,headerText:"currDeptId"         ,width:100 ,height:30 , visible:false},                    
+                        {dataField:"curruserid"     ,headerText:"currUserId"         ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"username"       ,headerText:"userName2"           ,width:100 ,height:30 , visible:false},                       
+                        {dataField:"imeino"       ,headerText:"imeiNo"           ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"macaddr"  ,headerText:"macAddr"      ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"purchsamt"   ,headerText:"purchsAmt"       ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"assetrem"   ,headerText:"assetRem"         ,width:120 ,height:30 , visible:false},                       
+                        {dataField:"serialno"      ,headerText:"serialNo"          ,width:100 ,height:30 , visible:false},                        
+                        {dataField:"stusid"      ,headerText:"stusId"          ,width:100 ,height:30 , visible:false},              
+                        {dataField:"typeid"     ,headerText:"typeId"           ,width:120,height:30 , visible:false},                   
+                        {dataField:"upddt"     ,headerText:"updDt"         ,width:120 ,height:30 , visible:false},                      
+                        {dataField:"upduserid"    ,headerText:"upd_user_Id"        ,width:100 ,height:30 , visible:false},
+                        {dataField:"username1"  ,headerText:"userName1"      ,width:100 ,height:30 , visible:false},                       
+                        {dataField:"wrantyno"  ,headerText:"wrantyNo"      ,width:100 ,height:30 , visible:false},                      
+                        {dataField:"dealerid"  ,headerText:"dealerId"      ,width:100 ,height:30 , visible:false},
+                       ];   
     
  /* 그리드 속성 설정
   usePaging : true, pageRowCount : 30,  fixedColumnCount : 1,// 페이지 설정
@@ -509,6 +544,7 @@
 	                  //$("#ViewTrnsBtn").show();
 	                  $("#transH3_01").show();
 	                  $("#saveTrnsBtn").show();
+	                  $("#returnTrnsBtn").hide();
 	                  $("#trnasInfo").show();
             		 
             	 }else{
@@ -518,8 +554,76 @@
              Common.alert('Choice Data please..');
              }
          });
+         
+         $("#returnAssetOpen").click(function(){
+        	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
+        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
+	                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+	                  //doDefCombos('', '' ,'transdepartment', 'S', '');
+	                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
+             if (selectedItem[0] > -1){
+            	 if(currbrnchid == '42' && currbrnchid == '38'){
+		             Common.alert('This asset is already at IT Department store.');
+            	 }else{
+	                 div="V";              
+	                 $("#detailHead").text("Return Asset");
+	                 fn_setVisiable(div); 
+	                 fn_assetDetail(selectedItem[0]);
+	                  $("#masterWindow").show();
+	                  $("#Details_info").show();
+	                  $("#Insert_info").hide();
+	                  $("#Update_info").hide();
+	                  $("#CopyAssetInfo").hide();
+	                  $("#cancelPopbtn").hide();
+	                  //$("#ViewTrnsBtn").show();
+	                  $("#transH3_01").show();
+	                  $("#saveTrnsBtn").hide();
+	                  $("#returnTrnsBtn").show();
+	                  $("#trnasInfo").hide();
+            		 
+            	 }
+             }else{
+             Common.alert('Choice Data please..');
+             }
+         });
+         $("#statusAssetOpen").click(function(){
+        	 $("#status").val("");
+        	 $("#statusremark").val("");
+        	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
+        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
+	                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+	                  //doDefCombos('', '' ,'transdepartment', 'S', '');
+	                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
+             if (selectedItem[0] > -1){
+            	 if(currbrnchid == '42' && currbrnchid == '38'){
+		             Common.alert('Only IT Department Store asset can be');
+            	 }else{
+	                 div="V";              
+	                 $("#detailHead").text("Return Asset");
+	                 fn_setVisiable(div); 
+	                 fn_assetDetail(selectedItem[0]);
+	                  $("#masterWindow").show();
+	                  $("#Details_info").show();
+	                  $("#Insert_info").hide();
+	                  $("#Update_info").hide();
+	                  $("#CopyAssetInfo").hide();
+	                  $("#cancelPopbtn").hide();
+	                  //$("#ViewTrnsBtn").show();
+	                  $("#transH3_01").show();
+	                  $("#saveTrnsBtn").hide();
+	                  $("#returnTrnsBtn").hide();
+	                  $("#trnasInfo").hide();
+            		 
+            	 }
+             }else{
+             Common.alert('Choice Data please..');
+             }
+         });
          $("#ViewMoveTrns").click(function(){
-        	 assetMoveTrnsGrid  = GridCommon.createAUIGrid("#assetMoveTrnsGrid", asstMoveTrnsLayout,"", subgridpros);
+        	 destory(assetMoveTrnsGrid);
+        	 assetMoveTrnsGrid  = GridCommon.createAUIGrid("assetMoveTrnsGrid", asstMoveTrnsLayout,"", subgridpros);
         	 $("#asstMoveTrnsDiv").show();  
                 searchAssetMoveTransacton();
          });
@@ -536,11 +640,89 @@
         		 return false;
 	        	 }
         	 }
-        	 
+        	 $("#cardTypeId").val("TR");
         	 saveTrns();
         	 
          });
+         $("#saveStatusBtn").click(function(){
+        	 var status = $("#status").val();
+        	 var statusremark = $("#statusremark").val();
+        	 if(null == status || ''==status){
+        		 Common.alert("Please Select Status.");
+        		 return false;
+        	 }
+        	 if("7"==status){
+        		 $("#cardTypeId").val("OB");
+        	 }else if("67"==status){
+        		 $("#cardTypeId").val("LS");
+        	 }else{
+        		 $("#cardTypeId").val("DE");
+        	 }
+        	 saveStatus();
+        	 
+         });
+         $("#returnTrnsBtn").click(function(){
+        	 $("#cardTypeId").val("RT");
+        	 saveTrnsRe();
+        	 
+         });
          
+         $("#transBulkAssetOpen").click(function(){
+        	 destory(assetMoveTrnsBulkGrid);
+             assetMoveTrnsBulkGrid  = GridCommon.createAUIGrid("assetMoveTrnsBulkGrid", bulkLayout,"", subgridpros);
+             AUIGrid.resize(assetMoveTrnsBulkGrid,1205,300);
+             doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchidFrom', 'S' , ''); //청구처 리스트 조회
+             doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchidTo', 'S' , ''); //청구처 리스트 조회
+             doDefCombos('', '' ,'transdepartmentFrom', 'S', '');
+             doDefCombos('', '' ,'transdepartmentTo', 'S', '');
+             $("#asstMoveTrnsBulkDiv").show();  
+               // searchAssetMoveTransacton();
+         });
+         $("#transAsset").click(function(){
+        	 var selectedItem = AUIGrid.getSelectedIndex(assetMoveTrnsBulkGrid);
+             //var tmp = AUIGrid.getCellValue(assetMoveTrnsBulkGrid ,selectedItem[0],'assetid');
+        	 var branchF = $("#trnsbranchidFrom").val();
+        	 var branchT = $("#trnsbranchidTo").val();
+        	 var deptF = $("#transdepartmentFrom").val();
+        	 var deptT = $("#transdepartmentTo").val();
+        	 if(null == branchF || ''==branchF){
+        		 Common.alert("Please Select Transfer From Branch.");
+        		 return false;
+        	 }else if( branchF == "42"){
+	        	 if(null == deptF || ''==deptF){
+        		 Common.alert("Please Select Transfer From Department.");
+        		 return false;
+	        	 }
+        	 }
+        	 if(null == branchT || ''==branchT){
+        		 Common.alert("Please Select Transfer To Branch.");
+        		 return false;
+        	 }else if( branchT == "42"){
+	        	 if(null == deptT || ''==deptT){
+        		 Common.alert("Please Select Transfer To Department.");
+        		 return false;
+	        	 }
+        	 }
+        	 if(branchF == branchT){
+        		 if(branchT=="42"){
+	        		 Common.alert("Same department is disallowed.");
+	        		 return false;
+        		 }else{
+	        		 Common.alert("Same branch is disallowed.");
+	        		 return false;
+        		 }
+        		 
+        	 }
+             var assetid=AUIGrid.getCellValue(assetMoveTrnsBulkGrid ,selectedItem[0],'assetid');
+        	 var asset = $("#masterassetidBulk").val(assetid);
+        	 if(null == asset || ''==asset || 0>selectedItem[0]){
+        		 Common.alert('Choice Data please..');
+                  return false;
+        	 }
+        	 $("#cardTypeIdBulk").val("TR");
+        	 saveTrnsBulk();
+        	 
+         });
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
             v = $(this).val();
@@ -792,6 +974,7 @@
 			$("#trinserthide2").show();
 			$("#savePopbtn").hide();
 			$("#saveTrnsBtn").hide();
+			 $("#returnTrnsBtn").hide();
 			$("#updatePopbtn").hide();
 		} else if (div == "U") {
 			$("#masterstatus").prop('readonly', true);
@@ -817,6 +1000,7 @@
 			$("#trinserthide2").show();
 			$("#savePopbtn").hide();
 			$("#saveTrnsBtn").hide();
+			 $("#returnTrnsBtn").hide();
 			$("#updatePopbtn").show();
 		} else if (div == "N") {
 			$('#masterForm')[0].reset();
@@ -970,7 +1154,24 @@
 			$(robj).val("");
 			$(robj).attr("disabled", true);
 		}
+		if(obj=="transdepartmentFrom"){
+		     if(value != "42"){
+ 	    		searchAssetBulkList(value,'');
+	         }
+		}
 	}
+ 
+	function getComboRelayTrnsBulk(obj, value, tag, selvalue) {
+			 var brachId=$('#trnsbranchidFrom').val();
+		     if(brachId == "42"){
+	             if(null == value || ''==value){
+	             Common.alert("Please Select Transfer From Department.");
+	             return false;
+	             }
+	         }
+			 searchAssetBulkList(brachId,value);
+	}
+ 
 	
 	   function getComboRelayss(obj, value, tag, selvalue) {
 	        var robj = '#' + obj;
@@ -1033,7 +1234,11 @@
 				}).appendTo(obj);
 			}
 		});
-
+		if(obj=="#transdepartmentFrom" ||  obj=="#transdepartmentTo"  ||  obj=="#transdepartment" ){
+		//$("#selBox option:eq(2)").before("<option ;value='38'>** IT Department Store **</option>");
+		var setVal=obj +" option:eq(1)"
+		$(setVal).before("<option value='38'>** IT Department Store **</option>");
+		}
 		if (callbackFn) {
 			var strCallback = callbackFn + "()";
 			eval(strCallback);
@@ -1201,7 +1406,7 @@
 		
 	}
 	function saveTrns(){
-	      $("#cardTypeId").val("TR");
+	      //$("#cardTypeId").val("TR");
 	       var param = $('#masterForm').serializeJSON();
 	        var url = "/logistics/assetmng/saveAssetCard.do";
 	        console.log(param);
@@ -1212,7 +1417,63 @@
 	            });
 		
 	}
-	
+	function saveTrnsRe(){
+	      //$("#cardTypeId").val("RT");
+	      var param = $('#masterForm').serializeJSON();
+	      $.extend(param, {
+	          'trnsbranchid' : 42,
+	          'transdepartment' : 38
+	      });
+	        var url = "/logistics/assetmng/saveAssetCardReturn.do";
+	        console.log(param);
+	            Common.ajax("POST" , url , param , function(data){
+	            	Common.alert("Asset has been returned to IT Department Store.");
+	            	getAssetListAjax();  
+	            	$("#masterWindow").hide();
+	            });
+		
+	}
+	function saveStatus(){
+	      var param = $('#masterForm').serializeJSON();
+	      $.extend(param, {
+	          'trnsbranchid' : 0,
+	          'transdepartment' : 0
+	      });
+	        var url = "/logistics/assetmng/saveAssetStatus.do";
+	        console.log(param);
+	            Common.ajax("POST" , url , param , function(data){
+	            	Common.alert("Asset new status successfully saved.");
+	            	getAssetListAjax();  
+	            	$("#masterWindow").hide();
+	            });
+		
+	}
+	function saveTrnsBulk(){
+	      //$("#cardTypeIdBulk").val("TR");
+	       var param = $('#bulkForm').serializeJSON();
+	        var url = "/logistics/assetmng/saveAssetCardBulk.do";
+	        console.log(param);
+	            Common.ajax("POST" , url , param , function(data){
+	            	Common.alert("Asset(s) has been transfered to selected branch/department.");
+            	    getAssetListAjax();  
+                    $("#asstMoveTrnsBulkDiv").hide();
+	            });
+		
+	}
+	function searchAssetBulkList(branchId,deptId){
+		        var url = "/logistics/assetmng/assetBulkList.do";
+		        var param ={
+		                 'searchbranchid' : branchId,
+		                 'searchdeptid'    :deptId
+		        };
+		        console.log(param);
+		            Common.ajax("POST" , url , param , function(data){
+					     console.log(data.dataList);
+	                     AUIGrid.setGridData(assetMoveTrnsBulkGrid, data.dataList);      
+	                     //AUIGrid.resize(assetMoveTrnsBulkGrid);
+		            });
+		
+	}
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -1583,14 +1844,41 @@
         <tr>
             <th scope="row">Current Department</th>
             <td colspan="3"> 
-                <select class="w100p" id="transdepartment" name="transdepartment"  >
+                <select class="w100p" id="transdepartment" name="transdepartment" >
                 </select>
             </td>
         </tr>
     </table>
+    <table class="type1" id="statusInfo">
+        <colgroup>
+        <col style="width:120px" />
+        <col style="width:*" />
+        <col style="width:120px" />
+        <col style="width:*" /> 
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Status</th>
+            <td colspan="3">
+                 <select id="status" name="status"  class="w100p" >
+				  <option value=""></option>
+				  <option value="7">Obsolete</option>
+				  <option value="67">Lost</option>
+				  <option value="8">Deactivate</option>
+				</select>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Remark</th>
+            <td colspan="3"> 
+               <input type="text" title="" placeholder=""  class="w100p" id="statusremark" name="statusremark"/></td>    
+        </tr>
+    </table>
 <ul class="center_btns">
+    <li><p class="btn_blue2 big"><a id="returnTrnsBtn">Confirm Return</a></p></li>
     <li><p class="btn_blue2 big"><a id="savePopbtn">SAVE</a></p></li>
 	<li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a id="updatePopbtn">UPDATE</a></p></li>
     <li><p class="btn_blue2 big"><a id="cancelPopbtn" onclick="javascript:fn_assetDetailCancel();">CANCEL</a></p></li>
 </ul>
@@ -1775,6 +2063,78 @@
 </section>
 </div>
 
+<div class="size_big popup_wrap" id="asstMoveTrnsBulkDiv" style="display:none"><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Bulk Transfer Asset</h1>
+                <ul class="right_opt">
+		            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+		        </ul>
+    </header><!-- pop_header end -->
+    
+<section class="pop_body"><!-- pop_body start --> 
+ <form id="bulkForm" name="bulkForm" method="POST">
+ <input type="hidden" id="masterassetidBulk" name="masterassetidBulk"/>
+<input type="hidden" id="cardTypeIdBulk" name="cardTypeIdBulk"/>
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>search table</caption>
+                        <colgroup>
+                            <col style="width: 150px" />
+                            <col style="width: *" />
+                            <col style="width: 160px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+					         <tr>
+					            <td scope="row" colspan="4"><h3>Transfer Informaton</h3></th>
+					        </tr>
+					        <tr>
+					            <th scope="row"  rowspan="2">Transfer From</th>
+					            <td colspan="3">
+					                 <select id="trnsbranchidFrom" name="trnsbranchidFrom" onchange="getComboRelayTrns('transdepartmentFrom' , this.value , '', '')" class="w100p" >
+					                 </select>
+					            </td>
+					        </tr>
+					        <tr>
+					           <!--  <th scope="row">Current Department</th> -->
+					            <td colspan="3"> 
+					                <select class="w100p" id="transdepartmentFrom" name="transdepartmentFrom"  onchange="getComboRelayTrnsBulk('' , this.value , '', '')" >
+					                </select>
+					            </td>
+					        </tr>
+					        <tr>
+					            <th scope="row"  rowspan="2">Transfer To</th>
+					            <td colspan="3">
+					                 <select id="trnsbranchidTo" name="trnsbranchidTo" onchange="getComboRelayTrns('transdepartmentTo' , this.value , '', '')" class="w100p" >
+					                 </select>
+					            </td>
+					        </tr>
+					        <tr>
+					           <!--  <th scope="row">Current Department</th> -->
+					            <td colspan="3"> 
+					                <select class="w100p" id="transdepartmentTo" name="transdepartmentTo"  >
+					                </select>
+					            </td>
+					        </tr>
+					        <tr>
+					           <td colspan="4"><h3>Asset To Transfer</h3></td>
+					        </tr>
+					       </tbody>
+                    </table>
+					<article class="grid_wrap"><!-- grid_wrap start -->
+					    <div id="assetMoveTrnsBulkGrid"></div>
+					</article><!-- grid_wrap end -->
+					
+                    <!-- table end -->
+					<ul class="center_btns">
+					    <li><p class="btn_blue2 big"><a id="transAsset">Transfer Asset</a></p></li>
+					</ul>
+                </form> 
+    </section>  
+</div>
+
+</section>
+</div>
 </section><!-- content end -->
 </div>
 

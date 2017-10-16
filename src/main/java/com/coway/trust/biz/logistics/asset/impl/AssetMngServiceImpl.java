@@ -338,4 +338,12 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 
 	}
 
+	@Override
+	public void updateAssetStatus(Map<String, Object> params) {
+		AssetMngMapper.insertAssetCardFrom(params);
+		AssetMngMapper.updateAssetCard(params);
+		// TODO Auto-generated method stub
+
+	}
+
 }

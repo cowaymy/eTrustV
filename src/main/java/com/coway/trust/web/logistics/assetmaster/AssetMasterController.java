@@ -479,4 +479,101 @@ public class AssetMasterController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/saveAssetCardReturn.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAssetCardReturn(@RequestBody Map<String, Object> params) throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		logger.debug("masterassetid  : {}", params.get("masterassetid"));
+		params.put("loginId", loginId);
+		ams.saveAssetCard(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveAssetStatus.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAssetStatus(@RequestBody Map<String, Object> params) throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		logger.debug("masterassetid  : {}", params.get("masterassetid"));
+		logger.debug("transdepartment  : {}", params.get("transdepartment"));
+		params.put("loginId", loginId);
+		ams.updateAssetStatus(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveAssetCardBulk.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAssetCardBulk(@RequestBody Map<String, Object> params) throws Exception {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+
+		logger.debug("masterassetid  : {}", params.get("masterassetid"));
+
+		// int masterassetid = Integer.parseInt(String.valueOf(params.get("masterassetidBulk")));
+		// int trnsbranchid = Integer.parseInt(String.valueOf(params.get("trnsbranchidTo")));
+		// int transdepartment = 0;
+		// if (!"".equals(params.get("transdepartmentTo")) || null == params.get("transdepartmentTo")) {
+		// transdepartment = Integer.parseInt(String.valueOf(params.get("transdepartmentTo")));
+		// }
+		// String cardTypeId = String.valueOf(params.get("cardTypeIdBulk"));
+		Object masterassetid = params.get("masterassetidBulk");
+		Object trnsbranchid = params.get("trnsbranchidTo");
+		Object transdepartment = params.get("transdepartmentTo");
+		Object cardTypeId = params.get("cardTypeIdBulk");
+
+		params.put("loginId", loginId);
+		params.put("masterassetid", masterassetid);
+		params.put("trnsbranchid", trnsbranchid);
+		params.put("transdepartment", transdepartment);
+		params.put("cardTypeId", cardTypeId);
+		ams.saveAssetCard(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/assetBulkList.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> assetBulkList(@RequestBody Map<String, Object> params) throws Exception {
+		logger.debug("status pram : {}", params.get("status"));
+		logger.debug("searchbranchid  : {}", params.get("searchbranchid"));
+		logger.debug("searchdeptid  : {}", params.get("searchdeptid"));
+		int[] searchstatus = { 1 };
+		logger.debug("searchstatus  : {}", searchstatus.toString());
+		params.put("searchstatus", searchstatus);
+		List<EgovMap> list = ams.selectAssetList(params);
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
 }

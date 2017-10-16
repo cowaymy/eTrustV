@@ -37,4 +37,6 @@ public interface AssetMngService {
 
 	void saveAssetCard(Map<String, Object> params);
 
+	void updateAssetStatus(Map<String, Object> params);
+
 }

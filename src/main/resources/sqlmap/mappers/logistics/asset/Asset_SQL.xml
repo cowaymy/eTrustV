@@ -120,6 +120,9 @@
             <if test="searchbranchid != null and searchbranchid !=''">
                      AND E1.CURR_BRNCH_ID = #{searchbranchid}
          </if>
+            <if test="searchdeptid != null and searchdeptid !=''">
+                     AND E1.CURR_DEPT_ID = #{searchdeptid}
+         </if>
          <if test="searchinvoiceno != null and searchinvoiceno !=''">
                      AND E1.INVC_NO = #{searchinvoiceno}
          </if>
@@ -736,16 +739,26 @@
      INSERT INTO LOG0057M
 	           SELECT
 	           (SELECT MAX(CARD_ID)+1 FROM LOG0057M),
-	           <choose>
-	                <when test="cardTypeId eq 'TR'.toString() ">
-	                1277,
-	                'TR'||TO_CHAR(SYSDATE,'DDMMYYYY'),
-	                </when>
-	                <otherwise>
-	                1230,
-	                'RT'||TO_CHAR(SYSDATE,'DDMMYYYY'),
-	                </otherwise>
-	           </choose>
+	                    <if test="cardTypeId eq 'TR'.toString() ">
+                        1277,
+                        'TR'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'RT'.toString() ">
+                        1230,
+                        'RT'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'OB'.toString() ">
+                        1228,
+                        'OB'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'LS'.toString() ">
+                        1229,
+                        'LS'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'DE'.toString() ">
+                        1238,
+                        'DE'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
 	           ASSET_ID,
 	           -1,
 	           CURR_BRNCH_ID,
@@ -759,21 +772,19 @@
      INSERT INTO LOG0057M
            SELECT
 		           (SELECT MAX(CARD_ID)+1 FROM LOG0057M),
-		           <choose>
-		                <when test="cardTypeId eq 'TR'.toString() ">
+		                <if test="cardTypeId eq 'TR'.toString() ">
 		                1277,
 		                'TR'||TO_CHAR(SYSDATE,'DDMMYYYY'),
-		                </when>
-		                <otherwise>
+		                </if>
+		                <if test="cardTypeId eq 'RT'.toString() ">
 		                1230,
 		                'RT'||TO_CHAR(SYSDATE,'DDMMYYYY'),
-		                </otherwise>
-		           </choose>
+		                </if>
 		           ASSET_ID,
 		           1,
 		           #{trnsbranchid},
 		           <choose>
-		                <when test="transdepartment !=null and transdepartment !=''">
+		                <when test="transdepartment !=null">
 				           #{transdepartment},
 		                </when>
 		                <otherwise>
@@ -788,8 +799,14 @@
     <update id="updateAssetCard" parameterType="Map">
         UPDATE LOG0050M
 			         SET CURR_BRNCH_ID = #{trnsbranchid},
-			          <if test="transdepartment !=null and transdepartment !=''">
+			          <if test="transdepartment !=null">
 			          CURR_DEPT_ID=#{transdepartment},
+			          </if>
+			          <if test="status !=null and status !=''">
+			          STUS_ID=#{status},
+			          </if>
+			          <if test="statusremark !=null and statusremark !=''">
+			          ASSET_REM=#{statusremark},
 			          </if>
 			             UPD_DT = SYSDATE
 			        WHERE   ASSET_ID =#{masterassetid}
