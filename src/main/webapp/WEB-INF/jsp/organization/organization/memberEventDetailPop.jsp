@@ -312,7 +312,7 @@
 </tr>
 <tr>
     <th scope="row">Branch(To)</th>
-    <td colspan="5"> <%-- <span><c:out value="${promoInfo.nric} + "-" + ${promoInfo.nric} "/></span> --%></td>
+    <td colspan="5"> <span><c:out value="${promoInfo.c7} "/></span> </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
@@ -330,6 +330,7 @@
     </td> --%>
     <input type="hidden" id="promoId" name="promoId" value="${promoInfo.promoId}">
      <input type="hidden" id="memCode" name="memCode" value="${promoInfo.memCode}">
+     <input type="hidden" id="branchId" name="branchId" value="${promoInfo.c7} ">
 <aside class="title_line"><!-- title_line start -->
 <h2>Request Information</h2>
 </aside><!-- title_line end -->
