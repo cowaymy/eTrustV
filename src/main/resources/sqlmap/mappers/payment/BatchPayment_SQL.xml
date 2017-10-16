@@ -285,7 +285,7 @@
     <select id="selectTotalValidAmt" parameterType="Map" resultType="egovMap">
         SELECT 
             GroupBy1.A1 C1  , 
-            GroupBy1.SYS_AMT SYS_AMT  
+            TO_CHAR(NVL(GroupBy1.SYS_AMT,'0.00'), 'FM9999999999990.00') AS SYS_AMT  
 			  FROM ( SELECT COUNT(1)  A1  , SUM(Extent1.SYS_AMT) SYS_AMT
 			         FROM PAY0043D Extent1
 			                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
