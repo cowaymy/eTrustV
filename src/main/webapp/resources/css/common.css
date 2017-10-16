@@ -292,7 +292,6 @@ select.disabled,
 textarea.readonly{background:#f2f2f2;}
 table.type1 tbody td select,
 .select_solo{width:237px; height:20px; padding:0 0 0 4px; margin:0; border:1px solid #d2d2d2; border-radius:3px; box-sizing:border-box; font-size:12px; color:#444; font-family:Verdana,"돋움",Dotum,sans-serif;}
-table.type1 tbody td .select_solo_year{width:100px;}
 table.type1 td > label{margin:0 5px!important;}
 table.type1 td > label input[type=checkbox]{position:relative; top:2px; margin:0 5px 0 0; padding:0; border:1px solid #d2d2d2;}
 table.type1 td > label input[type=radio]{position:relative; top:2px; margin:0 5px 0 0; padding:0;}
