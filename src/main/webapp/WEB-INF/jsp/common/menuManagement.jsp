@@ -176,9 +176,10 @@ function getStatusComboListAjax(callBack)
 {
 	  Common.ajaxSync("GET", "/common/selectCodeList.do"
 // 	  Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do"
-    	           , $("#MainForm").serialize()
+    	           , $("#MainForm").serialize()+"&orderValue=code"
     	           , function(result)
     	           {
+    	        	   StatusCdList.push({id:"" ,value:"-All-"});
 					          for (var i = 0; i < result.length; i++)
 						        {
 					        	  var list = new Object();
