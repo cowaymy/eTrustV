@@ -26,6 +26,12 @@ public class InventoryAllListDto {
 
 	@ApiModelProperty(value = "재고위치명")
 	private String locationName;
+	
+	@ApiModelProperty(value = "부품 id")
+	private int partsId;
+	
+	@ApiModelProperty(value = "브런치 코드")
+	private int branchCode;
 
 	public static InventoryAllListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, InventoryAllListDto.class);
@@ -79,4 +85,20 @@ public class InventoryAllListDto {
 		this.locationName = locationName;
 	}
 
+	public int getPartsId() {
+		return partsId;
+	}
+
+	public void setPartsId(int partsId) {
+		this.partsId = partsId;
+	}
+
+	public int getBranchCode() {
+		return branchCode;
+	}
+
+	public void setBranchCode(int branchCode) {
+		this.branchCode = branchCode;
+	}
+	
 }

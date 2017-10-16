@@ -15,7 +15,7 @@ public class StockByHolderListForm {
 	@ApiModelProperty(value = "partsCode [default : '' 전체] 예) 100750, 3001499 ,3105547, 3300513", example = "1, 2, 3")
 	private String partsCode;
 
-	@ApiModelProperty(value = "partsId [default : '' 전체] 예) Water Purifier=54, Air Purifier=55, Bidet=56", example = "1, 2, 3")
+	@ApiModelProperty(value = "partsId [default : '' 전체] 예) 125", example = "1, 2, 3")
 	private String partsId;
 
 	public static Map<String, Object> createMap(StockByHolderListForm StockByHolderListForm) {

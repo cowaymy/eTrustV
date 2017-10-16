@@ -15,6 +15,8 @@ public class StockRequestStatusForm {
 	String searchToDate;
 	@ApiModelProperty(value = "조회할 CT/CODY ID [default : '' 전체] 예) requested / done, ", example = "requested / done")
 	String searchStatus;
+	@ApiModelProperty(value = "MRSL 고정값 [default : '' 전체] 예) MRSL, ", example = "MRSL")
+	String MRSL;
 
 	public static Map<String, Object> createMap(StockRequestStatusForm stockRequestStatusForm) {
 		Map<String, Object> map = BeanConverter.toMap(stockRequestStatusForm);
