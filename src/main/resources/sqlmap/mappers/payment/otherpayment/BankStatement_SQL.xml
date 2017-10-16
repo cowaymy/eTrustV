@@ -131,6 +131,54 @@
         )
     </insert>
     
+    <insert id="insertBankStatementITF" parameterType="Map">
+       
+        INSERT INTO ITF0900M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,           
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            BANKCO,
+            BANKAC,
+            INDATE,
+            INREF1,
+            INREF2,
+            INREF3,
+            INREF4,
+            INREF5,
+            INREF6,
+            BNTYPE,
+            BNDEBIT,
+            BNCRDIT,
+            PROCAN_YN
+        ) VALUES (
+            FN_CRT_IFKEY('900'),
+            1,
+            '900',
+            '10',       
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userNm},
+            #{uploadIssueBank},
+            #{uploadBankAccount},
+            TO_CHAR(TO_DATE(#{fTrnscDt},'DD/MM/YYYY'),'YYYYMMDD'),
+            #{fTrnscRefChqNo},
+            #{fTrnscRef3},
+            #{fTrnscRef1},
+            #{fTrnscRef4},
+            #{fTrnscRef2},
+            #{fTrnscRef6},
+            #{fTrnscRem},
+            #{fTrnscDebtAmt},
+            #{fTrnscCrditAmt},
+            'Y'
+        )            
+    </insert>
+    
    
+
 
 </mapper>
