@@ -39,9 +39,9 @@ var gridPros2 = {
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
     
-	// 그리드 생성
-	groupListGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	esmListGridID = GridCommon.createAUIGrid("grid_wrap2", estmColumnLayout,null,gridPros);
+    // 그리드 생성
+    groupListGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+    esmListGridID = GridCommon.createAUIGrid("grid_wrap2", estmColumnLayout,null,gridPros);
     
 });
 
@@ -122,10 +122,10 @@ var estmColumnLayout = [
               iconWidth : 16,
               iconHeight : 16,
              onclick : function(rowIndex, columnIndex, value, item) {
-            	 
-            	 if(item.stusCodeId =="44"){
-            		 showDetailEstmHistory(item.reqId, "C");
-            	 }
+                 
+                 if(item.stusCodeId =="44"){
+                     showDetailEstmHistory(item.reqId, "C");
+                 }
              }
            }
     },
@@ -142,7 +142,7 @@ var estmColumnLayout = [
               iconWidth : 16, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
               iconHeight : 16,              
               onclick : function(rowIndex, columnIndex, value, item) {
-            	  if(item.stusCodeId =="44"){
+                  if(item.stusCodeId =="44"){
                       showDetailEstmHistory(item.reqId, "A");
                   }
              }
@@ -330,7 +330,7 @@ var contPersonLayout = [
 //AUIGrid 칼럼 설정
 var addOrderLayout = [ 
     {
-    	dataField : "isMain",
+        dataField : "isMain",
         headerText : "Main Order",
         editable : true,
         visible:true,
@@ -379,8 +379,8 @@ var addOrderLayout = [
     
     //ajax list 조회.
     function searchList(){
-    	
-    	var now = new Date();
+        
+        var now = new Date();
         var year= now.getFullYear();
         var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
         var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
@@ -390,14 +390,14 @@ var addOrderLayout = [
         orderNo = $.trim(orderNo);
                 
         if(currentDay >= 26 || currentDay == 1){
-        	
-        	Common.alert("Unable to perform this between 26 and 1 next month");
-        	return;
-        	
+            
+            Common.alert("Unable to perform this between 26 and 1 next month");
+            return;
+            
         }else{
-        	
-        	
-        	if(orderNo == ""){
+            
+            
+            if(orderNo == ""){
                 valid = false;
                 message = "Please key in the order number."
             }
@@ -407,8 +407,8 @@ var addOrderLayout = [
                 Common.ajax("GET","/payment/selectBillGroup.do", {"orderNo":orderNo}, function(result){
                     console.log(result);
                     if(result.data.selectBasicInfo != null){
-                    	
-                    	$("#displayVisible").show();
+                        
+                        $("#displayVisible").show();
                         $("#orderNo").addClass('readonly');
                         $("#custBillId").val(result.data.custBillId);//히든값
                         $("#custBillCustId").val(result.data.selectBasicInfo.custBillCustId);//히든값
@@ -441,17 +441,19 @@ var addOrderLayout = [
                         $("#remark").text(result.data.selectBasicInfo.custBillRem);
                         
                         if(result.data.selectBasicInfo.custBillEmail != undefined){
-                        	$("#email").text(result.data.selectBasicInfo.custBillEmail);
+                            $("#email").text(result.data.selectBasicInfo.custBillEmail);
                         }else{
-                        	$("#email").text("");
+                            $("#email").text("");
                         }
+                        
                         
                         //Mailling Addres
                         if(result.data.selectMaillingInfo != null){
-                        	$("#maillingAddr").text(result.data.selectMaillingInfo.addr);
+                            $("#maillingAddr").text(result.data.selectMaillingInfo.addr);
                         }else{
-                        	$("#maillingAddr").text("");
+                            $("#maillingAddr").text("");
                         }
+                        
                         
                         //ContractInfo
                         $("#contractPerson").text(result.data.selecContractInfo.name2);
@@ -486,33 +488,33 @@ var addOrderLayout = [
                 Common.alert(message);
                 $("#displayVisible").hide();
             }
-        	
+            
         }
         
     }
     
     function fn_billGrpHistory(){
-    	
-    	AUIGrid.destroy(billGrpHisGridID); 
-    	$("#viewHistorytPopup").show();
-    	
-    	billGrpHisGridID = GridCommon.createAUIGrid("history_wrap", billGrpHistoryLayout,null,gridPros);
-    	var custBillId = $("#custBillId").val();
+        
+        AUIGrid.destroy(billGrpHisGridID); 
+        $("#viewHistorytPopup").show();
+        
+        billGrpHisGridID = GridCommon.createAUIGrid("history_wrap", billGrpHistoryLayout,null,gridPros);
+        var custBillId = $("#custBillId").val();
         Common.ajax("GET","/payment/selectBillGrpHistory.do", {"custBillId":custBillId}, function(result){
-        	console.log(result);
-        	
-        	AUIGrid.setGridData(billGrpHisGridID, result);
+            console.log(result);
+            
+            AUIGrid.setGridData(billGrpHisGridID, result);
         });
     }
     
     function fn_hisClose() {
-    	
+        
         $('#viewHistorytPopup').hide();
         searchList();
     }
     
     function fn_changeMainOrder(){
-    	
+        
         AUIGrid.destroy(changeOrderGridID); 
         $("#changeMainOrderPop").show();
         
@@ -538,7 +540,7 @@ var addOrderLayout = [
     }
     
     function fn_changeOrderClose() {
-    	
+        
         $('#changeMainOrderPop').hide();
         $('#change_reasonUpd').val("");
         $("#salesOrdNo").val("");
@@ -547,7 +549,7 @@ var addOrderLayout = [
     }
     
     function fn_updRemark(){
-    	
+        
         $("#updRemPop").show();
         var custBillId = $("#custBillId").val();
         
@@ -568,21 +570,21 @@ var addOrderLayout = [
         var valid = true;
         
         if($.trim(reasonUpd) == ""){
-        	
-        	valid = false;
-        	message += "* Please key in the reason to update.<br />";
-        	
+            
+            valid = false;
+            message += "* Please key in the reason to update.<br />";
+            
         }else{
-        	
-        	if($.trim(reasonUpd).length > 200){
-        		valid = false;
-        		message += "* Reason to update cannot more than 200 characters.<br />";
-        	}
+            
+            if($.trim(reasonUpd).length > 200){
+                valid = false;
+                message += "* Reason to update cannot more than 200 characters.<br />";
+            }
         }
 
         if(valid){
-        	
-        	Common.ajax("GET","/payment/saveRemark.do", {"custBillId":custBillId , "remarkNew" : newRem, "reasonUpd" : reasonUpd}, function(result){
+            
+            Common.ajax("GET","/payment/saveRemark.do", {"custBillId":custBillId , "remarkNew" : newRem, "reasonUpd" : reasonUpd}, function(result){
                 console.log(result);
                 Common.alert(result.message);
                 $("#newRem").val("");
@@ -590,9 +592,9 @@ var addOrderLayout = [
                 fn_updRemark();
                 
             });
-        	
+            
         }else{
-        	Common.alert(message);
+            Common.alert(message);
         }
         
     }
@@ -605,9 +607,9 @@ var addOrderLayout = [
     }
     
     function fn_changeBillType(){
-    	
-    	$("#tab_billType").trigger("click");
-    	AUIGrid.destroy(estmHisPopGridID); 
+        
+        $("#tab_billType").trigger("click");
+        AUIGrid.destroy(estmHisPopGridID); 
         $("#changeBillTypePop").show();
         
         estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
@@ -621,9 +623,9 @@ var addOrderLayout = [
             $('#changeBill_remark').text(result.data.basicInfo.custBillRem);
             
             if(result.data.basicInfo.custBillIsPost == "1"){
-            	$("#changePop_post").prop('checked', true);
+                $("#changePop_post").prop('checked', true);
             }else{
-            	$("#changePop_post").prop('checked', false);
+                $("#changePop_post").prop('checked', false);
             }
             
             if(result.data.basicInfo.custBillIsSms == "1"){
@@ -691,14 +693,14 @@ var addOrderLayout = [
     }
     
     function fn_chgContPerPopClose() {
-    	
+        
         $('#chgContPerPop').hide();
         searchList();
         
     }
     
     function showDetailHistory(historyId){
-    	
+        
         $("#detailhistoryViewPop").show();
         
         Common.ajax("GET", "/payment/selectDetailHistoryView", {"historyId" : historyId} , function(result) {
@@ -712,20 +714,20 @@ var addOrderLayout = [
            $('#det_userRemark').val(result.data.detailHistoryView.userHistRem);
            
            if(typeId == "1042"){
-        	   
-        	   //Mailing Address
-        	   var descFrom = result.data.mailAddrOldHistorty.addr;
-        	   var descTo = result.data.mailAddrNewHistorty.addr;
+               
+               //Mailing Address
+               var descFrom = result.data.mailAddrOldHistorty.addr;
+               var descTo = result.data.mailAddrNewHistorty.addr;
                
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-        	   
+               
            }else if(typeId == "1043"){
                 
-        	   //Contact Person
-        	   var descFrom = "";
+               //Contact Person
+               var descFrom = "";
                var descTo = "";
-        	   
+               
                 descFrom += "Name : ("+result.data.cntcIdOldHistory.code+") " + result.data.cntcIdOldHistory.name + "<br>";
                 descFrom += "NRIC : " + result.data.cntcIdOldHistory.nric + " <br>";
                 descFrom += "Race : " + result.data.cntcIdOldHistory.codeName + " <br>";
@@ -744,32 +746,32 @@ var addOrderLayout = [
                 
                 $('#det_descFrom').html(descFrom);
                 $('#det_descTo').html(descTo);
-        	   
+               
            }else if(typeId == "1044"){
-        	   
-        	   //Remark
+               
+               //Remark
                var descFrom = "";
                var descTo = "";
                
                descFrom += result.data.detailHistoryView.remOld;
                descTo += result.data.detailHistoryView.remNw;
 
-        	   $('#det_descFrom').html(descFrom);
+               $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
                
            }else if(typeId == "1045"){
-        	   
-        	   var descFrom = "";
+               
+               var descFrom = "";
                var descTo = "";
                
-        	   //Post
+               //Post
                if(result.data.detailHistoryView.isPostOld == "1"){
-            	   descFrom += "Post : Yes<br>";
-            	   
+                   descFrom += "Post : Yes<br>";
+                   
                }else{
-            	   descFrom += "Post : No<br>";
+                   descFrom += "Post : No<br>";
                }
-        	   
+               
                //SMS
                if(result.data.detailHistoryView.isSmsOld == "1"){
                    descFrom += "SMS : Yes<br>";
@@ -791,26 +793,26 @@ var addOrderLayout = [
                
                //Post
                if(result.data.detailHistoryView.isPostNw == "1"){
-            	   descTo += "Post : Yes<br>";
+                   descTo += "Post : Yes<br>";
                    
                }else{
-            	   descTo += "Post : No<br>";
+                   descTo += "Post : No<br>";
                }
                
                //SMS
                if(result.data.detailHistoryView.isSmsNw == "1"){
-            	   descTo += "SMS : Yes<br>";
+                   descTo += "SMS : Yes<br>";
                    
                }else{
-            	   descTo += "SMS : No<br>";
+                   descTo += "SMS : No<br>";
                }
                
                //E-Statement
                if(result.data.detailHistoryView.isEStateNw == "1"){
-            	   descTo += "E-Statement : Yes<br>";
+                   descTo += "E-Statement : Yes<br>";
                    
                }else{
-            	   descTo += "E-Statement : No<br>";
+                   descTo += "E-Statement : No<br>";
                }
                
                //Email
@@ -820,30 +822,30 @@ var addOrderLayout = [
                $('#det_descTo').html(descTo);
                
            }else if(typeId == "1046"){
-        	 
-        	   //Order Grouping
-        	   var descFrom = "";
+             
+               //Order Grouping
+               var descFrom = "";
                var descTo = "";
                
                if(result.data.salesOrderMsOld == null ||result.data.salesOrderMsOld == ""){
-            	   descFrom += "Order Number : " + "<br>" +
+                   descFrom += "Order Number : " + "<br>" +
                    "Order Date : "  + "<br>" +
                    "Rental Fees : " + "<br>" +
                    "Product : ";
                }else{
-            	   descFrom += "Order Number : " + result.data.salesOrderMsOld.salesOrdNo + "<br>" +
+                   descFrom += "Order Number : " + result.data.salesOrderMsOld.salesOrdNo + "<br>" +
                    "Order Date : " + result.data.salesOrderMsOld.salesDt + "<br>" +
                    "Rental Fees : " + result.data.salesOrderMsOld.mthRentAmt + "<br>" +
                    "Product : " + result.data.salesOrderMsOld.product;
                }
                
                if(result.data.salesOrderMsNw == null || result.data.salesOrderMsNw == ""){
-            	   descTo += "Order Number : "  + "<br>" +
+                   descTo += "Order Number : "  + "<br>" +
                    "Order Date : " + "<br>" +
                    "Rental Fees : "  + "<br>" +
                    "Product : " ;
                }else{
-            	   descTo += "Order Number : " + result.data.salesOrderMsNw.salesOrdNo + "<br>" +
+                   descTo += "Order Number : " + result.data.salesOrderMsNw.salesOrdNo + "<br>" +
                    "Order Date : " + result.data.salesOrderMsNw.salesDt + "<br>" +
                    "Rental Fees : " + result.data.salesOrderMsNw.mthRentAmt + "<br>" +
                    "Product : " + result.data.salesOrderMsNw.product;
@@ -851,10 +853,10 @@ var addOrderLayout = [
 
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-        	   
+               
            }else if(typeId == "1047"){
-        	   //E-Statement
-        	   var descFrom = "";
+               //E-Statement
+               var descFrom = "";
                var descTo = "";
                
                if(result.data.detailHistoryView.isEStateOld == "1"){
@@ -877,13 +879,13 @@ var addOrderLayout = [
                
                //Email
                descTo += "Email : " + result.data.detailHistoryView.emailNw;
-        	   
-        	   $('#det_descFrom').html(descFrom);
+               
+               $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
                
            }else if(typeId == "1048"){
                
-        	   var descFrom = "";
+               var descFrom = "";
                var descTo = "";
                
                if(result.data.salesOrderMsOld == null ||result.data.salesOrderMsOld == ""){
@@ -912,21 +914,21 @@ var addOrderLayout = [
              
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-        	   
+               
            }
            
         });
     }
     
     function fn_selectMailAddr(){
-    	
-    	AUIGrid.destroy(emailAddrPopGridID); 
-    	var custBillCustId = $("#custBillCustId").val();
-    	var custAddr = $("#custAddr").val();
-    	$("#selectMaillAddrPop").show();
-    	emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
-    	
-    	Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
+        
+        AUIGrid.destroy(emailAddrPopGridID); 
+        var custBillCustId = $("#custBillCustId").val();
+        var custAddr = $("#custAddr").val();
+        $("#selectMaillAddrPop").show();
+        emailAddrPopGridID = GridCommon.createAUIGrid("selMaillAddrGrid", emailAddrLayout,null,gridPros);
+        
+        Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custBillCustId, "custAddr" : custAddr}, function(result){
             console.log(result);
             AUIGrid.setGridData(emailAddrPopGridID, result);
             
@@ -944,37 +946,37 @@ var addOrderLayout = [
             });
             
         });
-    	
-	}
+        
+    }
     
     function fn_newAddrSave(){
-    	
-    	var valid = true;
-    	var message = "";
-    	var newAddr = $("#changeMail_newAddr").val();
-    	var reasonUpd = $("#changeMail_resUpd").val();
-    	var custAddId = $("#custAddId").val();
-    	var custBillId = $("#custBillId").val();
-    	
-    	if(newAddr == ""){
-    		valid = false;
-    		message += "* Please select the address.<br />";
-    	}
-    	
-    	if($.trim(reasonUpd) == ""){
+        
+        var valid = true;
+        var message = "";
+        var newAddr = $("#changeMail_newAddr").val();
+        var reasonUpd = $("#changeMail_resUpd").val();
+        var custAddId = $("#custAddId").val();
+        var custBillId = $("#custBillId").val();
+        
+        if(newAddr == ""){
+            valid = false;
+            message += "* Please select the address.<br />";
+        }
+        
+        if($.trim(reasonUpd) == ""){
             valid = false;
             message += "* Please key in the reason to update.<br />";
         }else{
-        	if ($.trim(reasonUpd).length > 200){
+            if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "* Reason to update cannot more than 200 characters.<br />";
             }
         }
-    	
-    	
-    	if(valid){
-    		
-    		Common.ajax("GET","/payment/saveNewAddr.do", {"custBillId":custBillId, "newAddr" : newAddr, "reasonUpd" : reasonUpd, "custAddId" : custAddId}, function(result){
+        
+        
+        if(valid){
+            
+            Common.ajax("GET","/payment/saveNewAddr.do", {"custBillId":custBillId, "newAddr" : newAddr, "reasonUpd" : reasonUpd, "custAddId" : custAddId}, function(result){
                 console.log(result);
                 
                 Common.alert(result.message);
@@ -984,14 +986,14 @@ var addOrderLayout = [
                 fn_changeMaillAddr();
                 
             });
-    		
-    	}else{
-    		Common.alert(message);
-    	}
+            
+        }else{
+            Common.alert(message);
+        }
     }
     
     function fn_selectContPerson(){
-    	
+        
         AUIGrid.destroy(contPersonPopGridID); 
         var custBillCustId = $("#custBillCustId").val();
         var personKeyword = $("#personKeyword").val();
@@ -1024,7 +1026,7 @@ var addOrderLayout = [
     }
     
     function fn_newContPersonSave(){
-    	
+        
         var valid = true;
         var message = "";
         var custCntcId = $("#custCntcId").val();
@@ -1065,50 +1067,50 @@ var addOrderLayout = [
                 
             });
         }else{
-        	Common.alert(message);
+            Common.alert(message);
         }
     }
     
     function fn_reqNewMail(){
-    	$("#estmNewReqPop").show();
+        $("#estmNewReqPop").show();
     }
     
     function fn_newReqSave(){
-    	var reqEmail = $("#newReqEmail").val();
-    	var reasonUpd = $("#newReqReason").val();
-    	var custBillId = $("#custBillId").val();
-    	var valid = true;
+        var reqEmail = $("#newReqEmail").val();
+        var reasonUpd = $("#newReqReason").val();
+        var custBillId = $("#custBillId").val();
+        var valid = true;
         var message = "";
         
         if($.trim(reqEmail) == ""){
-        	
-        	valid = false;
-        	message += "* Please key in the email address.<br />";
-        	
+            
+            valid = false;
+            message += "* Please key in the email address.<br />";
+            
         }else{
 
-        	if(FormUtil.checkEmail($.trim(reqEmail)) == true){
-        		valid = false;
+            if(FormUtil.checkEmail($.trim(reqEmail)) == true){
+                valid = false;
                 message += "* The email is invalid.<br />"; 
              }
         }
         
         if($.trim(reasonUpd) ==""){
-        	
-        	valid = false;
-        	message += "* Please key in the reason to update.<br />";
+            
+            valid = false;
+            message += "* Please key in the reason to update.<br />";
         }else{
-        	
-        	if ($.trim(reasonUpd).length > 200){
+            
+            if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "* Reason to update cannot more than 200 characters.<br />";
             }
-        	
+            
         }
         
         if(valid){
-        	
-        	Common.ajax("GET","/payment/saveNewReq.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqEmail" : reqEmail}, function(result){
+            
+            Common.ajax("GET","/payment/saveNewReq.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqEmail" : reqEmail}, function(result){
                 console.log(result);
                 
                 Common.alert(result.message);
@@ -1119,39 +1121,39 @@ var addOrderLayout = [
                 //this.SendConfirmEmail(requestMaster); 메일보내기 나중에하기
                 
             });
-        	
+            
         }else{
-        	Common.alert(message);
+            Common.alert(message);
         }
     }
     
     function fn_estmReqPopClose(){
-    	fn_changeBillType();
+        fn_changeBillType();
     }
     
     function fn_changeBillSave(){
-    	
+        
         var custTypeId = $('#custTypeId').val();
         var custBillEmail = $('#changePop_estmVal').val();
         var reasonUpd = $("#changePop_Reason").val();
         var custBillId = $("#custBillId").val();
         
         if($("#changePop_post").is(":checked")){
-        	$("#changePop_post").val(1);
+            $("#changePop_post").val(1);
         }else{
-        	$("#changePop_post").val(0);
+            $("#changePop_post").val(0);
         }
         
         if($("#changePop_sms").is(":checked")){
-        	$("#changePop_sms").val(1);
+            $("#changePop_sms").val(1);
         }else{
-        	$("#changePop_sms").val(0);
+            $("#changePop_sms").val(0);
         }
         
         if($("#changePop_estm").is(":checked")){
-        	$("#changePop_estm").val(1);
+            $("#changePop_estm").val(1);
         }else{
-        	$("#changePop_estm").val(0);
+            $("#changePop_estm").val(0);
         }
         
         var valid = true;
@@ -1164,9 +1166,9 @@ var addOrderLayout = [
         }
         
         if($("#changePop_sms").is(":checked") && custTypeId == "965"){
-        	
-        	valid = false;
-        	message += "* SMS is not allow for company type customer.<br />";
+            
+            valid = false;
+            message += "* SMS is not allow for company type customer.<br />";
         }
         
         if($.trim(reasonUpd) ==""){
@@ -1177,14 +1179,14 @@ var addOrderLayout = [
         }else{
             
             if ($.trim(reasonUpd).length > 200){
-            	
+                
                 valid = false;
                 message += "* Reason to update cannot more than 200 characters.<br />";
             }
         }
         
         if(valid){
-        	
+            
             var post = $("#changePop_post").val();
             var sms = $("#changePop_sms").val();
             var estm = $("#changePop_estm").val();
@@ -1203,7 +1205,7 @@ var addOrderLayout = [
     }
     
     function fn_addNewConPerson(){
-    	var custBillCustId = $("#custBillCustId").val(); 
+        var custBillCustId = $("#custBillCustId").val(); 
         Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId":custBillCustId, "callParam" : "billGroup"}, null , true ,'_editDiv3New');
     }
     
@@ -1216,10 +1218,10 @@ var addOrderLayout = [
     }
     
     function showDetailEstmHistory(val, gubun){
-    	
-    	if(gubun == "A"){
-    		$("#reqId").val(val);
-    		$("#btnApprReq").show();
+        
+        if(gubun == "A"){
+            $("#reqId").val(val);
+            $("#btnApprReq").show();
             $("#btnCancelReq").hide();
             $("#estmDetailHisPop").show();
             
@@ -1233,10 +1235,10 @@ var addOrderLayout = [
                 
             });
             
-    	}else{
-    		
-    		$("#reqId").val(val);
-    		$("#btnApprReq").hide();
+        }else{
+            
+            $("#reqId").val(val);
+            $("#btnApprReq").hide();
             $("#btnCancelReq").show();
             $("#estmDetailHisPop").show();
             
@@ -1249,13 +1251,13 @@ var addOrderLayout = [
                 $("#apprReq_creBy").text(result.data.estmReqHisView.crtUserId);
                 
             });
-    	}
-    	
+        }
+        
     }
     
     function fn_approveRequest(val){
-    	
-    	var custBillId = $("#custBillId").val();
+        
+        var custBillId = $("#custBillId").val();
         var reasonUpd = $("#apprReq_reasonUpd").val();
         var reqId = $("#reqId").val();
         var valid = true;
@@ -1288,8 +1290,8 @@ var addOrderLayout = [
                 message += "* Reason to update cannot more than 200 characters.<br />";
             }
         }
-    	
-    	if(val == "A"){//APPROVE REQUEST
+        
+        if(val == "A"){//APPROVE REQUEST
             
             if(valid){
                 
@@ -1310,7 +1312,7 @@ var addOrderLayout = [
                 Common.alert(message);
             }
             
-    	}else if(val == "C"){//CANCEL REQUEST
+        }else if(val == "C"){//CANCEL REQUEST
             
             if(valid){
                 
@@ -1330,18 +1332,18 @@ var addOrderLayout = [
             }else{
                 Common.alert(message);
             }
-    		
-    	}
-    	
+            
+        }
+        
     }
     
     function showDetailOrdGrp(salesOrdId){
-    	
-    	$("#salesOrdId").val(salesOrdId);
-    	var custBillId = $("#custBillId").val();
+        
+        $("#salesOrdId").val(salesOrdId);
+        var custBillId = $("#custBillId").val();
         var valid = true;
         var message = "";
-    	
+        
         $("#removeOrderPop").show();
         $("#btnSave").show();
         
@@ -1353,9 +1355,9 @@ var addOrderLayout = [
                 $("#remove_ordNo").text(result.data.billGrpOrdView.salesOrdNo);
                 
                 if(result.data.billGrpOrdView.isMain == "1"){
-                	$("#remove_isMain").text("Yes");
+                    $("#remove_isMain").text("Yes");
                 }else{
-                	$("#remove_isMain").text("No");
+                    $("#remove_isMain").text("No");
                 }
                 
                 $("#remove_ordDate").text(result.data.billGrpOrdView.salesDt);
@@ -1370,8 +1372,8 @@ var addOrderLayout = [
     }
     
     function fn_removeOrdGrp() {
-    	
-    	var valid = true;
+        
+        var valid = true;
         var message = "";
         var custBillId = $("#custBillId").val();
         var salesOrdId = $("#salesOrdId").val();
@@ -1390,39 +1392,39 @@ var addOrderLayout = [
         }
         
         if(valid){
-        	
-        	Common.confirm('Are you sure want to set this address as main address ?',function (){
+            
+            Common.confirm('Are you sure want to set this address as main address ?',function (){
                 
-        		Common.ajax("GET", "/payment/saveRemoveOrder.do", {"custBillId" : custBillId, "reasonUpd":reasonUpd, "salesOrdId":salesOrdId}, function(result) {
-        			
-        			Common.alert(result.message);
-        			
-        			$("#remove_ordGroup").text(result.data.grpOrder.orderGrp);$('#remove_ordGroup').css("color","red");
-        			$("#btnSave").hide();
-        			
+                Common.ajax("GET", "/payment/saveRemoveOrder.do", {"custBillId" : custBillId, "reasonUpd":reasonUpd, "salesOrdId":salesOrdId}, function(result) {
+                    
+                    Common.alert(result.message);
+                    
+                    $("#remove_ordGroup").text(result.data.grpOrder.orderGrp);$('#remove_ordGroup').css("color","red");
+                    $("#btnSave").hide();
+                    
                 });
-        		
+                
             });
 
         }else{
-        	Common.alert(message);
+            Common.alert(message);
         }
-    	
-	}
+        
+    }
     
     function fn_addNewAddr() {
-    	var custBillCustId = $("#custBillCustId").val();
-    	Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', {"custId" : custBillCustId,  "callParam" : "billGroup"}, null , true ,'_editDiv2New');
-	}
+        var custBillCustId = $("#custBillCustId").val();
+        Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', {"custId" : custBillCustId,  "callParam" : "billGroup"}, null , true ,'_editDiv2New');
+    }
     
     function fn_addOrder() {
-    	
-    	AUIGrid.destroy(addOrdPopGridID); 
-    	$("#addOrderPop").show();
-    	var custBillId = $("#custBillId").val();
-    	addOrdPopGridID = GridCommon.createAUIGrid("addOrdGrid", addOrderLayout,null,gridPros2);
-    	
-    	Common.ajax("GET","/payment/selectAddOrder.do", {"custBillId":custBillId}, function(result){
+        
+        AUIGrid.destroy(addOrdPopGridID); 
+        $("#addOrderPop").show();
+        var custBillId = $("#custBillId").val();
+        addOrdPopGridID = GridCommon.createAUIGrid("addOrdGrid", addOrderLayout,null,gridPros2);
+        
+        Common.ajax("GET","/payment/selectAddOrder.do", {"custBillId":custBillId}, function(result){
             console.log(result);
             $("#addOrd_grpNo").text(result.data.basicInfo.custBillGrpNo);
             $("#addOrd_ordGrp").text(result.data.grpOrder.orderGrp);$('#addOrd_ordGrp').css("color","red");
@@ -1439,11 +1441,11 @@ var addOrderLayout = [
             });
             
         });
-    	
+        
     }
     
     function fn_addOrdSave() {
-    	var valid = true;
+        var valid = true;
         var message = "";
         var custBillId = $("#custBillId").val();
         var reasonUpd = $("#addOrd_reasonUpd").val();
@@ -1470,8 +1472,8 @@ var addOrderLayout = [
         }
         
         if(valid){
-        	
-        	for(i=0; i<selectedItems.length; i++) {
+            
+            for(i=0; i<selectedItems.length; i++) {
                 rowInfoObj = selectedItems[i];
                 rowItem = rowInfoObj.item;
                 $("#salesOrdNo").val(rowItem.salesOrdNo);
@@ -1479,7 +1481,7 @@ var addOrderLayout = [
                 $("#salesOrdId").val(rowItem.salesOrdId);
                 str2 += rowItem.salesOrdId +":";
             }
-        	
+            
             var salesOrdNoArr = str.substring(0, str.length -1);
             var salesOrdIdArr = str2.substring(0, str2.length -1);
             var message2 = "There are " + selectedItems.length + " order(s) selected.<br />" +
@@ -1488,8 +1490,8 @@ var addOrderLayout = [
             Common.confirm(message2,function (){
                 
                 Common.ajax("GET", "/payment/saveAddOrder.do", {"salesOrdNo" : salesOrdNoArr, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdId" : salesOrdIdArr}, function(result) {
-                	
-                	$("#addOrd_reasonUpd").val("");
+                    
+                    $("#addOrd_reasonUpd").val("");
                     Common.alert(result.message);
                     fn_addOrder();
                     
@@ -1503,20 +1505,20 @@ var addOrderLayout = [
     }
     
     function fn_chgMainOrd() {
-    	
-    	var valid = true;
+        
+        var valid = true;
         var message = "";
         var custBillId = $("#custBillId").val();
         var reasonUpd = $("#change_reasonUpd").val();
-    	
-    	if(selectedGridValue == undefined){
-    		
-    		valid = false;
+        
+        if(selectedGridValue == undefined){
+            
+            valid = false;
             message += "* Please select the target order.<br />";
-    		
-    	}
-    	
-    	if($.trim(reasonUpd) ==""){
+            
+        }
+        
+        if($.trim(reasonUpd) ==""){
             valid = false;
             message += "* Please key in the reason to update.<br />";
             
@@ -1527,15 +1529,15 @@ var addOrderLayout = [
                 message += "* Reason to update cannot more than 200 characters.<br />";
             }
         }
-    	
-    	if(valid){
+        
+        if(valid){
             
             var salesOrdId = $("#salesOrdId").val();
             var salesOrdNo = $("#salesOrdNo").val();
             var custBillSoId = $("#custBillSoId").val();
             
             var message2= "You have select order [" +salesOrdNo +"].<br />"  + "Are you sure want to set this order as the main order of group ?";
-    		
+            
             Common.confirm(message2,function (){
                 
                 Common.ajax("GET", "/payment/saveChgMainOrd.do", {"salesOrdId" : salesOrdId, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdNo" : salesOrdNo, "custBillSoId": custBillSoId}, function(result) {
@@ -1544,28 +1546,28 @@ var addOrderLayout = [
                 });
                 
             });
-    		
-    	}else{
-    		Common.alert(message);
-    	}
-    	
+            
+        }else{
+            Common.alert(message);
+        }
+        
     }
     
     function fn_chgBillClose(){
-    	$("#changeBillTypePop").hide();
-    	$("#changePop_Reason").val("");
-    	searchList();
+        $("#changeBillTypePop").hide();
+        $("#changePop_Reason").val("");
+        searchList();
     }
     
     function fn_chgMailClose(){
-    	$("#chgMailAddrPop").hide();
+        $("#chgMailAddrPop").hide();
         searchList();
     }
     
     function fn_removeClose(){
-    	$("#removeOrderPop").hide();
-    	$("#remove_reasonUpd").val("");
-    	searchList();
+        $("#removeOrderPop").hide();
+        $("#remove_reasonUpd").val("");
+        searchList();
     }
     
     function fn_apprRequestClose(){
@@ -1604,23 +1606,17 @@ var addOrderLayout = [
         searchList();
     }
     
-    function fn_goAddNwGrp(){
-        
-    	location.href = "initAddNewGroup.do";
-    }
-
-    
 </script>
 <body>
 
 <div id="wrap"><!-- wrap start -->
 <section id="content"><!-- content start -->
-	<ul class="path">
-	        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	        <li>Payment</li>
+    <ul class="path">
+            <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+            <li>Payment</li>
             <li>Billing Group</li>
             <li>Management</li>
-	</ul>
+    </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
@@ -1651,24 +1647,6 @@ var addOrderLayout = [
 </tr>
 </tbody>
 </table><!-- table end -->
-
-<!-- link_btns_wrap start -->
-            <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-                <dl class="link_list">
-                    <dt>Link</dt>
-                    <dd>                    
-                    <ul class="btns">
-                        <li><p class="link_btn"><a href="/payment/initInvoiceIssue.do">Generate Invoice</a></p></li>
-                     </ul>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_goAddNwGrp();">Add New Group</a></p></li>                    
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                    </dd>
-                </dl>
-            </aside>
-            <!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
@@ -1913,16 +1891,16 @@ var addOrderLayout = [
 <tbody>
 <tr>
     <th scope="row">Billing Group</th>
-	    <td id="changePop_grpNo">
-	    </td>
+        <td id="changePop_grpNo">
+        </td>
     <th scope="row">Total Order In Group</th>
-	    <td id="changePop_ordGrp">
-	    </td>
+        <td id="changePop_ordGrp">
+        </td>
 </tr>
 <tr>
     <th scope="row">Available Order</th>
     <td colspan="3">
-	    <article id="changeOrderGrid" class="grid_wrap" style="width:100%"></article>
+        <article id="changeOrderGrid" class="grid_wrap" style="width:100%"></article>
     </td>
 </tr>
 <tr>
