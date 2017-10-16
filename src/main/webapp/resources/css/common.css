@@ -647,3 +647,12 @@ table.mtz-monthpicker .mtz-monthpicker-month.ui-state-active{color:#fff; backgro
 .item_list > li .inner > a .infos{width:150px; height:150px; padding:5px; background:#000; box-sizing:border-box;}
 .item_list > li .inner > a .infos li{margin-bottom:5px; font-size:11px; color:#ccc;}
 .item_list > li .inner > a .infos li span{font-size:11px; color:#ccc;}
+
+/* 검색 상태표시 */
+.status_result{}
+.status_result > p{display: inline-block;margin-left: 5px}
+.status_result > p:first-child{margin-left: 0}
+.status_result .circle {border-radius: 50%;display: inline-block;width:12px;height:12px;position: relative;top: 2px}
+.status_result .circle_red{background:#eb6444;}
+.status_result .circle_blue{background:#00aeef;}
+.status_result .circle_grey{background:#c5c0d1;}
