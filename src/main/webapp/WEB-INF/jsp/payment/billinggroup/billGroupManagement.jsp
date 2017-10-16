@@ -448,7 +448,12 @@ var addOrderLayout = [
                         
                         
                         //Mailling Addres
-                        $("#maillingAddr").text(result.data.selectMaillingInfo.addr);
+                        if(result.data.selectMaillingInfo != null){
+                        	$("#maillingAddr").text(result.data.selectMaillingInfo.addr);
+                        }else{
+                        	$("#maillingAddr").text("");
+                        }
+                        
                         
                         //ContractInfo
                         $("#contractPerson").text(result.data.selecContractInfo.name2);
