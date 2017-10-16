@@ -37,23 +37,26 @@
 
 	<select id="getStockbyHolderList" parameterType="Map"
 		resultType="egovMap">
-		SELECT
-		O01.NAME CT_CODY_NAME,
-		O01.MEM_CODE CT_CODY_ID,
-		S28.CDC_CODE,
-		S28.RDC_CODE,
-		S28.WH_LOC_CODE LOGIN_CODE,
-		L56.STK_CODE,
-		L56.STK_CTGRY_ID STK_ID,
-		L56.QTY STOCK_QTY
-		FROM ORG0001D O01, SYS0028M S28,LOG0056M L56
-		WHERE 1 = 1
-		AND O01.MEM_CODE=S28.WH_LOC_CODE
-		AND S28.WH_LOC_ID =L56.LOC_ID
-		AND O01.BRNCH= (SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_CODE =
-		#{userId})
-		AND L56.STK_CODE= #{partsCode}
-		AND L56.STK_CTGRY_ID=#{partsId}
+	    SELECT
+        O01.NAME CT_CODY_NAME,
+        O01.MEM_CODE CT_CODY_ID,
+        S28.CDC_CODE,
+        S28.RDC_CODE,
+        S28.WH_LOC_CODE LOGIN_CODE,
+        L56.STK_CODE,
+        S26.STK_ID STK_ID,
+        L56.QTY STOCK_QTY
+        FROM ORG0001D O01, SYS0028M S28,LOG0056M L56,SYS0026m S26
+        WHERE 1 = 1
+        AND O01.MEM_CODE=S28.WH_LOC_CODE
+        AND S28.WH_LOC_ID =L56.LOC_ID
+        AND L56.STK_CODE=S26.STK_CODE(+)
+        AND L56.STK_TYPE_ID = S26.STK_TYPE_ID(+)
+        AND L56.STK_CTGRY_ID = S26.STK_CTGRY_ID(+)
+        AND O01.BRNCH= (SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_CODE =
+        #{userId})
+        AND L56.STK_CODE= #{partsCode}
+        AND S26.STK_ID=#{partsId}
 	</select>
 	
      <select id="getCommonQty" parameterType="Map" resultType="egovMap">
@@ -193,7 +196,9 @@
 		 (LTRIM(RTRIM(NVL (l56.serial_no, ' ')))) serial_no,
 		l56.STK_CTGRY_ID,l56.STK_TYPE_ID,
 		s28.WH_LOC_CODE LOCATION_CODE,
-		s28.WH_LOC_DESC LOCATION_NAME
+		s28.WH_LOC_DESC LOCATION_NAME,
+		s26.STK_ID parts_Id,
+		s28.WH_LOC_BRNCH_ID branch_Code
 		FROM log0043m l43,
 		log0044d l44,
 		(SELECT log0056m.*, log0063d.serial_no
@@ -208,7 +213,7 @@
 		AND l44.BOM_COMPNT = l56.stk_code(+)
 		AND l44.BOM_COMPNT = s26.stk_code
 		AND l43.bom = l44.bom
-		AND l56.STK_TYPE_ID in(62,63)
+		AND l56.STK_TYPE_ID in (62,63,61)
 		AND l56.LOC_ID=s28.WH_LOC_ID
 		<if test="productCode != null and productCode !=''">
 			AND l43.matrl_no = #{productCode}
@@ -219,8 +224,12 @@
 		<if test='searchType =="1" '>
 			AND UPPER(l43.matrl_no) LIKE '%' || UPPER(#{searchKeyword}) || '%'
 		</if>
+		<if test="productId != null and productId !=''">
+		AND s26.STK_ID=#{productId}
+		</if>
 		GROUP BY
-		l43.matrl_no,l44.BOM_COMPNT,l56.qty,l56.serial_no,l56.STK_CTGRY_ID,l56.STK_TYPE_ID,s26.stk_desc,s28.WH_LOC_CODE,s28.WH_LOC_DESC
+		l43.matrl_no,l44.BOM_COMPNT,l56.qty,l56.serial_no,l56.STK_CTGRY_ID,l56.STK_TYPE_ID,s26.stk_desc,s28.WH_LOC_CODE,s28.WH_LOC_DESC, s26.STK_ID,
+        s28.WH_LOC_BRNCH_ID
 		<!-- AND l43.MATRL_NO = '110181' -->
 	</select>
 
@@ -253,9 +262,14 @@
 		WHERE 1 = 1
 		AND O01.MEM_CODE=S28.WH_LOC_CODE
 		AND O01.BRNCH =(select USER_BRNCH_ID from sys0047m where
-		USER_NAME='CT100069')
+		USER_NAME=#{userId})
 		AND S28.WH_LOC_ID=T1.LOC_ID
-		AND T1.BOM_COMPNT='3300513'
+		<if test='searchType =="1" '>
+            AND T1.BOM_COMPNT= #{searchKeyword}
+        </if>
+        <if test='searchType =="2" '>
+            AND UPPER(T1.stk_desc) LIKE UPPER(#{searchKeyword}) || '%'
+        </if>
 	</select>
 
 	<select id="StockReceiveList" parameterType="Map" resultType="egovMap">
@@ -271,7 +285,8 @@
 		l47.PRIDIC_FRQNCY)
 		REQ_TYPE,
 		S28Q.WH_LOC_DESC,
-		S28C.WH_LOC_DESC GI_CUST_NAME
+		S28C.WH_LOC_DESC GI_CUST_NAME,
+		 L47.REQST_STUS req_Status
 		FROM LOG0047M L47,
 		LOG0048D L48,
 		LOG0054M L54,
@@ -285,8 +300,8 @@
 		(SELECT *
 		FROM SYS0013M
 		WHERE CODE_MASTER_ID = 42) UOMT,
-		<!-- (SELECT * FROM SYS0028M WHERE WH_LOC_CODE = #{userId}) S28Q, -->
-		SYS0028M S28Q,
+		(SELECT * FROM SYS0028M WHERE WH_LOC_CODE = #{userId}) S28Q, 
+<!-- 		SYS0028M S28Q, -->
 		SYS0028M S28C
 		<!-- SYS0028M S28Q -->
 		WHERE 1 = 1
@@ -304,17 +319,23 @@
 		<!-- AND L47.REQST_NO='SMO20170928143545198328' -->
 		<if test="searchFromDate !=null and searchFromDate !=''">
 			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]>
-			to_char(to_date(#{searchFromDate},'dd/mm/yyyy'),'yyyymmdd')
+			TO_CHAR (TO_DATE (#{searchFromDate},   'YYYY/MM/DD'),'yyyymmdd')
 		</if>
 		<if test="searchToDate !=null and searchToDate !=''">
 			and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]>
-			to_char(to_date(#{searchToDate},'dd/mm/yyyy'),'yyyymmdd')
+			TO_CHAR (TO_DATE (#{searchToDate},   'YYYY/MM/DD'),'yyyymmdd')
 		</if>
 		<if test="searchType !=null and searchType !=''">
 			and l47.pridic_frqncy = #{searchType}
 		</if>
+		<if test="searchStatus eq 'Transit'.toString() ">
+          AND L47.REQST_STUS IN ('O')
+        </if>
+        <if test="searchStatus eq 'done'.toString() ">
+           AND L47.REQST_STUS='C'
+        </if>   
 		GROUP BY
-		L47.REQST_NO,L54.DELVRY_GI_DT,L54.DELVRY_GR_DT,S28C.WH_LOC_DESC,S28Q.WH_LOC_DESC,L55.DELVRY_NO,l47.PRIDIC_FRQNCY
+		L47.REQST_NO,L54.DELVRY_GI_DT,L54.DELVRY_GR_DT,S28C.WH_LOC_DESC,S28Q.WH_LOC_DESC,L55.DELVRY_NO,l47.PRIDIC_FRQNCY,L47.REQST_STUS
 	</select>
 
 
