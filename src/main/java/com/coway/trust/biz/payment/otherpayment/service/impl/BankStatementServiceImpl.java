@@ -58,7 +58,14 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
     		for (Object map : detailParamList) {
     			hm = (HashMap<String, Object>) map;      			
     			hm.put("fBankJrnlId", masterParamMap.get("fBankJrnlId"));	//Master 정보 등록시 생성된 key값    			
-    			bankStatementMapper.insertBankStatementDetail(hm);    			
+    			bankStatementMapper.insertBankStatementDetail(hm);   
+    			
+    			hm.put("uploadIssueBank", masterParamMap.get("uploadIssueBank"));	//Interface 정보 Bank Code
+    			hm.put("uploadBankAccount", masterParamMap.get("uploadBankAccount"));	//Interface 정보 Bank Account Code
+    			
+    			//Interface Table Insert
+    			bankStatementMapper.insertBankStatementITF(hm);
+    			
     		}
     	}    	
 	}

@@ -61,12 +61,23 @@ public class BillingMgmtController {
 	 */
 	@RequestMapping(value = "/initBillingResult.do")
 	public String initBillingResult(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		model.addAttribute("taskId", params.get("taskId"));
-		
+		model.addAttribute("taskId", String.valueOf(params.get("taskId")));
 		return "payment/billing/billingResult";
 	}
 	
+	/**
+	 * Billing Result 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initBillingResultPop.do")
+	public String initBillingResultPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("taskId", String.valueOf(params.get("taskId")));
+		return "payment/billing/billingResultPop";
+	}
+	
+		
 	@RequestMapping(value = "/selectBillingResultList.do")
 	public ResponseEntity<Map<String, Object>> selectBillingResult(@RequestParam Map<String, Object> params, ModelMap model) {	
 		

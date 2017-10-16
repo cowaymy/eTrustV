@@ -41,6 +41,13 @@ public interface BankStatementMapper {
 	 */
 	void insertBankStatementDetail(Map<String, Object> params);
 	
+	/**
+	 * Bank Statement Interface 데이터 등록
+	 * @param params
+	 * @return
+	 */
+	void insertBankStatementITF(Map<String, Object> params);
+	
 	
 	
 }
