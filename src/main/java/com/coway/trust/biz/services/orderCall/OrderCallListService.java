@@ -15,5 +15,7 @@ public interface OrderCallListService {
 	 Map<String, Object> insertCallResult(Map<String, Object> params, SessionVO sessionVO);
 	
 	List<EgovMap> selectCallStatus();
+	
+	List<EgovMap> selectCallLogTransaction(Map<String, Object> params);
 	      
 } 

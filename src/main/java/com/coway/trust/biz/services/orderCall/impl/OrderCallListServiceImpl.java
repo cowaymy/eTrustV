@@ -50,6 +50,12 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
+	public List<EgovMap> selectCallLogTransaction(Map<String, Object> params) {
+		return orderCallListMapper.selectCallLogTransaction(params);
+	}
+	
+	
+	@Override
 	public Map<String, Object>  insertCallResult(Map<String, Object> params, SessionVO sessionVO) {
 		String salesOrdNo = params.get("salesOrdNo").toString();
 		String installationNo = "";
