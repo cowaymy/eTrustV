@@ -200,6 +200,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mPromoEntry.put("updDt", formList.get("updDt"));
 			mPromoEntry.put("updUserId", formList.get("updUserId"));
 			mPromoEntry.put("promoId", params.get("promoId"));
+			mPromoEntry.put("branchId", params.get("branchId"));
 			logger.debug("mPromoEntry::::" + mPromoEntry);
             memberEventMapper.updateMemberPromoEntry(mPromoEntry);
             
