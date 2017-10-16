@@ -13,6 +13,10 @@ public interface BudgetService {
 
 	List<EgovMap> selectAdjustmentAmount(Map<String, Object> params) throws Exception; 
 	
+	List<EgovMap> selectPenConAmount(Map<String, Object> params) throws Exception; 
+	
+	List<EgovMap> selectAdjustmentList(Map<String, Object> params) throws Exception; 
+	
 	/*
 	int insertExpenseInfo(List<Object> addList, Integer crtUserId) throws Exception;
 	

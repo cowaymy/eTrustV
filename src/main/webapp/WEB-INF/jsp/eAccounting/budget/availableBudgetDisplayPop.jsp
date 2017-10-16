@@ -24,10 +24,22 @@ $(document).ready(function(){
 	    $("#availableAmt").text(comma("${result.availableAmt}"));
 	}
 	
-	
+	//adjustAmt 상세 팝업
 	$("#adjustAmt").click(function() { 
 		 Common.popupDiv("/eAccounting/budget/adjustmentAmountPop.do",$("#pForm").serializeJSON(), null, true, "adjustmentAmountPop"); 
 	});
+	
+	//pendAppvAmt 상세 팝업
+   $("#pendAppvAmt").click(function() {	   
+	    $("#type").val("Pending");		   
+         Common.popupDiv("/eAccounting/budget/pendingConsumedAmountPop.do",$("#pForm").serializeJSON(), null, true, "pendingConsumedAmountPop"); 
+    });
+   
+	//consumAppvAmt 상세 팝업
+    $("#consumAppvAmt").click(function() { 
+        $("#type").val("Consumed");         
+         Common.popupDiv("/eAccounting/budget/pendingConsumedAmountPop.do",$("#pForm").serializeJSON(), null, true, "pendingConsumedAmountPop"); 
+    });
 	
 	
 });
@@ -53,6 +65,7 @@ function comma(str) {
 <form action="#" method="post" id="pForm" name="pForm">
 <input type="hidden" id="budgetPlanYear" name="budgetPlanYear"  value="${item.budgetPlanYear }"/>
 <input type="hidden" id="budgetPlanMonth" name="budgetPlanMonth"  value="${item.budgetPlanMonth }"/>
+<input type="hidden" id="type" name="type" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -64,8 +77,8 @@ function comma(str) {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="budget.Year" />/<spring:message code="budget.Month" /></th>
-	<td colspan="3"><input type="text" title="" placeholder="" class="readonly" readonly="readonly" style="width:100px" value="${item.budgetPlanYear}/${ item.month}"/></td>
+	<th scope="row"><spring:message code="budget.Month" />/<spring:message code="budget.Year" /></th>
+	<td colspan="3"><input type="text" title="" placeholder="" class="readonly" readonly="readonly" style="width:100px" value="${ item.month}/${item.budgetPlanYear}"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>

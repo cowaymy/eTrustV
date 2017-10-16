@@ -42,6 +42,18 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 		return budgetMapper.selectAdjustmentAmount(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectPenConAmount( Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return budgetMapper.selectPenConAmount(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectAdjustmentList( Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return budgetMapper.selectAdjustmentList(params);
+	}
+	
 	
 /*
 	@Override

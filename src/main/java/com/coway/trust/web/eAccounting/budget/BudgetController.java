@@ -122,5 +122,56 @@ public class BudgetController {
 		
 		return ResponseEntity.ok(adjustmentList);
 	}
+		
+	@RequestMapping(value = "/pendingConsumedAmountPop.do")
+	public String pendingConsumedAmountPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.debug("params =====================================>>  " + params);		
+		model.addAttribute("item", params);
+		return "eAccounting/budget/pendingConsumedAmountPop";
+	}
+	
+	@RequestMapping(value = "/selectPenConAmountList")
+	public ResponseEntity<List<EgovMap>>  selectPenConAmountList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovMap> adjustmentList = null; 
+		
+		adjustmentList= budgetService.selectPenConAmount(params);
+		
+		return ResponseEntity.ok(adjustmentList);
+	}
+	
+	@RequestMapping(value = "/budgetAdjustmentList.do")
+	public String budgetAdjustmentList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		String yearMonth =  CommonUtils.getNowDate().substring(4,6) +"/" +CommonUtils.getNowDate().substring(0,4);
+		
+		model.addAttribute("yearMonth",  yearMonth );	 
+		return "eAccounting/budget/budgetAdjustmentList";
+	}
+	
+	@RequestMapping(value = "/selectAdjustmentList")
+	public ResponseEntity<List<EgovMap>>  selectAdjustmentList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+		
+		LOGGER.debug("params =====================================>>  " + params);
+
+		String[] budgetAdjType = request.getParameterValues("budgetAdjType");
+
+		params.put("budgetAdjType", budgetAdjType);
+		
+		List<EgovMap> adjustmentList = null; 
+		
+		adjustmentList= budgetService.selectAdjustmentList(params);
+		
+		return ResponseEntity.ok(adjustmentList);
+	}
+		
+	@RequestMapping(value = "/budgetAdjustmentPop.do")
+	public String budgetAdjustment (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		return "eAccounting/budget/budgetAdjustmentPop";
+	}
 }
 

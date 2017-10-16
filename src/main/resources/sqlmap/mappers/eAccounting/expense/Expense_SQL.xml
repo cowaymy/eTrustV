@@ -12,11 +12,11 @@
 		           ,BUDGET_CODE
 		           ,BUDGET_CODE_NAME
 		           ,DISAB_FLAG
-		           ,TO_CHAR(DISAB_DT, 'yyyy-mm-dd') DISAB_DT
+		           ,TO_CHAR(DISAB_DT, 'dd-mm-yyyy') DISAB_DT
 		           ,DISAB_USER_ID
-		           ,TO_CHAR(CRT_DT, 'yyyy-mm-dd') CRT_DT
+		           ,TO_CHAR(CRT_DT, 'dd-mm-yyyy') CRT_DT
 		           ,CRT_USER_ID
-		           ,TO_CHAR(UPD_DT, 'yyyy-mm-dd') UPD_DT
+		           ,TO_CHAR(UPD_DT, 'dd-mm-yyyy') UPD_DT
 		           ,UPD_USER_ID
 		  FROM FCM0001M
 		 WHERE DISAB_FLAG is null		
@@ -78,8 +78,8 @@
 
   <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
 		SELECT BUDGET_CODE    
-		        ,TO_CHAR(START_DT, 'yyyy-mm-dd')   START_DT  
-		        ,TO_CHAR(END_DT, 'yyyy-mm-dd')         END_DT
+		        ,TO_CHAR(START_DT, 'dd-mm-yyyy')   START_DT  
+		        ,TO_CHAR(END_DT, 'dd-mm-yyyy')         END_DT
 		        ,BUDGET_CODE_TEXT
 		        ,CRT_USER_ID
 		        ,CRT_DT

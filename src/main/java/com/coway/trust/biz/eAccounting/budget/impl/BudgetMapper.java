@@ -14,7 +14,11 @@ public interface BudgetMapper {
 	EgovMap selectAvailableBudgetAmt( Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> selectAdjustmentAmount( Map<String, Object> params) throws Exception;
-	
+
+	List<EgovMap> selectPenConAmount(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectAdjustmentList(Map<String, Object> params) throws Exception;
+
 	/*String selectMaxExpType(Map<String, Object> params) throws Exception;
 	
 	int insertExpenseInfo(Map<String, Object> params) throws Exception;

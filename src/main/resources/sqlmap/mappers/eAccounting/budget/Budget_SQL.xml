@@ -70,7 +70,7 @@
                                ,A.GL_ACC_CODE
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT 
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT  
-                               ,SUM(A.APPV_AMT ) APP_AMT_TOTAL
+                               ,SUM(A.NET_AMT ) APP_AMT_TOTAL
                                ,A.INVC_DT
                        FROM FCM0015D A, FCM0004M B
                      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
@@ -92,7 +92,7 @@
   
   <select id="selectAdjustmentAmount" parameterType="Map" resultType="egovMap">
   <![CDATA[
-      SELECT TO_CHAR(A.UPD_DT, 'yyyy-mm-dd hh24:mi') AS CONFIRM_DATE 
+      SELECT TO_CHAR(A.UPD_DT, 'dd-mm-yyyy hh24:mi') AS CONFIRM_DATE 
 		          ,B.BUDGET_ADJ_TYPE
 		          ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
 		          ,CASE WHEN B.SIGNAL ='+' THEN 'Receiver(+)' ELSE 'Sender(-)' END SIGNAL_TEXT
@@ -115,6 +115,78 @@
             AND B.GL_ACC_CODE        = #{glAccCode}
   </select>
   
+  <select id="selectPenConAmount" parameterType="Map" resultType="egovMap">
+	  SELECT A.APPV_REQ_KEY_NO 
+	           ,B.COST_CENTR_NAME       
+               ,(SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME  
+	           ,A.CRT_USER_ID
+	           ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT 
+	           ,TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
+	           ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
+	           ,B.MEM_ACC_ID
+	           ,(SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = B.MEM_ACC_ID) AS MEM_ACC_NAME
+	           ,B.NET_AMT
+	           ,B.EXP_DESC
+	   FROM FCM0004M A, FCM0015D B
+	 WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
+	 <if test='type == "Pending" '>
+	     AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' ) 
+	 </if>
+	 <if test='type == "Consumed" '>
+	     AND A.APPV_PRCSS_STUS =  'A'  
+	 </if>
+	     AND TO_CHAR(B.INVC_DT, 'yyyy')   = #{budgetPlanYear}
+	     AND TO_CHAR(B.INVC_DT, 'mm')   = #{budgetPlanMonth}          
+         AND B.COST_CENTR         = #{costCentr}
+         AND B.BUDGET_CODE        = #{budgetCode}
+         AND B.GL_ACC_CODE        = #{glAccCode}
+  </select>
+  
+  <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
+       <![CDATA[ 
+       SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' ELSE 'Open' END STATUS
+		         ,A.BUDGET_DOC_NO
+		         ,B.COST_CENTR
+		         ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
+		         ,B.BUDGET_CODE
+		         ,B.GL_ACC_CODE
+		         ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
+		         ,B.ADJ_AMT
+		         ,A.ADJ_REM
+		         ,A.ATCH_FILE_GRP_ID
+		         ,FD.FILE_SUB_PATH
+		         ,CASE WHEN A.APPV_STUS = 'C' THEN 'N' ELSE 'Y' END AS CHECK_ID                 
+		FROM FCM0102M A
+	   INNER JOIN FCM0103D B 
+	       ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
+	     LEFT OUTER JOIN SYS0070M FM
+	       ON A.ATCH_FILE_GRP_ID = FM.ATCH_FILE_GRP_ID
+	     LEFT OUTER JOIN SYS0071D FD
+	       ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
+	  WHERE  TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}  
+	  ]]>      
+        <if test="costCentr != null and costCentr != ''">
+          AND B.COST_CENTR    = #{costCentr}
+          </if>
+        <if test="budgetCode != null and budgetCode != ''">
+          AND B.BUDGET_CODE  = #{budgetCode}
+          </if>
+        <if test="glAccCode != null and glAccCode != ''">
+          AND B.GL_ACC_CODE  = #{glAccCode}
+          </if>
+           <if test="budgetAdjType != null and budgetAdjType != ''">
+           AND B.BUDGET_ADJ_TYPE IN
+         <foreach item="item" collection="budgetAdjType" index="index" open="(" separator="," close=")">
+           #{item}
+         </foreach>
+         </if>         
+        <if test="budgetDocNo != null and budgetDocNo != ''">
+          AND A.BUDGET_DOC_NO LIKE '%' || #{budgetDocNo} || '%'
+          </if>          
+        <if test="appvStus != null and appvStus != ''">
+           AND A.APPV_STUS = #{appvStus}
+           </if>
+  </select>
   
   
 <!--   <select id="selectMaxExpType" parameterType="Map" resultType="String">
