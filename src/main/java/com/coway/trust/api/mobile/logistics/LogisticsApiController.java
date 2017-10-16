@@ -202,7 +202,7 @@ public class LogisticsApiController {
 
 				List<LogStockPartsReceiveDto> partsList = serialList.stream()
 						.map(r -> LogStockPartsReceiveDto.create(r)).collect(Collectors.toList());
-				hList.get(i).setsList(partsList);
+				hList.get(j).setsList(partsList);
 			}
 
 		}
@@ -362,7 +362,7 @@ public class LogisticsApiController {
 
 				List<RequestResultDListDto> partsList = reqParts.stream()
 						.map(r -> RequestResultDListDto.create(r)).collect(Collectors.toList());
-				hList.get(i).setPartsList(partsList);
+				hList.get(j).setPartsList(partsList);
 			}
 
 		}
@@ -396,14 +396,34 @@ public class LogisticsApiController {
 
 				List<ReturnOnHandStockDListDto> partsList = reqParts.stream()
 						.map(r -> ReturnOnHandStockDListDto.create(r)).collect(Collectors.toList());
-				hList.get(i).setPartsList(partsList);
+				hList.get(j).setPartsList(partsList);
 			}
 
 		}
-
 		return ResponseEntity.ok(hList);
-
 	}
+	
+	
+	@ApiOperation(value = "Audit Stock - Result Detail 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/auditStockResultDetail", method = RequestMethod.GET)
+	public ResponseEntity<List<StockAuditResultDetailDto>> getAuditStockResultDetail(
+			@ModelAttribute StockAuditResultDetailForm StockAuditResultDetailForm) throws Exception {
+
+		Map<String, Object> params = StockAuditResultDetailForm.createMap(StockAuditResultDetailForm);
+
+		List<EgovMap> auditStockResultDetail = MlogApiService.getAuditStockResultDetail(params);
+
+		for (int i = 0; i < auditStockResultDetail.size(); i++) {
+			LOGGER.debug("itemBankLocationList    값 : {}", auditStockResultDetail.get(i));
+
+		}
+
+		List<StockAuditResultDetailDto> list = auditStockResultDetail.stream().map(r -> StockAuditResultDetailDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
 	
 	
 	/**

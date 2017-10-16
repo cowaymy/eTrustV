@@ -19,7 +19,7 @@ public class LogStockReceiveDto {
 
 	@ApiModelProperty(value = "상태")
 	private String reqStatus;
-
+	
 	@ApiModelProperty(value = "gi 요청자")
 	private String giCustName;
 

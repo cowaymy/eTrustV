@@ -15,7 +15,7 @@ public class RdcStockListForm {
 	@ApiModelProperty(value = "materialCode IDs [default : '' 전체] 예) 110544,3112234,110544", example = "1, 2")
 	private String partsCode;
 
-	@ApiModelProperty(value = "부품 id IDs [default : '' 전체] 예) Water Purifier=54, Air Purifier=55, Bidet=56", example = "1, 2")
+	@ApiModelProperty(value = "부품 id IDs [default : '' 전체] 예) 407", example = "1, 2")
 	private int partsId;
 
 	public static Map<String, Object> createMap(RdcStockListForm RdcStockListForm) {
