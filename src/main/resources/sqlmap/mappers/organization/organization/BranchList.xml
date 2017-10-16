@@ -15,7 +15,7 @@
         <select id="selectBranchList" parameterType="Map" resultType="egovMap">
         
         
-            <![CDATA[
+
             
 		    SELECT Project1.BRNCH_ID BRNCH_ID  ,
 				       Project1.C1 C1  ,
@@ -139,11 +139,34 @@
 				                LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE_ID
 				                LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.REGN_ID
 				                LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
-				          WHERE  ( 1 = Extent1.STUS_ID )
-				                   AND ( Extent1.TYPE_ID IN ( 41,40,42,1160,43,46,44,45,47 )
-				                  ) ) Project1
+				          WHERE  1=1
+      	                             <if test="branchTypeList != null and branchTypeList != ''">
+						                 AND Extent1.TYPE_ID IN
+						                 <foreach item="item" collection="branchTypeList" index="index" open="(" separator="," close=")">
+						                     #{item}
+						                 </foreach>
+						             </if>
+                                     <if test="regionList != null and regionList != ''">
+                                         AND Extent1.REGN_ID IN
+                                         <foreach item="item" collection="regionList" index="index" open="(" separator="," close=")">
+                                             #{item}
+                                         </foreach>
+                                     </if>
+                                     <if test="branchCd != null and branchCd != ''">
+						                 AND EXTENT1.CODE LIKE '%'|| #{branchCd} || '%'
+						             </if>
+                                     <if test="branchNm != null and branchNm != ''">
+						                 AND EXTENT1.NAME LIKE '%'|| #{branchNm} || '%'
+						             </if>
+                                     <if test="cmbStatusType != null and cmbStatusType != ''">
+						                 AND EXTENT1.CNTY_ID = #{cmbStatusType}
+						             </if>
+                                     <if test="countryCd != null and countryCd != ''">
+						                 AND EXTENT1.STUS_ID =  #{countryCd}
+						             </if>
+				                   ) Project1
 				  ORDER BY Project1.CODE ASC
-           ]]>   
+
 
              
         </select>
