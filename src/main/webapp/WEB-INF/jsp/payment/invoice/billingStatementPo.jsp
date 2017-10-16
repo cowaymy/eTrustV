@@ -19,12 +19,30 @@ $(document).ready(function(){
        }
     }); */
     
-    $("#startPeriod").keyup(function(e){
+    $("#startPeriod").keyup(function() {
+        var str = $("#startPeriod").val();
+        var pattern_eng = /[A-za-z]/g;
+
+         if (pattern_special.test(str) || pattern_eng.test(str)) {
+             $("#startPeriod").val(str.replace(/[^0-9]/g, ""));
+         }
+   });
+    
+    $("#endPeriod").keyup(function() {
+        var str = $("#endPeriod").val();
+        var pattern_eng = /[A-za-z]/g;
+
+         if (pattern_special.test(str) || pattern_eng.test(str)) {
+             $("#endPeriod").val(str.replace(/[^0-9]/g, ""));
+         }
+   });
+    
+    $("#startPeriod").change(function(e){
     	if($(this).val() < 1 ) $("#startPeriod").val(1);
     	else if($(this).val() > 60) $("#startPeriod").val(60);
     });
     
-    $("#endPeriod").keyup(function(e){
+    $("#endPeriod").change(function(e){
         if($(this).val() < 1 ) $("#endPeriod").val(1);
         else if($(this).val() > 60) $("#endPeriod").val(60);
     });
