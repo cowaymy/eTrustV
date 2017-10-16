@@ -127,7 +127,10 @@
                               REQST_CDC_RDC,
                               REQST_STUS,
                               CRT_USER_ID,
-                              CRT_DT)
+			                  CRT_DT,
+			                  REQST_TYPE,
+			                  REQST_TYPE_DTL
+                              )
                             VALUES (  #{reqno}
 		                            , #{sttype}
 		                            , #{smtype}
@@ -140,6 +143,8 @@
 		                            , 'O'
 		                            , #{userId}
 		                            , SYSDATE
+                                    , #{sttype}
+                                    , #{smtype}
 		                            )
     </update>
     

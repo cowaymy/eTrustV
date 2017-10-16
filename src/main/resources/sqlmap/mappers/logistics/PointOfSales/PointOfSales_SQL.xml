@@ -65,8 +65,11 @@ select ROWNUM rnum , l47.REQST_STUS     status
            <if test="searchOthersReq1 != null and searchOthersReq2 != null and searchOthersReq1 != '' and searchOthersReq2 != ''" >
              AND l47.reqst_no BETWEEN #{searchOthersReq1} AND #{searchOthersReq2}
            </if>
-          <if test="searchReqType != null and searchReqType !=''">
+<!--           <if test="searchReqType != null and searchReqType !=''">
             AND l47.trnsc_type_dtl = #{searchReqType}
+           </if> -->
+          <if test="searchReqType != null and searchReqType !=''">
+            AND l47.REQST_TYPE_DTL = #{searchReqType}
            </if>
            <if test="searchLoc != null and searchLoc !=''">
             AND l47.reqst_cdc_rdc = #{searchLoc}
@@ -282,7 +285,10 @@ WHERE 1 = 1
 	            REQST_CDC_RDC,
 	            REQST_STUS,
 	            CRT_USER_ID,
-	            CRT_DT)
+	            CRT_DT,
+	            REQST_TYPE,
+                REQST_TYPE_DTL
+	            )
         VALUES (  
                 #{reqno}
                 , #{trnscType}
@@ -296,6 +302,8 @@ WHERE 1 = 1
                 , 'O'
                 , #{userId}
                 , SYSDATE
+                , #{trnscType}
+                , #{insReqType}
                 )
     </insert>
     <insert id="insRequestItem" parameterType="Map">

@@ -59,11 +59,17 @@
            <if test="streq !=null and streq !=''">
               and l47.reqst_no = #{streq}
            </if>
-           <if test="smtype !=null and smtype !=''">
+<!--            <if test="smtype !=null and smtype !=''">
               and l47.trnsc_type_dtl = #{smtype}
            </if>
            <if test="sttype !=null and sttype !=''">
               and l47.trnsc_type = #{sttype}
+           </if> -->
+           <if test="smtype !=null and smtype !=''">
+              and l47.REQST_TYPE_DTL = #{smtype}
+           </if>
+           <if test="sttype !=null and sttype !=''">
+              and l47.REQST_TYPE = #{sttype}
            </if>
            <if test="flocation !=null and flocation !=''">
               and l47.rciv_cdc_rdc = #{flocation}
@@ -131,7 +137,10 @@
                               REQST_CDC_RDC,
                               REQST_STUS,
                               CRT_USER_ID,
-                              CRT_DT)
+			                  CRT_DT,
+			                  REQST_TYPE,
+			                  REQST_TYPE_DTL
+                              )
                             VALUES (  #{reqno}
                                     , #{sttype}
                                     , #{smtype}
@@ -143,7 +152,9 @@
                                     , #{tlocation}
                                     , 'O'
                                     , #{userId}
-                                    , SYSDATE
+					                , SYSDATE
+                                    , #{sttype}
+                                    , #{smtype}
                                     )
     </update>
     
@@ -347,11 +358,17 @@
            <if test="seldelno != null and seldelno != ''">
               and l54.delvry_no  = #{seldelno}
            </if>
-           <if test="smtype !=null and smtype !=''">
+<!--            <if test="smtype !=null and smtype !=''">
               and l47.trnsc_type_dtl = #{smtype}
            </if>
            <if test="sttype !=null and sttype !=''">
               and l47.trnsc_type = #{sttype}
+           </if> -->
+           <if test="smtype !=null and smtype !=''">
+              and l47.REQST_TYPE_DTL = #{smtype}
+           </if>
+           <if test="sttype !=null and sttype !=''">
+              and l47.REQST_TYPE = #{sttype}
            </if>
            <if test="flocation !=null and flocation !=''">
               and l47.rciv_cdc_rdc = #{flocation}
