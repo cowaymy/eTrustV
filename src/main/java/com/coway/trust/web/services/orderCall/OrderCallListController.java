@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -31,6 +32,8 @@ public class OrderCallListController {
 	
 	@Resource(name = "orderCallListService")
 	private OrderCallListService orderCallListService;
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
 	
 	/**
 	 * Call Center - Order Call 
@@ -82,9 +85,12 @@ public class OrderCallListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/addCallResultPop.do")
-	public String insertCallResultPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String insertCallResultPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 		EgovMap orderCall = orderCallListService.getOrderCall(params);
 		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
+		
+		//Order Detail Tab
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params);
 		logger.debug("orderCall : {}", orderCall);
 		model.addAttribute("callStusCode", params.get("callStusCode"));
 		model.addAttribute("callStusId", params.get("callStusId"));
@@ -93,6 +99,7 @@ public class OrderCallListController {
 		model.addAttribute("salesOrdNo", params.get("salesOrdNo"));
 		model.addAttribute("orderCall", orderCall);
 		model.addAttribute("callStatus", callStatus);
+		model.addAttribute("orderDetail", orderDetail);
 		return "services/orderCall/addCallLogResultPop";
 	}
 	
@@ -114,6 +121,24 @@ public class OrderCallListController {
 		resultValue = orderCallListService.insertCallResult(params,sessionVO);
 		message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
 		return ResponseEntity.ok(message);
+	}
+	
+	/**
+	 * Call Center - order Call List - Save Call Log Result 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getCallLogTransaction.do", method = RequestMethod.GET)
+	public  ResponseEntity<List<EgovMap>>  selectCallLogTransaction(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		logger.debug("params : {}", params);
+		//Call Log Transation
+		List<EgovMap> callLogTran = orderCallListService.selectCallLogTransaction(params);
+		
+		logger.debug("callLogTran : {}", callLogTran);
+		return ResponseEntity.ok(callLogTran);
 	}
 	
 }
