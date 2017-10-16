@@ -9,6 +9,97 @@ function fn_addCallSave(){
         Common.alert(result.message);
     });
 }
+
+function fn_callLogTransaction(){
+    Common.ajax("GET", "/callCenter/getCallLogTransaction.do", $("#addCallForm").serialize(), function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        AUIGrid.setGridData(myGridID, result);
+    });
+}
+
+$(document).ready(function() {
+	callLogTranGrid();
+	fn_callLogTransaction();
+	
+});
+var myGridID;
+function callLogTranGrid() {
+    //AUIGrid 칼럼 설정
+    var columnLayout = [ {
+        dataField : "code",
+        headerText : "Status",
+        editable : false,
+        width : 100
+    }, {
+        dataField : "c1",
+        headerText : "Recall Date",
+        editable : false,
+        width : 100
+    }, {
+        dataField : "c2",
+        headerText : "Action Date",
+        editable : false,
+        width : 130
+    }, {
+        dataField : "c9",
+        headerText : "Feedback",
+        editable : false,
+        width : 150
+    }, {
+        dataField : "appTypeName",
+        headerText : "Assign CT",
+        editable : false,
+        style : "my-column",
+        width : 100
+    }, {
+        dataField : "callRem",
+        headerText : "Remark",
+        editable : false,
+        width : 180
+    }, {
+        dataField : "c3",
+        headerText : "Key By",
+        editable : false,
+        width : 180
+        
+    }, {
+        dataField : "callCrtDt",
+        headerText : "Key At",
+        width : 180
+    }];
+     // 그리드 속성 설정
+    var gridPros = {
+        
+        // 페이징 사용       
+        usePaging : true,
+        
+        // 한 화면에 출력되는 행 개수 20(기본값:20)
+        pageRowCount : 20,
+        
+        editable : true,
+        
+        showStateColumn : true, 
+        
+        displayTreeOpen : true,
+        
+        
+        headerHeight : 30,
+        
+        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+        skipReadonlyColumns : true,
+        
+        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+        wrapSelectionMove : true,
+        
+        // 줄번호 칼럼 렌더러 출력
+        showRowNumColumn : true,
+
+    };
+    
+    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+    myGridID = AUIGrid.create("#grid_wrap_callLogList", columnLayout, gridPros);
+}
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -38,865 +129,59 @@ function fn_addCallSave(){
     <tr>
         <th scope="row">Call Log Type</th>
         <td>
-        <span></span>
+        <span><c:out value="${orderCall.callTypeName}"/> </span>
         </td>
         <th scope="row">Create Date</th>
         <td>
+        <span><c:out value="${orderCall.crtDt}"/> </span>
         </td>
     </tr>
     <tr>
         <th scope="row">Wait For Cancel</th>
+        <c:if test="${orderCall.isWaitCancl == '0' }">
         <td>
-        <span></span>
+        <span>No</span>
         </td>
+         </c:if>
+         <c:if test="${orderCall.isWaitCancl == '1' }">
+        <td>
+        <span>Yes</span>
+        </td>
+         </c:if>
+    
+    
         <th scope="row">Creator</th>
         <td>
+        <span><c:out value="${orderCall.crtUserId}"/></span>
         </td>
     </tr>
     <tr>
         <th scope="row">Product To Install </th>
         <td>
-        <span></span>
+        <span><c:out value="${orderCall.productCode}"/> - <c:out value="${orderCall.productName}"/></span>
         </td>
         <th scope="row">Call Log Status</th>
         <td>
+           <span><c:out value="${orderCall.callStusCode}"/></span>
         </td>
     </tr>
     </tbody>
     </table><!-- table end -->
     
     <article class="grid_wrap mt20"><!-- grid_wrap start -->
-    그리드 영역
+    <div id="grid_wrap_callLogList" style="width: 100%; height: 250px; margin: 0 auto;"></div>
     </article><!-- grid_wrap end -->
 
     </dd>
     <dt class="click_add_on"><a href="#">Order Full Details</a></dt>
     <dd>
-    
-    <section class="tap_wrap mt0"><!-- tap_wrap start -->
-    <ul class="tap_type1 num4">
-        <li><a href="#" class="on">Basic Info</a></li>
-        <li><a href="#">HP / Cody</a></li>
-        <li><a href="#">Customer Info</a></li>
-        <li><a href="#">Installation Info</a></li>
-        <li><a href="#">Mailing Info</a></li>
-        <li><a href="#">Payment Channel</a></li>
-        <li><a href="#">Membership Info</a></li>
-        <li><a href="#">Document Submission</a></li>
-        <li><a href="#">Call Log</a></li>
-        <li><a href="#">Guarantee Info</a></li>
-        <li><a href="#">Payment Listing</a></li>
-        <li><a href="#">Last 6 Months Transaction</a></li>
-        <li><a href="#">Order Configuration</a></li>
-        <li><a href="#">Auto Debit Result</a></li>
-        <li><a href="#">Relief Certificate</a></li>
-        <li><a href="#">Discount</a></li>
-    </ul>
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:130px" />
-        <col style="width:*" />
-        <col style="width:130px" />
-        <col style="width:*" />
-        <col style="width:130px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row">Progress Status</th>
-        <td>
-        <span></span>
-        </td>
-        <th scope="row">Agreement No</th>
-        <td>
-        </td>
-        <th scope="row">Agreement Expiry</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Order No</th>
-        <td>
-        </td>
-        <th scope="row">Order Date</th>
-        <td>
-        </td>
-        <th scope="row">Status</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Application Type</th>
-        <td>
-        </td>
-        <th scope="row">Reference No</th>
-        <td>
-        </td>
-        <th scope="row">Key At (By)</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Product</th>
-        <td>
-        </td>
-        <th scope="row">PO Number</th>
-        <td>
-        </td>
-        <th scope="row">Key-In Branch</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">PV</th>
-        <td>
-        </td>
-        <th scope="row">Price/RPF</th>
-        <td>
-        </td>
-        <th scope="row">Rental Fees</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Installment Duration</th>
-        <td>
-        </td>
-        <th scope="row">PV Month (month/year)</th>
-        <td>
-        </td>
-        <th scope="row">Rental Status</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Promotion</th>
-        <td colspan="3">
-        </td>
-        <th scope="row">Related No</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Serial Number</th>
-        <td>
-        </td>
-        <th scope="row">Sirim Number</th>
-        <td>
-        </td>
-        <th scope="row">Update At (By)</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Obligation Period</th>
-        <td colspan="5">
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Remark</th>
-        <td colspan="5">
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">CCP Feedback Code</th>
-        <td colspan="5">
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">CCP Remark</th>
-        <td colspan="5">
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <div class="divine_auto"><!-- divine_auto start -->
-
-    <div style="width:50%;">
-
-    <div class="border_box"><!-- border_box start -->
-
-    <aside class="title_line"><!-- title_line start -->
-    <h3 class="pt0">Salesman Info</h3>
-    </aside><!-- title_line end -->
-    
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:150px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row" rowspan="3">Order Made By</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Salesman Code</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Salesman Name</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Salesman NRIC</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Mobile No</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Office No</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">House No</th>
-        <td><span></span></td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </div><!-- border_box end -->
-
-    </div>
-
-    <div style="width:50%;">
-
-    <div class="border_box"><!-- border_box start -->
-
-    <aside class="title_line"><!-- title_line start -->
-    <h3 class="pt0">Cody Info</h3>
-    </aside><!-- title_line end -->
-
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:150px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row" rowspan="3">Service By</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Cody Code</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Cody Name</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Cody NRIC</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Mobile No</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">Office No</th>
-        <td><span></span></td>
-    </tr>
-    <tr>
-        <th scope="row">House No</th>
-        <td><span></span></td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </div><!-- border_box end -->
-
-    </div>
-
-    </div><!-- divine_auto end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:130px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row">Customer ID</th>
-        <td>
-        <span></span>
-        </td>
-        <th scope="row">Customer Name</th>
-        <td colspan="3">
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Customer Type</th>
-        <td>
-        </td>
-        <th scope="row">NRIC/Company No</th>
-        <td>
-        </td>
-        <th scope="row">JomPay Ref-1</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Nationality</th>
-        <td>
-        </td>
-        <th scope="row">Gender</th>
-        <td>
-        </td>
-        <th scope="row">Race</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">VA Number</th>
-        <td>
-        </td>
-        <th scope="row">Passport Expire</th>
-        <td>
-        </td>
-        <th scope="row">Visa Expire</th>
-        <td>
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    <aside class="title_line"><!-- title_line start -->
-    <h3>Same Rental Group Order(s)</h3>
-    </aside><!-- title_line end -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row" rowspan="3">Installation Address</th>
-        <td colspan="3"></td>
-        <th scope="row">Country</th>
-        <td></td>
-    </tr>
-    <tr>
-        <td colspan="3"></td>
-        <th scope="row">State</th>
-        <td></td>
-    </tr>
-    <tr>
-        <td colspan="3"></td>
-        <th scope="row">Area</th>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">Prefer Install Date</th>
-        <td>
-        </td>
-        <th scope="row">Prefer Install Time</th>
-        <td>
-        </td>
-        <th scope="row">Postcode</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Instruction</th>
-        <td colspan="5">
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">DSC Verification Remark</th>
-        <td colspan="5">
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">DSC Branch</th>
-        <td colspan="3">
-        </td>
-        <th scope="row">Installed Date</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">CT Code</th>
-        <td>
-        </td>
-        <th scope="row">CT Name</th>
-        <td colspan="3">
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Contact Name</th>
-        <td colspan="3">
-        </td>
-        <th scope="row">Gender</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Contact NRIC</th>
-        <td>
-        </td>
-        <th scope="row">Email</th>
-        <td>
-        </td>
-        <th scope="row">Fax No</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Mobile No</th>
-        <td>
-        </td>
-        <th scope="row">Office No</th>
-        <td>
-        </td>
-        <th scope="row">House No</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Post</th>
-        <td>
-        </td>
-        <th scope="row">Department</th>
-        <td colspan="3">
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row" rowspan="3">Mailing Address</th>
-        <td colspan="3"></td>
-        <th scope="row">Country</th>
-        <td></td>
-    </tr>
-    <tr>
-        <td colspan="3"></td>
-        <th scope="row">State</th>
-        <td></td>
-    </tr>
-    <tr>
-        <td colspan="3"></td>
-        <th scope="row">Area</th>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">Billing Group</th>
-        <td>
-        </td>
-        <th scope="row">Billing Type</th>
-        <td>
-        <label><input type="checkbox" /><span>SMS</span></label>
-        <label><input type="checkbox" /><span>Post</span></label>
-        <label><input type="checkbox" /><span>E-statement</span></label>
-        </td>
-        <th scope="row">Postcode</th>
-        <td>
-        </td>
-    </tr>   
-    <tr>
-        <th scope="row">Contact Name</th>
-        <td colspan="3">
-        </td>
-        <th scope="row">Gender</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Contact NRIC</th>
-        <td>
-        </td>
-        <th scope="row">Email</th>
-        <td>
-        </td>
-        <th scope="row">Fax No</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Mobile No</th>
-        <td>
-        </td>
-        <th scope="row">Office No</th>
-        <td>
-        </td>
-        <th scope="row">House No</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Post</th>
-        <td>
-        </td>
-        <th scope="row">Department</th>
-        <td colspan="3">
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-    
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:150px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:150px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row">Rental Paymode</th>
-        <td>
-        </td>
-        <th scope="row">Direct Debit Mode</th>
-        <td>
-        </td>
-        <th scope="row">Auto Debit Limit</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Issue Bank</th>
-        <td>
-        </td>
-        <th scope="row">Card Type</th>
-        <td>
-        </td>
-        <th scope="row">Claim Bill Date</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Credit Card No</th>
-        <td>
-        </td>
-        <th scope="row">Name On Card</th>
-        <td>
-        </td>
-        <th scope="row">Expiry Date</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Bank Account No</th>
-        <td>
-        </td>
-        <th scope="row">Account Name</th>
-        <td>
-        </td>
-        <th scope="row">Issue NRIC</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Apply Date</th>
-        <td>
-        </td>
-        <th scope="row">Submit Date</th>
-        <td>
-        </td>
-        <th scope="row">Start Date</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Reject Date</th>
-        <td>
-        </td>
-        <th scope="row">Reject Code</th>
-        <td>
-        </td>
-        <th scope="row">Payment Term</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Pay By Third Party</th>
-        <td>
-        </td>
-        <th scope="row">Third Party ID</th>
-        <td>
-        </td>
-        <th scope="row">Third Party Type</th>
-        <td>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Third Party Name</th>
-        <td colspan="3">
-        </td>
-        <th scope="row">Third Party NRIC</th>
-        <td>
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:155px" />
-        <col style="width:*" />
-        <col style="width:155px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row">Guarantee Status</th>
-        <td colspan="3"></td>
-    </tr>
-    <tr>
-        <th scope="row">HP Code</th>
-        <td></td>
-        <th scope="row">HP Name (NRIC)</th>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">HM Code</th>
-        <td></td>
-        <th scope="row">HM Name (NRIC)</th>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">SM Code</th>
-        <td></td>
-        <th scope="row">SM Name (NRIC)</th>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">GM Code</th>
-        <td></td>
-        <th scope="row">GM Name (NRIC)</th>
-        <td></td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-        <col style="width:140px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row">BS Availability</th>
-        <td>
-        <span>1111</span>
-        </td>
-        <th scope="row">BS Frequency</th>
-        <td></td>
-        <th scope="row">3Last BS Date</th>
-        <td></td>
-    </tr>
-    <tr>
-        <th scope="row">BS Cody Code</th>
-        <td colspan="5"></td>
-    </tr>
-    <tr>
-        <th scope="row">Config Remark</th>
-        <td colspan="5"></td>
-    </tr>
-    <tr>
-        <th scope="row">Happy Call Service</th>
-        <td colspan="5">
-        <label><input type="checkbox" /><span>Installation Type</span></label>
-        <label><input type="checkbox" /><span>BS Type</span></label>
-        <label><input type="checkbox" /><span>AS Type</span></label>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Prefer BS Week</th>
-        <td colspan="5">
-        <label><input type="radio" name="week" /><span>None</span></label>
-        <label><input type="radio" name="week" /><span>Week 1</span></label>
-        <label><input type="radio" name="week" /><span>Week 2</span></label>
-        <label><input type="radio" name="week" /><span>Week 3</span></label>
-        <label><input type="radio" name="week" /><span>Week 4</span></label>
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-    <span class="red_text">Disclaimer : This data is subject to Coway private information property which is not meant to view by any public other than coway internal staff only.</span>
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:180px" />
-        <col style="width:*" />
-        <col style="width:150px" />
-        <col style="width:*" />
-    </colgroup>
-    <tbody>
-    <tr>
-        <th scope="row">Reference No</th>
-        <td>
-        <input type="text" title="" placeholder="Reference No" class="w100p" />
-        </td>
-        <th scope="row">Certificate Date</th>
-        <td>
-        <input type="text" title="" placeholder="Certificate Date" class="w100p" />
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">GST Registration No</th>
-        <td colspan="3">
-        <input type="text" title="" placeholder="GST Registration No" class="w100p" />
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">Remark</th>
-        <td colspan="3">
-        <textarea cols="20" rows="5"></textarea>
-        </td>
-    </tr>
-    </tbody>
-    </table><!-- table end -->
-
-    </article><!-- tap_area end -->
-
-    <article class="tap_area"><!-- tap_area start -->
-
-    <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
-    </article><!-- grid_wrap end -->
-
-    </article><!-- tap_area end -->
-
-    </section><!-- tap_wrap end -->
-
+    <!------------------------------------------------------------------------------
+    Order Detail Page Include START
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp" %>
+<!------------------------------------------------------------------------------
+    Order Detail Page Include END
+------------------------------------------------------------------------------->
     </dd>
 </dl>
 </article><!-- acodi_wrap end -->
