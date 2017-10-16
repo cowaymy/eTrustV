@@ -26,6 +26,8 @@ public class CommissionConstants {
 	public static final String COMIS_RUNNING = "1";			//Default end success
 	public static final String COMIS_FAIL_NEXT = "8";			//Default end fail
 	public static final String COMIS_FAIL = "9";					//Default end fail
+	public static final String COMIS_STATUS_ID = "15";					//Status Code Id
+	
 	
 	public static final String COMIS_S_G_MANAGER_MEM_LEV = "0";			//Super General Manager
 	public static final String COMIS_G_MANAGER_MEM_LEV = "1";			//General Manager

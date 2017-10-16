@@ -1605,6 +1605,7 @@ public class CommissionCalculationController {
     	msg.setCode(AppConstants.SUCCESS);
 		
 		commissionCalculationService.neoProInsert(params,sessionVO);
+		message = AppConstants.MSG_SUCCESS;
 		
 		msg.setMessage(message);
         return ResponseEntity.ok(msg);

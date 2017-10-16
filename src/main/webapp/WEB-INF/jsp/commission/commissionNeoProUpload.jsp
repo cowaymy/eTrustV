@@ -37,11 +37,11 @@
     	                    // 그리드 CSV 데이터 적용시킴
     	                    AUIGrid.setCsvGridData(newGridID, event.target.result, false);
     	                } else {
-    	                    alert('No data to import!');
+    	                	Common.alert('<spring:message code="sys.common.alert.upload.noDate"/>');
     	                }
     	            };
     	            reader.onerror = function() {
-    	                alert('Unable to read ' + file.fileName);
+    	            	Common.alert("<spring:message code='sys.common.alert.upload.unable' arguments='"+file.fileName+"' htmlEscape='false'/>");
     	            };
     	        }
     	});
@@ -90,7 +90,7 @@
 	         }
 	     },
 	     error : function(e) {
-	         alert("ajaxSubmit Error : " + e);
+	    	 Common.alert("<spring:message code='sys.common.alert.error.ajaxSubmit' arguments='"+e+"' htmlEscape='false'/>");
 	     }
 	  });
   }
@@ -100,7 +100,7 @@
 	    var fileNm = $("#uploadfile").val();
         
         if(fileNm.substr(fileNm.indexOf("."),fileNm.length) != ".csv"){
-            Common.alert('Select the CSV file on the loca PC');
+        	Common.alert('<spring:message code="sys.common.alert.upload.csv"/>');
             return;
         }else{
 			
@@ -135,13 +135,13 @@
 		    	
 		        data.all = gridList;
 		    }  else {
-		        Common.alert('Select the CSV file on the loca PC');
+		    	Common.alert('<spring:message code="sys.common.alert.upload.csv"/>');
 		        return;
 		    }
 		    
 		    //Ajax 호출
 		     Common.ajax("POST", "/commission/calculation/neoUploadFile", data, function(result) {
-		        Common.alert(result.message);
+		    	 Common.alert('<spring:message code="sys.msg.success"/>');
 		        
 		        document.myForm.reset();
 		    },  function(jqXHR, textStatus, errorThrown) {
@@ -154,7 +154,7 @@
 		        } catch (e) {
 		            console.log(e);
 		        }
-		        alert("Fail : " + jqXHR.responseJSON.message);        
+		        Common.alert("<spring:message code='sys.common.alert.error.ajaxSubmit' arguments='"+jqXHR.responseJSON.message+"' htmlEscape='false'/>");
 		    }); 
         }
 	}
