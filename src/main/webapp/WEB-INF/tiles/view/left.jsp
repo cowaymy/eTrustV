@@ -117,7 +117,7 @@
             <c:set var="menuStatusClass" value="disabled" />
         </c:when>
         <c:otherwise>
-
+            <c:set var="menuStatusClass" value="" />
         </c:otherwise>
     </c:choose>
 
