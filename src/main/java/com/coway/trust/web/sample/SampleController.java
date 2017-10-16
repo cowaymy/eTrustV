@@ -111,7 +111,7 @@ public class SampleController {
 		command.add("-Dspring.profiles.active=local");
 		command.add("batch-1.0.0-SNAPSHOT.jar");
 		command.add("-Dspring.batch.job.names=ctosJob");
-		command.add(" ctosJob");
+		command.add("ctosJob");
 		command.add("aa=" + command);
 		// command.add("--spring.batch.job.names=ctosJob");
 		LOGGER.debug("command : {}", command.toString());

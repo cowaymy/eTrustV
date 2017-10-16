@@ -7,4 +7,6 @@ import com.coway.trust.biz.common.FileVO;
 
 public interface FileApplication {
 	void businessAttach(String fileChannel, List<FileVO> list, Map<String, Object> params);
+
+	int commonAttach(String fileChannel, List<FileVO> list, Map<String, Object> params);
 }

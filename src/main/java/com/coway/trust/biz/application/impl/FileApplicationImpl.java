@@ -40,7 +40,13 @@ public class FileApplicationImpl implements FileApplication {
 
 		// fileGroupKey 를 가지고 업무 처리..
 		// 업무 crud 처리.
-		//customerService.insertCustomerInfo(params);
+		// customerService.insertCustomerInfo(params);
 	}
 
+	@Override
+	public int commonAttach(String fileChannel, List<FileVO> list, Map<String, Object> params) {
+		int fileGroupKey = fileService.insertFiles(list, fileChannel, (Integer) params.get("userId"));
+		params.put("fileGroupKey", fileGroupKey);
+		return fileGroupKey;
+	}
 }
