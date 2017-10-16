@@ -342,7 +342,7 @@
             <input type="hidden" id="loginBrowser" name="browser" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
-            <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value="IVYLIM"/></p>
+            <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value="100122"/></p>
             <p><input type="password" title="PASSWORD" placeholder="PASSWORD" id="password" name="password"
                       value="ivy123"/></p>
             <p class="id_save">
