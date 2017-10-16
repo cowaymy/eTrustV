@@ -44,7 +44,7 @@
 
 <header class="lnb_header"><!-- lnb_header start -->
 <form action="#" method="post">
-<h1 class="logo_type"><a href="#"><img src="../images/common/CowayLeftLogo.png" alt="COWAY" /></a><a href="#"><img src="../images/common/logo.gif" alt="eTrust system" /></a></h1>
+<h1><a href="#"><img src="../images/common/logo.gif" alt="eTrust system" /></a></h1>
 <p class="search">
 <input type="text" title="검색어 입력" />
 <input type="image" src="../images/common/icon_lnb_search.gif" alt="검색" />
@@ -147,13 +147,13 @@
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="../images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
+	<li>eAccount</li>
+	<li>Staff Claim</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>PO Issue</h2>
+<h2>Staff Claim</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
 </ul>
@@ -166,133 +166,49 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
+	<col style="width:110px" />
 	<col style="width:*" />
 	<col style="width:110px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">EST Year & Week</th>
-	<td>
-
-	<select class="select_solo_year">
-		<option value="">2017</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	<select>
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-
-	</td>
-	<th scope="row">CDC</th>
-	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
-	</select>
-	</td>
+	<th scope="row">Cost Center</th>
+	<td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a></td>
+	<th scope="row">Staff Code</th>
+	<td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row">Stock</th>
+	<th scope="row">Claim Month</th>
+	<td><input type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" /></td>
+	<th scope="row">Status</th>
 	<td>
-	<select class="w100p">
-		<option value="">11</option>
-		<option value="">22</option>
-		<option value="">33</option>
+	<select class="multy_select" multiple="multiple">
+		<option value="1">Temporary save</option>
+		<option value="2">Request</option>
+		<option value="3">Approve In-Progress</option>
+		<option value="4">Approved</option>
+		<option value="5">Reject</option>
 	</select>
-	</td>
-	<th scope="row">PO Status</th>
-	<td>
-	<label><input type="checkbox" disabled="disabled" /><span>PO Issue</span></label>
-	<label><input type="checkbox" disabled="disabled" /><span>Approval</span></label>
 	</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-<div class="divine_auto type2 mt30"><!-- divine_auto start -->
-
-<div style="width:50%;">
-
-<div class="border_box" style="height:230px"><!-- border_box start -->
-
-<article class="grid_wrap" style="height:170px"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-</div><!-- border_box end -->
-
-</div>
-
-<div style="width:50%;">
-
-<div class="border_box" style="height:230px"><!-- border_box start -->
-
-<article class="grid_wrap" style="height:170px"><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-<ul class="btns">
-	<li><a href="#"><img src="../images/common/btn_right.gif" alt="right" /></a></li>
-</ul>
-
-<ul class="center_btns">
-	<li><p class="btn_blue"><a href="#">Clear</a></p></li>
-	<li><p class="btn_blue"><a href="#">Create PO</a></p></li>
-</ul>
-</div><!-- border_box end -->
-
-</div>
-
-</div><!-- divine_auto end -->
-
-
-<article class="grid_wrap mt30" style=""><!-- grid_wrap start -->
-그리드 영역
-</article><!-- grid_wrap end -->
-
-
-<ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#">Download Raw Data</a></p></li>
-</ul>
-
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn"><a href="#">menu2</a></p></li>
-		<li><p class="link_btn"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn"><a href="#">menu8</a></p></li>
-	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-	</ul>
-	<p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
-
 </form>
 </section><!-- search_table end -->
+
+<section class="search_result"><!-- search_result start -->
+
+<ul class="right_btns">
+	<li><p class="btn_grid"><a href="#">New Expenses</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
 
 </section><!-- content end -->
 
