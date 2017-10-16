@@ -16,7 +16,7 @@ public class StockByHolderListDto {
 	private String ctCodyId;
 
 	@ApiModelProperty(value = "CT/CODY 별 예정 수량")
-	private int qty;
+	private int stockQty;
 
 	public static StockByHolderListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, StockByHolderListDto.class);
@@ -38,12 +38,12 @@ public class StockByHolderListDto {
 		this.ctCodyId = ctCodyId;
 	}
 
-	public int getQty() {
-		return qty;
+	public int getStockQty() {
+		return stockQty;
 	}
 
-	public void setQty(int qty) {
-		this.qty = qty;
+	public void setStockQty(int stockQty) {
+		this.stockQty = stockQty;
 	}
 
 }
