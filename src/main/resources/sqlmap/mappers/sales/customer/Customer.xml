@@ -183,7 +183,7 @@
                                                 AND S1.RACE_ID1 = #{raceId}
                                             </if>
                                             <if test="name != null and name !=''">
-                                                AND S1.Name1 like '%'|| #{name} || '%'
+                                                AND UPPER(S1.Name1) like '%'|| UPPER(#{name}) || '%'
                                             </if>
                                             <if test="custVaNo != null and custVaNo !=''">
                                                 AND S1.CUST_VA_NO = #{custVaNo}

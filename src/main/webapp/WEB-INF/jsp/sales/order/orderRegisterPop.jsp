@@ -2218,8 +2218,8 @@
 <tr>
     <th scope="row">Discount Period/<br>Promotion Rental Fee</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p"></select></p>
-        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder=""  class="w100p readonly" readonly/></p>
-        <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder=""  class="w100p readonly" readonly/></p></td>
+        <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:44px;" class="readonly" readonly/></p>
+        <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
     <th scope="row">Organization Code</th>
     <td><input id="orgCd" name="orgCd" type="text" title="" placeholder="Organization Code" class="w100p readonly" readonly />
         <input id="orgMemId" name="orgMemId" type="hidden" /></td>

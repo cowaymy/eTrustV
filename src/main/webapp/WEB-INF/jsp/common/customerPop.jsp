@@ -10,8 +10,8 @@
 	    //AUIGrid 그리드를 생성합니다.
 	    createAUIGrid();
 	    
-        doGetCombo('/common/selectCodeList.do', '8', '', 'cmbTypeId', 'S', ''); //Common Code
-        doGetCombo('/common/selectCodeList.do', '2', '', 'raceId',    'S', ''); //Common Code
+        doGetCombo('/common/selectCodeList.do', '8', '964', 'cmbTypeId', 'S', ''); //Common Code
+        doGetCombo('/common/selectCodeList.do', '2', '',    'raceId',    'S', ''); //Common Code
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -35,6 +35,18 @@
 	    $('#custPopCloseBtn').click();
 	}
 	
+    function fn_validSearchCustomer() {
+        var isValid = true, msg = "";
+
+        if($("#cmbTypeId option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select a customer type.<br>";
+        }
+
+        if(!isValid) Common.alert("Search Customer" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+    }
 	
     function createAUIGrid() {
         
@@ -70,7 +82,8 @@
     }
 
     // 리스트 조회.
-    function fn_selectPstRequestDOListAjax() {        
+    function fn_selectPstRequestDOListAjax() {
+        if(!fn_validSearchCustomer()) return false;
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", $("#custSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
@@ -102,7 +115,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Customer Type</th>
+	<th scope="row">Customer Type<span class="must">*</span></th>
 	<td>
 	<select id="cmbTypeId" name="cmbTypeId" class="w100p"></select>
 	</td>
