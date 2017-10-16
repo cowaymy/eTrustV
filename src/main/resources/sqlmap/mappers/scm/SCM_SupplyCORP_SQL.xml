@@ -17,77 +17,79 @@
 	 ORDER BY PLAN_ID
   </select> 
   
-<select id="selectSupplyCdcMainList" parameterType="Map" resultType="egovMap">
-		SELECT  0 CHECK_FLAG
-		       ,PLAN_DTL_ID   
-		       ,PLAN_MASTER_ID   
-		       ,PSI_ID     
-		       ,STOCK_CODE CODE   
-		       ,CMPLT      IS_SAVED
-		       ,LAST_UPD_COLUMN   
-		       ,PSI_NAME   PSI
-		       ,STOCK_CTGRY CATEGORY
-		       ,STOCK_NAME  NAME 
-		       ,M_3   
-		       ,M_2   
-		       ,M_1   
-		       ,M3_ISSU_AVG   
-		       ,SALES_PLAN_PRCNTAG   
-		       ,ROUND(M0_ORD)  M0_ORD  
-		       ,ROUND(M0_PLAN) M0_PLAN_ORDER  
-		       ,ROUND(M1) M1  
-		       ,ROUND(M2) M2  
-		       ,ROUND(M3) M3  
-		       ,ROUND(M4) M4  
-		       ,ROUND(OVERDUE) OVERDUE  
-		       ,ROUND(WS0) BEF_1_WEEK_TH  
-		       ,ROUND(WS1) BEF_2_WEEK_TH  
-		       ,ROUND(WS2) BEF_3_WEEK_TH  
-		       ,ROUND(WS3) BEF_4_WEEK_TH  
-		       ,ROUND(W00) W00  
-		       ,ROUND(W01) W01  
-		       ,ROUND(W02) W02  
-		       ,ROUND(W03) W03  
-		       ,ROUND(W04) W04  
-		       ,ROUND(W05) W05  
-		       ,ROUND(W06) W06  
-		       ,ROUND(W07) W07  
-		       ,ROUND(W08) W08  
-		       ,ROUND(W09) W09  
-		       ,ROUND(W10) W10  
-		       ,ROUND(W11) W11  
-		       ,ROUND(W12) W12  
-		       ,ROUND(W13) W13  
-		       ,ROUND(W14) W14  
-		       ,ROUND(W15) W15  
-		       ,ROUND(W16) W16  
-		       ,ROUND(W17) W17  
-		       ,ROUND(W18) W18  
-		       ,ROUND(W19) W19  
-		       ,ROUND(W20) W20  
-		       ,ROUND(W21) W21  
-		       ,ROUND(W22) W22  
-		       ,ROUND(W23) W23  
-		       ,ROUND(W24) W24  
-		       ,ROUND(W25) W25  
-		       ,ROUND(W26) W26  
-		       ,ROUND(W27) W27  
-		       ,ROUND(W28) W28  
-		       ,ROUND(W29) W29  
-		       ,ROUND(W30) W30  
-		  FROM SCM0006D
-		 WHERE PLAN_MASTER_ID = #{cdcCbBox}
-		  <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
-		   AND STOCK_CODE = #{stockCodeCbBox}         
-		  </if>
-		 ORDER BY STOCK_CTGRY ASC 
-		         ,STOCK_NAME ASC 
-		         ,PSI_ID ASC
-  </select>   
+  <select id="selectSupplyCdcMainList" parameterType="Map" resultType="egovMap">
+  SELECT  
+           MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,STOCK_NAME),2) DIV_ODD
+           ,PLAN_DTL_ID   
+           ,PLAN_MASTER_ID   
+           ,PSI_ID     
+           ,STOCK_CODE CODE   
+           ,CMPLT      IS_SAVED
+           ,LAST_UPD_COLUMN   
+           ,PSI_NAME   PSI
+           ,STOCK_CTGRY CATEGORY
+           ,STOCK_NAME  NAME 
+           ,M_3   
+           ,M_2   
+           ,M_1   
+           ,M3_ISSU_AVG   
+           ,SALES_PLAN_PRCNTAG   
+           ,ROUND(M0_ORD)  M0_ORD  
+           ,ROUND(M0_PLAN) M0_PLAN_ORDER  
+           ,ROUND(M1) M1  
+           ,ROUND(M2) M2  
+           ,ROUND(M3) M3  
+           ,ROUND(M4) M4  
+           ,ROUND(OVERDUE) OVERDUE  
+           ,ROUND(WS0) BEF_1_WEEK_TH  
+           ,ROUND(WS1) BEF_2_WEEK_TH  
+           ,ROUND(WS2) BEF_3_WEEK_TH  
+           ,ROUND(WS3) BEF_4_WEEK_TH  
+           ,ROUND(W00) W00  
+           ,ROUND(W01) W01  
+           ,ROUND(W02) W02  
+           ,ROUND(W03) W03  
+           ,ROUND(W04) W04  
+           ,ROUND(W05) W05  
+           ,ROUND(W06) W06  
+           ,ROUND(W07) W07  
+           ,ROUND(W08) W08  
+           ,ROUND(W09) W09  
+           ,ROUND(W10) W10  
+           ,ROUND(W11) W11  
+           ,ROUND(W12) W12  
+           ,ROUND(W13) W13  
+           ,ROUND(W14) W14  
+           ,ROUND(W15) W15  
+           ,ROUND(W16) W16  
+           ,ROUND(W17) W17  
+           ,ROUND(W18) W18  
+           ,ROUND(W19) W19  
+           ,ROUND(W20) W20  
+           ,ROUND(W21) W21  
+           ,ROUND(W22) W22  
+           ,ROUND(W23) W23  
+           ,ROUND(W24) W24  
+           ,ROUND(W25) W25  
+           ,ROUND(W26) W26  
+           ,ROUND(W27) W27  
+           ,ROUND(W28) W28  
+           ,ROUND(W29) W29  
+           ,ROUND(W30) W30  
+      FROM SCM0006D
+     WHERE PLAN_MASTER_ID = #{cdcCbBox}
+      <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
+       AND STOCK_CODE = #{stockCodeCbBox}         
+      </if>
+     ORDER BY STOCK_CTGRY 
+             ,STOCK_NAME 
+             ,PSI_ID
+  </select>
   
   <!-- Supply-CORP -->
   <select id="selectSupplyCorpList" parameterType="Map" resultType="egovMap">
-		 SELECT PLAN_YEAR   
+		 SELECT MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY,STOCK_NAME ),2 ) DIV_ODD
+		       ,PLAN_YEAR   
 		       ,PLAN_MONTH   
 		       ,PLAN_WEEK   
 		       ,STOCK_CTGRY CATEGORY
@@ -143,8 +145,9 @@
 		   <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
 		   AND STOCK_CODE = #{stockCodeCbBox}   
 		   </if>
-		 ORDER BY PSI_ID
-		 
+		 ORDER BY STOCK_CTGRY
+		         ,STOCK_NAME
+		         ,PSI_ID
   </select> 
     
 </mapper>
