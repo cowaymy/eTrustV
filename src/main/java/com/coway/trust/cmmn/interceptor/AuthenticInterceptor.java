@@ -69,6 +69,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
 		}
 
+        // 메뉴에 등록된 uri 에 대한 menuCode....  등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
 		if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))) {
 			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 			sessionVO.setMenuCode((String) pgmPahMenuAuth.get("menuCode"));
