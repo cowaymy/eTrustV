@@ -117,7 +117,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 
 			for (int i = 0; i < GIList.size(); i++) {
 
-				Map<String, Object> tmpMap = (Map<String, Object>) GIList.get(i);
+				Map<String, Object> tmpMap = GIList.get(i);
 				Map<String, Object> imap = new HashMap();
 				imap = (Map<String, Object>) tmpMap.get("item");
 				ttype = (String) imap.get("ttype");
@@ -140,7 +140,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		String[] delvcd = delyCd.split("∈");
 		GiMap.put("parray", delvcd);
 		GiMap.put("gtype", ttype);
-		GiMap.put("prgnm", "POS PROGRAM");
+		// GiMap.put("prgnm", "POS PROGRAM");
 		GiMap.put("refdocno", docno);
 		GiMap.put("salesorder", "");
 		GiMap.put("userId", params.get("userId"));

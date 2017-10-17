@@ -463,7 +463,8 @@ function grFunc(){
 		
 		<section class="pop_body"><!-- pop_body start -->
 		    <form id="grForm" name="grForm" method="POST">
-		    <input type="hidden" name="gtype" id="gtype" value="GR"> 
+		    <input type="hidden" name="gtype" id="gtype" value="GR">
+		    <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>   
 		    <table class="type1">
 		    <caption>search table</caption>
 		    <colgroup>

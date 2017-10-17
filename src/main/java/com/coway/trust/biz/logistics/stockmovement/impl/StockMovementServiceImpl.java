@@ -208,13 +208,11 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 		formMap.put("parray", delvcd);
 		formMap.put("userId", params.get("userId"));
-		formMap.put("prgnm", "deliverylist");
+		// formMap.put("prgnm", params.get("prgnm"));
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
 		stockMoveMapper.StockMovementIssue(formMap);
-		
-		
 
 	}
 
@@ -253,8 +251,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 		String[] delvcd = delyCd.split("∈");
 		formMap.put("parray", delvcd);
-		formMap.put("userId", 999999999);
-		formMap.put("prgnm", "deliverylist");
+		formMap.put("userId", params.get("userId"));
+		// formMap.put("prgnm", params.get("prgnm"));
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 		logger.debug("formMap : {}", formMap);
@@ -266,8 +264,6 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 			stockMoveMapper.StockMovementIssue(formMap);
 		}
-
-
 
 		return formMap;
 	}

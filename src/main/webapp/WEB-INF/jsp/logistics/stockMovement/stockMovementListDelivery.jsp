@@ -694,6 +694,7 @@ function fn_serialChck(rowindex , rowitem , str){
             <input type="hidden" name="gtype" id="gtype" value="GI"/>
             <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="reqstno" id="reqstno"/>
+            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
             <table class="type1">
             <caption>search table</caption>
             <colgroup>

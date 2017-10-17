@@ -258,9 +258,9 @@ public class StockMovementController {
 	}
 
 	@RequestMapping(value = "/StockMovementReqAdd.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> stockMovementReqAdd(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<Map> stockMovementReqAdd(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) {
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
@@ -340,9 +340,8 @@ public class StockMovementController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/StockMovementReqDelivery.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> stockMovementReqDelivery(@RequestBody Map<String, Object> params,
-			Model model) {
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	public ResponseEntity<ReturnMessage> stockMovementReqDelivery(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) {
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);
 
@@ -376,10 +375,12 @@ public class StockMovementController {
 	}
 
 	@RequestMapping(value = "/StockMovementGoodIssue.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model)
-			throws Exception {
+	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVO) throws Exception {
 
-		Map<String, Object> rmap =  stockMovementService.stockMovementDeliveryIssue(params);
+		int loginId = sessionVO.getUserId();
+		params.put("userId", loginId);
+		Map<String, Object> rmap = stockMovementService.stockMovementDeliveryIssue(params);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();

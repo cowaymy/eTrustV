@@ -515,7 +515,8 @@ function f_getTtype(g , v){
         
         <section class="pop_body"><!-- pop_body start -->
         <form id="giForm" name="giForm" method="POST">
-            <input type="hidden" name="gitype" id="gitype" value="GI"/> 
+            <input type="hidden" name="gitype" id="gitype" value="GI"/>
+            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/> 
 <!--             <input type="hidden" name="serialqty" id="serialqty"/> -->
 <!--             <input type="hidden" name="reqstno" id="reqstno"/> -->
             <table class="type1">

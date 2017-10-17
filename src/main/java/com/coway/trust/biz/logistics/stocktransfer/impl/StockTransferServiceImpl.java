@@ -28,7 +28,7 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "stockTranMapper")
 	private StockTransferMapper stocktran;
-	
+
 	@Override
 	public List<EgovMap> selectStockTransferMainList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -62,8 +62,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 				stocktran.insStockTransfer(insMap);
 			}
 		}
-		stocktran.updateRequestTransfer(((String)fMap.get("headtitle") + seq));
-		
+		stocktran.updateRequestTransfer(((String) fMap.get("headtitle") + seq));
+
 		//
 		insertStockBooking(fMap);
 	}
@@ -243,8 +243,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 		String[] delvcd = delyCd.split("∈");
 		formMap.put("parray", delvcd);
-		formMap.put("userId", 999999999);
-		formMap.put("prgnm", "deliverylist");
+		formMap.put("userId", params.get("userId"));
+		// formMap.put("prgnm", params.get("prgnm"));
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
@@ -256,8 +256,6 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			stocktran.StockTransferiSsue(formMap);
 		}
 
-
-
 		List<EgovMap> list = null;
 
 		return list;
@@ -268,11 +266,11 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return stocktran.selectStockTransferMtrDocInfoList(params);
 	}
-	
+
 	@Override
 	public void insertStockBooking(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		//return stocktran.selectStockTransferMtrDocInfoList(params);
+		// return stocktran.selectStockTransferMtrDocInfoList(params);
 		stocktran.insertStockBooking(params);
 	}
 }

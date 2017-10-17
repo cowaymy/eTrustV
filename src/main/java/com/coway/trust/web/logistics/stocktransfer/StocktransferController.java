@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -72,7 +73,7 @@ public class StocktransferController {
 
 		return "logistics/StockTrans/StockTransferReceiptList";
 	}
-	
+
 	@RequestMapping(value = "/test.do")
 	public String StockTransfertest(Model model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -207,8 +208,9 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferAdd.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> StocktransferAdd(@RequestBody Map<String, Object> params, Model model) {
-
+	public ResponseEntity<ReturnMessage> StocktransferAdd(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) {
+		int userId = sessionVo.getUserId();
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
@@ -218,7 +220,7 @@ public class StocktransferController {
 		Map<String, Object> param = new HashMap();
 		param.put("add", insList);
 		param.put("form", formMap);
-		param.put("userId", 999999999);
+		param.put("userId", userId);
 		stock.insertStockTransferInfo(param);
 
 		// 결과 만들기 예.
@@ -230,8 +232,10 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferReqAdd.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> StocktransferReqAdd(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<Map> StocktransferReqAdd(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) {
 
+		int userId = sessionVo.getUserId();
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 
@@ -241,7 +245,7 @@ public class StocktransferController {
 		param.put("add", insList);
 		param.put("upd", updList);
 		param.put("form", formMap);
-		param.put("userId", 999999999);
+		param.put("userId", userId);
 
 		List<EgovMap> list = stock.addStockTransferInfo(param);
 
@@ -316,8 +320,10 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferDelivery.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> StocktransferDelivery(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> StocktransferDelivery(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) {
 
+		int userId = sessionVo.getUserId();
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
@@ -327,7 +333,7 @@ public class StocktransferController {
 		Map<String, Object> param = new HashMap();
 		param.put("upd", updList);
 		param.put("form", formMap);
-		param.put("userId", 999999999);
+		param.put("userId", userId);
 
 		stock.deliveryStockTransferInfo(param);
 
@@ -341,8 +347,8 @@ public class StocktransferController {
 
 	@RequestMapping(value = "/StocktransferReqItemDelete.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> StocktransferReqItemDelete(@RequestBody Map<String, Object> params,
-			Model model) {
-
+			Model model, SessionVO sessionVo) {
+		int userId = sessionVo.getUserId();
 		List<Object> delList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
@@ -352,7 +358,7 @@ public class StocktransferController {
 		Map<String, Object> param = new HashMap();
 		param.put("del", delList);
 		param.put("form", formMap);
-		param.put("userId", 999999999);
+		param.put("userId", userId);
 
 		stock.deliveryStockTransferItmDel(param);
 
@@ -365,14 +371,15 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferReqDelivery.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> StocktransferReqDelivery(@RequestBody Map<String, Object> params,
-			Model model) {
+	public ResponseEntity<ReturnMessage> StocktransferReqDelivery(@RequestBody Map<String, Object> params, Model mode,
+			SessionVO sessionVo) {
+		int userId = sessionVo.getUserId();
 
 		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 
 		Map<String, Object> param = new HashMap();
 		param.put("check", list);
-		param.put("userId", 999999999);
+		param.put("userId", userId);
 
 		stock.StocktransferReqDelivery(param);
 
@@ -397,9 +404,11 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferGoodIssue.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model)
-			throws Exception {
+	public ResponseEntity<Map> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) throws Exception {
+		int userId = sessionVo.getUserId();
 
+		params.put("userId", userId);
 		List<EgovMap> list = stock.StockTransferDeliveryIssue(params);
 
 		Map<String, Object> rmap = new HashMap();
