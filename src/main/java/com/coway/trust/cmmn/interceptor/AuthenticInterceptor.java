@@ -68,6 +68,11 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				&& !"Y".equals(pgmPahMenuAuth.get("funcYn"))) {
 			throw new AuthException(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase());
 		}
+
+		if (pgmPahMenuAuth != null && CommonUtils.isNotEmpty(pgmPahMenuAuth.get("menuCode"))) {
+			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+			sessionVO.setMenuCode((String) pgmPahMenuAuth.get("menuCode"));
+		}
 	}
 
 	@Override
@@ -93,6 +98,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 
 				accessMonitoringService.insertAccessMonitoring(params);
 			}
+
+			//url 로 직접 접근시 menuCode 처리.
+			modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
 
 			modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
 			modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));

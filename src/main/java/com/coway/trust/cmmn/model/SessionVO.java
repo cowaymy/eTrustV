@@ -27,6 +27,8 @@ public class SessionVO implements Serializable {
 	private String deptName;
 	private String userPassWord;
 
+	private String menuCode; // 현재 uri 에 대한 menuCode....
+
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 
 	public int getUserId() {
@@ -220,5 +222,13 @@ public class SessionVO implements Serializable {
 		}
 
 		return sessionVO;
+	}
+
+	public String getMenuCode() {
+		return menuCode;
+	}
+
+	public void setMenuCode(String menuCode) {
+		this.menuCode = menuCode;
 	}
 }
