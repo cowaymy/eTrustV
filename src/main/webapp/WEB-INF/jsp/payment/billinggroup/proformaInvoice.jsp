@@ -389,32 +389,32 @@ hideViewPopup=function(val){
     <!-- pop_header end -->
     <!-- pop_body start -->
     <form name="optionForm" id="optionForm"  method="post">
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />                
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Option</th>
-                        <td>
-                            <label><input type="checkbox" id="boosterPump" name="boosterPump"/><span>Booster Pump</span></label>
-                            <label><input type="radio" id="advance1" name="advance" /><span>Advanced 1 Year</span></label>
-                            <label><input type="radio" id="advance2" name="advance" /><span>Advanced 2 Year</span></label>
-                        </td>
-                    </tr>
-                   </tbody>  
-            </table>
-        </section>        
-        <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_generateStatement();">Generate</a></p></li>
-        </ul>
-    </section>
+	    <section class="pop_body">
+	        <!-- search_table start -->
+	        <section class="search_table">
+	            <!-- table start -->
+	            <table class="type1">
+	                <caption>table</caption>
+	                 <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />                
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Option</th>
+	                        <td>
+	                            <label><input type="checkbox" id="boosterPump" name="boosterPump"/><span>Booster Pump</span></label>
+	                            <label><input type="radio" id="advance1" name="advance" /><span>Advanced 1 Year</span></label>
+	                            <label><input type="radio" id="advance2" name="advance" /><span>Advanced 2 Year</span></label>
+	                        </td>
+	                    </tr>
+	                   </tbody>  
+	            </table>
+	        </section>        
+	        <ul class="center_btns" >
+	            <li><p class="btn_blue2"><a href="javascript:fn_generateStatement();">Generate</a></p></li>
+	        </ul>
+	    </section>
     </form>       
     <!-- pop_body end -->
 </div>
@@ -435,30 +435,30 @@ hideViewPopup=function(val){
     
     <!-- pop_body start -->
     <form name="eInvoiceForm" id="eInvoiceForm"  method="post">
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />                
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Email</th>
-                        <td>
-                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
-                        </td>
-                    </tr>
-                   </tbody>  
-            </table>
-        </section>
-        <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
-        </ul>
-    </section>
+	    <section class="pop_body">
+	        <!-- search_table start -->
+	        <section class="search_table">
+	            <!-- table start -->
+	            <table class="type1">
+	                <caption>table</caption>
+	                 <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />                
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Email</th>
+	                        <td>
+	                            <input type="text" id="send_email" name="send_email" title="Email Address" placeholder="Email Address" class="w100p" />
+	                        </td>
+	                    </tr>
+	                   </tbody>  
+	            </table>
+	        </section>
+	        <ul class="center_btns" >
+	            <li><p class="btn_blue2"><a href="javascript:fn_sendEInvoice();">Generate & Send</a></p></li>
+	        </ul>
+	    </section>
     </form>       
     <!-- pop_body end -->
 </div>
