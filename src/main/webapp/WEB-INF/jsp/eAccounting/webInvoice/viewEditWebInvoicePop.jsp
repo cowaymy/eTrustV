@@ -4,11 +4,14 @@
 <script type="text/javascript">
 var newGridID;
 var selectRowIdx;
+var callType = "view";
+var removeOriFileName = new Array();
 var keyValueList = $.parseJSON('${taxCodeList}');
 var gridDataList = new Array();
 <c:forEach var="data" items="${gridDataList}">
 var obj = {
-		expType : "${data.expType}"
+		clmSeq : "${data.clmSeq}"
+		,expType : "${data.expType}"
         ,expTypeName : "${data.expTypeName}"
         ,glAccCode : "${data.glAccCode}"
         ,glAccCodeName : "${data.glAccCodeName}"
@@ -32,6 +35,9 @@ var obj = {
 attachmentList.push(obj);
 </c:forEach>
 var myColumnLayout = [ {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+},{
     dataField : "expType",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 },{
@@ -128,17 +134,17 @@ var myGridPros = {
     // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
     enableRestore : true,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+    softRemoveRowMode : true
 
 };
 
 $(document).ready(function () {
     newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
     
-    $("#tempSave").click(fn_attachmentUpload);
+    $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_approveLinePop);
     $("#add_row").click(fn_addRow);
-    $("#remove_row").click(fn_removeRow);
-    $("#remove_btn").click(fn_deleteFile);
+    $("#delete_row").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_supplierSearchPop);
     $("#costCenter_search_btn").click(fn_costCenterSearchPop);
     
@@ -182,31 +188,10 @@ $(document).ready(function () {
     });
 });
 
-/* 인풋 파일(멀티) start */
+/* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
 }
-
-/* $(document).on(//인풋파일 추가
-    "click", ".auto_file2 a:contains('Add')", function(){
-    
-    $(".auto_file2:last-child").clone().insertAfter(".auto_file2:last-child");
-    $(".auto_file2:last-child :file, .auto_file2:last-child :text").val("");
-    return false;
-}); */
-
-$(document).on(//인풋파일 삭제
-    "click", ".auto_file2 a:contains('Delete')", function(){
-    var fileNum=$(".auto_file2").length;
-
-    if(fileNum <= 1){
-
-    }else{
-        $(this).parents(".auto_file2").remove();
-    }
-    return false;
-});
-/* 인풋 파일(멀티) end */
 
 function fn_setKeyInDate() {
     var today = new Date();
@@ -257,8 +242,6 @@ function fn_supplierSearchPop() {
 }
 
 function fn_costCenterSearchPop() {
-    var value = $("#costCenter").val();
-    var object = {value:value};
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
@@ -278,26 +261,12 @@ function fn_addRow() {
 
 function fn_removeRow() {
     var total = Number($("#totalAmount").text().replace(',', ''));
-    AUIGrid.removeRow(newGridID, selectRowIdx);
     var value = fn_getValue(selectRowIdx);
     value = Number(value.replace(',', ''));
     total -= value;
     $("#totalAmount").text(AUIGrid.formatNumber(total, "#,##0"));
     $("#totAmt").val(total);
-    // remove한 row를 화면상에서도 지우도록 구현 필요
-    // totalAmount를 할때 값이 포함된다
-    // TO DO
-    AUIGrid.update(); // update 해본 결과 : 실패
-}
-
-function fn_attachmentUpload() {
-	// TODO 파일 리스트에서 delete btn click인 경우 어떻게 처리할것인지
-    var formData = Common.getFormData("form_viewEditWebInvoice");
-    Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
-        console.log(result);
-        $("#atchFileGrpId").val(result.fileGroupKey);
-        fn_updateWebInvoiceInfo();
-    });
+    AUIGrid.removeRow(newGridID, selectRowIdx);
 }
 
 function fn_attachmentDown(fileGrpId, fileId) {
@@ -317,45 +286,44 @@ function fn_attachmentDown(fileGrpId, fileId) {
     });
 }
 
-function fn_updateWebInvoiceInfo() {
-    var data = {
-            costCentr : $("#newCostCenter").val(),
-            costCentrName : $("#newCostCenterText").val(),
-            memAccId : $("#newMemAccId").val(),
-            gstRgistNo : $("#gstRgistNo").val(),
-            bankCode : $("#bankCode").val(),
-            bankAccNo : $("#bankAccNo").val(),
-            invcType : $("#invcType").val(),
-            invcNo : $("#invcNo").val(),
-            invcDt : $("#invcDt").val(),
-            payDueDt : $("#payDueDt").val(),
-            atchFileGrpId : $("#atchFileGrpId").val(),
-            invcRem : $("#invcRem").val(),
-            totAmt : $("#totAmt").val(),
-            crtUserId : $("#crtUserId").val()
-    };
-    
-    Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", data, function(result) {
-        console.log(result);
-        $("#clmNo").val(result.clmNo);
-        fn_saveGridInfo();
-    });
-    
+function fn_tempSave() {
+	fn_updateWebInvoiceInfo(callType);
 }
 
-function fn_saveGridInfo() {
-	// TODO update인 경우 clmSeq값 필요, 어떻게 처리할것인지
-    //var data = AUIGrid.exportToObject(newGridID);
+function fn_attachmentUpload(st) {
+    var formData = Common.getFormData("form_newWebInvoice");
+    Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
+        console.log(result);
+        $("#atchFileGrpId").val(result.data.atchFileGrpId);
+    });
+}
+
+// 공통 코드에 현재 미구현으로 불가
+function fn_attachmentUpdate(st) {
+	// file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+    // add인지 update or delete인지 분기 필요
+    // 파일 수정해야 하는 경우 : delete 버튼 클릭 or file 버튼 클릭으로 수정
+    // delete 버튼의 파일이름 찾아서 저장
+    var formData = Common.getFormData("form_newWebInvoice");
+    Common.ajaxFile("/eAccounting/webInvoice/attachmentUpdate.do", formData, function(result) {
+        console.log(result);
+        //$("#atchFileGrpId").val(result.data.atchFileGrpId);
+    });
+}
+
+function fn_updateWebInvoiceInfo(st) {
+    var obj = $("#form_newWebInvoice").serializeJSON();
     var gridData = GridCommon.getEditData(newGridID);
-    var clmNo = $("#clmNo").val();
+    obj.gridData = gridData;
+    console.log(obj);
+    Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", obj, function(result) {
+        console.log(result);
+        if(st == "view"){
+            Common.alert("Temporary save succeeded.");
+            $("#viewEditWebInvoicePop").remove();
+        }
+    });
     
-    console.log(gridData);
-    
-    //Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(newGridID), function(result) {
-     //   console.log(result);
-    //    Common.alert("Temporary save succeeded.");
-        //fn_SelectMenuListAjax() ;
-  //  });
 }
 
 function fn_setGridData(data) {
@@ -376,27 +344,6 @@ function fn_setSupplier() {
     $("#bankName").val($("#search_bankName").val());
     $("#bankAccNo").val($("#search_bankAccNo").val());
 }
-
-function fn_tempSave() {
-	// TODO 파일이 있는지 체크하고 있다면 업로드 처리
-}
-
-function fn_deleteFile() {
-	// 파일 다운
-    $(".input_text").click(function() {
-        var oriFileName = $(this).val();
-        var fileGrpId;
-        var fileId;
-        for(var i = 0; i < attachmentList.length; i++) {
-            if(attachmentList[i].atchFileName == oriFileName) {
-                fileGrpId = attachmentList[i].atchFileGrpId;
-                fileId = attachmentList[i].atchFileId;
-            }
-        }
-        fn_attachmentDown(fileGrpId, fileId);
-    });
-}
-
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -410,13 +357,15 @@ function fn_deleteFile() {
 
 <section class="pop_body"><!-- pop_body start -->
 
+<c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
 	<li><p class="btn_blue2"><a href="#" id="tempSave"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
 	<li><p class="btn_blue2"><a href="#" id="submitPop"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
 </ul>
+</c:if>
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id=form_newWebInvoice>
+<form action="#" method="post" enctype="multipart/form-data" id=form_newWebInvoice>
 <input type="hidden" id="clmNo" name="clmNo" value="${webInvoiceInfo.clmNo}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${webInvoiceInfo.atchFileGrpId}">
 <input type="hidden" id="newMemAccId" name="memAccId" value="${webInvoiceInfo.memAccId}">
@@ -477,10 +426,9 @@ function fn_deleteFile() {
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3">
-	<!-- TODO 미승인 상태인 경우 -->
 	<c:forEach var="files" items="${attachmentList}" varStatus="st">
 	<div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
-    <input type="file" title="file add" style="width:300px" />
+	<input type="file" title="file add" style="width:300px" />
     <label>
     <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
     <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>

@@ -27,12 +27,6 @@ var attaListColumnLayout = [ {
     dataField : "atchFileName",
     headerText : '<spring:message code="newWebInvoice.attachment" />'
 }, {
-    dataField : "fileSubPath",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "physiclFileName",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
     dataField : "fileExtsn",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }
@@ -53,25 +47,29 @@ $(document).ready(function () {
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log(event.item)
+                var data = {
+                            atchFileGrpId : event.item.atchFileGrpId,
+                            atchFileId : event.item.atchFileId
+                    };
                 if(event.item.fileExtsn == "jpg") {
                     // TODO View
-                    var data = {
-                    		atchFileGrpId : event.item.atchFileGrpId,
-                    		atchFileId : event.item.atchFileId
-                    };
                 	Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
                         console.log(result);
                         var fileSubPath = result.fileSubPath;
                         fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log(result.fileViewPath + fileSubPath + '/' + result.physiclFileName + result.fileExtsn);
+                        console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
                         window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                        //window.open(result.fileViewPath + fileSubPath + '/' + result.atchFileName);
                     });
                 } else {
-                    console.log("view_btn click fileSubPath : " + event.item.fileSubPath + ", physiclFileName : " + event.item.physiclFileName + ", atchFileName : " + event.item.atchFileName);
-                    window.open("/file/fileDown.do?subPath=" + event.item.fileSubPath
-                            + "&fileName=" + event.item.physiclFileName + "&orignlFileNm=" + event.item.atchFileName
-                            + "");
+                	Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                        console.log(result);
+                        var fileSubPath = result.fileSubPath;
+                        fileSubPath = fileSubPath.replace('\', '/'');
+                        console.log("/file/fileDown.do?subPath=" + fileSubPath
+                                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                        window.open("/file/fileDown.do?subPath=" + fileSubPath
+                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                    });
                 }
             });
     

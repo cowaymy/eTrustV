@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.common.type.FileType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -53,8 +53,7 @@ public class WebInvoiceController {
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 	
-	@Value("${eAccounting.webInvoice}")
-	private String fileViewPath;
+	//web.resource.upload.file
 	
 	// DataBase message accessor....
 	@Autowired
@@ -99,7 +98,7 @@ public class WebInvoiceController {
 	public String newWebInvoice(ModelMap model, SessionVO sessionVO) {
 		List<EgovMap> taxCodeList = webInvoiceService.selectTaxCodeWebInvoiceFlag();
 		
-		model.addAttribute("userId", sessionVO.getUserId());
+		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
 		
 		return "eAccounting/webInvoice/newWebInvoicePop";
@@ -131,8 +130,13 @@ public class WebInvoiceController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		String appvPrcssNo = (String)params.get("appvPrcssNo");
+		
 		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(appvPrcssNo);
 		
+		// TODO appvPrcssStus 생성
+		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvInfoAndItems);
+		
+		model.addAttribute("appvPrcssStus", appvPrcssStus);
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
 		
 		return "eAccounting/webInvoice/webInvoiceApproveViewPop";
@@ -156,9 +160,19 @@ public class WebInvoiceController {
 		return "eAccounting/webInvoice/approvalOfWebInvoiceRegistMsgPop";
 	}
 	
+	@RequestMapping(value = "/approveComplePop.do")
+	public String approveComplePop(ModelMap model) {
+		return "eAccounting/webInvoice/approvalOfWebInvoiceCompletedMsgPop";
+	}
+	
 	@RequestMapping(value = "/rejectRegistPop.do")
 	public String rejectRegistPop(ModelMap model) {
 		return "eAccounting/webInvoice/rejectionOfWebInvoiceRegistMsgPop";
+	}
+	
+	@RequestMapping(value = "/rejectComplePop.do")
+	public String rejectComplePop(ModelMap model) {
+		return "eAccounting/webInvoice/rejectionOfWebInvoiceCompletedMsgPop";
 	}
 	
 	@RequestMapping(value = "/approveLinePop.do")
@@ -222,13 +236,12 @@ public class WebInvoiceController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		Map<String, Object> fileInfo = webInvoiceService.selectAttachmentInfo(params);
-		fileInfo.put("fileViewPath", fileViewPath);
 		
 		return ResponseEntity.ok(fileInfo);
 	}
 	
-	@RequestMapping(value = "/insertWebInvoiceInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertWebInvoiceInfo(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+	@RequestMapping(value = "/attachmentUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachmentUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -244,9 +257,24 @@ public class WebInvoiceController {
 			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
 		}
 
+		params.put("attachmentList", list);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/insertWebInvoiceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertWebInvoiceInfo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
 		String clmNo = webInvoiceService.selectNextClmNo();
 		params.put("clmNo", clmNo);
-		params.put("attachment", list);
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
 		webInvoiceService.insertWebInvoiceInfo(params);
 		
@@ -258,96 +286,53 @@ public class WebInvoiceController {
 		return ResponseEntity.ok(message);
 	}
 	
-	@RequestMapping(value = "/saveGridInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveGridInfo(@RequestBody Map<String, ArrayList<Object>> params, @RequestParam Map<String, Object> queryString, ModelMap model, SessionVO sessionVO) {
+	@RequestMapping(value = "/updateWebInvoiceInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateWebInvoiceInfo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
 		
 		LOGGER.debug("params =====================================>>  " + params);
-		LOGGER.debug("queryString =====================================>>  " + queryString);
 		
-		String clmNo = (String) queryString.get("clmNo");
-		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // 추가 리스트 얻기
-		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
-		List<Object> removeList = params.get(AppConstants.AUIGRID_REMOVE); // 제거 리스트 얻기
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		
-		if (addList.size() > 0) {
-			Map hm = null;
-			// biz처리
-			for (Object map : addList) {
-				hm = (HashMap<String, Object>) map;
-				hm.put("clmNo", clmNo);
-				int clmSeq = webInvoiceService.selectNextClmSeq(clmNo);
-				hm.put("clmSeq", clmSeq);
-				hm.put("userId", sessionVO.getUserId());
-				webInvoiceService.insertWebInvoiceDetail(hm);
-			}
-		}
-		if (updateList.size() > 0) {
-			Map hm = null;
-			
-			// 테스트를 위한 로그 출력
-			updateList.forEach(obj -> {
-				Map<String, Object> test = (Map<String, Object>) obj;
-				test.put("clmNo", clmNo);
-				test.put("userId", sessionVO.getUserId());
-				LOGGER.debug("====================== update 시작 =====================");
-				for(String key : test.keySet()) {
-					LOGGER.debug("key : " + key + "=============> value : " + test.get(key));
-				}
-				LOGGER.debug("====================== update 종료 =====================");
-							
-			});
-			
-//			for (Object map : updateList) {
-//				hm = (HashMap<String, Object>) map;
-//				hm.put("clmNo", clmNo);
-//				hm.put("userId", sessionVO.getUserId());
-//				// TODO biz처리 (clmNo, clmSeq 값으로 update 처리)
-//			}
-		}
-		if (removeList.size() > 0) {
-			Map hm = null;
-			
-			// 테스트를 위한 로그 출력
-			removeList.forEach(obj -> {
-				Map<String, Object> test = (Map<String, Object>) obj;
-				test.put("clmNo", clmNo);
-				test.put("userId", sessionVO.getUserId());
-				LOGGER.debug("====================== remove 시작 =====================");
-				for(String key : test.keySet()) {
-					LOGGER.debug("key : " + key + "=============> value : " + test.get(key));
-				}
-				LOGGER.debug("====================== remove 종료 =====================");
-							
-			});
-			
-//			for (Object map : removeList) {
-//				hm = (HashMap<String, Object>) map;
-//				hm.put("clmNo", clmNo);
-//				hm.put("userId", sessionVO.getUserId());
-//				// TODO biz처리 (clmNo, clmSeq 값으로 delete 처리)
-//			}
-		}
-		
-		LOGGER.info("추가 : {}", addList.toString());
-		LOGGER.info("수정 : {}", updateList.toString());
-		LOGGER.info("삭제 : {}", removeList.toString());
+		webInvoiceService.updateWebInvoiceInfo(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
 	}
 	
-	@RequestMapping(value = "/updateWebInvoiceInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> updateWebInvoiceInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	@RequestMapping(value = "/attachmentUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachmentUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		params.put("userId", sessionVO.getUserId());
-		//webInvoiceService.updateWebInvoiceInfo(params);
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "eAccounting" + File.separator + "webInvoice", AppConstants.UPLOAD_MAX_FILE_SIZE);
 		
-		return ResponseEntity.ok(params);
+		LOGGER.debug("list.size : {}", list.size());
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		if (list.size() > 0) {
+			// TODO
+			// add는 forData로 인해 따로 구현 필요  (file upload 구현 참고) 
+			// update or delete file 처리
+			// 공통 코드에 현재 미구현으로 불가
+			//fileApplication.businessAttach(AppConstants.FILE_WEB, FileVO.createList(list), params);
+		}
+		
+		params.put("attachment", list);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 	
 	@RequestMapping(value = "/webInvoiceApprove.do")
@@ -360,9 +345,6 @@ public class WebInvoiceController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
-		List<Object> newGridList = (List<Object>) params.get("newGridList");
-		
 		String appvPrcssNo = webInvoiceService.selectNextAppvPrcssNo();
 		params.put("appvPrcssNo", appvPrcssNo);
 		String clmNo = (String) params.get("clmNo");
@@ -373,48 +355,9 @@ public class WebInvoiceController {
 		}
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
-		params.put("appvLineCnt", apprGridList.size());
 		
 		// TODO appvLineMasterTable Insert
 		webInvoiceService.insertApproveManagement(params);
-		
-		if (apprGridList.size() > 0) {
-			Map hm = null;
-			
-			for (Object map : apprGridList) {
-				hm = (HashMap<String, Object>) map;
-				hm.put("appvPrcssNo", appvPrcssNo);
-				hm.put(CommonConstants.USER_ID, params.get(CommonConstants.USER_ID));
-				params.put("userName", params.get("userName"));
-				// TODO appvLineDetailTable Insert
-				webInvoiceService.insertApproveLineDetail(hm);
-			}
-		}
-		
-		if (newGridList.size() > 0) {
-			Map hm = null;
-			
-			// biz처리
-			for (Object map : newGridList) {
-				hm = (HashMap<String, Object>) map;
-				hm.put("appvPrcssNo", appvPrcssNo);
-				int appvItmSeq = webInvoiceService.selectNextClmSeq(appvPrcssNo);
-				hm.put("appvItmSeq", appvItmSeq);
-				hm.put("invcNo", params.get("invcNo"));
-				hm.put("invcDt", params.get("invcDt"));
-				hm.put("invcType", params.get("invcType"));
-				hm.put("memAccId", params.get("memAccId"));
-				hm.put("payDueDt", params.get("payDueDt"));
-				hm.put("costCentr", params.get("costCentr"));
-				hm.put("costCentrName", params.get("costCentrName"));
-				hm.put("atchFileGrpId", params.get("atchFileGrpId"));
-				hm.put("userName", params.get("userName"));
-				// TODO TODO appvLineItemsTable Insert
-				webInvoiceService.insertApproveItems(hm);
-			}
-		}
-		
-		webInvoiceService.updateAppvPrcssNo(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -422,5 +365,47 @@ public class WebInvoiceController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/appvRejctSubmit.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approvalSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		
+		webInvoiceService.updateAppvInfo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/budgetCheck.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		Map<String, Object> result = webInvoiceService.budgetCheck(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(result);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectWebInvoiceItemList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectWebInvoiceItemList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovMap> itemList = webInvoiceService.selectWebInvoiceItems((String) params.get("clmNo"));
+		
+		return ResponseEntity.ok(itemList);
 	}
 }

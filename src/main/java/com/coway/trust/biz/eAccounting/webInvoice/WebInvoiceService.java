@@ -23,19 +23,11 @@ public interface WebInvoiceService {
 	
 	void insertWebInvoiceInfo(Map<String, Object> params);
 	
-	void insertWebInvoiceDetail(Map<String, Object> params);
-	
 	void updateWebInvoiceInfo(Map<String, Object> params);
-	
-	void updateWebInvoiceDetail(Map<String, Object> params);
 	
 	void insertApproveManagement(Map<String, Object> params);
 	
-	void insertApproveLineDetail(Map<String, Object> params);
-	
-	void insertApproveItems(Map<String, Object> params);
-	
-	void updateAppvPrcssNo(Map<String, Object> params);
+	void updateAppvInfo(Map<String, Object> params);
 	
 	List<EgovMap> selectSupplier(Map<String, Object> params);
 	
@@ -45,10 +37,16 @@ public interface WebInvoiceService {
 	
 	String selectNextClmNo();
 	
-	int selectNextClmSeq(String clmNo);
-	
 	String selectNextAppvPrcssNo();
 	
 	int selectNextAppvItmSeq(String appvPrcssNo);
+	
+	String selectNextIfKey();
+	
+	int selectNextSeq(String ifKey);
+	
+	Map<String, Object> budgetCheck(Map<String, Object> params);
+	
+	String getAppvPrcssStus(List<EgovMap> appvInfoAndItems);
 	
 }

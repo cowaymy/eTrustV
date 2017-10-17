@@ -2,6 +2,17 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+$(document).ready(function(){
+    $("#cancel_btn").click(fn_closePop);
+    $("#rejct_btn").click(function() {
+    	var rejctResn = $("#rejctResn").val();
+        fn_appvRejctSubmit("rejct", rejctResn);
+    });
+});
+
+function fn_closePop() {
+    $("#rejectRegistPop").remove();
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap msg_box"><!-- popup_wrap start -->
@@ -12,10 +23,10 @@
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt"><spring:message code="rejectionWebInvoiceMsg.registMsg" /><br /><br /><textarea cols="20" rows="5"></textarea></p>
+<p class="msg_txt"><spring:message code="rejectionWebInvoiceMsg.registMsg" /><br /><br /><textarea cols="20" rows="5" id="rejctResn"></textarea></p>
 <ul class="center_btns mt20">
-	<li><p class="btn_blue2"><a href="#"><spring:message code="webInvoice.select.reject" /></a></p></li>
-	<li><p class="btn_blue2"><a href="#"><spring:message code="approvalWebInvoMsg.cancel" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="rejct_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="cancel_btn"><spring:message code="approvalWebInvoMsg.cancel" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

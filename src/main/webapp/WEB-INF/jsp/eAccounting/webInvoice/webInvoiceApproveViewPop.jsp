@@ -126,7 +126,7 @@ $(document).ready(function () {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="approveView.approveStatus" /></th>
-	<td colspan="3" style="height:60px" id="viewAppvStus"></td>
+	<td colspan="3" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -8,6 +8,9 @@ var invoAprveGridColLayout = [ {
     dataField : "appvPrcssNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 },{
+    dataField : "appvLineSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+},{
     dataField : "clmNo",
     headerText : '<spring:message code="invoiceApprove.clmNo" />',
     width : 90
@@ -56,29 +59,39 @@ var invoAprveGridColLayout = [ {
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
-        	console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId);
-        	console.log(item);
+        	console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
         	if(item.fileCnt > 1) {
         		atchFileGrpId = item.atchFileGrpId;
         		fn_fileListPop();
         	} else {
+        		var data = {
+                        atchFileGrpId : item.atchFileGrpId,
+                        atchFileId : item.atchFileId
+                };
         		if(item.fileExtsn == "jpg") {
                     // TODO View
+                    console.log(data);
+                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                        console.log(result);
+                        var fileSubPath = result.fileSubPath;
+                        fileSubPath = fileSubPath.replace('\', '/'');
+                        console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                        window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                    });
                 } else {
-                    console.log("view_btn click fileSubPath : " + item.fileSubPath + ", physiclFileName : " + item.physiclFileName + ", atchFileName : " + item.atchFileName);
-                    window.open("/file/fileDown.do?subPath=" + item.fileSubPath
-                            + "&fileName=" + item.physiclFileName + "&orignlFileNm=" + item.atchFileName
-                            + "");
+                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                        console.log(result);
+                        var fileSubPath = result.fileSubPath;
+                        fileSubPath = fileSubPath.replace('\', '/'');
+                        console.log("/file/fileDown.do?subPath=" + fileSubPath
+                                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                        window.open("/file/fileDown.do?subPath=" + fileSubPath
+                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                    });
                 }
         	}
         }
     }
-}, {
-    dataField : "fileSubPath",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "physiclFileName",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "fileExtsn",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -195,6 +208,31 @@ function fn_rejectRegistPop() {
 function fn_setGridData(gridId, data) {
     console.log(data);
     AUIGrid.setGridData(gridId, data);
+}
+
+function fn_appvRejctSubmit(type, rejctResn) {
+    var invoAppvGridList = AUIGrid.getCheckedRowItemsAll(invoAprveGridID);
+    console.log(invoAppvGridList);
+    if(invoAppvGridList.length == 0) {
+        Common.alert("No data selected.");
+    } else {
+        var data = {
+                invoAppvGridList : invoAppvGridList
+                ,type : type
+                ,rejctResn : rejctResn
+        };
+        console.log(data);
+        Common.ajax("POST", "/eAccounting/webInvoice/appvRejctSubmit.do", data, function(result) {
+            console.log(result);
+            if(type == "appv") {
+            	Common.popupDiv("/eAccounting/webInvoice/approveComplePop.do", null, null, true, "approveComplePop");
+            }else if(type == 'rejct') {
+            	Common.popupDiv("/eAccounting/webInvoice/rejectComplePop.do", null, null, true, "rejectComplePop");
+            }
+        });
+    }
+    
+    fn_closePop();
 }
 </script>
 

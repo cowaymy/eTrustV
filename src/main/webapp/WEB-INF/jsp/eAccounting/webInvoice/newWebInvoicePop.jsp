@@ -4,6 +4,7 @@
 <script type="text/javascript">
 var newGridID;
 var selectRowIdx;
+var callType = "new";
 var keyValueList = $.parseJSON('${taxCodeList}');
 var myColumnLayout = [ {
     dataField : "expType",
@@ -98,15 +99,14 @@ var myGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     editable : true,
-    showStateColumn : true,
-    // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
-    enableRestore : true,
-    softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+    softRemoveRowMode : false
 
 };
 
 $(document).ready(function () {
     newGridID = AUIGrid.create("#newWebInvoice_grid_wrap", myColumnLayout, myGridPros);
+    
+    setInputFile2();
     
     $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_approveLinePop);
@@ -132,32 +132,11 @@ $(document).ready(function () {
     fn_setKeyInDate();
 });
 
-/* 인풋 파일(멀티) start */
+/* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
 }
-setInputFile2();
 
-/* $(document).on(//인풋파일 추가
-    "click", ".auto_file2 a:contains('Add')", function(){
-    
-    $(".auto_file2:last-child").clone().insertAfter(".auto_file2:last-child");
-    $(".auto_file2:last-child :file, .auto_file2:last-child :text").val("");
-    return false;
-}); */
-
-$(document).on(//인풋파일 삭제
-    "click", ".auto_file2 a:contains('Delete')", function(){
-    var fileNum=$(".auto_file2").length;
-
-    if(fileNum <= 1){
-
-    }else{
-        $(this).parents(".auto_file2").remove();
-    }
-    return false;
-});
-/* 인풋 파일(멀티) end */
 
 function fn_setKeyInDate() {
     var today = new Date();
@@ -208,8 +187,6 @@ function fn_supplierSearchPop() {
 }
 
 function fn_costCenterSearchPop() {
-    var value = $("#costCenter").val();
-    var object = {value:value};
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
@@ -218,8 +195,6 @@ function fn_expenseTypeSearchPop() {
 }
 
 function fn_approveLinePop() {
-    var value = $("#approveLine").val();
-    var object = {value:value};
     Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
@@ -229,67 +204,40 @@ function fn_addRow() {
 
 function fn_removeRow() {
 	var total = Number($("#totalAmount").text().replace(',', ''));
-	AUIGrid.removeRow(newGridID, selectRowIdx);
 	var value = fn_getValue(selectRowIdx);
 	value = Number(value.replace(',', ''));
 	total -= value;
 	$("#totalAmount").text(AUIGrid.formatNumber(total, "#,##0"));
 	$("#totAmt").val(total);
-	// remove한 row를 화면상에서도 지우도록 구현 필요
-	// totalAmount를 할때 값이 포함된다
-	// TO DO
-	AUIGrid.update(); // update 해본 결과 : 실패
-	// 삭제 행 표시 기능 없이 삭제와 동시에 그리드에서 제거하고자 한다면 softRemoveRowMode=false 설정하십시오.(기본값:true)
- 	// 삭제 처리된 아이템 있는지 보기
-    //var removedRows = AUIGrid.getRemovedItems(myGridID, true);
-    
-   // if(removedRows.length <= 0) {
-     //   alert("삭제 처리되어 마크된 행이 없습니다.")
-    //    return;
-    //}
-    
-    // softRemoveRowMode 가 true 일 때 삭제를 하면 그리드 상에 마크가 되는데
-    // 이를 실제로 그리드에서 삭제 함.
-   // AUIGrid.removeSoftRows(myGridID);
+	AUIGrid.removeRow(newGridID, selectRowIdx);
 }
 
 function fn_tempSave() {
-	fn_insertWebInvoiceInfo("new");
+	fn_attachmentUpload(callType);
+}
+
+function fn_attachmentUpload(st) {
+	var formData = Common.getFormData("form_newWebInvoice");
+    Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
+        console.log(result);
+        $("#atchFileGrpId").val(result.data.atchFileGrpId);
+        fn_insertWebInvoiceInfo(st);
+    });
 }
 
 function fn_insertWebInvoiceInfo(st) {
-	var formData = Common.getFormData("form_newWebInvoice");
     var obj = $("#form_newWebInvoice").serializeJSON();
+    var gridData = GridCommon.getEditData(newGridID);
+    obj.gridData = gridData;
     console.log(obj);
-    $.each(obj, function(key, value) {
-        formData.append(key, value);
-    });
-    Common.ajaxFile("/eAccounting/webInvoice/insertWebInvoiceInfo.do", formData, function(result) {
+    Common.ajax("POST", "/eAccounting/webInvoice/insertWebInvoiceInfo.do", obj, function(result) {
         console.log(result);
         $("#clmNo").val(result.data.clmNo);
-        $("#atchFileGrpId").val(result.data.clmNo);
-        console.log(st);
         
-        fn_saveGridInfo(st);
-    });
-}
-
-function fn_saveGridInfo(st) {
-	//var data = AUIGrid.exportToObject(newGridID);
-    var gridData = GridCommon.getEditData(newGridID);
-    var clmNo = $("#clmNo").val();
-    
-    console.log(gridData);
-    
-	Common.ajax("POST", "/eAccounting/webInvoice/saveGridInfo.do?clmNo=" + clmNo, GridCommon.getEditData(newGridID), function(result) {
-        console.log(result);
         if(st == 'new') {
-        	Common.alert("Temporary save succeeded.");
-        	// TODO 그리드 리로딩 필요
-        	$("#newWebInvoicePop").remove();
+            Common.alert("Temporary save succeeded.");
+            $("#newWebInvoicePop").remove();
         }
-        //fn_SelectMenuListAjax() ;
-
     });
 }
 

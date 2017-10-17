@@ -31,6 +31,8 @@ public interface WebInvoiceMapper {
 	
 	void updateWebInvoiceDetail(Map<String, Object> params);
 	
+	void deleteWebInvoiceDetail(Map<String, Object> params);
+	
 	void insertApproveManagement(Map<String, Object> params);
 	
 	void insertApproveLineDetail(Map<String, Object> params);
@@ -38,6 +40,14 @@ public interface WebInvoiceMapper {
 	void insertApproveItems(Map<String, Object> params);
 	
 	void updateAppvPrcssNo(Map<String, Object> params);
+	
+	void updateAppvInfo(Map<String, Object> params);
+	
+	void updateAppvLine(Map<String, Object> params);
+	
+	void updateLastAppvLine(Map<String, Object> params);
+	
+	void insertEccInterface(Map<String, Object> params);
 	
 	List<EgovMap> selectSupplier(Map<String, Object> params);
 	
@@ -52,5 +62,15 @@ public interface WebInvoiceMapper {
 	String selectNextAppvPrcssNo();
 	
 	int selectNextAppvItmSeq(String appvPrcssNo);
+	
+	int selectAppvLineCnt(String appvPrcssNo);
+	
+	int selectAppvLinePrcssCnt(String appvPrcssNo);
+	
+	String selectNextIfKey();
+	
+	int selectNextSeq(String ifKey);
+	
+	String budgetCheck(Map<String, Object> params);
 	
 }

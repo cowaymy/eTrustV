@@ -78,7 +78,7 @@ $(document).ready(function () {
     approveLineGridID = AUIGrid.create("#approveLine_grid_wrap", approveLineColumnLayout, approveLineGridPros);
     
     $("#delete_btn").click(fn_deleteRow);
-    $("#submit").click(fn_registMsgPop);
+    $("#submit").click(fn_newRegistMsgPop);
     
     AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
     	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
@@ -131,7 +131,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     });
 }
 
-function fn_registMsgPop() {
+function fn_newRegistMsgPop() {
 	Common.popupDiv("/eAccounting/webInvoice/newRegistMsgPop.do", null, null, true, "registMsgPop");
 }
 </script>

@@ -82,18 +82,17 @@ function fn_supplierSearchPop() {
 }
 
 function fn_costCenterSearchPop() {
-	var value = $("#costCenter").val();
-	var object = {value:value};
 	Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
 }
 
 function fn_newWebInvoicePop() {
-	Common.popupDiv("/eAccounting/webInvoice/newWebInvoicePop.do", null, null, true, "newWebInvoicePop");
+	Common.popupDiv("/eAccounting/webInvoice/newWebInvoicePop.do", {callType:'new'}, null, true, "newWebInvoicePop");
 }
 
 function fn_viewEditWebInvoicePop(clmNo) {
 	var data = {
-            clmNo : clmNo
+            clmNo : clmNo,
+            callType : 'view'
     };
 	
 	Common.popupDiv("/eAccounting/webInvoice/viewEditWebInvoicePop.do", data, null, true, "viewEditWebInvoicePop");

@@ -4,27 +4,13 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $("#cancel_btn").click(fn_closePop);
-    $("#confirm_btn").click(fn_approvalSubmit);
+    $("#confirm_btn").click(function () {
+    	fn_appvRejctSubmit("appv", "");
+    });
 });
 
 function fn_closePop() {
     $("#approveRegistPop").remove();
-}
-
-function fn_approvalSubmit() {
-	// getCheckedRowItems       item + rowIdx
-	// getCheckedRowItemsAll   숨겨진칼럼까지 전부
-    var invoAppvGridList = AUIGrid.getCheckedRowItems(invoAprveGridID);
-	console.log(invoAppvGridList);
-    //Common.ajax("POST", "/eAccounting/webInvoice/approvalSubmit.do", null, function(result) {
-     //   console.log(result);
-     //   Common.popupDiv("/eAccounting/webInvoice/approveComplePop.do", null, null, true, "approveComplePop");
-        //Common.alert("Temporary save succeeded.");
-        //fn_SelectMenuListAjax() ;
-
-   // });
-    
-    fn_closePop();
 }
 </script>
 
