@@ -1614,7 +1614,7 @@ var addOrderLayout = [
 		            <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 		            <li>Payment</li>
 		            <li>Billing Group</li>
-		            <li>Management</li>
+		            <li>Billing Group Mgmt</li>
 		    </ul>
 		<aside class="title_line"><!-- title_line start -->
 			<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
