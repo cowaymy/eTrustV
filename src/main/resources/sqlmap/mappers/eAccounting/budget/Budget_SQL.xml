@@ -188,68 +188,79 @@
            </if>
   </select>
   
-  
-<!--   <select id="selectMaxExpType" parameterType="Map" resultType="String">
-     SELECT #{clmType} || NVL(TO_CHAR(MAX(REPLACE(EXP_TYPE, #{clmType}, '')) + 1, 'FM000'), '001') EXP_TYPE 
-      FROM FCM0001M
-    WHERE CLM_TYPE = #{clmType}  
-  </select>
-  
-  <insert id="insertExpenseInfo" parameterType="Map">
-
-   INSERT INTO FCM0001M
-   (
-        CLM_TYPE
-       ,EXP_TYPE
-       ,EXP_TYPE_NAME
-       ,GL_ACC_CODE
-       ,GL_ACC_CODE_NAME
-       ,BUDGET_CODE
-       ,BUDGET_CODE_NAME
-       ,CRT_DT
-       ,CRT_USER_ID
-       ,UPD_DT
-       ,UPD_USER_ID
-    )
-    values
-    (
-        #{clmType}
-       ,#{expType}
-       ,#{expTypeName}
-       ,#{glAccCode}
-       ,#{glAccCodeName}
-       ,#{budgetCode}
-       ,#{budgetCodeName}
-       ,SYSDATE
-       ,#{userId}
-       ,SYSDATE
-       ,#{userId}
-    )
+ 
+    <insert id="insertAdjustmentM" parameterType="Map">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') ID 
+		       FROM FCM0102M
+		     WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%' 
+        </selectKey>
+        
+		   INSERT INTO FCM0102M
+		   (
+		        BUDGET_DOC_NO
+		       ,ADJ_REM
+		       ,ATCH_FILE_GRP_ID
+		       ,APPV_STUS
+		       ,CRT_DT
+		       ,CRT_USER_ID
+		       ,UPD_DT
+		       ,UPD_USER_ID
+		   )
+		   VALUES
+		    (
+		        #{id}
+		       ,#{adjRem}
+		       ,#{atchFileGrpId}
+		       ,'O'
+		       ,SYSDATE
+		       ,#{userId}
+		       ,SYSDATE
+		       ,#{userId}
+		    )
     </insert>
-
-  <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
-		SELECT BUDGET_CODE    
-		        ,TO_CHAR(START_DT, 'yyyy-mm-dd')   START_DT  
-		        ,TO_CHAR(END_DT, 'yyyy-mm-dd')         END_DT
-		        ,BUDGET_CODE_TEXT
-		        ,CRT_USER_ID
-		        ,CRT_DT
-		        ,UPD_USER_ID
-		        ,UPD_DT
-		 FROM FCM0010M
-		 WHERE 1=1
-        <![CDATA[ 
-		     AND START_DT <= SYSDATE
-		     AND END_DT  >= SYSDATE
-        ]]>
-        <if test="budgetCode != null and budgetCode != ''">
-	       AND BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
-        </if>  
-        <if test="budgetCodeText != null and budgetCodeText != ''">
-           AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
-        </if>
-  </select>
-  
+    
+    <insert id="insertAdjustmentD" parameterType="Map">
+        <selectKey keyProperty="seq" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(BUDGET_DOC_SEQ) +1,1) FROM FCM0103D WHERE BUDGET_DOC_NO = #{budgetDocNo}
+        </selectKey>
+        
+		   INSERT INTO FCM0103D
+		   (
+		        BUDGET_DOC_NO
+		       ,BUDGET_DOC_SEQ
+		       ,BUDGET_ADJ_MONTH
+               ,BUDGET_ADJ_YEAR
+		       ,BUDGET_ADJ_TYPE
+		       ,SIGNAL
+		       ,COST_CENTR
+		       ,BUDGET_CODE
+		       ,GL_ACC_CODE
+		       ,ADJ_AMT
+		       ,CRT_DT
+		       ,CRT_USER_ID
+		       ,UPD_DT
+		       ,UPD_USER_ID
+		   )
+		 VALUES
+		   (
+		        #{budgetDocNo}
+		       ,#{seq}
+		       ,SUBSTR(#{adjYearMonth}, 0,2)
+		       ,SUBSTR(#{adjYearMonth}, 4,4)
+		       ,#{budgetAdjType}
+		       ,#{signal}
+		       ,#{costCentr}
+		       ,#{budgetCode}
+		       ,#{glAccCode}
+		       ,#{adjAmt}
+		       ,SYSDATE
+		       ,#{userId}
+		       ,SYSDATE
+		       ,#{userId}
+		   )
+    </insert>
+<!-- 
   
   
   <update id="updateExpenseInfo" parameterType="Map">

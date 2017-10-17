@@ -19,6 +19,9 @@ $(document).ready(function(){
         name: "codeName",
         type:"M"
     });
+
+    $("#stYearMonth").val("${stYearMonth}");
+    $("#edYearMonth").val("${edYearMonth}");
     
     $("#btnSearch").click(fn_selectListAjax);
     
@@ -155,9 +158,11 @@ function fn_setCostCenter (){
 	$("#costCentrName").val( $("#search_costCentrName").val());
 }
 
-//adjustment Pop 
+//adjustment Pop
 function fn_budgetAdjustmentPop() {
-    Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", null, null, true, "budgetAdjustmentPop");
+	var stYearMonth = $("#stYearMonth").val();
+	var edYearMonth = $("#edYearMonth").val();
+    Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), null, true, "budgetAdjustmentPop");
 }
 
 
@@ -202,9 +207,9 @@ function fn_budgetAdjustmentPop() {
 	<th scope="row"><spring:message code="budget.Month" />/<spring:message code="budget.Year" /></th>
 	<td>
 	<div class="date_set"><!-- date_set start -->
-	<p><input type="text" id="stYearMonth" name="stYearMonth" title="Create start Date" placeholder="MM/YYYY" class="j_date2" value="${yearMonth }" /></p>
+	<p><input type="text" id="stYearMonth" name="stYearMonth" title="Create start Date" placeholder="MM/YYYY" class="j_date2"/></p>
 	<span><spring:message code="budget.To" /></span>
-	<p><input type="text" id="edYearMonth" name="edYearMonth" title="Create end Date" placeholder="MM/YYYY" class="j_date2"  value="${yearMonth }" /></p>
+	<p><input type="text" id="edYearMonth" name="edYearMonth" title="Create end Date" placeholder="MM/YYYY" class="j_date2" /></p>
 	</div><!-- date_set end -->
 	</td>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
