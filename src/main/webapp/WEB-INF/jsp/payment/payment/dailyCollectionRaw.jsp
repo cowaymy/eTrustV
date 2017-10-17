@@ -30,13 +30,13 @@ function fn_genDocument(){
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
         <li>Payment</li>
-        <li>Daily Collection Listing</li>
+        <li>Daily Collection Raw</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Daily Collection Listing</h2>
+        <h2>Daily Collection Raw</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_genDocument();"><span class="search"></span>Generate</a></p></li>
         </ul>
