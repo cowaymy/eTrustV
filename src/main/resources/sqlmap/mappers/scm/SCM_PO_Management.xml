@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.PoMngementMapper"> 
+ 
+  <select id="selectScmPoView" parameterType="Map" resultType="egovMap">
+		SELECT
+	       'PDF'||'/ EXCEL' PDF
+	       ,ROWNUM NO
+	       ,PO_NO
+	       ,PO_ITM_NO  
+	       ,EST_WEEK 
+	       ,GR_WEEK        
+	       ,TO_CHAR(PO_ISSU_DT,'dd-mm-YYYY') PO_ISSU_DT  
+	       ,STOCK_CODE         
+	       ,STK_DESC  STOCK_NAME
+	       ,QTY 
+	       ,TO_CHAR(FOB_AMT, 'fm999,999,999,999.00')  FOB_AMT  
+	       ,CDC  
+	       ,RTPGR_WEEK         
+	       ,PO_APPV_STUS  
+	                     
+	       ,PO_ID          
+	       ,BAS_YEAR   
+	       ,PO_STUS   
+	       ,CRT_DT   
+	       ,CRT_USER_ID   
+	       ,UPD_DT   
+	       ,UPD_USER_ID   
+	       ,IF_DT   
+	       ,GR_YEAR   
+	       ,GR_MONTH   
+	       ,SN   
+	       ,STOCK_CTGRY   
+	       ,STOCK_ID   
+	       ,PO_ITM_APPV_STUS   
+	       ,GR_DT   
+	   FROM SCM0041V 
+	  WHERE BAS_YEAR = #{scmYearCbBox}  
+	    AND EST_WEEK = #{scmPeriodCbBox} 
+	    AND CDC = #{cdcCbBox}
+	   <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
+	    AND STOCK_CODE = #{stockCodeCbBox}      
+	   </if>
+      ORDER BY PO_NO DESC
+  </select>
+ 
+  <select id="selectScmPrePoItemView" parameterType="Map" resultType="egovMap">
+    SELECT
+           PRE_YEAR   
+		     , PRE_MONTH   
+		     , PRE_WEEK_TH   
+		     , PRE_STOCK_CODE STOCK_CODE
+		     , STK_DESC STOCK_NAME     
+		     , PRE_QTY  PLAN_QTY
+		     , PO_QTY
+		     , PRE_CDC 
+		     , PRE_CRT_DT   
+		     , PRE_PO_ITM_STUS   
+		     , PRE_PO_ITM_STUS_DT   
+		     , UNIT_PRC  FOB_PRICE 
+		     , FOB_AMT   FOB_AMOUNT
+		  FROM SCM0042V   
+		 WHERE PRE_YEAR    = #{scmYearCbBox}  
+		   AND PRE_WEEK_TH = #{scmPeriodCbBox}  
+		   AND PRE_CDC     = #{cdcCbBox}
+		   <if test='stockCodeCbBox != null and stockCodeCbBox !="" '> 
+		   AND PRE_STOCK_CODE = #{stockCodeCbBox}      
+		   </if>
+
+     </select>
+ 
+  
+</mapper>
