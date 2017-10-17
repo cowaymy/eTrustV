@@ -140,58 +140,44 @@
     
     <select id="selectCustMailAddrList" parameterType="Map" resultType="egovMap">
        <![CDATA[    
-                     SELECT 
+                   SELECT 
                         project1.CUST_ADD_ID,
                         project1.CUST_ID,
                         project1.CRT_USER_ID,
                         project1.NAME,
-                        project1.COUNTRY COUNTRY,
-                        project1.STATE STATE,
-                        project1.REGION2 REGION2,
-                        project1.REGION3 REGION3,
-                        project1.REGION4 REGION4,
-                        project1.POSTCODE POSTCODE,
-                        project1.CITY CITY,
-                        project1.AREA AREA,
-                        project1.AREA ||' '|| project1.POSTCODE ||' '|| project1.CITY ||' '|| project1.REGION2 ||' '|| project1.STATE ||' '|| project1.COUNTRY AS ADDR,
+                        project1.ADDR_DTL,
+                        project1.ADDR,
                         project1.REM,
                         project1.USER_NAME,
-                        project1.CRT_DT,
-                        project1.UPD_DT,
+                        TO_CHAR(project1.CRT_DT , 'DD-MM-YYYY'),
+                        TO_CHAR(project1.UPD_DT , 'DD-MM-YYYY'),
                         project1.UPD_USER_ID,
                         project1.USER_NAME1,
                         project1.STUS_CODE_ID
                     FROM 
-                        (SELECT 
-                               Extent1.CUST_ADD_ID   ,
+                        (SELECT Extent1.CUST_ADD_ID   ,
                                Extent1.CUST_ID   ,
                                Extent1.CRT_USER_ID   ,
                                Extent2.NAME   ,
-                               Extent5.COUNTRY COUNTRY,
-                               Extent5.STATE STATE,
-                               Extent5.REGION2 REGION2,
-                               Extent5.REGION3 REGION3,
-                               Extent5.REGION4 REGION4,
-                               Extent5.POSTCODE POSTCODE,
-                               Extent5.CITY CITY,
-                               Extent5.AREA AREA,                                                    
+                               Extent1.ADDR_DTL,
+                               CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
+                               NVL(Extent1.STREET, '') ||' '|| Extent5.AREA ||' '|| Extent5.POSTCODE ||' '|| Extent5.CITY ||' '|| Extent5.STATE ||' '|| Extent5.COUNTRY AS ADDR,                                                                                  
                                CASE  WHEN ( Extent1.REM IS NOT NULL ) THEN Extent1.REM  ELSE '' END REM  ,
                                CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  ,
                                CASE  WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE '' END USER_NAME  ,
-                               CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.CRT_DT ELSE TO_DATE('19000101','YYYYMMDD') END CRT_DT  ,
-                               CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('19000101','YYYYMMDD') ) ) THEN Extent1.UPD_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END UPD_DT  ,
+                               CASE  WHEN ( ( Extent1.CRT_DT IS NOT NULL ) AND ( Extent1.CRT_DT > TO_DATE('1900-01-01','YYYY-MM-DD') ) ) THEN Extent1.CRT_DT ELSE TO_DATE('1900-01-01','YYYY-MM-DD') END CRT_DT  ,
+                               CASE WHEN ( ( Extent1.UPD_DT IS NOT NULL ) AND ( Extent1.UPD_DT > TO_DATE('1900-01-01','YYYY-MM-DD') ) ) THEN Extent1.UPD_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END UPD_DT  ,
                                CASE  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID ELSE 0 END UPD_USER_ID  ,
                                CASE  WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE '' END USER_NAME1  
                         FROM SAL0023D Extent1
                                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID                               
                                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
                                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
-                               LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID AND Extent5.STATUS_ID = 1
+                               LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID
                         WHERE   
                               8 <> Extent1.STUS_CODE_ID 
                         AND  
                               Extent1.CUST_ID = #{custBillCustId}) project1
-                         
                 ]]>
                   <if test='custAddr != null and custAddr !=""'>
                      WHERE (UPPER(project1.ADDR_DTL)     LIKE '%' || UPPER(#{custAddr}) || '%'
