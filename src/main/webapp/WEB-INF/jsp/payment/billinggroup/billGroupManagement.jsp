@@ -1794,16 +1794,14 @@ var addOrderLayout = [
 							</div><!-- border_box end -->
 						</div>
 						<div style="width:50%;">
-						<div class="border_box" style="height:350px;"><!-- border_box start -->
-						
-						<aside class="title_line"><!-- title_line start -->
-						<h3 class="pt0">E-Statement Request History</h3>
-						</aside><!-- title_line end -->
-						<!-- grid_wrap start -->
-						        <article id="grid_wrap2" class="grid_wrap"></article>
-						<!-- grid_wrap end -->
-						</div><!-- border_box end -->
-						
+							<div class="border_box" style="height:350px;"><!-- border_box start -->
+								<aside class="title_line"><!-- title_line start -->
+								 <h3 class="pt0">E-Statement Request History</h3>
+								</aside><!-- title_line end -->
+								<!-- grid_wrap start -->
+								        <article id="grid_wrap2" class="grid_wrap"></article>
+								<!-- grid_wrap end -->
+							</div><!-- border_box end -->
 						</div>
 						<form name="myForm" id="myForm">
 						    <input type="hidden" name="custBillId" id="custBillId">
