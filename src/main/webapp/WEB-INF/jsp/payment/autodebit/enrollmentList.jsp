@@ -278,200 +278,194 @@ var columnLayout2 = [
 
 <!-- content start -->
 <form name="searchForm" id="searchForm">
-<section id="content">
-    <ul class="path">
-        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Auto Debit</li>
-        <li>Enrollment</li>
-    </ul>
-    <!-- title_line start -->
-    <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Enrollment</h2>   
-        <ul class="right_btns">
-            <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
-        </ul>    
-    </aside>
-    <!-- title_line end -->
-    
-    <!-- search_table start -->
-    <section class="search_table">
-        
-            <!-- table start -->
-            <table class="type1">
-                <caption>search table</caption>
-                <colgroup>
-                    <col style="width:144px" />
-                    <col style="width:*" />
-                    <col style="width:144px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Enroll ID</th>
-                        <td><input type="text" title="orgCode" id="enrollID" name="enrollID" placeholder="Enroll ID" /></td>
-                        <th scope="row">Creator</th>
-                        <td><input type="text" title="grpCode" id="creator" name="creator"  placeholder="Creator (Username)"/></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Create Date</th>
-                        <td>
-                            <div class="date_set w100p"><!-- date_set start -->
-                            <p><input id="rdpCreateDateFr" name="rdpCreateDateFr" type="text" title="rdpCreateDateFr" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
-                            <span>~</span>
-                            <p><input id="rdpCreateDateTo" name="rdpCreateDateTo"  type="text" title="rdpCreateDateTo" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
-                            </div><!-- date_set end -->
-                        </td>
-                        <th scope="row">Issue Bank</th>
-                        <td>
-	                        <select id="cmbIssueBank" name="cmbIssueBank" class="w100p">
-	                           <option value="" selected="selected">Issue Bank</option>
-	                           <option value="2">Alliance Bank</option>
-	                           <!-- <option value="3">CIMB Bank</option>
-	                           <option value="5">Hong Leong Bank</option> -->
-	                           <option value="21">Maybank</option>
-	                           <!-- <option value="6">Public Bank</option> -->
-	                           <option value="7">RHB Bank</option>
-	                           <option value="9">BSN Bank</option>
-	                        </select>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- table end -->
-        
-    </section>
-    <!-- search_table end -->
-
-    <!-- search_result start -->
-    <section class="search_result">
-          <!-- link_btns_wrap start -->
-        <aside class="link_btns_wrap">
-            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-            <dl class="link_list">
-                <dt>Link</dt>
-                <dd>
-                    <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:view_Enrollment()">View Enrollment</a></p></li>
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()">New Enrollment</a></p></li>
-                        <li><p class="link_btn type2"><a href="#" onclick="fn_goEnrollmentResult();">Enrollment Result</a></p></li>
-                        <li><p class="link_btn type2"><a href="/payment/initClaimList.do">Claim List</a></p></li>
-                    </ul>
-                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-                </dd>
-            </dl>
-        </aside>
-        <!-- link_btns_wrap end -->
-        <!-- grid_wrap start -->
-        <article id="grid_wrap" class="grid_wrap"></article>
-        <!-- grid_wrap end -->
-
-    </section>
-    <!-- search_result end -->
-</section>
-
-<!-- content end -->
-<div id="popup_wrap" style="display:none;">
-<!-- popup_wrap start -->
-<header class="pop_header"><!-- pop_header start -->
-<h1>VIEW ENROLLMENT</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-    <table class="type1"><!-- table start -->
-        <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Enroll ID</th>
-                        <td id="enrlId"></td>
-                        <th scope="row">Create Date</th>
-                        <td id="crtDt"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Issue Bank</th>
-                        <td id="issueBank"></td>
-                        <th scope="row">Creator</th>
-                        <td id="c1"></td>
-                    </tr>
-                     <tr>
-                        <th scope="row">Debit Date (From)</th>
-                        <td id="debtDtFrom"></td>
-                        <th scope="row">Debit Date (To)</th>
-                        <td id="debtDtTo"></td>
-                    </tr>
-                </tbody>
-    </table>
-    <section class="search_result"><!-- search_result start -->
-		
-	<article class="grid_wrap"  id="grid_wrap2" style="width  : 100%;">
-	</article><!-- grid_wrap end -->
-	
-	</section><!-- search_result end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
-<div id="popup_wrap2" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
-<header class="pop_header"><!-- pop_header start -->
-<h1>NEW ENROLLMENT</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-    <table class="type1"><!-- table start -->
-        <caption>table</caption>
-                <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Issue Bank<span class="must">*</span></th>
-                        <td colspan="3">
-                            <select id="cmbIssueBank2" name="cmbIssueBank2" onchange="fn_IssueBank();">
-                               <option value="" selected="selected">Issue Bank</option>
-                               <option value="2">Alliance Bank</option>
-                               <!-- <option value="3">CIMB Bank</option>
-                               <option value="5">Hong Leong Bank</option> -->
-                               <option value="21">Maybank</option>
-                               <!-- <option value="6">Public Bank</option> -->
-                               <option value="7">RHB Bank</option>
-                               <option value="9">BSN Bank</option>
-                            </select>    
-                        </td>
-                     </tr>
-                     <tr>
-                        <th scope="row">Debit Date<span class="must">*</span></th>
-                        <td colspan="3">
-	                        <div class="date_set w105p"><!-- date_set start -->   
-	                            <p><input id="rdpCreateDateFr2" name="rdpCreateDateFr2" type="text" title="rdpCreateDateFr2" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
+	<section id="content">
+	    <ul class="path">
+	        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+	        <li>Payment</li>
+	        <li>Auto Debit</li>
+	        <li>Enrollment</li>
+	    </ul>
+	    <!-- title_line start -->
+	    <aside class="title_line">
+	        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+	        <h2>Enrollment</h2>   
+	        <ul class="right_btns">
+	            <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
+	        </ul>    
+	    </aside>
+	    <!-- title_line end -->
+	    
+	    <!-- search_table start -->
+	    <section class="search_table">
+	        
+	            <!-- table start -->
+	            <table class="type1">
+	                <caption>search table</caption>
+	                <colgroup>
+	                    <col style="width:144px" />
+	                    <col style="width:*" />
+	                    <col style="width:144px" />
+	                    <col style="width:*" />
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Enroll ID</th>
+	                        <td><input type="text" title="orgCode" id="enrollID" name="enrollID" placeholder="Enroll ID" /></td>
+	                        <th scope="row">Creator</th>
+	                        <td><input type="text" title="grpCode" id="creator" name="creator"  placeholder="Creator (Username)"/></td>
+	                    </tr>
+	                    <tr>
+	                        <th scope="row">Create Date</th>
+	                        <td>
+	                            <div class="date_set w100p"><!-- date_set start -->
+	                            <p><input id="rdpCreateDateFr" name="rdpCreateDateFr" type="text" title="rdpCreateDateFr" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
 	                            <span>~</span>
-	                            <p><input id="rdpCreateDateTo2" name="rdpCreateDateTo2"  type="text" title="rdpCreateDateTo2" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
-	                         </div>   
-	                         <p><span id="issueBankMsg"></span><p>
-                        </td>
-                       
-                      </tr>
-                </tbody>
-    </table>
-    <ul class="center_btns">
-        <li><p class="btn_grid"><a href="javascript:fn_saveEnroll();">Enroll</a></p></li>
-    </ul>
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
+	                            <p><input id="rdpCreateDateTo" name="rdpCreateDateTo"  type="text" title="rdpCreateDateTo" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+	                            </div><!-- date_set end -->
+	                        </td>
+	                        <th scope="row">Issue Bank</th>
+	                        <td>
+		                        <select id="cmbIssueBank" name="cmbIssueBank" class="w100p">
+		                           <option value="" selected="selected">Issue Bank</option>
+		                           <option value="2">Alliance Bank</option>
+		                           <!-- <option value="3">CIMB Bank</option>
+		                           <option value="5">Hong Leong Bank</option> -->
+		                           <option value="21">Maybank</option>
+		                           <!-- <option value="6">Public Bank</option> -->
+		                           <option value="7">RHB Bank</option>
+		                           <option value="9">BSN Bank</option>
+		                        </select>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            <!-- table end -->
+	        
+	    </section>
+	    <!-- search_table end -->
+	
+	    <!-- search_result start -->
+	    <section class="search_result">
+	          <!-- link_btns_wrap start -->
+	        <aside class="link_btns_wrap">
+	            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+	            <dl class="link_list">
+	                <dt>Link</dt>
+	                <dd>
+	                    <ul class="btns">
+	                        <li><p class="link_btn type2"><a href="#" onclick="javascript:view_Enrollment()">View Enrollment</a></p></li>
+	                        <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()">New Enrollment</a></p></li>
+	                        <li><p class="link_btn type2"><a href="#" onclick="fn_goEnrollmentResult();">Enrollment Result</a></p></li>
+	                        <li><p class="link_btn type2"><a href="/payment/initClaimList.do">Claim List</a></p></li>
+	                    </ul>
+	                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+	                </dd>
+	            </dl>
+	        </aside>
+	        <!-- link_btns_wrap end -->
+	        <!-- grid_wrap start -->
+	        <article id="grid_wrap" class="grid_wrap"></article>
+	        <!-- grid_wrap end -->
+	
+	    </section>
+	    <!-- search_result end -->
+	</section>
+	
+	<!-- content end -->
+	<div id="popup_wrap" style="display:none;">
+		<!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>VIEW ENROLLMENT</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+		
+		<section class="pop_body"><!-- pop_body start -->
+		    <table class="type1"><!-- table start -->
+		        <caption>table</caption>
+		                <colgroup>
+		                    <col style="width:165px" />
+		                    <col style="width:*" />
+		                    <col style="width:165px" />
+		                    <col style="width:*" />
+		                </colgroup>
+		                <tbody>
+		                    <tr>
+		                        <th scope="row">Enroll ID</th>
+		                        <td id="enrlId"></td>
+		                        <th scope="row">Create Date</th>
+		                        <td id="crtDt"></td>
+		                    </tr>
+		                     <tr>
+		                        <th scope="row">Issue Bank</th>
+		                        <td id="issueBank"></td>
+		                        <th scope="row">Creator</th>
+		                        <td id="c1"></td>
+		                    </tr>
+		                     <tr>
+		                        <th scope="row">Debit Date (From)</th>
+		                        <td id="debtDtFrom"></td>
+		                        <th scope="row">Debit Date (To)</th>
+		                        <td id="debtDtTo"></td>
+		                    </tr>
+		                </tbody>
+		    </table>
+		    <section class="search_result"><!-- search_result start -->
+				<article class="grid_wrap"  id="grid_wrap2" style="width  : 100%;">
+				</article><!-- grid_wrap end -->
+			</section><!-- search_result end -->
+		</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
+	<div id="popup_wrap2" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+		<header class="pop_header"><!-- pop_header start -->
+			<h1>NEW ENROLLMENT</h1>
+			<ul class="right_opt">
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
+			</ul>
+		</header><!-- pop_header end -->
+	<section class="pop_body"><!-- pop_body start -->
+	    <table class="type1"><!-- table start -->
+	        <caption>table</caption>
+	                <colgroup>
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                    <col style="width:165px" />
+	                    <col style="width:*" />
+	                </colgroup>
+	                <tbody>
+	                    <tr>
+	                        <th scope="row">Issue Bank<span class="must">*</span></th>
+	                        <td colspan="3">
+	                            <select id="cmbIssueBank2" name="cmbIssueBank2" onchange="fn_IssueBank();">
+	                               <option value="" selected="selected">Issue Bank</option>
+	                               <option value="2">Alliance Bank</option>
+	                               <!-- <option value="3">CIMB Bank</option>
+	                               <option value="5">Hong Leong Bank</option> -->
+	                               <option value="21">Maybank</option>
+	                               <!-- <option value="6">Public Bank</option> -->
+	                               <option value="7">RHB Bank</option>
+	                               <option value="9">BSN Bank</option>
+	                            </select>    
+	                        </td>
+	                     </tr>
+	                     <tr>
+	                        <th scope="row">Debit Date<span class="must">*</span></th>
+	                        <td colspan="3">
+		                        <div class="date_set w105p"><!-- date_set start -->   
+		                            <p><input id="rdpCreateDateFr2" name="rdpCreateDateFr2" type="text" title="rdpCreateDateFr2" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
+		                            <span>~</span>
+		                            <p><input id="rdpCreateDateTo2" name="rdpCreateDateTo2"  type="text" title="rdpCreateDateTo2" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+		                         </div>   
+		                         <p><span id="issueBankMsg"></span><p>
+	                        </td>
+	                       
+	                      </tr>
+	                </tbody>
+	    </table>
+	    <ul class="center_btns">
+	        <li><p class="btn_grid"><a href="javascript:fn_saveEnroll();">Enroll</a></p></li>
+	    </ul>
+	</section><!-- pop_body end -->
+	</div><!-- popup_wrap end -->
 </form>
