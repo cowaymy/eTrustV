@@ -56,12 +56,13 @@ public class InvoiceController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initBillingConfirmedResult.do")
+	@RequestMapping(value = "/initBillingConfirmedResultPop.do")
 	public String initBillingConfirmedResult(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		model.addAttribute("taskId", params.get("taskId"));
 		
-		return "payment/invoice/billingConfirmedResult";
+		//return "payment/invoice/billingConfirmedResult";
+		return "payment/invoice/billingConfirmedResultPop";
 	}
 	
 	@RequestMapping(value = "/selectInvoiceResultList.do")
@@ -71,6 +72,9 @@ public class InvoiceController {
 		
 		EgovMap master = invoiceService.selectInvoiceMaster(params).get(0);	
 		List<EgovMap> detail = invoiceService.selectInvoiceDetail(params);
+		
+		for(int i=0; i<detail.size(); i++)
+			System.out.println("###detail : " + detail.get(i));
 		
 		result.put("master", master);
 		result.put("detail", detail);

@@ -379,11 +379,11 @@ var billingTargetLayout = [
 		<ul class="path">
 		    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 		    <li>Manual Billing </li>
-            <li>Rental Membership</li>
+            <li>Rental Membership Unbill</li>
 		</ul>
 		<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Rental Membership</h2>
+		<h2>Rental Membership Unbill</h2>
 		</aside><!-- title_line end -->
 		<section class="search_table"><!-- search_table start -->
 		<table class="type1"><!-- table start -->
@@ -404,36 +404,6 @@ var billingTargetLayout = [
 		</tr>
 		</tbody>
 		</table><!-- table end -->
-		
-		<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-		<dl class="link_list">
-		    <dt>Link</dt>
-		    <dd>
-		    <ul class="btns">
-		        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-		        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-		        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-		        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-		        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-		        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-		        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-		        <li><p class="link_btn"><a href="#">menu8</a></p></li>
-		    </ul>
-		    <ul class="btns">
-		        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-		        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-		        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-		        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-		        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-		        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-		        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-		    </ul>
-		    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-		    </dd>
-		</dl>
-		</aside><!-- link_btns_wrap end -->
 		
 		<article id="grid_wrap" class="grid_wrap"></article>
 		</section><!-- search_table end -->

@@ -148,11 +148,11 @@ var detailListLayout = [
 		<ul class="path">
 		    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 		    <li>Invoice/Statement</li>
-            <li>Billing Void</li>
+            <li>Billing Void Mgmt</li>
 		</ul>
 		<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Billing Void</h2>
+		<h2>Billing Void Mgmt</h2>
 		</aside><!-- title_line end -->
 		<section class="search_table"><!-- search_table start -->
 		<aside class="title_line"><!-- title_line start -->

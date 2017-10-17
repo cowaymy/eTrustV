@@ -201,11 +201,6 @@ function fn_complete(){
                 </tbody>
             </table>
         </form>
-    </section>
-
-    <!-- search_result start -->
-    <section class="search_result">     
-
         <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
             <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
@@ -220,10 +215,14 @@ function fn_complete(){
             </dl>
         </aside>
         <!-- link_btns_wrap end -->
+    </section>
 
-        <!-- grid_wrap start -->
+    <!-- search_result start -->
+    <section class="search_result">     
+         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap mt10"></article>
         <!-- grid_wrap end -->
+        
     </section>
 </section>
 <!-- popup_wrap end -->

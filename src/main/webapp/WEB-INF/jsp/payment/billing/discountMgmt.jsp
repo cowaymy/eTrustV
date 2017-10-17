@@ -297,6 +297,7 @@ var discountLayout = [
 </tr>
 </tbody>
 </table><!-- table end -->
+    <section class="search_result">
         <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
                 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
@@ -311,9 +312,11 @@ var discountLayout = [
                 </dl>
             </aside>
             <!-- link_btns_wrap end -->
-            <article class="grid_wrap" >
-                <div id="discounGrid_wrap" style="width:100%"></div>
+          
+            <article id="grid_wrap" class="grid_wrap mt10">
+               <div id="discounGrid_wrap" style="width:100%"></div>
             </article>
+    </section>
 </section><!-- container end -->
 <hr />
 </div><!-- wrap end -->

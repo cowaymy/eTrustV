@@ -246,12 +246,7 @@ function fn_doSave(){
 			</tbody>
 			</table><!-- table end -->
         </form>
-        </section>
-
- <!-- search_result start -->
-<section class="search_result">     
-
-    <!-- link_btns_wrap start -->
+        <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
             <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
@@ -265,6 +260,12 @@ function fn_doSave(){
             </dl>
         </aside>
         <!-- link_btns_wrap end -->
+        </section>
+
+ <!-- search_result start -->
+<section class="search_result">     
+
+    
         
     <!-- grid_wrap start -->
     <article id="grid_wrap" class="grid_wrap"></article>

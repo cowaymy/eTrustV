@@ -78,7 +78,8 @@ function fn_view(){
 	if(selectedGridValue != undefined){
 		var value = AUIGrid.getCellValue(myGridID , selectedGridValue , "taskId");
 		
-		location.href="/payment/initBillingConfirmedResult.do?taskId="+value;
+		//location.href="/payment/initBillingConfirmedResult.do?taskId="+value;
+		Common.popupDiv('/payment/initBillingConfirmedResultPop.do', {taskId:value}, null , true ,'_billingDetailViewPop')
 	}else{
 		Common.alert("No Task ID Selected.");
 	}
@@ -112,14 +113,15 @@ function fn_generateInv(){
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Billing</li>
-        <li>Billing Management</li>
+        <li>Invoice/Statement</li>
     </ul>
     
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
-        <h2>Billing Management</h2>   
+        <h2>Invoice/Statement</h2>   
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_generateInv()">Generate Inv/Statement</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList();"><span class="search"></span>Search</a></p></li>
         </ul>    
     </aside>
@@ -154,12 +156,7 @@ function fn_generateInv(){
                  </tbody>
               </table>
         </form>
-        </section>
-
- <!-- search_result start -->
-<section class="search_result">     
-
-    <!-- link_btns_wrap start -->
+        <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
             <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
@@ -170,12 +167,17 @@ function fn_generateInv(){
                     </ul> -->
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="javascript:fn_view()">View Details</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_generateInv()">Generate Inv/Statement</a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
         </aside>
+        </section>
+
+ <!-- search_result start -->
+<section class="search_result">     
+
+    
         <!-- link_btns_wrap end -->
         
     <!-- grid_wrap start -->
