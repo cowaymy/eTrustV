@@ -27,7 +27,7 @@ public class SessionVO implements Serializable {
 	private String deptName;
 	private String userPassWord;
 
-	private String menuCode; // 현재 uri 에 대한 menuCode....
+	private String menuCode; // 메뉴에 등록된 uri 에 대한 menuCode....  등록되지 않은 uri 호출이 된 경우에도 이전 메뉴를 가지고 있음.
 
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 
