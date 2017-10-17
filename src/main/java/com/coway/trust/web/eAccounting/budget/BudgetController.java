@@ -40,7 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/eAccounting/budget") 
 public class BudgetController {
 
-	@Value("${com.file.upload.path}")
+	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 
 	@Autowired
